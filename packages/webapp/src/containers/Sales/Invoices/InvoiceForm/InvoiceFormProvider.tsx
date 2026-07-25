@@ -33,6 +33,7 @@ import { useGetPaymentServices } from '@/hooks/query/payment-services';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
 import { useTaxRates } from '@/hooks/query/tax-rates';
 import { useFeatureCan } from '@/hooks/state';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 type InvoiceFormSubmitPayload = {
   redirect?: boolean;
@@ -59,6 +60,7 @@ type InvoiceFormContextValue = {
   isItemsLoading: boolean;
   isCustomersLoading: boolean;
   isSettingsLoading: boolean;
+  invoiceSettings: SettingsGroup | undefined;
   isWarehouesLoading: boolean;
   isBranchesLoading: boolean;
   isFeatureLoading: boolean;
@@ -169,7 +171,8 @@ function InvoiceFormProvider({
     useGetSaleInvoiceState();
 
   // Handle fetching settings.
-  const { isLoading: isSettingsLoading } = useSettingsInvoices();
+  const { data: invoiceSettings, isLoading: isSettingsLoading } =
+    useSettingsInvoices();
 
   // Create and edit invoice mutations.
   const { mutateAsync: createInvoiceMutate } = useCreateInvoice();
@@ -218,6 +221,7 @@ function InvoiceFormProvider({
     isItemsLoading,
     isCustomersLoading,
     isSettingsLoading,
+    invoiceSettings,
     isWarehouesLoading,
     isBranchesLoading,
     isFeatureLoading,

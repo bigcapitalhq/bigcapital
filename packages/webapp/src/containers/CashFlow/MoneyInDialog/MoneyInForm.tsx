@@ -14,19 +14,11 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { CreateCashflowTransactionBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose, transactionNumber } from '@/utils';
 
-interface WithSettingsProps {
-  transactionNextNumber?: string | number;
-  transactionNumberPrefix?: string;
-  transactionIncrementMode?: boolean;
-}
-
 interface MoneyInFormInnerProps
-  extends WithSettingsProps,
-    Pick<WithDialogActionsProps, 'closeDialog'> {}
+  extends Pick<WithDialogActionsProps, 'closeDialog'> {}
 
 const defaultInitialValues: MoneyInFormValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
@@ -68,11 +60,6 @@ const transformToRequestBody = (
 function MoneyInFormInner({
   // #withDialogActions
   closeDialog,
-
-  // #withSettings
-  transactionNextNumber,
-  transactionNumberPrefix,
-  transactionIncrementMode,
 }: MoneyInFormInnerProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
@@ -81,7 +68,19 @@ function MoneyInFormInner({
     accountId,
     accountType,
     createCashflowTransactionMutate,
+    cashflowSettings: cashflowSetting,
   } = useMoneyInDailogContext();
+
+  const transactionNextNumber = cashflowSetting?.nextNumber as
+    | string
+    | number
+    | undefined;
+  const transactionNumberPrefix = cashflowSetting?.numberPrefix as
+    | string
+    | undefined;
+  const transactionIncrementMode = cashflowSetting?.autoIncrement as
+    | boolean
+    | undefined;
 
   // transaction number.
   const transactionNo = transactionNumber(
@@ -131,11 +130,4 @@ function MoneyInFormInner({
   );
 }
 
-export const MoneyInForm = compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-    transactionIncrementMode: cashflowSetting?.autoIncrement,
-  })),
-)(MoneyInFormInner);
+export const MoneyInForm = compose(withDialogActions)(MoneyInFormInner);

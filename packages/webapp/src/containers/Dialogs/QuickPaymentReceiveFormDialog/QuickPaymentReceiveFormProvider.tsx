@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { pick } from 'lodash';
 import React, { useContext, createContext, useMemo } from 'react';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
 import {
@@ -38,7 +39,8 @@ function QuickPaymentReceiveFormProvider({
   const { mutateAsync: createPaymentReceiveMutate } = useCreatePaymentReceive();
 
   // Fetch payment made settings.
-  const { isLoading: isSettingsLoading } = useSettingsPaymentReceives();
+  const { isLoading: isSettingsLoading, data: paymentReceiveSettings } =
+    useSettingsPaymentReceives();
 
   // Fetches the branches list.
   const {
@@ -62,6 +64,7 @@ function QuickPaymentReceiveFormProvider({
     isBranchesSuccess,
     dialogName,
     baseCurrency,
+    paymentReceiveSettings: paymentReceiveSettings as SettingsGroup | undefined,
     createPaymentReceiveMutate,
   };
 

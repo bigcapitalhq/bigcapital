@@ -70,6 +70,8 @@ interface EstimateFormContextValue {
   saleEstimateState: UseGetSaleEstimatesStateResult['data'];
   isSaleEstimateStateLoading: boolean;
 
+  estimatesSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
+
   isBootLoading: boolean;
 }
 
@@ -147,7 +149,7 @@ function EstimateFormProvider({
     useGetSaleEstimatesState();
 
   // Handle fetch settings.
-  useSettingsEstimates();
+  const { data: estimatesSettings } = useSettingsEstimates();
 
   // Form submit payload.
   const [submitPayload, setSubmitPayload] =
@@ -201,6 +203,8 @@ function EstimateFormProvider({
 
     saleEstimateState,
     isSaleEstimateStateLoading,
+
+    estimatesSettings,
 
     isBootLoading,
   };

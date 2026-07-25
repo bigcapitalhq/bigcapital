@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Tabs, Tab } from '@blueprintjs/core';
 import classNames from 'classnames';
 import React from 'react';
@@ -8,18 +7,23 @@ import { SMSMessagesDataTable } from './SMSMessagesDataTable';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { compose } from '@/utils';
 
 import '@/style/pages/Preferences/SMSIntegration.scss';
 
+type SMSIntegrationTabsInnerProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
+
 /**
  * SMS Integration Tabs.
- * @returns {React.JSX}
  */
 function SMSIntegrationTabsInner({
   // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: SMSIntegrationTabsInnerProps) {
   React.useEffect(() => {
     changePreferencesPageTitle(intl.get('sms_integration.label'));
   }, [changePreferencesPageTitle]);

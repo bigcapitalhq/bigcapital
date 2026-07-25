@@ -21,7 +21,6 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -30,17 +29,12 @@ interface WithEstimatesActionsProps {
   setEstimatesSelectedRows: (ids: number[]) => void;
 }
 
-interface WithSettingsProps {
-  estimatesTableSize?: string | null;
-}
-
 interface EstimatesDataTableProps
   extends Pick<WithEstimatesProps, 'estimatesTableState'>,
     WithEstimatesActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
-    WithDialogActionsProps,
-    WithSettingsProps {}
+    WithDialogActionsProps {}
 
 function EstimatesDataTableInner({
   setEstimatesTableState,
@@ -48,7 +42,6 @@ function EstimatesDataTableInner({
   openAlert,
   openDrawer,
   openDialog,
-  estimatesTableSize,
   estimatesTableState,
 }: EstimatesDataTableProps) {
   const history = useHistory();
@@ -59,7 +52,9 @@ function EstimatesDataTableInner({
     isEmptyStatus,
     isEstimatesLoading,
     isEstimatesFetching,
+    estimatesSettings,
   } = useEstimatesListContext();
+  const estimatesTableSize = estimatesSettings?.tableSize as string | undefined;
 
   const columns = useEstiamtesTableColumns();
 
@@ -183,8 +178,5 @@ export const EstimatesDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ estimatesSettings }: any) => ({
-    estimatesTableSize: estimatesSettings?.tableSize,
-  })),
   withEstimates(({ estimatesTableState }) => ({ estimatesTableState })),
 )(EstimatesDataTableInner);

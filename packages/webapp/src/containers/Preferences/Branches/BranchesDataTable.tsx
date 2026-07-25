@@ -1,8 +1,8 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import type { Branch } from '@bigcapital/sdk-ts';
 
 import '@/style/pages/Preferences/branchesList.scss';
 
@@ -10,9 +10,14 @@ import { useBranchesContext } from './BranchesProvider';
 import { useBranchesTableColumns, ActionsMenu } from './components';
 import { DataTable, Card, AppToaster, TableSkeletonRows } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { useMarkBranchAsPrimary } from '@/hooks/query';
 import { compose } from '@/utils';
+
+type BranchesDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
+  Pick<WithAlertActionsProps, 'openAlert'>;
 
 /**
  * Branches data table.
@@ -23,7 +28,7 @@ function BranchesDataTableInner({
 
   // #withAlertActions
   openAlert,
-}) {
+}: BranchesDataTableInnerProps) {
   const columns = useBranchesTableColumns();
   const { mutateAsync: markBranchAsPrimaryMutate } = useMarkBranchAsPrimary();
 
@@ -31,17 +36,17 @@ function BranchesDataTableInner({
     useBranchesContext();
 
   // Handle edit branch.
-  const handleEditBranch = ({ id }) => {
+  const handleEditBranch = ({ id }: Branch) => {
     openDialog('branch-form', { branchId: id, action: 'edit' });
   };
 
   // Handle delete branch.
-  const handleDeleteBranch = ({ id }) => {
+  const handleDeleteBranch = ({ id }: Branch) => {
     openAlert('branch-delete', { branchId: id });
   };
 
   // Handle mark  branch as primary.
-  const handleMarkBranchAsPrimary = ({ id }) => {
+  const handleMarkBranchAsPrimary = ({ id }: Branch) => {
     markBranchAsPrimaryMutate(id).then(() => {
       AppToaster.show({
         message: intl.get('branch.alert.mark_primary_message'),

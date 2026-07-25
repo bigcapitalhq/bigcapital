@@ -30,26 +30,15 @@ import type { WarehouseTransferFormValues } from './types';
 import { AppToaster } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import type { WithSettingsProps } from '@/containers/Settings/withSettings';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 
-interface WarehouseTransferFormInnerProps {
-  warehouseTransferNextNumber?: unknown;
-  warehouseTransferNumberPrefix?: unknown;
-  warehouseTransferIncrementMode?: unknown;
-}
+interface WarehouseTransferFormInnerProps {}
 
 interface ApiError {
   data?: { errors?: { type: string }[] };
 }
 
-function WarehouseTransferFormInner({
-  // #withSettings
-  warehouseTransferNextNumber,
-  warehouseTransferNumberPrefix,
-  warehouseTransferIncrementMode,
-}: WarehouseTransferFormInnerProps) {
+function WarehouseTransferFormInner({}: WarehouseTransferFormInnerProps) {
   const history = useHistory();
 
   const {
@@ -58,12 +47,21 @@ function WarehouseTransferFormInner({
     createWarehouseTransferMutate,
     editWarehouseTransferMutate,
     submitPayload,
+    warehouseTransferSettings,
   } = useWarehouseTransferFormContext();
+
+  const warehouseTransferNextNumber = warehouseTransferSettings?.nextNumber as
+    | number
+    | undefined;
+  const warehouseTransferNumberPrefix =
+    warehouseTransferSettings?.numberPrefix as string | undefined;
+  const warehouseTransferIncrementMode =
+    warehouseTransferSettings?.autoIncrement as boolean | undefined;
 
   // WarehouseTransfer number.
   const warehouseTransferNumber = transactionNumber(
-    warehouseTransferNumberPrefix as string,
-    warehouseTransferNextNumber as number,
+    warehouseTransferNumberPrefix,
+    warehouseTransferNextNumber,
   );
 
   // Form initial values.
@@ -176,11 +174,6 @@ function WarehouseTransferFormInner({
   );
 }
 
-export const WarehouseTransferForm = compose(
-  withDashboardActions,
-  withSettings(({ warehouseTransferSettings }: WithSettingsProps) => ({
-    warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
-    warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,
-    warehouseTransferIncrementMode: warehouseTransferSettings?.autoIncrement,
-  })),
-)(WarehouseTransferFormInner);
+export const WarehouseTransferForm = compose(withDashboardActions)(
+  WarehouseTransferFormInner,
+);

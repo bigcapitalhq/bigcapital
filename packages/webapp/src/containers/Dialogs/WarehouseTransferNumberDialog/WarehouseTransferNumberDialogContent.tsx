@@ -9,9 +9,7 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { useSaveSettings } from '@/hooks/query';
+import { useSaveSettings, useSettingsWarehouseTransfers } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface ReferenceFormValues {
@@ -23,19 +21,25 @@ interface WarehouseTransferNumberDialogContentProps
   extends WithDialogActionsProps {
   initialValues?: Record<string, unknown>;
   onConfirm?: (values: ReferenceFormValues) => void;
-  nextNumber?: string | number;
-  numberPrefix?: string;
-  autoIncrement?: string;
 }
 
 function WarehouseTransferNumberDialogContentInner({
   initialValues,
   onConfirm,
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
   closeDialog,
 }: WarehouseTransferNumberDialogContentProps): React.ReactElement {
+  const { data: warehouseTransferSettings } = useSettingsWarehouseTransfers();
+  const nextNumber = warehouseTransferSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
+  const numberPrefix = warehouseTransferSettings?.numberPrefix as
+    | string
+    | undefined;
+  const autoIncrement = warehouseTransferSettings?.autoIncrement as
+    | string
+    | undefined;
+
   const { mutateAsync: saveSettings } = useSaveSettings();
   const [referenceFormValues, setReferenceFormValues] =
     React.useState<ReferenceFormValues | null>(null);
@@ -95,12 +99,6 @@ function WarehouseTransferNumberDialogContentInner({
     </WarehouseTransferNumberDialogProvider>
   );
 }
-export const WarehouseTransferNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
-  withSettings(({ warehouseTransferSettings }: Record<string, any>) => ({
-    autoIncrement: warehouseTransferSettings?.autoIncrement,
-    nextNumber: warehouseTransferSettings?.nextNumber,
-    numberPrefix: warehouseTransferSettings?.numberPrefix,
-  })),
-)(WarehouseTransferNumberDialogContentInner);
+export const WarehouseTransferNumberDialogContent = compose(withDialogActions)(
+  WarehouseTransferNumberDialogContentInner,
+);

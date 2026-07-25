@@ -18,7 +18,6 @@ import type { WithAccountsProps } from './withAccounts';
 import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
 import {
   AdvancedFilterPopover,
   Can,
@@ -33,22 +32,19 @@ import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
 import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface AccountsActionsBarInnerProps {
   openDialog: WithDialogActionsProps['openDialog'];
   openAlert: WithAlertActionsProps['openAlert'];
-  addSetting: WithSettingsActionsProps['addSetting'];
   setAccountsTableState: WithAccountsTableActionsProps['setAccountsTableState'];
   accountsSelectedRows: WithAccountsProps['accountsSelectedRows'];
   accountsInactiveMode: boolean | undefined;
   accountsFilterConditions: IFilterRole[];
-  accountsTableSize: unknown;
 }
 
 /**
@@ -61,11 +57,12 @@ function AccountsActionsBarInner({
   accountsFilterConditions,
   openAlert,
   setAccountsTableState,
-  accountsTableSize,
-  addSetting,
 }: AccountsActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
-  const { resourceViews, fields } = useAccountsChartContext();
+  const { resourceViews, fields, accountsSettings } = useAccountsChartContext();
+  const accountsTableSize = accountsSettings?.tableSize as string | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -108,7 +105,9 @@ function AccountsActionsBarInner({
   };
   // Handle table row size change.
   const handleTableRowSizeChange = (size: unknown) => {
-    addSetting('accounts', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'accounts', key: 'tableSize', value: size }],
+    });
   };
   // handle the import button click.
   const handleImportBtnClick = () => {
@@ -240,14 +239,10 @@ function AccountsActionsBarInner({
 export const AccountsActionsBar = compose(
   withDialogActions,
   withAlertActions,
-  withSettingsActions,
   withAccounts(({ accountsSelectedRows, accountsTableState }) => ({
     accountsSelectedRows,
     accountsInactiveMode: accountsTableState.inactiveMode,
     accountsFilterConditions: accountsTableState.filterRoles,
-  })),
-  withSettings(({ accountsSettings }) => ({
-    accountsTableSize: accountsSettings?.tableSize,
   })),
   withAccountsTableActions,
 )(AccountsActionsBarInner);

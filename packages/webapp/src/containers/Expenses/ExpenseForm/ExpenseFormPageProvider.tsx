@@ -1,6 +1,6 @@
-// @ts-nocheck
 import { css } from '@emotion/css';
 import React, { createContext } from 'react';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
 import { useProjects } from '@/containers/Projects/hooks';
@@ -12,15 +12,28 @@ import {
   useBranches,
   useCreateExpense,
   useEditExpense,
+  useSettingsExpenses,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
+import type { ExpenseFormContext } from './types';
 
-const ExpenseFormPageContext = createContext();
+const ExpenseFormPageContext = createContext<ExpenseFormContext | undefined>(
+  undefined,
+);
+
+type ExpenseFormPageProviderProps = {
+  expenseId: number;
+  query?: Record<string, any>;
+} & Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>;
 
 /**
  * Accounts chart data provider.
  */
-function ExpenseFormPageProvider({ query, expenseId, ...props }) {
+function ExpenseFormPageProvider({
+  query,
+  expenseId,
+  ...props
+}: ExpenseFormPageProviderProps & { children?: React.ReactNode }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -56,22 +69,30 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   const { mutateAsync: createExpenseMutate } = useCreateExpense();
   const { mutateAsync: editExpenseMutate } = useEditExpense();
 
+  // Expense settings.
+  const { data: expenseSettings } = useSettingsExpenses();
+
   // Submit form payload - using ref for synchronous access.
-  const submitPayloadRef = React.useRef({});
+  const submitPayloadRef = React.useRef<
+    ExpenseFormContext['submitPayloadRef']['current']
+  >({});
 
   // Setter to update the ref.
-  const setSubmitPayload = React.useCallback((payload) => {
-    submitPayloadRef.current = payload;
-  }, []);
+  const setSubmitPayload = React.useCallback(
+    (payload: ExpenseFormContext['submitPayloadRef']['current']) => {
+      submitPayloadRef.current = payload;
+    },
+    [],
+  );
 
   // Detarmines whether the form in new mode.
   const isNewMode = !expenseId;
 
   // Provider payload.
-  const provider = {
+  const provider: ExpenseFormContext = {
     isNewMode,
     expenseId,
-    submitPayloadRef, // Expose ref for synchronous access
+    submitPayloadRef,
 
     currencies: currencies ?? [],
     customers: customersData?.data ?? [],
@@ -85,10 +106,13 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
     isCustomersLoading,
     isAccountsLoading,
     isBranchesSuccess,
+    isBranchesLoading,
 
     createExpenseMutate,
     editExpenseMutate,
     setSubmitPayload,
+
+    expenseSettings,
   };
 
   return (
@@ -111,6 +135,14 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   );
 }
 
-const useExpenseFormContext = () => React.useContext(ExpenseFormPageContext);
+const useExpenseFormContext = (): ExpenseFormContext => {
+  const ctx = React.useContext(ExpenseFormPageContext);
+  if (!ctx) {
+    throw new Error(
+      'useExpenseFormContext must be used within an ExpenseFormPageProvider',
+    );
+  }
+  return ctx;
+};
 
 export { ExpenseFormPageProvider, useExpenseFormContext };

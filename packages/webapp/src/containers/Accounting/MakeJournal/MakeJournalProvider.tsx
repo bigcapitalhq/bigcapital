@@ -7,6 +7,7 @@ import type {
   BranchesListResponse,
   CurrenciesListResponse,
   ContactsAutoCompleteResponse,
+  SettingsGroup,
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import { Features } from '@/constants';
@@ -38,6 +39,7 @@ type MakeJournalFormContextValue = {
   projects: unknown[];
   submitPayload: MakeJournalFormSubmitPayload;
   isNewMode: boolean;
+  manualJournalsSettings: SettingsGroup | undefined;
 
   createJournalMutate: (values: CreateManualJournalBody) => Promise<void>;
   editJournalMutate: (args: [number, EditManualJournalBody]) => Promise<void>;
@@ -100,7 +102,8 @@ function MakeJournalProvider({
   const { mutateAsync: editJournalMutate } = useEditJournal();
 
   // Loading the journal settings.
-  const { isLoading: isSettingsLoading } = useSettingsManualJournals();
+  const { data: manualJournalsSettings, isLoading: isSettingsLoading } =
+    useSettingsManualJournals();
 
   // Fetches the branches list.
   const {
@@ -142,6 +145,7 @@ function MakeJournalProvider({
     isBranchesLoading,
     isBranchesSuccess,
     isNewMode: !journalId,
+    manualJournalsSettings,
 
     submitPayload,
     setSubmitPayload,

@@ -3,6 +3,7 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { MakeJournalFormValues } from './utils';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   FieldHint,
@@ -14,30 +15,22 @@ import {
   FFormGroup,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { compose } from '@/utils';
 
-interface MakeJournalTransactionNoFieldOwnProps {
-  journalAutoIncrement?: boolean;
-}
-
 interface MakeJournalTransactionNoFieldProps
-  extends Pick<WithDialogActionsProps, 'openDialog'>,
-    MakeJournalTransactionNoFieldOwnProps {}
+  extends Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Journal number field of make journal form.
  */
-export const MakeJournalTransactionNoField = compose(
-  withDialogActions,
-  withSettings(({ manualJournalsSettings }) => ({
-    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
-  })),
-)(({
+export const MakeJournalTransactionNoField = compose(withDialogActions)(({
   openDialog,
-  journalAutoIncrement,
 }: MakeJournalTransactionNoFieldProps) => {
   const { setFieldValue, values } = useFormikContext<MakeJournalFormValues>();
+  const { manualJournalsSettings } = useMakeJournalFormContext();
+  const journalAutoIncrement = manualJournalsSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   const handleJournalNumberChange = () => {
     openDialog('journal-number-form');

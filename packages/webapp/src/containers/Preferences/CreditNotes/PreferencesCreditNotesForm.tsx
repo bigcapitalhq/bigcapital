@@ -6,10 +6,16 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { FormattedMessage as T, FFormGroup, FTextArea } from '@/components';
 
+export interface PreferencesCreditNotesFormProps {
+  isSubmitting: boolean;
+}
+
 /**
  * Preferences credit notes form.
  */
-export function PreferencesCreditNotesForm({ isSubmitting }) {
+export function PreferencesCreditNotesForm({
+  isSubmitting,
+}: PreferencesCreditNotesFormProps) {
   const history = useHistory();
 
   // Handle close click.
@@ -26,7 +32,7 @@ export function PreferencesCreditNotesForm({ isSubmitting }) {
         fastField={true}
       >
         <FTextArea
-          medium={'true'}
+          medium={true}
           name={'customerNotes'}
           fastField={true}
           fill={true}
@@ -40,7 +46,7 @@ export function PreferencesCreditNotesForm({ isSubmitting }) {
         fastField={true}
       >
         <FTextArea
-          medium={'true'}
+          medium={true}
           name={'termsConditions'}
           fastField={true}
           fill={true}

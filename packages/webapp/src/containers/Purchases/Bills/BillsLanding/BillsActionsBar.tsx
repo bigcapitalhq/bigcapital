@@ -29,30 +29,19 @@ import {
 import { BillAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useRefreshBills } from '@/hooks/query/bills';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithBillsActionsProps {
   setBillsTableState: (state: Record<string, any>) => void;
 }
 
-interface WithSettingsActionsProps {
-  addSetting: (group: string, key: string, value: any) => void;
-}
-
-interface WithSettingsProps {
-  billsTableSize?: string | null;
-}
-
 interface BillActionsBarProps
   extends Pick<WithBillsProps, 'billsSelectedRows'>,
     WithBillsActionsProps,
-    WithSettingsActionsProps,
-    WithDialogActionsProps,
-    WithSettingsProps {
+    WithDialogActionsProps {
   billsConditionsRoles: any[];
 }
 
@@ -60,15 +49,15 @@ function BillActionsBar({
   setBillsTableState,
   billsConditionsRoles,
   billsSelectedRows,
-  billsTableSize,
-  addSetting,
   openDialog,
 }: BillActionsBarProps) {
-  const history = useHistory();
+  const { mutateAsync: saveSettings } = useSaveSettings();
 
+  const history = useHistory();
   const { refresh } = useRefreshBills();
 
-  const { billsViews, fields } = useBillsListContext();
+  const { billsViews, fields, billSettings } = useBillsListContext();
+  const billsTableSize = billSettings?.tableSize as string | undefined;
 
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
@@ -84,7 +73,9 @@ function BillActionsBar({
     refresh();
   };
   const handleTableRowSizeChange = (size: any) => {
-    addSetting('bills', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'bills', key: 'tableSize', value: size }],
+    });
   };
   const handleImportBtnClick = () => {
     history.push('/bills/import');
@@ -200,13 +191,9 @@ function BillActionsBar({
 
 export const BillsActionsBar = compose(
   withBillsActions,
-  withSettingsActions,
   withBills(({ billsTableState, billsSelectedRows }) => ({
     billsConditionsRoles: billsTableState.filterRoles,
     billsSelectedRows,
-  })),
-  withSettings(({ billsettings }: any) => ({
-    billsTableSize: billsettings?.tableSize,
   })),
   withDialogActions,
 )(BillActionsBar);

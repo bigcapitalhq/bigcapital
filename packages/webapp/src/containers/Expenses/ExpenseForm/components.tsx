@@ -1,10 +1,10 @@
-// @ts-nocheck
 import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useExpensesIsForeign } from './utils';
+import type { ExpenseFormValues } from './types';
 import {
   Icon,
   Hint,
@@ -22,6 +22,14 @@ import { CellType, Features, Align } from '@/constants';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 
+type ActionsCellRendererProps = {
+  row: { index: number };
+  column: { id: string };
+  cell: { value: unknown };
+  data: unknown;
+  payload: { removeRow: (index: number) => void };
+};
+
 /**
  * Expense category header cell.
  */
@@ -37,15 +45,11 @@ const ExpenseCategoryHeaderCell = () => {
 /**
  * Actions cell renderer.
  */
-const ActionsCellRenderer = ({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  data,
-  payload,
-}) => {
+const ActionsCellRenderer: React.FC<ActionsCellRendererProps> & {
+  cellType?: any;
+} = ({ row: { index }, payload: { removeRow } }) => {
   const handleClickRemoveRole = () => {
-    payload.removeRow(index);
+    removeRow(index);
   };
   const exampleMenu = (
     <Menu>
@@ -60,6 +64,7 @@ const ActionsCellRenderer = ({
     <Popover2 content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
+        // @ts-expect-error BP4 Button does not declare `iconSize`; runtime accepts it
         iconSize={14}
         className="m12"
         minimal={true}
@@ -76,22 +81,33 @@ const LandedCostHeaderCell = () => {
   return (
     <>
       <T id={'landed'} />
+      {/* @ts-expect-error Hint.content is typed as string but renders ReactNode */}
       <Hint content={<T id={'item_entries.landed.hint'} />} />
     </>
   );
 };
 
+type ExpenseAmountHeaderCellProps = {
+  payload: { currencyCode: string };
+};
+
 /**
  * Expense amount header cell.
  */
-export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
+export function ExpenseAmountHeaderCell({
+  payload: { currencyCode },
+}: ExpenseAmountHeaderCellProps) {
   return intl.get('amount_currency', { currency: currencyCode });
 }
 
 /**
  * Retrieve expense form table entries columns.
  */
-export function useExpenseFormTableColumns({ landedCost }) {
+export function useExpenseFormTableColumns({
+  landedCost,
+}: {
+  landedCost: boolean;
+}) {
   const { featureCan } = useFeatureCan();
 
   return React.useMemo(
@@ -166,22 +182,26 @@ export function useExpenseFormTableColumns({ landedCost }) {
  * Expense exchange rate input field.
  * @returns {JSX.Element}
  */
-export function ExpensesExchangeRateInputField({ ...props }) {
+export function ExpensesExchangeRateInputField(props: Record<string, any>) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<ExpenseFormValues>();
 
   const isForeignJouranl = useExpensesIsForeign();
 
-  // Can't continue if the customer is not foreign.
   if (!isForeignJouranl) {
     return null;
   }
   return (
     <ExchangeRateInputGroup
-      fromCurrency={values.currencyCode}
-      toCurrency={baseCurrency}
+      name={'exchangeRate'}
+      fromCurrency={values.currencyCode ?? ''}
+      toCurrency={baseCurrency ?? ''}
       {...props}
     />
   );
 }
-ExpensesExchangeRateInputField.cellType = CellType.Field;
+(
+  ExpensesExchangeRateInputField as React.FC & {
+    cellType?: any;
+  }
+).cellType = CellType.Field;

@@ -9,9 +9,7 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { useSaveSettings } from '@/hooks/query';
+import { useSaveSettings, useSettingsInvoices } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
@@ -22,14 +20,14 @@ function InvoiceNumberDialogContentInner({
   initialValues,
   onConfirm,
 
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
   // #withDialogActions
   closeDialog,
 }) {
+  const { data: invoiceSettings } = useSettingsInvoices();
+  const nextNumber = invoiceSettings?.nextNumber as number | undefined;
+  const numberPrefix = invoiceSettings?.numberPrefix as string | undefined;
+  const autoIncrement = invoiceSettings?.autoIncrement as boolean | undefined;
+
   const { mutateAsync: saveSettings } = useSaveSettings();
   const [referenceFormValues, setReferenceFormValues] = React.useState(null);
 
@@ -91,12 +89,6 @@ function InvoiceNumberDialogContentInner({
   );
 }
 
-export const InvoiceNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
-  withSettings(({ invoiceSettings }) => ({
-    nextNumber: invoiceSettings?.nextNumber,
-    numberPrefix: invoiceSettings?.numberPrefix,
-    autoIncrement: invoiceSettings?.autoIncrement,
-  })),
-)(InvoiceNumberDialogContentInner);
+export const InvoiceNumberDialogContent = compose(withDialogActions)(
+  InvoiceNumberDialogContentInner,
+);

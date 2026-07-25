@@ -1,24 +1,66 @@
-// @ts-nocheck
 import { DepGraph } from 'dependency-graph';
 import { chain, isEmpty, castArray, memoize } from 'lodash';
 import * as R from 'ramda';
+import type { RolesFormPermission } from './types';
 import {
   getPermissionsSchema,
   getPermissionsSchemaService,
   getPermissionsSchemaServices,
 } from '@/constants/permissionsSchema';
 
+interface PermissionItem {
+  subject: string;
+  ability: string;
+  key?: string;
+  value: boolean;
+  default?: boolean;
+  relatedColumn?: string;
+  depend?: unknown;
+  label?: string;
+}
+
+interface PermissionService {
+  subject: string;
+  label?: string;
+  permissions: PermissionItem[];
+}
+
+interface PermissionModule {
+  label?: string;
+  type?: string;
+  serviceFullAccess?: boolean;
+  columns?: Array<{ key: string; label?: string }>;
+  services: PermissionService[];
+}
+
+interface PermissionSchemaItem {
+  subject: string;
+  abilities?: PermissionItem[];
+  extra_abilities?: PermissionItem[];
+}
+
+interface FormLike {
+  values: {
+    permissions: Record<string, boolean>;
+    serviceFullAccess: Record<string, boolean | number>;
+  };
+  setFieldValue: (field: string, value: unknown) => void;
+}
+
 export const FULL_ACCESS_CHECKBOX_STATE = {
   INDETARMINE: -1,
   ON: true,
   OFF: false,
-};
+} as const;
 
 /**
  * Transformes the permissions object to array.
- * @returns
  */
-export const transformToArray = ({ permissions }) => {
+export const transformToArray = ({
+  permissions,
+}: {
+  permissions: Record<string, boolean>;
+}): RolesFormPermission[] => {
   return Object.keys(permissions).map((index) => {
     const [value, key] = index.split('/');
 
@@ -30,7 +72,9 @@ export const transformToArray = ({ permissions }) => {
   });
 };
 
-function transformPermissions(permissions) {
+function transformPermissions(
+  permissions: Record<string, boolean>,
+): Array<{ key: string; subject: string; value: boolean }> {
   return Object.keys(permissions).map((permissionKey) => {
     const [subject, key] = permissionKey.split('/');
     const value = permissions[permissionKey];
@@ -41,11 +85,11 @@ function transformPermissions(permissions) {
 
 /**
  * Transformes permissions array to object.
- * @param {*} permissions -
- * @returns
  */
-export const transformPermissionsToObject = (permissions) => {
-  const output = {};
+export const transformPermissionsToObject = (
+  permissions: Array<{ subject: string; ability: string; value: boolean }>,
+): Record<string, boolean> => {
+  const output: Record<string, boolean> = {};
   permissions.forEach((item) => {
     output[`${item.subject}/${item.ability}`] = !!item.value;
   });
@@ -54,10 +98,12 @@ export const transformPermissionsToObject = (permissions) => {
 
 /**
  *
- * @param {*} role
- * @returns
  */
-export const transformToObject = (role) => {
+export const transformToObject = (role: {
+  name: string;
+  description: string;
+  permissions: Array<{ subject: string; ability: string; value: boolean }>;
+}) => {
   const permissions = transformPermissionsToObject(role.permissions);
   const serviceFullAccess = getInitialServicesFullAccess(permissions);
 
@@ -69,7 +115,9 @@ export const transformToObject = (role) => {
   };
 };
 
-export const getDefaultValuesFromSchema = (schema) => {
+export const getDefaultValuesFromSchema = (
+  schema: PermissionSchemaItem[],
+): RolesFormPermission[] => {
   return schema
     .map((item) => {
       const abilities = [
@@ -80,8 +128,8 @@ export const getDefaultValuesFromSchema = (schema) => {
         .filter((ability) => ability.default)
         .map((ability) => ({
           subject: item.subject,
-          ability: ability.key,
-          value: ability.default,
+          ability: ability.key || '',
+          value: !!ability.default,
         }));
     })
     .flat();
@@ -89,14 +137,14 @@ export const getDefaultValuesFromSchema = (schema) => {
 
 /**
  * Retrieve initial values of full access services.
- * @param {*} formPermissions
- * @returns
  */
-export const getInitialServicesFullAccess = (formPermissions) => {
+export const getInitialServicesFullAccess = (
+  formPermissions: Record<string, boolean>,
+): Record<string, boolean | number> => {
   const services = getPermissionsSchemaServices();
 
   return chain(services)
-    .map((service) => {
+    .map((service: PermissionService) => {
       const { subject } = service;
       const isFullChecked = isServiceFullChecked(subject, formPermissions);
       const isFullUnchecked = isServiceFullUnchecked(subject, formPermissions);
@@ -110,10 +158,13 @@ export const getInitialServicesFullAccess = (formPermissions) => {
 
 /**
  *
- * @param {*} schema
- * @returns
  */
-export const getNewRoleInitialValues = (schema) => {
+export const getNewRoleInitialValues = (
+  schema: PermissionSchemaItem[],
+): {
+  permissions: Record<string, boolean>;
+  serviceFullAccess: Record<string, boolean | number>;
+} => {
   const permissions = transformPermissionsToObject(
     getDefaultValuesFromSchema(schema),
   );
@@ -127,11 +178,11 @@ export const getNewRoleInitialValues = (schema) => {
 
 /**
  *
- * @param {*} service
- * @param {*} columnKey
- * @returns
  */
-export function getSerivceColumnPermission(service, columnKey) {
+export function getSerivceColumnPermission(
+  service: PermissionService,
+  columnKey: string,
+): PermissionItem | undefined {
   return service.permissions.find((permission) => {
     return permission.relatedColumn === columnKey;
   });
@@ -139,10 +190,10 @@ export function getSerivceColumnPermission(service, columnKey) {
 
 /**
  *
- * @param {*} service
- * @returns
  */
-export function getServiceExtraPermissions(service) {
+export function getServiceExtraPermissions(
+  service: PermissionService,
+): PermissionItem[] {
   return service.permissions.filter((permission) => {
     return !permission.relatedColumn;
   });
@@ -151,8 +202,13 @@ export function getServiceExtraPermissions(service) {
 /**
  * Detarmines the given service subject is full permissions checked.
  */
-export function isServiceFullChecked(subject, permissions) {
-  const serviceSchema = getPermissionsSchemaService(subject);
+export function isServiceFullChecked(
+  subject: string,
+  permissions: Record<string, boolean>,
+): boolean {
+  const serviceSchema = getPermissionsSchemaService(
+    subject,
+  ) as PermissionService;
 
   return serviceSchema.permissions.every(
     (permission) => permissions[`${subject}/${permission.key}`],
@@ -161,11 +217,14 @@ export function isServiceFullChecked(subject, permissions) {
 
 /**
  * Detarmines the given service subject is fully associated permissions unchecked.
- * @param {string} subject -
- * @param {Object} permissionsMap -
  */
-export function isServiceFullUnchecked(subject, permissionsMap) {
-  const serviceSchema = getPermissionsSchemaService(subject);
+export function isServiceFullUnchecked(
+  subject: string,
+  permissionsMap: Record<string, boolean>,
+): boolean {
+  const serviceSchema = getPermissionsSchemaService(
+    subject,
+  ) as PermissionService;
 
   return serviceSchema.permissions.every(
     (permission) => !permissionsMap[`${subject}/${permission.key}`],
@@ -176,40 +235,40 @@ export function isServiceFullUnchecked(subject, permissionsMap) {
  * Handles permission checkbox change.
  */
 export const handleCheckboxPermissionChange = R.curry(
-  (form, permission, service, event) => {
+  (
+    form: FormLike,
+    permission: PermissionItem,
+    service: PermissionService,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { subject } = service;
     const isChecked = event.currentTarget.checked;
+    const permKey = `${subject}/${permission.key}`;
 
     const permissionsGraph = memoizedPermissionsGraph();
     const dependencies = isChecked
-      ? permissionsGraph.dependenciesOf(`${subject}/${permission.key}`)
-      : permissionsGraph.dependantsOf(`${subject}/${permission.key}`);
+      ? permissionsGraph.dependenciesOf(permKey)
+      : permissionsGraph.dependantsOf(permKey);
 
     const newDependsPermiss = chain(dependencies)
-      .map((dep) => [dep, isChecked])
+      .map((dep: string) => [dep, isChecked])
       .fromPairs()
       .value();
 
-    const newValues = {
-      ...form.values,
-      permissions: {
-        ...form.values.permissions,
-        [`${subject}/${permission.key}`]: isChecked,
-        ...newDependsPermiss,
-      },
+    const newPermissions = {
+      ...form.values.permissions,
+      [permKey]: isChecked,
+      ...newDependsPermiss,
     };
-    const isFullChecked = isServiceFullChecked(subject, newValues.permissions);
-    const isFullUnchecked = isServiceFullUnchecked(
-      subject,
-      newValues.permissions,
-    );
-    form.setFieldValue(`permissions.${subject}/${permission.key}`, isChecked);
+    const isFullChecked = isServiceFullChecked(subject, newPermissions);
+    const isFullUnchecked = isServiceFullUnchecked(subject, newPermissions);
+    form.setFieldValue(`permissions.${permKey}`, isChecked);
     form.setFieldValue(
       `serviceFullAccess.${subject}`,
       detarmineCheckboxState(isFullChecked, isFullUnchecked),
     );
 
-    dependencies.forEach((depKey) => {
+    dependencies.forEach((depKey: string) => {
       form.setFieldValue(`permissions.${depKey}`, isChecked);
     });
   },
@@ -217,11 +276,11 @@ export const handleCheckboxPermissionChange = R.curry(
 
 /**
  * Detarmines the permission checkbox state.
- * @param {boolean} isFullChecked
- * @param {boolean} isFullUnchecked
- * @returns {FULL_ACCESS_CHECKBOX_STATE}
  */
-function detarmineCheckboxState(isFullChecked, isFullUnchecked) {
+function detarmineCheckboxState(
+  isFullChecked: boolean,
+  isFullUnchecked: boolean,
+): boolean | number {
   return isFullChecked
     ? FULL_ACCESS_CHECKBOX_STATE.ON
     : isFullUnchecked
@@ -231,11 +290,9 @@ function detarmineCheckboxState(isFullChecked, isFullUnchecked) {
 
 /**
  * Retreive the service all permissions paths.
- * @param {string} subject
- * @returns {string[]}
  */
-export function getServiceAllPermissionsPaths(subject) {
-  const service = getPermissionsSchemaService(subject);
+export function getServiceAllPermissionsPaths(subject: string): string[] {
+  const service = getPermissionsSchemaService(subject) as PermissionService;
 
   return service.permissions.map(
     (perm) => `permissions.${subject}/${perm.key}`,
@@ -246,7 +303,11 @@ export function getServiceAllPermissionsPaths(subject) {
  * Handle full access service checkbox change.
  */
 export const handleCheckboxFullAccessChange = R.curry(
-  (service, form, event) => {
+  (
+    service: PermissionService,
+    form: FormLike,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const isChecked = event.currentTarget.checked;
     const permsPaths = getServiceAllPermissionsPaths(service.subject);
 
@@ -266,16 +327,18 @@ export const handleCheckboxFullAccessChange = R.curry(
 /**
  * Retrieves all flatten modules permissions.
  */
-export function getAllFlattenPermissionsSchema() {
-  const permissions = getPermissionsSchema();
+export function getAllFlattenPermissionsSchema(): Array<
+  PermissionItem & { subject: string }
+> {
+  const permissions = getPermissionsSchema() as PermissionModule[];
 
   return chain(permissions)
     .map((module) => module.services)
     .flatten()
-    .map((module) =>
+    .map((module: PermissionService) =>
       module.permissions.map((permission) => ({
-        subject: module.subject,
         ...permission,
+        subject: module.subject,
       })),
     )
     .flatten()
@@ -284,10 +347,9 @@ export function getAllFlattenPermissionsSchema() {
 
 /**
  * Retrieve the permissions schema dependencies graph.
- * @returns {DepGraph}
  */
-export const getPermissionsSchemaGraph = () => {
-  const graph = new DepGraph();
+export const getPermissionsSchemaGraph = (): DepGraph<PermissionItem> => {
+  const graph = new DepGraph<PermissionItem>();
   const permissions = getAllFlattenPermissionsSchema();
 
   permissions.forEach((permission) => {
@@ -300,7 +362,9 @@ export const getPermissionsSchemaGraph = () => {
 
     if (isEmpty(node.depend)) return;
 
-    const depends = castArray(node.depend);
+    const depends = castArray<{ subject?: string; key: string }>(
+      node.depend as unknown as { subject?: string; key: string },
+    );
 
     depends.forEach((dependRelation) => {
       const subject = dependRelation.subject || node.subject;

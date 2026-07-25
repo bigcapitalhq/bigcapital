@@ -1,4 +1,3 @@
-// @ts-nocheck
 import classNames from 'classnames';
 import React, { createContext } from 'react';
 import styled from 'styled-components';
@@ -12,12 +11,29 @@ import {
   useOrgBaseCurrencyMutateAbilities,
 } from '@/hooks/query';
 
-const GeneralFormContext = createContext();
+type UpdateOrganizationMutateAsync = ReturnType<
+  typeof useUpdateOrganization
+>['mutateAsync'];
+
+export interface GeneralFormContextValue {
+  isOrganizationLoading: boolean;
+  isDateFormatsLoading: boolean;
+  updateOrganization: UpdateOrganizationMutateAsync;
+  baseCurrencyMutateAbility: string[];
+  organization: ReturnType<typeof useCurrentOrganization>['data'];
+  dateFormats: ReturnType<typeof useDateFormats>['data'];
+}
+
+const GeneralFormContext = createContext<GeneralFormContextValue | null>(null);
+
+export interface GeneralFormProviderProps {
+  children?: React.ReactNode;
+}
 
 /**
  * General form provider.
  */
-function GeneralFormProvider({ ...props }) {
+function GeneralFormProvider({ children }: GeneralFormProviderProps) {
   // Fetches current organization information.
   const { isLoading: isOrganizationLoading, data: organization } =
     useCurrentOrganization();
@@ -33,11 +49,12 @@ function GeneralFormProvider({ ...props }) {
   const { mutateAsync: updateOrganization } = useUpdateOrganization();
 
   // Provider state.
-  const provider = {
+  const provider: GeneralFormContextValue = {
     isOrganizationLoading,
     isDateFormatsLoading,
     updateOrganization,
-    baseCurrencyMutateAbility,
+    baseCurrencyMutateAbility: (baseCurrencyMutateAbility ??
+      []) as unknown as string[],
     organization,
     dateFormats,
   };
@@ -53,7 +70,9 @@ function GeneralFormProvider({ ...props }) {
         {isOrganizationLoading || isDateFormatsLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <GeneralFormContext.Provider value={provider} {...props} />
+          <GeneralFormContext.Provider value={provider}>
+            {children}
+          </GeneralFormContext.Provider>
         )}
       </GeneralFormCard>
     </div>

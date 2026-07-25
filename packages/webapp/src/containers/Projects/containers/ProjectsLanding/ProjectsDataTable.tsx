@@ -14,7 +14,6 @@ import {
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -28,15 +27,18 @@ function ProjectsDataTableInner({
 
   // #withAlertActions
   openAlert,
-
-  // #withSettings
-  projectsTableSize,
 }) {
   const history = useHistory();
 
   // Projects list context.
-  const { projects, isEmptyStatus, isProjectsLoading, isProjectsFetching } =
-    useProjectsListContext();
+  const {
+    projects,
+    isEmptyStatus,
+    isProjectsLoading,
+    isProjectsFetching,
+    projectSettings,
+  } = useProjectsListContext();
+  const projectsTableSize = projectSettings?.tableSize;
 
   // Retrieve projects table columns.
   const columns = useProjectsListColumns();
@@ -122,9 +124,6 @@ export const ProjectsDataTable = compose(
   withDialogActions,
   withAlertActions,
   withProjectsActions,
-  withSettings(({ projectSettings }) => ({
-    projectsTableSize: projectSettings?.tableSize,
-  })),
 )(ProjectsDataTableInner);
 
 const ProjectsTable = styled(DataTable)`

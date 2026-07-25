@@ -32,29 +32,15 @@ import type { InvoiceFormValues } from './utils';
 import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 
-type InvoiceFormRootProps = {
-  invoiceNextNumber?: number;
-  invoiceNumberPrefix?: string;
-  invoiceAutoIncrementMode?: boolean;
-  invoiceCustomerNotes?: string;
-  invoiceTermsConditions?: string;
-};
+type InvoiceFormRootProps = Record<string, never>;
 
 /**
  * Invoice form.
  */
-function InvoiceFormRoot({
-  // #withSettings
-  invoiceNextNumber,
-  invoiceNumberPrefix,
-  invoiceAutoIncrementMode,
-  invoiceCustomerNotes,
-  invoiceTermsConditions,
-}: InvoiceFormRootProps) {
+function InvoiceFormRoot({}: InvoiceFormRootProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const history = useHistory();
@@ -69,7 +55,22 @@ function InvoiceFormRoot({
     editInvoiceMutate,
     submitPayload,
     saleInvoiceState,
+    invoiceSettings,
   } = useInvoiceFormContext();
+
+  const invoiceNextNumber = invoiceSettings?.nextNumber as number | undefined;
+  const invoiceNumberPrefix = invoiceSettings?.numberPrefix as
+    | string
+    | undefined;
+  const invoiceAutoIncrementMode = invoiceSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const invoiceCustomerNotes = invoiceSettings?.customerNotes as
+    | string
+    | undefined;
+  const invoiceTermsConditions = invoiceSettings?.termsConditions as
+    | string
+    | undefined;
 
   // Invoice number.
   const invoiceNumber = transactionNumber(
@@ -210,13 +211,4 @@ function InvoiceFormRoot({
   );
 }
 
-export const InvoiceForm = compose(
-  withDashboardActions,
-  withSettings(({ invoiceSettings }) => ({
-    invoiceNextNumber: invoiceSettings?.nextNumber,
-    invoiceNumberPrefix: invoiceSettings?.numberPrefix,
-    invoiceAutoIncrementMode: invoiceSettings?.autoIncrement,
-    invoiceCustomerNotes: invoiceSettings?.customerNotes,
-    invoiceTermsConditions: invoiceSettings?.termsConditions,
-  })),
-)(InvoiceFormRoot);
+export const InvoiceForm = compose(withDashboardActions)(InvoiceFormRoot);

@@ -1,69 +1,88 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import classNames from 'classnames';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { defaultInitialValues } from './utils';
 import {
   CreateVendorFormSchema,
   EditVendorFormSchema,
 } from './VendorForm.schema';
 import { VendorFormContent } from './VendorFormContent';
 import { useVendorFormContext } from './VendorFormProvider';
-import { AppToaster, Box } from '@/components';
-import { CLASSES } from '@/constants/classes';
+import type { VendorFormSubmitPayload } from './VendorFormProvider';
+import {
+  VendorFormValues,
+  defaultInitialValues,
+  transformFormToCreateRequest,
+  transformFormToEditRequest,
+  transformValuesToForm,
+  transformVendorToForm,
+} from './utils';
+import { AppToaster } from '@/components';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { transformToForm, safeInvoke, parseBoolean } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 /**
  * Vendor form.
  */
 function VendorFormFormikBase({
-  // #ownProps
   initialValues,
   onSubmitSuccess,
   onSubmitError,
   onCancel,
-  className,
+  className: _className,
+}: {
+  initialValues?: Partial<VendorFormValues>;
+  onSubmitSuccess?: (
+    values: VendorFormValues,
+    formArgs: FormikHelpers<VendorFormValues>,
+    submitPayload: VendorFormSubmitPayload,
+    responseData?: unknown,
+  ) => void;
+  onSubmitError?: (
+    values: VendorFormValues,
+    formArgs: FormikHelpers<VendorFormValues>,
+    submitPayload: VendorFormSubmitPayload,
+    errorData?: unknown,
+  ) => void;
+  onCancel?: () => void;
+  className?: string;
 }) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   // Vendor form context.
   const {
-    vendorId,
     vendor,
     contactDuplicate,
     createVendorMutate,
     editVendorMutate,
-    setSubmitPayload,
     submitPayload,
     isNewMode,
   } = useVendorFormContext();
 
-  const initialFormValues = useMemo(
-    () => ({
+  const initialFormValues = useMemo<VendorFormValues>(() => {
+    const merged: VendorFormValues = {
       ...defaultInitialValues,
-      ...transformToForm(initialValues, defaultInitialValues),
-      currency_code: baseCurrency,
-      ...transformToForm(vendor, defaultInitialValues),
-      ...transformToForm(contactDuplicate, defaultInitialValues),
-    }),
-    [vendor, contactDuplicate, baseCurrency, initialValues],
-  );
+      ...transformValuesToForm(initialValues ?? {}, defaultInitialValues),
+      ...transformVendorToForm(vendor, defaultInitialValues),
+      ...transformVendorToForm(contactDuplicate, defaultInitialValues),
+    };
+    if (!merged.currencyCode && baseCurrency) {
+      merged.currencyCode = baseCurrency;
+    }
+    return merged;
+  }, [vendor, contactDuplicate, baseCurrency, initialValues]);
 
   // Handles the form submit.
-  const handleFormSubmit = (values, form) => {
+  const handleFormSubmit = (
+    values: VendorFormValues,
+    form: FormikHelpers<VendorFormValues>,
+  ) => {
     const { setSubmitting, resetForm } = form;
-    const requestForm = {
-      ...values,
-      active: parseBoolean(values.active, true),
-    };
 
     setSubmitting(true);
 
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -72,28 +91,31 @@ function VendorFormFormikBase({
         ),
         intent: Intent.SUCCESS,
       });
-      setSubmitPayload(false);
       setSubmitting(false);
       resetForm();
 
-      safeInvoke(onSubmitSuccess, values, form, submitPayload, response.data);
+      saveInvoke(onSubmitSuccess, values, form, submitPayload);
     };
 
     const onError = () => {
-      setSubmitPayload(false);
       setSubmitting(false);
-
-      safeInvoke(onSubmitError, values, form, submitPayload);
+      saveInvoke(onSubmitError, values, form, submitPayload);
     };
+
     if (isNewMode) {
-      createVendorMutate(requestForm).then(onSuccess).catch(onError);
+      createVendorMutate(transformFormToCreateRequest(values))
+        .then(onSuccess)
+        .catch(onError);
     } else {
-      editVendorMutate([vendor.id, requestForm]).then(onSuccess).catch(onError);
+      if (!vendor) return;
+      editVendorMutate([vendor.id, transformFormToEditRequest(values)])
+        .then(onSuccess)
+        .catch(onError);
     }
   };
 
   return (
-    <Formik
+    <Formik<VendorFormValues>
       validationSchema={
         isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
       }

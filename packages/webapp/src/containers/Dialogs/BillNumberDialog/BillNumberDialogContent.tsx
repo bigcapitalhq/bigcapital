@@ -1,12 +1,10 @@
 // @ts-nocheck
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { DialogContent } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
 import { withBillsActions } from '@/containers/Purchases/Bills/BillsLanding/withBillsActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { useSaveSettings, useSettingsBills } from '@/hooks/query';
 import { compose, optionsMapToArray } from '@/utils';
 
 /**
@@ -14,40 +12,29 @@ import { compose, optionsMapToArray } from '@/utils';
  */
 
 function BillNumberDialogContentInner({
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-
-  // #withSettingsActions
-  requestFetchOptions,
-  requestSubmitOptions,
-
   // #withDialogActions
   closeDialog,
 
   // #withBillsActions
   setBillNumberChanged,
 }) {
-  const queryClient = useQueryClient();
-  const fetchSettings = useQuery({
-    queryKey: ['settings'],
-    queryFn: () => requestFetchOptions({}),
-  });
+  const { data: billSettings, isFetching: isSettingsFetching } =
+    useSettingsBills();
+  const nextNumber = billSettings?.nextNumber as number | undefined;
+  const numberPrefix = billSettings?.numberPrefix as string | undefined;
+
+  const { mutateAsync: saveSettings } = useSaveSettings();
 
   const handleSubmitForm = (values, { setSubmitting }) => {
     const options = optionsMapToArray(values).map((option) => {
       return { key: option.key, ...option, group: 'bills' };
     });
 
-    requestSubmitOptions({ options })
+    saveSettings({ options })
       .then(() => {
         setSubmitting(false);
         closeDialog('bill-number-form');
         setBillNumberChanged(true);
-
-        setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ['settings'] });
-        }, 250);
       })
       .catch(() => {
         setSubmitting(false);
@@ -59,7 +46,7 @@ function BillNumberDialogContentInner({
   };
 
   return (
-    <DialogContent isLoading={fetchSettings.isFetching}>
+    <DialogContent isLoading={isSettingsFetching}>
       <ReferenceNumberForm
         initialNumber={nextNumber}
         initialPrefix={numberPrefix}
@@ -72,10 +59,5 @@ function BillNumberDialogContentInner({
 
 export const BillNumberDialogContent = compose(
   withDialogActions,
-  withSettingsActions,
-  withSettings(({ billsettings }) => ({
-    nextNumber: billsettings?.next_number,
-    numberPrefix: billsettings?.number_prefix,
-  })),
   withBillsActions,
 )(BillNumberDialogContentInner);

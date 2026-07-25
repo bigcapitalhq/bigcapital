@@ -5,10 +5,15 @@ import type {
   Account,
   BankingAccountSummaryResponse,
   BankingAccountsListResponse,
+  SettingsGroup,
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import { useAppQueryString } from '@/hooks';
-import { useCashflowAccounts, useAccount } from '@/hooks/query';
+import {
+  useCashflowAccounts,
+  useAccount,
+  useSettingsCashflowTransactions,
+} from '@/hooks/query';
 import { useGetBankAccountSummaryMeta } from '@/hooks/query/banking';
 
 /**
@@ -26,6 +31,7 @@ export interface AccountTransactionsContextValue {
   cashflowAccounts: BankingAccountsListResponse;
   currentAccount?: Account;
   bankAccountMetaSummary?: BankAccountSummaryMeta;
+  cashflowTransactionsSettings: SettingsGroup | undefined;
 
   isCashFlowAccountsFetching: boolean;
   isCashFlowAccountsLoading: boolean;
@@ -89,6 +95,10 @@ function AccountTransactionsProvider({
     isFetching: isBankAccountMetaSummaryFetching,
   } = useGetBankAccountSummaryMeta(accountId);
 
+  // Retrieves cashflow transactions settings.
+  const { data: cashflowTransactionsSettings } =
+    useSettingsCashflowTransactions();
+
   const [scrollableRef, setScrollableRef] = useState<HTMLElement | null>(null);
 
   // Provider payload.
@@ -97,6 +107,7 @@ function AccountTransactionsProvider({
     cashflowAccounts: cashflowAccounts ?? [],
     currentAccount,
     bankAccountMetaSummary,
+    cashflowTransactionsSettings,
 
     isCashFlowAccountsFetching,
     isCashFlowAccountsLoading,

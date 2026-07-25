@@ -1,5 +1,5 @@
-// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
+import React from 'react';
 import { StripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
 import { StripeIntegrationEditForm } from './StripeIntegrationEditForm';
 import {

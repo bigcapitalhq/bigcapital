@@ -13,11 +13,11 @@ import {
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
 import { compose } from '@/utils';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 
 type ReceiptExchangeRateInputFieldRootProps = React.ComponentProps<
   typeof ExchangeRateInputGroup
@@ -63,46 +63,41 @@ export function ReceiptProjectSelectButton({ label }: { label?: string }) {
   return <Button text={label ?? intl.get('select_project')} />;
 }
 
-type ReceiptSyncIncrementSettingsToFormProps = {
-  receiptAutoIncrement?: boolean;
-  receiptNextNumber?: number;
-  receiptNumberPrefix?: string;
-};
+type ReceiptSyncIncrementSettingsToFormProps = Record<string, never>;
 
 /**
  * Syncs receipt auto-increment settings to form.
  * @return {React.ReactNode}
  */
-export const ReceiptSyncIncrementSettingsToForm = compose(
-  withSettings(({ receiptSettings }) => ({
-    receiptAutoIncrement: receiptSettings?.autoIncrement,
-    receiptNextNumber: receiptSettings?.nextNumber,
-    receiptNumberPrefix: receiptSettings?.numberPrefix,
-  })),
-)(({
-  receiptAutoIncrement,
-  receiptNextNumber,
-  receiptNumberPrefix,
-}: ReceiptSyncIncrementSettingsToFormProps) => {
-  const { setFieldValue } = useFormikContext<ReceiptFormValues>();
+export const ReceiptSyncIncrementSettingsToForm =
+  ({}: ReceiptSyncIncrementSettingsToFormProps) => {
+    const { receiptSettings } = useReceiptFormContext();
+    const receiptAutoIncrement = receiptSettings?.autoIncrement as
+      | boolean
+      | undefined;
+    const receiptNextNumber = receiptSettings?.nextNumber as number | undefined;
+    const receiptNumberPrefix = receiptSettings?.numberPrefix as
+      | string
+      | undefined;
+    const { setFieldValue } = useFormikContext<ReceiptFormValues>();
 
-  useUpdateEffect(() => {
-    // Do not update if the receipt auto-increment mode is disabled.
-    if (!receiptAutoIncrement) return;
+    useUpdateEffect(() => {
+      // Do not update if the receipt auto-increment mode is disabled.
+      if (!receiptAutoIncrement) return;
 
-    setFieldValue(
-      'receiptNumber',
-      transactionNumber(receiptNumberPrefix, receiptNextNumber),
-    );
-  }, [
-    setFieldValue,
-    receiptNumberPrefix,
-    receiptAutoIncrement,
-    receiptNextNumber,
-  ]);
+      setFieldValue(
+        'receiptNumber',
+        transactionNumber(receiptNumberPrefix, receiptNextNumber),
+      );
+    }, [
+      setFieldValue,
+      receiptNumberPrefix,
+      receiptAutoIncrement,
+      receiptNextNumber,
+    ]);
 
-  return null;
-});
+    return null;
+  };
 
 type ReceiptSyncAutoExRateToFormProps = {
   openDialog: WithDialogActionsProps['openDialog'];

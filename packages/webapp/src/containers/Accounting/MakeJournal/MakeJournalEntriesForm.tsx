@@ -30,24 +30,13 @@ import {
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { CLASSES } from '@/constants/classes';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { compose, transactionNumber } from '@/utils';
-
-type MakeJournalEntriesFormRootProps = {
-  journalNextNumber?: number;
-  journalNumberPrefix?: string;
-  journalAutoIncrement?: boolean;
-};
+import { transactionNumber } from '@/utils';
 
 /**
  * Journal entries form.
  */
-function MakeJournalEntriesFormInner({
-  journalNextNumber,
-  journalNumberPrefix,
-  journalAutoIncrement,
-}: MakeJournalEntriesFormRootProps) {
+function MakeJournalEntriesFormInner() {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   // Journal form context.
@@ -57,7 +46,19 @@ function MakeJournalEntriesFormInner({
     isNewMode,
     manualJournal,
     submitPayload,
+    manualJournalsSettings,
   } = useMakeJournalFormContext();
+
+  // Auto-increment settings derived from the manual journals settings group.
+  const journalNextNumber = manualJournalsSettings?.nextNumber as
+    | number
+    | undefined;
+  const journalNumberPrefix = manualJournalsSettings?.numberPrefix as
+    | string
+    | undefined;
+  const journalAutoIncrement = manualJournalsSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   const history = useHistory();
 
@@ -211,10 +212,4 @@ function MakeJournalEntriesFormInner({
   );
 }
 
-export const MakeJournalEntriesForm = compose(
-  withSettings(({ manualJournalsSettings }) => ({
-    journalNextNumber: manualJournalsSettings?.nextNumber,
-    journalNumberPrefix: manualJournalsSettings?.numberPrefix,
-    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
-  })),
-)(MakeJournalEntriesFormInner);
+export const MakeJournalEntriesForm = MakeJournalEntriesFormInner;

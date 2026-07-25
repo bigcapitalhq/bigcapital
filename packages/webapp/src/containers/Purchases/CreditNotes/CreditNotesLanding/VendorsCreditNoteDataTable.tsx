@@ -22,7 +22,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -31,17 +30,12 @@ interface WithVendorsCreditNotesActionsProps {
   setVendorsCreditNoteSelectedRows: (ids: number[]) => void;
 }
 
-interface WithSettingsProps {
-  creditNoteTableSize?: string | null;
-}
-
 interface VendorsCreditNoteDataTableProps
   extends Pick<WithVendorsCreditNotesProps, 'vendorsCreditNoteTableState'>,
     WithVendorsCreditNotesActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
-    WithDialogActionsProps,
-    WithSettingsProps {}
+    WithDialogActionsProps {}
 
 function VendorsCreditNoteDataTableInner({
   setVendorsCreditNoteTableState,
@@ -50,7 +44,6 @@ function VendorsCreditNoteDataTableInner({
   openAlert,
   openDrawer,
   openDialog,
-  creditNoteTableSize,
 }: VendorsCreditNoteDataTableProps) {
   const history = useHistory();
 
@@ -60,7 +53,11 @@ function VendorsCreditNoteDataTableInner({
     isEmptyStatus,
     isVendorCreditsFetching,
     isVendorCreditsLoading,
+    vendorCreditSettings,
   } = useVendorsCreditNoteListContext();
+  const creditNoteTableSize = vendorCreditSettings?.tableSize as
+    | string
+    | undefined;
 
   const columns = useVendorsCreditNoteTableColumns();
 
@@ -170,9 +167,6 @@ export const VendorsCreditNoteDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ vendorsCreditNoteSetting }: any) => ({
-    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
-  })),
   withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
     vendorsCreditNoteTableState,
   })),

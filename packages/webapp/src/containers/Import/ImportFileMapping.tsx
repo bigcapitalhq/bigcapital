@@ -2,6 +2,7 @@ import { Button, Intent, Position } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { useFormikContext } from 'formik';
 import { useCallback, useMemo } from 'react';
+import type { ImportFileMappingFormValues } from './_types';
 import { ImportStepperStep } from './_types';
 import { getFieldKey } from './_utils';
 import { ImportFileContainer } from './ImportFileContainer';
@@ -24,8 +25,9 @@ export function ImportFileMapping() {
             Bigcapital fields.
           </p>
 
-          {entityColumns.map((entityColumn, index) => (
+          {entityColumns.map((entityColumn) => (
             <ImportFileMappingGroup
+              key={entityColumn.groupKey || entityColumn.groupLabel}
               groupKey={entityColumn.groupKey}
               groupLabel={entityColumn.groupLabel}
               fields={entityColumn.fields}
@@ -41,13 +43,9 @@ export function ImportFileMapping() {
 interface ImportFileMappingGroupProps {
   groupKey: string;
   groupLabel: string;
-  fields: any;
+  fields: EntityColumnField[];
 }
 
-/**
- * Mapping fields group
- * @returns {React.ReactNode}
- */
 function ImportFileMappingGroup({
   groupKey,
   groupLabel,
@@ -76,10 +74,6 @@ interface ImportFileMappingFieldsProps {
   fields: EntityColumnField[];
 }
 
-/**
- * Import mapping fields.
- * @returns {React.ReactNode}
- */
 function ImportFileMappingFields({ fields }: ImportFileMappingFieldsProps) {
   const { sheetColumns } = useImportFileContext();
 
@@ -120,7 +114,7 @@ function ImportFileMappingFields({ fields }: ImportFileMappingFieldsProps) {
 }
 
 function ImportFileMappingFloatingActions() {
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<ImportFileMappingFormValues>();
   const { setStep } = useImportFileContext();
 
   const handleCancelBtnClick = () => {

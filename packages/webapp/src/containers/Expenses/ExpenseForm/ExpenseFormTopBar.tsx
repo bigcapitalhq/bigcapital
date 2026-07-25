@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
@@ -18,13 +17,10 @@ import { useFeatureCan } from '@/hooks/state';
  * @returns
  */
 export function ExpenseFormTopBar() {
-  // Features guard.
   const { featureCan } = useFeatureCan();
 
-  // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
 
-  // Can't display the navigation bar if  branches feature is not enabled.
   if (!featureCan(Features.Branches)) {
     return null;
   }
@@ -41,7 +37,6 @@ export function ExpenseFormTopBar() {
 }
 
 function ExpenseFormSelectBranch() {
-  // Invoice form context.
   const { branches, isBranchesLoading } = useExpenseFormContext();
 
   return isBranchesLoading ? (

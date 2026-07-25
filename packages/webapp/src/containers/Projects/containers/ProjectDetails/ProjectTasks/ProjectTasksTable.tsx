@@ -12,19 +12,20 @@ import {
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 import { compose } from '@/utils';
 
 function ProjectTaskTableRoot({
-  // #withSettings
-  projectTasksTableSize,
-
   // #withDialog
   openDialog,
   // #withAlertActions
   openAlert,
 }) {
+  // Settings hook.
+  const { projectTasksSettings } = useProjectDetailContext();
+  const projectTasksTableSize = projectTasksSettings?.tableSize;
+
   const { projectTasks } = useProjectTaskContext();
 
   // Retrieve project task table columns.
@@ -71,9 +72,6 @@ function ProjectTaskTableRoot({
 export const ProjectTasksTable = compose(
   withAlertActions,
   withDialogActions,
-  withSettings(({ projectTasksSettings }) => ({
-    projectTasksTableSize: projectTasksSettings?.tableSize,
-  })),
 )(ProjectTaskTableRoot);
 
 const ProjectTaksDataTable = styled(DataTable)`

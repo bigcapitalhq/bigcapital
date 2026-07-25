@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Divider } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { VendorBillingAddress } from './VendorBillingAddress';

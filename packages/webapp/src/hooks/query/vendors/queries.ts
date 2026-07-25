@@ -36,7 +36,7 @@ export function useVendors(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<VendorsListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: vendorsKeys.list(query),
@@ -136,7 +136,7 @@ export function useVendor(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<Vendor>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: vendorsKeys.detail(id),
@@ -154,7 +154,6 @@ export function useEditVendorOpeningBalance(
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
-
   return useMutation({
     ...props,
     mutationFn: ([id, values]: [number, EditVendorOpeningBalanceBody]) =>

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { ImportFileMapping } from './ImportFileMapping';
 import { ImportFilePreview } from './ImportFilePreview';
 import { useImportFileContext } from './ImportFileProvider';

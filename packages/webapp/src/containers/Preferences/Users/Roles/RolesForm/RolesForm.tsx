@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -12,6 +11,7 @@ import { handleDeleteErrors } from '../utils';
 import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
 import { RolesFormContent } from './RolesFormContent';
 import { useRolesFormContext } from './RolesFormProvider';
+import type { RolesFormValues } from './types';
 import {
   getNewRoleInitialValues,
   transformToArray,
@@ -19,14 +19,24 @@ import {
 } from './utils';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { compose, transformToForm } from '@/utils';
 
-const defaultValues = {
+const defaultValues: RolesFormValues = {
   role_name: '',
   role_description: '',
   permissions: {},
   serviceFullAccess: {},
 };
+
+interface RoleErrorPayload {
+  data: { errors: Array<{ type: string }> };
+}
+
+type RolesFormInnerProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
 
 /**
  *  Preferences - Roles Form.
@@ -34,7 +44,7 @@ const defaultValues = {
 function RolesFormInner({
   // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: RolesFormInnerProps) {
   // History context.
   const history = useHistory();
 
@@ -49,18 +59,26 @@ function RolesFormInner({
   } = useRolesFormContext();
 
   // Initial values.
-  const initialValues = {
+  const initialValues: RolesFormValues = {
     ...defaultValues,
     ...(!isEmpty(role)
-      ? transformToForm(transformToObject(role), defaultValues)
-      : getNewRoleInitialValues(permissionsSchema)),
+      ? (transformToForm(
+          transformToObject(role as never),
+          defaultValues,
+        ) as Partial<RolesFormValues>)
+      : (getNewRoleInitialValues(
+          (permissionsSchema as never) || [],
+        ) as Partial<RolesFormValues>)),
   };
   React.useEffect(() => {
-    changePreferencesPageTitle(<T id={'roles.label'} />);
+    changePreferencesPageTitle(intl.get('roles.label'));
   }, [changePreferencesPageTitle]);
 
   // Handle the form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
+  const handleFormSubmit = (
+    values: RolesFormValues,
+    { setSubmitting }: FormikHelpers<RolesFormValues>,
+  ) => {
     const permission = transformToArray(values);
     const form = {
       ...values,
@@ -80,19 +98,23 @@ function RolesFormInner({
       history.push('/preferences/users');
     };
 
-    const onError = ({ data: { errors } }) => {
+    const onError = ({ data: { errors } }: RoleErrorPayload) => {
       setSubmitting(false);
       handleDeleteErrors(errors);
     };
     if (isNewMode) {
-      createRolePermissionMutate(form).then(onSuccess).catch(onError);
+      createRolePermissionMutate(form as never)
+        .then(onSuccess)
+        .catch(onError);
     } else {
-      editRolePermissionMutate([roleId, form]).then(onSuccess).catch(onError);
+      editRolePermissionMutate([roleId, form] as never)
+        .then(onSuccess)
+        .catch(onError);
     }
   };
 
   return (
-    <Formik
+    <Formik<RolesFormValues>
       initialValues={initialValues}
       validationSchema={isNewMode ? CreateRolesFormSchema : EditRolesFormSchema}
       onSubmit={handleFormSubmit}

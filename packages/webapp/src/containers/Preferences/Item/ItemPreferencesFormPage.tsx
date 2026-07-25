@@ -12,7 +12,6 @@ import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import {
   compose,
   optionsMapToArray,
@@ -26,15 +25,12 @@ const defaultFormValues: ItemPreferencesFormValues = {
   preferredInventoryAccount: '',
 };
 
-interface ItemPreferencesFormPageProps extends WithDashboardActionsProps {
-  itemsSettings?: Record<string, unknown>;
-}
+interface ItemPreferencesFormPageProps extends WithDashboardActionsProps {}
 
 function ItemPreferencesFormPageInner({
-  itemsSettings,
   changePreferencesPageTitle,
 }: ItemPreferencesFormPageProps): React.ReactElement {
-  const { saveSettingMutate } = useItemPreferencesFormContext();
+  const { itemsSettings, saveSettingMutate } = useItemPreferencesFormContext();
 
   const initialValues: ItemPreferencesFormValues = {
     ...defaultFormValues,
@@ -84,7 +80,6 @@ function ItemPreferencesFormPageInner({
   );
 }
 
-export const ItemPreferencesFormPage = compose(
-  withSettings(({ itemsSettings }: Record<string, any>) => ({ itemsSettings })),
-  withDashboardActions,
-)(ItemPreferencesFormPageInner);
+export const ItemPreferencesFormPage = compose(withDashboardActions)(
+  ItemPreferencesFormPageInner,
+);

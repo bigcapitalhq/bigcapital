@@ -16,7 +16,6 @@ import { withManualJournalsActions } from './withManualJournalsActions';
 import type { WithManualJournalsProps } from './withManualJournals';
 import type { WithManualJournalsActionsProps } from './withManualJournalsActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
 import {
   Icon,
   AdvancedFilterPopover,
@@ -31,23 +30,16 @@ import {
 import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
 import { useRefreshJournals } from '@/hooks/query/manual-journals';
 import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
-interface WithSettingsProps {
-  manualJournalsTableSize?: string | null;
-}
-
 interface ManualJournalActionsBarInnerProps
   extends Pick<WithManualJournalsProps, 'manualJournalsSelectedRows'>,
     WithManualJournalsActionsProps,
-    WithSettingsActionsProps,
-    WithDialogActionsProps,
-    WithSettingsProps {
+    WithDialogActionsProps {
   manualJournalsFilterConditions: IFilterRole[];
 }
 
@@ -62,20 +54,20 @@ function ManualJournalActionsBarInner({
   manualJournalsFilterConditions,
   manualJournalsSelectedRows = [],
 
-  // #withSettings
-  manualJournalsTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withDialogActions
   openDialog,
 }: ManualJournalActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   // History context.
   const history = useHistory();
 
   // Manual journals context.
-  const { journalsViews, fields } = useManualJournalsContext();
+  const { journalsViews, fields, manualJournalsSettings } =
+    useManualJournalsContext();
+  const manualJournalsTableSize = manualJournalsSettings?.tableSize as
+    | string
+    | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -109,7 +101,9 @@ function ManualJournalActionsBarInner({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size: string) => {
-    addSetting('manualJournals', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'manualJournals', key: 'tableSize', value: size }],
+    });
   };
 
   // Handle the export button click.
@@ -224,14 +218,10 @@ function ManualJournalActionsBarInner({
 export const ManualJournalActionsBar = compose(
   withDialogActions,
   withManualJournalsActions,
-  withSettingsActions,
   withManualJournals(
     ({ manualJournalsTableState, manualJournalsSelectedRows }) => ({
       manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
       manualJournalsSelectedRows,
     }),
   ),
-  withSettings(({ manualJournalsSettings }) => ({
-    manualJournalsTableSize: manualJournalsSettings?.tableSize,
-  })),
 )(ManualJournalActionsBarInner);

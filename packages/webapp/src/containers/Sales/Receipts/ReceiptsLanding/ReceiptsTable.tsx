@@ -18,7 +18,6 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -41,9 +40,6 @@ function ReceiptsDataTable({
 
   // #withDialogAction
   openDialog,
-
-  // #withSettings
-  receiptsTableSize,
 }) {
   const history = useHistory();
 
@@ -54,7 +50,9 @@ function ReceiptsDataTable({
     isReceiptsFetching,
     isReceiptsLoading,
     isEmptyStatus,
+    receiptSettings,
   } = useReceiptsListContext();
+  const receiptsTableSize = receiptSettings?.tableSize;
 
   // Receipts table columns.
   const columns = useReceiptsTableColumns();
@@ -164,7 +162,4 @@ export const ReceiptsTable = compose(
   withDrawerActions,
   withDialogActions,
   withReceipts(({ receiptTableState }) => ({ receiptTableState })),
-  withSettings(({ receiptSettings }) => ({
-    receiptsTableSize: receiptSettings?.tableSize,
-  })),
 )(ReceiptsDataTable);

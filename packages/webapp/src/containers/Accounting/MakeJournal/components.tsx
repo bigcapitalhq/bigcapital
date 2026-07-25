@@ -4,6 +4,7 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 import {
   ExchangeRateInputGroup,
   Icon,
@@ -19,11 +20,10 @@ import {
   ProjectsListFieldCell,
 } from '@/components/DataTableCells';
 import { CellType, Features, Align } from '@/constants';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { compose, transactionNumber } from '@/utils';
+import { transactionNumber } from '@/utils';
 
 type JournalExchangeRateInputFieldRootProps = Omit<
   React.ComponentProps<typeof ExchangeRateInputGroup>,
@@ -220,27 +220,22 @@ export function JournalExchangeRateInputField({
   );
 }
 
-type JournalSyncIncrementSettingsToFormProps = {
-  journalAutoIncrement?: boolean;
-  journalNextNumber?: number;
-  journalNumberPrefix?: string;
-};
-
 /**
  * Syncs journal auto-increment settings to form.
  */
-export const JournalSyncIncrementSettingsToForm = compose(
-  withSettings(({ manualJournalsSettings }) => ({
-    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
-    journalNextNumber: manualJournalsSettings?.nextNumber,
-    journalNumberPrefix: manualJournalsSettings?.numberPrefix,
-  })),
-)(({
-  journalAutoIncrement,
-  journalNextNumber,
-  journalNumberPrefix,
-}: JournalSyncIncrementSettingsToFormProps) => {
+export const JournalSyncIncrementSettingsToForm = () => {
   const { setFieldValue } = useFormikContext<MakeJournalFormValues>();
+  const { manualJournalsSettings } = useMakeJournalFormContext();
+
+  const journalAutoIncrement = manualJournalsSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const journalNextNumber = manualJournalsSettings?.nextNumber as
+    | number
+    | undefined;
+  const journalNumberPrefix = manualJournalsSettings?.numberPrefix as
+    | string
+    | undefined;
 
   useUpdateEffect(() => {
     // Do not update if the journal auto-increment mode is disabled.
@@ -258,7 +253,7 @@ export const JournalSyncIncrementSettingsToForm = compose(
   ]);
 
   return null;
-});
+};
 
 JournalSyncIncrementSettingsToForm.displayName =
   'JournalSyncIncrementSettingsToForm';

@@ -15,6 +15,7 @@ import {
   useCreateWarehouseTransfer,
   useEditWarehouseTransfer,
   useItemInventoryCost,
+  useSettingsWarehouseTransfers,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 
@@ -53,6 +54,9 @@ function WarehouseTransferFormProvider({
     useWarehouseTransfer(warehouseTransferId, {
       enabled: !!warehouseTransferId,
     });
+
+  // Handle fetch warehouse transfer settings.
+  const { data: warehouseTransferSettings } = useSettingsWarehouseTransfers();
   // Fetch warehouses list.
   const {
     data: warehouses,
@@ -118,6 +122,8 @@ function WarehouseTransferFormProvider({
     isItemsCostSuccess,
     itemCostQuery,
     setItemCostQuery,
+
+    warehouseTransferSettings,
   };
 
   return (

@@ -13,11 +13,11 @@ import {
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose } from '@/utils';
 import { transactionNumber } from '@/utils';
+import { useEstimateFormContext } from './EstimateFormProvider';
 
 type EstimateExchangeRateInputFieldRootProps = Omit<
   React.ComponentProps<typeof ExchangeRateInputGroup>,
@@ -73,52 +73,43 @@ export function EstimateProjectSelectButton({
   return <Button text={label ?? intl.get('select_project')} />;
 }
 
-type EstimateIncrementSyncSettingsToFormProps = {
-  estimateNextNumber?: number;
-  estimateNumberPrefix?: string;
-  estimateAutoIncrement?: boolean;
-};
+type EstimateIncrementSyncSettingsToFormProps = Record<string, never>;
 
 /**
  * Syncs the estimate auto-increment settings to estimate form.
  * @returns {React.ReactNode}
  */
-export const EstimateIncrementSyncSettingsToForm = compose(
-  withSettings(
-    ({
-      estimatesSettings,
-    }: {
-      estimatesSettings?: Record<string, unknown>;
-    }) => ({
-      estimateNextNumber: estimatesSettings?.nextNumber,
-      estimateNumberPrefix: estimatesSettings?.numberPrefix,
-      estimateAutoIncrement: estimatesSettings?.autoIncrement,
-    }),
-  ),
-)(({
-  estimateNextNumber,
-  estimateNumberPrefix,
-  estimateAutoIncrement,
-}: EstimateIncrementSyncSettingsToFormProps) => {
-  const { setFieldValue } = useFormikContext<EstimateFormValues>();
+export const EstimateIncrementSyncSettingsToForm =
+  ({}: EstimateIncrementSyncSettingsToFormProps) => {
+    const { estimatesSettings } = useEstimateFormContext();
+    const estimateNextNumber = estimatesSettings?.nextNumber as
+      | number
+      | undefined;
+    const estimateNumberPrefix = estimatesSettings?.numberPrefix as
+      | string
+      | undefined;
+    const estimateAutoIncrement = estimatesSettings?.autoIncrement as
+      | boolean
+      | undefined;
+    const { setFieldValue } = useFormikContext<EstimateFormValues>();
 
-  useUpdateEffect(() => {
-    // Do not update if the estimate auto-increment mode is disabled.
-    if (!estimateAutoIncrement) return;
+    useUpdateEffect(() => {
+      // Do not update if the estimate auto-increment mode is disabled.
+      if (!estimateAutoIncrement) return;
 
-    setFieldValue(
-      'estimateNumber',
-      transactionNumber(estimateNumberPrefix, estimateNextNumber),
-    );
-  }, [
-    setFieldValue,
-    estimateNumberPrefix,
-    estimateNextNumber,
-    estimateAutoIncrement,
-  ]);
+      setFieldValue(
+        'estimateNumber',
+        transactionNumber(estimateNumberPrefix, estimateNextNumber),
+      );
+    }, [
+      setFieldValue,
+      estimateNumberPrefix,
+      estimateNextNumber,
+      estimateAutoIncrement,
+    ]);
 
-  return null;
-});
+    return null;
+  };
 
 type EstimateSyncAutoExRateToFormProps = {
   openDialog: WithDialogActionsProps['openDialog'];

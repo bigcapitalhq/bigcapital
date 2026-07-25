@@ -12,7 +12,6 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 import { useBulkDeleteCreditNotesDialog } from './hooks/use-bulk-delete-credit-notes-dialog';
@@ -36,30 +35,19 @@ import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithCreditNotesActionsProps {
   setCreditNotesTableState: (state: Record<string, any>) => void;
 }
 
-interface WithSettingsActionsProps {
-  addSetting: (group: string, key: string, value: any) => void;
-}
-
-interface WithSettingsProps {
-  creditNoteTableSize?: string | null;
-}
-
 interface CreditNotesActionsBarProps
   extends Pick<WithCreditNotesProps, 'creditNotesSelectedRows'>,
     WithCreditNotesActionsProps,
-    WithSettingsActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {
+    WithDrawerActionsProps {
   creditNoteFilterRoles: any[];
 }
 
@@ -67,14 +55,18 @@ function CreditNotesActionsBarInner({
   creditNoteFilterRoles,
   creditNotesSelectedRows,
   setCreditNotesTableState,
-  creditNoteTableSize,
-  addSetting,
   openDialog,
   openDrawer,
 }: CreditNotesActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
 
-  const { CreditNotesView, fields, refresh } = useCreditNoteListContext();
+  const { CreditNotesView, fields, refresh, creditNoteSettings } =
+    useCreditNoteListContext();
+  const creditNoteTableSize = creditNoteSettings?.tableSize as
+    | string
+    | undefined;
 
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
@@ -90,7 +82,9 @@ function CreditNotesActionsBarInner({
     refresh();
   };
   const handleTableRowSizeChange = (size: any) => {
-    addSetting('creditNote', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'creditNote', key: 'tableSize', value: size }],
+    });
   };
   const handleImportBtnClick = () => {
     history.push('/credit-notes/import');
@@ -218,13 +212,9 @@ function CreditNotesActionsBarInner({
 
 export const CreditNotesActionsBar = compose(
   withCreditNotesActions,
-  withSettingsActions,
   withCreditNotes(({ creditNoteTableState, creditNotesSelectedRows }) => ({
     creditNoteFilterRoles: creditNoteTableState.filterRoles,
     creditNotesSelectedRows,
-  })),
-  withSettings(({ creditNoteSettings }: any) => ({
-    creditNoteTableSize: creditNoteSettings?.tableSize,
   })),
   withDialogActions,
   withDrawerActions,

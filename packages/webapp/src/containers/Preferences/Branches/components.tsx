@@ -1,9 +1,20 @@
-// @ts-nocheck
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { Branch } from '@bigcapital/sdk-ts';
 import { Icon, If } from '@/components';
 import { safeCallback } from '@/utils';
+
+export interface ActionsMenuPayload {
+  onEdit?: (branch: Branch) => void;
+  onDelete?: (branch: Branch) => void;
+  onMarkPrimary?: (branch: Branch) => void;
+}
+
+interface ActionsMenuProps {
+  payload: ActionsMenuPayload;
+  row: { original: Branch };
+}
 
 /**
  * Context menu of Branches.
@@ -11,7 +22,7 @@ import { safeCallback } from '@/utils';
 export function ActionsMenu({
   payload: { onEdit, onDelete, onMarkPrimary },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -37,10 +48,15 @@ export function ActionsMenu({
   );
 }
 
+interface BranchNameCellProps {
+  value: string;
+  row: { original: Branch };
+}
+
 /**
  * Branch name cell.
  */
-function BranchNameCell({ value, row: { original } }) {
+function BranchNameCell({ value, row: { original } }: BranchNameCellProps) {
   return (
     <span>
       {value} {original.primary && <Icon icon={'star-18dp'} iconSize={16} />}
@@ -50,7 +66,6 @@ function BranchNameCell({ value, row: { original } }) {
 
 /**
  * Retrieve branches table columns
- * @returns
  */
 export function useBranchesTableColumns() {
   return React.useMemo(

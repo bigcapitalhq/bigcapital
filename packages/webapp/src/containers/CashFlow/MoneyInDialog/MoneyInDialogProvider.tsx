@@ -5,6 +5,7 @@ import type {
   BankingAccountsListResponse,
   BranchesListResponse,
   CreateCashflowTransactionBody,
+  SettingsGroup,
 } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
@@ -32,6 +33,7 @@ export interface MoneyInDialogContentValue {
   isAccountsLoading: boolean;
   isBranchesSuccess: boolean;
   cashflowAccounts: BankingAccountsListResponse;
+  cashflowSettings: SettingsGroup | undefined;
   submitPayload: SubmitPayload;
   dialogName?: string;
   createCashflowTransactionMutate: (
@@ -88,7 +90,8 @@ function MoneyInDialogProvider({
     useCreateCashflowTransaction();
 
   // Handle fetching settings.
-  const { isLoading: isSettingsLoading } = useSettingCashFlow();
+  const { isLoading: isSettingsLoading, data: cashflowSettings } =
+    useSettingCashFlow();
 
   // Submit payload.
   const [submitPayload, setSubmitPayload] = useState<SubmitPayload>({});
@@ -107,6 +110,8 @@ function MoneyInDialogProvider({
     isBranchesSuccess,
 
     cashflowAccounts: (cashflowAccounts ?? []) as BankingAccountsListResponse,
+
+    cashflowSettings,
 
     submitPayload,
     dialogName,

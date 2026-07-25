@@ -6,57 +6,23 @@ import styled from 'styled-components';
 import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
 import { CustomerFormContent } from './CustomerFormContent';
 import { useCustomerFormContext } from './CustomerFormProvider';
-import { defaultInitialValues } from './utils';
+import {
+  CustomerFormValues,
+  defaultInitialValues,
+  transformCustomerToForm,
+  transformFormToCreateRequest,
+  transformFormToEditRequest,
+  transformValuesToForm,
+} from './utils';
 import { AppToaster } from '@/components';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { transformToForm, saveInvoke, parseBoolean } from '@/utils';
-
-type CustomerFormValues = {
-  customer_type: string;
-  salutation: string;
-  first_name: string;
-  last_name: string;
-  company_name: string;
-  display_name: string;
-
-  email?: string;
-  work_phone?: string;
-  personal_phone?: string;
-  website?: string;
-  note?: string;
-  active: boolean | string;
-
-  billing_address_country: string;
-  billing_address1: string;
-  billing_address2: string;
-  billing_address_city: string;
-  billing_address_state: string;
-  billing_address_postcode?: string;
-  billing_address_phone?: string;
-
-  shipping_address_country: string;
-  shipping_address1: string;
-  shipping_address2: string;
-  shipping_address_city: string;
-  shipping_address_state: string;
-  shipping_address_postcode?: string;
-  shipping_address_phone?: string;
-
-  currency_code: string;
-  opening_balance?: string | number;
-  opening_balance_at?: string;
-  opening_balance_exchange_rate?: string;
-  opening_balance_branch_id?: string;
-
-  [key: string]: any;
-};
+import { saveInvoke } from '@/utils';
 
 type CustomerFormSubmitPayload = {
   noRedirect?: boolean;
 };
 
 type CustomerFormFormikRootProps = {
-  // #ownProps
   initialValues?: Partial<CustomerFormValues>;
   onSubmitSuccess?: (
     values: CustomerFormValues,
@@ -77,12 +43,12 @@ type CustomerFormFormikRootProps = {
 const EMPTY_INITIAL_VALUES: Partial<CustomerFormValues> = {};
 
 function CustomerFormFormikRoot({
-  // #ownProps
   initialValues: initialCustomerValues = EMPTY_INITIAL_VALUES,
   onSubmitSuccess,
   onSubmitError,
   // `onCancel` is accepted for compatibility but currently not used.
-  className,
+  onCancel: _onCancel,
+  className: _className,
 }: CustomerFormFormikRootProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
@@ -95,19 +61,21 @@ function CustomerFormFormikRoot({
     isNewMode,
   } = useCustomerFormContext();
 
-  const initialValues = useMemo<CustomerFormValues>(
-    () =>
-      ({
-        ...defaultInitialValues,
-        currency_code: baseCurrency,
-        ...transformToForm(
-          contactDuplicate ?? customer ?? {},
-          defaultInitialValues,
-        ),
-        ...transformToForm(initialCustomerValues, defaultInitialValues),
-      }) as CustomerFormValues,
-    [customer, contactDuplicate, baseCurrency, initialCustomerValues],
-  );
+  const initialValues = useMemo<CustomerFormValues>(() => {
+    const merged: CustomerFormValues = {
+      ...defaultInitialValues,
+      ...transformCustomerToForm(
+        contactDuplicate ?? customer,
+        defaultInitialValues,
+      ),
+      ...transformValuesToForm(initialCustomerValues, defaultInitialValues),
+    };
+    // Fall back to the organization base currency only if nothing else provided one.
+    if (!merged.currencyCode && baseCurrency) {
+      merged.currencyCode = baseCurrency;
+    }
+    return merged;
+  }, [customer, contactDuplicate, baseCurrency, initialCustomerValues]);
 
   // Handles the form submit.
   const handleFormSubmit = (
@@ -115,12 +83,8 @@ function CustomerFormFormikRoot({
     formArgs: FormikHelpers<CustomerFormValues>,
   ) => {
     const { setSubmitting, resetForm } = formArgs;
-    const formValues = {
-      ...values,
-      active: parseBoolean(values.active, true),
-    };
 
-    const onSuccess = (res: { data?: unknown }) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -131,19 +95,21 @@ function CustomerFormFormikRoot({
       });
       setSubmitting(false);
       resetForm();
-      saveInvoke(onSubmitSuccess, values, formArgs, submitPayload, res.data);
+      saveInvoke(onSubmitSuccess, values, formArgs, submitPayload);
     };
 
     const onError = () => {
       setSubmitting(false);
       saveInvoke(onSubmitError, values, formArgs, submitPayload);
     };
+
     if (isNewMode) {
-      createCustomerMutate(formValues).then(onSuccess).catch(onError);
+      createCustomerMutate(transformFormToCreateRequest(values))
+        .then(onSuccess)
+        .catch(onError);
     } else {
       if (!customer) return;
-
-      editCustomerMutate([customer?.id, formValues])
+      editCustomerMutate([customer.id, transformFormToEditRequest(values)])
         .then(onSuccess)
         .catch(onError);
     }

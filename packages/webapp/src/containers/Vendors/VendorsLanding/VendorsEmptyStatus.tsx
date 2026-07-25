@@ -1,6 +1,4 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from '@/components';
 import { Can, FormattedMessage as T } from '@/components';

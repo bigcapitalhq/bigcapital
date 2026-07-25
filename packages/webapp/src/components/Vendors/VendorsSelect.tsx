@@ -1,16 +1,25 @@
-// @ts-nocheck
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
-import React from 'react';
 import { FSelect } from '../Forms';
 import { createNewItemFromQuery, createNewItemRenderer } from './utils';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useCreateAutofillListener } from '@/hooks/state/autofill';
+
+interface VendorsSelectRootProps extends WithDrawerActionsProps {
+  name: string;
+  items: unknown[];
+  allowCreate?: boolean;
+  [key: string]: unknown;
+}
+
+interface CreatedItem {
+  name: string;
+}
 
 /**
  * Vendor select.
- * @returns {React.ReactNode}
  */
 function VendorsSelectRoot({
   // #withDrawerActions
@@ -22,7 +31,7 @@ function VendorsSelectRoot({
   allowCreate,
 
   ...restProps
-}) {
+}: VendorsSelectRootProps) {
   // Maybe inject create new item props to suggest component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
   const maybeCreateNewItemFromQuery = allowCreate
@@ -31,12 +40,14 @@ function VendorsSelectRoot({
   const { setFieldValue } = useFormikContext();
 
   // Creates a new autofill listener once the quick vendor drawer submits the form.
-  const autofillRef = useCreateAutofillListener((payload: any) => {
-    setFieldValue(name, payload.vendorId);
-  });
+  const autofillRef = useCreateAutofillListener(
+    (payload: { vendorId?: number }) => {
+      setFieldValue(name, payload.vendorId);
+    },
+  );
 
   // Handles the create item click.
-  const handleCreateItemClick = (item) => {
+  const handleCreateItemClick = (item: CreatedItem) => {
     openDrawer(DRAWERS.QUICK_WRITE_VENDOR, {
       autofillRef,
       displayName: item.name,

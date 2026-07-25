@@ -9,25 +9,17 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
 } from '@/components';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  cashflowTansactionsTableSize?: string | null;
-}
-
-interface PendingTransactionsDataTableRootProps extends WithSettingsProps {}
 
 /**
  * Account transactions data table.
  */
-function PendingTransactionsDataTableRoot({
-  // #withSettings
-  cashflowTansactionsTableSize,
-}: PendingTransactionsDataTableRootProps) {
+function PendingTransactionsDataTableRoot() {
   // Retrieve table columns.
   const columns = usePendingTransactionsTableColumns();
-  const { scrollableRef } = useAccountTransactionsContext();
+  const { scrollableRef, cashflowTransactionsSettings } =
+    useAccountTransactionsContext();
+  const cashflowTansactionsTableSize =
+    cashflowTransactionsSettings?.tableSize as string | undefined;
 
   // Retrieve list context.
   const {
@@ -58,8 +50,4 @@ function PendingTransactionsDataTableRoot({
   );
 }
 
-export const PendingTransactionsDataTable = compose(
-  withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
-  })),
-)(PendingTransactionsDataTableRoot);
+export const PendingTransactionsDataTable = PendingTransactionsDataTableRoot;

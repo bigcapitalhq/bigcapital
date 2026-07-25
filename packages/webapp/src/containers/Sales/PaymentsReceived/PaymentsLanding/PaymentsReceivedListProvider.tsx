@@ -6,9 +6,11 @@ import {
   useResourceViews,
   useResourceMeta,
   usePaymentReceives,
+  useSettingsPaymentReceives,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface PaymentsReceivedListProviderProps {
   query?: any;
@@ -28,6 +30,7 @@ export interface PaymentsReceivedListContextValue {
   isResourceLoading: boolean;
   isViewsLoading: boolean;
   isEmptyStatus: boolean;
+  paymentReceiveSettings: SettingsGroup | undefined;
 }
 
 const PaymentsReceivedListContext =
@@ -55,6 +58,8 @@ function PaymentsReceivedListProvider({
     isFetching: isPaymentReceivesFetching,
   } = usePaymentReceives(query);
 
+  const { data: paymentReceiveSettings } = useSettingsPaymentReceives();
+
   const isEmptyStatus =
     isEmpty(paymentReceivesData?.data) &&
     !isPaymentReceivesLoading &&
@@ -77,6 +82,8 @@ function PaymentsReceivedListProvider({
     isResourceLoading,
     isViewsLoading,
     isEmptyStatus,
+
+    paymentReceiveSettings,
   };
 
   return (

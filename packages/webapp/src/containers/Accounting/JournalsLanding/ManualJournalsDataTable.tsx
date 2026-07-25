@@ -21,20 +21,14 @@ import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  manualJournalsTableSize?: string | null;
-}
 
 interface ManualJournalsDataTableProps
   extends Pick<WithManualJournalsProps, 'manualJournalsTableState'>,
     WithManualJournalsActionsProps,
     WithAlertActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {
+    WithDrawerActionsProps {
   onSelectedRowsChange?: (selectedFlatRows: unknown) => void;
 }
 
@@ -57,9 +51,6 @@ function ManualJournalsDataTableInner({
 
   // #ownProps
   onSelectedRowsChange,
-
-  // #withSettings
-  manualJournalsTableSize,
 }: ManualJournalsDataTableProps) {
   // Manual journals context.
   const {
@@ -68,7 +59,11 @@ function ManualJournalsDataTableInner({
     isManualJournalsLoading,
     isManualJournalsFetching,
     isEmptyStatus,
+    manualJournalsSettings,
   } = useManualJournalsContext();
+  const manualJournalsTableSize = manualJournalsSettings?.tableSize as
+    | string
+    | undefined;
 
   const history = useHistory();
 
@@ -183,7 +178,4 @@ export const ManualJournalsDataTable = compose(
   })),
   withAlertActions,
   withDrawerActions,
-  withSettings(({ manualJournalsSettings }) => ({
-    manualJournalsTableSize: manualJournalsSettings?.tableSize,
-  })),
 )(ManualJournalsDataTableInner);

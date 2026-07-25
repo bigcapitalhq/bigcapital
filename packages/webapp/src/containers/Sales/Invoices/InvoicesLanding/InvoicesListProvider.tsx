@@ -2,9 +2,15 @@ import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import type { InvoiceTableRow } from './components';
 import { DashboardInsider } from '@/components/Dashboard';
-import { useResourceViews, useResourceMeta, useInvoices } from '@/hooks/query';
+import {
+  useResourceViews,
+  useResourceMeta,
+  useInvoices,
+  useSettingsInvoices,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface InvoicesListProviderProps {
   query?: any;
@@ -23,6 +29,7 @@ export interface InvoicesListContextValue {
   isResourceLoading: boolean;
   isViewsLoading: boolean;
   isEmptyStatus: boolean;
+  invoiceSettings: SettingsGroup | undefined;
 }
 
 const InvoicesListContext = createContext<InvoicesListContextValue>(
@@ -52,6 +59,8 @@ function InvoicesListProvider({
     isLoading: isInvoicesLoading,
   } = useInvoices(query);
 
+  const { data: invoiceSettings } = useSettingsInvoices();
+
   const isEmptyStatus =
     isEmpty(invoicesData?.data) && !tableStateChanged && !isInvoicesLoading;
 
@@ -71,6 +80,8 @@ function InvoicesListProvider({
     isViewsLoading,
 
     isEmptyStatus,
+
+    invoiceSettings,
   };
 
   return (

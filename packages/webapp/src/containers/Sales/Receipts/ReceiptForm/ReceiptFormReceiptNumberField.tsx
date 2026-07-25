@@ -13,30 +13,25 @@ import {
   FInputGroup,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { compose } from '@/utils';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 
 type ReceiptFormReceiptNumberFieldProps = {
   openDialog: WithDialogActionsProps['openDialog'];
-  receiptAutoIncrement?: boolean;
 };
 
 /**
  * Receipt number field of receipt form.
  */
-export const ReceiptFormReceiptNumberField = compose(
-  withDialogActions,
-  withSettings(({ receiptSettings }) => ({
-    receiptAutoIncrement: receiptSettings?.autoIncrement,
-  })),
-)(({
+export const ReceiptFormReceiptNumberField = compose(withDialogActions)(({
   // #withDialogActions
   openDialog,
-
-  // #withSettings
-  receiptAutoIncrement,
 }: ReceiptFormReceiptNumberFieldProps) => {
   const { values, setFieldValue } = useFormikContext<ReceiptFormValues>();
+  const { receiptSettings } = useReceiptFormContext();
+  const receiptAutoIncrement = receiptSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   const handleReceiptNumberChange = () => {
     openDialog('receipt-number-form', {});

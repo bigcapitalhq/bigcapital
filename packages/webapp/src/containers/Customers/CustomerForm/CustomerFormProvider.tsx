@@ -1,6 +1,7 @@
 import {
   CurrenciesListResponse,
   BranchesListResponse,
+  ContactResponse,
   Customer,
 } from '@bigcapital/sdk-ts';
 import React, { createContext, useState } from 'react';
@@ -16,6 +17,9 @@ import {
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 
+type UseEditCustomerResult = ReturnType<typeof useEditCustomer>;
+type UseCreateCustomerResult = ReturnType<typeof useCreateCustomer>;
+
 type CustomerFormSubmitPayload = {
   noRedirect?: boolean;
 };
@@ -25,7 +29,7 @@ type CustomerFormContextValue = {
   customer?: Customer | undefined;
   currencies: CurrenciesListResponse;
   branches: BranchesListResponse;
-  contactDuplicate?: unknown | undefined;
+  contactDuplicate?: ContactResponse | undefined;
   submitPayload: CustomerFormSubmitPayload;
   isNewMode: boolean;
 
@@ -38,8 +42,8 @@ type CustomerFormContextValue = {
     React.SetStateAction<CustomerFormSubmitPayload>
   >;
 
-  editCustomerMutate: (args: [number, any]) => Promise<any>;
-  createCustomerMutate: (values: any) => Promise<any>;
+  editCustomerMutate: UseEditCustomerResult['mutateAsync'];
+  createCustomerMutate: UseCreateCustomerResult['mutateAsync'];
 };
 
 type CustomerFormProviderProps = {
@@ -58,7 +62,8 @@ export function CustomerFormProvider({
   children,
 }: CustomerFormProviderProps) {
   const { state } = useLocation<{ action?: number | string }>();
-  const contactId = state?.action;
+  const contactId =
+    typeof state?.action === 'number' ? state.action : undefined;
 
   // Features guard.
   const { featureCan } = useFeatureCan();
@@ -90,12 +95,8 @@ export function CustomerFormProvider({
     {},
   );
 
-  const editCustomerMutation = useEditCustomer(undefined) as any;
-  const createCustomerMutation = useCreateCustomer(undefined) as any;
-  const editCustomerMutate =
-    editCustomerMutation.mutateAsync as CustomerFormContextValue['editCustomerMutate'];
-  const createCustomerMutate =
-    createCustomerMutation.mutateAsync as CustomerFormContextValue['createCustomerMutate'];
+  const { mutateAsync: editCustomerMutate } = useEditCustomer();
+  const { mutateAsync: createCustomerMutate } = useCreateCustomer();
 
   // determines whether the form new or duplicate mode.
   const isNewMode = Boolean(contactId) || !customerId;

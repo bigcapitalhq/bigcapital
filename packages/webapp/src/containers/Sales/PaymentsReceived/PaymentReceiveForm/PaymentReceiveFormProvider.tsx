@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
-import type { PaymentReceiveEditPageResponse } from '@bigcapital/sdk-ts';
+import type {
+  PaymentReceiveEditPageResponse,
+  SettingsGroup,
+} from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
 import { useProjects } from '@/containers/Projects/hooks';
 import {
@@ -74,6 +77,7 @@ interface PaymentReceiveFormContextValue {
   isPaymentReceivedStateLoading: boolean;
   paymentReceivedState: UsePaymentReceivedStateResult['data'];
 
+  paymentReceiveSettings: SettingsGroup | undefined;
   isBootLoading: boolean;
 }
 
@@ -118,7 +122,7 @@ function PaymentReceiveFormProvider({
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Fetch payment made settings.
-  useSettingsPaymentReceives();
+  const { data: paymentReceiveSettings } = useSettingsPaymentReceives();
 
   // Fetches customers list.
   const { data: customersData, isLoading: isCustomersLoading } = useCustomers({
@@ -197,6 +201,8 @@ function PaymentReceiveFormProvider({
 
     isPaymentReceivedStateLoading,
     paymentReceivedState,
+
+    paymentReceiveSettings,
 
     isBootLoading,
   };

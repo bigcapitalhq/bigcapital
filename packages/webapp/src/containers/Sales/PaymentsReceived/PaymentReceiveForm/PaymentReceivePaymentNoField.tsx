@@ -13,28 +13,24 @@ import {
   InputPrependButton,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { compose } from '@/utils';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 
 interface PaymentReceivePaymentNoFieldProps
-  extends Pick<WithDialogActionsProps, 'openDialog'> {
-  paymentReceiveAutoIncrement?: boolean;
-}
+  extends Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Payment receive number field.
  */
-export const PaymentReceivePaymentNoField = compose(
-  withDialogActions,
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-)(({
+export const PaymentReceivePaymentNoField = compose(withDialogActions)(({
   openDialog,
-  paymentReceiveAutoIncrement,
 }: PaymentReceivePaymentNoFieldProps) => {
   const { values, setFieldValue } =
     useFormikContext<PaymentReceiveFormValues>();
+  const { paymentReceiveSettings } = usePaymentReceiveFormContext();
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   const handleClickOpenDialog = () => {
     openDialog('payment-receive-number-form');

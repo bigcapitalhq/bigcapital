@@ -1,20 +1,37 @@
-// @ts-nocheck
 import classNames from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { useSettings } from '@/hooks/query';
+import { useSettingsInvoices } from '@/hooks/query';
 
-const PreferencesInvoiceFormContext = React.createContext();
+export interface PreferencesInvoicesBootContextValue {
+  invoiceSettings?: SettingsGroup;
+  isSettingsLoading: boolean;
+}
 
-function PreferencesInvoicesBoot({ ...props }) {
+const PreferencesInvoicesFormContext =
+  React.createContext<PreferencesInvoicesBootContextValue>(
+    {} as PreferencesInvoicesBootContextValue,
+  );
+
+export interface PreferencesInvoicesBootProps {
+  children?: React.ReactNode;
+}
+
+function PreferencesInvoicesBoot({
+  children,
+  ...props
+}: PreferencesInvoicesBootProps) {
   // Fetches organization settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  const { data: invoiceSettings, isLoading: isSettingsLoading } =
+    useSettingsInvoices();
 
   // Provider state.
-  const provider = {
+  const provider: PreferencesInvoicesBootContextValue = {
+    invoiceSettings,
     isSettingsLoading,
   };
 
@@ -32,7 +49,9 @@ function PreferencesInvoicesBoot({ ...props }) {
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesInvoiceFormContext.Provider value={provider} {...props} />
+          <PreferencesInvoicesFormContext.Provider value={provider}>
+            {children}
+          </PreferencesInvoicesFormContext.Provider>
         )}
       </PreferencesInvoicesCard>
     </div>
@@ -47,7 +66,7 @@ const PreferencesInvoicesCard = styled(Card)`
   }
 `;
 
-const usePreferencesInvoiceFormContext = () =>
-  React.useContext(PreferencesInvoiceFormContext);
+export const usePreferencesInvoiceFormContext = () =>
+  React.useContext(PreferencesInvoicesFormContext);
 
-export { PreferencesInvoicesBoot, usePreferencesInvoiceFormContext };
+export { PreferencesInvoicesBoot };

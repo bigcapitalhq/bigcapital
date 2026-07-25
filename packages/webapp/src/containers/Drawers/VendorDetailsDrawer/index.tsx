@@ -1,14 +1,19 @@
-// @ts-nocheck
-import React from 'react';
+import { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { compose } from '@/utils';
 
-const VendorDetailsDrawerContent = React.lazy(() =>
+const VendorDetailsDrawerContent = lazy(() =>
   import('./VendorDetailsDrawerContent').then((m) => ({
     default: m.VendorDetailsDrawerContent,
   })),
 );
+
+interface VendorDetailsDrawerProps {
+  name: string;
+  isOpen: boolean;
+  payload: { vendorId?: number };
+}
 
 /**
  * Vendor details drawer.
@@ -19,7 +24,7 @@ function VendorDetailsDrawer({
   // #withDrawer
   isOpen,
   payload: { vendorId },
-}) {
+}: VendorDetailsDrawerProps) {
   return (
     <Drawer isOpen={isOpen} name={name} size={'750px'}>
       <DrawerSuspense>

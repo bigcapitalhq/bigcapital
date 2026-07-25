@@ -8,7 +8,6 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useSaveSettings, useSettingsEstimates } from '@/hooks/query';
 import { compose, saveInvoke } from '@/utils';
 
@@ -16,11 +15,6 @@ import { compose, saveInvoke } from '@/utils';
  * Estimate number dialog's content.
  */
 function EstimateNumberDialogContentInner({
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
   // #withDialogActions
   closeDialog,
 
@@ -31,7 +25,11 @@ function EstimateNumberDialogContentInner({
   const [referenceFormValues, setReferenceFormValues] = React.useState(null);
 
   // Fetches the estimates settings.
-  const { isLoading: isSettingsLoading } = useSettingsEstimates();
+  const { data: estimatesSettings, isLoading: isSettingsLoading } =
+    useSettingsEstimates();
+  const nextNumber = estimatesSettings?.nextNumber as number | undefined;
+  const numberPrefix = estimatesSettings?.numberPrefix as string | undefined;
+  const autoIncrement = estimatesSettings?.autoIncrement as boolean | undefined;
 
   // Mutates the settings.
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
@@ -91,11 +89,6 @@ function EstimateNumberDialogContentInner({
   );
 }
 
-export const EstimateNumberDialogContent = compose(
-  withDialogActions,
-  withSettings(({ estimatesSettings }) => ({
-    nextNumber: estimatesSettings?.nextNumber,
-    numberPrefix: estimatesSettings?.numberPrefix,
-    autoIncrement: estimatesSettings?.autoIncrement,
-  })),
-)(EstimateNumberDialogContentInner);
+export const EstimateNumberDialogContent = compose(withDialogActions)(
+  EstimateNumberDialogContentInner,
+);

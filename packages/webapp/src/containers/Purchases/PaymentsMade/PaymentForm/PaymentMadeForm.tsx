@@ -34,7 +34,6 @@ import type {
 import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose, orderingLinesIndexes } from '@/utils';
 
@@ -42,21 +41,12 @@ type WithDialogActionsProps = {
   openDialog: (name: string, payload?: Record<string, unknown>) => void;
 };
 
-type WithSettingsProps = {
-  preferredPaymentAccount?: number | string;
-  paymentNextNumber?: number;
-  paymentNumberPrefix?: string;
-};
-
-type PaymentMadeFormRootProps = WithDialogActionsProps & WithSettingsProps;
+type PaymentMadeFormRootProps = WithDialogActionsProps;
 
 /**
  * Payment made form component.
  */
-function PaymentMadeFormInner({
-  preferredPaymentAccount,
-  openDialog,
-}: PaymentMadeFormRootProps) {
+function PaymentMadeFormInner({ openDialog }: PaymentMadeFormRootProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const history = useHistory();
@@ -71,7 +61,12 @@ function PaymentMadeFormInner({
     createPaymentMadeMutate,
     editPaymentMadeMutate,
     isExcessConfirmed,
+    billPaymentSettings,
   } = usePaymentMadeFormContext();
+
+  const preferredPaymentAccount = parseInt(
+    (billPaymentSettings?.withdrawalAccount as string | undefined) ?? '',
+  ) as number | undefined;
 
   // Form initial values.
   const initialValues: PaymentMadeFormValues = useMemo(
@@ -205,11 +200,4 @@ function PaymentMadeFormInner({
   );
 }
 
-export const PaymentMadeForm = compose(
-  withSettings(({ billPaymentSettings }: Record<string, any>) => ({
-    paymentNextNumber: billPaymentSettings?.next_number,
-    paymentNumberPrefix: billPaymentSettings?.number_prefix,
-    preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
-  })),
-  withDialogActions,
-)(PaymentMadeFormInner);
+export const PaymentMadeForm = compose(withDialogActions)(PaymentMadeFormInner);

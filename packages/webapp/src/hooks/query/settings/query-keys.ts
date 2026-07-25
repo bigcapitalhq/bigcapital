@@ -13,6 +13,17 @@ export const SETTING_EDIT_SMS_NOTIFICATION = 'SETTING_EDIT_SMS_NOTIFICATION';
 export const SETTING_CREDIT_NOTES = 'SETTING_CREDIT_NOTES';
 export const SETTING_VENDOR_CREDITS = 'SETTING_VENDOR_CREDITS';
 export const SETTING_WAREHOUSE_TRANSFER = 'SETTING_WAREHOUSE_TRANSFERS';
+export const SETTING_BILLS = 'SETTING_BILLS';
+export const SETTING_BILL_PAYMENTS = 'SETTING_BILL_PAYMENTS';
+export const SETTING_ORGANIZATION = 'SETTING_ORGANIZATION';
+export const SETTING_EXPENSES = 'SETTING_EXPENSES';
+export const SETTING_ACCOUNTS = 'SETTING_ACCOUNTS';
+export const SETTING_CUSTOMERS = 'SETTING_CUSTOMERS';
+export const SETTING_VENDORS = 'SETTING_VENDORS';
+export const SETTING_CASHFLOW_TRANSACTIONS = 'SETTING_CASHFLOW_TRANSACTIONS';
+export const SETTING_PROJECTS = 'SETTING_PROJECTS';
+export const SETTING_PROJECT_TASKS = 'SETTING_PROJECT_TASKS';
+export const SETTING_TIMESHEETS = 'SETTING_TIMESHEETS';
 
 // Query key factory
 export const settingsKeys = {
@@ -27,6 +38,17 @@ export const settingsKeys = {
   creditNotes: () => [SETTING, SETTING_CREDIT_NOTES] as const,
   vendorCredits: () => [SETTING, SETTING_VENDOR_CREDITS] as const,
   warehouseTransfers: () => [SETTING, SETTING_WAREHOUSE_TRANSFER] as const,
+  bills: () => [SETTING, SETTING_BILLS] as const,
+  billPayments: () => [SETTING, SETTING_BILL_PAYMENTS] as const,
+  organization: () => [SETTING, SETTING_ORGANIZATION] as const,
+  expenses: () => [SETTING, SETTING_EXPENSES] as const,
+  accounts: () => [SETTING, SETTING_ACCOUNTS] as const,
+  customers: () => [SETTING, SETTING_CUSTOMERS] as const,
+  vendors: () => [SETTING, SETTING_VENDORS] as const,
+  cashflowTransactions: () => [SETTING, SETTING_CASHFLOW_TRANSACTIONS] as const,
+  projects: () => [SETTING, SETTING_PROJECTS] as const,
+  projectTasks: () => [SETTING, SETTING_PROJECT_TASKS] as const,
+  timesheets: () => [SETTING, SETTING_TIMESHEETS] as const,
   smsNotifications: () => [SETTING_SMS_NOTIFICATIONS] as const,
   smsNotification: (key: string) => [SETTING_SMS_NOTIFICATIONS, key] as const,
 };
@@ -47,4 +69,15 @@ export const SettingsQueryKeys = {
   SETTING_CREDIT_NOTES,
   SETTING_VENDOR_CREDITS,
   SETTING_WAREHOUSE_TRANSFER,
+  SETTING_BILLS,
+  SETTING_BILL_PAYMENTS,
+  SETTING_ORGANIZATION,
+  SETTING_EXPENSES,
+  SETTING_ACCOUNTS,
+  SETTING_CUSTOMERS,
+  SETTING_VENDORS,
+  SETTING_CASHFLOW_TRANSACTIONS,
+  SETTING_PROJECTS,
+  SETTING_PROJECT_TASKS,
+  SETTING_TIMESHEETS,
 } as const;

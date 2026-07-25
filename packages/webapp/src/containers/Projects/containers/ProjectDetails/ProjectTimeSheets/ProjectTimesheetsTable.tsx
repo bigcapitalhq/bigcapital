@@ -13,8 +13,8 @@ import { DialogsName } from '@/constants/dialogs';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 import { compose } from '@/utils';
 
 /**
@@ -22,14 +22,15 @@ import { compose } from '@/utils';
  * @returns
  */
 function ProjectTimesheetsTableRoot({
-  // #withSettings
-  timesheetsTableSize,
-
   // #withDialog
   openDialog,
   // #withAlertActions
   openAlert,
 }) {
+  // Settings hook.
+  const { timesheetsSettings } = useProjectDetailContext();
+  const timesheetsTableSize = timesheetsSettings?.tableSize;
+
   const { projectTimeEntries } = useProjectTimesheetContext();
 
   // Retrieve project timesheet table columns.
@@ -71,9 +72,6 @@ function ProjectTimesheetsTableRoot({
 export const ProjectTimesheetsTable = compose(
   withAlertActions,
   withDialogActions,
-  withSettings(({ timesheetsSettings }) => ({
-    timesheetsTableSize: timesheetsSettings?.tableSize,
-  })),
 )(ProjectTimesheetsTableRoot);
 
 const ProjectTimesheetDataTable = styled(DataTable)`

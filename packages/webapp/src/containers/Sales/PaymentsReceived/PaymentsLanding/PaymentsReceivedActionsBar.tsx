@@ -39,31 +39,20 @@ import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshPaymentReceive } from '@/hooks/query/payment-receives';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithPaymentsReceivedActionsProps {
   setPaymentReceivesTableState: (state: Record<string, any>) => void;
 }
 
-interface WithSettingsActionsProps {
-  addSetting: (group: string, key: string, value: any) => void;
-}
-
-interface WithSettingsProps {
-  paymentReceivesTableSize?: string | null;
-}
-
 interface PaymentsReceivedActionsBarProps
   extends Pick<WithPaymentsReceivedProps, 'paymentReceivesSelectedRows'>,
     WithPaymentsReceivedActionsProps,
-    WithSettingsActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {
+    WithDrawerActionsProps {
   paymentFilterConditions: any[];
 }
 
@@ -71,14 +60,18 @@ function PaymentsReceivedActionsBarInner({
   setPaymentReceivesTableState,
   paymentFilterConditions,
   paymentReceivesSelectedRows,
-  paymentReceivesTableSize,
-  addSetting,
   openDialog,
   openDrawer,
 }: PaymentsReceivedActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
 
-  const { paymentReceivesViews, fields } = usePaymentsReceivedListContext();
+  const { paymentReceivesViews, fields, paymentReceiveSettings } =
+    usePaymentsReceivedListContext();
+  const paymentReceivesTableSize = paymentReceiveSettings?.tableSize as
+    | string
+    | undefined;
 
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
@@ -95,7 +88,9 @@ function PaymentsReceivedActionsBarInner({
     refresh();
   };
   const handleTableRowSizeChange = (size: any) => {
-    addSetting('paymentReceives', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'paymentReceives', key: 'tableSize', value: size }],
+    });
   };
   const handleImportBtnClick = () => {
     history.push('/payments-received/import');
@@ -220,7 +215,6 @@ function PaymentsReceivedActionsBarInner({
 
 export const PaymentsReceivedActionsBar = compose(
   withPaymentsReceivedActions,
-  withSettingsActions,
   withPaymentsReceived(
     ({ paymentReceivesTableState, paymentReceivesSelectedRows }) => ({
       paymentReceivesTableState,
@@ -228,9 +222,6 @@ export const PaymentsReceivedActionsBar = compose(
       paymentReceivesSelectedRows,
     }),
   ),
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
-  })),
   withDialogActions,
   withDrawerActions,
 )(PaymentsReceivedActionsBarInner);

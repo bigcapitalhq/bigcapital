@@ -8,9 +8,7 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { useSaveSettings } from '@/hooks/query';
+import { useSaveSettings, useSettingCashFlow } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
@@ -21,14 +19,14 @@ function TransactionNumberDialogContentInner({
   initialValues,
   onConfirm,
 
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
   // #withDialogActions
   closeDialog,
 }) {
+  const { data: cashflowSettings } = useSettingCashFlow();
+  const nextNumber = cashflowSettings?.nextNumber as number | undefined;
+  const numberPrefix = cashflowSettings?.numberPrefix as string | undefined;
+  const autoIncrement = cashflowSettings?.autoIncrement as boolean | undefined;
+
   const { mutateAsync: saveSettings } = useSaveSettings();
   const [referenceFormValues, setReferenceFormValues] = React.useState(null);
 
@@ -91,12 +89,6 @@ function TransactionNumberDialogContentInner({
   );
 }
 
-export const TransactionNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
-  withSettings(({ cashflowSetting }) => ({
-    nextNumber: cashflowSetting?.nextNumber,
-    numberPrefix: cashflowSetting?.numberPrefix,
-    autoIncrement: cashflowSetting?.autoIncrement,
-  })),
-)(TransactionNumberDialogContentInner);
+export const TransactionNumberDialogContent = compose(withDialogActions)(
+  TransactionNumberDialogContentInner,
+);

@@ -16,7 +16,6 @@ import { withExpensesActions } from './withExpensesActions';
 import type { WithExpensesProps } from './withExpenses';
 import type { WithExpensesActionsProps } from './withExpensesActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
 import {
   If,
   Can,
@@ -31,20 +30,17 @@ import {
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useRefreshExpenses } from '@/hooks/query/expenses';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
 import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface ExpensesActionsBarInnerProps
   extends Pick<WithExpensesActionsProps, 'setExpensesTableState'>,
-    Pick<WithSettingsActionsProps, 'addSetting'>,
     Pick<WithDialogActionsProps, 'openDialog'>,
     Pick<WithExpensesProps, 'expensesSelectedRows'> {
   expensesFilterConditions: IFilterRole[];
-  expensesTableSize: unknown;
 }
 
 /**
@@ -58,20 +54,17 @@ function ExpensesActionsBar({
   expensesFilterConditions,
   expensesSelectedRows = [],
 
-  // #withSettings
-  expensesTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withDialogActions
   openDialog,
 }: ExpensesActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   // History context.
   const history = useHistory();
 
   // Expenses list context.
-  const { expensesViews, fields } = useExpensesListContext();
+  const { expensesViews, fields, expenseSettings } = useExpensesListContext();
+  const expensesTableSize = expenseSettings?.tableSize as string | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -107,7 +100,9 @@ function ExpensesActionsBar({
   };
   // Handle table row size change.
   const handleTableRowSizeChange = (size: unknown) => {
-    addSetting('expenses', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'expenses', key: 'tableSize', value: size }],
+    });
   };
   // Handle the export button click.
   const handleExportBtnClick = () => {
@@ -220,12 +215,8 @@ function ExpensesActionsBar({
 export const ExpenseActionsBar = compose(
   withDialogActions,
   withExpensesActions,
-  withSettingsActions,
   withExpenses(({ expensesTableState, expensesSelectedRows }) => ({
     expensesFilterConditions: expensesTableState.filterRoles,
     expensesSelectedRows,
-  })),
-  withSettings(({ expenseSettings }) => ({
-    expensesTableSize: expenseSettings?.tableSize,
   })),
 )(ExpensesActionsBar);

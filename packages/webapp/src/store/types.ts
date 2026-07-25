@@ -12,7 +12,6 @@ export * from './preferences/preferences.types';
 export * from './users/users.types';
 export * from './financial-statement/financial-statements.types';
 export * from './item-categories/items-category.type';
-export * from './settings/settings.type';
 export * from './search/search.type';
 export * from './registers/register.type';
 export * from './exchange-rate/exchange.type';

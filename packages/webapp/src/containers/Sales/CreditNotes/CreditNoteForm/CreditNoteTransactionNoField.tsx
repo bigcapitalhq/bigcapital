@@ -13,22 +13,23 @@ import {
   FInputGroup,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { compose } from '@/utils';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
 interface CreditNoteTransactionNoFieldProps
-  extends Pick<WithDialogActionsProps, 'openDialog'> {
-  creditAutoIncrement?: boolean;
-}
+  extends Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Credit note transaction number field.
  */
 const CreditNoteTransactionNoFieldInner = ({
   openDialog,
-  creditAutoIncrement,
 }: CreditNoteTransactionNoFieldProps) => {
   const { values, setFieldValue } = useFormikContext<CreditNoteFormValues>();
+  const { creditNoteSettings } = useCreditNoteFormContext();
+  const creditAutoIncrement = creditNoteSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   // Handle credit number changing.
   const handleCreditNumberChange = () => {
@@ -88,13 +89,8 @@ const CreditNoteTransactionNoFieldInner = ({
   );
 };
 
-export const CreditNoteTransactionNoField = compose(
-  withDialogActions,
-  withSettings(({ creditNoteSettings }) => ({
-    creditAutoIncrement: creditNoteSettings?.autoIncrement,
-    creditNextNumber: creditNoteSettings?.nextNumber,
-    creditNumberPrefix: creditNoteSettings?.numberPrefix,
-  })),
-)(CreditNoteTransactionNoFieldInner);
+export const CreditNoteTransactionNoField = compose(withDialogActions)(
+  CreditNoteTransactionNoFieldInner,
+);
 
 CreditNoteTransactionNoField.displayName = 'CreditNoteTransactionNoField';

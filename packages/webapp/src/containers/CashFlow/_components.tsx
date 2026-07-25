@@ -6,16 +6,10 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { FFormGroup, Icon, InputPrependButton } from '@/components';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useUpdateEffect } from '@/hooks';
+import { useSettingCashFlow } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  transactionAutoIncrement?: boolean;
-  transactionNextNumber?: string | number;
-  transactionNumberPrefix?: string;
-}
 
 /**
  * Minimal slice of the cashflow transaction form values used by the shared
@@ -30,58 +24,54 @@ interface CashflowTransactionNoFormValues {
 /**
  * Syncs cashflow auto-increment settings to the form once update.
  */
-export const MoneyInOutSyncIncrementSettingsToForm = compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionAutoIncrement: cashflowSetting?.autoIncrement,
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-  })),
-)(({
-  // #withSettings
-  transactionAutoIncrement,
-  transactionNextNumber,
-  transactionNumberPrefix,
-}: WithSettingsProps) => {
-  const { setFieldValue } = useFormikContext<CashflowTransactionNoFormValues>();
+export const MoneyInOutSyncIncrementSettingsToForm = compose(withDialogActions)(
+  () => {
+    const { setFieldValue } =
+      useFormikContext<CashflowTransactionNoFormValues>();
+    const { data: cashflowSetting } = useSettingCashFlow();
 
-  useUpdateEffect(() => {
-    // Do not update if the invoice auto-increment is disabled.
-    if (!transactionAutoIncrement) return;
+    const transactionAutoIncrement = cashflowSetting?.autoIncrement as
+      | boolean
+      | undefined;
+    const transactionNextNumber = cashflowSetting?.nextNumber as
+      | string
+      | number
+      | undefined;
+    const transactionNumberPrefix = cashflowSetting?.numberPrefix as
+      | string
+      | undefined;
 
-    const newTransactionNumber = transactionNumber(
-      transactionNumberPrefix,
-      transactionNextNumber,
-    );
-    setFieldValue('transactionNumber', newTransactionNumber);
-  }, [setFieldValue, transactionNumberPrefix, transactionNextNumber]);
+    useUpdateEffect(() => {
+      // Do not update if the invoice auto-increment is disabled.
+      if (!transactionAutoIncrement) return;
 
-  return null;
-});
+      const newTransactionNumber = transactionNumber(
+        transactionNumberPrefix,
+        transactionNextNumber,
+      );
+      setFieldValue('transactionNumber', newTransactionNumber);
+    }, [setFieldValue, transactionNumberPrefix, transactionNextNumber]);
+
+    return null;
+  },
+);
 
 interface MoneyInOutTransactionNoFieldProps
-  extends WithSettingsProps,
-    Pick<WithDialogActionsProps, 'openDialog'> {}
+  extends Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Money In/Out transaction number field.
  */
-export const MoneyInOutTransactionNoField = compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionAutoIncrement: cashflowSetting?.autoIncrement,
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-  })),
-)(({
-  // #withDialogActions
+export const MoneyInOutTransactionNoField = compose(withDialogActions)(({
   openDialog,
-
-  // #withSettings
-  transactionAutoIncrement,
 }: MoneyInOutTransactionNoFieldProps) => {
   const { values, setFieldValue } =
     useFormikContext<CashflowTransactionNoFormValues>();
+  const { data: cashflowSetting } = useSettingCashFlow();
+
+  const transactionAutoIncrement = cashflowSetting?.autoIncrement as
+    | boolean
+    | undefined;
 
   // Handle tranaction number changing.
   const handleTransactionNumberChange = () => {

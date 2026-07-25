@@ -1,53 +1,58 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import { defaultTo } from 'lodash';
 import moment from 'moment';
-import React from 'react';
 import intl from 'react-intl-universal';
 import { CreateCustomerOpeningBalanceFormSchema } from './CustomerOpeningBalanceForm.schema';
 import { CustomerOpeningBalanceFormContent } from './CustomerOpeningBalanceFormContent';
 import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormProvider';
+import type { CustomerOpeningBalanceFormValues } from './utils';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-const defaultInitialValues = {
-  opening_balance: '0',
-  opening_balance_branch_id: '',
-  opening_balance_exchange_rate: 1,
-  opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
+const defaultInitialValues: CustomerOpeningBalanceFormValues = {
+  openingBalance: '0',
+  openingBalanceBranchId: '',
+  openingBalanceExchangeRate: 1,
+  openingBalanceAt: moment(new Date()).format('YYYY-MM-DD'),
 };
+
+interface CustomerOpeningBalanceFormProps extends WithDialogActionsProps {}
 
 /**
  * Customer Opening balance form.
- * @returns
  */
 function CustomerOpeningBalanceFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: CustomerOpeningBalanceFormProps) {
   const { dialogName, customer, editCustomerOpeningBalanceMutate } =
     useCustomerOpeningBalanceContext();
 
   // Initial form values
-  const initialValues = {
+  const initialValues: CustomerOpeningBalanceFormValues = {
     ...defaultInitialValues,
     ...customer,
-    opening_balance: defaultTo(customer.opening_balance, ''),
+    openingBalance: defaultTo(customer.openingBalance, ''),
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: CustomerOpeningBalanceFormValues,
+    { setSubmitting }: FormikHelpers<CustomerOpeningBalanceFormValues>,
+  ) => {
     const formValues = {
-      ...values,
-      opening_balance_at: moment(values.opening_balance_at).format(
-        'YYYY-MM-DD',
-      ),
+      openingBalance: Number(values.openingBalance),
+      openingBalanceAt: moment(values.openingBalanceAt).format('YYYY-MM-DD'),
+      openingBalanceExchangeRate: values.openingBalanceExchangeRate,
+      openingBalanceBranchId: values.openingBalanceBranchId
+        ? Number(values.openingBalanceBranchId)
+        : undefined,
     };
 
     // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('customer_opening_balance.success_message'),
         intent: Intent.SUCCESS,
@@ -56,19 +61,23 @@ function CustomerOpeningBalanceFormInner({
     };
 
     // Handle request response errors.
-    const onError = ({ data: { errors } }) => {
+    const onError = (error: {
+      data?: { errors?: Record<string, unknown> };
+    }) => {
+      const errors = error?.data?.errors;
       if (errors) {
+        // Errors are surfaced via the form schema; nothing to do here.
       }
       setSubmitting(false);
     };
 
-    editCustomerOpeningBalanceMutate([customer.id, formValues])
+    editCustomerOpeningBalanceMutate([customer.id!, formValues])
       .then(onSuccess)
       .catch(onError);
   };
 
   return (
-    <Formik
+    <Formik<CustomerOpeningBalanceFormValues>
       validationSchema={CreateCustomerOpeningBalanceFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}

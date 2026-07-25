@@ -7,9 +7,11 @@ import {
   useResourceMeta,
   useCreditNotes,
   useRefreshCreditNotes,
+  useSettingsCreditNotes,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface CreditNotesListProviderProps {
   query?: any;
@@ -30,6 +32,7 @@ export interface CreditNotesListContextValue {
   isCreditNotesLoading: boolean;
   isViewsLoading: boolean;
   isEmptyStatus: boolean;
+  creditNoteSettings: SettingsGroup | undefined;
 }
 
 const CreditNoteListContext = React.createContext<CreditNotesListContextValue>(
@@ -58,6 +61,8 @@ function CreditNotesListProvider({
     isLoading: isCreditNotesLoading,
   } = useCreditNotes(query);
 
+  const { data: creditNoteSettings } = useSettingsCreditNotes();
+
   const isEmptyStatus =
     isEmpty(creditNotesData?.data) &&
     !isCreditNotesLoading &&
@@ -81,6 +86,8 @@ function CreditNotesListProvider({
     isCreditNotesLoading,
     isViewsLoading,
     isEmptyStatus,
+
+    creditNoteSettings,
   };
 
   return (

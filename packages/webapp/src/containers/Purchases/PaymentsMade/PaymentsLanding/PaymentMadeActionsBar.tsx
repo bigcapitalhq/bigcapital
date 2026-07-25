@@ -6,7 +6,6 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { withPaymentMade } from './withPaymentMade';
@@ -27,45 +26,38 @@ import {
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshPaymentMades } from '@/hooks/query/payment-mades';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithPaymentMadeActionsProps {
   setPaymentMadesTableState: (state: Record<string, any>) => void;
 }
 
-interface WithSettingsActionsProps {
-  addSetting: (group: string, key: string, value: any) => void;
-}
-
-interface WithSettingsProps {
-  paymentMadesTableSize?: string | null;
-}
-
 interface PaymentMadeActionsBarProps
   extends Pick<WithPaymentMadeProps, never>,
     WithPaymentMadeActionsProps,
-    WithSettingsActionsProps,
-    WithDialogActionsProps,
-    WithSettingsProps {
+    WithDialogActionsProps {
   paymentMadesFilterConditions: any[];
 }
 
 function PaymentMadeActionsBarInner({
   setPaymentMadesTableState,
   paymentMadesFilterConditions,
-  paymentMadesTableSize,
   openDialog,
-  addSetting,
 }: PaymentMadeActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
 
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
-  const { paymentMadesViews, fields } = usePaymentMadesListContext();
+  const { paymentMadesViews, fields, billPaymentSettings } =
+    usePaymentMadesListContext();
+  const paymentMadesTableSize = billPaymentSettings?.tableSize as
+    | string
+    | undefined;
 
   const { refresh } = useRefreshPaymentMades();
 
@@ -79,7 +71,9 @@ function PaymentMadeActionsBarInner({
     refresh();
   };
   const handleTableRowSizeChange = (size: any) => {
-    addSetting('billPayments', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'billPayments', key: 'tableSize', value: size }],
+    });
   };
   const handleImportBtnClick = () => {
     history.push('/payments-made/import');
@@ -170,12 +164,8 @@ function PaymentMadeActionsBarInner({
 
 export const PaymentMadeActionsBar = compose(
   withPaymentMadeActions,
-  withSettingsActions,
   withPaymentMade(({ paymentMadesTableState }) => ({
     paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
-  })),
-  withSettings(({ billPaymentSettings }: any) => ({
-    paymentMadesTableSize: billPaymentSettings?.tableSize,
   })),
   withDialogActions,
 )(PaymentMadeActionsBarInner);

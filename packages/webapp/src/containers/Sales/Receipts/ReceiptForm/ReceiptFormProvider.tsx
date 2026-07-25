@@ -54,6 +54,7 @@ type ReceiptFormContextValue = {
   isBranchesLoading: boolean;
   isFeatureLoading: boolean;
   isSettingLoading: boolean;
+  receiptSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
   isBranchesSuccess: boolean;
   isWarehousesSuccess: boolean;
 
@@ -164,7 +165,8 @@ function ReceiptFormProvider({
     useGetReceiptState();
 
   // Fetch receipt settings.
-  const { isLoading: isSettingLoading } = useSettingsReceipts();
+  const { data: receiptSettings, isLoading: isSettingLoading } =
+    useSettingsReceipts();
 
   const { mutateAsync: createReceiptMutate } = useCreateReceipt();
   const { mutateAsync: editReceiptMutate } = useEditReceipt();
@@ -205,6 +207,7 @@ function ReceiptFormProvider({
     isBranchesLoading,
     isFeatureLoading,
     isSettingLoading,
+    receiptSettings,
     isBranchesSuccess,
     isWarehousesSuccess,
 

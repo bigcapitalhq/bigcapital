@@ -5,9 +5,15 @@ import type {
   GetExpensesQuery,
   ResourceMetaResponse,
   ResourceViewResponse,
+  SettingsGroup,
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
-import { useExpenses, useResourceMeta, useResourceViews } from '@/hooks/query';
+import {
+  useExpenses,
+  useResourceMeta,
+  useResourceViews,
+  useSettingsExpenses,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
 type ExpensesListContextValue = {
@@ -22,6 +28,8 @@ type ExpensesListContextValue = {
   isResourceMetaFetching: boolean;
   isViewsLoading: boolean;
   isEmptyStatus: boolean;
+
+  expenseSettings: SettingsGroup | undefined;
 };
 
 const ExpensesListContext = createContext<ExpensesListContextValue | undefined>(
@@ -45,6 +53,9 @@ function ExpensesListProvider({
   // Fetch expenses resource views and fields.
   const { data: expensesViews, isLoading: isViewsLoading } =
     useResourceViews('expenses');
+
+  // Expense settings.
+  const { data: expenseSettings } = useSettingsExpenses();
 
   // Fetches the expenses with pagination meta.
   const {
@@ -82,6 +93,8 @@ function ExpensesListProvider({
     isExpensesFetching,
 
     isEmptyStatus,
+
+    expenseSettings,
   };
 
   return (

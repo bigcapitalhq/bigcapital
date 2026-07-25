@@ -14,31 +14,26 @@ import {
 } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { compose } from '@/utils';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 
 type InvoiceFormInvoiceNumberFieldProps = {
   openDialog: WithDialogActionsProps['openDialog'];
-  invoiceAutoIncrement?: boolean;
 };
 
 /**
  * Invoice number field of invoice form.
  */
-export const InvoiceFormInvoiceNumberField = compose(
-  withDialogActions,
-  withSettings(({ invoiceSettings }) => ({
-    invoiceAutoIncrement: invoiceSettings?.autoIncrement,
-  })),
-)(({
+export const InvoiceFormInvoiceNumberField = compose(withDialogActions)(({
   // #withDialogActions
   openDialog,
-
-  // #withSettings
-  invoiceAutoIncrement,
 }: InvoiceFormInvoiceNumberFieldProps) => {
   // Formik context.
   const { values, setFieldValue } = useFormikContext<InvoiceFormValues>();
+  const { invoiceSettings } = useInvoiceFormContext();
+  const invoiceAutoIncrement = invoiceSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {

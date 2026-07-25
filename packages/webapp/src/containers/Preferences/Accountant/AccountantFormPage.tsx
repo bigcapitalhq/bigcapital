@@ -7,16 +7,13 @@ import intl from 'react-intl-universal';
 import { AccountantSchema } from './Accountant.schema';
 import { AccountantForm } from './AccountantForm';
 import { useAccountantFormContext } from './AccountantFormProvider';
+import type { AccountantFormValues } from './types';
 import { transferObjectOptionsToArray } from './utils';
 import { AppToaster } from '@/components';
 import {
   withDashboardActions,
   type WithDashboardActionsProps,
 } from '@/containers/Dashboard/withDashboardActions';
-import {
-  withSettings,
-  type WithSettingsProps,
-} from '@/containers/Settings/withSettings';
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 
 import '@/style/pages/Preferences/Accounting.scss';
@@ -38,32 +35,12 @@ const defaultFormValues = flatten({
   },
 }) as AccountantFormValues;
 
-interface AccountantFormValues {
-  organization: {
-    accountingBasis: string;
-  };
-  accounts: {
-    accountCodeRequired: boolean;
-    accountCodeUnique: boolean;
-  };
-  billPayments: {
-    withdrawalAccount: string;
-  };
-  paymentReceives: {
-    preferredDepositAccount: string;
-    preferredAdvanceDeposit: string;
-  };
-}
-
-interface AccountantFormPageInnerProps
-  extends WithDashboardActionsProps,
-    WithSettingsProps {}
+interface AccountantFormPageInnerProps extends WithDashboardActionsProps {}
 
 function AccountantFormPageInner({
   changePreferencesPageTitle,
-  allSettings,
 }: AccountantFormPageInnerProps) {
-  const { saveSettingMutate } = useAccountantFormContext();
+  const { allSettings, saveSettingMutate } = useAccountantFormContext();
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('accountant'));
@@ -107,9 +84,6 @@ function AccountantFormPageInner({
   );
 }
 
-export const AccountantFormPage = compose(
-  withSettings(({ allSettings }) => ({
-    allSettings,
-  })),
-  withDashboardActions,
-)(AccountantFormPageInner);
+export const AccountantFormPage = compose(withDashboardActions)(
+  AccountantFormPageInner,
+);

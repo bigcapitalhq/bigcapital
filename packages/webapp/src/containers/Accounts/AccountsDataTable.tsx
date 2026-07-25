@@ -22,20 +22,14 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  accountsTableSize?: string | null;
-}
 
 interface AccountsDataTableProps
   extends WithAlertActionsProps,
     WithDialogActionsProps,
     WithDrawerActionsProps,
-    WithAccountsTableActionsProps,
-    WithSettingsProps {}
+    WithAccountsTableActionsProps {}
 
 interface ActionsMenuPayload {
   onEdit: (account: AccountTableRow) => void;
@@ -59,14 +53,12 @@ function AccountsDataTableInner({
   // #withDrawerActions
   openDrawer,
 
-  // #withSettings
-  accountsTableSize,
-
   // #withAccountsTableActions
   setAccountsSelectedRows,
 }: AccountsDataTableProps) {
-  const { isAccountsLoading, isAccountsFetching, accounts } =
+  const { isAccountsLoading, isAccountsFetching, accounts, accountsSettings } =
     useAccountsChartContext();
+  const accountsTableSize = accountsSettings?.tableSize as string | undefined;
 
   // Retrieve accounts table columns.
   const columns = useAccountsTableColumns();
@@ -178,7 +170,4 @@ export const AccountsDataTable = compose(
   withDrawerActions,
   withDialogActions,
   withAccountsTableActions,
-  withSettings(({ accountsSettings }) => ({
-    accountsTableSize: accountsSettings?.tableSize,
-  })),
 )(AccountsDataTableInner);

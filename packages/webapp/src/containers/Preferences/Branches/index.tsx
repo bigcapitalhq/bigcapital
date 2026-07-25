@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Branches } from './Branches';
 import { BranchesProvider } from './BranchesProvider';

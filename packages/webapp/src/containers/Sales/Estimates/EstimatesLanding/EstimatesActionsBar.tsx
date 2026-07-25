@@ -36,31 +36,20 @@ import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithEstimatesActionsProps {
   setEstimatesTableState: (state: Record<string, any>) => void;
 }
 
-interface WithSettingsActionsProps {
-  addSetting: (group: string, key: string, value: any) => void;
-}
-
-interface WithSettingsProps {
-  estimatesTableSize?: string | null;
-}
-
 interface EstimateActionsBarProps
   extends Pick<WithEstimatesProps, 'estimatesSelectedRows'>,
     WithEstimatesActionsProps,
-    WithSettingsActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {
+    WithDrawerActionsProps {
   estimatesFilterRoles: any[];
 }
 
@@ -68,13 +57,15 @@ function EstimateActionsBar({
   setEstimatesTableState,
   estimatesFilterRoles,
   estimatesSelectedRows = [],
-  estimatesTableSize,
   openDialog,
   openDrawer,
-  addSetting,
 }: EstimateActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
-  const { estimatesViews, fields } = useEstimatesListContext();
+  const { estimatesViews, fields, estimatesSettings } =
+    useEstimatesListContext();
+  const estimatesTableSize = estimatesSettings?.tableSize as string | undefined;
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   const onClickNewEstimate = () => {
@@ -91,7 +82,9 @@ function EstimateActionsBar({
     refresh();
   };
   const handleTableRowSizeChange = (size: any) => {
-    addSetting('salesEstimates', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'salesEstimates', key: 'tableSize', value: size }],
+    });
   };
   const handleImportBtnClick = () => {
     history.push('/estimates/import');
@@ -222,13 +215,9 @@ function EstimateActionsBar({
 
 export const EstimatesActionsBar = compose(
   withEstimatesActions,
-  withSettingsActions,
   withEstimates(({ estimatesTableState, estimatesSelectedRows }) => ({
     estimatesFilterRoles: estimatesTableState.filterRoles,
     estimatesSelectedRows: estimatesSelectedRows || [],
-  })),
-  withSettings(({ estimatesSettings }: any) => ({
-    estimatesTableSize: estimatesSettings?.tableSize,
   })),
   withDialogActions,
   withDrawerActions,

@@ -5,9 +5,8 @@ import React from 'react';
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 import { SetupOrganizationForm } from './SetupOrganizationForm';
 import { FormattedMessage as T } from '@/components';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { useOrganizationSetup } from '@/hooks/query';
-import { setCookie, compose, transfromToSnakeCase } from '@/utils';
+import { useOrganizationSetup, useSettingsOrganization } from '@/hooks/query';
+import { setCookie, transfromToSnakeCase } from '@/utils';
 
 // Initial values.
 const defaultValues = {
@@ -22,8 +21,9 @@ const defaultValues = {
 /**
  * Setup organization form.
  */
-function SetupOrganizationPageInner({ wizard }) {
+export function SetupOrganizationPage({ wizard }) {
   const { mutateAsync: organizationSetupMutate } = useOrganizationSetup();
+  const { data: organizationSettings } = useSettingsOrganization();
 
   // Validation schema.
   const validationSchema = getSetupOrganizationValidation();
@@ -31,6 +31,18 @@ function SetupOrganizationPageInner({ wizard }) {
   // Initialize values.
   const initialValues = {
     ...defaultValues,
+    ...(organizationSettings
+      ? {
+          name: organizationSettings.name ?? defaultValues.name,
+          location: organizationSettings.location ?? defaultValues.location,
+          baseCurrency:
+            organizationSettings.baseCurrency ?? defaultValues.baseCurrency,
+          language: organizationSettings.language ?? defaultValues.language,
+          fiscalYear:
+            organizationSettings.fiscalYear ?? defaultValues.fiscalYear,
+          timezone: organizationSettings.timezone ?? defaultValues.timezone,
+        }
+      : {}),
   };
 
   // Handle the form submit.
@@ -66,7 +78,3 @@ function SetupOrganizationPageInner({ wizard }) {
     </x.div>
   );
 }
-
-export const SetupOrganizationPage = compose(withSettingsActions)(
-  SetupOrganizationPageInner,
-);
