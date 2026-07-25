@@ -49,9 +49,7 @@ type PaymentReceiveFormRootProps = WithDialogActionsProps;
 /**
  * Payment Receive form.
  */
-function PaymentReceiveFormRoot({
-  openDialog,
-}: PaymentReceiveFormRootProps) {
+function PaymentReceiveFormRoot({ openDialog }: PaymentReceiveFormRootProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const history = useHistory();
@@ -78,10 +76,11 @@ function PaymentReceiveFormRoot({
   const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
     | boolean
     | undefined;
-  const preferredDepositAccount = paymentReceiveSettings?.preferredDepositAccount as
-    | number
-    | string
-    | undefined;
+  const preferredDepositAccount =
+    paymentReceiveSettings?.preferredDepositAccount as
+      | number
+      | string
+      | undefined;
 
   const nextPaymentNumber = transactionNumber(
     paymentReceiveNumberPrefix,

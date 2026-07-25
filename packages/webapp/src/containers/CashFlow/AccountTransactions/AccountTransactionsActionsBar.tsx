@@ -42,10 +42,7 @@ import {
 import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import {
-  useRefreshCashflowTransactions,
-  useSaveSettings,
-} from '@/hooks/query';
+import { useRefreshCashflowTransactions, useSaveSettings } from '@/hooks/query';
 import {
   useUpdateBankAccount,
   useExcludeUncategorizedTransactions,
@@ -88,9 +85,8 @@ function AccountTransactionsActionsBarInner({
   const history = useHistory();
   const { accountId, currentAccount, cashflowTransactionsSettings } =
     useAccountTransactionsContext();
-  const cashflowTansactionsTableSize = cashflowTransactionsSettings?.tableSize as
-    | string
-    | undefined;
+  const cashflowTansactionsTableSize =
+    cashflowTransactionsSettings?.tableSize as string | undefined;
 
   // Refresh cashflow infinity transactions hook.
   const { refresh } = useRefreshCashflowTransactions();

@@ -89,6 +89,6 @@ function InvoiceNumberDialogContentInner({
   );
 }
 
-export const InvoiceNumberDialogContent = compose(
-  withDialogActions,
-)(InvoiceNumberDialogContentInner);
+export const InvoiceNumberDialogContent = compose(withDialogActions)(
+  InvoiceNumberDialogContentInner,
+);

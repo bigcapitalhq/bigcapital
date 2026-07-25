@@ -40,11 +40,7 @@ export const handleContactRenderer = (
   contact: VendorSelectRow,
   { handleClick }: ContactListRenderProps,
 ) => (
-  <MenuItem
-    key={contact.id}
-    text={contact.displayName}
-    onClick={handleClick}
-  />
+  <MenuItem key={contact.id} text={contact.displayName} onClick={handleClick} />
 );
 
 // Creates a new item from query.

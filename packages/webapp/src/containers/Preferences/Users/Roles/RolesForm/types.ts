@@ -10,4 +10,3 @@ export interface RolesFormValues {
   permissions: Record<string, boolean>;
   serviceFullAccess: Record<string, boolean | number>;
 }
-

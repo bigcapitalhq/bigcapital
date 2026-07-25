@@ -64,9 +64,7 @@ function ReceiptFormRoot({}: ReceiptFormRootProps) {
   const receiptTermsConditions = receiptSettings?.termsConditions as
     | string
     | undefined;
-  const receiptMessage = receiptSettings?.receiptMessage as
-    | string
-    | undefined;
+  const receiptMessage = receiptSettings?.receiptMessage as string | undefined;
   const preferredDepositAccount = receiptSettings?.preferredDepositAccount as
     | string
     | undefined;

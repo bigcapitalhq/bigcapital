@@ -79,34 +79,37 @@ type EstimateIncrementSyncSettingsToFormProps = Record<string, never>;
  * Syncs the estimate auto-increment settings to estimate form.
  * @returns {React.ReactNode}
  */
-export const EstimateIncrementSyncSettingsToForm = ({}: EstimateIncrementSyncSettingsToFormProps) => {
-  const { estimatesSettings } = useEstimateFormContext();
-  const estimateNextNumber = estimatesSettings?.nextNumber as number | undefined;
-  const estimateNumberPrefix = estimatesSettings?.numberPrefix as
-    | string
-    | undefined;
-  const estimateAutoIncrement = estimatesSettings?.autoIncrement as
-    | boolean
-    | undefined;
-  const { setFieldValue } = useFormikContext<EstimateFormValues>();
+export const EstimateIncrementSyncSettingsToForm =
+  ({}: EstimateIncrementSyncSettingsToFormProps) => {
+    const { estimatesSettings } = useEstimateFormContext();
+    const estimateNextNumber = estimatesSettings?.nextNumber as
+      | number
+      | undefined;
+    const estimateNumberPrefix = estimatesSettings?.numberPrefix as
+      | string
+      | undefined;
+    const estimateAutoIncrement = estimatesSettings?.autoIncrement as
+      | boolean
+      | undefined;
+    const { setFieldValue } = useFormikContext<EstimateFormValues>();
 
-  useUpdateEffect(() => {
-    // Do not update if the estimate auto-increment mode is disabled.
-    if (!estimateAutoIncrement) return;
+    useUpdateEffect(() => {
+      // Do not update if the estimate auto-increment mode is disabled.
+      if (!estimateAutoIncrement) return;
 
-    setFieldValue(
-      'estimateNumber',
-      transactionNumber(estimateNumberPrefix, estimateNextNumber),
-    );
-  }, [
-    setFieldValue,
-    estimateNumberPrefix,
-    estimateNextNumber,
-    estimateAutoIncrement,
-  ]);
+      setFieldValue(
+        'estimateNumber',
+        transactionNumber(estimateNumberPrefix, estimateNextNumber),
+      );
+    }, [
+      setFieldValue,
+      estimateNumberPrefix,
+      estimateNextNumber,
+      estimateAutoIncrement,
+    ]);
 
-  return null;
-};
+    return null;
+  };
 
 type EstimateSyncAutoExRateToFormProps = {
   openDialog: WithDialogActionsProps['openDialog'];

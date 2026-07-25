@@ -93,6 +93,6 @@ function JournalNumberDialogContentInner({
   );
 }
 
-export const JournalNumberDialogContent = compose(
-  withDialogActions,
-)(JournalNumberDialogContentInner);
+export const JournalNumberDialogContent = compose(withDialogActions)(
+  JournalNumberDialogContentInner,
+);

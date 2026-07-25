@@ -79,6 +79,6 @@ function PreferencesEstimatesFormPageRoot({
   );
 }
 
-export const PreferencesEstimatesFormPage = compose(
-  withDashboardActions,
-)(PreferencesEstimatesFormPageRoot);
+export const PreferencesEstimatesFormPage = compose(withDashboardActions)(
+  PreferencesEstimatesFormPageRoot,
+);

@@ -20,8 +20,7 @@ import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
 
 // AccountsSelect expects a typed array; the SDK AccountsList is a wider list
 // response — bridge with a loose cast at the boundary.
-const accountsForSelect = (accounts: unknown) =>
-  accounts as never;
+const accountsForSelect = (accounts: unknown) => accounts as never;
 
 /**
  * Accountant form.

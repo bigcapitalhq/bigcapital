@@ -69,34 +69,35 @@ type ReceiptSyncIncrementSettingsToFormProps = Record<string, never>;
  * Syncs receipt auto-increment settings to form.
  * @return {React.ReactNode}
  */
-export const ReceiptSyncIncrementSettingsToForm = ({}: ReceiptSyncIncrementSettingsToFormProps) => {
-  const { receiptSettings } = useReceiptFormContext();
-  const receiptAutoIncrement = receiptSettings?.autoIncrement as
-    | boolean
-    | undefined;
-  const receiptNextNumber = receiptSettings?.nextNumber as number | undefined;
-  const receiptNumberPrefix = receiptSettings?.numberPrefix as
-    | string
-    | undefined;
-  const { setFieldValue } = useFormikContext<ReceiptFormValues>();
+export const ReceiptSyncIncrementSettingsToForm =
+  ({}: ReceiptSyncIncrementSettingsToFormProps) => {
+    const { receiptSettings } = useReceiptFormContext();
+    const receiptAutoIncrement = receiptSettings?.autoIncrement as
+      | boolean
+      | undefined;
+    const receiptNextNumber = receiptSettings?.nextNumber as number | undefined;
+    const receiptNumberPrefix = receiptSettings?.numberPrefix as
+      | string
+      | undefined;
+    const { setFieldValue } = useFormikContext<ReceiptFormValues>();
 
-  useUpdateEffect(() => {
-    // Do not update if the receipt auto-increment mode is disabled.
-    if (!receiptAutoIncrement) return;
+    useUpdateEffect(() => {
+      // Do not update if the receipt auto-increment mode is disabled.
+      if (!receiptAutoIncrement) return;
 
-    setFieldValue(
-      'receiptNumber',
-      transactionNumber(receiptNumberPrefix, receiptNextNumber),
-    );
-  }, [
-    setFieldValue,
-    receiptNumberPrefix,
-    receiptAutoIncrement,
-    receiptNextNumber,
-  ]);
+      setFieldValue(
+        'receiptNumber',
+        transactionNumber(receiptNumberPrefix, receiptNextNumber),
+      );
+    }, [
+      setFieldValue,
+      receiptNumberPrefix,
+      receiptAutoIncrement,
+      receiptNextNumber,
+    ]);
 
-  return null;
-};
+    return null;
+  };
 
 type ReceiptSyncAutoExRateToFormProps = {
   openDialog: WithDialogActionsProps['openDialog'];

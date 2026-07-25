@@ -16,10 +16,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { useMarkBranchAsPrimary } from '@/hooks/query';
 import { compose } from '@/utils';
 
-type BranchesDataTableInnerProps = Pick<
-  WithDialogActionsProps,
-  'openDialog'
-> &
+type BranchesDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
   Pick<WithAlertActionsProps, 'openAlert'>;
 
 /**

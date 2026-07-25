@@ -2,7 +2,12 @@ import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import { transformVendorsStateToQuery } from './utils';
 import { DashboardInsider } from '@/components';
-import { useResourceMeta, useResourceViews, useVendors, useSettingsVendors } from '@/hooks/query';
+import {
+  useResourceMeta,
+  useResourceViews,
+  useVendors,
+  useSettingsVendors,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { TableQuery } from '@/store/store.types';
 import type { SettingsGroup } from '@bigcapital/sdk-ts';

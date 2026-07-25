@@ -79,6 +79,6 @@ function PreferencesReceiptsFormPageRoot({
   );
 }
 
-export const PreferencesReceiptsFormPage = compose(
-  withDashboardActions,
-)(PreferencesReceiptsFormPageRoot);
+export const PreferencesReceiptsFormPage = compose(withDashboardActions)(
+  PreferencesReceiptsFormPageRoot,
+);

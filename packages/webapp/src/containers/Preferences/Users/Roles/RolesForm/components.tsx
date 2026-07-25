@@ -266,10 +266,7 @@ function ModulePermissionsServiceFullAccess() {
   return (
     <If condition={module.serviceFullAccess}>
       <td className="full-access-permission">
-        <Field
-          name={`serviceFullAccess.${service.subject}`}
-          type="checkbox"
-        >
+        <Field name={`serviceFullAccess.${service.subject}`} type="checkbox">
           {({ form, field }) => (
             <PermissionCheckbox
               inline={true}

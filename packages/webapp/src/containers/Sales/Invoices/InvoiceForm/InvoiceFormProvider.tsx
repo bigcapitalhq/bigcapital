@@ -171,10 +171,8 @@ function InvoiceFormProvider({
     useGetSaleInvoiceState();
 
   // Handle fetching settings.
-  const {
-    data: invoiceSettings,
-    isLoading: isSettingsLoading,
-  } = useSettingsInvoices();
+  const { data: invoiceSettings, isLoading: isSettingsLoading } =
+    useSettingsInvoices();
 
   // Create and edit invoice mutations.
   const { mutateAsync: createInvoiceMutate } = useCreateInvoice();

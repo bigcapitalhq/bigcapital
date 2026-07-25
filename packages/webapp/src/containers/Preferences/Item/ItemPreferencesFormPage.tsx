@@ -80,6 +80,6 @@ function ItemPreferencesFormPageInner({
   );
 }
 
-export const ItemPreferencesFormPage = compose(
-  withDashboardActions,
-)(ItemPreferencesFormPageInner);
+export const ItemPreferencesFormPage = compose(withDashboardActions)(
+  ItemPreferencesFormPageInner,
+);

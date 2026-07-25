@@ -3,9 +3,7 @@ import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
-  role_name: Yup.string()
-    .required()
-    .label(intl.get('roles.label.role_name_')),
+  role_name: Yup.string().required().label(intl.get('roles.label.role_name_')),
   role_description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
   permissions: Yup.object().shape({
     subject: Yup.string(),

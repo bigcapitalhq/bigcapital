@@ -103,7 +103,9 @@ function RolesFormInner({
       handleDeleteErrors(errors);
     };
     if (isNewMode) {
-      createRolePermissionMutate(form as never).then(onSuccess).catch(onError);
+      createRolePermissionMutate(form as never)
+        .then(onSuccess)
+        .catch(onError);
     } else {
       editRolePermissionMutate([roleId, form] as never)
         .then(onSuccess)

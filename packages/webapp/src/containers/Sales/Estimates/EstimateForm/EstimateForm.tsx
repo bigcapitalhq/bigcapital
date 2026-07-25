@@ -51,7 +51,9 @@ function EstimateFormInner({}: EstimateFormRootProps) {
     estimatesSettings,
   } = useEstimateFormContext();
 
-  const estimateNextNumber = estimatesSettings?.nextNumber as number | undefined;
+  const estimateNextNumber = estimatesSettings?.nextNumber as
+    | number
+    | undefined;
   const estimateNumberPrefix = estimatesSettings?.numberPrefix as
     | string
     | undefined;

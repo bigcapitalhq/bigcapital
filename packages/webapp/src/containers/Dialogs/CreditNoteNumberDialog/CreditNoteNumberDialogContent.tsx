@@ -89,6 +89,6 @@ function CreditNoteNumberDialogContentInner({
   );
 }
 
-export const CreditNoteNumberDialogContent = compose(
-  withDialogActions,
-)(CreditNoteNumberDialogContentInner);
+export const CreditNoteNumberDialogContent = compose(withDialogActions)(
+  CreditNoteNumberDialogContentInner,
+);

@@ -47,10 +47,7 @@ const ExpenseCategoryHeaderCell = () => {
  */
 const ActionsCellRenderer: React.FC<ActionsCellRendererProps> & {
   cellType?: any;
-} = ({
-  row: { index },
-  payload: { removeRow },
-}) => {
+} = ({ row: { index }, payload: { removeRow } }) => {
   const handleClickRemoveRole = () => {
     removeRow(index);
   };
@@ -203,6 +200,8 @@ export function ExpensesExchangeRateInputField(props: Record<string, any>) {
     />
   );
 }
-(ExpensesExchangeRateInputField as React.FC & {
-  cellType?: any;
-}).cellType = CellType.Field;
+(
+  ExpensesExchangeRateInputField as React.FC & {
+    cellType?: any;
+  }
+).cellType = CellType.Field;

@@ -102,10 +102,8 @@ function MakeJournalProvider({
   const { mutateAsync: editJournalMutate } = useEditJournal();
 
   // Loading the journal settings.
-  const {
-    data: manualJournalsSettings,
-    isLoading: isSettingsLoading,
-  } = useSettingsManualJournals();
+  const { data: manualJournalsSettings, isLoading: isSettingsLoading } =
+    useSettingsManualJournals();
 
   // Fetches the branches list.
   const {

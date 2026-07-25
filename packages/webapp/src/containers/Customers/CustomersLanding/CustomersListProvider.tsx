@@ -2,7 +2,12 @@ import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import { transformCustomersStateToQuery } from './utils';
 import { DashboardInsider } from '@/components';
-import { useResourceMeta, useResourceViews, useCustomers, useSettingsCustomers } from '@/hooks/query';
+import {
+  useResourceMeta,
+  useResourceViews,
+  useCustomers,
+  useSettingsCustomers,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { TableQuery } from '@/store/store.types';
 import type { SettingsGroup } from '@bigcapital/sdk-ts';
@@ -71,9 +76,7 @@ function CustomersListProvider({
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(customersData?.data) &&
-    !isCustomersLoading &&
-    !tableStateChanged;
+    isEmpty(customersData?.data) && !isCustomersLoading && !tableStateChanged;
 
   const state: CustomersListContextValue = {
     customersViews,

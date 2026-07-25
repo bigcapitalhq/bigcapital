@@ -73,10 +73,9 @@ function CustomerActionsBar({
   const history = useHistory();
 
   // Customers list context.
-  const { customersViews, fields, customersSettings } = useCustomersListContext();
-  const customersTableSize = customersSettings?.tableSize as
-    | string
-    | undefined;
+  const { customersViews, fields, customersSettings } =
+    useCustomersListContext();
+  const customersTableSize = customersSettings?.tableSize as string | undefined;
 
   // Customers refresh action.
   const { refresh } = useRefreshCustomers();
@@ -229,12 +228,10 @@ function CustomerActionsBar({
 
 export const CustomersActionsBar = compose(
   withCustomersActions,
-  withCustomers(
-    ({ customersSelectedRows, customersTableState }) => ({
-      customersSelectedRows,
-      customersInactiveMode: customersTableState.inactiveMode,
-      customersFilterConditions: customersTableState.filterRoles,
-    }),
-  ),
+  withCustomers(({ customersSelectedRows, customersTableState }) => ({
+    customersSelectedRows,
+    customersInactiveMode: customersTableState.inactiveMode,
+    customersFilterConditions: customersTableState.filterRoles,
+  })),
   withDialogActions,
 )(CustomerActionsBar);

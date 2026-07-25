@@ -63,7 +63,8 @@ function ManualJournalActionsBarInner({
   const history = useHistory();
 
   // Manual journals context.
-  const { journalsViews, fields, manualJournalsSettings } = useManualJournalsContext();
+  const { journalsViews, fields, manualJournalsSettings } =
+    useManualJournalsContext();
   const manualJournalsTableSize = manualJournalsSettings?.tableSize as
     | string
     | undefined;
@@ -101,9 +102,7 @@ function ManualJournalActionsBarInner({
   // Handle table row size change.
   const handleTableRowSizeChange = (size: string) => {
     saveSettings({
-      options: [
-        { group: 'manualJournals', key: 'tableSize', value: size },
-      ],
+      options: [{ group: 'manualJournals', key: 'tableSize', value: size }],
     });
   };
 

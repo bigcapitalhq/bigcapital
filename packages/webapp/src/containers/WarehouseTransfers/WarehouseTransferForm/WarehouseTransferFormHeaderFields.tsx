@@ -56,15 +56,13 @@ function WarehouseTransferFormHeaderFieldsInner({
 }: WarehouseTransferFormHeaderFieldsProps) {
   const { warehouses, warehouseTransferSettings } =
     useWarehouseTransferFormContext();
-  const warehouseTransferAutoIncrement = warehouseTransferSettings?.autoIncrement as
-    | boolean
-    | undefined;
+  const warehouseTransferAutoIncrement =
+    warehouseTransferSettings?.autoIncrement as boolean | undefined;
   const warehouseTransferNextNumber = warehouseTransferSettings?.nextNumber as
     | number
     | undefined;
-  const warehouseTransferNumberPrefix = warehouseTransferSettings?.numberPrefix as
-    | string
-    | undefined;
+  const warehouseTransferNumberPrefix =
+    warehouseTransferSettings?.numberPrefix as string | undefined;
   const { values } = useFormikContext<WarehouseTransferFormValues>();
 
   // Handle warehouse transfer number changing.

@@ -11,10 +11,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { useApiKeys, useRevokeApiKey } from '@/hooks/query';
 import { compose } from '@/utils';
 
-type ApiKeysDataTableInnerProps = Pick<
-  WithDialogActionsProps,
-  'openDialog'
-> &
+type ApiKeysDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
   Pick<WithAlertActionsProps, 'openAlert'>;
 
 interface RevokeApiKeyError {

@@ -81,25 +81,26 @@ const getInitialDefaultValues = (
 /**
  * Retrieves the initial values of the mapping form.
  */
-export const useImportFileMappingInitialValues = (): ImportFileMappingFormValues => {
-  const { importFile } = useImportFileMapBootContext();
-  const { entityColumns, sheetColumns } = useImportFileContext();
+export const useImportFileMappingInitialValues =
+  (): ImportFileMappingFormValues => {
+    const { importFile } = useImportFileMapBootContext();
+    const { entityColumns, sheetColumns } = useImportFileContext();
 
-  const initialResValues = useMemo(
-    () => transformResToFormValues(importFile?.map || []),
-    [importFile?.map],
-  );
-  const initialDefaultValues = useMemo(
-    () => getInitialDefaultValues(entityColumns, sheetColumns),
-    [entityColumns, sheetColumns],
-  );
+    const initialResValues = useMemo(
+      () => transformResToFormValues(importFile?.map || []),
+      [importFile?.map],
+    );
+    const initialDefaultValues = useMemo(
+      () => getInitialDefaultValues(entityColumns, sheetColumns),
+      [entityColumns, sheetColumns],
+    );
 
-  return useMemo(
-    () =>
-      assign(
-        initialDefaultValues,
-        transformToForm(initialResValues, initialDefaultValues),
-      ),
-    [initialDefaultValues, initialResValues],
-  );
-};
+    return useMemo(
+      () =>
+        assign(
+          initialDefaultValues,
+          transformToForm(initialResValues, initialDefaultValues),
+        ),
+      [initialDefaultValues, initialResValues],
+    );
+  };

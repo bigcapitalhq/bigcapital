@@ -21,14 +21,10 @@ export interface PreferencesReceiptsBootProps {
   children?: React.ReactNode;
 }
 
-function PreferencesReceiptsBoot({
-  children,
-}: PreferencesReceiptsBootProps) {
+function PreferencesReceiptsBoot({ children }: PreferencesReceiptsBootProps) {
   // Fetches organization settings.
-  const {
-    data: receiptSettings,
-    isLoading: isSettingsLoading,
-  } = useSettingsReceipts();
+  const { data: receiptSettings, isLoading: isSettingsLoading } =
+    useSettingsReceipts();
 
   // Provider state.
   const provider: PreferencesReceiptsBootContextValue = {

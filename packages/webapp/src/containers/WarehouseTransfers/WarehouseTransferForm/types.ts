@@ -77,5 +77,7 @@ export interface WarehouseTransferFormContextValue {
     React.SetStateAction<WarehouseTransferItemCostQuery | null>
   >;
 
-  warehouseTransferSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
+  warehouseTransferSettings:
+    | import('@bigcapital/sdk-ts').SettingsGroup
+    | undefined;
 }

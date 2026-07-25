@@ -90,6 +90,6 @@ function VendorCreditNumberDialogContentInner({
   );
 }
 
-export const VendorCreditNumberDialogContent = compose(
-  withDialogActions,
-)(VendorCreditNumberDialogContentInner);
+export const VendorCreditNumberDialogContent = compose(withDialogActions)(
+  VendorCreditNumberDialogContentInner,
+);

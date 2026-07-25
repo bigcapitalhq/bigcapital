@@ -5,10 +5,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-type BranchesEmptyStatusInnerProps = Pick<
-  WithDialogActionsProps,
-  'openDialog'
->;
+type BranchesEmptyStatusInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;
 
 function BranchesEmptyStatusInner({
   // #withDialogActions

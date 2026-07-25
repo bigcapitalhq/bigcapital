@@ -54,9 +54,8 @@ function AccountTransactionsDataTable({
   const columns = useAccountUncategorizedTransactionsColumns();
   const { scrollableRef, cashflowTransactionsSettings } =
     useAccountTransactionsContext();
-  const cashflowTansactionsTableSize = cashflowTransactionsSettings?.tableSize as
-    | string
-    | undefined;
+  const cashflowTansactionsTableSize =
+    cashflowTransactionsSettings?.tableSize as string | undefined;
 
   // Retrieve list context.
   const {

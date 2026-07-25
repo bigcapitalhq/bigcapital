@@ -56,9 +56,7 @@ export function ImportFileUploadForm({ children }: ImportFileUploadFormProps) {
         setSheetColumns(response.sheetColumns);
         // SDK ships a flat `resourceColumns` shape; the runtime response is
         // already grouped (groupKey/groupLabel/fields). Cast at the boundary.
-        setEntityColumns(
-          response.resourceColumns as unknown as EntityColumn[],
-        );
+        setEntityColumns(response.resourceColumns as unknown as EntityColumn[]);
         setStep(ImportStepperStep.Mapping);
         setSubmitting(false);
       })

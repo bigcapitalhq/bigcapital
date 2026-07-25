@@ -18,9 +18,7 @@ export interface CurrenciesProviderProps {
 /**
  * currencies provider.
  */
-function CurrenciesProvider({
-  children,
-}: CurrenciesProviderProps) {
+function CurrenciesProvider({ children }: CurrenciesProviderProps) {
   // fetches the currencies list.
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 

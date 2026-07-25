@@ -84,6 +84,6 @@ function AccountantFormPageInner({
   );
 }
 
-export const AccountantFormPage = compose(
-  withDashboardActions,
-)(AccountantFormPageInner);
+export const AccountantFormPage = compose(withDashboardActions)(
+  AccountantFormPageInner,
+);

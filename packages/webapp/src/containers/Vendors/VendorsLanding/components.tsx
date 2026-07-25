@@ -19,7 +19,13 @@ import { safeCallback, firstLettersArgs } from '@/utils';
 
 type VendorRow = Pick<
   Vendor,
-  'id' | 'active' | 'displayName' | 'workPhone' | 'closingBalance' | 'currencyCode' | 'note'
+  | 'id'
+  | 'active'
+  | 'displayName'
+  | 'workPhone'
+  | 'closingBalance'
+  | 'currencyCode'
+  | 'note'
 >;
 
 type ActionsMenuPayload = {

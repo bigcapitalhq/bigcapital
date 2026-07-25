@@ -93,6 +93,6 @@ function PaymentNumberDialogContent({
   );
 }
 
-export const PaymentReceiveNumberDialogContent = compose(
-  withDialogActions,
-)(PaymentNumberDialogContent);
+export const PaymentReceiveNumberDialogContent = compose(withDialogActions)(
+  PaymentNumberDialogContent,
+);

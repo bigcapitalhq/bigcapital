@@ -128,8 +128,7 @@ export const transformFormToCreateRequest = (
 ): CreateVendorBody => ({
   currencyCode: values.currencyCode,
   active: parseBoolean(values.active, true),
-  openingBalanceExchangeRate:
-    toNumber(values.openingBalanceExchangeRate) ?? 1,
+  openingBalanceExchangeRate: toNumber(values.openingBalanceExchangeRate) ?? 1,
 
   salutation: values.salutation,
   firstName: values.firstName,

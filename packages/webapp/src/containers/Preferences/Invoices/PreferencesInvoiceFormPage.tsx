@@ -79,6 +79,6 @@ function PreferencesInvoiceFormPageInner({
   );
 }
 
-export const PreferencesInvoiceFormPage = compose(
-  withDashboardActions,
-)(PreferencesInvoiceFormPageInner);
+export const PreferencesInvoiceFormPage = compose(withDashboardActions)(
+  PreferencesInvoiceFormPageInner,
+);

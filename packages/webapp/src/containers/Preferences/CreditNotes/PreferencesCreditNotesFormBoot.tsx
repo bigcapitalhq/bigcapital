@@ -25,10 +25,8 @@ function PreferencesCreditNotesBoot({
   children,
 }: PreferencesCreditNotesBootProps) {
   // Fetches organization settings.
-  const {
-    data: creditNoteSettings,
-    isLoading: isSettingsLoading,
-  } = useSettingsCreditNotes();
+  const { data: creditNoteSettings, isLoading: isSettingsLoading } =
+    useSettingsCreditNotes();
 
   // Provider state.
   const provider: PreferencesCreditNotesBootContextValue = {
@@ -69,7 +67,4 @@ const PreferencesCreditNotesCard = styled(Card)`
 const usePreferencesCreditNotesFormContext = () =>
   React.useContext(PreferencesCreditNotesFormContext);
 
-export {
-  PreferencesCreditNotesBoot,
-  usePreferencesCreditNotesFormContext,
-};
+export { PreferencesCreditNotesBoot, usePreferencesCreditNotesFormContext };

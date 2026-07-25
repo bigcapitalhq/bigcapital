@@ -147,10 +147,7 @@ export const getInitialServicesFullAccess = (
     .map((service: PermissionService) => {
       const { subject } = service;
       const isFullChecked = isServiceFullChecked(subject, formPermissions);
-      const isFullUnchecked = isServiceFullUnchecked(
-        subject,
-        formPermissions,
-      );
+      const isFullUnchecked = isServiceFullUnchecked(subject, formPermissions);
       const value = detarmineCheckboxState(isFullChecked, isFullUnchecked);
 
       return [service.subject, value];
@@ -238,7 +235,12 @@ export function isServiceFullUnchecked(
  * Handles permission checkbox change.
  */
 export const handleCheckboxPermissionChange = R.curry(
-  (form: FormLike, permission: PermissionItem, service: PermissionService, event: React.ChangeEvent<HTMLInputElement>) => {
+  (
+    form: FormLike,
+    permission: PermissionItem,
+    service: PermissionService,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { subject } = service;
     const isChecked = event.currentTarget.checked;
     const permKey = `${subject}/${permission.key}`;
@@ -301,7 +303,11 @@ export function getServiceAllPermissionsPaths(subject: string): string[] {
  * Handle full access service checkbox change.
  */
 export const handleCheckboxFullAccessChange = R.curry(
-  (service: PermissionService, form: FormLike, event: React.ChangeEvent<HTMLInputElement>) => {
+  (
+    service: PermissionService,
+    form: FormLike,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const isChecked = event.currentTarget.checked;
     const permsPaths = getServiceAllPermissionsPaths(service.subject);
 

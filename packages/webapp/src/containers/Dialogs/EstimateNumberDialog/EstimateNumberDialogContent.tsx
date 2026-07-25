@@ -89,6 +89,6 @@ function EstimateNumberDialogContentInner({
   );
 }
 
-export const EstimateNumberDialogContent = compose(
-  withDialogActions,
-)(EstimateNumberDialogContentInner);
+export const EstimateNumberDialogContent = compose(withDialogActions)(
+  EstimateNumberDialogContentInner,
+);

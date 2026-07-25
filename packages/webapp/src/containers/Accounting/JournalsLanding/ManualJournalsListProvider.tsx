@@ -1,9 +1,17 @@
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import type { ManualJournalTableRow } from './components';
-import type { ManualJournalsListQuery, SettingsGroup } from '@bigcapital/sdk-ts';
+import type {
+  ManualJournalsListQuery,
+  SettingsGroup,
+} from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
-import { useResourceViews, useResourceMeta, useJournals, useSettingsManualJournals } from '@/hooks/query';
+import {
+  useResourceViews,
+  useResourceMeta,
+  useJournals,
+  useSettingsManualJournals,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 

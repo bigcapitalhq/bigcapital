@@ -1,10 +1,4 @@
-import {
-  Intent,
-  Button,
-  Menu,
-  MenuItem,
-  MenuDivider,
-} from '@blueprintjs/core';
+import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';

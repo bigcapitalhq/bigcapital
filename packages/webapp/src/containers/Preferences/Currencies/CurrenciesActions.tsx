@@ -5,14 +5,9 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-type CurrenciesActionsInnerProps = Pick<
-  WithDialogActionsProps,
-  'openDialog'
->;
+type CurrenciesActionsInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;
 
-function CurrenciesActionsInner({
-  openDialog,
-}: CurrenciesActionsInnerProps) {
+function CurrenciesActionsInner({ openDialog }: CurrenciesActionsInnerProps) {
   const handleClickNewCurrency = useCallback(() => {
     openDialog('currency-form');
   }, [openDialog]);

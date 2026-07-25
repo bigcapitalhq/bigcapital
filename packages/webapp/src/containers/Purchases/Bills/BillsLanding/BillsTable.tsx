@@ -44,8 +44,14 @@ function BillsDataTable({
   openDialog,
   openDrawer,
 }: BillsDataTableProps) {
-  const { bills, pagination, isBillsLoading, isBillsFetching, isEmptyStatus, billSettings } =
-    useBillsListContext();
+  const {
+    bills,
+    pagination,
+    isBillsLoading,
+    isBillsFetching,
+    isEmptyStatus,
+    billSettings,
+  } = useBillsListContext();
   const billsTableSize = billSettings?.tableSize as string | undefined;
 
   const history = useHistory();

@@ -62,9 +62,8 @@ function AccountTransactionsDataTableInner({
 
   const { scrollableRef, cashflowTransactionsSettings } =
     useAccountTransactionsContext();
-  const cashflowTansactionsTableSize = cashflowTransactionsSettings?.tableSize as
-    | string
-    | undefined;
+  const cashflowTansactionsTableSize =
+    cashflowTransactionsSettings?.tableSize as string | undefined;
 
   // Handle view details action.
   const handleViewDetailCashflowTransaction = (

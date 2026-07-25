@@ -35,11 +35,8 @@ import { momentFormatter } from '@/utils';
  * Quick payment receive form fields.
  */
 function QuickPaymentReceiveFormFieldsInner() {
-  const {
-    accounts,
-    branches,
-    paymentReceiveSettings,
-  } = useQuickPaymentReceiveContext();
+  const { accounts, branches, paymentReceiveSettings } =
+    useQuickPaymentReceiveContext();
   const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
     | boolean
     | undefined;

@@ -46,11 +46,7 @@ export function CustomerBillingAddress() {
         <FInputGroup name={'billingAddressCity'} fill />
       </FFormGroup>
 
-      <FFormGroup
-        name={'billingAddressState'}
-        label={intl.get('state')}
-        inline
-      >
+      <FFormGroup name={'billingAddressState'} label={intl.get('state')} inline>
         <FInputGroup name={'billingAddressState'} fill />
       </FFormGroup>
 
@@ -62,11 +58,7 @@ export function CustomerBillingAddress() {
         <FInputGroup name={'billingAddressPostcode'} fill />
       </FFormGroup>
 
-      <FFormGroup
-        name={'billingAddressPhone'}
-        label={intl.get('phone')}
-        inline
-      >
+      <FFormGroup name={'billingAddressPhone'} label={intl.get('phone')} inline>
         <FInputGroup name={'billingAddressPhone'} fill />
       </FFormGroup>
     </Box>

@@ -58,34 +58,37 @@ type CreditNoteSyncIncrementSettingsProps = Record<string, never>;
 /**
  * Syncs credit note auto-increment settings to form.
  */
-export const CreditNoteSyncIncrementSettingsToForm = ({}: CreditNoteSyncIncrementSettingsProps) => {
-  const { creditNoteSettings } = useCreditNoteFormContext();
-  const creditAutoIncrement = creditNoteSettings?.autoIncrement as
-    | boolean
-    | undefined;
-  const creditNextNumber = creditNoteSettings?.nextNumber as number | undefined;
-  const creditNumberPrefix = creditNoteSettings?.numberPrefix as
-    | string
-    | undefined;
-  const { setFieldValue } = useFormikContext<CreditNoteFormValues>();
+export const CreditNoteSyncIncrementSettingsToForm =
+  ({}: CreditNoteSyncIncrementSettingsProps) => {
+    const { creditNoteSettings } = useCreditNoteFormContext();
+    const creditAutoIncrement = creditNoteSettings?.autoIncrement as
+      | boolean
+      | undefined;
+    const creditNextNumber = creditNoteSettings?.nextNumber as
+      | number
+      | undefined;
+    const creditNumberPrefix = creditNoteSettings?.numberPrefix as
+      | string
+      | undefined;
+    const { setFieldValue } = useFormikContext<CreditNoteFormValues>();
 
-  useEffect(() => {
-    // Do not update if the credit note auto-increment mode is disabled.
-    if (!creditAutoIncrement) return;
+    useEffect(() => {
+      // Do not update if the credit note auto-increment mode is disabled.
+      if (!creditAutoIncrement) return;
 
-    setFieldValue(
-      'creditNoteNumber',
-      transactionNumber(creditNumberPrefix, creditNextNumber),
-    );
-  }, [
-    setFieldValue,
-    creditNumberPrefix,
-    creditNextNumber,
-    creditAutoIncrement,
-  ]);
+      setFieldValue(
+        'creditNoteNumber',
+        transactionNumber(creditNumberPrefix, creditNextNumber),
+      );
+    }, [
+      setFieldValue,
+      creditNumberPrefix,
+      creditNextNumber,
+      creditAutoIncrement,
+    ]);
 
-  return null;
-};
+    return null;
+  };
 
 type CreditNoteExchangeRateSyncProps = {
   openDialog: WithDialogActionsProps['openDialog'];

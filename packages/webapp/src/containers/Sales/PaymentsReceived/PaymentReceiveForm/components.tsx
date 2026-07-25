@@ -140,31 +140,31 @@ type SyncIncrementSettingsProps = Record<string, never>;
 /**
  * Syncs the auto-increment settings to payment receive form.
  */
-export const PaymentReceiveSyncIncrementSettingsToForm = ({}: SyncIncrementSettingsProps) => {
-  const { paymentReceiveSettings } = usePaymentReceiveFormContext();
-  const paymentReceiveNextNumber = paymentReceiveSettings?.nextNumber as
-    | number
-    | undefined;
-  const paymentReceiveNumberPrefix = paymentReceiveSettings?.numberPrefix as
-    | string
-    | undefined;
-  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
-    | boolean
-    | undefined;
-  const { setFieldValue } = useFormikContext<PaymentReceiveFormValues>();
+export const PaymentReceiveSyncIncrementSettingsToForm =
+  ({}: SyncIncrementSettingsProps) => {
+    const { paymentReceiveSettings } = usePaymentReceiveFormContext();
+    const paymentReceiveNextNumber = paymentReceiveSettings?.nextNumber as
+      | number
+      | undefined;
+    const paymentReceiveNumberPrefix = paymentReceiveSettings?.numberPrefix as
+      | string
+      | undefined;
+    const paymentReceiveAutoIncrement =
+      paymentReceiveSettings?.autoIncrement as boolean | undefined;
+    const { setFieldValue } = useFormikContext<PaymentReceiveFormValues>();
 
-  useLayoutEffect(() => {
-    if (!paymentReceiveAutoIncrement) return;
+    useLayoutEffect(() => {
+      if (!paymentReceiveAutoIncrement) return;
 
-    setFieldValue(
-      'paymentReceiveNo',
-      transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber),
-    );
-  }, [
-    setFieldValue,
-    paymentReceiveNumberPrefix,
-    paymentReceiveNextNumber,
-    paymentReceiveAutoIncrement,
-  ]);
-  return null;
-};
+      setFieldValue(
+        'paymentReceiveNo',
+        transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber),
+      );
+    }, [
+      setFieldValue,
+      paymentReceiveNumberPrefix,
+      paymentReceiveNextNumber,
+      paymentReceiveAutoIncrement,
+    ]);
+    return null;
+  };

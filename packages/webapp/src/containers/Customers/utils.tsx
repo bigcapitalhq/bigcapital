@@ -18,7 +18,9 @@ export const transformErrors = (errors: unknown) => {
     });
   }
   if (
-    typedErrors.find((error) => error.type === 'SOME.CUSTOMERS.HAVE.SALES_INVOICES')
+    typedErrors.find(
+      (error) => error.type === 'SOME.CUSTOMERS.HAVE.SALES_INVOICES',
+    )
   ) {
     AppToaster.show({
       message: intl.get('some_customers_have_sales_invoices'),

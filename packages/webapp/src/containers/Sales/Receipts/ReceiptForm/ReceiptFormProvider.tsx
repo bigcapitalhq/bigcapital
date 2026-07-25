@@ -165,7 +165,8 @@ function ReceiptFormProvider({
     useGetReceiptState();
 
   // Fetch receipt settings.
-  const { data: receiptSettings, isLoading: isSettingLoading } = useSettingsReceipts();
+  const { data: receiptSettings, isLoading: isSettingLoading } =
+    useSettingsReceipts();
 
   const { mutateAsync: createReceiptMutate } = useCreateReceipt();
   const { mutateAsync: editReceiptMutate } = useEditReceipt();

@@ -62,74 +62,74 @@ interface MoneyInOutTransactionNoFieldProps
 /**
  * Money In/Out transaction number field.
  */
-export const MoneyInOutTransactionNoField = compose(withDialogActions)(
-  ({ openDialog }: MoneyInOutTransactionNoFieldProps) => {
-    const { values, setFieldValue } =
-      useFormikContext<CashflowTransactionNoFormValues>();
-    const { data: cashflowSetting } = useSettingCashFlow();
+export const MoneyInOutTransactionNoField = compose(withDialogActions)(({
+  openDialog,
+}: MoneyInOutTransactionNoFieldProps) => {
+  const { values, setFieldValue } =
+    useFormikContext<CashflowTransactionNoFormValues>();
+  const { data: cashflowSetting } = useSettingCashFlow();
 
-    const transactionAutoIncrement = cashflowSetting?.autoIncrement as
-      | boolean
-      | undefined;
+  const transactionAutoIncrement = cashflowSetting?.autoIncrement as
+    | boolean
+    | undefined;
 
-    // Handle tranaction number changing.
-    const handleTransactionNumberChange = () => {
-      openDialog('transaction-number-form');
-    };
-    // Handle transaction no. field blur.
-    const handleTransactionNoBlur = (
-      event: React.FocusEvent<HTMLInputElement>,
-    ) => {
-      const newValue = event.target.value;
+  // Handle tranaction number changing.
+  const handleTransactionNumberChange = () => {
+    openDialog('transaction-number-form');
+  };
+  // Handle transaction no. field blur.
+  const handleTransactionNoBlur = (
+    event: React.FocusEvent<HTMLInputElement>,
+  ) => {
+    const newValue = event.target.value;
 
-      if (values.transactionNumber !== newValue && transactionAutoIncrement) {
-        openDialog('transaction-number-form', {
-          initialFormValues: {
-            onceManualNumber: newValue,
-            incrementMode: 'manual-transaction',
-          },
-        });
-      }
-      if (!transactionAutoIncrement) {
-        setFieldValue('transactionNumber', values.transactionNumber);
-        setFieldValue('transactionNumberManually', values.transactionNumber);
-      }
-    };
+    if (values.transactionNumber !== newValue && transactionAutoIncrement) {
+      openDialog('transaction-number-form', {
+        initialFormValues: {
+          onceManualNumber: newValue,
+          incrementMode: 'manual-transaction',
+        },
+      });
+    }
+    if (!transactionAutoIncrement) {
+      setFieldValue('transactionNumber', values.transactionNumber);
+      setFieldValue('transactionNumberManually', values.transactionNumber);
+    }
+  };
 
-    // Spread props onto InputGroup to bypass the strict excess-property check
-    // that fires when typing the JSX literal directly (InputGroup's class-component
-    // typing is incompatible with the project's @types/react for inline literals).
-    const inputGroupProps = {
-      minimal: true,
-      value: values.transactionNumber,
-      asyncControl: true,
-      onBlur: handleTransactionNoBlur,
-    };
+  // Spread props onto InputGroup to bypass the strict excess-property check
+  // that fires when typing the JSX literal directly (InputGroup's class-component
+  // typing is incompatible with the project's @types/react for inline literals).
+  const inputGroupProps = {
+    minimal: true,
+    value: values.transactionNumber,
+    asyncControl: true,
+    onBlur: handleTransactionNoBlur,
+  };
 
-    return (
-      <FFormGroup
-        name={'transactionNumber'}
-        label={intl.get('transaction_number')}
-      >
-        <ControlGroup fill={true}>
-          <InputGroup {...inputGroupProps} />
-          <InputPrependButton
-            buttonProps={{
-              onClick: handleTransactionNumberChange,
-              icon: <Icon icon={'settings-18'} />,
-            }}
-            tooltip={true}
-            tooltipProps={{
-              content: (
-                <T
-                  id={'cash_flow.setting_your_auto_generated_transaction_number'}
-                />
-              ),
-              position: Position.BOTTOM_LEFT,
-            }}
-          />
-        </ControlGroup>
-      </FFormGroup>
-    );
-  },
-);
+  return (
+    <FFormGroup
+      name={'transactionNumber'}
+      label={intl.get('transaction_number')}
+    >
+      <ControlGroup fill={true}>
+        <InputGroup {...inputGroupProps} />
+        <InputPrependButton
+          buttonProps={{
+            onClick: handleTransactionNumberChange,
+            icon: <Icon icon={'settings-18'} />,
+          }}
+          tooltip={true}
+          tooltipProps={{
+            content: (
+              <T
+                id={'cash_flow.setting_your_auto_generated_transaction_number'}
+              />
+            ),
+            position: Position.BOTTOM_LEFT,
+          }}
+        />
+      </ControlGroup>
+    </FFormGroup>
+  );
+});

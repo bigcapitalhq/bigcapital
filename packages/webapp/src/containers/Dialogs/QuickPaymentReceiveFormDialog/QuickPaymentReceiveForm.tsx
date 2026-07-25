@@ -39,10 +39,11 @@ function QuickPaymentReceiveFormInner({
   const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
     | boolean
     | undefined;
-  const preferredDepositAccount = paymentReceiveSettings?.preferredDepositAccount as
-    | string
-    | number
-    | undefined;
+  const preferredDepositAccount =
+    paymentReceiveSettings?.preferredDepositAccount as
+      | string
+      | number
+      | undefined;
 
   // Payment receive number.
   const nextPaymentNumber = transactionNumber(
@@ -104,6 +105,6 @@ function QuickPaymentReceiveFormInner({
   );
 }
 
-export const QuickPaymentReceiveForm = compose(
-  withDialogActions,
-)(QuickPaymentReceiveFormInner);
+export const QuickPaymentReceiveForm = compose(withDialogActions)(
+  QuickPaymentReceiveFormInner,
+);

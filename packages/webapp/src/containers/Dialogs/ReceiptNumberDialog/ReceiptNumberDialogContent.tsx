@@ -87,6 +87,6 @@ function ReceiptNumberDialogContentInner({
   );
 }
 
-export const ReceiptNumberDialogContent = compose(
-  withDialogActions,
-)(ReceiptNumberDialogContentInner);
+export const ReceiptNumberDialogContent = compose(withDialogActions)(
+  ReceiptNumberDialogContentInner,
+);

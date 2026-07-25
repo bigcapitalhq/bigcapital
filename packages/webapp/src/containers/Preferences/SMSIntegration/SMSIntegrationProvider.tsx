@@ -18,10 +18,9 @@ export interface SMSIntegrationContextValue {
   isSMSNotificationsFetching: boolean;
 }
 
-const SMSIntegrationContext =
-  React.createContext<SMSIntegrationContextValue>(
-    {} as SMSIntegrationContextValue,
-  );
+const SMSIntegrationContext = React.createContext<SMSIntegrationContextValue>(
+  {} as SMSIntegrationContextValue,
+);
 
 export interface SMSIntegrationProviderProps {
   children?: React.ReactNode;
@@ -30,9 +29,7 @@ export interface SMSIntegrationProviderProps {
 /**
  * SMS Integration provider.
  */
-function SMSIntegrationProvider({
-  children,
-}: SMSIntegrationProviderProps) {
+function SMSIntegrationProvider({ children }: SMSIntegrationProviderProps) {
   //Fetches Organization Settings.
   const { isLoading: isSettingsLoading } = useSettings();
 

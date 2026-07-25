@@ -29,10 +29,7 @@ function SMSMessagesDataTableInner({
   const { mutateAsync: editSMSNotificationMutate } =
     useSettingEditSMSNotification();
 
-  const toggleSmsNotification = (
-    notificationKey: string,
-    value: boolean,
-  ) => {
+  const toggleSmsNotification = (notificationKey: string, value: boolean) => {
     editSMSNotificationMutate({
       key: notificationKey,
       values: { is_notification_enabled: value },

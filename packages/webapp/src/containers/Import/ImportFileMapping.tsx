@@ -9,10 +9,7 @@ import { ImportFileContainer } from './ImportFileContainer';
 import styles from './ImportFileMapping.module.scss';
 import { ImportFileMapBootProvider } from './ImportFileMappingBoot';
 import { ImportFileMappingForm } from './ImportFileMappingForm';
-import {
-  EntityColumnField,
-  useImportFileContext,
-} from './ImportFileProvider';
+import { EntityColumnField, useImportFileContext } from './ImportFileProvider';
 import { Box, FSelect, Group, Hint } from '@/components';
 import { CLASSES } from '@/constants';
 

@@ -38,7 +38,8 @@ export function SetupOrganizationPage({ wizard }) {
           baseCurrency:
             organizationSettings.baseCurrency ?? defaultValues.baseCurrency,
           language: organizationSettings.language ?? defaultValues.language,
-          fiscalYear: organizationSettings.fiscalYear ?? defaultValues.fiscalYear,
+          fiscalYear:
+            organizationSettings.fiscalYear ?? defaultValues.fiscalYear,
           timezone: organizationSettings.timezone ?? defaultValues.timezone,
         }
       : {}),
@@ -77,4 +78,3 @@ export function SetupOrganizationPage({ wizard }) {
     </x.div>
   );
 }
-

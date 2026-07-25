@@ -18,12 +18,7 @@ import { safeCallback } from '@/utils';
 
 type CustomerRow = Pick<
   Customer,
-  | 'id'
-  | 'active'
-  | 'personalPhone'
-  | 'closingBalance'
-  | 'currencyCode'
-  | 'note'
+  'id' | 'active' | 'personalPhone' | 'closingBalance' | 'currencyCode' | 'note'
 >;
 
 type ActionsMenuPayload = {

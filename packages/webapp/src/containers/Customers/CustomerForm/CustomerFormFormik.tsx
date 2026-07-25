@@ -61,24 +61,21 @@ function CustomerFormFormikRoot({
     isNewMode,
   } = useCustomerFormContext();
 
-  const initialValues = useMemo<CustomerFormValues>(
-    () => {
-      const merged: CustomerFormValues = {
-        ...defaultInitialValues,
-        ...transformCustomerToForm(
-          contactDuplicate ?? customer,
-          defaultInitialValues,
-        ),
-        ...transformValuesToForm(initialCustomerValues, defaultInitialValues),
-      };
-      // Fall back to the organization base currency only if nothing else provided one.
-      if (!merged.currencyCode && baseCurrency) {
-        merged.currencyCode = baseCurrency;
-      }
-      return merged;
-    },
-    [customer, contactDuplicate, baseCurrency, initialCustomerValues],
-  );
+  const initialValues = useMemo<CustomerFormValues>(() => {
+    const merged: CustomerFormValues = {
+      ...defaultInitialValues,
+      ...transformCustomerToForm(
+        contactDuplicate ?? customer,
+        defaultInitialValues,
+      ),
+      ...transformValuesToForm(initialCustomerValues, defaultInitialValues),
+    };
+    // Fall back to the organization base currency only if nothing else provided one.
+    if (!merged.currencyCode && baseCurrency) {
+      merged.currencyCode = baseCurrency;
+    }
+    return merged;
+  }, [customer, contactDuplicate, baseCurrency, initialCustomerValues]);
 
   // Handles the form submit.
   const handleFormSubmit = (

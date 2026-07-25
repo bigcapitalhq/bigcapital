@@ -153,7 +153,9 @@ type ExpenseFormCustomerSelectProps = {
  * Customer select field of expense form.
  * @returns {React.ReactNode}
  */
-function ExpenseFormCustomerSelect({ customers }: ExpenseFormCustomerSelectProps) {
+function ExpenseFormCustomerSelect({
+  customers,
+}: ExpenseFormCustomerSelectProps) {
   return (
     <FormGroup
       label={intl.get('customer')}

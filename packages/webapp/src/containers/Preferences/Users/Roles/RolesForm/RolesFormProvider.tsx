@@ -39,10 +39,7 @@ export interface RolesFormProviderProps {
 /**
  * Roles Form page provider.
  */
-function RolesFormProvider({
-  roleId,
-  children,
-}: RolesFormProviderProps) {
+function RolesFormProvider({ roleId, children }: RolesFormProviderProps) {
   // Create and edit roles mutations.
   const { mutateAsync: createRolePermissionMutate } =
     useCreateRolePermissionSchema();

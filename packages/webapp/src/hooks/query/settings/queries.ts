@@ -67,7 +67,10 @@ export function useSettings(
   });
 }
 
-type GroupQueryOptions = Omit<UseQueryOptions<SettingsGroup>, 'queryKey' | 'queryFn'>;
+type GroupQueryOptions = Omit<
+  UseQueryOptions<SettingsGroup>,
+  'queryKey' | 'queryFn'
+>;
 
 export function useSettingsInvoices(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });

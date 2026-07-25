@@ -11,7 +11,9 @@ export const transformErrors = (errors: unknown) => {
     return;
   }
   const typedErrors = errors as TransformError[];
-  if (typedErrors.find((error) => error.type === 'VENDOR.HAS.ASSOCIATED.BILLS')) {
+  if (
+    typedErrors.find((error) => error.type === 'VENDOR.HAS.ASSOCIATED.BILLS')
+  ) {
     AppToaster.show({
       message: intl.get(
         'cannot_delete_vendor_that_has_associated_purchase_bills',

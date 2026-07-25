@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import type { PaymentReceiveEditPageResponse } from '@bigcapital/sdk-ts';
+import type { PaymentReceiveEditPageResponse, SettingsGroup } from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
 import { useProjects } from '@/containers/Projects/hooks';
 import {
@@ -74,8 +74,7 @@ interface PaymentReceiveFormContextValue {
   isPaymentReceivedStateLoading: boolean;
   paymentReceivedState: UsePaymentReceivedStateResult['data'];
 
-  paymentReceiveSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
-
+  paymentReceiveSettings: SettingsGroup | undefined;
   isBootLoading: boolean;
 }
 

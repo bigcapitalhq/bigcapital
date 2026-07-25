@@ -7,10 +7,13 @@ export function ExpenseFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Description --------- */}
-      <DescriptionFormGroup label={intl.get('description')} name={'description'}>
+      <DescriptionFormGroup
+        label={intl.get('description')}
+        name={'description'}
+      >
         <FEditableText
           name={'description'}
-          placeholder={<T id={'expenses.decscrption.placeholder'} /> as any}
+          placeholder={(<T id={'expenses.decscrption.placeholder'} />) as any}
           multiline
           fastField
         />

@@ -99,6 +99,6 @@ function WarehouseTransferNumberDialogContentInner({
     </WarehouseTransferNumberDialogProvider>
   );
 }
-export const WarehouseTransferNumberDialogContent = compose(
-  withDialogActions,
-)(WarehouseTransferNumberDialogContentInner);
+export const WarehouseTransferNumberDialogContent = compose(withDialogActions)(
+  WarehouseTransferNumberDialogContentInner,
+);

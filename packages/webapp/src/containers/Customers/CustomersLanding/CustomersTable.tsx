@@ -69,9 +69,7 @@ function CustomersTableInner({
     isCustomersFetching,
     customersSettings,
   } = useCustomersListContext();
-  const customersTableSize = customersSettings?.tableSize as
-    | string
-    | undefined;
+  const customersTableSize = customersSettings?.tableSize as string | undefined;
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
@@ -99,8 +97,7 @@ function CustomersTableInner({
 
   const handleSelectedRowsChange = React.useCallback(
     (selectedFlatRows: Array<{ original: CustomerRow }>) => {
-      const selectedIds =
-        selectedFlatRows?.map((row) => row.original.id) || [];
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
       setCustomersSelectedRows(selectedIds);
     },
     [setCustomersSelectedRows],

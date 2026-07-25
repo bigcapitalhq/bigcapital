@@ -56,8 +56,7 @@ function WarehouseTransferFormProvider({
     });
 
   // Handle fetch warehouse transfer settings.
-  const { data: warehouseTransferSettings } =
-    useSettingsWarehouseTransfers();
+  const { data: warehouseTransferSettings } = useSettingsWarehouseTransfers();
   // Fetch warehouses list.
   const {
     data: warehouses,

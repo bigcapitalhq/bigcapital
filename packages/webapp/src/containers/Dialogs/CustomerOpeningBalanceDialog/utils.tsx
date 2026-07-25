@@ -26,7 +26,8 @@ export interface CustomerOpeningBalanceSeed {
 }
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext<CustomerOpeningBalanceFormValues>();
+  const { setFieldValue } =
+    useFormikContext<CustomerOpeningBalanceFormValues>();
   const { branches, isBranchesSuccess } = useCustomerOpeningBalanceContext();
 
   React.useEffect(() => {

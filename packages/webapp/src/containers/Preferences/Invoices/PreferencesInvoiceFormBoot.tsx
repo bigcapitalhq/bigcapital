@@ -26,10 +26,8 @@ function PreferencesInvoicesBoot({
   ...props
 }: PreferencesInvoicesBootProps) {
   // Fetches organization settings.
-  const {
-    data: invoiceSettings,
-    isLoading: isSettingsLoading,
-  } = useSettingsInvoices();
+  const { data: invoiceSettings, isLoading: isSettingsLoading } =
+    useSettingsInvoices();
 
   // Provider state.
   const provider: PreferencesInvoicesBootContextValue = {

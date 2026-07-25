@@ -81,14 +81,15 @@ function VendorOpeningBalanceFormProvider({
   );
 }
 
-const useVendorOpeningBalanceContext = (): VendorOpeningBalanceFormContextValue => {
-  const ctx = React.useContext(VendorOpeningBalanceContext);
-  if (!ctx) {
-    throw new Error(
-      'useVendorOpeningBalanceContext must be used within VendorOpeningBalanceFormProvider',
-    );
-  }
-  return ctx;
-};
+const useVendorOpeningBalanceContext =
+  (): VendorOpeningBalanceFormContextValue => {
+    const ctx = React.useContext(VendorOpeningBalanceContext);
+    if (!ctx) {
+      throw new Error(
+        'useVendorOpeningBalanceContext must be used within VendorOpeningBalanceFormProvider',
+      );
+    }
+    return ctx;
+  };
 
 export { VendorOpeningBalanceFormProvider, useVendorOpeningBalanceContext };

@@ -79,6 +79,6 @@ function PreferencesCreditNotesFormPageRoot({
   );
 }
 
-export const PreferencesCreditNotesFormPage = compose(
-  withDashboardActions,
-)(PreferencesCreditNotesFormPageRoot);
+export const PreferencesCreditNotesFormPage = compose(withDashboardActions)(
+  PreferencesCreditNotesFormPageRoot,
+);

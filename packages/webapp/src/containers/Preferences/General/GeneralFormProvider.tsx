@@ -24,9 +24,7 @@ export interface GeneralFormContextValue {
   dateFormats: ReturnType<typeof useDateFormats>['data'];
 }
 
-const GeneralFormContext = createContext<GeneralFormContextValue | null>(
-  null,
-);
+const GeneralFormContext = createContext<GeneralFormContextValue | null>(null);
 
 export interface GeneralFormProviderProps {
   children?: React.ReactNode;

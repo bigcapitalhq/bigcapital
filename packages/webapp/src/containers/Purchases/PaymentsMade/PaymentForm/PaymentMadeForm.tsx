@@ -46,9 +46,7 @@ type PaymentMadeFormRootProps = WithDialogActionsProps;
 /**
  * Payment made form component.
  */
-function PaymentMadeFormInner({
-  openDialog,
-}: PaymentMadeFormRootProps) {
+function PaymentMadeFormInner({ openDialog }: PaymentMadeFormRootProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const history = useHistory();
@@ -202,6 +200,4 @@ function PaymentMadeFormInner({
   );
 }
 
-export const PaymentMadeForm = compose(withDialogActions)(
-  PaymentMadeFormInner,
-);
+export const PaymentMadeForm = compose(withDialogActions)(PaymentMadeFormInner);

@@ -6,7 +6,12 @@ import type {
   GetAccountsQuery,
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
-import { useResourceViews, useResourceMeta, useAccounts, useSettingsAccounts } from '@/hooks/query';
+import {
+  useResourceViews,
+  useResourceMeta,
+  useAccounts,
+  useSettingsAccounts,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { SettingsGroup } from '@bigcapital/sdk-ts';
 

@@ -53,12 +53,10 @@ function WarehouseTransferFormInner({}: WarehouseTransferFormInnerProps) {
   const warehouseTransferNextNumber = warehouseTransferSettings?.nextNumber as
     | number
     | undefined;
-  const warehouseTransferNumberPrefix = warehouseTransferSettings?.numberPrefix as
-    | string
-    | undefined;
-  const warehouseTransferIncrementMode = warehouseTransferSettings?.autoIncrement as
-    | boolean
-    | undefined;
+  const warehouseTransferNumberPrefix =
+    warehouseTransferSettings?.numberPrefix as string | undefined;
+  const warehouseTransferIncrementMode =
+    warehouseTransferSettings?.autoIncrement as boolean | undefined;
 
   // WarehouseTransfer number.
   const warehouseTransferNumber = transactionNumber(

@@ -63,7 +63,8 @@ function EstimateActionsBar({
   const { mutateAsync: saveSettings } = useSaveSettings();
 
   const history = useHistory();
-  const { estimatesViews, fields, estimatesSettings } = useEstimatesListContext();
+  const { estimatesViews, fields, estimatesSettings } =
+    useEstimatesListContext();
   const estimatesTableSize = estimatesSettings?.tableSize as string | undefined;
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 

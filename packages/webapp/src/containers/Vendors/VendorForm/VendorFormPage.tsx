@@ -1,10 +1,7 @@
 import { FormikHelpers } from 'formik';
 import { useParams, useHistory } from 'react-router-dom';
 import { VendorFormFormik } from './VendorFormFormik';
-import {
-  VendorFormProvider,
-  useVendorFormContext,
-} from './VendorFormProvider';
+import { VendorFormProvider, useVendorFormContext } from './VendorFormProvider';
 import type { VendorFormSubmitPayload } from './VendorFormProvider';
 import type { VendorFormValues } from './utils';
 import { Box, DashboardInsider } from '@/components';

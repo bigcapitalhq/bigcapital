@@ -217,12 +217,10 @@ function VendorActionsBarInner({
 
 export const VendorActionsBar = compose(
   withVendorsActions,
-  withVendors(
-    ({ vendorsTableState, vendorsSelectedRows }) => ({
-      vendorsSelectedRows,
-      vendorsInactiveMode: vendorsTableState.inactiveMode,
-      vendorsFilterConditions: vendorsTableState.filterRoles,
-    }),
-  ),
+  withVendors(({ vendorsTableState, vendorsSelectedRows }) => ({
+    vendorsSelectedRows,
+    vendorsInactiveMode: vendorsTableState.inactiveMode,
+    vendorsFilterConditions: vendorsTableState.filterRoles,
+  })),
   withDialogActions,
 )(VendorActionsBarInner);

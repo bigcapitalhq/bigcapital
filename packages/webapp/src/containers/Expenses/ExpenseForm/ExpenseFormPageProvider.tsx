@@ -73,7 +73,9 @@ function ExpenseFormPageProvider({
   const { data: expenseSettings } = useSettingsExpenses();
 
   // Submit form payload - using ref for synchronous access.
-  const submitPayloadRef = React.useRef<ExpenseFormContext['submitPayloadRef']['current']>({});
+  const submitPayloadRef = React.useRef<
+    ExpenseFormContext['submitPayloadRef']['current']
+  >({});
 
   // Setter to update the ref.
   const setSubmitPayload = React.useCallback(

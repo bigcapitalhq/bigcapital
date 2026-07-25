@@ -39,10 +39,8 @@ function QuickPaymentReceiveFormProvider({
   const { mutateAsync: createPaymentReceiveMutate } = useCreatePaymentReceive();
 
   // Fetch payment made settings.
-  const {
-    isLoading: isSettingsLoading,
-    data: paymentReceiveSettings,
-  } = useSettingsPaymentReceives();
+  const { isLoading: isSettingsLoading, data: paymentReceiveSettings } =
+    useSettingsPaymentReceives();
 
   // Fetches the branches list.
   const {

@@ -123,16 +123,17 @@ function ExpenseFormInner() {
         .then(handleSuccess)
         .catch(handleError);
     } else {
-      editExpenseMutate([
-        expense!.id,
-        form as unknown as EditExpenseBody,
-      ]).then(handleSuccess).catch(handleError);
+      editExpenseMutate([expense!.id, form as unknown as EditExpenseBody])
+        .then(handleSuccess)
+        .catch(handleError);
     }
   };
 
   return (
     <Formik
-      validationSchema={isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema}
+      validationSchema={
+        isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema
+      }
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >

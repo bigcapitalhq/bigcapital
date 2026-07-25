@@ -8,7 +8,12 @@ import type {
   SettingsGroup,
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
-import { useExpenses, useResourceMeta, useResourceViews, useSettingsExpenses } from '@/hooks/query';
+import {
+  useExpenses,
+  useResourceMeta,
+  useResourceViews,
+  useSettingsExpenses,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
 type ExpensesListContextValue = {

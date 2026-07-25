@@ -49,7 +49,10 @@ function GeneralFormPageInner({
   // Initial values.
   const initialValues: GeneralFormValues = {
     ...defaultValues,
-    ...(transformToForm(organization?.metadata, defaultValues) as Partial<GeneralFormValues>),
+    ...(transformToForm(
+      organization?.metadata,
+      defaultValues,
+    ) as Partial<GeneralFormValues>),
   };
 
   // Handle the form submit.

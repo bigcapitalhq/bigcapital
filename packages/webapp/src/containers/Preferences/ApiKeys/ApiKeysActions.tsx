@@ -7,9 +7,7 @@ import { compose } from '@/utils';
 
 type ApiKeysActionsInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;
 
-function ApiKeysActionsInner({
-  openDialog,
-}: ApiKeysActionsInnerProps) {
+function ApiKeysActionsInner({ openDialog }: ApiKeysActionsInnerProps) {
   const onClickGenerateApiKey = () => {
     openDialog('api-keys-generate');
   };

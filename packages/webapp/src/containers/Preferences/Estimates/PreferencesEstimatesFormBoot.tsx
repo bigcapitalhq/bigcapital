@@ -21,14 +21,10 @@ export interface PreferencesEstimatesBootProps {
   children?: React.ReactNode;
 }
 
-function PreferencesEstimatesBoot({
-  children,
-}: PreferencesEstimatesBootProps) {
+function PreferencesEstimatesBoot({ children }: PreferencesEstimatesBootProps) {
   // Fetches organization settings.
-  const {
-    data: estimatesSettings,
-    isLoading: isSettingsLoading,
-  } = useSettingsEstimates();
+  const { data: estimatesSettings, isLoading: isSettingsLoading } =
+    useSettingsEstimates();
 
   // Provider state.
   const provider: PreferencesEstimatesBootContextValue = {

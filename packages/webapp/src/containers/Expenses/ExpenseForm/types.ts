@@ -58,7 +58,10 @@ export type ExpenseFormContext = {
   isBranchesSuccess: boolean;
   isBranchesLoading: boolean;
   createExpenseMutate: (data: CreateExpenseBody) => Promise<unknown>;
-  editExpenseMutate: ([id, data]: [number, EditExpenseBody]) => Promise<unknown>;
+  editExpenseMutate: ([id, data]: [
+    number,
+    EditExpenseBody,
+  ]) => Promise<unknown>;
   setSubmitPayload: (payload: ExpenseSubmitPayload) => void;
   expenseSettings: SettingsGroup | undefined;
 };

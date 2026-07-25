@@ -140,8 +140,7 @@ function VendorsTableInner({
 
   const handleSelectedRowsChange = useCallback(
     (selectedFlatRows: Array<{ original: VendorRow }>) => {
-      const selectedIds =
-        selectedFlatRows?.map((row) => row.original.id) || [];
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
       setVendorsSelectedRows(selectedIds);
     },
     [setVendorsSelectedRows],

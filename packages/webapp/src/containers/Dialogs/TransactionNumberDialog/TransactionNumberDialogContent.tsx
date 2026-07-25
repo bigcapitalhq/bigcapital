@@ -24,12 +24,8 @@ function TransactionNumberDialogContentInner({
 }) {
   const { data: cashflowSettings } = useSettingCashFlow();
   const nextNumber = cashflowSettings?.nextNumber as number | undefined;
-  const numberPrefix = cashflowSettings?.numberPrefix as
-    | string
-    | undefined;
-  const autoIncrement = cashflowSettings?.autoIncrement as
-    | boolean
-    | undefined;
+  const numberPrefix = cashflowSettings?.numberPrefix as string | undefined;
+  const autoIncrement = cashflowSettings?.autoIncrement as boolean | undefined;
 
   const { mutateAsync: saveSettings } = useSaveSettings();
   const [referenceFormValues, setReferenceFormValues] = React.useState(null);
@@ -93,6 +89,6 @@ function TransactionNumberDialogContentInner({
   );
 }
 
-export const TransactionNumberDialogContent = compose(
-  withDialogActions,
-)(TransactionNumberDialogContentInner);
+export const TransactionNumberDialogContent = compose(withDialogActions)(
+  TransactionNumberDialogContentInner,
+);

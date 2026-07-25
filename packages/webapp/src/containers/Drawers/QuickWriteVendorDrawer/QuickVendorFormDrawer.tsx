@@ -31,11 +31,7 @@ interface QuickVendorFormDrawerProps
 /**
  * Drawer vendor form loading wrapper.
  */
-function DrawerVendorFormLoading({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DrawerVendorFormLoading({ children }: { children: React.ReactNode }) {
   const { isFormLoading } = useVendorFormContext();
 
   return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;

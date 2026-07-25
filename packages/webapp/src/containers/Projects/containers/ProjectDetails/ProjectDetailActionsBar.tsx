@@ -129,6 +129,6 @@ function ProjectDetailActionsBarInner({
     </DashboardActionsBar>
   );
 }
-export const ProjectDetailActionsBar = compose(
-  withDialogActions,
-)(ProjectDetailActionsBarInner);
+export const ProjectDetailActionsBar = compose(withDialogActions)(
+  ProjectDetailActionsBarInner,
+);
