@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
-import { ICreateInvoicePdfTemplateDTO } from '../types';
+import { CreatePdfTemplateDto } from '../dtos/PdfTemplate.dto';
+import { sanitizePdfTemplateAttributes } from '../utils/sanitizePdfTemplateAttributes';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { PdfTemplateModel } from '../models/PdfTemplate';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -20,16 +21,11 @@ export class CreatePdfTemplateService {
 
   /**
    * Creates a new pdf template.
-   * @param {string} templateName - Pdf template name.
-   * @param {string} resource - Pdf template resource.
-   * @param {ICreateInvoicePdfTemplateDTO} invoiceTemplateDTO - Invoice template data.
+   * @param {CreatePdfTemplateDto} createDTO - Pdf template data.
    */
-  public createPdfTemplate(
-    templateName: string,
-    resource: string,
-    invoiceTemplateDTO: ICreateInvoicePdfTemplateDTO,
-  ) {
-    const attributes = invoiceTemplateDTO;
+  public createPdfTemplate(createDTO: CreatePdfTemplateDto) {
+    const { templateName, resource, attributes } = createDTO;
+    const sanitizedAttributes = sanitizePdfTemplateAttributes(attributes);
 
     return this.uow.withTransaction(async (trx) => {
       // Triggers `onPdfTemplateCreating` event.
@@ -38,7 +34,7 @@ export class CreatePdfTemplateService {
       const pdfTemplate = await this.pdfTemplateModel().query(trx).insert({
         templateName,
         resource,
-        attributes,
+        attributes: sanitizedAttributes,
       });
 
       // Triggers `onPdfTemplateCreated` event.

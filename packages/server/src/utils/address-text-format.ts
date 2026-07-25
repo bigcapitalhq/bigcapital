@@ -1,3 +1,4 @@
+import sanitizeHtml from 'sanitize-html';
 import { Contact } from '@/modules/Contacts/models/Contact';
 
 interface OrganizationAddressFormatArgs {
@@ -11,6 +12,10 @@ interface OrganizationAddressFormatArgs {
   phone?: string;
 }
 
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: ['b', 'strong'],
+  allowedAttributes: { a: ['href'] },
+};
 export const defaultOrganizationAddressFormat = `
 <strong>{ORGANIZATION_NAME}</strong>
 {ADDRESS_1}
@@ -32,7 +37,7 @@ export const defaultOrganizationAddressFormat = `
 const formatText = (message: string, replacements: Record<string, string>) => {
   let formattedMessage = Object.entries(replacements).reduce(
     (msg, [key, value]) => {
-      return msg.split(`{${key}}`).join(value || '');
+      return msg.split(`{${key}}`).join(sanitizeHtml(value || '', SANITIZE_OPTIONS));
     },
     message,
   );
