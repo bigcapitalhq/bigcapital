@@ -2,9 +2,15 @@ import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import type { EstimateTableRow } from './components';
 import { DashboardInsider } from '@/components/Dashboard';
-import { useResourceViews, useResourceMeta, useEstimates } from '@/hooks/query';
+import {
+  useResourceViews,
+  useResourceMeta,
+  useEstimates,
+  useSettingsEstimates,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface EstimatesListProviderProps {
   query?: any;
@@ -23,6 +29,7 @@ export interface EstimatesListContextValue {
   isEstimatesFetching: boolean;
   isViewsLoading: boolean;
   isEmptyStatus: boolean;
+  estimatesSettings: SettingsGroup | undefined;
 }
 
 const EstimatesListContext = createContext<EstimatesListContextValue>(
@@ -49,6 +56,8 @@ function EstimatesListProvider({
     isFetching: isEstimatesFetching,
   } = useEstimates(query);
 
+  const { data: estimatesSettings } = useSettingsEstimates();
+
   const isEmptyStatus =
     !isEstimatesLoading && !tableStateChanged && isEmpty(estimatesData?.data);
 
@@ -69,6 +78,8 @@ function EstimatesListProvider({
     isViewsLoading,
 
     isEmptyStatus,
+
+    estimatesSettings,
   };
 
   return (

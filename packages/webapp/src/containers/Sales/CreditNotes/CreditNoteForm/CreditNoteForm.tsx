@@ -29,7 +29,6 @@ import {
 } from './utils';
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   compose,
@@ -38,24 +37,12 @@ import {
   safeSumBy,
 } from '@/utils';
 
-type CreditNoteFormInnerProps = {
-  creditAutoIncrement?: boolean;
-  creditNumberPrefix?: string;
-  creditNextNumber?: number;
-  creditCustomerNotes?: string;
-  creditTermsConditions?: string;
-};
+type CreditNoteFormInnerProps = Record<string, never>;
 
 /**
  * Credit note form.
  */
-function CreditNoteFormInner({
-  creditAutoIncrement,
-  creditNumberPrefix,
-  creditNextNumber,
-  creditCustomerNotes,
-  creditTermsConditions,
-}: CreditNoteFormInnerProps) {
+function CreditNoteFormInner({}: CreditNoteFormInnerProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const history = useHistory();
@@ -69,7 +56,22 @@ function CreditNoteFormInner({
     createCreditNoteMutate,
     editCreditNoteMutate,
     creditNoteState,
+    creditNoteSettings,
   } = useCreditNoteFormContext();
+
+  const creditAutoIncrement = creditNoteSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const creditNextNumber = creditNoteSettings?.nextNumber as number | undefined;
+  const creditNumberPrefix = creditNoteSettings?.numberPrefix as
+    | string
+    | undefined;
+  const creditCustomerNotes = creditNoteSettings?.customerNotes as
+    | string
+    | undefined;
+  const creditTermsConditions = creditNoteSettings?.termsConditions as
+    | string
+    | undefined;
 
   // Credit number.
   const creditNumber = transactionNumber(creditNumberPrefix, creditNextNumber);
@@ -183,12 +185,4 @@ function CreditNoteFormInner({
     </Formik>
   );
 }
-export const CreditNoteForm = compose(
-  withSettings(({ creditNoteSettings }) => ({
-    creditAutoIncrement: creditNoteSettings?.autoIncrement,
-    creditNextNumber: creditNoteSettings?.nextNumber,
-    creditNumberPrefix: creditNoteSettings?.numberPrefix,
-    creditCustomerNotes: creditNoteSettings?.customerNotes,
-    creditTermsConditions: creditNoteSettings?.termsConditions,
-  })),
-)(CreditNoteFormInner);
+export const CreditNoteForm = CreditNoteFormInner;

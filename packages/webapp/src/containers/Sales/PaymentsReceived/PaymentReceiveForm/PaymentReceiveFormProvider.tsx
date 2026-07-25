@@ -74,6 +74,8 @@ interface PaymentReceiveFormContextValue {
   isPaymentReceivedStateLoading: boolean;
   paymentReceivedState: UsePaymentReceivedStateResult['data'];
 
+  paymentReceiveSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
+
   isBootLoading: boolean;
 }
 
@@ -118,7 +120,7 @@ function PaymentReceiveFormProvider({
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Fetch payment made settings.
-  useSettingsPaymentReceives();
+  const { data: paymentReceiveSettings } = useSettingsPaymentReceives();
 
   // Fetches customers list.
   const { data: customersData, isLoading: isCustomersLoading } = useCustomers({
@@ -197,6 +199,8 @@ function PaymentReceiveFormProvider({
 
     isPaymentReceivedStateLoading,
     paymentReceivedState,
+
+    paymentReceiveSettings,
 
     isBootLoading,
   };

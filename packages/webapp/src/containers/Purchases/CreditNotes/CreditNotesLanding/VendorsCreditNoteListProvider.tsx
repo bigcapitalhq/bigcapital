@@ -7,9 +7,11 @@ import {
   useResourceMeta,
   useVendorCredits,
   useRefreshVendorCredits,
+  useSettingsVendorCredits,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface VendorsCreditNoteListProviderProps {
   query?: any;
@@ -24,6 +26,7 @@ export interface VendorsCreditNoteListContextValue {
   refresh: () => void;
   resourceMeta: any;
   fields: IResourceField[];
+  vendorCreditSettings: SettingsGroup | undefined;
   isResourceLoading: boolean;
   isResourceFetching: boolean;
   isVendorCreditsFetching: boolean;
@@ -66,6 +69,8 @@ function VendorsCreditNoteListProvider({
       }
     | undefined;
 
+  const { data: vendorCreditSettings } = useSettingsVendorCredits();
+
   const isEmptyStatus =
     isEmpty(listData?.data) && !isVendorCreditsLoading && !tableStateChanged;
 
@@ -79,6 +84,7 @@ function VendorsCreditNoteListProvider({
     fields: resourceMeta?.fields
       ? getFieldsFromResourceMeta(resourceMeta.fields)
       : [],
+    vendorCreditSettings,
     isResourceLoading,
     isResourceFetching,
 

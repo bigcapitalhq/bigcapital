@@ -57,6 +57,7 @@ type CreditNoteFormContextValue = {
   isWarehousesSuccess: boolean;
   isBrandingTemplatesLoading: boolean;
   isCreditNoteStateLoading: boolean;
+  creditNoteSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
   isBootLoading: boolean;
 
   createCreditNoteMutate: (values: CreateCreditNoteBody) => Promise<void>;
@@ -133,7 +134,7 @@ function CreditNoteFormProvider({
     useGetCreditNoteState();
 
   // Handle fetching settings.
-  useSettingsCreditNotes();
+  const { data: creditNoteSettings } = useSettingsCreditNotes();
 
   // Create and edit credit note mutations.
   const { mutateAsync: createCreditNoteMutate } = useCreateCreditNote();
@@ -186,6 +187,7 @@ function CreditNoteFormProvider({
     isBranchesLoading,
     isBrandingTemplatesLoading,
     isCreditNoteStateLoading,
+    creditNoteSettings,
     isBootLoading,
 
     createCreditNoteMutate: createCreditNoteMutate as (

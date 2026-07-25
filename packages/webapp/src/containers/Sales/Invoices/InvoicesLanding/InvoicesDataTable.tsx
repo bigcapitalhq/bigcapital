@@ -22,7 +22,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -31,17 +30,12 @@ interface WithInvoiceActionsProps {
   setInvoicesSelectedRows: (ids: number[]) => void;
 }
 
-interface WithSettingsProps {
-  invoicesTableSize?: string | null;
-}
-
 interface InvoicesDataTableProps
   extends Pick<WithInvoicesProps, 'invoicesTableState'>,
     WithInvoiceActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
-    WithDialogActionsProps,
-    WithSettingsProps {}
+    WithDialogActionsProps {}
 
 function InvoicesDataTableInner({
   setInvoicesTableState,
@@ -50,7 +44,6 @@ function InvoicesDataTableInner({
   openAlert,
   openDrawer,
   openDialog,
-  invoicesTableSize,
 }: InvoicesDataTableProps) {
   const history = useHistory();
 
@@ -60,7 +53,9 @@ function InvoicesDataTableInner({
     isEmptyStatus,
     isInvoicesLoading,
     isInvoicesFetching,
+    invoiceSettings,
   } = useInvoicesListContext();
+  const invoicesTableSize = invoiceSettings?.tableSize as string | undefined;
 
   const columns = useInvoicesTableColumns();
 
@@ -184,7 +179,4 @@ export const InvoicesDataTable = compose(
   withDrawerActions,
   withDialogActions,
   withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
-  withSettings(({ invoiceSettings }) => ({
-    invoicesTableSize: invoiceSettings?.tableSize,
-  })),
 )(InvoicesDataTableInner);

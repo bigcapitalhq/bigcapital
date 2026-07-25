@@ -1,5 +1,5 @@
 import {
-  fetchSettings,
+  fetchSettingsGrouped,
   fetchSettingsInvoices,
   fetchSettingsEstimates,
   fetchSettingsPaymentReceives,
@@ -10,6 +10,17 @@ import {
   fetchSettingsCreditNotes,
   fetchSettingsVendorCredits,
   fetchSettingsWarehouseTransfers,
+  fetchSettingsBills,
+  fetchSettingsBillPayments,
+  fetchSettingsOrganization,
+  fetchSettingsExpenses,
+  fetchSettingsAccounts,
+  fetchSettingsCustomers,
+  fetchSettingsVendors,
+  fetchSettingsCashflowTransactions,
+  fetchSettingsProjects,
+  fetchSettingsProjectTasks,
+  fetchSettingsTimesheets,
   fetchSettingSMSNotifications,
   fetchSettingSMSNotification,
   editSettingSMSNotification,
@@ -24,7 +35,11 @@ import {
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { settingsKeys } from './query-keys';
-import type { SaveSettingsBody, SettingsResponse } from '@bigcapital/sdk-ts';
+import type {
+  AllSettings,
+  SaveSettingsBody,
+  SettingsGroup,
+} from '@bigcapital/sdk-ts';
 
 export function useSaveSettings(
   props?: UseMutationOptions<void, Error, SaveSettingsBody>,
@@ -41,22 +56,21 @@ export function useSaveSettings(
 }
 
 export function useSettings(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
+  props?: Omit<UseQueryOptions<AllSettings>, 'queryKey' | 'queryFn'>,
 ) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
     queryKey: settingsKeys.all(),
-    queryFn: () => fetchSettings(fetcher),
+    queryFn: () => fetchSettingsGrouped(fetcher),
   });
 }
 
-export function useSettingsInvoices(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+type GroupQueryOptions = Omit<UseQueryOptions<SettingsGroup>, 'queryKey' | 'queryFn'>;
 
+export function useSettingsInvoices(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: settingsKeys.invoices(),
@@ -64,11 +78,8 @@ export function useSettingsInvoices(
   });
 }
 
-export function useSettingsEstimates(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
+export function useSettingsEstimates(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
   return useQuery({
     ...props,
     queryKey: settingsKeys.estimates(),
@@ -76,11 +87,8 @@ export function useSettingsEstimates(
   });
 }
 
-export function useSettingsPaymentReceives(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
+export function useSettingsPaymentReceives(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
   return useQuery({
     ...props,
     queryKey: settingsKeys.paymentReceives(),
@@ -88,11 +96,8 @@ export function useSettingsPaymentReceives(
   });
 }
 
-export function useSettingsReceipts(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
+export function useSettingsReceipts(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
   return useQuery({
     ...props,
     queryKey: settingsKeys.receipts(),
@@ -100,22 +105,17 @@ export function useSettingsReceipts(
   });
 }
 
-export function useSettingsManualJournals(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
+export function useSettingsManualJournals(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
   return useQuery({
     ...props,
     queryKey: settingsKeys.manualJournals(),
     queryFn: () => fetchSettingsManualJournals(fetcher),
   });
 }
-export function useSettingsItems(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
+export function useSettingsItems(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: settingsKeys.items(),
@@ -123,11 +123,8 @@ export function useSettingsItems(
   });
 }
 
-export function useSettingCashFlow(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
+export function useSettingCashFlow(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
   return useQuery({
     ...props,
     queryKey: settingsKeys.cashflow(),
@@ -135,11 +132,8 @@ export function useSettingCashFlow(
   });
 }
 
-export function useSettingsCreditNotes(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
+export function useSettingsCreditNotes(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
   return useQuery({
     ...props,
     queryKey: settingsKeys.creditNotes(),
@@ -147,11 +141,8 @@ export function useSettingsCreditNotes(
   });
 }
 
-export function useSettingsVendorCredits(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
+export function useSettingsVendorCredits(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
   return useQuery({
     ...props,
     queryKey: settingsKeys.vendorCredits(),
@@ -159,15 +150,111 @@ export function useSettingsVendorCredits(
   });
 }
 
-export function useSettingsWarehouseTransfers(
-  props?: Omit<UseQueryOptions<SettingsResponse>, 'queryKey' | 'queryFn'>,
-) {
+export function useSettingsWarehouseTransfers(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
   return useQuery({
     ...props,
     queryKey: settingsKeys.warehouseTransfers(),
     queryFn: () => fetchSettingsWarehouseTransfers(fetcher),
+  });
+}
+
+export function useSettingsBills(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.bills(),
+    queryFn: () => fetchSettingsBills(fetcher),
+  });
+}
+
+export function useSettingsBillPayments(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.billPayments(),
+    queryFn: () => fetchSettingsBillPayments(fetcher),
+  });
+}
+
+export function useSettingsOrganization(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.organization(),
+    queryFn: () => fetchSettingsOrganization(fetcher),
+  });
+}
+
+export function useSettingsExpenses(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.expenses(),
+    queryFn: () => fetchSettingsExpenses(fetcher),
+  });
+}
+
+export function useSettingsAccounts(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.accounts(),
+    queryFn: () => fetchSettingsAccounts(fetcher),
+  });
+}
+
+export function useSettingsCustomers(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.customers(),
+    queryFn: () => fetchSettingsCustomers(fetcher),
+  });
+}
+
+export function useSettingsVendors(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.vendors(),
+    queryFn: () => fetchSettingsVendors(fetcher),
+  });
+}
+
+export function useSettingsCashflowTransactions(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.cashflowTransactions(),
+    queryFn: () => fetchSettingsCashflowTransactions(fetcher),
+  });
+}
+
+export function useSettingsProjects(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.projects(),
+    queryFn: () => fetchSettingsProjects(fetcher),
+  });
+}
+
+export function useSettingsProjectTasks(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.projectTasks(),
+    queryFn: () => fetchSettingsProjectTasks(fetcher),
+  });
+}
+
+export function useSettingsTimesheets(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.timesheets(),
+    queryFn: () => fetchSettingsTimesheets(fetcher),
   });
 }
 

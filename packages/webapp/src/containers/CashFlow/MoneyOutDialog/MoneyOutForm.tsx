@@ -14,19 +14,12 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { CreateCashflowTransactionBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { useSettingCashFlow } from '@/hooks/query';
 import { compose, transactionNumber } from '@/utils';
 
-interface WithSettingsProps {
-  transactionNextNumber?: string | number;
-  transactionNumberPrefix?: string;
-  transactionIncrementMode?: boolean;
-}
-
 interface MoneyOutFormInnerProps
-  extends WithSettingsProps,
-    Pick<WithDialogActionsProps, 'closeDialog'> {}
+  extends Pick<WithDialogActionsProps, 'closeDialog'> {}
 
 const defaultInitialValues: MoneyOutFormValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
@@ -68,13 +61,20 @@ const transformToRequestBody = (
 function MoneyOutFormInner({
   // #withDialogActions
   closeDialog,
-
-  // #withSettings
-  transactionNextNumber,
-  transactionNumberPrefix,
-  transactionIncrementMode,
 }: MoneyOutFormInnerProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { data: cashflowSetting } = useSettingCashFlow();
+
+  const transactionNextNumber = cashflowSetting?.nextNumber as
+    | string
+    | number
+    | undefined;
+  const transactionNumberPrefix = cashflowSetting?.numberPrefix as
+    | string
+    | undefined;
+  const transactionIncrementMode = cashflowSetting?.autoIncrement as
+    | boolean
+    | undefined;
 
   const {
     dialogName,
@@ -132,11 +132,4 @@ function MoneyOutFormInner({
   );
 }
 
-export const MoneyOutForm = compose(
-  withDialogActions,
-  withSettings(({ cashflowSetting }) => ({
-    transactionNextNumber: cashflowSetting?.nextNumber,
-    transactionNumberPrefix: cashflowSetting?.numberPrefix,
-    transactionIncrementMode: cashflowSetting?.autoIncrement,
-  })),
-)(MoneyOutFormInner);
+export const MoneyOutForm = compose(withDialogActions)(MoneyOutFormInner);

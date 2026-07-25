@@ -20,18 +20,12 @@ import {
   AppToaster,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/banking';
 import { compose } from '@/utils';
 
-interface WithSettingsProps {
-  cashflowTansactionsTableSize?: string | null;
-}
-
 interface AccountTransactionsDataTableProps
-  extends WithSettingsProps,
-    Pick<
+  extends Pick<
       WithBankingProps,
       'openMatchingTransactionAside' | 'enableMultipleCategorization'
     >,
@@ -47,9 +41,6 @@ interface AccountTransactionsDataTableProps
  * Account transactions data table.
  */
 function AccountTransactionsDataTable({
-  // #withSettings
-  cashflowTansactionsTableSize,
-
   // #withBanking
   enableMultipleCategorization,
 
@@ -61,7 +52,11 @@ function AccountTransactionsDataTable({
 }: AccountTransactionsDataTableProps) {
   // Retrieve table columns.
   const columns = useAccountUncategorizedTransactionsColumns();
-  const { scrollableRef } = useAccountTransactionsContext();
+  const { scrollableRef, cashflowTransactionsSettings } =
+    useAccountTransactionsContext();
+  const cashflowTansactionsTableSize = cashflowTransactionsSettings?.tableSize as
+    | string
+    | undefined;
 
   // Retrieve list context.
   const {
@@ -167,9 +162,6 @@ function AccountTransactionsDataTable({
 }
 
 export const AccountTransactionsUncategorizedTable = compose(
-  withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
-  })),
   withBankingActions,
   withBanking(
     ({ openMatchingTransactionAside, enableMultipleCategorization }) => ({

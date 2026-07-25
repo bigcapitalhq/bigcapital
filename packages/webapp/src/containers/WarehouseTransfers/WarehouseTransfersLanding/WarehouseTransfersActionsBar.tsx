@@ -20,10 +20,7 @@ import {
   DashboardActionViewsList,
   DashboardActionsBar,
 } from '@/components';
-import { withSettings } from '@/containers/Settings/withSettings';
-import type { WithSettingsProps } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
+import { useSaveSettings } from '@/hooks/query';
 import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
@@ -33,8 +30,6 @@ interface WarehouseTransfersActionsBarInnerProps
     'setWarehouseTransferTableState'
   > {
   warehouseTransferFilterRoles: IFilterRole[];
-  warehouseTransferTableSize?: unknown;
-  addSetting: WithSettingsActionsProps['addSetting'];
 }
 
 interface ViewOption {
@@ -50,18 +45,15 @@ function WarehouseTransfersActionsBarInner({
 
   // #withWarehouseTransfersActions
   setWarehouseTransferTableState,
-
-  // #withSettings
-  warehouseTransferTableSize,
-
-  // #withSettingsActions
-  addSetting,
 }: WarehouseTransfersActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
 
   // credit note list context.
-  const { WarehouseTransferView, fields, refresh } =
+  const { WarehouseTransferView, fields, refresh, warehouseTransferSettings } =
     useWarehouseTranfersListContext();
+  const warehouseTransferTableSize = warehouseTransferSettings?.tableSize;
 
   // Handle new warehouse transfer button click.
   const handleClickNewWarehouseTransfer = () => {
@@ -80,7 +72,11 @@ function WarehouseTransfersActionsBarInner({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size: string) => {
-    addSetting('warehouseTransfers', 'tableSize', size);
+    saveSettings({
+      options: [
+        { group: 'warehouseTransfers', key: 'tableSize', value: size },
+      ],
+    });
   };
 
   return (
@@ -153,13 +149,9 @@ function WarehouseTransfersActionsBarInner({
 }
 
 export const WarehouseTransfersActionsBar = compose(
-  withSettingsActions,
   withWarehouseTransfersActions,
   withWarehouseTransfers(({ warehouseTransferTableState }) => ({
     warehouseTransferFilterRoles:
       warehouseTransferTableState?.filterRoles ?? [],
-  })),
-  withSettings(({ warehouseTransferSettings }: WithSettingsProps) => ({
-    warehouseTransferTableSize: warehouseTransferSettings?.tableSize,
   })),
 )(WarehouseTransfersActionsBarInner);

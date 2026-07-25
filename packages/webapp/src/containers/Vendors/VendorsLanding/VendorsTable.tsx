@@ -22,21 +22,15 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  vendorsTableSize?: string | null;
-}
 
 interface VendorsTableInnerProps
   extends Pick<WithVendorsProps, 'vendorsTableState'>,
     WithVendorsActionsProps,
     WithAlertActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {}
+    WithDrawerActionsProps {}
 
 type VendorRow = Pick<Vendor, 'id'>;
 type SortBy = Array<{ id: string; desc: boolean }>;
@@ -60,9 +54,6 @@ function VendorsTableInner({
 
   // #withDialogActions
   openDialog,
-
-  // #withSettings
-  vendorsTableSize,
 }: VendorsTableInnerProps) {
   // Vendors list context.
   const {
@@ -71,7 +62,9 @@ function VendorsTableInner({
     isVendorsFetching,
     isVendorsLoading,
     isEmptyStatus,
+    vendorsSettings,
   } = useVendorsListContext();
+  const vendorsTableSize = vendorsSettings?.tableSize as string | undefined;
 
   // Vendors table columns.
   const columns = useVendorsTableColumns();
@@ -206,7 +199,4 @@ export const VendorsTable = compose(
   withDialogActions,
   withDrawerActions,
   withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
-  withSettings(({ vendorsSettings }) => ({
-    vendorsTableSize: vendorsSettings?.tableSize,
-  })),
 )(VendorsTableInner);

@@ -8,7 +8,6 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useSaveSettings, useSettingsManualJournals } from '@/hooks/query';
 import { saveInvoke, compose } from '@/utils';
 
@@ -18,11 +17,6 @@ import '@/style/pages/ManualJournal/JournalNumberDialog.scss';
  * Journal number dialog's content.
  */
 function JournalNumberDialogContentInner({
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
   // #withDialogActions
   closeDialog,
 
@@ -30,7 +24,15 @@ function JournalNumberDialogContentInner({
   onConfirm,
   initialValues,
 }) {
-  const { isLoading: isSettingsLoading } = useSettingsManualJournals();
+  const { data: manualJournalsSettings, isLoading: isSettingsLoading } =
+    useSettingsManualJournals();
+  const nextNumber = manualJournalsSettings?.nextNumber as number | undefined;
+  const numberPrefix = manualJournalsSettings?.numberPrefix as
+    | string
+    | undefined;
+  const autoIncrement = manualJournalsSettings?.autoIncrement as
+    | boolean
+    | undefined;
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
   const [referenceFormValues, setReferenceFormValues] = React.useState(null);
 
@@ -93,9 +95,4 @@ function JournalNumberDialogContentInner({
 
 export const JournalNumberDialogContent = compose(
   withDialogActions,
-  withSettings(({ manualJournalsSettings }) => ({
-    nextNumber: manualJournalsSettings?.nextNumber,
-    numberPrefix: manualJournalsSettings?.numberPrefix,
-    autoIncrement: manualJournalsSettings?.autoIncrement,
-  })),
 )(JournalNumberDialogContentInner);

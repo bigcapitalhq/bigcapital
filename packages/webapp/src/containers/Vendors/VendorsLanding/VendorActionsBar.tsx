@@ -30,22 +30,14 @@ import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshVendors } from '@/hooks/query/vendors';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  vendorsTableSize?: string | null;
-}
 
 interface VendorActionsBarInnerProps
   extends Pick<WithVendorsProps, 'vendorsTableState'>,
     WithVendorsActionsProps,
-    WithSettingsProps,
-    WithSettingsActionsProps,
     WithDialogActionsProps {
   vendorsSelectedRows: unknown[];
   vendorsFilterConditions: IFilterRole[];
@@ -64,15 +56,11 @@ function VendorActionsBarInner({
   setVendorsTableState,
   vendorsInactiveMode,
 
-  // #withSettings
-  vendorsTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withDialogActions
   openDialog,
 }: VendorActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
   const bulkDelete = useBulkDeleteVendorsDialog();
   const { openBulkDeleteDialog } = bulkDelete;
@@ -83,7 +71,8 @@ function VendorActionsBarInner({
   ).isValidatingBulkDeleteVendors;
 
   // Vendors list context.
-  const { vendorsViews, fields } = useVendorsListContext();
+  const { vendorsViews, fields, vendorsSettings } = useVendorsListContext();
+  const vendorsTableSize = vendorsSettings?.tableSize as string | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -111,7 +100,9 @@ function VendorActionsBarInner({
     refresh();
   };
   const handleTableRowSizeChange = (size: string) => {
-    addSetting('vendors', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'vendors', key: 'tableSize', value: size }],
+    });
   };
   // Handle import button success.
   const handleImportBtnSuccess = () => {
@@ -226,7 +217,6 @@ function VendorActionsBarInner({
 
 export const VendorActionsBar = compose(
   withVendorsActions,
-  withSettingsActions,
   withVendors(
     ({ vendorsTableState, vendorsSelectedRows }) => ({
       vendorsSelectedRows,
@@ -234,8 +224,5 @@ export const VendorActionsBar = compose(
       vendorsFilterConditions: vendorsTableState.filterRoles,
     }),
   ),
-  withSettings(({ vendorsSettings }) => ({
-    vendorsTableSize: vendorsSettings?.tableSize,
-  })),
   withDialogActions,
 )(VendorActionsBarInner);

@@ -1,7 +1,6 @@
 import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import moment from 'moment';
-import * as R from 'ramda';
 import React, { useLayoutEffect } from 'react';
 import intl from 'react-intl-universal';
 import {
@@ -10,9 +9,9 @@ import {
   type PaymentReceiveFormValues,
 } from './utils';
 import { Money, ExchangeRateInputGroup, MoneyFieldCell } from '@/components';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 
 type InvoiceDateCellProps = {
   value?: string | number | Date | null;
@@ -136,26 +135,22 @@ export function PaymentReceiveProjectSelectButton({
   return <Button text={label ?? intl.get('select_project')} />;
 }
 
-type SyncIncrementSettingsProps = {
-  paymentReceiveNextNumber?: number;
-  paymentReceiveNumberPrefix?: string;
-  paymentReceiveAutoIncrement?: boolean;
-};
+type SyncIncrementSettingsProps = Record<string, never>;
 
 /**
  * Syncs the auto-increment settings to payment receive form.
  */
-export const PaymentReceiveSyncIncrementSettingsToForm = R.compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
-    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-)(({
-  paymentReceiveNextNumber,
-  paymentReceiveNumberPrefix,
-  paymentReceiveAutoIncrement,
-}: SyncIncrementSettingsProps) => {
+export const PaymentReceiveSyncIncrementSettingsToForm = ({}: SyncIncrementSettingsProps) => {
+  const { paymentReceiveSettings } = usePaymentReceiveFormContext();
+  const paymentReceiveNextNumber = paymentReceiveSettings?.nextNumber as
+    | number
+    | undefined;
+  const paymentReceiveNumberPrefix = paymentReceiveSettings?.numberPrefix as
+    | string
+    | undefined;
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
   const { setFieldValue } = useFormikContext<PaymentReceiveFormValues>();
 
   useLayoutEffect(() => {
@@ -172,4 +167,4 @@ export const PaymentReceiveSyncIncrementSettingsToForm = R.compose(
     paymentReceiveAutoIncrement,
   ]);
   return null;
-});
+};

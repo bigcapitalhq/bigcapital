@@ -22,19 +22,13 @@ import {
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useUncategorizeTransaction } from '@/hooks/query';
 import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/banking';
 import { compose } from '@/utils';
 
-interface WithSettingsProps {
-  cashflowTansactionsTableSize?: string | null;
-}
-
 interface AccountTransactionsDataTableProps
-  extends WithSettingsProps,
-    Pick<WithAlertActionsProps, 'openAlert'>,
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
     Pick<WithDrawerActionsProps, 'openDrawer'>,
     Pick<WithBankingActionsProps, 'setCategorizedTransactionsSelected'> {}
 
@@ -42,9 +36,6 @@ interface AccountTransactionsDataTableProps
  * Account transactions data table.
  */
 function AccountTransactionsDataTableInner({
-  // #withSettings
-  cashflowTansactionsTableSize,
-
   // #withDrawerActions
   openDrawer,
 
@@ -69,7 +60,11 @@ function AccountTransactionsDataTableInner({
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
 
-  const { scrollableRef } = useAccountTransactionsContext();
+  const { scrollableRef, cashflowTransactionsSettings } =
+    useAccountTransactionsContext();
+  const cashflowTansactionsTableSize = cashflowTransactionsSettings?.tableSize as
+    | string
+    | undefined;
 
   // Handle view details action.
   const handleViewDetailCashflowTransaction = (
@@ -168,9 +163,6 @@ function AccountTransactionsDataTableInner({
 }
 
 export const AccountTransactionsDataTable = compose(
-  withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
-  })),
   withAlertActions,
   withDrawerActions,
   withBankingActions,

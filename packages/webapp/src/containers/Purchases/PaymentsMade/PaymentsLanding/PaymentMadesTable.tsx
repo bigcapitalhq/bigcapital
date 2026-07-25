@@ -19,7 +19,6 @@ import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -27,23 +26,17 @@ interface WithPaymentMadeActionsProps {
   setPaymentMadesTableState: (state: Record<string, any>) => void;
 }
 
-interface WithSettingsProps {
-  paymentMadesTableSize?: string | null;
-}
-
 interface PaymentMadesTableProps
   extends Pick<WithPaymentMadeProps, 'paymentMadesTableState'>,
     WithPaymentMadeActionsProps,
     WithAlertActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {}
+    WithDrawerActionsProps {}
 
 function PaymentMadesTableInner({
   setPaymentMadesTableState,
   paymentMadesTableState,
   openAlert,
   openDrawer,
-  paymentMadesTableSize,
 }: PaymentMadesTableProps) {
   const columns = usePaymentMadesTableColumns();
 
@@ -53,7 +46,11 @@ function PaymentMadesTableInner({
     isEmptyStatus,
     isPaymentsLoading,
     isPaymentsFetching,
+    billPaymentSettings,
   } = usePaymentMadesListContext();
+  const paymentMadesTableSize = billPaymentSettings?.tableSize as
+    | string
+    | undefined;
 
   const history = useHistory();
 
@@ -137,7 +134,4 @@ export const PaymentMadesTable = compose(
   withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
   withAlertActions,
   withDrawerActions,
-  withSettings(({ billPaymentSettings }: any) => ({
-    paymentMadesTableSize: billPaymentSettings?.tableSize,
-  })),
 )(PaymentMadesTableInner);

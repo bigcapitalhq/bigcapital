@@ -9,18 +9,18 @@ import {
   TableSkeletonHeader,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 
 /**
  * Project Purchases DataTable.
  * @returns
  */
-function ProjectPurchasesTableRoot({
-  // #withSettings
-  purchasesTableSize,
-}) {
+function ProjectPurchasesTableRoot() {
+  // Settings hook.
+  const { projectSettings } = useProjectDetailContext();
+  const purchasesTableSize = projectSettings?.tableSize;
+
   // Retrieve purchases table columns.
   const columns = useProjectPurchasesColumns();
 
@@ -51,8 +51,4 @@ function ProjectPurchasesTableRoot({
     />
   );
 }
-export const ProjectPurchasesTable = compose(
-  withSettings(({ purchasesSettings }) => ({
-    purchasesTableSize: purchasesSettings?.tableSize,
-  })),
-)(ProjectPurchasesTableRoot);
+export const ProjectPurchasesTable = ProjectPurchasesTableRoot;

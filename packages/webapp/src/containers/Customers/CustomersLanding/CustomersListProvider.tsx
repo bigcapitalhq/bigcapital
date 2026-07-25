@@ -2,9 +2,10 @@ import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import { transformCustomersStateToQuery } from './utils';
 import { DashboardInsider } from '@/components';
-import { useResourceMeta, useResourceViews, useCustomers } from '@/hooks/query';
+import { useResourceMeta, useResourceViews, useCustomers, useSettingsCustomers } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { TableQuery } from '@/store/store.types';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 type UseCustomersResult = ReturnType<typeof useCustomers>;
 type UseResourceViewsResult = ReturnType<typeof useResourceViews>;
@@ -25,6 +26,8 @@ type CustomersListContextValue = {
   isResourceMetaFetching: boolean;
 
   isEmptyStatus: boolean;
+
+  customersSettings: SettingsGroup | undefined;
 };
 
 type CustomersListProviderProps = {
@@ -44,6 +47,9 @@ function CustomersListProvider({
 }: CustomersListProviderProps) {
   // Transformes the table state to fetch query.
   const tableQuery = transformCustomersStateToQuery(tableState);
+
+  // Customers settings.
+  const { data: customersSettings } = useSettingsCustomers();
 
   // Fetch customers resource views and fields.
   const { data: customersViews, isLoading: isViewsLoading } =
@@ -86,6 +92,8 @@ function CustomersListProvider({
     isCustomersFetching,
 
     isEmptyStatus,
+
+    customersSettings,
   };
 
   return (

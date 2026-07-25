@@ -26,22 +26,13 @@ import {
 import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose } from '@/utils';
-
-type WithSettingsProps = {
-  preferredPaymentAccount?: number | string;
-};
-
-type ExpenseFormInnerProps = WithSettingsProps;
 
 /**
  * Expense form.
  */
-function ExpenseFormInner({
-  preferredPaymentAccount,
-}: ExpenseFormInnerProps) {
+function ExpenseFormInner() {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const {
@@ -50,7 +41,13 @@ function ExpenseFormInner({
     expense,
     expenseId,
     submitPayloadRef,
+    expenseSettings,
   } = useExpenseFormContext();
+
+  const preferredPaymentAccount = parseInt(
+    (expenseSettings?.preferredPaymentAccount as string | undefined) ?? '',
+    10,
+  );
 
   const isNewMode = !expenseId;
 
@@ -167,12 +164,4 @@ function ExpenseFormInner({
   );
 }
 
-export const ExpenseForm = compose(
-  withDashboardActions,
-  withSettings(({ expenseSettings }: Record<string, any>) => ({
-    preferredPaymentAccount: parseInt(
-      expenseSettings?.preferredPaymentAccount,
-      10,
-    ),
-  })),
-)(ExpenseFormInner);
+export const ExpenseForm = compose(withDashboardActions)(ExpenseFormInner);

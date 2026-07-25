@@ -14,7 +14,6 @@ import {
 } from './utils';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { compose, transactionNumber } from '@/utils';
 
 /**
@@ -23,15 +22,27 @@ import { compose, transactionNumber } from '@/utils';
 function QuickPaymentReceiveFormInner({
   // #withDialogActions
   closeDialog,
-
-  // #withSettings
-  paymentReceiveAutoIncrement,
-  paymentReceiveNumberPrefix,
-  paymentReceiveNextNumber,
-  preferredDepositAccount,
 }) {
-  const { dialogName, invoice, createPaymentReceiveMutate } =
-    useQuickPaymentReceiveContext();
+  const {
+    dialogName,
+    invoice,
+    createPaymentReceiveMutate,
+    paymentReceiveSettings,
+  } = useQuickPaymentReceiveContext();
+
+  const paymentReceiveNextNumber = paymentReceiveSettings?.nextNumber as
+    | number
+    | undefined;
+  const paymentReceiveNumberPrefix = paymentReceiveSettings?.numberPrefix as
+    | string
+    | undefined;
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const preferredDepositAccount = paymentReceiveSettings?.preferredDepositAccount as
+    | string
+    | number
+    | undefined;
 
   // Payment receive number.
   const nextPaymentNumber = transactionNumber(
@@ -95,10 +106,4 @@ function QuickPaymentReceiveFormInner({
 
 export const QuickPaymentReceiveForm = compose(
   withDialogActions,
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
-    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-    preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
-  })),
 )(QuickPaymentReceiveFormInner);

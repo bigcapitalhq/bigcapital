@@ -6,8 +6,9 @@ import type {
   GetAccountsQuery,
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
-import { useResourceViews, useResourceMeta, useAccounts } from '@/hooks/query';
+import { useResourceViews, useResourceMeta, useAccounts, useSettingsAccounts } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 type AccountsChartContextValue = {
   accounts: AccountsList | undefined;
@@ -19,6 +20,7 @@ type AccountsChartContextValue = {
   isResourceMetaFetching: boolean;
   isResourceMetaLoading: boolean;
   isViewsLoading: boolean;
+  accountsSettings: SettingsGroup | undefined;
 };
 
 const AccountsChartContext = createContext<
@@ -42,6 +44,9 @@ function AccountsChartProvider({
   // Fetch accounts resource views and fields.
   const { data: resourceViews, isLoading: isViewsLoading } =
     useResourceViews('accounts');
+
+  // Accounts settings.
+  const { data: accountsSettings } = useSettingsAccounts();
 
   // Fetch the accounts resource fields.
   const {
@@ -71,6 +76,8 @@ function AccountsChartProvider({
     isResourceMetaFetching,
     isResourceMetaLoading,
     isViewsLoading,
+
+    accountsSettings,
   };
 
   return (

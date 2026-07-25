@@ -1,9 +1,9 @@
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import type { ManualJournalTableRow } from './components';
-import type { ManualJournalsListQuery } from '@bigcapital/sdk-ts';
+import type { ManualJournalsListQuery, SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
-import { useResourceViews, useResourceMeta, useJournals } from '@/hooks/query';
+import { useResourceViews, useResourceMeta, useJournals, useSettingsManualJournals } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
@@ -34,6 +34,8 @@ export interface ManualJournalsContextValue {
   isManualJournalsFetching: boolean;
   isViewsLoading: boolean;
   isEmptyStatus: boolean;
+
+  manualJournalsSettings: SettingsGroup | undefined;
 }
 
 const ManualJournalsContext = createContext<ManualJournalsContextValue>(
@@ -48,6 +50,9 @@ function ManualJournalsListProvider({
   // Fetches accounts resource views and fields.
   const { data: journalsViews, isLoading: isViewsLoading } =
     useResourceViews('manual_journals');
+
+  // Manual journals settings.
+  const { data: manualJournalsSettings } = useSettingsManualJournals();
 
   // Fetches the manual journals transactions with pagination meta.
   const {
@@ -85,6 +90,8 @@ function ManualJournalsListProvider({
     isViewsLoading,
 
     isEmptyStatus,
+
+    manualJournalsSettings,
   };
 
   const isPageLoading = isViewsLoading || isResourceMetaLoading;

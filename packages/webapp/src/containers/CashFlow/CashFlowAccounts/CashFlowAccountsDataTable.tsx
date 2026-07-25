@@ -8,23 +8,17 @@ import {
   TableSkeletonHeader,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  cashflowTableSize?: string | null;
-}
-
-interface CashFlowAccountsDataTableProps extends WithSettingsProps {}
+import { useSettingCashFlow } from '@/hooks/query';
 
 /**
  * Cash flow accounts data table.
  */
-function CashFlowAccountsDataTableInner({
-  // #withSettings
-  cashflowTableSize,
-}: CashFlowAccountsDataTableProps) {
+function CashFlowAccountsDataTableInner() {
+  // Settings hook.
+  const { data: cashflowSettings } = useSettingCashFlow();
+  const cashflowTableSize = cashflowSettings?.tableSize as string | undefined;
+
   // Retrieve list context.
   const {
     cashflowAccounts,
@@ -62,8 +56,4 @@ function CashFlowAccountsDataTableInner({
   );
 }
 
-export const CashFlowAccountsDataTable = compose(
-  withSettings(({ cashflowSettings }) => ({
-    cashflowTableSize: cashflowSettings?.tableSize,
-  })),
-)(CashFlowAccountsDataTableInner);
+export const CashFlowAccountsDataTable = CashFlowAccountsDataTableInner;

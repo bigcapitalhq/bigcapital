@@ -12,32 +12,24 @@ import {
   InputPrependButton,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { compose } from '@/utils';
+import { useEstimateFormContext } from './EstimateFormProvider';
 
 type EstimateNumberFieldProps = {
   openDialog: WithDialogActionsProps['openDialog'];
-  estimateAutoIncrement?: boolean;
 };
 
 /**
  * Estimate number field of estimate form.
  */
-export const EstimateFormEstimateNumberField = compose(
-  withDialogActions,
-  withSettings(
-    ({
-      estimatesSettings,
-    }: {
-      estimatesSettings?: Record<string, unknown>;
-    }) => ({
-      estimateNextNumber: estimatesSettings?.nextNumber,
-      estimateNumberPrefix: estimatesSettings?.numberPrefix,
-      estimateAutoIncrement: estimatesSettings?.autoIncrement,
-    }),
-  ),
-)(({ openDialog, estimateAutoIncrement }: EstimateNumberFieldProps) => {
+export const EstimateFormEstimateNumberField = compose(withDialogActions)(({
+  openDialog,
+}: EstimateNumberFieldProps) => {
   const { values, setFieldValue } = useFormikContext<EstimateFormValues>();
+  const { estimatesSettings } = useEstimateFormContext();
+  const estimateAutoIncrement = estimatesSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   const handleEstimateNumberBtnClick = () => {
     openDialog('estimate-number-form', {});

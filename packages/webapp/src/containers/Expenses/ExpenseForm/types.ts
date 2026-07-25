@@ -2,6 +2,7 @@ import type {
   CreateExpenseBody,
   EditExpenseBody,
   Expense,
+  SettingsGroup,
 } from '@bigcapital/sdk-ts';
 import type React from 'react';
 
@@ -59,4 +60,5 @@ export type ExpenseFormContext = {
   createExpenseMutate: (data: CreateExpenseBody) => Promise<unknown>;
   editExpenseMutate: ([id, data]: [number, EditExpenseBody]) => Promise<unknown>;
   setSubmitPayload: (payload: ExpenseSubmitPayload) => void;
+  expenseSettings: SettingsGroup | undefined;
 };

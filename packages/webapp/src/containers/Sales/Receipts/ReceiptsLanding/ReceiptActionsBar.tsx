@@ -37,10 +37,9 @@ import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshReceipts } from '@/hooks/query/receipts';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
@@ -55,22 +54,19 @@ function ReceiptActionsBarInner({
   receiptsFilterConditions,
   receiptSelectedRows,
 
-  // #withSettings
-  receiptsTableSize,
-
   // #withDialogActions
   openDialog,
 
   // #withDrawerActions
   openDrawer,
-
-  // #withSettingsActions
-  addSetting,
 }) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
 
   // Sale receipts list context.
-  const { receiptsViews, fields } = useReceiptsListContext();
+  const { receiptsViews, fields, receiptSettings } = useReceiptsListContext();
+  const receiptsTableSize = receiptSettings?.tableSize;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -96,7 +92,9 @@ function ReceiptActionsBarInner({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('salesReceipts', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'salesReceipts', key: 'tableSize', value: size }],
+    });
   };
 
   // Handle the import button click.
@@ -240,13 +238,9 @@ function ReceiptActionsBarInner({
 
 export const ReceiptActionsBar = compose(
   withReceiptsActions,
-  withSettingsActions,
   withReceipts(({ receiptTableState, receiptSelectedRows }) => ({
     receiptsFilterConditions: receiptTableState.filterRoles,
     receiptSelectedRows,
-  })),
-  withSettings(({ receiptSettings }) => ({
-    receiptsTableSize: receiptSettings?.tableSize,
   })),
   withDialogActions,
   withDrawerActions,

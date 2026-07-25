@@ -28,7 +28,6 @@ import { projectsPersistReducer as projects } from './project/projects.reducer';
 import { salesReceiptsPersistReducer as salesReceipts } from './receipts/receipts.reducer';
 import { resourcesReducer as resources } from './resources/resources.reducer';
 import { searchReducer as globalSearch } from './search/search.reducer';
-import { settingsPersistReducer as settings } from './settings/settings.reducer';
 import { RESET } from './types';
 import { usersReducer as users } from './users/users.reducer';
 import { vendorCreditPersistReducer as vendorCredit } from './vendor-credit/vendor-credit.reducer';
@@ -51,7 +50,6 @@ const appReducer = combineReducers({
   financialStatements,
   items,
   itemsCategories,
-  settings,
   globalSearch,
   exchangeRates,
   globalErrors,

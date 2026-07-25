@@ -2,14 +2,14 @@ import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
-import type { AccountsList, SettingsResponse } from '@bigcapital/sdk-ts';
+import type { AccountsList, AllSettings } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useAccounts, useSaveSettings, useSettings } from '@/hooks/query';
 
 interface AccountantFormContextValue {
   accounts: AccountsList | undefined;
-  allSettings?: SettingsResponse;
+  allSettings?: AllSettings;
   isAccountsLoading: boolean;
   saveSettingMutate: ReturnType<typeof useSaveSettings>['mutateAsync'];
 }

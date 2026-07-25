@@ -21,7 +21,6 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -30,17 +29,12 @@ interface WithBillsActionsProps {
   setBillsSelectedRows: (ids: number[]) => void;
 }
 
-interface WithSettingsProps {
-  billsTableSize?: string | null;
-}
-
 interface BillsDataTableProps
   extends Pick<WithBillsProps, 'billsTableState'>,
     WithBillsActionsProps,
     WithAlertActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {}
+    WithDrawerActionsProps {}
 
 function BillsDataTable({
   setBillsTableState,
@@ -49,10 +43,10 @@ function BillsDataTable({
   openAlert,
   openDialog,
   openDrawer,
-  billsTableSize,
 }: BillsDataTableProps) {
-  const { bills, pagination, isBillsLoading, isBillsFetching, isEmptyStatus } =
+  const { bills, pagination, isBillsLoading, isBillsFetching, isEmptyStatus, billSettings } =
     useBillsListContext();
+  const billsTableSize = billSettings?.tableSize as string | undefined;
 
   const history = useHistory();
   const columns = useBillsTableColumns();
@@ -167,7 +161,4 @@ export const BillsTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ billsettings }: any) => ({
-    billsTableSize: billsettings?.tableSize,
-  })),
 )(BillsDataTable);

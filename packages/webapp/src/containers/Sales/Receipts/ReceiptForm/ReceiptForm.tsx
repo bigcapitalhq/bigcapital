@@ -30,31 +30,15 @@ import type { ReceiptFormValues } from './utils';
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 
-type ReceiptFormRootProps = {
-  receiptNextNumber?: number;
-  receiptNumberPrefix?: string;
-  receiptAutoIncrement?: boolean;
-  receiptTermsConditions?: string;
-  receiptMessage?: string;
-  preferredDepositAccount?: string;
-};
+type ReceiptFormRootProps = Record<string, never>;
 
 /**
  * Receipt form.
  */
-function ReceiptFormRoot({
-  // #withSettings
-  receiptNextNumber,
-  receiptNumberPrefix,
-  receiptAutoIncrement,
-  receiptTermsConditions,
-  receiptMessage,
-  preferredDepositAccount,
-}: ReceiptFormRootProps) {
+function ReceiptFormRoot({}: ReceiptFormRootProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const history = useHistory();
@@ -67,7 +51,25 @@ function ReceiptFormRoot({
     submitPayload,
     isNewMode,
     saleReceiptState,
+    receiptSettings,
   } = useReceiptFormContext();
+
+  const receiptNextNumber = receiptSettings?.nextNumber as number | undefined;
+  const receiptNumberPrefix = receiptSettings?.numberPrefix as
+    | string
+    | undefined;
+  const receiptAutoIncrement = receiptSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const receiptTermsConditions = receiptSettings?.termsConditions as
+    | string
+    | undefined;
+  const receiptMessage = receiptSettings?.receiptMessage as
+    | string
+    | undefined;
+  const preferredDepositAccount = receiptSettings?.preferredDepositAccount as
+    | string
+    | undefined;
 
   // The next receipt number.
   const nextReceiptNumber = transactionNumber(
@@ -192,14 +194,4 @@ function ReceiptFormRoot({
   );
 }
 
-export const ReceiptForm = compose(
-  withDashboardActions,
-  withSettings(({ receiptSettings }) => ({
-    receiptNextNumber: receiptSettings?.nextNumber,
-    receiptNumberPrefix: receiptSettings?.numberPrefix,
-    receiptAutoIncrement: receiptSettings?.autoIncrement,
-    receiptMessage: receiptSettings?.receiptMessage,
-    receiptTermsConditions: receiptSettings?.termsConditions,
-    preferredDepositAccount: receiptSettings?.preferredDepositAccount,
-  })),
-)(ReceiptFormRoot);
+export const ReceiptForm = compose(withDashboardActions)(ReceiptFormRoot);

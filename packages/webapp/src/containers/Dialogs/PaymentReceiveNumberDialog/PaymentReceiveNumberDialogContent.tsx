@@ -8,8 +8,6 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useSaveSettings, useSettingsPaymentReceives } from '@/hooks/query';
 import { saveInvoke, compose } from '@/utils';
 
@@ -17,11 +15,6 @@ import { saveInvoke, compose } from '@/utils';
  * Payment receive number dialog's content.
  */
 function PaymentNumberDialogContent({
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
   // #withDialogActions
   closeDialog,
 
@@ -31,7 +24,15 @@ function PaymentNumberDialogContent({
 }) {
   const [referenceFormValues, setReferenceFormValues] = React.useState(null);
 
-  const { isLoading: isSettingsLoading } = useSettingsPaymentReceives();
+  const { data: paymentReceiveSettings, isLoading: isSettingsLoading } =
+    useSettingsPaymentReceives();
+  const nextNumber = paymentReceiveSettings?.nextNumber as number | undefined;
+  const numberPrefix = paymentReceiveSettings?.numberPrefix as
+    | string
+    | undefined;
+  const autoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   const initialFormValues = {
@@ -94,10 +95,4 @@ function PaymentNumberDialogContent({
 
 export const PaymentReceiveNumberDialogContent = compose(
   withDialogActions,
-  withSettingsActions,
-  withSettings(({ paymentReceiveSettings }) => ({
-    nextNumber: paymentReceiveSettings?.nextNumber,
-    numberPrefix: paymentReceiveSettings?.numberPrefix,
-    autoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
 )(PaymentNumberDialogContent);

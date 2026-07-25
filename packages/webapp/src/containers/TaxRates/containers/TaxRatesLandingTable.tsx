@@ -18,11 +18,11 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import {
   useActivateTaxRate,
   useInactivateTaxRate,
 } from '@/hooks/query/tax-rates';
+import { useSettingsInvoices, useSettingsOrganization } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
@@ -38,6 +38,11 @@ function TaxRatesDataTable({
   // #withDialogAction
   openDialog,
 }) {
+  // Settings hooks.
+  const { data: organizationSettings } = useSettingsOrganization();
+  const { data: invoiceSettings } = useSettingsInvoices();
+  const invoicesTableSize = invoiceSettings?.tableSize;
+
   // Invoices list context.
   const { taxRates, isTaxRatesLoading, isEmptyStatus } =
     useTaxRatesLandingContext();
@@ -139,7 +144,4 @@ export const TaxRatesLandingTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ invoiceSettings }) => ({
-    invoicesTableSize: invoiceSettings?.tableSize,
-  })),
 )(TaxRatesDataTable);

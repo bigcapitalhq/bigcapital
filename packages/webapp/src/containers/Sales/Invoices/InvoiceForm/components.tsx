@@ -13,11 +13,11 @@ import {
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
 import { compose } from '@/utils';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 
 type InvoiceExchangeRateInputFieldRootProps = React.ComponentProps<
   typeof ExchangeRateInputGroup
@@ -67,26 +67,18 @@ export function InvoiceProjectSelectButton({ label }: { label?: string }) {
   return <Button text={label ?? intl.get('select_project')} />;
 }
 
-type InvoiceNoSyncSettingsToFormProps = {
-  invoiceAutoIncrement?: boolean;
-  invoiceNextNumber?: number;
-  invoiceNumberPrefix?: string;
-};
-
 /**
  * Syncs invoice auto-increment settings to invoice form once update.
  */
-export const InvoiceNoSyncSettingsToForm = compose(
-  withSettings(({ invoiceSettings }) => ({
-    invoiceAutoIncrement: invoiceSettings?.autoIncrement,
-    invoiceNextNumber: invoiceSettings?.nextNumber,
-    invoiceNumberPrefix: invoiceSettings?.numberPrefix,
-  })),
-)(({
-  invoiceAutoIncrement,
-  invoiceNextNumber,
-  invoiceNumberPrefix,
-}: InvoiceNoSyncSettingsToFormProps) => {
+export const InvoiceNoSyncSettingsToForm = () => {
+  const { invoiceSettings } = useInvoiceFormContext();
+  const invoiceAutoIncrement = invoiceSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const invoiceNextNumber = invoiceSettings?.nextNumber as number | undefined;
+  const invoiceNumberPrefix = invoiceSettings?.numberPrefix as
+    | string
+    | undefined;
   const { setFieldValue } = useFormikContext<InvoiceFormValues>();
 
   useUpdateEffect(() => {
@@ -100,7 +92,7 @@ export const InvoiceNoSyncSettingsToForm = compose(
   }, [setFieldValue, invoiceNumberPrefix, invoiceNextNumber]);
 
   return null;
-});
+};
 
 type InvoiceExchangeRateSyncProps = {
   openDialog: WithDialogActionsProps['openDialog'];

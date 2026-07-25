@@ -8,9 +8,7 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { useSaveSettings } from '@/hooks/query';
+import { useSaveSettings, useSettingsCreditNotes } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
@@ -21,14 +19,16 @@ function CreditNoteNumberDialogContentInner({
   initialValues,
   onConfirm,
 
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
   // #withDialogActions
   closeDialog,
 }) {
+  const { data: creditNoteSettings } = useSettingsCreditNotes();
+  const nextNumber = creditNoteSettings?.nextNumber as number | undefined;
+  const numberPrefix = creditNoteSettings?.numberPrefix as string | undefined;
+  const autoIncrement = creditNoteSettings?.autoIncrement as
+    | boolean
+    | undefined;
+
   const { mutateAsync: saveSettings } = useSaveSettings();
   const [referenceFormValues, setReferenceFormValues] = React.useState(null);
 
@@ -91,10 +91,4 @@ function CreditNoteNumberDialogContentInner({
 
 export const CreditNoteNumberDialogContent = compose(
   withDialogActions,
-  withSettingsActions,
-  withSettings(({ creditNoteSettings }) => ({
-    autoIncrement: creditNoteSettings?.autoIncrement,
-    nextNumber: creditNoteSettings?.nextNumber,
-    numberPrefix: creditNoteSettings?.numberPrefix,
-  })),
 )(CreditNoteNumberDialogContentInner);

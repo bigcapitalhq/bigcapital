@@ -30,22 +30,14 @@ import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
 import { useRefreshCustomers } from '@/hooks/query/customers';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  customersTableSize?: string | null;
-}
 
 interface CustomerActionsBarInnerProps
   extends Pick<WithCustomersProps, 'customersTableState'>,
     WithCustomersActionsProps,
-    WithSettingsProps,
-    WithSettingsActionsProps,
     WithDialogActionsProps {
   customersSelectedRows: unknown[];
   customersFilterConditions: IFilterRole[];
@@ -64,15 +56,11 @@ function CustomerActionsBar({
   setCustomersTableState,
   customersInactiveMode,
 
-  // #withSettings
-  customersTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withDialogActions
   openDialog,
 }: CustomerActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const bulkDelete = useBulkDeleteCustomersDialog();
   const { openBulkDeleteDialog } = bulkDelete;
   // `isValidatingBulkDeleteCustomers` is not on the hook's return type — preserved
@@ -85,7 +73,10 @@ function CustomerActionsBar({
   const history = useHistory();
 
   // Customers list context.
-  const { customersViews, fields } = useCustomersListContext();
+  const { customersViews, fields, customersSettings } = useCustomersListContext();
+  const customersTableSize = customersSettings?.tableSize as
+    | string
+    | undefined;
 
   // Customers refresh action.
   const { refresh } = useRefreshCustomers();
@@ -122,7 +113,9 @@ function CustomerActionsBar({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size: string) => {
-    addSetting('customers', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'customers', key: 'tableSize', value: size }],
+    });
   };
 
   // Handle import button click.
@@ -236,7 +229,6 @@ function CustomerActionsBar({
 
 export const CustomersActionsBar = compose(
   withCustomersActions,
-  withSettingsActions,
   withCustomers(
     ({ customersSelectedRows, customersTableState }) => ({
       customersSelectedRows,
@@ -244,8 +236,5 @@ export const CustomersActionsBar = compose(
       customersFilterConditions: customersTableState.filterRoles,
     }),
   ),
-  withSettings(({ customersSettings }) => ({
-    customersTableSize: customersSettings?.tableSize,
-  })),
   withDialogActions,
 )(CustomerActionsBar);

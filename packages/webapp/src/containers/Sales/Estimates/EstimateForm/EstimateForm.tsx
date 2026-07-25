@@ -29,29 +29,15 @@ import {
 import type { EstimateFormValues } from './utils';
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';
 
-type EstimateFormRootProps = {
-  estimateNextNumber?: number;
-  estimateNumberPrefix?: string;
-  estimateAutoIncrementMode?: boolean;
-  estimateCustomerNotes?: string;
-  estimateTermsConditions?: string;
-};
+type EstimateFormRootProps = Record<string, never>;
 
 /**
  * Estimate form.
  */
-function EstimateFormInner({
-  // #withSettings
-  estimateNextNumber,
-  estimateNumberPrefix,
-  estimateAutoIncrementMode,
-  estimateCustomerNotes,
-  estimateTermsConditions,
-}: EstimateFormRootProps) {
+function EstimateFormInner({}: EstimateFormRootProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const history = useHistory();
@@ -62,7 +48,22 @@ function EstimateFormInner({
     createEstimateMutate,
     editEstimateMutate,
     saleEstimateState,
+    estimatesSettings,
   } = useEstimateFormContext();
+
+  const estimateNextNumber = estimatesSettings?.nextNumber as number | undefined;
+  const estimateNumberPrefix = estimatesSettings?.numberPrefix as
+    | string
+    | undefined;
+  const estimateAutoIncrementMode = estimatesSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const estimateCustomerNotes = estimatesSettings?.customerNotes as
+    | string
+    | undefined;
+  const estimateTermsConditions = estimatesSettings?.termsConditions as
+    | string
+    | undefined;
 
   const estimateNumber = transactionNumber(
     estimateNumberPrefix,
@@ -192,18 +193,4 @@ function EstimateFormInner({
   );
 }
 
-export const EstimateForm = compose(
-  withSettings(
-    ({
-      estimatesSettings,
-    }: {
-      estimatesSettings?: Record<string, unknown>;
-    }) => ({
-      estimateNextNumber: estimatesSettings?.nextNumber,
-      estimateNumberPrefix: estimatesSettings?.numberPrefix,
-      estimateAutoIncrementMode: estimatesSettings?.autoIncrement,
-      estimateCustomerNotes: estimatesSettings?.customerNotes,
-      estimateTermsConditions: estimatesSettings?.termsConditions,
-    }),
-  ),
-)(EstimateFormInner);
+export const EstimateForm = EstimateFormInner;

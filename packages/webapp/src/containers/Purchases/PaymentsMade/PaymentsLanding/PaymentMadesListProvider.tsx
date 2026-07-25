@@ -6,9 +6,11 @@ import {
   useResourceViews,
   usePaymentMades,
   useResourceMeta,
+  useSettingsBillPayments,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface PaymentMadesListProviderProps {
   query?: any;
@@ -23,6 +25,7 @@ export interface PaymentMadesListContextValue {
   paymentMadesViews: any;
   fields: IResourceField[];
   resourceMeta: any;
+  billPaymentSettings: SettingsGroup | undefined;
   isResourceMetaLoading: boolean;
   isResourceMetaFetching: boolean;
   isPaymentsLoading: boolean;
@@ -63,6 +66,8 @@ function PaymentMadesListProvider({
       }
     | undefined;
 
+  const { data: billPaymentSettings } = useSettingsBillPayments();
+
   const isEmptyStatus =
     isEmpty(listData?.data) && !isPaymentsLoading && !tableStateChanged;
 
@@ -76,6 +81,7 @@ function PaymentMadesListProvider({
       ? getFieldsFromResourceMeta(resourceMeta.fields)
       : [],
     resourceMeta,
+    billPaymentSettings,
     isResourceMetaLoading,
     isResourceMetaFetching,
 

@@ -37,7 +37,6 @@ import type {
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber, compose } from '@/utils';
 
@@ -45,23 +44,12 @@ type WithDialogActionsProps = {
   openDialog: (name: string, payload?: Record<string, unknown>) => void;
 };
 
-type WithSettingsProps = {
-  preferredDepositAccount?: number | string;
-  paymentReceiveNextNumber?: number;
-  paymentReceiveNumberPrefix?: string;
-  paymentReceiveAutoIncrement?: boolean;
-};
-
-type PaymentReceiveFormRootProps = WithDialogActionsProps & WithSettingsProps;
+type PaymentReceiveFormRootProps = WithDialogActionsProps;
 
 /**
  * Payment Receive form.
  */
 function PaymentReceiveFormRoot({
-  preferredDepositAccount,
-  paymentReceiveNextNumber,
-  paymentReceiveNumberPrefix,
-  paymentReceiveAutoIncrement,
   openDialog,
 }: PaymentReceiveFormRootProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
@@ -78,7 +66,22 @@ function PaymentReceiveFormRoot({
     createPaymentReceiveMutate,
     isExcessConfirmed,
     paymentReceivedState,
+    paymentReceiveSettings,
   } = usePaymentReceiveFormContext();
+
+  const paymentReceiveNextNumber = paymentReceiveSettings?.nextNumber as
+    | number
+    | undefined;
+  const paymentReceiveNumberPrefix = paymentReceiveSettings?.numberPrefix as
+    | string
+    | undefined;
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const preferredDepositAccount = paymentReceiveSettings?.preferredDepositAccount as
+    | number
+    | string
+    | undefined;
 
   const nextPaymentNumber = transactionNumber(
     paymentReceiveNumberPrefix,
@@ -217,13 +220,6 @@ function PaymentReceiveFormRoot({
   );
 }
 
-export const PaymentReceivedForm = compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveSettings,
-    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
-    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-    preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
-  })),
-  withDialogActions,
-)(PaymentReceiveFormRoot);
+export const PaymentReceivedForm = compose(withDialogActions)(
+  PaymentReceiveFormRoot,
+);

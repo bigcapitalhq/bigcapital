@@ -13,11 +13,11 @@ import {
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
 import { compose } from '@/utils';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 
 type ReceiptExchangeRateInputFieldRootProps = React.ComponentProps<
   typeof ExchangeRateInputGroup
@@ -63,27 +63,21 @@ export function ReceiptProjectSelectButton({ label }: { label?: string }) {
   return <Button text={label ?? intl.get('select_project')} />;
 }
 
-type ReceiptSyncIncrementSettingsToFormProps = {
-  receiptAutoIncrement?: boolean;
-  receiptNextNumber?: number;
-  receiptNumberPrefix?: string;
-};
+type ReceiptSyncIncrementSettingsToFormProps = Record<string, never>;
 
 /**
  * Syncs receipt auto-increment settings to form.
  * @return {React.ReactNode}
  */
-export const ReceiptSyncIncrementSettingsToForm = compose(
-  withSettings(({ receiptSettings }) => ({
-    receiptAutoIncrement: receiptSettings?.autoIncrement,
-    receiptNextNumber: receiptSettings?.nextNumber,
-    receiptNumberPrefix: receiptSettings?.numberPrefix,
-  })),
-)(({
-  receiptAutoIncrement,
-  receiptNextNumber,
-  receiptNumberPrefix,
-}: ReceiptSyncIncrementSettingsToFormProps) => {
+export const ReceiptSyncIncrementSettingsToForm = ({}: ReceiptSyncIncrementSettingsToFormProps) => {
+  const { receiptSettings } = useReceiptFormContext();
+  const receiptAutoIncrement = receiptSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const receiptNextNumber = receiptSettings?.nextNumber as number | undefined;
+  const receiptNumberPrefix = receiptSettings?.numberPrefix as
+    | string
+    | undefined;
   const { setFieldValue } = useFormikContext<ReceiptFormValues>();
 
   useUpdateEffect(() => {
@@ -102,7 +96,7 @@ export const ReceiptSyncIncrementSettingsToForm = compose(
   ]);
 
   return null;
-});
+};
 
 type ReceiptSyncAutoExRateToFormProps = {
   openDialog: WithDialogActionsProps['openDialog'];

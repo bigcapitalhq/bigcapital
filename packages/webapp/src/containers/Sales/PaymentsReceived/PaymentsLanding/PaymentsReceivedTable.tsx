@@ -21,7 +21,6 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -30,17 +29,12 @@ interface WithPaymentsReceivedActionsProps {
   setPaymentReceivesSelectedRows: (ids: number[]) => void;
 }
 
-interface WithSettingsProps {
-  paymentReceivesTableSize?: string | null;
-}
-
 interface PaymentsReceivedDataTableProps
   extends Pick<WithPaymentsReceivedProps, 'paymentReceivesTableState'>,
     WithPaymentsReceivedActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
-    WithDialogActionsProps,
-    WithSettingsProps {}
+    WithDialogActionsProps {}
 
 function PaymentsReceivedDataTable({
   setPaymentReceivesTableState,
@@ -49,7 +43,6 @@ function PaymentsReceivedDataTable({
   openAlert,
   openDrawer,
   openDialog,
-  paymentReceivesTableSize,
 }: PaymentsReceivedDataTableProps) {
   const history = useHistory();
 
@@ -59,7 +52,11 @@ function PaymentsReceivedDataTable({
     isPaymentReceivesLoading,
     isPaymentReceivesFetching,
     isEmptyStatus,
+    paymentReceiveSettings,
   } = usePaymentsReceivedListContext();
+  const paymentReceivesTableSize = paymentReceiveSettings?.tableSize as
+    | string
+    | undefined;
 
   const columns = usePaymentReceivesColumns();
 
@@ -162,8 +159,5 @@ export const PaymentsReceivedTable = compose(
   withDialogActions,
   withPaymentsReceived(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
-  })),
-  withSettings(({ paymentReceiveSettings }: any) => ({
-    paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
   })),
 )(PaymentsReceivedDataTable);

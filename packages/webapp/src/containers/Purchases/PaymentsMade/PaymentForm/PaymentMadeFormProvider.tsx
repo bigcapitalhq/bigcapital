@@ -8,7 +8,7 @@ import {
   useItems,
   useBranches,
   usePaymentMadeEditPage,
-  useSettings,
+  useSettingsBillPayments,
   useCreatePaymentMade,
   useEditPaymentMade,
 } from '@/hooks/query';
@@ -68,6 +68,8 @@ interface PaymentMadeFormContextValue {
 
   isExcessConfirmed: boolean;
   setIsExcessConfirmed: React.Dispatch<React.SetStateAction<boolean>>;
+
+  billPaymentSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
 }
 
 type PaymentMadeFormProviderProps = {
@@ -132,7 +134,7 @@ function PaymentMadeFormProvider({
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Fetch payment made settings.
-  useSettings();
+  const { data: billPaymentSettings } = useSettingsBillPayments();
 
   // Create and edit payment made mutations.
   const { mutateAsync: createPaymentMadeMutate } = useCreatePaymentMade();
@@ -174,6 +176,8 @@ function PaymentMadeFormProvider({
 
     isExcessConfirmed,
     setIsExcessConfirmed,
+
+    billPaymentSettings,
   };
 
   return (

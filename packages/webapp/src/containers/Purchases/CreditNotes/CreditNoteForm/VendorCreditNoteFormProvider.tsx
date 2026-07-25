@@ -49,6 +49,8 @@ type VendorCreditFormContextValue = {
   isBranchesSuccess: boolean;
   isWarehousesSuccess: boolean;
 
+  vendorCreditSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
+
   createVendorCreditMutate: (values: CreateVendorCreditBody) => Promise<void>;
   editVendorCreditMutate: (
     args: [number, EditVendorCreditBody],
@@ -88,7 +90,7 @@ function VendorCreditNoteFormProvider({
   });
 
   // Handle fetching settings.
-  useSettingsVendorCredits();
+  const { data: vendorCreditSettings } = useSettingsVendorCredits();
 
   // Handle fetch vendors data table or list.
   const { data: vendorsData, isLoading: isVendorsLoading } = useVendors({
@@ -158,6 +160,8 @@ function VendorCreditNoteFormProvider({
     isWarehouesLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+
+    vendorCreditSettings,
 
     createVendorCreditMutate,
     editVendorCreditMutate,

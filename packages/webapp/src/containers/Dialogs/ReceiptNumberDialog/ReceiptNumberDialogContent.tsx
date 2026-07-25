@@ -8,7 +8,6 @@ import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useSettingsReceipts, useSaveSettings } from '@/hooks/query';
 import { compose, saveInvoke } from '@/utils';
 
@@ -21,17 +20,16 @@ function ReceiptNumberDialogContentInner({
   onConfirm,
   initialValues,
 
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
   // #withDialogActions
   closeDialog,
 }) {
   const [referenceFormValues, setReferenceFormValues] = React.useState(null);
 
-  const { isLoading: isSettingsLoading } = useSettingsReceipts();
+  const { data: receiptSettings, isLoading: isSettingsLoading } =
+    useSettingsReceipts();
+  const nextNumber = receiptSettings?.nextNumber as number | undefined;
+  const numberPrefix = receiptSettings?.numberPrefix as string | undefined;
+  const autoIncrement = receiptSettings?.autoIncrement as boolean | undefined;
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   // Handle the form submit.
@@ -91,9 +89,4 @@ function ReceiptNumberDialogContentInner({
 
 export const ReceiptNumberDialogContent = compose(
   withDialogActions,
-  withSettings(({ receiptSettings }) => ({
-    nextNumber: receiptSettings?.nextNumber,
-    numberPrefix: receiptSettings?.numberPrefix,
-    autoIncrement: receiptSettings?.autoIncrement,
-  })),
 )(ReceiptNumberDialogContentInner);

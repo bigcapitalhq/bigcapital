@@ -7,7 +7,7 @@ import { transformItemFormData } from './ItemForm.schema';
 import type { ItemFormValues } from './types';
 import type { Item } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
-import { useSettingsSelector } from '@/hooks/state';
+import { useSettingsItems } from '@/hooks/query';
 import { useWatch } from '@/hooks/utils';
 import {
   transformToForm,
@@ -63,8 +63,8 @@ export const useItemFormInitialValues = (
   item: Item | undefined,
   initialValues?: Partial<ItemFormValues>,
 ): ItemFormValues => {
-  const { items: itemsSettings } = useSettingsSelector() as {
-    items?: ItemsSettings;
+  const { data: itemsSettings } = useSettingsItems() as {
+    data?: ItemsSettings;
   };
 
   return useMemo(

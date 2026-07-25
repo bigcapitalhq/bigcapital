@@ -7,9 +7,11 @@ import {
   useResourceMeta,
   useWarehousesTransfers,
   useRefreshWarehouseTransfers,
+  useSettingsWarehouseTransfers,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface WarehouseTransfersListProviderProps {
   query: Record<string, unknown> | null;
@@ -33,6 +35,8 @@ interface WarehouseTransfersListContextValue {
   isWarehouseTransfersFetching: boolean;
   isViewsLoading: boolean;
   isEmptyStatus: boolean;
+
+  warehouseTransferSettings: SettingsGroup | undefined;
 }
 
 const WarehouseTransfersListContext = React.createContext<
@@ -49,6 +53,9 @@ function WarehouseTransfersListProvider({
 }: WarehouseTransfersListProviderProps) {
   // warehouse transfers refresh action.
   const { refresh } = useRefreshWarehouseTransfers();
+
+  // Warehouse transfer settings.
+  const { data: warehouseTransferSettings } = useSettingsWarehouseTransfers();
 
   // Fetch warehouse transfers list according to the given custom view id.
   const {
@@ -97,6 +104,8 @@ function WarehouseTransfersListProvider({
     isWarehouseTransfersFetching,
     isViewsLoading,
     isEmptyStatus,
+
+    warehouseTransferSettings,
   };
 
   return (

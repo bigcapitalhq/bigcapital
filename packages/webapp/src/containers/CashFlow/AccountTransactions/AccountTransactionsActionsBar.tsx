@@ -26,7 +26,6 @@ import type { WithBankingProps } from '../withBanking';
 import type { WithBankingActionsProps } from '../withBankingActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
 import {
   Icon,
   DashboardActionsBar,
@@ -43,9 +42,10 @@ import {
 import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { useRefreshCashflowTransactions } from '@/hooks/query';
+import {
+  useRefreshCashflowTransactions,
+  useSaveSettings,
+} from '@/hooks/query';
 import {
   useUpdateBankAccount,
   useExcludeUncategorizedTransactions,
@@ -54,14 +54,8 @@ import {
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { compose } from '@/utils';
 
-interface WithSettingsProps {
-  cashflowTansactionsTableSize?: string | null;
-}
-
 interface AccountTransactionsActionsBarInnerProps
-  extends WithSettingsProps,
-    Pick<WithDialogActionsProps, 'openDialog'>,
-    Pick<WithSettingsActionsProps, 'addSetting'>,
+  extends Pick<WithDialogActionsProps, 'openDialog'>,
     Pick<
       WithBankingProps,
       | 'uncategorizedTransationsIdsSelected'
@@ -76,12 +70,6 @@ function AccountTransactionsActionsBarInner({
   // #withDialogActions
   openDialog,
 
-  // #withSettings
-  cashflowTansactionsTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withBanking
   uncategorizedTransationsIdsSelected,
   excludedTransactionsIdsSelected,
@@ -94,8 +82,15 @@ function AccountTransactionsActionsBarInner({
   // #withAlerts
   openAlert,
 }: AccountTransactionsActionsBarInnerProps) {
+  // Settings hook.
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
-  const { accountId, currentAccount } = useAccountTransactionsContext();
+  const { accountId, currentAccount, cashflowTransactionsSettings } =
+    useAccountTransactionsContext();
+  const cashflowTansactionsTableSize = cashflowTransactionsSettings?.tableSize as
+    | string
+    | undefined;
 
   // Refresh cashflow infinity transactions hook.
   const { refresh } = useRefreshCashflowTransactions();
@@ -112,7 +107,11 @@ function AccountTransactionsActionsBarInner({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size: unknown) => {
-    addSetting('cashflowTransactions', 'tableSize', size);
+    saveSettings({
+      options: [
+        { group: 'cashflowTransactions', key: 'tableSize', value: size },
+      ],
+    });
   };
   // Handle money in form
   const handleMoneyInFormTransaction = (account: CashFlowMenuItem) => {
@@ -469,10 +468,6 @@ function AccountTransactionsActionsBarInner({
 export const AccountTransactionsActionsBar = compose(
   withDialogActions,
   withAlertActions,
-  withSettingsActions,
-  withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
-  })),
   withBanking(
     ({
       uncategorizedTransationsIdsSelected,

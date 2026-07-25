@@ -24,20 +24,14 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  itemsTableSize?: string | null;
-}
 
 interface ItemsDataTableProps
   extends WithItemsActionsProps,
     WithAlertActionsProps,
     WithDialogActionsProps,
     WithDrawerActionsProps,
-    WithSettingsProps,
     Pick<WithItemsProps, 'itemsTableState'> {
   tableProps?: Record<string, unknown>;
 }
@@ -69,9 +63,6 @@ function ItemsDataTableInner({
   // #withDrawerActions
   openDrawer,
 
-  // #withSettings
-  itemsTableSize,
-
   // #withItems
   itemsTableState,
 
@@ -79,8 +70,15 @@ function ItemsDataTableInner({
   tableProps,
 }: ItemsDataTableProps) {
   // Items list context.
-  const { items, pagination, isItemsLoading, isEmptyStatus, isItemsFetching } =
-    useItemsListContext();
+  const {
+    items,
+    pagination,
+    isItemsLoading,
+    isEmptyStatus,
+    isItemsFetching,
+    itemsSettings,
+  } = useItemsListContext();
+  const itemsTableSize = itemsSettings?.tableSize as string | undefined;
 
   // Datatable columns.
   const columns = useItemsTableColumns();
@@ -228,8 +226,5 @@ export const ItemsDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ itemsSettings }) => ({
-    itemsTableSize: itemsSettings?.tableSize,
-  })),
   withItems(({ itemsTableState }) => ({ itemsTableState })),
 )(ItemsDataTableInner);

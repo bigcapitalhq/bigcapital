@@ -22,21 +22,15 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  customersTableSize?: string | null;
-}
 
 interface CustomersTableInnerProps
   extends Pick<WithCustomersProps, 'customersTableState'>,
     WithCustomersActionsProps,
     WithAlertActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {}
+    WithDrawerActionsProps {}
 
 type CustomerRow = Pick<Customer, 'id'>;
 type SortBy = Array<{ id: string; desc: boolean }>;
@@ -60,9 +54,6 @@ function CustomersTableInner({
 
   // #withDialogActions
   openDialog,
-
-  // #withSettings
-  customersTableSize,
 }: CustomersTableInnerProps) {
   const history = useHistory();
 
@@ -76,7 +67,11 @@ function CustomersTableInner({
     pagination,
     isCustomersLoading,
     isCustomersFetching,
+    customersSettings,
   } = useCustomersListContext();
+  const customersTableSize = customersSettings?.tableSize as
+    | string
+    | undefined;
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
@@ -203,7 +198,4 @@ export const CustomersTable = compose(
   withCustomersActions,
   withDrawerActions,
   withCustomers(({ customersTableState }) => ({ customersTableState })),
-  withSettings(({ customersSettings }) => ({
-    customersTableSize: customersSettings?.tableSize,
-  })),
 )(CustomersTableInner);

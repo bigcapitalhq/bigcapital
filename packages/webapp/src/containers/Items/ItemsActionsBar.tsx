@@ -17,7 +17,6 @@ import { withItemsActions } from './withItemsActions';
 import type { WithItemsProps } from './withItems';
 import type { WithItemsActionsProps } from './withItemsActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import type { WithSettingsActionsProps } from '@/containers/Settings/withSettingsActions';
 import {
   DashboardActionsBar,
   DashboardRowsHeightButton,
@@ -34,22 +33,15 @@ import {
 import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshItems } from '@/hooks/query/items';
+import { useSaveSettings } from '@/hooks/query';
 import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  itemsTableSize?: string | null;
-}
 
 interface ItemsActionsBarInnerProps
   extends Pick<WithItemsProps, 'itemsSelectedRows' | 'itemsTableState'>,
     WithItemsActionsProps,
-    WithSettingsProps,
-    WithSettingsActionsProps,
     WithDialogActionsProps {
   itemsFilterRoles: IFilterRole[];
   itemsInactiveMode: boolean | undefined;
@@ -67,15 +59,11 @@ function ItemsActionsBarInner({
   setItemsTableState,
   itemsInactiveMode,
 
-  // #withSettings
-  itemsTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withDialogActions
   openDialog,
 }: ItemsActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const bulkDelete = useBulkDeleteItemsDialog();
   const { openBulkDeleteDialog } = bulkDelete;
   // `isValidatingBulkDeleteItems` is not on the return type (the hook returns
@@ -86,7 +74,8 @@ function ItemsActionsBarInner({
   ).isValidatingBulkDeleteItems;
 
   // Items list context.
-  const { itemsViews, fields } = useItemsListContext();
+  const { itemsSettings, itemsViews, fields } = useItemsListContext();
+  const itemsTableSize = itemsSettings?.tableSize as string | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -125,7 +114,9 @@ function ItemsActionsBarInner({
   };
   // Handle table row size change.
   const handleTableRowSizeChange = (size: string) => {
-    addSetting('items', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'items', key: 'tableSize', value: size }],
+    });
   };
   // Handles the import button click.
   const handleImportBtnClick = () => {
@@ -238,14 +229,10 @@ function ItemsActionsBarInner({
 }
 
 export const ItemsActionsBar = compose(
-  withSettingsActions,
   withItems(({ itemsSelectedRows, itemsTableState }) => ({
     itemsSelectedRows,
     itemsInactiveMode: itemsTableState.inactiveMode,
     itemsFilterRoles: itemsTableState.filterRoles,
-  })),
-  withSettings(({ itemsSettings }) => ({
-    itemsTableSize: itemsSettings?.tableSize,
   })),
   withItemsActions,
   withDialogActions,

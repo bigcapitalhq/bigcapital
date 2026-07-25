@@ -2,13 +2,13 @@ import classNames from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
-import type { SettingsResponse } from '@bigcapital/sdk-ts';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useSettingsInvoices } from '@/hooks/query';
 
 export interface PreferencesInvoicesBootContextValue {
-  invoiceSettings?: SettingsResponse;
+  invoiceSettings?: SettingsGroup;
   isSettingsLoading: boolean;
 }
 

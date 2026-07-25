@@ -17,8 +17,6 @@ import { FieldRequiredHint, Icon, InputPrependButton } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import type { WithSettingsProps } from '@/containers/Settings/withSettings';
 import { momentFormatter, compose } from '@/utils';
 
 /** Blueprint FormGroup/InputGroup support `fastField`/`asyncControl`; package typings omit them. */
@@ -47,9 +45,6 @@ const FInputGroupField =
 
 interface WarehouseTransferFormHeaderFieldsProps {
   openDialog: WithDialogActionsProps['openDialog'];
-  warehouseTransferAutoIncrement?: unknown;
-  warehouseTransferNextNumber?: unknown;
-  warehouseTransferNumberPrefix?: unknown;
 }
 
 /**
@@ -58,13 +53,18 @@ interface WarehouseTransferFormHeaderFieldsProps {
 function WarehouseTransferFormHeaderFieldsInner({
   // #withDialogActions
   openDialog,
-
-  // #withSettings
-  warehouseTransferAutoIncrement,
-  warehouseTransferNextNumber,
-  warehouseTransferNumberPrefix,
 }: WarehouseTransferFormHeaderFieldsProps) {
-  const { warehouses } = useWarehouseTransferFormContext();
+  const { warehouses, warehouseTransferSettings } =
+    useWarehouseTransferFormContext();
+  const warehouseTransferAutoIncrement = warehouseTransferSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const warehouseTransferNextNumber = warehouseTransferSettings?.nextNumber as
+    | number
+    | undefined;
+  const warehouseTransferNumberPrefix = warehouseTransferSettings?.numberPrefix as
+    | string
+    | undefined;
   const { values } = useFormikContext<WarehouseTransferFormValues>();
 
   // Handle warehouse transfer number changing.
@@ -188,11 +188,6 @@ function WarehouseTransferFormHeaderFieldsInner({
   );
 }
 
-export const WarehouseTransferFormHeaderFields = compose(
-  withDialogActions,
-  withSettings(({ warehouseTransferSettings }: WithSettingsProps) => ({
-    warehouseTransferAutoIncrement: warehouseTransferSettings?.autoIncrement,
-    warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
-    warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,
-  })),
-)(WarehouseTransferFormHeaderFieldsInner);
+export const WarehouseTransferFormHeaderFields = compose(withDialogActions)(
+  WarehouseTransferFormHeaderFieldsInner,
+);

@@ -35,31 +35,20 @@ import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshInvoices } from '@/hooks/query/invoices';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithInvoiceActionsProps {
   setInvoicesTableState: (state: Record<string, any>) => void;
 }
 
-interface WithSettingsActionsProps {
-  addSetting: (group: string, key: string, value: any) => void;
-}
-
-interface WithSettingsProps {
-  invoicesTableSize?: string | null;
-}
-
 interface InvoiceActionsBarProps
   extends Pick<WithInvoicesProps, 'invoicesSelectedRows'>,
     WithInvoiceActionsProps,
-    WithSettingsActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {
+    WithDrawerActionsProps {
   invoicesFilterRoles: any[];
 }
 
@@ -67,16 +56,18 @@ function InvoiceActionsBar({
   setInvoicesTableState,
   invoicesFilterRoles,
   invoicesSelectedRows = [],
-  invoicesTableSize,
-  addSetting,
   openDialog,
   openDrawer,
 }: InvoiceActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
   const { openBulkDeleteDialog, isValidatingBulkDeleteInvoices } =
     useBulkDeleteInvoicesDialog();
 
-  const { invoicesViews, invoicesFields } = useInvoicesListContext();
+  const { invoicesViews, invoicesFields, invoiceSettings } =
+    useInvoicesListContext();
+  const invoicesTableSize = invoiceSettings?.tableSize as string | undefined;
 
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
@@ -95,7 +86,9 @@ function InvoiceActionsBar({
   };
 
   const handleTableRowSizeChange = (size: any) => {
-    addSetting('salesInvoices', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'salesInvoices', key: 'tableSize', value: size }],
+    });
   };
 
   const handleImportBtnClick = () => {
@@ -223,13 +216,9 @@ function InvoiceActionsBar({
 
 export const InvoicesActionsBar = compose(
   withInvoiceActions,
-  withSettingsActions,
   withInvoices(({ invoicesTableState, invoicesSelectedRows }) => ({
     invoicesFilterRoles: invoicesTableState.filterRoles,
     invoicesSelectedRows,
-  })),
-  withSettings(({ invoiceSettings }) => ({
-    invoicesTableSize: invoiceSettings?.tableSize,
   })),
   withDialogActions,
   withDrawerActions,

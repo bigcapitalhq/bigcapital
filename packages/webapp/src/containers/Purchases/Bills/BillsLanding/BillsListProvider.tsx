@@ -2,9 +2,15 @@ import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import type { BillTableRow } from './components';
 import { DashboardInsider } from '@/components/Dashboard';
-import { useResourceViews, useResourceMeta, useBills } from '@/hooks/query';
+import {
+  useResourceViews,
+  useResourceMeta,
+  useBills,
+  useSettingsBills,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface BillsListProviderProps {
   query?: any;
@@ -18,6 +24,7 @@ export interface BillsListContextValue {
   billsViews: any;
   resourceMeta: any;
   fields: IResourceField[];
+  billSettings: SettingsGroup | undefined;
   isResourceLoading: boolean;
   isResourceFetching: boolean;
   isBillsLoading: boolean;
@@ -50,6 +57,8 @@ function BillsListProvider({
     isFetching: isBillsFetching,
   } = useBills(query);
 
+  const { data: billSettings } = useSettingsBills();
+
   const isEmptyStatus =
     isEmpty(billsData?.data) && !isBillsLoading && !tableStateChanged;
 
@@ -62,6 +71,7 @@ function BillsListProvider({
     fields: resourceMeta?.fields
       ? getFieldsFromResourceMeta(resourceMeta.fields)
       : [],
+    billSettings,
     isResourceLoading,
     isResourceFetching,
 

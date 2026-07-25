@@ -26,7 +26,6 @@ import {
   FInputGroup,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { momentFormatter, compose } from '@/utils';
 
 const getFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
@@ -47,24 +46,27 @@ const getFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
 `;
 
 interface VendorCreditNoteFormHeaderFieldsInnerProps
-  extends Pick<WithDialogActionsProps, 'openDialog'> {
-  vendorcreditAutoIncrement?: boolean;
-  vendorcreditNumberPrefix?: string;
-  vendorcreditNextNumber?: number;
-}
+  extends Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Vendor Credit note form header fields.
  */
 function VendorCreditNoteFormHeaderFieldsInner({
   openDialog,
-  vendorcreditAutoIncrement,
-  vendorcreditNumberPrefix,
-  vendorcreditNextNumber,
 }: VendorCreditNoteFormHeaderFieldsInnerProps) {
   const theme = useTheme();
   const fieldsClassName = getFieldsStyle(theme);
   const { values } = useFormikContext<VendorCreditFormValues>();
+  const { vendorCreditSettings } = useVendorCreditNoteFormContext();
+  const vendorcreditAutoIncrement = vendorCreditSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const vendorcreditNextNumber = vendorCreditSettings?.nextNumber as
+    | number
+    | undefined;
+  const vendorcreditNumberPrefix = vendorCreditSettings?.numberPrefix as
+    | string
+    | undefined;
 
   // Handle vendor credit number changing.
   const handleVendorCreditNumberChange = () => {
@@ -208,14 +210,9 @@ function VendorCreditFormVendorSelect() {
   );
 }
 
-export const VendorCreditNoteFormHeaderFields = compose(
-  withDialogActions,
-  withSettings(({ vendorsCreditNoteSetting }) => ({
-    vendorcreditAutoIncrement: vendorsCreditNoteSetting?.autoIncrement,
-    vendorcreditNextNumber: vendorsCreditNoteSetting?.nextNumber,
-    vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
-  })),
-)(VendorCreditNoteFormHeaderFieldsInner);
+export const VendorCreditNoteFormHeaderFields = compose(withDialogActions)(
+  VendorCreditNoteFormHeaderFieldsInner,
+);
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;

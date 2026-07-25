@@ -37,9 +37,8 @@ import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithVendorsCreditNotesActionsProps {
@@ -50,22 +49,12 @@ interface WithVendorActionsProps {
   setVendorCreditsTableState: (state: Record<string, any>) => void;
 }
 
-interface WithSettingsActionsProps {
-  addSetting: (group: string, key: string, value: any) => void;
-}
-
-interface WithSettingsProps {
-  creditNoteTableSize?: string | null;
-}
-
 interface VendorsCreditNoteActionsBarProps
   extends Pick<WithVendorsCreditNotesProps, 'vendorsCreditNoteSelectedRows'>,
     WithVendorsCreditNotesActionsProps,
     WithVendorActionsProps,
-    WithSettingsActionsProps,
     WithDialogActionsProps,
-    WithDrawerActionsProps,
-    WithSettingsProps {
+    WithDrawerActionsProps {
   vendorCreditFilterRoles: any[];
 }
 
@@ -74,15 +63,18 @@ function VendorsCreditNoteActionsBarInner({
   vendorCreditFilterRoles,
   vendorsCreditNoteSelectedRows,
   setVendorsCreditNoteTableState,
-  creditNoteTableSize,
-  addSetting,
   openDialog,
   openDrawer,
 }: VendorsCreditNoteActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
 
-  const { VendorCreditsViews, fields, refresh } =
+  const { VendorCreditsViews, fields, refresh, vendorCreditSettings } =
     useVendorsCreditNoteListContext();
+  const creditNoteTableSize = vendorCreditSettings?.tableSize as
+    | string
+    | undefined;
 
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
@@ -96,7 +88,9 @@ function VendorsCreditNoteActionsBarInner({
     refresh();
   };
   const handleTableRowSizeChange = (size: any) => {
-    addSetting('vendorCredit', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'vendorCredit', key: 'tableSize', value: size }],
+    });
   };
   const handleImportBtnClick = () => {
     history.push('/vendor-credits/import');
@@ -226,16 +220,12 @@ function VendorsCreditNoteActionsBarInner({
 export const VendorsCreditNoteActionsBar = compose(
   withVendorsCreditNotesActions,
   withVendorActions,
-  withSettingsActions,
   withVendorsCreditNotes(
     ({ vendorsCreditNoteTableState, vendorsCreditNoteSelectedRows }) => ({
       vendorCreditFilterRoles: vendorsCreditNoteTableState.filterRoles,
       vendorsCreditNoteSelectedRows,
     }),
   ),
-  withSettings(({ vendorsCreditNoteSetting }: any) => ({
-    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
-  })),
   withDialogActions,
   withDrawerActions,
 )(VendorsCreditNoteActionsBarInner);

@@ -20,8 +20,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import type { WithSettingsProps } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
@@ -42,9 +40,7 @@ interface WarehouseTransfersDataTableInnerProps
     >,
     Pick<WithAlertActionsProps, 'openAlert'>,
     Pick<WithDrawerActionsProps, 'openDrawer'>,
-    Pick<WithDialogActionsProps, 'openDialog'> {
-  warehouseTransferTableSize?: unknown;
-}
+    Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Warehouse transfers datatable.
@@ -58,8 +54,6 @@ function WarehouseTransfersDataTableInner({
 
   // #withDrawerActions
   openDrawer,
-
-  warehouseTransferTableSize,
 }: WarehouseTransfersDataTableInnerProps) {
   const history = useHistory();
 
@@ -70,7 +64,9 @@ function WarehouseTransfersDataTableInner({
     isEmptyStatus,
     isWarehouseTransfersLoading,
     isWarehouseTransfersFetching,
+    warehouseTransferSettings,
   } = useWarehouseTranfersListContext();
+  const warehouseTransferTableSize = warehouseTransferSettings?.tableSize;
 
   // Invoices table columns.
   const columns = useWarehouseTransfersTableColumns();
@@ -171,7 +167,4 @@ export const WarehouseTransfersDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ warehouseTransferSettings }: WithSettingsProps) => ({
-    warehouseTransferTableSize: warehouseTransferSettings?.tableSize,
-  })),
 )(WarehouseTransfersDataTableInner);

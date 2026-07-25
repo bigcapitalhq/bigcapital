@@ -25,24 +25,15 @@ import { VendorCreditNoteFormTopBar } from './VendorCreditNoteFormTopBar';
 import { VendorCreditNoteItemsEntriesEditor } from './VendorCreditNoteItemsEntriesEditor';
 import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { compose, safeSumBy, transactionNumber } from '@/utils';
+import { safeSumBy, transactionNumber } from '@/utils';
 
-interface VendorCreditNoteFormInnerProps {
-  vendorcreditAutoIncrement?: boolean;
-  vendorcreditNumberPrefix?: string;
-  vendorcreditNextNumber?: number;
-}
+interface VendorCreditNoteFormInnerProps {}
 
 /**
  * Vendor Credit note form.
  */
-function VendorCreditNoteFormInner({
-  vendorcreditAutoIncrement,
-  vendorcreditNumberPrefix,
-  vendorcreditNextNumber,
-}: VendorCreditNoteFormInnerProps) {
+function VendorCreditNoteFormInner({}: VendorCreditNoteFormInnerProps) {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const history = useHistory();
@@ -55,7 +46,18 @@ function VendorCreditNoteFormInner({
     newVendorCredit,
     createVendorCreditMutate,
     editVendorCreditMutate,
+    vendorCreditSettings,
   } = useVendorCreditNoteFormContext();
+
+  const vendorcreditAutoIncrement = vendorCreditSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const vendorcreditNextNumber = vendorCreditSettings?.nextNumber as
+    | number
+    | undefined;
+  const vendorcreditNumberPrefix = vendorCreditSettings?.numberPrefix as
+    | string
+    | undefined;
 
   // Credit number.
   const vendorCreditNumber = transactionNumber(
@@ -170,10 +172,4 @@ function VendorCreditNoteFormInner({
   );
 }
 
-export const VendorCreditNoteForm = compose(
-  withSettings(({ vendorsCreditNoteSetting }) => ({
-    vendorcreditAutoIncrement: vendorsCreditNoteSetting?.autoIncrement,
-    vendorcreditNextNumber: vendorsCreditNoteSetting?.nextNumber,
-    vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
-  })),
-)(VendorCreditNoteFormInner);
+export const VendorCreditNoteForm = VendorCreditNoteFormInner;

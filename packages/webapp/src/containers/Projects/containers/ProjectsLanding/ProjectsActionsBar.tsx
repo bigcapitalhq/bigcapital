@@ -9,6 +9,7 @@ import {
 import React from 'react';
 import { withProjects } from './withProjects';
 import { withProjectsActions } from './withProjectsActions';
+import { useProjectsListContext } from './ProjectsListProvider';
 import {
   Icon,
   Can,
@@ -20,8 +21,7 @@ import {
 import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
@@ -37,13 +37,11 @@ function ProjectsActionsBarInner({
 
   // #withProjectsActions
   setProjectsTableState,
-
-  // #withSettings
-  projectsTableSize,
-
-  // #withSettingsActions
-  addSetting,
 }) {
+  // Settings hook.
+  const { projectSettings } = useProjectsListContext();
+  const projectsTableSize = projectSettings?.tableSize;
+  const { mutateAsync: saveSettings } = useSaveSettings();
   // Handle tab change.
   const handleTabChange = (view) => {
     setProjectsTableState({
@@ -56,7 +54,9 @@ function ProjectsActionsBarInner({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('projects', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'projects', key: 'tableSize', value: size }],
+    });
   };
 
   // Handle new project button click.
@@ -119,11 +119,7 @@ function ProjectsActionsBarInner({
 export const ProjectsActionsBar = compose(
   withDialogActions,
   withProjectsActions,
-  withSettingsActions,
   withProjects(({ projectsTableState }) => ({
     projectsFilterRoles: projectsTableState?.filterRoles,
-  })),
-  withSettings(({ projectSettings }) => ({
-    projectsTableSize: projectSettings?.tableSize,
   })),
 )(ProjectsActionsBarInner);

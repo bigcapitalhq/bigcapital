@@ -8,18 +8,18 @@ import {
   TableSkeletonHeader,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 
 /**
  * Porject sales datatable.
  * @returns
  */
-function ProjectSalesTableRoot({
-  // #withSettings
-  salesTableSize,
-}) {
+function ProjectSalesTableRoot() {
+  // Settings hook.
+  const { projectSettings } = useProjectDetailContext();
+  const salesTableSize = projectSettings?.tableSize;
+
   // Retrieve project sales table columns.
   const columns = useProjectSalesColumns();
 
@@ -50,8 +50,4 @@ function ProjectSalesTableRoot({
     />
   );
 }
-export const ProjectSalesTable = compose(
-  withSettings(({ salesSettings }) => ({
-    salesTableSize: salesSettings?.tableSize,
-  })),
-)(ProjectSalesTableRoot);
+export const ProjectSalesTable = ProjectSalesTableRoot;

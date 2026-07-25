@@ -27,17 +27,24 @@ import {
   FMoneyInputGroup,
 } from '@/components';
 import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useAutofocus } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter, compose } from '@/utils';
+import { momentFormatter } from '@/utils';
 
 /**
  * Quick payment receive form fields.
  */
-function QuickPaymentReceiveFormFieldsInner({ paymentReceiveAutoIncrement }) {
+function QuickPaymentReceiveFormFieldsInner() {
+  const {
+    accounts,
+    branches,
+    paymentReceiveSettings,
+  } = useQuickPaymentReceiveContext();
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
+
   const baseCurrency = useCurrentOrganizationBaseCurrency();
-  const { accounts, branches } = useQuickPaymentReceiveContext();
 
   // Intl context.
   const { values } = useFormikContext();
@@ -169,11 +176,7 @@ function QuickPaymentReceiveFormFieldsInner({ paymentReceiveAutoIncrement }) {
   );
 }
 
-export const QuickPaymentReceiveFormFields = compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-)(QuickPaymentReceiveFormFieldsInner);
+export const QuickPaymentReceiveFormFields = QuickPaymentReceiveFormFieldsInner;
 
 export const BranchRowDivider = styled.div`
   height: 1px;

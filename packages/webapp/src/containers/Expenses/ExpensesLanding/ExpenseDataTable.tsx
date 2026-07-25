@@ -21,19 +21,13 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithSettingsProps {
-  expensesTableSize?: string | null;
-}
 
 interface ExpensesDataTableProps
   extends WithExpensesActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
-    WithSettingsProps,
     Pick<WithExpensesProps, 'expensesTableState'> {}
 
 /**
@@ -50,9 +44,6 @@ function ExpensesDataTable({
   // #withAlertActions
   openAlert,
 
-  // #withSettings
-  expensesTableSize,
-
   // #withExpenses
   expensesTableState,
 }: ExpensesDataTableProps) {
@@ -64,7 +55,9 @@ function ExpensesDataTable({
     isExpensesLoading,
     isExpensesFetching,
     isEmptyStatus,
+    expenseSettings,
   } = useExpensesListContext();
+  const expensesTableSize = expenseSettings?.tableSize as string | undefined;
 
   const history = useHistory();
 
@@ -181,8 +174,5 @@ export const ExpenseDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withExpensesActions,
-  withSettings(({ expenseSettings }) => ({
-    expensesTableSize: expenseSettings?.tableSize,
-  })),
   withExpenses(({ expensesTableState }) => ({ expensesTableState })),
 )(ExpensesDataTable);

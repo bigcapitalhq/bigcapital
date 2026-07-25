@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
 import React, { createContext } from 'react';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
 import { useProjects } from '@/containers/Projects/hooks';
@@ -11,6 +12,7 @@ import {
   useBranches,
   useCreateExpense,
   useEditExpense,
+  useSettingsExpenses,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import type { ExpenseFormContext } from './types';
@@ -67,6 +69,9 @@ function ExpenseFormPageProvider({
   const { mutateAsync: createExpenseMutate } = useCreateExpense();
   const { mutateAsync: editExpenseMutate } = useEditExpense();
 
+  // Expense settings.
+  const { data: expenseSettings } = useSettingsExpenses();
+
   // Submit form payload - using ref for synchronous access.
   const submitPayloadRef = React.useRef<ExpenseFormContext['submitPayloadRef']['current']>({});
 
@@ -104,6 +109,8 @@ function ExpenseFormPageProvider({
     createExpenseMutate,
     editExpenseMutate,
     setSubmitPayload,
+
+    expenseSettings,
   };
 
   return (
