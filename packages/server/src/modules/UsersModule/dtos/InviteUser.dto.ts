@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiExtraModels } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { IsValidPassword } from '@/modules/Auth/password.policy';
 
 @ApiExtraModels()
 export class InviteUserDto {
@@ -30,8 +31,7 @@ export class InviteUserDto {
     description: 'Password for the invited user',
     example: 'StrongPassword123!',
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsValidPassword()
   password: string;
 }
 
