@@ -19,6 +19,7 @@ import {
   Res,
   UnauthorizedException,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -32,12 +33,15 @@ import { FileInterceptor } from '@/common/interceptors/file.interceptor';
 import { ConfigService } from '@nestjs/config';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { AttachmentAction } from './Attachments.types';
 
 @ApiTags('Attachments')
 @Controller('/attachments')
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class AttachmentsController {
   /**
    * @param {AttachmentsApplication} attachmentsApplication - Attachments application.
@@ -56,6 +60,7 @@ export class AttachmentsController {
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
+  @RequirePermission(AttachmentAction.Create, AbilitySubject.Attachment)
   @ApiOperation({ summary: 'Upload attachment to S3' })
   @ApiBody({ description: 'Upload attachment', type: UploadAttachmentDto })
   @ApiResponse({
@@ -133,6 +138,7 @@ export class AttachmentsController {
   @ApiOperation({ summary: 'Link attachment to a model' })
   @ApiParam({ name: 'id', description: 'Attachment ID' })
   @ApiBody({ type: LinkAttachmentDto })
+  @RequirePermission(AttachmentAction.Create, AbilitySubject.Attachment)
   @ApiResponse({
     status: 200,
     description: 'The document has been linked successfully',
@@ -160,6 +166,7 @@ export class AttachmentsController {
   @ApiOperation({ summary: 'Unlink attachment from a model' })
   @ApiParam({ name: 'id', description: 'Attachment ID' })
   @ApiBody({ type: UnlinkAttachmentDto })
+  @RequirePermission(AttachmentAction.Delete, AbilitySubject.Attachment)
   @ApiResponse({
     status: 200,
     description: 'The document has been unlinked successfully',

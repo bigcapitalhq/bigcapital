@@ -325,6 +325,7 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
     subjectLabel: 'ability.attachments',
     abilities: [
       { key: AttachmentAction.View, label: 'ability.view', default: true },
+      { key: AttachmentAction.Create, label: 'ability.create', default: true },
       { key: AttachmentAction.Delete, label: 'ability.delete', default: true },
     ],
   },
