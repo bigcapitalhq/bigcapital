@@ -20,6 +20,7 @@ import {
   AbilitySubject,
   ISubjectAbilitiesSchema,
   ISubjectAbilitySchema,
+  RoleAction,
 } from './Roles.types';
 import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.types';
 import { PreferencesAction } from '../Settings/Settings.types';
@@ -327,6 +328,16 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: AttachmentAction.View, label: 'ability.view', default: true },
       { key: AttachmentAction.Create, label: 'ability.create', default: true },
       { key: AttachmentAction.Delete, label: 'ability.delete', default: true },
+    ],
+  },
+  {
+    subject: AbilitySubject.Role,
+    subjectLabel: 'ability.roles',
+    abilities: [
+      { key: RoleAction.View, label: 'ability.view', default: false },
+      { key: RoleAction.Create, label: 'ability.create', default: false },
+      { key: RoleAction.Edit, label: 'ability.edit', default: false },
+      { key: RoleAction.Delete, label: 'ability.delete', default: false },
     ],
   },
   {
