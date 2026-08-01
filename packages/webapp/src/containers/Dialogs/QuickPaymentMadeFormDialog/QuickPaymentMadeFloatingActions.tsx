@@ -1,18 +1,19 @@
-// @ts-nocheck
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import React from 'react';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
+import type { QuickPaymentMadeFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
+interface QuickPaymentMadeFloatingActionsProps extends WithDialogActionsProps {}
+
 function QuickPaymentMadeFloatingActionsInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: QuickPaymentMadeFloatingActionsProps) {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<QuickPaymentMadeFormValues>();
 
   const { dialogName } = useQuickPaymentMadeContext();
 

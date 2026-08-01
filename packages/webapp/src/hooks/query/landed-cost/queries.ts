@@ -53,7 +53,7 @@ export function useDeleteLandedCost(props) {
 }
 
 export function useLandedCostTransaction(query, props) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: landedCostKeys.list({ query }),

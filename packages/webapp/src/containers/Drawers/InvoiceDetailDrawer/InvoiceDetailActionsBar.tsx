@@ -141,7 +141,7 @@ function InvoiceDetailActionsBarInner({
           <NavbarDivider />
         </Can>
         <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
-          <If condition={invoice.delivered && !invoice.isFullyPaid}>
+          <If condition={invoice.isDelivered && !invoice.isFullyPaid}>
             <Button
               className={Classes.MINIMAL}
               icon={<ArrowBottomLeft size={16} />}

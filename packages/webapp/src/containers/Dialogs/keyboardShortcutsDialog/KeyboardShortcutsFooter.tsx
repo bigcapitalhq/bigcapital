@@ -1,14 +1,15 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
+interface KeyboardShortcutsFooterProps extends WithDialogActionsProps {}
+
 function KeyboardShortcutsFooterInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: KeyboardShortcutsFooterProps): React.ReactElement {
   const handleClose = () => {
     closeDialog('keyboard-shortcuts');
   };

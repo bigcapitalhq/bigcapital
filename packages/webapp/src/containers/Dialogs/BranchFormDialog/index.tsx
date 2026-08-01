@@ -1,23 +1,29 @@
-// @ts-nocheck
-import React from 'react';
+import React, { lazy } from 'react';
+import type { BranchFormDialogPayload } from './types';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const BranchFormDialogContent = React.lazy(() =>
+const BranchFormDialogContent = lazy(() =>
   import('./BranchFormDialogContent').then((m) => ({
     default: m.BranchFormDialogContent,
   })),
 );
+
+interface BranchFormDialogProps extends DialogBaseProps {
+  dialogName: string;
+  payload: BranchFormDialogPayload;
+}
 
 /**
  * Branch form form dialog.
  */
 function BranchFormDialog({
   dialogName,
-  payload: { branchId, action },
+  payload: { branchId = null, action } = {},
   isOpen,
-}) {
+}: BranchFormDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}

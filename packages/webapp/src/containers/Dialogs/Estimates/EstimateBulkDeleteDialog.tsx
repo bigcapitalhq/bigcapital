@@ -1,8 +1,9 @@
-// @ts-nocheck
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithEstimatesActionsProps } from '@/containers/Sales/Estimates/EstimatesLanding/withEstimatesActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
@@ -10,23 +11,39 @@ import { withEstimatesActions } from '@/containers/Sales/Estimates/EstimatesLand
 import { useBulkDeleteEstimates } from '@/hooks/query/estimates';
 import { compose } from '@/utils';
 
+interface EstimateBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface EstimateBulkDeleteDialogProps
+  extends WithEstimatesActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
 function EstimateBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withEstimatesActions
   setEstimatesSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteEstimates, isLoading } =
+}: EstimateBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: EstimateBulkDeleteDialogPayload = payload ?? {};
+
+  const { mutateAsync: bulkDeleteEstimates, isPending: isLoading } =
     useBulkDeleteEstimates();
 
   const handleCancel = () => {

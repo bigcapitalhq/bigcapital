@@ -96,7 +96,7 @@ export function useBranchesTableColumns() {
       },
       {
         Header: intl.get('branches.column.phone_number'),
-        accessor: 'phone_number',
+        accessor: 'phoneNumber',
         width: '120',
         disableSortBy: true,
       },

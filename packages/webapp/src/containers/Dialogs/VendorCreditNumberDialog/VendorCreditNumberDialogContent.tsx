@@ -1,7 +1,9 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { VendorCreditNumberDilaogProvider } from './VendorCreditNumberDilaogProvider';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
 import {
@@ -11,34 +13,45 @@ import {
 import { useSaveSettings, useSettingsVendorCredits } from '@/hooks/query';
 import { compose } from '@/utils';
 
+interface VendorCreditNumberDialogContentProps
+  extends WithDialogActionsProps {
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
 /**
  * Vendor credit number dialog
  */
 function VendorCreditNumberDialogContentInner({
-  // #ownProps
   initialValues,
   onConfirm,
-
-  // #withDialogActions
   closeDialog,
-}) {
+}: VendorCreditNumberDialogContentProps): React.ReactElement {
   const { data: vendorCreditSettings } = useSettingsVendorCredits();
-  const nextNumber = vendorCreditSettings?.nextNumber as number | undefined;
+  const nextNumber = vendorCreditSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
   const numberPrefix = vendorCreditSettings?.numberPrefix as string | undefined;
   const autoIncrement = vendorCreditSettings?.autoIncrement as
     | boolean
+    | string
     | undefined;
 
   const { mutateAsync: saveSettings } = useSaveSettings();
-  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+  const [referenceFormValues, setReferenceFormValues] =
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
 
   // Handle the submit form.
-  const handleSubmitForm = (values, { setSubmitting }) => {
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     // Handle the form success.
     const handleSuccess = () => {
       setSubmitting(false);
       closeDialog('vendor-credit-form');
-      onConfirm(values);
+      onConfirm?.(values);
     };
     // Handle the form errors.
     const handleErrors = () => {
@@ -60,7 +73,7 @@ function VendorCreditNumberDialogContentInner({
     closeDialog('vendor-credit-form');
   };
   // Handle form change.
-  const handleChange = (values) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
 

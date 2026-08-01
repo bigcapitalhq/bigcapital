@@ -1,56 +1,64 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
-import { pick, snakeCase } from 'lodash';
+import { Formik, type FormikHelpers } from 'formik';
+import { pick } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { InviteUserFormSchema } from './InviteUserDialog.schema';
 import { InviteUserFormContent } from './InviteUserFormContent';
 import { useInviteUserFormContext } from './InviteUserFormProvider';
 import { transformApiErrors } from './utils';
+import type { InviteUserBody } from '@bigcapital/sdk-ts';
+import type { InviteUserFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, objectKeysTransform } from '@/utils';
+import { compose } from '@/utils';
 
-const initialValues = {
+const initialValues: InviteUserFormValues = {
   email: '',
-  role_id: '',
+  roleId: '',
 };
 
+interface InviteUserFormProps extends WithDialogActionsProps {}
+
 function InviteUserFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: InviteUserFormProps): React.ReactElement {
   const { dialogName, isEditMode, inviteUserMutate, userId } =
     useInviteUserFormContext();
 
-  const initialFormValues = {
+  const initialFormValues: InviteUserFormValues = {
     ...initialValues,
     status: 1,
     ...(isEditMode &&
-      pick(
-        objectKeysTransform(userId, snakeCase),
-        Object.keys(InviteUserFormSchema.fields),
-      )),
+      (pick(
+        userId,
+        Object.keys(InviteUserFormSchema.fields ?? {}),
+      ) as Partial<InviteUserFormValues>)),
   };
 
-  const handleSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleSubmit = (
+    values: InviteUserFormValues,
+    { setSubmitting, setErrors }: FormikHelpers<InviteUserFormValues>,
+  ) => {
     const form = { ...values };
 
     // Handle close the dialog after success response.
     const afterSubmit = () => {
       closeDialog(dialogName);
     };
-    const onSuccess = ({ response }) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('teammate_invited_to_organization_account'),
         intent: Intent.SUCCESS,
       });
-      afterSubmit(response);
+      afterSubmit();
     };
 
     // Handle the response error.
-    const onError = (error) => {
+    const onError = (error: {
+      data: { errors: Array<{ type: string }> };
+    }) => {
       const {
         data: { errors },
       } = error;
@@ -60,7 +68,9 @@ function InviteUserFormInner({
       setErrors({ ...errorsTransformed });
       setSubmitting(false);
     };
-    inviteUserMutate(form).then(onSuccess).catch(onError);
+    // Form keeps `roleId: number | string` for Yup validation ergonomics; the
+    // runtime value is a number when valid. Cast narrows to the SDK body shape.
+    inviteUserMutate(form as InviteUserBody).then(onSuccess).catch(onError);
   };
 
   return (

@@ -96,12 +96,6 @@ export class SaleInvoiceResponseDto {
   taxes?: SaleInvoiceTaxEntryDto[];
 
   @ApiProperty({
-    description: 'Whether the invoice has been delivered',
-    example: false,
-  })
-  delivered: boolean;
-
-  @ApiProperty({
     description: 'The date when the invoice was delivered',
     example: '2023-01-02T00:00:00Z',
     required: false,

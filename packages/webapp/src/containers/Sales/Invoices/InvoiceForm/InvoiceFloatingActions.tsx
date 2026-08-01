@@ -97,7 +97,7 @@ export function InvoiceFloatingActions() {
     <PageForm.FooterActions spacing={10} position={'apart'}>
       <Group spacing={10}>
         {/* ----------- Save And Deliver ----------- */}
-        <If condition={!invoice || !invoice?.delivered}>
+        <If condition={!invoice || !invoice?.isDelivered}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}
@@ -165,7 +165,7 @@ export function InvoiceFloatingActions() {
         </If>
 
         {/* ----------- Save and New ----------- */}
-        <If condition={!!invoice && !!invoice?.delivered}>
+        <If condition={!!invoice && !!invoice?.isDelivered}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}

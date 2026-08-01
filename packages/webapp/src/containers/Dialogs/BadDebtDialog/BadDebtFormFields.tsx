@@ -1,40 +1,29 @@
-// @ts-nocheck
 import {
   Classes,
-  FormGroup,
-  TextArea,
   ControlGroup,
   Callout,
   Intent,
 } from '@blueprintjs/core';
-import classNames from 'classnames';
-import { FastField, ErrorMessage } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useBadDebtContext } from './BadDebtFormProvider';
 import {
-  FMoneyInputGroup,
   FTextArea,
   FormattedMessage as T,
   FFormGroup,
-} from '@/components';
-import {
+  FMoneyInputGroup,
   FAccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
   FieldRequiredHint,
 } from '@/components';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { CLASSES } from '@/constants/classes';
 import { useAutofocus } from '@/hooks';
-import { inputIntent } from '@/utils';
 
 /**
  * Bad debt form fields.
  */
-export function BadDebtFormFields() {
-  const amountfieldRef = useAutofocus();
-
+export function BadDebtFormFields(): React.ReactElement {
+  const amountfieldRef = useAutofocus<HTMLInputElement>();
   const { accounts, invoice } = useBadDebtContext();
 
   return (
@@ -50,28 +39,28 @@ export function BadDebtFormFields() {
         name={'amount'}
         label={intl.get('bad_debt.dialog.written_off_amount')}
         labelInfo={<FieldRequiredHint />}
-        fill
       >
         <ControlGroup>
-          <InputPrependText text={invoice?.currency_code || ''} />
+          <InputPrependText text={invoice?.currencyCode || ''} />
           <FMoneyInputGroup
             name={'amount'}
             minimal={true}
-            inputRef={(ref) => (amountfieldRef.current = ref)}
+            inputRef={(ref: HTMLInputElement | null) => {
+              amountfieldRef.current = ref;
+            }}
           />
         </ControlGroup>
       </FFormGroup>
 
-      {/*------------ Expense account -----------*/}
+      {/*------------ Expense account ----------- */}
       <FFormGroup
-        name={'expense_account_id'}
+        name={'expenseAccountId'}
         label={intl.get('expense_account_id')}
         labelInfo={<FieldRequiredHint />}
-        fill
       >
         <FAccountsSuggestField
-          name={'expense_account_id'}
-          items={accounts}
+          name={'expenseAccountId'}
+          items={accounts ?? []}
           filterByTypes={[ACCOUNT_TYPE.EXPENSE]}
           fill
         />
@@ -82,7 +71,6 @@ export function BadDebtFormFields() {
         name={'reason'}
         label={intl.get('reason')}
         labelInfo={<FieldRequiredHint />}
-        fill
       >
         <FTextArea name={'reason'} growVertically={true} large={true} fill />
       </FFormGroup>

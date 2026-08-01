@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Classes, Intent, Tag } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
 import React from 'react';
@@ -41,7 +40,9 @@ export function BulkDeleteDialogContent({
       </x.div>
 
       <x.div display="flex" alignItems="center" gap={'12px'} mt={'8px'}>
-        <Tag intent={Intent.INFO} minimal>
+        {/* `Intent.INFO` was removed in Blueprint v5; using PRIMARY as the
+            nearest equivalent for the "cannot be deleted" tag. */}
+        <Tag intent={Intent.PRIMARY} minimal>
           {undeletableCount}
         </Tag>
         <x.div>

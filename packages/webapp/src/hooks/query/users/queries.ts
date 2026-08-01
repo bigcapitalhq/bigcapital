@@ -117,7 +117,7 @@ export function useDeleteUser(props?: UseMutationOptions<void, Error, number>) {
 export function useUsers(
   props?: Omit<UseQueryOptions<UsersListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: usersKeys.all(),
@@ -129,7 +129,7 @@ export function useUser(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<User>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: usersKeys.detail(id),

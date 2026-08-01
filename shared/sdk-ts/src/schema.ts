@@ -6002,7 +6002,7 @@ export interface components {
              * @description Branch phone number
              * @example +1-555-123-4567
              */
-            phone_number?: string;
+            phoneNumber?: string;
             /**
              * @description Branch email
              * @example branch@example.com
@@ -6050,7 +6050,7 @@ export interface components {
              * @description Branch phone number
              * @example +1-555-123-4567
              */
-            phone_number?: string;
+            phoneNumber?: string;
             /**
              * @description Branch email
              * @example branch@example.com
@@ -6979,11 +6979,6 @@ export interface components {
             /** @description The tax entries of the invoice */
             taxes?: components["schemas"]["SaleInvoiceTaxEntryDto"][];
             /**
-             * @description Whether the invoice has been delivered
-             * @example false
-             */
-            delivered: boolean;
-            /**
              * Format: date-time
              * @description The date when the invoice was delivered
              * @example 2023-01-02T00:00:00Z
@@ -7422,6 +7417,8 @@ export interface components {
              */
             attachments: string[];
         };
+        CreatePdfTemplateDto: Record<string, never>;
+        EditPdfTemplateDto: Record<string, never>;
         UploadAttachmentDto: {
             /** Format: binary */
             file: string;
@@ -12478,6 +12475,42 @@ export interface components {
              * @example 2024-03-16T00:00:00Z
              */
             updatedAt?: string;
+        };
+        VendorCreditBillToApplyResponseDto: {
+            /** @example 1 */
+            id: number;
+            /** @example BILL-0001 */
+            billNo: string;
+            /**
+             * Format: date-time
+             * @example 2024-01-10
+             */
+            billDate: string;
+            /**
+             * Format: date-time
+             * @example 2024-01-20
+             */
+            dueDate: string;
+            /** @example 500 */
+            amount: number;
+            /** @example 500 */
+            dueAmount: number;
+            /** @example 0 */
+            paymentAmount: number;
+            /** @example PO-001 */
+            referenceNo?: string | null;
+            /** @example USD */
+            currencyCode?: string | null;
+            /** @example 2024-01-10 */
+            formattedBillDate: string;
+            /** @example 2024-01-20 */
+            formattedDueDate: string;
+            /** @example $500.00 */
+            formattedAmount: string;
+            /** @example $500.00 */
+            formattedDueAmount: string;
+            /** @example $0.00 */
+            formattedPaymentAmount: string;
         };
         ApplyVendorCreditToBillEntryDto: {
             /**
@@ -18970,7 +19003,11 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePdfTemplateDto"];
+            };
+        };
         responses: {
             /** @description The PDF template has been successfully created. */
             200: {
@@ -19027,7 +19064,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditPdfTemplateDto"];
+            };
+        };
         responses: {
             /** @description The PDF template has been successfully edited. */
             200: {
@@ -23479,11 +23520,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Bills that can be applied with this vendor credit. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["VendorCreditBillToApplyResponseDto"][];
+                };
             };
         };
     };

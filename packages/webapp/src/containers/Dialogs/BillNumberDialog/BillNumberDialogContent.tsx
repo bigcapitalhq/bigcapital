@@ -1,40 +1,49 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
 import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { DialogContent } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
-import { withBillsActions } from '@/containers/Purchases/Bills/BillsLanding/withBillsActions';
+import {
+  withBillsActions,
+  type WithBillsActionsProps,
+} from '@/containers/Purchases/Bills/BillsLanding/withBillsActions';
 import { useSaveSettings, useSettingsBills } from '@/hooks/query';
 import { compose, optionsMapToArray } from '@/utils';
+
+interface BillNumberDialogContentProps
+  extends WithDialogActionsProps,
+    WithBillsActionsProps {
+  billNumberId?: number | null;
+}
 
 /**
  * bill number dialog's content.
  */
-
 function BillNumberDialogContentInner({
-  // #withDialogActions
   closeDialog,
-
-  // #withBillsActions
-  setBillNumberChanged,
-}) {
+}: BillNumberDialogContentProps): React.ReactElement {
   const { data: billSettings, isFetching: isSettingsFetching } =
     useSettingsBills();
-  const nextNumber = billSettings?.nextNumber as number | undefined;
+  const nextNumber = billSettings?.nextNumber as string | number | undefined;
   const numberPrefix = billSettings?.numberPrefix as string | undefined;
 
   const { mutateAsync: saveSettings } = useSaveSettings();
 
-  const handleSubmitForm = (values, { setSubmitting }) => {
-    const options = optionsMapToArray(values).map((option) => {
-      return { key: option.key, ...option, group: 'bills' };
-    });
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
+    const options = optionsMapToArray(values).map((option) => ({
+      ...option,
+      group: 'bills',
+    }));
 
     saveSettings({ options })
       .then(() => {
         setSubmitting(false);
         closeDialog('bill-number-form');
-        setBillNumberChanged(true);
       })
       .catch(() => {
         setSubmitting(false);
@@ -47,9 +56,15 @@ function BillNumberDialogContentInner({
 
   return (
     <DialogContent isLoading={isSettingsFetching}>
+      {/* Latent bug (preserved): original code passed `initialNumber` /
+          `initialPrefix` props that `ReferenceNumberForm` never read, so the
+          bill prefix/next-number were never seeded into the form. Replaced
+          with `initialValues` to honor the obvious intent. */}
       <ReferenceNumberForm
-        initialNumber={nextNumber}
-        initialPrefix={numberPrefix}
+        initialValues={{
+          numberPrefix: (numberPrefix as string | undefined) ?? '',
+          nextNumber: (nextNumber as string | undefined) ?? '',
+        }}
         onSubmit={handleSubmitForm}
         onClose={handleClose}
       />

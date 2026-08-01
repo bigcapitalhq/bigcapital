@@ -1,30 +1,49 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
 import {
   useCreateNotifyReceiptBySMS,
   useReceiptSMSDetail,
 } from '@/hooks/query';
 
-const NotifyReceiptViaSMSContext = React.createContext();
+interface NotifyReceiptViaSMSContextValue {
+  receiptId: number | null;
+  dialogName: string;
+  receiptSMSDetail: Record<string, unknown>;
+  createNotifyReceiptBySMSMutate: ReturnType<
+    typeof useCreateNotifyReceiptBySMS
+  >['mutateAsync'];
+}
 
-/**
- *
- */
-function NotifyReceiptViaSMSFormProvider({ receiptId, dialogName, ...props }) {
+const NotifyReceiptViaSMSContext = createContext<NotifyReceiptViaSMSContextValue>(
+  {} as NotifyReceiptViaSMSContextValue,
+);
+
+interface NotifyReceiptViaSMSFormProviderProps {
+  receiptId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
+
+function NotifyReceiptViaSMSFormProvider({
+  receiptId,
+  dialogName,
+  ...props
+}: NotifyReceiptViaSMSFormProviderProps) {
   // Create notfiy receipt via SMS mutations.
   const { mutateAsync: createNotifyReceiptBySMSMutate } =
     useCreateNotifyReceiptBySMS();
 
   // Retrieve the receipt SMS notification details.
-  const { data: receiptSMSDetail, isLoading: isReceiptSMSDetailLoading } =
-    useReceiptSMSDetail(receiptId, {
+  const { data: receiptSMSDetailRaw, isLoading: isReceiptSMSDetailLoading } =
+    useReceiptSMSDetail(receiptId as number, {
       enabled: !!receiptId,
     });
+  const receiptSMSDetail =
+    (receiptSMSDetailRaw as Record<string, unknown> | undefined) ?? {};
 
   // State provider.
-  const provider = {
-    receiptId,
+  const provider: NotifyReceiptViaSMSContextValue = {
+    receiptId: receiptId ?? null,
     dialogName,
     receiptSMSDetail,
     createNotifyReceiptBySMSMutate,

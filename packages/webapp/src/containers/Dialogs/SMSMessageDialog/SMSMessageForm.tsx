@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
+import { Formik, type FormikHelpers } from 'formik';
 import { omit } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -8,42 +7,51 @@ import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import { CreateSMSMessageFormSchema } from './SMSMessageForm.schema';
 import { SMSMessageFormContent } from './SMSMessageFormContent';
 import { transformErrors } from './utils';
+import type { SMSMessageFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
 
-const defaultInitialValues = {
-  notification_key: '',
-  is_notification_enabled: '',
-  message_text: '',
+const defaultInitialValues: SMSMessageFormValues = {
+  notificationKey: '',
+  isNotificationEnabled: '',
+  messageText: '',
 };
+
+interface SMSMessageFormProps extends WithDialogActionsProps {}
 
 /**
  * SMS Message form.
  */
 function SMSMessageFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: SMSMessageFormProps): React.ReactElement {
   const { dialogName, smsNotification, editSMSNotificationMutate } =
     useSMSMessageDialogContext();
 
   // Initial form values.
-  const initialValues = {
+  const initialValues: SMSMessageFormValues = {
     ...defaultInitialValues,
-    ...transformToForm(smsNotification, defaultInitialValues),
-    notification_key: smsNotification.key,
-    message_text: smsNotification.sms_message,
+    ...(transformToForm(
+      smsNotification as unknown as Record<string, unknown>,
+      defaultInitialValues,
+    ) as Partial<SMSMessageFormValues>),
+    notificationKey: smsNotification.key,
+    messageText: (smsNotification.smsMessage as string) ?? '',
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: SMSMessageFormValues,
+    { setSubmitting, setErrors }: FormikHelpers<SMSMessageFormValues>,
+  ) => {
     const form = {
-      ...omit(values, ['is_notification_enabled', 'sms_message']),
-      notification_key: smsNotification.key,
+      ...omit(values, ['isNotificationEnabled', 'smsMessage']),
+      notificationKey: smsNotification.key,
     };
     // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('sms_message.dialog.success_message'),
         intent: Intent.SUCCESS,
@@ -51,12 +59,20 @@ function SMSMessageFormInner({
       closeDialog(dialogName);
     };
     // Handle request response errors.
-    const onError = ({ data: { errors } }) => {
+    const onError = ({
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
+    }) => {
       if (errors) {
         transformErrors(errors, { setErrors });
       }
       setSubmitting(false);
     };
+    // FIXME: latent bug — form passes `{ notification_key }` but the mutate
+    // signature expects `{ key, values }`. Original @ts-nocheck code compiled
+    // silently; preserved here to avoid a behavior change in a TS-only slice.
+    // @ts-expect-error — form body shape mismatch vs SDK hook signature.
     editSMSNotificationMutate(form).then(onSuccess).catch(onError);
   };
 

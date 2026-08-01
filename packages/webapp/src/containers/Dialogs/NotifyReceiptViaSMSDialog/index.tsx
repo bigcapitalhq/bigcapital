@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
@@ -11,16 +10,24 @@ const NotifyReceiptViaSMSDialogContent = React.lazy(() =>
   })),
 );
 
+interface NotifyReceiptViaSMSDialogProps {
+  dialogName: string;
+  payload: { receiptId?: number | null };
+  isOpen: boolean | undefined;
+}
+
 function NotifyReceiptViaSMSDialog({
   dialogName,
-  payload: { receiptId },
+  payload: { receiptId } = {},
   isOpen,
-}) {
+}: NotifyReceiptViaSMSDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
       title={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
       isOpen={isOpen}
+      // FIXME: typo — should be `canEscapeKeyClose`. Left as-is to avoid a
+      // behavior change in a TS-only slice.
       canEscapeJeyClose={true}
       autoFocus={true}
       className={'dialog--notify-vis-sms'}
@@ -28,7 +35,7 @@ function NotifyReceiptViaSMSDialog({
       <DialogSuspense>
         <NotifyReceiptViaSMSDialogContent
           dialogName={dialogName}
-          receipt={receiptId}
+          receipt={receiptId ?? null}
         />
       </DialogSuspense>
     </Dialog>
