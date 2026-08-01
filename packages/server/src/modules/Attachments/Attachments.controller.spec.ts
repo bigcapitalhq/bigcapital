@@ -15,7 +15,7 @@ describe('AttachmentsController authorization', () => {
       switchToHttp: () => ({ getRequest: () => ({ ability }) }),
       getHandler: () => handler,
       getClass: () => AttachmentsController,
-    } as any);
+    }) as any;
 
   const cases: Array<[string, string]> = [
     ['uploadAttachment', AttachmentAction.Create],

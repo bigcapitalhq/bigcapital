@@ -14,7 +14,7 @@ describe('RolesController authorization', () => {
       switchToHttp: () => ({ getRequest: () => ({ ability }) }),
       getHandler: () => handler,
       getClass: () => RolesController,
-    } as any);
+    }) as any;
 
   const cases: Array<[string, string]> = [
     ['createRole', RoleAction.Create],
