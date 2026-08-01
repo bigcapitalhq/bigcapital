@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 import { ConfigService } from '@nestjs/config';
 import { Inject, Injectable } from '@nestjs/common';
 import { SystemUser } from '@/modules/System/models/SystemUser';
