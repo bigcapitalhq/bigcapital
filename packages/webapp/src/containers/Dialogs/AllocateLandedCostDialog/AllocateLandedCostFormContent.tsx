@@ -21,9 +21,7 @@ export function AllocateLandedCostFormContent() {
   // `number | string` (schema Yup.string()) but the provider state setters are
   // `number | null`. Pass through unchanged to preserve original runtime behavior
   // (state may hold a string at runtime if the field is a string).
-  const handleFormChange = (
-    nextValues: AllocateLandedCostFormValues,
-  ) => {
+  const handleFormChange = (nextValues: AllocateLandedCostFormValues) => {
     if (nextValues.transactionType) {
       setTransactionsType(nextValues.transactionType);
     }
@@ -31,9 +29,7 @@ export function AllocateLandedCostFormContent() {
       setTransactionId(nextValues.transactionId as unknown as number);
     }
     if (nextValues.transactionEntryId) {
-      setTransactionEntryId(
-        nextValues.transactionEntryId as unknown as number,
-      );
+      setTransactionEntryId(nextValues.transactionEntryId as unknown as number);
     }
   };
   return (

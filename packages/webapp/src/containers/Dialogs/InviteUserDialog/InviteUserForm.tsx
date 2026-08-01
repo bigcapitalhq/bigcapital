@@ -56,9 +56,7 @@ function InviteUserFormInner({
     };
 
     // Handle the response error.
-    const onError = (error: {
-      data: { errors: Array<{ type: string }> };
-    }) => {
+    const onError = (error: { data: { errors: Array<{ type: string }> } }) => {
       const {
         data: { errors },
       } = error;
@@ -70,7 +68,9 @@ function InviteUserFormInner({
     };
     // Form keeps `roleId: number | string` for Yup validation ergonomics; the
     // runtime value is a number when valid. Cast narrows to the SDK body shape.
-    inviteUserMutate(form as InviteUserBody).then(onSuccess).catch(onError);
+    inviteUserMutate(form as InviteUserBody)
+      .then(onSuccess)
+      .catch(onError);
   };
 
   return (

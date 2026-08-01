@@ -41,10 +41,10 @@ function LockingTransactionsFormInner({
     () => ({
       ...(isEnabled
         ? {
-            ...transformToForm(
+            ...(transformToForm(
               transactionLocking,
               defaultInitialValues,
-            ) as LockingTransactionsFormValues,
+            ) as LockingTransactionsFormValues),
             module: moduleName,
           }
         : {
@@ -82,9 +82,7 @@ function LockingTransactionsFormInner({
       setSubmitting(false);
     };
 
-    createLockingTransactionMutate(values)
-      .then(onSuccess)
-      .catch(onError);
+    createLockingTransactionMutate(values).then(onSuccess).catch(onError);
   };
 
   return (

@@ -6,8 +6,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfPaymentReceive } from '@/hooks/query';
 import { compose } from '@/utils';
 
-interface PaymentReceivePdfPreviewContentProps
-  extends WithDialogActionsProps {
+interface PaymentReceivePdfPreviewContentProps extends WithDialogActionsProps {
   subscriptionForm: { paymentReceiveId: number | null };
   dialogName?: string;
 }

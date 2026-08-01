@@ -54,7 +54,7 @@ function AllocateLandedCostFormInner({
           transformToForm(
             entry,
             defaultInitialValues.items[0],
-          ) as typeof defaultInitialValues.items[0],
+          ) as (typeof defaultInitialValues.items)[0],
       );
 
     if (entries.length <= 0) {

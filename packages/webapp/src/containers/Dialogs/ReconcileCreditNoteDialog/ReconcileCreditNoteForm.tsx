@@ -95,7 +95,10 @@ function ReconcileCreditNoteFormInner({
 
     // FIXME: latent bug preserved — `creditNoteId` is `number | null` but the
     // dialog only opens with a real id. Non-null assertion matches runtime.
-    createReconcileCreditNoteMutate([creditNoteId!, form as ApplyCreditNoteToInvoicesBody])
+    createReconcileCreditNoteMutate([
+      creditNoteId!,
+      form as ApplyCreditNoteToInvoicesBody,
+    ])
       .then(onSuccess)
       .catch(onError);
   };

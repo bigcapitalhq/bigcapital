@@ -21,9 +21,8 @@ type NotifyViaSMSFormProps = {
   calloutCodes?: any;
   formikProps?: any;
 };
-const NotifyViaSMSForm = NotifyViaSMSFormBase as unknown as React.ComponentType<
-  NotifyViaSMSFormProps
->;
+const NotifyViaSMSForm =
+  NotifyViaSMSFormBase as unknown as React.ComponentType<NotifyViaSMSFormProps>;
 
 interface NotifyViaSMSFormValues {
   notification_key: string;

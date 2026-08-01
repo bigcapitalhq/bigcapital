@@ -37,7 +37,10 @@ function ExportDialogRoot({
     >
       <DialogSuspense>
         <ExportDialogContent
-          initialValues={{ resource: resource ?? undefined, format: format ?? undefined }}
+          initialValues={{
+            resource: resource ?? undefined,
+            format: format ?? undefined,
+          }}
         />
       </DialogSuspense>
     </Dialog>

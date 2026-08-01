@@ -7,7 +7,7 @@ import '@/style/components/Hint.scss';
 import { Tooltip2Props } from '@blueprintjs/popover2';
 
 interface HintProps {
-  content?: string|React.ReactNode;
+  content?: string | React.ReactNode;
   position?: Position;
   iconSize?: number;
   tooltipProps?: Partial<Tooltip2Props>;

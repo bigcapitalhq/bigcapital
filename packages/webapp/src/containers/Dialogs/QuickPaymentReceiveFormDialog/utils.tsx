@@ -41,10 +41,7 @@ export const transformErrors = (
     errors.find((e) => e.type === errorType);
 
   if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
-    setFieldError(
-      'paymentReceiveNo',
-      intl.get('payment_number_is_not_unique'),
-    );
+    setFieldError('paymentReceiveNo', intl.get('payment_number_is_not_unique'));
   }
   if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
     setFieldError(

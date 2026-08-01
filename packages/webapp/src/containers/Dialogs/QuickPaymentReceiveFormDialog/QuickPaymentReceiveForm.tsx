@@ -41,10 +41,11 @@ function QuickPaymentReceiveFormInner({
   const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
     | boolean
     | undefined;
-  const preferredDepositAccount = paymentReceiveSettings?.preferredDepositAccount as
-    | string
-    | number
-    | undefined;
+  const preferredDepositAccount =
+    paymentReceiveSettings?.preferredDepositAccount as
+      | string
+      | number
+      | undefined;
 
   // Payment receive number.
   const nextPaymentNumber = transactionNumber(
@@ -65,9 +66,16 @@ function QuickPaymentReceiveFormInner({
   // Handles the form submit.
   const handleFormSubmit = (
     values: QuickPaymentReceiveFormValues,
-    { setSubmitting, setFieldError }: FormikHelpers<QuickPaymentReceiveFormValues>,
+    {
+      setSubmitting,
+      setFieldError,
+    }: FormikHelpers<QuickPaymentReceiveFormValues>,
   ) => {
-    const { paymentReceiveNo: _paymentReceiveNo, invoiceId: _invoiceId, ...rest } = values;
+    const {
+      paymentReceiveNo: _paymentReceiveNo,
+      invoiceId: _invoiceId,
+      ...rest
+    } = values;
     void _paymentReceiveNo;
     void _invoiceId;
     const entries = [

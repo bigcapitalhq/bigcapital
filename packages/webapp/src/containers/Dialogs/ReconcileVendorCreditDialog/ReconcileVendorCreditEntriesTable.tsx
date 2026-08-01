@@ -39,9 +39,9 @@ export function ReconcileVendorCreditEntriesTable({
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
-      const newRows = compose(
-        updateTableCell(rowIndex, columnId, value),
-      )(entries) as ReconcileVendorCreditFormEntry[];
+      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+        entries,
+      ) as ReconcileVendorCreditFormEntry[];
       onUpdateData(newRows);
     },
     [onUpdateData, entries],

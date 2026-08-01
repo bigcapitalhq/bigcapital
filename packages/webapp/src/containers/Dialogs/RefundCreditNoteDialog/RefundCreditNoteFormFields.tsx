@@ -52,9 +52,8 @@ type FInputProps = {
   inputRef?: (ref: HTMLInputElement | null) => void;
 };
 const FInputGroupWidened = FInputGroup as unknown as React.FC<FInputProps>;
-const FMoneyInputGroupWidened = FMoneyInputGroup as unknown as React.FC<
-  FInputProps
->;
+const FMoneyInputGroupWidened =
+  FMoneyInputGroup as unknown as React.FC<FInputProps>;
 
 /**
  * Refund credit note form fields.

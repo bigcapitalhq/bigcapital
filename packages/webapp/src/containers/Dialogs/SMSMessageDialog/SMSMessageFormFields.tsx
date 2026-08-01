@@ -22,10 +22,7 @@ export function SMSMessageFormFields(): React.ReactElement {
 
   // Handle the button click.
   const handleBtnClick = () => {
-    setFieldValue(
-      'messageText',
-      smsNotification.defaultSmsMessage ?? '',
-    );
+    setFieldValue('messageText', smsNotification.defaultSmsMessage ?? '');
   };
 
   return (

@@ -21,9 +21,8 @@ type NotifyViaSMSFormProps = {
   calloutCodes?: any;
   formikProps?: any;
 };
-const NotifyViaSMSForm = NotifyViaSMSFormBase as unknown as React.ComponentType<
-  NotifyViaSMSFormProps
->;
+const NotifyViaSMSForm =
+  NotifyViaSMSFormBase as unknown as React.ComponentType<NotifyViaSMSFormProps>;
 
 interface NotifyViaSMSFormValues {
   notification_key: string;
@@ -35,8 +34,7 @@ const notificationType = {
   label: intl.get('sms_notification.payment_details.type'),
 };
 
-interface NotifyPaymentReceiveViaSMSFormProps
-  extends WithDialogActionsProps {}
+interface NotifyPaymentReceiveViaSMSFormProps extends WithDialogActionsProps {}
 
 /**
  * Notify Payment Recive Via SMS Form.

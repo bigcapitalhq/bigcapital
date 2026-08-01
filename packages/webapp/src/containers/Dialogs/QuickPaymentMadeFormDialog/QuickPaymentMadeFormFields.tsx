@@ -19,7 +19,7 @@ import {
   FeatureCan,
   ExchangeRateMutedField,
   BranchSelect,
-  FFormGroup ,
+  FFormGroup,
   FInputGroup,
   FDateInput,
   FTextArea,

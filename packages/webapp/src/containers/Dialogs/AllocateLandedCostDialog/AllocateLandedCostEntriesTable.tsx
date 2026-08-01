@@ -45,7 +45,9 @@ export function AllocateLandedCostEntriesTable({
   );
 }
 
-export const AllocateLandeedCostEntriesEditableTable = styled(DataTableEditable)`
+export const AllocateLandeedCostEntriesEditableTable = styled(
+  DataTableEditable,
+)`
   .table {
     .thead .tr .th {
       padding-top: 8px;

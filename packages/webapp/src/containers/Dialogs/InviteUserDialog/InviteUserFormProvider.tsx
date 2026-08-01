@@ -52,7 +52,6 @@ function InviteUserFormProvider({
   );
 }
 
-const useInviteUserFormContext = () =>
-  React.useContext(InviteUserFormContext);
+const useInviteUserFormContext = () => React.useContext(InviteUserFormContext);
 
 export { InviteUserFormProvider, useInviteUserFormContext };

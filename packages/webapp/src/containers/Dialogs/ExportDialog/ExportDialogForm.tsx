@@ -78,4 +78,5 @@ function ExportDialogFormRoot({
   );
 }
 
-export const ExportDialogForm = compose(withDialogActions)(ExportDialogFormRoot);
+export const ExportDialogForm =
+  compose(withDialogActions)(ExportDialogFormRoot);

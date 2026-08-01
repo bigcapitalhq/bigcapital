@@ -8,12 +8,12 @@ import type { AccountFormValues } from './types';
 import {
   If,
   FieldRequiredHint,
-  Hint ,
-  AccountsSelect ,
-  AccountsTypesSelect ,
-  CurrencySelect ,
+  Hint,
+  AccountsSelect,
+  AccountsTypesSelect,
+  CurrencySelect,
   FormattedMessage as T,
-  FFormGroup ,
+  FFormGroup,
   FInputGroup,
   FCheckbox,
   FTextArea,
@@ -34,7 +34,8 @@ export function AccountDialogFormContent({
   const { values, isSubmitting, setFieldValue } =
     useFormikContext<AccountFormValues>();
   const accountNameFieldRef = useAutofocus<HTMLInputElement>();
-  const { fieldsDisabled, currencies, accounts, accountsTypes } = useAccountDialogContext();
+  const { fieldsDisabled, currencies, accounts, accountsTypes } =
+    useAccountDialogContext();
 
   return (
     <Form>

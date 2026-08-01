@@ -14,9 +14,10 @@ interface NotifyReceiptViaSMSContextValue {
   >['mutateAsync'];
 }
 
-const NotifyReceiptViaSMSContext = createContext<NotifyReceiptViaSMSContextValue>(
-  {} as NotifyReceiptViaSMSContextValue,
-);
+const NotifyReceiptViaSMSContext =
+  createContext<NotifyReceiptViaSMSContextValue>(
+    {} as NotifyReceiptViaSMSContextValue,
+  );
 
 interface NotifyReceiptViaSMSFormProviderProps {
   receiptId?: number | null;

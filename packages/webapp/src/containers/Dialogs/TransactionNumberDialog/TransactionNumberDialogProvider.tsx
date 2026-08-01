@@ -6,9 +6,10 @@ interface TransactionNumberDialogContextValue {
   isSettingsLoading: boolean;
 }
 
-const TransactionNumberDialogContext = React.createContext<
-  TransactionNumberDialogContextValue
->({} as TransactionNumberDialogContextValue);
+const TransactionNumberDialogContext =
+  React.createContext<TransactionNumberDialogContextValue>(
+    {} as TransactionNumberDialogContextValue,
+  );
 
 interface TransactionNumberDialogProviderProps {
   query?: Record<string, unknown>;

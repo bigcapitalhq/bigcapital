@@ -27,16 +27,9 @@ const defaultInitialValues: BranchFormValues = {
 
 interface BranchFormProps extends WithDialogActionsProps {}
 
-function BranchFormInner({
-  closeDialog,
-}: BranchFormProps): React.ReactElement {
-  const {
-    dialogName,
-    branch,
-    branchId,
-    createBranchMutate,
-    editBranchMutate,
-  } = useBranchFormContext();
+function BranchFormInner({ closeDialog }: BranchFormProps): React.ReactElement {
+  const { dialogName, branch, branchId, createBranchMutate, editBranchMutate } =
+    useBranchFormContext();
 
   // Initial form values.
   const initialValues: BranchFormValues = {
@@ -76,9 +69,13 @@ function BranchFormInner({
     const body = form as CreateBranchBody | EditBranchBody;
 
     if (branchId) {
-      editBranchMutate([branchId, body as EditBranchBody]).then(onSuccess).catch(onError);
+      editBranchMutate([branchId, body as EditBranchBody])
+        .then(onSuccess)
+        .catch(onError);
     } else {
-      createBranchMutate(body as CreateBranchBody).then(onSuccess).catch(onError);
+      createBranchMutate(body as CreateBranchBody)
+        .then(onSuccess)
+        .catch(onError);
     }
   };
 

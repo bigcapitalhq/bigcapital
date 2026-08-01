@@ -71,16 +71,13 @@ function QuickPaymentReceiveFormFieldsInner(): React.ReactElement {
             label={intl.get('customer_name')}
             labelInfo={<FieldRequiredHint />}
           >
-            <FInputGroup name={'customerId'} disabled/>
+            <FInputGroup name={'customerId'} disabled />
           </FFormGroup>
         </Col>
 
         <Col xs={5}>
           {/* ------------ Payment receive no. ------------ */}
-          <FFormGroup
-            name={'paymentReceiveNo'}
-            label={intl.get('payment_no')}
-          >
+          <FFormGroup name={'paymentReceiveNo'} label={intl.get('payment_no')}>
             <FInputGroup
               name={'paymentReceiveNo'}
               disabled={paymentReceiveAutoIncrement}
@@ -132,10 +129,7 @@ function QuickPaymentReceiveFormFieldsInner(): React.ReactElement {
 
         <Col xs={5}>
           {/* ------------ Deposit account ------------ */}
-          <FFormGroup
-            name={'depositAccountId'}
-            label={intl.get('deposit_to')}
-          >
+          <FFormGroup name={'depositAccountId'} label={intl.get('deposit_to')}>
             <FAccountsSuggestField
               name={'depositAccountId'}
               items={accounts ?? []}

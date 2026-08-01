@@ -55,7 +55,12 @@ function QuickPaymentMadeFormProvider({
 
   const paymentBill = useMemo(
     () =>
-      pick(bill, ['id', 'dueAmount', 'vendorId', 'currencyCode']) as QuickPaymentMadeContextValue['bill'],
+      pick(bill, [
+        'id',
+        'dueAmount',
+        'vendorId',
+        'currencyCode',
+      ]) as QuickPaymentMadeContextValue['bill'],
     [bill],
   );
 

@@ -18,8 +18,7 @@ function ReconcileCreditNoteFormFloatingActionsInner({
   closeDialog,
 }: ReconcileCreditNoteFormFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } =
-    useFormikContext<ReconcileCreditNoteFormValues>();
+  const { isSubmitting } = useFormikContext<ReconcileCreditNoteFormValues>();
 
   const { dialogName } = useReconcileCreditNoteContext();
 

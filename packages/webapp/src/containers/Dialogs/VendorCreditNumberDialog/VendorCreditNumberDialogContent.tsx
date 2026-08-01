@@ -13,8 +13,7 @@ import {
 import { useSaveSettings, useSettingsVendorCredits } from '@/hooks/query';
 import { compose } from '@/utils';
 
-interface VendorCreditNumberDialogContentProps
-  extends WithDialogActionsProps {
+interface VendorCreditNumberDialogContentProps extends WithDialogActionsProps {
   initialValues?: Partial<ReferenceNumberFormValues>;
   onConfirm?: (values: ReferenceNumberFormValues) => void;
 }

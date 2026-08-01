@@ -29,11 +29,13 @@ export const defaultInitialValues = {
  * Retrieve transaction entries of the given transaction id.
  */
 export function getEntriesByTransactionId(
-  transactions: { id: number; entries?: AllocateLandedCostFormEntry[] }[] | undefined,
+  transactions:
+    | { id: number; entries?: AllocateLandedCostFormEntry[] }[]
+    | undefined,
   id: number | null,
 ): AllocateLandedCostFormEntry[] {
   const transaction = transactions?.find((trans) => trans.id === id);
-  return transaction ? transaction.entries ?? [] : [];
+  return transaction ? (transaction.entries ?? []) : [];
 }
 
 /**

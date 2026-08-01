@@ -10,9 +10,7 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('payment_received_no_')),
   paymentDate: Yup.date().required().label(intl.get('payment_date_')),
-  depositAccountId: Yup.number()
-    .required()
-    .label(intl.get('deposit_account_')),
+  depositAccountId: Yup.number().required().label(intl.get('deposit_account_')),
   referenceNo: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   // statement: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
   branchId: Yup.string(),

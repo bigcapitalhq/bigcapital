@@ -29,7 +29,10 @@ import { VendorCreditAction } from '../VendorCredit/types/VendorCredit.types';
 @Controller('vendor-credits')
 @ApiTags('Vendor Credits Apply Bills')
 @ApiCommonHeaders()
-@ApiExtraModels(VendorCreditAppliedBillResponseDto, VendorCreditBillToApplyResponseDto)
+@ApiExtraModels(
+  VendorCreditAppliedBillResponseDto,
+  VendorCreditBillToApplyResponseDto,
+)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class VendorCreditApplyBillsController {
   constructor(

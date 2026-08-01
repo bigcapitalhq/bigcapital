@@ -8,8 +8,7 @@ import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-interface RefundCreditNoteFloatingActionsProps
-  extends WithDialogActionsProps {}
+interface RefundCreditNoteFloatingActionsProps extends WithDialogActionsProps {}
 
 /**
  * Refund credit note floating actions.
@@ -18,8 +17,7 @@ function RefundCreditNoteFloatingActionsInner({
   closeDialog,
 }: RefundCreditNoteFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } =
-    useFormikContext<RefundCreditNoteFormValues>();
+  const { isSubmitting } = useFormikContext<RefundCreditNoteFormValues>();
 
   // refund credit note dialog context.
   const { dialogName } = useRefundCreditNoteContext();

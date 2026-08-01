@@ -31,7 +31,8 @@ function SMSMessageDialogProvider({
   // SMS notificiation details. SDK leaves this typed as `unknown`; cast narrow.
   const { data: smsNotificationRaw, isLoading: isSMSNotificationLoading } =
     useSettingSMSNotification(notificationkey);
-  const smsNotification = (smsNotificationRaw as SMSNotification | undefined) ??
+  const smsNotification =
+    (smsNotificationRaw as SMSNotification | undefined) ??
     ({} as SMSNotification);
 
   //  provider.

@@ -18,8 +18,7 @@ function UnlockingTransactionsFormFloatingActionsInner({
   closeDialog,
 }: UnlockingTransactionsFormFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } =
-    useFormikContext<UnlockingTransactionsFormValues>();
+  const { isSubmitting } = useFormikContext<UnlockingTransactionsFormValues>();
 
   const { dialogName } = useUnlockingTransactionsContext();
 

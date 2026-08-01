@@ -36,5 +36,7 @@ export type QuickPaymentMadeContextValue = {
   accounts: Account[] | undefined;
   branches: Branch[] | undefined;
   isBranchesSuccess: boolean;
-  createPaymentMadeMutate: ReturnType<typeof useCreatePaymentMade>['mutateAsync'];
+  createPaymentMadeMutate: ReturnType<
+    typeof useCreatePaymentMade
+  >['mutateAsync'];
 };

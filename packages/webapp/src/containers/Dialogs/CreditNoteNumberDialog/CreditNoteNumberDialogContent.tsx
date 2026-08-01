@@ -27,7 +27,10 @@ function CreditNoteNumberDialogContentInner({
   closeDialog,
 }: CreditNoteNumberDialogContentProps): React.ReactElement {
   const { data: creditNoteSettings } = useSettingsCreditNotes();
-  const nextNumber = creditNoteSettings?.nextNumber as string | number | undefined;
+  const nextNumber = creditNoteSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
   const numberPrefix = creditNoteSettings?.numberPrefix as string | undefined;
   const autoIncrement = creditNoteSettings?.autoIncrement as
     | boolean

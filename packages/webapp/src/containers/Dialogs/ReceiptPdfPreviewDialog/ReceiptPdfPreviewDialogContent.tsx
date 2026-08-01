@@ -6,8 +6,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfReceipt } from '@/hooks/query';
 import { compose } from '@/utils';
 
-interface ReceiptPdfPreviewDialogContentProps
-  extends WithDialogActionsProps {
+interface ReceiptPdfPreviewDialogContentProps extends WithDialogActionsProps {
   subscriptionForm: { receiptId: number | null };
   dialogName?: string;
 }

@@ -93,9 +93,7 @@ function CurrencyFormInner({
       // FIXME: `currency` is a code string from the dialog payload (not an
       // object with `.id`); edit-mode currency update is broken at runtime.
       // @ts-expect-error — latent bug preserved: `currency.id` undefined access.
-      editCurrencyMutate([currency.id, values])
-        .then(onSuccess)
-        .catch(onError);
+      editCurrencyMutate([currency.id, values]).then(onSuccess).catch(onError);
     } else {
       createCurrencyMutate(values).then(onSuccess).catch(onError);
     }

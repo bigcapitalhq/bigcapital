@@ -1,4 +1,4 @@
-import { Classes} from '@blueprintjs/core';
+import { Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FFormGroup, FTextArea } from '@/components';

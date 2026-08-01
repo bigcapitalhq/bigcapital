@@ -18,8 +18,7 @@ function RefundVendorCreditFloatingActionsInner({
   closeDialog,
 }: RefundVendorCreditFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } =
-    useFormikContext<RefundVendorCreditFormValues>();
+  const { isSubmitting } = useFormikContext<RefundVendorCreditFormValues>();
   // refund vendor credit  dialog context.
   const { dialogName } = useRefundVendorCreditContext();
 

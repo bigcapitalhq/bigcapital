@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePdfTemplateDto, EditPdfTemplateDto } from './dtos/PdfTemplate.dto';
+import {
+  CreatePdfTemplateDto,
+  EditPdfTemplateDto,
+} from './dtos/PdfTemplate.dto';
 import { CreatePdfTemplateService } from './commands/CreatePdfTemplate.service';
 import { DeletePdfTemplateService } from './commands/DeletePdfTemplate.service';
 import { GetPdfTemplateService } from './queries/GetPdfTemplate.service';

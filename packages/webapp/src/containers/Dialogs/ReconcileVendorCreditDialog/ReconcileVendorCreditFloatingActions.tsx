@@ -15,8 +15,7 @@ function ReconcileVendorCreditFloatingActionsInner({
   closeDialog,
 }: ReconcileVendorCreditFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } =
-    useFormikContext<ReconcileVendorCreditFormValues>();
+  const { isSubmitting } = useFormikContext<ReconcileVendorCreditFormValues>();
   const { dialogName } = useReconcileVendorCreditContext();
 
   // Handle cancel button click.
@@ -42,6 +41,6 @@ function ReconcileVendorCreditFloatingActionsInner({
     </div>
   );
 }
-export const ReconcileVendorCreditFloatingActions = compose(
-  withDialogActions,
-)(ReconcileVendorCreditFloatingActionsInner);
+export const ReconcileVendorCreditFloatingActions = compose(withDialogActions)(
+  ReconcileVendorCreditFloatingActionsInner,
+);

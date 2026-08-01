@@ -16,9 +16,10 @@ interface NotifyInvoiceViaSMSContextValue {
   setNotificationType: (next: string) => void;
 }
 
-const NotifyInvoiceViaSMSContext = createContext<NotifyInvoiceViaSMSContextValue>(
-  {} as NotifyInvoiceViaSMSContextValue,
-);
+const NotifyInvoiceViaSMSContext =
+  createContext<NotifyInvoiceViaSMSContextValue>(
+    {} as NotifyInvoiceViaSMSContextValue,
+  );
 
 interface NotifyInvoiceViaSMSFormProviderProps {
   invoiceId?: number | null;

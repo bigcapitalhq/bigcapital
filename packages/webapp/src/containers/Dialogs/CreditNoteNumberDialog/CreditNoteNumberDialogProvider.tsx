@@ -6,9 +6,10 @@ interface CreditNoteNumberDialogContextValue {
   isSettingsLoading: boolean;
 }
 
-const CreditNoteNumberDialogContext = React.createContext<
-  CreditNoteNumberDialogContextValue
->({} as CreditNoteNumberDialogContextValue);
+const CreditNoteNumberDialogContext =
+  React.createContext<CreditNoteNumberDialogContextValue>(
+    {} as CreditNoteNumberDialogContextValue,
+  );
 
 interface CreditNoteNumberDialogProviderProps {
   query?: Record<string, unknown>;

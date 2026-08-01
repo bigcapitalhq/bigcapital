@@ -5,7 +5,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { ReconcileCreditNoteEntriesTable } from './ReconcileCreditNoteEntriesTable';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
-import type { ReconcileCreditNoteFormEntry, ReconcileCreditNoteFormValues } from './types';
+import type {
+  ReconcileCreditNoteFormEntry,
+  ReconcileCreditNoteFormValues,
+} from './types';
 import {
   T,
   TotalLines,

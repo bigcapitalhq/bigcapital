@@ -6,8 +6,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfEstimate } from '@/hooks/query';
 import { compose } from '@/utils';
 
-interface EstimatePdfPreviewDialogContentProps
-  extends WithDialogActionsProps {
+interface EstimatePdfPreviewDialogContentProps extends WithDialogActionsProps {
   subscriptionForm: { estimateId: number | null };
   dialogName?: string;
 }

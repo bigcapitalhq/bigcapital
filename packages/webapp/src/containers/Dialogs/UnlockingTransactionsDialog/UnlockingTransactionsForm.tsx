@@ -61,9 +61,7 @@ function UnlockingTransactionsFormInner({
       setSubmitting(false);
     };
 
-    cancelLockingTransactionMutate(values)
-      .then(onSuccess)
-      .catch(onError);
+    cancelLockingTransactionMutate(values).then(onSuccess).catch(onError);
   };
 
   return (

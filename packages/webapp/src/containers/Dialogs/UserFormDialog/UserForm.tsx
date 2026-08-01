@@ -24,9 +24,7 @@ interface UserFormProps extends WithDialogActionsProps {}
 /**
  * User form.
  */
-function UserFormInner({
-  closeDialog,
-}: UserFormProps): React.ReactElement {
+function UserFormInner({ closeDialog }: UserFormProps): React.ReactElement {
   const [calloutCode, setCalloutCode] = React.useState<number[]>([]);
 
   const { dialogName, user, userId, isEditMode, EditUserMutate } =

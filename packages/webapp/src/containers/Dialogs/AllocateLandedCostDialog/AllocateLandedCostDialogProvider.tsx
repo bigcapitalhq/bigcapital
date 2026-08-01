@@ -41,7 +41,8 @@ function AllocateLandedCostDialogProvider({
   dialogName,
   ...props
 }: AllocateLandedCostDialogProviderProps) {
-  const [transactionsType, setTransactionsType] = React.useState<string>('Bill');
+  const [transactionsType, setTransactionsType] =
+    React.useState<string>('Bill');
   const [transactionId, setTransactionId] = React.useState<number | null>(null);
   const [transactionEntryId, setTransactionEntryId] = React.useState<
     number | null
@@ -85,9 +86,7 @@ function AllocateLandedCostDialogProvider({
     [costTransaction, transactionEntryId],
   );
   // Retrieve entries of the given transaction id.
-  const costTransactionEntries = React.useMemo<
-    LandedCostTransactionEntry[]
-  >(
+  const costTransactionEntries = React.useMemo<LandedCostTransactionEntry[]>(
     () =>
       transactionId
         ? (getEntriesByTransactionId(
@@ -129,9 +128,8 @@ function AllocateLandedCostDialogProvider({
     setTransactionsType,
     setTransactionId,
     setTransactionEntryId,
-    costTransactionEntry: (costTransactionEntry ?? null) as
-      | LandedCostTransactionEntry
-      | null,
+    costTransactionEntry: (costTransactionEntry ??
+      null) as LandedCostTransactionEntry | null,
     transactionEntryId,
     transactionId,
     billId,

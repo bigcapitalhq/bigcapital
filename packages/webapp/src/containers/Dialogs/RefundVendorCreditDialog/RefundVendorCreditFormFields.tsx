@@ -48,7 +48,7 @@ function RefundVendorCreditFormFieldsInner(): React.ReactElement {
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup name={'branchId'} label={intl.get('branch')} >
+            <FFormGroup name={'branchId'} label={intl.get('branch')}>
               <BranchSelect
                 name={'branchId'}
                 branches={branches}

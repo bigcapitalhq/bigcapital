@@ -50,10 +50,7 @@ export class WarehouseTransfersController {
    * Creates a new warehouse transfer transaction.
    */
   @Post()
-  @RequirePermission(
-    WarehouseTransferAction.CREATE,
-    AbilitySubject.Warehouse,
-  )
+  @RequirePermission(WarehouseTransferAction.CREATE, AbilitySubject.Warehouse)
   @ApiOperation({ summary: 'Create a new warehouse transfer transaction.' })
   @ApiResponse({
     status: 200,
@@ -205,10 +202,7 @@ export class WarehouseTransfersController {
    * Deletes the given warehouse transfer transaction.
    */
   @Delete(':id')
-  @RequirePermission(
-    WarehouseTransferAction.DELETE,
-    AbilitySubject.Warehouse,
-  )
+  @RequirePermission(WarehouseTransferAction.DELETE, AbilitySubject.Warehouse)
   @ApiOperation({ summary: 'Delete the given warehouse transfer transaction.' })
   @ApiResponse({
     status: 200,

@@ -13,8 +13,7 @@ import {
 import { useSaveSettings, useSettingCashFlow } from '@/hooks/query';
 import { compose } from '@/utils';
 
-interface TransactionNumberDialogContentProps
-  extends WithDialogActionsProps {
+interface TransactionNumberDialogContentProps extends WithDialogActionsProps {
   initialValues?: Partial<ReferenceNumberFormValues>;
   onConfirm?: (values: ReferenceNumberFormValues) => void;
 }
@@ -28,7 +27,10 @@ function TransactionNumberDialogContentInner({
   closeDialog,
 }: TransactionNumberDialogContentProps): React.ReactElement {
   const { data: cashflowSettings } = useSettingCashFlow();
-  const nextNumber = cashflowSettings?.nextNumber as string | number | undefined;
+  const nextNumber = cashflowSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
   const numberPrefix = cashflowSettings?.numberPrefix as string | undefined;
   const autoIncrement = cashflowSettings?.autoIncrement as
     | boolean

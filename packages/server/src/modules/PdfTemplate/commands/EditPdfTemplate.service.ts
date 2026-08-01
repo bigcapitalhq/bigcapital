@@ -12,7 +12,9 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 export class EditPdfTemplateService {
   constructor(
     @Inject(PdfTemplateModel.name)
-    private readonly pdfTemplateModel: TenantModelProxy<typeof PdfTemplateModel>,
+    private readonly pdfTemplateModel: TenantModelProxy<
+      typeof PdfTemplateModel
+    >,
     private readonly uow: UnitOfWork,
     private readonly eventEmitter: EventEmitter2,
   ) {}

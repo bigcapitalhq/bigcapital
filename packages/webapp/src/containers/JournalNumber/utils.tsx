@@ -19,15 +19,16 @@ export const defaultInvoiceNoSettings: ReferenceNumberFormValues = {
 };
 const defaultReqNoSettings = omit(defaultInvoiceNoSettings, [
   'incrementMode',
-  'onceManualNumber'
+  'onceManualNumber',
 ]);
 
 export const transformSettingsToForm = (
   settings: SettingsForm,
-): ReferenceNumberFormValues => ({
-  ...omit(settings, ['autoIncrement']),
-  incrementMode: settings.autoIncrement ? 'auto' : 'manual',
-}) as ReferenceNumberFormValues;
+): ReferenceNumberFormValues =>
+  ({
+    ...omit(settings, ['autoIncrement']),
+    incrementMode: settings.autoIncrement ? 'auto' : 'manual',
+  }) as ReferenceNumberFormValues;
 
 export const transformFormToSettings = (
   values: ReferenceNumberFormValues,

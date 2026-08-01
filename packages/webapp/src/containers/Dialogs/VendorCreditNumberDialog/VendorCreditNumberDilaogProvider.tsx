@@ -6,9 +6,10 @@ interface VendorCreditNumberDialogContextValue {
   isSettingsLoading: boolean;
 }
 
-const VendorCreditNumberDialogContext = React.createContext<
-  VendorCreditNumberDialogContextValue
->({} as VendorCreditNumberDialogContextValue);
+const VendorCreditNumberDialogContext =
+  React.createContext<VendorCreditNumberDialogContextValue>(
+    {} as VendorCreditNumberDialogContextValue,
+  );
 
 interface VendorCreditNumberDialogProviderProps {
   query?: Record<string, unknown>;

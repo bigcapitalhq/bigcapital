@@ -32,7 +32,10 @@ function EstimateNumberDialogContentInner({
   // Fetches the estimates settings.
   const { data: estimatesSettings, isLoading: isSettingsLoading } =
     useSettingsEstimates();
-  const nextNumber = estimatesSettings?.nextNumber as string | number | undefined;
+  const nextNumber = estimatesSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
   const numberPrefix = estimatesSettings?.numberPrefix as string | undefined;
   const autoIncrement = estimatesSettings?.autoIncrement as
     | boolean

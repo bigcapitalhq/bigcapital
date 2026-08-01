@@ -6,8 +6,7 @@ import type { WithCurrencyDetailProps } from '@/containers/Currencies/withCurren
 import { withCurrencyDetail } from '@/containers/Currencies/withCurrencyDetail';
 import { compose } from '@/utils';
 
-interface CurrencyFormDialogContentInnerProps
-  extends WithCurrencyDetailProps {
+interface CurrencyFormDialogContentInnerProps extends WithCurrencyDetailProps {
   action?: string;
   currencyCode?: string;
   dialogName: string;

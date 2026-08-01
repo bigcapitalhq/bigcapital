@@ -42,7 +42,6 @@ export const transformApiErrors = (errors: ResponseError[]) => {
   return fields;
 };
 
-
 /**
  * Payload transformer in account edit mode.
  */
@@ -92,7 +91,7 @@ const defaultPayloadTransform = (
 });
 
 type AccountTransformer = (
-  account:  Account | undefined,
+  account: Account | undefined,
   payload: AccountDialogPayload,
 ) => Record<string, unknown>;
 

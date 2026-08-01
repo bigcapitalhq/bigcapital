@@ -1,9 +1,4 @@
-import {
-  Classes,
-  ControlGroup,
-  Callout,
-  Intent,
-} from '@blueprintjs/core';
+import { Classes, ControlGroup, Callout, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useBadDebtContext } from './BadDebtFormProvider';

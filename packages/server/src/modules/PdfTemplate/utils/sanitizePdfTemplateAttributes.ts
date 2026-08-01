@@ -27,7 +27,8 @@ export function sanitizePdfTemplateAttributes(
 ): Record<string, unknown> {
   const sanitized: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(attributes)) {
-    sanitized[key] = typeof value === 'string' ? sanitizeHtml(value, SANITIZE_OPTIONS) : value;
+    sanitized[key] =
+      typeof value === 'string' ? sanitizeHtml(value, SANITIZE_OPTIONS) : value;
   }
   return sanitized;
 }

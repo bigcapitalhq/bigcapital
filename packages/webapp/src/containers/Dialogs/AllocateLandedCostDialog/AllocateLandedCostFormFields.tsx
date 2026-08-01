@@ -1,8 +1,4 @@
-import {
-  Classes,
-  Radio,
-  Spinner,
-} from '@blueprintjs/core';
+import { Classes, Radio, Spinner } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
