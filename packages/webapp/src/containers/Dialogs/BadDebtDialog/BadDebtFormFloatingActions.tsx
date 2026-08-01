@@ -1,8 +1,8 @@
-// @ts-nocheck
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import React from 'react';
 import { useBadDebtContext } from './BadDebtFormProvider';
+import type { BadDebtFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
@@ -10,15 +10,16 @@ import { compose } from '@/utils';
 /**
  * Bad bebt form floating actions.
  */
+interface BadDebtFormFloatingActionsProps extends WithDialogActionsProps {}
+
 function BadDebtFormFloatingActionsInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: BadDebtFormFloatingActionsProps) {
   // bad debt invoice dialog context.
   const { dialogName } = useBadDebtContext();
 
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<BadDebtFormValues>();
 
   // Handle close button click.
   const handleCancelBtnClick = () => {

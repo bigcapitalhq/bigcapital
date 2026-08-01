@@ -1,19 +1,31 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
+import type { UserFormContextValue } from './types';
 import { DialogContent } from '@/components';
 import {
-  useEditUser,
-  useUser,
-  useRoles,
   useAuthenticatedAccount,
+  useEditUser,
+  useRoles,
+  useUser,
 } from '@/hooks/query';
 
-const UserFormContext = createContext();
+const UserFormContext = createContext<UserFormContextValue>(
+  {} as UserFormContextValue,
+);
+
+interface UserFormProviderProps {
+  userId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * User Form provider.
  */
-function UserFormProvider({ userId, dialogName, ...props }) {
+function UserFormProvider({
+  userId,
+  dialogName,
+  ...props
+}: UserFormProviderProps) {
   //  edit user mutations.
   const { mutateAsync: EditUserMutate } = useEditUser();
 
@@ -28,14 +40,19 @@ function UserFormProvider({ userId, dialogName, ...props }) {
   // Retrieve authenticated user information.
   const { data: authAccountData } = useAuthenticatedAccount();
 
-  const isEditMode = userId;
+  // FIXME: `isEditMode = userId` is a number (truthy) rather than a boolean.
+  const isEditMode: number | boolean = userId ?? false;
 
-  const isAuth = user.system_user_id == authAccountData?.id;
+  // FIXME: `systemUserId` (camelCase) on the typed SDK User; the original code
+  // used `system_user_id` which silently returned undefined. `AuthedAccount`
+  // is typed as `{}` in the SDK, so a narrow cast is required to read `.id`.
+  const authAccount = authAccountData as { id?: number } | undefined;
+  const isAuth = user?.systemUserId === authAccount?.id;
 
   // Provider state.
-  const provider = {
+  const provider: UserFormContextValue = {
     isAuth,
-    userId,
+    userId: userId ?? null,
     dialogName,
 
     user,

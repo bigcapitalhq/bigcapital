@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Form } from 'formik';
 import React from 'react';
 import { LockingTransactionsFormFields } from './LockingTransactionsFormFields';
@@ -7,7 +6,7 @@ import { LockingTransactionsFormFloatingActions } from './LockingTransactionsFor
 /**
  * locking Transactions form content.
  */
-export function LockingTransactionsFormContent() {
+export function LockingTransactionsFormContent(): React.ReactElement {
   return (
     <Form>
       <LockingTransactionsFormFields />

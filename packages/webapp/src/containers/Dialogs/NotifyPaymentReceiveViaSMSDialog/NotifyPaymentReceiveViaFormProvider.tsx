@@ -1,32 +1,51 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
 import {
   useCreateNotifyPaymentReceiveBySMS,
   usePaymentReceiveSMSDetail,
 } from '@/hooks/query';
 
-const NotifyPaymentReceiveViaSMSContext = React.createContext();
+interface NotifyPaymentReceiveViaSMSContextValue {
+  paymentReceiveId: number | null;
+  dialogName: string;
+  paymentReceiveMSDetail: Record<string, unknown>;
+  createNotifyPaymentReceivetBySMSMutate: ReturnType<
+    typeof useCreateNotifyPaymentReceiveBySMS
+  >['mutateAsync'];
+}
+
+const NotifyPaymentReceiveViaSMSContext =
+  createContext<NotifyPaymentReceiveViaSMSContextValue>(
+    {} as NotifyPaymentReceiveViaSMSContextValue,
+  );
+
+interface NotifyPaymentReceiveViaFormProviderProps {
+  paymentReceiveId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 function NotifyPaymentReceiveViaFormProvider({
   paymentReceiveId,
   dialogName,
   ...props
-}) {
+}: NotifyPaymentReceiveViaFormProviderProps) {
   // Create notfiy receipt via sms mutations.
   const { mutateAsync: createNotifyPaymentReceivetBySMSMutate } =
     useCreateNotifyPaymentReceiveBySMS();
 
   const {
-    data: paymentReceiveMSDetail,
+    data: paymentReceiveMSDetailRaw,
     isLoading: isPaymentReceiveSMSDetailLoading,
-  } = usePaymentReceiveSMSDetail(paymentReceiveId, {
+  } = usePaymentReceiveSMSDetail(paymentReceiveId as number, {
     enabled: !!paymentReceiveId,
   });
+  const paymentReceiveMSDetail =
+    (paymentReceiveMSDetailRaw as Record<string, unknown> | undefined) ?? {};
 
   // State provider.
-  const provider = {
-    paymentReceiveId,
+  const provider: NotifyPaymentReceiveViaSMSContextValue = {
+    paymentReceiveId: paymentReceiveId ?? null,
     dialogName,
     paymentReceiveMSDetail,
     createNotifyPaymentReceivetBySMSMutate,

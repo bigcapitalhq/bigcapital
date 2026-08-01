@@ -1,24 +1,28 @@
-// @ts-nocheck
 import { Classes, Button, Intent } from '@blueprintjs/core';
-import { FormGroup, InputGroup } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
-import { FastField, ErrorMessage } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { inputIntent } from '@/utils';
 import { compose } from '@/utils';
+
+interface ApiKeyFormValues {
+  name: string;
+}
+
+interface ApiKeysGenerateFormContentProps extends WithDialogActionsProps {
+  dialogName: string;
+}
 
 /**
  * API Keys Generate form content.
  */
 function ApiKeysGenerateFormContentInner({
   dialogName,
-  // #withDialogActions
   closeDialog,
-}) {
-  const { isSubmitting } = useFormikContext();
+}: ApiKeysGenerateFormContentProps): React.ReactElement {
+  const { isSubmitting } = useFormikContext<ApiKeyFormValues>();
 
   const handleClose = () => {
     closeDialog(dialogName);

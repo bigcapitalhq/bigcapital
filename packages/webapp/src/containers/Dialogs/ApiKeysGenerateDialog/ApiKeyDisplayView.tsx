@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Classes,
   Button,
@@ -10,14 +9,32 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, Icon, Alert } from '@/components';
+import { FormattedMessage as T, Icon, Alert as AlertBase } from '@/components';
 import { AppToaster } from '@/components';
 import { useClipboard } from '@/hooks/utils/useClipboard';
+
+// Alert component is `@ts-nocheck`; widen to accept the props used here.
+const Alert = AlertBase as unknown as React.FC<{
+  intent?: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  className?: string;
+  children?: React.ReactNode;
+}>;
+
+interface ApiKeyDisplayViewProps {
+  dialogName: string;
+  apiKey: string;
+  onClose: () => void;
+}
 
 /**
  * API Key Display view component (used within the generate dialog).
  */
-export function ApiKeyDisplayView({ dialogName, apiKey, onClose }) {
+export function ApiKeyDisplayView({
+  apiKey,
+  onClose,
+}: ApiKeyDisplayViewProps): React.ReactElement {
   const clipboard = useClipboard();
 
   const handleCopy = () => {

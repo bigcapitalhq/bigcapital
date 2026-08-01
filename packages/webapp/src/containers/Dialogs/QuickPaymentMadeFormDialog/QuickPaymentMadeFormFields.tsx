@@ -1,26 +1,25 @@
-// @ts-nocheck
 import { Classes, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { FastField, useFormikContext } from 'formik';
+import { useFormikContext } from 'formik';
 import { isEqual } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import { useSetPrimaryBranchToForm } from './utils';
+import type { QuickPaymentMadeFormValues } from './types';
 import {
   FieldRequiredHint,
   Col,
   Row,
   FAccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
   Icon,
   If,
   FeatureCan,
   ExchangeRateMutedField,
   BranchSelect,
-  FFormGroup,
+  FFormGroup ,
   FInputGroup,
   FDateInput,
   FTextArea,
@@ -29,19 +28,19 @@ import {
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
 import { useAutofocus } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { inputIntent, momentFormatter } from '@/utils';
+import { momentFormatter } from '@/utils';
 
 /**
  * Quick payment made form fields.
  */
-function QuickPaymentMadeFormFieldsInner() {
+function QuickPaymentMadeFormFieldsInner(): React.ReactElement {
   const baseCurrency = useCurrentOrganizationBaseCurrency();
   const { accounts, branches } = useQuickPaymentMadeContext();
 
   // Intl context.
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<QuickPaymentMadeFormValues>();
 
-  const paymentMadeFieldRef = useAutofocus();
+  const paymentMadeFieldRef = useAutofocus<HTMLInputElement>();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -51,9 +50,9 @@ function QuickPaymentMadeFormFieldsInner() {
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup label={intl.get('branch')} name={'branch_id'}>
+            <FFormGroup label={intl.get('branch')} name={'branchId'}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -66,40 +65,42 @@ function QuickPaymentMadeFormFieldsInner() {
       <Row>
         {/* ------------- Vendor name ------------- */}
         <Col xs={5}>
-          <FFormGroup name={'vendor_id'} label={intl.get('vendor_name')}>
-            <FInputGroup name={'vendor_id'} minimal={true} disabled={true} />
+          <FFormGroup name={'vendorId'} label={intl.get('vendor_name')}>
+            <FInputGroup name={'vendorId'} disabled={true} />
           </FFormGroup>
         </Col>
 
         {/* ------------ Payment number. ------------ */}
         <Col xs={5}>
-          <FFormGroup name={'payment_number'} label={intl.get('payment_no')}>
-            <FInputGroup name={'payment_number'} minimal={true} />
+          <FFormGroup name={'paymentNumber'} label={intl.get('payment_no')}>
+            <FInputGroup name={'paymentNumber'} />
           </FFormGroup>
         </Col>
       </Row>
 
-      {/*------------ Amount Received -----------*/}
+      {/*------------ Amount Received ----------- */}
       <FFormGroup name={'amount'} label={intl.get('amount_received')}>
         <ControlGroup>
-          <InputPrependText text={values.currency_code} />
+          <InputPrependText text={values.currencyCode} />
           <FMoneyInputGroup
             name={'amount'}
             minimal={true}
-            inputRef={(ref) => (paymentMadeFieldRef.current = ref)}
+            inputRef={(ref: HTMLInputElement | null) => {
+              paymentMadeFieldRef.current = ref;
+            }}
           />
         </ControlGroup>
       </FFormGroup>
 
-      <If condition={!isEqual(baseCurrency, values.currency_code)}>
-        {/*------------ exchange rate -----------*/}
+      <If condition={!isEqual(baseCurrency, values.currencyCode)}>
+        {/*------------ exchange rate ----------- */}
         <ExchangeRateMutedField
-          name={'exchange_rate'}
+          name={'exchangeRate'}
           fromCurrency={baseCurrency}
-          toCurrency={values.currency_code}
+          toCurrency={values.currencyCode}
           formGroupProps={{ label: '', inline: false }}
-          date={values.payment_date}
-          exchangeRate={values.exchange_rate}
+          date={values.paymentDate}
+          exchangeRate={values.exchangeRate}
         />
       </If>
 
@@ -107,13 +108,13 @@ function QuickPaymentMadeFormFieldsInner() {
         <Col xs={5}>
           {/* ------------- Payment date ------------- */}
           <FFormGroup
-            name={'payment_date'}
+            name={'paymentDate'}
             label={intl.get('payment_date')}
             labelInfo={<FieldRequiredHint />}
             className={classNames('form-group--select-list', CLASSES.FILL)}
           >
             <FDateInput
-              name={'payment_date'}
+              name={'paymentDate'}
               {...momentFormatter('YYYY/MM/DD')}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
@@ -126,12 +127,12 @@ function QuickPaymentMadeFormFieldsInner() {
         <Col xs={5}>
           {/* ------------ payment account ------------ */}
           <FFormGroup
-            name={'payment_account_id'}
+            name={'paymentAccountId'}
             label={intl.get('payment_account')}
           >
             <FAccountsSuggestField
-              name={'payment_account_id'}
-              items={accounts}
+              name={'paymentAccountId'}
+              items={accounts ?? []}
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}
@@ -147,7 +148,7 @@ function QuickPaymentMadeFormFieldsInner() {
 
       {/* ------------ Reference No. ------------ */}
       <FFormGroup name={'reference'} label={intl.get('reference')}>
-        <FInputGroup name={'reference'} minimal={true} />
+        <FInputGroup name={'reference'} />
       </FFormGroup>
 
       {/* --------- Statement --------- */}

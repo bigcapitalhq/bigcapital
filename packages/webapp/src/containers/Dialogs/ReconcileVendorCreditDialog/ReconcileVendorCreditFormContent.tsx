@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Form } from 'formik';
 import React from 'react';
 import { ReconcileVendorCreditFloatingActions } from './ReconcileVendorCreditFloatingActions';
@@ -7,7 +6,7 @@ import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProv
 import { EmptyStatuCallout } from './utils';
 import { Choose } from '@/components';
 
-export function ReconcileVendorCreditFormContent() {
+export function ReconcileVendorCreditFormContent(): React.ReactElement {
   const { isEmptyStatus } = useReconcileVendorCreditContext();
 
   return (

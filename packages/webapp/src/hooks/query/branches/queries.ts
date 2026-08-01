@@ -81,7 +81,7 @@ export function useBranches(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<BranchesListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: branchesKeys.list(query),
@@ -94,7 +94,7 @@ export function useBranch(
   props?: Omit<UseQueryOptions<Branch>, 'queryKey' | 'queryFn'>,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: branchesKeys.detail(id),

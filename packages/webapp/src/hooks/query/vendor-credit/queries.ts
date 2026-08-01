@@ -303,8 +303,7 @@ export function useReconcileVendorCredit(
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
   _requestProps?: unknown,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: vendorCreditsKeys.reconcile(id),

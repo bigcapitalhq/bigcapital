@@ -1,32 +1,30 @@
-// @ts-nocheck
 import { Classes, Position } from '@blueprintjs/core';
 import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
 import {
   FieldRequiredHint,
-  FFormGroup,
   FTextArea,
   FDateInput,
+  FFormGroup,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useAutofocus } from '@/hooks';
 import { momentFormatter } from '@/utils';
 
 /**
- *  locking Transactions form fields.
+ * Locking transactions form fields.
  */
-export function LockingTransactionsFormFields() {
-  const reasonFieldRef = useAutofocus();
+export function LockingTransactionsFormFields(): React.ReactElement {
+  const reasonFieldRef = useAutofocus<HTMLTextAreaElement>();
 
   return (
     <div className={Classes.DIALOG_BODY}>
-      {/*------------  Locking Date -----------*/}
+      {/*------------  Locking Date ----------- */}
       <FFormGroup
         name={'lock_to_date'}
         label={intl.get('locking_transactions.dialog.locking_date')}
         labelInfo={<FieldRequiredHint />}
-        minimal={true}
         className={classNames(CLASSES.FILL, 'form-group--date')}
         fastField
       >
@@ -41,7 +39,7 @@ export function LockingTransactionsFormFields() {
         />
       </FFormGroup>
 
-      {/*------------ Locking  Reason -----------*/}
+      {/*------------ Locking  Reason ----------- */}
       <FFormGroup
         name={'reason'}
         label={intl.get('locking_transactions.dialog.reason')}
@@ -52,7 +50,9 @@ export function LockingTransactionsFormFields() {
           name={'reason'}
           growVertically={true}
           large={true}
-          inputRef={(ref) => (reasonFieldRef.current = ref)}
+          inputRef={(ref: HTMLTextAreaElement | null) => {
+            reasonFieldRef.current = ref;
+          }}
           fill
           fastField
         />

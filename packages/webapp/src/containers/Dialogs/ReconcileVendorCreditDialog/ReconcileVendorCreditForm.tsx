@@ -1,14 +1,13 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
+import { Formik, type FormikHelpers } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-
 import '@/style/pages/ReconcileVendorCredit/ReconcileVendorCreditForm.scss';
-
 import { CreateReconcileVendorCreditFormSchema } from './ReconcileVendorCreditForm.schema';
 import { ReconcileVendorCreditFormContent } from './ReconcileVendorCreditFormContent';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
+import type { ReconcileVendorCreditFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
@@ -17,19 +16,20 @@ import { compose, transformToForm } from '@/utils';
 const defaultInitialValues = {
   entries: [
     {
-      bill_id: '',
+      billId: '',
       amount: '',
     },
   ],
 };
 
+interface ReconcileVendorCreditFormProps extends WithDialogActionsProps {}
+
 /**
  * Reconcile vendor credit form.
  */
 function ReconcileVendorCreditFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: ReconcileVendorCreditFormProps): React.ReactElement {
   const {
     dialogName,
     reconcileVendorCredits,
@@ -38,29 +38,39 @@ function ReconcileVendorCreditFormInner({
   } = useReconcileVendorCreditContext();
 
   // Initial form values.
-  const initialValues = {
+  const initialValues: ReconcileVendorCreditFormValues = {
     entries: reconcileVendorCredits.map((entry) => ({
       ...entry,
-      bill_id: entry.id,
+      billId: entry.id ?? '',
       amount: '',
     })),
   };
 
   // Handle form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: ReconcileVendorCreditFormValues,
+    { setSubmitting }: FormikHelpers<ReconcileVendorCreditFormValues>,
+  ) => {
     setSubmitting(true);
     // Filters the entries.
     const entries = values.entries
-      .filter((entry) => entry.bill_id && entry.amount)
-      .map((entry) => transformToForm(entry, defaultInitialValues.entries[0]));
+      .filter(
+        (entry) => entry.billId && entry.amount !== '' && entry.amount != null,
+      )
+      .map((entry) =>
+        transformToForm(
+          entry as unknown as Record<string, unknown>,
+          defaultInitialValues.entries[0],
+        ),
+      );
 
     const form = {
       ...values,
-      entries: entries,
+      entries,
     };
 
     // Handle the request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('reconcile_vendor_credit.dialog.success_message'),
         intent: Intent.SUCCESS,
@@ -70,13 +80,20 @@ function ReconcileVendorCreditFormInner({
     };
 
     // Handle the request error.
-    const onError = ({ data: { errors } }) => {
-      // if (errors) {
-      //   transformErrors(errors, { setErrors });
-      // }
+    // FIXME: latent bug — original code had `transformErrors(errors, { setErrors })`
+    // call commented out. Preserved as-is.
+    const onError = ({
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
+    }) => {
+      void errors;
       setSubmitting(false);
     };
 
+    // FIXME: latent bug — `vendorCredit` may be undefined when the query hasn't
+    // resolved; original code reads `vendorCredit.id` directly.
+    // @ts-expect-error — `vendorCredit` may be undefined at runtime.
     createReconcileVendorCreditMutate([vendorCredit.id, form])
       .then(onSuccess)
       .catch(onError);

@@ -307,7 +307,7 @@ export function useReconcileCreditNote(
   >,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: creditNotesKeys.reconcile(id),

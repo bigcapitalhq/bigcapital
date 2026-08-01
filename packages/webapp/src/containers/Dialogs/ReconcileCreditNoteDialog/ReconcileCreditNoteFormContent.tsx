@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Form } from 'formik';
 import React from 'react';
 import { ReconcileCreditNoteFormFields } from './ReconcileCreditNoteFormFields';
@@ -10,7 +9,7 @@ import { Choose } from '@/components';
 /**
  * Reconcile credit note form content.
  */
-export function ReconcileCreditNoteFormContent() {
+export function ReconcileCreditNoteFormContent(): React.ReactElement {
   const { isEmptyStatus } = useReconcileCreditNoteContext();
   return (
     <Choose>

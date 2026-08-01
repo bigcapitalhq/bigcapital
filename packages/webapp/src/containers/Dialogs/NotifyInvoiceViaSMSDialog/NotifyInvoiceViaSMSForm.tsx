@@ -1,16 +1,39 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { pick } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useNotifyInvoiceViaSMSContext } from './NotifyInvoiceViaSMSFormProvider';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { NotifyViaSMSForm } from '@/containers/NotifyViaSMS/NotifyViaSMSForm';
+import { NotifyViaSMSForm as NotifyViaSMSFormBase } from '@/containers/NotifyViaSMS/NotifyViaSMSForm';
 import { transformErrors } from '@/containers/NotifyViaSMS/utils';
 import { compose } from '@/utils';
 
-const transformFormValuesToRequest = (values) => {
+// `NotifyViaSMSForm` is `@ts-nocheck` with required destructured props; widen
+// locally so this dialog can pass only the props it actually uses.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type NotifyViaSMSFormProps = {
+  initialValues?: any;
+  notificationTypes?: any;
+  onSubmit?: any;
+  onCancel?: any;
+  onValuesChange?: any;
+  calloutCodes?: any;
+  formikProps?: any;
+};
+const NotifyViaSMSForm = NotifyViaSMSFormBase as unknown as React.ComponentType<
+  NotifyViaSMSFormProps
+>;
+
+interface NotifyViaSMSFormValues {
+  notification_key: string;
+  [key: string]: unknown;
+}
+
+const transformFormValuesToRequest = (
+  values: NotifyViaSMSFormValues,
+): Record<string, unknown> => {
   return pick(values, ['notification_key']);
 };
 
@@ -26,13 +49,14 @@ const notificationTypes = [
   },
 ];
 
+interface NotifyInvoiceViaSMSFormProps extends WithDialogActionsProps {}
+
 /**
  * Notify Invoice Via SMS Form.
  */
 function NotifyInvoiceViaSMSFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: NotifyInvoiceViaSMSFormProps): React.ReactElement {
   const {
     createNotifyInvoiceBySMSMutate,
     invoiceId,
@@ -42,14 +66,23 @@ function NotifyInvoiceViaSMSFormInner({
     setNotificationType,
   } = useNotifyInvoiceViaSMSContext();
 
-  const [calloutCode, setCalloutCode] = React.useState([]);
+  const [calloutCode, setCalloutCode] = React.useState<number[]>([]);
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: NotifyViaSMSFormValues,
+    {
+      setSubmitting,
+      setErrors,
+    }: {
+      setSubmitting: (isSubmitting: boolean) => void;
+      setErrors: (errors: Partial<Record<string, string>>) => void;
+    },
+  ) => {
     setSubmitting(true);
 
     // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('notify_invoice_via_sms.dialog.success_message'),
         intent: Intent.SUCCESS,
@@ -58,7 +91,11 @@ function NotifyInvoiceViaSMSFormInner({
       closeDialog(dialogName);
     };
     // Handle request response errors.
-    const onError = ({ data: { errors } }) => {
+    const onError = ({
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
+    }) => {
       if (errors) {
         transformErrors(errors, { setErrors, setCalloutCode });
       }
@@ -68,6 +105,7 @@ function NotifyInvoiceViaSMSFormInner({
     const requestValues = transformFormValuesToRequest(values);
 
     // Submits invoice SMS notification.
+    // @ts-expect-error — invoiceId may be null in theory; dialog is only opened with a real id.
     createNotifyInvoiceBySMSMutate([invoiceId, requestValues])
       .then(onSuccess)
       .catch(onError);
@@ -82,7 +120,7 @@ function NotifyInvoiceViaSMSFormInner({
     ...invoiceSMSDetail,
   };
   // Handle form values change.
-  const handleValuesChange = (values) => {
+  const handleValuesChange = (values: NotifyViaSMSFormValues) => {
     if (values.notification_key !== notificationType) {
       setNotificationType(values.notification_key);
     }

@@ -1,5 +1,5 @@
-// @ts-nocheck
 import React from 'react';
+import type { UnlockingTransactionsDialogPayload } from './types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
@@ -10,14 +10,20 @@ const UnlockingTransactionsDialogContent = React.lazy(() =>
   })),
 );
 
+interface UnlockingTransactionsDialogProps {
+  dialogName: string;
+  payload: UnlockingTransactionsDialogPayload;
+  isOpen: boolean | undefined;
+}
+
 /**
  * Unlocking transactions dialog.
  */
 function UnlockingTransactionsDialog({
   dialogName,
-  payload: { module },
+  payload: { module } = {},
   isOpen,
-}) {
+}: UnlockingTransactionsDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -29,7 +35,7 @@ function UnlockingTransactionsDialog({
     >
       <DialogSuspense>
         <UnlockingTransactionsDialogContent
-          moduleName={module}
+          moduleName={module ?? ''}
           dialogName={dialogName}
         />
       </DialogSuspense>

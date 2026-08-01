@@ -3898,6 +3898,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePdfTemplateDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The PDF template has been successfully created."
@@ -4070,6 +4080,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditPdfTemplateDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The PDF template has been successfully edited."
@@ -12025,7 +12045,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Bills that can be applied with this vendor credit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VendorCreditBillToApplyResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -25697,7 +25727,7 @@
             "description": "Branch country",
             "example": "USA"
           },
-          "phone_number": {
+          "phoneNumber": {
             "type": "string",
             "description": "Branch phone number",
             "example": "+1-555-123-4567"
@@ -25751,7 +25781,7 @@
             "description": "Branch country",
             "example": "USA"
           },
-          "phone_number": {
+          "phoneNumber": {
             "type": "string",
             "description": "Branch phone number",
             "example": "+1-555-123-4567"
@@ -27116,11 +27146,6 @@
               "$ref": "#/components/schemas/SaleInvoiceTaxEntryDto"
             }
           },
-          "delivered": {
-            "type": "boolean",
-            "description": "Whether the invoice has been delivered",
-            "example": false
-          },
           "deliveredAt": {
             "format": "date-time",
             "type": "string",
@@ -27376,7 +27401,6 @@
           "invoiceNo",
           "customerId",
           "entries",
-          "delivered",
           "balance",
           "paymentAmount",
           "subtotal",
@@ -27680,6 +27704,14 @@
           "entries",
           "attachments"
         ]
+      },
+      "CreatePdfTemplateDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "EditPdfTemplateDto": {
+        "type": "object",
+        "properties": {}
       },
       "UploadAttachmentDto": {
         "type": "object",
@@ -35112,6 +35144,85 @@
           "billId",
           "vendorCreditId",
           "createdAt"
+        ]
+      },
+      "VendorCreditBillToApplyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "billNo": {
+            "type": "string",
+            "example": "BILL-0001"
+          },
+          "billDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "dueDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-20"
+          },
+          "amount": {
+            "type": "number",
+            "example": 500
+          },
+          "dueAmount": {
+            "type": "number",
+            "example": 500
+          },
+          "paymentAmount": {
+            "type": "number",
+            "example": 0
+          },
+          "referenceNo": {
+            "type": "string",
+            "example": "PO-001",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "USD",
+            "nullable": true
+          },
+          "formattedBillDate": {
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "formattedDueDate": {
+            "type": "string",
+            "example": "2024-01-20"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "example": "$500.00"
+          },
+          "formattedDueAmount": {
+            "type": "string",
+            "example": "$500.00"
+          },
+          "formattedPaymentAmount": {
+            "type": "string",
+            "example": "$0.00"
+          }
+        },
+        "required": [
+          "id",
+          "billNo",
+          "billDate",
+          "dueDate",
+          "amount",
+          "dueAmount",
+          "paymentAmount",
+          "formattedBillDate",
+          "formattedDueDate",
+          "formattedAmount",
+          "formattedDueAmount",
+          "formattedPaymentAmount"
         ]
       },
       "ApplyVendorCreditToBillEntryDto": {

@@ -1,8 +1,9 @@
+import { FormikHelpers } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { WarehouseTransferNumberDialogProvider } from './WarehouseTransferNumberDialogProvider';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import type { FormikHelpers } from 'formik';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
 import {
@@ -12,15 +13,10 @@ import {
 import { useSaveSettings, useSettingsWarehouseTransfers } from '@/hooks/query';
 import { compose } from '@/utils';
 
-interface ReferenceFormValues {
-  incrementMode?: string;
-  [key: string]: unknown;
-}
-
 interface WarehouseTransferNumberDialogContentProps
   extends WithDialogActionsProps {
-  initialValues?: Record<string, unknown>;
-  onConfirm?: (values: ReferenceFormValues) => void;
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
 }
 
 function WarehouseTransferNumberDialogContentInner({
@@ -37,16 +33,17 @@ function WarehouseTransferNumberDialogContentInner({
     | string
     | undefined;
   const autoIncrement = warehouseTransferSettings?.autoIncrement as
+    | boolean
     | string
     | undefined;
 
   const { mutateAsync: saveSettings } = useSaveSettings();
   const [referenceFormValues, setReferenceFormValues] =
-    React.useState<ReferenceFormValues | null>(null);
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
 
   const handleSubmitForm = (
-    values: ReferenceFormValues,
-    { setSubmitting }: FormikHelpers<ReferenceFormValues>,
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
   ) => {
     const handleSuccess = () => {
       setSubmitting(false);
@@ -71,7 +68,7 @@ function WarehouseTransferNumberDialogContentInner({
     closeDialog('warehouse-transfer-no-form');
   };
 
-  const handleChange = (values: ReferenceFormValues) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
 

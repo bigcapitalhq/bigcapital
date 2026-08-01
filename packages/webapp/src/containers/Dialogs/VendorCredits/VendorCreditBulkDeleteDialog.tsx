@@ -1,8 +1,9 @@
-// @ts-nocheck
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithVendorsCreditNotesActionsProps } from '@/containers/Purchases/CreditNotes/CreditNotesLanding/withVendorsCreditNotesActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
@@ -10,23 +11,39 @@ import { withVendorsCreditNotesActions } from '@/containers/Purchases/CreditNote
 import { useBulkDeleteVendorCredits } from '@/hooks/query/vendor-credit';
 import { compose } from '@/utils';
 
+interface VendorCreditBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface VendorCreditBulkDeleteDialogProps
+  extends WithVendorsCreditNotesActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
 function VendorCreditBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withVendorsCreditNotesActions
   setVendorsCreditNoteSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteVendorCredits, isLoading } =
+}: VendorCreditBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: VendorCreditBulkDeleteDialogPayload = payload ?? {};
+
+  const { mutateAsync: bulkDeleteVendorCredits, isPending: isLoading } =
     useBulkDeleteVendorCredits();
 
   const handleCancel = () => {

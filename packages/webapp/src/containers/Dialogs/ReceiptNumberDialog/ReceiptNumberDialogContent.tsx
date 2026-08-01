@@ -1,6 +1,8 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { DialogContent } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
@@ -11,29 +13,39 @@ import {
 import { useSettingsReceipts, useSaveSettings } from '@/hooks/query';
 import { compose, saveInvoke } from '@/utils';
 
+interface ReceiptNumberDialogContentProps extends WithDialogActionsProps {
+  receiptId?: number;
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
 /**
  * Receipt number dialog's content.
  */
 function ReceiptNumberDialogContentInner({
-  // #ownProps
   receiptId,
   onConfirm,
   initialValues,
-
-  // #withDialogActions
   closeDialog,
-}) {
-  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+}: ReceiptNumberDialogContentProps): React.ReactElement {
+  const [referenceFormValues, setReferenceFormValues] =
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
 
   const { data: receiptSettings, isLoading: isSettingsLoading } =
     useSettingsReceipts();
-  const nextNumber = receiptSettings?.nextNumber as number | undefined;
+  const nextNumber = receiptSettings?.nextNumber as string | number | undefined;
   const numberPrefix = receiptSettings?.numberPrefix as string | undefined;
-  const autoIncrement = receiptSettings?.autoIncrement as boolean | undefined;
+  const autoIncrement = receiptSettings?.autoIncrement as
+    | boolean
+    | string
+    | undefined;
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   // Handle the form submit.
-  const handleSubmitForm = (values, { setSubmitting }) => {
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     const handleSuccess = () => {
       setSubmitting(false);
       closeDialog('receipt-number-form');
@@ -57,7 +69,7 @@ function ReceiptNumberDialogContentInner({
   }, [closeDialog]);
 
   // Handle form change.
-  const handleChange = (values) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
 

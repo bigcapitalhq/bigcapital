@@ -1,6 +1,8 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { DialogContent } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
@@ -13,31 +15,41 @@ import { saveInvoke, compose } from '@/utils';
 
 import '@/style/pages/ManualJournal/JournalNumberDialog.scss';
 
+interface JournalNumberDialogContentProps extends WithDialogActionsProps {
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
 /**
  * Journal number dialog's content.
  */
 function JournalNumberDialogContentInner({
-  // #withDialogActions
   closeDialog,
-
-  // #ownProps
   onConfirm,
   initialValues,
-}) {
+}: JournalNumberDialogContentProps): React.ReactElement {
   const { data: manualJournalsSettings, isLoading: isSettingsLoading } =
     useSettingsManualJournals();
-  const nextNumber = manualJournalsSettings?.nextNumber as number | undefined;
+  const nextNumber = manualJournalsSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
   const numberPrefix = manualJournalsSettings?.numberPrefix as
     | string
     | undefined;
   const autoIncrement = manualJournalsSettings?.autoIncrement as
     | boolean
+    | string
     | undefined;
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
-  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+  const [referenceFormValues, setReferenceFormValues] =
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
 
   // Handle the form submit.
-  const handleSubmitForm = (values, { setSubmitting }) => {
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     // Handle success.
     const handleSuccess = () => {
       setSubmitting(false);
@@ -63,7 +75,7 @@ function JournalNumberDialogContentInner({
   }, [closeDialog]);
 
   // Handle form change.
-  const handleChange = (values) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
 

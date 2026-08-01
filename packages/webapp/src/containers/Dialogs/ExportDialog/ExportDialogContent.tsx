@@ -1,7 +1,6 @@
-// @ts-nocheck
-
+import React from 'react';
 import { ExportDialogForm } from './ExportDialogForm';
-import { ExportFormInitialValues } from './type';
+import type { ExportFormInitialValues } from './type';
 
 interface ExportDialogContentProps {
   initialValues?: ExportFormInitialValues;
@@ -12,6 +11,6 @@ interface ExportDialogContentProps {
  */
 export function ExportDialogContent({
   initialValues,
-}: ExportDialogContentProps) {
+}: ExportDialogContentProps): React.ReactElement {
   return <ExportDialogForm initialValues={initialValues} />;
 }

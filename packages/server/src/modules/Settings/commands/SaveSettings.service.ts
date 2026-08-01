@@ -50,7 +50,6 @@ export class SaveSettingsService {
         option.key,
         option.group,
       );
-
       if (!setting) {
         notDefined.push(option);
       }
