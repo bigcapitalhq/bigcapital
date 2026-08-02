@@ -9,6 +9,7 @@ import {
   useQueryClient,
   useMutation,
   useQuery,
+  type UseMutationOptions,
   type UseQueryOptions,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
@@ -38,13 +39,15 @@ export function useCreateLandedCost(props) {
   });
 }
 
-export function useDeleteLandedCost(props) {
+export function useDeleteLandedCost(
+  props?: UseMutationOptions<void, Error, number>,
+) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
   return useMutation({
     ...props,
-    mutationFn: (landedCostId) =>
+    mutationFn: (landedCostId: number) =>
       deleteAllocatedLandedCost(fetcher, landedCostId),
     onSuccess: () => {
       commonInvalidateQueries(queryClient);

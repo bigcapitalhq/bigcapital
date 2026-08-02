@@ -1,9 +1,22 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { compose, saveInvoke } from '@/utils';
+
+interface ChangingFullAmountAlertPayload {
+  // Empty payload — alert reads no payload field.
+  [key: string]: unknown;
+}
+
+interface ChangingFullAmountAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ChangingFullAmountAlertPayload;
+  onConfirm?: (event: React.SyntheticEvent<HTMLElement>) => void;
+}
 
 /**
  * Changing full-amount alert in payment made form.
@@ -11,29 +24,23 @@ import { compose, saveInvoke } from '@/utils';
 function ChangingFullAmountAlertInner({
   name,
   onConfirm,
-
-  // #withAlertStoreConnect
   isOpen,
-  payload: {},
-
-  // #withAlertActions
+  payload,
   closeAlert,
-}) {
-  // Handle the alert cancel.
+}: ChangingFullAmountAlertProps): React.ReactElement {
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete manual journal.
-  const handleConfirm = (event) => {
+  const handleConfirm = (event: React.SyntheticEvent<HTMLElement>) => {
     closeAlert(name);
     saveInvoke(onConfirm, event);
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'ok'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('ok')}
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancel}

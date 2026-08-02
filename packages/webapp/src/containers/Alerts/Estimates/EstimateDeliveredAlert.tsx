@@ -1,35 +1,39 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useDeliverEstimate } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface EstimateDeliveredAlertPayload {
+  estimateId: number;
+}
+
+interface EstimateDeliveredAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: EstimateDeliveredAlertPayload;
+}
 
 /**
  * Estimate delivered alert.
  */
 function EstimateDeliveredAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { estimateId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: deliverEstimateMutate, isLoading } =
+}: EstimateDeliveredAlertProps): React.ReactElement {
+  const { mutateAsync: deliverEstimateMutate, isPending: isLoading } =
     useDeliverEstimate();
 
-  // Handle cancel delivered estimate alert.
   const handleAlertCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm estimate delivered.
   const handleAlertConfirm = () => {
     deliverEstimateMutate(estimateId)
       .then(() => {
@@ -38,7 +42,13 @@ function EstimateDeliveredAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -46,8 +56,8 @@ function EstimateDeliveredAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'deliver'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('deliver')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleAlertCancel}

@@ -1,36 +1,41 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useApproveEstimate } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface EstimateApproveAlertPayload {
+  estimateId: number;
+}
+
+interface EstimateApproveAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: EstimateApproveAlertPayload;
+}
 
 /**
  * Estimate approve alert.
  */
 function EstimateApproveAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { estimateId },
-
-  // #withAlertActions
   closeAlert,
-}) {
+}: EstimateApproveAlertProps): React.ReactElement {
   const queryClient = useQueryClient();
-  const { mutateAsync: deliverEstimateMutate, isLoading } =
+  const { mutateAsync: deliverEstimateMutate, isPending: isLoading } =
     useApproveEstimate();
 
-  // handle cancel approve alert.
   const handleCancelApproveEstimate = () => {
     closeAlert(name);
   };
-  // Handle confirm estimate approve.
+
   const handleConfirmEstimateApprove = useCallback(() => {
     deliverEstimateMutate(estimateId)
       .then(() => {
@@ -40,16 +45,22 @@ function EstimateApproveAlertInner({
         });
         queryClient.invalidateQueries({ queryKey: ['estimates-table'] });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
-  }, [estimateId, deliverEstimateMutate, closeAlert, name]);
+  }, [estimateId, deliverEstimateMutate, closeAlert, name, queryClient]);
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'approve'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('approve')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       loading={isLoading}

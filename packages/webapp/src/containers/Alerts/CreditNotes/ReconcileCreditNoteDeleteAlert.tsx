@@ -1,38 +1,40 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteReconcileCredit } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface ReconcileCreditNoteDeleteAlertPayload {
+  creditNoteId: number;
+}
+
+interface ReconcileCreditNoteDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ReconcileCreditNoteDeleteAlertPayload;
+}
 
 /**
  * Reconcile credit note delete alert.
  */
 function ReconcileCreditNoteDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { creditNoteId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { isLoading, mutateAsync: deleteReconcileCreditMutate } =
+}: ReconcileCreditNoteDeleteAlertProps): React.ReactElement {
+  const { isPending: isLoading, mutateAsync: deleteReconcileCreditMutate } =
     useDeleteReconcileCredit();
 
-  // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
@@ -45,8 +47,12 @@ function ReconcileCreditNoteDeleteAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(({ data: { errors } }) => {
-        // handleDeleteErrors(errors);
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had a commented-out `handleDeleteErrors(errors)` and empty catch — failures were silently swallowed.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
       })
       .finally(() => {
         closeAlert(name);
@@ -55,8 +61,8 @@ function ReconcileCreditNoteDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -65,6 +71,7 @@ function ReconcileCreditNoteDeleteAlertInner({
       loading={isLoading}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={
             'reconcile_credit_note.once_you_delete_this_reconcile_credit_note'

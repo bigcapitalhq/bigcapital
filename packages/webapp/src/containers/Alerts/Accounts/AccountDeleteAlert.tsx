@@ -1,43 +1,46 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { handleDeleteErrors } from '@/containers/Accounts/utils';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteAccount } from '@/hooks/query';
 import { compose } from '@/utils';
 
+interface AccountDeleteAlertPayload {
+  accountId: number;
+}
+
+interface AccountDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: AccountDeleteAlertPayload;
+}
+
 /**
- * Account delete alerts.
+ * Account delete alert.
  */
 function AccountDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { accountId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { isLoading, mutateAsync: deleteAccount } = useDeleteAccount();
+}: AccountDeleteAlertProps): React.ReactElement {
+  const { isPending: isLoading, mutateAsync: deleteAccount } =
+    useDeleteAccount();
 
-  // handle cancel delete account alert.
   const handleCancelAccountDelete = () => {
     closeAlert(name);
   };
-  // Handle confirm account delete.
+
   const handleConfirmAccountDelete = () => {
     deleteAccount(accountId)
       .then(() => {
@@ -48,16 +51,18 @@ function AccountDeleteAlertInner({
         closeAlert(name);
         closeDrawer(DRAWERS.ACCOUNT_DETAILS);
       })
-      .catch(({ data: { errors } }) => {
-        handleDeleteErrors(errors);
-        closeAlert(name);
-      });
+      .catch(
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
+          handleDeleteErrors(errors);
+          closeAlert(name);
+        },
+      );
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -66,6 +71,7 @@ function AccountDeleteAlertInner({
       loading={isLoading}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_account_you_will_able_to_restore_it'}
         />

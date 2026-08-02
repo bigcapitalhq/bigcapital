@@ -1,43 +1,45 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteReceipt } from '@/hooks/query';
 import { compose } from '@/utils';
 
+interface ReceiptDeleteAlertPayload {
+  receiptId: number;
+}
+
+interface ReceiptDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ReceiptDeleteAlertPayload;
+}
+
 /**
- * Invoice  alert.
+ * Receipt delete alert.
  */
 function NameDeleteAlert({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { receiptId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteReceiptMutate, isLoading } = useDeleteReceipt();
+}: ReceiptDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteReceiptMutate, isPending: isLoading } =
+    useDeleteReceipt();
 
-  // Handle cancel delete  alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete receipt
   const handleConfirmReceiptDelete = () => {
     deleteReceiptMutate(receiptId)
       .then(() => {
@@ -47,7 +49,13 @@ function NameDeleteAlert({
         });
         closeDrawer(DRAWERS.RECEIPT_DETAILS);
       })
-      .catch(() => {})
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had an empty `.catch(() => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -55,8 +63,8 @@ function NameDeleteAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -65,6 +73,7 @@ function NameDeleteAlert({
       loading={isLoading}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_receipt_you_will_able_to_restore_it'}
         />
