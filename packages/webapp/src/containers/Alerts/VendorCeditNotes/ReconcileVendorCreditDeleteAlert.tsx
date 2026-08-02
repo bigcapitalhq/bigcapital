@@ -32,8 +32,10 @@ function ReconcileVendorCreditDeleteAlertInner({
   closeAlert,
   closeDrawer,
 }: ReconcileVendorCreditDeleteAlertProps): React.ReactElement {
-  const { isPending: isLoading, mutateAsync: deleteReconcileVendorCreditMutate } =
-    useDeleteReconcileVendorCredit();
+  const {
+    isPending: isLoading,
+    mutateAsync: deleteReconcileVendorCreditMutate,
+  } = useDeleteReconcileVendorCredit();
 
   const handleCancelDeleteAlert = () => {
     closeAlert(name);

@@ -7,9 +7,7 @@ interface DeleteError {
 }
 
 export const handleDeleteErrors = (errors: DeleteError[]): void => {
-  if (
-    errors.find((e) => e.type === 'EXPENSE_HAS_ASSOCIATED_LANDED_COST')
-  ) {
+  if (errors.find((e) => e.type === 'EXPENSE_HAS_ASSOCIATED_LANDED_COST')) {
     AppToaster.show({
       intent: Intent.DANGER,
       message: intl.get(

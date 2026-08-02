@@ -54,11 +54,7 @@ function EstimateDeleteAlertInner({
         closeDrawer(DRAWERS.ESTIMATE_DETAILS);
       })
       .catch(
-        ({
-          data: { errors },
-        }: {
-          data: { errors: EstimateDeleteError[] };
-        }) => {
+        ({ data: { errors } }: { data: { errors: EstimateDeleteError[] } }) => {
           if (
             errors.find((e) => e.type === 'SALE_ESTIMATE_CONVERTED_TO_INVOICE')
           ) {

@@ -24,7 +24,8 @@ function AccountBulkInactivateAlertInner({
   payload: { accountsIds },
   closeAlert,
 }: AccountBulkInactivateAlertProps): React.ReactElement {
-  const { mutateAsync: bulkInactivate, isPending } = useBulkInactivateAccounts();
+  const { mutateAsync: bulkInactivate, isPending } =
+    useBulkInactivateAccounts();
 
   const handleCancel = () => {
     closeAlert(name);

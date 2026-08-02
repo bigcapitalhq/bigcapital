@@ -43,11 +43,7 @@ function UserInactivateAlertInner({
         });
       })
       .catch(
-        ({
-          data: { errors },
-        }: {
-          data: { errors: UserInactivateError[] };
-        }) => {
+        ({ data: { errors } }: { data: { errors: UserInactivateError[] } }) => {
           if (
             errors.find(
               (e) => e.type === 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER',
