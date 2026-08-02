@@ -1,39 +1,39 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { handleDeleteErrors } from '@/containers/Preferences/Branches/utils';
 import { useDeleteBranch } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface BranchDeleteAlertPayload {
+  branchId: number | string;
+}
+
+interface BranchDeleteAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: BranchDeleteAlertPayload;
+}
 
 /**
  * Branch delete alert.
  */
 function BranchDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { branchId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: deleteBranch, isLoading } = useDeleteBranch();
+}: BranchDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteBranch, isPending: isLoading } = useDeleteBranch();
 
-  // Handle cancel delete alert.
   const handleCancelDelete = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete branch.
   const handleConfirmDeleteBranch = () => {
     deleteBranch(branchId)
       .then(() => {
@@ -42,9 +42,11 @@ function BranchDeleteAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(({ data: { errors } }) => {
-        handleDeleteErrors(errors);
-      })
+      .catch(
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
+          handleDeleteErrors(errors);
+        },
+      )
       .finally(() => {
         closeAlert(name);
       });
@@ -52,8 +54,8 @@ function BranchDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -62,6 +64,7 @@ function BranchDeleteAlertInner({
       loading={isLoading}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage id={'branch.once_delete_this_branch'} />
       </p>
     </Alert>

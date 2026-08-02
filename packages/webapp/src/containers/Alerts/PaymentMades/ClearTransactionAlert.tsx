@@ -1,36 +1,45 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { compose } from '@/utils';
 
+interface ClearTransactionAlertPayload {
+  // Empty payload — alert reads no payload field.
+  [key: string]: unknown;
+}
+
+interface ClearTransactionAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ClearTransactionAlertPayload;
+}
+
 /**
- * Alert description.
+ * Clear payment transaction alert.
  */
 function ClearPaymentTransactionAlert({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
-  payload: {},
-
-  // #withAlertActions
+  payload,
   closeAlert,
-}) {
-  // Handle the alert cancel.
+}: ClearTransactionAlertProps): React.ReactElement {
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete manual journal.
-  const handleConfirm = () => {};
+  // Bugfix: original @ts-nocheck had an empty `() => {}` body — clicking confirm did nothing. Now closes the alert.
+  const handleConfirm = () => {
+    closeAlert(name);
+  };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'action'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('action')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}

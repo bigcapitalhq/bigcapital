@@ -1,31 +1,35 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T } from '@/components';
-import { AppToaster } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useBulkInactivateAccounts } from '@/hooks/query/accounts';
 import { compose } from '@/utils';
+
+interface AccountBulkInactivateAlertPayload {
+  accountsIds: number[];
+}
+
+interface AccountBulkInactivateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: AccountBulkInactivateAlertPayload;
+}
 
 function AccountBulkInactivateAlertInner({
   name,
   isOpen,
   payload: { accountsIds },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: bulkInactivate, isPending } =
-    useBulkInactivateAccounts();
+}: AccountBulkInactivateAlertProps): React.ReactElement {
+  const { mutateAsync: bulkInactivate, isPending } = useBulkInactivateAccounts();
 
-  // Handle alert cancel.
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle Bulk Inactive accounts confirm.
   const handleConfirmBulkInactive = async () => {
     try {
       await bulkInactivate({ ids: accountsIds });
@@ -33,9 +37,14 @@ function AccountBulkInactivateAlertInner({
         message: intl.get('the_accounts_have_been_successfully_inactivated'),
         intent: Intent.SUCCESS,
       });
-    } catch (error) {
+    } catch (error: unknown) {
+      // Replaced `(error as Error)?.message` cast with instanceof narrowing.
+      const message =
+        error instanceof Error
+          ? error.message
+          : intl.get('something_went_wrong');
       AppToaster.show({
-        message: (error as Error)?.message,
+        message,
         intent: Intent.DANGER,
       });
     } finally {
@@ -45,7 +54,7 @@ function AccountBulkInactivateAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={`${intl.get('inactivate')} (${accountsIds.length})`}
       intent={Intent.WARNING}
       isOpen={isOpen}
