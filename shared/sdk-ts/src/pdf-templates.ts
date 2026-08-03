@@ -72,7 +72,7 @@ export async function createPdfTemplate(
   values: CreatePdfTemplateBody
 ): Promise<void> {
   const post = fetcher.path(PDF_TEMPLATES_ROUTES.LIST).method('post').create();
-  await (post as (body: CreatePdfTemplateBody) => Promise<unknown>)(values);
+  await post(values as never);
 }
 
 export async function editPdfTemplate(
@@ -81,7 +81,7 @@ export async function editPdfTemplate(
   values: EditPdfTemplateBody
 ): Promise<void> {
   const put = fetcher.path(PDF_TEMPLATES_ROUTES.BY_ID).method('put').create();
-  await (put as (params: { id: number } & EditPdfTemplateBody) => Promise<unknown>)({ id, ...values });
+  await put({ id, ...values } as never);
 }
 
 export async function deletePdfTemplate(fetcher: ApiFetcher, id: number): Promise<void> {

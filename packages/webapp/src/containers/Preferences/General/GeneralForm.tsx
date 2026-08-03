@@ -70,13 +70,13 @@ export function PreferencesGeneralForm({
 
       {/* ---------- Organization Tax Number ----------  */}
       <FFormGroup
-        name={'tax_number'}
+        name={'taxNumber'}
         label={intl.get('organization_tax_number')}
         inline={true}
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
         fastField={true}
       >
-        <FInputGroup medium={true} name={'tax_number'} fastField={true} />
+        <FInputGroup medium={true} name={'taxNumber'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Industry ----------  */}
@@ -129,14 +129,14 @@ export function PreferencesGeneralForm({
           <Group spacing={15}>
             <FInputGroup name={'address.city'} placeholder={'City'} fastField />
             <FInputGroup
-              name={'address.postal_code'}
+              name={'address.postalCode'}
               placeholder={'ZIP Code'}
               fastField
             />
           </Group>
           <Group spacing={15}>
             <FInputGroup
-              name={'address.state_province'}
+              name={'address.stateProvince'}
               placeholder={'State or Province'}
               fastField
             />
@@ -151,7 +151,7 @@ export function PreferencesGeneralForm({
 
       {/* ----------  Base currency ----------  */}
       <FFormGroup
-        name={'base_currency'}
+        name={'baseCurrency'}
         baseCurrencyDisabled={baseCurrencyDisabled}
         label={intl.get('base_currency')}
         labelInfo={<FieldRequiredHint />}
@@ -165,7 +165,7 @@ export function PreferencesGeneralForm({
         shouldUpdate={shouldBaseCurrencyUpdate}
       >
         <FSelect
-          name={'base_currency'}
+          name={'baseCurrency'}
           items={Currencies}
           valueAccessor={'key'}
           textAccessor={'name'}
@@ -181,7 +181,7 @@ export function PreferencesGeneralForm({
 
       {/* --------- Fiscal Year ----------- */}
       <FFormGroup
-        name={'fiscal_year'}
+        name={'fiscalYear'}
         label={intl.get('fiscal_year')}
         labelInfo={<FieldRequiredHint />}
         inline={true}
@@ -189,7 +189,7 @@ export function PreferencesGeneralForm({
         fastField={true}
       >
         <FSelect
-          name={'fiscal_year'}
+          name={'fiscalYear'}
           items={FiscalYear}
           valueAccessor={'key'}
           textAccessor={'name'}
@@ -223,15 +223,15 @@ export function PreferencesGeneralForm({
 
       {/* --------- Data format ----------- */}
       <FFormGroup
-        name={'date_format'}
+        name={'dateFormat'}
         label={intl.get('date_format')}
         labelInfo={<FieldRequiredHint />}
         inline={true}
-        helperText={<ErrorMessage name="date_format" />}
+        helperText={<ErrorMessage name="dateFormat" />}
         fastField={true}
       >
         <FSelect
-          name={'date_format'}
+          name={'dateFormat'}
           items={dateFormats ?? []}
           valueAccessor={'key'}
           textAccessor={'label'}

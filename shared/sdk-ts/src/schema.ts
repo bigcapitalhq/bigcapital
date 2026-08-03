@@ -15994,6 +15994,20 @@ export interface components {
              */
             dateFormat?: string;
         };
+        OrganizationAddressDto: {
+            /** @example 123 Main St */
+            address1?: string;
+            /** @example Suite 100 */
+            address2?: string;
+            /** @example 10001 */
+            postalCode?: string;
+            /** @example New York */
+            city?: string;
+            /** @example NY */
+            stateProvince?: string;
+            /** @example +1-555-123-4567 */
+            phone?: string;
+        };
         UpdateOrganizationDto: {
             /**
              * @description Organization name
@@ -16035,18 +16049,8 @@ export interface components {
              * @example MM/DD/YYYY
              */
             dateFormat?: string;
-            /**
-             * @description Organization address details
-             * @example {
-             *       "address_1": "123 Main St",
-             *       "address_2": "Suite 100",
-             *       "postal_code": "10001",
-             *       "city": "New York",
-             *       "stateProvince": "NY",
-             *       "phone": "+1-555-123-4567"
-             *     }
-             */
-            address?: Record<string, never>;
+            /** @description Organization address details */
+            address?: components["schemas"]["OrganizationAddressDto"];
             /**
              * @description Primary brand color in hex format
              * @example #4285F4

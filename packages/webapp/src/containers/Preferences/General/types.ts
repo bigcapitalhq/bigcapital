@@ -2,30 +2,26 @@ export interface GeneralFormAddress {
   address1?: string;
   address2?: string;
   city?: string;
-  postal_code?: string;
-  state_province?: string;
+  postalCode?: string;
+  stateProvince?: string;
   phone?: string;
 }
 
 /**
  * General preferences form values.
  *
- * NOTE: snake_case keys are preserved for `tax_number`, `base_currency`,
- * `fiscal_year`, `date_format`, and the nested `address` object because they
- * are read from / written to `organization.metadata`, which is a free-form
- * JSON blob stored as-is by the server. Renaming would silently break the
- * round-trip without a migration. The Address sub-interface mirrors the same
- * constraint.
+ * Keys are camelCase to match the organization metadata API
+ * (`GET/PUT /api/organization`), so values hydrate and persist as-is.
  */
 export interface GeneralFormValues {
   name: string;
   industry?: string;
   location?: string;
-  base_currency: string;
+  baseCurrency: string;
   language: string;
-  fiscal_year: string;
-  date_format: string;
+  fiscalYear: string;
+  dateFormat: string;
   timezone: string;
-  tax_number?: string;
+  taxNumber?: string;
   address: GeneralFormAddress;
 }

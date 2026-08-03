@@ -1,7 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, FormikHelpers } from 'formik';
 import * as R from 'ramda';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
 import { PreferencesInvoiceFormSchema } from './PreferencesInvoiceForm.schema';
