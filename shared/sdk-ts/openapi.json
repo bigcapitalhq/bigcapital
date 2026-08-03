@@ -42800,6 +42800,35 @@
           "language"
         ]
       },
+      "OrganizationAddressDto": {
+        "type": "object",
+        "properties": {
+          "address1": {
+            "type": "string",
+            "example": "123 Main St"
+          },
+          "address2": {
+            "type": "string",
+            "example": "Suite 100"
+          },
+          "postalCode": {
+            "type": "string",
+            "example": "10001"
+          },
+          "city": {
+            "type": "string",
+            "example": "New York"
+          },
+          "stateProvince": {
+            "type": "string",
+            "example": "NY"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1-555-123-4567"
+          }
+        }
+      },
       "UpdateOrganizationDto": {
         "type": "object",
         "properties": {
@@ -42844,16 +42873,12 @@
             "example": "MM/DD/YYYY"
           },
           "address": {
-            "type": "object",
             "description": "Organization address details",
-            "example": {
-              "address_1": "123 Main St",
-              "address_2": "Suite 100",
-              "postal_code": "10001",
-              "city": "New York",
-              "stateProvince": "NY",
-              "phone": "+1-555-123-4567"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OrganizationAddressDto"
+              }
+            ]
           },
           "primaryColor": {
             "type": "string",
