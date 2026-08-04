@@ -40,11 +40,9 @@ function PaymentReceiveInnerProvider({
   const { isNewMode } = usePaymentReceiveFormContext();
 
   const {
-    values: { customer_id: customerId },
+    values: { customerId },
     setFieldValue,
-  } = useFormikContext<
-    PaymentReceiveFormValues & { customer_id?: string | number }
-  >();
+  } = useFormikContext<PaymentReceiveFormValues>();
 
   // `useDueInvoices` types its options as a full UseQueryOptions (which requires queryKey/queryFn),
   // but it supplies those internally — so we pass only the partial options.

@@ -166,7 +166,7 @@ function VendorCreditNoteFormHeaderFieldsInner({
   );
 }
 
-type VendorOption = { id: number; currency_code: string };
+type VendorOption = { id: number; currencyCode: string };
 
 /**
  * Vendor select field of vendor credit form.
@@ -192,7 +192,7 @@ function VendorCreditFormVendorSelect() {
           placeholder={<T id={'select_vender_account'} />}
           onItemChange={(contact: VendorOption) => {
             setFieldValue('vendorId', contact.id);
-            setFieldValue('currencyCode', contact?.currency_code);
+            setFieldValue('currencyCode', contact?.currencyCode);
           }}
           popoverFill={true}
           allowCreate={true}

@@ -40,7 +40,6 @@ import { momentFormatter, safeSumBy } from '@/utils';
 
 type VendorContact = {
   id: string | number;
-  currency_code?: string;
   currencyCode?: string;
 };
 
@@ -232,7 +231,7 @@ function PaymentFormVendorSelect() {
           placeholder={<T id={'select_vender_account'} />}
           onItemChange={(contact: VendorContact) => {
             setFieldValue('vendorId', contact.id);
-            setFieldValue('currencyCode', contact?.currency_code);
+            setFieldValue('currencyCode', contact?.currencyCode);
             setPaymentVendorId(Number(contact.id));
           }}
           disabled={!isNewMode}

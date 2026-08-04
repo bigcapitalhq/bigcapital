@@ -238,7 +238,7 @@ const CustomerButtonLink = styled(CustomerDrawerLink)`
 
 type CustomerOption = {
   id: string | number;
-  currency_code?: string;
+  currencyCode?: string;
 };
 
 /**
@@ -269,7 +269,7 @@ function PaymentReceiveCustomerSelect() {
           onItemChange={(customer: CustomerOption) => {
             setFieldValue('customerId', customer.id);
             setFieldValue('amount', '');
-            setFieldValue('currencyCode', customer?.currency_code);
+            setFieldValue('currencyCode', customer?.currencyCode);
           }}
           popoverFill={true}
           disabled={!isNewMode}
