@@ -29,6 +29,6 @@ export const convertBrandingTemplatesToOptions = (
   brandingTemplates: Array<any>,
 ) => {
   return brandingTemplates?.map(
-    (template) => ({ text: template.template_name, value: template.id }) || [],
+    (template) => ({ text: template.templateName, value: template.id }) || [],
   );
 };
