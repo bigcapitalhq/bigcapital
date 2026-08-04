@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { difference, sumBy } from 'lodash';
+import { Knex } from 'knex';
 import {
   IPaymentReceivedEditDTO,
   IPaymentReceivedEntryDTO,
@@ -71,10 +72,12 @@ export class PaymentReceivedValidators {
    * Validates the invoices IDs existance.
    * @param {number} customerId -
    * @param {IPaymentReceivedEntryDTO[]} paymentReceiveEntries -
+   * @param {Knex.Transaction} trx - Locks the invoice rows when given (FOR UPDATE).
    */
   public async validateInvoicesIDsExistance(
     customerId: number,
     paymentReceiveEntries: { invoiceId: number }[],
+    trx?: Knex.Transaction,
   ): Promise<SaleInvoice[]> {
     const invoicesIds = paymentReceiveEntries
       .map((e: { invoiceId: number }) => e.invoiceId)
@@ -84,10 +87,15 @@ export class PaymentReceivedValidators {
       throw new ServiceError(ERRORS.INVOICES_IDS_NOT_FOUND);
     }
 
-    const storedInvoices = await this.saleInvoiceModel()
-      .query()
+    const storedInvoicesQuery = this.saleInvoiceModel()
+      .query(trx)
       .whereIn('id', invoicesIds)
       .where('customer_id', customerId);
+
+    if (trx) {
+      storedInvoicesQuery.forUpdate();
+    }
+    const storedInvoices = await storedInvoicesQuery;
 
     const storedInvoicesIds = storedInvoices.map((invoice) => invoice.id);
     const notFoundInvoicesIDs = difference(invoicesIds, storedInvoicesIds);
@@ -111,17 +119,24 @@ export class PaymentReceivedValidators {
    * Validates entries invoice payment amount.
    * @param {IPaymentReceivedEntryDTO[]} paymentReceiveEntries
    * @param {IPaymentReceivedEntry[]} oldPaymentEntries
+   * @param {Knex.Transaction} trx - Locks the invoice rows when given (FOR UPDATE).
    */
   public async validateInvoicesPaymentsAmount(
     paymentReceiveEntries: IPaymentReceivedEntryDTO[],
     oldPaymentEntries: PaymentReceivedEntry[] = [],
+    trx?: Knex.Transaction,
   ) {
     const invoicesIds = paymentReceiveEntries.map(
       (e: IPaymentReceivedEntryDTO) => e.invoiceId,
     );
-    const storedInvoices = await this.saleInvoiceModel()
-      .query()
+    const storedInvoicesQuery = this.saleInvoiceModel()
+      .query(trx)
       .whereIn('id', invoicesIds);
+
+    if (trx) {
+      storedInvoicesQuery.forUpdate();
+    }
+    const storedInvoices = await storedInvoicesQuery;
 
     const storedInvoicesMap = new Map(
       storedInvoices.map((invoice: SaleInvoice) => {

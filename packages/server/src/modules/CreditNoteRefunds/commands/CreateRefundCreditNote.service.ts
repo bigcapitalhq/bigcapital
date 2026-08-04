@@ -50,29 +50,14 @@ export class CreateRefundCreditNoteService {
     creditNoteId: number,
     newCreditNoteDTO: CreditNoteRefundDto,
   ): Promise<RefundCreditNote> {
-    // Retrieve the credit note or throw not found service error.
-    const creditNote = await this.creditNoteModel()
-      .query()
-      .findById(creditNoteId)
-      .throwIfNotFound();
-
-    // Retrieve the withdrawal account or throw not found service error.
-    const fromAccount = await this.accountModel()
-      .query()
-      .findById(newCreditNoteDTO.fromAccountId)
-      .throwIfNotFound();
-
-    // Validate the credit note remaining amount.
-    this.commandCreditNoteDTOTransform?.validateCreditRemainingAmount(
-      creditNote,
-      newCreditNoteDTO.amount,
-    );
-    // Validate the refund withdrawal account type.
-    // this.commandCreditNoteDTOTransform.validateRefundWithdrawwalAccountType(
-    //   fromAccount,
-    // );
     // Creates a refund credit note transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the refund operation against the locked credit note row.
+      const { creditNote } = await this.validate(
+        creditNoteId,
+        newCreditNoteDTO,
+        trx,
+      );
       // Triggers `onCreditNoteRefundCreating` event.
       await this.eventPublisher.emitAsync(events.creditNote.onRefundCreating, {
         trx,
@@ -95,6 +80,43 @@ export class CreateRefundCreditNoteService {
 
       return refundCreditNote;
     });
+  }
+
+  /**
+   * Validates the refund credit note operation against the locked credit note row.
+   * @param {number} creditNoteId - The credit note id.
+   * @param {CreditNoteRefundDto} newCreditNoteDTO - The credit note refund DTO.
+   * @param {Knex.Transaction} trx - Locks the credit note row (FOR UPDATE).
+   * @returns {Promise<{ creditNote: CreditNote }>}
+   */
+  async validate(
+    creditNoteId: number,
+    newCreditNoteDTO: CreditNoteRefundDto,
+    trx: Knex.Transaction,
+  ): Promise<{ creditNote: CreditNote }> {
+    // Retrieve the withdrawal account or throw not found service error.
+    const fromAccount = await this.accountModel()
+      .query(trx)
+      .findById(newCreditNoteDTO.fromAccountId)
+      .throwIfNotFound();
+
+    // Validate the refund withdrawal account type.
+    // this.commandCreditNoteDTOTransform.validateRefundWithdrawwalAccountType(
+    //   fromAccount,
+    // );
+    // Retrieve the credit note with a row lock or throw not found service error.
+    const creditNote = await this.creditNoteModel()
+      .query(trx)
+      .findById(creditNoteId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate the credit note remaining amount against the locked row.
+    this.commandCreditNoteDTOTransform.validateCreditRemainingAmount(
+      creditNote,
+      newCreditNoteDTO.amount,
+    );
+    return { creditNote };
   }
 
   /**

@@ -27,6 +27,32 @@ export class TransferredWarehouseTransfer {
   ) {}
 
   /**
+   * Validates the transferred warehouse transfer operation against the locked
+   * transfer row: existence, not already transferred and should be initiated.
+   * @param {number} warehouseTransferId - Warehouse transfer id.
+   * @param {Knex.Transaction} trx - Locks the transfer row (FOR UPDATE).
+   * @returns {Promise<ModelObject<WarehouseTransfer>>} The locked transfer.
+   */
+  validate = async (
+    warehouseTransferId: number,
+    trx: Knex.Transaction,
+  ): Promise<ModelObject<WarehouseTransfer>> => {
+    // Re-read the transfer with a row lock to validate against current state.
+    const oldWarehouseTransfer = await this.warehouseTransferModel()
+      .query(trx)
+      .findById(warehouseTransferId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate the warehouse transfer not already transferred.
+    this.validateWarehouseTransferNotTransferred(oldWarehouseTransfer);
+
+    // Validate the warehouse transfer should be initiated.
+    this.validateWarehouseTranbsferShouldInitiated(oldWarehouseTransfer);
+    return oldWarehouseTransfer;
+  };
+
+  /**
    * Validate the warehouse transfer not already transferred.
    * @param {IWarehouseTransfer} warehouseTransfer
    */
@@ -58,20 +84,14 @@ export class TransferredWarehouseTransfer {
   public transferredWarehouseTransfer = async (
     warehouseTransferId: number,
   ): Promise<ModelObject<WarehouseTransfer>> => {
-    // Retrieves the old warehouse transfer transaction.
-    const oldWarehouseTransfer = await this.warehouseTransferModel()
-      .query()
-      .findById(warehouseTransferId)
-      .throwIfNotFound();
-
-    // Validate the warehouse transfer not already transferred.
-    this.validateWarehouseTransferNotTransferred(oldWarehouseTransfer);
-
-    // Validate the warehouse transfer should be initiated.
-    this.validateWarehouseTranbsferShouldInitiated(oldWarehouseTransfer);
-
     // Edits warehouse transfer transaction under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the transferred operation against the locked transfer row.
+      const oldWarehouseTransfer = await this.validate(
+        warehouseTransferId,
+        trx,
+      );
+
       // Triggers `onWarehouseTransferInitiate` event.
       await this.eventPublisher.emitAsync(events.warehouseTransfer.onTransfer, {
         oldWarehouseTransfer,

@@ -46,15 +46,67 @@ export class EditVendorCreditService {
     vendorCreditDTO: EditVendorCreditDto,
     trx?: Knex.Transaction,
   ) => {
-    // Retrieve the vendor credit or throw not found service error.
+    // Edits the vendor credit graph under unit-of-work envirement.
+    return this.uow.withTransaction(async (trx) => {
+      // Validates the edit operation against the locked vendor credit row.
+      const { oldVendorCredit, vendorCreditModel } = await this.validate(
+        vendorCreditId,
+        vendorCreditDTO,
+        trx,
+      );
+      // Triggers `onVendorCreditEditing` event.
+      await this.eventPublisher.emitAsync(events.vendorCredit.onEditing, {
+        oldVendorCredit,
+        vendorCreditDTO,
+        trx,
+      } as IVendorCreditEditingPayload);
+
+      // Saves the vendor credit graph to the storage.
+      const vendorCredit = await this.vendorCreditModel()
+        .query(trx)
+        .upsertGraphAndFetch({
+          id: vendorCreditId,
+          ...vendorCreditModel,
+        });
+      // Triggers `onVendorCreditEdited event.
+      await this.eventPublisher.emitAsync(events.vendorCredit.onEdited, {
+        oldVendorCredit,
+        vendorCredit,
+        vendorCreditDTO,
+        trx,
+      } as IVendorCreditEditedPayload);
+
+      return vendorCredit;
+    }, trx);
+  };
+
+  /**
+   * Validates the edit vendor credit operation against the locked vendor
+   * credit row: existence, vendor, items entries and the new amount against
+   * the already used amounts.
+   * @param {number} vendorCreditId - Vendor credit id.
+   * @param {EditVendorCreditDto} vendorCreditDTO - Vendor credit edit DTO.
+   * @param {Knex.Transaction} trx - Locks the vendor credit row (FOR UPDATE).
+   * @returns {Promise<{ oldVendorCredit: VendorCredit, vendorCreditModel: VendorCredit }>}
+   */
+  validate = async (
+    vendorCreditId: number,
+    vendorCreditDTO: EditVendorCreditDto,
+    trx: Knex.Transaction,
+  ): Promise<{
+    oldVendorCredit: VendorCredit;
+    vendorCreditModel: VendorCredit;
+  }> => {
+    // Retrieve the vendor credit with a row lock or throw not found service error.
     const oldVendorCredit = await this.vendorCreditModel()
-      .query()
+      .query(trx)
       .findById(vendorCreditId)
+      .forUpdate()
       .throwIfNotFound();
 
     // Validate customer existance.
     const vendor = await this.contactModel()
-      .query()
+      .query(trx)
       .modify('vendor')
       .findById(vendorCreditDTO.vendorId)
       .throwIfNotFound();
@@ -80,31 +132,12 @@ export class EditVendorCreditService {
         vendor.currencyCode,
         oldVendorCredit,
       );
-    // Edits the vendor credit graph under unit-of-work envirement.
-    return this.uow.withTransaction(async (trx) => {
-      // Triggers `onVendorCreditEditing` event.
-      await this.eventPublisher.emitAsync(events.vendorCredit.onEditing, {
-        oldVendorCredit,
-        vendorCreditDTO,
-        trx,
-      } as IVendorCreditEditingPayload);
-
-      // Saves the vendor credit graph to the storage.
-      const vendorCredit = await this.vendorCreditModel()
-        .query(trx)
-        .upsertGraphAndFetch({
-          id: vendorCreditId,
-          ...vendorCreditModel,
-        });
-      // Triggers `onVendorCreditEdited event.
-      await this.eventPublisher.emitAsync(events.vendorCredit.onEdited, {
-        oldVendorCredit,
-        vendorCredit,
-        vendorCreditDTO,
-        trx,
-      } as IVendorCreditEditedPayload);
-
-      return vendorCredit;
-    }, trx);
+    // Validate the new amount is not smaller than the already refunded
+    // and applied-to-bills amounts against the locked row.
+    this.vendorCreditDTOTransform.validateCreditAmountNotBelowUsed(
+      oldVendorCredit,
+      vendorCreditModel.amount,
+    );
+    return { oldVendorCredit, vendorCreditModel };
   };
 }

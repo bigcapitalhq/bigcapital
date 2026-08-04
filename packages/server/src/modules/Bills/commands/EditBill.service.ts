@@ -48,64 +48,10 @@ export class EditBillService {
    * @return {Promise<IBill>}
    */
   public async editBill(billId: number, billDTO: EditBillDto): Promise<Bill> {
-    // Retrieve the given bill or throw not found error.
-    const oldBill = await this.billModel()
-      .query()
-      .findById(billId)
-      .withGraphFetched('entries');
-
-    // Validate bill existance.
-    this.validators.validateBillExistance(oldBill);
-
-    // Retrieve vendor details or throw not found service error.
-    const vendor = await this.vendorModel()
-      .query()
-      .findById(billDTO.vendorId)
-      .throwIfNotFound();
-
-    // Validate bill number uniqiness on the storage.
-    if (billDTO.billNumber) {
-      await this.validators.validateBillNumberExists(
-        billDTO.billNumber,
-        billId,
-      );
-    }
-    // Validate the entries ids existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
-      billId,
-      'Bill',
-      billDTO.entries,
-    );
-    // Validate the items ids existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(billDTO.entries);
-    // Accept the purchasable items only.
-    await this.itemsEntriesService.validateNonPurchasableEntriesItems(
-      billDTO.entries,
-    );
-
-    // Transforms the bill DTO to model object.
-    const billObj = await this.transformerDTO.billDTOToModel(
-      billDTO,
-      vendor,
-      oldBill,
-    );
-    // Validate bill total amount should be bigger than paid amount.
-    this.validators.validateBillAmountBiggerPaidAmount(
-      billObj.amount,
-      oldBill.paymentAmount,
-    );
-    // Validate landed cost entries that have allocated cost could not be deleted.
-    await this.transactionLandedCostEntries.validateLandedCostEntriesNotDeleted(
-      oldBill.entries,
-      billObj.entries,
-    );
-    // Validate new landed cost entries should be bigger than new entries.
-    await this.transactionLandedCostEntries.validateLocatedCostEntriesSmallerThanNewEntries(
-      oldBill.entries,
-      billObj.entries,
-    );
     // Edits bill transactions and associated transactions under UOW envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the edit operation against the locked bill row.
+      const { oldBill, billObj } = await this.validate(billId, billDTO, trx);
       // Triggers `onBillEditing` event.
       await this.eventPublisher.emitAsync(events.bill.onEditing, {
         oldBill,
@@ -130,5 +76,75 @@ export class EditBillService {
 
       return bill;
     });
+  }
+
+  /**
+   * Validates the edit bill operation against the locked bill row: existence,
+   * vendor, bill number uniqueness, items entries, landed cost entries and
+   * the bill amount against the paid amount.
+   * @param {number} billId - Bill id.
+   * @param {EditBillDto} billDTO - Bill edit DTO.
+   * @param {Knex.Transaction} trx - Locks the bill row (FOR UPDATE).
+   * @returns {Promise<{ oldBill: Bill, billObj: Bill }>}
+   */
+  async validate(
+    billId: number,
+    billDTO: EditBillDto,
+    trx: Knex.Transaction,
+  ): Promise<{ oldBill: Bill; billObj: Bill }> {
+    // Retrieve the given bill with a row lock or throw not found error.
+    const oldBill = await this.billModel()
+      .query(trx)
+      .findById(billId)
+      .forUpdate()
+      .withGraphFetched('entries')
+      .throwIfNotFound();
+
+    // Retrieve vendor details or throw not found service error.
+    const vendor = await this.vendorModel()
+      .query(trx)
+      .findById(billDTO.vendorId)
+      .throwIfNotFound();
+
+    // Validate bill number uniqiness on the storage.
+    if (billDTO.billNumber) {
+      await this.validators.validateBillNumberExists(billDTO.billNumber, billId);
+    }
+    // Validate the entries ids existance.
+    await this.itemsEntriesService.validateEntriesIdsExistance(
+      billId,
+      'Bill',
+      billDTO.entries,
+    );
+    // Validate the items ids existance on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistance(billDTO.entries);
+    // Accept the purchasable items only.
+    await this.itemsEntriesService.validateNonPurchasableEntriesItems(
+      billDTO.entries,
+    );
+
+    // Transforms the bill DTO to model object.
+    const billObj = await this.transformerDTO.billDTOToModel(
+      billDTO,
+      vendor,
+      oldBill,
+    );
+    // Validate landed cost entries that have allocated cost could not be deleted.
+    await this.transactionLandedCostEntries.validateLandedCostEntriesNotDeleted(
+      oldBill.entries,
+      billObj.entries,
+    );
+    // Validate new landed cost entries should be bigger than new entries.
+    await this.transactionLandedCostEntries.validateLocatedCostEntriesSmallerThanNewEntries(
+      oldBill.entries,
+      billObj.entries,
+    );
+    // Validate bill total amount should be bigger than paid amount
+    // against the locked row.
+    this.validators.validateBillAmountBiggerPaidAmount(
+      billObj.amount,
+      oldBill.paymentAmount,
+    );
+    return { oldBill, billObj };
   }
 }

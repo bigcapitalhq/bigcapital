@@ -28,6 +28,29 @@ export class InitiateWarehouseTransfer {
   ) {}
 
   /**
+   * Validates the initiate warehouse transfer operation against the locked
+   * transfer row: existence and not already initiated.
+   * @param {number} warehouseTransferId - Warehouse transfer id.
+   * @param {Knex.Transaction} trx - Locks the transfer row (FOR UPDATE).
+   * @returns {Promise<ModelObject<WarehouseTransfer>>} The locked transfer.
+   */
+  validate = async (
+    warehouseTransferId: number,
+    trx: Knex.Transaction,
+  ): Promise<ModelObject<WarehouseTransfer>> => {
+    // Re-read the transfer with a row lock to validate against current state.
+    const oldWarehouseTransfer = await this.warehouseTransferModel()
+      .query(trx)
+      .findById(warehouseTransferId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate the given warehouse transfer not already initiated.
+    this.validateWarehouseTransferNotAlreadyInitiated(oldWarehouseTransfer);
+    return oldWarehouseTransfer;
+  };
+
+  /**
    * Validate the given warehouse transfer not already initiated.
    * @param {IWarehouseTransfer} warehouseTransfer
    */
@@ -47,17 +70,14 @@ export class InitiateWarehouseTransfer {
   public initiateWarehouseTransfer = async (
     warehouseTransferId: number,
   ): Promise<ModelObject<WarehouseTransfer>> => {
-    // Retrieves the old warehouse transfer transaction.
-    const oldWarehouseTransfer = await this.warehouseTransferModel()
-      .query()
-      .findById(warehouseTransferId)
-      .throwIfNotFound();
-
-    // Validate the given warehouse transfer not already initiated.
-    this.validateWarehouseTransferNotAlreadyInitiated(oldWarehouseTransfer);
-
     // Edits warehouse transfer transaction under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the initiate operation against the locked transfer row.
+      const oldWarehouseTransfer = await this.validate(
+        warehouseTransferId,
+        trx,
+      );
+
       // Triggers `onWarehouseTransferInitiate` event.
       await this.eventPublisher.emitAsync(events.warehouseTransfer.onInitiate, {
         oldWarehouseTransfer,

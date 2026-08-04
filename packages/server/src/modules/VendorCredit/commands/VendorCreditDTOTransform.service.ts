@@ -103,4 +103,21 @@ export class VendorCreditDTOTransformService {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_HAS_NO_REMAINING_AMOUNT);
     }
   };
+
+  /**
+   * Validates the new vendor credit amount is not smaller than the already
+   * refunded and applied-to-bills amounts.
+   * @param {VendorCredit} vendorCredit
+   * @param {number} newAmount
+   */
+  public validateCreditAmountNotBelowUsed = (
+    vendorCredit: VendorCredit,
+    newAmount: number,
+  ) => {
+    const usedAmount = vendorCredit.refundedAmount + vendorCredit.invoicedAmount;
+
+    if (newAmount < usedAmount) {
+      throw new ServiceError(ERRORS.VENDOR_CREDIT_AMOUNT_SMALLER_THAN_USED);
+    }
+  };
 }
