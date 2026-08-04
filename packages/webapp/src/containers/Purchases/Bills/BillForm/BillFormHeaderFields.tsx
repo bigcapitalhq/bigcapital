@@ -144,7 +144,7 @@ function BillFormHeader() {
   );
 }
 
-type VendorOption = { id: number; currency_code?: string };
+type VendorOption = { id: number; currencyCode?: string };
 
 /**
  * Vendor select field of bill form.
@@ -169,7 +169,7 @@ function BillFormVendorField() {
           placeholder={<T id={'select_vender_account'} />}
           onItemChange={(contact: VendorOption) => {
             setFieldValue('vendorId', contact.id);
-            setFieldValue('currencyCode', contact?.currency_code);
+            setFieldValue('currencyCode', contact?.currencyCode);
           }}
           allowCreate={true}
           fastField={true}

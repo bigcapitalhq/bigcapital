@@ -12,7 +12,7 @@ interface CreatedItem {
 
 /**
  * Vendor row used by the select dropdown. The backend list response carries
- * `formatted_balance` for display; we extend the SDK `Vendor` shape via the
+ * `formattedBalance` for display; we extend the SDK `Vendor` shape via the
  * drawer's `VendorDetails` augmentation.
  */
 type VendorSelectRow = Pick<VendorDetails, 'id' | 'displayName'> &
