@@ -8,7 +8,7 @@ export const useBrandingTemplatesColumns = () => {
       Header: 'Template Name',
       accessor: (row: any) => (
         <Group spacing={10}>
-          {row.template_name} {row.default && <Tag round>Default</Tag>}
+          {row.templateName} {row.default && <Tag round>Default</Tag>}
         </Group>
       ),
       width: 65,
@@ -16,7 +16,7 @@ export const useBrandingTemplatesColumns = () => {
     },
     {
       Header: 'Created At',
-      accessor: 'created_at_formatted',
+      accessor: 'createdAtFormatted',
       width: 35,
       className: clsx(Classes.TEXT_MUTED),
       clickable: true,
