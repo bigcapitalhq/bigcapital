@@ -107,11 +107,12 @@ export class ApplyVendorCreditToBillsService {
     );
 
     // Validate bills entries existance (locks the bill rows).
-    const appliedBills = await this.billPaymentValidators.validateBillsExistance(
-      vendorCreditAppliedModel.entries,
-      vendorCredit.vendorId,
-      trx,
-    );
+    const appliedBills =
+      await this.billPaymentValidators.validateBillsExistance(
+        vendorCreditAppliedModel.entries,
+        vendorCredit.vendorId,
+        trx,
+      );
 
     // Validate bills has remaining amount to apply.
     this.validateBillsRemainingAmount(

@@ -149,7 +149,11 @@ export class CreateBillPaymentService {
       trx,
     );
     // Validates the bills due payment amount against the locked rows.
-    await this.validators.validateBillsDueAmount(billPaymentObj.entries, [], trx);
+    await this.validators.validateBillsDueAmount(
+      billPaymentObj.entries,
+      [],
+      trx,
+    );
     return { billPaymentObj };
   }
 }

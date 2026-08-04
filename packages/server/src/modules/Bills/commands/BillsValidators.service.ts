@@ -84,7 +84,10 @@ export class BillsValidators {
    * @param {number} billId - Bill id.
    * @param {Knex.Transaction} trx
    */
-  public async validateBillHasNoEntries(billId: number, trx?: Knex.Transaction) {
+  public async validateBillHasNoEntries(
+    billId: number,
+    trx?: Knex.Transaction,
+  ) {
     // Retrieve the bill associate payment made entries.
     const entries = await this.billPaymentEntryModel()
       .query(trx)

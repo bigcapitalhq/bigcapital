@@ -52,12 +52,13 @@ export class MatchBankTransactions {
 
     // Validates the uncategorized transaction existance (locks the rows
     // when running inside a transaction).
-    const uncategorizedTransactionsQuery = this.uncategorizedBankTransactionModel()
-      .query(trx)
-      .whereIn('id', uncategorizedTransactionIds)
-      .orderBy('id')
-      .withGraphFetched('matchedBankTransactions')
-      .throwIfNotFound();
+    const uncategorizedTransactionsQuery =
+      this.uncategorizedBankTransactionModel()
+        .query(trx)
+        .whereIn('id', uncategorizedTransactionIds)
+        .orderBy('id')
+        .withGraphFetched('matchedBankTransactions')
+        .throwIfNotFound();
 
     if (trx) {
       uncategorizedTransactionsQuery.forUpdate();
@@ -135,7 +136,11 @@ export class MatchBankTransactions {
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Validates the given matching transactions DTO against locked
       // uncategorized transaction rows.
-      await this.validate(uncategorizedTransactionIds, matchedTransactions, trx);
+      await this.validate(
+        uncategorizedTransactionIds,
+        matchedTransactions,
+        trx,
+      );
 
       // Triggers the event `onBankTransactionMatching`.
       await this.eventPublisher.emitAsync(events.bankMatch.onMatching, {

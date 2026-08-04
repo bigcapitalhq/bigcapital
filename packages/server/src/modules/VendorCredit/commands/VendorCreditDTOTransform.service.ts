@@ -114,7 +114,8 @@ export class VendorCreditDTOTransformService {
     vendorCredit: VendorCredit,
     newAmount: number,
   ) => {
-    const usedAmount = vendorCredit.refundedAmount + vendorCredit.invoicedAmount;
+    const usedAmount =
+      vendorCredit.refundedAmount + vendorCredit.invoicedAmount;
 
     if (newAmount < usedAmount) {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_AMOUNT_SMALLER_THAN_USED);

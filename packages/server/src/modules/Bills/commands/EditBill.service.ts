@@ -108,7 +108,10 @@ export class EditBillService {
 
     // Validate bill number uniqiness on the storage.
     if (billDTO.billNumber) {
-      await this.validators.validateBillNumberExists(billDTO.billNumber, billId);
+      await this.validators.validateBillNumberExists(
+        billDTO.billNumber,
+        billId,
+      );
     }
     // Validate the entries ids existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
