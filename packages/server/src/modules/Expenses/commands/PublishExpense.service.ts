@@ -35,18 +35,12 @@ export class PublishExpense {
    * @return {Promise<void>}
    */
   public async publishExpense(expenseId: number) {
-    // Retrieves the old expense or throw not found error.
-    const oldExpense = await this.expenseModel()
-      .query()
-      .findById(expenseId)
-      .throwIfNotFound();
-
-    // Validate the expense whether is published before.
-    this.validator.validateExpenseIsNotPublished(oldExpense);
-
     // Publishes expense transactions with associated transactions
     // under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the publish operation against the locked expense row.
+      const oldExpense = await this.validate(expenseId, trx);
+
       // Trigggers `onExpensePublishing` event.
       await this.eventPublisher.emitAsync(events.expenses.onPublishing, {
         trx,
@@ -54,11 +48,14 @@ export class PublishExpense {
       } as IExpensePublishingPayload);
 
       // Publish the given expense on the storage.
-      await this.expenseModel().query().findById(expenseId).modify('publish');
+      await this.expenseModel()
+        .query(trx)
+        .findById(expenseId)
+        .modify('publish');
 
       // Retrieve the new expense after modification.
       const expense = await this.expenseModel()
-        .query()
+        .query(trx)
         .findById(expenseId)
         .withGraphFetched('categories');
 
@@ -70,5 +67,25 @@ export class PublishExpense {
         trx,
       } as IExpenseEventPublishedPayload);
     });
+  }
+
+  /**
+   * Validates the publish expense operation against the locked expense row:
+   * existence and not already published.
+   * @param {number} expenseId - Expense id.
+   * @param {Knex.Transaction} trx - Locks the expense row (FOR UPDATE).
+   * @returns {Promise<Expense>} The locked expense.
+   */
+  async validate(expenseId: number, trx: Knex.Transaction): Promise<Expense> {
+    // Re-read the expense with a row lock to validate against current state.
+    const oldExpense = await this.expenseModel()
+      .query(trx)
+      .findById(expenseId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate the expense whether is published before against the locked row.
+    this.validator.validateExpenseIsNotPublished(oldExpense);
+    return oldExpense;
   }
 }

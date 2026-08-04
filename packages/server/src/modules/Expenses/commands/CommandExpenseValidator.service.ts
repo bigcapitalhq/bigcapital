@@ -1,4 +1,5 @@
 import { sumBy, difference } from 'lodash';
+import { Knex } from 'knex';
 import { ERRORS, SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from '../constants';
 import { ACCOUNT_ROOT_TYPE } from '@/constants/accounts';
 import { Account } from '@/modules/Accounts/models/Account.model';
@@ -80,8 +81,12 @@ export class CommandExpenseValidator {
    * Validates the expense has not associated landed cost
    * references to the given expense.
    * @param {number} expenseId
+   * @param {Knex.Transaction} trx
    */
-  public async validateNoAssociatedLandedCost(expenseId: number) {
+  public async validateNoAssociatedLandedCost(
+    expenseId: number,
+    trx?: Knex.Transaction,
+  ) {
     // const { BillLandedCost } = this.tenancy.models(tenantId);
     // const associatedLandedCosts = await BillLandedCost.query()
     //   .where('fromTransactionType', 'Expense')

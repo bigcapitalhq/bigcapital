@@ -33,27 +33,12 @@ export class DeleteBill {
    * @return {void}
    */
   public async deleteBill(billId: number, trx?: Knex.Transaction) {
-    // Retrieve the given bill or throw not found error.
-    const oldBill = await this.billModel()
-      .query()
-      .findById(billId)
-      .withGraphFetched('entries');
-
-    // Validates the bill existence.
-    this.validators.validateBillExistance(oldBill);
-
-    // Validate the given bill has no associated landed cost transactions.
-    await this.validators.validateBillHasNoLandedCost(billId);
-
-    // Validate the purchase bill has no associated payments transactions.
-    await this.validators.validateBillHasNoEntries(billId);
-
-    // Validate the given bill has no associated reconciled with vendor credits.
-    await this.validators.validateBillHasNoAppliedToCredit(billId);
-
     // Deletes bill transaction with associated transactions under
     // unit-of-work environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the delete operation against the locked bill row.
+      const oldBill = await this.validate(billId, trx);
+
       // Triggers `onBillDeleting` event.
       await this.eventPublisher.emitAsync(events.bill.onDeleting, {
         trx,
@@ -77,5 +62,33 @@ export class DeleteBill {
         trx,
       } as IBIllEventDeletedPayload);
     }, trx);
+  }
+
+  /**
+   * Validates the delete bill operation against the locked bill row:
+   * existence, no associated landed cost transactions, no associated
+   * payments transactions and no reconciled vendor credits.
+   * @param {number} billId - Bill id.
+   * @param {Knex.Transaction} trx - Locks the bill row (FOR UPDATE).
+   * @returns {Promise<Bill>} The locked bill.
+   */
+  async validate(billId: number, trx: Knex.Transaction): Promise<Bill> {
+    // Lock the bill row to serialize with concurrent payment/credit operations.
+    const oldBill = await this.billModel()
+      .query(trx)
+      .findById(billId)
+      .forUpdate()
+      .withGraphFetched('entries')
+      .throwIfNotFound();
+
+    // Validate the given bill has no associated landed cost transactions.
+    await this.validators.validateBillHasNoLandedCost(billId, trx);
+
+    // Validate the purchase bill has no associated payments transactions.
+    await this.validators.validateBillHasNoEntries(billId, trx);
+
+    // Validate the given bill has no associated reconciled with vendor credits.
+    await this.validators.validateBillHasNoAppliedToCredit(billId, trx);
+    return oldBill;
   }
 }

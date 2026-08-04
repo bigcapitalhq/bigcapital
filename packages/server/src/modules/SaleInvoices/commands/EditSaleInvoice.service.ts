@@ -52,18 +52,70 @@ export class EditSaleInvoice {
     saleInvoiceId: number,
     saleInvoiceDTO: EditSaleInvoiceDto,
   ): Promise<SaleInvoice> {
-    // Retrieve the sale invoice or throw not found service error.
-    const oldSaleInvoice = await this.saleInvoiceModel()
-      .query()
-      .findById(saleInvoiceId)
-      .withGraphJoined('entries');
+    // Edit sale invoice transaction in UOW envirment.
+    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the edit operation against the locked invoice row.
+      const { oldSaleInvoice, saleInvoiceObj } = await this.validate(
+        saleInvoiceId,
+        saleInvoiceDTO,
+        trx,
+      );
+      // Triggers `onSaleInvoiceEditing` event.
+      await this.eventPublisher.emitAsync(events.saleInvoice.onEditing, {
+        trx,
+        oldSaleInvoice,
+        saleInvoiceDTO,
+      } as ISaleInvoiceEditingPayload);
 
-    // Validates the given invoice existance.
-    this.validators.validateInvoiceExistance(oldSaleInvoice);
+      // Upsert the the invoice graph to the storage.
+      const saleInvoice = await this.saleInvoiceModel()
+        .query(trx)
+        .upsertGraphAndFetch({
+          id: saleInvoiceId,
+          ...saleInvoiceObj,
+        });
+      // Edit event payload.
+      const editEventPayload: ISaleInvoiceEditedPayload = {
+        saleInvoiceId,
+        saleInvoice,
+        saleInvoiceDTO,
+        oldSaleInvoice,
+        trx,
+      };
+      // Triggers `onSaleInvoiceEdited` event.
+      await this.eventPublisher.emitAsync(
+        events.saleInvoice.onEdited,
+        editEventPayload,
+      );
+      return saleInvoice;
+    });
+  }
+
+  /**
+   * Validates the edit sale invoice operation against the locked invoice row:
+   * existence, customer, items entries, invoice number uniqueness and the
+   * invoice amount against the paid amount.
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {EditSaleInvoiceDto} saleInvoiceDTO - Sale invoice edit DTO.
+   * @param {Knex.Transaction} trx - Locks the invoice row (FOR UPDATE).
+   * @returns {Promise<{ oldSaleInvoice: SaleInvoice, saleInvoiceObj: SaleInvoice }>}
+   */
+  async validate(
+    saleInvoiceId: number,
+    saleInvoiceDTO: EditSaleInvoiceDto,
+    trx: Knex.Transaction,
+  ): Promise<{ oldSaleInvoice: SaleInvoice; saleInvoiceObj: SaleInvoice }> {
+    // Retrieve the sale invoice with a row lock or throw not found service error.
+    const oldSaleInvoice = await this.saleInvoiceModel()
+      .query(trx)
+      .findById(saleInvoiceId)
+      .forUpdate()
+      .withGraphFetched('entries')
+      .throwIfNotFound();
 
     // Validate customer existance.
     const customer = await this.customerModel()
-      .query()
+      .query(trx)
       .findById(saleInvoiceDTO.customerId)
       .throwIfNotFound();
 
@@ -94,42 +146,13 @@ export class EditSaleInvoice {
         saleInvoiceId,
       );
     }
-    // Validate the invoice amount is not smaller than the invoice payment amount.
+    // Validate the invoice amount is not smaller than the invoice payment amount
+    // against the locked row.
     this.validators.validateInvoiceAmountBiggerPaymentAmount(
       saleInvoiceObj.balance,
       oldSaleInvoice.paymentAmount,
     );
-    // Edit sale invoice transaction in UOW envirment.
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
-      // Triggers `onSaleInvoiceEditing` event.
-      await this.eventPublisher.emitAsync(events.saleInvoice.onEditing, {
-        trx,
-        oldSaleInvoice,
-        saleInvoiceDTO,
-      } as ISaleInvoiceEditingPayload);
-
-      // Upsert the the invoice graph to the storage.
-      const saleInvoice = await this.saleInvoiceModel()
-        .query()
-        .upsertGraphAndFetch({
-          id: saleInvoiceId,
-          ...saleInvoiceObj,
-        });
-      // Edit event payload.
-      const editEventPayload: ISaleInvoiceEditedPayload = {
-        saleInvoiceId,
-        saleInvoice,
-        saleInvoiceDTO,
-        oldSaleInvoice,
-        trx,
-      };
-      // Triggers `onSaleInvoiceEdited` event.
-      await this.eventPublisher.emitAsync(
-        events.saleInvoice.onEdited,
-        editEventPayload,
-      );
-      return saleInvoice;
-    });
+    return { oldSaleInvoice, saleInvoiceObj };
   }
 
   /**

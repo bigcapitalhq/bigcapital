@@ -54,11 +54,69 @@ export class EditPaymentReceivedService {
   ) {
     const tenant = await this.tenancyContext.getTenant(true);
 
-    // Validate the payment receive existance.
+    // Creates payment receive transaction under UOW envirement.
+    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the edit operation against the locked payment receive
+      // and invoices rows.
+      const { oldPaymentReceive, paymentReceiveObj } = await this.validate(
+        paymentReceiveId,
+        paymentReceiveDTO,
+        tenant?.metadata.baseCurrency,
+        trx,
+      );
+      // Triggers `onPaymentReceiveEditing` event.
+      await this.eventPublisher.emitAsync(events.paymentReceive.onEditing, {
+        trx,
+        oldPaymentReceive,
+        paymentReceiveDTO,
+      } as IPaymentReceivedEditingPayload);
+
+      // Update the payment receive transaction.
+      const paymentReceive = await this.paymentReceiveModel()
+        .query(trx)
+        .upsertGraphAndFetch({
+          id: paymentReceiveId,
+          ...paymentReceiveObj,
+        });
+      // Triggers `onPaymentReceiveEdited` event.
+      await this.eventPublisher.emitAsync(events.paymentReceive.onEdited, {
+        paymentReceiveId,
+        paymentReceive,
+        oldPaymentReceive,
+        paymentReceiveDTO,
+        trx,
+      } as IPaymentReceivedEditedPayload);
+
+      return paymentReceive;
+    });
+  }
+
+  /**
+   * Validates the edit payment receive operation against the locked payment
+   * receive and invoices rows: existence, customer not modified, payment
+   * number uniqueness, deposit account and currency, entries ids, invoices
+   * existence and payment amounts.
+   * @param {number} paymentReceiveId - Payment receive id.
+   * @param {EditPaymentReceivedDto} paymentReceiveDTO - Payment receive edit DTO.
+   * @param {string} baseCurrency - Tenant base currency.
+   * @param {Knex.Transaction} trx - Locks the payment receive and invoice rows (FOR UPDATE).
+   * @returns {Promise<{ oldPaymentReceive: PaymentReceived, paymentReceiveObj: PaymentReceived }>}
+   */
+  async validate(
+    paymentReceiveId: number,
+    paymentReceiveDTO: EditPaymentReceivedDto,
+    baseCurrency: string,
+    trx: Knex.Transaction,
+  ): Promise<{
+    oldPaymentReceive: PaymentReceived;
+    paymentReceiveObj: PaymentReceived;
+  }> {
+    // Validate the payment receive existance (locks the payment row).
     const oldPaymentReceive = await this.paymentReceiveModel()
-      .query()
+      .query(trx)
       .withGraphFetched('entries')
       .findById(paymentReceiveId)
+      .forUpdate()
       .throwIfNotFound();
 
     // Validates the payment existance.
@@ -66,7 +124,7 @@ export class EditPaymentReceivedService {
 
     // Validate customer existance.
     const customer = await this.customerModel()
-      .query()
+      .query(trx)
       .findById(paymentReceiveDTO.customerId)
       .throwIfNotFound();
 
@@ -97,50 +155,26 @@ export class EditPaymentReceivedService {
       paymentReceiveId,
       paymentReceiveDTO.entries,
     );
-    // Validate payment receive invoices IDs existance and associated
-    // to the given customer id.
-    await this.validators.validateInvoicesIDsExistance(
-      oldPaymentReceive.customerId,
-      paymentReceiveDTO.entries,
-    );
-    // Validate invoice payment amount.
-    await this.validators.validateInvoicesPaymentsAmount(
-      paymentReceiveDTO.entries,
-      oldPaymentReceive.entries,
-    );
     // Validates the payment account currency code.
     this.validators.validatePaymentAccountCurrency(
       depositAccount.currencyCode,
       customer.currencyCode,
-      tenant?.metadata.baseCurrency,
+      baseCurrency,
     );
-    // Creates payment receive transaction under UOW envirement.
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
-      // Triggers `onPaymentReceiveEditing` event.
-      await this.eventPublisher.emitAsync(events.paymentReceive.onEditing, {
-        trx,
-        oldPaymentReceive,
-        paymentReceiveDTO,
-      } as IPaymentReceivedEditingPayload);
-
-      // Update the payment receive transaction.
-      const paymentReceive = await this.paymentReceiveModel()
-        .query(trx)
-        .upsertGraphAndFetch({
-          id: paymentReceiveId,
-          ...paymentReceiveObj,
-        });
-      // Triggers `onPaymentReceiveEdited` event.
-      await this.eventPublisher.emitAsync(events.paymentReceive.onEdited, {
-        paymentReceiveId,
-        paymentReceive,
-        oldPaymentReceive,
-        paymentReceiveDTO,
-        trx,
-      } as IPaymentReceivedEditedPayload);
-
-      return paymentReceive;
-    });
+    // Validate payment receive invoices IDs existance and associated
+    // to the given customer id (locks the invoice rows).
+    await this.validators.validateInvoicesIDsExistance(
+      oldPaymentReceive.customerId,
+      paymentReceiveDTO.entries,
+      trx,
+    );
+    // Validate invoice payment amount against the locked rows.
+    await this.validators.validateInvoicesPaymentsAmount(
+      paymentReceiveDTO.entries,
+      oldPaymentReceive.entries,
+      trx,
+    );
+    return { oldPaymentReceive, paymentReceiveObj };
   }
 
   /**

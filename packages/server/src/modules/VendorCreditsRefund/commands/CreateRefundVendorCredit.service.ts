@@ -56,38 +56,24 @@ export class CreateRefundVendorCredit {
     vendorCreditId: number,
     refundVendorCreditDTO: RefundVendorCreditDto,
   ): Promise<RefundVendorCredit> => {
-    // Retrieve the vendor credit or throw not found service error.
-    const vendorCredit = await this.vendorCreditModel()
-      .query()
-      .findById(vendorCreditId)
-      .throwIfNotFound();
-
-    // Retrieve the deposit account or throw not found service error.
-    const depositAccount = await this.accountModel()
-      .query()
-      .findById(refundVendorCreditDTO.depositAccountId)
-      .throwIfNotFound();
-
-    // Validate vendor credit has remaining credit.
-    this.validateVendorCreditRemainingCredit(
-      vendorCredit,
-      refundVendorCreditDTO.amount,
-    );
-    // Validate refund deposit account type.
-    this.validateRefundDepositAccountType(depositAccount);
-
-    // Triggers `onVendorCreditRefundCreate` event.
-    await this.eventPublisher.emitAsync(events.vendorCredit.onRefundCreate, {
-      vendorCreditId,
-      refundVendorCreditDTO,
-    } as IVendorCreditCreatePayload);
-
-    const refundCreditObj = await this.transformDTOToModel(
-      vendorCredit,
-      refundVendorCreditDTO,
-    );
     // Saves refund vendor credit with associated transactions.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the refund operation against the locked vendor credit row.
+      const { vendorCredit } = await this.validate(
+        vendorCreditId,
+        refundVendorCreditDTO,
+        trx,
+      );
+      // Triggers `onVendorCreditRefundCreate` event.
+      await this.eventPublisher.emitAsync(events.vendorCredit.onRefundCreate, {
+        vendorCreditId,
+        refundVendorCreditDTO,
+      } as IVendorCreditCreatePayload);
+
+      const refundCreditObj = await this.transformDTOToModel(
+        vendorCredit,
+        refundVendorCreditDTO,
+      );
       const eventPayload = {
         vendorCredit,
         trx,
@@ -101,7 +87,7 @@ export class CreateRefundVendorCredit {
       );
       // Inserts refund vendor credit to the storage layer.
       const refundVendorCredit = await this.refundVendorCreditModel()
-        .query()
+        .query(trx)
         .insertAndFetch(refundCreditObj);
 
       // Triggers `onVendorCreditCreated` event.
@@ -113,6 +99,43 @@ export class CreateRefundVendorCredit {
       return refundVendorCredit;
     });
   };
+
+  /**
+   * Validates the refund vendor credit operation against the locked vendor
+   * credit row.
+   * @param {number} vendorCreditId - The vendor credit id.
+   * @param {RefundVendorCreditDto} refundVendorCreditDTO - The refund DTO.
+   * @param {Knex.Transaction} trx - Locks the vendor credit row (FOR UPDATE).
+   * @returns {Promise<{ vendorCredit: VendorCredit }>}
+   */
+  async validate(
+    vendorCreditId: number,
+    refundVendorCreditDTO: RefundVendorCreditDto,
+    trx: Knex.Transaction,
+  ): Promise<{ vendorCredit: VendorCredit }> {
+    // Retrieve the deposit account or throw not found service error.
+    const depositAccount = await this.accountModel()
+      .query(trx)
+      .findById(refundVendorCreditDTO.depositAccountId)
+      .throwIfNotFound();
+
+    // Validate refund deposit account type.
+    this.validateRefundDepositAccountType(depositAccount);
+
+    // Retrieve the vendor credit with a row lock or throw not found service error.
+    const vendorCredit = await this.vendorCreditModel()
+      .query(trx)
+      .findById(vendorCreditId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate vendor credit has remaining credit against the locked row.
+    this.validateVendorCreditRemainingCredit(
+      vendorCredit,
+      refundVendorCreditDTO.amount,
+    );
+    return { vendorCredit };
+  }
 
   /**
    * Transformes the refund DTO to refund vendor credit model.
