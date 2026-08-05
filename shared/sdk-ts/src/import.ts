@@ -1,5 +1,5 @@
 import type { ApiFetcher } from './fetch-utils';
-import { getBlob, postFormData } from './fetch-utils';
+import { withFormData } from './fetch-utils';
 import { paths } from './schema';
 
 export const IMPORT_ROUTES = {
@@ -94,33 +94,42 @@ export async function importProcess(
 }
 
 /**
- * Upload an import file via multipart/form-data. FormData carries the File part
- * plus `resource` and JSON-encoded `params` fields; the generated client's
- * typed JSON body is the wrong shape, so we post through a typed helper.
+ * Upload an import file via multipart/form-data. The generated typed fetcher's
+ * JSON body serializer would corrupt a `FormData` instance, so the body is
+ * smuggled through a custom init property (`withFormData`) that the form-data
+ * middleware swaps back in as the real body before fetch executes. This keeps
+ * the upload on the full middleware pipeline: the camelCase middleware
+ * transforms the response so callers receive camelCase keys, and failures
+ * throw an `ApiError` with `data.errors` (same shape as JSON endpoints).
  */
 export async function uploadImportFile(
   fetcher: ApiFetcher,
   formData: FormData
 ): Promise<ImportFileUploadResponse> {
-  return postFormData<ImportFileUploadResponse>(
-    fetcher,
-    IMPORT_ROUTES.FILE,
-    formData,
-  );
+  const post = fetcher.path(IMPORT_ROUTES.FILE).method('post').create();
+  const { data } = await post({} as never, withFormData(formData));
+  return (data ?? {}) as ImportFileUploadResponse;
 }
 
 /**
- * Download a csv/xlsx sample sheet as a binary Blob. The generated client
- * expects JSON, so we fetch through a typed blob helper.
+ * Download a csv/xlsx sample sheet as a binary Blob. The raw-response
+ * middleware intercepts the binary `Accept` header (e.g. `application/xlsx`)
+ * and returns the body as a Blob; CSV responses come back as text from the
+ * default fetcher and are wrapped in a Blob here for a consistent return type.
  */
 export async function downloadImportSample(
   fetcher: ApiFetcher,
   params: ImportSampleParams
 ): Promise<Blob> {
-  return getBlob(
-    fetcher,
-    IMPORT_ROUTES.SAMPLE,
-    { resource: params.resource, format: params.format },
-    { Accept: params.format === 'xlsx' ? 'application/xlsx' : 'application/csv' },
+  const get = fetcher.path(IMPORT_ROUTES.SAMPLE).method('get').create();
+  const response = await get(
+    { resource: params.resource, format: params.format } as never,
+    {
+      headers: {
+        Accept: params.format === 'xlsx' ? 'application/xlsx' : 'application/csv',
+      },
+    },
   );
+  const data = response.data as Blob | string;
+  return data instanceof Blob ? data : new Blob([data]);
 }

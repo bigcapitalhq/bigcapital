@@ -207,8 +207,7 @@ export function useAccountUncategorizedTransactionsInfinity(
     'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
   >,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useInfiniteQuery<
     AccountUncategorizedTransactionsInfinityPage,
     Error,
@@ -240,7 +239,6 @@ export function useRefreshCashflowAccounts() {
 
 export function useRefreshCashflowTransactions() {
   const queryClient = useQueryClient();
-
   return {
     refresh: () => {
       queryClient.invalidateQueries({
@@ -261,8 +259,7 @@ export function useUncategorizedTransaction(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery<
     UncategorizedTransactionResponse,
     Error,
