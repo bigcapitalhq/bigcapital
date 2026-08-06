@@ -5,13 +5,13 @@ interface SubscriptionPlan {
   name: string;
   description: string;
   features: unknown[];
-  featured: boolean;
+  featured?: boolean;
   monthlyPrice: string;
   monthlyPriceLabel: string;
   annuallyPrice: string;
   annuallyPriceLabel: string;
-  monthlyVariantId: number;
-  annuallyVariantId: number;
+  monthlyVariantId: string;
+  annuallyVariantId: string;
 }
 
 interface WithSubscriptionPlanProps {
@@ -24,13 +24,13 @@ interface MappedSubscriptionPlanProps {
   label: string;
   description: string;
   features: unknown[];
-  featured: boolean;
+  featured?: boolean;
   monthlyPrice: string;
   monthlyPriceLabel: string;
   annuallyPrice: string;
   annuallyPriceLabel: string;
-  monthlyVariantId: number;
-  annuallyVariantId: number;
+  monthlyVariantId: string;
+  annuallyVariantId: string;
   onSubscribe?: (variantId: number) => void;
 }
 

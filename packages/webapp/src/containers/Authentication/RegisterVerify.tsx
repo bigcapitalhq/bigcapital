@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
 import { AuthInsiderCard } from './_components';
@@ -11,7 +10,7 @@ import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function RegisterVerify() {
   const { setLogout } = useAuthActions();
-  const { mutateAsync: resendSignUpVerifyMail, isLoading } =
+  const { mutateAsync: resendSignUpVerifyMail, isPending } =
     useAuthSignUpVerifyResendMail();
 
   const emailAddress = useAuthUserVerifyEmail();
@@ -62,7 +61,7 @@ export function RegisterVerify() {
             <Button
               large
               fill
-              loading={isLoading}
+              loading={isPending}
               intent={Intent.NONE}
               onClick={handleResendMailBtnClick}
             >

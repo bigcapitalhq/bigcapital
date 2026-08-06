@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import { Form } from 'formik';
@@ -10,7 +9,7 @@ import { FFormGroup, FInputGroup, FCheckbox, T } from '@/components';
 /**
  * Login form.
  */
-export function LoginForm({ isSubmitting }) {
+export function LoginForm({ isSubmitting }: { isSubmitting: boolean }) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // Handle password revealer changing.

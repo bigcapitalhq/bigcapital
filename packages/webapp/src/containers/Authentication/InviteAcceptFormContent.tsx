@@ -1,13 +1,13 @@
-// @ts-nocheck
-import { Button, InputGroup, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import { Form, useFormikContext } from 'formik';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { AuthSubmitButton } from './_components';
 import { useInviteAcceptContext } from './InviteAcceptProvider';
+import { InviteAcceptFormValues } from './utils';
 import {
   Col,
   FFormGroup,
@@ -23,7 +23,7 @@ export function InviteUserFormContent() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const { inviteMeta } = useInviteAcceptContext();
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<InviteAcceptFormValues>();
 
   // Handle password revealer changing.
   const handleLockClick = () => {
@@ -68,13 +68,13 @@ export function InviteUserFormContent() {
 
       <InviteAcceptFooterParagraphs>
         <p>
-          <T id={'you_email_address_is'} /> <b>{inviteMeta.email},</b> <br />
+          <T id={'you_email_address_is'} /> <b>{inviteMeta?.email},</b> <br />
           <T id={'you_will_use_this_address_to_sign_in_to_bigcapital'} />
         </p>
         <p>
           {intl.getHTML('signing_in_or_creating', {
-            terms: (msg) => <Link>{msg}</Link>,
-            privacy: (msg) => <Link>{msg}</Link>,
+            terms: (msg: string) => <Link to={'#'}>{msg}</Link>,
+            privacy: (msg: string) => <Link to={'#'}>{msg}</Link>,
           })}
         </p>
       </InviteAcceptFooterParagraphs>

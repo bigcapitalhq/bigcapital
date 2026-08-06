@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { Form } from 'formik';
 import React from 'react';
@@ -9,7 +8,7 @@ import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
 /**
  * Reset password form.
  */
-export function ResetPasswordForm({ isSubmitting }) {
+export function ResetPasswordForm({ isSubmitting }: { isSubmitting: boolean }) {
   return (
     <Form>
       <FFormGroup name={'password'} label={intl.get('new_password')}>

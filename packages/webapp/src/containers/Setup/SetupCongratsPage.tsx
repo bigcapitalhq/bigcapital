@@ -1,19 +1,23 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
-import React from 'react';
+import { useState } from 'react';
 import { WorkflowIcon } from './WorkflowIcon';
 import { FormattedMessage as T } from '@/components';
-import { withOrganizationActions } from '@/containers/Organization/withOrganizationActions';
+import {
+  withOrganizationActions,
+  WithOrganizationActionsProps,
+} from '@/containers/Organization/withOrganizationActions';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 import { compose } from '@/utils';
 
 /**
  * Setup congrats page.
  */
-function SetupCongratsPageInner({ setOrganizationSetupCompleted }) {
-  const [isReloading, setIsReloading] = React.useState(false);
+function SetupCongratsPageInner({
+  setOrganizationSetupCompleted,
+}: WithOrganizationActionsProps) {
+  const [isReloading, setIsReloading] = useState(false);
   const isDarkMode = useIsDarkMode();
 
   const handleBtnClick = () => {

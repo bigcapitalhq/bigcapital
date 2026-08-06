@@ -1,7 +1,5 @@
-// @ts-nocheck
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
-import React from 'react';
 import { SetupCongratsPage } from './SetupCongratsPage';
 import { SetupInitializingForm } from './SetupInitializingForm';
 import { SetupOrganizationPage } from './SetupOrganizationPage';
@@ -37,15 +35,15 @@ export function SetupWizardContent({
         </Stepper.Step>
 
         <Stepper.Step label={'Organization'}>
-          <SetupOrganizationPage id="organization" />
+          <SetupOrganizationPage />
         </Stepper.Step>
 
         <Stepper.Step label={'Initializing'}>
-          <SetupInitializingForm id={'initializing'} />
+          <SetupInitializingForm />
         </Stepper.Step>
 
         <Stepper.Step label={'Congrats'}>
-          <SetupCongratsPage id="congrats" />
+          <SetupCongratsPage />
         </Stepper.Step>
       </Stepper>
     </x.div>

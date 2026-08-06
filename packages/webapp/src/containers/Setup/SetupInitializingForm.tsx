@@ -1,17 +1,22 @@
-// @ts-nocheck
 import { ProgressBar, Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import type { OrganizationCurrent } from '@bigcapital/sdk-ts';
 import { FormattedMessage as T } from '@/components';
-import { withOrganizationActions } from '@/containers/Organization/withOrganizationActions';
+import {
+  withOrganizationActions,
+  WithOrganizationActionsProps,
+} from '@/containers/Organization/withOrganizationActions';
 import { useJob, useCurrentOrganization } from '@/hooks/query';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 /**
  * Setup initializing step form.
  */
-function SetupInitializingFormInner({ setOrganizationSetupCompleted }) {
+function SetupInitializingFormInner({
+  setOrganizationSetupCompleted,
+}: WithOrganizationActionsProps) {
   const {
     data: organization,
     refetch,
@@ -19,15 +24,16 @@ function SetupInitializingFormInner({ setOrganizationSetupCompleted }) {
   } = useCurrentOrganization({ enabled: false });
 
   // Job done state.
-  const [isJobDone, setIsJobDone] = React.useState(false);
+  const [isJobDone, setIsJobDone] = useState(false);
 
-  const { data: jobState, isFetching: isJobFetching } = useJob(
-    organization?.buildJobId,
-    {
-      refetchInterval: 2000,
-      enabled: !!organization?.buildJobId,
-    },
-  );
+  const buildJobId = (
+    organization as (OrganizationCurrent & { buildJobId?: string }) | undefined
+  )?.buildJobId;
+
+  const { data: jobState, isFetching: isJobFetching } = useJob(buildJobId, {
+    refetchInterval: 2000,
+    enabled: !!buildJobId,
+  });
   const isRunning = Boolean(jobState?.isRunning);
   const isWaiting = Boolean(jobState?.isWaiting);
   const isFailed = Boolean(jobState?.isFailed);
@@ -121,7 +127,7 @@ function SetupInitializingRunning() {
   return (
     <x.div>
       <x.div className={progressBarStyles}>
-        <ProgressBar intent={Intent.NONE} value={null} />
+        <ProgressBar intent={Intent.NONE} value={undefined} />
       </x.div>
 
       <x.div textAlign="center" mt={35}>

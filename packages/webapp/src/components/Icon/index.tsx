@@ -24,7 +24,7 @@ import IconSvgPaths from '@/static/json/icons';
 export interface IconProps extends Props {
   color?: string;
   htmlTitle?: string;
-  icon: IconName | MaybeElement;
+  icon: string | MaybeElement;
   iconSize?: number;
   width?: number;
   height?: number;

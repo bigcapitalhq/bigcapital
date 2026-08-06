@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
 import { TaxRatesLandingActionsBar } from '../containers/TaxRatesLandingActionsBar';
 import { TaxRatesLandingDrawers } from '../containers/TaxRatesLandingDrawers';
 import { TaxRatesLandingProvider } from '../containers/TaxRatesLandingProvider';

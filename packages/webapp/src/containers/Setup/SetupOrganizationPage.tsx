@@ -1,15 +1,13 @@
-// @ts-nocheck
 import { x } from '@xstyled/emotion';
-import { Formik } from 'formik';
-import React from 'react';
+import { Formik, FormikHelpers } from 'formik';
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 import { SetupOrganizationForm } from './SetupOrganizationForm';
-import { FormattedMessage as T } from '@/components';
+import type { SetupOrganizationFormValues } from './SetupOrganization.schema';
 import { useOrganizationSetup, useSettingsOrganization } from '@/hooks/query';
 import { setCookie, transfromToSnakeCase } from '@/utils';
 
 // Initial values.
-const defaultValues = {
+const defaultValues: SetupOrganizationFormValues = {
   name: '',
   location: '',
   baseCurrency: '',
@@ -18,44 +16,62 @@ const defaultValues = {
   timezone: '',
 };
 
+export interface SetupOrganizationPageProps {
+  wizard?: {
+    next?: () => void;
+  };
+}
+
+interface OrganizationSettings {
+  name?: string;
+  location?: string;
+  baseCurrency?: string;
+  language?: string;
+  fiscalYear?: string;
+  timezone?: string;
+}
+
 /**
  * Setup organization form.
  */
-export function SetupOrganizationPage({ wizard }) {
+export function SetupOrganizationPage({ wizard }: SetupOrganizationPageProps) {
   const { mutateAsync: organizationSetupMutate } = useOrganizationSetup();
   const { data: organizationSettings } = useSettingsOrganization();
+
+  const settings = organizationSettings as OrganizationSettings | undefined;
 
   // Validation schema.
   const validationSchema = getSetupOrganizationValidation();
 
   // Initialize values.
-  const initialValues = {
+  const initialValues: SetupOrganizationFormValues = {
     ...defaultValues,
-    ...(organizationSettings
+    ...(settings
       ? {
-          name: organizationSettings.name ?? defaultValues.name,
-          location: organizationSettings.location ?? defaultValues.location,
-          baseCurrency:
-            organizationSettings.baseCurrency ?? defaultValues.baseCurrency,
-          language: organizationSettings.language ?? defaultValues.language,
-          fiscalYear:
-            organizationSettings.fiscalYear ?? defaultValues.fiscalYear,
-          timezone: organizationSettings.timezone ?? defaultValues.timezone,
+          name: settings.name ?? defaultValues.name,
+          location: settings.location ?? defaultValues.location,
+          baseCurrency: settings.baseCurrency ?? defaultValues.baseCurrency,
+          language: settings.language ?? defaultValues.language,
+          fiscalYear: settings.fiscalYear ?? defaultValues.fiscalYear,
+          timezone: settings.timezone ?? defaultValues.timezone,
         }
       : {}),
   };
 
   // Handle the form submit.
-  const handleSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleSubmit = (
+    values: SetupOrganizationFormValues,
+    { setSubmitting }: FormikHelpers<SetupOrganizationFormValues>,
+  ) => {
     organizationSetupMutate({ ...transfromToSnakeCase(values) })
-      .then((response) => {
+      .then(() => {
         setSubmitting(false);
 
         // Sets locale cookie to next boot cycle.
         setCookie('locale', values.language);
-        wizard.next();
+        wizard?.next?.();
       })
-      .catch((erros) => {
+      .catch(() => {
         setSubmitting(false);
       });
   };

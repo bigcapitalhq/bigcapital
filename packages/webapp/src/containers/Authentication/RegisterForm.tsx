@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Intent, Button } from '@blueprintjs/core';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import { Form } from 'formik';
@@ -18,7 +17,7 @@ import {
 /**
  * Register form.
  */
-export function RegisterForm({ isSubmitting }) {
+export function RegisterForm({ isSubmitting }: { isSubmitting: boolean }) {
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
   // Handle password revealer changing.
@@ -69,8 +68,8 @@ export function RegisterForm({ isSubmitting }) {
 
       <TermsConditionsText>
         {intl.getHTML('signing_in_or_creating', {
-          terms: (msg) => <Link>{msg}</Link>,
-          privacy: (msg) => <Link>{msg}</Link>,
+          terms: (msg: string) => <Link to={'#'}>{msg}</Link>,
+          privacy: (msg: string) => <Link to={'#'}>{msg}</Link>,
         })}
       </TermsConditionsText>
 

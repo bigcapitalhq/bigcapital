@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import { InviteAcceptForm } from './InviteAcceptForm';
 import { InviteAcceptProvider } from './InviteAcceptProvider';
@@ -9,7 +7,7 @@ import { AuthInsider } from '@/containers/Authentication/AuthInsider';
  * Authentication invite page.
  */
 export function Invite() {
-  const { token } = useParams();
+  const { token } = useParams<{ token: string }>();
 
   return (
     <AuthInsider>
