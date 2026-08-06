@@ -15,7 +15,7 @@ interface SubscriptionPricingFeature {
   style?: Record<string, string>;
 }
 
-interface SubscriptionPricingProps {
+export interface SubscriptionPricingProps {
   slug: string;
   label: string;
   description: string;

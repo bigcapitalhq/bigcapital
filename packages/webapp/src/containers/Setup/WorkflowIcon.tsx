@@ -1,7 +1,10 @@
-// @ts-nocheck
-import React from 'react';
-
-export function WorkflowIcon({ width = '309.566', height = '356.982' }) {
+export function WorkflowIcon({
+  width = '309.566',
+  height = '356.982',
+}: {
+  width?: string;
+  height?: string;
+}) {
   return (
     <svg width={width} height={height} viewBox="0 0 309.566 356.982">
       <defs>

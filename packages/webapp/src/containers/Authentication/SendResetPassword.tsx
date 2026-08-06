@@ -1,7 +1,5 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
-import React, { useMemo } from 'react';
+import { Formik, FormikHelpers } from 'formik';
 import intl from 'react-intl-universal';
 import { Link, useHistory } from 'react-router-dom';
 import {
@@ -14,12 +12,14 @@ import { SendResetPasswordForm } from './SendResetPasswordForm';
 import {
   SendResetPasswordSchema,
   transformSendResetPassErrorsToToasts,
+  SendResetPasswordValues,
 } from './utils';
+import type { ApiError } from 'openapi-typescript-fetch';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { AuthInsider } from '@/containers/Authentication/AuthInsider';
 import { useAuthSendResetPassword } from '@/hooks/query';
 
-const initialValues = {
+const initialValues: SendResetPasswordValues = {
   crediential: '',
 };
 
@@ -31,7 +31,10 @@ export function SendResetPassword() {
   const { mutateAsync: sendResetPasswordMutate } = useAuthSendResetPassword();
 
   // Handle form submitting.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: SendResetPasswordValues,
+    { setSubmitting }: FormikHelpers<SendResetPasswordValues>,
+  ) => {
     sendResetPasswordMutate({ email: values.crediential })
       .then(() => {
         AppToaster.show({
@@ -41,7 +44,14 @@ export function SendResetPassword() {
         history.push('/auth/login');
         setSubmitting(false);
       })
-      .catch(() => {
+      .catch((response: ApiError) => {
+        const toastMessages = transformSendResetPassErrorsToToasts(
+          response.data,
+        );
+
+        toastMessages.forEach((toastMessage) => {
+          AppToaster.show(toastMessage);
+        });
         setSubmitting(false);
       });
   };

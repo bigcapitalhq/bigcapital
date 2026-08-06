@@ -1,12 +1,9 @@
-// @ts-nocheck
 import { getAllCountries } from '@bigcapital/utils';
-import { Button, Intent, FormGroup, Classes } from '@blueprintjs/core';
-import { TimezonePicker } from '@blueprintjs/timezone';
+import { Button, Intent, Classes } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
-import classNames from 'classnames';
-import { FastField, Form, ErrorMessage } from 'formik';
-import React from 'react';
+import { Form, FormikProps } from 'formik';
 import intl from 'react-intl-universal';
+import type { SetupOrganizationFormValues } from './SetupOrganization.schema';
 import {
   FFormGroup,
   FInputGroup,
@@ -19,14 +16,15 @@ import { getAllCurrenciesOptions } from '@/constants/currencies';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import { inputIntent } from '@/utils';
 
 const countries = getAllCountries();
 
 /**
  * Setup organization form.
  */
-export function SetupOrganizationForm({ isSubmitting, values }) {
+export function SetupOrganizationForm({
+  isSubmitting,
+}: FormikProps<SetupOrganizationFormValues>) {
   const FiscalYear = getFiscalYear();
   const Languages = getLanguages();
   const currencies = getAllCurrenciesOptions();
@@ -126,7 +124,7 @@ export function SetupOrganizationForm({ isSubmitting, values }) {
           name={'timezone'}
           valueDisplayFormat="composite"
           showLocalTimezone={true}
-          placeholder={<T id={'select_time_zone'} />}
+          placeholder={intl.get('select_time_zone')}
           popoverProps={{ minimal: true }}
           buttonProps={{
             alignText: 'left',

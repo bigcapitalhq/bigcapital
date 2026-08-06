@@ -1,31 +1,41 @@
-// @ts-nocheck
 import { Intent, Alert } from '@blueprintjs/core';
-import React from 'react';
-import { AppToaster, FormattedMessage as T } from '@/components';
+import intl from 'react-intl-universal';
+import { AppToaster } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withAlertStoreConnect,
+  WithAlertStoreConnectProps,
+} from '@/containers/Alert/withAlertStoreConnect';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 import { useDeleteTaxRate } from '@/hooks/query/tax-rates';
 import { compose } from '@/utils';
+
+interface TaxRateDeleteAlertInnerProps
+  extends Pick<WithAlertStoreConnectProps, 'isOpen'>,
+    Pick<WithAlertActionsProps, 'closeAlert'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'> {
+  name: string;
+  payload: { taxRateId: number };
+}
 
 /**
  * Item delete alerts.
  */
 function TaxRateDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { taxRateId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteTaxRate, isLoading } = useDeleteTaxRate();
+}: TaxRateDeleteAlertInnerProps) {
+  const { mutateAsync: deleteTaxRate, isPending } = useDeleteTaxRate();
 
   // Handle cancel delete item alert.
   const handleCancelItemDelete = () => {
@@ -41,7 +51,7 @@ function TaxRateDeleteAlertInner({
         });
         closeDrawer(DRAWERS.TAX_RATE_DETAILS);
       })
-      .catch(({ data: { errors } }) => {
+      .catch(() => {
         AppToaster.show({
           message: 'Something went wrong.',
           intent: Intent.DANGER,
@@ -54,14 +64,14 @@ function TaxRateDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelItemDelete}
       onConfirm={handleConfirmDeleteItem}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         Once you delete this tax rate, you won't be able to restore the item
