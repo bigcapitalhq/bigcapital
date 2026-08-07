@@ -172,11 +172,11 @@ const reducerInstance = createReducer(initialState, {
     action: DashboardAction,
   ) => {
     const { features } = (action.payload || {}) as {
-      features: Array<{ name: string; is_accessible: boolean }>;
+      features: Array<{ name: string; isAccessible: boolean }>;
     };
     const _data: Record<string, boolean> = {};
     features.forEach((feature) => {
-      _data[feature.name] = feature.is_accessible;
+      _data[feature.name] = feature.isAccessible;
     });
     state.features = _data;
   },

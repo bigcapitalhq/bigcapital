@@ -1,12 +1,17 @@
+import type { RootState } from '@/store/reducers';
+import type { AnyAction } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
 import ApiService from '@/services/ApiService';
 import { RESOURCE_DATA_SET, RESOURCE_FIELDS_SET } from '@/store/types';
+
+type Thunk = ThunkAction<Promise<unknown>, RootState, unknown, AnyAction>;
 
 export const fetchResourceColumns = ({
   resourceSlug,
 }: {
   resourceSlug: string;
-}) => {
-  return (_dispatch: any) =>
+}): Thunk => {
+  return (_dispatch) =>
     new Promise((resolve, reject) => {
       ApiService.get(`resources/${resourceSlug}/columns`)
         .then((response) => resolve(response))
@@ -18,8 +23,8 @@ export const fetchResourceFields = ({
   resourceSlug,
 }: {
   resourceSlug: string;
-}) => {
-  return (dispatch: any) =>
+}): Thunk => {
+  return (dispatch) =>
     new Promise((resolve, reject) => {
       ApiService.get(`resources/${resourceSlug}/fields`)
         .then((response) => {
@@ -38,8 +43,8 @@ export const fetchResourceData = ({
   resourceSlug,
 }: {
   resourceSlug: string;
-}) => {
-  return (dispatch: any) =>
+}): Thunk => {
+  return (dispatch) =>
     new Promise((resolve, reject) => {
       ApiService.get(`/resources/${resourceSlug}/data`)
         .then((response) => {

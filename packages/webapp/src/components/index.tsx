@@ -13,7 +13,6 @@ export * from './PdfPreview';
 export * from './Details';
 export * from './TotalLines/index';
 export * from './Alert';
-export * from './Dashboard';
 export * from './Drawer';
 export * from './Forms';
 export * from './MultiSelectTaggable';

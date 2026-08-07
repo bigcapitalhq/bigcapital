@@ -41,4 +41,5 @@ export function DashboardSockets() {
       socket.current.close();
     };
   }, []);
+  return null;
 }

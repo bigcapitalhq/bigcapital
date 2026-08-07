@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createApiFetcher } from '@bigcapital/sdk-ts';
 import axios from 'axios';
 import React from 'react';
@@ -10,7 +9,7 @@ import {
   useAuthToken,
 } from './state';
 import { useApiFetcherOnError } from './useApiFetcherOnError';
-import type { ApiError } from 'openapi-typescript-fetch';
+import type { AxiosError, AxiosRequestConfig } from 'axios';
 
 export default function useApiRequest() {
   const setGlobalErrors = useSetGlobalErrors();
@@ -50,9 +49,20 @@ export default function useApiRequest() {
     // Response interceptors.
     instance.interceptors.response.use(
       (response) => response,
-      (error) => {
-        const { status, data } = error.response;
+      (
+        error: AxiosError<{
+          errors?: Array<{
+            type: string;
+            payload?: Record<string, unknown>;
+          }>;
+          message?: string;
+        }>,
+      ) => {
+        const { status, data } = error.response || {};
 
+        if (typeof status !== 'number') {
+          return Promise.reject(error);
+        }
         if (status >= 500) {
           setGlobalErrors({ something_wrong: true });
         }
@@ -61,12 +71,12 @@ export default function useApiRequest() {
           setLogout();
         }
         if (status === 403) {
-          setGlobalErrors({ access_denied: { message: data.message } });
+          setGlobalErrors({ access_denied: { message: data?.message } });
         }
         if (status === 429) {
           setGlobalErrors({ too_many_requests: true });
         }
-        if (status === 400) {
+        if (status === 400 && data && Array.isArray(data.errors)) {
           const lockedError = data.errors.find(
             (error) => error.type === 'TRANSACTIONS_DATE_LOCKED',
           );
@@ -95,27 +105,27 @@ export default function useApiRequest() {
     () => ({
       http,
 
-      get(resource, params) {
+      get(resource: string, params?: AxiosRequestConfig) {
         return http.get(`/api/${normalizeApiPath(resource)}`, params);
       },
 
-      post(resource, params, config) {
+      post(resource: string, params?: unknown, config?: AxiosRequestConfig) {
         return http.post(`/api/${normalizeApiPath(resource)}`, params, config);
       },
 
-      update(resource, slug, params) {
+      update(resource: string, slug: string, params?: unknown) {
         return http.put(`/api/${normalizeApiPath(resource)}/${slug}`, params);
       },
 
-      put(resource, params) {
+      put(resource: string, params?: unknown) {
         return http.put(`/api/${normalizeApiPath(resource)}`, params);
       },
 
-      patch(resource, params, config) {
+      patch(resource: string, params?: unknown, config?: AxiosRequestConfig) {
         return http.patch(`/api/${normalizeApiPath(resource)}`, params, config);
       },
 
-      delete(resource, params) {
+      delete(resource: string, params?: AxiosRequestConfig) {
         return http.delete(`/api/${normalizeApiPath(resource)}`, params);
       },
     }),
@@ -183,22 +193,22 @@ export function useAuthApiRequest() {
   return React.useMemo(
     () => ({
       http,
-      get(resource, params) {
+      get(resource: string, params?: AxiosRequestConfig) {
         return http.get(`/api/${normalizeApiPath(resource)}`, params);
       },
-      post(resource, params, config) {
+      post(resource: string, params?: unknown, config?: AxiosRequestConfig) {
         return http.post(`/api/${normalizeApiPath(resource)}`, params, config);
       },
-      update(resource, slug, params) {
+      update(resource: string, slug: string, params?: unknown) {
         return http.put(`/api/${normalizeApiPath(resource)}/${slug}`, params);
       },
-      put(resource, params) {
+      put(resource: string, params?: unknown) {
         return http.put(`/api/${normalizeApiPath(resource)}`, params);
       },
-      patch(resource, params, config) {
+      patch(resource: string, params?: unknown, config?: AxiosRequestConfig) {
         return http.patch(`/api/${normalizeApiPath(resource)}`, params, config);
       },
-      delete(resource, params) {
+      delete(resource: string, params?: AxiosRequestConfig) {
         return http.delete(`/api/${normalizeApiPath(resource)}`, params);
       },
     }),

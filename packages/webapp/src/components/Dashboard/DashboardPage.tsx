@@ -1,10 +1,25 @@
-// @ts-nocheck
 import { Spinner } from '@blueprintjs/core';
 import React, { useEffect, Suspense } from 'react';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import type { WithUniversalSearchActionsProps } from '@/containers/UniversalSearch/withUniversalSearchActions';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
 import { compose } from '@/utils';
+
+interface DashboardPageOwnProps {
+  pageTitle?: string;
+  backLink?: boolean | string;
+  sidebarExpand?: boolean;
+  Component: React.ComponentType;
+  name?: string;
+  hint?: string;
+  defaultSearchResource?: string;
+}
+
+type DashboardPageProps = DashboardPageOwnProps &
+  WithDashboardActionsProps &
+  WithUniversalSearchActionsProps;
 
 /**
  * Dashboard pages wrapper.
@@ -28,7 +43,7 @@ function DashboardPage({
   // #withUniversalSearch
   setResourceTypeUniversalSearch,
   resetResourceTypeUniversalSearch,
-}) {
+}: DashboardPageProps) {
   // Hydrate the given page title.
   useEffect(() => {
     pageTitle && changePageTitle(pageTitle);
@@ -86,8 +101,8 @@ function DashboardPage({
     <div className={CLASSES.DASHBOARD_PAGE}>
       <Suspense
         fallback={
-          <div class="dashboard__fallback-loading">
-            <Spinner size={40} value={null} />
+          <div className="dashboard__fallback-loading">
+            <Spinner size={40} />
           </div>
         }
       >
@@ -99,6 +114,5 @@ function DashboardPage({
 
 export default compose(
   withDashboardActions,
-  // withUniversalSearch,
   withUniversalSearchActions,
 )(DashboardPage);

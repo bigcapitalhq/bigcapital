@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useResourceData } from '../GenericResource';
 import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
 
@@ -9,10 +8,10 @@ import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
  * @param {any} resource
  * @returns
  */
-function transfromResourceDataToSearch(resource) {
+function transfromResourceDataToSearch(resource: any) {
   const selectItem = getUniversalSearchBind(resource._type, 'itemSelect');
 
-  return resource.items.map((item) => ({
+  return resource.items.map((item: unknown) => ({
     ...(selectItem ? selectItem(item) : {}),
     _type: resource._type,
   }));
@@ -24,7 +23,11 @@ function transfromResourceDataToSearch(resource) {
  * @param {*} searchKeyword
  * @returns
  */
-export function useUniversalSearch(type, searchKeyword, props) {
+export function useUniversalSearch(
+  type: string,
+  searchKeyword: string,
+  props?: unknown,
+) {
   const { data, ...restProps } = useResourceData(
     type,
     {

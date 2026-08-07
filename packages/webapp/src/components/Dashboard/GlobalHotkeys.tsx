@@ -1,12 +1,19 @@
-// @ts-nocheck
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useHistory } from 'react-router-dom';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithUniversalSearchActionsProps } from '@/containers/UniversalSearch/withUniversalSearchActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
 import { getDashboardRoutes } from '@/routes/dashboard';
 import { compose } from '@/utils';
+
+interface GlobalHotkeyRoute {
+  path: string;
+  hotkey?: string;
+}
 
 // Toggle dark/light mode by toggling 'bp4-dark' class on body
 const handleToggleDarkMode = () => {
@@ -19,6 +26,10 @@ const handleToggleDarkMode = () => {
   }
 };
 
+type GlobalHotkeysProps = Pick<WithDashboardActionsProps, 'toggleSidebarExpand'> &
+  Pick<WithUniversalSearchActionsProps, 'openGlobalSearch'> &
+  Pick<WithDialogActionsProps, 'openDialog'>;
+
 function GlobalHotkeys({
   // #withDashboardActions
   toggleSidebarExpand,
@@ -28,9 +39,9 @@ function GlobalHotkeys({
 
   // #withDialogActions
   openDialog,
-}) {
+}: GlobalHotkeysProps) {
   const history = useHistory();
-  const routes = getDashboardRoutes();
+  const routes = getDashboardRoutes() as GlobalHotkeyRoute[];
 
   const globalHotkeys = routes
     .filter(({ hotkey }) => hotkey)
@@ -42,7 +53,7 @@ function GlobalHotkeys({
   };
   useHotkeys(
     globalHotkeys,
-    (event, handle) => {
+    (_event, handle) => {
       routes.map(({ path, hotkey }) => {
         if (handle.key === hotkey) {
           history.push(path);

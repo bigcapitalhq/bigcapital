@@ -1,4 +1,3 @@
-// @ts-nocheck
 export const RESOURCES_TYPES = {
   INVOICE: 'invoice',
   ESTIMATE: 'estimate',
@@ -14,4 +13,4 @@ export const RESOURCES_TYPES = {
   ACCOUNT: 'account',
   CREDIT_NOTE: 'credit_note',
   VENDOR_CREDIT: 'vendor_credit',
-};
+} as const;

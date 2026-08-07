@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useCallback } from 'react';
 import { useAuthActions, useSetGlobalErrors } from './state';
 import type { ApiError } from 'openapi-typescript-fetch';

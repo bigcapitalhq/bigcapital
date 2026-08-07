@@ -1,4 +1,3 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 import { useAbilitiesFilter } from '../hooks';
 import {
@@ -9,8 +8,9 @@ import {
   ManualJournalAction,
   ExpenseAction,
 } from './abilityOption';
+import type { QuickNewActionOption } from './types';
 
-export const getQuickNewActions = () => [
+export const getQuickNewActions = (): QuickNewActionOption[] => [
   {
     path: 'invoices/new',
     name: intl.get('sale_invoice'),
@@ -56,7 +56,7 @@ export const getQuickNewActions = () => [
     name: intl.get('vendor'),
     permission: {
       subject: AbilitySubject.Vendor,
-      ability: VendorAction.Vendor,
+      ability: VendorAction.Create,
     },
   },
 ];

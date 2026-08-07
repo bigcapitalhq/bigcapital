@@ -242,7 +242,6 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('general_ledger'),
     backLink: true,
     sidebarExpand: false,
-    defaultSearchResource: RESOURCES_TYPES.INVENTORY_ADJUSTMENT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {

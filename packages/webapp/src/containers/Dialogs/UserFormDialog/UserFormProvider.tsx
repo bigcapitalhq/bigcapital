@@ -43,11 +43,7 @@ function UserFormProvider({
   // FIXME: `isEditMode = userId` is a number (truthy) rather than a boolean.
   const isEditMode: number | boolean = userId ?? false;
 
-  // FIXME: `systemUserId` (camelCase) on the typed SDK User; the original code
-  // used `system_user_id` which silently returned undefined. `AuthedAccount`
-  // is typed as `{}` in the SDK, so a narrow cast is required to read `.id`.
-  const authAccount = authAccountData as { id?: number } | undefined;
-  const isAuth = user?.systemUserId === authAccount?.id;
+  const isAuth = user?.systemUserId === authAccountData?.id;
 
   // Provider state.
   const provider: UserFormContextValue = {

@@ -16,4 +16,12 @@ export class GetAuthedAccountTransformer extends Transformer {
       'verified',
     ];
   };
+
+  /**
+   * Exclude sensitive attributes from the account object.
+   * @returns {Array}
+   */
+  public excludeAttributes = (): string[] => {
+    return ['password', 'verifyToken'];
+  };
 }

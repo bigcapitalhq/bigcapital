@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogsName } from './dialogs';
 import { FormattedMessage as T } from '@/components';
@@ -28,7 +27,26 @@ import {
   ISidebarMenuOverlayIds,
 } from '@/containers/Dashboard/Sidebar/interfaces';
 
-export const SidebarMenu = [
+export interface SidebarMenuItemPermission {
+  subject: string;
+  ability: string;
+}
+
+export interface SidebarMenuItem {
+  text: React.ReactNode;
+  type: ISidebarMenuItemType;
+  disabled?: boolean;
+  href?: string;
+  matchExact?: boolean;
+  overlayId?: ISidebarMenuOverlayIds;
+  dialogName?: DialogsName;
+  divider?: boolean;
+  feature?: string;
+  permission?: SidebarMenuItemPermission;
+  children?: SidebarMenuItem[];
+}
+
+export const SidebarMenu: SidebarMenuItem[] = [
   // ---------------
   // # Homepage
   // ---------------
