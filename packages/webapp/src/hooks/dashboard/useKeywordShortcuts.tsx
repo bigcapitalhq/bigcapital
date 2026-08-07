@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useAbilitiesFilter } from '../utils/useAbilityContext';
 import { KeyboardShortcutsOptions } from '@/constants/keyboardShortcutsOptions';

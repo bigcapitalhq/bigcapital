@@ -1,3 +1,6 @@
+import type { RootState } from '@/store/reducers';
+import type { AnyAction } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
 import ApiService from '@/services/ApiService';
 import {
   RESOURCE_COLUMNS_SET,
@@ -7,8 +10,10 @@ import {
   VIEW_META_SET,
 } from '@/store/types';
 
-export const submitView = ({ form }: { form: unknown }) => {
-  return (_dispatch: any) => ApiService.post('views', form);
+type Thunk = ThunkAction<Promise<unknown>, RootState, unknown, AnyAction>;
+
+export const submitView = ({ form }: { form: unknown }): Thunk => {
+  return (_dispatch) => ApiService.post('views', form);
 };
 
 export const editView = ({
@@ -17,16 +22,16 @@ export const editView = ({
 }: {
   id: string | number;
   form: unknown;
-}) => {
-  return (_dispatch: any) => ApiService.post(`views/${id}`, form);
+}): Thunk => {
+  return (_dispatch) => ApiService.post(`views/${id}`, form);
 };
 
-export const deleteView = ({ id }: { id: string | number }) => {
-  return (_dispatch: any) => ApiService.delete(`views/${id}`);
+export const deleteView = ({ id }: { id: string | number }): Thunk => {
+  return (_dispatch) => ApiService.delete(`views/${id}`);
 };
 
-export const fetchView = ({ id }: { id: string | number }) => {
-  return (dispatch: any) =>
+export const fetchView = ({ id }: { id: string | number }): Thunk => {
+  return (dispatch) =>
     new Promise((resolve, reject) => {
       ApiService.get(`views/${id}`)
         .then((response) => {
@@ -41,8 +46,8 @@ export const fetchResourceViews = ({
   resourceSlug,
 }: {
   resourceSlug: string;
-}) => {
-  return (dispatch: any) =>
+}): Thunk => {
+  return (dispatch) =>
     new Promise((resolve, reject) => {
       ApiService.get(`views/resource/${resourceSlug}`)
         .then((response) => {
@@ -58,8 +63,8 @@ export const fetchResourceViews = ({
     });
 };
 
-export const fetchViewResource = ({ id }: { id: string | number }) => {
-  return (dispatch: any) =>
+export const fetchViewResource = ({ id }: { id: string | number }): Thunk => {
+  return (dispatch) =>
     new Promise((resolve, reject) => {
       ApiService.get(`views/${id}/resource`)
         .then((response) => {

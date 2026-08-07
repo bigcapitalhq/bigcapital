@@ -1,9 +1,7 @@
-// @ts-nocheck
 import {
   useMutation,
-  UseMutationOptions,
-  UseMutationResult,
-  useQueryClient,
+  type UseMutationOptions,
+  type UseMutationResult,
 } from '@tanstack/react-query';
 import { batch } from 'react-redux';
 import {
@@ -11,16 +9,14 @@ import {
   useSetAuthUserId,
   useSetLocale,
   useSetOrganizationId,
-  useSetTenantId,
 } from '../../state';
 import useApiRequest from '../../useRequest';
 import { setAuthLoginCookies } from '../authentication';
+import type { AuthSigninResponse } from '@bigcapital/sdk-ts';
 
 interface CreateOneClickDemoValues {}
 interface CreateOneClickDemoRes {
-  email: string;
-  signedIn: any;
-  buildJob: any;
+  data: unknown;
 }
 
 /**
@@ -35,22 +31,30 @@ export function useCreateOneClickDemo(
     CreateOneClickDemoValues
   >,
 ): UseMutationResult<CreateOneClickDemoRes, Error, CreateOneClickDemoValues> {
-  const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation<CreateOneClickDemoRes, Error, CreateOneClickDemoValues>(
-    () => apiRequest.post(`/demo/one_click`),
-    {
-      ...props,
-      onSuccess: (res, id) => {},
-    },
-  );
+  return useMutation<CreateOneClickDemoRes, Error, CreateOneClickDemoValues>({
+    ...props,
+    mutationFn: () =>
+      apiRequest.post(`/demo/one_click`) as unknown as Promise<CreateOneClickDemoRes>,
+    onSuccess: (_res: CreateOneClickDemoRes, _id: CreateOneClickDemoValues) => {},
+  });
 }
 
 interface OneClickSigninDemoValues {
   demoId: string;
 }
-interface OneClickSigninDemoRes {}
+
+interface OneClickSigninDemoRes {
+  data: {
+    token: string;
+    tenant: {
+      organization_id: string | number;
+      metadata?: { language?: string };
+    };
+    user: { id: string | number };
+  };
+}
 
 /**
  * Sign-in to the created one-click demo account.
@@ -64,7 +68,6 @@ export function useOneClickDemoSignin(
     OneClickSigninDemoValues
   >,
 ): UseMutationResult<OneClickSigninDemoRes, Error, OneClickSigninDemoValues> {
-  const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
   const setAuthToken = useSetAuthToken();
@@ -75,16 +78,18 @@ export function useOneClickDemoSignin(
   return useMutation<OneClickSigninDemoRes, Error, OneClickSigninDemoValues>({
     ...props,
     mutationFn: ({ demoId }) =>
-      apiRequest.post(`/demo/one_click_signin`, { demo_id: demoId }),
+      apiRequest.post(`/demo/one_click_signin`, {
+        demo_id: demoId,
+      }) as unknown as Promise<OneClickSigninDemoRes>,
     onSuccess: (res, _id) => {
       // Set authentication cookies.
-      setAuthLoginCookies(res.data);
+      setAuthLoginCookies(res.data as unknown as AuthSigninResponse);
 
       batch(() => {
         // Sets the auth metadata to global state.
         setAuthToken(res.data.token);
-        setOrganizationId(res.data.tenant.organization_id);
-        setUserId(res.data.user.id);
+        setOrganizationId(String(res.data.tenant.organization_id));
+        setUserId(String(res.data.user.id));
 
         if (res.data?.tenant?.metadata?.language) {
           setLocale(res.data?.tenant?.metadata?.language);

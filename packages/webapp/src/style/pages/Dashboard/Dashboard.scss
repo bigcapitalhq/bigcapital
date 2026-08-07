@@ -67,6 +67,18 @@ $dashboard-views-bar-height: 44px;
       align-items: center;
       margin-right: 4px;
 
+      &,
+      .bp4-dark & {
+        box-shadow: 0 0 0;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        height: auto;
+      }
+
+      .#{$ns}-navbar-group {
+          height: auto;
+      }
       .#{$ns}-button {
         color: #1552c8;
         font-weight: 5000;

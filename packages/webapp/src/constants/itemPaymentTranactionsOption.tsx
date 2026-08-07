@@ -1,4 +1,3 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 import { useAbilitiesFilter } from '../hooks';
 import {
@@ -8,8 +7,9 @@ import {
   SaleInvoiceAction,
   BillAction,
 } from './abilityOption';
+import type { ItemPaymentTransactionOption } from './types';
 
-export const getItemPaymentTransactions = () => [
+export const getItemPaymentTransactions = (): ItemPaymentTransactionOption[] => [
   {
     name: 'invoices',
     label: intl.get('invoices'),

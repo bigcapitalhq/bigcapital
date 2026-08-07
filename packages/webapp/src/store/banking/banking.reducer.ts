@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { castArray, uniq } from 'lodash';
+import type { RootState } from '@/store/reducers';
 
 interface StorePlaidState {
   plaidToken: string;
@@ -204,11 +205,11 @@ export const PlaidSlice = createSlice({
     /**
      * Sets the uncategorized transactions filter.
      * @param {StorePlaidState} state
-     * @param {PayloadAction<{ filter: any }>} action
+     * @param {PayloadAction<{ filter: { fromDate?: string; toDate?: string } }>} action
      */
     setUncategorizedTransactionsFilter: (
       state: StorePlaidState,
-      action: PayloadAction<{ filter: any }>,
+      action: PayloadAction<{ filter: { fromDate?: string; toDate?: string } }>,
     ) => {
       state.uncategorizedFilter = action.payload.filter;
     },
@@ -247,18 +248,18 @@ export const {
   resetUncategorizedTranasctionsFilter,
 } = PlaidSlice.actions;
 
-export const getPlaidToken = (state: any) => state.plaid.plaidToken;
-export const getTransactionsToCategorizeSelected = (state: any) =>
+export const getPlaidToken = (state: RootState) => state.plaid.plaidToken;
+export const getTransactionsToCategorizeSelected = (state: RootState) =>
   state.plaid.transactionsToCategorizeSelected;
 
-export const getOpenMatchingTransactionAside = (state: any) =>
+export const getOpenMatchingTransactionAside = (state: RootState) =>
   state.plaid.openMatchingTransactionAside;
 
-export const isMultipleCategorization = (state: any) =>
+export const isMultipleCategorization = (state: RootState) =>
   state.plaid.enableMultipleCategorization;
 
-export const getTransactionsToCategorizeIdsSelected = (state: any) =>
+export const getTransactionsToCategorizeIdsSelected = (state: RootState) =>
   state.plaid.transactionsToCategorizeSelected;
 
-export const getUncategorizedTransactionsFilter = (state: any) =>
-  state.uncategorizedFilter;
+export const getUncategorizedTransactionsFilter = (state: RootState) =>
+  state.plaid.uncategorizedFilter;

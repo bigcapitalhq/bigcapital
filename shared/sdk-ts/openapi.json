@@ -218,7 +218,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The authenticated account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthedAccountResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -24254,6 +24261,52 @@
         },
         "required": [
           "password"
+        ]
+      },
+      "AuthedAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "User ID"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "User first name"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "User last name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the user account is active"
+          },
+          "language": {
+            "type": "string",
+            "description": "User language"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "Tenant ID"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Whether the user email is verified"
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "active",
+          "tenantId",
+          "verified"
         ]
       },
       "ApiKeyResponseDto": {

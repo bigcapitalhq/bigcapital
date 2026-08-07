@@ -1,14 +1,15 @@
 import { isEmpty } from 'lodash';
+import type { ReactNode } from 'react';
 import { useAbilityContext } from '@/hooks';
 
-interface FinancialReport {
+export interface FinancialReport {
   ability: string;
   subject: string;
   [key: string]: unknown;
 }
 
-interface FinancialSection {
-  sectionTitle: string;
+export interface FinancialSection {
+  sectionTitle: ReactNode;
   reports: FinancialReport[];
 }
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import isDeepEqualReact from 'fast-deep-equal/react';
 import { DependencyList, EffectCallback } from 'react';
 import { useCustomCompareEffect } from './useCustomCompareEffect';
