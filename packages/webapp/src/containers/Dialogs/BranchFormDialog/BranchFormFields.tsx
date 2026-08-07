@@ -1,14 +1,10 @@
-// @ts-nocheck
+import { Classes, ControlGroup } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Classes, ControlGroup } from '@blueprintjs/core';
 import { FieldRequiredHint, FFormGroup, FInputGroup } from '@/components';
 
-/**
- * Branch form dialog fields.
- */
-export function BranchFormFields() {
+export function BranchFormFields(): React.ReactElement {
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Branch Name -----------*/}
@@ -21,6 +17,7 @@ export function BranchFormFields() {
       >
         <FInputGroup name={'name'} />
       </FFormGroup>
+
       {/*------------ Branch Code -----------*/}
       <FFormGroup
         name={'code'}
@@ -65,12 +62,12 @@ export function BranchFormFields() {
 
       {/*------------ Phone Number -----------*/}
       <FFormGroup
-        name={'phone_number'}
+        name={'phoneNumber'}
         label={intl.get('branch.dialog.label.phone_number')}
         inline={true}
         className={'form-group--phone_number'}
       >
-        <FInputGroup name={'phone_number'} placeholder={'https://'} />
+        <FInputGroup name={'phoneNumber'} />
       </FFormGroup>
 
       {/*------------ Email -----------*/}

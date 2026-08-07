@@ -9,7 +9,7 @@ const initialState: GlobalErrorsState = {
 };
 
 export const globalErrorsReducer = createReducer(initialState, {
-  ['GLOBAL_ERRORS_SET']: (
+  GLOBAL_ERRORS_SET: (
     state,
     action: { payload: { errors: Record<string, unknown> } },
   ) => {

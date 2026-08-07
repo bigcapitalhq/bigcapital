@@ -1,10 +1,17 @@
-// @ts-nocheck
+import { Classes, FormGroup, Position } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import classNames from 'classnames';
-import { useFormikContext } from 'formik';
-import { Classes, FormGroup, Position } from '@blueprintjs/core';
+import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
+import { InventoryAdjustmentQuantityFields } from './InventoryAdjustmentQuantityFields';
+import {
+  diffQuantity,
+  useSetPrimaryBranchToForm,
+  useSetPrimaryWarehouseToForm,
+  useGetAdjustmentTypeOptions,
+} from './utils';
+import type { InventoryAdjustmentFormValues } from './types';
 import {
   FFormGroup,
   FDateInput,
@@ -12,7 +19,6 @@ import {
   FTextArea,
   FSelect,
 } from '@/components';
-import { useAutofocus } from '@/hooks';
 import {
   FieldRequiredHint,
   Col,
@@ -22,51 +28,35 @@ import {
   WarehouseSelect,
   FAccountsSuggestField,
 } from '@/components';
-import { momentFormatter, toSafeNumber } from '@/utils';
-import { Features, CLASSES } from '@/constants';
-
-import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
+import { Features } from '@/constants';
+import { useAutofocus } from '@/hooks';
 import { useFeatureCan } from '@/hooks/state';
+import { momentFormatter, toSafeNumber } from '@/utils';
 
-import { InventoryAdjustmentQuantityFields } from './InventoryAdjustmentQuantityFields';
-import {
-  diffQuantity,
-  useSetPrimaryBranchToForm,
-  useSetPrimaryWarehouseToForm,
-  useGetAdjustmentTypeOptions,
-} from './utils';
-
-/**
- * Inventory adjustment form dialogs fields.
- */
-export function InventoryAdjustmentFormDialogFields() {
-  // Features guard.
+export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
   const { featureCan } = useFeatureCan();
 
-  // Retrieves memorized adjustment types options.
   const adjustmentTypes = useGetAdjustmentTypeOptions();
 
-  const dateFieldRef = useAutofocus();
+  const dateFieldRef = useAutofocus<HTMLInputElement>();
 
-  // Inventory adjustment dialog context.
   const { accounts, branches, warehouses } = useInventoryAdjContext();
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } =
+    useFormikContext<InventoryAdjustmentFormValues>();
 
-  // Sets the primary warehouse to form.
   useSetPrimaryWarehouseToForm();
-
-  // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
 
-  // Handle adjustment type change.
-  const handleAdjustmentTypeChange = (type) => {
+  const handleAdjustmentTypeChange = (type: {
+    value: 'increment' | 'decrement';
+  }) => {
     const result = diffQuantity(
       toSafeNumber(values.quantity),
-      toSafeNumber(values.quantity_on_hand),
+      toSafeNumber(values.quantityOnHand),
       type.value,
     );
     setFieldValue('type', type.value);
-    setFieldValue('new_quantity', result);
+    setFieldValue('newQuantity', result);
   };
 
   return (
@@ -74,9 +64,9 @@ export function InventoryAdjustmentFormDialogFields() {
       <Row>
         <FeatureCan feature={Features.Branches}>
           <Col xs={5}>
-            <FormGroup label={intl.get('branch')} fill>
+            <FormGroup label={intl.get('branch')}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -85,9 +75,9 @@ export function InventoryAdjustmentFormDialogFields() {
         </FeatureCan>
         <FeatureCan feature={Features.Warehouses}>
           <Col xs={5}>
-            <FormGroup label={intl.get('warehouse')} fill>
+            <FormGroup label={intl.get('warehouse')}>
               <WarehouseSelect
-                name={'warehouse_id'}
+                name={'warehouseId'}
                 warehouses={warehouses}
                 popoverProps={{ minimal: true }}
               />
@@ -102,12 +92,10 @@ export function InventoryAdjustmentFormDialogFields() {
 
       <Row>
         <Col xs={5}>
-          {/*------------ Date -----------*/}
           <FFormGroup
             name={'date'}
             label={intl.get('date')}
             labelInfo={<FieldRequiredHint />}
-            fill
             fastField
           >
             <FDateInput
@@ -117,19 +105,17 @@ export function InventoryAdjustmentFormDialogFields() {
                 position: Position.BOTTOM,
                 minimal: true,
               }}
-              inputRef={(ref) => (dateFieldRef.current = ref)}
+              inputProps={{ inputRef: dateFieldRef }}
               fastField
             />
           </FFormGroup>
         </Col>
 
         <Col xs={5}>
-          {/*------------ Adjustment type -----------*/}
           <FFormGroup
             name={'type'}
             label={intl.get('adjustment_type')}
             labelInfo={<FieldRequiredHint />}
-            fill
             fastField
           >
             <FSelect
@@ -148,15 +134,13 @@ export function InventoryAdjustmentFormDialogFields() {
 
       <InventoryAdjustmentQuantityFields />
 
-      {/*------------ Adjustment account -----------*/}
       <FFormGroup
-        name={'adjustment_account_id'}
+        name={'adjustmentAccountId'}
         label={intl.get('adjustment_account')}
         labelInfo={<FieldRequiredHint />}
-        fill
       >
         <FAccountsSuggestField
-          name={'adjustment_account_id'}
+          name={'adjustmentAccountId'}
           items={accounts}
           inputProps={{
             placeholder: intl.get('select_adjustment_account'),
@@ -166,21 +150,18 @@ export function InventoryAdjustmentFormDialogFields() {
         />
       </FFormGroup>
 
-      {/*------------ Reference -----------*/}
       <FFormGroup
-        name={'reference_no'}
+        name={'referenceNo'}
         label={intl.get('reference_no')}
         fastField
       >
-        <FInputGroup name={'reference_no'} fastField />
+        <FInputGroup name={'referenceNo'} fastField />
       </FFormGroup>
 
-      {/*------------ Adjustment reasons -----------*/}
       <FFormGroup
         name={'reason'}
         label={intl.get('adjustment_reasons')}
         labelInfo={<FieldRequiredHint />}
-        fill
         fastField
       >
         <FTextArea name={'reason'} growVertically large fastField fill />

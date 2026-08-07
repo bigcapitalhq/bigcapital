@@ -1,24 +1,33 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
-import styled from 'styled-components';
-
 import { Card, DrawerLoading } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { CustomerFormFormik } from '@/containers/Customers/CustomerForm/CustomerFormFormik';
 import {
   CustomerFormProvider,
   useCustomerFormContext,
 } from '@/containers/Customers/CustomerForm/CustomerFormProvider';
-import { CustomerFormFormik } from '@/containers/Customers/CustomerForm/CustomerFormFormik';
-
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { DRAWERS } from '@/constants/drawers';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useAddAutofillRef } from '@/hooks/state/autofill';
+import type { CustomerFormValues } from '@/containers/Customers/CustomerForm/utils';
+import type { FormikHelpers } from 'formik';
+import { compose } from '@/utils';
+
+type CustomerFormSubmitPayload = { noRedirect?: boolean };
+
+interface QuickCustomerFormDrawerProps extends WithDrawerActionsProps {
+  displayName?: string;
+  autofillRef?: number;
+  customerId?: number;
+}
 
 /**
  * Drawer customer form loading wrapper.
- * @returns {JSX}
  */
-function DrawerCustomerFormLoading({ children }) {
+function DrawerCustomerFormLoading({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { isFormLoading } = useCustomerFormContext();
 
   return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
@@ -32,15 +41,26 @@ function QuickCustomerFormDrawerInner({
   autofillRef,
   closeDrawer,
   customerId,
-}) {
+}: QuickCustomerFormDrawerProps) {
   const addAutofillRef = useAddAutofillRef();
 
   // Handle the form submit request success.
-  const handleSubmitSuccess = (values, formArgs, submitPayload, res) => {
+  // `responseData` is typed as `unknown` because `CustomerFormFormik` forwards
+  // the mutate result opaquely; the SDK's `createCustomer` returns void so the
+  // created id is unavailable here. To preserve the previous runtime behavior
+  // we fall back to `customerId` when `responseData.id` is missing.
+  const handleSubmitSuccess = (
+    values: CustomerFormValues,
+    _formArgs: FormikHelpers<CustomerFormValues>,
+    _submitPayload: CustomerFormSubmitPayload,
+    responseData?: unknown,
+  ) => {
     if (autofillRef) {
+      const responseId =
+        (responseData as { id?: number } | undefined)?.id ?? customerId;
       addAutofillRef(autofillRef, {
-        displayName: values.display_name,
-        customerId: res.id,
+        displayName: values.displayName,
+        customerId: responseId,
       });
     }
     closeDrawer(DRAWERS.QUICK_CREATE_CUSTOMER);
@@ -54,7 +74,7 @@ function QuickCustomerFormDrawerInner({
     <CustomerFormProvider customerId={customerId}>
       <DrawerCustomerFormLoading>
         <CustomerFormFormik
-          initialValues={{ first_name: displayName }}
+          initialValues={{ firstName: displayName }}
           onSubmitSuccess={handleSubmitSuccess}
           onCancel={handleCancelForm}
         />
@@ -63,6 +83,6 @@ function QuickCustomerFormDrawerInner({
   );
 }
 
-export const QuickCustomerFormDrawer = R.compose(withDrawerActions)(
+export const QuickCustomerFormDrawer = compose(withDrawerActions)(
   QuickCustomerFormDrawerInner,
 );

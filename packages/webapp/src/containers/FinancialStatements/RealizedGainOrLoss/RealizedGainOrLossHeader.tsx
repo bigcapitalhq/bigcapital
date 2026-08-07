@@ -1,21 +1,18 @@
-import React from 'react';
-import moment from 'moment';
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
-import { Formik, Form } from 'formik';
-import type { FormikHelpers } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-
+import { Formik, Form } from 'formik';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
 import { RealizedGainOrLossGeneralPanel } from './RealizedGainOrLossGeneralPanel';
-
 import { withRealizedGainOrLoss } from './withRealizedGainOrLoss';
 import {
   withRealizedGainOrLossActions,
   WithRealizedGainOrLossActionsProps,
 } from './withRealizedGainOrLossActions';
-
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
 import { compose, transformToForm } from '@/utils';
 
 interface RealizedGainOrLossHeaderOwnProps {

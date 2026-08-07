@@ -1,17 +1,31 @@
-// @ts-nocheck
-import React, { useState, useRef, useCallback } from 'react';
 import { ProgressBar, Classes, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
+import React, { useState, useRef, useCallback } from 'react';
 import { AppToaster } from '@/components';
 import { saveFilesInAsync } from '@/utils';
 
-const useMedia = ({ saveCallback, deleteCallback }) => {
-  const [files, setFiles] = useState([]);
-  const [deletedFiles, setDeletedFiles] = useState([]);
-  const toastKey = useRef(0);
+interface MediaFile {
+  uploaded?: boolean;
+  [key: string]: unknown;
+}
+
+interface UseMediaArgs {
+  saveCallback: (
+    formData: unknown,
+    config: { onUploadProgress: (progress: unknown) => void },
+  ) => Promise<unknown>;
+  deleteCallback: (files: MediaFile[]) => Promise<unknown>;
+}
+
+const showToast = AppToaster.show as (message: unknown, key?: string) => string;
+
+const useMedia = ({ saveCallback, deleteCallback }: UseMediaArgs) => {
+  const [files, setFiles] = useState<MediaFile[]>([]);
+  const [deletedFiles, setDeletedFiles] = useState<MediaFile[]>([]);
+  const toastKey = useRef<string>('');
 
   const openProgressToast = useCallback(
-    (amount) => ({
+    (amount: number) => ({
       message: (
         <ProgressBar
           className={classNames('toast-progress', {
@@ -29,28 +43,35 @@ const useMedia = ({ saveCallback, deleteCallback }) => {
     const notUploadedFiles = files.filter((file) => file.uploaded === false);
 
     if (notUploadedFiles.length > 0) {
-      toastKey.current = AppToaster.show(openProgressToast(0));
+      toastKey.current = showToast(openProgressToast(0));
 
-      const saveAction = (formData, attachment, progressCallback) => {
+      const saveAction = (
+        formData: unknown,
+        attachment: MediaFile,
+        progressCallback: (progress: number) => void,
+      ) => {
         return saveCallback(formData, {
           onUploadProgress: (progress) => {
-            progressCallback(progress);
+            progressCallback(progress as number);
           },
         }).then((res) => {
           attachment.uploaded = true;
           return res;
         });
       };
-      return saveFilesInAsync(notUploadedFiles, saveAction).onProgress(
-        (progress) => {
-          if (progress > 0) {
-            AppToaster.show(
-              openProgressToast(progress * 100),
-              toastKey.current,
-            );
-          }
-        },
-      );
+      return (
+        saveFilesInAsync(
+          notUploadedFiles,
+          saveAction,
+          undefined,
+        ) as unknown as {
+          onProgress: (cb: (progress: number) => void) => unknown;
+        }
+      ).onProgress((progress) => {
+        if (progress > 0) {
+          showToast(openProgressToast(progress * 100), toastKey.current);
+        }
+      });
     }
     return Promise.resolve([]);
   }, [files, openProgressToast, saveCallback]);

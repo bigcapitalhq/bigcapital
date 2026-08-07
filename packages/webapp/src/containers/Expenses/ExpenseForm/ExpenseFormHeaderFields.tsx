@@ -1,17 +1,28 @@
-// @ts-nocheck
-import React from 'react';
 import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage } from 'formik';
 import { css } from '@emotion/css';
-import classNames from 'classnames';
 import { useTheme } from '@emotion/react';
-
+import type { Theme } from '@xstyled/emotion';
+import classNames from 'classnames';
+import { FastField, ErrorMessage } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { ExpensesExchangeRateInputField } from './components';
+import { SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from './constants';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
+import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
 import {
   CustomersSelect,
   FInputGroup,
   Stack,
   FormattedMessage as T,
+} from '@/components';
+import {
+  FFormGroup,
+  FSelect,
+  AccountsSelect,
+  FieldRequiredHint,
+  Hint,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -20,18 +31,6 @@ import {
   inputIntent,
   handleDateChange,
 } from '@/utils';
-import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
-import {
-  FFormGroup,
-  FSelect,
-  AccountsSelect,
-  FieldRequiredHint,
-  Hint,
-} from '@/components';
-import { ExpensesExchangeRateInputField } from './components';
-import { useExpenseFormContext } from './ExpenseFormPageProvider';
-import { SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from './constants';
-import intl from 'react-intl-universal';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -55,26 +54,26 @@ const getFieldsStyle = (theme: Theme) => css`
  */
 export function ExpenseFormHeader() {
   const { currencies, accounts, customers } = useExpenseFormContext();
-  const theme = useTheme();
+  const theme = useTheme() as unknown as Theme;
   const fieldsClassName = getFieldsStyle(theme);
 
   return (
     <Stack spacing={18} flex={1} className={fieldsClassName}>
-      <FastField name={'payment_date'}>
-        {({ form, field: { value }, meta: { error, touched } }) => (
+      <FastField name={'paymentDate'}>
+        {({ form, field: { value }, meta: { error, touched } }: any) => (
           <FormGroup
             label={intl.get('payment_date')}
             labelInfo={<Hint />}
             className={classNames('form-group--select-list', Classes.FILL)}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="payment_date" />}
+            intent={inputIntent({ error, touched }) as any}
+            helperText={<ErrorMessage name="paymentDate" />}
             inline={true}
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               value={tansformDateValue(value)}
-              onChange={handleDateChange((formattedDate) => {
-                form.setFieldValue('payment_date', formattedDate);
+              onChange={handleDateChange((formattedDate: string) => {
+                form.setFieldValue('paymentDate', formattedDate);
               })}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
             />
@@ -83,7 +82,8 @@ export function ExpenseFormHeader() {
       </FastField>
 
       <FFormGroup
-        name={'payment_account_id'}
+        name={'paymentAccountId'}
+        // @ts-expect-error FFormGroup does not declare `items` / `shouldUpdate` / `fastField`
         items={accounts}
         label={intl.get('payment_account')}
         labelInfo={<FieldRequiredHint />}
@@ -92,7 +92,7 @@ export function ExpenseFormHeader() {
         shouldUpdate={accountsFieldShouldUpdate}
       >
         <AccountsSelect
-          name={'payment_account_id'}
+          name={'paymentAccountId'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES}
@@ -104,18 +104,18 @@ export function ExpenseFormHeader() {
       </FFormGroup>
 
       <FFormGroup
-        name={'currency_code'}
+        name={'currencyCode'}
         label={intl.get('currency')}
         className={classNames(Classes.FILL)}
         inline={true}
         fastField={true}
       >
         <FSelect
-          name={'currency_code'}
+          name={'currencyCode'}
           items={currencies}
-          valueAccessor={'currency_code'}
-          textAccessor={'currency_code'}
-          labelAccessor={'currency_code'}
+          valueAccessor={'currencyCode'}
+          textAccessor={'currencyCode'}
+          labelAccessor={'currencyCode'}
           popoverProps={{ minimal: true }}
           fill={true}
           fastField={true}
@@ -124,45 +124,51 @@ export function ExpenseFormHeader() {
 
       {/* ----------- Exchange rate ----------- */}
       <ExpensesExchangeRateInputField
-        name={'exchange_rate'}
+        name={'exchangeRate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
 
       {/* ----------- Reference No. ----------- */}
       <FFormGroup
-        name={'reference_no'}
+        name={'referenceNo'}
         label={intl.get('reference_no')}
         inline={true}
         fastField
       >
-        <FInputGroup minimal={true} name={'reference_no'} fastField />
+        {/* @ts-expect-error FInputGroup does not declare `minimal` / `fastField` */}
+        <FInputGroup minimal={true} name={'referenceNo'} fastField />
       </FFormGroup>
 
       {/* ----------- Customer ----------- */}
-      <ExpenseFormCustomerSelect />
+      <ExpenseFormCustomerSelect customers={customers} />
     </Stack>
   );
 }
+
+type ExpenseFormCustomerSelectProps = {
+  customers: Record<string, any>[];
+};
 
 /**
  * Customer select field of expense form.
  * @returns {React.ReactNode}
  */
-function ExpenseFormCustomerSelect() {
-  const { customers } = useExpenseFormContext();
-
+function ExpenseFormCustomerSelect({
+  customers,
+}: ExpenseFormCustomerSelectProps) {
   return (
     <FormGroup
       label={intl.get('customer')}
       labelInfo={<Hint />}
       inline={true}
-      name={'customer_id'}
+      // @ts-expect-error FormGroup does not declare `name` / `fastField` / `shouldUpdateDeps` / `shouldUpdate`
+      name={'customerId'}
       fastField={true}
       shouldUpdateDeps={{ items: customers }}
       shouldUpdate={customersFieldShouldUpdate}
     >
       <CustomersSelect
-        name={'customer_id'}
+        name={'customerId'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
         allowCreate={true}

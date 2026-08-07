@@ -1,7 +1,7 @@
 // @ts-nocheck
+import { MenuItem, Button } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem, Button } from '@blueprintjs/core';
 import { FSelect } from '@/components';
 
 /**

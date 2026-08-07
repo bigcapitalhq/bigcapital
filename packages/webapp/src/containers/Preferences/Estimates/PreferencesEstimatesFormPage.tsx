@@ -1,24 +1,28 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, FormikHelpers } from 'formik';
+import * as R from 'ramda';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import * as R from 'ramda';
-
-import { AppToaster } from '@/components';
-import { PreferencesEstimatesFormSchema } from './PreferencesEstimatesForm.schema';
-import { PreferencesEstimatesForm } from './PreferencesEstimatesForm';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
 import { transferObjectOptionsToArray } from '../Accountant/utils';
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { PreferencesEstimatesForm } from './PreferencesEstimatesForm';
+import { PreferencesEstimatesFormSchema } from './PreferencesEstimatesForm.schema';
+import { usePreferencesEstimatesFormContext } from './PreferencesEstimatesFormBoot';
+import type { EstimatesPreferencesFormValues } from './types';
+import { AppToaster } from '@/components';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { useSaveSettings } from '@/hooks/query';
+import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 
-const defaultValues = {
+const defaultValues: EstimatesPreferencesFormValues = {
   termsConditions: '',
   customerNotes: '',
 };
+
+type PreferencesEstimatesFormPageRootProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
 
 /**
  * Preferences estimates form.
@@ -26,10 +30,8 @@ const defaultValues = {
 function PreferencesEstimatesFormPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
-
-  // #withSettings
-  estimatesSettings,
-}) {
+}: PreferencesEstimatesFormPageRootProps) {
+  const { estimatesSettings } = usePreferencesEstimatesFormContext();
   // Save Organization Settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
@@ -38,19 +40,22 @@ function PreferencesEstimatesFormPageRoot({
   }, [changePreferencesPageTitle]);
 
   // Initial values.
-  const initialValues = {
+  const initialValues: EstimatesPreferencesFormValues = {
     ...defaultValues,
     ...transformToForm(estimatesSettings, defaultValues),
   };
   // Handle the form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
+  const handleFormSubmit = (
+    values: EstimatesPreferencesFormValues,
+    { setSubmitting }: FormikHelpers<EstimatesPreferencesFormValues>,
+  ) => {
     const options = R.compose(
       transferObjectOptionsToArray,
       transfromToSnakeCase,
     )({ salesEstimates: { ...values } });
 
     // Handle request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('preferences.estimates.success_message'),
         intent: Intent.SUCCESS,
@@ -65,7 +70,7 @@ function PreferencesEstimatesFormPageRoot({
   };
 
   return (
-    <Formik
+    <Formik<EstimatesPreferencesFormValues>
       initialValues={initialValues}
       validationSchema={PreferencesEstimatesFormSchema}
       onSubmit={handleFormSubmit}
@@ -74,9 +79,6 @@ function PreferencesEstimatesFormPageRoot({
   );
 }
 
-export const PreferencesEstimatesFormPage = compose(
-  withDashboardActions,
-  withSettings(({ estimatesSettings }) => ({
-    estimatesSettings: estimatesSettings,
-  })),
-)(PreferencesEstimatesFormPageRoot);
+export const PreferencesEstimatesFormPage = compose(withDashboardActions)(
+  PreferencesEstimatesFormPageRoot,
+);

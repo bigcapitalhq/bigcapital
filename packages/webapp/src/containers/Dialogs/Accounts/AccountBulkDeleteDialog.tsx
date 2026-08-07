@@ -1,34 +1,50 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithAccountsTableActionsProps } from '@/containers/Accounts/withAccountsTableActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
+import { handleDeleteErrors } from '@/containers/Accounts/utils';
+import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTableActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteAccounts } from '@/hooks/query/accounts';
-import withDialogRedux from '@/components/DialogReduxConnect';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTableActions';
 import { compose } from '@/utils';
-import { handleDeleteErrors } from '@/containers/Accounts/utils';
+
+interface AccountBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface AccountBulkDeleteDialogProps
+  extends WithAccountsTableActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
 
 function AccountBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withAccountsTableActions
   setAccountsSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteAccounts, isLoading } =
+}: AccountBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: AccountBulkDeleteDialogPayload = payload ?? {};
+
+  const { mutateAsync: bulkDeleteAccounts, isPending: isLoading } =
     useBulkDeleteAccounts();
 
   const handleCancel = () => {
@@ -48,8 +64,10 @@ function AccountBulkDeleteDialogInner({
         setAccountsSelectedRows([]);
         closeDialog(dialogName);
       })
-      .catch((errors) => {
-        handleDeleteErrors(errors);
+      .catch((errors: unknown) => {
+        // Account dialog uses the shared `handleDeleteErrors` helper for
+        // richer error rendering (vs the generic toast used by other dialogs).
+        handleDeleteErrors(errors as never);
       });
   };
 

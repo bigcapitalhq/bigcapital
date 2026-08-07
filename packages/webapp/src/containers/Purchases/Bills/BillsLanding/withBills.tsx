@@ -1,11 +1,11 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
+import type { ApplicationState } from '@/store/reducers';
 import {
   getBillsTableStateFactory,
   billsTableStateChangedFactory,
   getBillsSelectedRowsFactory,
 } from '@/store/bills/bills.selectors';
-import type { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithBillsProps {
   billsTableState: ReturnType<ReturnType<typeof getBillsTableStateFactory>>;

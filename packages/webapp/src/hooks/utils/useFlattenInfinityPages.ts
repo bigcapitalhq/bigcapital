@@ -5,6 +5,7 @@ import { flattenInfinityPages } from '@/utils';
 export function useFlattenInfinityPages<TItem>(
   data: InfiniteData<{ data: TItem[] }> | undefined | null,
 ): TItem[];
+
 export function useFlattenInfinityPages<TPage, TItem>(
   data: InfiniteData<TPage> | undefined | null,
   selector: (page: TPage) => TItem[],

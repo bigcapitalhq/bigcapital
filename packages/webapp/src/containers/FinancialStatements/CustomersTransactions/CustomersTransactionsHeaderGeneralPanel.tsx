@@ -1,14 +1,13 @@
 import React from 'react';
+import intl from 'react-intl-universal';
+import { filterCustomersOptions } from '../constants';
 import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
 import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
-import { Row, Col, CustomersMultiSelect, FFormGroup } from '@/components';
-import { filterCustomersOptions } from '../constants';
-
 import {
   CustomersTransactionsGeneralPanelProvider,
   useCustomersTransactionsGeneralPanelContext,
 } from './CustomersTransactionsHeaderGeneralPanelProvider';
-import intl from 'react-intl-universal';
+import { Row, Col, CustomersMultiSelect, FFormGroup } from '@/components';
 
 /**
  * Customers transactions header - General panel.

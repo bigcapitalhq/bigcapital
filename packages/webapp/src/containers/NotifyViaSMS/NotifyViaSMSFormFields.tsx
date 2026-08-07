@@ -1,14 +1,13 @@
 // @ts-nocheck
-import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { FastField, ErrorMessage } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
 import { FFormGroup, FSelect, FieldRequiredHint } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { inputIntent } from '@/utils';
-import intl from 'react-intl-universal';
 
 export function NotifyViaSMSFormFields({ notificationTypes }) {
   return (

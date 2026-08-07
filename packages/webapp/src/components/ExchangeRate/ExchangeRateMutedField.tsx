@@ -1,7 +1,4 @@
 // @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import intl from 'react-intl-universal';
 import {
   Button,
   Popover,
@@ -10,7 +7,21 @@ import {
   Position,
   Classes,
 } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import { ExchangeRateInputGroup, Icon } from '@/components';
+
+interface ExchangeRateMutedFieldProps {
+  name?: string;
+  toCurrency?: React.ReactNode;
+  fromCurrency?: React.ReactNode;
+  date?: React.ReactNode;
+  exchangeRate?: React.ReactNode;
+  exchangeRateFieldProps?: Record<string, unknown>;
+  popoverProps?: Record<string, unknown>;
+  formGroupProps?: Record<string, unknown>;
+}
 
 export function ExchangeRateMutedField({
   name,
@@ -20,7 +31,8 @@ export function ExchangeRateMutedField({
   exchangeRate,
   exchangeRateFieldProps,
   popoverProps,
-}) {
+  ...formGroupProps
+}: ExchangeRateMutedFieldProps) {
   const content = (
     <ExchangeRateFormGroupContent>
       <ExchangeRateInputGroup
@@ -33,7 +45,7 @@ export function ExchangeRateMutedField({
   );
 
   return (
-    <ExchangeRateFormGroup label={`As on ${date},`}>
+    <ExchangeRateFormGroup label={`As on ${date},`} {...formGroupProps}>
       <Popover
         content={content}
         interactionKind={PopoverInteractionKind.CLICK}

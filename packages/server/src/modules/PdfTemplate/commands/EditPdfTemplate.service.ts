@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import { IEditPdfTemplateDTO } from '../types';
+import { EditPdfTemplateDto } from '../dtos/PdfTemplate.dto';
+import { sanitizePdfTemplateAttributes } from '../utils/sanitizePdfTemplateAttributes';
 import { PdfTemplateModel } from '../models/PdfTemplate';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -21,16 +22,20 @@ export class EditPdfTemplateService {
   /**
    * Edits an existing pdf template.
    * @param {number} templateId - Template id.
-   * @param {IEditPdfTemplateDTO} editTemplateDTO
+   * @param {EditPdfTemplateDto} editTemplateDTO
    */
   public async editPdfTemplate(
     templateId: number,
-    editTemplateDTO: IEditPdfTemplateDTO,
+    editTemplateDTO: EditPdfTemplateDto,
   ) {
     const oldPdfTemplate = await this.pdfTemplateModel()
       .query()
       .findById(templateId)
       .throwIfNotFound();
+
+    const sanitizedAttributes = sanitizePdfTemplateAttributes(
+      editTemplateDTO.attributes,
+    );
 
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Triggers `onPdfTemplateEditing` event.
@@ -43,7 +48,7 @@ export class EditPdfTemplateService {
         .where('id', templateId)
         .update({
           templateName: editTemplateDTO.templateName,
-          attributes: editTemplateDTO.attributes,
+          attributes: sanitizedAttributes,
         });
 
       // Triggers `onPdfTemplatedEdited` event.

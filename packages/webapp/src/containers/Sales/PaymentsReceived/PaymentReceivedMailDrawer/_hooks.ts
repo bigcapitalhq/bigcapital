@@ -1,13 +1,13 @@
-import { useMemo } from 'react';
-import { useFormikContext } from 'formik';
 import { SelectOptionProps } from '@blueprintjs-formik/select';
-import { usePaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
-import { PaymentReceivedSendMailFormValues } from './_types';
+import { useFormikContext } from 'formik';
+import { useMemo } from 'react';
 import {
   formatMailMessage,
   transformEmailArgs,
   transformFormatArgsToOptions,
 } from '../../Estimates/SendMailViewDrawer/hooks';
+import { PaymentReceivedSendMailFormValues } from './_types';
+import { usePaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
 
 /**
  * Retrieves the mail format arguments of payment received mail.

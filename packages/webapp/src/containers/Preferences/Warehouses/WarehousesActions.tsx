@@ -1,19 +1,16 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-
-import { Features } from '@/constants';
+import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FeatureCan, FormattedMessage as T, Icon } from '@/components';
+import { Features } from '@/constants';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-/**
- * Warehouse actions.
- */
+interface WarehousesActionsProps extends WithDialogActionsProps {}
+
 function WarehousesActionsInner({
-  //#ownProps
   openDialog,
-}) {
+}: WarehousesActionsProps): React.ReactElement {
   const handleClickNewWarehouse = () => {
     openDialog('warehouse-form');
   };

@@ -1,16 +1,13 @@
-import React from 'react';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
-import moment from 'moment';
-import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
-import type { FormikHelpers } from 'formik';
-
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
-import { CashFlowStatementHeaderGeneralPanel as CashFlowStatementGeneralPanel } from './CashFlowStatementGeneralPanel';
 import { CashFlowStatementDimensionsPanel } from './CashFlowStatementDimensionsPanel';
-
+import { CashFlowStatementHeaderGeneralPanel as CashFlowStatementGeneralPanel } from './CashFlowStatementGeneralPanel';
+import { getDefaultCashFlowSheetQuery } from './utils';
 import {
   withCashFlowStatement,
   WithCashFlowStatementProps,
@@ -19,11 +16,11 @@ import {
   withCashFlowStatementActions,
   WithCashFlowStatementActionsProps,
 } from './withCashFlowStatementActions';
-
-import { getDefaultCashFlowSheetQuery } from './utils';
-import { compose, transformToForm } from '@/utils';
-import { useFeatureCan } from '@/hooks/state';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
+import { compose, transformToForm } from '@/utils';
 
 type CashFlowSheetFormValues = ReturnType<typeof getDefaultCashFlowSheetQuery>;
 

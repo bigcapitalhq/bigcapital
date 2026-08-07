@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { useEffect, useState, useCallback } from 'react';
-import { useAsync } from 'react-use';
-import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAsync } from 'react-use';
 import {
   If,
   AppToaster,
@@ -11,14 +11,11 @@ import {
   FormattedMessage as T,
   FormattedHTMLMessage,
 } from '@/components';
-
-import { ViewForm } from '@/containers/Views/ViewForm';
-
-import { compose } from '@/utils';
-
-import { withResourcesActions } from '@/containers/Resources/withResourcesActions';
-import { withViewsActions } from '@/containers/Views/withViewsActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withResourcesActions } from '@/containers/Resources/withResourcesActions';
+import { ViewForm } from '@/containers/Views/ViewForm';
+import { withViewsActions } from '@/containers/Views/withViewsActions';
+import { compose } from '@/utils';
 
 // @flow
 function ViewFormPageInner({

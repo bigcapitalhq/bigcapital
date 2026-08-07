@@ -1,8 +1,8 @@
-import { ComponentType, useCallback, useEffect } from 'react';
 import { useFormikContext } from 'formik';
-import { useUpdateEntriesOnExchangeRateChange } from './useUpdateEntriesOnExchangeRateChange';
+import { ComponentType, useCallback, useEffect } from 'react';
 import { useAutoExRateContext } from './AutoExchangeProvider';
-import { useCurrentOrganization } from '@/hooks/state';
+import { useUpdateEntriesOnExchangeRateChange } from './useUpdateEntriesOnExchangeRateChange';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 export interface WithExchangeRateItemEntriesPriceRecalcProps {
   onRecalcConfirm: (args: {
@@ -76,7 +76,7 @@ export const useCustomerUpdateExRate = () => {
   const { setAutoExRateCurrency } = useAutoExRateContext();
 
   const updateEntriesOnExChange = useUpdateEntriesOnExchangeRateChange();
-  const currentCompany = useCurrentOrganization() as { base_currency: string };
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const DEFAULT_EX_RATE = 1;
 
@@ -86,7 +86,7 @@ export const useCustomerUpdateExRate = () => {
       setAutoExRateCurrency(null);
 
       // If the customer's currency code equals the same base currency.
-      if (customer.currency_code === currentCompany.base_currency) {
+      if (customer.currency_code === baseCurrency) {
         setFieldValue('exchange_rate', DEFAULT_EX_RATE + '');
         setFieldValue(
           'entries',
@@ -101,7 +101,7 @@ export const useCustomerUpdateExRate = () => {
       }
     },
     [
-      currentCompany.base_currency,
+      baseCurrency,
       setAutoExRateCurrency,
       setFieldValue,
       updateEntriesOnExChange,

@@ -1,18 +1,18 @@
 // @ts-nocheck
-import { lazy, Suspense } from 'react';
-import { Router, Switch, Route } from 'react-router';
-import { createBrowserHistory } from 'history';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { createBrowserHistory } from 'history';
+import { lazy, Suspense } from 'react';
+import { Router, Switch, Route } from 'react-router';
 
 import '@/style/App.scss';
 
+import { SplashScreen, DashboardThemeProvider } from '../components';
+import { queryConfig } from '../hooks/query/base';
 import AppIntlLoader from './AppIntlLoader';
+import { EnsureUserEmailNotVerified } from './Guards/EnsureUserEmailNotVerified';
 import { EnsureAuthenticated } from '@/components/Guards/EnsureAuthenticated';
 import { GlobalErrors } from '@/containers/GlobalErrors/GlobalErrors';
-import { SplashScreen, DashboardThemeProvider } from '../components';
-import { EnsureUserEmailNotVerified } from './Guards/EnsureUserEmailNotVerified';
-import { queryConfig } from '../hooks/query/base';
 
 const DashboardPrivatePages = lazy(
   () => import('@/components/Dashboard/PrivatePages'),

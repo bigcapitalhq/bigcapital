@@ -1,9 +1,9 @@
 // @ts-nocheck
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { useQueryClient } from '@tanstack/react-query';
-import { setCookie } from '@/utils';
 import { setOrganizationId } from '@/store/authentication/authentication.actions';
+import { setCookie } from '@/utils';
 
 /**
  * Switches the active organization by updating the cookie,

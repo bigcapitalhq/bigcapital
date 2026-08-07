@@ -1,17 +1,21 @@
-// @ts-nocheck
 import React from 'react';
-import { LockingTransactionsFormProvider } from './LockingTransactionsFormProvider';
 import { LockingTransactionsForm } from './LockingTransactionsForm';
+import { LockingTransactionsFormProvider } from './LockingTransactionsFormProvider';
+
+interface LockingTransactionsDialogContentProps {
+  dialogName: string;
+  moduleName: string;
+  isEnabled: boolean;
+}
 
 /**
  * Locking transactions dialog content.
  */
 export function LockingTransactionsDialogContent({
-  // #ownProps
   dialogName,
   moduleName,
   isEnabled,
-}) {
+}: LockingTransactionsDialogContentProps): React.ReactElement {
   return (
     <LockingTransactionsFormProvider
       isEnabled={isEnabled}

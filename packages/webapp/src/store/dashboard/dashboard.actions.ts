@@ -62,7 +62,7 @@ export function splashStopLoading() {
 export const setFeatureDashboardMeta = ({
   features,
 }: {
-  features: Array<{ name: string; is_accessible: boolean }>;
+  features: Array<{ name: string; isAccessible: boolean }>;
 }) => ({ type: SET_FEATURE_DASHBOARD_META, payload: { features } });
 
 export function openSidebarSubmenu({ submenuId }: { submenuId: unknown }) {

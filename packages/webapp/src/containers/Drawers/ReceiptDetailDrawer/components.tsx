@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Button,
   Popover,
@@ -10,17 +8,29 @@ import {
   Intent,
   Tag,
 } from '@blueprintjs/core';
-
+import React from 'react';
+import type { ReceiptDetail } from './ReceiptDetailDrawerProvider';
 import { Icon, Choose, T } from '@/components';
+
+interface ReceiptDetailsStatusProps {
+  receipt: ReceiptDetail;
+}
+
+interface ReceiptMoreMenuItemsPayload {
+  onNotifyViaSMS: () => void;
+}
+
+interface ReceiptMoreMenuItemsProps {
+  payload: ReceiptMoreMenuItemsPayload;
+}
 
 /**
  * Receipt details status.
- * @returns {React.JSX}
  */
-export function ReceiptDetailsStatus({ receipt }) {
+export function ReceiptDetailsStatus({ receipt }: ReceiptDetailsStatusProps) {
   return (
     <Choose>
-      <Choose.When condition={receipt.is_closed}>
+      <Choose.When condition={receipt.closed}>
         <Tag round={true} intent={Intent.SUCCESS}>
           <T id={'closed'} />
         </Tag>
@@ -35,7 +45,9 @@ export function ReceiptDetailsStatus({ receipt }) {
   );
 }
 
-export function ReceiptMoreMenuItems({ payload: { onNotifyViaSMS } }) {
+export function ReceiptMoreMenuItems({ payload }: ReceiptMoreMenuItemsProps) {
+  const { onNotifyViaSMS } = payload;
+
   return (
     <Popover
       minimal={true}

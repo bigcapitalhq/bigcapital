@@ -1,15 +1,19 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
-
+import { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { compose } from '@/utils';
 
-const QuickWriteVendorDrawerContent = React.lazy(() =>
+const QuickWriteVendorDrawerContent = lazy(() =>
   import('./QuickWriteVendorDrawerContent').then((m) => ({
     default: m.QuickWriteVendorDrawerContent,
   })),
 );
+
+interface QuickWriteVendorDrawerProps {
+  name: string;
+  isOpen: boolean;
+  payload: { displayName?: string; autofillRef?: number };
+}
 
 /**
  * Quick Write vendor.
@@ -20,7 +24,7 @@ function QuickWriteVendorDrawer({
   // #withDrawer
   isOpen,
   payload: { displayName, autofillRef },
-}) {
+}: QuickWriteVendorDrawerProps) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -38,4 +42,4 @@ function QuickWriteVendorDrawer({
   );
 }
 
-export const index = R.compose(withDrawers())(QuickWriteVendorDrawer);
+export const index = compose(withDrawers())(QuickWriteVendorDrawer);

@@ -1,7 +1,6 @@
-// @ts-nocheck
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import * as qs from 'qs';
-import { useHistory } from 'react-router';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 export type QueryStringResult = [
   Record<string, any>,
@@ -20,7 +19,7 @@ type ParseOptions = {
   [key: string]: any;
 };
 
-type StringifyOptions = qs.IStringifyOptions;
+type StringifyOptions = Record<string, unknown>;
 
 /**
  * Checks if a string represents a number (including negatives, decimals, scientific notation)
@@ -130,7 +129,7 @@ export function useQueryString(
   const setQuery: typeof setState = (values): void => {
     const nextState = typeof values === 'function' ? values(state) : values;
     setState(
-      (state): Record<string, any> => ({
+      (state: Record<string, any>): Record<string, any> => ({
         ...state,
         ...nextState,
       }),
@@ -148,7 +147,7 @@ export function useQueryString(
  */
 export const useAppQueryString = (
   navigate?: NavigateCallback,
-  parseOptions?: ParseOptions = {},
+  parseOptions: ParseOptions = {},
 ): QueryStringResult => {
   const history = useHistory();
 

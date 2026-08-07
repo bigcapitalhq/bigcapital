@@ -1,32 +1,28 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import { ErrorMessage, useFormikContext } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  RadioGroup,
-  Radio,
-  InputGroup,
-  Spinner,
-} from '@blueprintjs/core';
-import classNames from 'classnames';
+import { Classes, Radio, Spinner } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
+import { useFormikContext } from 'formik';
+import intl from 'react-intl-universal';
+import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
+import { AllocateLandedCostFormBody } from './AllocateLandedCostFormBody';
+import { allocateCostToEntries, resetAllocatedCostEntries } from './utils';
+import type {
+  AllocateLandedCostFormEntry,
+  AllocateLandedCostFormValues,
+  LandedCostTransaction,
+  LandedCostTransactionEntry,
+} from './types';
 import {
   If,
   FFormGroup,
   FSelect,
   FRadioGroup,
   FInputGroup,
+  FieldRequiredHint,
 } from '@/components';
-import { handleStringChange } from '@/utils';
-import { FieldRequiredHint } from '@/components';
-import { CLASSES } from '@/constants/classes';
 import { AllocateLandedCostType } from '@/constants/allocateLandedCostType';
+import { handleStringChange } from '@/utils';
 
-import { AllocateLandedCostFormBody } from './AllocateLandedCostFormBody';
-import { allocateCostToEntries, resetAllocatedCostEntries } from './utils';
-import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
+type TransactionTypeOption = { name: string; value: string };
 
 /**
  * Allocate landed cost form fields.
@@ -39,54 +35,59 @@ export function AllocateLandedCostFormFields() {
     isLandedCostTransactionsLoading,
   } = useAllocateLandedConstDialogContext();
 
-  const { values, setFieldValue, form } = useFormikContext();
+  // FIXME: original code destructured `form` from useFormikContext and never used it — dropped.
+  const { values, setFieldValue } =
+    useFormikContext<AllocateLandedCostFormValues>();
 
   // Handle transaction type select change.
-  const handleTransactionTypeChange = (type) => {
+  const handleTransactionTypeChange = (type: TransactionTypeOption) => {
     const { items } = values;
 
-    setFieldValue('transaction_type', type.value);
-    setFieldValue('transaction_id', '');
-    setFieldValue('transaction_entry_id', '');
+    setFieldValue('transactionType', type.value);
+    setFieldValue('transactionId', '');
+    setFieldValue('transactionEntryId', '');
     setFieldValue('amount', '');
     setFieldValue('items', resetAllocatedCostEntries(items));
   };
 
   // Handle transaction select change.
-  const handleTransactionChange = (transaction) => {
+  const handleTransactionChange = (transaction: LandedCostTransaction) => {
     const { items } = values;
-    setFieldValue('transaction_id', transaction.id);
-    setFieldValue('transaction_entry_id', '');
+    setFieldValue('transactionId', transaction.id);
+    setFieldValue('transactionEntryId', '');
     setFieldValue('amount', '');
     setFieldValue('items', resetAllocatedCostEntries(items));
   };
 
   // Handle transaction entry select change.
-  const handleTransactionEntryChange = (entry) => {
-    const { id, unallocated_cost_amount: unallocatedAmount } = entry;
-    const { items, allocation_method } = values;
+  const handleTransactionEntryChange = (entry: LandedCostTransactionEntry) => {
+    const { id, unallocatedCostAmount: unallocatedAmount } = entry;
+    const { items, allocationMethod } = values;
 
-    setFieldValue('amount', unallocatedAmount);
-    setFieldValue('transaction_entry_id', id);
+    setFieldValue('amount', unallocatedAmount ?? 0);
+    setFieldValue('transactionEntryId', id);
     setFieldValue(
       'items',
-      allocateCostToEntries(unallocatedAmount, allocation_method, items),
+      allocateCostToEntries(
+        unallocatedAmount ?? 0,
+        allocationMethod,
+        items as unknown as AllocateLandedCostFormEntry[],
+      ),
     );
   };
 
   return (
     <div className={Classes.DIALOG_BODY}>
-      {/*------------Transaction type -----------*/}
+      {/*------------Transaction type ----------- */}
       <FFormGroup
-        name={'transaction_type'}
+        name={'transactionType'}
         label={intl.get('transaction_type')}
         labelInfo={<FieldRequiredHint />}
         inline
-        fill
         fastField
       >
         <FSelect
-          name={'transaction_type'}
+          name={'transactionType'}
           items={AllocateLandedCostType}
           onItemChange={handleTransactionTypeChange}
           filterable={false}
@@ -97,23 +98,22 @@ export function AllocateLandedCostFormFields() {
         />
       </FFormGroup>
 
-      {/*------------ Transaction  -----------*/}
+      {/*------------ Transaction  ----------- */}
       <FFormGroup
-        name={'transaction_id'}
+        name={'transactionId'}
         label={intl.get('transaction_id')}
         labelInfo={<FieldRequiredHint />}
         inline
-        fill
       >
         <x.div position="relative" w="100%">
           <FSelect
-            name={'transaction_id'}
+            name={'transactionId'}
             items={landedCostTransactions || []}
             onItemChange={handleTransactionChange}
             filterable={false}
             valueAccessor={'id'}
             textAccessor={'name'}
-            labelAccessor={'formatted_unallocated_cost_amount'}
+            labelAccessor={'formattedUnallocatedCostAmount'}
             placeholder={intl.get(
               'landed_cost.dialog.label_select_transaction',
             )}
@@ -134,23 +134,22 @@ export function AllocateLandedCostFormFields() {
         </x.div>
       </FFormGroup>
 
-      {/*------------ Transaction line  -----------*/}
-      <If condition={costTransactionEntries?.length > 0}>
+      {/*------------ Transaction line  ----------- */}
+      <If condition={(costTransactionEntries?.length ?? 0) > 0}>
         <FFormGroup
-          name={'transaction_entry_id'}
+          name={'transactionEntryId'}
           label={intl.get('transaction_line')}
           inline
-          fill
           fastField
         >
           <FSelect
-            name={'transaction_entry_id'}
+            name={'transactionEntryId'}
             items={costTransactionEntries}
             onItemChange={handleTransactionEntryChange}
             filterable={false}
             valueAccessor={'id'}
             textAccessor={'name'}
-            labelAccessor={'formatted_unallocated_cost_amount'}
+            labelAccessor={'formattedUnallocatedCostAmount'}
             placeholder={intl.get(
               'landed_cost.dialog.label_select_transaction_entry',
             )}
@@ -160,7 +159,7 @@ export function AllocateLandedCostFormFields() {
         </FFormGroup>
       </If>
 
-      {/*------------ Amount -----------*/}
+      {/*------------ Amount ----------- */}
       <FFormGroup
         name={'amount'}
         label={intl.get('amount')}
@@ -171,33 +170,40 @@ export function AllocateLandedCostFormFields() {
           name={'amount'}
           onBlur={(e) => {
             const amount = e.target.value;
-            const { allocation_method, items } = values;
+            const { allocationMethod, items } = values;
 
             setFieldValue(
               'items',
-              allocateCostToEntries(amount, allocation_method, items),
+              allocateCostToEntries(
+                amount,
+                allocationMethod,
+                items as unknown as AllocateLandedCostFormEntry[],
+              ),
             );
           }}
         />
       </FFormGroup>
 
-      {/*------------ Allocation method -----------*/}
+      {/*------------ Allocation method ----------- */}
       <FFormGroup
-        name={'allocation_method'}
+        name={'allocationMethod'}
         label={intl.get('allocation_method')}
-        medium
         inline
         fastField
       >
         <FRadioGroup
-          name={'allocation_method'}
-          onChange={handleStringChange((_value) => {
+          name={'allocationMethod'}
+          onChange={handleStringChange((_value: string) => {
             const { amount, items } = values;
 
-            setFieldValue('allocation_method', _value);
+            setFieldValue('allocationMethod', _value);
             setFieldValue(
               'items',
-              allocateCostToEntries(amount, _value, items),
+              allocateCostToEntries(
+                amount,
+                _value,
+                items as unknown as AllocateLandedCostFormEntry[],
+              ),
             );
           })}
           inline={true}

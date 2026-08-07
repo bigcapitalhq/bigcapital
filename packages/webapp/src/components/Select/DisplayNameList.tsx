@@ -1,7 +1,7 @@
+import { useFormikContext } from 'formik';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { FSelect } from '../Forms';
-import { useFormikContext } from 'formik';
 
 export type DisplayNameListItem = { label: string };
 type DisplayNameFormat = {

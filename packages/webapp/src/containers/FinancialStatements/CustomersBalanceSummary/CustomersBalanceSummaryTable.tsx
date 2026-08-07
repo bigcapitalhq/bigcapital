@@ -1,11 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { TableStyle } from '@/constants';
-import { ReportDataTable, FinancialSheet } from '@/components';
-import { tableRowTypesToClassnames } from '@/utils';
-import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { useCustomersSummaryColumns } from './components';
+import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
+import { tableRowTypesToClassnames } from '@/utils';
 
 interface CustomersBalanceSummaryTableProps {
   companyName: string;

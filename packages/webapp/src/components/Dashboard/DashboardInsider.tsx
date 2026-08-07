@@ -1,5 +1,5 @@
-import React, { ReactNode, CSSProperties } from 'react';
 import classnames from 'classnames';
+import React, { ReactNode, CSSProperties } from 'react';
 import { LoadingIndicator } from '../Indicator';
 
 interface DashboardInsiderProps {

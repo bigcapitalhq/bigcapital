@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getCreditNotesTableStateFactory,
   isCreditNotesTableStateChangedFactory,
 } from '@/store/credit-note/credit-note.selector';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithCreditNotesProps {
   creditNoteTableState: ReturnType<

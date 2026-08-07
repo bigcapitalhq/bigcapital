@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import type { TableQuery } from '@/store/store.types';
 import {
   setManualJournalsTableState,
   setManualJournalsSelectedRows,
 } from '@/store/manual-journals/manual-journals.actions';
-import type { TableQuery } from '@/store/store.types';
 
 export interface WithManualJournalsActionsProps {
   setManualJournalsTableState: (queries: Partial<TableQuery>) => void;

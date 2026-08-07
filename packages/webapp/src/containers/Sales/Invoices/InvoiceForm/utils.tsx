@@ -1,11 +1,30 @@
-// @ts-nocheck
-import React from 'react';
+import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import intl from 'react-intl-universal';
+import { omit, first, sumBy } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
-import { Intent } from '@blueprintjs/core';
-import { omit, first, sumBy } from 'lodash';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
+import type { SaleInvoice, CreateSaleInvoiceBody } from '@bigcapital/sdk-ts';
+import { AppToaster } from '@/components';
+import { ERROR } from '@/constants/errors';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+} from '@/containers/Entries/utils';
+import {
+  aggregateItemEntriesTaxRates,
+  assignEntriesTaxAmount,
+  getEntriesTotal,
+} from '@/containers/Entries/utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { TaxType } from '@/interfaces/TaxRates';
 import {
   compose,
   transformToForm,
@@ -14,87 +33,123 @@ import {
   formattedAmount,
   toSafeNumber,
 } from '@/utils';
-import { ERROR } from '@/constants/errors';
-import { AppToaster } from '@/components';
-import { useCurrentOrganization } from '@/hooks/state';
-import {
-  aggregateItemEntriesTaxRates,
-  assignEntriesTaxAmount,
-  getEntriesTotal,
-} from '@/containers/Entries/utils';
-import { useInvoiceFormContext } from './InvoiceFormProvider';
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
-import { TaxType } from '@/interfaces/TaxRates';
-import {
-  transformAttachmentsToForm,
-  transformAttachmentsToRequest,
-} from '@/containers/Attachments/utils';
-import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 export const MIN_LINES_NUMBER = 1;
 
+export type InvoiceEntry = {
+  index: number;
+  itemId: string | number;
+  rate: string | number;
+  discount: string | number;
+  quantity: string | number;
+  description: string;
+  amount: string | number;
+  taxRateId: string | number;
+  taxRate: string | number;
+  taxAmount: string | number;
+};
+
+export type PaymentMethodFormValue = { enable: boolean };
+
+export type InvoiceFormValues = {
+  customerId: string | number;
+  invoiceDate: string;
+  dueDate: string;
+  invoiceNo: string;
+  invoiceNoManually: string;
+  referenceNo: string;
+  delivered: boolean | '';
+  inclusiveExclusiveTax: TaxType;
+  fromEstimateId?: string;
+  invoiceMessage: string;
+  termsConditions: string;
+  exchangeRate: string;
+  currencyCode: string;
+  branchId: string | number;
+  warehouseId: string | number;
+  projectId: string | number;
+  pdfTemplateId: string | number;
+  entries: InvoiceEntry[];
+  attachments: unknown[];
+  paymentMethods: Record<string, PaymentMethodFormValue>;
+  discount: string;
+  discountType: 'amount' | 'percentage';
+  adjustment: string;
+};
+
+export type AggregatedTaxRate = {
+  taxRateId: string;
+  taxRate: number | undefined;
+  label: string;
+  taxAmount: number;
+  taxAmountFormatted: string;
+};
+
 // Default invoice entry object.
-export const defaultInvoiceEntry = {
+export const defaultInvoiceEntry: InvoiceEntry = {
   index: 0,
-  item_id: '',
+  itemId: '',
   rate: '',
   discount: '',
   quantity: '',
   description: '',
   amount: '',
-  tax_rate_id: '',
-  tax_rate: '',
-  tax_amount: '',
+  taxRateId: '',
+  taxRate: '',
+  taxAmount: '',
 };
 
 // Default invoice object.
-export const defaultInvoice = {
-  customer_id: '',
-  invoice_date: moment(new Date()).format('YYYY-MM-DD'),
-  due_date: moment().format('YYYY-MM-DD'),
+export const defaultInvoice: InvoiceFormValues = {
+  customerId: '',
+  invoiceDate: moment(new Date()).format('YYYY-MM-DD'),
+  dueDate: moment().format('YYYY-MM-DD'),
   delivered: '',
-  invoice_no: '',
-  inclusive_exclusive_tax: TaxType.Inclusive,
+  invoiceNo: '',
+  inclusiveExclusiveTax: TaxType.Inclusive,
   // Holds the invoice number that entered manually only.
-  invoice_no_manually: '',
-  reference_no: '',
-  invoice_message: '',
-  terms_conditions: '',
-  exchange_rate: '1',
-  currency_code: '',
-  branch_id: '',
-  warehouse_id: '',
-  project_id: '',
-  pdf_template_id: '',
+  invoiceNoManually: '',
+  referenceNo: '',
+  invoiceMessage: '',
+  termsConditions: '',
+  exchangeRate: '1',
+  currencyCode: '',
+  branchId: '',
+  warehouseId: '',
+  projectId: '',
+  pdfTemplateId: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
   attachments: [],
-  payment_methods: {},
+  paymentMethods: {},
   discount: '',
-  discount_type: 'amount',
+  discountType: 'amount',
   adjustment: '',
 };
 
 // Invoice entry request schema.
 export const defaultReqInvoiceEntry = {
   index: 0,
-  item_id: '',
+  itemId: '',
   rate: '',
   discount: '',
   quantity: '',
   description: '',
-  tax_rate_id: '',
+  taxRateId: '',
 };
 
 /**
  * Transform invoice to initial values in edit mode.
+ *
+ * Accepts a partial invoice shape: the provider seeds a new invoice from a
+ * picked estimate (`customerId`, `currencyCode`, `entries`) which lacks most
+ * SaleInvoice fields. The transform fills gaps from `defaultInvoice`.
  */
-export function transformToEditForm(invoice) {
+export function transformToEditForm(
+  invoice: Partial<SaleInvoice> & { entries: SaleInvoice['entries'] },
+): InvoiceFormValues {
   const initialEntries = [
-    ...invoice.entries.map((invoice) => ({
-      ...transformToForm(invoice, defaultInvoiceEntry),
+    ...invoice.entries.map((entry) => ({
+      ...transformToForm(entry, defaultInvoiceEntry),
     })),
     ...repeatValue(
       defaultInvoiceEntry,
@@ -107,23 +162,27 @@ export function transformToEditForm(invoice) {
   )(initialEntries);
 
   return {
-    ...transformToForm(invoice, defaultInvoice),
-    inclusive_exclusive_tax: invoice.is_inclusive_tax
+    ...defaultInvoice,
+    ...(transformToForm(invoice, defaultInvoice) as Partial<InvoiceFormValues>),
+    inclusiveExclusiveTax: invoice.isInclusiveTax
       ? TaxType.Inclusive
       : TaxType.Exclusive,
     entries,
     attachments: transformAttachmentsToForm(invoice),
-    payment_methods: transformPaymentMethodsToForm(invoice?.payment_methods),
+    paymentMethods: transformPaymentMethodsToForm(invoice?.paymentMethods),
   };
 }
 
 /**
  * Transformes the response errors types.
  */
-export const transformErrors = (errors, { setErrors }) => {
+export const transformErrors = (
+  errors: Array<{ type: string }>,
+  { setErrors }: { setErrors: (errors: Record<string, unknown>) => void },
+) => {
   if (errors.some((e) => e.type === ERROR.SALE_INVOICE_NUMBER_IS_EXISTS)) {
     setErrors({
-      invoice_no: intl.get('sale_invoice_number_is_exists'),
+      invoiceNo: intl.get('sale_invoice_number_is_exists'),
     });
   }
   if (
@@ -151,17 +210,27 @@ export const transformErrors = (errors, { setErrors }) => {
     errors.some((error) => error.type === ERROR.SALE_INVOICE_NO_IS_REQUIRED)
   ) {
     setErrors({
-      invoice_no: intl.get('invoice.field.error.invoice_no_required'),
+      invoiceNo: intl.get('invoice.field.error.invoice_no_required'),
     });
   }
+};
+
+type FastFieldShouldUpdateProps = {
+  shouldUpdateDeps?: { items?: unknown[] };
+  items?: unknown;
+  taxRates?: unknown;
+  [key: string]: unknown;
 };
 
 /**
  * Detarmines customer name field when should update.
  */
-export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
+export const customerNameFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
-    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
+    newProps.shouldUpdateDeps?.items !== oldProps.shouldUpdateDeps?.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -169,7 +238,10 @@ export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Detarmines invoice entries field when should update.
  */
-export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+export const entriesFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.items !== oldProps.items ||
     newProps.taxRates !== oldProps.taxRates ||
@@ -197,73 +269,86 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
 /**
  * Transformes bill entries to submit request.
  */
-const transformEntriesToRequest = (entries) => {
-  return R.compose(
-    R.map(R.compose(R.curry(transformToForm)(R.__, defaultReqInvoiceEntry))),
-    filterNonZeroEntries,
-  )(entries);
+const transformEntriesToRequest = (entries: InvoiceEntry[]) => {
+  return filterNonZeroEntries(entries).map((entry) =>
+    transformToForm(entry, defaultReqInvoiceEntry),
+  );
 };
 
 /**
  * Filters the givne non-zero entries.
  */
-const filterNonZeroEntries = (entries) => {
-  return entries.filter((item) => item.item_id && item.quantity);
+const filterNonZeroEntries = (entries: InvoiceEntry[]) => {
+  return entries.filter((item) => item.itemId && item.quantity);
 };
 
 /**
  * Transformes the form values to request body values.
+ *
+ * NOTE: `as unknown as CreateSaleInvoiceBody` is required because the SDK request
+ * type reuses the response `ItemEntryDto`, which mandates server-computed fields
+ * (taxCode, warehouseId, costAccountId, projectRefId, ...) that the client never
+ * sends — the backend populates them. Form field values are also string-typed
+ * (from inputs) while the DTO types them as numbers. Coercing every field would
+ * change the runtime payload, so we assemble the body as-is and assert the type.
  */
-export function transformValueToRequest(values) {
+export function transformValueToRequest(
+  values: InvoiceFormValues,
+): CreateSaleInvoiceBody {
   return {
     ...omit(values, [
-      'invoice_no',
-      'invoice_no_manually',
-      'inclusive_exclusive_tax',
+      'invoiceNo',
+      'invoiceNoManually',
+      'inclusiveExclusiveTax',
     ]),
-    // The `invoice_no_manually` will be presented just if the auto-increment
+    // The `invoiceNoManually` will be presented just if the auto-increment
     // is disable, always both attributes hold the same value in manual mode.
-    ...(values.invoice_no_manually && {
-      invoice_no: values.invoice_no,
+    ...(values.invoiceNoManually && {
+      invoiceNo: values.invoiceNo,
     }),
-    is_inclusive_tax: values.inclusive_exclusive_tax === TaxType.Inclusive,
+    isInclusiveTax: values.inclusiveExclusiveTax === TaxType.Inclusive,
     entries: transformEntriesToRequest(values.entries),
     delivered: false,
     attachments: transformAttachmentsToRequest(values),
-    payment_methods: transformPaymentMethodsToRequest(values?.payment_methods),
-  };
+    paymentMethods: transformPaymentMethodsToRequest(values?.paymentMethods),
+  } as unknown as CreateSaleInvoiceBody;
 }
 
 /**
  * Transformes the form payment methods to request.
  * @param {Record<string, { enable: boolean }>} paymentMethods
- * @returns {Array<{ payment_integration_id: string; enable: boolean }>}
+ * @returns {Array<{ paymentIntegrationId: number; enable: boolean }>}
  */
 const transformPaymentMethodsToRequest = (
   paymentMethods: Record<string, { enable: boolean }>,
-): Array<{ payment_integration_id: string; enable: boolean }> => {
+): Array<{ paymentIntegrationId: number; enable: boolean }> => {
   return Object.entries(paymentMethods).map(([paymentMethodId, method]) => ({
-    payment_integration_id: +paymentMethodId,
+    paymentIntegrationId: Number(paymentMethodId),
     enable: method.enable,
   }));
 };
 
 /**
  * Transformes payment methods from request to form.
- * @param {Array<{ payment_integration_id: number; enable: boolean }>} paymentMethods
+ * @param {Array<{ paymentIntegrationId: number; enable: boolean }>} paymentMethods
  * @returns {Record<string, { enable: boolean }>}
  */
 const transformPaymentMethodsToForm = (
-  paymentMethods: Array<{ payment_integration_id: number; enable: boolean }>,
+  paymentMethods:
+    | Array<{ paymentIntegrationId: number; enable: boolean }>
+    | undefined,
 ): Record<string, { enable: boolean }> => {
-  return paymentMethods?.reduce((acc, method) => {
-    acc[method.payment_integration_id] = { enable: method.enable };
-    return acc;
-  }, {});
+  return (paymentMethods ?? []).reduce(
+    (acc: Record<string, { enable: boolean }>, method) => {
+      acc[method.paymentIntegrationId] = { enable: method.enable };
+      return acc;
+    },
+    {},
+  );
 };
 
 export const useSetPrimaryWarehouseToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<InvoiceFormValues>();
   const { warehouses, isWarehousesSuccess, isNewMode } =
     useInvoiceFormContext();
 
@@ -273,14 +358,14 @@ export const useSetPrimaryWarehouseToForm = () => {
         warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
-        setFieldValue('warehouse_id', primaryWarehouse.id);
+        setFieldValue('warehouseId', primaryWarehouse.id);
       }
     }
   }, [isWarehousesSuccess, setFieldValue, warehouses, isNewMode]);
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<InvoiceFormValues>();
   const { branches, isBranchesSuccess, isNewMode } = useInvoiceFormContext();
 
   React.useEffect(() => {
@@ -288,7 +373,7 @@ export const useSetPrimaryBranchToForm = () => {
       const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches, isNewMode]);
@@ -301,7 +386,7 @@ export const useSetPrimaryBranchToForm = () => {
 export const useInvoiceSubtotal = () => {
   const {
     values: { entries },
-  } = useFormikContext();
+  } = useFormikContext<InvoiceFormValues>();
 
   // Calculate the total due amount of invoice entries.
   return React.useMemo(() => getEntriesTotal(entries), [entries]);
@@ -313,9 +398,9 @@ export const useInvoiceSubtotal = () => {
  */
 export const useInvoiceSubtotalFormatted = () => {
   const subtotal = useInvoiceSubtotal();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
 
-  return formattedAmount(subtotal, values.currency_code);
+  return formattedAmount(subtotal, values.currencyCode);
 };
 
 /**
@@ -323,11 +408,11 @@ export const useInvoiceSubtotalFormatted = () => {
  * @returns {number}
  */
 export const useInvoiceDiscountAmount = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
   const subtotal = useInvoiceSubtotal();
   const discount = toSafeNumber(values.discount);
 
-  return values?.discount_type === 'percentage'
+  return values?.discountType === 'percentage'
     ? (subtotal * discount) / 100
     : discount;
 };
@@ -339,10 +424,10 @@ export const useInvoiceDiscountAmount = () => {
 export const useInvoiceDiscountAmountFormatted = () => {
   const discountAmount = useInvoiceDiscountAmount();
   const {
-    values: { currency_code },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<InvoiceFormValues>();
 
-  return formattedAmount(discountAmount, currency_code);
+  return formattedAmount(discountAmount, currencyCode);
 };
 
 /**
@@ -350,7 +435,7 @@ export const useInvoiceDiscountAmountFormatted = () => {
  * @returns {number}
  */
 export const useInvoiceAdjustmentAmount = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
   const adjustment = toSafeNumber(values.adjustment);
 
   return adjustment;
@@ -363,10 +448,10 @@ export const useInvoiceAdjustmentAmount = () => {
 export const useInvoiceAdjustmentAmountFormatted = () => {
   const adjustmentAmount = useInvoiceAdjustmentAmount();
   const {
-    values: { currency_code },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<InvoiceFormValues>();
 
-  return formattedAmount(adjustmentAmount, currency_code);
+  return formattedAmount(adjustmentAmount, currencyCode);
 };
 
 /**
@@ -374,12 +459,12 @@ export const useInvoiceAdjustmentAmountFormatted = () => {
  * @returns {boolean}
  */
 export const useInvoiceIsForeignCustomer = () => {
-  const { values } = useFormikContext();
-  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext<InvoiceFormValues>();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const isForeignCustomer = React.useMemo(
-    () => values.currency_code !== currentOrganization.base_currency,
-    [values.currency_code, currentOrganization.base_currency],
+    () => values.currencyCode !== baseCurrency,
+    [values.currencyCode, baseCurrency],
   );
   return isForeignCustomer;
 };
@@ -387,13 +472,20 @@ export const useInvoiceIsForeignCustomer = () => {
 /**
  * Resets the form state to initial values
  */
-export const resetFormState = ({ initialValues, values, resetForm }) => {
+export const resetFormState = ({
+  initialValues,
+  values,
+  resetForm,
+}: {
+  initialValues: InvoiceFormValues;
+  values: InvoiceFormValues;
+  resetForm: (next?: { values: InvoiceFormValues }) => void;
+}) => {
   resetForm({
     values: {
       // Reset the all values except the warehouse and brand id.
       ...initialValues,
-      warehouse_id: values.warehouse_id,
-      brand_id: values.brand_id,
+      warehouseId: values.warehouseId,
     },
   });
 };
@@ -404,28 +496,29 @@ export const resetFormState = ({ initialValues, values, resetForm }) => {
  */
 export const composeEntriesOnEditInclusiveTax = (
   inclusiveExclusiveTax: string,
-  entries,
-) => {
-  return R.compose(
-    assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
-  )(entries);
+  entries: InvoiceEntry[],
+): InvoiceEntry[] => {
+  return assignEntriesTaxAmount(
+    inclusiveExclusiveTax === 'inclusive',
+    entries,
+  ) as InvoiceEntry[];
 };
 
 /**
  * Retreives the invoice aggregated tax rates.
  * @returns {Array}
  */
-export const useInvoiceAggregatedTaxRates = () => {
-  const { values } = useFormikContext();
+export const useInvoiceAggregatedTaxRates = (): AggregatedTaxRate[] => {
+  const { values } = useFormikContext<InvoiceFormValues>();
   const { taxRates } = useInvoiceFormContext();
 
   const aggregateTaxRates = React.useMemo(
-    () => aggregateItemEntriesTaxRates(values.currency_code, taxRates),
-    [values.currency_code, taxRates],
+    () => aggregateItemEntriesTaxRates(values.currencyCode, taxRates),
+    [values.currencyCode, taxRates],
   );
   // Calculate the total tax amount of invoice entries.
   return React.useMemo(() => {
-    return aggregateTaxRates(values.entries);
+    return aggregateTaxRates(values.entries) as AggregatedTaxRate[];
   }, [aggregateTaxRates, values.entries]);
 };
 
@@ -434,11 +527,11 @@ export const useInvoiceAggregatedTaxRates = () => {
  * @returns {number}
  */
 export const useInvoiceTotalTaxAmount = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
 
   return React.useMemo(() => {
-    const filteredEntries = values.entries.filter((entry) => entry.tax_amount);
-    return sumBy(filteredEntries, 'tax_amount');
+    const filteredEntries = values.entries.filter((entry) => entry.taxAmount);
+    return sumBy(filteredEntries, 'taxAmount');
   }, [values.entries]);
 };
 
@@ -466,9 +559,9 @@ export const useInvoiceTotal = () => {
  */
 export const useInvoiceTotalFormatted = () => {
   const total = useInvoiceTotal();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
 
-  return formattedAmount(total, values.currency_code);
+  return formattedAmount(total, values.currencyCode);
 };
 
 /**
@@ -478,7 +571,7 @@ export const useInvoiceTotalFormatted = () => {
 export const useInvoicePaidAmount = () => {
   const { invoice } = useInvoiceFormContext();
 
-  return toSafeNumber(invoice?.payment_amount);
+  return toSafeNumber(invoice?.paymentAmount);
 };
 
 /**
@@ -487,9 +580,9 @@ export const useInvoicePaidAmount = () => {
  */
 export const useInvoicePaidAmountFormatted = () => {
   const paidAmount = useInvoicePaidAmount();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
 
-  return formattedAmount(paidAmount, values.currency_code);
+  return formattedAmount(paidAmount, values.currencyCode);
 };
 
 /**
@@ -509,9 +602,9 @@ export const useInvoiceDueAmount = () => {
  */
 export const useInvoiceDueAmountFormatted = () => {
   const dueAmount = useInvoiceDueAmount();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
 
-  return formattedAmount(dueAmount, values.currency_code);
+  return formattedAmount(dueAmount, values.currencyCode);
 };
 
 /**
@@ -519,9 +612,9 @@ export const useInvoiceDueAmountFormatted = () => {
  * @returns {boolean}
  */
 export const useIsInvoiceTaxInclusive = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
 
-  return values.inclusive_exclusive_tax === TaxType.Inclusive;
+  return values.inclusiveExclusiveTax === TaxType.Inclusive;
 };
 
 /**
@@ -529,9 +622,9 @@ export const useIsInvoiceTaxInclusive = () => {
  * @returns {boolean}
  */
 export const useIsInvoiceTaxExclusive = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
 
-  return values.inclusive_exclusive_tax === TaxType.Exclusive;
+  return values.inclusiveExclusiveTax === TaxType.Exclusive;
 };
 
 /**
@@ -539,9 +632,9 @@ export const useIsInvoiceTaxExclusive = () => {
  * @returns {string}
  */
 export const useInvoiceCurrencyCode = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<InvoiceFormValues>();
 
-  return values.currency_code;
+  return values.currencyCode;
 };
 
 export const useInvoiceFormBrandingTemplatesOptions = () => {

@@ -1,15 +1,15 @@
 // @ts-nocheck
-import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster, Group } from '@/components';
+import * as R from 'ramda';
 import { SubscriptionPlan } from '../../component/SubscriptionPlan';
-import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
-import { useSubscriptionPlans } from '@/hooks/constants/useSubscriptionPlans';
-import { useChangeSubscriptionPlan } from '@/hooks/query/subscription';
 import { withSubscriptionPlanMapper } from '../../component/withSubscriptionPlanMapper';
 import { withPlans } from '../../withPlans';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { AppToaster, Group } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useSubscriptionPlans } from '@/hooks/constants/useSubscriptionPlans';
+import { useChangeSubscriptionPlan } from '@/hooks/query/subscription';
+import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 
 export function ChangeSubscriptionPlans() {
   const subscriptionPlans = useSubscriptionPlans();

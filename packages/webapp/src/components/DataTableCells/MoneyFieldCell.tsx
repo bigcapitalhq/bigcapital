@@ -1,10 +1,9 @@
 // @ts-nocheck
-import React, { useCallback, useState, useEffect } from 'react';
 import { FormGroup, Intent } from '@blueprintjs/core';
-
+import React, { useCallback, useState, useEffect } from 'react';
 import { MoneyInputGroup } from '@/components';
-import { CLASSES } from '@/constants/classes';
 import { CellType } from '@/constants';
+import { CLASSES } from '@/constants/classes';
 
 // Input form cell renderer.
 const MoneyFieldCellRenderer = ({

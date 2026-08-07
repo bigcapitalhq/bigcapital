@@ -1,19 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  Vendor,
-  CreateVendorBody,
-  EditVendorBody,
-  EditVendorOpeningBalanceBody,
-  ValidateBulkDeleteVendorsResponse,
-} from '@bigcapital/sdk-ts';
-import type { VendorsListResponse } from '@bigcapital/sdk-ts';
-import {
   fetchVendors,
   fetchVendor,
   createVendor,
@@ -23,8 +8,23 @@ import {
   bulkDeleteVendors,
   editVendorOpeningBalance,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { vendorsKeys } from './query-keys';
+import type {
+  Vendor,
+  CreateVendorBody,
+  EditVendorBody,
+  EditVendorOpeningBalanceBody,
+  ValidateBulkDeleteVendorsResponse,
+} from '@bigcapital/sdk-ts';
+import type { VendorsListResponse } from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -36,7 +36,7 @@ export function useVendors(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<VendorsListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: vendorsKeys.list(query),
@@ -136,7 +136,7 @@ export function useVendor(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<Vendor>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: vendorsKeys.detail(id),
@@ -154,7 +154,6 @@ export function useEditVendorOpeningBalance(
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
-
   return useMutation({
     ...props,
     mutationFn: ([id, values]: [number, EditVendorOpeningBalanceBody]) =>

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import { getCashflowAccountsTableStateFactory } from '@/store/cashflow-accounts/cashflow-accounts.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithCashflowAccountsProps {
   cashflowAccountsTableState: ReturnType<

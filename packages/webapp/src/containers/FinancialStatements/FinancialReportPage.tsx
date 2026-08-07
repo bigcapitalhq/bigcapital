@@ -1,5 +1,5 @@
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 import styled from 'styled-components';
 import { DashboardInsider } from '@/components';
 import { CLASSES } from '@/constants/classes';

@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from 'react';
-import { CommercialDocFooter, DetailsMenu, DetailItem, T } from '@/components';
-import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import intl from 'react-intl-universal';
+import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
+import { CommercialDocFooter, DetailsMenu, DetailItem, T } from '@/components';
 
 export function CashflowTransactionDrawerFooter() {
   const { cashflowTransaction } = useCashflowTransactionDrawerContext();

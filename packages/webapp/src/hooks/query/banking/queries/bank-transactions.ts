@@ -1,19 +1,3 @@
-import type { QueryClient } from '@tanstack/react-query';
-import {
-  UseMutationOptions,
-  UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import type {
-  ExcludeBankTransactionsBulkBody,
-  MatchTransactionBody,
-  MatchedTransactionsResponse,
-  UnmatchMatchedTransactionParams,
-} from '@bigcapital/sdk-ts';
 import {
   excludeBankTransaction,
   excludeBankTransactionsBulk,
@@ -24,8 +8,24 @@ import {
   unexcludeBankTransactionsBulk,
   unmatchMatchedTransaction,
 } from '@bigcapital/sdk-ts';
+import {
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../../useRequest';
 import { bankingKeys } from '../query-keys';
+import type {
+  ExcludeBankTransactionsBulkBody,
+  MatchTransactionBody,
+  MatchedTransactionsResponse,
+  UnmatchMatchedTransactionParams,
+} from '@bigcapital/sdk-ts';
+import type { QueryClient } from '@tanstack/react-query';
 
 export function useGetBankTransactionsMatches(
   uncategorizedTransactionIds: number[],
@@ -37,10 +37,7 @@ export function useGetBankTransactionsMatches(
     ...options,
     queryKey: bankingKeys.transactionMatches(uncategorizedTransactionIds),
     queryFn: () =>
-      fetchMatchedTransactions(
-        fetcher,
-        uncategorizedTransactionIds,
-      ) as Promise<MatchedTransactionsResponse>,
+      fetchMatchedTransactions(fetcher, uncategorizedTransactionIds),
   });
 }
 
@@ -59,8 +56,8 @@ const onValidateExcludeUncategorizedTransaction = (
 };
 
 export function useExcludeUncategorizedTransaction(
-  options?: UseMutationOptions<unknown, Error, number>,
-): UseMutationResult<unknown, Error, number> {
+  options?: UseMutationOptions<void, Error, number>,
+): UseMutationResult<void, Error, number> {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
@@ -73,8 +70,8 @@ export function useExcludeUncategorizedTransaction(
 }
 
 export function useUnexcludeUncategorizedTransaction(
-  options?: UseMutationOptions<unknown, Error, number>,
-): UseMutationResult<unknown, Error, number> {
+  options?: UseMutationOptions<void, Error, number>,
+): UseMutationResult<void, Error, number> {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
@@ -87,8 +84,8 @@ export function useUnexcludeUncategorizedTransaction(
 }
 
 export function useExcludeUncategorizedTransactions(
-  options?: UseMutationOptions<unknown, Error, ExcludeBankTransactionsBulkBody>,
-): UseMutationResult<unknown, Error, ExcludeBankTransactionsBulkBody> {
+  options?: UseMutationOptions<void, Error, ExcludeBankTransactionsBulkBody>,
+): UseMutationResult<void, Error, ExcludeBankTransactionsBulkBody> {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
@@ -101,8 +98,8 @@ export function useExcludeUncategorizedTransactions(
 }
 
 export function useUnexcludeUncategorizedTransactions(
-  options?: UseMutationOptions<unknown, Error, ExcludeBankTransactionsBulkBody>,
-): UseMutationResult<unknown, Error, ExcludeBankTransactionsBulkBody> {
+  options?: UseMutationOptions<void, Error, ExcludeBankTransactionsBulkBody>,
+): UseMutationResult<void, Error, ExcludeBankTransactionsBulkBody> {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
@@ -115,8 +112,8 @@ export function useUnexcludeUncategorizedTransactions(
 }
 
 export function useMatchUncategorizedTransaction(
-  props?: UseMutationOptions<unknown, Error, MatchTransactionBody>,
-): UseMutationResult<unknown, Error, MatchTransactionBody> {
+  props?: UseMutationOptions<void, Error, MatchTransactionBody>,
+): UseMutationResult<void, Error, MatchTransactionBody> {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
@@ -139,11 +136,11 @@ type UnmatchUncategorizedTransactionValues = {
 
 export function useUnmatchMatchedUncategorizedTransaction(
   props?: UseMutationOptions<
-    unknown,
+    void,
     Error,
     UnmatchUncategorizedTransactionValues
   >,
-): UseMutationResult<unknown, Error, UnmatchUncategorizedTransactionValues> {
+): UseMutationResult<void, Error, UnmatchUncategorizedTransactionValues> {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 

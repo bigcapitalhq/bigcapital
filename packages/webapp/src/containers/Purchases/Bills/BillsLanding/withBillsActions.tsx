@@ -1,14 +1,14 @@
 import { ComponentType } from 'react';
+import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { connect } from 'react-redux';
+import type { RootState } from '@/store/reducers';
+import type { TableQuery } from '@/store/store.types';
 import {
   setBillsTableState,
   resetBillsTableState,
   setBillsSelectedRows,
 } from '@/store/bills/bills.actions';
-import type { RootState } from '@/store/reducers';
-import type { TableQuery } from '@/store/store.types';
 
 export interface WithBillsActionsProps {
   setBillsTableState: (queries: Partial<TableQuery>) => void;

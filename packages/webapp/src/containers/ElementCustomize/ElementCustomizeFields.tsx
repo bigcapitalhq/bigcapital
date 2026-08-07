@@ -1,16 +1,16 @@
 // @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { Box, Group, Stack } from '@/components';
+import * as R from 'ramda';
+import React from 'react';
+import styles from './ElementCustomize.module.scss';
 import { ElementCustomizeHeader } from './ElementCustomizeHeader';
+import { useElementCustomizeContext } from './ElementCustomizeProvider';
 import { ElementCustomizeTabs } from './ElementCustomizeTabs';
 import { useElementCustomizeTabsController } from './ElementCustomizeTabsController';
+import { Box, Group, Stack } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useElementCustomizeContext } from './ElementCustomizeProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import styles from './ElementCustomize.module.scss';
 
 export function ElementCustomizeFields() {
   return (

@@ -1,20 +1,17 @@
-// @ts-nocheck
 import React from 'react';
-import { Switch, Route } from 'react-router';
-
+import { Switch, Route } from 'react-router-dom';
 import '@/style/pages/Dashboard/Dashboard.scss';
-
-import { Sidebar } from '@/containers/Dashboard/Sidebar/Sidebar';
-import DashboardContent from '@/components/Dashboard/DashboardContent';
-import DialogsContainer from '@/components/DialogsContainer';
-import PreferencesPage from '@/components/Preferences/PreferencesPage';
-import { DashboardUniversalSearch } from '@/containers/UniversalSearch/DashboardUniversalSearch';
-import DashboardSplitPane from '@/components/Dashboard/DashboardSplitePane';
-import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
-import DrawersContainer from '@/components/DrawersContainer';
-import { AlertsContainer } from '@/containers/AlertsContainer';
 import { DashboardSockets } from './DashboardSockets';
+import GlobalHotkeys from './GlobalHotkeys';
+import DashboardContent from '@/components/Dashboard/DashboardContent';
+import DashboardSplitPane from '@/components/Dashboard/DashboardSplitePane';
+import DialogsContainer from '@/components/DialogsContainer';
+import DrawersContainer from '@/components/DrawersContainer';
+import PreferencesPage from '@/components/Preferences/PreferencesPage';
+import { AlertsContainer } from '@/containers/AlertsContainer';
+import { Sidebar } from '@/containers/Dashboard/Sidebar/Sidebar';
+import { DashboardUniversalSearch } from '@/containers/UniversalSearch/DashboardUniversalSearch';
 
 /**
  * Dashboard preferences.

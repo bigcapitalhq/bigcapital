@@ -1,13 +1,11 @@
 // @ts-nocheck
-import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import { Classes, Icon, H4, Button } from '@blueprintjs/core';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useDrawerContext } from './DrawerProvider';
-
-import { compose } from '@/utils';
+import React from 'react';
 import styled from 'styled-components';
+import { useDrawerContext } from './DrawerProvider';
+import { FormattedMessage as T } from '@/components';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { compose } from '@/utils';
 
 /**
  * Drawer header content.

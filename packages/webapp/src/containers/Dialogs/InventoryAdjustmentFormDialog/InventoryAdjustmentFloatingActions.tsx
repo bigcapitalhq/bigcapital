@@ -1,40 +1,35 @@
-// @ts-nocheck
-import React from 'react';
-import { Intent, Button, Classes } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import React from 'react';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
+import type { InventoryAdjustmentFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-/**
- * Inventory adjustment floating actions.
- */
-function InventoryAdjustmentFloatingActionsInner({
-  // #withDialogActions
-  closeDialog,
-}) {
-  // Formik context.
-  const { isSubmitting, submitForm } = useFormikContext();
+interface InventoryAdjustmentFloatingActionsProps
+  extends WithDialogActionsProps {}
 
-  // Inventory adjustment dialog context.
+function InventoryAdjustmentFloatingActionsInner({
+  closeDialog,
+}: InventoryAdjustmentFloatingActionsProps): React.ReactElement {
+  const { isSubmitting, submitForm } =
+    useFormikContext<InventoryAdjustmentFormValues>();
+
   const { dialogName, setSubmitPayload, submitPayload } =
     useInventoryAdjContext();
 
-  // handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = () => {
     setSubmitPayload({ publish: false });
     submitForm();
   };
 
-  // Handle submit make adjustment button click.
-  const handleSubmitMakeAdjustmentBtnClick = (event) => {
+  const handleSubmitMakeAdjustmentBtnClick = () => {
     setSubmitPayload({ publish: true });
   };
 
-  // Handle close button click.
-  const handleCloseBtnClick = (event) => {
+  const handleCloseBtnClick = () => {
     closeDialog(dialogName);
   };
 
@@ -54,7 +49,7 @@ function InventoryAdjustmentFloatingActionsInner({
           style={{ minWidth: '75px' }}
           onClick={handleSubmitDraftBtnClick}
         >
-          {<T id={'save_as_draft'} />}
+          <T id={'save_as_draft'} />
         </Button>
 
         <Button
@@ -64,7 +59,7 @@ function InventoryAdjustmentFloatingActionsInner({
           type="submit"
           onClick={handleSubmitMakeAdjustmentBtnClick}
         >
-          {<T id={'make_adjustment'} />}
+          <T id={'make_adjustment'} />
         </Button>
       </div>
     </div>

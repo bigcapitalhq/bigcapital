@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -22,10 +21,10 @@ export function CreditNoteFormFooterLeft() {
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
         label={intl.get('credit_note.label_terms_conditions')}
-        name={'terms_conditions'}
+        name={'termsConditions'}
       >
         <FEditableText
-          name={'terms_conditions'}
+          name={'termsConditions'}
           placeholder={intl.get(
             'credit_note.label_terms_and_conditions.placeholder',
           )}

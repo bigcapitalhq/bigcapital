@@ -1,12 +1,12 @@
+import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { connect } from 'react-redux';
+import type { RootState } from '@/store/reducers';
+import type { TableQuery } from '@/store/store.types';
 import {
   setVendorCreditTableState,
   resetVendorCreditTableState,
 } from '@/store/vendor-credit/vendor-credit.actions';
-import type { RootState } from '@/store/reducers';
-import type { TableQuery } from '@/store/store.types';
 
 export interface WithVendorActionsProps {
   setVendorCreditsTableState: (queries: Partial<TableQuery>) => void;

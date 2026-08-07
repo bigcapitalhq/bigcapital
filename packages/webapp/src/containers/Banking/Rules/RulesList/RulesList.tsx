@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { DashboardPageContent } from '@/components';
-import { RulesListBoot } from './RulesListBoot';
-import { RulesListActionsBar } from './RulesListActionsBar';
-import { BankRulesTable } from './RulesTable';
 import React from 'react';
+import { RulesListActionsBar } from './RulesListActionsBar';
+import { RulesListBoot } from './RulesListBoot';
+import { BankRulesTable } from './RulesTable';
+import { DashboardPageContent } from '@/components';
 
 /**
  * Renders the rules landing page.

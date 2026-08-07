@@ -1,11 +1,11 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getManualJournalsSelectedRowsFactory,
   getManualJournalsTableStateFactory,
   manualJournalTableStateChangedFactory,
 } from '@/store/manual-journals/manual-journals.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithManualJournalsProps {
   manualJournalsTableState: ReturnType<

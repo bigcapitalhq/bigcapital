@@ -1,18 +1,18 @@
-import { useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { SalesByItemsBody } from './SalesByItemsBody';
-import { SalesByItemProvider } from './SalesByItemProvider';
+import { useEffect, useCallback } from 'react';
 import { SalesByItemsLoadingBar } from './components';
-import { FinancialStatement, DashboardPageContent } from '@/components';
+import { SalesByItemProvider } from './SalesByItemProvider';
 import { SalesByItemsActionsBar } from './SalesByItemsActionsBar';
+import { SalesByItemsBody } from './SalesByItemsBody';
+import { SalesByItemsDialogs } from './SalesByitemsDialogs';
 import { SalesByItemsHeader } from './SalesByItemsHeader';
+import { useSalesByItemsQuery } from './utils';
 import {
   withSalesByItemsActions,
   WithSalesByItemsActionsProps,
 } from './withSalesByItemsActions';
-import { useSalesByItemsQuery } from './utils';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { compose } from '@/utils';
-import { SalesByItemsDialogs } from './SalesByitemsDialogs';
 
 interface SalesByItemsProps {
   toggleSalesByItemsFilterDrawer: WithSalesByItemsActionsProps['toggleSalesByItemsFilterDrawer'];

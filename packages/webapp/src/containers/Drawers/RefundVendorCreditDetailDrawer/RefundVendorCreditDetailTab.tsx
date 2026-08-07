@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-
-import { CommercialDocBox } from '@/components';
 import { RefundVendorCreditDetailHeader } from './RefundVendorCreditDetailHeader';
+import { CommercialDocBox } from '@/components';
 
 /**
  * Refund vendor credit detail tab.

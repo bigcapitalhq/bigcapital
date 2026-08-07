@@ -1,7 +1,4 @@
 // @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import intl from 'react-intl-universal';
 import {
   Button,
   Position,
@@ -12,9 +9,11 @@ import {
   Classes,
 } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
-
-import { Hint, Icon, If, FormattedMessage as T } from '@/components';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
+import { Hint, Icon, If, FormattedMessage as T } from '@/components';
 import { safeInvoke } from '@/utils';
 
 /**

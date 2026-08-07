@@ -1,8 +1,8 @@
 // @ts-nocheck
 
+import { Button } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Button } from '@blueprintjs/core';
 import styled from 'styled-components';
 
 /**

@@ -1,5 +1,9 @@
-import React from 'react';
 import { Position } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
+import { useAPAgingSummaryGeneralContext } from './APAgingSummaryGeneralProvider';
+import { filterVendorsOptions } from './constants';
 import {
   Row,
   Col,
@@ -9,11 +13,7 @@ import {
   FDateInput,
   FInputGroup,
 } from '@/components';
-import { useAPAgingSummaryGeneralContext } from './APAgingSummaryGeneralProvider';
-import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
-import { filterVendorsOptions } from './constants';
 import { momentFormatter } from '@/utils';
-import intl from 'react-intl-universal';
 
 export function APAgingSummaryHeaderGeneralContent() {
   const { vendors } = useAPAgingSummaryGeneralContext();

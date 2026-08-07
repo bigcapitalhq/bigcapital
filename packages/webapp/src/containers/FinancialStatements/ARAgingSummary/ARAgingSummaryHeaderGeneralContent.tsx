@@ -1,6 +1,8 @@
-import intl from 'react-intl-universal';
 import { Position } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
+import { useARAgingSummaryGeneralContext } from './ARAgingSummaryGeneralProvider';
+import { filterCustomersOptions } from './constants';
 import {
   Row,
   Col,
@@ -11,8 +13,6 @@ import {
   FDateInput,
 } from '@/components';
 import { momentFormatter } from '@/utils';
-import { useARAgingSummaryGeneralContext } from './ARAgingSummaryGeneralProvider';
-import { filterCustomersOptions } from './constants';
 
 export function ARAgingSummaryHeaderGeneralContent() {
   const { customers } = useARAgingSummaryGeneralContext();

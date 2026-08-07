@@ -1,13 +1,13 @@
-import { useMemo } from 'react';
-import { useFormikContext } from 'formik';
 import { SelectOptionProps } from '@blueprintjs-formik/select';
-import { useEstimateSendMailBoot } from './EstimateSendMailBoot';
+import { useFormikContext } from 'formik';
+import { useMemo } from 'react';
 import {
   formatMailMessage,
   transformEmailArgs,
   transformFormatArgsToOptions,
 } from '../SendMailViewDrawer/hooks';
 import { EstimateSendMailFormValues } from './_interfaces';
+import { useEstimateSendMailBoot } from './EstimateSendMailBoot';
 
 /**
  * Retrieves the mail format arguments of estimate mail.

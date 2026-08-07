@@ -1,12 +1,3 @@
-import React from 'react';
-import intl from 'react-intl-universal';
-import * as R from 'ramda';
-import classNames from 'classnames';
-
-import { AppToaster, If, Stack } from '@/components';
-import { Align } from '@/constants';
-import { FinancialLoadingBar } from '../FinancialLoadingBar';
-import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import {
   Classes,
   Intent,
@@ -15,14 +6,22 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
-import {
-  useCustomerBalanceSummaryCsvExport,
-  useCustomerBalanceSummaryXlsxExport,
-} from '@/hooks/query';
+import classNames from 'classnames';
+import * as R from 'ramda';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import type {
   CustomerBalanceXlsxQuery,
   CustomerBalanceCsvQuery,
 } from '@bigcapital/sdk-ts';
+import { AppToaster, If, Stack } from '@/components';
+import { Align } from '@/constants';
+import {
+  useCustomerBalanceSummaryCsvExport,
+  useCustomerBalanceSummaryXlsxExport,
+} from '@/hooks/query';
 
 /**
  * Retrieve customers balance summary columns.

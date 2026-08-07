@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { setItemsCategoriesTableState } from '@/store/item-categories/items-category.actions';
 import type { TableQuery } from '@/store/store.types';
+import { setItemsCategoriesTableState } from '@/store/item-categories/items-category.actions';
 
 export interface WithItemCategoriesActionsProps {
   setItemsCategoriesTableState: (state: Partial<TableQuery>) => void;

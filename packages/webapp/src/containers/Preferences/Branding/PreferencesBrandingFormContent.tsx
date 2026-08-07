@@ -1,11 +1,10 @@
-// @ts-nocheck
 import { Button, Classes, Intent, Text } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import type { PreferencesBrandingFormValues } from './_types';
+import styles from './PreferencesBranding.module.scss';
 import { FFormGroup, Group, Stack } from '@/components';
 import { FColorInput } from '@/components/Forms/FColorInput';
 import { CompanyLogoUpload } from '@/containers/ElementCustomize/components/CompanyLogoUpload';
-import { PreferencesBrandingFormValues } from './_types';
-import styles from './PreferencesBranding.module.scss';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function PreferencesBrandingFormContent() {
@@ -32,7 +31,7 @@ export function PreferencesBrandingFormContent() {
 }
 
 export function PreferencesBrandingFormFooter() {
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<PreferencesBrandingFormValues>();
   const isDarkMode = useIsDarkMode();
 
   return (
@@ -56,7 +55,7 @@ export function BrandingCompanyLogoUpload() {
   return (
     <CompanyLogoUpload
       initialPreview={values?.logoUri}
-      onChange={(file) => {
+      onChange={(file: File | null) => {
         const imageUrl = file ? URL.createObjectURL(file) : '';
 
         setFieldValue('_logoFile', file);

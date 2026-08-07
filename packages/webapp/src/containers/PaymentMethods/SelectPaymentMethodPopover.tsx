@@ -1,13 +1,13 @@
-import styled from 'styled-components';
-import React from 'react';
 import {
   Classes,
   Popover,
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { Stack } from '@/components';
+import React from 'react';
+import styled from 'styled-components';
 import { PaymentMethodSelectField } from './PaymentMethodSelect';
+import { Stack } from '@/components';
 
 interface PaymentOptionsButtonPopverProps {
   paymentMethods: Array<any>;

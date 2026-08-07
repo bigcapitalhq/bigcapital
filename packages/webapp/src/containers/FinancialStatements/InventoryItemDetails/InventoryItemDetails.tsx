@@ -1,24 +1,20 @@
-import React, { useEffect } from 'react';
 import moment from 'moment';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-
-import { InventoryItemDetailsActionsBar } from './InventoryItemDetailsActionsBar';
-import { InventoryItemDetailsHeader } from './InventoryItemDetailsHeader';
-
-import {
-  withInventoryItemDetailsActions,
-  WithInventoryItemDetailsActionsProps,
-} from './withInventoryItemDetailsActions';
-import { InventoryItemDetailsProvider } from './InventoryItemDetailsProvider';
+import React, { useEffect } from 'react';
 import {
   InventoryItemDetailsLoadingBar,
   InventoryItemDetailsAlerts,
 } from './components';
-
+import { InventoryItemDetailsActionsBar } from './InventoryItemDetailsActionsBar';
 import { InventoryItemDetailsBody } from './InventoryItemDetailsBody';
 import { InventoryItemDetailsDialogs } from './InventoryItemDetailsDialogs';
+import { InventoryItemDetailsHeader } from './InventoryItemDetailsHeader';
+import { InventoryItemDetailsProvider } from './InventoryItemDetailsProvider';
 import { useInventoryValuationQuery } from './utils2';
+import {
+  withInventoryItemDetailsActions,
+  WithInventoryItemDetailsActionsProps,
+} from './withInventoryItemDetailsActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { compose } from '@/utils';
 
 interface InventoryItemDetailsProps {

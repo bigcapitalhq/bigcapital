@@ -4,5 +4,6 @@ export interface AttachmentLinkDTO {
 
 export enum AttachmentAction {
   View = 'View',
+  Create = 'Create',
   Delete = 'Delete',
 }

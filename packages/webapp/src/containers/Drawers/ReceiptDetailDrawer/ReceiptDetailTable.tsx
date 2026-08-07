@@ -1,11 +1,6 @@
-// @ts-nocheck
-import React from 'react';
-
-import { CommercialDocEntriesTable } from '@/components';
-
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { useReceiptReadonlyEntriesTableColumns } from './utils';
-
+import { CommercialDocEntriesTable } from '@/components';
 import { TableStyle } from '@/constants';
 
 /**
@@ -13,9 +8,8 @@ import { TableStyle } from '@/constants';
  */
 export function ReceiptDetailTable() {
   // Receipt details drawer context.
-  const {
-    receipt: { entries },
-  } = useReceiptDetailDrawerContext();
+  const { receipt } = useReceiptDetailDrawerContext();
+  const entries = receipt?.entries ?? [];
 
   // Receipt readonly entries table columns.
   const columns = useReceiptReadonlyEntriesTableColumns();
@@ -26,7 +20,7 @@ export function ReceiptDetailTable() {
       data={entries}
       initialHiddenColumns={
         // If any entry has no discount, hide the discount column.
-        entries?.some((e) => e.discount_formatted) ? [] : ['discount']
+        entries.some((e) => e.discountFormatted) ? [] : ['discount']
       }
       styleName={TableStyle.Constrant}
     />

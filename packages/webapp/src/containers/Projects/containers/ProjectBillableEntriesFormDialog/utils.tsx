@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
-import moment from 'moment';
 import { Callout, Intent, Classes } from '@blueprintjs/core';
-import { CLASSES } from '@/constants/classes';
+import moment from 'moment';
+import React from 'react';
 import { FormattedMessage as T } from '@/components';
+import { CLASSES } from '@/constants/classes';
 
 /**
  * Empty status callout.

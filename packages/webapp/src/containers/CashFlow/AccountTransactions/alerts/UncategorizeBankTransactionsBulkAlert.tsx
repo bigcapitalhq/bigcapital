@@ -1,13 +1,19 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-
-import { AppToaster, FormattedMessage as T } from '@/components';
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useUncategorizeTransactionsBulkAction } from '@/hooks/query/banking';
 import { compose } from '@/utils';
+
+interface UncategorizeBankTransactionsBulkAlertProps
+  extends Pick<WithAlertActionsProps, 'closeAlert'>,
+    WithAlertStoreConnectProps {
+  name: string;
+}
 
 /**
  * Uncategorize bank account transactions in build alert.
@@ -17,13 +23,16 @@ function UncategorizeBankTransactionsBulkAlertInner({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { uncategorizeTransactionsIds },
+  payload,
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: uncategorizeTransactions, isLoading } =
+}: UncategorizeBankTransactionsBulkAlertProps) {
+  const { mutateAsync: uncategorizeTransactions, isPending: isLoading } =
     useUncategorizeTransactionsBulkAction();
+
+  const uncategorizeTransactionsIds = (payload?.uncategorizeTransactionsIds ??
+    []) as number[];
 
   // Handle activate item alert cancel.
   const handleCancelActivateItem = () => {
@@ -39,7 +48,7 @@ function UncategorizeBankTransactionsBulkAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {
+      .catch(() => {
         AppToaster.show({
           message: 'Something went wrong while uncategorizing transactions.',
           intent: Intent.DANGER,
@@ -52,7 +61,7 @@ function UncategorizeBankTransactionsBulkAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Uncategorize Transactions'}
       intent={Intent.DANGER}
       isOpen={isOpen}

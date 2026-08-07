@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import {
   Button,
   Popover,
@@ -9,38 +6,39 @@ import {
   MenuItem,
   Menu,
 } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 import { Icon } from '@/components';
 import { getColumnWidth } from '@/utils';
-import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
 /**
  * Retrieve payment entries table columns.
  */
 export const usePaymentReceiveEntriesColumns = () => {
-  const {
-    paymentReceive: { entries },
-  } = usePaymentReceiveDetailContext();
+  const { paymentReceive } = usePaymentReceiveDetailContext();
+  const entries = paymentReceive?.entries ?? [];
 
   return React.useMemo(
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'invoice.invoice_date_formatted',
+        accessor: 'invoice.invoiceDateFormatted',
         width: 100,
         className: 'date',
         disableSortBy: true,
       },
       {
         Header: intl.get('invoice_no'),
-        accessor: 'invoice.invoice_no',
+        accessor: 'invoice.invoiceNo',
         width: 150,
         className: 'invoice_number',
         disableSortBy: true,
       },
       {
         Header: intl.get('invoice_amount'),
-        accessor: 'invoice.total_formatted',
-        width: getColumnWidth(entries, 'invoice.total_formatted', {
+        accessor: 'invoice.totalFormatted',
+        width: getColumnWidth(entries, 'invoice.totalFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -49,9 +47,9 @@ export const usePaymentReceiveEntriesColumns = () => {
       },
       {
         Header: intl.get('amount_due'),
-        accessor: 'invoice.due_amount_formatted',
+        accessor: 'invoice.dueAmountFormatted',
         align: 'right',
-        width: getColumnWidth(entries, 'invoice.due_amount_formatted', {
+        width: getColumnWidth(entries, 'invoice.dueAmountFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -60,9 +58,9 @@ export const usePaymentReceiveEntriesColumns = () => {
       },
       {
         Header: intl.get('payment_amount'),
-        accessor: 'payment_amount_formatted',
+        accessor: 'paymentAmountFormatted',
         align: 'right',
-        width: getColumnWidth(entries, 'payment_amount_formatted', {
+        width: getColumnWidth(entries, 'paymentAmountFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -70,11 +68,23 @@ export const usePaymentReceiveEntriesColumns = () => {
         textOverview: true,
       },
     ],
-    [],
+    [entries],
   );
 };
 
-export function PaymentReceiveMoreMenuItems({ payload: { onNotifyViaSMS } }) {
+interface PaymentReceiveMoreMenuItemsPayload {
+  onNotifyViaSMS: () => void;
+}
+
+interface PaymentReceiveMoreMenuItemsProps {
+  payload: PaymentReceiveMoreMenuItemsPayload;
+}
+
+export function PaymentReceiveMoreMenuItems({
+  payload,
+}: PaymentReceiveMoreMenuItemsProps) {
+  const { onNotifyViaSMS } = payload;
+
   return (
     <Popover
       minimal={true}

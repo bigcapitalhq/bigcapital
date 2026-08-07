@@ -1,5 +1,5 @@
-// @ts-nocheck
 import React from 'react';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
@@ -10,6 +10,13 @@ const TransactionNumberDialogContent = React.lazy(() =>
   })),
 );
 
+interface TransactionNumberDialogProps {
+  dialogName: string;
+  payload: { initialFormValues?: Partial<ReferenceNumberFormValues> };
+  isOpen: boolean | undefined;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
 /**
  * Transaction number dialog.
  */
@@ -18,8 +25,8 @@ function TransctionNumberDialog({
   payload: { initialFormValues },
   isOpen,
   onConfirm,
-}) {
-  const handleConfirm = (values) => {
+}: TransactionNumberDialogProps): React.ReactElement {
+  const handleConfirm = (values: ReferenceNumberFormValues) => {
     saveInvoke(onConfirm, values);
   };
 
@@ -33,6 +40,7 @@ function TransctionNumberDialog({
     >
       <DialogSuspense>
         <TransactionNumberDialogContent
+          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />

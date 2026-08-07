@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useHistory } from 'react-router-dom';
-import { ImportView } from '@/containers/Import';
 import { DashboardInsider } from '@/components';
+import { ImportView } from '@/containers/Import';
 
 export function ReceiptsImport() {
   const history = useHistory();

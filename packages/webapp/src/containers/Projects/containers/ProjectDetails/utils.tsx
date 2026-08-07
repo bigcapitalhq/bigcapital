@@ -1,10 +1,10 @@
 //@ts-nocheck
 
-import React from 'react';
-import moment from 'moment';
 import { subtract } from 'lodash';
-import { calculateStatus } from '@/utils';
+import moment from 'moment';
+import React from 'react';
 import { useProjectDetailContext } from './ProjectDetailProvider';
+import { calculateStatus } from '@/utils';
 
 function calculateProject(costEstiate, totalAmount) {
   return (costEstiate / totalAmount) * 100;

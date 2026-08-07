@@ -1,6 +1,6 @@
 import React from 'react';
-import { RolesListProvider } from './RolesListProvider';
 import { RolesDataTable } from './RolesDataTable';
+import { RolesListProvider } from './RolesListProvider';
 
 /**
  * Roles list.

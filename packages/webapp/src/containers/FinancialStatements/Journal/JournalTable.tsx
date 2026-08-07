@@ -1,19 +1,16 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
+import { useJournalSheetColumns } from './dynamicColumns';
+import { useJournalSheetContext } from './JournalProvider';
 import {
   ReportDataTable,
   FinancialSheet,
   TableFastCell,
   TableVirtualizedListRows,
 } from '@/components';
-
-import { useJournalSheetContext } from './JournalProvider';
-
+import { TableStyle } from '@/constants';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
-import { useJournalSheetColumns } from './dynamicColumns';
 
 interface JournalTableProps {
   companyName: string;

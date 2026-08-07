@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { ProjectDetailHeader } from '../ProjectDetailsHeader';
 import { ProjectPurchasesTable } from './ProjectPurchasesTable';
 import { Box, DashboardContentTable } from '@/components';
-import { ProjectDetailHeader } from '../ProjectDetailsHeader';
 
 /**
  *

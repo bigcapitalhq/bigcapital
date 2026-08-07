@@ -1,14 +1,10 @@
 import React from 'react';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-
-import { RealizedGainOrLossHeader } from './RealizedGainOrLossHeader';
-import { RealizedGainOrLossActionsBar } from './RealizedGainOrLossActionsBar';
 import { RealizedGainOrLossLoadingBar } from './components';
+import { RealizedGainOrLossActionsBar } from './RealizedGainOrLossActionsBar';
+import { RealizedGainOrLossHeader } from './RealizedGainOrLossHeader';
 import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
-
 import { WithRealizedGainOrLossActionsProps } from './withRealizedGainOrLossActions';
-
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { compose } from '@/utils';
 
 type RealizedGainOrLossProps = {

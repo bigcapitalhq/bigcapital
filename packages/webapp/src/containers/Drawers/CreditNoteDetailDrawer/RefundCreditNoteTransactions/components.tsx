@@ -1,15 +1,24 @@
-// @ts-nocheck
+import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, MenuItem, Menu } from '@blueprintjs/core';
+import type { RefundCreditNoteTransaction } from '@bigcapital/sdk-ts';
 import { Can, FormatDateCell, Icon } from '@/components';
-import { safeCallback } from '@/utils';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
+import { safeCallback } from '@/utils';
 
-/**
- * Actions menu.
- */
-export function ActionsMenu({ payload: { onDelete }, row: { original } }) {
+interface ActionsMenuPayload {
+  onDelete: (row: RefundCreditNoteTransaction) => void;
+}
+
+interface ActionsMenuProps {
+  payload: ActionsMenuPayload;
+  row: { original: RefundCreditNoteTransaction };
+}
+
+export function ActionsMenu({
+  payload: { onDelete },
+  row: { original },
+}: ActionsMenuProps) {
   return (
     <Menu>
       <Can I={CreditNoteAction.Delete} a={AbilitySubject.CreditNote}>
@@ -36,7 +45,7 @@ export function useRefundCreditTransactionsTableColumns() {
       },
       {
         Header: intl.get('refund_credit_transactions.column.amount_refunded'),
-        accessor: 'formtted_amount',
+        accessor: 'formattedAmount',
         width: 100,
         className: 'amount',
         align: 'right',
@@ -46,14 +55,15 @@ export function useRefundCreditTransactionsTableColumns() {
         Header: intl.get(
           'refund_credit_transactions.column.withdrawal_account',
         ),
-        accessor: ({ from_account }) => from_account.name,
+        accessor: (row: { fromAccount?: { name?: string } }) =>
+          row.fromAccount?.name,
         width: 100,
         className: 'from_account',
       },
       {
         id: 'reference_no',
         Header: intl.get('reference_no'),
-        accessor: 'reference_no',
+        accessor: 'referenceNo',
         width: 100,
         className: 'reference_no',
         textOverview: true,

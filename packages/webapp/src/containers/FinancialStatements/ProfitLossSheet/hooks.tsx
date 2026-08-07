@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { dynamicColumns } from './dynamicColumns';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 

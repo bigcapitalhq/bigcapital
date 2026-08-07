@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useState } from 'react';
 import { Collapse } from '@blueprintjs/core';
 import classNames from 'classnames';
+import React, { useState } from 'react';
 
 /**
  * Postbox.

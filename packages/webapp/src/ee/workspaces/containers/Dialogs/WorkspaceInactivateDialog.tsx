@@ -1,15 +1,15 @@
 // @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent, Callout } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
-import intl from 'react-intl-universal';
 import { x } from '@xstyled/emotion';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FormattedMessage as T, AppToaster } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   useInactivateWorkspace,
   useActivateWorkspace,
-} from '@/ee/workspaces/hooks/query/workspaces';
-import withDialogRedux from '@/components/DialogReduxConnect';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+} from '@/ee/workspaces/hooks/query';
 import { compose } from '@/utils';
 
 function WorkspaceInactivateDialog({

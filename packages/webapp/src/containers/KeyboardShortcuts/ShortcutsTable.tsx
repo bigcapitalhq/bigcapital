@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
-import { DataTable } from '@/components';
 import intl from 'react-intl-universal';
+import { DataTable } from '@/components';
 import { useKeywordShortcuts } from '@/hooks/dashboard';
 
 /**

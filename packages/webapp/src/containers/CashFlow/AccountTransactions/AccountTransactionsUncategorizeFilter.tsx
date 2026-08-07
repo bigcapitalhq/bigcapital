@@ -1,28 +1,33 @@
-// @ts-nocheck
-import { useMemo } from 'react';
-import * as R from 'ramda';
-import { useAppQueryString } from '@/hooks';
-import { Group, Stack } from '@/components';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { TagsControl } from '@/components/TagsControl';
-import { AccountUncategorizedDateFilter } from './UncategorizedTransactions/AccountUncategorizedDateFilter';
 import { Divider } from '@blueprintjs/core';
+import * as R from 'ramda';
+import React, { useMemo } from 'react';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { AccountUncategorizedDateFilter } from './UncategorizedTransactions/AccountUncategorizedDateFilter';
+import { Group } from '@/components';
+import { TagsControl } from '@/components/TagsControl';
+import { useAppQueryString } from '@/hooks';
+
+interface TagsControlOption {
+  value: string;
+  label: React.ReactNode;
+}
 
 export function AccountTransactionsUncategorizeFilter() {
   const { bankAccountMetaSummary } = useAccountTransactionsContext();
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   const totalUncategorized =
-    bankAccountMetaSummary?.totalUncategorizedTransactions;
-  const totalRecognized = bankAccountMetaSummary?.totalRecognizedTransactions;
+    bankAccountMetaSummary?.totalUncategorizedTransactions ?? 0;
+  const totalRecognized =
+    bankAccountMetaSummary?.totalRecognizedTransactions ?? 0;
 
-  const totalPending = bankAccountMetaSummary?.totalPendingTransactions;
+  const totalPending = bankAccountMetaSummary?.totalPendingTransactions ?? 0;
 
-  const handleTabsChange = (value) => {
+  const handleTabsChange = (value: string) => {
     setLocationQuery({ uncategorizedFilter: value });
   };
 
-  const options = useMemo(
+  const options = useMemo<TagsControlOption[]>(
     () =>
       R.when(
         () => totalPending > 0,
@@ -51,7 +56,7 @@ export function AccountTransactionsUncategorizeFilter() {
             </>
           ),
         },
-      ]),
+      ]) as TagsControlOption[],
     [totalPending, totalRecognized, totalUncategorized],
   );
 
@@ -59,6 +64,7 @@ export function AccountTransactionsUncategorizeFilter() {
     <Group position={'apart'} style={{ marginBottom: 14 }}>
       <Group align={'stretch'} spacing={10}>
         <TagsControl
+          // @ts-expect-error TagsControl types label as string but renders JSX at runtime
           options={options}
           value={locationQuery?.uncategorizedFilter || 'all'}
           onValueChange={handleTabsChange}

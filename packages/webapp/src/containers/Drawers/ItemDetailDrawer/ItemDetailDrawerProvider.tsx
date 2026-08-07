@@ -1,16 +1,34 @@
-// @ts-nocheck
 import React from 'react';
+import { inactiveStatus } from './utils';
+import type { Item } from '@bigcapital/sdk-ts';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { useItem } from '@/hooks/query';
-import { inactiveStatus } from './utlis';
 import { DRAWERS } from '@/constants/drawers';
+import { useItem } from '@/hooks/query';
 
-const ItemDetailDrawerContext = React.createContext();
+export interface ItemDetailDrawerContextValue {
+  item: Item | undefined;
+  itemId: number | undefined;
+  isItemLoading: boolean;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}
+
+interface ItemDetailDrawerProviderProps {
+  itemId: number | undefined;
+  children?: React.ReactNode;
+}
+
+const ItemDetailDrawerContext = React.createContext<
+  ItemDetailDrawerContextValue | undefined
+>(undefined);
 
 /**
  * Item detail provider
  */
-function ItemDetailDrawerProvider({ itemId, ...props }) {
+function ItemDetailDrawerProvider({
+  itemId,
+  children,
+}: ItemDetailDrawerProviderProps) {
   // transaction type payload.
   const [value, setValue] = React.useState('invoices');
 
@@ -20,7 +38,7 @@ function ItemDetailDrawerProvider({ itemId, ...props }) {
   });
 
   //provider.
-  const provider = {
+  const provider: ItemDetailDrawerContextValue = {
     item,
     itemId,
     isItemLoading,
@@ -34,11 +52,21 @@ function ItemDetailDrawerProvider({ itemId, ...props }) {
         name={DRAWERS.ITEM_DETAILS}
         title={inactiveStatus(item)}
       />
-      <ItemDetailDrawerContext.Provider value={provider} {...props} />
+      <ItemDetailDrawerContext.Provider value={provider}>
+        {children}
+      </ItemDetailDrawerContext.Provider>
     </DrawerLoading>
   );
 }
-const useItemDetailDrawerContext = () =>
-  React.useContext(ItemDetailDrawerContext);
+
+const useItemDetailDrawerContext = (): ItemDetailDrawerContextValue => {
+  const ctx = React.useContext(ItemDetailDrawerContext);
+  if (!ctx) {
+    throw new Error(
+      'useItemDetailDrawerContext must be used within ItemDetailDrawerProvider',
+    );
+  }
+  return ctx;
+};
 
 export { ItemDetailDrawerProvider, useItemDetailDrawerContext };

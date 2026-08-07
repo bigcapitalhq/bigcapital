@@ -1,16 +1,15 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
+import { FormikHelpers } from 'formik';
 import { useParams, useHistory } from 'react-router-dom';
-import { Box, DashboardCard, DashboardInsider } from '@/components';
-import { VendorFormProvider, useVendorFormContext } from './VendorFormProvider';
 import { VendorFormFormik } from './VendorFormFormik';
+import { VendorFormProvider, useVendorFormContext } from './VendorFormProvider';
+import type { VendorFormSubmitPayload } from './VendorFormProvider';
+import type { VendorFormValues } from './utils';
+import { Box, DashboardInsider } from '@/components';
 
 /**
  * Vendor form page loading wrapper.
- * @returns {JSX}
  */
-function VendorFormPageLoading({ children }) {
+function VendorFormPageLoading({ children }: { children: React.ReactNode }) {
   const { isFormLoading } = useVendorFormContext();
 
   return (
@@ -23,10 +22,15 @@ function VendorFormPageLoading({ children }) {
  */
 export function VendorFormPage() {
   const history = useHistory();
-  const { id } = useParams();
+  const { id } = useParams<{ id?: string }>();
+  const vendorId = id ? parseInt(id, 10) : undefined;
 
   // Handle the form submit success.
-  const handleSubmitSuccess = (values, formArgs, submitPayload) => {
+  const handleSubmitSuccess = (
+    _values: VendorFormValues,
+    _formArgs: FormikHelpers<VendorFormValues>,
+    submitPayload: VendorFormSubmitPayload,
+  ) => {
     if (!submitPayload.noRedirect) {
       history.push('/vendors');
     }
@@ -37,7 +41,7 @@ export function VendorFormPage() {
   };
 
   return (
-    <VendorFormProvider vendorId={id}>
+    <VendorFormProvider vendorId={vendorId}>
       <VendorFormPageLoading>
         <Box mx={'auto'} maxWidth={800}>
           <VendorFormFormik

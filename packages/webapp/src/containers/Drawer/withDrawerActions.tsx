@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import { CLOSE_DRAWER, OPEN_DRAWER } from '@/store/types';
 
 export interface WithDrawerActionsProps {

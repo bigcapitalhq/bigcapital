@@ -1,13 +1,13 @@
-import * as R from 'ramda';
-import { useFormikContext } from 'formik';
 import { css } from '@emotion/css';
+import { useFormikContext } from 'formik';
+import * as R from 'ramda';
+import { InvoiceCustomizeFormValues } from './types';
+import { Box } from '@/components';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import {
   InvoicePaymentPagePreview,
   InvoicePaymentPagePreviewProps,
 } from '@/containers/PaymentPortal/InvoicePaymentPagePreview';
-import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
-import { InvoiceCustomizeFormValues } from './types';
-import { Box } from '@/components';
 
 const withInvoicePaymentPreviewPageProps = <P extends Object>(
   Component: React.ComponentType<P>,

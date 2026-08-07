@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { If } from './If';
 
 export const Choose = (props) => {
@@ -24,7 +24,16 @@ Choose.propTypes = {
 
 Choose.When = If;
 
-Choose.Otherwise = ({ render, children }) => (render ? render() : children);
+Choose.Otherwise = ({
+  render,
+  children,
+}: {
+  render?: () => React.ReactNode;
+  children?: React.ReactNode;
+}): React.ReactElement | null => {
+  const result = render ? render() : children;
+  return result as React.ReactElement | null;
+};
 
 Choose.Otherwise.propTypes = {
   children: PropTypes.node,

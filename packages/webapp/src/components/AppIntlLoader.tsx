@@ -1,17 +1,15 @@
 // @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import { setLocale } from 'yup';
-import intl from 'react-intl-universal';
 import { find } from 'lodash';
-import rtlDetect from 'rtl-detect';
+import moment from 'moment';
 import * as R from 'ramda';
-
-import { AppIntlProvider } from './AppIntlProvider';
-import { useSplashLoading } from '@/hooks/state';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import rtlDetect from 'rtl-detect';
+import { setLocale } from 'yup';
 import { useWatchImmediate } from '../hooks';
+import { AppIntlProvider } from './AppIntlProvider';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { useSplashLoading } from '@/hooks/state';
 
 const SUPPORTED_LOCALES = [
   { name: 'English', value: 'en' },

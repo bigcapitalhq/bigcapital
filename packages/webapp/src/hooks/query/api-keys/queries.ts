@@ -1,3 +1,4 @@
+import { fetchApiKeys, generateApiKey, revokeApiKey } from '@bigcapital/sdk-ts';
 import {
   useMutation,
   useQuery,
@@ -5,10 +6,9 @@ import {
   UseMutationOptions,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import type { ApiKeysList, GenerateApiKeyBody } from '@bigcapital/sdk-ts';
-import { fetchApiKeys, generateApiKey, revokeApiKey } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../useRequest';
 import { apiKeysKeys } from './query-keys';
+import type { ApiKeysList, GenerateApiKeyBody } from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,

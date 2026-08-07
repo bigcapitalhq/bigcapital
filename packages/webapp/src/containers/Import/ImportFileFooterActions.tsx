@@ -1,14 +1,14 @@
-// @ts-nocheck
+import { Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
+import { useFormikContext } from 'formik';
+import type { ImportFileUploadValues } from './_types';
+import styles from './ImportFileActions.module.scss';
+import { useImportFileContext } from './ImportFileProvider';
 import { Group } from '@/components';
 import { CLASSES } from '@/constants';
-import { Button, Intent } from '@blueprintjs/core';
-import { useFormikContext } from 'formik';
-import { useImportFileContext } from './ImportFileProvider';
-import styles from './ImportFileActions.module.scss';
 
 export function ImportFileUploadFooterActions() {
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<ImportFileUploadValues>();
   const { onCancelClick } = useImportFileContext();
 
   const handleCancelBtnClick = () => {

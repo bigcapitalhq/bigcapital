@@ -1,14 +1,24 @@
-// @ts-nocheck
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-
-import { getDashboardRoutes } from '@/routes/dashboard';
 import DashboardPage from './DashboardPage';
+import { getDashboardRoutes } from '@/routes/dashboard';
+
+export interface DashboardRoute {
+  path: string;
+  component: React.ComponentType;
+  name?: string;
+  pageTitle?: string;
+  hint?: string;
+  backLink?: boolean | string;
+  sidebarExpand?: boolean;
+  defaultSearchResource?: string;
+  exact?: boolean;
+}
 
 /**
  * Dashboard inner route content.
  */
-function DashboardContentRouteContent({ route }) {
+function DashboardContentRouteContent({ route }: { route: DashboardRoute }) {
   return (
     <DashboardPage
       name={route.name}
@@ -17,7 +27,6 @@ function DashboardContentRouteContent({ route }) {
       backLink={route.backLink}
       hint={route.hint}
       sidebarExpand={route.sidebarExpand}
-      pageType={route.pageType}
       defaultSearchResource={route.defaultSearchResource}
     />
   );
@@ -27,10 +36,10 @@ function DashboardContentRouteContent({ route }) {
  * Dashboard content route.
  */
 export default function DashboardContentRoute() {
-  const routes = getDashboardRoutes();
+  const routes = getDashboardRoutes() as DashboardRoute[];
 
   return (
-    <Route pathname="/">
+    <Route path="/">
       <Switch>
         {routes.map((route, index) => (
           <Route exact={route.exact} key={index} path={`${route.path}`}>

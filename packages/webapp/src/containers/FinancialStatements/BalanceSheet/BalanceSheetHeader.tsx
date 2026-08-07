@@ -1,25 +1,25 @@
-import React from 'react';
-import styled from 'styled-components';
-import moment from 'moment';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
-import type { FormikHelpers } from 'formik';
-import { FormattedMessage as T } from '@/components';
-import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
-import { withBalanceSheet } from './withBalanceSheet';
-import type { WithBalanceSheetProps } from './withBalanceSheet';
-import { withBalanceSheetActions } from './withBalanceSheetActions';
-import type { WithBalanceSheetActionsProps } from './withBalanceSheetActions';
-import { BalanceSheetHeaderGeneralPanal } from './BalanceSheetHeaderGeneralPanal';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
+import { FinancialStatementHeader } from '../../FinancialStatements/FinancialStatementHeader';
 import { BalanceSheetHeaderComparisonPanal } from './BalanceSheetHeaderComparisonPanal';
 import { BalanceSheetHeaderDimensionsPanel } from './BalanceSheetHeaderDimensionsPanel';
-import { FinancialStatementHeader } from '../../FinancialStatements/FinancialStatementHeader';
-import { compose, transformToForm } from '@/utils';
+import { BalanceSheetHeaderGeneralPanal } from './BalanceSheetHeaderGeneralPanal';
 import {
   getBalanceSheetHeaderValidationSchema,
   getDefaultBalanceSheetQuery,
 } from './utils';
+import { withBalanceSheet } from './withBalanceSheet';
+import { withBalanceSheetActions } from './withBalanceSheetActions';
+import type { WithBalanceSheetProps } from './withBalanceSheet';
+import type { WithBalanceSheetActionsProps } from './withBalanceSheetActions';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
+import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
+import { compose, transformToForm } from '@/utils';
 
 type BalanceSheetFormValues = Omit<
   ReturnType<typeof getDefaultBalanceSheetQuery>,

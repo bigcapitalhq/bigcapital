@@ -1,52 +1,55 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import intl from 'react-intl-universal';
-import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
 import { omit } from 'lodash';
-
-import { AppToaster } from '@/components';
-import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { CreateRefundCreditNoteFormSchema } from './RefundCreditNoteForm.schema';
 import { RefundCreditNoteFormContent } from './RefundCreditNoteFormContent';
-
+import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
+import type { RefundCreditNoteFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-const defaultInitialValues = {
-  from_account_id: '',
+const defaultInitialValues: RefundCreditNoteFormValues = {
+  fromAccountId: '',
   date: moment(new Date()).format('YYYY-MM-DD'),
-  reference_no: '',
+  referenceNo: '',
   description: '',
   amount: '',
-  exchange_rate: 1,
+  exchangeRate: 1,
 };
+
+interface RefundCreditNoteFormProps extends WithDialogActionsProps {}
 
 /**
  * Refund credit note form.
  */
 function RefundCreditNoteFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: RefundCreditNoteFormProps): React.ReactElement {
   const { dialogName, creditNote, createRefundCreditNoteMutate } =
     useRefundCreditNoteContext();
 
   // Initial form values
-  const initialValues = {
+  const initialValues: RefundCreditNoteFormValues = {
     ...defaultInitialValues,
-    ...creditNote,
+    ...(creditNote as unknown as RefundCreditNoteFormValues),
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
+  const handleFormSubmit = (
+    values: RefundCreditNoteFormValues,
+    { setSubmitting }: FormikHelpers<RefundCreditNoteFormValues>,
+  ) => {
     const form = {
-      ...omit(values, ['currency_code', 'credits_remaining']),
+      ...omit(values, ['currencyCode', 'creditsRemaining']),
     };
 
     // Handle request response success.
-    const onSaved = (response) => {
+    const onSaved = () => {
       AppToaster.show({
         message: intl.get('refund_credit_note.dialog.success_message'),
         intent: Intent.SUCCESS,
@@ -55,12 +58,17 @@ function RefundCreditNoteFormInner({
     };
     // Handle request response errors.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
     }) => {
+      // errors read but unused (preserved from original).
+      void errors;
       setSubmitting(false);
     };
+    // FIXME: latent bug — `creditNote` may be undefined before the query
+    // resolves; original code accessed `creditNote.id` directly.
+    // @ts-expect-error — `creditNote` may be undefined at runtime.
     createRefundCreditNoteMutate([creditNote.id, form])
       .then(onSaved)
       .catch(onError);

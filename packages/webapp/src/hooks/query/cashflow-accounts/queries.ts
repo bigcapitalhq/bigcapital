@@ -1,21 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  useInfiniteQuery,
-  UseMutationOptions,
-  UseQueryOptions,
-  UseInfiniteQueryOptions,
-  InfiniteData,
-  QueryKey,
-} from '@tanstack/react-query';
-import type {
-  CreateCashflowTransactionBody,
-  CashflowAccountTransactionsQuery,
-  CashflowAccountUncategorizedTransactionsQuery,
-  CategorizeTransactionBody,
-} from '@bigcapital/sdk-ts';
-import {
   fetchCashflowAccounts,
   createCashflowTransaction,
   fetchCashflowTransaction,
@@ -26,12 +9,32 @@ import {
   categorizeTransaction,
   uncategorizeTransaction,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useInfiniteQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+  UseInfiniteQueryOptions,
+  InfiniteData,
+  QueryKey,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { cashflowAccountsKeys } from './query-keys';
 import { accountsKeys } from '../accounts/query-keys';
 import { customersKeys } from '../customers/query-keys';
-import { vendorsKeys } from '../vendors/query-keys';
 import { financialReportsKeys } from '../FinancialReports/query-keys';
+import { vendorsKeys } from '../vendors/query-keys';
+import { cashflowAccountsKeys } from './query-keys';
+import type {
+  BankingAccountsListResponse,
+  BankingTransactionResponse,
+  CreateCashflowTransactionBody,
+  CashflowAccountTransactionsQuery,
+  CashflowAccountUncategorizedTransactionsQuery,
+  CategorizeTransactionBody,
+  UncategorizedTransactionResponse,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -68,13 +71,24 @@ const commonInvalidateQueries = (
 
 export function useCashflowAccounts(
   query?: Record<string, unknown>,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<
+    UseQueryOptions<
+      BankingAccountsListResponse,
+      Error,
+      BankingAccountsListResponse
+    >,
+    'queryKey' | 'queryFn'
+  >,
 ) {
-  const fetcher = useApiFetcher();
-  return useQuery({
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery<
+    BankingAccountsListResponse,
+    Error,
+    BankingAccountsListResponse
+  >({
     ...props,
     queryKey: cashflowAccountsKeys.list(query),
-    queryFn: () => fetchCashflowAccounts(fetcher, query ?? {}),
+    queryFn: () => fetchCashflowAccounts(fetcher),
   });
 }
 
@@ -96,11 +110,22 @@ export function useCreateCashflowTransaction(
 
 export function useCashflowTransaction(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<
+    UseQueryOptions<
+      BankingTransactionResponse,
+      Error,
+      BankingTransactionResponse
+    >,
+    'queryKey' | 'queryFn'
+  >,
 ) {
   const fetcher = useApiFetcher();
 
-  return useQuery({
+  return useQuery<
+    BankingTransactionResponse,
+    Error,
+    BankingTransactionResponse
+  >({
     ...props,
     queryKey: cashflowAccountsKeys.transaction(id),
     queryFn: () => fetchCashflowTransaction(fetcher, id!),
@@ -147,7 +172,7 @@ export function useAccountTransactionsInfinity(
     'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useInfiniteQuery<
     AccountTransactionsInfinityPage,
@@ -161,7 +186,6 @@ export function useAccountTransactionsInfinity(
     queryFn: ({ pageParam }) =>
       fetchAccountTransactionsInfinity(fetcher, accountId, {
         ...query,
-        accountId,
         page: pageParam,
       }),
     initialPageParam: 1,
@@ -183,8 +207,7 @@ export function useAccountUncategorizedTransactionsInfinity(
     'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
   >,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useInfiniteQuery<
     AccountUncategorizedTransactionsInfinityPage,
     Error,
@@ -216,7 +239,6 @@ export function useRefreshCashflowAccounts() {
 
 export function useRefreshCashflowTransactions() {
   const queryClient = useQueryClient();
-
   return {
     refresh: () => {
       queryClient.invalidateQueries({
@@ -228,11 +250,21 @@ export function useRefreshCashflowTransactions() {
 
 export function useUncategorizedTransaction(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<
+    UseQueryOptions<
+      UncategorizedTransactionResponse,
+      Error,
+      UncategorizedTransactionResponse
+    >,
+    'queryKey' | 'queryFn'
+  >,
 ) {
-  const fetcher = useApiFetcher();
-
-  return useQuery({
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery<
+    UncategorizedTransactionResponse,
+    Error,
+    UncategorizedTransactionResponse
+  >({
     ...props,
     queryKey: cashflowAccountsKeys.uncategorizedTransaction(id),
     queryFn: () => fetchUncategorizedTransaction(fetcher, id!),

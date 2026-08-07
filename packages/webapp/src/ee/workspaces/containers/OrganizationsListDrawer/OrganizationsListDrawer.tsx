@@ -1,11 +1,11 @@
 // @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { Position } from '@blueprintjs/core';
 import styled from '@xstyled/emotion';
+import * as R from 'ramda';
+import React from 'react';
+import { OrganizationsListDrawerContent } from './OrganizationsListDrawerContent';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-import { OrganizationsListDrawerContent } from './OrganizationsListDrawerContent';
 
 const OrganizationsDrawer = styled(Drawer)`
   &.bp4-drawer.bp4-dark,

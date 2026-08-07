@@ -1,24 +1,27 @@
-// @ts-nocheck
-import { Formik } from 'formik';
-
-import { compose, transformToForm } from '@/utils';
-
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
 import { ExportDialogFormSchema } from './ExportDialogForm.schema';
 import { ExportDialogFormContent } from './ExportDialogFormContent';
-import { useResourceExport } from '@/hooks/query/FinancialReports/use-export';
-import { ExportFormInitialValues } from './type';
+import type { ExportFormInitialValues } from './type';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
-import { Intent } from '@blueprintjs/core';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useResourceExport } from '@/hooks/query/FinancialReports/use-export';
+import { compose, transformToForm } from '@/utils';
+
+interface ExportDialogFormValues {
+  resource: string;
+  format: string;
+}
 
 // Default initial form values.
-const defaultInitialValues = {
+const defaultInitialValues: ExportDialogFormValues = {
   resource: '',
   format: 'csv',
 };
 
-interface ExportDialogFormProps {
+interface ExportDialogFormProps extends WithDialogActionsProps {
   initialValues?: ExportFormInitialValues;
 }
 
@@ -28,14 +31,15 @@ interface ExportDialogFormProps {
 function ExportDialogFormRoot({
   // #ownProps
   initialValues,
-
-  // #withDialogActions
   closeDialog,
-}: ExportDialogFormProps) {
+}: ExportDialogFormProps): React.ReactElement {
   const { mutateAsync: mutateExport } = useResourceExport();
 
   // Callbacks handles form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: ExportDialogFormValues,
+    { setSubmitting }: FormikHelpers<ExportDialogFormValues>,
+  ) => {
     setSubmitting(true);
     const { resource, format } = values;
 
@@ -54,7 +58,7 @@ function ExportDialogFormRoot({
   };
 
   // Form initial values in create and edit mode.
-  const initialFormValues = {
+  const initialFormValues: ExportDialogFormValues = {
     ...defaultInitialValues,
     /**
      * We only care about the fields in the form. Previously unfilled optional

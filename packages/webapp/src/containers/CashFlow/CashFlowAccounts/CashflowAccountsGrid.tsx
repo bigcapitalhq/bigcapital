@@ -1,67 +1,93 @@
-// @ts-nocheck
+import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
+import { ContextMenu2 } from '@blueprintjs/popover2';
+import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import styled from 'styled-components';
-import { isNull, isEmpty } from 'lodash';
-import { compose, curry } from 'lodash/fp';
 import { Link } from 'react-router-dom';
-import { ContextMenu2 } from '@blueprintjs/popover2';
-import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
-
+import styled from 'styled-components';
+import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
+import type { CashflowAccountRow } from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { BankAccountsList, BankAccount, If, Icon, T, Can } from '@/components';
 import {
   AccountAction,
   CashflowAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
-import { DialogsName } from '@/constants/dialogs';
 import {
   getAddMoneyInOptions,
   getAddMoneyOutOptions,
 } from '@/constants/cashflowOptions';
-
-import { BankAccountsList, BankAccount, If, Icon, T, Can } from '@/components';
-import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { safeCallback } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+import { compose } from '@/utils';
 
 const CASHFLOW_SKELETON_N = 4;
+
+interface MoneyContextMenuProps {
+  onClick: (transactionType: string) => void;
+}
+
+interface CashflowAccountContextMenuProps {
+  account: CashflowAccountRow;
+  onViewClick: () => void;
+  onEditClick: () => void;
+  onInactivateClick: () => void;
+  onActivateClick: () => void;
+  onDeleteClick: () => void;
+  onMoneyInClick: (transactionType: string) => void;
+  onMoneyOutClick: (transactionType: string) => void;
+}
+
+interface CashflowBankAccountProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDialogActionsProps, 'openDialog'>,
+    Pick<WithDrawerActionsProps, 'openDrawer'> {
+  account: CashflowAccountRow;
+}
+
+interface CashflowAccountsGridItemsProps {
+  accounts: CashflowAccountRow[];
+}
 
 /**
  * Cashflow accounts skeleton for loading state.
  */
 function CashflowAccountsSkeleton() {
-  return [...Array(CASHFLOW_SKELETON_N)].map((e, i) => (
-    <BankAccount
-      title={'XXXXX'}
-      code={'XXXXX'}
-      balance={'XXXXXX'}
-      cash={'cash'}
-      loading={true}
-    />
-  ));
+  return (
+    <>
+      {Array.from({ length: CASHFLOW_SKELETON_N }).map((_, i) => (
+        <BankAccount
+          key={i}
+          title={'XXXXX'}
+          code={'XXXXX'}
+          balance={'XXXXXX'}
+          type={'cash'}
+          updatedBeforeText={''}
+          uncategorizedTransactionsCount={0}
+          loading={true}
+        />
+      ))}
+    </>
+  );
 }
 
 /**
  * Cashflow bank account.
  */
 function CashflowBankAccount({
-  // #withAlertsDialog
   openAlert,
-
-  // #withDialog
   openDialog,
-
-  // #withDrawerActions
   openDrawer,
-
   account,
-}) {
+}: CashflowBankAccountProps) {
   // Handle view detail account.
   const handleViewClick = () => {
     openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: account.id });
@@ -86,14 +112,14 @@ function CashflowBankAccount({
     });
   };
   // Handle money in menu item actions.
-  const handleMoneyInClick = (transactionType) => {
+  const handleMoneyInClick = (transactionType: string) => {
     openDialog('money-in', {
       account_type: transactionType,
       account_id: account.id,
     });
   };
   // Handle money out menu item actions.
-  const handleMoneyOutClick = (transactionType) => {
+  const handleMoneyOutClick = (transactionType: string) => {
     openDialog('money-out', {
       account_type: transactionType,
       account_id: account.id,
@@ -121,14 +147,14 @@ function CashflowBankAccount({
         <BankAccount
           title={account.name}
           code={account.code}
-          balance={!isNull(account.amount) ? account.formatted_amount : '-'}
-          type={account.account_type}
+          balance={account.amount != null ? account.formattedAmount : '-'}
+          type={account.accountType}
           updatedBeforeText={
-            account.last_feeds_updated_from_now
-              ? `Updated ${account.last_feeds_updated_from_now} ago`
+            account.lastFeedsUpdatedFromNow
+              ? `Updated ${account.lastFeedsUpdatedFromNow} ago`
               : ''
           }
-          uncategorizedTransactionsCount={account.uncategorized_transactions}
+          uncategorizedTransactionsCount={undefined}
         />
       </CashflowAccountAnchor>
     </ContextMenu2>
@@ -141,17 +167,19 @@ const CashflowBankAccountEnhanced = compose(
   withDialogActions,
 )(CashflowBankAccount);
 
-function getUpdatedBeforeText(createdAt) {
-  return '';
-}
-
 /**
  * Cashflow accounts grid items.
  */
-function CashflowAccountsGridItems({ accounts }) {
-  return accounts.map((account) => (
-    <CashflowBankAccountEnhanced account={account} />
-  ));
+function CashflowAccountsGridItems({
+  accounts,
+}: CashflowAccountsGridItemsProps) {
+  return (
+    <>
+      {accounts.map((account) => (
+        <CashflowBankAccountEnhanced key={account.id} account={account} />
+      ))}
+    </>
+  );
 }
 
 /**
@@ -183,7 +211,7 @@ export function CashflowAccountsGrid() {
         ) : isEmpty(cashflowAccounts) ? (
           <CashflowAccountsEmptyState />
         ) : (
-          <CashflowAccountsGridItems accounts={cashflowAccounts} />
+          <CashflowAccountsGridItems accounts={cashflowAccounts ?? []} />
         )}
       </BankAccountsList>
     </CashflowAccountsGridWrap>
@@ -193,31 +221,43 @@ export function CashflowAccountsGrid() {
 /**
  * Cashflow account money out context menu.
  */
-function CashflowAccountMoneyInContextMenu({ onClick }) {
-  const handleItemClick = curry((transactionType, event) => {
-    onClick && onClick(transactionType, event);
-  });
+function CashflowAccountMoneyInContextMenu({ onClick }: MoneyContextMenuProps) {
   // Retreives the add money in button options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
 
-  return addMoneyInOptions.map((option) => (
-    <MenuItem text={option.name} onClick={handleItemClick(option.value)} />
-  ));
+  return (
+    <>
+      {addMoneyInOptions.map((option) => (
+        <MenuItem
+          key={option.value}
+          text={option.name}
+          onClick={() => onClick?.(option.value)}
+        />
+      ))}
+    </>
+  );
 }
 
 /**
  * Cashflow account money in context menu.
  */
-function CashflowAccountMoneyOutContextMenu({ onClick }) {
-  const handleItemClick = curry((transactionType, event) => {
-    onClick && onClick(transactionType, event);
-  });
+function CashflowAccountMoneyOutContextMenu({
+  onClick,
+}: MoneyContextMenuProps) {
   // Retreives the add money out button options.
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
-  return addMoneyOutOptions.map((option) => (
-    <MenuItem text={option.name} onClick={handleItemClick(option.value)} />
-  ));
+  return (
+    <>
+      {addMoneyOutOptions.map((option) => (
+        <MenuItem
+          key={option.value}
+          text={option.name}
+          onClick={() => onClick?.(option.value)}
+        />
+      ))}
+    </>
+  );
 }
 
 /**
@@ -232,7 +272,7 @@ function CashflowAccountContextMenu({
   onDeleteClick,
   onMoneyInClick,
   onMoneyOutClick,
-}) {
+}: CashflowAccountContextMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -256,7 +296,12 @@ function CashflowAccountContextMenu({
           <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />
         </MenuItem>
       </Can>
-      <Can I={CashflowAction.Edit} a={AbilitySubject.Cashflow}>
+      <Can
+        // @ts-expect-error latent bug — CashflowAction.Edit is not defined in
+        // the constants file; runtime receives `undefined`.
+        I={CashflowAction.Edit}
+        a={AbilitySubject.Cashflow}
+      >
         <MenuDivider />
 
         <MenuItem
@@ -308,8 +353,6 @@ const CashflowAccountAnchor = styled(Link)`
 const CashflowAccountsGridWrap = styled.div`
   margin: 30px;
 `;
-
-const CashflowBankAccountWrap = styled.div``;
 
 const AccountsEmptyStateBase = styled.div`
   flex: 1;

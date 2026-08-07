@@ -1,42 +1,36 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import {
   AppToaster,
-  FormattedMessage as T,
   FormattedHTMLMessage,
+  FormattedMessage as T,
 } from '@/components';
-
-import { useDeleteItemCategory } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useDeleteItemCategory } from '@/hooks/query';
 import { compose } from '@/utils';
 
-/**
- * Item Category delete alerts.
- */
+interface ItemCategoryDeleteAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { itemCategoryId: number };
+}
+
 function ItemCategoryDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { itemCategoryId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: deleteItemCategory, isLoading } =
+}: ItemCategoryDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteItemCategory, isPending } =
     useDeleteItemCategory();
 
-  // handle cancel delete item category alert.
   const handleCancelItemCategoryDelete = () => {
     closeAlert(name);
   };
 
-  // Handle alert confirm delete item category.
   const handleConfirmItemDelete = () => {
     deleteItemCategory(itemCategoryId)
       .then(() => {
@@ -53,16 +47,17 @@ function ItemCategoryDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelItemCategoryDelete}
       onConfirm={handleConfirmItemDelete}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch */}
         <FormattedHTMLMessage
           id={'once_delete_this_item_category_you_will_able_to_restore_it'}
         />

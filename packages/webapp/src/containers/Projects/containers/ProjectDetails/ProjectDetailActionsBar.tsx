@@ -1,6 +1,4 @@
 // @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   Classes,
@@ -8,18 +6,19 @@ import {
   NavbarGroup,
   Alignment,
 } from '@blueprintjs/core';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { projectTranslations } from './common';
+import { ProjectTransactionsSelect } from './components';
+import { useProjectDetailContext } from './ProjectDetailProvider';
 import {
   Icon,
   FormattedMessage as T,
   DashboardRowsHeightButton,
   DashboardActionsBar,
 } from '@/components';
-import { ProjectTransactionsSelect } from './components';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { projectTranslations } from './common';
-import { useProjectDetailContext } from './ProjectDetailProvider';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
@@ -29,14 +28,11 @@ import { compose } from '@/utils';
 function ProjectDetailActionsBarInner({
   // #withDialogActions
   openDialog,
-
-  // #withSettings
-  timesheetsTableSize,
-
-  // #withSettingsActions
-  addSetting,
 }) {
-  const { projectId } = useProjectDetailContext();
+  // Settings hook.
+  const { projectId, timesheetsSettings } = useProjectDetailContext();
+  const timesheetsTableSize = timesheetsSettings?.tableSize;
+  const { mutateAsync: saveSettings } = useSaveSettings();
 
   // Handle new transaction button click.
   const handleNewTransactionBtnClick = ({ path }) => {
@@ -62,10 +58,14 @@ function ProjectDetailActionsBarInner({
   };
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('timesheets', 'tableSize', size) &&
-      addSetting('sales', 'tableSize', size) &&
-      addSetting('purchases', 'tableSize', size) &&
-      addSetting('project_tasks', 'tableSize', size);
+    saveSettings({
+      options: [
+        { group: 'timesheets', key: 'tableSize', value: size },
+        { group: 'sales', key: 'tableSize', value: size },
+        { group: 'purchases', key: 'tableSize', value: size },
+        { group: 'project_tasks', key: 'tableSize', value: size },
+      ],
+    });
   };
 
   const handleTimeEntryBtnClick = () => {
@@ -129,10 +129,6 @@ function ProjectDetailActionsBarInner({
     </DashboardActionsBar>
   );
 }
-export const ProjectDetailActionsBar = compose(
-  withDialogActions,
-  withSettingsActions,
-  withSettings(({ timesheetsSettings }) => ({
-    timesheetsTableSize: timesheetsSettings?.tableSize,
-  })),
-)(ProjectDetailActionsBarInner);
+export const ProjectDetailActionsBar = compose(withDialogActions)(
+  ProjectDetailActionsBarInner,
+);

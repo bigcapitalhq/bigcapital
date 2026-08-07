@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import preferencesTabs from '@/routes/preferencesTabs';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import preferencesTabs from '@/routes/preferencesTabs';
 
 export default function PreferencesSubContent({ preferenceTab }) {
   const routes = preferencesTabs[preferenceTab];

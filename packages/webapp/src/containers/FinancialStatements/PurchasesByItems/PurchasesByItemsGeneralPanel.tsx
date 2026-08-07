@@ -1,14 +1,13 @@
 import React from 'react';
-import { Row, Col, ItemsMultiSelect, FFormGroup } from '@/components';
+import intl from 'react-intl-universal';
+import { filterItemsOptions } from '../constants';
 import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
 import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
-import { filterItemsOptions } from '../constants';
-
 import {
   PurchasesByItemsGeneralPanelProvider,
   usePurchaseByItemsGeneralPanelContext,
 } from './PurchasesByItemsGeneralPanelProvider';
-import intl from 'react-intl-universal';
+import { Row, Col, FItemsMultiSelect, FFormGroup } from '@/components';
 
 /**
  *
@@ -44,7 +43,7 @@ function PurchasesByItemsGeneralPanelContent() {
       <Row>
         <Col xs={4}>
           <FFormGroup name={'itemsIds'} label={intl.get('Specific items')}>
-            <ItemsMultiSelect name={'itemsIds'} items={items} />
+            <FItemsMultiSelect name={'itemsIds'} items={items} />
           </FFormGroup>
         </Col>
       </Row>

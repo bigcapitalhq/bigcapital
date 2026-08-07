@@ -1,6 +1,6 @@
 import React from 'react';
-import { DialogsName } from '@/constants/dialogs';
 import { VendorBalancePdfDialog } from './dialogs/VendorBalancePdfDialog';
+import { DialogsName } from '@/constants/dialogs';
 
 export function VendorBalanceDialogs() {
   return (

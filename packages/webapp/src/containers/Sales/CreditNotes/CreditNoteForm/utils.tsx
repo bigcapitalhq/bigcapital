@@ -1,9 +1,21 @@
-// @ts-nocheck
-import React from 'react';
+import { useFormikContext } from 'formik';
+import { first } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
-import { first } from 'lodash';
-
+import React from 'react';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import type { CreateCreditNoteBody, CreditNote } from '@bigcapital/sdk-ts';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import { getEntriesTotal } from '@/containers/Entries/utils';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+} from '@/containers/Entries/utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
   transformToForm,
@@ -11,28 +23,46 @@ import {
   formattedAmount,
   orderingLinesIndexes,
   toSafeNumber,
+  compose,
 } from '@/utils';
-import { useFormikContext } from 'formik';
-import { useCreditNoteFormContext } from './CreditNoteFormProvider';
-
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
-import { useCurrentOrganization } from '@/hooks/state';
-import { getEntriesTotal } from '@/containers/Entries/utils';
-import {
-  transformAttachmentsToForm,
-  transformAttachmentsToRequest,
-} from '@/containers/Attachments/utils';
-import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 export const MIN_LINES_NUMBER = 1;
 
+export type CreditNoteEntry = {
+  index: number;
+  itemId: string | number;
+  rate: string | number;
+  discount: string | number;
+  quantity: string | number;
+  description: string;
+  amount: string | number;
+};
+
+export type CreditNoteFormValues = {
+  customerId: string | number;
+  creditNoteDate: string;
+  creditNoteNumber: string;
+  creditNoteNumberManually: string | boolean;
+  open: boolean | '';
+  referenceNo: string;
+  note: string;
+  termsConditions: string;
+  branchId: string | number;
+  warehouseId: string | number;
+  exchangeRate: string | number;
+  currencyCode: string;
+  pdfTemplateId: string | number;
+  discount: string;
+  discountType: 'amount' | 'percentage';
+  adjustment: string;
+  entries: CreditNoteEntry[];
+  attachments: unknown[];
+};
+
 // Default entry object.
-export const defaultCreditNoteEntry = {
+export const defaultCreditNoteEntry: CreditNoteEntry = {
   index: 0,
-  item_id: '',
+  itemId: '',
   rate: '',
   discount: '',
   quantity: '',
@@ -41,97 +71,124 @@ export const defaultCreditNoteEntry = {
 };
 
 // Default credit note object.
-export const defaultCreditNote = {
-  customer_id: '',
-  credit_note_date: moment(new Date()).format('YYYY-MM-DD'),
-  credit_note_number: '',
-  // Holds the credit note number that entered manually only.
-  credit_note_number_manually: false,
+export const defaultCreditNote: CreditNoteFormValues = {
+  customerId: '',
+  creditNoteDate: moment(new Date()).format('YYYY-MM-DD'),
+  creditNoteNumber: '',
+  creditNoteNumberManually: false,
   open: '',
-  reference_no: '',
+  referenceNo: '',
   note: '',
-  terms_conditions: '',
-  branch_id: '',
-  warehouse_id: '',
-  exchange_rate: 1,
-  currency_code: '',
+  termsConditions: '',
+  branchId: '',
+  warehouseId: '',
+  exchangeRate: 1,
+  currencyCode: '',
+  pdfTemplateId: '',
+  discount: '',
+  discountType: 'amount',
+  adjustment: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
   attachments: [],
-  pdf_template_id: '',
-  discount: '',
-  discount_type: 'amount',
-  adjustment: '',
 };
 
 /**
  * Transform credit note to initial values in edit mode.
+ *
+ * Accepts a partial credit note shape: the provider seeds a new credit note
+ * from a picked invoice (`customerId`, `currencyCode`, `entries`) which lacks
+ * most CreditNote fields. The transform fills gaps from `defaultCreditNote`.
  */
-export function transformToEditForm(creditNote) {
+export function transformToEditForm(
+  creditNote: Partial<CreditNote> & { entries: CreditNote['entries'] },
+): CreditNoteFormValues {
   const initialEntries = [
-    ...creditNote.entries.map((creditNote) => ({
-      ...transformToForm(creditNote, defaultCreditNoteEntry),
+    ...creditNote.entries.map((entry) => ({
+      ...transformToForm(entry, defaultCreditNoteEntry),
     })),
     ...repeatValue(
       defaultCreditNoteEntry,
       Math.max(MIN_LINES_NUMBER - creditNote.entries.length, 0),
     ),
   ];
-  const entries = R.compose(
+  const entries = compose(
     ensureEntriesHaveEmptyLine(defaultCreditNoteEntry),
     updateItemsEntriesTotal,
   )(initialEntries);
 
-  const attachment = transformAttachmentsToForm(creditNote);
-
   return {
-    ...transformToForm(creditNote, defaultCreditNote),
+    ...defaultCreditNote,
+    ...(transformToForm(
+      creditNote,
+      defaultCreditNote,
+    ) as Partial<CreditNoteFormValues>),
     entries,
-    attachment,
+    attachments: transformAttachmentsToForm(creditNote),
   };
 }
+
+// Credit note entry request schema (without computed `amount`).
+const defaultReqCreditNoteEntry = {
+  index: 0,
+  itemId: '',
+  rate: '',
+  discount: '',
+  quantity: '',
+  description: '',
+};
 
 /**
  * Transformes credit note entries to submit request.
  */
-export const transformEntriesToSubmit = (entries) => {
-  const transformCreditNoteEntry = R.compose(
-    R.omit(['amount']),
-    R.curry(transformToForm)(R.__, defaultCreditNoteEntry),
+const transformEntriesToSubmit = (entries: CreditNoteEntry[]) => {
+  return orderingLinesIndexes(
+    entries.map((entry) => transformToForm(entry, defaultReqCreditNoteEntry)),
   );
-  return R.compose(
-    orderingLinesIndexes,
-    R.map(transformCreditNoteEntry),
-  )(entries);
 };
 
 /**
- * Filters the givne non-zero entries.
+ * Filters the given non-zero entries.
  */
-export const filterNonZeroEntries = (entries) => {
-  return entries.filter((item) => item.item_id && item.quantity);
+const filterNonZeroEntries = (entries: CreditNoteEntry[]) => {
+  return entries.filter((item) => item.itemId && item.quantity);
 };
 
 /**
  * Transformes form values to request body.
+ *
+ * NOTE: `as unknown as CreateCreditNoteBody` is required because the SDK request
+ * type reuses the response `ItemEntryDto`, which mandates server-computed fields
+ * that the client never sends — the backend populates them. Form field values
+ * are also string-typed (from inputs) while the DTO types them as numbers.
+ * Coercing every field would change the runtime payload, so we assemble the body
+ * as-is and assert the type.
  */
-export const transformFormValuesToRequest = (values) => {
-  const entries = filterNonZeroEntries(values.entries);
-  const attachments = transformAttachmentsToRequest(values);
-
+export function transformFormValuesToRequest(
+  values: CreditNoteFormValues,
+): CreateCreditNoteBody {
   return {
     ...values,
-    entries: transformEntriesToSubmit(entries),
+    entries: transformEntriesToSubmit(filterNonZeroEntries(values.entries)),
     open: false,
-    attachments,
-  };
+    attachments: transformAttachmentsToRequest(values),
+  } as unknown as CreateCreditNoteBody;
+}
+
+type FastFieldShouldUpdateProps = {
+  shouldUpdateDeps?: { items?: unknown[] };
+  items?: unknown;
+  [key: string]: unknown;
 };
 
 /**
  * Determines customer name field when should update.
  */
-export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
+export const customerNameFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
-    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
+    newProps.shouldUpdateDeps?.items !== oldProps.shouldUpdateDeps?.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -139,7 +196,10 @@ export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Determines invoice entries field when should update.
  */
-export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+export const entriesFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -147,7 +207,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<CreditNoteFormValues>();
   const { branches, isBranchesSuccess, isNewMode } = useCreditNoteFormContext();
 
   React.useEffect(() => {
@@ -155,14 +215,14 @@ export const useSetPrimaryBranchToForm = () => {
       const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches, isNewMode]);
 };
 
 export const useSetPrimaryWarehouseToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<CreditNoteFormValues>();
   const { warehouses, isWarehousesSuccess, isNewMode } =
     useCreditNoteFormContext();
 
@@ -172,7 +232,7 @@ export const useSetPrimaryWarehouseToForm = () => {
         warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
-        setFieldValue('warehouse_id', primaryWarehouse.id);
+        setFieldValue('warehouseId', primaryWarehouse.id);
       }
     }
   }, [isWarehousesSuccess, setFieldValue, warehouses, isNewMode]);
@@ -180,84 +240,75 @@ export const useSetPrimaryWarehouseToForm = () => {
 
 /**
  * Retrieves the credit note subtotal.
- * @returns {number}
  */
 export const useCreditNoteSubtotal = () => {
   const {
     values: { entries },
-  } = useFormikContext();
+  } = useFormikContext<CreditNoteFormValues>();
 
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
-
-  return total;
+  return React.useMemo(() => getEntriesTotal(entries), [entries]);
 };
 
 /**
  * Retrieves the credit note subtotal formatted.
- * @returns {string}
  */
 export const useCreditNoteSubtotalFormatted = () => {
   const subtotal = useCreditNoteSubtotal();
   const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<CreditNoteFormValues>();
 
   return formattedAmount(subtotal, currencyCode, { money: true });
 };
 
 /**
  * Retrieves the credit note discount amount.
- * @returns {number}
  */
 export const useCreditNoteDiscountAmount = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<CreditNoteFormValues>();
   const subtotal = useCreditNoteSubtotal();
   const discount = toSafeNumber(values.discount);
 
-  return values?.discount_type === 'percentage'
+  return values?.discountType === 'percentage'
     ? (discount * subtotal) / 100
     : discount;
 };
 
 /**
  * Retrieves the credit note discount amount formatted.
- * @returns {string}
  */
 export const useCreditNoteDiscountAmountFormatted = () => {
   const discountAmount = useCreditNoteDiscountAmount();
   const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<CreditNoteFormValues>();
 
   return formattedAmount(discountAmount, currencyCode, { money: true });
 };
 
 /**
  * Retrieves the credit note adjustment amount.
- * @returns {number}
  */
 export const useCreditNoteAdjustmentAmount = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<CreditNoteFormValues>();
 
   return toSafeNumber(values.adjustment);
 };
 
 /**
  * Retrieves the credit note adjustment amount formatted.
- * @returns {string}
  */
 export const useCreditNoteAdjustmentFormatted = () => {
   const adjustmentAmount = useCreditNoteAdjustmentAmount();
   const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<CreditNoteFormValues>();
 
   return formattedAmount(adjustmentAmount, currencyCode, { money: true });
 };
 
 /**
  * Retrieves the credit note total.
- * @returns {number}
  */
 export const useCreditNoteTotal = () => {
   const subtotal = useCreditNoteSubtotal();
@@ -266,34 +317,32 @@ export const useCreditNoteTotal = () => {
 
   return R.compose(
     R.subtract(R.__, discountAmount),
-    R.add(R.__, adjustmentAmount),
+    R.add(adjustmentAmount),
   )(subtotal);
 };
 
 /**
  * Retrieves the credit note total formatted.
- * @returns {string}
  */
 export const useCreditNoteTotalFormatted = () => {
   const total = useCreditNoteTotal();
   const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<CreditNoteFormValues>();
 
   return formattedAmount(total, currencyCode, { money: true });
 };
 
 /**
- * Detarmines whether the receipt has foreign customer.
- * @returns {boolean}
+ * Detarmines whether the credit note has foreign customer.
  */
 export const useCreditNoteIsForeignCustomer = () => {
-  const { values } = useFormikContext();
-  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext<CreditNoteFormValues>();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const isForeignCustomer = React.useMemo(
-    () => values.currency_code !== currentOrganization.base_currency,
-    [values.currency_code, currentOrganization.base_currency],
+    () => values.currencyCode !== baseCurrency,
+    [values.currencyCode, baseCurrency],
   );
   return isForeignCustomer;
 };

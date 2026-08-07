@@ -1,9 +1,7 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-
+import React from 'react';
 import { WarehouseTransferFormHeaderFields } from './WarehouseTransferFormHeaderFields';
+import { CLASSES } from '@/constants/classes';
 
 /**
  * Warehose transfer form header section.

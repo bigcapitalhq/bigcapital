@@ -1,15 +1,19 @@
-// @ts-nocheck
-import React from 'react';
+import { ComponentType, lazy } from 'react';
 
-const WarehouseDeleteAlert = React.lazy(() =>
+const WarehouseDeleteAlert = lazy(() =>
   import('@/containers/Alerts/Warehouses/WarehouseDeleteAlert').then((m) => ({
     default: m.WarehouseDeleteAlert,
   })),
 );
 
-/**
- * Warehouses alerts.
- */
-export const WarehousesAlerts = [
-  { name: 'warehouse-delete', component: WarehouseDeleteAlert },
+interface WarehouseAlertEntry {
+  name: string;
+  component: ComponentType<unknown>;
+}
+
+export const WarehousesAlerts: WarehouseAlertEntry[] = [
+  {
+    name: 'warehouse-delete',
+    component: WarehouseDeleteAlert as ComponentType<unknown>,
+  },
 ];

@@ -1,25 +1,25 @@
+import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import { Formik, Form } from 'formik';
 import moment from 'moment';
 import styled from 'styled-components';
-import { Formik, Form } from 'formik';
-import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-import { compose } from '@/utils';
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
-import { ProfitLossSheetHeaderGeneralPane } from './ProfitLossSheetHeaderGeneralPane';
 import { ProfitLossSheetHeaderComparisonPanel } from './ProfitLossSheetHeaderComparisonPanel';
 import { ProfitLossSheetHeaderDimensionsPanel } from './ProfitLossSheetHeaderDimensionsPanel';
+import { ProfitLossSheetHeaderGeneralPane } from './ProfitLossSheetHeaderGeneralPane';
+import {
+  useProfitLossHeaderValidationSchema,
+  getDefaultProfitLossQuery,
+} from './utils';
 import { withProfitLoss, WithProfitLossProps } from './withProfitLoss';
 import {
   withProfitLossActions,
   WithProfitLossActionsProps,
 } from './withProfitLossActions';
-import {
-  useProfitLossHeaderValidationSchema,
-  getDefaultProfitLossQuery,
-} from './utils';
-import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
 import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
+import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
+import { compose } from '@/utils';
 
 type ProfitLossFormValues = ReturnType<typeof getDefaultProfitLossQuery>;
 

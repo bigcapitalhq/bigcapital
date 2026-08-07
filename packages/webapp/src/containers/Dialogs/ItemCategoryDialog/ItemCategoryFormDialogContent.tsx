@@ -1,18 +1,17 @@
-// @ts-nocheck
 import React from 'react';
-import { ItemCategoryProvider } from './ItemCategoryProvider';
 import { ItemCategoryForm } from './ItemCategoryForm';
+import { ItemCategoryProvider } from './ItemCategoryProvider';
 
-import '@/style/pages/ItemCategory/ItemCategoryDialog.scss';
+interface ItemCategoryFormDialogContentProps {
+  itemCategoryId?: number | null;
+  dialogName: string;
+  action?: string;
+}
 
-/**
- * Item Category form dialog content.
- */
 export function ItemCategoryFormDialogContent({
-  // #ownProp
   itemCategoryId,
   dialogName,
-}) {
+}: ItemCategoryFormDialogContentProps): React.ReactElement {
   return (
     <ItemCategoryProvider
       itemCategoryId={itemCategoryId}

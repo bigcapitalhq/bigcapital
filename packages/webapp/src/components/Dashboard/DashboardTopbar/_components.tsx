@@ -1,12 +1,11 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes } from '@blueprintjs/core';
-import { useGetUniversalSearchTypeOptions } from '@/containers/UniversalSearch/utils';
+import React from 'react';
 import { Icon, FormattedMessage as T } from '@/components';
+import { useGetUniversalSearchTypeOptions } from '@/containers/UniversalSearch/utils';
 
 export function DashboardTopbarSubscriptionMessage() {
   return (
-    <div class="dashboard__topbar-subscription-msg">
+    <div className="dashboard__topbar-subscription-msg">
       <span>
         <T id={'dashboard.subscription_msg.period_over'} />
       </span>
@@ -14,7 +13,9 @@ export function DashboardTopbarSubscriptionMessage() {
   );
 }
 
-export function DashboardHamburgerButton({ ...props }) {
+export function DashboardHamburgerButton(
+  props: React.ComponentProps<typeof Button>,
+) {
   return (
     <Button minimal={true} {...props}>
       <svg
@@ -43,7 +44,9 @@ export function DashboardHamburgerButton({ ...props }) {
 /**
  * Dashboard quick search button.
  */
-export function DashboardQuickSearchButton({ ...rest }) {
+export function DashboardQuickSearchButton(
+  rest: React.ComponentProps<typeof Button>,
+) {
   const searchTypeOptions = useGetUniversalSearchTypeOptions();
 
   // Can't continue if there is no any search type option.

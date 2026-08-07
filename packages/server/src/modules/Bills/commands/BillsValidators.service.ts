@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
 import { ERRORS } from '../Bills.constants';
 import { Bill } from '../models/Bill';
 import { ServiceError } from '@/modules/Items/ServiceError';
@@ -81,11 +82,15 @@ export class BillsValidators {
   /**
    * Validate the bill has no payment entries.
    * @param {number} billId - Bill id.
+   * @param {Knex.Transaction} trx
    */
-  public async validateBillHasNoEntries(billId: number) {
+  public async validateBillHasNoEntries(
+    billId: number,
+    trx?: Knex.Transaction,
+  ) {
     // Retrieve the bill associate payment made entries.
     const entries = await this.billPaymentEntryModel()
-      .query()
+      .query(trx)
       .where('bill_id', billId);
 
     if (entries.length > 0) {
@@ -107,10 +112,14 @@ export class BillsValidators {
   /**
    * Validate bill transaction has no associated allocated landed cost transactions.
    * @param {number} billId
+   * @param {Knex.Transaction} trx
    */
-  public async validateBillHasNoLandedCost(billId: number) {
+  public async validateBillHasNoLandedCost(
+    billId: number,
+    trx?: Knex.Transaction,
+  ) {
     const billLandedCosts = await this.billLandedCostModel()
-      .query()
+      .query(trx)
       .where('billId', billId);
 
     if (billLandedCosts.length > 0) {
@@ -150,9 +159,12 @@ export class BillsValidators {
    *
    * @param {number} billId
    */
-  public validateBillHasNoAppliedToCredit = async (billId: number) => {
+  public validateBillHasNoAppliedToCredit = async (
+    billId: number,
+    trx?: Knex.Transaction,
+  ) => {
     const appliedTransactions = await this.vendorCreditAppliedBillModel()
-      .query()
+      .query(trx)
       .where('billId', billId);
 
     if (appliedTransactions.length > 0) {

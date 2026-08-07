@@ -1,17 +1,15 @@
-// @ts-nocheck
-import React from 'react';
 import { Tab } from '@blueprintjs/core';
+import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { DrawerMainTabs } from '@/components';
-import { useAbilityContext } from '@/hooks/utils';
-import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
+import { BillDetailActionsBar } from './BillDetailActionsBar';
 import { BillDetailTab } from './BillDetailTab';
-import { LocatedLandedCostTable } from './LocatedLandedCostTable';
 import { BillGLEntriesTable } from './BillGLEntriesTable';
 import { BillPaymentTransactionTable } from './BillPaymentTransactions/BillPaymentTransactionTable';
-import { BillDetailActionsBar } from './BillDetailActionsBar';
+import { LocatedLandedCostTable } from './LocatedLandedCostTable';
+import { DrawerMainTabs } from '@/components';
+import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
+import { useAbilityContext } from '@/hooks/utils';
 
 /**
  * Bill details tabs.

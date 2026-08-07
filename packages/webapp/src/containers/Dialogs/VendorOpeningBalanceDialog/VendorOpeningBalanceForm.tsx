@@ -1,56 +1,58 @@
-// @ts-nocheck
-import React from 'react';
+import { Intent } from '@blueprintjs/core';
+import { Formik, FormikHelpers } from 'formik';
+import { defaultTo } from 'lodash';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { defaultTo } from 'lodash';
-
-import { AppToaster } from '@/components';
 import { CreateVendorOpeningBalanceFormSchema } from './VendorOpeningBalanceForm.schema';
-import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
-
 import { VendorOpeningBalanceFormContent } from './VendorOpeningBalanceFormContent';
+import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
+import type { VendorOpeningBalanceFormValues } from './utils';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
-const defaultInitialValues = {
-  opening_balance: '0',
-  opening_balance_branch_id: '',
-  opening_balance_exchange_rate: 1,
-  opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
+const defaultInitialValues: VendorOpeningBalanceFormValues = {
+  openingBalance: '0',
+  openingBalanceBranchId: '',
+  openingBalanceExchangeRate: 1,
+  openingBalanceAt: moment(new Date()).format('YYYY-MM-DD'),
 };
+
+interface VendorOpeningBalanceFormProps extends WithDialogActionsProps {}
 
 /**
  * Vendor Opening balance form.
- * @returns
  */
 function VendorOpeningBalanceFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: VendorOpeningBalanceFormProps) {
   const { dialogName, vendor, editVendorOpeningBalanceMutate } =
     useVendorOpeningBalanceContext();
 
   // Initial form values
-  const initialValues = {
+  const initialValues: VendorOpeningBalanceFormValues = {
     ...defaultInitialValues,
     ...vendor,
-    opening_balance: defaultTo(vendor.opening_balance, ''),
+    openingBalance: defaultTo(vendor.openingBalance, ''),
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: VendorOpeningBalanceFormValues,
+    { setSubmitting }: FormikHelpers<VendorOpeningBalanceFormValues>,
+  ) => {
     const formValues = {
-      ...values,
-      opening_balance_at: moment(values.opening_balance_at).format(
-        'YYYY-MM-DD',
-      ),
+      openingBalance: Number(values.openingBalance),
+      openingBalanceAt: moment(values.openingBalanceAt).format('YYYY-MM-DD'),
+      openingBalanceExchangeRate: values.openingBalanceExchangeRate,
+      openingBalanceBranchId: values.openingBalanceBranchId
+        ? Number(values.openingBalanceBranchId)
+        : undefined,
     };
 
     // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('vendor_opening_balance.success_message'),
         intent: Intent.SUCCESS,
@@ -59,23 +61,23 @@ function VendorOpeningBalanceFormInner({
     };
 
     // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
+    const onError = (error: {
+      data?: { errors?: Record<string, unknown> };
     }) => {
+      const errors = error?.data?.errors;
       if (errors) {
+        // Errors are surfaced via the form schema; nothing to do here.
       }
       setSubmitting(false);
     };
 
-    editVendorOpeningBalanceMutate([vendor.id, formValues])
+    editVendorOpeningBalanceMutate([vendor.id!, formValues])
       .then(onSuccess)
       .catch(onError);
   };
 
   return (
-    <Formik
+    <Formik<VendorOpeningBalanceFormValues>
       validationSchema={CreateVendorOpeningBalanceFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}

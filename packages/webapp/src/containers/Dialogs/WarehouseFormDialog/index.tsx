@@ -1,36 +1,38 @@
-// @ts-nocheck
-import React from 'react';
+import React, { lazy } from 'react';
+import type { WarehouseFormDialogPayload } from './types';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-
 import { compose } from '@/utils';
 
-const WarehouseFormDialogContent = React.lazy(() =>
+const WarehouseFormDialogContent = lazy(() =>
   import('./WarehouseFormDialogContent').then((m) => ({
     default: m.WarehouseFormDialogContent,
   })),
 );
 
-/**
- * Warehouse form form dialog.
- */
+interface WarehouseFormDialogProps extends DialogBaseProps {
+  dialogName: string;
+  payload: WarehouseFormDialogPayload;
+}
+
 function WarehouseFormDialog({
   dialogName,
-  payload: { warehouseId = null, action },
+  payload: { warehouseId = null, action } = {},
   isOpen,
-}) {
+}: WarehouseFormDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
       title={
-        action == 'edit' ? (
+        action === 'edit' ? (
           <T id={'warehouse.dialog.label.edit_warehouse'} />
         ) : (
           <T id={'warehouse.dialog.label.new_warehouse'} />
         )
       }
       isOpen={isOpen}
-      canEscapeJeyClose={true}
+      canEscapeKeyClose={true}
       autoFocus={true}
       className={'dialog--warehouse-form'}
     >

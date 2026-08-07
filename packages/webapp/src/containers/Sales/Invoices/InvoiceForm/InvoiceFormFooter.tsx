@@ -1,11 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { x } from '@xstyled/emotion';
-
-import { Row, Col, Paper } from '@/components';
+import React from 'react';
+import { UploadAttachmentButton } from '../../../Attachments/UploadAttachmentButton';
 import { InvoiceFormFooterLeft } from './InvoiceFormFooterLeft';
 import { InvoiceFormFooterRight } from './InvoiceFormFooterRight';
-import { UploadAttachmentButton } from '../../../Attachments/UploadAttachmentButton';
+import { Row, Col, Paper } from '@/components';
 
 export function InvoiceFormFooter() {
   return (

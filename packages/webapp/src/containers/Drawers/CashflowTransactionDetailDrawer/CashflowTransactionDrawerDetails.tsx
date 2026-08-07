@@ -1,13 +1,11 @@
 // @ts-nocheck
 import React from 'react';
-
-import { Card, CommercialDocBox } from '@/components';
-
 import { CashflowTransactionDrawerActionBar } from './CashflowTransactionDrawerActionBar';
+import { CashflowTransactionDrawerFooter } from './CashflowTransactionDrawerFooter';
 import { CashflowTransactionDrawerHeader } from './CashflowTransactionDrawerHeader';
 import { CashflowTransactionDrawerTable } from './CashflowTransactionDrawerTable';
 import { CashflowTransactionDrawerTableFooter } from './CashflowTransactionDrawerTableFooter';
-import { CashflowTransactionDrawerFooter } from './CashflowTransactionDrawerFooter';
+import { Card, CommercialDocBox } from '@/components';
 /**
  * Cashflow transaction view details.
  */

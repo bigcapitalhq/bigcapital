@@ -1,5 +1,4 @@
-// @ts-nocheck
-import React from 'react';
+import React, { ComponentType, LazyExoticComponent } from 'react';
 
 const InventoryAdjustmentDeleteAlert = React.lazy(() =>
   import('@/containers/Alerts/Items/InventoryAdjustmentDeleteAlert').then(
@@ -13,7 +12,12 @@ const InventoryAdjustmentPublishAlert = React.lazy(() =>
   ),
 );
 
-export const InventoryAdjustmentsAlerts = [
+interface AlertItem {
+  name: string;
+  component: LazyExoticComponent<ComponentType<unknown>>;
+}
+
+export const InventoryAdjustmentsAlerts: AlertItem[] = [
   {
     name: 'inventory-adjustment-delete',
     component: InventoryAdjustmentDeleteAlert,

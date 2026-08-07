@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -9,11 +8,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
-
+import React from 'react';
 import { CustomersTransactionsExportMenu } from './components';
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import {
   withCustomersTransactions,
@@ -23,13 +19,14 @@ import {
   withCustomersTransactionsActions,
   WithCustomersTransactionsActionsProps,
 } from './withCustomersTransactionsActions';
-
-import { compose, saveInvoke } from '@/utils';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { compose, saveInvoke } from '@/utils';
 
 interface CustomersTransactionsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;

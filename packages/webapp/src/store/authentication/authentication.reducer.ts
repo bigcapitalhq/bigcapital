@@ -1,9 +1,8 @@
 import { PayloadAction, createReducer } from '@reduxjs/toolkit';
+import { isUndefined } from 'lodash';
 import { persistReducer } from 'redux-persist';
 import purgeStoredState from 'redux-persist/es/purgeStoredState';
 import storage from 'redux-persist/lib/storage';
-import { isUndefined } from 'lodash';
-import { getCookie } from '@/utils';
 import {
   AUTH_LOGIN_CLEAR_ERRORS,
   AUTH_LOGIN_FAILURE,
@@ -13,6 +12,7 @@ import {
   AUTH_SET_USER_ID,
   RESET,
 } from '@/store/types';
+import { getCookie } from '@/utils';
 
 export interface AuthenticationState {
   token: string | null;

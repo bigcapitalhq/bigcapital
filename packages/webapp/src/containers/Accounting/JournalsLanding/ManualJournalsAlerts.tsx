@@ -1,5 +1,4 @@
-// @ts-nocheck
-import React from 'react';
+import React, { ComponentType, LazyExoticComponent } from 'react';
 
 const JournalDeleteAlert = React.lazy(() =>
   import('@/containers/Alerts/ManualJournals/JournalDeleteAlert').then((m) => ({
@@ -12,11 +11,15 @@ const JournalPublishAlert = React.lazy(() =>
   ),
 );
 
+interface AlertItem {
+  name: string;
+  component: LazyExoticComponent<ComponentType<unknown>>;
+}
+
 /**
  * Manual journals alerts.
  */
-
-export const ManualJournalsAlerts = [
+export const ManualJournalsAlerts: AlertItem[] = [
   { name: 'journal-delete', component: JournalDeleteAlert },
   { name: 'journal-publish', component: JournalPublishAlert },
 ];

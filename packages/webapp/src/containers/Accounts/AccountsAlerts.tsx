@@ -1,5 +1,4 @@
-// @ts-nocheck
-import React from 'react';
+import React, { ComponentType, LazyExoticComponent } from 'react';
 
 const AccountDeleteAlert = React.lazy(() =>
   import('@/containers/Alerts/Accounts/AccountDeleteAlert').then((m) => ({
@@ -27,7 +26,12 @@ const AccountBulkInactivateAlert = React.lazy(() =>
   ),
 );
 
-export const AccountsAlerts = [
+interface AlertItem {
+  name: string;
+  component: LazyExoticComponent<ComponentType<unknown>>;
+}
+
+export const AccountsAlerts: AlertItem[] = [
   { name: 'account-delete', component: AccountDeleteAlert },
   { name: 'account-inactivate', component: AccountInactivateAlert },
   { name: 'account-activate', component: AccountActivateAlert },

@@ -1,8 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import type { Column } from 'react-table';
-import { Align, TableStyle } from '@/constants';
-import { SkeletonText } from '@/components';
 import {
   DataTable,
   TableSkeletonRows,
@@ -15,6 +12,9 @@ import {
   FinancialSheetDate,
   FinancialSheetTable,
 } from './StyledFinancialSheet';
+import type { Column } from 'react-table';
+import { SkeletonText } from '@/components';
+import { Align, TableStyle } from '@/constants';
 
 const defaultSkeletonColumns = [
   { id: 'skeleton-1', className: 'skeleton-1' },

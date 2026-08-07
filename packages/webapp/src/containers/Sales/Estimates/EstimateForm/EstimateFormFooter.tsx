@@ -1,10 +1,8 @@
-// @ts-nocheck
-import React from 'react';
 import { x } from '@xstyled/emotion';
-
-import { Row, Col, Paper } from '@/components';
+import React from 'react';
 import { EstimateFormFooterLeft } from './EstimateFormFooterLeft';
 import { EstimateFormFooterRight } from './EstimateFormFooterRight';
+import { Row, Col, Paper } from '@/components';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**

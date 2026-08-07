@@ -1,10 +1,17 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
-
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { AbilitySubject, VendorAction } from '@/constants/abilityOption';
+import type { VendorDetails } from '@/containers/Drawers/VendorDetailsDrawer/VendorDetailsDrawerProvider';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { withDrawerActions } from '../Drawer/withDrawerActions';
+import { AbilitySubject, VendorAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+
+interface VendorUniversalSearchSelectComponentProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+  onAction?: () => void;
+}
 
 /**
  * Vendor univesal search item select action.
@@ -16,7 +23,7 @@ function VendorUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: VendorUniversalSearchSelectComponentProps) {
   if (resourceType === RESOURCES_TYPES.VENDOR) {
     openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId: resourceId });
     onAction && onAction();
@@ -31,10 +38,10 @@ const VendorUniversalSearchSelectAction = withDrawerActions(
 /**
  * Transformes vendor resource item to search.
  */
-const vendorToSearch = (contact) => ({
+const vendorToSearch = (contact: VendorDetails) => ({
   id: contact.id,
-  text: contact.display_name,
-  label: contact.formatted_balance,
+  text: contact.displayName,
+  label: contact.formattedBalance,
   reference: contact,
 });
 

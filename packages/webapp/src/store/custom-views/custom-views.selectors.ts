@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import { pickItemsFromIds } from '@/store/selectors';
 import type { RootState } from '@/store/reducers';
+import { pickItemsFromIds } from '@/store/selectors';
 
 const resourceViewsIdsSelector = (
   state: RootState,

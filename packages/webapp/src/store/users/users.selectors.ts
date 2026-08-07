@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { pickItemsFromIds, getItemById } from '@/store/selectors';
 import type { RootState } from '@/store/reducers';
+import { pickItemsFromIds, getItemById } from '@/store/selectors';
 
 const usersItemsSelector = (state: RootState) => state.users.items;
 const userIdPropSelector = (

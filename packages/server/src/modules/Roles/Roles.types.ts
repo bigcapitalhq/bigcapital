@@ -25,6 +25,13 @@ export type AppAbility = Ability<Abilities>;
 export const createAbility = (rules: RawRuleOf<AppAbility>[]) =>
   new Ability<Abilities>(rules);
 
+export enum RoleAction {
+  View = 'View',
+  Create = 'Create',
+  Edit = 'Edit',
+  Delete = 'Delete',
+}
+
 export interface ISubjectAbilitySchema {
   key: string;
   label: string;

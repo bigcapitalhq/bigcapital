@@ -1,11 +1,11 @@
+import { fetchResourceView, fetchResourceMeta } from '@bigcapital/sdk-ts';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { useApiFetcher } from '../../useRequest';
+import { viewsKeys } from './query-keys';
 import type {
   ResourceViewResponse,
   ResourceMetaResponse,
 } from '@bigcapital/sdk-ts';
-import { fetchResourceView, fetchResourceMeta } from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../../useRequest';
-import { viewsKeys } from './query-keys';
 
 export function useResourceViews(
   resourceSlug: string | null | undefined,

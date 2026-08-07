@@ -1,29 +1,34 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { compose } from '@/utils';
+import { ActionsMenu, useExpensesTableColumns } from './components';
+import { InvoicesEmptyStatus as ExpensesEmptyStatus } from './ExpensesEmptyStatus';
 import { useExpensesListContext } from './ExpensesListProvider';
-import { useMemorizedColumnsWidths } from '@/hooks';
+import { withExpenses } from './withExpenses';
+import { withExpensesActions } from './withExpensesActions';
+import type { ExpenseTableRow } from './components';
+import type { WithExpensesProps } from './withExpenses';
+import type { WithExpensesActionsProps } from './withExpensesActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DashboardContentTable,
   DataTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { TABLES } from '@/constants/tables';
-
-import { InvoicesEmptyStatus as ExpensesEmptyStatus } from './ExpensesEmptyStatus';
-
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withExpensesActions } from './withExpensesActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withExpenses } from './withExpenses';
-
-import { ActionsMenu, useExpensesTableColumns } from './components';
 import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { compose } from '@/utils';
+
+interface ExpensesDataTableProps
+  extends WithExpensesActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps,
+    Pick<WithExpensesProps, 'expensesTableState'> {}
 
 /**
  * Expenses datatable.
@@ -39,12 +44,9 @@ function ExpensesDataTable({
   // #withAlertActions
   openAlert,
 
-  // #withSettings
-  expensesTableSize,
-
   // #withExpenses
   expensesTableState,
-}) {
+}: ExpensesDataTableProps) {
   // Expenses list context.
   const {
     expenses,
@@ -53,7 +55,9 @@ function ExpensesDataTable({
     isExpensesLoading,
     isExpensesFetching,
     isEmptyStatus,
+    expenseSettings,
   } = useExpensesListContext();
+  const expensesTableSize = expenseSettings?.tableSize as string | undefined;
 
   const history = useHistory();
 
@@ -66,7 +70,15 @@ function ExpensesDataTable({
 
   // Handle fetch data of manual jouranls datatable.
   const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
+    ({
+      pageIndex,
+      pageSize,
+      sortBy,
+    }: {
+      pageIndex: number;
+      pageSize: number;
+      sortBy: Array<{ id: string; desc: boolean }>;
+    }) => {
       setExpensesTableState({
         pageIndex,
         pageSize,
@@ -77,34 +89,39 @@ function ExpensesDataTable({
   );
 
   // Handle the expense publish action.
-  const handlePublishExpense = (expense) => {
+  const handlePublishExpense = (expense: ExpenseTableRow) => {
     openAlert('expense-publish', { expenseId: expense.id });
   };
 
   // Handle the expense edit action.
-  const handleEditExpense = ({ id }) => {
+  const handleEditExpense = ({ id }: ExpenseTableRow) => {
     history.push(`/expenses/${id}/edit`);
   };
 
   // Handle the expense delete action.
-  const handleDeleteExpense = (expense) => {
+  const handleDeleteExpense = (expense: ExpenseTableRow) => {
     openAlert('expense-delete', { expenseId: expense.id });
   };
 
   // Handle view detail expense.
-  const handleViewDetailExpense = ({ id }) => {
+  const handleViewDetailExpense = ({ id }: ExpenseTableRow) => {
     openDrawer(DRAWERS.EXPENSE_DETAILS, {
       expenseId: id,
     });
   };
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (
+    cell: { row: { original: ExpenseTableRow } },
+    _event: React.MouseEvent,
+  ) => {
     openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: cell.row.original.id });
   };
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = (selectedFlatRows) => {
+  const handleSelectedRowsChange = (
+    selectedFlatRows: Array<{ original: ExpenseTableRow }>,
+  ) => {
     const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
     setExpensesSelectedRows(selectedIds);
   };
@@ -157,8 +174,5 @@ export const ExpenseDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withExpensesActions,
-  withSettings(({ expenseSettings }) => ({
-    expensesTableSize: expenseSettings?.tableSize,
-  })),
   withExpenses(({ expensesTableState }) => ({ expensesTableState })),
 )(ExpensesDataTable);

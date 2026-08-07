@@ -1,46 +1,42 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   AppToaster,
-  FormattedMessage as T,
   FormattedHTMLMessage,
+  FormattedMessage as T,
 } from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteInventoryAdjustment } from '@/hooks/query';
-
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
 
-/**
- * Inventory Adjustment delete alerts.
- */
+interface InventoryAdjustmentDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { inventoryId: number };
+}
+
 function InventoryAdjustmentDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { inventoryId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteInventoryAdjMutate, isLoading } =
+}: InventoryAdjustmentDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteInventoryAdjMutate, isPending } =
     useDeleteInventoryAdjustment();
 
-  // handle cancel delete alert.
   const handleCancelInventoryAdjustmentDelete = () => {
     closeAlert(name);
   };
 
-  // Handle the confirm delete of the inventory adjustment transaction.
   const handleConfirmInventoryAdjustmentDelete = () => {
     deleteInventoryAdjMutate(inventoryId)
       .then(() => {
@@ -52,7 +48,7 @@ function InventoryAdjustmentDeleteAlertInner({
         });
         closeDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS);
       })
-      .catch((errors) => {})
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -60,16 +56,17 @@ function InventoryAdjustmentDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelInventoryAdjustmentDelete}
       onConfirm={handleConfirmInventoryAdjustmentDelete}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch */}
         <FormattedHTMLMessage
           id={
             'once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it'

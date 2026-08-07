@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React from 'react';
+import { Classes, Checkbox, FormGroup, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { get } from 'lodash';
-import { Classes, Checkbox, FormGroup, Intent } from '@blueprintjs/core';
+import React from 'react';
 import { CellType } from '@/constants';
 
 const CheckboxEditableCell = ({

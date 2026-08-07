@@ -1,5 +1,7 @@
 // @ts-nocheck
 import React from 'react';
+import { ActionMenu } from './components';
+import { useProjectSalesColumns } from './hooks';
 import {
   DataTable,
   TableSkeletonRows,
@@ -7,20 +9,17 @@ import {
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { ActionMenu } from './components';
-import { useProjectSalesColumns } from './hooks';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { compose } from '@/utils';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 
 /**
  * Porject sales datatable.
  * @returns
  */
-function ProjectSalesTableRoot({
-  // #withSettings
-  salesTableSize,
-}) {
+function ProjectSalesTableRoot() {
+  // Settings hook.
+  const { projectSettings } = useProjectDetailContext();
+  const salesTableSize = projectSettings?.tableSize;
+
   // Retrieve project sales table columns.
   const columns = useProjectSalesColumns();
 
@@ -51,8 +50,4 @@ function ProjectSalesTableRoot({
     />
   );
 }
-export const ProjectSalesTable = compose(
-  withSettings(({ salesSettings }) => ({
-    salesTableSize: salesSettings?.tableSize,
-  })),
-)(ProjectSalesTableRoot);
+export const ProjectSalesTable = ProjectSalesTableRoot;

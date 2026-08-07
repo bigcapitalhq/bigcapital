@@ -1,8 +1,4 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import styled from 'styled-components';
-
 import {
   Menu,
   MenuDivider,
@@ -11,6 +7,9 @@ import {
   Intent,
   ProgressBar,
 } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import {
   Icon,
   FormatDate,

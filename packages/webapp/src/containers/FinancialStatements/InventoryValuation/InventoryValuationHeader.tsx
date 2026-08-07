@@ -1,13 +1,14 @@
-import React from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
-import { Formik, Form } from 'formik';
-import type { FormikHelpers } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
-import { InventoryValuationHeaderGeneralPanel } from './InventoryValuationHeaderGeneralPanel';
+import { Formik, Form } from 'formik';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
 import { InventoryValuationHeaderDimensionsPanel } from './InventoryValuationHeaderDimensionsPanel';
+import { InventoryValuationHeaderGeneralPanel } from './InventoryValuationHeaderGeneralPanel';
+import {
+  getInventoryValuationQuery,
+  getInventoryValuationQuerySchema,
+} from './utils';
 import {
   withInventoryValuation,
   WithInventoryValuationProps,
@@ -16,13 +17,12 @@ import {
   withInventoryValuationActions,
   WithInventoryValuationActionsProps,
 } from './withInventoryValuationActions';
-import { compose, transformToForm } from '@/utils';
-import { useFeatureCan } from '@/hooks/state';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
-import {
-  getInventoryValuationQuery,
-  getInventoryValuationQuerySchema,
-} from './utils';
+import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
+import { useFeatureCan } from '@/hooks/state';
+import { compose, transformToForm } from '@/utils';
 
 type InventoryValuationFormValues = Omit<
   ReturnType<typeof getInventoryValuationQuery>,

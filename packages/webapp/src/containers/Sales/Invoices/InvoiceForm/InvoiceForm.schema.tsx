@@ -1,17 +1,16 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
-import { isBlank } from '@/utils';
 import { TaxType } from '@/interfaces/TaxRates';
+import { isBlank } from '@/utils';
 
 const getSchema = () =>
   Yup.object().shape({
-    customer_id: Yup.string().label(intl.get('customer_name_')).required(),
-    invoice_date: Yup.date().required().label(intl.get('invoice_date_')),
-    due_date: Yup.date()
-      .min(Yup.ref('invoice_date'), ({ path, min }) =>
+    customerId: Yup.string().label(intl.get('customer_name_')).required(),
+    invoiceDate: Yup.date().required().label(intl.get('invoice_date_')),
+    dueDate: Yup.date()
+      .min(Yup.ref('invoiceDate'), ({ path, min }) =>
         intl.get('invoice.validation.due_date', {
           path,
           min: moment(min).format('YYYY/MM/DD'),
@@ -19,30 +18,30 @@ const getSchema = () =>
       )
       .required()
       .label(intl.get('due_date_')),
-    invoice_no: Yup.string()
+    invoiceNo: Yup.string()
       .max(DATATYPES_LENGTH.STRING)
       .label(intl.get('invoice_no_')),
-    reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
+    referenceNo: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
     delivered: Yup.boolean(),
-    from_estimate_id: Yup.string(),
-    invoice_message: Yup.string()
+    fromEstimateId: Yup.string(),
+    invoiceMessage: Yup.string()
       .trim()
       .min(1)
       .max(DATATYPES_LENGTH.TEXT)
       .label(intl.get('note')),
-    terms_conditions: Yup.string()
+    termsConditions: Yup.string()
       .trim()
       .min(1)
       .max(DATATYPES_LENGTH.TEXT)
       .label(intl.get('note')),
-    exchange_rate: Yup.number(),
-    inclusive_exclusive_tax: Yup.string().oneOf([
+    exchangeRate: Yup.number(),
+    inclusiveExclusiveTax: Yup.string().oneOf([
       TaxType.Inclusive,
       TaxType.Exclusive,
     ]),
-    branch_id: Yup.string(),
-    warehouse_id: Yup.string(),
-    project_id: Yup.string(),
+    branchId: Yup.string(),
+    warehouseId: Yup.string(),
+    projectId: Yup.string(),
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number()
@@ -53,7 +52,7 @@ const getSchema = () =>
             then: Yup.number().required(),
           }),
         rate: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
-        item_id: Yup.number()
+        itemId: Yup.number()
           .nullable()
           .when(['quantity', 'rate'], {
             is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),

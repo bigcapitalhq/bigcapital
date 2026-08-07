@@ -1,12 +1,9 @@
-// @ts-nocheck
 import React from 'react';
-
-import { CommercialDocBox } from '@/components';
-
+import { InvoiceDetailFooter } from './InvoiceDetailFooter';
 import { InvoiceDetailHeader } from './InvoiceDetailHeader';
 import { InvoiceDetailTable } from './InvoiceDetailTable';
 import { InvoiceDetailTableFooter } from './InvoiceDetailTableFooter';
-import { InvoiceDetailFooter } from './InvoiceDetailFooter';
+import { CommercialDocBox } from '@/components';
 
 /**
  * Invoice readonly details tab panel.

@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-
-import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteExpenses } from '@/hooks/query/expenses';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithExpensesActionsProps } from '@/containers/Expenses/ExpensesLanding/withExpensesActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withExpensesActions } from '@/containers/Expenses/ExpensesLanding/withExpensesActions';
+import { useBulkDeleteExpenses } from '@/hooks/query/expenses';
 import { compose } from '@/utils';
+
+interface ExpenseBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface ExpenseBulkDeleteDialogProps
+  extends WithExpensesActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
 
 function ExpenseBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withExpensesActions
   setExpensesSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteExpenses, isLoading } =
+}: ExpenseBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: ExpenseBulkDeleteDialogPayload = payload ?? {};
+
+  const { mutateAsync: bulkDeleteExpenses, isPending: isLoading } =
     useBulkDeleteExpenses();
 
   const handleCancel = () => {

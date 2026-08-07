@@ -1,11 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
-
-import { CLASSES } from '@/constants/classes';
-import { Row, Col, Paper } from '@/components';
+import React from 'react';
 import { MakeJournalFormFooterLeft } from './MakeJournalFormFooterLeft';
 import { MakeJournalFormFooterRight } from './MakeJournalFormFooterRight';
+import { Row, Col, Paper } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 export function MakeJournalFormFooter() {

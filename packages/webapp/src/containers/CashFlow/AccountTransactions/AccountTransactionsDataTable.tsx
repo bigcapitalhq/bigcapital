@@ -1,8 +1,15 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
-import { Intent } from '@blueprintjs/core';
-
+import { withBankingActions } from '../withBankingActions';
+import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { useAccountTransactionsColumns, ActionsMenu } from './components';
+import { handleCashFlowTransactionType } from './utils';
+import type { AccountTransactionRow } from './components';
+import type { WithBankingActionsProps } from '../withBankingActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTable,
   TableFastCell,
@@ -13,38 +20,28 @@ import {
   AppToaster,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-
-import { withSettings } from '@/containers/Settings/withSettings';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withBankingActions } from '../withBankingActions';
-
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { useAccountTransactionsColumns, ActionsMenu } from './components';
-import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/banking';
 import { useUncategorizeTransaction } from '@/hooks/query';
-import { handleCashFlowTransactionType } from './utils';
-
+import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/banking';
 import { compose } from '@/utils';
+
+interface AccountTransactionsDataTableProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'openDrawer'>,
+    Pick<WithBankingActionsProps, 'setCategorizedTransactionsSelected'> {}
 
 /**
  * Account transactions data table.
  */
 function AccountTransactionsDataTableInner({
-  // #withSettings
-  cashflowTansactionsTableSize,
-
-  // #withAlertActions
-  openAlert,
-
   // #withDrawerActions
   openDrawer,
 
   // #withBankingActions
   setCategorizedTransactionsSelected,
-}) {
+}: AccountTransactionsDataTableProps) {
   // Retrieve table columns.
   const columns = useAccountTransactionsColumns();
 
@@ -63,20 +60,27 @@ function AccountTransactionsDataTableInner({
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
 
-  const { scrollableRef } = useAccountTransactionsContext();
+  const { scrollableRef, cashflowTransactionsSettings } =
+    useAccountTransactionsContext();
+  const cashflowTansactionsTableSize =
+    cashflowTransactionsSettings?.tableSize as string | undefined;
 
   // Handle view details action.
-  const handleViewDetailCashflowTransaction = (referenceType) => {
+  const handleViewDetailCashflowTransaction = (
+    referenceType: AccountTransactionRow,
+  ) => {
     handleCashFlowTransactionType(referenceType, openDrawer);
   };
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (cell: {
+    row: { original: AccountTransactionRow };
+  }) => {
     const referenceType = cell.row.original;
     handleCashFlowTransactionType(referenceType, openDrawer);
   };
   // Handles the unmatching the matched transaction.
-  const handleUnmatchTransaction = (transaction) => {
-    unmatchTransaction({ id: transaction.uncategorized_transaction_id })
+  const handleUnmatchTransaction = (transaction: AccountTransactionRow) => {
+    unmatchTransaction({ id: transaction.uncategorizedTransactionId })
       .then(() => {
         AppToaster.show({
           message: 'The bank transaction has been unmatched.',
@@ -91,8 +95,10 @@ function AccountTransactionsDataTableInner({
       });
   };
   // Handle uncategorize transaction.
-  const handleUncategorizeTransaction = (transaction) => {
-    uncategorizeTransaction(transaction.uncategorized_transaction_id)
+  const handleUncategorizeTransaction = (
+    transaction: AccountTransactionRow,
+  ) => {
+    uncategorizeTransaction(transaction.uncategorizedTransactionId)
       .then(() => {
         AppToaster.show({
           message: 'The bank transaction has been uncategorized.',
@@ -108,10 +114,12 @@ function AccountTransactionsDataTableInner({
   };
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = (selected) => {
+  const handleSelectedRowsChange = (
+    selected: Array<{ original: AccountTransactionRow }>,
+  ) => {
     const selectedIds = selected
-      ?.filter((row) => row.original.uncategorized_transaction_id)
-      ?.map((row) => row.original.uncategorized_transaction_id);
+      ?.filter((row) => row.original.uncategorizedTransactionId)
+      ?.map((row) => row.original.uncategorizedTransactionId);
 
     setCategorizedTransactionsSelected(selectedIds);
   };
@@ -154,9 +162,6 @@ function AccountTransactionsDataTableInner({
 }
 
 export const AccountTransactionsDataTable = compose(
-  withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
-  })),
   withAlertActions,
   withDrawerActions,
   withBankingActions,
@@ -166,7 +171,6 @@ const DashboardConstrantTable = styled(DataTable)`
   .table {
     .thead {
       .th {
-        // background: #fff;
         letter-spacing: 1px;
         text-transform: uppercase;
         font-size: 13px;

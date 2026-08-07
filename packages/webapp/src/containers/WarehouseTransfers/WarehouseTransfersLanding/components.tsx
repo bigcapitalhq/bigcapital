@@ -1,8 +1,6 @@
-// @ts-nocheck
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { safeCallback } from '@/utils';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -10,11 +8,31 @@ import {
   If,
   Icon,
 } from '@/components';
+import { safeCallback } from '@/utils';
+
+interface WarehouseTransferRow {
+  id: number;
+  is_transferred?: boolean;
+  is_initiated?: boolean;
+}
+
+interface ActionsMenuPayload {
+  onEdit?: (row: WarehouseTransferRow) => void;
+  onDelete?: (row: WarehouseTransferRow) => void;
+  onViewDetails?: (row: WarehouseTransferRow) => void;
+  onInitate?: (row: WarehouseTransferRow) => void;
+  onTransfer?: (row: WarehouseTransferRow) => void;
+}
+
+interface ActionsMenuProps {
+  payload: ActionsMenuPayload;
+  row: { original: WarehouseTransferRow };
+}
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onViewDetails, onInitate, onTransfer },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -29,14 +47,18 @@ export function ActionsMenu({
         onClick={safeCallback(onEdit, original)}
       />
 
-      <If condition={!original.is_transferred && !original.is_initiated}>
+      <If
+        condition={Boolean(!original.is_transferred && !original.is_initiated)}
+      >
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
           text={intl.get('warehouse_transfer.action.initiate_transfer')}
           onClick={safeCallback(onInitate, original)}
         />
       </If>
-      <If condition={original.is_initiated && !original.is_transferred}>
+      <If
+        condition={Boolean(original.is_initiated && !original.is_transferred)}
+      >
         <MenuItem
           icon={<Icon icon="send" iconSize={16} />}
           text={intl.get('warehouse_transfer.action.mark_as_transferred')}
@@ -58,18 +80,18 @@ export function ActionsMenu({
 /**
  * Status accessor.
  */
-export function StatusAccessor(warehouse) {
+export function StatusAccessor(warehouse: WarehouseTransferRow) {
   return (
     <Choose>
       <Choose.When
-        condition={warehouse.is_initiated && !warehouse.is_transferred}
+        condition={Boolean(warehouse.is_initiated && !warehouse.is_transferred)}
       >
         <Tag minimal={true} intent={Intent.WARNING} round={true}>
           <T id={'warehouse_transfer.label.transfer_initiated'} />
         </Tag>
       </Choose.When>
       <Choose.When
-        condition={warehouse.is_initiated && warehouse.is_transferred}
+        condition={Boolean(warehouse.is_initiated && warehouse.is_transferred)}
       >
         <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
           <T id={'warehouse_transfer.label.transferred'} />

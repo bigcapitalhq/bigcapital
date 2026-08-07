@@ -1,22 +1,36 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
+import { pick } from 'lodash';
+import React, { useMemo, createContext } from 'react';
+import type { QuickPaymentMadeContextValue } from './types';
 import { DialogContent } from '@/components';
+import { Features } from '@/constants';
 import {
   useBill,
   useAccounts,
   useBranches,
   useCreatePaymentMade,
 } from '@/hooks/query';
-import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
-import { pick } from 'lodash';
 
-const QuickPaymentMadeContext = React.createContext();
+const QuickPaymentMadeContext = createContext<QuickPaymentMadeContextValue>(
+  {} as QuickPaymentMadeContextValue,
+);
+
+interface QuickPaymentMadeFormProviderProps {
+  query?: Record<string, unknown>;
+  billId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Quick payment made dialog provider.
  */
-function QuickPaymentMadeFormProvider({ query, billId, dialogName, ...props }) {
+function QuickPaymentMadeFormProvider({
+  query,
+  billId,
+  dialogName,
+  ...props
+}: QuickPaymentMadeFormProviderProps) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -40,12 +54,18 @@ function QuickPaymentMadeFormProvider({ query, billId, dialogName, ...props }) {
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   const paymentBill = useMemo(
-    () => pick(bill, ['id', 'due_amount', 'vendor_id', 'currency_code']),
+    () =>
+      pick(bill, [
+        'id',
+        'dueAmount',
+        'vendorId',
+        'currencyCode',
+      ]) as QuickPaymentMadeContextValue['bill'],
     [bill],
   );
 
   // State provider.
-  const provider = {
+  const provider: QuickPaymentMadeContextValue = {
     bill: paymentBill,
     accounts,
     branches,

@@ -1,9 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-
-import { Flex, FlexItem, FieldHint, FFormGroup, FCheckbox } from '@/components';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import {
   handlePreviousYearCheckBoxChange,
   handlePreviousPeriodCheckBoxChange,
@@ -12,7 +10,7 @@ import {
   handlePreviousPeriodChangeCheckboxChange,
   handlePreviousPeriodPercentageCheckboxChange,
 } from './utils';
-import intl from 'react-intl-universal';
+import { Flex, FlexItem, FieldHint, FFormGroup, FCheckbox } from '@/components';
 
 /**
  * Profit/loss comparisons panel fields.

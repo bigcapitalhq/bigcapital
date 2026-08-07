@@ -1,21 +1,12 @@
 import React from 'react';
-import * as R from 'ramda';
-
-import { APAgingSummaryTable } from './APAgingSummaryTable';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
+import { APAgingSummaryTable } from './APAgingSummaryTable';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
-
-interface APAgingSummaryBodyProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
-
-function APAgingSummaryBodyJSX({ organizationName }: APAgingSummaryBodyProps) {
+function APAgingSummaryBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isAPAgingLoading } = useAPAgingSummaryContext();
 
   return (
@@ -29,8 +20,4 @@ function APAgingSummaryBodyJSX({ organizationName }: APAgingSummaryBodyProps) {
   );
 }
 
-export const APAgingSummaryBody = R.compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization?.name,
-  })),
-)(APAgingSummaryBodyJSX);
+export const APAgingSummaryBody = APAgingSummaryBodyJSX;

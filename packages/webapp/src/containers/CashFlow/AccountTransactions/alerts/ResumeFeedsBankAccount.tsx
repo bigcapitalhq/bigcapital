@@ -1,13 +1,19 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-
-import { AppToaster, FormattedMessage as T } from '@/components';
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useResumeFeedsBankAccount } from '@/hooks/query/banking';
 import { compose } from '@/utils';
+
+interface ResumeFeedsBankAccountAlertProps
+  extends Pick<WithAlertActionsProps, 'closeAlert'>,
+    WithAlertStoreConnectProps {
+  name: string;
+}
 
 /**
  * Resume bank account feeds alert.
@@ -17,13 +23,15 @@ function ResumeFeedsBankAccountAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { bankAccountId },
+  payload,
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: resumeFeedsBankAccount, isLoading } =
+}: ResumeFeedsBankAccountAlertProps) {
+  const { mutateAsync: resumeFeedsBankAccount, isPending: isLoading } =
     useResumeFeedsBankAccount();
+
+  const bankAccountId = payload?.bankAccountId as number;
 
   // Handle activate item alert cancel.
   const handleCancelActivateItem = () => {
@@ -39,7 +47,7 @@ function ResumeFeedsBankAccountAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -47,7 +55,7 @@ function ResumeFeedsBankAccountAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Resume bank feeds'}
       intent={Intent.SUCCESS}
       isOpen={isOpen}

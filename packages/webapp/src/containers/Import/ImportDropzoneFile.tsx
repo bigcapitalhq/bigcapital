@@ -1,19 +1,27 @@
-// @ts-nocheck
-import { useRef } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
+import type { ComponentType, PropsWithChildren, ReactNode } from 'react';
+import { useRef } from 'react';
+import styles from './ImportDropzone.module.css';
 import { Box, Icon, Stack } from '@/components';
 import { Dropzone, DropzoneProps } from '@/components/Dropzone';
 import { MIME_TYPES } from '@/components/Dropzone/mine-types';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
-import styles from './ImportDropzone.module.css';
+
+// `Dropzone` reads `children` and `classNames` from props at runtime but its
+// exported type omits them. Cast once at the boundary so call sites stay typed.
+const DropzoneWithChildren = Dropzone as unknown as ComponentType<
+  PropsWithChildren<DropzoneProps> & {
+    classNames?: { root?: string; content?: string };
+  }
+>;
 
 export interface ImportDropzoneFieldProps {
-  initialValue?: File;
-  value?: File;
-  onChange?: (file: File) => void;
+  initialValue?: File | null;
+  value?: File | null;
+  onChange?: (file: File | null) => void;
   dropzoneProps?: DropzoneProps;
-  uploadIcon?: JSX.Element;
+  uploadIcon?: ReactNode;
   title?: string;
   subtitle?: string;
   classNames?: Record<string, string>;
@@ -29,7 +37,7 @@ export function ImportDropzoneField({
   subtitle = 'Drag and Drop file here or Choose file',
   classNames,
 }: ImportDropzoneFieldProps) {
-  const [localValue, handleChange] = useUncontrolled({
+  const [localValue, handleChange] = useUncontrolled<File | null>({
     value,
     initialValue,
     finalValue: null,
@@ -42,7 +50,7 @@ export function ImportDropzoneField({
   };
 
   return (
-    <Dropzone
+    <DropzoneWithChildren
       onDrop={(files) => handleChange(files[0])}
       onReject={(files) => console.log('rejected files', files)}
       maxSize={5 * 1024 ** 2}
@@ -82,6 +90,6 @@ export function ImportDropzoneField({
           {localValue ? 'Replace File' : 'Upload File'}
         </Button>
       </Stack>
-    </Dropzone>
+    </DropzoneWithChildren>
   );
 }

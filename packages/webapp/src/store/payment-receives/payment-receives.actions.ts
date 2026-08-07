@@ -1,9 +1,9 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   PAYMENT_RECEIVES_TABLE_STATE_RESET,
   PAYMENT_RECEIVES_TABLE_STATE_SET,
   PAYMENT_RECEIVES_SET_SELECTED_ROWS,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 export const setPaymentReceivesTableState = (queries: Partial<TableQuery>) => {
   return {

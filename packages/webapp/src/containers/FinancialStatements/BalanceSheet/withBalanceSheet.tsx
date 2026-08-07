@@ -1,7 +1,7 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import { getBalanceSheetFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithBalanceSheetProps {
   balanceSheetDrawerFilter: ReturnType<typeof getBalanceSheetFilterDrawer>;

@@ -1,8 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
-
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { compose } from '@/utils';
 
 const InvoiceDetailDrawerContent = React.lazy(() =>
@@ -11,6 +9,10 @@ const InvoiceDetailDrawerContent = React.lazy(() =>
   })),
 );
 
+interface InvoiceDetailDrawerProps extends WithDrawersProps {
+  name: string;
+}
+
 /**
  * Invoice Detail drawer.
  */
@@ -18,8 +20,10 @@ function InvoiceDetailDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { invoiceId },
-}) {
+  payload,
+}: InvoiceDetailDrawerProps) {
+  const invoiceId = payload?.invoiceId as number | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}

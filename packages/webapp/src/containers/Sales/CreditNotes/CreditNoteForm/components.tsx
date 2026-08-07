@@ -1,27 +1,35 @@
-// @ts-nocheck
-import React, { useEffect, useRef } from 'react';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import React, { useEffect, useRef } from 'react';
+import {
+  useCreditNoteIsForeignCustomer,
+  useCreditNoteSubtotal,
+  type CreditNoteFormValues,
+} from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { ExchangeRateInputGroup } from '@/components';
-import { useCurrentOrganization } from '@/hooks/state';
-import { useCreditNoteIsForeignCustomer, useCreditNoteSubtotal } from './utils';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { transactionNumber } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   useSyncExRateToForm,
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { transactionNumber, compose } from '@/utils';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+
+type CreditNoteExchangeRateInputFieldRootProps = React.ComponentProps<
+  typeof ExchangeRateInputGroup
+>;
 
 /**
  * Credit note exchange rate input field.
- * @returns {JSX.Element}
  */
-function CreditNoteExchangeRateInputFieldRoot({ ...props }) {
-  const currentOrganization = useCurrentOrganization();
-  const { values } = useFormikContext();
+const CreditNoteExchangeRateInputFieldRoot = ({
+  ...props
+}: CreditNoteExchangeRateInputFieldRootProps) => {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<CreditNoteFormValues>();
   const isForeignCustomer = useCreditNoteIsForeignCustomer();
 
   // Can't continue if the customer is not foreign.
@@ -30,63 +38,77 @@ function CreditNoteExchangeRateInputFieldRoot({ ...props }) {
   }
   return (
     <ExchangeRateInputGroup
-      name={'exchange_rate'}
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
+      {...props}
+      name={'exchangeRate'}
+      fromCurrency={values.currencyCode}
+      toCurrency={baseCurrency ?? ''}
       formGroupProps={{ label: ' ', inline: true }}
       withPopoverRecalcConfirm
-      {...props}
     />
   );
-}
+};
 
-export const CreditNoteExchangeRateInputField = R.compose(
+export const CreditNoteExchangeRateInputField = compose(
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 )(CreditNoteExchangeRateInputFieldRoot);
 
+type CreditNoteSyncIncrementSettingsProps = Record<string, never>;
+
 /**
  * Syncs credit note auto-increment settings to form.
- * @return {React.ReactNode}
  */
-export const CreditNoteSyncIncrementSettingsToForm = R.compose(
-  withSettings(({ creditNoteSettings }) => ({
-    creditAutoIncrement: creditNoteSettings?.autoIncrement,
-    creditNextNumber: creditNoteSettings?.nextNumber,
-    creditNumberPrefix: creditNoteSettings?.numberPrefix,
-  })),
-)(({ creditAutoIncrement, creditNextNumber, creditNumberPrefix }) => {
-  const { setFieldValue } = useFormikContext();
+export const CreditNoteSyncIncrementSettingsToForm =
+  ({}: CreditNoteSyncIncrementSettingsProps) => {
+    const { creditNoteSettings } = useCreditNoteFormContext();
+    const creditAutoIncrement = creditNoteSettings?.autoIncrement as
+      | boolean
+      | undefined;
+    const creditNextNumber = creditNoteSettings?.nextNumber as
+      | number
+      | undefined;
+    const creditNumberPrefix = creditNoteSettings?.numberPrefix as
+      | string
+      | undefined;
+    const { setFieldValue } = useFormikContext<CreditNoteFormValues>();
 
-  useEffect(() => {
-    // Do not update if the credit note auto-increment mode is disabled.
-    if (!creditAutoIncrement) return;
+    useEffect(() => {
+      // Do not update if the credit note auto-increment mode is disabled.
+      if (!creditAutoIncrement) return;
 
-    setFieldValue(
-      'credit_note_number',
-      transactionNumber(creditNumberPrefix, creditNextNumber),
-    );
-  }, [setFieldValue, creditNumberPrefix, creditNextNumber]);
+      setFieldValue(
+        'creditNoteNumber',
+        transactionNumber(creditNumberPrefix, creditNextNumber),
+      );
+    }, [
+      setFieldValue,
+      creditNumberPrefix,
+      creditNextNumber,
+      creditAutoIncrement,
+    ]);
 
-  return null;
-});
+    return null;
+  };
+
+type CreditNoteExchangeRateSyncProps = {
+  openDialog: WithDialogActionsProps['openDialog'];
+};
 
 /**
  * Syncs the realtime exchange rate to the credit note form and shows up popup to the user
  * as an indication the entries rates have been re-calculated.
- * @returns {React.ReactNode}
  */
-export const CreditNoteExchangeRateSync = R.compose(withDialogActions)(({
+export const CreditNoteExchangeRateSync = compose(withDialogActions)(({
   openDialog,
-}) => {
+}: CreditNoteExchangeRateSyncProps) => {
   const subtotal = useCreditNoteSubtotal();
-  const timeout = useRef();
+  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useSyncExRateToForm({
     onSynced: () => {
       // If the total bigger then zero show alert to the user after adjusting entries.
       if (subtotal > 0) {
-        clearTimeout(timeout.current);
+        if (timeout.current) clearTimeout(timeout.current);
         timeout.current = setTimeout(() => {
           openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
         }, 500);

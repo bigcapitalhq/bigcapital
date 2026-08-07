@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -8,12 +7,9 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import React from 'react';
 import { InventoryItemDetailsExportMenu } from './components';
-
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 import {
   withInventoryItemDetails,
@@ -23,13 +19,14 @@ import {
   withInventoryItemDetailsActions,
   WithInventoryItemDetailsActionsProps,
 } from './withInventoryItemDetailsActions';
-
-import { compose, saveInvoke } from '@/utils';
+import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
+import { compose, saveInvoke } from '@/utils';
 
 interface InventoryItemDetailsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;

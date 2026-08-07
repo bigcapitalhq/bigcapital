@@ -1,41 +1,48 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { DialogContent } from '@/components';
-import { useSaveSettings, useSettingsPaymentReceives } from '@/hooks/query';
-
-import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { saveInvoke, compose } from '@/utils';
+import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { useSaveSettings, useSettingsPaymentReceives } from '@/hooks/query';
+import { saveInvoke, compose } from '@/utils';
+
+interface PaymentReceiveNumberDialogContentProps
+  extends WithDialogActionsProps {
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
 
 /**
  * Payment receive number dialog's content.
  */
 function PaymentNumberDialogContent({
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
-  // #withDialogActions
   closeDialog,
-
-  // #ownProps
   onConfirm,
   initialValues,
-}) {
-  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+}: PaymentReceiveNumberDialogContentProps): React.ReactElement {
+  const [referenceFormValues, setReferenceFormValues] =
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
 
-  const { isLoading: isSettingsLoading } = useSettingsPaymentReceives();
+  const { data: paymentReceiveSettings, isLoading: isSettingsLoading } =
+    useSettingsPaymentReceives();
+  const nextNumber = paymentReceiveSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
+  const numberPrefix = paymentReceiveSettings?.numberPrefix as
+    | string
+    | undefined;
+  const autoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | string
+    | undefined;
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   const initialFormValues = {
@@ -48,7 +55,10 @@ function PaymentNumberDialogContent({
   };
 
   // Handle submit form.
-  const handleSubmitForm = (values, { setSubmitting }) => {
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     // Transformes the form values to settings to save it.
     const options = transformFormToSettings(values, 'payment_receives');
 
@@ -73,7 +83,7 @@ function PaymentNumberDialogContent({
   }, [closeDialog]);
 
   // Handle form change.
-  const handleChange = (values) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
 
@@ -96,12 +106,6 @@ function PaymentNumberDialogContent({
   );
 }
 
-export const PaymentReceiveNumberDialogContent = compose(
-  withDialogActions,
-  withSettingsActions,
-  withSettings(({ paymentReceiveSettings }) => ({
-    nextNumber: paymentReceiveSettings?.nextNumber,
-    numberPrefix: paymentReceiveSettings?.numberPrefix,
-    autoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-)(PaymentNumberDialogContent);
+export const PaymentReceiveNumberDialogContent = compose(withDialogActions)(
+  PaymentNumberDialogContent,
+);

@@ -1,10 +1,6 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import TableContext from './TableContext';
 
-/**
- * Table page.
- */
 export default function TablePage() {
   const {
     table: { page },

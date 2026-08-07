@@ -1,8 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { InvoiceFormValues } from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   FFormGroup,
   FormattedMessage as T,
@@ -12,39 +13,39 @@ import {
   FInputGroup,
 } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import intl from 'react-intl-universal';
+import { compose } from '@/utils';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
+
+type InvoiceFormInvoiceNumberFieldProps = {
+  openDialog: WithDialogActionsProps['openDialog'];
+};
 
 /**
  * Invoice number field of invoice form.
  */
-export const InvoiceFormInvoiceNumberField = R.compose(
-  withDialogActions,
-  withSettings(({ invoiceSettings }) => ({
-    invoiceAutoIncrement: invoiceSettings?.autoIncrement,
-  })),
-)(({
+export const InvoiceFormInvoiceNumberField = compose(withDialogActions)(({
   // #withDialogActions
   openDialog,
-
-  // #withSettings
-  invoiceAutoIncrement,
-}) => {
+}: InvoiceFormInvoiceNumberFieldProps) => {
   // Formik context.
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<InvoiceFormValues>();
+  const { invoiceSettings } = useInvoiceFormContext();
+  const invoiceAutoIncrement = invoiceSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   // Handle invoice number changing.
   const handleInvoiceNumberChange = () => {
     openDialog(DialogsName.InvoiceNumberSettings);
   };
   // Handle invoice no. field blur.
-  const handleInvoiceNoBlur = (event) => {
+  const handleInvoiceNoBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
 
     // Show the confirmation dialog if the value has changed and auto-increment
     // mode is enabled.
-    if (values.invoice_no !== newValue && invoiceAutoIncrement) {
+    if (values.invoiceNo !== newValue && invoiceAutoIncrement) {
       openDialog(DialogsName.InvoiceNumberSettings, {
         initialFormValues: {
           onceManualNumber: newValue,
@@ -55,14 +56,14 @@ export const InvoiceFormInvoiceNumberField = R.compose(
     // Setting the invoice number to the form will be manually in case
     // auto-increment is disable.
     if (!invoiceAutoIncrement) {
-      setFieldValue('invoice_no', newValue);
-      setFieldValue('invoice_no_manually', newValue);
+      setFieldValue('invoiceNo', newValue);
+      setFieldValue('invoiceNoManually', newValue);
     }
   };
 
   return (
     <FFormGroup
-      name={'invoice_no'}
+      name={'invoiceNo'}
       label={intl.get('invoice_no')}
       labelInfo={<FieldRequiredHint />}
       inline={true}
@@ -70,9 +71,7 @@ export const InvoiceFormInvoiceNumberField = R.compose(
     >
       <ControlGroup fill={true}>
         <FInputGroup
-          name={'invoice_no'}
-          minimal={true}
-          asyncControl={true}
+          name={'invoiceNo'}
           onBlur={handleInvoiceNoBlur}
           onChange={() => {}}
         />

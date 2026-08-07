@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Menu,
   MenuItem,
@@ -9,13 +6,12 @@ import {
   Popover,
   Position,
 } from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
-
-import { useAuthActions, useAuthOrganizationId } from '@/hooks/state';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import { useAuthenticatedAccount } from '@/hooks/query';
+import { useAuthActions, useAuthOrganizationId } from '@/hooks/state';
 import { firstLettersArgs, compose } from '@/utils';
 
 /**
@@ -24,7 +20,7 @@ import { firstLettersArgs, compose } from '@/utils';
 function DashboardTopbarUser({
   // #withDialogActions
   openDialog,
-}) {
+}: Pick<WithDialogActionsProps, 'openDialog'>) {
   const history = useHistory();
   const { setLogout } = useAuthActions();
 
@@ -49,10 +45,10 @@ function DashboardTopbarUser({
             className={'menu-item--profile'}
             text={
               <div>
-                <div class="person">
-                  {user.first_name} {user.last_name}
+                <div className="person">
+                  {user.firstName} {user.lastName}
                 </div>
-                <div class="org">
+                <div className="org">
                   <T id="organization_id" />: {organizationId}
                 </div>
               </div>
@@ -74,7 +70,7 @@ function DashboardTopbarUser({
     >
       <Button>
         <div className="user-text">
-          {firstLettersArgs(user.first_name, user.last_name)}
+          {firstLettersArgs(user.firstName, user.lastName)}
         </div>
       </Button>
     </Popover>

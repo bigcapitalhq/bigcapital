@@ -1,10 +1,10 @@
-import { Group } from '@/components';
-import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { Checkbox, Text } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { get } from 'lodash';
 import { useMemo } from 'react';
 import styled from 'styled-components';
+import { Group } from '@/components';
+import { useUncontrolled } from '@/hooks/useUncontrolled';
 
 export interface PaymentMethodSelectProps {
   label: string;

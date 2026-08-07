@@ -3,6 +3,8 @@ import { Type } from 'class-transformer';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
 import { BranchResponseDto } from '@/modules/Branches/dtos/BranchResponse.dto';
+import { SaleInvoiceTaxEntryDto } from '@/modules/SaleInvoices/dtos/SaleInvoiceTaxEntry.dto';
+import { VendorResponseDto } from '@/modules/Vendors/dtos/VendorResponse.dto';
 import { DiscountType } from '@/common/types/Discount';
 
 export class BillResponseDto {
@@ -78,6 +80,13 @@ export class BillResponseDto {
   entries: ItemEntryDto[];
 
   @ApiProperty({
+    description: 'The tax entries of the bill',
+    type: [SaleInvoiceTaxEntryDto],
+    required: false,
+  })
+  taxes?: SaleInvoiceTaxEntryDto[];
+
+  @ApiProperty({
     description: 'The ID of the warehouse',
     example: 101,
     required: false,
@@ -119,6 +128,13 @@ export class BillResponseDto {
     required: false,
   })
   discount?: number;
+
+  @ApiProperty({
+    description: 'The computed discount amount',
+    example: 100,
+    required: false,
+  })
+  discountAmount?: number;
 
   @ApiProperty({
     description: 'The type of discount (percentage or fixed)',
@@ -198,6 +214,13 @@ export class BillResponseDto {
   isFullyPaid: boolean;
 
   @ApiProperty({
+    description: 'Whether the bill is currently open for editing',
+    example: false,
+    required: false,
+  })
+  isOpen?: boolean;
+
+  @ApiProperty({
     description: 'The date when the bill was created',
     example: '2024-03-15T00:00:00Z',
   })
@@ -209,4 +232,145 @@ export class BillResponseDto {
     required: false,
   })
   updatedAt?: Date;
+
+  // Formatted fields from transformer
+  @ApiProperty({
+    description: 'Formatted bill date',
+    example: '2024-03-15',
+    required: false,
+  })
+  formattedBillDate?: string;
+
+  @ApiProperty({
+    description: 'Formatted due date',
+    example: '2024-04-15',
+    required: false,
+  })
+  formattedDueDate?: string;
+
+  @ApiProperty({
+    description: 'Formatted created at date',
+    example: '2024-03-15',
+    required: false,
+  })
+  formattedCreatedAt?: string;
+
+  @ApiProperty({
+    description: 'Formatted bill amount',
+    example: '$1,000.00',
+    required: false,
+  })
+  formattedAmount?: string;
+
+  @ApiProperty({
+    description: 'Formatted payment amount',
+    example: '$500.00',
+    required: false,
+  })
+  formattedPaymentAmount?: string;
+
+  @ApiProperty({
+    description: 'Formatted balance amount',
+    example: '$500.00',
+    required: false,
+  })
+  formattedBalance?: string;
+
+  @ApiProperty({
+    description: 'Formatted due amount',
+    example: '$500.00',
+    required: false,
+  })
+  formattedDueAmount?: string;
+
+  @ApiProperty({
+    description: 'Formatted exchange rate',
+    example: '1.25',
+    required: false,
+  })
+  formattedExchangeRate?: string;
+
+  @ApiProperty({
+    description: 'Formatted subtotal',
+    example: '$900.00',
+    required: false,
+  })
+  subtotalFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted subtotal in local currency',
+    example: '$900.00',
+    required: false,
+  })
+  subtotalLocalFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted subtotal excluding tax',
+    example: '$800.00',
+    required: false,
+  })
+  subtotalExcludingTaxFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted tax amount withheld in local currency',
+    example: '$50.00',
+    required: false,
+  })
+  taxAmountWithheldLocalFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted total',
+    example: '$1,000.00',
+    required: false,
+  })
+  totalFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted total in local currency',
+    example: '$1,000.00',
+    required: false,
+  })
+  totalLocalFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted discount amount',
+    example: '$100.00',
+    required: false,
+  })
+  discountAmountFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted discount percentage',
+    example: '10%',
+    required: false,
+  })
+  discountPercentageFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted adjustment amount',
+    example: '$50.00',
+    required: false,
+  })
+  adjustmentFormatted?: string;
+
+  @ApiProperty({
+    description: 'The vendor of the bill',
+    type: () => VendorResponseDto,
+  })
+  @Type(() => VendorResponseDto)
+  vendor: VendorResponseDto;
+
+  @ApiProperty({
+    description: 'Number of days the bill is overdue',
+    example: 0,
+    nullable: true,
+  })
+  overdueDays: number;
+
+  @ApiProperty({
+    description: 'Number of days remaining until the bill is due',
+    example: 15,
+    nullable: true,
+  })
+  remainingDays: number;
 }

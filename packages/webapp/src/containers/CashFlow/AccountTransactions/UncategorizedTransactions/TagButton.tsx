@@ -1,7 +1,11 @@
-// @ts-nocheck
 import { Button } from '@blueprintjs/core';
 import styles from './TagButton.module.scss';
+import type { ComponentProps } from 'react';
 
-export const TagButton = (props) => {
-  return <Button {...props} className={styles.root} />;
+type TagButtonProps = Omit<ComponentProps<typeof Button>, 'className'> & {
+  className?: string;
 };
+
+export function TagButton(props: TagButtonProps) {
+  return <Button {...props} className={styles.root} />;
+}

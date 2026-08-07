@@ -1,12 +1,12 @@
 import { ComponentType } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import type { TableQuery } from '@/store/store.types';
 import {
   setAccountsTableState,
   resetAccountsTableState,
   setAccountsSelectedRows,
 } from '@/store/accounts/accounts.actions';
-import type { TableQuery } from '@/store/store.types';
 
 export interface WithAccountsTableActionsProps {
   setAccountsTableState: (queries: Partial<TableQuery>) => void;

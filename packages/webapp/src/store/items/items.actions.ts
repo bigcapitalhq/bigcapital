@@ -1,9 +1,9 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   ITEMS_TABLE_STATE_RESET,
   ITEMS_TABLE_STATE_SET,
   ITEMS_SET_SELECTED_ROWS,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 export const setItemsTableState = (queries: Partial<TableQuery>) => {
   return {

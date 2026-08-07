@@ -1,10 +1,10 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   isDrawerOpenFactory,
   getDrawerPayloadFactory,
 } from '@/store/dashboard/dashboard.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithDrawersProps {
   isOpen: ReturnType<ReturnType<typeof isDrawerOpenFactory>>;

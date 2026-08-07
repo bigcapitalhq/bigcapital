@@ -1,21 +1,23 @@
-// @ts-nocheck
-import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { camelCase } from 'lodash';
-
+import React, { useContext } from 'react';
+import { MoneyDisplay } from '../Money/MoneyDisplay';
+import TableContext from './TableContext';
+import { isCellLoading } from './utils';
+import type { Cell, Row } from 'react-table';
 import { If, Skeleton } from '@/components';
 import { useAppIntlContext } from '@/components/AppIntlProvider';
-import TableContext from './TableContext';
 import { saveInvoke, ignoreEventFromSelectors } from '@/utils';
-import { isCellLoading } from './utils';
-import { MoneyDisplay } from '../Money/MoneyDisplay';
 
 const ROW_CLICK_SELECTORS_INGORED = ['.expand-toggle', '.selection-checkbox'];
 
-/**
- * Table cell.
- */
-export default function TableCell({ cell, row, index }) {
+interface TableCellProps {
+  cell: Cell<any>;
+  row: Row<any>;
+  index?: number;
+}
+
+export default function TableCell({ cell, row, index }: TableCellProps) {
   const { index: rowIndex, depth, getToggleRowExpandedProps, isExpanded } = row;
   const {
     props: {
@@ -29,12 +31,10 @@ export default function TableCell({ cell, row, index }) {
   } = useContext(TableContext);
 
   const isExpandColumn = expandToggleColumn === index;
-  const { skeletonWidthMax = 100, skeletonWidthMin = 40 } = {};
+  const { skeletonWidthMax = 100, skeletonWidthMin = 40 } = cell.column;
 
-  // Application intl context.
   const { isRTL } = useAppIntlContext();
 
-  // Detarmines whether the current cell is loading.
   const cellLoading = isCellLoading(
     cellsLoading,
     cellsLoadingCoords,
@@ -53,14 +53,14 @@ export default function TableCell({ cell, row, index }) {
       </div>
     );
   }
-  // Handle cell click action.
-  const handleCellClick = (event) => {
+  const handleCellClick = (event: React.MouseEvent) => {
     if (ignoreEventFromSelectors(event, ROW_CLICK_SELECTORS_INGORED)) {
       return;
     }
     saveInvoke(onCellClick, cell, event);
   };
-  const cellType = camelCase(cell.column.Cell.cellType) || 'text';
+  const cellType =
+    camelCase((cell.column.Cell as { cellType?: string }).cellType) || 'text';
 
   return (
     <div
@@ -73,9 +73,9 @@ export default function TableCell({ cell, row, index }) {
           [`td-${cell.column.id}`]: cell.column.id,
           [`td-${cellType}-type`]: !!cellType,
         }),
-        tabindex: 0,
-        onClick: handleCellClick,
       })}
+      tabIndex={0}
+      onClick={handleCellClick}
     >
       <div
         className={classNames(
@@ -87,15 +87,11 @@ export default function TableCell({ cell, row, index }) {
         style={{
           [isRTL ? 'paddingRight' : 'paddingLeft']:
             isExpandColumn && expandable
-              ? `${depth * expandColumnSpace}rem`
+              ? `${depth * (expandColumnSpace ?? 0)}rem`
               : '',
         }}
       >
-        {
-          // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-          // to build the toggle for expanding a row
-        }
-        <If condition={cell.row.canExpand && expandable && isExpandColumn}>
+        <If condition={cell.row.canExpand && !!expandable && isExpandColumn}>
           <span
             {...getToggleRowExpandedProps({
               className: 'expand-toggle',

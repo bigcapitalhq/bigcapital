@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
+import { CustomerResponseDto } from '@/modules/Customers/dtos/CustomerResponse.dto';
 
 export class SaleEstimateResponseDto {
   // Model attributes
@@ -209,4 +210,41 @@ export class SaleEstimateResponseDto {
   })
   @Type(() => AttachmentLinkDto)
   attachments: AttachmentLinkDto[];
+
+  @ApiProperty({
+    description: 'The customer of the estimate',
+    type: () => CustomerResponseDto,
+  })
+  @Type(() => CustomerResponseDto)
+  customer: CustomerResponseDto;
+
+  @ApiProperty({
+    description: 'Whether the estimate is approved',
+    example: false,
+  })
+  isApproved: boolean;
+
+  @ApiProperty({
+    description: 'Whether the estimate is rejected',
+    example: false,
+  })
+  isRejected: boolean;
+
+  @ApiProperty({
+    description: 'Whether the estimate is expired',
+    example: false,
+  })
+  isExpired: boolean;
+
+  @ApiProperty({
+    description: 'Whether the estimate is delivered',
+    example: false,
+  })
+  isDelivered: boolean;
+
+  @ApiProperty({
+    description: 'Whether the estimate is converted to invoice',
+    example: false,
+  })
+  isConvertedToInvoice: boolean;
 }

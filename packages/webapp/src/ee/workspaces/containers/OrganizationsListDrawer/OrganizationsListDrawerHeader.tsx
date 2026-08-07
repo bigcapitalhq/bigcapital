@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import { Button, Switch } from '@blueprintjs/core';
-import { x } from '@xstyled/emotion';
 import { css } from '@emotion/css';
+import { x } from '@xstyled/emotion';
+import React from 'react';
 import intl from 'react-intl-universal';
 
 import '@/ee/workspaces/style/containers/Workspaces/OrganizationsListDrawer.scss';

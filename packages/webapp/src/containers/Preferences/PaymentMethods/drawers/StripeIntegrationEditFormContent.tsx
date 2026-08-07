@@ -1,10 +1,10 @@
-import { AccountsSelect, FFormGroup, Group, Stack } from '@/components';
-import { useStripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import { useStripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
+import { AccountsSelect, FFormGroup, Group, Stack } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useDrawerActions } from '@/hooks/state';
 import { ACCOUNT_TYPE } from '@/constants';
+import { useDrawerActions } from '@/hooks/state';
 
 export function StripeIntegrationEditFormContent() {
   const { accounts } = useStripeIntegrationEditBoot();

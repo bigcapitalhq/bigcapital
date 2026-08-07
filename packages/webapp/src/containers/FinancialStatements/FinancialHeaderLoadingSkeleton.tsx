@@ -1,6 +1,6 @@
-import React from 'react';
 import { Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
+import React from 'react';
 import Style from './FinancialHeaderLoadingSkeleton.module.scss';
 
 function FinancialHeaderLoadingSkeletonLine() {

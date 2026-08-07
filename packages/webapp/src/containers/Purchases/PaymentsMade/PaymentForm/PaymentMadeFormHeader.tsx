@@ -1,11 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { useFormikContext } from 'formik';
-import { Money, PageForm, PageFormBigNumber } from '@/components';
-
-import { PaymentMadeFormHeaderFields } from './PaymentMadeFormHeaderFields';
-import { usePaymentmadeTotalAmount } from './utils';
+import React from 'react';
 import intl from 'react-intl-universal';
+import { PaymentMadeFormHeaderFields } from './PaymentMadeFormHeaderFields';
+import { usePaymentmadeTotalAmount, type PaymentMadeFormValues } from './utils';
+import { Money, PageForm, PageFormBigNumber } from '@/components';
 
 /**
  * Payment made header form.
@@ -13,8 +11,8 @@ import intl from 'react-intl-universal';
 export function PaymentMadeFormHeader() {
   // Formik form context.
   const {
-    values: { currency_code },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<PaymentMadeFormValues>();
 
   const totalAmount = usePaymentmadeTotalAmount();
 
@@ -23,7 +21,13 @@ export function PaymentMadeFormHeader() {
       <PaymentMadeFormHeaderFields />
       <PageFormBigNumber
         label={intl.get('amount_received')}
-        amount={<Money amount={totalAmount} currency={currency_code} />}
+        amount={
+          // PageFormBigNumber declares `amount: string | number` but renders
+          // it inside an <h1>; passing a <Money> element works at runtime.
+          (
+            <Money amount={totalAmount} currency={currencyCode} />
+          ) as unknown as number
+        }
       />
     </PageForm.Header>
   );

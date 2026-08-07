@@ -1,15 +1,19 @@
-// @ts-nocheck
-import * as R from 'ramda';
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import React from 'react';
 import styled from 'styled-components';
+import type { WithBankingActionsProps } from '@/containers/CashFlow/withBankingActions';
 import { Group } from '@/components';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
+import { compose } from '@/utils';
+
+interface CategorizeTransactionFormFooterRootProps
+  extends Pick<WithBankingActionsProps, 'closeMatchingTransactionAside'> {}
 
 function CategorizeTransactionFormFooterRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
-}) {
+}: CategorizeTransactionFormFooterRootProps) {
   const { isSubmitting } = useFormikContext();
 
   const handleClose = () => {
@@ -40,7 +44,7 @@ function CategorizeTransactionFormFooterRoot({
   );
 }
 
-export const CategorizeTransactionFormFooter = R.compose(withBankingActions)(
+export const CategorizeTransactionFormFooter = compose(withBankingActions)(
   CategorizeTransactionFormFooterRoot,
 );
 

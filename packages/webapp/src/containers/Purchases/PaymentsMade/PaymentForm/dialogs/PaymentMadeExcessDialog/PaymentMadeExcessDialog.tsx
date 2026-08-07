@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
@@ -10,10 +9,18 @@ const ExcessPaymentDialogContent = React.lazy(() =>
   })),
 );
 
+type ExcessPaymentDialogRootProps = {
+  dialogName: string;
+  isOpen?: boolean;
+};
+
 /**
- * Exess payment dialog of the payment made form.
+ * Excess payment dialog of the payment made form.
  */
-function ExcessPaymentDialogRoot({ dialogName, isOpen }) {
+function ExcessPaymentDialogRoot({
+  dialogName,
+  isOpen,
+}: ExcessPaymentDialogRootProps) {
   return (
     <Dialog
       name={dialogName}

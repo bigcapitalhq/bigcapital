@@ -1,49 +1,45 @@
-// @ts-nocheck
-import React from 'react';
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
-
-import { FInputGroup, FormattedMessage as T } from '@/components';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { PaymentReceiveFormValues } from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
+  FInputGroup,
+  FormattedMessage as T,
   FFormGroup,
   FieldRequiredHint,
   Icon,
   InputPrependButton,
 } from '@/components';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import intl from 'react-intl-universal';
+import { compose } from '@/utils';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+
+interface PaymentReceivePaymentNoFieldProps
+  extends Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Payment receive number field.
  */
-export const PaymentReceivePaymentNoField = R.compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-  withDialogActions,
-)(({
-  // #withDialogActions
+export const PaymentReceivePaymentNoField = compose(withDialogActions)(({
   openDialog,
+}: PaymentReceivePaymentNoFieldProps) => {
+  const { values, setFieldValue } =
+    useFormikContext<PaymentReceiveFormValues>();
+  const { paymentReceiveSettings } = usePaymentReceiveFormContext();
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
-  // #withSettings
-  paymentReceiveAutoIncrement,
-}) => {
-  const { values, setFieldValue } = useFormikContext();
-
-  // Handle click open payment receive number dialog.
   const handleClickOpenDialog = () => {
     openDialog('payment-receive-number-form');
   };
-  // Handle payment number field blur.
-  const handlePaymentNoBlur = (event) => {
+
+  const handlePaymentNoBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
 
-    // Show the confirmation dialog if the value has changed and auto-increment
-    // mode is enabled.
-    if (values.payment_receive_no !== newValue && paymentReceiveAutoIncrement) {
+    if (values.paymentReceiveNo !== newValue && paymentReceiveAutoIncrement) {
       openDialog('payment-receive-number-form', {
         initialFormValues: {
           onceManualNumber: newValue,
@@ -51,27 +47,25 @@ export const PaymentReceivePaymentNoField = R.compose(
         },
       });
     }
-    // Setting the payment number to the form will be manually in case
-    // auto-increment is disable.
     if (!paymentReceiveAutoIncrement) {
-      setFieldValue('payment_receive_no', newValue);
-      setFieldValue('payment_receive_no_manually', newValue);
+      setFieldValue('paymentReceiveNo', newValue);
+      setFieldValue('paymentReceiveNoManually', newValue);
     }
   };
   return (
     <FFormGroup
-      name={'payment_receive_no'}
+      name={'paymentReceiveNo'}
       label={intl.get('payment_received_no')}
       inline={true}
       labelInfo={<FieldRequiredHint />}
     >
       <ControlGroup fill={true}>
         <FInputGroup
-          name={'payment_receive_no'}
-          minimal={true}
-          value={values.payment_receive_no}
+          name={'paymentReceiveNo'}
+          fill={true}
           asyncControl={true}
           onBlur={handlePaymentNoBlur}
+          fastField={true}
           onChange={() => {}}
         />
         <InputPrependButton

@@ -1,14 +1,24 @@
-// @ts-nocheck
+import { Callout, Intent, Classes } from '@blueprintjs/core';
+import clsx from 'classnames';
+import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
-import * as R from 'ramda';
-import clsx from 'classnames';
-import { Callout, Intent, Classes } from '@blueprintjs/core';
-
+import type { ReconcileCreditNoteFormEntry } from './types';
+import { AppToaster, FormatDateCell, MoneyFieldCell, T } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { MoneyFieldCell, FormatDateCell, AppToaster, T } from '@/components';
 
-export const transformErrors = (errors, { setErrors }) => {
+interface ResponseError {
+  type: string;
+}
+
+interface TransformErrorsArgs {
+  setErrors: (errors: Partial<Record<string, string>>) => void;
+}
+
+export const transformErrors = (
+  errors: ResponseError[],
+  { setErrors }: TransformErrorsArgs,
+) => {
   if (errors.some((e) => e.type === 'INVOICES_HAS_NO_REMAINING_AMOUNT')) {
     AppToaster.show({
       message:
@@ -24,13 +34,13 @@ export const transformErrors = (errors, { setErrors }) => {
       intent: Intent.DANGER,
     });
   }
+  void setErrors;
 };
 
 /**
  * Empty status callout.
- * @returns {React.JSX}
  */
-export function EmptyStatuCallout() {
+export function EmptyStatuCallout(): React.ReactElement {
   return (
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>
@@ -46,34 +56,33 @@ export function EmptyStatuCallout() {
 
 /**
  * Retrieves reconcile credit note table columns.
- * @returns
  */
 export const useReconcileCreditNoteTableColumns = () => {
   return React.useMemo(
     () => [
       {
         Header: intl.get('invoice_date'),
-        accessor: 'formatted_invoice_date',
+        accessor: 'formattedInvoiceDate',
         Cell: FormatDateCell,
         disableSortBy: true,
         width: '120',
       },
       {
         Header: intl.get('invoice_no'),
-        accessor: 'invoice_no',
+        accessor: 'invoiceNo',
         disableSortBy: true,
         width: '100',
       },
       {
         Header: intl.get('amount'),
-        accessor: 'formatted_amount',
+        accessor: 'formattedAmount',
         disableSortBy: true,
         align: 'right',
         width: '100',
       },
       {
         Header: intl.get('reconcile_credit_note.column.remaining_amount'),
-        accessor: 'formatted_due_amount',
+        accessor: 'formattedDueAmount',
         disableSortBy: true,
         align: 'right',
         width: '150',
@@ -92,30 +101,36 @@ export const useReconcileCreditNoteTableColumns = () => {
 };
 
 /**
- * Sets max credit amount from sale invoicue balance.
+ * Sets max credit amount from sale invoice balance.
  */
-export const maxAmountCreditFromRemaining = (entries) => {
+export const maxAmountCreditFromRemaining = (
+  entries: ReconcileCreditNoteFormEntry[],
+): ReconcileCreditNoteFormEntry[] => {
   return entries.map((entry) => ({
     ...entry,
-    amount: entry.amount ? Math.min(entry.balance, entry.amount) : '',
+    amount: entry.amount
+      ? Math.min((entry.balance ?? 0) as number, entry.amount as number)
+      : '',
   }));
 };
 
 /**
  * Adjusts entries amount based on the given total.
  */
-export const maxCreditNoteAmountEntries = R.curry((total, entries) => {
-  let balance = total;
+export const maxCreditNoteAmountEntries = R.curry(
+  (total: number, entries: ReconcileCreditNoteFormEntry[]) => {
+    let balance = total;
 
-  return entries.map((entry) => {
-    const oldBalance = balance;
-    balance -= entry.amount ? entry.amount : 0;
+    return entries.map((entry) => {
+      const oldBalance = balance;
+      balance -= entry.amount ? (entry.amount as number) : 0;
 
-    return {
-      ...entry,
-      amount: entry.amount
-        ? Math.max(Math.min(entry.amount, oldBalance), 0)
-        : '',
-    };
-  });
-});
+      return {
+        ...entry,
+        amount: entry.amount
+          ? Math.max(Math.min(entry.amount as number, oldBalance), 0)
+          : '',
+      };
+    });
+  },
+);

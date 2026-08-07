@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
 import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
-
+import React, { useCallback } from 'react';
 import { CellType } from '@/constants';
 import { ProjectSuggestField } from '@/containers/Projects/components';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -9,11 +8,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
-import { compose, saveInvoke } from '@/utils';
+import React from 'react';
+import { SalesTaxLiabilityExportMenu } from './components';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
 import {
   withSalesTaxLiabilitySummary,
@@ -23,12 +19,14 @@ import {
   withSalesTaxLiabilitySummaryActions,
   WithSalesTaxLiabilitySummaryActionsProps,
 } from './withSalesTaxLiabilitySummaryActions';
-import { SalesTaxLiabilityExportMenu } from './components';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
+import { compose, saveInvoke } from '@/utils';
 
 interface SalesTaxLiabilitySummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;

@@ -1,25 +1,16 @@
 import React from 'react';
-import { InventoryValuationTable } from './InventoryValuationTable';
-import { useInventoryValuationContext } from './InventoryValuationProvider';
 import { FinancialReportBody } from '../FinancialReportPage';
+import { useInventoryValuationContext } from './InventoryValuationProvider';
+import { InventoryValuationTable } from './InventoryValuationTable';
 import { FinancialSheetSkeleton } from '@/components';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
-
-interface InventoryValuationBodyProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * Inventory valuation body.
  * @returns {JSX.Element}
  */
-function InventoryValuationBodyJSX({
-  organizationName,
-}: InventoryValuationBodyProps) {
+function InventoryValuationBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = useInventoryValuationContext();
 
   return (
@@ -33,8 +24,4 @@ function InventoryValuationBodyJSX({
   );
 }
 
-export const InventoryValuationBody = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(InventoryValuationBodyJSX);
+export const InventoryValuationBody = InventoryValuationBodyJSX;

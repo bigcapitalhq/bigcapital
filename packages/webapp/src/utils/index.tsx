@@ -1,23 +1,24 @@
 // @ts-nocheck
-import moment from 'moment';
-import _ from 'lodash';
-import * as R from 'ramda';
-import Currencies from 'js-money/lib/currency';
-import clsx from 'classnames';
 import { Intent } from '@blueprintjs/core';
-import Currency from 'js-money/lib/currency';
 import accounting from 'accounting';
-import { createSelectorCreator, defaultMemoize } from 'reselect';
-import { isEqual, castArray, isEmpty, includes, pickBy } from 'lodash';
+import clsx from 'classnames';
 import jsCookie from 'js-cookie';
+import Currencies from 'js-money/lib/currency';
+import Currency from 'js-money/lib/currency';
+import _ from 'lodash';
+import { isEqual, castArray, isEmpty, includes, pickBy } from 'lodash';
+import moment from 'moment';
+import * as R from 'ramda';
+import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { deepMapKeys } from './map-key-deep';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 export * from './deep';
 export * from './flatten-infinity-pages';
 
 /** Strips leading slash from a path segment to avoid double slashes when joining with a base (e.g. `/api/` + path). */
 export const normalizeApiPath = (path) => (path || '').replace(/^\//, '');
 
-export const getCookie = (name, defaultValue) =>
+export const getCookie = (name, defaultValue?) =>
   _.defaultTo(jsCookie.get(name), defaultValue);
 
 export const setCookie = (name, value, expiry = 365, secure = false) => {
@@ -42,7 +43,10 @@ export function removeEmptyFromObject(obj) {
   return obj;
 }
 
-export const optionsMapToArray = (optionsMap, service = '') => {
+export const optionsMapToArray = (
+  optionsMap: Record<string, unknown>,
+  service = '',
+): Array<{ key: string; value: unknown }> => {
   return Object.keys(optionsMap).map((optionKey) => {
     const optionValue = optionsMap[optionKey];
 
@@ -186,7 +190,7 @@ export const defaultExpanderReducer = (tableRows, level) => {
   return expended;
 };
 
-export function formattedAmount(cents, currencyCode = '', props) {
+export function formattedAmount(cents, currencyCode = '', props = {}) {
   const currency = Currency[currencyCode];
 
   const parsedCurrency = {
@@ -288,7 +292,7 @@ export const firstLettersArgs = (...args) => {
   return letters.join('').toUpperCase();
 };
 
-export const uniqueMultiProps = (items, props) => {
+export const uniqueMultiProps = <T,>(items: T[], props: string[]): T[] => {
   return _.uniqBy(items, (item) => {
     return JSON.stringify(_.pick(item, props));
   });
@@ -507,8 +511,8 @@ export const transformToCamelCase = (object) => {
   return deepMapKeys(object, (key) => _.camelCase(key));
 };
 
-export const transfromToSnakeCase = (object) => {
-  return deepMapKeys(object, (key) => _.snakeCase(key));
+export const transfromToSnakeCase = (object: Record<string, any>) => {
+  return deepMapKeys<any>(object, (key) => _.snakeCase(key));
 };
 
 export const transformTableQueryToParams = (object) => {
@@ -591,7 +595,7 @@ function transformFilterRoles(filterRoles) {
 /**
  * Transformes the table state to url query.
  */
-export function transformTableStateToQuery(tableState) {
+export function transformTableStateToQuery(tableState: Record<string, any>) {
   const { pageSize, pageIndex, viewSlug, sortBy } = tableState;
 
   const query = {
@@ -708,8 +712,10 @@ export const updateTableRow = (rowIndex, value) => (old) => {
     return row;
   });
 };
-export const transformGeneralSettings = (data) => {
-  return _.mapKeys(data, (value, key) => _.snakeCase(key));
+export const transformGeneralSettings = (
+  data: Record<string, unknown> | undefined,
+): Record<string, unknown> => {
+  return _.mapKeys(data ?? {}, (value, key) => _.snakeCase(key));
 };
 
 export const calculateStatus = (paymentAmount, balanceAmount) => {
@@ -801,7 +807,9 @@ export function nestedArrayToflatten(
   }, []);
 }
 
-export function getFieldsFromResourceMeta(resourceFields) {
+export function getFieldsFromResourceMeta(
+  resourceFields: Record<string, unknown>,
+): IResourceField[] {
   const fields = Object.keys(resourceFields)
     .map((fieldKey) => {
       const field = resourceFields[fieldKey];
@@ -955,22 +963,22 @@ export const filterAccountsByQuery = (accounts, queryProps) => {
 
   if (!isEmpty(query.filterByParentTypes)) {
     filteredAccounts = filteredAccounts.filter((account) =>
-      includes(query.filterByParentTypes, account.account_parent_type),
+      includes(query.filterByParentTypes, account.accountParentType),
     );
   }
   if (!isEmpty(query.filterByTypes)) {
     filteredAccounts = filteredAccounts.filter((account) =>
-      includes(query.filterByTypes, account.account_type),
+      includes(query.filterByTypes, account.accountType),
     );
   }
   if (!isEmpty(query.filterByNormal)) {
     filteredAccounts = filteredAccounts.filter((account) =>
-      includes(query.filterByTypes, account.account_normal),
+      includes(query.filterByTypes, account.accountNormal),
     );
   }
   if (!isEmpty(query.filterByRootTypes)) {
     filteredAccounts = filteredAccounts.filter((account) =>
-      includes(query.filterByRootTypes, account.account_root_type),
+      includes(query.filterByRootTypes, account.accountRootType),
     );
   }
   return filteredAccounts;

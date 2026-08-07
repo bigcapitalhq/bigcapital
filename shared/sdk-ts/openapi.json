@@ -218,7 +218,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The authenticated account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthedAccountResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -2099,7 +2106,17 @@
         ],
         "responses": {
           "200": {
-            "description": "The item associated warehouses have been successfully retrieved."
+            "description": "The item associated warehouses have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ItemWarehousesResponseDto"
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "The item not found."
@@ -2200,6 +2217,96 @@
         "responses": {
           "200": {
             "description": "The accounts have been successfully deleted."
+          }
+        },
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/api/accounts/bulk-activate": {
+      "post": {
+        "operationId": "AccountsController_bulkActivateAccounts",
+        "summary": "Activates multiple accounts in bulk.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkActivateAccountsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The accounts have been successfully activated."
+          }
+        },
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/api/accounts/bulk-inactivate": {
+      "post": {
+        "operationId": "AccountsController_bulkInactivateAccounts",
+        "summary": "Inactivates multiple accounts in bulk.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkActivateAccountsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The accounts have been successfully inactivated."
           }
         },
         "tags": [
@@ -3798,6 +3905,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePdfTemplateDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The PDF template has been successfully created."
@@ -3970,6 +4087,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditPdfTemplateDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The PDF template has been successfully edited."
@@ -9973,7 +10100,25 @@
         ],
         "responses": {
           "200": {
-            "description": "List of bill landed cost transactions."
+            "description": "List of bill landed cost transactions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "billId": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BillLandedCostTransactionDto"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -11857,7 +12002,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The vendor credit details have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorCreditResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -11900,7 +12052,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Bills that can be applied with this vendor credit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VendorCreditBillToApplyResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -12039,7 +12201,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The bills applied to the vendor credit have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VendorCreditAppliedBillResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -12559,7 +12731,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The vendor credit refunds have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RefundVendorCreditResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -19094,7 +19276,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Transactions by reference"
+            "description": "Transactions by reference",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionsByReferenceResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -21854,7 +22043,36 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "List of subscriptions retrieved successfully"
+            "description": "List of subscriptions retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/lemon": {
+      "get": {
+        "operationId": "SubscriptionsController_getLemonSubscriptions",
+        "summary": "Get Lemon Squeezy subscription details for the current tenant",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lemon subscription details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LemonSubscriptionsListResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -24045,6 +24263,52 @@
           "password"
         ]
       },
+      "AuthedAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "User ID"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "User first name"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "User last name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the user account is active"
+          },
+          "language": {
+            "type": "string",
+            "description": "User language"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "Tenant ID"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Whether the user email is verified"
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "active",
+          "tenantId",
+          "verified"
+        ]
+      },
       "ApiKeyResponseDto": {
         "type": "object",
         "properties": {
@@ -25093,6 +25357,95 @@
           "type"
         ]
       },
+      "ItemLinkDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the item",
+            "example": "Consulting service"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "InventoryAdjustmentEntryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the inventory adjustment entry",
+            "example": 1
+          },
+          "adjustmentId": {
+            "type": "number",
+            "description": "The unique identifier of the inventory adjustment",
+            "example": 1
+          },
+          "index": {
+            "type": "number",
+            "description": "The index of the entry",
+            "example": 1
+          },
+          "itemId": {
+            "type": "number",
+            "description": "The id of the item",
+            "example": 1
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The quantity of the entry",
+            "example": 10
+          },
+          "cost": {
+            "type": "number",
+            "description": "The cost of the entry",
+            "example": 100
+          },
+          "value": {
+            "type": "number",
+            "description": "The value of the entry",
+            "example": 1000
+          },
+          "item": {
+            "description": "The nested item summary",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ItemLinkDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "adjustmentId",
+          "index",
+          "itemId",
+          "quantity",
+          "cost",
+          "value"
+        ]
+      },
+      "InventoryAdjustmentAccountDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the adjustment account",
+            "example": 100
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the adjustment account",
+            "example": "Inventory Adjustment"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
       "InventoryAdjustmentResponseDto": {
         "type": "object",
         "properties": {
@@ -25125,6 +25478,14 @@
             "description": "The ID of the adjustment account",
             "example": 100
           },
+          "adjustmentAccount": {
+            "description": "The nested adjustment account summary",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventoryAdjustmentAccountDto"
+              }
+            ]
+          },
           "reason": {
             "type": "string",
             "description": "The reason for the adjustment",
@@ -25150,6 +25511,11 @@
             "description": "The date when the adjustment was published",
             "example": "2024-03-20T10:00:00Z"
           },
+          "isPublished": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether the inventory adjustment is published"
+          },
           "branchId": {
             "type": "number",
             "description": "The ID of the branch where the adjustment was made",
@@ -25167,10 +25533,10 @@
           },
           "entries": {
             "description": "The entries associated with this adjustment",
+            "type": "array",
             "items": {
-              "type": "array"
-            },
-            "type": "array"
+              "$ref": "#/components/schemas/InventoryAdjustmentEntryResponseDto"
+            }
           }
         },
         "required": [
@@ -25182,6 +25548,7 @@
           "reason",
           "referenceNo",
           "userId",
+          "isPublished",
           "branchId",
           "warehouseId",
           "createdAt",
@@ -25413,7 +25780,7 @@
             "description": "Branch country",
             "example": "USA"
           },
-          "phone_number": {
+          "phoneNumber": {
             "type": "string",
             "description": "Branch phone number",
             "example": "+1-555-123-4567"
@@ -25467,7 +25834,7 @@
             "description": "Branch country",
             "example": "USA"
           },
-          "phone_number": {
+          "phoneNumber": {
             "type": "string",
             "description": "Branch phone number",
             "example": "+1-555-123-4567"
@@ -25638,6 +26005,49 @@
           "phoneNumber",
           "email",
           "website"
+        ]
+      },
+      "ItemWarehousesResponseDto": {
+        "type": "object",
+        "properties": {
+          "warehouseId": {
+            "type": "number",
+            "example": 1,
+            "description": "The unique identifier of the warehouse."
+          },
+          "warehouseName": {
+            "type": "string",
+            "example": "Main Warehouse",
+            "description": "The name of the warehouse."
+          },
+          "warehouseCode": {
+            "type": "string",
+            "example": "WH-001",
+            "description": "The code of the warehouse."
+          },
+          "quantityOnHand": {
+            "type": "number",
+            "example": 150,
+            "description": "The quantity on hand of the item in the warehouse."
+          },
+          "quantityOnHandFormatted": {
+            "type": "string",
+            "example": "150",
+            "description": "The formatted quantity on hand of the item in the warehouse."
+          },
+          "availableForSale": {
+            "type": "number",
+            "example": 150,
+            "description": "The quantity available for sale in the warehouse."
+          }
+        },
+        "required": [
+          "warehouseId",
+          "warehouseName",
+          "warehouseCode",
+          "quantityOnHand",
+          "quantityOnHandFormatted",
+          "availableForSale"
         ]
       },
       "ValidateBulkDeleteResponseDto": {
@@ -26024,6 +26434,26 @@
           "ids"
         ]
       },
+      "BulkActivateAccountsDto": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "description": "Array of account IDs to activate or inactivate",
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "ids"
+        ]
+      },
       "CreateAccountDTO": {
         "type": "object",
         "properties": {
@@ -26311,6 +26741,14 @@
             "description": "The id of the item",
             "example": 1
           },
+          "item": {
+            "description": "The nested item summary",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ItemLinkDto"
+              }
+            ]
+          },
           "rate": {
             "type": "number",
             "description": "The rate of the item entry",
@@ -26380,6 +26818,31 @@
             "type": "number",
             "description": "The cost account id of the item entry",
             "example": 1021
+          },
+          "amount": {
+            "type": "number",
+            "description": "The computed amount of the item entry (quantity * rate)",
+            "example": 100
+          },
+          "quantityFormatted": {
+            "type": "string",
+            "description": "Formatted quantity of the item entry",
+            "example": "12"
+          },
+          "rateFormatted": {
+            "type": "string",
+            "description": "Formatted rate of the item entry",
+            "example": "$10.00"
+          },
+          "discountFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount of the item entry",
+            "example": "$2.00"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total of the item entry",
+            "example": "$118.00"
           }
         },
         "required": [
@@ -26399,6 +26862,68 @@
           "projectRefInvoicedAmount",
           "sellAccountId",
           "costAccountId"
+        ]
+      },
+      "SaleInvoiceTaxEntryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the tax rate transaction",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the tax rate",
+            "example": "VAT"
+          },
+          "taxRateCode": {
+            "type": "string",
+            "description": "The code of the tax rate",
+            "example": "VAT-15"
+          },
+          "taxRate": {
+            "type": "number",
+            "description": "The rate of the tax",
+            "example": 15
+          },
+          "taxRateId": {
+            "type": "number",
+            "description": "The id of the tax rate",
+            "example": 1
+          },
+          "taxRateAmount": {
+            "type": "number",
+            "description": "The computed tax amount",
+            "example": 150
+          },
+          "taxRateAmountFormatted": {
+            "type": "string",
+            "description": "The formatted tax rate amount",
+            "example": "$150.00"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "taxRateCode",
+          "taxRate",
+          "taxRateId",
+          "taxRateAmount",
+          "taxRateAmountFormatted"
+        ]
+      },
+      "BranchLinkDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the branch",
+            "example": "Main Office"
+          }
+        },
+        "required": [
+          "name"
         ]
       },
       "AttachmentLinkDto": {
@@ -26422,6 +26947,182 @@
         "required": [
           "paymentIntegrationId",
           "enable"
+        ]
+      },
+      "CustomerResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "Customer id."
+          },
+          "balance": {
+            "type": "number",
+            "example": 1500
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "USD"
+          },
+          "openingBalance": {
+            "type": "number",
+            "example": 1000
+          },
+          "openingBalanceAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "openingBalanceExchangeRate": {
+            "type": "number",
+            "example": 1
+          },
+          "openingBalanceBranchId": {
+            "type": "number",
+            "example": 1
+          },
+          "salutation": {
+            "type": "string",
+            "example": "Mr."
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "companyName": {
+            "type": "string",
+            "example": "Acme Corporation"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "John Doe - Acme Corporation"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@acme.com"
+          },
+          "workPhone": {
+            "type": "string",
+            "example": "+1 (555) 123-4567"
+          },
+          "personalPhone": {
+            "type": "string",
+            "example": "+1 (555) 987-6543"
+          },
+          "website": {
+            "type": "string",
+            "example": "https://www.acme.com"
+          },
+          "billingAddress1": {
+            "type": "string",
+            "example": "123 Business Ave"
+          },
+          "billingAddress2": {
+            "type": "string",
+            "example": "Suite 100"
+          },
+          "billingAddressCity": {
+            "type": "string",
+            "example": "New York"
+          },
+          "billingAddressCountry": {
+            "type": "string",
+            "example": "United States"
+          },
+          "billingAddressEmail": {
+            "type": "string",
+            "example": "billing@acme.com"
+          },
+          "billingAddressPostcode": {
+            "type": "string",
+            "example": "10001"
+          },
+          "billingAddressPhone": {
+            "type": "string",
+            "example": "+1 (555) 111-2222"
+          },
+          "billingAddressState": {
+            "type": "string",
+            "example": "NY"
+          },
+          "shippingAddress1": {
+            "type": "string",
+            "example": "456 Shipping St"
+          },
+          "shippingAddress2": {
+            "type": "string",
+            "example": "Unit 200"
+          },
+          "shippingAddressCity": {
+            "type": "string",
+            "example": "Los Angeles"
+          },
+          "shippingAddressCountry": {
+            "type": "string",
+            "example": "United States"
+          },
+          "shippingAddressEmail": {
+            "type": "string",
+            "example": "shipping@acme.com"
+          },
+          "shippingAddressPostcode": {
+            "type": "string",
+            "example": "90001"
+          },
+          "shippingAddressPhone": {
+            "type": "string",
+            "example": "+1 (555) 333-4444"
+          },
+          "shippingAddressState": {
+            "type": "string",
+            "example": "CA"
+          },
+          "note": {
+            "type": "string",
+            "example": "Important client with regular monthly orders"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "localOpeningBalance": {
+            "type": "number",
+            "example": 1000
+          },
+          "closingBalance": {
+            "type": "number",
+            "example": 1500
+          }
+        },
+        "required": [
+          "id",
+          "balance",
+          "currencyCode",
+          "openingBalance",
+          "openingBalanceAt",
+          "openingBalanceExchangeRate",
+          "displayName",
+          "note",
+          "active",
+          "createdAt",
+          "updatedAt",
+          "localOpeningBalance",
+          "closingBalance"
         ]
       },
       "SaleInvoiceResponseDto": {
@@ -26491,10 +27192,12 @@
               "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
-          "delivered": {
-            "type": "boolean",
-            "description": "Whether the invoice has been delivered",
-            "example": false
+          "taxes": {
+            "description": "The tax entries of the invoice",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SaleInvoiceTaxEntryDto"
+            }
           },
           "deliveredAt": {
             "format": "date-time",
@@ -26511,6 +27214,14 @@
             "type": "number",
             "description": "The ID of the branch",
             "example": 1
+          },
+          "branch": {
+            "description": "The nested branch summary",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BranchLinkDto"
+              }
+            ]
           },
           "projectId": {
             "type": "number",
@@ -26534,6 +27245,11 @@
           "discount": {
             "type": "number",
             "description": "The discount value",
+            "example": 10
+          },
+          "discountAmount": {
+            "type": "number",
+            "description": "The computed discount amount",
             "example": 10
           },
           "discountType": {
@@ -26605,6 +27321,11 @@
             "description": "Whether the invoice is fully paid",
             "example": false
           },
+          "isWrittenoff": {
+            "type": "boolean",
+            "description": "Whether the invoice is written off as bad debt",
+            "example": false
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -26616,6 +27337,114 @@
             "type": "string",
             "description": "The date when the invoice was last updated",
             "example": "2023-01-02T00:00:00Z"
+          },
+          "invoiceDateFormatted": {
+            "type": "string",
+            "description": "Formatted invoice date",
+            "example": "2023-01-01"
+          },
+          "dueDateFormatted": {
+            "type": "string",
+            "description": "Formatted due date",
+            "example": "2023-01-15"
+          },
+          "createdAtFormatted": {
+            "type": "string",
+            "description": "Formatted created at date",
+            "example": "2023-01-01"
+          },
+          "dueAmountFormatted": {
+            "type": "string",
+            "description": "Formatted due amount",
+            "example": "$500.00"
+          },
+          "paymentAmountFormatted": {
+            "type": "string",
+            "description": "Formatted payment amount",
+            "example": "$500.00"
+          },
+          "balanceAmountFormatted": {
+            "type": "string",
+            "description": "Formatted balance amount",
+            "example": "$500.00"
+          },
+          "exchangeRateFormatted": {
+            "type": "string",
+            "description": "Formatted exchange rate",
+            "example": "1.00"
+          },
+          "subtotalFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal",
+            "example": "$900.00"
+          },
+          "subtotalLocalFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal in local currency",
+            "example": "$900.00"
+          },
+          "subtotalExludingTaxFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal excluding tax",
+            "example": "$800.00"
+          },
+          "taxAmountWithheldFormatted": {
+            "type": "string",
+            "description": "Formatted tax amount withheld",
+            "example": "$50.00"
+          },
+          "taxAmountWithheldLocalFormatted": {
+            "type": "string",
+            "description": "Formatted tax amount withheld in local currency",
+            "example": "$50.00"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total",
+            "example": "$1,000.00"
+          },
+          "totalLocalFormatted": {
+            "type": "string",
+            "description": "Formatted total in local currency",
+            "example": "$1,000.00"
+          },
+          "discountAmountFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount",
+            "example": "$10.00"
+          },
+          "discountPercentageFormatted": {
+            "type": "string",
+            "description": "Formatted discount percentage",
+            "example": "10%"
+          },
+          "adjustmentFormatted": {
+            "type": "string",
+            "description": "Formatted adjustment amount",
+            "example": "$5.00"
+          },
+          "customer": {
+            "description": "The customer of the invoice",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerResponseDto"
+              }
+            ]
+          },
+          "isDelivered": {
+            "type": "boolean",
+            "description": "Whether the invoice has been delivered",
+            "example": false
+          },
+          "overdueDays": {
+            "type": "number",
+            "description": "Number of days the invoice is overdue",
+            "example": 0
+          },
+          "remainingDays": {
+            "type": "number",
+            "description": "Number of days remaining until the invoice is due",
+            "example": 15
           }
         },
         "required": [
@@ -26625,7 +27454,6 @@
           "invoiceNo",
           "customerId",
           "entries",
-          "delivered",
           "balance",
           "paymentAmount",
           "subtotal",
@@ -26634,7 +27462,28 @@
           "isOverdue",
           "isPartiallyPaid",
           "isFullyPaid",
-          "createdAt"
+          "createdAt",
+          "invoiceDateFormatted",
+          "dueDateFormatted",
+          "createdAtFormatted",
+          "dueAmountFormatted",
+          "paymentAmountFormatted",
+          "balanceAmountFormatted",
+          "exchangeRateFormatted",
+          "subtotalFormatted",
+          "subtotalLocalFormatted",
+          "subtotalExludingTaxFormatted",
+          "taxAmountWithheldFormatted",
+          "taxAmountWithheldLocalFormatted",
+          "totalFormatted",
+          "totalLocalFormatted",
+          "discountAmountFormatted",
+          "discountPercentageFormatted",
+          "adjustmentFormatted",
+          "customer",
+          "isDelivered",
+          "overdueDays",
+          "remainingDays"
         ]
       },
       "CreateSaleInvoiceDto": {
@@ -26908,6 +27757,14 @@
           "entries",
           "attachments"
         ]
+      },
+      "CreatePdfTemplateDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "EditPdfTemplateDto": {
+        "type": "object",
+        "properties": {}
       },
       "UploadAttachmentDto": {
         "type": "object",
@@ -27525,6 +28382,14 @@
               }
             ]
           },
+          "customer": {
+            "description": "The customer of the payment received",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerResponseDto"
+              }
+            ]
+          },
           "branchId": {
             "type": "number",
             "description": "The ID of the branch",
@@ -27629,6 +28494,7 @@
           "formattedExchangeRate",
           "depositAccountId",
           "depositAccount",
+          "customer",
           "userId",
           "createdAt",
           "formattedCreatedAt",
@@ -28737,6 +29603,19 @@
             "type": "number",
             "example": 50,
             "description": "The unallocated cost amount of the expense category"
+          },
+          "expenseAccount": {
+            "description": "The expense account associated with this category",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountResponseDto"
+              }
+            ]
+          },
+          "amountFormatted": {
+            "type": "string",
+            "example": "$100.00",
+            "description": "The formatted amount of the expense category"
           }
         },
         "required": [
@@ -28868,6 +29747,44 @@
             "type": "number",
             "example": 1000,
             "description": "The billable amount of the expense"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "example": "$1,000.00",
+            "description": "The formatted total amount of the expense"
+          },
+          "formattedLandedCostAmount": {
+            "type": "string",
+            "example": "$800.00",
+            "description": "The formatted landed cost amount of the expense"
+          },
+          "formattedAllocatedCostAmount": {
+            "type": "string",
+            "example": "$200.00",
+            "description": "The formatted allocated cost amount of the expense"
+          },
+          "formattedDate": {
+            "type": "string",
+            "example": "2024-03-20",
+            "description": "The formatted payment date of the expense"
+          },
+          "formattedCreatedAt": {
+            "type": "string",
+            "example": "2024-03-20",
+            "description": "The formatted creation date of the expense"
+          },
+          "formattedPublishedAt": {
+            "type": "string",
+            "example": "2024-03-20",
+            "description": "The formatted publication date of the expense"
+          },
+          "branch": {
+            "description": "The branch associated with the expense",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BranchResponseDto"
+              }
+            ]
           },
           "categories": {
             "description": "The categories associated with this expense",
@@ -29412,182 +30329,6 @@
           "nonDeletableCount",
           "deletableIds",
           "nonDeletableIds"
-        ]
-      },
-      "CustomerResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number",
-            "example": 1,
-            "description": "Customer id."
-          },
-          "balance": {
-            "type": "number",
-            "example": 1500
-          },
-          "currencyCode": {
-            "type": "string",
-            "example": "USD"
-          },
-          "openingBalance": {
-            "type": "number",
-            "example": 1000
-          },
-          "openingBalanceAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-01T00:00:00Z"
-          },
-          "openingBalanceExchangeRate": {
-            "type": "number",
-            "example": 1
-          },
-          "openingBalanceBranchId": {
-            "type": "number",
-            "example": 1
-          },
-          "salutation": {
-            "type": "string",
-            "example": "Mr."
-          },
-          "firstName": {
-            "type": "string",
-            "example": "John"
-          },
-          "lastName": {
-            "type": "string",
-            "example": "Doe"
-          },
-          "companyName": {
-            "type": "string",
-            "example": "Acme Corporation"
-          },
-          "displayName": {
-            "type": "string",
-            "example": "John Doe - Acme Corporation"
-          },
-          "email": {
-            "type": "string",
-            "example": "john.doe@acme.com"
-          },
-          "workPhone": {
-            "type": "string",
-            "example": "+1 (555) 123-4567"
-          },
-          "personalPhone": {
-            "type": "string",
-            "example": "+1 (555) 987-6543"
-          },
-          "website": {
-            "type": "string",
-            "example": "https://www.acme.com"
-          },
-          "billingAddress1": {
-            "type": "string",
-            "example": "123 Business Ave"
-          },
-          "billingAddress2": {
-            "type": "string",
-            "example": "Suite 100"
-          },
-          "billingAddressCity": {
-            "type": "string",
-            "example": "New York"
-          },
-          "billingAddressCountry": {
-            "type": "string",
-            "example": "United States"
-          },
-          "billingAddressEmail": {
-            "type": "string",
-            "example": "billing@acme.com"
-          },
-          "billingAddressPostcode": {
-            "type": "string",
-            "example": "10001"
-          },
-          "billingAddressPhone": {
-            "type": "string",
-            "example": "+1 (555) 111-2222"
-          },
-          "billingAddressState": {
-            "type": "string",
-            "example": "NY"
-          },
-          "shippingAddress1": {
-            "type": "string",
-            "example": "456 Shipping St"
-          },
-          "shippingAddress2": {
-            "type": "string",
-            "example": "Unit 200"
-          },
-          "shippingAddressCity": {
-            "type": "string",
-            "example": "Los Angeles"
-          },
-          "shippingAddressCountry": {
-            "type": "string",
-            "example": "United States"
-          },
-          "shippingAddressEmail": {
-            "type": "string",
-            "example": "shipping@acme.com"
-          },
-          "shippingAddressPostcode": {
-            "type": "string",
-            "example": "90001"
-          },
-          "shippingAddressPhone": {
-            "type": "string",
-            "example": "+1 (555) 333-4444"
-          },
-          "shippingAddressState": {
-            "type": "string",
-            "example": "CA"
-          },
-          "note": {
-            "type": "string",
-            "example": "Important client with regular monthly orders"
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-01T00:00:00Z"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-01T00:00:00Z"
-          },
-          "localOpeningBalance": {
-            "type": "number",
-            "example": 1000
-          },
-          "closingBalance": {
-            "type": "number",
-            "example": 1500
-          }
-        },
-        "required": [
-          "id",
-          "balance",
-          "currencyCode",
-          "openingBalance",
-          "openingBalanceAt",
-          "openingBalanceExchangeRate",
-          "displayName",
-          "note",
-          "active",
-          "createdAt",
-          "updatedAt",
-          "localOpeningBalance",
-          "closingBalance"
         ]
       },
       "CustomersPaginationDto": {
@@ -30748,6 +31489,39 @@
             "items": {
               "$ref": "#/components/schemas/AttachmentLinkDto"
             }
+          },
+          "customer": {
+            "description": "The customer of the estimate",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerResponseDto"
+              }
+            ]
+          },
+          "isApproved": {
+            "type": "boolean",
+            "description": "Whether the estimate is approved",
+            "example": false
+          },
+          "isRejected": {
+            "type": "boolean",
+            "description": "Whether the estimate is rejected",
+            "example": false
+          },
+          "isExpired": {
+            "type": "boolean",
+            "description": "Whether the estimate is expired",
+            "example": false
+          },
+          "isDelivered": {
+            "type": "boolean",
+            "description": "Whether the estimate is delivered",
+            "example": false
+          },
+          "isConvertedToInvoice": {
+            "type": "boolean",
+            "description": "Whether the estimate is converted to invoice",
+            "example": false
           }
         },
         "required": [
@@ -30781,7 +31555,13 @@
           "totalLocalFormatted",
           "formattedCreatedAt",
           "entries",
-          "attachments"
+          "attachments",
+          "customer",
+          "isApproved",
+          "isRejected",
+          "isExpired",
+          "isDelivered",
+          "isConvertedToInvoice"
         ]
       },
       "SaleEstiamteStateResponseDto": {
@@ -31485,6 +32265,16 @@
             "description": "The formatted discount amount",
             "example": "100.00"
           },
+          "discountAmount": {
+            "type": "number",
+            "description": "The discount amount computed from the discount type",
+            "example": 100
+          },
+          "paidFormatted": {
+            "type": "string",
+            "description": "The formatted paid amount",
+            "example": "1,000.00"
+          },
           "discountPercentageFormatted": {
             "type": "string",
             "description": "The formatted discount percentage",
@@ -31939,6 +32729,13 @@
               "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
+          "taxes": {
+            "description": "The tax entries of the bill",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SaleInvoiceTaxEntryDto"
+            }
+          },
           "warehouseId": {
             "type": "number",
             "description": "The ID of the warehouse",
@@ -31972,6 +32769,11 @@
           "discount": {
             "type": "number",
             "description": "The discount value",
+            "example": 100
+          },
+          "discountAmount": {
+            "type": "number",
+            "description": "The computed discount amount",
             "example": 100
           },
           "discountType": {
@@ -32038,6 +32840,11 @@
             "description": "Whether the bill is fully paid",
             "example": false
           },
+          "isOpen": {
+            "type": "boolean",
+            "description": "Whether the bill is currently open for editing",
+            "example": false
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string",
@@ -32049,6 +32856,111 @@
             "type": "string",
             "description": "The date when the bill was last updated",
             "example": "2024-03-16T00:00:00Z"
+          },
+          "formattedBillDate": {
+            "type": "string",
+            "description": "Formatted bill date",
+            "example": "2024-03-15"
+          },
+          "formattedDueDate": {
+            "type": "string",
+            "description": "Formatted due date",
+            "example": "2024-04-15"
+          },
+          "formattedCreatedAt": {
+            "type": "string",
+            "description": "Formatted created at date",
+            "example": "2024-03-15"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "description": "Formatted bill amount",
+            "example": "$1,000.00"
+          },
+          "formattedPaymentAmount": {
+            "type": "string",
+            "description": "Formatted payment amount",
+            "example": "$500.00"
+          },
+          "formattedBalance": {
+            "type": "string",
+            "description": "Formatted balance amount",
+            "example": "$500.00"
+          },
+          "formattedDueAmount": {
+            "type": "string",
+            "description": "Formatted due amount",
+            "example": "$500.00"
+          },
+          "formattedExchangeRate": {
+            "type": "string",
+            "description": "Formatted exchange rate",
+            "example": "1.25"
+          },
+          "subtotalFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal",
+            "example": "$900.00"
+          },
+          "subtotalLocalFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal in local currency",
+            "example": "$900.00"
+          },
+          "subtotalExcludingTaxFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal excluding tax",
+            "example": "$800.00"
+          },
+          "taxAmountWithheldLocalFormatted": {
+            "type": "string",
+            "description": "Formatted tax amount withheld in local currency",
+            "example": "$50.00"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total",
+            "example": "$1,000.00"
+          },
+          "totalLocalFormatted": {
+            "type": "string",
+            "description": "Formatted total in local currency",
+            "example": "$1,000.00"
+          },
+          "discountAmountFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount",
+            "example": "$100.00"
+          },
+          "discountPercentageFormatted": {
+            "type": "string",
+            "description": "Formatted discount percentage",
+            "example": "10%"
+          },
+          "adjustmentFormatted": {
+            "type": "string",
+            "description": "Formatted adjustment amount",
+            "example": "$50.00"
+          },
+          "vendor": {
+            "description": "The vendor of the bill",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VendorResponseDto"
+              }
+            ]
+          },
+          "overdueDays": {
+            "type": "number",
+            "description": "Number of days the bill is overdue",
+            "example": 0,
+            "nullable": true
+          },
+          "remainingDays": {
+            "type": "number",
+            "description": "Number of days remaining until the bill is due",
+            "example": 15,
+            "nullable": true
           }
         },
         "required": [
@@ -32066,7 +32978,10 @@
           "isOverdue",
           "isPartiallyPaid",
           "isFullyPaid",
-          "createdAt"
+          "createdAt",
+          "vendor",
+          "overdueDays",
+          "remainingDays"
         ]
       },
       "BillEntryDto": {
@@ -32081,6 +32996,14 @@
             "type": "number",
             "description": "The id of the item",
             "example": 1
+          },
+          "item": {
+            "description": "The nested item summary",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ItemLinkDto"
+              }
+            ]
           },
           "rate": {
             "type": "number",
@@ -32151,6 +33074,31 @@
             "type": "number",
             "description": "The cost account id of the item entry",
             "example": 1021
+          },
+          "amount": {
+            "type": "number",
+            "description": "The computed amount of the item entry (quantity * rate)",
+            "example": 100
+          },
+          "quantityFormatted": {
+            "type": "string",
+            "description": "Formatted quantity of the item entry",
+            "example": "12"
+          },
+          "rateFormatted": {
+            "type": "string",
+            "description": "Formatted rate of the item entry",
+            "example": "$10.00"
+          },
+          "discountFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount of the item entry",
+            "example": "$2.00"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total of the item entry",
+            "example": "$118.00"
           },
           "landedCost": {
             "type": "boolean",
@@ -32398,6 +33346,94 @@
           "billDate",
           "vendorId",
           "entries"
+        ]
+      },
+      "BillLandedCostTransactionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the landed cost transaction",
+            "example": 1
+          },
+          "billId": {
+            "type": "number",
+            "description": "The bill id the landed cost is allocated to",
+            "example": 10
+          },
+          "fromTransactionId": {
+            "type": "number",
+            "description": "The id of the source transaction the cost was allocated from",
+            "example": 5
+          },
+          "fromTransactionType": {
+            "type": "string",
+            "description": "The type of the source transaction (Bill or Expense)",
+            "example": "Expense"
+          },
+          "fromTransactionEntryId": {
+            "type": "number",
+            "description": "The entry id of the source transaction",
+            "example": 2
+          },
+          "allocationMethod": {
+            "type": "string",
+            "description": "The allocation method used to distribute the cost",
+            "example": "quantity"
+          },
+          "allocationMethodFormatted": {
+            "type": "string",
+            "description": "The translated label of the allocation method",
+            "example": "Quantity"
+          },
+          "costAccountId": {
+            "type": "number",
+            "description": "The cost account id the landed cost is posted to",
+            "example": 1020
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the landed cost transaction",
+            "example": "Freight charges"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The allocated landed cost amount",
+            "example": 150
+          },
+          "localAmount": {
+            "type": "number",
+            "description": "The allocated landed cost amount in the base currency",
+            "example": 150
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "The currency code of the landed cost transaction",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "The exchange rate applied to the amount",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "The resolved name of the source item or expense account",
+            "example": "Widget A"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "description": "Formatted allocated amount",
+            "example": "$150.00"
+          },
+          "formattedLocalAmount": {
+            "type": "string",
+            "description": "Formatted allocated amount in the base currency",
+            "example": "$150.00"
+          }
+        },
+        "required": [
+          "id"
         ]
       },
       "AllocateBillLandedCostDto": {
@@ -32810,6 +33846,16 @@
             "description": "Whether the credit note is closed",
             "example": false
           },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Whether the credit note is draft",
+            "example": false
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the credit note is published",
+            "example": true
+          },
           "entries": {
             "description": "The line items of the credit note",
             "type": "array",
@@ -32826,6 +33872,14 @@
             "type": "number",
             "description": "The ID of the branch",
             "example": 1
+          },
+          "branch": {
+            "description": "The nested branch summary",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BranchLinkDto"
+              }
+            ]
           },
           "attachments": {
             "description": "The attachments of the credit note",
@@ -32984,6 +34038,14 @@
             "type": "string",
             "description": "Formatted total in local currency",
             "example": "$1,000.00"
+          },
+          "customer": {
+            "description": "The customer of the credit note",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerResponseDto"
+              }
+            ]
           }
         },
         "required": [
@@ -33009,7 +34071,8 @@
           "adjustmentFormatted",
           "adjustmentLocalFormatted",
           "totalFormatted",
-          "totalLocalFormatted"
+          "totalLocalFormatted",
+          "customer"
         ]
       },
       "CreateCreditNoteDto": {
@@ -33539,6 +34602,301 @@
           "entries"
         ]
       },
+      "VendorCreditResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the vendor credit",
+            "example": 1
+          },
+          "vendorCreditNumber": {
+            "type": "string",
+            "description": "The vendor credit number",
+            "example": "VC-2024-001"
+          },
+          "vendorCreditDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date of the vendor credit",
+            "example": "2024-03-15T00:00:00Z"
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "The reference number",
+            "example": "PO-2024-001"
+          },
+          "vendorId": {
+            "type": "number",
+            "description": "The ID of the vendor",
+            "example": 1001
+          },
+          "amount": {
+            "type": "number",
+            "description": "The vendor credit amount",
+            "example": 1000
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "The currency code",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "The exchange rate for currency conversion",
+            "example": 1.25
+          },
+          "note": {
+            "type": "string",
+            "description": "Additional notes about the vendor credit",
+            "example": "Credit for returned goods"
+          },
+          "openedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date the vendor credit was opened",
+            "example": "2024-03-15T00:00:00Z"
+          },
+          "userId": {
+            "type": "number",
+            "description": "The ID of the user who created the vendor credit",
+            "example": 1
+          },
+          "refundedAmount": {
+            "type": "number",
+            "description": "The amount already refunded",
+            "example": 0
+          },
+          "invoicedAmount": {
+            "type": "number",
+            "description": "The amount already invoiced (applied to bills)",
+            "example": 0
+          },
+          "adjustment": {
+            "type": "number",
+            "description": "The adjustment amount",
+            "example": 0
+          },
+          "discount": {
+            "type": "number",
+            "description": "The discount value",
+            "example": 0
+          },
+          "discountType": {
+            "type": "string",
+            "description": "The type of discount (percentage or fixed)",
+            "enum": [
+              "percentage",
+              "amount"
+            ],
+            "example": "amount"
+          },
+          "branchId": {
+            "type": "number",
+            "description": "The ID of the branch",
+            "example": 1
+          },
+          "warehouseId": {
+            "type": "number",
+            "description": "The ID of the warehouse",
+            "example": 1
+          },
+          "entries": {
+            "description": "The line items of the vendor credit",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryDto"
+            }
+          },
+          "branch": {
+            "description": "Branch details",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BranchResponseDto"
+              }
+            ]
+          },
+          "vendor": {
+            "description": "Vendor details",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VendorResponseDto"
+              }
+            ]
+          },
+          "attachments": {
+            "description": "The attachments of the vendor credit",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AttachmentLinkDto"
+            }
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Whether the vendor credit is in draft state",
+            "example": false
+          },
+          "isPublished": {
+            "type": "boolean",
+            "description": "Whether the vendor credit has been published",
+            "example": true
+          },
+          "isOpen": {
+            "type": "boolean",
+            "description": "Whether the vendor credit is open (has remaining credits)",
+            "example": true
+          },
+          "isClosed": {
+            "type": "boolean",
+            "description": "Whether the vendor credit is closed (no remaining credits)",
+            "example": false
+          },
+          "creditsRemaining": {
+            "type": "number",
+            "description": "The remaining credits available",
+            "example": 1000
+          },
+          "subtotal": {
+            "type": "number",
+            "description": "The subtotal (equal to amount)",
+            "example": 1000
+          },
+          "total": {
+            "type": "number",
+            "description": "The total amount after discount and adjustment",
+            "example": 950
+          },
+          "localAmount": {
+            "type": "number",
+            "description": "The amount in the local currency",
+            "example": 1250
+          },
+          "subtotalLocal": {
+            "type": "number",
+            "description": "The subtotal in the local currency",
+            "example": 1250
+          },
+          "totalLocal": {
+            "type": "number",
+            "description": "The total in the local currency",
+            "example": 1187.5
+          },
+          "discountAmount": {
+            "type": "number",
+            "description": "The computed discount amount",
+            "example": 50
+          },
+          "discountAmountLocal": {
+            "type": "number",
+            "description": "The computed discount amount in local currency",
+            "example": 62.5,
+            "nullable": true
+          },
+          "discountPercentage": {
+            "type": "number",
+            "description": "The discount percentage (only when discountType is Percentage)",
+            "example": 10,
+            "nullable": true
+          },
+          "adjustmentLocal": {
+            "type": "number",
+            "description": "The adjustment amount in local currency",
+            "example": 0,
+            "nullable": true
+          },
+          "formattedVendorCreditDate": {
+            "type": "string",
+            "description": "Formatted vendor credit date",
+            "example": "2024-03-15"
+          },
+          "formattedCreatedAt": {
+            "type": "string",
+            "description": "Formatted created at date",
+            "example": "2024-03-15"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "description": "Formatted vendor credit amount",
+            "example": "$1,000.00"
+          },
+          "formattedSubtotal": {
+            "type": "string",
+            "description": "Formatted subtotal",
+            "example": "1,000.00"
+          },
+          "formattedCreditsRemaining": {
+            "type": "string",
+            "description": "Formatted credits remaining",
+            "example": "$1,000.00"
+          },
+          "formattedInvoicedAmount": {
+            "type": "string",
+            "description": "Formatted invoiced amount",
+            "example": "$0.00"
+          },
+          "discountAmountFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount",
+            "example": "$50.00"
+          },
+          "discountAmountLocalFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount in local currency",
+            "example": "$62.50"
+          },
+          "discountPercentageFormatted": {
+            "type": "string",
+            "description": "Formatted discount percentage",
+            "example": "10%"
+          },
+          "adjustmentFormatted": {
+            "type": "string",
+            "description": "Formatted adjustment amount",
+            "example": "$0.00"
+          },
+          "adjustmentLocalFormatted": {
+            "type": "string",
+            "description": "Formatted adjustment amount in local currency",
+            "example": "$0.00"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total amount",
+            "example": "$950.00"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date when the vendor credit was created",
+            "example": "2024-03-15T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date when the vendor credit was last updated",
+            "example": "2024-03-16T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "vendorCreditNumber",
+          "vendorCreditDate",
+          "vendorId",
+          "amount",
+          "userId",
+          "refundedAmount",
+          "invoicedAmount",
+          "entries",
+          "isDraft",
+          "isPublished",
+          "isOpen",
+          "isClosed",
+          "creditsRemaining",
+          "subtotal",
+          "total",
+          "createdAt"
+        ]
+      },
       "CreateVendorCreditDto": {
         "type": "object",
         "properties": {
@@ -33761,6 +35119,165 @@
           "adjustment"
         ]
       },
+      "VendorCreditAppliedBillResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the applied bill record",
+            "example": 1
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount of the vendor credit applied to the bill",
+            "example": 500
+          },
+          "billId": {
+            "type": "number",
+            "description": "The ID of the bill the vendor credit was applied to",
+            "example": 1001
+          },
+          "vendorCreditId": {
+            "type": "number",
+            "description": "The ID of the vendor credit",
+            "example": 2001
+          },
+          "vendorCreditNumber": {
+            "type": "string",
+            "description": "The vendor credit number",
+            "example": "VC-2024-001"
+          },
+          "vendorCreditDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The vendor credit date",
+            "example": "2024-03-15T00:00:00Z"
+          },
+          "formattedVendorCreditDate": {
+            "type": "string",
+            "description": "Formatted vendor credit date",
+            "example": "2024-03-15"
+          },
+          "billNumber": {
+            "type": "string",
+            "description": "The bill number",
+            "example": "BILL-2024-001"
+          },
+          "billReferenceNo": {
+            "type": "string",
+            "description": "The bill reference number",
+            "example": "PO-2024-001"
+          },
+          "formattedBillDate": {
+            "type": "string",
+            "description": "Formatted bill date",
+            "example": "2024-03-10"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "description": "Formatted applied amount",
+            "example": "$500.00"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date when the applied bill record was created",
+            "example": "2024-03-15T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date when the applied bill record was last updated",
+            "example": "2024-03-16T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "amount",
+          "billId",
+          "vendorCreditId",
+          "createdAt"
+        ]
+      },
+      "VendorCreditBillToApplyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "billNo": {
+            "type": "string",
+            "example": "BILL-0001"
+          },
+          "billDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "dueDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-20"
+          },
+          "amount": {
+            "type": "number",
+            "example": 500
+          },
+          "dueAmount": {
+            "type": "number",
+            "example": 500
+          },
+          "paymentAmount": {
+            "type": "number",
+            "example": 0
+          },
+          "referenceNo": {
+            "type": "string",
+            "example": "PO-001",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "USD",
+            "nullable": true
+          },
+          "formattedBillDate": {
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "formattedDueDate": {
+            "type": "string",
+            "example": "2024-01-20"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "example": "$500.00"
+          },
+          "formattedDueAmount": {
+            "type": "string",
+            "example": "$500.00"
+          },
+          "formattedPaymentAmount": {
+            "type": "string",
+            "example": "$0.00"
+          }
+        },
+        "required": [
+          "id",
+          "billNo",
+          "billDate",
+          "dueDate",
+          "amount",
+          "dueAmount",
+          "paymentAmount",
+          "formattedBillDate",
+          "formattedDueDate",
+          "formattedAmount",
+          "formattedDueAmount",
+          "formattedPaymentAmount"
+        ]
+      },
       "ApplyVendorCreditToBillEntryDto": {
         "type": "object",
         "properties": {
@@ -33935,6 +35452,22 @@
             "items": {
               "$ref": "#/components/schemas/AttachmentLinkDto"
             }
+          },
+          "vendor": {
+            "description": "The vendor of the bill payment",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VendorResponseDto"
+              }
+            ]
+          },
+          "paymentAccount": {
+            "description": "The payment account of the bill payment",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountResponseDto"
+              }
+            ]
           }
         },
         "required": [
@@ -33949,7 +35482,9 @@
           "formattedSubtotal",
           "createdAt",
           "formattedCreatedAt",
-          "entries"
+          "entries",
+          "vendor",
+          "paymentAccount"
         ]
       },
       "BillPaymentPageEntryDto": {
@@ -34201,6 +35736,103 @@
           "entries",
           "branchId",
           "attachments"
+        ]
+      },
+      "RefundVendorCreditResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the refund transaction",
+            "example": 1
+          },
+          "vendorCreditId": {
+            "type": "number",
+            "description": "The ID of the vendor credit being refunded",
+            "example": 1001
+          },
+          "amount": {
+            "type": "number",
+            "description": "The refund amount",
+            "example": 500
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "The currency code",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "The exchange rate for currency conversion",
+            "example": 1
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "The reference number",
+            "example": "REF-2024-001"
+          },
+          "depositAccountId": {
+            "type": "number",
+            "description": "The deposit account ID",
+            "example": 10
+          },
+          "description": {
+            "type": "string",
+            "description": "A description of the refund",
+            "example": "Refund for overpayment"
+          },
+          "branchId": {
+            "type": "number",
+            "description": "The ID of the branch",
+            "example": 1
+          },
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date of the refund",
+            "example": "2024-03-15T00:00:00Z"
+          },
+          "depositAccount": {
+            "description": "The deposit account the refund was paid into",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountResponseDto"
+              }
+            ]
+          },
+          "formattedAmount": {
+            "type": "string",
+            "description": "Formatted refund amount",
+            "example": "$500.00"
+          },
+          "formattedDate": {
+            "type": "string",
+            "description": "Formatted refund date",
+            "example": "2024-03-15"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date when the refund was created",
+            "example": "2024-03-15T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date when the refund was last updated",
+            "example": "2024-03-16T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "vendorCreditId",
+          "amount",
+          "currencyCode",
+          "exchangeRate",
+          "referenceNo",
+          "depositAccountId",
+          "date",
+          "createdAt"
         ]
       },
       "RefundVendorCreditDto": {
@@ -38231,6 +39863,118 @@
           "meta"
         ]
       },
+      "TransactionByReferenceDateDto": {
+        "type": "object",
+        "properties": {
+          "formattedDate": {
+            "type": "string",
+            "description": "Formatted date string"
+          },
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Raw transaction date"
+          }
+        },
+        "required": [
+          "formattedDate",
+          "date"
+        ]
+      },
+      "TransactionByReferenceTransactionDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "description": "Transaction date",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransactionByReferenceDateDto"
+              }
+            ]
+          },
+          "credit": {
+            "description": "Credit amount",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FinancialReportTotalDto"
+              }
+            ]
+          },
+          "debit": {
+            "description": "Debit amount",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FinancialReportTotalDto"
+              }
+            ]
+          },
+          "contactType": {
+            "type": "string",
+            "description": "Contact type"
+          },
+          "formattedContactType": {
+            "type": "string",
+            "description": "Formatted contact type"
+          },
+          "contactId": {
+            "type": "number",
+            "description": "Contact ID"
+          },
+          "referenceType": {
+            "type": "string",
+            "description": "Reference type"
+          },
+          "formattedReferenceType": {
+            "type": "string",
+            "description": "Formatted reference type"
+          },
+          "referenceId": {
+            "type": "number",
+            "description": "Reference ID"
+          },
+          "accountName": {
+            "type": "string",
+            "description": "Account name"
+          },
+          "accountCode": {
+            "type": "string",
+            "description": "Account code"
+          },
+          "accountId": {
+            "type": "number",
+            "description": "Account ID"
+          }
+        },
+        "required": [
+          "date",
+          "credit",
+          "debit",
+          "contactType",
+          "formattedContactType",
+          "contactId",
+          "referenceType",
+          "formattedReferenceType",
+          "referenceId",
+          "accountName",
+          "accountCode",
+          "accountId"
+        ]
+      },
+      "TransactionsByReferenceResponseDto": {
+        "type": "object",
+        "properties": {
+          "transactions": {
+            "description": "Transactions linked to the given reference",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionByReferenceTransactionDto"
+            }
+          }
+        },
+        "required": [
+          "transactions"
+        ]
+      },
       "ARAgingSummaryQueryResponseDto": {
         "type": "object",
         "properties": {
@@ -40617,6 +42361,201 @@
           "permissions"
         ]
       },
+      "SubscriptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "main"
+          },
+          "status": {
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "inactive",
+              "on_trial",
+              "canceled"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "inactive": {
+            "type": "boolean",
+            "example": false
+          },
+          "onTrial": {
+            "type": "boolean",
+            "example": false
+          },
+          "canceled": {
+            "type": "boolean",
+            "example": false
+          },
+          "ended": {
+            "type": "boolean",
+            "example": false
+          },
+          "paymentStatus": {
+            "type": "string",
+            "example": "succeed",
+            "enum": [
+              "succeed",
+              "failed"
+            ]
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "endsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-02-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "canceledAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "trialEndsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-07T00:00:00.000Z",
+            "nullable": true
+          },
+          "statusFormatted": {
+            "type": "string",
+            "example": "Active"
+          },
+          "canceledAtFormatted": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "endsAtFormatted": {
+            "type": "string",
+            "example": "Jan 1, 2024",
+            "nullable": true
+          },
+          "trialStartsAtFormatted": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "trialEndsAtFormatted": {
+            "type": "string",
+            "example": "Jan 7, 2024",
+            "nullable": true
+          },
+          "planName": {
+            "type": "string",
+            "example": "Standard"
+          },
+          "planSlug": {
+            "type": "string",
+            "example": "standard"
+          },
+          "planPrice": {
+            "type": "number",
+            "example": 10
+          },
+          "planPriceCurrency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "planPriceFormatted": {
+            "type": "string",
+            "example": "$10"
+          },
+          "planPeriod": {
+            "type": "string",
+            "example": "month"
+          }
+        },
+        "required": [
+          "slug",
+          "status",
+          "active",
+          "inactive",
+          "onTrial",
+          "canceled",
+          "ended",
+          "paymentStatus",
+          "statusFormatted",
+          "planName",
+          "planSlug",
+          "planPrice",
+          "planPriceCurrency",
+          "planPriceFormatted",
+          "planPeriod"
+        ]
+      },
+      "SubscriptionsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionResponseDto"
+            }
+          }
+        },
+        "required": [
+          "subscriptions"
+        ]
+      },
+      "LemonSubscriptionUrlsDto": {
+        "type": "object",
+        "properties": {
+          "updatePaymentMethod": {
+            "type": "string",
+            "example": "https://.../update-payment-method",
+            "nullable": true
+          },
+          "customerPortal": {
+            "type": "string",
+            "example": "https://.../customer-portal",
+            "nullable": true
+          }
+        }
+      },
+      "LemonSubscriptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "main"
+          },
+          "urls": {
+            "$ref": "#/components/schemas/LemonSubscriptionUrlsDto"
+          }
+        },
+        "required": [
+          "slug",
+          "urls"
+        ]
+      },
+      "LemonSubscriptionsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "lemonSubscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LemonSubscriptionResponseDto"
+            }
+          }
+        },
+        "required": [
+          "lemonSubscriptions"
+        ]
+      },
       "OrgBaseCurrencyMutateLockDto": {
         "type": "object",
         "properties": {
@@ -40827,10 +42766,11 @@
           },
           "metadata": {
             "description": "Organization metadata",
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrganizationMetadataResponseDto"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OrganizationMetadataResponseDto"
+              }
+            ]
           },
           "isReady": {
             "type": "boolean",
@@ -40913,6 +42853,35 @@
           "language"
         ]
       },
+      "OrganizationAddressDto": {
+        "type": "object",
+        "properties": {
+          "address1": {
+            "type": "string",
+            "example": "123 Main St"
+          },
+          "address2": {
+            "type": "string",
+            "example": "Suite 100"
+          },
+          "postalCode": {
+            "type": "string",
+            "example": "10001"
+          },
+          "city": {
+            "type": "string",
+            "example": "New York"
+          },
+          "stateProvince": {
+            "type": "string",
+            "example": "NY"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1-555-123-4567"
+          }
+        }
+      },
       "UpdateOrganizationDto": {
         "type": "object",
         "properties": {
@@ -40957,16 +42926,12 @@
             "example": "MM/DD/YYYY"
           },
           "address": {
-            "type": "object",
             "description": "Organization address details",
-            "example": {
-              "address_1": "123 Main St",
-              "address_2": "Suite 100",
-              "postal_code": "10001",
-              "city": "New York",
-              "stateProvince": "NY",
-              "phone": "+1-555-123-4567"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OrganizationAddressDto"
+              }
+            ]
           },
           "primaryColor": {
             "type": "string",

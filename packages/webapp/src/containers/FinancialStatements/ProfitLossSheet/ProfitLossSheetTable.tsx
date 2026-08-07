@@ -1,10 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import intl from 'react-intl-universal';
-import { TableStyle } from '@/constants';
-import { ReportDataTable, FinancialSheet } from '@/components';
+import styled from 'styled-components';
 import { useProfitLossSheetColumns } from './hooks';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
 import { tableRowTypesToClassnames, defaultExpanderReducer } from '@/utils';
 
 interface ProfitLossSheetTableProps {

@@ -1,9 +1,7 @@
+import { isEmpty, pick } from 'lodash';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { isEmpty, pick } from 'lodash';
-import { transformToEditForm } from './utils';
-import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
+import { transformToEditForm, type CreditNoteFormValues } from './utils';
 import type {
   CreditNote,
   CreateCreditNoteBody,
@@ -15,6 +13,7 @@ import type {
   Branch,
   PdfTemplateResponse,
 } from '@bigcapital/sdk-ts';
+import { Features } from '@/constants';
 import {
   useCreditNote,
   useCreateCreditNote,
@@ -28,9 +27,12 @@ import {
   useGetCreditNoteState,
 } from '@/hooks/query';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { useFeatureCan } from '@/hooks/state';
 
 type CreditNoteFormSubmitPayload = {
   redirect?: boolean;
+  open?: boolean;
+  resetForm?: boolean;
 };
 
 type CreditNoteFormContextValue = {
@@ -39,7 +41,7 @@ type CreditNoteFormContextValue = {
   customers: Customer[];
   branches: Branch[];
   warehouses: Warehouse[];
-  newCreditNote: ReturnType<typeof transformToEditForm> | [];
+  newCreditNote: CreditNoteFormValues | [];
   submitPayload: CreditNoteFormSubmitPayload | undefined;
   brandingTemplates: PdfTemplateResponse[];
   isNewMode: boolean;
@@ -55,6 +57,7 @@ type CreditNoteFormContextValue = {
   isWarehousesSuccess: boolean;
   isBrandingTemplatesLoading: boolean;
   isCreditNoteStateLoading: boolean;
+  creditNoteSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
   isBootLoading: boolean;
 
   createCreditNoteMutate: (values: CreateCreditNoteBody) => Promise<void>;
@@ -131,7 +134,7 @@ function CreditNoteFormProvider({
     useGetCreditNoteState();
 
   // Handle fetching settings.
-  useSettingsCreditNotes();
+  const { data: creditNoteSettings } = useSettingsCreditNotes();
 
   // Create and edit credit note mutations.
   const { mutateAsync: createCreditNoteMutate } = useCreateCreditNote();
@@ -150,7 +153,7 @@ function CreditNoteFormProvider({
 
   const newCreditNote = !isEmpty(invoice)
     ? transformToEditForm({
-        ...pick(invoice, ['customer_id', 'currency_code', 'entries']),
+        ...pick(invoice, ['customerId', 'currencyCode', 'entries']),
       })
     : ([] as []);
 
@@ -184,6 +187,7 @@ function CreditNoteFormProvider({
     isBranchesLoading,
     isBrandingTemplatesLoading,
     isCreditNoteStateLoading,
+    creditNoteSettings,
     isBootLoading,
 
     createCreditNoteMutate: createCreditNoteMutate as (

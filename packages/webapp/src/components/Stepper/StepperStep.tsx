@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { StepperStepState } from './types';
 import styled from 'styled-components';
 import { Icon } from '../Icon';
+import { StepperStepState } from './types';
 
 interface StepperStepProps {
   label: string;

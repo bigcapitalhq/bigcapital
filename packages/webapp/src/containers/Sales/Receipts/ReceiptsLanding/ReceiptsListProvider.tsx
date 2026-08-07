@@ -1,10 +1,13 @@
 // @ts-nocheck
-import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
-
+import React, { createContext } from 'react';
 import { DashboardInsider } from '@/components/Dashboard';
-
-import { useResourceMeta, useResourceViews, useReceipts } from '@/hooks/query';
+import {
+  useResourceMeta,
+  useResourceViews,
+  useReceipts,
+  useSettingsReceipts,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
 const ReceiptsListContext = createContext();
@@ -28,6 +31,8 @@ function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isReceiptsFetching,
   } = useReceipts(query, { keepPreviousData: true });
 
+  const { data: receiptSettings } = useSettingsReceipts();
+
   // Detarmines the datatable empty status.
   const isEmptyStatus =
     isEmpty(receiptsData?.data) && !tableStateChanged && !isReceiptsLoading;
@@ -49,6 +54,8 @@ function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
     isReceiptsLoading,
     isReceiptsFetching,
     isEmptyStatus,
+
+    receiptSettings,
   };
 
   return (

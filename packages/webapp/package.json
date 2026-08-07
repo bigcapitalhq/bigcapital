@@ -78,6 +78,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.33",
+    "openapi-typescript-fetch": "^2.2.1",
     "path-browserify": "^1.0.1",
     "plaid": "^9.3.0",
     "plaid-threads": "^11.4.3",
@@ -134,6 +135,7 @@
     "@vitejs/plugin-legacy": "^5.4.2",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-import": "^2.29.1",
     "prettier": "^3.3.3",
     "vite": "^5.1.6"
   },
@@ -144,6 +146,8 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
+    "lint:check": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "test": "node scripts/test.js",
     "storybook": "start-storybook -p 6006"
   },
@@ -151,7 +155,29 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "import/order": [
+        "error",
+        {
+          "groups": [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+            "object",
+            "type"
+          ],
+          "newlines-between": "never",
+          "alphabetize": {
+            "order": "asc",
+            "caseInsensitive": true
+          }
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [

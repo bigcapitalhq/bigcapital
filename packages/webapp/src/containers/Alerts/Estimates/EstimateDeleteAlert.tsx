@@ -1,47 +1,50 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-
-import { useDeleteEstimate } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { useDeleteEstimate } from '@/hooks/query';
+import { compose } from '@/utils';
+
+interface EstimateDeleteAlertPayload {
+  estimateId: number;
+}
+
+interface EstimateDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: EstimateDeleteAlertPayload;
+}
+
+interface EstimateDeleteError {
+  type: string;
+}
 
 /**
  * Estimate delete alert.
  */
 function EstimateDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { estimateId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteEstimateMutate, isLoading } = useDeleteEstimate();
+}: EstimateDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteEstimateMutate, isPending: isLoading } =
+    useDeleteEstimate();
 
-  // handle cancel delete  alert.
-  const handleAlertCancel = () => {
+  const handleAlertCancel = useCallback(() => {
     closeAlert(name);
-  };
+  }, [closeAlert, name]);
 
-  // handle confirm delete estimate
-  const handleAlertConfirm = () => {
+  const handleAlertConfirm = useCallback(() => {
     deleteEstimateMutate(estimateId)
       .then(() => {
         AppToaster.show({
@@ -51,11 +54,7 @@ function EstimateDeleteAlertInner({
         closeDrawer(DRAWERS.ESTIMATE_DETAILS);
       })
       .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
+        ({ data: { errors } }: { data: { errors: EstimateDeleteError[] } }) => {
           if (
             errors.find((e) => e.type === 'SALE_ESTIMATE_CONVERTED_TO_INVOICE')
           ) {
@@ -71,12 +70,12 @@ function EstimateDeleteAlertInner({
       .finally(() => {
         closeAlert(name);
       });
-  };
+  }, [estimateId, deleteEstimateMutate, closeDrawer, closeAlert, name]);
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -85,6 +84,7 @@ function EstimateDeleteAlertInner({
       onConfirm={handleAlertConfirm}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_estimate_you_will_able_to_restore_it'}
         />

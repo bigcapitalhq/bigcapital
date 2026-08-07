@@ -1,14 +1,12 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import {
   T,
   TotalLines,
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import { TotalLine } from '@/components';
 
 /**
@@ -22,12 +20,12 @@ export function ExpenseDrawerFooter() {
       <ExpenseTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'expense.details.subtotal'} />}
-          value={expense.formatted_amount}
+          value={expense?.formattedAmount}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine
           title={<T id={'expense.details.total'} />}
-          value={expense.formatted_amount}
+          value={expense?.formattedAmount}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />

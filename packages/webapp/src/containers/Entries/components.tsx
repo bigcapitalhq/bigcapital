@@ -1,12 +1,10 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import { MenuItem, Menu, Button, Position, Intent } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
-
-import { Align, CellType, Features } from '@/constants';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
 import { Hint, Icon, FormattedMessage as T } from '@/components';
-import { formattedAmount } from '@/utils';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -16,9 +14,10 @@ import {
   CheckBoxFieldCell,
   ProjectBillableEntriesCell,
 } from '@/components/DataTableCells';
-import { useFeatureCan } from '@/hooks/state';
 import { TaxRatesSuggestInputCell } from '@/components/TaxRates/TaxRatesSuggestInputCell';
-import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
+import { Align, CellType, Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
+import { formattedAmount } from '@/utils';
 
 /**
  * Item header cell.
@@ -99,9 +98,9 @@ export function useEditableItemsEntriesColumns() {
   return React.useMemo(
     () => [
       {
-        id: 'item_id',
+        id: 'itemId',
         Header: ItemHeaderCell,
-        accessor: 'item_id',
+        accessor: 'itemId',
         Cell: ItemsListCell,
         disableSortBy: true,
         width: 130,
@@ -136,7 +135,7 @@ export function useEditableItemsEntriesColumns() {
         ? [
             {
               Header: 'Tax rate',
-              accessor: 'tax_rate_id',
+              accessor: 'taxRateId',
               Cell: TaxRatesSuggestInputCell,
               disableSortBy: true,
               width: 110,
@@ -163,10 +162,10 @@ export function useEditableItemsEntriesColumns() {
         ? [
             {
               Header: LandedCostHeaderCell,
-              accessor: 'landed_cost',
+              accessor: 'landedCost',
               Cell: CheckBoxFieldCell,
               width: 100,
-              disabledAccessor: 'landed_cost_disabled',
+              disabledAccessor: 'landedCostDisabled',
               disableSortBy: true,
               disableResizing: true,
               align: Align.Center,

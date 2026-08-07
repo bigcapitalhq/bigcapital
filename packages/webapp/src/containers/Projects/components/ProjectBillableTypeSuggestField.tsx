@@ -1,11 +1,10 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
-import { FormattedMessage as T } from '@/components';
-
 import classNames from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 
 /**

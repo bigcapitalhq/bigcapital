@@ -1,11 +1,11 @@
 // @ts-nocheck
 
+import { Intent, Button, Classes } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import styled from 'styled-components';
-import { useFormikContext } from 'formik';
-import { Intent, Button, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import { useProjectBillableEntriesFormContext } from './ProjectBillableEntriesFormProvider';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 

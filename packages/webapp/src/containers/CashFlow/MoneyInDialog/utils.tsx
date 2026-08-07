@@ -1,44 +1,41 @@
-// @ts-nocheck
+import { useFormikContext } from 'formik';
+import { isEqual, isNull, first } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { useFormikContext } from 'formik';
-import { transactionNumber } from '@/utils';
-import { isEqual, isNull, first } from 'lodash';
-
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 import { useMoneyInFieldsContext } from './MoneyInFieldsProvider';
+import type { MoneyInFormValues } from './types';
+import type { Account } from '@bigcapital/sdk-ts';
 
-export const useObserveTransactionNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
-
-  React.useEffect(() => {
-    const TransactionNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('transacttion_numner', TransactionNo);
-  }, [setFieldValue, prefix, nextNumber]);
-};
+interface Branch {
+  id: number;
+  primary?: boolean;
+}
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<MoneyInFormValues>();
   const { branches, isBranchesSuccess } = useMoneyInDailogContext();
 
   React.useEffect(() => {
     if (isBranchesSuccess) {
-      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+      const primaryBranch =
+        (branches as Array<Branch> | undefined)?.find((b) => b.primary) ||
+        first(branches as Array<Branch> | undefined);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
 
 export const useForeignAccount = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<MoneyInFormValues>();
   const { account } = useMoneyInFieldsContext();
 
+  const accountCurrency = (account as Account | undefined)?.currencyCode;
   return (
-    !isEqual(account.currency_code, values.currency_code) &&
-    !isNull(account.currency_code)
+    !isEqual(accountCurrency, values.currencyCode) && !isNull(accountCurrency)
   );
 };
 

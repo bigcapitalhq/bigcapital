@@ -1,7 +1,5 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import { ControlGroup } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 import { FFormGroup, FInputGroup, Box } from '@/components';
 
 /**
@@ -22,7 +20,7 @@ export function VendorFormAfterPrimarySection() {
 
       {/*------------ Phone number -----------*/}
       <FFormGroup
-        name={'work_phone'}
+        name={'workPhone'}
         className={'form-group--phone-number'}
         label={intl.get('phone_number')}
         inline
@@ -30,12 +28,12 @@ export function VendorFormAfterPrimarySection() {
       >
         <ControlGroup>
           <FInputGroup
-            name={'work_phone'}
+            name={'workPhone'}
             placeholder={intl.get('work')}
             fastField
           />
           <FInputGroup
-            name={'personal_phone'}
+            name={'personalPhone'}
             placeholder={intl.get('mobile')}
             fastField
           />

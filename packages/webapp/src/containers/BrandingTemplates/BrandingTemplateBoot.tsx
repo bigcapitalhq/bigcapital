@@ -1,5 +1,5 @@
-import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
+import React, { createContext, useContext } from 'react';
 import {
   GetPdfTemplateBrandingStateResponse,
   GetPdfTemplateResponse,

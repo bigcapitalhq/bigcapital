@@ -1,7 +1,13 @@
 // @ts-nocheck
 import React from 'react';
-import { DashboardInsider } from '@/components';
 import { useProject } from '../../hooks';
+import { DashboardInsider } from '@/components';
+import {
+  useSettingsProjects,
+  useSettingsProjectTasks,
+  useSettingsTimesheets,
+} from '@/hooks/query';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 const ProjectDetailContext = React.createContext();
 
@@ -19,10 +25,19 @@ function ProjectDetailProvider({
     enabled: !!projectId,
   });
 
+  // Settings hooks.
+  const { data: projectSettings } = useSettingsProjects();
+  const { data: projectTasksSettings } = useSettingsProjectTasks();
+  const { data: timesheetsSettings } = useSettingsTimesheets();
+
   // State provider.
   const provider = {
     project,
     projectId,
+
+    projectSettings: projectSettings as SettingsGroup | undefined,
+    projectTasksSettings: projectTasksSettings as SettingsGroup | undefined,
+    timesheetsSettings: timesheetsSettings as SettingsGroup | undefined,
   };
   return (
     <DashboardInsider loading={isProjectLoading}>

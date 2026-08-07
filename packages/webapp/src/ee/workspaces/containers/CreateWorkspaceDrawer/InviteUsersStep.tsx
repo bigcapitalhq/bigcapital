@@ -1,8 +1,9 @@
 // @ts-nocheck
-import React, { useState, useCallback } from 'react';
 import { Button, Intent, InputGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { x } from '@xstyled/emotion';
+import React, { useState, useCallback } from 'react';
+import * as Yup from 'yup';
 import {
   FormattedMessage as T,
   DrawerBody,
@@ -10,7 +11,6 @@ import {
 } from '@/components';
 import { useBulkCreateInviteUsers, useRoles } from '@/hooks/query';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import * as Yup from 'yup';
 
 interface InviteRow {
   id: string;

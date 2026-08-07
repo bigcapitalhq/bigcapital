@@ -1,5 +1,5 @@
-import { ITEMS_CATEGORIES_TABLE_STATE_SET } from '@/store/types';
 import type { TableQuery } from '@/store/store.types';
+import { ITEMS_CATEGORIES_TABLE_STATE_SET } from '@/store/types';
 
 /**
  * Sets the items categories table state.

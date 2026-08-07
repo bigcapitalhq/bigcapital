@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
-import classNames from 'classnames';
 import { Button, Tooltip, Classes } from '@blueprintjs/core';
+import classNames from 'classnames';
+import React, { useMemo } from 'react';
 
 export function InputPrependButton({
   buttonProps = {},

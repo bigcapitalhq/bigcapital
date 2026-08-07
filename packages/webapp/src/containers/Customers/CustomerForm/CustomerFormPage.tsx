@@ -1,21 +1,23 @@
-// @ts-nocheck
-import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import styled from 'styled-components';
-import { Box, DashboardCard, DashboardInsider } from '@/components';
-import { CustomerFormFormik, ustomerFormFormik } from './CustomerFormFormik';
+import { CustomerFormFormik } from './CustomerFormFormik';
 import {
   CustomerFormProvider,
   useCustomerFormContext,
 } from './CustomerFormProvider';
+import type { CustomerFormValues } from './utils';
+import { Box, DashboardInsider } from '@/components';
+import type { FormikHelpers } from 'formik';
+
+type CustomerFormSubmitPayload = {
+  noRedirect?: boolean;
+};
 
 /**
  * Customer form page.
- * @returns {JSX}
  */
 export function CustomerFormPage() {
-  const { id } = useParams();
-  const customerId = parseInt(id, 10);
+  const { id } = useParams<{ id?: string }>();
+  const customerId = id ? parseInt(id, 10) : undefined;
 
   return (
     <CustomerFormProvider customerId={customerId}>
@@ -28,7 +30,11 @@ function CustomerFormPageContent() {
   const history = useHistory();
   const { isFormLoading } = useCustomerFormContext();
 
-  const handleSubmitSuccess = (values, formArgs, submitPayload) => {
+  const handleSubmitSuccess = (
+    _values: CustomerFormValues,
+    _formArgs: FormikHelpers<CustomerFormValues>,
+    submitPayload: CustomerFormSubmitPayload,
+  ) => {
     if (!submitPayload.noRedirect) {
       history.push('/customers');
     }

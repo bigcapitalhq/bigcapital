@@ -1,17 +1,4 @@
 import {
-  useQueryClient,
-  useMutation,
-  useQuery,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  Warehouse,
-  WarehousesListResponse,
-  CreateWarehouseBody,
-  EditWarehouseBody,
-} from '@bigcapital/sdk-ts';
-import {
   fetchWarehouses,
   fetchWarehouse,
   createWarehouse,
@@ -20,10 +7,23 @@ import {
   activateWarehouses,
   markWarehousePrimary,
 } from '@bigcapital/sdk-ts';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { warehousesKeys } from './query-keys';
-import { warehousesTransfersKeys } from '../warehouses-transfers/query-keys';
 import { usersKeys } from '../users/query-keys';
+import { warehousesTransfersKeys } from '../warehouses-transfers/query-keys';
+import { warehousesKeys } from './query-keys';
+import type {
+  Warehouse,
+  WarehousesListResponse,
+  CreateWarehouseBody,
+  EditWarehouseBody,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,

@@ -1,22 +1,23 @@
-// @ts-nocheck
 import React from 'react';
-import {
-  DataTable,
-  TableSkeletonRows,
-  Card,
-  FormattedMessage as T,
-} from '@/components';
-
-import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { useLocatedLandedCostColumns, ActionsMenu } from './components';
+import type { BillLandedCostTransaction } from '@bigcapital/sdk-ts';
+import { DataTable, TableSkeletonRows, Card } from '@/components';
 import { TableStyle } from '@/constants';
-
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { compose } from '@/utils';
+
+interface LocatedLandedCostTableInnerProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Located landed cost table.
@@ -27,32 +28,35 @@ function LocatedLandedCostTableInner({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: LocatedLandedCostTableInnerProps) {
   // Located landed cost table columns.
   const columns = useLocatedLandedCostColumns();
 
   // Bill drawer context.
-  const { transactions, billId } = useBillDrawerContext();
-
-  console.log(transactions, 'ahmed');
+  const { transactions } = useBillDrawerContext();
 
   // Handle the transaction delete action.
-  const handleDeleteTransaction = ({ id }) => {
+  const handleDeleteTransaction = ({ id }: { id: number }) => {
     openAlert('bill-located-cost-delete', { BillId: id });
   };
 
   // Handle from transaction link click.
-  const handleFromTransactionClick = (original) => {
-    const { from_transaction_type, from_transaction_id } = original;
+  const handleFromTransactionClick = (
+    original: Pick<
+      BillLandedCostTransaction,
+      'fromTransactionType' | 'fromTransactionId'
+    >,
+  ) => {
+    const { fromTransactionType, fromTransactionId } = original;
 
-    switch (from_transaction_type) {
+    switch (fromTransactionType) {
       case 'Expense':
-        openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: from_transaction_id });
+        openDrawer(DRAWERS.EXPENSE_DETAILS, { expenseId: fromTransactionId });
         break;
 
       case 'Bill':
       default:
-        openDrawer(DRAWERS.BILL_DETAILS, { billId: from_transaction_id });
+        openDrawer(DRAWERS.BILL_DETAILS, { billId: fromTransactionId });
         break;
     }
   };

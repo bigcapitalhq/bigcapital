@@ -1,26 +1,26 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  ItemCategory,
-  ItemCategoriesListResponse,
-  ItemsCategoriesListResult,
-  CreateItemCategoryBody,
-  EditItemCategoryBody,
-} from '@bigcapital/sdk-ts';
-import {
   fetchItemCategories,
   fetchItemCategory,
   createItemCategory,
   editItemCategory,
   deleteItemCategory,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { itemsCategoriesKeys } from './query-keys';
+import type {
+  ItemCategory,
+  ItemCategoriesListResponse,
+  CreateItemCategoryBody,
+  EditItemCategoryBody,
+  GetItemCategoriesQuery,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -28,9 +28,6 @@ const commonInvalidateQueries = (
   queryClient.invalidateQueries({ queryKey: itemsCategoriesKeys.all() });
 };
 
-/**
- * Creates a new item category.
- */
 export function useCreateItemCategory(
   props?: UseMutationOptions<void, Error, CreateItemCategoryBody>,
 ) {
@@ -45,9 +42,6 @@ export function useCreateItemCategory(
   });
 }
 
-/**
- * Edits the item category.
- */
 export function useEditItemCategory(
   props?: UseMutationOptions<void, Error, [number, EditItemCategoryBody]>,
 ) {
@@ -67,9 +61,6 @@ export function useEditItemCategory(
   });
 }
 
-/**
- * Deletes the given item category.
- */
 export function useDeleteItemCategory(
   props?: UseMutationOptions<void, Error, number>,
 ) {
@@ -88,48 +79,29 @@ export function useDeleteItemCategory(
   });
 }
 
-function transformCategories(
-  data: ItemCategoriesListResponse,
-): ItemsCategoriesListResult {
-  const arr = Array.isArray(data)
-    ? data
-    : ((data as { data?: ItemCategory[] })?.data ?? []);
-  const pagination =
-    (data as { pagination?: Record<string, unknown> })?.pagination ?? {};
-  return {
-    itemsCategories: arr as ItemCategory[],
-    pagination,
-  };
-}
-
-/**
- * Retrieve the items categories.
- */
 export function useItemsCategories(
-  query?: Record<string, unknown>,
+  query?: GetItemCategoriesQuery,
   props?: Omit<
     UseQueryOptions<
       ItemCategoriesListResponse,
       Error,
-      ItemsCategoriesListResult
+      ItemCategoriesListResponse
     >,
     'queryKey' | 'queryFn' | 'select'
   >,
 ) {
-  const fetcher = useApiFetcher();
-  return useQuery<ItemCategoriesListResponse, Error, ItemsCategoriesListResult>(
-    {
-      ...props,
-      queryKey: [...itemsCategoriesKeys.all(), query],
-      queryFn: () => fetchItemCategories(fetcher),
-      select: transformCategories,
-    },
-  );
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery<
+    ItemCategoriesListResponse,
+    Error,
+    ItemCategoriesListResponse
+  >({
+    ...props,
+    queryKey: [...itemsCategoriesKeys.all(), query],
+    queryFn: () => fetchItemCategories(fetcher, query),
+  });
 }
 
-/**
- * Retrieve the item category details.
- */
 export function useItemCategory(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<ItemCategory>, 'queryKey' | 'queryFn'>,

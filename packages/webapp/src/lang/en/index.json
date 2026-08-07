@@ -230,6 +230,7 @@
   "cannot_delete_account_has_associated_transactions": "You cannot delete an account that has associated transactions.",
   "the_account_has_been_successfully_inactivated": "The account has been successfully inactivated.",
   "the_account_has_been_successfully_activated": "The account has been successfully activated.",
+  "the_accounts_has_been_successfully_activated": "The accounts have been successfully activated.",
   "the_account_has_been_successfully_deleted": "The account has been successfully deleted.",
   "the_accounts_has_been_successfully_deleted": "The accounts have been successfully deleted.",
   "are_sure_to_inactive_this_account": "Are you sure you want to inactive this account? You will be able to activate it later",

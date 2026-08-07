@@ -1,37 +1,46 @@
-// @ts-nocheck
-import React, { useEffect, useLayoutEffect } from 'react';
-import moment from 'moment';
-import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
-
+import moment from 'moment';
+import React, { useLayoutEffect } from 'react';
+import intl from 'react-intl-universal';
+import {
+  useEstimateIsForeignCustomer,
+  type PaymentReceiveEntry,
+  type PaymentReceiveFormValues,
+} from './utils';
 import { Money, ExchangeRateInputGroup, MoneyFieldCell } from '@/components';
-
-import { useCurrentOrganization } from '@/hooks/state';
-import { useEstimateIsForeignCustomer } from './utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+
+type InvoiceDateCellProps = {
+  value?: string | number | Date | null;
+};
 
 /**
  * Invoice date cell.
  */
-function InvoiceDateCell({ value }) {
+function InvoiceDateCell({ value }: InvoiceDateCellProps) {
   return <span>{moment(value).format('YYYY MMM DD')}</span>;
 }
 
 /**
  * Invoice number table cell accessor.
  */
-function InvNumberCellAccessor(row) {
-  return row?.invoice_no ? `#${row?.invoice_no || ''}` : '-';
+function InvNumberCellAccessor(row: PaymentReceiveEntry): string {
+  return row?.invoiceNo ? `#${row?.invoiceNo || ''}` : '-';
 }
+
+type MoneyTableCellProps = {
+  row: { original: PaymentReceiveEntry };
+  value: string | number;
+};
 
 /**
  * Mobey table cell.
  */
-function MoneyTableCell({ row: { original }, value }) {
-  return <Money amount={value} currency={original.currency_code} />;
+function MoneyTableCell({ row: { original }, value }: MoneyTableCellProps) {
+  return <Money amount={value} currency={original.currencyCode} />;
 }
 
 /**
@@ -42,8 +51,8 @@ export const usePaymentReceiveEntriesColumns = () => {
     () => [
       {
         Header: 'Invoice date',
-        id: 'invoice_date',
-        accessor: 'invoice_date',
+        id: 'invoiceDate',
+        accessor: 'invoiceDate',
         Cell: InvoiceDateCell,
         disableSortBy: true,
         disableResizing: true,
@@ -66,7 +75,7 @@ export const usePaymentReceiveEntriesColumns = () => {
       },
       {
         Header: intl.get('amount_due'),
-        accessor: 'due_amount',
+        accessor: 'dueAmount',
         Cell: MoneyTableCell,
         disableSortBy: true,
         width: 150,
@@ -74,7 +83,7 @@ export const usePaymentReceiveEntriesColumns = () => {
       },
       {
         Header: intl.get('payment_amount'),
-        accessor: 'payment_amount',
+        accessor: 'paymentAmount',
         Cell: MoneyFieldCell,
         disableSortBy: true,
         width: 150,
@@ -85,66 +94,77 @@ export const usePaymentReceiveEntriesColumns = () => {
   );
 };
 
+type ExchangeRateInputFieldProps = Omit<
+  React.ComponentProps<typeof ExchangeRateInputGroup>,
+  'fromCurrency' | 'toCurrency'
+>;
+
 /**
  * payment receive exchange rate input field.
- * @returns {JSX.Element}
  */
-export function PaymentReceiveExchangeRateInputField({ ...props }) {
-  const currentOrganization = useCurrentOrganization();
-  const { values } = useFormikContext();
+export function PaymentReceiveExchangeRateInputField({
+  ...props
+}: ExchangeRateInputFieldProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<PaymentReceiveFormValues>();
 
   const isForeignCustomer = useEstimateIsForeignCustomer();
 
-  // Can't continue if the customer is not foreign.
   if (!isForeignCustomer) {
     return null;
   }
   return (
     <ExchangeRateInputGroup
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
+      fromCurrency={values.currencyCode}
+      toCurrency={baseCurrency ?? ''}
       {...props}
     />
   );
 }
 
+type ProjectSelectButtonProps = {
+  label?: string;
+};
+
 /**
  * payment receive project select.
- * @returns {JSX.Element}
  */
-export function PaymentReceiveProjectSelectButton({ label }) {
+export function PaymentReceiveProjectSelectButton({
+  label,
+}: ProjectSelectButtonProps) {
   return <Button text={label ?? intl.get('select_project')} />;
 }
 
+type SyncIncrementSettingsProps = Record<string, never>;
+
 /**
  * Syncs the auto-increment settings to payment receive form.
- * @returns {React.ReactNode}
  */
-export const PaymentReceiveSyncIncrementSettingsToForm = R.compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
-    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-)(({
-  paymentReceiveNextNumber,
-  paymentReceiveNumberPrefix,
-  paymentReceiveAutoIncrement,
-}) => {
-  const { setFieldValue } = useFormikContext();
+export const PaymentReceiveSyncIncrementSettingsToForm =
+  ({}: SyncIncrementSettingsProps) => {
+    const { paymentReceiveSettings } = usePaymentReceiveFormContext();
+    const paymentReceiveNextNumber = paymentReceiveSettings?.nextNumber as
+      | number
+      | undefined;
+    const paymentReceiveNumberPrefix = paymentReceiveSettings?.numberPrefix as
+      | string
+      | undefined;
+    const paymentReceiveAutoIncrement =
+      paymentReceiveSettings?.autoIncrement as boolean | undefined;
+    const { setFieldValue } = useFormikContext<PaymentReceiveFormValues>();
 
-  useLayoutEffect(() => {
-    if (!paymentReceiveAutoIncrement) return;
+    useLayoutEffect(() => {
+      if (!paymentReceiveAutoIncrement) return;
 
-    setFieldValue(
-      'payment_receive_no',
-      transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber),
-    );
-  }, [
-    setFieldValue,
-    paymentReceiveNumberPrefix,
-    paymentReceiveNextNumber,
-    paymentReceiveAutoIncrement,
-  ]);
-  return null;
-});
+      setFieldValue(
+        'paymentReceiveNo',
+        transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber),
+      );
+    }, [
+      setFieldValue,
+      paymentReceiveNumberPrefix,
+      paymentReceiveNextNumber,
+      paymentReceiveAutoIncrement,
+    ]);
+    return null;
+  };

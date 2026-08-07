@@ -1,13 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import type { TableQuery } from '@/store/store.types';
 import { createTableStateReducers } from '@/store/table-state.reducer';
 import {
   RESET,
   INVOICES_SET_SELECTED_ROWS,
   INVOICES_RESET_SELECTED_ROWS,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 interface InvoicesState {
   tableState: Partial<TableQuery>;

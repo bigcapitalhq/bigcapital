@@ -1,6 +1,6 @@
 import React from 'react';
-import { FSelect } from '@/components/Forms';
 import type { AccountTypesList } from '@bigcapital/sdk-ts';
+import { FSelect } from '@/components/Forms';
 
 type FSelectProps = React.ComponentProps<typeof FSelect>;
 type AccountType = AccountTypesList[number];

@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-
-import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteCreditNotes } from '@/hooks/query/credit-note';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithCreditNotesActionsProps } from '@/containers/Sales/CreditNotes/CreditNotesLanding/withCreditNotesActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withCreditNotesActions } from '@/containers/Sales/CreditNotes/CreditNotesLanding/withCreditNotesActions';
+import { useBulkDeleteCreditNotes } from '@/hooks/query/credit-note';
 import { compose } from '@/utils';
+
+interface CreditNoteBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface CreditNoteBulkDeleteDialogProps
+  extends WithCreditNotesActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
 
 function CreditNoteBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withCreditNotesActions
   setCreditNotesSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteCreditNotes, isLoading } =
+}: CreditNoteBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: CreditNoteBulkDeleteDialogPayload = payload ?? {};
+
+  const { mutateAsync: bulkDeleteCreditNotes, isPending: isLoading } =
     useBulkDeleteCreditNotes();
 
   const handleCancel = () => {

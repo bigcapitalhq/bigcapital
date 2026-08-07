@@ -1,10 +1,9 @@
 import React from 'react';
+import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import type { BranchesListResponse } from '@bigcapital/sdk-ts';
-
 import { Features } from '@/constants';
 import { useBranches } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
 interface BalanceSheetHeaderDimensionsContextValue {
   branches: BranchesListResponse | undefined;

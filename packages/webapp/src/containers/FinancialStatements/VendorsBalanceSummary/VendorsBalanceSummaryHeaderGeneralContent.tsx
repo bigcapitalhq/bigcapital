@@ -1,7 +1,11 @@
-import React from 'react';
-import { FastField } from 'formik';
-import { DateInput } from '@blueprintjs/datetime';
 import { FormGroup, Position, Checkbox } from '@blueprintjs/core';
+import { DateInput } from '@blueprintjs/datetime';
+import { FastField } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { filterVendorsOptions } from '../constants';
+import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
+import { useVendorsBalanceSummaryGeneralPanelContext } from './VendorsBalanceSummaryHeaderGeneralProvider';
 import {
   Row,
   Col,
@@ -9,16 +13,12 @@ import {
   FFormGroup,
   VendorsMultiSelect,
 } from '@/components';
-import { filterVendorsOptions } from '../constants';
 import {
   momentFormatter,
   tansformDateValue,
   inputIntent,
   handleDateChange,
 } from '@/utils';
-import { useVendorsBalanceSummaryGeneralPanelContext } from './VendorsBalanceSummaryHeaderGeneralProvider';
-import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
-import intl from 'react-intl-universal';
 
 /**
  * Vendors balance header - General panel - Content.

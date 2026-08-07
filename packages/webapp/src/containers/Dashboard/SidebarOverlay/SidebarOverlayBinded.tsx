@@ -1,12 +1,10 @@
 // @ts-nocheck
-import React from 'react';
 import * as R from 'ramda';
-
-import { SidebarOverlay } from './SidebarOverlay';
-import { withDashboardSidebarActions } from '@/containers/Dashboard/Sidebar/withDashboardSidebarActions';
-import { withDashboardSidebar } from '@/containers/Dashboard/Sidebar/withDashboardSidebar';
-
+import React from 'react';
 import { useSubSidebarMenu } from '../Sidebar/hooks';
+import { SidebarOverlay } from './SidebarOverlay';
+import { withDashboardSidebar } from '@/containers/Dashboard/Sidebar/withDashboardSidebar';
+import { withDashboardSidebarActions } from '@/containers/Dashboard/Sidebar/withDashboardSidebarActions';
 
 /**
  * Dashboard sidebar menu.

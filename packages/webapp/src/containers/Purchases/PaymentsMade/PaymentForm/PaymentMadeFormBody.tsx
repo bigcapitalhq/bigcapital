@@ -1,9 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
 import { FastField } from 'formik';
-import { CLASSES } from '@/constants/classes';
+import React from 'react';
 import { PaymentMadeEntriesTable } from './PaymentMadeEntriesTable';
+import type { PaymentMadeEntry, PaymentMadeFormValues } from './utils';
+import { CLASSES } from '@/constants/classes';
 
 export function PaymentMadeFormBody() {
   return (
@@ -12,14 +12,19 @@ export function PaymentMadeFormBody() {
         {({
           form: { setFieldValue, values },
           field: { value },
-          meta: { error, touched },
+        }: {
+          form: {
+            setFieldValue: (field: string, val: unknown) => void;
+            values: PaymentMadeFormValues;
+          };
+          field: { value: PaymentMadeEntry[] };
         }) => (
           <PaymentMadeEntriesTable
             entries={value}
-            onUpdateData={(newEntries) => {
+            onUpdateData={(newEntries: PaymentMadeEntry[]) => {
               setFieldValue('entries', newEntries);
             }}
-            currencyCode={values.currency_code}
+            currencyCode={values.currencyCode}
           />
         )}
       </FastField>

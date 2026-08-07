@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import {
   Button,
   NavbarGroup,
@@ -7,6 +6,10 @@ import {
   NavbarDivider,
   Alignment,
 } from '@blueprintjs/core';
+import React from 'react';
+import { withProjects } from './withProjects';
+import { withProjectsActions } from './withProjectsActions';
+import { useProjectsListContext } from './ProjectsListProvider';
 import {
   Icon,
   Can,
@@ -16,15 +19,10 @@ import {
   DashboardActionsBar,
 } from '@/components';
 import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { withProjects } from './withProjects';
-import { withProjectsActions } from './withProjectsActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
+import { compose } from '@/utils';
 
 /**
  * Projects actions bar.
@@ -39,13 +37,11 @@ function ProjectsActionsBarInner({
 
   // #withProjectsActions
   setProjectsTableState,
-
-  // #withSettings
-  projectsTableSize,
-
-  // #withSettingsActions
-  addSetting,
 }) {
+  // Settings hook.
+  const { projectSettings } = useProjectsListContext();
+  const projectsTableSize = projectSettings?.tableSize;
+  const { mutateAsync: saveSettings } = useSaveSettings();
   // Handle tab change.
   const handleTabChange = (view) => {
     setProjectsTableState({
@@ -58,7 +54,9 @@ function ProjectsActionsBarInner({
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
-    addSetting('projects', 'tableSize', size);
+    saveSettings({
+      options: [{ group: 'projects', key: 'tableSize', value: size }],
+    });
   };
 
   // Handle new project button click.
@@ -121,11 +119,7 @@ function ProjectsActionsBarInner({
 export const ProjectsActionsBar = compose(
   withDialogActions,
   withProjectsActions,
-  withSettingsActions,
   withProjects(({ projectsTableState }) => ({
     projectsFilterRoles: projectsTableState?.filterRoles,
-  })),
-  withSettings(({ projectSettings }) => ({
-    projectsTableSize: projectSettings?.tableSize,
   })),
 )(ProjectsActionsBarInner);

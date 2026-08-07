@@ -1,8 +1,12 @@
-// @ts-nocheck
-import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
 import { Position, ControlGroup } from '@blueprintjs/core';
-import classNames from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { MoneyInOutTransactionNoField } from '../../_components';
+import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
+import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
+import { useSetPrimaryBranchToForm, BranchRowDivider } from '../utils';
+import type { Account } from '@bigcapital/sdk-ts';
 import {
   FAccountsSuggestField,
   InputPrependText,
@@ -18,33 +22,16 @@ import {
   FDateInput,
   Icon,
 } from '@/components';
-import { ACCOUNT_TYPE, CLASSES, Features } from '@/constants';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
-import {
-  useSetPrimaryBranchToForm,
-  BranchRowDivider,
-} from '../../MoneyInDialog/utils';
-import { MoneyInOutTransactionNoField } from '../../_components';
-import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
-import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
-import intl from 'react-intl-universal';
+import { ACCOUNT_TYPE, Features } from '@/constants';
+import { momentFormatter } from '@/utils';
 
-/**
 /**
  * Owner contribution form fields.
  */
 export function OwnerContributionFormFields() {
-  // Money in dialog context.
   const { accounts, branches } = useMoneyInDailogContext();
   const { account } = useMoneyInFieldsContext();
 
-  // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
 
   return (
@@ -52,9 +39,9 @@ export function OwnerContributionFormFields() {
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup name={'branch_id'} label={intl.get('branch')}>
+            <FFormGroup name={'branchId'} label={intl.get('branch')}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -71,7 +58,6 @@ export function OwnerContributionFormFields() {
             name={'date'}
             label={intl.get('date')}
             labelInfo={<FieldRequiredHint />}
-            fill
           >
             <FDateInput
               name={'date'}
@@ -102,8 +88,10 @@ export function OwnerContributionFormFields() {
             labelInfo={<FieldRequiredHint />}
           >
             <ControlGroup>
-              <InputPrependText text={account?.currency_code || '--'} />
-              <FMoneyInputGroup name={'amount'} minimal={true} />
+              <InputPrependText
+                text={(account as Account | undefined)?.currencyCode || '--'}
+              />
+              <FMoneyInputGroup name={'amount'} minimal={true} fastField />
             </ControlGroup>
           </FFormGroup>
         </Col>
@@ -116,22 +104,22 @@ export function OwnerContributionFormFields() {
         <Col xs={5}>
           {/*------------ equity account -----------*/}
           <FFormGroup
-            name={'credit_account_id'}
+            name={'creditAccountId'}
             label={intl.get('cash_flow_transaction.label_equity_account')}
             labelInfo={<FieldRequiredHint />}
           >
             <FAccountsSuggestField
-              name={'credit_account_id'}
+              name={'creditAccountId'}
               items={accounts}
-              filterByTypes={ACCOUNT_TYPE.EQUITY}
+              filterByTypes={[ACCOUNT_TYPE.EQUITY]}
             />
           </FFormGroup>
         </Col>
 
         <Col xs={5}>
           {/*------------ Reference -----------*/}
-          <FFormGroup name={'reference_no'} label={intl.get('reference_no')}>
-            <FInputGroup name={'reference_no'} />
+          <FFormGroup name={'referenceNo'} label={intl.get('reference_no')}>
+            <FInputGroup name={'referenceNo'} />
           </FFormGroup>
         </Col>
       </Row>

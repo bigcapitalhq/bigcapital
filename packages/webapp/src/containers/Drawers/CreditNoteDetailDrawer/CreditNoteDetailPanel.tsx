@@ -1,12 +1,9 @@
-// @ts-nocheck
 import React from 'react';
-
-import { CommercialDocBox } from '@/components';
-
+import { CreditNoteDetailFooter } from './CreditNoteDetailFooter';
 import { CreditNoteDetailHeader } from './CreditNoteDetailHeader';
 import { CreditNoteDetailTable } from './CreditNoteDetailTable';
 import { CreditNoteDetailTableFooter } from './CreditNoteDetailTableFooter';
-import { CreditNoteDetailFooter } from './CreditNoteDetailFooter';
+import { CommercialDocBox } from '@/components';
 
 /**
  * Credit note details panel.

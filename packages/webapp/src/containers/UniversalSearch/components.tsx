@@ -1,9 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
-
-import { highlightText } from '@/utils';
+import React from 'react';
 import { getUniversalSearchBind } from './utils';
+import { highlightText } from '@/utils';
 
 /**
  * Default univesal search item component.

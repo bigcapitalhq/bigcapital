@@ -1,6 +1,6 @@
-import React from 'react';
 import { x, SystemProps } from '@xstyled/emotion';
 import clsx from 'classnames';
+import React from 'react';
 import styles from './Paper.module.scss';
 
 interface PaperProps extends SystemProps {

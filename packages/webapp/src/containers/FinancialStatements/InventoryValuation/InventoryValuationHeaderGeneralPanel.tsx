@@ -1,20 +1,20 @@
 import { Position } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
+import { filterInventoryValuationOptions } from '../constants';
+import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
 import {
-  ItemsMultiSelect,
+  InventoryValuationGeneralPanelProvider,
+  useInventoryValuationGeneralPanelContext,
+} from './InventoryValuationHeaderGeneralPanelProvider';
+import {
+  FItemsMultiSelect,
   Row,
   Col,
   FieldHint,
   FFormGroup,
   FDateInput,
 } from '@/components';
-import { filterInventoryValuationOptions } from '../constants';
 import { momentFormatter } from '@/utils';
-import {
-  InventoryValuationGeneralPanelProvider,
-  useInventoryValuationGeneralPanelContext,
-} from './InventoryValuationHeaderGeneralPanelProvider';
-import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
-import intl from 'react-intl-universal';
 
 /**
  * Inventory valuation - Drawer Header - General panel.
@@ -67,7 +67,7 @@ function InventoryValuationHeaderGeneralPanelContent() {
       <Row>
         <Col xs={4}>
           <FFormGroup name={'itemsIds'} label={intl.get('Specific items')}>
-            <ItemsMultiSelect name={'itemsIds'} items={items} />
+            <FItemsMultiSelect name={'itemsIds'} items={items} />
           </FFormGroup>
         </Col>
       </Row>

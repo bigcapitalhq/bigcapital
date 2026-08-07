@@ -1,20 +1,20 @@
 // @ts-nocheck
-import React, { useState, useMemo, useCallback } from 'react';
-import * as R from 'ramda';
-import { debounce } from 'lodash';
 import { FormGroup, InputGroup, Button } from '@blueprintjs/core';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { css } from '@emotion/css';
+import { x } from '@xstyled/emotion';
+import { debounce } from 'lodash';
+import * as R from 'ramda';
+import React, { useState, useMemo, useCallback } from 'react';
+import intl from 'react-intl-universal';
+import { OrganizationsListDrawerHeader } from './OrganizationsListDrawerHeader';
+import OrganizationsListTable from './OrganizationsListTable';
 import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import {
   useWorkspaces,
   useSetDefaultWorkspace,
-} from '@/ee/workspaces/hooks/query/workspaces';
+} from '@/ee/workspaces/hooks/query';
 import { useAuthOrganizationId } from '@/hooks/state';
-import OrganizationsListTable from './OrganizationsListTable';
-import { OrganizationsListDrawerHeader } from './OrganizationsListDrawerHeader';
-import intl from 'react-intl-universal';
-import { css } from '@emotion/css';
-import { x } from '@xstyled/emotion';
 
 import '@/ee/workspaces/style/containers/Workspaces/OrganizationsListDrawer.scss';
 

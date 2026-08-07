@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   FormGroup,
   InputGroup,
@@ -10,6 +9,7 @@ import {
   TextArea,
   HTMLSelect,
 } from '@blueprintjs-formik/core';
+import { DateInput, TimezoneSelect } from '@blueprintjs-formik/datetime';
 import {
   MultiSelect,
   Suggest,
@@ -20,8 +20,8 @@ import {
   withFormikSuggest,
   withFormikSelect,
 } from '@blueprintjs-formik/select';
-import { DateInput, TimezoneSelect } from '@blueprintjs-formik/datetime';
-import { FSelect } from './Select';
+import React from 'react';
+import { FSelect, BPSelect } from './Select';
 
 export {
   FormGroup as FFormGroup,
@@ -31,6 +31,7 @@ export {
   RadioGroup as FRadioGroup,
   Switch as FSwitch,
   FSelect,
+  BPSelect,
   FormikMultiSelect as FMultiSelect,
   EditableText as FEditableText,
   FormikSuggest as FSuggest,

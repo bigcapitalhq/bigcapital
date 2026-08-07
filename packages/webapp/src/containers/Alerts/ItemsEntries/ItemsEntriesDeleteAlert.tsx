@@ -1,42 +1,38 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
-import { Intent, Alert } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { FormattedMessage as T } from '@/components';
-
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-
 import { compose, saveInvoke } from '@/utils';
 
-/**
- * Items entries table clear all lines alert.
- */
+interface ItemsEntriesDeleteAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: Record<string, never>;
+  onConfirm?: (event?: unknown) => void;
+}
+
 function ItemsEntriesDeleteAlertInner({
   name,
-  onConfirm,
-
-  // #withAlertStoreConnect
   isOpen,
-  payload: {},
-
-  // #withAlertActions
+  onConfirm,
   closeAlert,
-}) {
-  // Handle the alert cancel.
+}: ItemsEntriesDeleteAlertProps): React.ReactElement {
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm the alert.
-  const handleConfirm = (event) => {
+  const handleConfirm = (event: unknown) => {
     closeAlert(name);
     saveInvoke(onConfirm, event);
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'clear_all_lines'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('clear_all_lines')}
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancel}

@@ -1,17 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  TaxRatesListResponse,
-  TaxRate,
-  CreateTaxRateBody,
-  EditTaxRateBody,
-} from '@bigcapital/sdk-ts';
-import {
   fetchTaxRates,
   fetchTaxRate,
   createTaxRate,
@@ -20,8 +7,21 @@ import {
   activateTaxRate,
   inactivateTaxRate,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { taxRatesKeys } from './query-keys';
+import type {
+  TaxRatesListResponse,
+  TaxRate,
+  CreateTaxRateBody,
+  EditTaxRateBody,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,

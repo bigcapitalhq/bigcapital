@@ -1,6 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import { defaultTo } from 'lodash';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import {
   DetailsMenu,
   DetailItem,
@@ -9,8 +11,6 @@ import {
   Col,
   CommercialDocHeader,
 } from '@/components';
-import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
-import intl from 'react-intl-universal';
 
 /**
  * Cashlflow transaction drawer detail Header.

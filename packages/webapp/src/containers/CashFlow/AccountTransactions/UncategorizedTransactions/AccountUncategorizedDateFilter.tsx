@@ -1,29 +1,37 @@
-// @ts-nocheck
-import { useState } from 'react';
-import * as R from 'ramda';
-import moment from 'moment';
-import { Box, Icon } from '@/components';
 import { Classes, Popover, Position } from '@blueprintjs/core';
-import { withBankingActions } from '../../withBankingActions';
+import moment from 'moment';
+import { useState } from 'react';
 import { withBanking } from '../../withBanking';
+import { withBankingActions } from '../../withBankingActions';
 import { AccountTransactionsDateFilterForm } from '../AccountTransactionsDateFilter';
 import { TagButton } from './TagButton';
+import type { WithBankingProps } from '../../withBanking';
+import type { WithBankingActionsProps } from '../../withBankingActions';
+import type { UncategorizedTransactionsFilter } from '../../withBankingActions';
+import type { AccountTransactionsDateFilterFormValues } from '../AccountTransactionsDateFilter';
+import type { FormikConfig, FormikHelpers } from 'formik';
+import { Box, Icon } from '@/components';
+import { compose } from '@/utils';
+
+interface AccountUncategorizedDateFilterRootProps
+  extends Pick<WithBankingProps, 'uncategorizedTransactionsFilter'> {}
 
 function AccountUncategorizedDateFilterRoot({
   uncategorizedTransactionsFilter,
-}) {
+}: AccountUncategorizedDateFilterRootProps) {
   const fromDate = uncategorizedTransactionsFilter?.fromDate;
   const toDate = uncategorizedTransactionsFilter?.toDate;
 
-  const fromDateFormatted = moment(fromDate).isSame(
-    moment().format('YYYY'),
-    'year',
-  )
-    ? moment(fromDate).format('MMM, DD')
-    : moment(fromDate).format('MMM, DD, YYYY');
-  const toDateFormatted = moment(toDate).isSame(moment().format('YYYY'), 'year')
-    ? moment(toDate).format('MMM, DD')
-    : moment(toDate).format('MMM, DD, YYYY');
+  const fromDateFormatted = fromDate
+    ? moment(fromDate).isSame(moment().format('YYYY'), 'year')
+      ? moment(fromDate).format('MMM, DD')
+      : moment(fromDate).format('MMM, DD, YYYY')
+    : '';
+  const toDateFormatted = toDate
+    ? moment(toDate).isSame(moment().format('YYYY'), 'year')
+      ? moment(toDate).format('MMM, DD')
+      : moment(toDate).format('MMM, DD, YYYY')
+    : '';
 
   const buttonText =
     fromDate && toDate
@@ -51,7 +59,7 @@ function AccountUncategorizedDateFilterRoot({
       onClose={() => setIsOpen(false)}
     >
       <TagButton
-        outline
+        outlined
         icon={<Icon icon={'date-range'} />}
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -61,13 +69,26 @@ function AccountUncategorizedDateFilterRoot({
   );
 }
 
-export const AccountUncategorizedDateFilter = R.compose(
+export const AccountUncategorizedDateFilter = compose(
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),
 )(AccountUncategorizedDateFilterRoot);
 
-export const UncategorizedTransactionsDateFilter = R.compose(
+interface UncategorizedTransactionsDateFilterProps
+  extends Pick<WithBankingActionsProps, 'setUncategorizedTransactionsFilter'>,
+    Pick<WithBankingProps, 'uncategorizedTransactionsFilter'> {
+  onSubmit?: (values: UncategorizedTransactionsFilter) => void;
+}
+
+const toDateFilterString = (value: string | Date | null): string | undefined =>
+  value == null
+    ? undefined
+    : typeof value === 'string'
+      ? value
+      : value.toISOString();
+
+export const UncategorizedTransactionsDateFilter = compose(
   withBankingActions,
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
@@ -81,18 +102,25 @@ export const UncategorizedTransactionsDateFilter = R.compose(
 
   // #ownProps
   onSubmit,
-}) => {
-  const initialValues = {
-    ...uncategorizedTransactionsFilter,
+}: UncategorizedTransactionsDateFilterProps) => {
+  const initialValues: AccountTransactionsDateFilterFormValues = {
+    period: 'all_dates',
+    fromDate: uncategorizedTransactionsFilter?.fromDate ?? '',
+    toDate: uncategorizedTransactionsFilter?.toDate ?? '',
   };
 
-  const handleSubmit = (values) => {
-    setUncategorizedTransactionsFilter({
-      fromDate: values.fromDate,
-      toDate: values.toDate,
-    });
-    onSubmit && onSubmit(values);
-  };
+  const handleSubmit: FormikConfig<AccountTransactionsDateFilterFormValues>['onSubmit'] =
+    (
+      values: AccountTransactionsDateFilterFormValues,
+      _helpers: FormikHelpers<AccountTransactionsDateFilterFormValues>,
+    ) => {
+      const filter: UncategorizedTransactionsFilter = {
+        fromDate: toDateFilterString(values.fromDate),
+        toDate: toDateFilterString(values.toDate),
+      };
+      setUncategorizedTransactionsFilter(filter);
+      onSubmit?.(filter);
+    };
 
   return (
     <AccountTransactionsDateFilterForm

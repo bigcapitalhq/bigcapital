@@ -1,7 +1,5 @@
-// @ts-nocheck
-import React from 'react';
-import { TaxRateFormDialogForm } from './TaxRateFormDialogForm';
 import { TaxRateFormDialogBoot } from './TaxRateFormDialogBoot';
+import { TaxRateFormDialogForm } from './TaxRateFormDialogForm';
 
 interface TaxRateFormDialogContentProps {
   dialogName: string;

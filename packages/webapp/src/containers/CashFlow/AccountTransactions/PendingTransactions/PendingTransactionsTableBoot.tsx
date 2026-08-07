@@ -1,16 +1,33 @@
-// @ts-nocheck
 import React from 'react';
-import { IntersectionObserver } from '@/components';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
+import type { PendingBankTransactionsListPage } from '@bigcapital/sdk-ts';
+import { IntersectionObserver } from '@/components';
 import { usePendingBankTransactionsInfinity } from '@/hooks/query/banking';
 import { useFlattenInfinityPages } from '@/hooks/utils';
 
-const PendingTransactionsContext = React.createContext();
+type PendingTransactionRow = NonNullable<
+  PendingBankTransactionsListPage['data']
+>[number];
+
+export interface PendingTransactionsContextValue {
+  pendingTransactions: PendingTransactionRow[];
+  isPendingTransactionFetching: boolean;
+  isPendingTransactionsLoading: boolean;
+}
+
+interface PendingTransactionsBootProps {
+  children: React.ReactNode;
+}
+
+const PendingTransactionsContext =
+  React.createContext<PendingTransactionsContextValue>(
+    {} as PendingTransactionsContextValue,
+  );
 
 /**
  * Account pending transctions provider.
  */
-function PendingTransactionsBoot({ children }) {
+function PendingTransactionsBoot({ children }: PendingTransactionsBootProps) {
   const { accountId } = useAccountTransactionsContext();
 
   // Fetches the pending transactions.
@@ -19,16 +36,16 @@ function PendingTransactionsBoot({ children }) {
     isFetching: isPendingTransactionFetching,
     isLoading: isPendingTransactionsLoading,
     isSuccess: isPendingTransactionsSuccess,
-    isFetchingNextPage: isPendingTransactionFetchNextPage,
-    fetchNextPage: fetchNextPendingTransactionsPage,
     hasNextPage: hasPendingTransactionsNextPage,
+    fetchNextPage: fetchNextPendingTransactionsPage,
   } = usePendingBankTransactionsInfinity({
-    account_id: accountId,
-    page_size: 50,
+    accountId,
+    pageSize: 50,
   });
   // Memorized the cashflow account transactions.
   const pendingTransactions = useFlattenInfinityPages(
     isPendingTransactionsSuccess ? pendingTransactionsPage : undefined,
+    (page) => page?.data ?? [],
   );
   // Handle the observer ineraction.
   const handleObserverInteract = React.useCallback(() => {
@@ -41,8 +58,8 @@ function PendingTransactionsBoot({ children }) {
     fetchNextPendingTransactionsPage,
   ]);
   // Provider payload.
-  const provider = {
-    pendingTransactions,
+  const provider: PendingTransactionsContextValue = {
+    pendingTransactions: pendingTransactions ?? [],
     isPendingTransactionFetching,
     isPendingTransactionsLoading,
   };
@@ -50,10 +67,7 @@ function PendingTransactionsBoot({ children }) {
   return (
     <PendingTransactionsContext.Provider value={provider}>
       {children}
-      <IntersectionObserver
-        onIntersect={handleObserverInteract}
-        enabled={!isPendingTransactionFetchNextPage}
-      />
+      <IntersectionObserver onIntersect={handleObserverInteract} />
     </PendingTransactionsContext.Provider>
   );
 }

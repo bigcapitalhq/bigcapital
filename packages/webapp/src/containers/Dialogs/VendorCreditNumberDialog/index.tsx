@@ -1,5 +1,5 @@
-// @ts-nocheck
 import React from 'react';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
@@ -10,6 +10,13 @@ const VendorCreditNumberDialogContent = React.lazy(() =>
   })),
 );
 
+interface VendorCreditNumberDialogProps {
+  dialogName: string;
+  payload: { initialFormValues?: Partial<ReferenceNumberFormValues> };
+  isOpen: boolean | undefined;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
 /**
  * Vendor Credit number dialog.
  */
@@ -18,8 +25,8 @@ function VendorCreditNumberDialog({
   payload: { initialFormValues },
   isOpen,
   onConfirm,
-}) {
-  const handleConfirm = (values) => {
+}: VendorCreditNumberDialogProps): React.ReactElement {
+  const handleConfirm = (values: ReferenceNumberFormValues) => {
     saveInvoke(onConfirm, values);
   };
 
@@ -33,6 +40,7 @@ function VendorCreditNumberDialog({
     >
       <DialogSuspense>
         <VendorCreditNumberDialogContent
+          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />

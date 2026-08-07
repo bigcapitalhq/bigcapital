@@ -1,28 +1,29 @@
-// @ts-nocheck
-import React from 'react';
-import { Form, useFormikContext } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
+import { Form, useFormikContext } from 'formik';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
+import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 import {
   AccountsSelect,
-  FieldRequiredHint,
-  FormattedMessage as T,
-  FFormGroup,
   CardFooterActions,
+  FieldRequiredHint,
+  FFormGroup,
+  FormattedMessage as T,
 } from '@/components';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
 
-import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
+export interface ItemPreferencesFormValues {
+  preferredSellAccount: string | number;
+  preferredCostAccount: string | number;
+  preferredInventoryAccount: string | number;
+}
 
-/**
- * Item preferences form.
- */
-export function ItemForm() {
+export function ItemForm(): React.ReactElement {
   const history = useHistory();
   const { accounts } = useItemPreferencesFormContext();
 
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<ItemPreferencesFormValues>();
 
   const handleCloseClick = () => {
     history.go(-1);
@@ -30,9 +31,8 @@ export function ItemForm() {
 
   return (
     <Form>
-      {/* ----------- Preferred Sell Account ----------- */}
       <ItemFormGroup
-        name={'preferred_sell_account'}
+        name={'preferredSellAccount'}
         label={
           <strong>
             <T id={'preferred_sell_account'} />
@@ -49,16 +49,15 @@ export function ItemForm() {
         fastField={true}
       >
         <AccountsSelect
-          name={'preferred_sell_account'}
+          name={'preferredSellAccount'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
         />
       </ItemFormGroup>
 
-      {/* ----------- Preferred Cost Account ----------- */}
       <ItemFormGroup
-        name={'preferred_cost_account'}
+        name={'preferredCostAccount'}
         label={
           <strong>
             <T id={'preferred_cost_account'} />
@@ -75,16 +74,15 @@ export function ItemForm() {
         fastField={true}
       >
         <AccountsSelect
-          name={'preferred_cost_account'}
+          name={'preferredCostAccount'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
         />
       </ItemFormGroup>
 
-      {/* ----------- Preferred Inventory Account ----------- */}
       <ItemFormGroup
-        name={'preferred_inventory_account'}
+        name={'preferredInventoryAccount'}
         label={
           <strong>
             <T id={'preferred_inventory_account'} />
@@ -101,7 +99,7 @@ export function ItemForm() {
         fastField={true}
       >
         <AccountsSelect
-          name={'preferred_inventory_account'}
+          name={'preferredInventoryAccount'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[ACCOUNT_TYPE.INVENTORY]}

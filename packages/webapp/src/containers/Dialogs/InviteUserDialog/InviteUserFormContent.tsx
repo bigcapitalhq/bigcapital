@@ -1,7 +1,10 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useInviteUserFormContext } from './InviteUserFormProvider';
+import type { InviteUserFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   FSelect,
   FieldRequiredHint,
@@ -10,17 +13,15 @@ import {
   FInputGroup,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
-import { useInviteUserFormContext } from './InviteUserFormProvider';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import intl from 'react-intl-universal';
+import { compose } from '@/utils';
+
+interface InviteUserFormContentProps extends WithDialogActionsProps {}
 
 function InviteUserFormContentInner({
-  // #withDialogActions
   closeDialog,
-}) {
-  const { isSubmitting } = useFormikContext();
+}: InviteUserFormContentProps): React.ReactElement {
+  const { isSubmitting } = useFormikContext<InviteUserFormValues>();
   const { isEditMode, dialogName, roles } = useInviteUserFormContext();
 
   const handleClose = () => {
@@ -43,13 +44,13 @@ function InviteUserFormContentInner({
         </FFormGroup>
         {/* ----------- Role name ----------- */}
         <FFormGroup
-          name={'role_id'}
+          name={'roleId'}
           label={intl.get('invite_user.label.role_name')}
           labelInfo={<FieldRequiredHint />}
         >
           <FSelect
-            name={'role_id'}
-            items={roles}
+            name={'roleId'}
+            items={roles ?? []}
             valueAccessor={'id'}
             textAccessor={'name'}
             popoverProps={{ minimal: true }}

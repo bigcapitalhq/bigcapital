@@ -1,10 +1,10 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getItemsTableStateFactory,
   isItemsTableStateChangedFactory,
 } from '@/store/items/items.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithItemsProps {
   itemsSelectedRows: ApplicationState['items']['selectedRows'];

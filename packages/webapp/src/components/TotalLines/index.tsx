@@ -1,7 +1,7 @@
 // @ts-nocheck
+import { x } from '@xstyled/emotion';
 import React from 'react';
 import styled from 'styled-components';
-import { x } from '@xstyled/emotion';
 export const TotalLineBorderStyle = {
   None: 'None',
   SingleDark: 'SingleDark',
@@ -13,12 +13,19 @@ export const TotalLineTextStyle = {
   Bold: 'Bold',
 };
 
+interface TotalLinesProps {
+  children?: React.ReactNode;
+  amountColWidth?: string | number;
+  labelColWidth?: string | number;
+  className?: string;
+}
+
 export function TotalLines({
   children,
   amountColWidth,
   labelColWidth,
   className,
-}) {
+}: TotalLinesProps) {
   return (
     <TotalLinesRoot
       className={className}
@@ -30,7 +37,21 @@ export function TotalLines({
   );
 }
 
-export function TotalLine({ title, value, borderStyle, textStyle, className }) {
+interface TotalLineProps {
+  title?: React.ReactNode;
+  value?: React.ReactNode;
+  borderStyle?: string;
+  textStyle?: string;
+  className?: string;
+}
+
+export function TotalLine({
+  title,
+  value,
+  borderStyle,
+  textStyle,
+  className,
+}: TotalLineProps) {
   return (
     <TotalLinePrimitive
       borderStyle={borderStyle}
@@ -63,7 +84,7 @@ export const TotalLinesRoot = styled.div`
   `}
 `;
 
-export const TotalLinePrimitive = styled.div`
+const TotalLinePrimitiveBase = styled.div`
   --x-color-divider: #d2dde2;
   --x-color-divider-dark: #000;
 
@@ -94,7 +115,7 @@ export const TotalLinePrimitive = styled.div`
       border-bottom-color: transparent;
     `}
     ${(props) =>
-      props.textStyle === TotalLineTextStyle.Bold &&
+      props.textStyle === TotalLineBorderStyle.Bold &&
       `
       font-weight: 600;
     `}
@@ -117,9 +138,11 @@ const TotalLineAmount = (props) => {
   );
 };
 
-export const TotalLineTitle = (props) => {
+const TotalLineTitle = (props) => {
   return <x.div display={'table-cell'} padding={'8px'} {...props} />;
 };
 
-TotalLinePrimitive.Amount = TotalLineAmount;
-TotalLinePrimitive.Title = TotalLineTitle;
+export const TotalLinePrimitive = Object.assign(TotalLinePrimitiveBase, {
+  Amount: TotalLineAmount,
+  Title: TotalLineTitle,
+});

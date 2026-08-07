@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { ItemForm } from './ItemForm';
@@ -7,8 +6,8 @@ import { ItemForm } from './ItemForm';
  * Item form page.
  */
 export function ItemFormPage() {
-  const { id } = useParams();
-  const idInteger = parseInt(id, 10);
+  const { id } = useParams<{ id?: string }>();
+  const idInteger = id ? parseInt(id, 10) : undefined;
 
   return <ItemForm itemId={idInteger} />;
 }

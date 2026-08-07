@@ -1,7 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-
+import React from 'react';
 import { ProjectFormFields } from './ProjectFormFields';
 import { ProjectFormFloatingActions } from './ProjectFormFloatingActions';
 

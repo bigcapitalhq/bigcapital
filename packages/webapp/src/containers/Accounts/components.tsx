@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import {
   Position,
   Classes,
@@ -10,9 +7,39 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { Account } from '@bigcapital/sdk-ts';
 import { Can, Icon, If } from '@/components';
-import { safeCallback } from '@/utils';
 import { AbilitySubject, AccountAction } from '@/constants/abilityOption';
+import { safeCallback } from '@/utils';
+
+export type AccountTableRow = Account & {
+  // `description` is returned by the server but not declared on the SDK type.
+  description?: string;
+};
+
+interface ActionsMenuPayload {
+  onEdit: (account: AccountTableRow) => void;
+  onViewDetails: (account: AccountTableRow) => void;
+  onDelete: (account: AccountTableRow) => void;
+  onNewChild: (account: AccountTableRow) => void;
+  onActivate: (account: AccountTableRow) => void;
+  onInactivate: (account: AccountTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: AccountTableRow };
+  payload: ActionsMenuPayload;
+}
+
+interface CellProps {
+  cell: { row: { original: AccountTableRow } };
+}
+
+interface NormalCellProps {
+  cell: { value?: string };
+}
 
 /**
  * Accounts table actions menu.
@@ -26,9 +53,8 @@ export function ActionsMenu({
     onNewChild,
     onActivate,
     onInactivate,
-    // onDrawer,
   },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -52,7 +78,7 @@ export function ActionsMenu({
         <MenuDivider />
       </Can>
       <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
-        <If condition={original.active}>
+        <If condition={!!original.active}>
           <MenuItem
             text={intl.get('inactivate_account')}
             icon={<Icon icon="pause-16" iconSize={16} />}
@@ -82,17 +108,17 @@ export function ActionsMenu({
 /**
  * Normal cell.
  */
-export function NormalCell({ cell: { value } }) {
+export function NormalCell({ cell: { value } }: NormalCellProps) {
   const arrowDirection = value === 'credit' ? 'down' : 'up';
 
   // Can't continue if the value is not `credit` or `debit`.
-  if (['credit', 'debit'].indexOf(value) === -1) {
-    return '';
+  if (['credit', 'debit'].indexOf(value ?? '') === -1) {
+    return null;
   }
   return (
     <Tooltip
       className={Classes.TOOLTIP_INDICATOR}
-      content={intl.get(value)}
+      content={intl.get(value ?? '')}
       position={Position.RIGHT}
       hoverOpenDelay={100}
     >
@@ -104,15 +130,14 @@ export function NormalCell({ cell: { value } }) {
 /**
  * Balance cell.
  */
-export function BalanceCell({ cell }) {
+export function BalanceCell({ cell }: CellProps) {
   const account = cell.row.original;
 
   return account.amount !== null ? (
-    <span>
-      {account.formatted_amount}
-      {/* <Money amount={account.amount} currency={account.currency_code} /> */}
-    </span>
+    <span>{account.formattedAmount}</span>
   ) : (
+    // `class` should be `className` — preserved from @ts-nocheck.
+    // @ts-expect-error latent bug
     <span class="placeholder">—</span>
   );
 }
@@ -120,12 +145,14 @@ export function BalanceCell({ cell }) {
 /**
  * Balance cell.
  */
-export function BankBalanceCell({ cell }) {
+export function BankBalanceCell({ cell }: CellProps) {
   const account = cell.row.original;
 
   return account.amount !== null ? (
-    <span>{account.bank_balance_formatted}</span>
+    <span>{account.bankBalanceFormatted}</span>
   ) : (
+    // `class` should be `className` — preserved from @ts-nocheck.
+    // @ts-expect-error latent bug
     <span class="placeholder">—</span>
   );
 }

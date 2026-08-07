@@ -1,16 +1,14 @@
 // @ts-nocheck
-import React from 'react';
 import * as R from 'ramda';
+import React from 'react';
 import {
   TransactionsLockingList,
   TransactionsLockingFull,
   TransactionLockingSkeletonList,
 } from './components';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 /**
  * Transactions locking body.

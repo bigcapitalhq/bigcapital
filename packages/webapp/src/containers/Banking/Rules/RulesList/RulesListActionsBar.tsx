@@ -3,8 +3,8 @@ import { Button, Classes, NavbarGroup } from '@blueprintjs/core';
 import * as R from 'ramda';
 import { Can, DashboardActionsBar, Icon } from '@/components';
 import { AbilitySubject, BankRuleAction } from '@/constants/abilityOption';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 function RulesListActionsBarRoot({
   // #withDialogActions

@@ -1,9 +1,9 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   CREDIT_NOTES_TABLE_STATE_RESET,
   CREDIT_NOTES_TABLE_STATE_SET,
   CREDIT_NOTES_SET_SELECTED_ROWS,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 export const setCreditNoteTableState = (queries: Partial<TableQuery>) => {
   return {

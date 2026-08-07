@@ -1,13 +1,11 @@
-// @ts-nocheck
 import { Divider } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-import { Box } from '@/components';
-
+import { VendorBillingAddress } from './VendorBillingAddress';
 import { VendorFormBasicSection } from './VendorFormBasicSection';
 import { VendorFormFinancialSection } from './VendorFormFinancialSection';
-import { VendorBillingAddress } from './VendorBillingAddress';
-import { VendorShippingAddress } from './VendorShippingAddress';
 import { VendorFormNotesSection } from './VendorFormNotesSection';
+import { VendorShippingAddress } from './VendorShippingAddress';
+import { Box } from '@/components';
 
 const vendorFormSectionDividerClass = css`
   margin: 20px 0;

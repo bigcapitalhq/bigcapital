@@ -1,8 +1,8 @@
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import type { AuditLogsResponse } from '@bigcapital/sdk-ts';
+import { IntersectionObserver } from '@/components';
 import { useAuditLogsInfinityQuery } from '@/hooks/query';
 import { useFlattenInfinityPages } from '@/hooks/utils';
-import { IntersectionObserver } from '@/components';
 
 interface AuditLogQuery {
   subject?: string | string[];

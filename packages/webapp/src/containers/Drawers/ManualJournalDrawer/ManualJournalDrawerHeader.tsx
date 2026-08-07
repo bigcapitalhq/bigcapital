@@ -1,8 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { defaultTo } from 'lodash';
+import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
+import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
+import { ManualJournalDetailsStatus } from './utils';
 import {
   Row,
   Col,
@@ -11,9 +12,6 @@ import {
   CommercialDocHeader,
   CommercialDocTopHeader,
 } from '@/components';
-import { ManualJournalDetailsStatus } from './utils';
-import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
-import intl from 'react-intl-universal';
 
 /**
  * Manual journal details header.
@@ -21,12 +19,14 @@ import intl from 'react-intl-universal';
 export function ManualJournalDrawerHeader() {
   const { manualJournal } = useManualJournalDrawerContext();
 
+  if (!manualJournal) return null;
+
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
           <DetailItem name={'total'} label={intl.get('total')}>
-            <h3 class="big-number">{manualJournal.formatted_amount}</h3>
+            <h3 className="big-number">{manualJournal.formattedAmount}</h3>
           </DetailItem>
 
           <StatusDetailItem>
@@ -39,11 +39,11 @@ export function ManualJournalDrawerHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem name={'journal-type'} label={intl.get('journal_type')}>
-              {manualJournal.journal_type}
+              {manualJournal.journalType}
             </DetailItem>
 
             <DetailItem name={'journal-number'} label={intl.get('journal_no')}>
-              {manualJournal.journal_number}
+              {manualJournal.journalNumber}
             </DetailItem>
 
             <DetailItem name={'reference-no'} label={intl.get('reference_no')}>
@@ -51,7 +51,7 @@ export function ManualJournalDrawerHeader() {
             </DetailItem>
 
             <DetailItem name={'currency'} label={intl.get('currency')}>
-              {manualJournal.currency_code}
+              {manualJournal.currencyCode}
             </DetailItem>
 
             <DetailItem label={intl.get('description')}>

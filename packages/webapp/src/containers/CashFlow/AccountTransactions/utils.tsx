@@ -1,29 +1,42 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Button,
   PopoverInteractionKind,
   MenuItem,
   Position,
 } from '@blueprintjs/core';
-
 import { Select } from '@blueprintjs/select';
+import React from 'react';
+import type { ItemRenderer } from '@blueprintjs/select';
 import { Icon } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+
+export interface CashFlowMenuItem {
+  name: string;
+  label?: string;
+  value?: string;
+}
+
+interface CashFlowMenuItemsProps {
+  text: React.ReactNode;
+  items: CashFlowMenuItem[];
+  onItemSelect?: (item: CashFlowMenuItem) => void;
+  buttonProps?: React.ComponentProps<typeof Button>;
+}
 
 export const CashFlowMenuItems = ({
   text,
   items,
   onItemSelect,
   buttonProps,
-}) => {
+}: CashFlowMenuItemsProps) => {
   // Menu items renderer.
-  const itemsRenderer = (item, { handleClick, modifiers, query }) => (
-    <MenuItem text={item.name} label={item.label} onClick={handleClick} />
-  );
+  const itemsRenderer: ItemRenderer<CashFlowMenuItem> = (
+    item,
+    { handleClick },
+  ) => <MenuItem text={item.name} label={item.label} onClick={handleClick} />;
 
-  const handleCashFlowMenuSelect = (type) => {
-    onItemSelect && onItemSelect(type);
+  const handleCashFlowMenuSelect = (item: CashFlowMenuItem) => {
+    onItemSelect?.(item);
   };
 
   return (
@@ -51,44 +64,54 @@ export const CashFlowMenuItems = ({
   );
 };
 
-export const handleCashFlowTransactionType = (reference, openDrawer) => {
-  switch (reference.reference_type) {
+interface CashFlowTransactionReference {
+  referenceType: string;
+  referenceId: number;
+}
+
+type OpenDrawer = (name: string, payload?: Record<string, unknown>) => void;
+
+export const handleCashFlowTransactionType = (
+  reference: CashFlowTransactionReference,
+  openDrawer: OpenDrawer,
+) => {
+  switch (reference.referenceType) {
     case 'SaleReceipt':
       return openDrawer(DRAWERS.RECEIPT_DETAILS, {
-        receiptId: reference.reference_id,
+        receiptId: reference.referenceId,
       });
     case 'Journal':
       return openDrawer(DRAWERS.JOURNAL_DETAILS, {
-        manualJournalId: reference.reference_id,
+        manualJournalId: reference.referenceId,
       });
     case 'Expense':
       return openDrawer(DRAWERS.EXPENSE_DETAILS, {
-        expenseId: reference.reference_id,
+        expenseId: reference.referenceId,
       });
     case 'PaymentReceive':
       return openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, {
-        paymentReceiveId: reference.reference_id,
+        paymentReceiveId: reference.referenceId,
       });
     case 'BillPayment':
       return openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, {
-        paymentMadeId: reference.reference_id,
+        paymentMadeId: reference.referenceId,
       });
     case 'RefundCreditNote':
       return openDrawer(DRAWERS.REFUND_CREDIT_NOTE_DETAILS, {
-        refundTransactionId: reference.reference_id,
+        refundTransactionId: reference.referenceId,
       });
     case 'RefundVendorCredit':
       return openDrawer(DRAWERS.REFUND_VENDOR_CREDIT_DETAILS, {
-        refundTransactionId: reference.reference_id,
+        refundTransactionId: reference.referenceId,
       });
     case 'InventoryAdjustment':
       return openDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS, {
-        inventoryId: reference.reference_id,
+        inventoryId: reference.referenceId,
       });
 
     default:
       return openDrawer(DRAWERS.CASHFLOW_TRNASACTION_DETAILS, {
-        referenceId: reference.reference_id,
+        referenceId: reference.referenceId,
       });
   }
 };

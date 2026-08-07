@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
+import { ApplicationState } from '@/store/reducers';
 import {
   getResourceColumns,
   getResourceMetadata,
   getResourceFieldsFactory,
   getResourceDataFactory,
 } from '@/store/resources/resources.selectors';
-import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 interface OwnProps {
   resourceName: string;

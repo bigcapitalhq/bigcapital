@@ -1,6 +1,6 @@
 import { connect, MapStateToProps } from 'react-redux';
-import { ApplicationState } from '@/store/reducers';
 import type { MapState } from '@/containers/hoc.types';
+import { ApplicationState } from '@/store/reducers';
 
 export interface WithDashboardSidebarProps {
   sidebarSubmenuOpen: boolean;

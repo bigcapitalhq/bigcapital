@@ -1,10 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import * as R from 'ramda';
-
 import { ButtonLink } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { compose } from '@/utils';
 
 function ProjectBillableEntriesLinkComponent({
   // #ownProps
@@ -14,8 +13,13 @@ function ProjectBillableEntriesLinkComponent({
 
   // #withDialogAction
   openDialog,
+}: {
+  children?: React.ReactNode;
+  projectId?: string | number;
+  className?: string;
+  openDialog: (name: string, payload?: Record<string, unknown>) => void;
 }) {
-  const handleBillableEntries = (event) => {
+  const handleBillableEntries = (event: React.MouseEvent) => {
     openDialog('project-billable-entries', { projectId });
     event.preventDefault();
   };
@@ -27,7 +31,7 @@ function ProjectBillableEntriesLinkComponent({
   );
 }
 
-export const ProjectBillableEntriesLink = R.compose(withDialogActions)(
+export const ProjectBillableEntriesLink = compose(withDialogActions)(
   ProjectBillableEntriesLinkComponent,
 );
 

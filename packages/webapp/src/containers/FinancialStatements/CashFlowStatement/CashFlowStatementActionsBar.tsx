@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -8,12 +7,10 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T, DashboardActionsBar } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
+import React from 'react';
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
+import { CashflowSheetExportMenu } from './components';
 import {
   withCashFlowStatement,
   WithCashFlowStatementProps,
@@ -22,14 +19,14 @@ import {
   withCashFlowStatementActions,
   WithCashFlowStatementActionsProps,
 } from './withCashFlowStatementActions';
-
-import { compose, saveInvoke } from '@/utils';
-import { CashflowSheetExportMenu } from './components';
+import { Icon, FormattedMessage as T, DashboardActionsBar } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { compose, saveInvoke } from '@/utils';
 
 interface CashFlowStatementActionsBarOwnProps {
   numberFormat: Record<string, unknown>;

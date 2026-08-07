@@ -1,10 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
+import React from 'react';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import { compose } from '@/utils';
 
 function ProjectsEmptyStatusInner({

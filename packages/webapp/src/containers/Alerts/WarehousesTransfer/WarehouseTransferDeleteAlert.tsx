@@ -1,47 +1,42 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   AppToaster,
-  FormattedMessage as T,
   FormattedHTMLMessage,
+  FormattedMessage as T,
 } from '@/components';
-import { useDeleteWarehouseTransfer } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useDeleteWarehouseTransfer } from '@/hooks/query';
+import { compose } from '@/utils';
 
-/**
- * Warehouse transfer delete alert
- * @returns
- */
+interface WarehouseTransferDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { warehouseTransferId: number };
+}
+
 function WarehouseTransferDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { warehouseTransferId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteWarehouseTransferMutate, isLoading } =
+}: WarehouseTransferDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteWarehouseTransferMutate, isPending } =
     useDeleteWarehouseTransfer();
 
-  // handle cancel delete warehouse alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // handleConfirm delete warehouse transfer.
   const handleConfirmWarehouseTransferDelete = () => {
     deleteWarehouseTransferMutate(warehouseTransferId)
       .then(() => {
@@ -51,13 +46,7 @@ function WarehouseTransferDeleteAlertInner({
         });
         closeDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS);
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -65,16 +54,17 @@ function WarehouseTransferDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelDeleteAlert}
       onConfirm={handleConfirmWarehouseTransferDelete}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch */}
         <FormattedHTMLMessage
           id={'warehouse_transfer.once_delete_this_warehouse_transfer'}
         />

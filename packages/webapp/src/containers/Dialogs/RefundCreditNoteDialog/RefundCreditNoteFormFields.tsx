@@ -1,20 +1,12 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import intl from 'react-intl-universal';
+import { Classes, Position, ControlGroup } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import { isEqual } from 'lodash';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
-import classNames from 'classnames';
-import { CLASSES, Features } from '@/constants';
-import { DateInput } from '@blueprintjs/datetime';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
+import { useSetPrimaryBranchToForm } from './utils';
+import type { RefundCreditNoteFormValues } from './types';
 import {
   Icon,
   Col,
@@ -23,39 +15,54 @@ import {
   FieldRequiredHint,
   FAccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
   ExchangeRateMutedField,
   BranchSelect,
   FeatureCan,
   FInputGroup,
   FMoneyInputGroup,
   FDateInput,
-  FFormGroup,
+  FFormGroup as FFormGroupBase,
   FTextArea,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  compose,
-} from '@/utils';
-import { useAutofocus } from '@/hooks';
+import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { useSetPrimaryBranchToForm } from './utils';
-import { useRefundCreditNoteContext } from './RefundCreditNoteFormProvider';
+import { useAutofocus } from '@/hooks';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { momentFormatter } from '@/utils';
 
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+// FFormGroup / FMoneyInputGroup / FInputGroup (blueprintjs-formik) wrappers
+// don't expose all underlying props (`fill`, `minimal`) in their public type.
+// Widen locally — runtime passes extras through.
+type FFormGroupProps = React.PropsWithChildren<{
+  name?: string;
+  label?: React.ReactNode;
+  labelInfo?: React.ReactNode;
+  className?: string;
+  inline?: boolean;
+  fill?: boolean;
+  fastField?: boolean;
+}>;
+const FFormGroup = FFormGroupBase as unknown as React.FC<FFormGroupProps>;
+
+type FInputProps = {
+  name?: string;
+  minimal?: boolean;
+  fill?: boolean;
+  fastField?: boolean;
+  inputRef?: (ref: HTMLInputElement | null) => void;
+};
+const FInputGroupWidened = FInputGroup as unknown as React.FC<FInputProps>;
+const FMoneyInputGroupWidened =
+  FMoneyInputGroup as unknown as React.FC<FInputProps>;
 
 /**
  * Refund credit note form fields.
  */
-function RefundCreditNoteFormFieldsInner({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+function RefundCreditNoteFormFieldsInner(): React.ReactElement {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+
   const { accounts, branches } = useRefundCreditNoteContext();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<RefundCreditNoteFormValues>();
 
   const amountFieldRef = useAutofocus();
 
@@ -67,9 +74,9 @@ function RefundCreditNoteFormFieldsInner({
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup name={'branch_id'} label={intl.get('branch')}>
+            <FFormGroup name={'branchId'} label={intl.get('branch')}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -102,15 +109,15 @@ function RefundCreditNoteFormFieldsInner({
         <Col xs={5}>
           {/* ------------ Form account ------------ */}
           <FFormGroup
-            name={'from_account_id'}
+            name={'fromAccountId'}
             label={intl.get('refund_credit_note.dialog.from_account')}
             labelInfo={<FieldRequiredHint />}
             fill
             fastField
           >
             <FAccountsSuggestField
-              name={'from_account_id'}
-              items={accounts}
+              name={'fromAccountId'}
+              items={accounts ?? []}
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}
@@ -134,35 +141,37 @@ function RefundCreditNoteFormFieldsInner({
         fastField
       >
         <ControlGroup>
-          <InputPrependText text={values.currency_code} />
-          <FMoneyInputGroup
+          <InputPrependText text={values.currencyCode} />
+          <FMoneyInputGroupWidened
             name={'amount'}
             minimal={true}
-            inputRef={(ref) => (amountFieldRef.current = ref)}
+            inputRef={(ref: HTMLInputElement | null) => {
+              amountFieldRef.current = ref;
+            }}
           />
         </ControlGroup>
       </FFormGroup>
 
-      {/*------------ exchange rate -----------*/}
-      <If condition={!isEqual(base_currency, values.currency_code)}>
+      {/*------------ exchange rate ----------- */}
+      <If condition={!isEqual(baseCurrency, values.currencyCode)}>
         <ExchangeRateMutedField
-          name={'exchange_rate'}
-          fromCurrency={base_currency}
-          toCurrency={values.currency_code}
+          name={'exchangeRate'}
+          fromCurrency={baseCurrency}
+          toCurrency={values.currencyCode}
           formGroupProps={{ label: '', inline: false }}
           date={values.date}
-          exchangeRate={values.exchange_rate}
+          exchangeRate={values.exchangeRate}
         />
       </If>
 
       {/* ------------ Reference No. ------------ */}
       <FFormGroup
-        name={'reference_no'}
+        name={'referenceNo'}
         label={intl.get('reference_no')}
         fill
         fastField
       >
-        <FInputGroup name={'reference_no'} minimal fill />
+        <FInputGroupWidened name={'referenceNo'} minimal fill />
       </FFormGroup>
 
       {/* --------- Statement --------- */}
@@ -178,9 +187,7 @@ function RefundCreditNoteFormFieldsInner({
   );
 }
 
-export const RefundCreditNoteFormFields = compose(withCurrentOrganization())(
-  RefundCreditNoteFormFieldsInner,
-);
+export const RefundCreditNoteFormFields = RefundCreditNoteFormFieldsInner;
 
 export const BranchRowDivider = styled.div`
   --x-divider-color: #ebf1f6;

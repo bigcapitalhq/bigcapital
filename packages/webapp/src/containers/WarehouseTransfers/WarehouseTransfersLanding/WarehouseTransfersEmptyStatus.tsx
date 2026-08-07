@@ -1,7 +1,6 @@
-// @ts-nocheck
+import { Button, Intent } from '@blueprintjs/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Intent } from '@blueprintjs/core';
 import { EmptyStatus, FormattedMessage as T } from '@/components';
 
 export function WarehouseTransfersEmptyStatus() {

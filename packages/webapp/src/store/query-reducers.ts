@@ -1,5 +1,5 @@
-import type { Reducer, AnyAction } from 'redux';
 import type { TableQuery } from './store.types';
+import type { Reducer, AnyAction } from 'redux';
 
 interface TableQueryState {
   tableQuery: Partial<TableQuery>;

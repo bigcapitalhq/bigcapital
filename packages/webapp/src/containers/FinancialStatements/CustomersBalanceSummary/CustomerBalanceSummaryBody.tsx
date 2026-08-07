@@ -1,21 +1,12 @@
 import React from 'react';
-import * as R from 'ramda';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { CustomersBalanceSummaryTable } from './CustomersBalanceSummaryTable';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
-interface CustomerBalanceSummaryBodyProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
-
-function CustomerBalanceSummaryBodyJSX({
-  organizationName,
-}: CustomerBalanceSummaryBodyProps) {
+function CustomerBalanceSummaryBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isCustomersBalanceLoading } = useCustomersBalanceSummaryContext();
 
   return (
@@ -29,8 +20,4 @@ function CustomerBalanceSummaryBodyJSX({
   );
 }
 
-export const CustomerBalanceSummaryBody = R.compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(CustomerBalanceSummaryBodyJSX);
+export const CustomerBalanceSummaryBody = CustomerBalanceSummaryBodyJSX;

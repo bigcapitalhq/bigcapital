@@ -1,10 +1,11 @@
-// @ts-nocheck
-import React from 'react';
 import { FastField } from 'formik';
-import { ItemsEntriesTable } from '@/containers/Entries/ItemsEntriesTable';
+import React from 'react';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
+import type { CreditNoteFormValues } from './utils';
+import type { FieldProps } from 'formik';
 import { Box } from '@/components';
+import { ItemsEntriesTable } from '@/containers/Entries/ItemsEntriesTable';
 
 /**
  * Credit note items entries editor field.
@@ -22,8 +23,8 @@ export function CreditNoteItemsEntriesEditorField() {
         {({
           form: { values, setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+          meta: { error },
+        }: FieldProps<any[], CreditNoteFormValues>) => (
           <ItemsEntriesTable
             value={value}
             onChange={(entries) => {
@@ -32,7 +33,7 @@ export function CreditNoteItemsEntriesEditorField() {
             items={items}
             errors={error}
             linesNumber={4}
-            currencyCode={values.currency_code}
+            currencyCode={values.currencyCode}
             enableTaxRates={false}
           />
         )}

@@ -1,18 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  Customer,
-  CreateCustomerBody,
-  EditCustomerBody,
-  ValidateBulkDeleteCustomersResponse,
-} from '@bigcapital/sdk-ts';
-import type { CustomersListResponse } from '@bigcapital/sdk-ts';
-import {
   fetchCustomers,
   fetchCustomer,
   createCustomer,
@@ -22,8 +8,22 @@ import {
   bulkDeleteCustomers,
   editCustomerOpeningBalance,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { customersKeys } from './query-keys';
+import type {
+  Customer,
+  CreateCustomerBody,
+  EditCustomerBody,
+  ValidateBulkDeleteCustomersResponse,
+} from '@bigcapital/sdk-ts';
+import type { CustomersListResponse } from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -35,7 +35,7 @@ export function useCustomers(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<CustomersListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: customersKeys.list(query),
@@ -48,7 +48,6 @@ export function useEditCustomer(
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
-
   return useMutation({
     ...props,
     mutationFn: ([id, values]: [number, EditCustomerBody]) =>
@@ -136,7 +135,7 @@ export function useCustomer(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<Customer>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: customersKeys.detail(id),

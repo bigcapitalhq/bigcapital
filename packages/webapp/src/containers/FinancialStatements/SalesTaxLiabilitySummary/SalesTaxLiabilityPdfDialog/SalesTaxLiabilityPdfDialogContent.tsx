@@ -1,11 +1,11 @@
+import { AnchorButton } from '@blueprintjs/core';
+import { useSalesTaxLiabilitySummaryContext } from '../SalesTaxLiabilitySummaryBoot';
 import {
   DialogContent,
   PdfDocumentPreview,
   FormattedMessage as T,
 } from '@/components';
-import { AnchorButton } from '@blueprintjs/core';
 import { useSalesTaxLiabilitySummaryPdf } from '@/hooks/query';
-import { useSalesTaxLiabilitySummaryContext } from '../SalesTaxLiabilitySummaryBoot';
 
 export function SalesTaxLiabilityPdfDialogContent() {
   const { query } = useSalesTaxLiabilitySummaryContext();

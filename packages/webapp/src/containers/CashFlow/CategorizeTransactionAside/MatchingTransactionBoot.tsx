@@ -1,8 +1,8 @@
-import React, { createContext } from 'react';
+import { Spinner } from '@blueprintjs/core';
 import { defaultTo } from 'lodash';
 import * as R from 'ramda';
+import React, { createContext } from 'react';
 import { useGetBankTransactionsMatches } from '@/hooks/query/banking';
-import { Spinner } from '@blueprintjs/core';
 
 interface MatchingTransactionBootValues {
   isMatchingTransactionsLoading: boolean;

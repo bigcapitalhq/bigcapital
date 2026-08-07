@@ -1,13 +1,13 @@
 // @ts-nocheck
 import { Button, Intent, ProgressBar, Text } from '@blueprintjs/core';
 import { useEffect, useState } from 'react';
+import style from './OneClickDemoPage.module.scss';
+import { Box, Icon, Stack } from '@/components';
+import { useJob } from '@/hooks/query';
 import {
   useCreateOneClickDemo,
   useOneClickDemoSignin,
 } from '@/hooks/query/oneclick-demo';
-import { Box, Icon, Stack } from '@/components';
-import { useJob } from '@/hooks/query';
-import style from './OneClickDemoPage.module.scss';
 
 export function OneClickDemoPageContent() {
   const {

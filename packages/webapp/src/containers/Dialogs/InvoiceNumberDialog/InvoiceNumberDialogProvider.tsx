@@ -1,18 +1,31 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { DialogContent } from '@/components';
 import { useSettingsInvoices } from '@/hooks/query';
 
-const InvoiceNumberDialogContext = createContext();
+interface InvoiceNumberDialogContextValue {
+  isSettingsLoading: boolean;
+}
+
+const InvoiceNumberDialogContext =
+  createContext<InvoiceNumberDialogContextValue>(
+    {} as InvoiceNumberDialogContextValue,
+  );
+
+interface InvoiceNumberDialogProviderProps {
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+}
 
 /**
  * Invoice number dialog provider.
  */
-function InvoiceNumberDialogProvider({ query, ...props }) {
+function InvoiceNumberDialogProvider({
+  ...props
+}: InvoiceNumberDialogProviderProps) {
   const { isLoading: isSettingsLoading } = useSettingsInvoices();
 
   // Provider payload.
-  const provider = {
+  const provider: InvoiceNumberDialogContextValue = {
     isSettingsLoading,
   };
 

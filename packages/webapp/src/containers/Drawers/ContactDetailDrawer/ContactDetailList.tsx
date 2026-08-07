@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Money } from '@/components';
 import { useContactDetailDrawerContext } from './ContactDetailDrawerProvider';
+import { Money } from '@/components';
 import { DetailItem } from '@/components/Details';
 
 export function ContactDetailList({}) {

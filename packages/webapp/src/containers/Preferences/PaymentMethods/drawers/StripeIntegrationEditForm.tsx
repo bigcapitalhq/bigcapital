@@ -1,13 +1,13 @@
+import { Intent } from '@blueprintjs/core';
+import { Formik, FormikHelpers } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
-import { Formik, FormikHelpers } from 'formik';
-import { useUpdatePaymentMethod } from '@/hooks/query/payment-services';
-import { AppToaster } from '@/components';
-import { Intent } from '@blueprintjs/core';
 import { usePaymentMethodsBoot } from '../PreferencesPaymentMethodsBoot';
-import { useDrawerActions } from '@/hooks/state';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useStripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
+import { AppToaster } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useUpdatePaymentMethod } from '@/hooks/query/payment-services';
+import { useDrawerActions } from '@/hooks/state';
 import { transformToForm } from '@/utils';
 
 interface StripeIntegrationFormValues {

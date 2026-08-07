@@ -1,27 +1,33 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/PaymentReceive/List.scss';
-
-import { DashboardPageContent } from '@/components';
+import { PaymentsReceivedActionsBar } from './PaymentsReceivedActionsBar';
+import { PaymentsReceivedListDialogs } from './PaymentsReceivedListDialogs';
+import { PaymentsReceivedListDrawers } from './PaymentsReceivedListDrawers';
 import { PaymentsReceivedListProvider } from './PaymentsReceivedListProvider';
 import { PaymentsReceivedTable as PaymentReceivesTable } from './PaymentsReceivedTable';
-import { PaymentsReceivedActionsBar } from './PaymentsReceivedActionsBar';
-
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
-
+import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import { DashboardPageContent } from '@/components';
 import { compose, transformTableStateToQuery } from '@/utils';
 
+interface WithPaymentsReceivedActionsProps {
+  resetPaymentReceivesTableState: () => void;
+}
+
+interface PaymentsReceivedListProps
+  extends Pick<
+      WithPaymentsReceivedProps,
+      'paymentReceivesTableState' | 'paymentsTableStateChanged'
+    >,
+    WithPaymentsReceivedActionsProps {}
+
 function PaymentsReceivedListInner({
-  // #withPaymentsReceived
   paymentReceivesTableState,
   paymentsTableStateChanged,
-
-  // #withPaymentsReceivedActions
   resetPaymentReceivesTableState,
-}) {
-  // Resets the payment receives table state once the page unmount.
+}: PaymentsReceivedListProps) {
   React.useEffect(
     () => () => {
       resetPaymentReceivesTableState();
@@ -35,6 +41,8 @@ function PaymentsReceivedListInner({
       tableStateChanged={paymentsTableStateChanged}
     >
       <PaymentsReceivedActionsBar />
+      <PaymentsReceivedListDrawers />
+      <PaymentsReceivedListDialogs />
 
       <DashboardPageContent>
         <PaymentReceivesTable />

@@ -1,5 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { isUndefined, isNumber, omit } from 'lodash';
+import { persistReducer, purgeStoredState } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import {
   ADD_AUTOFILL_REF,
   ALTER_DASHBOARD_PAGE_SUBTITLE,
@@ -25,8 +27,6 @@ import {
   SPLASH_START_LOADING,
   SPLASH_STOP_LOADING,
 } from '@/store/types';
-import { persistReducer, purgeStoredState } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 
 interface OverlayEntry {
   isOpen: boolean;
@@ -172,11 +172,11 @@ const reducerInstance = createReducer(initialState, {
     action: DashboardAction,
   ) => {
     const { features } = (action.payload || {}) as {
-      features: Array<{ name: string; is_accessible: boolean }>;
+      features: Array<{ name: string; isAccessible: boolean }>;
     };
     const _data: Record<string, boolean> = {};
     features.forEach((feature) => {
-      _data[feature.name] = feature.is_accessible;
+      _data[feature.name] = feature.isAccessible;
     });
     state.features = _data;
   },

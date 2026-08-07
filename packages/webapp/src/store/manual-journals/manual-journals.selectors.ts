@@ -1,9 +1,9 @@
 import { isEqual } from 'lodash';
 import { createSelector } from 'reselect';
-import { paginationLocationQuery } from '@/store/selectors';
-import { createDeepEqualSelector } from '@/utils';
 import { defaultTableQuery } from './manual-journals.reducers';
 import type { RootState } from '@/store/reducers';
+import { paginationLocationQuery } from '@/store/selectors';
+import { createDeepEqualSelector } from '@/utils';
 
 const manualJournalsTableState = (state: RootState) =>
   state.manualJournals.tableState;

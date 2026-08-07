@@ -1,26 +1,39 @@
-// @ts-nocheck
+import { useFormikContext } from 'formik';
+import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
+import {
+  usePaymentMadeIsForeignCustomer,
+  type PaymentMadeFormValues,
+} from './utils';
 import { Money, ExchangeRateInputGroup } from '@/components';
 import { MoneyFieldCell } from '@/components/DataTableCells';
-import { useFormikContext } from 'formik';
-import { useCurrentOrganization } from '@/hooks/state';
-import { usePaymentMadeIsForeignCustomer } from './utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
-function BillNumberAccessor(row) {
-  return row?.bill_no ? row?.bill_no : '-';
+type Row = {
+  billNo?: string;
+  currencyCode?: string;
+};
+
+function BillNumberAccessor(row: Row): string {
+  return row?.billNo ? row?.billNo : '-';
 }
 
-function BillDateCell({ value }) {
-  return moment(value).format('YYYY MMM DD');
+function BillDateCell({ value }: { value: string }) {
+  return <span>{moment(value).format('YYYY MMM DD')}</span>;
 }
 
 /**
- * Mobey table cell.
+ * Money table cell.
  */
-function MoneyTableCell({ row: { original }, value }) {
-  return <Money amount={value} currency={original.currency_code} />;
+function MoneyTableCell({
+  row: { original },
+  value,
+}: {
+  row: { original: Row };
+  value: string | number;
+}) {
+  return <Money amount={value} currency={original.currencyCode} />;
 }
 
 /**
@@ -31,8 +44,8 @@ export function usePaymentMadeEntriesTableColumns() {
     () => [
       {
         Header: 'Bill date',
-        id: 'bill_date',
-        accessor: 'bill_date',
+        id: 'billDate',
+        accessor: 'billDate',
         Cell: BillDateCell,
         disableSortBy: true,
         width: 120,
@@ -52,14 +65,14 @@ export function usePaymentMadeEntriesTableColumns() {
       },
       {
         Header: intl.get('amount_due'),
-        accessor: 'due_amount',
+        accessor: 'dueAmount',
         Cell: MoneyTableCell,
         disableSortBy: true,
         width: 150,
       },
       {
         Header: intl.get('payment_amount'),
-        accessor: 'payment_amount',
+        accessor: 'paymentAmount',
         Cell: MoneyFieldCell,
         disableSortBy: true,
         width: 150,
@@ -69,13 +82,19 @@ export function usePaymentMadeEntriesTableColumns() {
   );
 }
 
+type ExchangeRateInputFieldProps = Omit<
+  React.ComponentProps<typeof ExchangeRateInputGroup>,
+  'fromCurrency' | 'toCurrency'
+> & { name?: string; formGroupProps?: { label: string; inline: boolean } };
+
 /**
- * payment made exchange rate input field.
- * @returns {JSX.Element}
+ * Payment made exchange rate input field.
  */
-export function PaymentMadeExchangeRateInputField({ ...props }) {
-  const currentOrganization = useCurrentOrganization();
-  const { values } = useFormikContext();
+export function PaymentMadeExchangeRateInputField(
+  props: ExchangeRateInputFieldProps,
+) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<PaymentMadeFormValues>();
 
   const isForeignCustomer = usePaymentMadeIsForeignCustomer();
 
@@ -85,8 +104,8 @@ export function PaymentMadeExchangeRateInputField({ ...props }) {
   }
   return (
     <ExchangeRateInputGroup
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
+      fromCurrency={values.currencyCode}
+      toCurrency={baseCurrency ?? ''}
       {...props}
     />
   );

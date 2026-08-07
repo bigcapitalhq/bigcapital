@@ -1,7 +1,7 @@
 // @ts-nocheck
+import { Classes } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
-import { Classes } from '@blueprintjs/core';
 
 /**
  * Dialog footer actions.

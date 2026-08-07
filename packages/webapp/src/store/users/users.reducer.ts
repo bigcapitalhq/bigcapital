@@ -1,11 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
+import type { UsersState } from './users.types';
 import {
   USERS_LIST_SET,
   USERS_TABLE_LOADING,
   USER_DELETE,
   USER_DETAILS_SET,
 } from '@/store/types';
-import type { UsersState } from './users.types';
 
 interface UserRecord {
   id: string | number;

@@ -1,17 +1,17 @@
 // @ts-nocheck
-import { universalSearchInvoiceBind } from '../Sales/Invoices/InvoiceUniversalSearch';
-import { universalSearchReceiptBind } from '../Sales/Receipts/ReceiptUniversalSearch';
-import { universalSearchBillBind } from '../Purchases/Bills/BillUniversalSearch';
-import { universalSearchEstimateBind } from '../Sales/Estimates/EstimatesLanding/EstimateUniversalSearch';
-import { universalSearchPaymentReceiveBind } from '../Sales/PaymentsReceived/PaymentReceiveUniversalSearch';
-import { universalSearchPaymentMadeBind } from '../Purchases/PaymentsMade/PaymentsMadeUniversalSearch';
-import { universalSearchItemBind } from '../Items/ItemsUniversalSearch';
-import { universalSearchCustomerBind } from '../Customers/CustomersUniversalSearch';
 import { universalSearchJournalBind } from '../Accounting/ManualJournalUniversalSearch';
 import { universalSearchAccountBind } from '../Accounts/AccountUniversalSearch';
-import { universalSearchVendorBind } from '../Vendors/VendorsUniversalSearch';
-import { universalSearchCreditNoteBind } from '../Sales/CreditNotes/CreditNoteUniversalSearch';
+import { universalSearchCustomerBind } from '../Customers/CustomersUniversalSearch';
+import { universalSearchItemBind } from '../Items/ItemsUniversalSearch';
+import { universalSearchBillBind } from '../Purchases/Bills/BillUniversalSearch';
 import { universalSearchVendorCreditBind } from '../Purchases/CreditNotes/VendorCreditIUniversalSearchBind';
+import { universalSearchPaymentMadeBind } from '../Purchases/PaymentsMade/PaymentsMadeUniversalSearch';
+import { universalSearchCreditNoteBind } from '../Sales/CreditNotes/CreditNoteUniversalSearch';
+import { universalSearchEstimateBind } from '../Sales/Estimates/EstimatesLanding/EstimateUniversalSearch';
+import { universalSearchInvoiceBind } from '../Sales/Invoices/InvoiceUniversalSearch';
+import { universalSearchPaymentReceiveBind } from '../Sales/PaymentsReceived/PaymentReceiveUniversalSearch';
+import { universalSearchReceiptBind } from '../Sales/Receipts/ReceiptUniversalSearch';
+import { universalSearchVendorBind } from '../Vendors/VendorsUniversalSearch';
 
 // Universal search binds.
 export const universalSearchBinds = [

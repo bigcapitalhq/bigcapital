@@ -1,6 +1,6 @@
 import { Button, Classes } from '@blueprintjs/core';
-import { Group, Icon } from '@/components';
 import styles from './ElementCustomizeHeader.module.scss';
+import { Group, Icon } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 interface ElementCustomizeHeaderProps {

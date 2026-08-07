@@ -1,12 +1,12 @@
-import * as R from 'ramda';
 import { useFormikContext } from 'formik';
+import * as R from 'ramda';
 import {
   InvoicePaperTemplate,
   InvoicePaperTemplateProps,
 } from './InvoicePaperTemplate';
-import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import { InvoiceCustomizeFormValues } from './types';
 import { Box } from '@/components';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 
 /**
  * Injects the `InvoicePaperTemplate` component props from the form and branding states.

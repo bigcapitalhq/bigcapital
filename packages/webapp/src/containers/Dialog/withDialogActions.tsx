@@ -1,6 +1,6 @@
+import { ComponentType } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { ComponentType } from 'react';
 import { CLOSE_DIALOG, OPEN_DIALOG } from '@/store/types';
 
 export interface WithDialogActionsProps {

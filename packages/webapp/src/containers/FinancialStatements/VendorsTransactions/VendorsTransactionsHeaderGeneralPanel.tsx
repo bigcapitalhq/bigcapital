@@ -1,16 +1,13 @@
 import React from 'react';
-
+import intl from 'react-intl-universal';
+import { filterVendorsOptions } from '../constants';
 import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
 import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
-
-import { Row, Col, FFormGroup, VendorsMultiSelect } from '@/components';
-import { filterVendorsOptions } from '../constants';
-
 import {
   VendorsTransactionsGeneralPanelProvider,
   useVendorsTransactionsGeneralPanelContext,
 } from './VendorsTransactionsHeaderGeneralPanelProvider';
-import intl from 'react-intl-universal';
+import { Row, Col, FFormGroup, VendorsMultiSelect } from '@/components';
 
 /**
  * Vendors transactions header - General panel

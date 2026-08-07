@@ -1,25 +1,15 @@
 import React from 'react';
-import { GeneralLedgerTable } from './GeneralLedgerTable';
-import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
-
-interface GeneralLedgerBodyProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
+import { GeneralLedgerTable } from './GeneralLedgerTable';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * General ledger body JSX.
  */
-function GeneralLedgerBodyJSX({
-  // #withCurrentOrganization
-  organizationName,
-}: GeneralLedgerBodyProps) {
+function GeneralLedgerBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = useGeneralLedgerContext();
 
   return (
@@ -33,8 +23,4 @@ function GeneralLedgerBodyJSX({
   );
 }
 
-export const GeneralLedgerBody = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(GeneralLedgerBodyJSX);
+export const GeneralLedgerBody = GeneralLedgerBodyJSX;

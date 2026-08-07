@@ -1,8 +1,8 @@
 // @ts-nocheck
 import * as R from 'ramda';
-import { Stack } from '@/components';
 import { ElementCustomizeHeader } from './ElementCustomizeHeader';
 import { ElementCustomizePreviewContent } from './ElementCustomizePreviewContent';
+import { Stack } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 

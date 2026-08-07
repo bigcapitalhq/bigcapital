@@ -1,11 +1,11 @@
 // @ts-nocheck
-import { Stack } from '@/components';
 import { Classes } from '@blueprintjs/core';
+import { fieldsGroups } from './constants';
+import { Stack } from '@/components';
 import {
   ElementCustomizeContentItemFieldGroup,
   ElementCustomizeFieldsGroup,
 } from '@/containers/ElementCustomize/ElementCustomizeFieldsGroup';
-import { fieldsGroups } from './constants';
 
 export function ReceiptCustomizeFieldsContent() {
   return (

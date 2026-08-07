@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
-import { Suggest } from '@blueprintjs-formik/select';
 import { FormGroup } from '@blueprintjs/core';
+import { Suggest } from '@blueprintjs-formik/select';
+import React, { useCallback } from 'react';
 import { CellType } from '@/constants';
 
 export function TaxRatesSuggestInputCell({

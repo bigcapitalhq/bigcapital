@@ -1,11 +1,11 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
+import type { ApplicationState } from '@/store/reducers';
 import {
   getVendorCreditTableStateFactory,
   isVendorCreditTableStateChangedFactory,
   getVendorsCreditNoteSelectedRowsFactory,
 } from '@/store/vendor-credit/vendor-credit.selector';
-import type { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithVendorsCreditNotesProps {
   vendorsCreditNoteTableState: ReturnType<

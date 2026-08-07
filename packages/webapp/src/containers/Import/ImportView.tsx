@@ -1,21 +1,8 @@
-// @ts-nocheck
-import { ImportStepper } from './ImportStepper';
-import { Box } from '@/components';
+import { ImportViewProps } from './_types';
 import { ImportFileProvider } from './ImportFileProvider';
+import { ImportStepper } from './ImportStepper';
 import styles from './ImportView.module.scss';
-
-interface ImportViewProps {
-  resource: string;
-  description?: string;
-  params: Record<string, any>;
-  onImportSuccess?: () => void;
-  onImportFailed?: () => void;
-  onCancelClick?: () => void;
-  sampleFileName?: string;
-  exampleDownload?: boolean;
-  exampleTitle?: string;
-  exampleDescription?: string;
-}
+import { Box } from '@/components';
 
 export function ImportView({ ...props }: ImportViewProps) {
   return (

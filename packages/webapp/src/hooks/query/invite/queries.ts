@@ -1,18 +1,18 @@
 import {
-  useMutation,
-  useQuery,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type { AcceptInviteBody, BulkInviteBody } from '@bigcapital/sdk-ts';
-import {
   acceptInvite,
   bulkSendInviteUsers,
   fetchInviteCheck,
   resendInvite,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { inviteKeys } from './query-keys';
+import type { AcceptInviteBody, BulkInviteBody } from '@bigcapital/sdk-ts';
 
 export function useAuthInviteAccept(
   props?: UseMutationOptions<unknown, Error, [Record<string, unknown>, string]>,

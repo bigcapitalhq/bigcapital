@@ -1,39 +1,37 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import React from 'react';
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
+
+interface MoneyInFloatingActionsInnerProps
+  extends Pick<WithDialogActionsProps, 'closeDialog'> {}
 
 /**
  * Money in floating actions.
  */
 function MoneyInFloatingActionsInner({
-  // #withDialogActions
   closeDialog,
-}) {
-  // Formik context.
+}: MoneyInFloatingActionsInnerProps) {
   const { isSubmitting, submitForm } = useFormikContext();
-  //  money in  dialog context.
   const { dialogName, setSubmitPayload, submitPayload } =
     useMoneyInDailogContext();
 
   // handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ publish: false });
     submitForm();
   };
-  // Handle submit  button click.
-  const handleSubmittBtnClick = (event) => {
+  // Handle submit button click.
+  const handleSubmittBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ publish: true });
   };
   // Handle close button click.
-  const handleCloseBtnClick = (event) => {
-    closeDialog(dialogName);
+  const handleCloseBtnClick = (_event: React.MouseEvent) => {
+    if (dialogName) closeDialog(dialogName);
   };
 
   return (
@@ -46,15 +44,6 @@ function MoneyInFloatingActionsInner({
         >
           <T id={'close'} />
         </Button>
-        {/* <Button
-          disabled={isSubmitting}
-          loading={isSubmitting && !submitPayload.publish}
-          style={{ minWidth: '75px' }}
-          type="submit"
-          onClick={handleSubmitDraftBtnClick}
-        >
-          {<T id={'save_as_draft'} />}
-        </Button> */}
 
         <Button
           intent={Intent.PRIMARY}

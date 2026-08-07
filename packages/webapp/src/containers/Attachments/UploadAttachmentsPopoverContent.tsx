@@ -1,19 +1,19 @@
 // @ts-nocheck
-import { useState } from 'react';
-import { isEmpty } from 'lodash';
 import { Button, Intent, Text, Spinner } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
+import { useState } from 'react';
+import styles from './UploadAttachmentPopoverContent.module.scss';
 import { Box, Group, Icon, Stack } from '@/components';
+import { MIME_TYPES } from '@/components/Dropzone/mine-types';
 import {
   ImportDropzoneField,
   ImportDropzoneFieldProps,
 } from '@/containers/Import/ImportDropzoneFile';
-import { useUncontrolled } from '@/hooks/useUncontrolled';
 import {
   useGetPresignedUrlAttachment,
   useUploadAttachments,
 } from '@/hooks/query/attachments';
-import styles from './UploadAttachmentPopoverContent.module.scss';
-import { MIME_TYPES } from '@/components/Dropzone/mine-types';
+import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { formatBytes } from '@/utils/format-bytes';
 
 interface AttachmentFileCommon {

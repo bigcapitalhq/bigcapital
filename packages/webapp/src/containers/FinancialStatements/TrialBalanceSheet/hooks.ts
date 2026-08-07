@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { trialBalancesheetDynamicColumns } from './dynamicColumns';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 
 /**
  * Retrieves the trial balance sheet columns.

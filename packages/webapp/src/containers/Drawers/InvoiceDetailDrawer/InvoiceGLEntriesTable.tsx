@@ -1,15 +1,12 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
-import { Card } from '@/components';
-import { useTransactionsByReference } from '@/hooks/query';
-import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
-
 import {
   AmountDisplayedBaseCurrencyMessage,
   JournalEntriesTable,
 } from '../../JournalEntriesTable/JournalEntriesTable';
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
+import { Card } from '@/components';
+import { useTransactionsByReference } from '@/hooks/query';
 
 /**
  * Invoice GL entries table.
@@ -19,16 +16,14 @@ export function InvoiceGLEntriesTable() {
   const { invoiceId } = useInvoiceDetailDrawerContext();
 
   // Handle fetch transaction by reference.
-  const {
-    data: { transactions },
-    isLoading: isTransactionLoading,
-  } = useTransactionsByReference(
+  const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
     {
-      reference_id: invoiceId,
-      reference_type: 'SaleInvoice',
+      referenceId: invoiceId as number,
+      referenceType: 'SaleInvoice',
     },
     { enabled: !!invoiceId },
   );
+  const transactions = data?.transactions ?? [];
 
   return (
     <InvoiceGLEntriesRoot>

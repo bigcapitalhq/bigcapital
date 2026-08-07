@@ -1,19 +1,17 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import { useFormikContext } from 'formik';
 import { Intent, Button } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-
+import styled from 'styled-components';
+import type { RolesFormValues } from './types';
 import { FormattedMessage as T } from '@/components';
 
 /**
  * Role form floating actions.
- * @returns {React.JSX}
  */
 export function RoleFormFloatingActions() {
   // Formik form context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<RolesFormValues>();
 
   // History context.
   const history = useHistory();

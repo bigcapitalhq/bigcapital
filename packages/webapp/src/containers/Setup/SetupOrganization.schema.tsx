@@ -1,5 +1,5 @@
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 
 /** Values for setup organization / create workspace forms (matches Yup schema fields). */
 export interface SetupOrganizationFormValues {

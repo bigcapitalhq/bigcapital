@@ -1,12 +1,11 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-import { QuickPaymentMadeFormFields } from './QuickPaymentMadeFormFields';
+import React from 'react';
 import { QuickPaymentMadeFloatingActions } from './QuickPaymentMadeFloatingActions';
+import { QuickPaymentMadeFormFields } from './QuickPaymentMadeFormFields';
 /**
  * Quick payment made form content.
  */
-export function QuickPaymentMadeFormContent() {
+export function QuickPaymentMadeFormContent(): React.ReactElement {
   return (
     <Form>
       <QuickPaymentMadeFormFields />

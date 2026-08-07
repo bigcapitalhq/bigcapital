@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React from 'react';
-import { isUndefined } from 'lodash';
-import styled from 'styled-components';
 import { Intent, ProgressBar } from '@blueprintjs/core';
+import { isUndefined } from 'lodash';
+import React from 'react';
+import styled from 'styled-components';
 
 export function DetailFinancialSection({ children }) {
   return <FinancialSectionWrap>{children}</FinancialSectionWrap>;

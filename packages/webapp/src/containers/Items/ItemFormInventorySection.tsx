@@ -1,58 +1,45 @@
-// @ts-nocheck
-import React from 'react';
+import intl from 'react-intl-universal';
+import { useItemFormContext } from './ItemFormProvider';
+import { ItemFormSectionTitle } from './ItemFormSectionTitle';
+import { accountsFieldShouldUpdate } from './utils';
 import {
   AccountsSelect,
   FFormGroup,
   FormattedMessage as T,
-  Col,
+  Box,
   Row,
+  Col,
 } from '@/components';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { accountsFieldShouldUpdate } from './utils';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { useItemFormContext } from './ItemFormProvider';
-import { compose } from '@/utils';
-import intl from 'react-intl-universal';
 
-/**
- * Item form inventory sections.
- */
-function ItemFormInventorySectionInner({ organization: { base_currency } }) {
+export function ItemFormInventorySection() {
   const { accounts } = useItemFormContext();
 
   return (
-    <div class="page-form__section page-form__section--inventory">
-      <h3>
-        <T id={'inventory_information'} />
-      </h3>
+    <Box data-section-id="inventory">
+      <ItemFormSectionTitle>Inventory details</ItemFormSectionTitle>
 
       <Row>
         <Col xs={6}>
           {/*------------- Inventory Account ------------- */}
           <FFormGroup
             label={intl.get('inventory_account')}
-            name={'inventory_account_id'}
-            items={accounts}
+            name={'inventoryAccountId'}
             fastField={true}
-            shouldUpdate={accountsFieldShouldUpdate}
             inline={true}
           >
             <AccountsSelect
-              name={'inventory_account_id'}
+              name={'inventoryAccountId'}
               items={accounts}
               placeholder={<T id={'select_account'} />}
               filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
               fastField={true}
               shouldUpdate={accountsFieldShouldUpdate}
+              accounts={accounts}
             />
           </FFormGroup>
         </Col>
       </Row>
-    </div>
+    </Box>
   );
 }
-
-export const ItemFormInventorySection = compose(withCurrentOrganization())(
-  ItemFormInventorySectionInner,
-);

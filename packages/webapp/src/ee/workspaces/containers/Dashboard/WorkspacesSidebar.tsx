@@ -1,15 +1,15 @@
 // @ts-nocheck
-import React, { useState } from 'react';
-import * as R from 'ramda';
 import { Tooltip, Position, Spinner, Icon } from '@blueprintjs/core';
-import { useWorkspaces } from '@/ee/workspaces/hooks/query/workspaces';
-import { useAuthOrganizationId } from '@/hooks/state';
-import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { DRAWERS } from '@/constants/drawers';
-import { firstLettersArgs } from '@/utils';
-import { WorkspaceSwitchingOverlay } from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
 import classNames from 'classnames';
+import * as R from 'ramda';
+import React, { useState } from 'react';
+import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { WorkspaceSwitchingOverlay } from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
+import { useWorkspaces } from '@/ee/workspaces/hooks/query';
+import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
+import { useAuthOrganizationId } from '@/hooks/state';
+import { firstLettersArgs } from '@/utils';
 
 import '@/ee/workspaces/style/containers/Dashboard/WorkspacesSidebar.scss';
 

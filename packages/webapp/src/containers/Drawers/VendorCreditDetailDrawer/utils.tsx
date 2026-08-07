@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import {
   Button,
   Popover,
@@ -11,22 +8,24 @@ import {
   Tag,
   Intent,
 } from '@blueprintjs/core';
-import { getColumnWidth } from '@/utils';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
+import type { VendorCredit } from '@bigcapital/sdk-ts';
 import {
   Icon,
   FormattedMessage as T,
   TextOverviewTooltipCell,
   Choose,
 } from '@/components';
-import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
+import { getColumnWidth } from '@/utils';
 
 /**
  * Retrieve vendor credit readonly details entries table columns.
  */
 export const useVendorCreditReadonlyEntriesTableColumns = () => {
-  const {
-    vendorCredit: { entries },
-  } = useVendorCreditDetailDrawerContext();
+  const { vendorCredit } = useVendorCreditDetailDrawerContext();
+  const entries = vendorCredit?.entries ?? [];
   return React.useMemo(
     () => [
       {
@@ -48,8 +47,8 @@ export const useVendorCreditReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('quantity'),
-        accessor: 'quantity_formatted',
-        width: getColumnWidth(entries, 'quantity_formatted', {
+        accessor: 'quantityFormatted',
+        width: getColumnWidth(entries, 'quantityFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -59,8 +58,8 @@ export const useVendorCreditReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('rate'),
-        accessor: 'rate_formatted',
-        width: getColumnWidth(entries, 'rate_formatted', {
+        accessor: 'rateFormatted',
+        width: getColumnWidth(entries, 'rateFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -71,8 +70,8 @@ export const useVendorCreditReadonlyEntriesTableColumns = () => {
       {
         id: 'discount',
         Header: 'Discount',
-        accessor: 'discount_formatted',
-        width: getColumnWidth(entries, 'discount_formatted', {
+        accessor: 'discountFormatted',
+        width: getColumnWidth(entries, 'discountFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -82,8 +81,8 @@ export const useVendorCreditReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('amount'),
-        accessor: 'total_formatted',
-        width: getColumnWidth(entries, 'total_formatted', {
+        accessor: 'totalFormatted',
+        width: getColumnWidth(entries, 'totalFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -92,15 +91,23 @@ export const useVendorCreditReadonlyEntriesTableColumns = () => {
         textOverview: true,
       },
     ],
-    [],
+    [entries],
   );
 };
+
+interface VendorCreditMenuItemProps {
+  payload: {
+    onReconcile: () => void;
+  };
+}
 
 /**
  * Vendor note more actions menu.
  * @returns {React.JSX}
  */
-export const VendorCreditMenuItem = ({ payload: { onReconcile } }) => {
+export const VendorCreditMenuItem = ({
+  payload: { onReconcile },
+}: VendorCreditMenuItemProps) => {
   return (
     <Popover
       minimal={true}
@@ -123,26 +130,32 @@ export const VendorCreditMenuItem = ({ payload: { onReconcile } }) => {
   );
 };
 
+interface VendorCreditDetailsStatusProps {
+  vendorCredit: VendorCredit;
+}
+
 /**
  * Vendor Credit details status.
  * @returns {React.JSX}
  */
-export function VendorCreditDetailsStatus({ vendorCredit }) {
+export function VendorCreditDetailsStatus({
+  vendorCredit,
+}: VendorCreditDetailsStatusProps) {
   return (
     <Choose>
-      <Choose.When condition={vendorCredit.is_open}>
+      <Choose.When condition={!!vendorCredit.isOpen}>
         <Tag intent={Intent.WARNING} round={true}>
           <T id={'open'} />
         </Tag>
       </Choose.When>
 
-      <Choose.When condition={vendorCredit.is_closed}>
+      <Choose.When condition={!!vendorCredit.isClosed}>
         <Tag intent={Intent.SUCCESS} round={true}>
           <T id={'closed'} />
         </Tag>
       </Choose.When>
 
-      <Choose.When condition={vendorCredit.is_draft}>
+      <Choose.When condition={!!vendorCredit.isDraft}>
         <Tag intent={Intent.NONE} round={true} minimal={true}>
           <T id={'draft'} />
         </Tag>

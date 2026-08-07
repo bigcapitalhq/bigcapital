@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import { Formik } from 'formik';
-import { AppToaster } from '@/components';
+import React from 'react';
 import { CreateEstimatedExpenseFormSchema } from './EstimatedExpense.schema';
 import { EstimatedExpenseFormConent } from './EstimatedExpenseFormConent';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
@@ -35,11 +35,7 @@ function EstimatedExpenseFormInner({
     };
 
     // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = ({ data: { errors } }) => {
       setSubmitting(false);
     };
   };

@@ -1,21 +1,18 @@
-// @ts-nocheck
+import { Tab } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Tab } from '@blueprintjs/core';
-
-import { useAbilityContext } from '@/hooks/utils';
-import { DrawerMainTabs } from '@/components';
 import { CreditNoteDetailActionsBar } from './CreditNoteDetailActionsBar';
 import { CreditNoteDetailPanel } from './CreditNoteDetailPanel';
-import { RefundCreditNoteTransactionsTable } from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
-import { ReconcileCreditNoteTransactionsTable } from './ReconcileCreditNoteTransactions/ReconcileCreditNoteTransactionsTable';
 import { CreditNoteGLEntriesTable } from './JournalEntriesTransactions/JournalEntriesTransactionsTable';
+import { ReconcileCreditNoteTransactionsTable } from './ReconcileCreditNoteTransactions/ReconcileCreditNoteTransactionsTable';
+import { RefundCreditNoteTransactionsTable } from './RefundCreditNoteTransactions/RefundCreditNoteTransactionsTable';
+import { DrawerMainTabs } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
+import { useAbilityContext } from '@/hooks/utils';
 
 /**
  * Credit Note view detail.
- * @returns {React.JSX}
  */
 export function CreditNoteDetail() {
   return (
@@ -28,7 +25,6 @@ export function CreditNoteDetail() {
 
 /**
  * Credit note details tabs.
- * @returns {React.JSX}
  */
 function CreditNoteDetailsTabs() {
   const ability = useAbilityContext();

@@ -1,24 +1,21 @@
-import React from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
-import { Formik, Form, FormikHelpers } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-
-import { FormattedMessage as T } from '@/components';
-import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
+import { Formik, Form, FormikHelpers } from 'formik';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
 import { PurchasesByItemsGeneralPanel } from './PurchasesByItemsGeneralPanel';
-
+import {
+  getDefaultPurchasesByItemsQuery,
+  getPurchasesByItemsQuerySchema,
+} from './utils';
 import { withPurchasesByItems } from './withPurchasesByItems';
 import {
   withPurchasesByItemsActions,
   WithPurchasesByItemsActionsProps,
 } from './withPurchasesByItemsActions';
-
+import { FormattedMessage as T } from '@/components';
+import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { compose, transformToForm } from '@/utils';
-import {
-  getDefaultPurchasesByItemsQuery,
-  getPurchasesByItemsQuerySchema,
-} from './utils';
 
 interface PurchasesByItemsFormValues {
   fromDate: Date;

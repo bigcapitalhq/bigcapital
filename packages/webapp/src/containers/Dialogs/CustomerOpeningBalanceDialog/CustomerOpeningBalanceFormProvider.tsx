@@ -1,27 +1,49 @@
-// @ts-nocheck
 import React from 'react';
+import type { Branch } from '@bigcapital/sdk-ts';
+import { transfromCustomertoForm } from './utils';
+import type { CustomerOpeningBalanceSeed } from './utils';
 import { DialogContent } from '@/components';
+import { Features } from '@/constants';
 import {
   useBranches,
   useCustomer,
   useEditCustomerOpeningBalance,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
-import { transfromCustomertoForm } from './utils';
 
-const CustomerOpeningBalanceContext = React.createContext();
+type UseEditCustomerOpeningBalanceResult = ReturnType<
+  typeof useEditCustomerOpeningBalance
+>;
+
+export interface CustomerOpeningBalanceFormContextValue {
+  branches: Branch[];
+  customer: CustomerOpeningBalanceSeed;
+  isBranchesSuccess: boolean;
+  isBranchesLoading: boolean;
+  dialogName: string;
+  editCustomerOpeningBalanceMutate: UseEditCustomerOpeningBalanceResult['mutateAsync'];
+}
+
+interface CustomerOpeningBalanceFormProviderProps {
+  query?: Record<string, unknown>;
+  customerId: number | undefined;
+  dialogName: string;
+  children?: React.ReactNode;
+}
+
+const CustomerOpeningBalanceContext = React.createContext<
+  CustomerOpeningBalanceFormContextValue | undefined
+>(undefined);
 
 /**
  * Customer opening balance provider.
- * @returns
  */
 function CustomerOpeningBalanceFormProvider({
   query,
   customerId,
   dialogName,
-  ...props
-}) {
+  children,
+}: CustomerOpeningBalanceFormProviderProps) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -43,8 +65,8 @@ function CustomerOpeningBalanceFormProvider({
   );
 
   // State provider.
-  const provider = {
-    branches,
+  const provider: CustomerOpeningBalanceFormContextValue = {
+    branches: branches ?? [],
     customer: transfromCustomertoForm(customer),
 
     isBranchesSuccess,
@@ -55,12 +77,22 @@ function CustomerOpeningBalanceFormProvider({
 
   return (
     <DialogContent isLoading={isBranchesLoading || isCustomerLoading}>
-      <CustomerOpeningBalanceContext.Provider value={provider} {...props} />
+      <CustomerOpeningBalanceContext.Provider value={provider}>
+        {children}
+      </CustomerOpeningBalanceContext.Provider>
     </DialogContent>
   );
 }
 
-const useCustomerOpeningBalanceContext = () =>
-  React.useContext(CustomerOpeningBalanceContext);
+const useCustomerOpeningBalanceContext =
+  (): CustomerOpeningBalanceFormContextValue => {
+    const ctx = React.useContext(CustomerOpeningBalanceContext);
+    if (!ctx) {
+      throw new Error(
+        'useCustomerOpeningBalanceContext must be used within CustomerOpeningBalanceFormProvider',
+      );
+    }
+    return ctx;
+  };
 
 export { CustomerOpeningBalanceFormProvider, useCustomerOpeningBalanceContext };

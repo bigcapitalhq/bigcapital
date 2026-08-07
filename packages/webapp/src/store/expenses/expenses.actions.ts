@@ -1,9 +1,9 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   EXPENSES_TABLE_STATE_RESET,
   EXPENSES_TABLE_STATE_SET,
   EXPENSES_SET_SELECTED_ROWS,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 /**
  * Sets global table state of the table.

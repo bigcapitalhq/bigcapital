@@ -1,12 +1,12 @@
 // @ts-nocheck
 import React from 'react';
+import intl from 'react-intl-universal';
 import { FSelect, FFormGroup, FSwitch } from '@/components';
 import {
   moneyFormat,
   negativeFormat,
   decimalPlaces,
 } from '@/constants/numberFormatsOptions';
-import intl from 'react-intl-universal';
 
 /**
  *  Number Formats Fields.

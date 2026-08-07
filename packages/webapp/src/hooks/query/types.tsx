@@ -22,7 +22,6 @@ export { CreditNotesQueryKeys } from './credit-note';
 export { VendorCreditsQueryKeys } from './vendor-credit';
 export { SettingsQueryKeys } from './settings';
 export { OrganizationsQueryKeys } from './organization';
-export { SubscriptionsQueryKeys } from './subscriptions';
 export { ExpensesQueryKeys } from './expenses';
 export { ManualJournalsQueryKeys } from './manual-journals';
 export { LandedCostQueryKeys } from './landed-cost';

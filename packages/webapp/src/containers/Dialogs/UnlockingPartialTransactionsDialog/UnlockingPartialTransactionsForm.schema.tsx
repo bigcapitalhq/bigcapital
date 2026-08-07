@@ -1,11 +1,10 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
-  unlock_from_date: Yup.date().required().label(intl.get('date')),
-  unlock_to_date: Yup.date().required().label(intl.get('date')),
+  unlockFromDate: Yup.date().required().label(intl.get('date')),
+  unlockToDate: Yup.date().required().label(intl.get('date')),
   module: Yup.string().required(),
   reason: Yup.string()
     .required()

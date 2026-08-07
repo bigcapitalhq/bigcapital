@@ -1,15 +1,15 @@
 // @ts-nocheck
+import { Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Intent } from '@blueprintjs/core';
-import { FormatDate } from '@/components';
 import {
   DetailFinancialCard,
   DetailFinancialSection,
   FinancialProgressBar,
   FinancialCardText,
 } from '../components';
+import { FormatDate } from '@/components';
 import { calculateStatus } from '@/utils';
 
 /**

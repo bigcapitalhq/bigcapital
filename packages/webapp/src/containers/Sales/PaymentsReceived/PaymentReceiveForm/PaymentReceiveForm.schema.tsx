@@ -1,32 +1,29 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
-  customer_id: Yup.string().label(intl.get('customer_name_')).required(),
-  payment_date: Yup.date().required().label(intl.get('payment_date_')),
-  deposit_account_id: Yup.number()
-    .required()
-    .label(intl.get('deposit_account_')),
+  customerId: Yup.string().label(intl.get('customer_name_')).required(),
+  paymentDate: Yup.date().required().label(intl.get('payment_date_')),
+  depositAccountId: Yup.number().required().label(intl.get('deposit_account_')),
   amount: Yup.number().required().label('Amount'),
-  payment_receive_no: Yup.string()
+  paymentReceiveNo: Yup.string()
     .nullable()
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('payment_received_no_')),
-  reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
+  referenceNo: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   // statement: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
-  branch_id: Yup.string(),
-  exchange_rate: Yup.number(),
+  branchId: Yup.string(),
+  exchangeRate: Yup.number(),
   entries: Yup.array().of(
     Yup.object().shape({
       id: Yup.number().nullable(),
-      due_amount: Yup.number().nullable(),
-      payment_amount: Yup.number().nullable().max(Yup.ref('due_amount')),
-      invoice_id: Yup.number()
+      dueAmount: Yup.number().nullable(),
+      paymentAmount: Yup.number().nullable().max(Yup.ref('dueAmount')),
+      invoiceId: Yup.number()
         .nullable()
-        .when(['payment_amount'], {
-          is: (payment_amount) => payment_amount,
+        .when(['paymentAmount'], {
+          is: (paymentAmount: unknown) => !!paymentAmount,
           then: Yup.number().required(),
         }),
     }),

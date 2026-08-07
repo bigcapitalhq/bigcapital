@@ -1,15 +1,17 @@
-// @ts-nocheck
 import React from 'react';
-import * as R from 'ramda';
 
 import '@/style/pages/ItemsCategories/List.scss';
 
-import { DashboardContentTable, DashboardPageContent } from '@/components';
-import { ItemsCategoriesProvider } from './ItemsCategoriesProvider';
-
 import { ItemCategoriesTable } from './ItemCategoriesTable';
+import { ItemsCategoriesProvider } from './ItemsCategoriesProvider';
 import { ItemsCategoryActionsBar } from './ItemsCategoryActionsBar';
 import { withItemCategories } from './withItemCategories';
+import type { WithItemCategoriesProps } from './withItemCategories';
+import { DashboardContentTable, DashboardPageContent } from '@/components';
+import { compose } from '@/utils';
+
+interface ItemCategoryListProps
+  extends Pick<WithItemCategoriesProps, 'itemsCategoriesTableState'> {}
 
 /**
  * Item categories list.
@@ -17,7 +19,7 @@ import { withItemCategories } from './withItemCategories';
 function ItemCategoryList({
   // #withItemCategories
   itemsCategoriesTableState,
-}) {
+}: ItemCategoryListProps) {
   return (
     <ItemsCategoriesProvider tableState={itemsCategoriesTableState}>
       <ItemsCategoryActionsBar />
@@ -31,7 +33,10 @@ function ItemCategoryList({
   );
 }
 
-export const ItemCategoriesList = R.compose(
+// Note: original used `R.compose` from ramda, but ramda's stricter typing
+// rejects the inner props shape. Switched to the codebase's untyped `compose`
+// — runtime behavior is identical.
+export const ItemCategoriesList = compose(
   withItemCategories(({ itemsCategoriesTableState }) => ({
     itemsCategoriesTableState,
   })),

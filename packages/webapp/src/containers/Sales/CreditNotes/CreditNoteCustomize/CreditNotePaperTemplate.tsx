@@ -1,9 +1,9 @@
 import { Classes, Text } from '@blueprintjs/core';
-import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
 } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import { Box, Group, Stack } from '@/components';
 import {
   DefaultPdfTemplateTerms,
   DefaultPdfTemplateItemDescription,

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAuditLogContext } from './AuditLogProvider';
 import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useAuditLogContext } from './AuditLogProvider';
 
 /**
  * Audit Log Loading Bar

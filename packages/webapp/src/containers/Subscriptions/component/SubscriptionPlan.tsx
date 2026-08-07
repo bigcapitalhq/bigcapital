@@ -1,12 +1,12 @@
 // @ts-nocheck
+import { ButtonProps } from '@blueprintjs/core';
 import * as R from 'ramda';
 import { PricingPlan } from '@/components/PricingPlan/PricingPlan';
-import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 import {
   WithPlansProps,
   withPlans,
 } from '@/containers/Subscriptions/withPlans';
-import { ButtonProps } from '@blueprintjs/core';
+import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 
 interface SubscriptionPricingFeature {
   text: string;
@@ -15,7 +15,7 @@ interface SubscriptionPricingFeature {
   style?: Record<string, string>;
 }
 
-interface SubscriptionPricingProps {
+export interface SubscriptionPricingProps {
   slug: string;
   label: string;
   description: string;

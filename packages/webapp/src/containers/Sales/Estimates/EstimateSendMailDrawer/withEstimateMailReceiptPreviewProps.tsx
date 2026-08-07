@@ -1,8 +1,8 @@
 import { ComponentType, useMemo } from 'react';
 import { defaultEstimateMailReceiptProps } from './_constants';
 import { useEstimateSendMailBoot } from './EstimateSendMailBoot';
-import { useSendEstimateMailMessage } from './hooks';
 import { EstimateSendMailReceiptProps } from './EstimateSendMailReceipt';
+import { useSendEstimateMailMessage } from './hooks';
 
 /**
  * Injects props from estimate mail state into the `EstimateSendMailReceipt` component.

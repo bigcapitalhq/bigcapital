@@ -202,7 +202,7 @@ export class Transformer<T = {}, ExtraContext = {}> {
    */
   protected formatMoney(money, options?) {
     return formatNumber(money, {
-      currencyCode: this.context.organization.baseCurrency,
+      currencyCode: this.context.organization?.baseCurrency,
       money: true,
       ...options,
     });

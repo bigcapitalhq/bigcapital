@@ -1,8 +1,8 @@
-import React from 'react';
-import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
+import React from 'react';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { Align, CLASSES } from '@/constants';
+import { getColumnWidth } from '@/utils';
 
 interface CellProps {
   cell: { value: React.ReactNode };

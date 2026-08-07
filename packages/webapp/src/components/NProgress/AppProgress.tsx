@@ -1,7 +1,7 @@
 // @ts-nocheck
+import { useIsFetching } from '@tanstack/react-query';
 import React from 'react';
 import Progress from './Progress';
-import { useIsFetching } from '@tanstack/react-query';
 
 function AppProgress() {
   const isFetching = useIsFetching();

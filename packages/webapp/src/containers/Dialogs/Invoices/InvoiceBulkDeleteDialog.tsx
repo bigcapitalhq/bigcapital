@@ -1,17 +1,29 @@
-// @ts-nocheck
-import React from 'react';
-import { FormattedMessage as T } from '@/components';
-import intl from 'react-intl-universal';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-
+import intl from 'react-intl-universal';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithInvoiceActionsProps } from '@/containers/Sales/Invoices/InvoicesLanding/withInvoiceActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withInvoiceActions } from '@/containers/Sales/Invoices/InvoicesLanding/withInvoiceActions';
 import { useBulkDeleteInvoices } from '@/hooks/query/invoices';
-import { AppToaster } from '@/components';
-import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-
 import { compose } from '@/utils';
+
+interface InvoiceBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface InvoiceBulkDeleteDialogProps
+  extends WithInvoiceActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
 
 /**
  * Invoice bulk delete dialog.
@@ -19,20 +31,22 @@ import { compose } from '@/utils';
 function InvoiceBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withInvoiceActions
   resetInvoicesSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteInvoices, isLoading } =
+}: InvoiceBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: InvoiceBulkDeleteDialogPayload = payload ?? {};
+
+  const { mutateAsync: bulkDeleteInvoices, isPending: isLoading } =
     useBulkDeleteInvoices();
 
   const handleCancel = () => {
@@ -52,7 +66,7 @@ function InvoiceBulkDeleteDialogInner({
         resetInvoicesSelectedRows();
         closeDialog(dialogName);
       })
-      .catch((errors) => {
+      .catch(() => {
         AppToaster.show({
           message: intl.get('something_went_wrong'),
           intent: Intent.DANGER,

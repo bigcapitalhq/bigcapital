@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { TransactionsByReferenceApplication } from './TransactionsByReferenceApplication';
 import { TransactionsByReferenceQueryDto } from './TransactionsByReferenceQuery.dto';
+import { TransactionsByReferenceResponseDto } from './TransactionsByReferenceResponse.dto';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
   ApiExtraModels,
@@ -13,14 +14,18 @@ import {
 
 @Controller('reports/transactions-by-reference')
 @ApiTags('Reports')
-@ApiExtraModels(NumberFormatQueryDto)
+@ApiExtraModels(NumberFormatQueryDto, TransactionsByReferenceResponseDto)
 export class TransactionsByReferenceController {
   constructor(
     private readonly transactionsByReferenceApp: TransactionsByReferenceApplication,
   ) {}
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Transactions by reference' })
+  @ApiResponse({
+    status: 200,
+    description: 'Transactions by reference',
+    schema: { $ref: getSchemaPath(TransactionsByReferenceResponseDto) },
+  })
   @ApiOperation({ summary: 'Get transactions by reference' })
   @ApiQuery({
     name: 'numberFormat',

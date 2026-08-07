@@ -14,7 +14,12 @@ export class ItemEntryTransformer extends Transformer<
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['quantityFormatted', 'rateFormatted', 'totalFormatted'];
+    return [
+      'quantityFormatted',
+      'rateFormatted',
+      'discountFormatted',
+      'totalFormatted',
+    ];
   };
 
   /**
@@ -35,6 +40,18 @@ export class ItemEntryTransformer extends Transformer<
     return this.formatNumber(entry.rate, {
       currencyCode: this.context.currencyCode,
       money: false,
+    });
+  };
+
+  /**
+   * Retrieves the formatted discount amount of item entry.
+   * @param {IItemEntry} entry
+   * @returns {string}
+   */
+  protected discountFormatted = (entry: ItemEntry): string => {
+    return this.formatNumber(entry.discountAmount, {
+      currencyCode: this.context.currencyCode,
+      excerptZero: true,
     });
   };
 

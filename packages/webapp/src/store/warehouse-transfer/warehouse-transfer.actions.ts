@@ -1,8 +1,8 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   WAREHOUSE_TRANSFERS_TABLE_STATE_RESET,
   WAREHOUSE_TRANSFERS_TABLE_STATE_SET,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 export const setWarehouseTransferTableState = (
   queries: Partial<TableQuery>,

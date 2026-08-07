@@ -23,6 +23,7 @@ import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAd
 import { InventoryAdjustmentsFilterDto } from './dtos/InventoryAdjustmentsFilter.dto';
 import { InventoryAdjustmentsListResponseDto } from './dtos/InventoryAdjustmentsListResponse.dto';
 import { InventoryAdjustmentResponseDto } from './dtos/InventoryAdjustmentResponse.dto';
+import { InventoryAdjustmentEntryResponseDto } from './dtos/InventoryAdjustmentEntryResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
@@ -34,6 +35,7 @@ import { InventoryAdjustmentAction } from './types/InventoryAdjustments.types';
 @ApiTags('Inventory Adjustments')
 @ApiExtraModels(InventoryAdjustmentResponseDto)
 @ApiExtraModels(InventoryAdjustmentsListResponseDto)
+@ApiExtraModels(InventoryAdjustmentEntryResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class InventoryAdjustmentsController {

@@ -1,9 +1,8 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
-
-import { DataTableEditable } from '@/components';
-import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { useExpenseFormTableColumns } from './components';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
+import type { ExpenseEntry } from './types';
+import { DataTableEditable } from '@/components';
 import {
   saveInvoke,
   compose,
@@ -13,32 +12,36 @@ import {
   updateRemoveLineByIndex,
 } from '@/utils';
 
+type ExpenseFormEntriesTableProps = {
+  entries: ExpenseEntry[];
+  defaultEntry: ExpenseEntry;
+  error?: unknown;
+  onChange: (entries: ExpenseEntry[]) => void;
+  currencyCode: string;
+  landedCost?: boolean;
+  minLines?: number;
+};
+
 /**
  * Expenses form entries.
  */
 export function ExpenseFormEntriesTable({
-  // #ownPorps
   entries,
   defaultEntry,
   error,
   onChange,
   currencyCode,
   landedCost = true,
-  minLines,
-}) {
-  // Expense form context.
+  minLines = 1,
+}: ExpenseFormEntriesTableProps) {
   const { accounts, projects } = useExpenseFormContext();
 
-  // Memorized data table columns.
   const columns = useExpenseFormTableColumns({ landedCost });
 
-  // Handles update datatable data.
   const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
+    (rowIndex: number, columnId: string, value: unknown) => {
       const newRows = compose(
-        // Update auto-adding new line.
-        updateAutoAddNewLine(defaultEntry, ['expense_account_id']),
-        // Update the row value of the given row index and column id.
+        updateAutoAddNewLine(defaultEntry, ['expenseAccountId']),
         updateTableCell(rowIndex, columnId, value),
       )(entries);
 
@@ -47,13 +50,10 @@ export function ExpenseFormEntriesTable({
     [entries, defaultEntry, onChange],
   );
 
-  // Handles click remove datatable row.
   const handleRemoveRow = useCallback(
-    (rowIndex) => {
+    (rowIndex: number) => {
       const newRows = compose(
-        // Ensure minimum lines count.
         updateMinEntriesLines(minLines, defaultEntry),
-        // Remove the line by the given index.
         updateRemoveLineByIndex(rowIndex),
       )(entries);
 
@@ -74,13 +74,9 @@ export function ExpenseFormEntriesTable({
         errors: error,
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
-        autoFocus: ['expense_account_id', 0],
+        autoFocus: ['expenseAccountId', 0],
         currencyCode,
       }}
     />
   );
 }
-
-ExpenseFormEntriesTable.defaultProps = {
-  minLines: 1,
-};

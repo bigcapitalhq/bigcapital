@@ -1,14 +1,8 @@
-// @ts-nocheck
+import { useFormikContext } from 'formik';
 import React from 'react';
 import styled from 'styled-components';
-import { useFormikContext } from 'formik';
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { AdjustmentTotalLine } from '../../Invoices/InvoiceForm/AdjustmentTotalLine';
+import { DiscountTotalLine } from '../../Invoices/InvoiceForm/DiscountTotalLine';
 import {
   useReceiptAdjustmentFormatted,
   useReceiptDiscountAmountFormatted,
@@ -17,13 +11,19 @@ import {
   useReceiptSubtotalFormatted,
   useReceiptTotalFormatted,
 } from './utils';
-import { DiscountTotalLine } from '../../Invoices/InvoiceForm/DiscountTotalLine';
-import { AdjustmentTotalLine } from '../../Invoices/InvoiceForm/AdjustmentTotalLine';
+import type { ReceiptFormValues } from './utils';
+import {
+  T,
+  TotalLines,
+  TotalLine,
+  TotalLineBorderStyle,
+  TotalLineTextStyle,
+} from '@/components';
 
 export function ReceiptFormFooterRight() {
   const {
-    values: { currency_code },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<ReceiptFormValues>();
 
   const paidAmountFormatted = useReceiptPaidAmountFormatted();
   const dueAmountFormatted = useReceiptDueAmountFormatted();
@@ -41,7 +41,7 @@ export function ReceiptFormFooterRight() {
         value={subtotalFormatted}
       />
       <DiscountTotalLine
-        currencyCode={currency_code}
+        currencyCode={currencyCode}
         discountAmount={discountAmount}
       />
       <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />

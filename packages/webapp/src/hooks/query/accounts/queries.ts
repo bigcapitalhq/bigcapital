@@ -1,19 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  Account,
-  AccountsList,
-  CreateAccountBody,
-  EditAccountBody,
-  GetAccountsQuery,
-  ValidateBulkDeleteResponse,
-} from '@bigcapital/sdk-ts';
-import {
   fetchAccounts,
   fetchAccount,
   fetchAccountTypes,
@@ -24,12 +9,29 @@ import {
   activateAccount,
   inactivateAccount,
   bulkDeleteAccounts,
+  bulkActivateAccounts,
+  bulkInactivateAccounts,
   validateBulkDeleteAccounts,
   AccountTypesList,
   AccountTransactionsList,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { accountsKeys } from './query-keys';
+import type {
+  Account,
+  AccountsList,
+  CreateAccountBody,
+  EditAccountBody,
+  GetAccountsQuery,
+  ValidateBulkDeleteResponse,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -41,7 +43,7 @@ export function useAccounts(
   query?: GetAccountsQuery | null,
   props?: Omit<UseQueryOptions<AccountsList>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: accountsKeys.list(query),
@@ -53,7 +55,7 @@ export function useAccount(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<Account>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: accountsKeys.detail(id),
@@ -65,7 +67,7 @@ export function useAccount(
 export function useAccountsTypes(
   props?: Omit<UseQueryOptions<AccountTypesList>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: accountsKeys.types(),
@@ -156,6 +158,32 @@ export function useBulkDeleteAccounts(
   });
 }
 
+export function useBulkActivateAccounts(
+  props?: UseMutationOptions<void, Error, { ids: number[] }>,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+  return useMutation({
+    ...props,
+    mutationFn: ({ ids }: { ids: number[] }) =>
+      bulkActivateAccounts(fetcher, { ids }),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+export function useBulkInactivateAccounts(
+  props?: UseMutationOptions<void, Error, { ids: number[] }>,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+  return useMutation({
+    ...props,
+    mutationFn: ({ ids }: { ids: number[] }) =>
+      bulkInactivateAccounts(fetcher, { ids }),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
 export function useValidateBulkDeleteAccounts(
   props?: UseMutationOptions<ValidateBulkDeleteResponse, Error, number[]>,
 ) {
@@ -173,7 +201,7 @@ export function useAccountTransactions(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: accountsKeys.transactions(id),

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -6,7 +5,6 @@ import { FFormGroup, FEditableText } from '@/components';
 
 /**
  * Payment made form footer left-side.
- * @returns {JSX.Element}
  */
 export function PaymentMadeFormFooterLeft() {
   return (

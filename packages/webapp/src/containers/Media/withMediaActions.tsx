@@ -1,9 +1,9 @@
 import { ComponentType } from 'react';
+import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { connect } from 'react-redux';
-import { submitMedia, deleteMedia } from '@/store/media/media.actions';
 import type { RootState } from '@/store/reducers';
+import { submitMedia, deleteMedia } from '@/store/media/media.actions';
 
 export interface WithMediaActionsProps {
   requestSubmitMedia: (form: FormData, config: unknown) => unknown;

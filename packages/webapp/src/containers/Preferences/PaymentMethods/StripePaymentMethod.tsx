@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
 import {
   Button,
   Classes,
@@ -12,19 +9,21 @@ import {
   Text,
   Tooltip,
 } from '@blueprintjs/core';
-import { Box, Card, Group, Stack } from '@/components';
-import { StripeLogo } from '@/icons/StripeLogo';
+import React from 'react';
+import styled from 'styled-components';
+import { STRIPE_PRICING_LINK } from './constants';
 import { usePaymentMethodsBoot } from './PreferencesPaymentMethodsBoot';
+import { Box, Card, Group, Stack } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
 import {
   useAlertActions,
   useDialogActions,
   useDrawerActions,
 } from '@/hooks/state';
-import { DRAWERS } from '@/constants/drawers';
-import { MoreIcon } from '@/icons/More';
-import { STRIPE_PRICING_LINK } from './constants';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
+import { MoreIcon } from '@/icons/More';
+import { StripeLogo } from '@/icons/StripeLogo';
 
 export function StripePaymentMethod() {
   const { openDialog } = useDialogActions();

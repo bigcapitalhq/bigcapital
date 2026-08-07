@@ -1,7 +1,7 @@
 import React from 'react';
+import { transformFilterFormToQuery } from '../common';
 import { FinancialReportPage } from '../FinancialReportPage';
 import { useCashFlowStatementReport } from '@/hooks/query';
-import { transformFilterFormToQuery } from '../common';
 
 type UseCashFlowResult = ReturnType<typeof useCashFlowStatementReport>;
 

@@ -1,17 +1,22 @@
-// @ts-nocheck
+import { Classes, Intent, ProgressBar } from '@blueprintjs/core';
+import type { ComponentType } from 'react';
 import React, { Suspense } from 'react';
 import styled from 'styled-components';
-import clsx from 'classnames';
-import * as R from 'ramda';
-import { Intent, Classes, ProgressBar } from '@blueprintjs/core';
 import { debounce } from 'lodash';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import clsx from 'classnames';
 import { AppToaster } from '@/components';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { compose } from '@/utils';
 
-function AlertLazyFallbackMessage({ amount }) {
+interface AlertLazyFallbackMessageProps {
+  amount: number;
+}
+
+function AlertLazyFallbackMessage({
+  amount,
+}: AlertLazyFallbackMessageProps): React.ReactElement {
   return (
     <React.Fragment>
       <ToastText>Alert content is loading, just a second.</ToastText>
@@ -26,15 +31,21 @@ function AlertLazyFallbackMessage({ amount }) {
   );
 }
 
-function AlertLazyFallback({}) {
-  const progressToastInterval = React.useRef(null);
-  const toastKey = React.useRef(null);
+interface ToastProgressLoadingResult {
+  message: React.ReactElement;
+  onDismiss: (didTimeoutExpire?: boolean) => void;
+  timeout: number;
+}
 
-  const toastProgressLoading = (amount) => {
+function AlertLazyFallback(): React.ReactElement {
+  const progressToastInterval = React.useRef<number | null>(null);
+  const toastKey = React.useRef<string | null>(null);
+
+  const toastProgressLoading = (amount: number): ToastProgressLoadingResult => {
     return {
       message: <AlertLazyFallbackMessage amount={amount} />,
-      onDismiss: (didTimeoutExpire) => {
-        if (!didTimeoutExpire) {
+      onDismiss: (didTimeoutExpire?: boolean) => {
+        if (!didTimeoutExpire && progressToastInterval.current !== null) {
           window.clearInterval(progressToastInterval.current);
         }
       },
@@ -48,17 +59,25 @@ function AlertLazyFallback({}) {
 
     progressToastInterval.current = window.setInterval(() => {
       if (toastKey.current == null || progress > 100) {
-        window.clearInterval(progressToastInterval.current);
+        if (progressToastInterval.current !== null) {
+          window.clearInterval(progressToastInterval.current);
+        }
       } else {
         progress += 10 + Math.random() * 20;
-        AppToaster.show(toastProgressLoading(progress), toastKey.current);
+        if (toastKey.current !== null) {
+          AppToaster.show(toastProgressLoading(progress), toastKey.current);
+        }
       }
     }, 100);
   };
 
   const hideProgressToast = () => {
-    window.clearInterval(progressToastInterval.current);
-    AppToaster.dismiss(toastKey.current);
+    if (progressToastInterval.current !== null) {
+      window.clearInterval(progressToastInterval.current);
+    }
+    if (toastKey.current !== null) {
+      AppToaster.dismiss(toastKey.current);
+    }
   };
 
   // Debounce the trigger.
@@ -76,10 +95,20 @@ function AlertLazyFallback({}) {
     };
   });
 
-  return null;
+  return <></>;
 }
 
-function AlertLazyInside({ isOpen, name, Component }) {
+interface AlertLazyInsideProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  Component: ComponentType<{ name: string }>;
+}
+
+function AlertLazyInside({
+  isOpen,
+  name,
+  Component,
+}: AlertLazyInsideProps): React.ReactElement | null {
   if (!isOpen) {
     return null;
   }
@@ -91,7 +120,7 @@ function AlertLazyInside({ isOpen, name, Component }) {
   );
 }
 
-export const AlertLazy = R.compose(
+export const AlertLazy = compose(
   withAlertStoreConnect(),
   withAlertActions,
 )(AlertLazyInside);

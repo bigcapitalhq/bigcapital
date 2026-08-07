@@ -1,13 +1,13 @@
 import React from 'react';
-import { Row, Col, ItemsMultiSelect, FFormGroup } from '@/components';
+import intl from 'react-intl-universal';
+import { filterItemsOptions } from '../constants';
 import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
 import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
-import { filterItemsOptions } from '../constants';
 import {
   SalesByItemGeneralPanelProvider,
   useSalesByItemsGeneralPanelContext,
 } from './SalesByItemsHeaderGeneralPanelProvider';
-import intl from 'react-intl-universal';
+import { Row, Col, FItemsMultiSelect, FFormGroup } from '@/components';
 
 /**
  * Sales by items - Drawer header - General panel.
@@ -43,7 +43,7 @@ function SalesByItemsHeaderGeneralPanelContent() {
       <Row>
         <Col xs={4}>
           <FFormGroup label={intl.get('Specific items')} name={'itemsIds'}>
-            <ItemsMultiSelect name={'itemsIds'} items={items} />
+            <FItemsMultiSelect name={'itemsIds'} items={items} />
           </FFormGroup>
         </Col>
       </Row>

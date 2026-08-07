@@ -33,6 +33,7 @@ import {
   BulkDeleteDto,
   ValidateBulkDeleteResponseDto,
 } from '@/common/dtos/BulkDelete.dto';
+import { BulkActivateAccountsDto } from './dtos/BulkActivateAccounts.dto';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
@@ -87,6 +88,34 @@ export class AccountsController {
     return this.accountsApplication.bulkDeleteAccounts(bulkDeleteDto.ids, {
       skipUndeletable: bulkDeleteDto.skipUndeletable ?? false,
     });
+  }
+
+  @Post('bulk-activate')
+  @HttpCode(200)
+  @RequirePermission(AccountAction.EDIT, AbilitySubject.Account)
+  @ApiOperation({ summary: 'Activates multiple accounts in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The accounts have been successfully activated.',
+  })
+  async bulkActivateAccounts(
+    @Body() dto: BulkActivateAccountsDto,
+  ): Promise<void> {
+    return this.accountsApplication.bulkActivateAccounts(dto.ids);
+  }
+
+  @Post('bulk-inactivate')
+  @HttpCode(200)
+  @RequirePermission(AccountAction.EDIT, AbilitySubject.Account)
+  @ApiOperation({ summary: 'Inactivates multiple accounts in bulk.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The accounts have been successfully inactivated.',
+  })
+  async bulkInactivateAccounts(
+    @Body() dto: BulkActivateAccountsDto,
+  ): Promise<void> {
+    return this.accountsApplication.bulkInactivateAccounts(dto.ids);
   }
 
   @Post()

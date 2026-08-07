@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
 
 export const NS = 'bp4';
@@ -137,6 +136,6 @@ const CLASSES = {
   SECTION_HEADER_TABS,
   SECTION_HEADER_RIGHT,
   SECTION_CARD,
-};
+} as const;
 
 export { CLASSES };

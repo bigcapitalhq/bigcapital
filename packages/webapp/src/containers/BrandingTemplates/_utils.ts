@@ -1,13 +1,13 @@
 import { omit } from 'lodash';
 import * as R from 'ramda';
+import { useBrandingTemplateBoot } from './BrandingTemplateBoot';
+import { BrandingState, BrandingTemplateValues } from './types';
+import { DRAWERS } from '@/constants/drawers';
 import {
   CreatePdfTemplateValues,
   EditPdfTemplateValues,
 } from '@/hooks/query/pdf-templates';
-import { useBrandingTemplateBoot } from './BrandingTemplateBoot';
 import { transformToForm } from '@/utils';
-import { BrandingState, BrandingTemplateValues } from './types';
-import { DRAWERS } from '@/constants/drawers';
 
 const commonExcludedAttrs = ['templateName', 'companyLogoUri'];
 

@@ -1,11 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import { batch } from 'react-redux';
-import {
   signin,
   signup,
   signupConfirm,
@@ -21,14 +14,21 @@ import {
   type AuthResetPasswordBody,
   type AuthMetaResponse,
 } from '@bigcapital/sdk-ts';
-import { useAuthApiFetcher, useApiFetcher } from '../../useRequest';
+import {
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
+import { batch } from 'react-redux';
 import { setCookie } from '../../../utils';
-import { authenticationKeys } from './query-keys';
 import {
   useSetAuthToken,
   useSetAuthUserId,
   useSetOrganizationId,
 } from '../../state';
+import { useAuthApiFetcher, useApiFetcher } from '../../useRequest';
+import { authenticationKeys } from './query-keys';
 
 /**
  * Saves the response data to cookies.

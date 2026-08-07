@@ -1,22 +1,24 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import React from 'react';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
+import type { RefundVendorCreditFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
+
+interface RefundVendorCreditFloatingActionsProps
+  extends WithDialogActionsProps {}
 
 /**
  * Refund vendor flaoting actions.
  */
 function RefundVendorCreditFloatingActionsInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: RefundVendorCreditFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<RefundVendorCreditFormValues>();
   // refund vendor credit  dialog context.
   const { dialogName } = useRefundVendorCreditContext();
 

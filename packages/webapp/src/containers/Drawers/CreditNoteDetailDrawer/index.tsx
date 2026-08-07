@@ -1,8 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
-
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { compose } from '@/utils';
 
 const CreditNoteDetailDrawerContent = React.lazy(() =>
@@ -11,6 +9,10 @@ const CreditNoteDetailDrawerContent = React.lazy(() =>
   })),
 );
 
+interface CreditNoteDetailDrawerProps extends WithDrawersProps {
+  name: string;
+}
+
 /**
  * Credit note detail drawer.
  */
@@ -18,8 +20,10 @@ function CreditNoteDetailDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { creditNoteId },
-}) {
+  payload,
+}: CreditNoteDetailDrawerProps) {
+  const creditNoteId = payload?.creditNoteId as number | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -33,4 +37,5 @@ function CreditNoteDetailDrawer({
     </Drawer>
   );
 }
+
 export const index = compose(withDrawers())(CreditNoteDetailDrawer);

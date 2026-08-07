@@ -1,21 +1,24 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
-
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { Account } from '@bigcapital/sdk-ts';
+import { AbilitySubject, AccountAction } from '@/constants/abilityOption';
+import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { AbilitySubject, AccountAction } from '@/constants/abilityOption';
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { DRAWERS } from '@/constants/drawers';
+interface AccountUniversalSearchItemSelectProps extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+  onAction?: () => void;
+}
 
 function AccountUniversalSearchItemSelectComponent({
-  // #ownProps
   resourceType,
   resourceId,
   onAction,
 
-  // #withDrawerActions
   openDrawer,
-}) {
+}: AccountUniversalSearchItemSelectProps) {
   if (resourceType === RESOURCES_TYPES.ACCOUNT) {
     openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: resourceId });
     onAction && onAction();
@@ -27,21 +30,13 @@ export const AccountUniversalSearchItemSelect = withDrawerActions(
   AccountUniversalSearchItemSelectComponent,
 );
 
-/**
- * Transformes account item to search item.
- * @param {*} account
- * @returns
- */
-const accountToSearch = (account) => ({
+const accountToSearch = (account: Account) => ({
   id: account.id,
   text: `${account.name} - ${account.code}`,
-  label: account.formatted_amount,
+  label: account.formattedAmount,
   reference: account,
 });
 
-/**
- * Binds universal search account configure.
- */
 export const universalSearchAccountBind = () => ({
   resourceType: RESOURCES_TYPES.ACCOUNT,
   optionItemLabel: intl.get('accounts'),

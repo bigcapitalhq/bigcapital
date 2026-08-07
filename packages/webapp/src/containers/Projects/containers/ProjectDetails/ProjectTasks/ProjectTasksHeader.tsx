@@ -1,7 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import { Intent } from '@blueprintjs/core';
-import { FormatDate } from '@/components';
+import React from 'react';
 import {
   DetailFinancialCard,
   DetailFinancialSection,
@@ -9,6 +8,7 @@ import {
   FinancialCardText,
 } from '../components';
 import { useProjectTaskContext } from './ProjectTaskProvider';
+import { FormatDate } from '@/components';
 import { calculateStatus } from '@/utils';
 
 /**

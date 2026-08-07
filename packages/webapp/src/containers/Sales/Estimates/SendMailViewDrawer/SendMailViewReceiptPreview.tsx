@@ -1,7 +1,7 @@
 import { Button, ButtonProps, Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-import { lighten } from 'polished';
 import { x } from '@xstyled/emotion';
+import { lighten } from 'polished';
 import { Stack, StackProps } from '@/components';
 
 export type SendMailReceiptProps = StackProps;

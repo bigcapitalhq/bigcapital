@@ -1,7 +1,12 @@
-// @ts-nocheck
-import React from 'react';
 import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
-import classNames from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { MoneyInOutTransactionNoField } from '../../_components';
+import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
+import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
+import { useSetPrimaryBranchToForm, BranchRowDivider } from '../utils';
+import type { Account } from '@bigcapital/sdk-ts';
 import {
   FormattedMessage as T,
   FAccountsSuggestField,
@@ -17,27 +22,16 @@ import {
   FDateInput,
   FInputGroup,
 } from '@/components';
-import { MoneyInOutTransactionNoField } from '../../_components';
-import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
-import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
+import { ACCOUNT_TYPE, Features } from '@/constants';
 import { momentFormatter } from '@/utils';
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
-import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
-import {
-  useSetPrimaryBranchToForm,
-  BranchRowDivider,
-} from '../../MoneyInDialog/utils';
-import intl from 'react-intl-universal';
 
 /**
  * Transfer from account form fields.
  */
 export function TransferFromAccountFormFields() {
-  // Money in dialog context.
   const { accounts, branches } = useMoneyInDailogContext();
   const { account } = useMoneyInFieldsContext();
 
-  // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
 
   return (
@@ -45,9 +39,9 @@ export function TransferFromAccountFormFields() {
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup label={intl.get('branch')} name={'branch_id'}>
+            <FFormGroup label={intl.get('branch')} name={'branchId'}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -64,7 +58,6 @@ export function TransferFromAccountFormFields() {
             name={'date'}
             label={intl.get('date')}
             labelInfo={<FieldRequiredHint />}
-            fill
           >
             <FDateInput
               name={'date'}
@@ -81,6 +74,7 @@ export function TransferFromAccountFormFields() {
           <MoneyInOutTransactionNoField />
         </Col>
       </Row>
+
       {/*------------ Amount -----------*/}
       <Row>
         <Col xs={10}>
@@ -89,8 +83,8 @@ export function TransferFromAccountFormFields() {
             labelInfo={<FieldRequiredHint />}
           >
             <ControlGroup>
-              <InputPrependText text={account.currency_code || '--'} />
-              <FMoneyInputGroup name={'amount'} minimal={true} />
+              <InputPrependText text={account?.currencyCode || '--'} />
+              <FMoneyInputGroup name={'amount'} minimal={true} fastField />
             </ControlGroup>
           </FormGroup>
         </Col>
@@ -103,15 +97,15 @@ export function TransferFromAccountFormFields() {
         <Col xs={5}>
           {/*------------ Transfer from account -----------*/}
           <FFormGroup
-            name={'credit_account_id'}
+            name={'creditAccountId'}
             label={
               <T id={'cash_flow_transaction.label_transfer_from_account'} />
             }
             labelInfo={<FieldRequiredHint />}
           >
             <FAccountsSuggestField
-              name={'credit_account_id'}
-              items={accounts as any[]}
+              name={'creditAccountId'}
+              items={accounts}
               filterByTypes={[
                 ACCOUNT_TYPE.CASH,
                 ACCOUNT_TYPE.BANK,
@@ -123,14 +117,14 @@ export function TransferFromAccountFormFields() {
 
         <Col xs={5}>
           {/*------------ Reference -----------*/}
-          <FFormGroup name={'reference_no'} label={intl.get('reference_no')}>
-            <FInputGroup name={'reference_no'} />
+          <FFormGroup name={'referenceNo'} label={intl.get('reference_no')}>
+            <FInputGroup name={'referenceNo'} />
           </FFormGroup>
         </Col>
       </Row>
 
       {/*------------ Description -----------*/}
-      <FormGroup name={'description'} label={intl.get('description')}>
+      <FormGroup label={intl.get('description')}>
         <FTextArea
           name={'description'}
           growVertically={true}

@@ -1,7 +1,5 @@
-// @ts-nocheck
-import React from 'react';
 import { Classes } from '@blueprintjs/core';
-
+import React from 'react';
 import { MoneyOutContentFields } from './MoneyOutContentFields';
 import { TransactionTypeFields } from './TransactionTypeFields';
 

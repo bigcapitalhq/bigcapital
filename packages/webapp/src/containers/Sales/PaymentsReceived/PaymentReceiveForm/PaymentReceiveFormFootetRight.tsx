@@ -1,6 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import {
+  usePaymentReceiveTotals,
+  usePaymentReceivedTotalExceededAmount,
+} from './utils';
 import {
   T,
   TotalLines,
@@ -9,10 +12,6 @@ import {
   TotalLineTextStyle,
   FormatNumber,
 } from '@/components';
-import {
-  usePaymentReceiveTotals,
-  usePaymentReceivedTotalExceededAmount,
-} from './utils';
 
 export function PaymentReceiveFormFootetRight() {
   const { formattedSubtotal, formattedTotal } = usePaymentReceiveTotals();
@@ -32,7 +31,7 @@ export function PaymentReceiveFormFootetRight() {
       />
       <TotalLine
         title={'Exceeded Amount'}
-        value={<FormatNumber value={exceededAmount} />}
+        value={<FormatNumber value={exceededAmount} noZero={false} />}
         textStyle={TotalLineTextStyle.Regular}
       />
     </PaymentReceiveTotalLines>

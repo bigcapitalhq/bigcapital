@@ -1,6 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { ActionMenu } from './components';
+import { useProjectPurchasesColumns } from './hooks';
 import {
   DataTable,
   TableSkeletonRows,
@@ -8,20 +10,17 @@ import {
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { ActionMenu } from './components';
-import { useProjectPurchasesColumns } from './hooks';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { compose } from '@/utils';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 
 /**
  * Project Purchases DataTable.
  * @returns
  */
-function ProjectPurchasesTableRoot({
-  // #withSettings
-  purchasesTableSize,
-}) {
+function ProjectPurchasesTableRoot() {
+  // Settings hook.
+  const { projectSettings } = useProjectDetailContext();
+  const purchasesTableSize = projectSettings?.tableSize;
+
   // Retrieve purchases table columns.
   const columns = useProjectPurchasesColumns();
 
@@ -52,8 +51,4 @@ function ProjectPurchasesTableRoot({
     />
   );
 }
-export const ProjectPurchasesTable = compose(
-  withSettings(({ purchasesSettings }) => ({
-    purchasesTableSize: purchasesSettings?.tableSize,
-  })),
-)(ProjectPurchasesTableRoot);
+export const ProjectPurchasesTable = ProjectPurchasesTableRoot;

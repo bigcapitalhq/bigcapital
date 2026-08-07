@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import { FSelect } from '../Forms';
+import { FormattedMessage as T } from '@/components';
 
 /**
  * Currency select field.
@@ -18,8 +18,8 @@ export function CurrencySelectList({
     <FSelect
       name={name}
       items={items}
-      textAccessor={'currency_code'}
-      valueAccessor={'currency_code'}
+      textAccessor={'currencyCode'}
+      valueAccessor={'currencyCode'}
       placeholder={placeholder}
       popoverProps={{ minimal: true, usePortal: true, inline: false }}
       {...props}

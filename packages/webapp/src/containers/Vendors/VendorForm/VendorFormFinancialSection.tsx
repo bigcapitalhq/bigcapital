@@ -1,7 +1,14 @@
-// @ts-nocheck
-import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
+import { Position, ControlGroup } from '@blueprintjs/core';
 import { ErrorMessage, useFormikContext } from 'formik';
-import { Features } from '@/constants';
+import intl from 'react-intl-universal';
+import {
+  openingBalanceFieldShouldUpdate,
+  useIsVendorForeignCurrency,
+  useSetPrimaryBranchToForm,
+} from './utils';
+import type { VendorFormValues } from './utils';
+import { useVendorFormContext } from './VendorFormProvider';
+import { VendorFormSectionTitle } from './VendorFormSectionTitle';
 import {
   FFormGroup,
   FormattedMessage as T,
@@ -15,15 +22,8 @@ import {
   Icon,
   Box,
 } from '@/components';
-import { useVendorFormContext } from './VendorFormProvider';
-import {
-  openingBalanceFieldShouldUpdate,
-  useIsVendorForeignCurrency,
-  useSetPrimaryBranchToForm,
-} from './utils';
-import { useCurrentOrganization } from '@/hooks/state';
-import { VendorFormSectionTitle } from './VendorFormSectionTitle';
-import intl from 'react-intl-universal';
+import { Features } from '@/constants';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 export function VendorFormFinancialSection() {
   const { currencies, vendorId, branches } = useVendorFormContext();
@@ -38,16 +38,15 @@ export function VendorFormFinancialSection() {
       </VendorFormSectionTitle>
 
       <FFormGroup
-        name={'currency_code'}
+        name={'currencyCode'}
         label={intl.get('currency')}
         fastField
         inline
-        fill
       >
         <CurrencySelectList
-          name="currency_code"
+          name="currencyCode"
           items={currencies}
-          disabled={vendorId}
+          disabled={Boolean(vendorId)}
           fastField
         />
       </FFormGroup>
@@ -59,12 +58,11 @@ export function VendorFormFinancialSection() {
       <FeatureCan feature={Features.Branches}>
         <FFormGroup
           label={intl.get('vendor.label.opening_branch')}
-          name={'opening_balance_branch_id'}
+          name={'openingBalanceBranchId'}
           inline
-          fill
         >
           <BranchSelect
-            name={'opening_balance_branch_id'}
+            name={'openingBalanceBranchId'}
             branches={branches}
             popoverProps={{ minimal: true }}
           />
@@ -76,7 +74,6 @@ export function VendorFormFinancialSection() {
 
 /**
  * Vendor opening balance at date field.
- * @returns {JSX.Element}
  */
 function VendorOpeningBalanceAtField() {
   const { vendorId } = useVendorFormContext();
@@ -86,18 +83,17 @@ function VendorOpeningBalanceAtField() {
 
   return (
     <FFormGroup
-      name={'opening_balance_at'}
+      name={'openingBalanceAt'}
       label={intl.get('opening_balance_at')}
       inline
-      fill
-      helperText={<ErrorMessage name="opening_balance_at" />}
+      helperText={<ErrorMessage name="openingBalanceAt" />}
     >
       <FDateInput
-        name={'opening_balance_at'}
+        name={'openingBalanceAt'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
-        disabled={vendorId}
-        formatDate={(date) => date.toLocaleDateString()}
-        parseDate={(str) => new Date(str)}
+        disabled={Boolean(vendorId)}
+        formatDate={(date: Date) => date.toLocaleDateString()}
+        parseDate={(str: string) => new Date(str)}
         inputProps={{
           leftIcon: <Icon icon={'date-range'} />,
         }}
@@ -109,7 +105,7 @@ function VendorOpeningBalanceAtField() {
 
 function VendorOpeningBalanceField() {
   const { vendorId } = useVendorFormContext();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<VendorFormValues>();
 
   // Cannot continue if the vendor id is defined.
   if (vendorId) return null;
@@ -117,17 +113,17 @@ function VendorOpeningBalanceField() {
   return (
     <FFormGroup
       label={intl.get('opening_balance')}
-      name={'opening_balance'}
+      name={'openingBalance'}
       inline
+      // @ts-expect-error shouldUpdate is forwarded to FastField at runtime; FormGroupProps type doesn't expose it
       shouldUpdate={openingBalanceFieldShouldUpdate}
-      shouldUpdateDeps={{ currencyCode: values.currency_code }}
+      shouldUpdateDeps={{ currencyCode: values.currencyCode }}
       fastField={true}
-      fill
     >
       <ControlGroup fill>
-        <InputPrependText text={values.currency_code as string} />
+        <InputPrependText text={values.currencyCode} />
         <FMoneyInputGroup
-          name={'opening_balance'}
+          name={'openingBalance'}
           fastField
           inputGroupProps={{ fill: true }}
         />
@@ -137,9 +133,9 @@ function VendorOpeningBalanceField() {
 }
 
 function VendorOpeningBalanceExchangeRateField() {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<VendorFormValues>();
   const { vendorId } = useVendorFormContext();
-  const currentOrganization = useCurrentOrganization();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const isForeignVendor = useIsVendorForeignCurrency();
 
@@ -149,9 +145,9 @@ function VendorOpeningBalanceExchangeRateField() {
   }
   return (
     <ExchangeRateInputGroup
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
-      name={'opening_balance_exchange_rate'}
+      fromCurrency={values.currencyCode}
+      toCurrency={baseCurrency ?? ''}
+      name={'openingBalanceExchangeRate'}
       onRecalcConfirm={() => {}}
       onCancel={() => {}}
       formGroupProps={{ label: ' ' }}

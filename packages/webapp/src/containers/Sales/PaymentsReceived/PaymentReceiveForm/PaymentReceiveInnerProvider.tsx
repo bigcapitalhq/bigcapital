@@ -1,43 +1,72 @@
-// @ts-nocheck
-import React, { createContext, useContext, useEffect } from 'react';
 import { useFormikContext } from 'formik';
-import { useDueInvoices } from '@/hooks/query';
-import { transformInvoicesNewPageEntries } from './utils';
+import React, { createContext, useContext, useEffect } from 'react';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+import {
+  transformInvoicesNewPageEntries,
+  type PaymentReceiveFormValues,
+} from './utils';
+import type { UseQueryOptions } from '@tanstack/react-query';
+import { useDueInvoices } from '@/hooks/query';
 
-const PaymentReceiveInnerContext = createContext();
+type DueInvoice = {
+  id: string | number;
+  due_amount: string | number;
+  invoice_date: string;
+  balance: string | number;
+  currency_code: string;
+  invoice_no: string;
+  branch_id: string | number;
+  payment_amount?: string | number;
+};
+
+interface PaymentReceiveInnerContextValue {
+  dueInvoices: DueInvoice[] | undefined;
+  isDueInvoicesLoading: boolean;
+  isDueInvoicesFetching: boolean;
+}
+
+const PaymentReceiveInnerContext = createContext<
+  PaymentReceiveInnerContextValue | undefined
+>(undefined);
 
 /**
  * Payment receive inner form provider.
  */
-function PaymentReceiveInnerProvider({ ...props }) {
+function PaymentReceiveInnerProvider({
+  ...props
+}: {
+  children?: React.ReactNode;
+}) {
   const { isNewMode } = usePaymentReceiveFormContext();
 
-  // Formik context.
   const {
-    values: { customer_id: customerId },
+    values: { customerId },
     setFieldValue,
-  } = useFormikContext();
+  } = useFormikContext<PaymentReceiveFormValues>();
 
-  // Fetches customer receivable invoices.
+  // `useDueInvoices` types its options as a full UseQueryOptions (which requires queryKey/queryFn),
+  // but it supplies those internally — so we pass only the partial options.
+  const dueInvoicesQuery = {
+    enabled: !!customerId && isNewMode,
+  } as UseQueryOptions<unknown, Error>;
+
   const {
     data: dueInvoices,
     isLoading: isDueInvoicesLoading,
     isFetching: isDueInvoicesFetching,
-  } = useDueInvoices(customerId, {
-    enabled: !!customerId && isNewMode,
-    keepPreviousData: true,
-  });
+  } = useDueInvoices(customerId as number | undefined, dueInvoicesQuery);
 
   useEffect(() => {
     if (!isDueInvoicesFetching && dueInvoices && isNewMode) {
-      setFieldValue('entries', transformInvoicesNewPageEntries(dueInvoices));
+      const transformed = transformInvoicesNewPageEntries(
+        dueInvoices as DueInvoice[],
+      );
+      setFieldValue('entries', transformed);
     }
   }, [isDueInvoicesFetching, dueInvoices, isNewMode, setFieldValue]);
 
-  // Provider payload.
-  const provider = {
-    dueInvoices,
+  const provider: PaymentReceiveInnerContextValue = {
+    dueInvoices: dueInvoices as DueInvoice[] | undefined,
     isDueInvoicesLoading,
     isDueInvoicesFetching,
   };
@@ -45,7 +74,14 @@ function PaymentReceiveInnerProvider({ ...props }) {
   return <PaymentReceiveInnerContext.Provider value={provider} {...props} />;
 }
 
-const usePaymentReceiveInnerContext = () =>
-  useContext(PaymentReceiveInnerContext);
+const usePaymentReceiveInnerContext = (): PaymentReceiveInnerContextValue => {
+  const ctx = useContext(PaymentReceiveInnerContext);
+  if (!ctx) {
+    throw new Error(
+      'usePaymentReceiveInnerContext must be used within a PaymentReceiveInnerProvider',
+    );
+  }
+  return ctx;
+};
 
 export { PaymentReceiveInnerProvider, usePaymentReceiveInnerContext };

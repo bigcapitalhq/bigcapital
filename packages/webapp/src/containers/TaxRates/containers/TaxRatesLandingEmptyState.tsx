@@ -1,16 +1,16 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import * as R from 'ramda';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
 
 function TaxRatesLandingEmptyStateRoot({
-  // #withDialogAction
   openDialog,
-}) {
+}: Pick<WithDialogActionsProps, 'openDialog'>) {
   return (
     <EmptyStatus
       title={"The organization doesn't have taxes, yet!"}

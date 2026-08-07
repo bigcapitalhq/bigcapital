@@ -1,15 +1,19 @@
 import {
-  useQuery,
-  useMutation,
-  UseQueryOptions,
-  UseMutationOptions,
-} from '@tanstack/react-query';
-import {
   fetchTransactionsByCustomersTable,
   fetchTransactionsByCustomersXlsx,
   fetchTransactionsByCustomersCsv,
   fetchTransactionsByCustomersPdf,
 } from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
 import type {
   TransactionsByCustomersTableQuery,
   TransactionsByCustomersTableResponse,
@@ -17,10 +21,6 @@ import type {
   TransactionsByCustomersCsvQuery,
   TransactionsByCustomersPdfQuery,
 } from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../../useRequest';
-import { useFetcherPdf } from '../../useRequestPdf';
-import { downloadFile } from '../../useDownloadFile';
-import { financialReportsKeys } from './query-keys';
 
 interface CustomersTransactionsReport {
   data: TransactionsByCustomersTableResponse['table'];

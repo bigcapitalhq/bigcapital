@@ -1,15 +1,14 @@
-// @ts-nocheck
+import { Button, Intent } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
-import styled from 'styled-components';
-import { isEmpty } from 'lodash';
-import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { FFormGroup, FEditableText, Box, Group, Stack } from '@/components';
-import { VisaIcon } from '@/icons/Visa';
-import { MastercardIcon } from '@/icons/Mastercard';
+import styled from 'styled-components';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { FFormGroup, FEditableText, Box, Group, Stack } from '@/components';
 import { PaymentOptionsButtonPopver } from '@/containers/PaymentMethods/SelectPaymentMethodPopover';
+import { MastercardIcon } from '@/icons/Mastercard';
+import { VisaIcon } from '@/icons/Visa';
 
 export function InvoiceFormFooterLeft() {
   const { paymentServices } = useInvoiceFormContext();
@@ -23,11 +22,11 @@ export function InvoiceFormFooterLeft() {
     <Stack spacing={20}>
       {/* --------- Invoice message --------- */}
       <InvoiceMsgFormGroup
-        name={'invoice_message'}
+        name={'invoiceMessage'}
         label={intl.get('invoice_message')}
       >
         <FEditableText
-          name={'invoice_message'}
+          name={'invoiceMessage'}
           placeholder={intl.get('invoice_form.invoice_message.placeholder')}
           fastField
           multiline
@@ -37,10 +36,10 @@ export function InvoiceFormFooterLeft() {
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
         label={intl.get('invoice_form.label.terms_conditions')}
-        name={'terms_conditions'}
+        name={'termsConditions'}
       >
         <FEditableText
-          name={'terms_conditions'}
+          name={'termsConditions'}
           placeholder={intl.get(
             'invoice_form.terms_and_conditions.placeholder',
           )}
@@ -52,7 +51,7 @@ export function InvoiceFormFooterLeft() {
       {/* --------- Payment Options --------- */}
       <PaymentOptionsFormGroup
         label={'Payment Options'}
-        name={'payment_method_id'}
+        name={'paymentMethodId'}
       >
         <PaymentOptionsText>
           Select an online payment option to get paid faster{' '}
@@ -70,7 +69,7 @@ export function InvoiceFormFooterLeft() {
               Setup payment gateways
             </PaymentOptionsButton>
           ) : (
-            <PaymentOptionsButtonPopver paymentMethods={paymentServices}>
+            <PaymentOptionsButtonPopver paymentMethods={paymentServices ?? []}>
               <PaymentOptionsButton intent={Intent.PRIMARY} small minimal>
                 Payment Options
               </PaymentOptionsButton>

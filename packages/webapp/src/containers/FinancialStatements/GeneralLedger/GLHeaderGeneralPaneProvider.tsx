@@ -1,7 +1,6 @@
 import React, { createContext, useContext } from 'react';
-
-import { useAccounts } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
+import { useAccounts } from '@/hooks/query';
 
 type GLHeaderGeneralPanelContextValue = {
   accounts: ReturnType<typeof useAccounts>['data'];

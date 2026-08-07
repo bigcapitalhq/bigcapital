@@ -1,34 +1,46 @@
-// @ts-nocheck
-import React, { useContext, createContext } from 'react';
 import classNames from 'classnames';
+import React, { createContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
-
-import { CLASSES } from '@/constants/classes';
-import { Card } from '@/components';
-import { useSettingsItems, useAccounts, useSaveSettings } from '@/hooks/query';
 import { PreferencesPageLoader } from '../PreferencesPageLoader';
+import { Card } from '@/components';
+import { CLASSES } from '@/constants/classes';
+import { useAccounts, useSaveSettings, useSettingsItems } from '@/hooks/query';
+import type { Account } from '@bigcapital/sdk-ts';
+import type { SaveSettingsBody, SettingsGroup } from '@bigcapital/sdk-ts';
 
-const ItemFormContext = createContext();
+interface ItemPreferencesFormContextValue {
+  accounts: Account[];
+  itemsSettings?: SettingsGroup;
+  saveSettingMutate: (vars: {
+    options: SaveSettingsBody['options'];
+  }) => Promise<unknown>;
+}
 
-/**
- * Item data provider.
- */
+const ItemFormContext = createContext<ItemPreferencesFormContextValue>(
+  {} as ItemPreferencesFormContextValue,
+);
 
-function ItemPreferencesFormProvider({ ...props }) {
-  // Fetches the accounts list.
+interface ItemPreferencesFormProviderProps {
+  children?: React.ReactNode;
+}
+
+function ItemPreferencesFormProvider({
+  ...props
+}: ItemPreferencesFormProviderProps) {
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
   const {
+    data: itemsSettings,
     isLoading: isItemsSettingsLoading,
     isFetching: isItemsSettingsFetching,
   } = useSettingsItems();
 
-  // Save Organization Settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
-  // Provider state.
-  const provider = {
-    accounts,
+  const provider: ItemPreferencesFormContextValue = {
+    accounts: accounts ?? [],
+    itemsSettings,
     saveSettingMutate,
   };
 

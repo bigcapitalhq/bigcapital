@@ -1,28 +1,33 @@
-// @ts-nocheck
-import * as R from 'ramda';
-import { Aside } from '@/components/Aside/Aside';
-import { CategorizeTransactionTabs } from './CategorizeTransactionTabs';
-import {
-  WithBankingActionsProps,
-  withBankingActions,
-} from '../withBankingActions';
-import { CategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
-import { withBanking } from '../withBanking';
 import { useEffect } from 'react';
+import { withBanking } from '../withBanking';
+import { withBankingActions } from '../withBankingActions';
+import { CategorizeTransactionTabs } from './CategorizeTransactionTabs';
+import { CategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
+import type { WithBankingProps } from '../withBanking';
+import type { WithBankingActionsProps } from '../withBankingActions';
+import { Aside } from '@/components/Aside/Aside';
+import { compose } from '@/utils';
 
-interface CategorizeTransactionAsideProps extends WithBankingActionsProps {}
+interface CategorizeTransactionAsideProps
+  extends Pick<
+      WithBankingActionsProps,
+      | 'closeMatchingTransactionAside'
+      | 'closeReconcileMatchingTransaction'
+      | 'resetTransactionsToCategorizeSelected'
+      | 'enableMultipleCategorization'
+    >,
+    Pick<WithBankingProps, 'selectedUncategorizedTransactionId'> {}
 
 function CategorizeTransactionAsideRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
   closeReconcileMatchingTransaction,
+  resetTransactionsToCategorizeSelected,
+  enableMultipleCategorization,
 
   // #withBanking
   selectedUncategorizedTransactionId,
-  resetTransactionsToCategorizeSelected,
-  enableMultipleCategorization,
 }: CategorizeTransactionAsideProps) {
-  //
   useEffect(
     () => () => {
       // Close the reconcile matching form.
@@ -44,7 +49,7 @@ function CategorizeTransactionAsideRoot({
   const handleClose = () => {
     closeMatchingTransactionAside();
   };
-  // Cannot continue if there is no selected transactions.;
+  // Cannot continue if there is no selected transaction.
   if (!selectedUncategorizedTransactionId) {
     return null;
   }
@@ -52,7 +57,7 @@ function CategorizeTransactionAsideRoot({
     <Aside title={'Categorize Bank Transaction'} onClose={handleClose}>
       <Aside.Body>
         <CategorizeTransactionTabsBoot
-          uncategorizedTransactionId={selectedUncategorizedTransactionId}
+          uncategorizedTransactionIds={selectedUncategorizedTransactionId}
         >
           <CategorizeTransactionTabs />
         </CategorizeTransactionTabsBoot>
@@ -61,9 +66,9 @@ function CategorizeTransactionAsideRoot({
   );
 }
 
-export const CategorizeTransactionAside = R.compose(
+export const CategorizeTransactionAside = compose(
   withBankingActions,
-  withBanking(({ transactionsToCategorizeIdsSelected }) => ({
-    selectedUncategorizedTransactionId: transactionsToCategorizeIdsSelected,
+  withBanking(({ selectedUncategorizedTransactionId }) => ({
+    selectedUncategorizedTransactionId,
   })),
 )(CategorizeTransactionAsideRoot);

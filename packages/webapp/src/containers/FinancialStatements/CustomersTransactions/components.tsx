@@ -1,10 +1,3 @@
-import React from 'react';
-import intl from 'react-intl-universal';
-import { AppToaster, If, Stack } from '@/components';
-import { Align } from '@/constants';
-import { getColumnWidth } from '@/utils';
-import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
-import { FinancialLoadingBar } from '../FinancialLoadingBar';
 import {
   Classes,
   Intent,
@@ -13,15 +6,22 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
-import {
-  useCustomersTransactionsCsvExport,
-  useCustomersTransactionsXlsxExport,
-} from '@/hooks/query';
+import classNames from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import type {
   TransactionsByCustomersXlsxQuery,
   TransactionsByCustomersCsvQuery,
 } from '@bigcapital/sdk-ts';
-import classNames from 'classnames';
+import { AppToaster, If, Stack } from '@/components';
+import { Align } from '@/constants';
+import {
+  useCustomersTransactionsCsvExport,
+  useCustomersTransactionsXlsxExport,
+} from '@/hooks/query';
+import { getColumnWidth } from '@/utils';
 
 /**
  * Retrieve customers transactions columns.

@@ -1,8 +1,10 @@
-// @ts-nocheck
-import React from 'react';
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { MakeJournalFormValues } from './utils';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   FieldHint,
   FieldRequiredHint,
@@ -12,35 +14,31 @@ import {
   FInputGroup,
   FFormGroup,
 } from '@/components';
-
-import { withSettings } from '@/containers/Settings/withSettings';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import intl from 'react-intl-universal';
+import { compose } from '@/utils';
+
+interface MakeJournalTransactionNoFieldProps
+  extends Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Journal number field of make journal form.
  */
-export const MakeJournalTransactionNoField = R.compose(
-  withDialogActions,
-  withSettings(({ manualJournalsSettings }) => ({
-    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
-  })),
-)(({
-  // #withDialog
+export const MakeJournalTransactionNoField = compose(withDialogActions)(({
   openDialog,
-
-  // #withSettings
-  journalAutoIncrement,
-}) => {
-  const { setFieldValue, values } = useFormikContext();
+}: MakeJournalTransactionNoFieldProps) => {
+  const { setFieldValue, values } = useFormikContext<MakeJournalFormValues>();
+  const { manualJournalsSettings } = useMakeJournalFormContext();
+  const journalAutoIncrement = manualJournalsSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   const handleJournalNumberChange = () => {
     openDialog('journal-number-form');
   };
-  const handleJournalNoBlur = (event) => {
+  const handleJournalNoBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
 
-    if (values.journal_number !== newValue && journalAutoIncrement) {
+    if (values.journalNumber !== newValue && journalAutoIncrement) {
       openDialog('journal-number-form', {
         initialFormValues: {
           onceManualNumber: newValue,
@@ -49,14 +47,14 @@ export const MakeJournalTransactionNoField = R.compose(
       });
     }
     if (!journalAutoIncrement) {
-      setFieldValue('journal_number', newValue);
-      setFieldValue('journal_number_manually', newValue);
+      setFieldValue('journalNumber', newValue);
+      setFieldValue('journalNumberManually', newValue);
     }
   };
 
   return (
     <FFormGroup
-      name={'journal_number'}
+      name={'journalNumber'}
       label={intl.get('journal_no')}
       labelInfo={
         <>
@@ -64,13 +62,12 @@ export const MakeJournalTransactionNoField = R.compose(
           <FieldHint />
         </>
       }
-      fill={true}
       inline={true}
       fastField={true}
     >
       <ControlGroup fill={true}>
         <FInputGroup
-          name={'journal_number'}
+          name={'journalNumber'}
           fill={true}
           asyncControl={true}
           onBlur={handleJournalNoBlur}

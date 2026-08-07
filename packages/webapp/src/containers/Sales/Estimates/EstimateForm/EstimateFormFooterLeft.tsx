@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -11,7 +10,6 @@ export function EstimateFormFooterLeft() {
       <EstimateMsgFormGroup
         name={'note'}
         label={intl.get('estimate_form.label.customer_note')}
-        hintText={'Will be displayed on the invoice'}
       >
         <FEditableText
           name={'note'}
@@ -24,10 +22,10 @@ export function EstimateFormFooterLeft() {
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
         label={intl.get('estimate_form.label.terms_conditions')}
-        name={'terms_conditions'}
+        name={'termsConditions'}
       >
         <FEditableText
-          name={'terms_conditions'}
+          name={'termsConditions'}
           placeholder={intl.get(
             'estimate_form.terms_and_conditions.placeholder',
           )}

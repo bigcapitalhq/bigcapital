@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { CLOSE_SEARCH, OPEN_SEARCH } from '@/store/types';
 import {
   universalSearchResetResourceType,
   universalSearchSetResourceType,
   universalSearchSetSelectedItem,
   universalSearchResetSelectedItem,
 } from '@/store/search/search.actions';
+import { CLOSE_SEARCH, OPEN_SEARCH } from '@/store/types';
 
 export interface WithUniversalSearchActionsProps {
   openGlobalSearch: () => void;

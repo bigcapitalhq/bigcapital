@@ -1,9 +1,8 @@
+import { castArray } from 'lodash';
+import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
 import * as Yup from 'yup';
-import { castArray } from 'lodash';
-
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 

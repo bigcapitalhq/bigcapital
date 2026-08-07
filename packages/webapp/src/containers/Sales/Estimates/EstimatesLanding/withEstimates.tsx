@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getEstimatesTableStateFactory,
   isEstimatesTableStateChangedFactory,
   getEstimatesSelectedRowsFactory,
 } from '@/store/estimate/estimates.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithEstimatesProps {
   estimatesTableState: ReturnType<

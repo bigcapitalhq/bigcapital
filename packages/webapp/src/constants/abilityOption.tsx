@@ -1,4 +1,3 @@
-// @ts-nocheck
 export const AbilitySubject = {
   Item: 'Item',
   InventoryAdjustment: 'InventoryAdjustment',
@@ -24,21 +23,21 @@ export const AbilitySubject = {
   TaxRate: 'TaxRate',
   BankRule: 'BankRule',
   AuditLog: 'AuditLog',
-};
+} as const;
 
 export const ItemAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-};
+} as const;
 
 export const InventoryAdjustmentAction = {
   Create: 'Create',
   Edit: 'Edit',
   View: 'View',
   Delete: 'Delete',
-};
+} as const;
 
 export const SaleEstimateAction = {
   View: 'View',
@@ -46,7 +45,7 @@ export const SaleEstimateAction = {
   Edit: 'Edit',
   Delete: 'Delete',
   NotifyBySms: 'NotifyBySms',
-};
+} as const;
 
 export const SaleInvoiceAction = {
   View: 'View',
@@ -55,7 +54,7 @@ export const SaleInvoiceAction = {
   Delete: 'Delete',
   Writeoff: 'bad-debt',
   NotifyBySms: 'NotifyBySms',
-};
+} as const;
 
 export const SaleReceiptAction = {
   View: 'View',
@@ -63,7 +62,7 @@ export const SaleReceiptAction = {
   Edit: 'Edit',
   Delete: 'Delete',
   NotifyBySms: 'NotifyBySms',
-};
+} as const;
 
 export const PaymentReceiveAction = {
   View: 'View',
@@ -71,7 +70,7 @@ export const PaymentReceiveAction = {
   Edit: 'Edit',
   Delete: 'Delete',
   NotifyBySms: 'NotifyBySms',
-};
+} as const;
 
 export const CreditNoteAction = {
   View: 'View',
@@ -79,7 +78,7 @@ export const CreditNoteAction = {
   Edit: 'Edit',
   Delete: 'Delete',
   Refund: 'Refund',
-};
+} as const;
 
 export const VendorCreditAction = {
   View: 'View',
@@ -87,35 +86,36 @@ export const VendorCreditAction = {
   Edit: 'Edit',
   Delete: 'Delete',
   Refund: 'Refund',
-};
+} as const;
+
 export const BillAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
   NotifyBySms: 'NotifyBySms',
-};
+} as const;
 
 export const PaymentMadeAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-};
+} as const;
 
 export const CustomerAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-};
+} as const;
 
 export const VendorAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-};
+} as const;
 
 export const AccountAction = {
   View: 'View',
@@ -123,7 +123,7 @@ export const AccountAction = {
   Edit: 'Edit',
   Delete: 'Delete',
   TransactionsLocking: 'TransactionsLocking',
-};
+} as const;
 
 export const ManualJournalAction = {
   View: 'View',
@@ -131,27 +131,27 @@ export const ManualJournalAction = {
   Edit: 'Edit',
   Delete: 'Delete',
   TransactionLocking: 'TransactionLocking',
-};
+} as const;
 
 export const ExpenseAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-};
+} as const;
 
 export const CashflowAction = {
   View: 'View',
   Create: 'Create',
   Delete: 'Delete',
-};
+} as const;
 
 export const ProjectAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-};
+} as const;
 
 export const ReportsAction = {
   ALL: 'all',
@@ -173,37 +173,37 @@ export const ReportsAction = {
   READ_INVENTORY_ITEM_DETAILS: 'read-inventory-item-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION: 'read-cashflow-account-transactions',
   READ_SALES_TAX_LIABILITY_SUMMARY: 'read-sales-tax-liability-summary',
-};
+} as const;
 
 export const PreferencesAbility = {
   Mutate: 'Mutate',
-};
+} as const;
 
 export const ExchangeRateAbility = {
   View: 'view',
   Create: 'create',
   Delete: 'delete',
-};
+} as const;
 
 export const SubscriptionBillingAbility = {
   View: 'view',
   Payment: 'payment',
-};
+} as const;
 
 export const TaxRateAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-};
+} as const;
 
 export const BankRuleAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',
   Delete: 'Delete',
-};
+} as const;
 
 export const AuditLogAction = {
   View: 'View',
-};
+} as const;

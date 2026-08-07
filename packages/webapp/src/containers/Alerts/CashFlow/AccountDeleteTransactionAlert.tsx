@@ -1,47 +1,49 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-
-import { useDeleteCashflowTransaction } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { useDeleteCashflowTransaction } from '@/hooks/query';
+import { compose } from '@/utils';
+
+interface AccountDeleteTransactionAlertPayload {
+  referenceId: number;
+}
+
+interface AccountDeleteTransactionAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: AccountDeleteTransactionAlertPayload;
+}
+
+interface CashflowTransactionError {
+  type: string;
+}
 
 /**
  * Account delete transaction alert.
  */
 function AccountDeleteTransactionAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { referenceId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteTransactionMutate, isLoading } =
+}: AccountDeleteTransactionAlertProps): React.ReactElement {
+  const { mutateAsync: deleteTransactionMutate, isPending: isLoading } =
     useDeleteCashflowTransaction();
 
-  // handle cancel delete alert
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // handleConfirm delete transaction.
   const handleConfirmTransactioneDelete = () => {
     deleteTransactionMutate(referenceId)
       .then(() => {
@@ -53,9 +55,9 @@ function AccountDeleteTransactionAlertInner({
       })
       .catch(
         ({
-          response: {
-            data: { errors },
-          },
+          data: { errors },
+        }: {
+          data: { errors: CashflowTransactionError[] };
         }) => {
           if (
             errors.find(
@@ -87,8 +89,8 @@ function AccountDeleteTransactionAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -97,6 +99,7 @@ function AccountDeleteTransactionAlertInner({
       loading={isLoading}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={
             'cash_flow_transaction_once_delete_this_transaction_you_will_able_to_restore_it'

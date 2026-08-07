@@ -1,4 +1,11 @@
 import {
+  fetchContact,
+  fetchContactsAutoComplete,
+  activateContact,
+  inactivateContact,
+  ContactResponse,
+} from '@bigcapital/sdk-ts';
+import {
   useMutation,
   useQuery,
   useQueryClient,
@@ -6,15 +13,8 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { castArray } from 'lodash';
-import {
-  fetchContact,
-  fetchContactsAutoComplete,
-  activateContact,
-  inactivateContact,
-  ContactResponse,
-} from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../../useRequest';
 import { useAuthOrganizationId } from '../../state';
+import { useApiFetcher } from '../../useRequest';
 import { contactsKeys } from './query-keys';
 
 // Common invalidate queries.

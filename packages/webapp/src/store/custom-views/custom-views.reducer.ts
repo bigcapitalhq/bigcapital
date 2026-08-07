@@ -1,10 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
+import type { CustomViewsState, CustomViewsAction } from './custom-views.types';
 import {
   RESOURCE_VIEWS_SET,
   VIEW_ITEMS_SET,
   VIEW_META_SET,
 } from '@/store/types';
-import type { CustomViewsState, CustomViewsAction } from './custom-views.types';
 
 const initialState: CustomViewsState = {
   views: {},

@@ -1,38 +1,39 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster, FormattedMessage as T } from '@/components';
-
-import { useMarkBranchAsPrimary } from '@/hooks/query';
-
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-
+import { useMarkBranchAsPrimary } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface BranchMarkPrimaryAlertPayload {
+  branchId: number | string;
+}
+
+interface BranchMarkPrimaryAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: BranchMarkPrimaryAlertPayload;
+}
 
 /**
  * branch mark primary alert.
  */
 function BranchMarkPrimaryAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { branchId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: markPrimaryBranchMutate, isLoading } =
+}: BranchMarkPrimaryAlertProps): React.ReactElement {
+  const { mutateAsync: markPrimaryBranchMutate, isPending: isLoading } =
     useMarkBranchAsPrimary();
 
-  // Handle cancel mark primary alert.
   const handleCancelMarkPrimaryAlert = () => {
     closeAlert(name);
   };
 
-  // andle cancel mark primary confirm.
   const handleConfirmMarkPrimaryBranch = () => {
     markPrimaryBranchMutate(branchId)
       .then(() => {
@@ -40,17 +41,21 @@ function BranchMarkPrimaryAlertInner({
           message: intl.get('branch.alert.mark_primary_message'),
           intent: Intent.SUCCESS,
         });
-        closeAlert(name);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck silently closed the alert on error without surfacing the failure.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
+      .finally(() => {
         closeAlert(name);
       });
   };
 
   return (
     <Alert
-      // cancelButtonText={<T id={'cancel'} />}
-      // confirmButtonText={<T id={'make_primary'} />}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelMarkPrimaryAlert}

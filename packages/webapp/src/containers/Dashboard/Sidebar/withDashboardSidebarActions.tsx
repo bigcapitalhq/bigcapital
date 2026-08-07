@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 import {
   closeSidebarSubmenu,
   openSidebarSubmenu,

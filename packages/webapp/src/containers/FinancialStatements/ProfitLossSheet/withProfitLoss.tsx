@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import { ApplicationState } from '@/store/reducers';
 import type { MapState } from '@/containers/hoc.types';
 import { getProfitLossFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
+import { ApplicationState } from '@/store/reducers';
 
 export interface WithProfitLossProps {
   profitLossDrawerFilter: ReturnType<typeof getProfitLossFilterDrawer>;

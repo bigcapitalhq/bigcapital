@@ -1,27 +1,28 @@
-// @ts-nocheck
-import React from 'react';
+import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
 import { compose } from '@/utils';
 
-const QuickCretaeItemDrawerContent = React.lazy(() =>
+const QuickCretaeItemDrawerContent = lazy(() =>
   import('./QuickCreateItemDrawerContent').then((m) => ({
     default: m.QuickCreateItemDrawerContent,
   })),
 );
 
-/**
- * Quick create item.
- */
-function QuickCreateItemDrawer({
-  // #ownProps
-  name,
+interface QuickCreateItemDrawerProps {
+  name: string;
+  isOpen: boolean;
+  payload: { name?: string; quickActionEvent?: unknown } & Record<
+    string,
+    unknown
+  >;
+}
 
-  // #withDrawer
+function QuickCreateItemDrawer({
+  name,
   isOpen,
   payload,
-}) {
+}: QuickCreateItemDrawerProps): React.ReactElement {
   return (
     <Drawer
       isOpen={isOpen}

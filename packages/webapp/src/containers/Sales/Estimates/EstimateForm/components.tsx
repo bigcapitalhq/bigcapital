@@ -1,30 +1,38 @@
-// @ts-nocheck
+import { Button } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import React, { useRef } from 'react';
 import intl from 'react-intl-universal';
-import { Button } from '@blueprintjs/core';
-import * as R from 'ramda';
-import { useFormikContext } from 'formik';
-import { ExchangeRateInputGroup } from '@/components';
-import { useCurrentOrganization } from '@/hooks/state';
 import { useEstimateIsForeignCustomer, useEstimateSubtotal } from './utils';
-import { transactionNumber } from '@/utils';
-import { useUpdateEffect } from '@/hooks';
-import { withSettings } from '@/containers/Settings/withSettings';
+import type { EstimateFormValues } from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { ExchangeRateInputGroup } from '@/components';
+import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   useSyncExRateToForm,
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { useUpdateEffect } from '@/hooks';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { compose } from '@/utils';
+import { transactionNumber } from '@/utils';
+import { useEstimateFormContext } from './EstimateFormProvider';
+
+type EstimateExchangeRateInputFieldRootProps = Omit<
+  React.ComponentProps<typeof ExchangeRateInputGroup>,
+  'name' | 'fromCurrency' | 'toCurrency'
+>;
 
 /**
  * Estimate exchange rate input field.
  * @returns {JSX.Element}
  */
-function EstimateExchangeRateInputFieldRoot({ ...props }) {
-  const currentOrganization = useCurrentOrganization();
-  const { values } = useFormikContext();
+function EstimateExchangeRateInputFieldRoot({
+  ...props
+}: EstimateExchangeRateInputFieldRootProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<EstimateFormValues>();
   const isForeignCustomer = useEstimateIsForeignCustomer();
 
   // Can't continue if the customer is not foreign.
@@ -33,9 +41,9 @@ function EstimateExchangeRateInputFieldRoot({ ...props }) {
   }
   return (
     <ExchangeRateInputGroup
-      name={'exchange_rate'}
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
+      name={'exchangeRate'}
+      fromCurrency={values.currencyCode ?? ''}
+      toCurrency={baseCurrency ?? ''}
       formGroupProps={{ label: ' ', inline: true }}
       withPopoverRecalcConfirm
       {...props}
@@ -48,61 +56,75 @@ function EstimateExchangeRateInputFieldRoot({ ...props }) {
  * with item entries price re-calc once exchange rate change.
  * @returns {JSX.Element}
  */
-export const EstimateExchangeRateInputField = R.compose(
+export const EstimateExchangeRateInputField = compose(
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 )(EstimateExchangeRateInputFieldRoot);
+
+type EstimateProjectSelectButtonProps = { label?: string };
 
 /**
  * Estimate project select.
  * @returns {JSX.Element}
  */
-export function EstimateProjectSelectButton({ label }) {
+export function EstimateProjectSelectButton({
+  label,
+}: EstimateProjectSelectButtonProps) {
   return <Button text={label ?? intl.get('select_project')} />;
 }
+
+type EstimateIncrementSyncSettingsToFormProps = Record<string, never>;
 
 /**
  * Syncs the estimate auto-increment settings to estimate form.
  * @returns {React.ReactNode}
  */
-export const EstimateIncrementSyncSettingsToForm = R.compose(
-  withSettings(({ estimatesSettings }) => ({
-    estimateNextNumber: estimatesSettings?.nextNumber,
-    estimateNumberPrefix: estimatesSettings?.numberPrefix,
-    estimateAutoIncrement: estimatesSettings?.autoIncrement,
-  })),
-)(({ estimateNextNumber, estimateNumberPrefix, estimateAutoIncrement }) => {
-  const { setFieldValue } = useFormikContext();
+export const EstimateIncrementSyncSettingsToForm =
+  ({}: EstimateIncrementSyncSettingsToFormProps) => {
+    const { estimatesSettings } = useEstimateFormContext();
+    const estimateNextNumber = estimatesSettings?.nextNumber as
+      | number
+      | undefined;
+    const estimateNumberPrefix = estimatesSettings?.numberPrefix as
+      | string
+      | undefined;
+    const estimateAutoIncrement = estimatesSettings?.autoIncrement as
+      | boolean
+      | undefined;
+    const { setFieldValue } = useFormikContext<EstimateFormValues>();
 
-  useUpdateEffect(() => {
-    // Do not update if the estimate auto-increment mode is disabled.
-    if (!estimateAutoIncrement) return null;
+    useUpdateEffect(() => {
+      // Do not update if the estimate auto-increment mode is disabled.
+      if (!estimateAutoIncrement) return;
 
-    setFieldValue(
-      'estimate_number',
-      transactionNumber(estimateNumberPrefix, estimateNextNumber),
-    );
-  }, [
-    setFieldValue,
-    estimateNumberPrefix,
-    estimateNextNumber,
-    estimateAutoIncrement,
-  ]);
+      setFieldValue(
+        'estimateNumber',
+        transactionNumber(estimateNumberPrefix, estimateNextNumber),
+      );
+    }, [
+      setFieldValue,
+      estimateNumberPrefix,
+      estimateNextNumber,
+      estimateAutoIncrement,
+    ]);
 
-  return null;
-});
+    return null;
+  };
+
+type EstimateSyncAutoExRateToFormProps = {
+  openDialog: WithDialogActionsProps['openDialog'];
+};
 
 /**
  * Syncs the auto exchange rate to the estimate form and shows up popup to user
  * as an indication the entries rates have been changed.
  * @returns {React.ReactNode}
  */
-export const EstimateSyncAutoExRateToForm = R.compose(withDialogActions)(({
-  // #withDialogActions
+export const EstimateSyncAutoExRateToForm = compose(withDialogActions)(({
   openDialog,
-}) => {
+}: EstimateSyncAutoExRateToFormProps) => {
   const subtotal = useEstimateSubtotal();
-  const timeout = useRef();
+  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useSyncExRateToForm({
     onSynced: () => {

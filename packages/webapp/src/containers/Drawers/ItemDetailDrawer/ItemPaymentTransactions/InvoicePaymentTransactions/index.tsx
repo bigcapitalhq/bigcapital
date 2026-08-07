@@ -1,40 +1,36 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { DataTable, TableSkeletonRows } from '@/components';
-
-import { useItemAssociatedInvoiceTransactions } from '@/hooks/query';
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
 import {
   useInvoicePaymentTransactionsColumns,
   ActionsMenu,
+  type ItemInvoiceTransaction,
 } from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { DataTable, TableSkeletonRows } from '@/components';
 import { TableStyle } from '@/constants';
-
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { useItemAssociatedInvoiceTransactions } from '@/hooks/query';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface InvoicePaymentTransactionsInnerProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'> {}
 
 /**
  * Invoice payment transactions.
  */
 function InvoicePaymentTransactions({
-  // #withAlertActions
   openAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
+}: InvoicePaymentTransactionsInnerProps) {
   const history = useHistory();
-
   const columns = useInvoicePaymentTransactionsColumns();
-
   const { itemId } = useItemDetailDrawerContext();
 
-  // Handle fetch invoice associated transactions.
   const {
     isLoading: isInvoiceTransactionsLoading,
     isFetching: isInvoiceTransactionFetching,
@@ -43,22 +39,24 @@ function InvoicePaymentTransactions({
     enabled: !!itemId,
   });
 
-  // Handles delete payment transactions.
-  const handleDeletePaymentTransactons = ({ invoice_id }) => {
+  const handleDeletePaymentTransactons = ({
+    invoiceId,
+  }: ItemInvoiceTransaction) => {
     openAlert('invoice-delete', {
-      invoiceId: invoice_id,
+      invoiceId,
     });
   };
 
-  // Handles edit payment transactions.
-  const handleEditPaymentTransactions = ({ invoice_id }) => {
-    history.push(`/invoices/${invoice_id}/edit`);
+  const handleEditPaymentTransactions = ({
+    invoiceId,
+  }: ItemInvoiceTransaction) => {
+    history.push(`/invoices/${invoiceId}/edit`);
     closeDrawer(DRAWERS.ITEM_DETAILS);
   };
   return (
     <DataTable
       columns={columns}
-      data={paymentTransactions}
+      data={paymentTransactions ?? []}
       loading={isInvoiceTransactionsLoading}
       headerLoading={isInvoiceTransactionsLoading}
       progressBarLoading={isInvoiceTransactionFetching}

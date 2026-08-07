@@ -1,18 +1,23 @@
-// @ts-nocheck
+import { Spinner } from '@blueprintjs/core';
 import { Suspense } from 'react';
 import styled from 'styled-components';
-import * as R from 'ramda';
-import { Spinner } from '@blueprintjs/core';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
+import type { WithBankingProps } from '@/containers/CashFlow/withBanking';
 import { withBanking } from '@/containers/CashFlow/withBanking';
+import { compose } from '@/utils';
+
+interface CategorizeTransactionContentRootProps
+  extends Pick<WithBankingProps, 'transactionsToCategorizeIdsSelected'> {}
 
 function CategorizeTransactionContentRoot({
   transactionsToCategorizeIdsSelected,
-}) {
+}: CategorizeTransactionContentRootProps) {
   return (
     <CategorizeTransactionBoot
-      uncategorizedTransactionsIds={transactionsToCategorizeIdsSelected}
+      uncategorizedTransactionsIds={transactionsToCategorizeIdsSelected.filter(
+        (id): id is number => typeof id === 'number',
+      )}
     >
       <CategorizeTransactionDrawerBody>
         <Suspense fallback={<Spinner size={40} />}>
@@ -23,7 +28,7 @@ function CategorizeTransactionContentRoot({
   );
 }
 
-export const CategorizeTransactionContent = R.compose(
+export const CategorizeTransactionContent = compose(
   withBanking(({ transactionsToCategorizeIdsSelected }) => ({
     transactionsToCategorizeIdsSelected,
   })),

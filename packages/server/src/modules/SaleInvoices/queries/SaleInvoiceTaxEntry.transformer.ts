@@ -11,6 +11,7 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
+      'id',
       'name',
       'taxRateCode',
       'taxRate',

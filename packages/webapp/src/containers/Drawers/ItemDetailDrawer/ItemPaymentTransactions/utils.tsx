@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
 import {
   Button,
   MenuItem,
@@ -9,23 +6,31 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import React from 'react';
+import styled from 'styled-components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
+import { FormattedMessage as T } from '@/components';
 import { useGetItemPaymentTransactionsMenu } from '@/constants/itemPaymentTranactionsOption';
 
-export const ItemManuTransaction = ({ onChange }) => {
-  const { value, setValue } = useItemDetailDrawerContext();
+interface ItemManuTransactionProps {
+  onChange?: (value: string) => void;
+}
+
+export const ItemManuTransaction = ({ onChange }: ItemManuTransactionProps) => {
+  const { value } = useItemDetailDrawerContext();
   const itemTransactionMenu = useGetItemPaymentTransactionsMenu();
 
   if (itemTransactionMenu.length === 0) {
     return null;
   }
-  const handleClickItem = (item) => {
+  const handleClickItem = (item: string) => {
     onChange && onChange(item);
   };
-  const content = itemTransactionMenu.map(({ name, label }) => (
-    <MenuItem onClick={() => handleClickItem(name)} text={label} />
-  ));
+  const content = itemTransactionMenu.map(
+    ({ name, label }: { name: string; label: React.ReactNode }) => (
+      <MenuItem onClick={() => handleClickItem(name)} text={label} />
+    ),
+  );
 
   return (
     <Popover

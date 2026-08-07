@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -9,21 +8,22 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import React from 'react';
+import { TrialBalanceSheetExportMenu } from './components';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { withTrialBalance, WithTrialBalanceProps } from './withTrialBalance';
 import {
   withTrialBalanceActions,
   WithTrialBalanceActionsProps,
 } from './withTrialBalanceActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { compose, saveInvoke } from '@/utils';
-import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
-import { TrialBalanceSheetExportMenu } from './components';
-import { DialogsName } from '@/constants/dialogs';
 
 interface TrialBalanceActionsBarOwnProps {
   numberFormat: Record<string, unknown>;

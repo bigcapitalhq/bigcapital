@@ -1,20 +1,29 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-
-import { DataTable } from '@/components';
-import { TABLES } from '@/constants/tables';
-import { useMemorizedColumnsWidths } from '@/hooks';
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
 import { useInventoryAdjustmentsContext } from './InventoryAdjustmentsProvider';
-
-import { withInventoryAdjustments } from './withInventoryAdjustments';
 import { withInventoryAdjustmentActions } from './withInventoryAdjustmentActions';
+import { withInventoryAdjustments } from './withInventoryAdjustments';
+import type { WithInventoryAdjustmentActionsProps } from './withInventoryAdjustmentActions';
+import type { WithInventoryAdjustmentsProps } from './withInventoryAdjustments';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { InventoryAdjustment } from '@bigcapital/sdk-ts';
+import { DataTable } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface InventoryAdjustmentDataTableProps
+  extends Pick<WithInventoryAdjustmentsProps, 'inventoryAdjustmentTableState'>,
+    WithInventoryAdjustmentActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {
+  tableProps?: Record<string, unknown>;
+}
 
 /**
  * Inventory adjustments datatable.
@@ -34,7 +43,7 @@ function InventoryAdjustmentDataTable({
 
   // #ownProps
   tableProps,
-}) {
+}: InventoryAdjustmentDataTableProps) {
   const {
     isAdjustmentsLoading,
     isAdjustmentsFetching,
@@ -44,16 +53,16 @@ function InventoryAdjustmentDataTable({
   } = useInventoryAdjustmentsContext();
 
   // Handle delete inventory adjustment transaction.
-  const handleDeleteAdjustment = ({ id }) => {
+  const handleDeleteAdjustment = ({ id }: InventoryAdjustment) => {
     openAlert('inventory-adjustment-delete', { inventoryId: id });
   };
 
   // Handle the inventory adjustment publish action.
-  const handlePublishInventoryAdjustment = ({ id }) => {
+  const handlePublishInventoryAdjustment = ({ id }: InventoryAdjustment) => {
     openAlert('inventory-adjustment-publish', { inventoryId: id });
   };
   // Handle view detail inventory adjustment.
-  const handleViewDetailInventoryAdjustment = ({ id }) => {
+  const handleViewDetailInventoryAdjustment = ({ id }: InventoryAdjustment) => {
     openDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS, { inventoryId: id });
   };
 
@@ -65,7 +74,15 @@ function InventoryAdjustmentDataTable({
 
   // Handle the table fetch data once states changing.
   const handleDataTableFetchData = useCallback(
-    ({ pageSize, pageIndex, sortBy }) => {
+    ({
+      pageSize,
+      pageIndex,
+      sortBy,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      sortBy: Array<{ id: string; desc: boolean }>;
+    }) => {
       setInventoryAdjustmentTableState({
         pageSize,
         pageIndex,
@@ -75,7 +92,10 @@ function InventoryAdjustmentDataTable({
     [setInventoryAdjustmentTableState],
   );
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (
+    cell: { row: { original: InventoryAdjustment } },
+    _event: React.MouseEvent,
+  ) => {
     openDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS, {
       inventoryId: cell.row.original.id,
     });

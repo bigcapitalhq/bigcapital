@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import styled from 'styled-components';
 import {
   Button,
   Popover,
@@ -12,6 +8,11 @@ import {
   Intent,
   Tag,
 } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { useBillDrawerContext } from './BillDrawerProvider';
+import type { Bill } from '@bigcapital/sdk-ts';
 import {
   TextOverviewTooltipCell,
   FormattedMessage as T,
@@ -19,15 +20,26 @@ import {
   Icon,
 } from '@/components';
 import { getColumnWidth } from '@/utils';
-import { useBillDrawerContext } from './BillDrawerProvider';
+
+interface BillDetailsStatusProps {
+  bill: Bill;
+}
+
+interface BillMenuItemPayload {
+  onConvert: () => void;
+  onAllocateLandedCost: () => void;
+}
+
+interface BillMenuItemProps {
+  payload: BillMenuItemPayload;
+}
 
 /**
  * Retrieve bill readonly details entries table columns.
  */
 export const useBillReadonlyEntriesTableColumns = () => {
-  const {
-    bill: { entries },
-  } = useBillDrawerContext();
+  const { bill } = useBillDrawerContext();
+  const entries = bill?.entries ?? [];
 
   return React.useMemo(
     () => [
@@ -50,8 +62,8 @@ export const useBillReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('quantity'),
-        accessor: 'quantity_formatted',
-        width: getColumnWidth(entries, 'quantity_formatted', {
+        accessor: 'quantityFormatted',
+        width: getColumnWidth(entries, 'quantityFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -61,7 +73,7 @@ export const useBillReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('rate'),
-        accessor: 'rate_formatted',
+        accessor: 'rate',
         width: getColumnWidth(entries, 'rate', {
           minWidth: 60,
           magicSpacing: 5,
@@ -73,19 +85,19 @@ export const useBillReadonlyEntriesTableColumns = () => {
       {
         id: 'discount',
         Header: 'Discount',
-        accessor: 'discount_formatted',
+        accessor: 'discountFormatted',
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'discount_formatted', {
+        width: getColumnWidth(entries, 'discountFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
       },
       {
         Header: intl.get('amount'),
-        accessor: 'total_formatted',
-        width: getColumnWidth(entries, 'total_formatted', {
+        accessor: 'totalFormatted',
+        width: getColumnWidth(entries, 'totalFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -94,7 +106,7 @@ export const useBillReadonlyEntriesTableColumns = () => {
         textOverview: true,
       },
     ],
-    [],
+    [entries],
   );
 };
 
@@ -102,18 +114,18 @@ export const useBillReadonlyEntriesTableColumns = () => {
  * Bill details status.
  * @returns {React.JSX}
  */
-export function BillDetailsStatus({ bill }) {
+export function BillDetailsStatus({ bill }: BillDetailsStatusProps) {
   return (
     <Choose>
-      <Choose.When condition={bill.is_fully_paid && bill.is_open}>
+      <Choose.When condition={!!bill.isFullyPaid && !!bill.isOpen}>
         <StatusTag intent={Intent.SUCCESS} round={true}>
           <T id={'paid'} />
         </StatusTag>
       </Choose.When>
 
-      <Choose.When condition={bill.is_open}>
+      <Choose.When condition={!!bill.isOpen}>
         <Choose>
-          <Choose.When condition={bill.is_overdue}>
+          <Choose.When condition={!!bill.isOverdue}>
             <StatusTag intent={Intent.WARNING} round={true}>
               <T id={'overdue'} />
             </StatusTag>
@@ -134,9 +146,7 @@ export function BillDetailsStatus({ bill }) {
   );
 }
 
-export const BillMenuItem = ({
-  payload: { onConvert, onAllocateLandedCost },
-}) => {
+export const BillMenuItem = ({ payload }: BillMenuItemProps) => {
   return (
     <Popover
       minimal={true}
@@ -148,11 +158,11 @@ export const BillMenuItem = ({
       content={
         <Menu>
           <MenuItem
-            onClick={onAllocateLandedCost}
+            onClick={payload.onAllocateLandedCost}
             text={<T id={'bill.allocate_landed_coast'} />}
           />
           <MenuItem
-            onClick={onConvert}
+            onClick={payload.onConvert}
             text={<T id={'bill.convert_to_credit_note'} />}
           />
         </Menu>

@@ -1,13 +1,10 @@
 import React from 'react';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-import { UnrealizedGainOrLossProvider } from './UnrealizedGainOrLossProvider';
 import { UnrealizedGainOrLossLoadingBar } from './components';
-
-import { UnrealizedGainOrLossHeader } from './UnrealizedGainOrLossHeader';
 import { UnrealizedGainOrLossActionsBar } from './UnrealizedGainOrLossActionsBar';
-
+import { UnrealizedGainOrLossHeader } from './UnrealizedGainOrLossHeader';
+import { UnrealizedGainOrLossProvider } from './UnrealizedGainOrLossProvider';
 import { WithUnrealizedGainOrLossActionsProps } from './withUnrealizedGainOrLossActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
 type UnrealizedGainOrLossProps = {
   organizationName: string;

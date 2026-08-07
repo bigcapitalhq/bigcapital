@@ -1,5 +1,5 @@
-import * as R from 'ramda';
 import { isEmpty } from 'lodash';
+import * as R from 'ramda';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 

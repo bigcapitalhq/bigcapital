@@ -1,11 +1,7 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import React, { lazy } from 'react';
 import { T, Dialog, DialogSuspense } from '@/components';
-
 import withDialogRedux from '@/components/DialogReduxConnect';
-
 import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
@@ -16,10 +12,20 @@ const PdfPreviewDialogContent = lazy(() =>
   })),
 );
 
+interface InvoicePdfPreviewDialogProps {
+  dialogName: string;
+  payload: { invoiceId: number | null };
+  isOpen: boolean | undefined;
+}
+
 /**
  * Invoice PDF preview dialog.
  */
-function InvoicePdfPreviewDialog({ dialogName, payload, isOpen }) {
+function InvoicePdfPreviewDialog({
+  dialogName,
+  payload,
+  isOpen,
+}: InvoicePdfPreviewDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -32,6 +38,7 @@ function InvoicePdfPreviewDialog({ dialogName, payload, isOpen }) {
     >
       <DialogSuspense>
         <PdfPreviewDialogContent
+          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           dialogName={dialogName}
           subscriptionForm={payload}
         />

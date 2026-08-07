@@ -1,4 +1,9 @@
 import {
+  fetchExcludedBankTransactions,
+  fetchRecognizedTransaction,
+  fetchRecognizedTransactions,
+} from '@bigcapital/sdk-ts';
+import {
   useInfiniteQuery,
   useQuery,
   UseQueryOptions,
@@ -7,26 +12,23 @@ import {
   InfiniteData,
   QueryKey,
 } from '@tanstack/react-query';
-import {
-  fetchExcludedBankTransactions,
-  fetchRecognizedTransaction,
-  fetchRecognizedTransactions,
-} from '@bigcapital/sdk-ts';
-import type {
-  BankTransactionsListPage,
-  ExcludedBankTransactionsListPage,
-} from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../../useRequest';
-import { bankingKeys } from '../query-keys';
 import {
   getNextPageFromPagination,
   getPrevPageFromPagination,
 } from '../../utils/infinite-pagination';
+import { bankingKeys } from '../query-keys';
+import type {
+  BankTransactionsListPage,
+  ExcludedBankTransactionsListPage,
+  GetExcludedBankTransactionsQuery,
+  RecognizedTransactionResponse,
+} from '@bigcapital/sdk-ts';
 
 export function useGetRecognizedBankTransaction(
   uncategorizedTransactionId: number,
-  options?: UseQueryOptions<unknown, Error>,
-): UseQueryResult<unknown, Error> {
+  options?: UseQueryOptions<RecognizedTransactionResponse, Error>,
+): UseQueryResult<RecognizedTransactionResponse, Error> {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
@@ -54,8 +56,7 @@ export function useRecognizedBankTransactionsInfinity(
     | 'getPreviousPageParam'
   >,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useInfiniteQuery<
     BankTransactionsListPage,
     Error,
@@ -74,7 +75,7 @@ export function useRecognizedBankTransactionsInfinity(
 }
 
 export function useExcludedBankTransactionsInfinity(
-  query: Record<string, unknown>,
+  query: GetExcludedBankTransactionsQuery,
   infinityProps?: Omit<
     UseInfiniteQueryOptions<
       ExcludedBankTransactionsListPage,
@@ -90,8 +91,7 @@ export function useExcludedBankTransactionsInfinity(
     | 'getPreviousPageParam'
   >,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useInfiniteQuery<
     ExcludedBankTransactionsListPage,
     Error,

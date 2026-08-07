@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React from 'react';
-import { isNull } from 'lodash';
 import { useFormikContext } from 'formik';
+import { isNull } from 'lodash';
+import React from 'react';
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
 
 export const useSetProjectToForm = () => {

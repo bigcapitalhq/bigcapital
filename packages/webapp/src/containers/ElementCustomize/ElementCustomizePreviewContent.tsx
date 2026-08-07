@@ -1,5 +1,5 @@
-import { Box, Stack } from '@/components';
 import { useElementCustomizeContext } from './ElementCustomizeProvider';
+import { Box, Stack } from '@/components';
 
 export function ElementCustomizePreviewContent() {
   const { PaperTemplate } = useElementCustomizeContext();

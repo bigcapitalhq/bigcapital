@@ -1,11 +1,8 @@
-// @ts-nocheck
 import React from 'react';
-
-import { Card } from '@/components';
-
 import { AccountDrawerActionBar } from './AccountDrawerActionBar';
 import { AccountDrawerHeader } from './AccountDrawerHeader';
 import { AccountDrawerTable } from './AccountDrawerTable';
+import { Card } from '@/components';
 
 /**
  * Account view details.

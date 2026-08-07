@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useFormikContext } from 'formik';
-import { FFormGroup } from '@/components';
 import { CompanyLogoUpload } from './CompanyLogoUpload';
+import { FFormGroup } from '@/components';
 
 export function BrandingCompanyLogoUploadField() {
   const { setFieldValue, values } = useFormikContext();

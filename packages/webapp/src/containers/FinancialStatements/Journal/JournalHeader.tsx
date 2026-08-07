@@ -1,20 +1,16 @@
-import React from 'react';
-import * as Yup from 'yup';
-import styled from 'styled-components';
-import moment from 'moment';
-import { Formik, Form, FormikHelpers } from 'formik';
 import { Tab, Tabs, Button, Intent } from '@blueprintjs/core';
-
-import { FormattedMessage as T } from '@/components';
-
+import { Formik, Form, FormikHelpers } from 'formik';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
+import * as Yup from 'yup';
 import { JournalSheetHeaderGeneralPanel } from './JournalSheetHeaderGeneral';
-import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
-
 import { withJournal } from './withJournal';
-import type { WithJournalProps } from './withJournal';
 import { withJournalActions } from './withJournalActions';
+import type { WithJournalProps } from './withJournal';
 import type { WithJournalActionsProps } from './withJournalActions';
-
+import { FormattedMessage as T } from '@/components';
+import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { compose } from '@/utils';
 
 interface JournalHeaderFormValues {

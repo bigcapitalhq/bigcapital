@@ -1,6 +1,4 @@
 // @ts-nocheck
-import React, { useState, useMemo, useCallback } from 'react';
-import intl from 'react-intl-universal';
 import {
   Button,
   Intent,
@@ -14,15 +12,17 @@ import {
 } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
 import styled from '@xstyled/emotion';
-import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
-import { useSetDefaultWorkspace } from '@/ee/workspaces/hooks/query/workspaces';
-import { useAuthOrganizationId } from '@/hooks/state';
-import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
-import { compose } from '@/utils';
+import React, { useState, useMemo, useCallback } from 'react';
+import intl from 'react-intl-universal';
 import { OrganizationsListWorkspaceCell } from './OrganizationsListWorkspaceCell';
-import { WorkspaceSwitchingOverlay } from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { WorkspaceSwitchingOverlay } from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
+import { useSetDefaultWorkspace } from '@/ee/workspaces/hooks/query';
+import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
+import { useAuthOrganizationId } from '@/hooks/state';
+import { compose } from '@/utils';
 
 /**
  * Organizations list table component.

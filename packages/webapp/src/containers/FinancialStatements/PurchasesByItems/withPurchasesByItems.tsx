@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import { getPurchasesByItemsFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithPurchasesByItemsProps {
   purchasesByItemsDrawerFilter: ReturnType<

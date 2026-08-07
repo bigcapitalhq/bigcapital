@@ -1,8 +1,6 @@
 import React from 'react';
-
-import { If } from '@/components';
-
 import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { If } from '@/components';
 
 export function UnrealizedGainOrLossLoadingBar() {
   return (

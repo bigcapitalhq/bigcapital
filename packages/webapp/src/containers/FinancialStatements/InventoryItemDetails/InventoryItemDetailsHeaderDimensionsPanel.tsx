@@ -1,18 +1,18 @@
+import { FormGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormGroup, Classes } from '@blueprintjs/core';
+import {
+  InventoryItemDetailsHeaderDimensionsProvider,
+  useInventoryItemDetailsHeaderDimensionsPanelContext,
+} from './InventoryItemDetailsHeaderDimensionsPanelProvider';
 import {
   BranchMultiSelect,
   WarehouseMultiSelect,
   Row,
   Col,
 } from '@/components';
-import {
-  InventoryItemDetailsHeaderDimensionsProvider,
-  useInventoryItemDetailsHeaderDimensionsPanelContext,
-} from './InventoryItemDetailsHeaderDimensionsPanelProvider';
-import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Inventory Item deatil header dismension panel.

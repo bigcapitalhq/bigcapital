@@ -1,8 +1,6 @@
-import React, { useMemo, useCallback } from 'react';
 import moment from 'moment';
+import React, { useMemo, useCallback } from 'react';
 import intl from 'react-intl-universal';
-
-import { FormattedMessage as T } from '@/components';
 import {
   FinancialSheetRoot,
   FinancialSheetFooterCurrentTime,
@@ -14,6 +12,7 @@ import {
   FinancialSheetType,
   FinancialSheetTitle,
 } from './StyledFinancialSheet';
+import { FormattedMessage as T } from '@/components';
 
 interface FinancialSheetProps {
   companyName?: string;

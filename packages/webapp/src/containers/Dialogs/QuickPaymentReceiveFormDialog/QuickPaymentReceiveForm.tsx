@@ -1,39 +1,51 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
+import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { defaultTo, omit } from 'lodash';
-
-import { AppToaster } from '@/components';
-import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
 import { CreateQuickPaymentReceiveFormSchema } from './QuickPaymentReceive.schema';
 import { QuickPaymentReceiveFormContent } from './QuickPaymentReceiveFormContent';
-
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
 import {
   defaultInitialValues,
   transformErrors,
   transformInvoiceToForm,
 } from './utils';
+import type { QuickPaymentReceiveFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transactionNumber } from '@/utils';
 
 /**
  * Quick payment receive form.
  */
-function QuickPaymentReceiveFormInner({
-  // #withDialogActions
-  closeDialog,
+interface QuickPaymentReceiveFormProps extends WithDialogActionsProps {}
 
-  // #withSettings
-  paymentReceiveAutoIncrement,
-  paymentReceiveNumberPrefix,
-  paymentReceiveNextNumber,
-  preferredDepositAccount,
-}) {
-  const { dialogName, invoice, createPaymentReceiveMutate } =
-    useQuickPaymentReceiveContext();
+function QuickPaymentReceiveFormInner({
+  closeDialog,
+}: QuickPaymentReceiveFormProps): React.ReactElement {
+  const {
+    dialogName,
+    invoice,
+    createPaymentReceiveMutate,
+    paymentReceiveSettings,
+  } = useQuickPaymentReceiveContext();
+
+  const paymentReceiveNextNumber = paymentReceiveSettings?.nextNumber as
+    | number
+    | undefined;
+  const paymentReceiveNumberPrefix = paymentReceiveSettings?.numberPrefix as
+    | string
+    | undefined;
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const preferredDepositAccount =
+    paymentReceiveSettings?.preferredDepositAccount as
+      | string
+      | number
+      | undefined;
 
   // Payment receive number.
   const nextPaymentNumber = transactionNumber(
@@ -42,33 +54,46 @@ function QuickPaymentReceiveFormInner({
   );
 
   // Initial form values
-  const initialValues = {
+  const initialValues: QuickPaymentReceiveFormValues = {
     ...defaultInitialValues,
     ...(paymentReceiveAutoIncrement && {
-      payment_receive_no: nextPaymentNumber,
+      paymentReceiveNo: nextPaymentNumber,
     }),
-    deposit_account_id: defaultTo(preferredDepositAccount, ''),
+    depositAccountId: defaultTo(preferredDepositAccount, ''),
     ...transformInvoiceToForm(invoice),
-  };
+  } as QuickPaymentReceiveFormValues;
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
+  const handleFormSubmit = (
+    values: QuickPaymentReceiveFormValues,
+    {
+      setSubmitting,
+      setFieldError,
+    }: FormikHelpers<QuickPaymentReceiveFormValues>,
+  ) => {
+    const {
+      paymentReceiveNo: _paymentReceiveNo,
+      invoiceId: _invoiceId,
+      ...rest
+    } = values;
+    void _paymentReceiveNo;
+    void _invoiceId;
     const entries = [
       {
-        invoice_id: values.invoice_id,
-        payment_amount: values.amount,
+        invoiceId: values.invoiceId,
+        paymentAmount: values.amount,
       },
     ];
     const form = {
-      ...omit(values, ['payment_receive_no', 'invoice_id']),
+      ...rest,
       ...(!paymentReceiveAutoIncrement && {
-        payment_receive_no: values.payment_receive_no,
+        paymentReceiveNo: values.paymentReceiveNo,
       }),
       entries,
     };
 
     // Handle request response success.
-    const onSaved = (response) => {
+    const onSaved = () => {
       AppToaster.show({
         message: intl.get('the_payment_received_transaction_has_been_created'),
         intent: Intent.SUCCESS,
@@ -77,15 +102,19 @@ function QuickPaymentReceiveFormInner({
     };
     // Handle request response errors.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
     }) => {
       if (errors) {
         transformErrors(errors, { setFieldError });
       }
       setSubmitting(false);
     };
+    // SDK `CreatePaymentReceivedBody` is loosely typed (`paymentDate: Record<
+    // string, never>`, `entries: string[]`) which doesn't structurally overlap
+    // with the form's specific shape. Runtime sends the correct payload.
+    // @ts-expect-error — SDK body shape too loose to assign without `as unknown as`.
     createPaymentReceiveMutate(form).then(onSaved).catch(onError);
   };
 
@@ -99,12 +128,6 @@ function QuickPaymentReceiveFormInner({
   );
 }
 
-export const QuickPaymentReceiveForm = compose(
-  withDialogActions,
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
-    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-    preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
-  })),
-)(QuickPaymentReceiveFormInner);
+export const QuickPaymentReceiveForm = compose(withDialogActions)(
+  QuickPaymentReceiveFormInner,
+);

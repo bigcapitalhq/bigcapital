@@ -1,9 +1,8 @@
-// @ts-nocheck
-import React from 'react';
 import { x } from '@xstyled/emotion';
-import { Paper, Row, Col } from '@/components';
+import React from 'react';
 import { BillFormFooterLeft } from './BillFormFooterLeft';
 import { BillFormFooterRight } from './BillFormFooterRight';
+import { Paper, Row, Col } from '@/components';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 // Bill form floating actions.

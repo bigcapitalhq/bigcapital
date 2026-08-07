@@ -1,25 +1,25 @@
+import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import { Formik, Form } from 'formik';
+import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
-import { FormattedMessage as T } from '@/components';
-import { Formik, Form } from 'formik';
-import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
-import { ARAgingSummaryHeaderGeneral } from './ARAgingSummaryHeaderGeneral';
 import { ARAgingSummaryHeaderDimensions } from './ARAgingSummaryHeaderDimensions';
+import { ARAgingSummaryHeaderGeneral } from './ARAgingSummaryHeaderGeneral';
+import {
+  getARAgingSummaryQuerySchema,
+  getDefaultARAgingSummaryQuery,
+} from './common';
 import { withARAgingSummary } from './withARAgingSummary';
 import {
   withARAgingSummaryActions,
   WithARAgingSummaryActionsProps,
 } from './withARAgingSummaryActions';
-import { compose, transformToForm } from '@/utils';
-import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
-import {
-  getARAgingSummaryQuerySchema,
-  getDefaultARAgingSummaryQuery,
-} from './common';
 import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
+import { Features } from '@/constants';
+import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
+import { useFeatureCan } from '@/hooks/state';
+import { compose, transformToForm } from '@/utils';
 
 type ARAgingSummaryFormValues = ReturnType<
   typeof getDefaultARAgingSummaryQuery

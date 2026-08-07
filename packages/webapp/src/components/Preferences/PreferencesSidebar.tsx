@@ -1,10 +1,10 @@
 // @ts-nocheck
-import React from 'react';
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import PreferencesSidebarContainer from './PreferencesSidebarContainer';
 import { FormattedMessage as T } from '@/components';
 import { PreferencesMenu } from '@/constants/preferencesMenu';
-import PreferencesSidebarContainer from './PreferencesSidebarContainer';
 
 import '@/style/pages/Preferences/Sidebar.scss';
 

@@ -1,13 +1,14 @@
-// @ts-nocheck
-import React, { useContext } from 'react';
 import clsx from 'classnames';
-import TableContext from './TableContext';
+import React, { useContext } from 'react';
 import { Skeleton } from '../Skeleton';
+import TableContext from './TableContext';
+import type { ColumnInstance } from 'react-table';
 
-/**
- * Table header cell.
- */
-function TableHeaderCell({ column }) {
+interface TableHeaderCellProps {
+  column: ColumnInstance<any>;
+}
+
+function TableHeaderCell({ column }: TableHeaderCellProps) {
   const { skeletonWidthMax = 100, skeletonWidthMin = 40 } = column;
 
   return (
@@ -27,10 +28,7 @@ function TableHeaderCell({ column }) {
   );
 }
 
-/**
- * Table skeleton rows.
- */
-export function TableSkeletonRows({}) {
+export function TableSkeletonRows() {
   const {
     table: { headerGroups },
   } = useContext(TableContext);

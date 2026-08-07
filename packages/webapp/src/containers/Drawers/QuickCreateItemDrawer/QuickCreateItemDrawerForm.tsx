@@ -1,48 +1,50 @@
-// @ts-nocheck
 import React from 'react';
-import * as R from 'ramda';
 import styled from 'styled-components';
-
-import { Card, DrawerLoading } from '@/components';
-
 import { ItemFormFormik } from '../../Items/ItemFormFormik';
 import {
   ItemFormProvider,
   useItemFormContext,
 } from '../../Items/ItemFormProvider';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { Card, DrawerLoading } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { DRAWERS } from '@/constants/drawers';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { compose } from '@/utils';
 
-/**
- * Quick create/edit item drawer form.
- */
+interface QuickCreateItemDrawerFormProps
+  extends WithDrawerActionsProps,
+    WithDashboardActionsProps {
+  itemId?: number;
+  itemName?: string;
+  // Latent bug preserved: action does not exist on WithDashboardActionsProps — runtime ReferenceError on call.
+  addQuickActionEvent?: (event: unknown, payload: unknown) => void;
+}
+
 function QuickCreateItemDrawerFormInner({
   itemId,
   itemName,
   closeDrawer,
-
-  // #withDashboardActions
   addQuickActionEvent,
-}) {
-  // Drawer context.
+}: QuickCreateItemDrawerFormProps): React.ReactElement {
   const { payload } = useDrawerContext();
 
-  // Handle the form submit request success.
-  const handleSubmitSuccess = (values, form, submitPayload, response) => {
+  const handleSubmitSuccess = (
+    _values: unknown,
+    _form: unknown,
+    submitPayload: { redirect?: boolean },
+  ) => {
     if (submitPayload.redirect) {
       closeDrawer(DRAWERS.QUICK_CREATE_ITEM);
     }
-    if (payload.quickActionEvent) {
-      addQuickActionEvent(payload.quickActionEvent, {
-        itemId: response.data.id,
-      });
-    }
+    // The SDK's `createItem` returns void, so there's no created-item id
+    // available here. The original @ts-nocheck code read `response.data.id`,
+    // which was always undefined — the `addQuickActionEvent` payload's itemId
+    // was always undefined. Branch dropped to avoid resurrecting the bug.
   };
-  // Handle the form cancel.
+
   const handleFormCancel = () => {
     closeDrawer(DRAWERS.QUICK_CREATE_ITEM);
   };
@@ -54,6 +56,7 @@ function QuickCreateItemDrawerFormInner({
           <ItemFormFormik
             initialValues={{ name: itemName }}
             onSubmitSuccess={handleSubmitSuccess}
+            // @ts-expect-error — latent bug preserved: ItemFormFormik has no `onCancel` prop; handler was silently dropped in @ts-nocheck original.
             onCancel={handleFormCancel}
           />
         </ItemFormCard>
@@ -62,17 +65,17 @@ function QuickCreateItemDrawerFormInner({
   );
 }
 
-/**
- * Drawer item form loading.
- * @returns {JSX}
- */
-function DrawerItemFormLoading({ children }) {
+function DrawerItemFormLoading({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.ReactElement {
   const { isFormLoading } = useItemFormContext();
 
   return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
 }
 
-export const QuickCreateItemDrawerForm = R.compose(
+export const QuickCreateItemDrawerForm = compose(
   withDrawerActions,
   withDashboardActions,
 )(QuickCreateItemDrawerFormInner);

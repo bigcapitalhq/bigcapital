@@ -1,29 +1,31 @@
-// @ts-nocheck
 import React from 'react';
 import { useItem } from '@/hooks/query';
+import type { WarehouseTransferEntryWarehouse } from './types';
 
 interface IItemMeta {
   rowIndex: number;
   columnId: string;
   itemId: number;
 
-  sourceWarehouseId: number;
-  distentionWarehouseId: number;
+  sourceWarehouseId: number | string;
+  destinationWarehouseId: number | string;
 }
 
-type CellLoading = any;
+type CellLoadingCoord = [number, string];
+type CellLoading = CellLoadingCoord[] | null;
 
-interface IWarehouseMeta {
+interface IRowExtra {
+  warehouses: WarehouseTransferEntryWarehouse[];
+}
+
+interface ItemWarehouseRaw {
   warehouseId: number;
-  warehouseQuantity: number;
-  warehouseQuantityFormatted: string;
+  quantityOnHand: number;
+  quantityOnHandFormatted: string;
 }
-interface IRow {
-  rowIndex: number;
-  columnId: number;
-  itemId: number;
 
-  warehouses: IWarehouseMeta[];
+interface ItemWithWarehouses {
+  itemWarehouses?: ItemWarehouseRaw[];
 }
 
 /**
@@ -35,9 +37,7 @@ export const useFetchItemWarehouseQuantity = () => {
   const [tableRow, setTableRow] = React.useState<IItemMeta | null>(null);
 
   // Table cells loading coords.
-  const [cellsLoading, setCellsLoading] = React.useState<CellLoading | null>(
-    null,
-  );
+  const [cellsLoading, setCellsLoading] = React.useState<CellLoading>(null);
   // Fetches the item warehouse locations.
   const {
     data: item,
@@ -54,18 +54,18 @@ export const useFetchItemWarehouseQuantity = () => {
     if (isItemLoading && tableRow) {
       setCellsLoading([
         [tableRow.rowIndex, 'quantity'],
-        [tableRow.rowIndex, 'source_warehouse'],
-        [tableRow.rowIndex, 'destination_warehouse'],
+        [tableRow.rowIndex, 'sourceWarehouse'],
+        [tableRow.rowIndex, 'destinationWarehouse'],
       ]);
     }
   }, [isItemLoading, tableRow]);
 
   // New table row meta.
-  const newRowMeta = React.useMemo(() => {
-    return isItemSuccess
+  const newRowMeta = React.useMemo<(IItemMeta & IRowExtra) | null>(() => {
+    return isItemSuccess && tableRow
       ? {
           ...tableRow,
-          warehouses: transformWarehousesQuantity(item),
+          warehouses: transformWarehousesQuantity(item as ItemWithWarehouses),
         }
       : null;
   }, [isItemSuccess, item, tableRow]);
@@ -85,10 +85,12 @@ export const useFetchItemWarehouseQuantity = () => {
   };
 };
 
-const transformWarehousesQuantity = (item) => {
-  return item.item_warehouses.map((warehouse) => ({
-    warehouseId: warehouse.warehouse_id,
-    quantityOnHand: warehouse.quantity_on_hand,
-    quantityOnHandFormatted: warehouse.quantity_on_hand_formatted,
+const transformWarehousesQuantity = (
+  item: ItemWithWarehouses,
+): WarehouseTransferEntryWarehouse[] => {
+  return (item.itemWarehouses ?? []).map((warehouse) => ({
+    warehouseId: warehouse.warehouseId,
+    quantityOnHand: warehouse.quantityOnHand,
+    quantityOnHandFormatted: warehouse.quantityOnHandFormatted,
   }));
 };

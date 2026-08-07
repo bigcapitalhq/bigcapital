@@ -1,16 +1,16 @@
-import React, { useCallback, ComponentType } from 'react';
-import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 import { ItemRenderer, ItemPredicate } from '@blueprintjs/select';
-import { DialogsName } from '@/constants/dialogs';
+import React, { useCallback, ComponentType } from 'react';
+import intl from 'react-intl-universal';
+import { usePreprocessingAccounts } from './_hooks';
 import {
   AccountSelectModel,
   FSuggest,
   Suggest,
   FormattedMessage as T,
 } from '@/components';
+import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { usePreprocessingAccounts } from './_hooks';
 
 // Types for renderers and predicates
 type AccountItemRenderer = ItemRenderer<AccountSelectModel>;

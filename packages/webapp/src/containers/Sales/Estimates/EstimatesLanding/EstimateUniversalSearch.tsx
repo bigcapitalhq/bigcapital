@@ -1,14 +1,12 @@
 // @ts-nocheck
+import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem, Intent } from '@blueprintjs/core';
-
 import { Choose, T, Icon, TextStatus } from '@/components';
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Estimate universal search item select action.

@@ -1,6 +1,6 @@
+import type { RootState } from '@/store/reducers';
 import { paginationLocationQuery } from '@/store/selectors';
 import { createDeepEqualSelector } from '@/utils';
-import type { RootState } from '@/store/reducers';
 
 // Items categories table state.
 const itemsCategoriesTableStateSelector = (state: RootState) =>

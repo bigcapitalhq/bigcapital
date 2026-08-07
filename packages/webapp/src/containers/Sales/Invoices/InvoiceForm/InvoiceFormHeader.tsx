@@ -1,9 +1,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Group, PageFormBigNumber } from '@/components';
+import styles from './InvoiceFormHeader.module.scss';
 import { InvoiceFormHeaderFields } from './InvoiceFormHeaderFields';
 import { useInvoiceTotalFormatted } from './utils';
-import styles from './InvoiceFormHeader.module.scss';
+import { Group, PageFormBigNumber } from '@/components';
 
 /**
  * Invoice form header section.

@@ -1,7 +1,5 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 import {
   TRDarkSingleLine,
@@ -16,9 +14,11 @@ import {
  * Manual journal readonly details footer.
  */
 export function ManualJournalDrawerFooter() {
-  const {
-    manualJournal: { amount, formatted_amount },
-  } = useManualJournalDrawerContext();
+  const { manualJournal } = useManualJournalDrawerContext();
+
+  if (!manualJournal) return null;
+
+  const { amount, formattedAmount } = manualJournal;
 
   return (
     <div className="journal-drawer__content-footer">
@@ -28,10 +28,10 @@ export function ManualJournalDrawerFooter() {
             <T id={'manual_journal.details.subtotal'} />
           </TDLabel>
           <TDAmount textAlign={'right'}>
-            <FormatNumber value={amount} />
+            <FormatNumber value={amount} noZero={false} />
           </TDAmount>
           <TDAmount textAlign={'right'}>
-            <FormatNumber value={amount} />
+            <FormatNumber value={amount} noZero={false} />
           </TDAmount>
         </TRDarkSingleLine>
 
@@ -39,8 +39,8 @@ export function ManualJournalDrawerFooter() {
           <TDLabel>
             <T id={'manual_journal.details.total'} />
           </TDLabel>
-          <TDAmount textAlign={'right'}>{formatted_amount}</TDAmount>
-          <TDAmount textAlign={'right'}>{formatted_amount}</TDAmount>
+          <TDAmount textAlign={'right'}>{formattedAmount}</TDAmount>
+          <TDAmount textAlign={'right'}>{formattedAmount}</TDAmount>
         </TRDarkDoubleLines>
       </JournalTotalTable>
     </div>
@@ -57,6 +57,6 @@ const TDLabel = styled(TD)`
   width: 220px;
 `;
 
-const TDAmount = styled(TD)`
+const TDAmount = styled(TD)<{ textAlign?: string }>`
   width: 155px;
 `;

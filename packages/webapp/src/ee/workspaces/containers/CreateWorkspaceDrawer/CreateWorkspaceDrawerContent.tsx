@@ -1,11 +1,11 @@
 // @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { x } from '@xstyled/emotion';
-import { DrawerHeaderContent, FormattedMessage as T } from '@/components';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { DRAWERS } from '@/constants/drawers';
+import * as R from 'ramda';
+import React from 'react';
 import { CreateWorkspaceStepper } from './CreateWorkspaceStepper';
+import { DrawerHeaderContent, FormattedMessage as T } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Create workspace drawer content.

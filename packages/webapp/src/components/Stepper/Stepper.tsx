@@ -1,7 +1,7 @@
 // @ts-nocheck
+import { toArray } from 'lodash';
 import { cloneElement } from 'react';
 import styled from 'styled-components';
-import { toArray } from 'lodash';
 import { Box } from '../Layout';
 import { StepperCompleted } from './StepperCompleted';
 import { StepperStep } from './StepperStep';

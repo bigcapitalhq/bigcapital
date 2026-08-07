@@ -3,7 +3,6 @@ import * as R from 'ramda';
 import type { Knex } from 'knex';
 import { Model, raw } from 'objection';
 import { castArray, difference, defaultTo } from 'lodash';
-import { BaseModel, PaginationQueryBuilderType } from '@/models/Model';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { DiscountType } from '@/common/types/Discount';

@@ -1,26 +1,29 @@
-// @ts-nocheck
-import React from 'react';
-
+import { lazy } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const CustomerOpeningBalanceDialogContent = React.lazy(() =>
+const CustomerOpeningBalanceDialogContent = lazy(() =>
   import('./CustomerOpeningBalanceDialogContent').then((m) => ({
     default: m.CustomerOpeningBalanceDialogContent,
   })),
 );
 
+interface CustomerOpeningBalanceDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
+
 /**
  * Customer opening balance dialog.
- * @returns
  */
 function CustomerOpeningBalanceDialog({
   dialogName,
-  payload: { customerId },
+  payload,
   isOpen,
-}) {
+}: CustomerOpeningBalanceDialogProps) {
+  const customerId = (payload.customerId as number | undefined) ?? undefined;
   return (
     <Dialog
       name={dialogName}

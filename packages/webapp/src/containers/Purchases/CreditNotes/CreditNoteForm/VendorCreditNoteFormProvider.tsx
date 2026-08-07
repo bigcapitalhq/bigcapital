@@ -1,11 +1,18 @@
-// @ts-nocheck
+import { isEmpty, pick } from 'lodash';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { isEmpty, pick } from 'lodash';
+import { transformToEditForm, type VendorCreditFormValues } from './utils';
+import type {
+  VendorCredit,
+  CreateVendorCreditBody,
+  EditVendorCreditBody,
+  Item,
+  Vendor,
+  Warehouse,
+  Branch,
+} from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
-import { transformToEditForm } from './utils';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import {
   useCreateVendorCredit,
   useEditVendorCredit,
@@ -17,15 +24,60 @@ import {
   useSettingsVendorCredits,
   useBill,
 } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-const VendorCreditNoteFormContext = React.createContext();
+type VendorCreditFormSubmitPayload = {
+  redirect?: boolean;
+  open?: boolean;
+  resetForm?: boolean;
+};
+
+type VendorCreditFormContextValue = {
+  vendorCredit: VendorCredit | undefined;
+  items: Item[];
+  vendors: Vendor[];
+  branches: Branch[];
+  warehouses: Warehouse[];
+  newVendorCredit: VendorCreditFormValues | [];
+  submitPayload: VendorCreditFormSubmitPayload | undefined;
+  isNewMode: boolean;
+
+  isVendorCreditLoading: boolean;
+  isFeatureLoading: boolean;
+  isBranchesLoading: boolean;
+  isWarehouesLoading: boolean;
+  isBranchesSuccess: boolean;
+  isWarehousesSuccess: boolean;
+
+  vendorCreditSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
+
+  createVendorCreditMutate: (values: CreateVendorCreditBody) => Promise<void>;
+  editVendorCreditMutate: (
+    args: [number, EditVendorCreditBody],
+  ) => Promise<void>;
+  setSubmitPayload: React.Dispatch<
+    React.SetStateAction<VendorCreditFormSubmitPayload | undefined>
+  >;
+};
+
+const VendorCreditNoteFormContext = React.createContext<
+  VendorCreditFormContextValue | undefined
+>(undefined);
+
+type VendorCreditNoteFormProviderProps = {
+  vendorCreditId?: number;
+  children?: React.ReactNode;
+};
 
 /**
  * Vendor Credit note data provider.
  */
-function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
+function VendorCreditNoteFormProvider({
+  vendorCreditId,
+  ...props
+}: VendorCreditNoteFormProviderProps) {
   const { state } = useLocation();
-  const billId = state?.billId;
+  const billId = (state as { billId?: number } | null)?.billId;
 
   // Features guard.
   const { featureCan } = useFeatureCan();
@@ -38,9 +90,9 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   });
 
   // Handle fetching settings.
-  useSettingsVendorCredits();
+  const { data: vendorCreditSettings } = useSettingsVendorCredits();
 
-  // Handle fetch vendors data table or list
+  // Handle fetch vendors data table or list.
   const { data: vendorsData, isLoading: isVendorsLoading } = useVendors({
     page_size: 10000,
   });
@@ -71,13 +123,15 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Form submit payload.
-  const [submitPayload, setSubmitPayload] = React.useState();
+  const [submitPayload, setSubmitPayload] = React.useState<
+    VendorCreditFormSubmitPayload | undefined
+  >();
 
   // Create and edit vendor credit mutations.
   const { mutateAsync: createVendorCreditMutate } = useCreateVendorCredit();
   const { mutateAsync: editVendorCreditMutate } = useEditVendorCredit();
 
-  // Determines whether the form in new mode.
+  // Determines whether the form is in new mode.
   const isNewMode = !vendorCreditId;
 
   // Determines whether the warehouse and branches are loading.
@@ -85,25 +139,29 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   const newVendorCredit = !isEmpty(bill)
     ? transformToEditForm({
-        ...pick(bill, ['vendor_id', 'currency_code', 'entries']),
+        ...pick(bill, ['vendorId', 'currencyCode', 'entries']),
       })
-    : [];
+    : ([] as []);
 
   // Provider payload.
-  const provider = {
+  const provider: VendorCreditFormContextValue = {
+    vendorCredit,
     items: itemsData?.data ?? [],
     vendors: vendorsData?.data ?? [],
-    vendorCredit,
-    warehouses: warehouses ?? [],
     branches: branches ?? [],
+    warehouses: warehouses ?? [],
+    newVendorCredit,
     submitPayload,
     isNewMode,
-    newVendorCredit,
 
     isVendorCreditLoading,
     isFeatureLoading,
+    isBranchesLoading,
+    isWarehouesLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+
+    vendorCreditSettings,
 
     createVendorCreditMutate,
     editVendorCreditMutate,
@@ -126,7 +184,14 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   );
 }
 
-const useVendorCreditNoteFormContext = () =>
-  React.useContext(VendorCreditNoteFormContext);
+const useVendorCreditNoteFormContext = (): VendorCreditFormContextValue => {
+  const ctx = React.useContext(VendorCreditNoteFormContext);
+  if (!ctx) {
+    throw new Error(
+      'useVendorCreditNoteFormContext must be used within a VendorCreditNoteFormProvider',
+    );
+  }
+  return ctx;
+};
 
 export { VendorCreditNoteFormProvider, useVendorCreditNoteFormContext };

@@ -1,13 +1,13 @@
-import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import type { ItemRenderer } from '@blueprintjs/select';
+import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItemNestedText, FSelect } from '@/components';
 import { accountPredicate } from './_components';
 import { usePreprocessingAccounts } from './_hooks';
+import { AccountSelectModel } from './AccountsMultiSelect';
+import type { ItemRenderer } from '@blueprintjs/select';
+import { MenuItemNestedText, FSelect } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { useDialogActions } from '@/hooks/state/dashboard';
-import { AccountSelectModel } from './AccountsMultiSelect';
 
 type FSelectProps = React.ComponentProps<typeof FSelect>;
 

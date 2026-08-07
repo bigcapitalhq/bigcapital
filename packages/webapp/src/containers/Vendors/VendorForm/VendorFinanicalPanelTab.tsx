@@ -1,9 +1,13 @@
-// @ts-nocheck
-import React from 'react';
-import classNames from 'classnames';
-import { FormGroup, ControlGroup, Position, Classes } from '@blueprintjs/core';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { Features } from '@/constants';
+import { ControlGroup, Position } from '@blueprintjs/core';
+import { ErrorMessage, useFormikContext } from 'formik';
+import intl from 'react-intl-universal';
+import {
+  openingBalanceFieldShouldUpdate,
+  useIsVendorForeignCurrency,
+  useSetPrimaryBranchToForm,
+} from './utils';
+import type { VendorFormValues } from './utils';
+import { useVendorFormContext } from './VendorFormProvider';
 import {
   FFormGroup,
   InputPrependText,
@@ -16,17 +20,11 @@ import {
   ExchangeRateInputGroup,
   FDateInput,
 } from '@/components';
-import {
-  openingBalanceFieldShouldUpdate,
-  useIsVendorForeignCurrency,
-  useSetPrimaryBranchToForm,
-} from './utils';
-import { useVendorFormContext } from './VendorFormProvider';
-import { useCurrentOrganization } from '@/hooks/state';
-import intl from 'react-intl-universal';
+import { Features } from '@/constants';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 /**
- * Vendor Finaniceal Panel Tab.
+ * Vendor Financial Panel Tab (legacy layout — kept for reference; not in the active form layout).
  */
 export function VendorFinanicalPanelTab() {
   const { currencies, branches } = useVendorFormContext();
@@ -40,14 +38,13 @@ export function VendorFinanicalPanelTab() {
         <Col xs={6}>
           {/*------------ Currency  -----------*/}
           <FFormGroup
-            name={'currency_code'}
+            name={'currencyCode'}
             label={intl.get('currency')}
             fastField
             inline
-            fastField
           >
             <CurrencySelectList
-              name="currency_code"
+              name="currencyCode"
               items={currencies}
               fastField
             />
@@ -64,11 +61,11 @@ export function VendorFinanicalPanelTab() {
           <FeatureCan feature={Features.Branches}>
             <FFormGroup
               label={intl.get('vendor.label.opening_branch')}
-              name={'opening_balance_branch_id'}
+              name={'openingBalanceBranchId'}
               inline={true}
             >
               <BranchSelect
-                name={'opening_balance_branch_id'}
+                name={'openingBalanceBranchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -82,28 +79,28 @@ export function VendorFinanicalPanelTab() {
 
 /**
  * Vendor opening balance field.
- * @returns {JSX.Element}
  */
 function VendorOpeningBalanceField() {
   const { vendorId } = useVendorFormContext();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<VendorFormValues>();
 
   // Cannot continue if the vendor id is defined.
   if (vendorId) return null;
 
   return (
     <FFormGroup
-      name={'opening_balance'}
+      name={'openingBalance'}
       label={intl.get('opening_balance')}
+      // @ts-expect-error shouldUpdate is forwarded to FastField at runtime; FormGroupProps type doesn't expose it
       shouldUpdate={openingBalanceFieldShouldUpdate}
-      shouldUpdateDeps={{ currencyCode: values.currency_code }}
+      shouldUpdateDeps={{ currencyCode: values.currencyCode }}
       inline
       fastField
     >
       <ControlGroup>
-        <InputPrependText text={values.currency_code} />
+        <InputPrependText text={values.currencyCode} />
         <FMoneyInputGroup
-          name={'opening_balance'}
+          name={'openingBalance'}
           inputGroupProps={{ fill: true }}
           fastField
         />
@@ -114,7 +111,6 @@ function VendorOpeningBalanceField() {
 
 /**
  * Vendor opening balance at date field.
- * @returns {JSX.Element}
  */
 function VendorOpeningBalanceAtField() {
   const { vendorId } = useVendorFormContext();
@@ -124,18 +120,18 @@ function VendorOpeningBalanceAtField() {
 
   return (
     <FFormGroup
-      name={'opening_balance_at'}
+      name={'openingBalanceAt'}
       label={intl.get('opening_balance_at')}
-      helperText={<ErrorMessage name="opening_balance_at" />}
+      helperText={<ErrorMessage name="openingBalanceAt" />}
       inline
       fastField
     >
       <FDateInput
-        name={'opening_balance_at'}
+        name={'openingBalanceAt'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
-        disabled={vendorId}
-        formatDate={(date) => date.toLocaleDateString()}
-        parseDate={(str) => new Date(str)}
+        disabled={Boolean(vendorId)}
+        formatDate={(date: Date) => date.toLocaleDateString()}
+        parseDate={(str: string) => new Date(str)}
         fill
         fastField
       />
@@ -145,13 +141,12 @@ function VendorOpeningBalanceAtField() {
 
 /**
  * Vendor opening balance exchange rate field if the vendor has foreign currency.
- * @returns {JSX.Element}
  */
 function VendorOpeningBalanceExchangeRateField() {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<VendorFormValues>();
   const { vendorId } = useVendorFormContext();
   const isForeignVendor = useIsVendorForeignCurrency();
-  const currentOrganization = useCurrentOrganization();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   // Cannot continue if the current vendor does not have foreign currency.
   if (!isForeignVendor || vendorId) {
@@ -160,15 +155,14 @@ function VendorOpeningBalanceExchangeRateField() {
   return (
     <FFormGroup
       label={' '}
-      name={'opening_balance_exchange_rate'}
+      name={'openingBalanceExchangeRate'}
       inline
       fastField
     >
       <ExchangeRateInputGroup
-        fromCurrency={values.currency_code}
-        toCurrency={currentOrganization.base_currency}
-        name={'opening_balance_exchange_rate'}
-        fastField
+        fromCurrency={values.currencyCode}
+        toCurrency={baseCurrency ?? ''}
+        name={'openingBalanceExchangeRate'}
       />
     </FFormGroup>
   );

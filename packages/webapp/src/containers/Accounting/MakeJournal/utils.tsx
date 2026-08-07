@@ -1,10 +1,20 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
-import moment from 'moment';
-import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, setWith, get, first, toNumber } from 'lodash';
+import { useFormikContext, type FormikErrors } from 'formik';
+import { sumBy, setWith, get, first, toNumber, omit } from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
+import type {
+  ManualJournal,
+  CreateManualJournalBody,
+} from '@bigcapital/sdk-ts';
+import { AppToaster } from '@/components';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   updateTableCell,
   repeatValue,
@@ -13,12 +23,8 @@ import {
   ensureEntriesHasEmptyLine,
   formattedAmount,
   safeSumBy,
+  orderingLinesIndexes,
 } from '@/utils';
-import { AppToaster } from '@/components';
-import { useFormikContext } from 'formik';
-import { useMakeJournalFormContext } from './MakeJournalProvider';
-import { useCurrentOrganization } from '@/hooks/state';
-import { transformAttachmentsToForm } from '@/containers/Attachments/utils';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -31,40 +37,72 @@ const ERROR = {
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
   COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS:
     'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS',
-};
+} as const;
 
 export const MIN_LINES_NUMBER = 1;
 export const DEFAULT_LINES_NUMBER = 1;
 
-export const defaultEntry = {
-  account_id: '',
+export type MakeJournalEntry = {
+  accountId: string | number;
+  credit: string | number;
+  debit: string | number;
+  contactId: string | number;
+  branchId: string | number;
+  projectId: string | number;
+  note: string;
+};
+
+export type MakeJournalFormValues = {
+  journalNumber: string;
+  journalNumberManually: string;
+  journalType: string;
+  date: string;
+  description: string;
+  reference: string;
+  currencyCode: string;
+  publish: '' | boolean;
+  branchId: string | number;
+  exchangeRate: number;
+  entries: MakeJournalEntry[];
+  attachments: unknown[];
+};
+
+export type MakeJournalErrorResponse = {
+  type: string;
+  indexes?: number[];
+  meta?: { contact_type?: string; indexes?: number[] }[];
+};
+
+export const defaultEntry: MakeJournalEntry = {
+  accountId: '',
   credit: '',
   debit: '',
-  contact_id: '',
-  branch_id: '',
-  project_id: '',
+  contactId: '',
+  branchId: '',
+  projectId: '',
   note: '',
 };
 
-export const defaultManualJournal = {
-  journal_number: '',
-  journal_number_manually: '',
-  journal_type: 'Journal',
+export const defaultManualJournal: MakeJournalFormValues = {
+  journalNumber: '',
+  journalNumberManually: '',
+  journalType: 'Journal',
   date: moment(new Date()).format('YYYY-MM-DD'),
   description: '',
   reference: '',
-  currency_code: '',
+  currencyCode: '',
   publish: '',
-  branch_id: '',
-  exchange_rate: 1,
+  branchId: '',
+  exchangeRate: 1,
   entries: [...repeatValue(defaultEntry, DEFAULT_LINES_NUMBER)],
   attachments: [],
 };
 
 // Transform to edit form.
-export function transformToEditForm(manualJournal) {
-  const defaultEntry = defaultManualJournal.entries[0];
-  const initialEntries = [
+export function transformToEditForm(
+  manualJournal: ManualJournal,
+): MakeJournalFormValues {
+  const initialEntries: MakeJournalEntry[] = [
     ...manualJournal.entries.map((entry) => ({
       ...transformToForm(entry, defaultEntry),
     })),
@@ -74,8 +112,9 @@ export function transformToEditForm(manualJournal) {
     ),
   ];
 
-  const entries = R.compose(
-    ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, defaultEntry),
+  const entries = ensureEntriesHasEmptyLine(
+    MIN_LINES_NUMBER,
+    defaultEntry,
   )(initialEntries);
 
   const attachments = transformAttachmentsToForm(manualJournal);
@@ -84,13 +123,41 @@ export function transformToEditForm(manualJournal) {
     ...transformToForm(manualJournal, defaultManualJournal),
     entries,
     attachments,
+  } as MakeJournalFormValues;
+}
+
+/**
+ * Transform form values to the create/edit request body.
+ */
+export function transformFormValuesToRequest(
+  values: MakeJournalFormValues,
+  publish: boolean,
+): CreateManualJournalBody {
+  const nonZeroEntries = values.entries.filter(
+    (entry) => entry.debit || entry.credit,
+  );
+  const entries = orderingLinesIndexes(nonZeroEntries);
+  const attachments = transformAttachmentsToRequest(values);
+
+  return {
+    ...omit(values, ['journalNumberManually', 'entries', 'attachments']),
+    ...(values.journalNumberManually && {
+      journalNumber: values.journalNumber,
+    }),
+    branchId: values.branchId === '' ? undefined : Number(values.branchId),
+    publish,
+    entries,
+    attachments,
   };
 }
 
 /**
  * Entries adjustment.
  */
-function adjustmentEntries(entries) {
+function adjustmentEntries(entries: MakeJournalEntry[]): {
+  debit: number;
+  credit: number;
+} {
   const credit = sumBy(entries, (e) => toNumber(e.credit));
   const debit = sumBy(entries, (e) => toNumber(e.debit));
 
@@ -102,40 +169,55 @@ function adjustmentEntries(entries) {
 
 /**
  * Adjustment credit/debit entries.
- * @param {number} rowIndex
- * @param {number} columnId
- * @param {string} value
- * @return {array}
  */
-export const updateAdjustEntries = (rowIndex, columnId, value) => (rows) => {
-  let newRows = [...rows];
+export const updateAdjustEntries =
+  (rowIndex: number, columnId: string, value: string | number) =>
+  (rows: MakeJournalEntry[]): MakeJournalEntry[] => {
+    let newRows = [...rows];
 
-  const oldCredit = get(rows, `[${rowIndex}].credit`);
-  const oldDebit = get(rows, `[${rowIndex}].debit`);
+    const oldCredit = get(rows, `[${rowIndex}].credit`);
+    const oldDebit = get(rows, `[${rowIndex}].debit`);
 
-  if (columnId === 'account_id' && !oldCredit && !oldDebit) {
-    const adjustment = adjustmentEntries(rows);
+    if (columnId === 'accountId' && !oldCredit && !oldDebit) {
+      const adjustment = adjustmentEntries(rows);
 
-    if (adjustment.credit) {
-      newRows = updateTableCell(rowIndex, 'credit', adjustment.credit)(newRows);
+      if (adjustment.credit) {
+        newRows = updateTableCell(
+          rowIndex,
+          'credit',
+          adjustment.credit,
+        )(newRows);
+      }
+      if (adjustment.debit) {
+        newRows = updateTableCell(rowIndex, 'debit', adjustment.debit)(newRows);
+      }
     }
-    if (adjustment.debit) {
-      newRows = updateTableCell(rowIndex, 'debit', adjustment.debit)(newRows);
-    }
-  }
-  return newRows;
-};
+    return newRows;
+  };
 
 /**
  * Transform API errors in toasts messages.
  */
-export const transformErrors = (resErrors, { setErrors, errors }) => {
-  const getError = (errorType) => resErrors.find((e) => e.type === errorType);
-  const toastMessages = [];
-  let error;
-  let newErrors = { ...errors, entries: [] };
+export const transformErrors = (
+  resErrors: MakeJournalErrorResponse[],
+  {
+    setErrors,
+    errors,
+  }: {
+    setErrors: (errors: FormikErrors<MakeJournalFormValues>) => void;
+    errors?: FormikErrors<MakeJournalFormValues>;
+  },
+): void => {
+  const getError = (errorType: string) =>
+    resErrors.find((e) => e.type === errorType);
+  const toastMessages: React.ReactNode[] = [];
+  let error: MakeJournalErrorResponse | undefined;
+  let newErrors: FormikErrors<MakeJournalFormValues> = {
+    ...errors,
+    entries: [],
+  };
 
-  const setEntriesErrors = (indexes, prop, message) =>
+  const setEntriesErrors = (indexes: number[], prop: string, message: string) =>
     indexes.forEach((i) => {
       const index = Math.max(i - 1, 0);
       newErrors = setWith(newErrors, `entries.[${index}].${prop}`, message);
@@ -145,26 +227,26 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
     toastMessages.push(
       intl.get('should_select_customers_with_entries_have_receivable_account'),
     );
-    setEntriesErrors(error.indexes, 'contact_id', 'error');
+    setEntriesErrors(error.indexes ?? [], 'contactId', 'error');
   }
   if ((error = getError(ERROR.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT))) {
-    if (error.meta.find((meta) => meta.contact_type === 'customer')) {
+    if (error.meta?.find((meta) => meta.contact_type === 'customer')) {
       toastMessages.push(
         intl.get('receivable_accounts_should_assign_with_customers'),
       );
     }
-    if (error.meta.find((meta) => meta.contact_type === 'vendor')) {
+    if (error.meta?.find((meta) => meta.contact_type === 'vendor')) {
       toastMessages.push(
         intl.get('payable_accounts_should_assign_with_vendors'),
       );
     }
-    const indexes = error.meta.map((meta) => meta.indexes).flat();
-    setEntriesErrors(indexes, 'contact_id', 'error');
+    const indexes = (error.meta ?? []).map((meta) => meta.indexes ?? []).flat();
+    setEntriesErrors(indexes, 'contactId', 'error');
   }
   if ((error = getError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS))) {
     newErrors = setWith(
       newErrors,
-      'journal_number',
+      'journalNumber',
       intl.get('journal_number_is_already_used'),
     );
   }
@@ -181,38 +263,60 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
 
   if (toastMessages.length > 0) {
     AppToaster.show({
-      message: toastMessages.map((message) => {
-        return <div>{message}</div>;
+      message: toastMessages.map((message, index) => {
+        return <div key={index}>{message}</div>;
       }),
       intent: Intent.DANGER,
     });
   }
 };
 
+type EntriesFieldShouldUpdateProps = {
+  accounts?: unknown[];
+  contacts?: unknown[];
+  branches?: unknown[];
+  shouldUpdateDeps?: {
+    accounts?: unknown[];
+    contacts?: unknown[];
+    branches?: unknown[];
+  };
+};
+
 /**
  * Detarmines entries fast field should update.
  */
-export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+export const entriesFieldShouldUpdate = (
+  newProps: EntriesFieldShouldUpdateProps,
+  oldProps: EntriesFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.accounts !== oldProps.accounts ||
     newProps.contacts !== oldProps.contacts ||
     newProps.branches !== oldProps.branches ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
+    (defaultFastFieldShouldUpdate(newProps, oldProps) as boolean)
   );
+};
+
+type CurrenciesFieldShouldUpdateProps = {
+  currencies?: unknown[];
+  shouldUpdateDeps?: { currencies?: unknown[] };
 };
 
 /**
  * Detarmines currencies fast field should update.
  */
-export const currenciesFieldShouldUpdate = (newProps, oldProps) => {
+export const currenciesFieldShouldUpdate = (
+  newProps: CurrenciesFieldShouldUpdateProps,
+  oldProps: CurrenciesFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.currencies !== oldProps.currencies ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
+    (defaultFastFieldShouldUpdate(newProps, oldProps) as boolean)
   );
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<MakeJournalFormValues>();
   const { branches, isBranchesSuccess, isNewMode } =
     useMakeJournalFormContext();
 
@@ -221,92 +325,91 @@ export const useSetPrimaryBranchToForm = () => {
       const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches, isNewMode]);
 };
 
-export const useManualJournalCreditTotal = () => {
-  const { values } = useFormikContext();
+export const useManualJournalCreditTotal = (): number => {
+  const { values } = useFormikContext<MakeJournalFormValues>();
   const totalCredit = safeSumBy(values.entries, 'credit');
 
   return totalCredit;
 };
 
-export const useManualJournalCreditTotalFormatted = () => {
+export const useManualJournalCreditTotalFormatted = (): string => {
   const totalCredit = useManualJournalCreditTotal();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<MakeJournalFormValues>();
 
-  return formattedAmount(totalCredit, values.currency_code);
+  return formattedAmount(totalCredit, values.currencyCode);
 };
 
-export const useManualJournalDebitTotal = () => {
-  const { values } = useFormikContext();
+export const useManualJournalDebitTotal = (): number => {
+  const { values } = useFormikContext<MakeJournalFormValues>();
   const totalDebit = safeSumBy(values.entries, 'debit');
 
   return totalDebit;
 };
 
-export const useManualJournalDebitTotalFormatted = () => {
+export const useManualJournalDebitTotalFormatted = (): string => {
   const totalDebit = useManualJournalDebitTotal();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<MakeJournalFormValues>();
 
-  return formattedAmount(totalDebit, values.currency_code);
+  return formattedAmount(totalDebit, values.currencyCode);
 };
 
-export const useManualJournalSubtotal = () => {
+export const useManualJournalSubtotal = (): number => {
   const totalCredit = useManualJournalCreditTotal();
   const totalDebit = useManualJournalDebitTotal();
 
   return Math.max(totalCredit, totalDebit);
 };
 
-export const useManualJournalSubtotalFormatted = () => {
+export const useManualJournalSubtotalFormatted = (): string => {
   const subtotal = useManualJournalSubtotal();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<MakeJournalFormValues>();
 
-  return formattedAmount(subtotal, values.currency_code);
+  return formattedAmount(subtotal, values.currencyCode);
 };
 
-export const useManualJournalTotalDifference = () => {
+export const useManualJournalTotalDifference = (): number => {
   const totalCredit = useManualJournalCreditTotal();
   const totalDebit = useManualJournalDebitTotal();
 
   return Math.abs(totalCredit - totalDebit);
 };
 
-export const useManualJournalTotalDifferenceFormatted = () => {
+export const useManualJournalTotalDifferenceFormatted = (): string => {
   const difference = useManualJournalTotalDifference();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<MakeJournalFormValues>();
 
-  return formattedAmount(difference, values.currency_code);
+  return formattedAmount(difference, values.currencyCode);
 };
 
-export const useManualJournalTotal = () => {
+export const useManualJournalTotal = (): number => {
   const total = useManualJournalSubtotal();
 
   return total;
 };
 
-export const useManualJournalTotalFormatted = () => {
+export const useManualJournalTotalFormatted = (): string => {
   const total = useManualJournalTotal();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<MakeJournalFormValues>();
 
-  return formattedAmount(total, values.currency_code);
+  return formattedAmount(total, values.currencyCode);
 };
 
 /**
- * Detarmines whether the expenses has foreign .
- * @returns {boolean}
+ * Detarmines whether the journal has foreign currency.
  */
-export const useJournalIsForeign = () => {
-  const { values } = useFormikContext();
-  const currentOrganization = useCurrentOrganization();
+export const useJournalIsForeign = (): boolean => {
+  const { values } = useFormikContext<MakeJournalFormValues>();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const isForeignJournal = React.useMemo(
-    () => values.currency_code !== currentOrganization.base_currency,
-    [values.currency_code, currentOrganization.base_currency],
+    () => values.currencyCode !== baseCurrency,
+    [values.currencyCode, baseCurrency],
   );
   return isForeignJournal;
 };

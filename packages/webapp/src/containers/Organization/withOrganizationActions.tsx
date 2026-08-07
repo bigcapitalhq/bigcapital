@@ -1,9 +1,9 @@
 import { ComponentType } from 'react';
+import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { connect } from 'react-redux';
-import { setOrganizationSetupCompleted } from '@/store/organizations/organizations.actions';
 import type { RootState } from '@/store/reducers';
+import { setOrganizationSetupCompleted } from '@/store/organizations/organizations.actions';
 
 export interface WithOrganizationActionsProps {
   setOrganizationSetupCompleted: (congrats: boolean) => void;

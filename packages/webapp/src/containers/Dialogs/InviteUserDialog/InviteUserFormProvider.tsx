@@ -1,14 +1,28 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
-import { useCreateInviteUser, useUsers, useRoles } from '@/hooks/query';
+import type { InviteUserFormContextValue } from './types';
 import { DialogContent } from '@/components';
+import { useCreateInviteUser, useUsers, useRoles } from '@/hooks/query';
 
-const InviteUserFormContext = createContext();
+const InviteUserFormContext = createContext<InviteUserFormContextValue>(
+  {} as InviteUserFormContextValue,
+);
+
+interface InviteUserFormProviderProps {
+  userId?: unknown;
+  isEditMode: string;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Invite user Form page provider.
  */
-function InviteUserFormProvider({ userId, isEditMode, dialogName, ...props }) {
+function InviteUserFormProvider({
+  userId,
+  isEditMode,
+  dialogName,
+  ...props
+}: InviteUserFormProviderProps) {
   // Create and edit item currency mutations.
   const { mutateAsync: inviteUserMutate } = useCreateInviteUser();
 
@@ -19,7 +33,7 @@ function InviteUserFormProvider({ userId, isEditMode, dialogName, ...props }) {
   const { data: roles, isLoading: isRolesLoading } = useRoles();
 
   // Provider state.
-  const provider = {
+  const provider: InviteUserFormContextValue = {
     inviteUserMutate,
     dialogName,
     userId,

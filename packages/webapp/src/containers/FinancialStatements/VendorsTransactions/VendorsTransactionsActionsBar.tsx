@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -8,11 +7,9 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
+import React from 'react';
+import { VendorTransactionsExportMenu } from './components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import {
   withVendorsTransaction,
@@ -22,14 +19,14 @@ import {
   withVendorsTransactionsActions,
   WithVendorsTransactionsActionsProps,
 } from './withVendorsTransactionsActions';
-
-import { compose, saveInvoke } from '@/utils';
-import { VendorTransactionsExportMenu } from './components';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { compose, saveInvoke } from '@/utils';
 
 interface VendorsTransactionsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;

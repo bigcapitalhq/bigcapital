@@ -1,13 +1,13 @@
 import { ComponentType } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import type { TableQuery } from '@/store/store.types';
 import {
   setVendorsTableState,
   resetVendorsTableState,
   setVendorsSelectedRows,
   resetVendorsSelectedRows,
 } from '@/store/vendors/vendors.actions';
-import type { TableQuery } from '@/store/store.types';
 
 export interface WithVendorsActionsProps {
   setVendorsTableState: (queries: Partial<TableQuery>) => void;

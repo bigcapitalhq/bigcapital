@@ -1,9 +1,8 @@
 // @ts-nocheck
+import { Menu, MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-
 import { FormatDateCell, Icon, FormattedMessage as T } from '@/components';
-import { Menu, MenuItem, Intent } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
 
 /**

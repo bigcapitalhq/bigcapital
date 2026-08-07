@@ -1,11 +1,9 @@
 // @ts-nocheck
+import { isEqual } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
-import * as R from 'ramda';
 import { DetailItem } from '@/components';
-import { isEqual } from 'lodash';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 /**
  * Detail exchange rate item.
@@ -13,23 +11,18 @@ import { withCurrentOrganization } from '@/containers/Organization/withCurrentOr
  * @param {*} param1
  * @returns
  */
-function DetailExchangeRate({
-  exchangeRate,
-  toCurrency,
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
-  if (isEqual(base_currency, toCurrency)) {
+function DetailExchangeRate({ exchangeRate, toCurrency }) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+
+  if (isEqual(baseCurrency, toCurrency)) {
     return null;
   }
 
   return (
     <DetailItem label={intl.get('exchange_rate')}>
-      1 {base_currency} = {exchangeRate} {toCurrency}
+      1 {baseCurrency} = {exchangeRate} {toCurrency}
     </DetailItem>
   );
 }
 
-export const ExchangeRateDetailItem = R.compose(withCurrentOrganization())(
-  DetailExchangeRate,
-);
+export const ExchangeRateDetailItem = DetailExchangeRate;

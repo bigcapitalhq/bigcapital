@@ -1,10 +1,16 @@
 // @ts-nocheck
+import { Classes, Intent, Position } from '@blueprintjs/core';
+import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Classes, Intent, Position } from '@blueprintjs/core';
-import { CLASSES } from '@/constants/classes';
-import classNames from 'classnames';
+import {
+  ProjectsSelect,
+  ProjectTaskSelect,
+  ProjectSelectButton,
+} from '../../components';
+import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
+import { useSetProjectToForm } from './utils';
 import {
   If,
   FFormGroup,
@@ -14,14 +20,8 @@ import {
   FieldRequiredHint,
   Stack,
 } from '@/components';
-import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
-import {
-  ProjectsSelect,
-  ProjectTaskSelect,
-  ProjectSelectButton,
-} from '../../components';
+import { CLASSES } from '@/constants/classes';
 import { momentFormatter } from '@/utils';
-import { useSetProjectToForm } from './utils';
 
 /**
  * Project time entry form fields.

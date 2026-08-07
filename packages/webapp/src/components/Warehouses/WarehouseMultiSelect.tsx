@@ -1,39 +1,42 @@
-// @ts-nocheck
+import { MenuItem } from '@blueprintjs/core';
+import { ItemPredicate } from '@blueprintjs/select';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem } from '@blueprintjs/core';
 import { FMultiSelect } from '../Forms';
+import type { Warehouse } from '@bigcapital/sdk-ts';
+import type {
+  FormikItemRenderer,
+  SelectOptionProps,
+} from '@blueprintjs-formik/select';
 
-/**
- *
- * @param {*} query
- * @param {*} warehouse
- * @param {*} _index
- * @param {*} exactMatch
- * @returns
- */
-const warehouseItemPredicate = (query, warehouse, _index, exactMatch) => {
-  const normalizedTitle = warehouse.name.toLowerCase();
+export interface WarehouseSelectModel
+  extends Partial<Warehouse>,
+    SelectOptionProps {}
+
+type FMultiSelectProps = React.ComponentProps<typeof FMultiSelect>;
+
+interface WarehouseMultiSelectProps extends Omit<FMultiSelectProps, 'items'> {
+  warehouses?: WarehouseSelectModel[];
+}
+
+const warehouseItemPredicate: ItemPredicate<WarehouseSelectModel> = (
+  query,
+  warehouse,
+  _index,
+  exactMatch,
+) => {
+  const normalizedTitle = (warehouse.name ?? '').toLowerCase();
   const normalizedQuery = query.toLowerCase();
 
   if (exactMatch) {
     return normalizedTitle === normalizedQuery;
-  } else {
-    return (
-      `${warehouse.code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-    );
   }
+  return `${warehouse.code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
 };
 
-/**
- *
- * @param {*} branch
- * @param {*} param1
- * @returns
- */
-const warehouseItemRenderer = (
+const warehouseItemRenderer: FormikItemRenderer<WarehouseSelectModel> = (
   warehouse,
-  { handleClick, modifiers, query },
+  { handleClick, modifiers },
   { isSelected },
 ) => {
   return (
@@ -49,26 +52,20 @@ const warehouseItemRenderer = (
   );
 };
 
-const warehouseSelectProps = {
-  itemPredicate: warehouseItemPredicate,
-  itemRenderer: warehouseItemRenderer,
-  valueAccessor: (item) => item.id,
-  labelAccessor: (item) => item.code,
-  tagRenderer: (item) => item.name,
-};
-
-/**
- * warehouses mulit select.
- * @param {*} param0
- * @returns
- */
-export function WarehouseMultiSelect({ warehouses, ...rest }) {
+export function WarehouseMultiSelect({
+  warehouses = [],
+  ...rest
+}: WarehouseMultiSelectProps): React.ReactElement {
   return (
-    <FMultiSelect
+    <FMultiSelect<WarehouseSelectModel>
       items={warehouses}
       placeholder={intl.get('warehouses_multi_select.placeholder')}
       popoverProps={{ minimal: true, usePortal: false }}
-      {...warehouseSelectProps}
+      itemPredicate={warehouseItemPredicate}
+      itemRenderer={warehouseItemRenderer}
+      valueAccessor={'id'}
+      labelAccessor={'code'}
+      tagAccessor={'name'}
       {...rest}
     />
   );

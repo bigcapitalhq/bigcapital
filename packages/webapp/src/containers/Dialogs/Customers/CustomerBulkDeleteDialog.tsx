@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-
+import { FormattedMessage as T, AppToaster } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import { withCustomersActions } from '@/containers/Customers/CustomersLanding/withCustomersActions';
+import type { WithCustomersActionsProps } from '@/containers/Customers/CustomersLanding/withCustomersActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteCustomers } from '@/hooks/query/customers';
-import withDialogRedux from '@/components/DialogReduxConnect';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withCustomersActions } from '@/containers/Customers/CustomersLanding/withCustomersActions';
 import { compose } from '@/utils';
+
+interface CustomerBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface CustomerBulkDeleteDialogProps
+  extends WithCustomersActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
 
 function CustomerBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withCustomersActions
   setCustomersSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteCustomers, isLoading } =
+}: CustomerBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: CustomerBulkDeleteDialogPayload = payload;
+
+  const { mutateAsync: bulkDeleteCustomers, isPending: isLoading } =
     useBulkDeleteCustomers();
 
   const handleCancel = () => {

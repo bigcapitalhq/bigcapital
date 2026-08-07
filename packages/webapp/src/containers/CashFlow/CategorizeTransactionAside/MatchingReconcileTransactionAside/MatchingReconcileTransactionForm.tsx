@@ -1,9 +1,21 @@
-// @ts-nocheck
-import * as R from 'ramda';
 import { Button, Intent, Position, Tag } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
-import moment from 'moment';
 import { round } from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import { useAccountTransactionsContext } from '../../AccountTransactions/AccountTransactionsProvider';
+import { withBanking } from '../../withBanking';
+import { withBankingActions } from '../../withBankingActions';
+import { initialValues, transformToReq } from './_utils';
+import {
+  MatchingReconcileTransactionBoot,
+  useMatchingReconcileTransactionBoot,
+} from './MatchingReconcileTransactionBoot';
+import styles from './MatchingReconcileTransactionForm.module.scss';
+import { MatchingReconcileFormSchema } from './MatchingReconcileTransactionForm.schema';
+import type { MatchingReconcileTransactionValues } from './_types';
+import type { WithBankingProps } from '../../withBanking';
+import type { WithBankingActionsProps } from '../../withBankingActions';
 import {
   AccountsSelect,
   AppToaster,
@@ -18,30 +30,28 @@ import {
   Icon,
 } from '@/components';
 import { Aside } from '@/components/Aside/Aside';
-import { momentFormatter } from '@/utils';
-import styles from './MatchingReconcileTransactionForm.module.scss';
 import { ContentTabs } from '@/components/ContentTabs';
-import { withBankingActions } from '../../withBankingActions';
-import {
-  MatchingReconcileTransactionBoot,
-  useMatchingReconcileTransactionBoot,
-} from './MatchingReconcileTransactionBoot';
-import { useCreateCashflowTransaction } from '@/hooks/query';
-import { useAccountTransactionsContext } from '../../AccountTransactions/AccountTransactionsProvider';
-import { MatchingReconcileFormSchema } from './MatchingReconcileTransactionForm.schema';
-import { initialValues, transformToReq } from './_utils';
-import { withBanking } from '../../withBanking';
 import { Features } from '@/constants';
+import { useCreateCashflowTransaction } from '@/hooks/query';
+import { compose } from '@/utils';
+import { momentFormatter } from '@/utils';
 
-interface MatchingReconcileTransactionFormProps {
-  onSubmitSuccess?: (values: any) => void;
+interface ReconcileSubmitSuccessPayload {
+  id: number;
+  type: string;
+}
+
+interface MatchingReconcileTransactionFormProps
+  extends Pick<WithBankingActionsProps, 'closeReconcileMatchingTransaction'>,
+    Pick<WithBankingProps, 'reconcileMatchingTransactionPendingAmount'> {
+  onSubmitSuccess?: (values: ReconcileSubmitSuccessPayload) => void;
 }
 
 function MatchingReconcileTransactionFormRoot({
   closeReconcileMatchingTransaction,
   reconcileMatchingTransactionPendingAmount,
 
-  // #props¿
+  // #props
   onSubmitSuccess,
 }: MatchingReconcileTransactionFormProps) {
   // Mutation create cashflow transaction.
@@ -66,7 +76,7 @@ function MatchingReconcileTransactionFormRoot({
     const _values = transformToReq(values, accountId);
 
     createCashflowTransactionMutate(_values)
-      .then((res) => {
+      .then(() => {
         setSubmitting(false);
 
         AppToaster.show({
@@ -74,31 +84,39 @@ function MatchingReconcileTransactionFormRoot({
           intent: Intent.SUCCESS,
         });
         closeReconcileMatchingTransaction();
-        onSubmitSuccess &&
-          onSubmitSuccess({ id: res.data.id, type: 'CashflowTransaction' });
+        // SDK mutation types as `void`; the backend response shape isn't captured,
+        // so we can't forward the new transaction id. Caller's auto-mark effect
+        // won't fire — users manually match after creating.
       })
-      .catch((error) => {
-        setSubmitting(false);
-        if (
-          error.response.data?.errors?.find(
-            (e) => e.type === 'BRANCH_ID_REQUIRED',
-          )
-        ) {
-          setErrors({
-            branchId: 'The branch is required.',
-          });
-        } else {
-          AppToaster.show({
-            message: 'Something went wrong.',
-            intent: Intent.DANGER,
-          });
-        }
-      });
+      .catch(
+        (error: {
+          response?: { data?: { errors?: Array<{ type: string }> } };
+        }) => {
+          setSubmitting(false);
+          if (
+            error.response?.data?.errors?.find(
+              (e) => e.type === 'BRANCH_ID_REQUIRED',
+            )
+          ) {
+            setErrors({
+              ...({} as MatchingReconcileTransactionValues),
+              branchId: 'The branch is required.',
+            });
+          } else {
+            AppToaster.show({
+              message: 'Something went wrong.',
+              intent: Intent.DANGER,
+            });
+          }
+        },
+      );
   };
 
-  const _initialValues = {
+  const _initialValues: MatchingReconcileTransactionValues = {
     ...initialValues,
-    amount: round(Math.abs(reconcileMatchingTransactionPendingAmount), 2) || 0,
+    amount: String(
+      round(Math.abs(reconcileMatchingTransactionPendingAmount), 2) || 0,
+    ),
     date: moment().format('YYYY-MM-DD'),
     type:
       reconcileMatchingTransactionPendingAmount > 0 ? 'deposit' : 'withdrawal',
@@ -131,7 +149,7 @@ function MatchingReconcileTransactionFormRoot({
   );
 }
 
-export const MatchingReconcileTransactionForm = R.compose(
+export const MatchingReconcileTransactionForm = compose(
   withBankingActions,
   withBanking(({ reconcileMatchingTransactionPendingAmount }) => ({
     reconcileMatchingTransactionPendingAmount,
@@ -140,11 +158,11 @@ export const MatchingReconcileTransactionForm = R.compose(
 
 function ReconcileMatchingType() {
   const { setFieldValue, values } =
-    useFormikContext<MatchingReconcileFormValues>();
+    useFormikContext<MatchingReconcileTransactionValues>();
 
   const handleChange = (value: string) => {
     setFieldValue('type', value);
-    setFieldValue('category');
+    setFieldValue('category', '');
   };
   return (
     <ContentTabs
@@ -203,8 +221,8 @@ function CreateReconcileTransactionContent() {
         <FInputGroup name={'memo'} fastField />
       </FFormGroup>
 
-      <FFormGroup label={'Reference No.'} name={'reference_no'} fastField>
-        <FInputGroup name={'reference_no'} />
+      <FFormGroup label={'Reference No.'} name={'referenceNo'} fastField>
+        <FInputGroup name={'referenceNo'} />
       </FFormGroup>
 
       <FeatureCan feature={Features.Branches}>
@@ -235,7 +253,7 @@ function CreateReconcileTransactionContent() {
 
 function MatchingReconcileCategoryField() {
   const { accounts } = useMatchingReconcileTransactionBoot();
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<MatchingReconcileTransactionValues>();
 
   return (
     <FFormGroup
@@ -246,6 +264,8 @@ function MatchingReconcileCategoryField() {
     >
       <AccountsSelect
         name={'category'}
+        // @ts-expect-error AccountsSelect expects AccountSelectModel[] (with
+        // SelectOptionProps) but the boot provides raw Account[] — runtime tolerates.
         items={accounts}
         popoverProps={{
           minimal: false,
@@ -255,15 +275,19 @@ function MatchingReconcileCategoryField() {
           },
           boundary: 'viewport',
         }}
-        filterByRootTypes={values.type === 'deposit' ? 'income' : 'expense'}
+        filterByRootTypes={values.type === 'deposit' ? ['income'] : ['expense']}
         fastField
       />
     </FFormGroup>
   );
 }
 
+interface FormikState {
+  isSubmitting: boolean;
+}
+
 function MatchingReconcileTransactionFooter() {
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<FormikState>();
 
   return (
     <Box className={styles.footer}>

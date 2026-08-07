@@ -1,6 +1,6 @@
+import React from 'react';
 import { Group, Stack } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import React from 'react';
 
 interface SendMailViewLayoutProps {
   header?: React.ReactNode;

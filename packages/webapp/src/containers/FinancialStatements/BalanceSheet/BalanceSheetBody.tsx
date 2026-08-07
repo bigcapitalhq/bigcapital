@@ -1,19 +1,12 @@
 import React from 'react';
-import { BalanceSheetTable } from './BalanceSheetTable';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
+import { BalanceSheetTable } from './BalanceSheetTable';
 import { FinancialSheetSkeleton } from '@/components';
-import { compose } from '@/utils';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
-interface BalanceSheetBodyProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
-
-function BalanceSheetBodyJSX({ organizationName }: BalanceSheetBodyProps) {
+function BalanceSheetBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = useBalanceSheetContext();
 
   return (
@@ -27,8 +20,4 @@ function BalanceSheetBodyJSX({ organizationName }: BalanceSheetBodyProps) {
   );
 }
 
-export const BalanceSheetBody = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(BalanceSheetBodyJSX);
+export const BalanceSheetBody = BalanceSheetBodyJSX;

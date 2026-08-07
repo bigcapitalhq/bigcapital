@@ -1,8 +1,18 @@
-// @ts-nocheck
 import React, { createContext, useState } from 'react';
+import type {
+  SaleReceipt,
+  CreateSaleReceiptBody,
+  EditSaleReceiptBody,
+  SaleReceiptStateResponse,
+  Account,
+  Customer,
+  Item,
+  Warehouse,
+  Branch,
+  PdfTemplateResponse,
+} from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
-import { DashboardInsider } from '@/components/Dashboard';
+import { useProjects } from '@/containers/Projects/hooks';
 import {
   useReceipt,
   useAccounts,
@@ -14,24 +24,73 @@ import {
   useCreateReceipt,
   useEditReceipt,
   useGetReceiptState,
-  IGetReceiptStateResponse,
 } from '@/hooks/query';
-import { useProjects } from '@/containers/Projects/hooks';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { useFeatureCan } from '@/hooks/state';
 
-const ReceiptFormContext = createContext<ReceiptFormProviderValue>(
-  {} as ReceiptFormProviderValue,
-);
+type ReceiptFormSubmitPayload = {
+  redirect?: boolean;
+  status?: boolean;
+  resetForm?: boolean;
+};
 
-interface ReceiptFormProviderValue {
+type ReceiptFormContextValue = {
+  receiptId: number | undefined;
+  receipt: SaleReceipt | undefined;
+  accounts: Account[];
+  customers: Customer[];
+  items: Item[];
+  branches: Branch[];
+  warehouses: Warehouse[];
+  projects: unknown[];
+  submitPayload: ReceiptFormSubmitPayload | undefined;
+
+  isNewMode: boolean;
+  isReceiptLoading: boolean;
+  isAccountsLoading: boolean;
+  isCustomersLoading: boolean;
+  isItemsLoading: boolean;
+  isWarehouesLoading: boolean;
+  isBranchesLoading: boolean;
+  isFeatureLoading: boolean;
+  isSettingLoading: boolean;
+  receiptSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
+  isBranchesSuccess: boolean;
+  isWarehousesSuccess: boolean;
+
+  createReceiptMutate: (values: CreateSaleReceiptBody) => Promise<unknown>;
+  editReceiptMutate: (args: [number, EditSaleReceiptBody]) => Promise<unknown>;
+  setSubmitPayload: React.Dispatch<
+    React.SetStateAction<ReceiptFormSubmitPayload | undefined>
+  >;
+
+  // Branding templates
+  brandingTemplates: PdfTemplateResponse[];
+  isBrandingTemplatesLoading: boolean;
+
+  // State
   isSaleReceiptStateLoading: boolean;
-  saleReceiptState: IGetReceiptStateResponse;
-}
+  saleReceiptState: SaleReceiptStateResponse | undefined;
+
+  isBootLoading: boolean;
+};
+
+type ReceiptFormProviderProps = {
+  receiptId?: number;
+  children?: React.ReactNode;
+};
+
+const ReceiptFormContext = createContext<ReceiptFormContextValue | undefined>(
+  undefined,
+);
 
 /**
  * Receipt form provider.
  */
-function ReceiptFormProvider({ receiptId, ...props }) {
+function ReceiptFormProvider({
+  receiptId,
+  ...props
+}: ReceiptFormProviderProps) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
@@ -92,7 +151,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     stringified_filter_roles: stringifiedFilterRoles,
   });
   // Fetch project list.
-  const { data: projectsData, isLoading: isProjectsLoading } = useProjects(
+  const { data: projectsData } = useProjects(
     {},
     { enabled: !!isProjectsFeatureCan },
   );
@@ -106,12 +165,15 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     useGetReceiptState();
 
   // Fetch receipt settings.
-  const { isLoading: isSettingLoading } = useSettingsReceipts();
+  const { data: receiptSettings, isLoading: isSettingLoading } =
+    useSettingsReceipts();
 
   const { mutateAsync: createReceiptMutate } = useCreateReceipt();
   const { mutateAsync: editReceiptMutate } = useEditReceipt();
 
-  const [submitPayload, setSubmitPayload] = useState({});
+  const [submitPayload, setSubmitPayload] = useState<
+    ReceiptFormSubmitPayload | undefined
+  >();
 
   const isNewMode = !receiptId;
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
@@ -125,7 +187,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isBrandingTemplatesLoading ||
     isSaleReceiptStateLoading;
 
-  const provider = {
+  const provider: ReceiptFormContextValue = {
     receiptId,
     receipt,
     accounts: accounts ?? [],
@@ -145,6 +207,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     isBranchesLoading,
     isFeatureLoading,
     isSettingLoading,
+    receiptSettings,
     isBranchesSuccess,
     isWarehousesSuccess,
 
@@ -153,7 +216,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
     setSubmitPayload,
 
     // Branding templates
-    brandingTemplates,
+    brandingTemplates: brandingTemplates?.templates ?? [],
     isBrandingTemplatesLoading,
 
     // State
@@ -165,7 +228,14 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   return <ReceiptFormContext.Provider value={provider} {...props} />;
 }
 
-const useReceiptFormContext = () =>
-  React.useContext<ReceiptFormProviderValue>(ReceiptFormContext);
+const useReceiptFormContext = (): ReceiptFormContextValue => {
+  const ctx = React.useContext(ReceiptFormContext);
+  if (ctx === undefined) {
+    throw new Error(
+      'useReceiptFormContext must be used within a ReceiptFormProvider',
+    );
+  }
+  return ctx;
+};
 
 export { ReceiptFormProvider, useReceiptFormContext };

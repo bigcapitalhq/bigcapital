@@ -1,13 +1,13 @@
-import { useMemo, ComponentType } from 'react';
 import { css } from '@emotion/css';
-import { Box } from '@/components';
+import { useMemo, ComponentType } from 'react';
 import {
   InvoiceMailReceiptPreview,
   InvoiceMailReceiptPreviewProps,
 } from '../InvoiceCustomize/InvoiceMailReceiptPreview';
+import { useSendInvoiceMailMessage } from './_hooks';
 import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
 import { InvoiceSendMailPreviewWithHeader } from './InvoiceSendMailHeaderPreview';
-import { useSendInvoiceMailMessage } from './_hooks';
+import { Box } from '@/components';
 
 const invoiceMailReceiptCss = css`
   margin: 0 auto;

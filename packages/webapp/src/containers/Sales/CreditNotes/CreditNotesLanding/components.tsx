@@ -1,17 +1,36 @@
-// @ts-nocheck
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { CLASSES } from '@/constants/classes';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { CreditNotesListResponse } from '@bigcapital/sdk-ts';
 import { FormattedMessage as T, Choose, If, Icon, Can } from '@/components';
-import { safeCallback } from '@/utils';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
+import { safeCallback } from '@/utils';
+
+export type CreditNoteTableRow = NonNullable<
+  CreditNotesListResponse['data']
+>[number];
+
+interface CreditNoteActionsPayload {
+  onEdit: (creditNote: CreditNoteTableRow) => void;
+  onDelete: (creditNote: CreditNoteTableRow) => void;
+  onRefund: (creditNote: CreditNoteTableRow) => void;
+  onOpen: (creditNote: CreditNoteTableRow) => void;
+  onReconcile: (creditNote: CreditNoteTableRow) => void;
+  onViewDetails: (creditNote: CreditNoteTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: CreditNoteTableRow };
+  payload: CreditNoteActionsPayload;
+}
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onRefund, onOpen, onReconcile, onViewDetails },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -26,7 +45,7 @@ export function ActionsMenu({
           text={intl.get('credit_note.action.edit_credit_note')}
           onClick={safeCallback(onEdit, original)}
         />
-        <If condition={original.is_draft}>
+        <If condition={!!original.isDraft}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
             text={intl.get('credit_note.action.make_as_open')}
@@ -36,7 +55,7 @@ export function ActionsMenu({
       </Can>
 
       <Can I={CreditNoteAction.Refund} a={AbilitySubject.CreditNote}>
-        <If condition={!original.is_closed && original.is_published}>
+        <If condition={!!(!original.isClosed && original.isPublished)}>
           <MenuItem
             icon={<Icon icon="quick-payment-16" />}
             text={intl.get('credit_note.action.refund_credit_note')}
@@ -45,7 +64,7 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={CreditNoteAction.Edit} a={AbilitySubject.CreditNote}>
-        <If condition={!original.is_closed && original.is_published}>
+        <If condition={!!(!original.isClosed && original.isPublished)}>
           <MenuItem
             text={intl.get('credit_note.action.reconcile_with_invoices')}
             icon={<Icon icon="receipt-24" iconSize={16} />}
@@ -66,26 +85,23 @@ export function ActionsMenu({
   );
 }
 
-/**
- * Status accessor.
- */
-export function StatusAccessor(creditNote) {
+export function StatusAccessor(creditNote: CreditNoteTableRow) {
   return (
     <div>
       <Choose>
-        <Choose.When condition={creditNote.is_open}>
+        <Choose.When condition={!!creditNote.isOpen}>
           <Tag intent={Intent.WARNING} round minimal>
             <T id={'open'} />
           </Tag>
         </Choose.When>
 
-        <Choose.When condition={creditNote.is_closed}>
+        <Choose.When condition={!!creditNote.isClosed}>
           <Tag intent={Intent.SUCCESS} round minimal>
             <T id={'closed'} />
           </Tag>
         </Choose.When>
 
-        <Choose.When condition={creditNote.is_draft}>
+        <Choose.When condition={!!creditNote.isDraft}>
           <Tag intent={Intent.NONE} round minimal>
             <T id={'draft'} />
           </Tag>
@@ -95,78 +111,76 @@ export function StatusAccessor(creditNote) {
   );
 }
 
-/**
- * Retrieve credit note table columns.
- */
-export function useCreditNoteTableColumns() {
+export function useCreditNoteTableColumns(): DataTableColumn<CreditNoteTableRow>[] {
   return React.useMemo(
-    () => [
-      {
-        id: 'credit_date',
-        Header: intl.get('credit_note.column.credit_date'),
-        accessor: 'formatted_credit_note_date',
-        width: 110,
-        className: 'credit_date',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'customer',
-        Header: intl.get('customer_name'),
-        accessor: 'customer.display_name',
-        width: 180,
-        className: 'customer',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'credit_number',
-        Header: intl.get('credit_note.column.credit_note_no'),
-        accessor: 'credit_note_number',
-        width: 100,
-        className: 'credit_number',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'amount',
-        Header: intl.get('amount'),
-        accessor: 'formatted_amount',
-        width: 120,
-        align: 'right',
-        clickable: true,
-        textOverview: true,
-        className: clsx(CLASSES.FONT_BOLD),
-      },
-      {
-        id: 'balance',
-        Header: intl.get('balance'),
-        accessor: 'formatted_credits_remaining',
-        width: 120,
-        align: 'right',
-        clickable: true,
-        textOverview: true,
-        disableSortBy: true,
-        className: clsx(CLASSES.FONT_BOLD),
-      },
-      {
-        id: 'status',
-        Header: intl.get('status'),
-        accessor: StatusAccessor,
-        width: 160, // 160
-        className: 'status',
-        clickable: true,
-      },
-      {
-        id: 'reference_no',
-        Header: intl.get('reference_no'),
-        accessor: 'reference_no', // or note
-        width: 90,
-        className: 'reference_no',
-        clickable: true,
-        textOverview: true,
-      },
-    ],
+    () =>
+      [
+        {
+          id: 'credit_date',
+          Header: intl.get('credit_note.column.credit_date'),
+          accessor: 'formattedCreditNoteDate',
+          width: 110,
+          className: 'credit_date',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'customer',
+          Header: intl.get('customer_name'),
+          accessor: 'customer.displayName',
+          width: 180,
+          className: 'customer',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'credit_number',
+          Header: intl.get('credit_note.column.credit_note_no'),
+          accessor: 'creditNoteNumber',
+          width: 100,
+          className: 'credit_number',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'amount',
+          Header: intl.get('amount'),
+          accessor: 'formattedAmount',
+          width: 120,
+          align: 'right',
+          clickable: true,
+          textOverview: true,
+          className: clsx(CLASSES.FONT_BOLD),
+        },
+        {
+          id: 'balance',
+          Header: intl.get('balance'),
+          accessor: 'formattedCreditsRemaining',
+          width: 120,
+          align: 'right',
+          clickable: true,
+          textOverview: true,
+          disableSortBy: true,
+          className: clsx(CLASSES.FONT_BOLD),
+        },
+        {
+          id: 'status',
+          Header: intl.get('status'),
+          accessor: StatusAccessor,
+          width: 160,
+          className: 'status',
+          clickable: true,
+        },
+        {
+          id: 'reference_no',
+          Header: intl.get('reference_no'),
+          accessor: 'referenceNo',
+          width: 90,
+          className: 'reference_no',
+          clickable: true,
+          textOverview: true,
+        },
+      ] as DataTableColumn<CreditNoteTableRow>[],
     [],
   );
 }

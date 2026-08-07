@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Button,
   NavbarGroup,
@@ -9,7 +7,15 @@ import {
   Alignment,
 } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useBulkDeleteManualJournalsDialog } from './hooks/use-bulk-delete-manual-journals-dialog';
+import { useManualJournalsContext } from './ManualJournalsListProvider';
+import { withManualJournals } from './withManualJournals';
+import { withManualJournalsActions } from './withManualJournalsActions';
+import type { WithManualJournalsProps } from './withManualJournals';
+import type { WithManualJournalsActionsProps } from './withManualJournalsActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   Icon,
   AdvancedFilterPopover,
@@ -21,20 +27,21 @@ import {
   DashboardActionViewsList,
   DashboardActionsBar,
 } from '@/components';
-import { useRefreshJournals } from '@/hooks/query/manual-journals';
-import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { withManualJournals } from './withManualJournals';
-import { withManualJournalsActions } from './withManualJournalsActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
-import { useBulkDeleteManualJournalsDialog } from './hooks/use-bulk-delete-manual-journals-dialog';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
+import { useRefreshJournals } from '@/hooks/query/manual-journals';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
+import { compose } from '@/utils';
+
+interface ManualJournalActionsBarInnerProps
+  extends Pick<WithManualJournalsProps, 'manualJournalsSelectedRows'>,
+    WithManualJournalsActionsProps,
+    WithDialogActionsProps {
+  manualJournalsFilterConditions: IFilterRole[];
+}
 
 /**
  * Manual journal actions bar.
@@ -47,20 +54,20 @@ function ManualJournalActionsBarInner({
   manualJournalsFilterConditions,
   manualJournalsSelectedRows = [],
 
-  // #withSettings
-  manualJournalsTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withDialogActions
   openDialog,
-}) {
+}: ManualJournalActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   // History context.
   const history = useHistory();
 
   // Manual journals context.
-  const { journalsViews, fields } = useManualJournalsContext();
+  const { journalsViews, fields, manualJournalsSettings } =
+    useManualJournalsContext();
+  const manualJournalsTableSize = manualJournalsSettings?.tableSize as
+    | string
+    | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -76,11 +83,11 @@ function ManualJournalActionsBarInner({
     useBulkDeleteManualJournalsDialog();
 
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(manualJournalsSelectedRows);
+    openBulkDeleteDialog(manualJournalsSelectedRows as number[]);
   };
 
   // Handle tab change.
-  const handleTabChange = (view) => {
+  const handleTabChange = (view?: { slig?: string }) => {
     setManualJournalsTableState({ viewSlug: view ? view.slig : null });
   };
   // Handle click a refresh Journals
@@ -93,8 +100,10 @@ function ManualJournalActionsBarInner({
   };
 
   // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('manualJournals', 'tableSize', size);
+  const handleTableRowSizeChange = (size: string) => {
+    saveSettings({
+      options: [{ group: 'manualJournals', key: 'tableSize', value: size }],
+    });
   };
 
   // Handle the export button click.
@@ -147,8 +156,10 @@ function ManualJournalActionsBarInner({
             conditions: manualJournalsFilterConditions,
             defaultFieldKey: 'journal_number',
             fields,
-            onFilterChange: (filterConditions) => {
-              setManualJournalsTableState({ filterRoles: filterConditions });
+            onFilterChange: (filterConditions: IFilterRole[]) => {
+              setManualJournalsTableState({
+                filterRoles: filterConditions,
+              });
             },
           }}
         >
@@ -207,14 +218,10 @@ function ManualJournalActionsBarInner({
 export const ManualJournalActionsBar = compose(
   withDialogActions,
   withManualJournalsActions,
-  withSettingsActions,
   withManualJournals(
     ({ manualJournalsTableState, manualJournalsSelectedRows }) => ({
       manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
       manualJournalsSelectedRows,
     }),
   ),
-  withSettings(({ manualJournalsSettings }) => ({
-    manualJournalsTableSize: manualJournalsSettings?.tableSize,
-  })),
 )(ManualJournalActionsBarInner);

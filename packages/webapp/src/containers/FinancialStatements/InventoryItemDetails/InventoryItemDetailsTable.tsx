@@ -1,13 +1,11 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { ReportDataTable, FinancialSheet } from '@/components';
 import { useInventoryItemDetailsColumns } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
-
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 interface InventoryItemDetailsTableProps {
   companyName: string;

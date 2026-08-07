@@ -1,9 +1,9 @@
-import { Stack } from '@/components';
-import { ReceiptSendMailPreviewHeader } from './ReceiptSendMailPreviewHeader';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useGetSaleReceiptHtml } from '@/hooks/query';
 import { Spinner } from '@blueprintjs/core';
 import { SendMailViewPreviewPdfIframe } from '../../Estimates/SendMailViewDrawer/SendMailViewPreviewPdfIframe';
+import { ReceiptSendMailPreviewHeader } from './ReceiptSendMailPreviewHeader';
+import { Stack } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useGetSaleReceiptHtml } from '@/hooks/query';
 
 export function ReceiptSendMailPdfPreview() {
   return (

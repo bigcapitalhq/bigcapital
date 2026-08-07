@@ -1,15 +1,12 @@
 // @ts-nocheck
 import React from 'react';
-import { DashboardPageContent, DashboardContentTable } from '@/components';
-
 import { ProjectsActionsBar } from './ProjectsActionsBar';
-import { ProjectsViewTabs } from './ProjectsViewTabs';
 import { ProjectsDataTable } from './ProjectsDataTable';
-
+import { ProjectsListProvider } from './ProjectsListProvider';
+import { ProjectsViewTabs } from './ProjectsViewTabs';
 import { withProjects } from './withProjects';
 import { withProjectsActions } from './withProjectsActions';
-
-import { ProjectsListProvider } from './ProjectsListProvider';
+import { DashboardPageContent, DashboardContentTable } from '@/components';
 import { compose, transformTableStateToQuery } from '@/utils';
 
 /**

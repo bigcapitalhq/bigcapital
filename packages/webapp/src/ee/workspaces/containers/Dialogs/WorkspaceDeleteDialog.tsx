@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React, { useState } from 'react';
 import {
   Button,
   Classes,
@@ -9,14 +8,15 @@ import {
   FormGroup,
   InputGroup,
 } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
-import intl from 'react-intl-universal';
+import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
-import { useDeleteWorkspace } from '@/ee/workspaces/hooks/query/workspaces';
+import React, { useState } from 'react';
+import intl from 'react-intl-universal';
+import { FormattedMessage as T, AppToaster } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useDeleteWorkspace } from '@/ee/workspaces/hooks/query';
 import { compose } from '@/utils';
-import { css } from '@emotion/css';
 
 function WorkspaceDeleteDialog({
   dialogName,

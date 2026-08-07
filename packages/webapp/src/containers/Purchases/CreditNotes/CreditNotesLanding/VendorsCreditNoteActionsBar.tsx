@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { isEmpty } from 'lodash';
 import {
   Button,
   Classes,
@@ -15,6 +11,17 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useBulkDeleteVendorCreditsDialog } from './hooks/use-bulk-delete-vendor-credits-dialog';
+import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
+import { withVendorActions } from './withVendorActions';
+import { withVendorsCreditNotes } from './withVendorsCreditNotes';
+import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
+import type { WithVendorsCreditNotesProps } from './withVendorsCreditNotes';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   Icon,
   Can,
@@ -25,87 +32,75 @@ import {
   DashboardRowsHeightButton,
   DashboardActionsBar,
 } from '@/components';
-
-import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
-import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withVendorActions } from './withVendorActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
-import { withVendorsCreditNotes } from './withVendorsCreditNotes';
-import { useBulkDeleteVendorCreditsDialog } from './hooks/use-bulk-delete-vendor-credits-dialog';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useSaveSettings } from '@/hooks/query';
+import { compose } from '@/utils';
 
-/**
- * Vendors Credit note  table actions bar.
- */
+interface WithVendorsCreditNotesActionsProps {
+  setVendorsCreditNoteTableState: (state: Record<string, any>) => void;
+}
+
+interface WithVendorActionsProps {
+  setVendorCreditsTableState: (state: Record<string, any>) => void;
+}
+
+interface VendorsCreditNoteActionsBarProps
+  extends Pick<WithVendorsCreditNotesProps, 'vendorsCreditNoteSelectedRows'>,
+    WithVendorsCreditNotesActionsProps,
+    WithVendorActionsProps,
+    WithDialogActionsProps,
+    WithDrawerActionsProps {
+  vendorCreditFilterRoles: any[];
+}
+
 function VendorsCreditNoteActionsBarInner({
   setVendorCreditsTableState,
-
-  // #withVendorsCreditNotes
   vendorCreditFilterRoles,
   vendorsCreditNoteSelectedRows,
-
-  // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
-
-  // #withSettings
-  creditNoteTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
-  // #withDialogActions
   openDialog,
-
-  // #withDrawerActions
   openDrawer,
-}) {
+}: VendorsCreditNoteActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
 
-  // vendor credit list context.
-  const { VendorCreditsViews, fields, refresh } =
+  const { VendorCreditsViews, fields, refresh, vendorCreditSettings } =
     useVendorsCreditNoteListContext();
+  const creditNoteTableSize = vendorCreditSettings?.tableSize as
+    | string
+    | undefined;
 
-  // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
-  // Handle click a new Vendor.
   const handleClickNewVendorCredit = () => {
     history.push('/vendor-credits/new');
   };
-  // Handle view tab change.
-  const handleTabChange = (view) => {
+  const handleTabChange = (view: { slug?: string } | null) => {
     setVendorCreditsTableState({ viewSlug: view ? view.slug : null });
   };
-  // Handle click a refresh credit note.
   const handleRefreshBtnClick = () => {
     refresh();
   };
-  // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('vendorCredit', 'tableSize', size);
+  const handleTableRowSizeChange = (size: any) => {
+    saveSettings({
+      options: [{ group: 'vendorCredit', key: 'tableSize', value: size }],
+    });
   };
-  // Handle import button click.
   const handleImportBtnClick = () => {
     history.push('/vendor-credits/import');
   };
-  // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'vendor_credit' });
   };
-  // Handle the print button click.
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'VendorCredit' });
   };
-  // Handle the customize button click.
   const handleCustomizeBtnClick = () => {
     openDrawer(DRAWERS.CREDIT_NOTE_DETAILS);
   };
@@ -115,7 +110,7 @@ function VendorsCreditNoteActionsBarInner({
 
   if (!isEmpty(vendorsCreditNoteSelectedRows)) {
     const handleBulkDelete = () => {
-      openBulkDeleteDialog(vendorsCreditNoteSelectedRows);
+      openBulkDeleteDialog(vendorsCreditNoteSelectedRows as number[]);
     };
 
     return (
@@ -158,7 +153,7 @@ function VendorsCreditNoteActionsBarInner({
             conditions: vendorCreditFilterRoles,
             defaultFieldKey: 'created_at',
             fields: fields,
-            onFilterChange: (filterConditions) => {
+            onFilterChange: (filterConditions: any) => {
               setVendorsCreditNoteTableState({ filterRoles: filterConditions });
             },
           }}
@@ -169,7 +164,7 @@ function VendorsCreditNoteActionsBarInner({
         </AdvancedFilterPopover>
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'print-16'} iconSize={'16'} />}
+          icon={<Icon icon={'print-16'} iconSize={16} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
         />
@@ -181,7 +176,7 @@ function VendorsCreditNoteActionsBarInner({
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
+          icon={<Icon icon={'file-export-16'} iconSize={16} />}
           text={<T id={'export'} />}
           onClick={handleExportBtnClick}
         />
@@ -225,16 +220,12 @@ function VendorsCreditNoteActionsBarInner({
 export const VendorsCreditNoteActionsBar = compose(
   withVendorsCreditNotesActions,
   withVendorActions,
-  withSettingsActions,
   withVendorsCreditNotes(
     ({ vendorsCreditNoteTableState, vendorsCreditNoteSelectedRows }) => ({
       vendorCreditFilterRoles: vendorsCreditNoteTableState.filterRoles,
       vendorsCreditNoteSelectedRows,
     }),
   ),
-  withSettings(({ vendorsCreditNoteSetting }) => ({
-    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
-  })),
   withDialogActions,
   withDrawerActions,
 )(VendorsCreditNoteActionsBarInner);

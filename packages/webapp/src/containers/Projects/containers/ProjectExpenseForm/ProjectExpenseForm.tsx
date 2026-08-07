@@ -1,14 +1,13 @@
 // @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { AppToaster } from '@/components';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { CreateProjectExpenseFormSchema } from './ProjectExpenseForm.schema';
 import { ProjectExpenseFormContent } from './ProjectExpenseFormContent';
 import { useProjectExpenseFormContext } from './ProjectExpenseFormProvider';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import { compose } from '@/utils';
 
 const defaultInitialValues = {
@@ -44,11 +43,7 @@ function ProjectExpenseFormInner({
     };
 
     // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = ({ data: { errors } }) => {
       setSubmitting(false);
     };
   };

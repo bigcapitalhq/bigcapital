@@ -1,7 +1,6 @@
 import * as R from 'ramda';
-
-import { getColumnWidth } from '@/utils';
 import { Align } from '@/constants';
+import { getColumnWidth } from '@/utils';
 
 const itemNameOrDateColumn = R.curry(
   (data: unknown[], index: number, column: Record<string, any>) => ({

@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
+import { transformFilterFormToQuery } from '../common';
 import { FinancialReportPage } from '../FinancialReportPage';
 import { useCustomerBalanceSummaryReport } from '@/hooks/query';
-import { transformFilterFormToQuery } from '../common';
 
 type UseCustomerBalanceSummaryResult = ReturnType<
   typeof useCustomerBalanceSummaryReport

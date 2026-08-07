@@ -1,30 +1,28 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-
+import React from 'react';
+import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 import { withVendorsCreditNotes } from './withVendorsCreditNotes';
 import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
-
+import type { WithVendorsCreditNotesProps } from './withVendorsCreditNotes';
+import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
-import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 
-/**
- * Vendors Credit note views tabs.
- */
+interface WithVendorsCreditNotesActionsProps {
+  setVendorsCreditNoteTableState: (state: Record<string, any>) => void;
+}
+
+interface VendorsCreditNoteViewTabsProps {
+  vendorCreditCurrentView: string;
+  setVendorsCreditNoteTableState: WithVendorsCreditNotesActionsProps['setVendorsCreditNoteTableState'];
+}
+
 function VendorsCreditNoteViewTabsInner({
-  // #withVendorsCreditNotes
   vendorCreditCurrentView,
-
-  // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
-}) {
-  // vendor credit list context.
+}: VendorsCreditNoteViewTabsProps) {
   const { VendorCreditsViews } = useVendorsCreditNoteListContext();
 
-  // Handle tab change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string | null) => {
     setVendorsCreditNoteTableState({ viewSlug: viewSlug || null });
   };
 
@@ -45,7 +43,9 @@ function VendorsCreditNoteViewTabsInner({
 
 export const VendorsCreditNoteViewTabs = compose(
   withVendorsCreditNotesActions,
-  withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
-    vendorCreditCurrentView: vendorsCreditNoteTableState.viewSlug,
-  })),
+  withVendorsCreditNotes(
+    ({ vendorsCreditNoteTableState }: WithVendorsCreditNotesProps) => ({
+      vendorCreditCurrentView: vendorsCreditNoteTableState.viewSlug,
+    }),
+  ),
 )(VendorsCreditNoteViewTabsInner);

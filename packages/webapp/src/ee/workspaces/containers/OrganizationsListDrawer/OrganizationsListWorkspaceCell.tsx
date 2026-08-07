@@ -1,6 +1,6 @@
-import React from 'react';
 import { Spinner, Tag, Icon } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
+import React from 'react';
 import { firstLettersArgs } from '@/utils';
 
 /** Workspace row shape used by the organizations list table (camelCase API). */

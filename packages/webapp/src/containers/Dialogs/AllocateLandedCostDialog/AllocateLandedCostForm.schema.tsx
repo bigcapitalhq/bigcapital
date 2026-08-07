@@ -1,18 +1,17 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 
 export const AllocateLandedCostFormSchema = () =>
   Yup.object().shape({
-    transaction_type: Yup.string().label(intl.get('transaction_type')),
-    transaction_date: Yup.date().label(intl.get('transaction_date')),
-    transaction_id: Yup.string().label(intl.get('transaction_number')),
-    transaction_entry_id: Yup.string().label(intl.get('transaction_line')),
+    transactionType: Yup.string().label(intl.get('transaction_type')),
+    transactionDate: Yup.date().label(intl.get('transaction_date')),
+    transactionId: Yup.string().label(intl.get('transaction_number')),
+    transactionEntryId: Yup.string().label(intl.get('transaction_line')),
     amount: Yup.number().label(intl.get('amount')),
-    allocation_method: Yup.string().trim(),
+    allocationMethod: Yup.string().trim(),
     items: Yup.array().of(
       Yup.object().shape({
-        entry_id: Yup.number().nullable(),
+        entryId: Yup.number().nullable(),
         cost: Yup.number().nullable(),
       }),
     ),

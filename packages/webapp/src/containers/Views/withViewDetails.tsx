@@ -1,9 +1,9 @@
 import { connect, MapStateToProps } from 'react-redux';
-import { ApplicationState } from '@/store/reducers';
 import {
   getViewItemFactory,
   getViewMetaFactory,
 } from '@/store/custom-views/custom-views.selectors';
+import { ApplicationState } from '@/store/reducers';
 
 export interface WithViewDetailsProps {
   viewMeta: ReturnType<ReturnType<typeof getViewMetaFactory>>;

@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { Box, Group } from '@/components';
 import { Spinner, Text } from '@blueprintjs/core';
-import { Subscription } from './BillingSubscription';
 import { useBillingPageBoot } from './BillingPageBoot';
 import styles from './BillingPageContent.module.scss';
+import { Subscription } from './BillingSubscription';
+import { Box, Group } from '@/components';
 
 export function BillingPageContent() {
   const { isSubscriptionsLoading, subscriptions } = useBillingPageBoot();

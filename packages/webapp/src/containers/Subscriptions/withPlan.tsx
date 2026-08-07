@@ -1,7 +1,7 @@
 import { MapStateToProps, connect } from 'react-redux';
-import { getPlanSelector } from '@/store/plans/plans.selectors';
-import type { ApplicationState } from '@/store/reducers';
 import type { MapState } from '@/containers/hoc.types';
+import type { ApplicationState } from '@/store/reducers';
+import { getPlanSelector } from '@/store/plans/plans.selectors';
 
 export interface WithPlanProps {
   plan: ReturnType<ReturnType<typeof getPlanSelector>>;

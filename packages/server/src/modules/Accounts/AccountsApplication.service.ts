@@ -15,6 +15,7 @@ import { GetAccountsService } from './GetAccounts.service';
 import { IFilterMeta } from '@/interfaces/Model';
 import { GetAccountTransactionResponseDto } from './dtos/GetAccountTransactionResponse.dto';
 import { GetAccountsQueryDto } from './dtos/GetAccountsQuery.dto';
+import { BulkActivateAccountsService } from './BulkActivateAccounts.service';
 import { BulkDeleteAccountsService } from './BulkDeleteAccounts.service';
 import { ValidateBulkDeleteAccountsService } from './ValidateBulkDeleteAccounts.service';
 import { ValidateBulkDeleteResponseDto } from '@/common/dtos/BulkDelete.dto';
@@ -41,6 +42,7 @@ export class AccountsApplication {
     private readonly getAccountTransactionsService: GetAccountTransactionsService,
     private readonly getAccountsService: GetAccountsService,
     private readonly bulkDeleteAccountsService: BulkDeleteAccountsService,
+    private readonly bulkActivateAccountsService: BulkActivateAccountsService,
     private readonly validateBulkDeleteAccountsService: ValidateBulkDeleteAccountsService,
   ) {}
 
@@ -132,6 +134,26 @@ export class AccountsApplication {
     filter: IAccountsTransactionsFilter,
   ): Promise<Array<GetAccountTransactionResponseDto>> => {
     return this.getAccountTransactionsService.getAccountsTransactions(filter);
+  };
+
+  /**
+   * Activates multiple accounts in bulk.
+   */
+  public bulkActivateAccounts = (accountIds: number[]): Promise<void> => {
+    return this.bulkActivateAccountsService.bulkActivateAccounts(
+      accountIds,
+      true,
+    );
+  };
+
+  /**
+   * Inactivates multiple accounts in bulk.
+   */
+  public bulkInactivateAccounts = (accountIds: number[]): Promise<void> => {
+    return this.bulkActivateAccountsService.bulkActivateAccounts(
+      accountIds,
+      false,
+    );
   };
 
   /**

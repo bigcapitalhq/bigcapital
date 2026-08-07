@@ -1,4 +1,5 @@
 import React, { lazy } from 'react';
+import type { AccountDialogPayload } from './types';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux, {
@@ -14,14 +15,14 @@ const AccountDialogContent = lazy(() =>
 
 interface AccountFormDialogProps extends DialogBaseProps {
   dialogName: string;
-  payload: { action: string; id: number | null };
+  payload: AccountDialogPayload;
 }
 
 function AccountFormDialog({
   dialogName,
-  payload = { action: '', id: null },
+  payload = { action: '', accountId: null },
   isOpen,
-}: AccountFormDialogProps) {
+}: AccountFormDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}

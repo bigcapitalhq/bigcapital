@@ -3,14 +3,13 @@ import React from 'react';
 import { DashboardPageContent } from '@/components';
 
 import '@/style/pages/SaleReceipt/List.scss';
-
 import { ReceiptActionsBar } from './ReceiptActionsBar';
+import { ReceiptsListDialogs } from './ReceiptsListDialogs';
+import { ReceiptsListDrawers } from './ReceiptsListDrawers';
+import { ReceiptsListProvider } from './ReceiptsListProvider';
 import { ReceiptsTable } from './ReceiptsTable';
-
 import { withReceipts } from './withReceipts';
 import { withReceiptsActions } from './withReceiptsActions';
-
-import { ReceiptsListProvider } from './ReceiptsListProvider';
 import { transformTableStateToQuery, compose } from '@/utils';
 
 /**
@@ -37,6 +36,9 @@ function ReceiptsListInner({
       query={transformTableStateToQuery(receiptTableState)}
       tableStateChanged={receiptsTableStateChanged}
     >
+      <ReceiptsListDrawers />
+      <ReceiptsListDialogs />
+
       <DashboardPageContent>
         <ReceiptActionsBar />
 

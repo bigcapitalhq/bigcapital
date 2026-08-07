@@ -1,15 +1,19 @@
-// @ts-nocheck
-import React, { useCallback } from 'react';
 import classNames from 'classnames';
-import { CloudLoadingIndicator } from '@/components';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
-import { CLASSES } from '@/constants/classes';
-import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
-import { DataTableEditable } from '@/components';
+import React, { useCallback } from 'react';
 import { usePaymentReceiveEntriesColumns } from './components';
+import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
+import type { PaymentReceiveEntry, PaymentReceiveFormValues } from './utils';
+import { CloudLoadingIndicator, FormattedMessage as T } from '@/components';
+import { DataTableEditable } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { compose, updateTableCell } from '@/utils';
+
+type PaymentReceiveItemsTableProps = {
+  entries: PaymentReceiveEntry[];
+  onUpdateData: (entries: PaymentReceiveEntry[]) => void;
+  currencyCode: string;
+};
 
 /**
  * Payment receive items table.
@@ -18,32 +22,27 @@ export function PaymentReceiveItemsTable({
   entries,
   onUpdateData,
   currencyCode,
-}) {
-  // Payment receive form context.
+}: PaymentReceiveItemsTableProps) {
   const { isDueInvoicesFetching } = usePaymentReceiveInnerContext();
 
-  // Payment receive entries form context.
   const columns = usePaymentReceiveEntriesColumns();
 
-  // Formik context.
   const {
-    values: { customer_id },
+    values: { customerId },
     errors,
-  } = useFormikContext();
+  } = useFormikContext<PaymentReceiveFormValues>();
 
-  // No results message.
-  const noResultsMessage = customer_id ? (
+  const noResultsMessage = customerId ? (
     <T id={'there_is_no_receivable_invoices_for_this_customer'} />
   ) : (
     <T id={'please_select_a_customer_to_display_all_open_invoices_for_it'} />
   );
 
-  // Handle update data.
   const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
+    (rowIndex: number, columnId: string, value: unknown) => {
       const newRows = compose(updateTableCell(rowIndex, columnId, value))(
         entries,
-      );
+      ) as PaymentReceiveEntry[];
 
       onUpdateData(newRows);
     },
@@ -52,6 +51,7 @@ export function PaymentReceiveItemsTable({
 
   return (
     <CloudLoadingIndicator isLoading={isDueInvoicesFetching}>
+      {/* @ts-expect-error DataTableEditable is untyped and infers required actions/name props that are unused at runtime */}
       <DataTableEditable
         progressBarLoading={isDueInvoicesFetching}
         className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
@@ -59,7 +59,8 @@ export function PaymentReceiveItemsTable({
         data={entries}
         spinnerProps={false}
         payload={{
-          errors: errors?.entries || [],
+          errors:
+            (errors as { entries?: unknown[] } | undefined)?.entries || [],
           updateData: handleUpdateData,
           currencyCode,
         }}

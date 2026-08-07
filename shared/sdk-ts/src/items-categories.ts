@@ -1,6 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
-import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const ITEMS_CATEGORIES_ROUTES = {
   LIST: '/api/item-categories',
@@ -12,14 +12,11 @@ export type ItemCategory = OpResponseBody<OpForPath<typeof ITEMS_CATEGORIES_ROUT
 export type CreateItemCategoryBody = OpRequestBody<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.LIST, 'post'>>;
 export type EditItemCategoryBody = OpRequestBody<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.BY_ID, 'put'>>;
 
-export type ItemsCategoriesListResult = {
-  itemsCategories: ItemCategory[];
-  pagination: Record<string, unknown>;
-};
+export type GetItemCategoriesQuery = OpQueryParams<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.LIST, 'get'>>;
 
-export async function fetchItemCategories(fetcher: ApiFetcher): Promise<ItemCategoriesListResponse> {
+export async function fetchItemCategories(fetcher: ApiFetcher, query?: GetItemCategoriesQuery): Promise<ItemCategoriesListResponse> {
   const get = fetcher.path(ITEMS_CATEGORIES_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await get(query ?? {});
   return data;
 }
 

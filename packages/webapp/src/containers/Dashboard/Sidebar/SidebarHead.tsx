@@ -8,16 +8,16 @@ import {
   Position,
 } from '@blueprintjs/core';
 import styled, { x } from '@xstyled/emotion';
-
 import { Icon, FormattedMessage as T } from '@/components';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { useAuthenticatedAccount } from '@/hooks/query';
-import { useWorkspaces } from '@/ee/workspaces/hooks/query/workspaces';
-import { useAuthOrganizationId, useAuthActions } from '@/hooks/state';
-import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useWorkspaces } from '@/ee/workspaces/hooks/query';
+import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
+import {
+  useAuthenticatedAccount,
+  useCurrentOrganizationMetadata,
+} from '@/hooks/query';
+import { useAuthOrganizationId, useAuthActions } from '@/hooks/state';
 import { compose, firstLettersArgs } from '@/utils';
 
 // Popover modifiers.
@@ -73,11 +73,10 @@ const DashboardOrganizationMenu = styled(Menu)`
  * Sidebar head.
  */
 function SidebarHeadJSX({
-  // #withCurrentOrganization
-  organization,
   // #withDrawerActions
   openDrawer,
 }) {
+  const metadata = useCurrentOrganizationMetadata();
   const { data: user } = useAuthenticatedAccount();
   const { data: workspaces } = useWorkspaces();
   const currentOrganizationId = useAuthOrganizationId();
@@ -112,10 +111,10 @@ function SidebarHeadJSX({
                 backgroundColor="rgba(255, 255, 255, 0.05)"
                 borderRadius={4}
               >
-                {organization.logo_uri ? (
+                {metadata?.logoUri ? (
                   <x.img
-                    src={organization.logo_uri}
-                    alt={organization.name}
+                    src={metadata?.logoUri}
+                    alt={metadata?.name}
                     h={'60px'}
                     w={'60px'}
                     borderRadius={10}
@@ -133,11 +132,11 @@ function SidebarHeadJSX({
                     fontSize={16}
                     color="#fff"
                   >
-                    {firstLettersArgs(...(organization.name || '').split(' '))}
+                    {firstLettersArgs(...(metadata?.name || '').split(' '))}
                   </x.div>
                 )}
                 <x.div fontWeight={600} color="#fff">
-                  {organization.name}
+                  {metadata?.name}
                 </x.div>
               </x.div>
               <MenuDivider />
@@ -245,10 +244,12 @@ function SidebarHeadJSX({
             className="title"
             rightIcon={<Icon icon={'caret-down-16'} size={16} />}
           >
-            {organization.name}
+            {metadata?.name}
           </Button>
         </Popover>
-        <span class="subtitle">{user.full_name}</span>
+        <span className="subtitle">
+          {user.firstName} {user.lastName}
+        </span>
       </div>
 
       <div className="sidebar__head-logo">
@@ -263,7 +264,4 @@ function SidebarHeadJSX({
   );
 }
 
-export const SidebarHead = compose(
-  withCurrentOrganization(({ organization }) => ({ organization })),
-  withDrawerActions,
-)(SidebarHeadJSX);
+export const SidebarHead = compose(withDrawerActions)(SidebarHeadJSX);

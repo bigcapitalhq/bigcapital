@@ -1,6 +1,6 @@
-import { FlexProps } from './interfaces';
-import { FlexItem } from './FlexItem';
 import { FlexStyled } from './Flex.style';
+import { FlexItem } from './FlexItem';
+import { FlexProps } from './interfaces';
 
 export function Flex({
   children,

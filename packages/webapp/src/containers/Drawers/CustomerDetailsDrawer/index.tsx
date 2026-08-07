@@ -1,15 +1,19 @@
-// @ts-nocheck
-import React from 'react';
+import { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-
 import { compose } from '@/utils';
 
-const CustomerDetailsDrawerContent = React.lazy(() =>
+const CustomerDetailsDrawerContent = lazy(() =>
   import('./CustomerDetailsDrawerContent').then((m) => ({
     default: m.CustomerDetailsDrawerContent,
   })),
 );
+
+interface CustomerDetailsDrawerProps {
+  name: string;
+  isOpen: boolean;
+  payload: { customerId?: number };
+}
 
 /**
  * Contact detail drawer.
@@ -20,7 +24,7 @@ function CustomerDetailsDrawer({
   // #withDrawer
   isOpen,
   payload: { customerId },
-}) {
+}: CustomerDetailsDrawerProps) {
   return (
     <Drawer isOpen={isOpen} name={name} size={'750px'}>
       <DrawerSuspense>

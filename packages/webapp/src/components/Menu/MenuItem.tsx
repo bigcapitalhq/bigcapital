@@ -15,13 +15,6 @@
  * limitations under the License.
  */
 
-import classNames from 'classnames';
-import React from 'react';
-
-// import {
-// ,
-//  } from "@bluprintjs/core/src/components/common";
-// import { DISPLAYNAME_PREFIX } from "../../common/props";
 import {
   Icon,
   Popover,
@@ -34,6 +27,13 @@ import {
   DISPLAYNAME_PREFIX,
   Collapse,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+import React from 'react';
+
+// import {
+// ,
+//  } from "@bluprintjs/core/src/components/common";
+// import { DISPLAYNAME_PREFIX } from "../../common/props";
 
 // export interface IMenuItemProps extends IActionProps, ILinkProps {
 //     // override from IActionProps to make it required

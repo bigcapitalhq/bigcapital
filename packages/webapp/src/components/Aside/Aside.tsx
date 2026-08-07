@@ -1,9 +1,9 @@
 import { Button, Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
-import { useIsDarkMode } from '@/hooks/useDarkMode';
-import { Box, BoxProps, Group } from '../Layout';
 import { Icon } from '../Icon';
+import { Box, BoxProps, Group } from '../Layout';
 import styles from './Aside.module.scss';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 interface AsideProps extends BoxProps {
   title?: string;

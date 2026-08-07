@@ -1,11 +1,10 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import { compose } from '@/utils';
-
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withResourceDetail } from '@/containers/Resources/withResourceDetails';
-import { withViewsActions } from '@/containers/Views/withViewsActions';
 import { withViewsDetails } from '@/containers/Views/withViewDetails';
+import { withViewsActions } from '@/containers/Views/withViewsActions';
+import { compose } from '@/utils';
 
 const mapStateToProps = (state, ownProps) => {
   return {

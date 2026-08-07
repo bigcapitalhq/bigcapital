@@ -7,17 +7,25 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiExtraModels,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { AllocateBillLandedCostDto } from './dtos/AllocateBillLandedCost.dto';
 import { AllocateLandedCostService } from './commands/AllocateLandedCost.service';
 import { BillAllocatedLandedCostTransactions } from './commands/BillAllocatedLandedCostTransactions.service';
 import { RevertAllocatedLandedCost } from './commands/RevertAllocatedLandedCost.service';
 import { LandedCostTranasctions } from './commands/LandedCostTransactions.service';
 import { LandedCostTransactionsQueryDto } from './dtos/LandedCostTransactionsQuery.dto';
+import { BillLandedCostTransactionDto } from './dtos/BillLandedCostTransaction.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 
 @ApiTags('Landed Cost')
 @Controller('landed-cost')
+@ApiExtraModels(BillLandedCostTransactionDto)
 @ApiCommonHeaders()
 export class BillAllocateLandedCostController {
   constructor(
@@ -85,6 +93,16 @@ export class BillAllocateLandedCostController {
   @ApiResponse({
     status: 200,
     description: 'List of bill landed cost transactions.',
+    schema: {
+      type: 'object',
+      properties: {
+        billId: { type: 'number' },
+        data: {
+          type: 'array',
+          items: { $ref: getSchemaPath(BillLandedCostTransactionDto) },
+        },
+      },
+    },
   })
   async getBillLandedCostTransactions(@Param('billId') billId: number) {
     const data =

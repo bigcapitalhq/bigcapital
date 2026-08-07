@@ -1,62 +1,67 @@
-// @ts-nocheck
-import React, { useState } from 'react';
-import { FormattedMessage as T } from '@/components';
+import { Alert, Intent } from '@blueprintjs/core';
+import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import { useQueryClient } from '@tanstack/react-query';
-import { AppToaster } from '@/components';
-
-// import { withAccountsActions } from '@/containers/Accounts/withAccountsTableActions';
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useBulkInactivateAccounts } from '@/hooks/query/accounts';
 import { compose } from '@/utils';
+
+interface AccountBulkInactivateAlertPayload {
+  accountsIds: number[];
+}
+
+interface AccountBulkInactivateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: AccountBulkInactivateAlertPayload;
+}
 
 function AccountBulkInactivateAlertInner({
   name,
   isOpen,
   payload: { accountsIds },
-
-  // #withAccountsActions
-  requestBulkInactiveAccounts,
-
   closeAlert,
-}) {
-  const [isLoading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
-  const selectedRowsCount = 0;
+}: AccountBulkInactivateAlertProps): React.ReactElement {
+  const { mutateAsync: bulkInactivate, isPending } =
+    useBulkInactivateAccounts();
 
-  // Handle alert cancel.
   const handleCancel = () => {
     closeAlert(name);
   };
-  // Handle Bulk Inactive accounts confirm.
-  const handleConfirmBulkInactive = () => {
-    setLoading(true);
-    requestBulkInactiveAccounts(accountsIds)
-      .then(() => {
-        AppToaster.show({
-          message: intl.get('the_accounts_have_been_successfully_inactivated'),
-          intent: Intent.SUCCESS,
-        });
-        queryClient.invalidateQueries({ queryKey: ['accounts-table'] });
-      })
-      .catch((errors) => {})
-      .finally(() => {
-        setLoading(false);
-        closeAlert(name);
+
+  const handleConfirmBulkInactive = async () => {
+    try {
+      await bulkInactivate({ ids: accountsIds });
+      AppToaster.show({
+        message: intl.get('the_accounts_have_been_successfully_inactivated'),
+        intent: Intent.SUCCESS,
       });
+    } catch (error: unknown) {
+      // Replaced `(error as Error)?.message` cast with instanceof narrowing.
+      const message =
+        error instanceof Error
+          ? error.message
+          : intl.get('something_went_wrong');
+      AppToaster.show({
+        message,
+        intent: Intent.DANGER,
+      });
+    } finally {
+      closeAlert(name);
+    }
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={`${intl.get('inactivate')} (${selectedRowsCount})`}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={`${intl.get('inactivate')} (${accountsIds.length})`}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancel}
       onConfirm={handleConfirmBulkInactive}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         <T id={'are_sure_to_inactive_this_accounts'} />
@@ -68,5 +73,4 @@ function AccountBulkInactivateAlertInner({
 export const AccountBulkInactivateAlert = compose(
   withAlertStoreConnect(),
   withAlertActions,
-  // withAccountsActions,
 )(AccountBulkInactivateAlertInner);

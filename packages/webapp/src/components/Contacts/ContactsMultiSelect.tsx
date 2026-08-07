@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
 import * as R from 'ramda';
+import React, { useCallback } from 'react';
 import { FMultiSelect } from '../Forms';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Contacts multi-select component.

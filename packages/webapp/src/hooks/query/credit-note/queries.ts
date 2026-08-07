@@ -1,21 +1,4 @@
 import {
-  useQueryClient,
-  useMutation,
-  useQuery,
-  UseMutationOptions,
-  UseQueryOptions,
-  UseQueryResult,
-} from '@tanstack/react-query';
-import type {
-  CreditNote,
-  CreateCreditNoteBody,
-  EditCreditNoteBody,
-  CreateRefundCreditNoteBody,
-  ApplyCreditNoteToInvoicesBody,
-  ValidateBulkDeleteCreditNotesResponse,
-} from '@bigcapital/sdk-ts';
-import type { CreditNotesListResponse } from '@bigcapital/sdk-ts';
-import {
   fetchCreditNotes,
   fetchCreditNote,
   fetchCreditNoteState,
@@ -34,17 +17,34 @@ import {
   applyCreditNoteToInvoices,
   deleteApplyCreditNoteToInvoices,
 } from '@bigcapital/sdk-ts';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseMutationOptions,
+  UseQueryOptions,
+  UseQueryResult,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { useRequestPdf } from '../../useRequestPdf';
-import { creditNotesKeys } from './query-keys';
-import { itemsKeys } from '../items/query-keys';
-import { customersKeys } from '../customers/query-keys';
 import { accountsKeys } from '../accounts/query-keys';
-import { invoicesKeys } from '../invoices/query-keys';
-import { financialReportsKeys } from '../FinancialReports/query-keys';
-import { settingsKeys } from '../settings/query-keys';
-import { organizationKeys } from '../organization/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
+import { customersKeys } from '../customers/query-keys';
+import { financialReportsKeys } from '../FinancialReports/query-keys';
+import { invoicesKeys } from '../invoices/query-keys';
+import { itemsKeys } from '../items/query-keys';
+import { organizationKeys } from '../organization/query-keys';
+import { settingsKeys } from '../settings/query-keys';
+import { creditNotesKeys } from './query-keys';
+import type { CreditNotesListResponse } from '@bigcapital/sdk-ts';
+import type {
+  CreditNote,
+  CreateCreditNoteBody,
+  EditCreditNoteBody,
+  CreateRefundCreditNoteBody,
+  ApplyCreditNoteToInvoicesBody,
+  ValidateBulkDeleteCreditNotesResponse,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -195,7 +195,7 @@ export function useCreditNotes(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: creditNotesKeys.list(query),
@@ -214,7 +214,7 @@ export function useCreditNote(
   props?: Omit<UseQueryOptions<CreditNote>, 'queryKey' | 'queryFn'>,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: creditNotesKeys.detail(id),
@@ -307,7 +307,7 @@ export function useReconcileCreditNote(
   >,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: creditNotesKeys.reconcile(id),

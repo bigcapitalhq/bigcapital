@@ -1,14 +1,11 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { DataTable, FinancialSheet } from '@/components';
-
 import { useCustomersTransactionsColumns } from './components';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
-
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { DataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 interface CustomersTransactionsTableProps {
   companyName: string;

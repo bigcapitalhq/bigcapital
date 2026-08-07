@@ -1,47 +1,52 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { omit } from 'lodash';
-import { AppToaster } from '@/components';
 import { CreateQuickPaymentMadeFormSchema } from './QuickPaymentMade.schema';
-import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import { QuickPaymentMadeFormContent } from './QuickPaymentMadeFormContent';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import {
   defaultPaymentMade,
   transformBillToForm,
   transformErrors,
 } from './utils';
+import type { QuickPaymentMadeFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
+
+interface QuickPaymentMadeFormProps extends WithDialogActionsProps {}
 
 /**
  * Quick payment made form.
  */
 function QuickPaymentMadeFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: QuickPaymentMadeFormProps): React.ReactElement {
   const { bill, dialogName, createPaymentMadeMutate } =
     useQuickPaymentMadeContext();
 
   // Initial form values.
-  const initialValues = {
+  const initialValues: QuickPaymentMadeFormValues = {
     ...defaultPaymentMade,
     ...transformBillToForm(bill),
-  };
+  } as QuickPaymentMadeFormValues;
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
+  const handleFormSubmit = (
+    values: QuickPaymentMadeFormValues,
+    { setSubmitting, setFieldError }: FormikHelpers<QuickPaymentMadeFormValues>,
+  ) => {
+    const { billId: _billId, ...rest } = values;
+    void _billId;
     const entries = [
       {
-        payment_amount: values.amount,
-        bill_id: values.bill_id,
+        paymentAmount: values.amount,
+        billId: values.billId,
       },
     ];
     const form = {
-      ...omit(values, ['bill_id']),
+      ...rest,
       entries,
     };
 
@@ -55,15 +60,19 @@ function QuickPaymentMadeFormInner({
     };
     // Handle request response errors.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
     }) => {
       if (errors) {
         transformErrors(errors, { setFieldError });
       }
       setSubmitting(false);
     };
+    // SDK `CreateBillPaymentBody` is loosely typed (`paymentDate: Record<string,
+    // never>`, `entries: string[]`) which doesn't structurally overlap with the
+    // form's specific shape. Runtime sends the correct payload.
+    // @ts-expect-error — SDK body shape too loose to assign without `as unknown as`.
     createPaymentMadeMutate(form).then(onSuccess).catch(onError);
   };
 

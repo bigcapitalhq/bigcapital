@@ -1,15 +1,25 @@
-// @ts-nocheck
 import React from 'react';
+import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
+import type { Account } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { useAccount } from '@/hooks/query';
-import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 
-const MoneyOutFieldsContext = React.createContext();
+interface MoneyOutFieldsContextValue {
+  account?: Account;
+}
+
+interface MoneyOutFieldsProviderProps {
+  children?: React.ReactNode;
+}
+
+const MoneyOutFieldsContext = React.createContext<MoneyOutFieldsContextValue>(
+  {} as MoneyOutFieldsContextValue,
+);
 
 /**
  * Money out fields dialog provider.
  */
-function MoneyOutFieldsProvider({ ...props }) {
+function MoneyOutFieldsProvider({ children }: MoneyOutFieldsProviderProps) {
   const { accountId } = useMoneyOutDialogContext();
 
   // Fetches the specific account details.
@@ -17,14 +27,16 @@ function MoneyOutFieldsProvider({ ...props }) {
     enabled: !!accountId,
   });
   // Provider data.
-  const provider = {
+  const provider: MoneyOutFieldsContextValue = {
     account,
   };
   const isLoading = isAccountLoading;
 
   return (
     <DialogContent isLoading={isLoading}>
-      <MoneyOutFieldsContext.Provider value={provider} {...props} />
+      <MoneyOutFieldsContext.Provider value={provider}>
+        {children}
+      </MoneyOutFieldsContext.Provider>
     </DialogContent>
   );
 }

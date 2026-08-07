@@ -1,75 +1,79 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
+import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
 import { VendorsCreditNoteEmptyStatus } from './VendorsCreditNoteEmptyStatus';
+import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
+import { withVendorsCreditNotes } from './withVendorsCreditNotes';
+import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
+import type { VendorCreditTableRow } from './components';
+import type { WithVendorsCreditNotesProps } from './withVendorsCreditNotes';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { TABLES } from '@/constants/tables';
-import { useMemorizedColumnsWidths } from '@/hooks';
-
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
-import { withVendorsCreditNotes } from './withVendorsCreditNotes';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
-import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
-
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { compose } from '@/utils';
 
-/**
- * Vendors Credit note data table.
- */
+interface WithVendorsCreditNotesActionsProps {
+  setVendorsCreditNoteTableState: (state: Record<string, any>) => void;
+  setVendorsCreditNoteSelectedRows: (ids: number[]) => void;
+}
+
+interface VendorsCreditNoteDataTableProps
+  extends Pick<WithVendorsCreditNotesProps, 'vendorsCreditNoteTableState'>,
+    WithVendorsCreditNotesActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps,
+    WithDialogActionsProps {}
+
 function VendorsCreditNoteDataTableInner({
-  // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
   setVendorsCreditNoteSelectedRows,
-
-  // #withVendorCredits
   vendorsCreditNoteTableState,
-
-  // #withAlertActions
   openAlert,
-
-  // #withDrawerActions
   openDrawer,
-
-  // #withDialogAction
   openDialog,
-
-  // #withSettings
-  creditNoteTableSize,
-}) {
+}: VendorsCreditNoteDataTableProps) {
   const history = useHistory();
 
-  // Vendor credits context.
   const {
     vendorCredits,
     pagination,
     isEmptyStatus,
     isVendorCreditsFetching,
     isVendorCreditsLoading,
+    vendorCreditSettings,
   } = useVendorsCreditNoteListContext();
+  const creditNoteTableSize = vendorCreditSettings?.tableSize as
+    | string
+    | undefined;
 
-  // Credit note table columns.
   const columns = useVendorsCreditNoteTableColumns();
 
-  // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.VENDOR_CREDITS);
 
-  // Handles fetch data once the table state change.
   const handleDataTableFetchData = React.useCallback(
-    ({ pageSize, pageIndex, sortBy }) => {
+    ({
+      pageSize,
+      pageIndex,
+      sortBy,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      sortBy: Array<{ id: string; desc: boolean }>;
+    }) => {
       setVendorsCreditNoteTableState({
         pageSize,
         pageIndex,
@@ -79,48 +83,43 @@ function VendorsCreditNoteDataTableInner({
     [setVendorsCreditNoteTableState],
   );
 
-  // Display create note empty status instead of the table.
   if (isEmptyStatus) {
     return <VendorsCreditNoteEmptyStatus />;
   }
 
-  // Handle view vendor credit details.
-  const handleViewDetailVendorCredit = ({ id }) => {
+  const handleViewDetailVendorCredit = ({ id }: VendorCreditTableRow) => {
     openDrawer(DRAWERS.VENDOR_CREDIT_DETAILS, { vendorCreditId: id });
   };
 
-  // Handle delete credit note.
-  const handleDeleteVendorCreditNote = ({ id }) => {
+  const handleDeleteVendorCreditNote = ({ id }: VendorCreditTableRow) => {
     openAlert('vendor-credit-delete', { vendorCreditId: id });
   };
 
-  // Handle edit credit note.
-  const hanldeEditVendorCreditNote = (vendorCredit) => {
+  const hanldeEditVendorCreditNote = (vendorCredit: VendorCreditTableRow) => {
     history.push(`/vendor-credits/${vendorCredit.id}/edit`);
   };
 
-  // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
     openDrawer(DRAWERS.VENDOR_CREDIT_DETAILS, {
       vendorCreditId: cell.row.original.id,
     });
   };
 
-  const handleRefundCreditVendor = ({ id }) => {
+  const handleRefundCreditVendor = ({ id }: VendorCreditTableRow) => {
     openDialog('refund-vendor-credit', { vendorCreditId: id });
   };
 
-  // Handle cancel/confirm vendor credit open.
-  const handleOpenCreditNote = ({ id }) => {
+  const handleOpenCreditNote = ({ id }: VendorCreditTableRow) => {
     openAlert('vendor-credit-open', { vendorCreditId: id });
   };
 
-  // Handle reconcile credit note.
-  const handleReconcileVendorCredit = ({ id }) => {
+  const handleReconcileVendorCredit = ({ id }: VendorCreditTableRow) => {
     openDialog('reconcile-vendor-credit', { vendorCreditId: id });
   };
 
-  const handleSelectedRowsChange = (selectedFlatRows) => {
+  const handleSelectedRowsChange = (
+    selectedFlatRows: Array<{ original: VendorCreditTableRow }>,
+  ) => {
     const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
     setVendorsCreditNoteSelectedRows(selectedIds);
   };
@@ -168,9 +167,6 @@ export const VendorsCreditNoteDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ vendorsCreditNoteSetting }) => ({
-    creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
-  })),
   withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
     vendorsCreditNoteTableState,
   })),

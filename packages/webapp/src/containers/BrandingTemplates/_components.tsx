@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { safeCallback } from '@/utils';
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import { safeCallback } from '@/utils';
 
 /**
  * Templates table actions menu.

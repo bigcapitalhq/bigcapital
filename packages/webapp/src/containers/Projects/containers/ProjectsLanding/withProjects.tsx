@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getProjectsTableStateFactory,
   isProjectsTableStateChangedFactory,
 } from '@/store/project/projects.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithProjectsProps {
   projectsTableState: ReturnType<

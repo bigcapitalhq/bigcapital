@@ -15,6 +15,16 @@ export const BANKING_ACCOUNTS_ROUTES = {
 
 export type BankingAccountsListResponse = OpResponseBody<OpForPath<typeof BANKING_ACCOUNTS_ROUTES.LIST, 'get'>>;
 
+/** Response for GET /api/banking/transactions/{id}. */
+export type BankingTransactionResponse = OpResponseBody<
+  OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTION_BY_ID, 'get'>
+>;
+
+/** Response for GET /api/banking/uncategorized/{uncategorizedTransactionId}. */
+export type UncategorizedTransactionResponse = OpResponseBody<
+  OpForPath<typeof BANKING_ACCOUNTS_ROUTES.UNCATEGORIZED_BY_ID, 'get'>
+>;
+
 /** Bank account summary response (schema does not define response body). */
 export interface BankingAccountSummaryResponse {
   name: string;
@@ -74,7 +84,7 @@ export async function fetchBankingTransactions(
 export async function getBankingTransaction(
   fetcher: ApiFetcher,
   id: string | number
-): Promise<unknown> {
+): Promise<BankingTransactionResponse> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.TRANSACTION_BY_ID).method('get').create();
   const { data } = await get({ id: String(id) });
   return data;
@@ -112,7 +122,7 @@ export async function fetchUncategorizedTransactions(
 export async function getUncategorizedTransaction(
   fetcher: ApiFetcher,
   uncategorizedTransactionId: number
-): Promise<unknown> {
+): Promise<UncategorizedTransactionResponse> {
   const get = fetcher
     .path(BANKING_ACCOUNTS_ROUTES.UNCATEGORIZED_BY_ID)
     .method('get')
@@ -147,10 +157,9 @@ export type CreateCashflowTransactionBody = CreateBankingTransactionBody;
 export type CashflowAccountTransactionsQuery = GetBankingTransactionsQuery;
 export type CashflowAccountUncategorizedTransactionsQuery = GetUncategorizedTransactionsQuery;
 
-/** Fetch cashflow accounts (alias for fetchBankingAccounts with optional query params). */
+/** Fetch cashflow accounts (alias for fetchBankingAccounts). */
 export async function fetchCashflowAccounts(
   fetcher: ApiFetcher,
-  _query?: Record<string, unknown>
 ): Promise<BankingAccountsListResponse> {
   return fetchBankingAccounts(fetcher);
 }

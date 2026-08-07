@@ -1,25 +1,16 @@
 import React from 'react';
+import { FinancialReportBody } from '../FinancialReportPage';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 import { InventoryItemDetailsTable } from './InventoryItemDetailsTable';
-import { FinancialReportBody } from '../FinancialReportPage';
 import { FinancialSheetSkeleton } from '@/components';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
-
-interface InventoryItemDetailsBodyProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * Inventory item details body.
  * @returns {JSX.Element}
  */
-function InventoryItemDetailsBodyJSX({
-  organizationName,
-}: InventoryItemDetailsBodyProps) {
+function InventoryItemDetailsBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isInventoryItemDetailsLoading } = useInventoryItemDetailsContext();
 
   return (
@@ -33,8 +24,4 @@ function InventoryItemDetailsBodyJSX({
   );
 }
 
-export const InventoryItemDetailsBody = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(InventoryItemDetailsBodyJSX);
+export const InventoryItemDetailsBody = InventoryItemDetailsBodyJSX;

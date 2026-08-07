@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
-import { FinancialStatement, DashboardPageContent } from '@/components';
-import { JournalHeader } from './JournalHeader';
+import React, { useCallback, useEffect } from 'react';
+import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
 import { JournalActionsBar } from './JournalActionsBar';
 import { JournalBody } from './JournalBody';
-import { JournalSheetProvider } from './JournalProvider';
-import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withJournalActions } from './withJournalActions';
-import { useJournalQuery } from './utils';
-import { compose } from '@/utils';
 import { JournalDialogs } from './JournalDialogs';
+import { JournalHeader } from './JournalHeader';
+import { JournalSheetProvider } from './JournalProvider';
+import { useJournalQuery } from './utils';
+import { withJournalActions } from './withJournalActions';
 import type { WithJournalActionsProps } from './withJournalActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { compose } from '@/utils';
 
 type JournalProps = WithJournalActionsProps;
 

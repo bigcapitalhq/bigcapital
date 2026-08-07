@@ -1,8 +1,8 @@
+import * as R from 'ramda';
 import React from 'react';
+import { useJournalSheetContext } from './JournalProvider';
 import { Align, CLASSES } from '@/constants';
 import { getColumnWidth } from '@/utils';
-import * as R from 'ramda';
-import { useJournalSheetContext } from './JournalProvider';
 
 interface DescriptionCellProps {
   cell: { value: string };

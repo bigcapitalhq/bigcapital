@@ -1,13 +1,12 @@
+import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import classNames from 'classnames';
+import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
-import * as R from 'ramda';
-import classNames from 'classnames';
-
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 import { AppToaster, If, Stack } from '@/components';
 import { Align, CLASSES } from '@/constants';
-import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
-import { FinancialLoadingBar } from '../FinancialLoadingBar';
-import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import {
   useVendorBalanceSummaryCsvExport,
   useVendorBalanceSummaryXlsxExport,

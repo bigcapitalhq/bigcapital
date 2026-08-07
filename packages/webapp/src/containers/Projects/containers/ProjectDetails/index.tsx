@@ -2,9 +2,9 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ProjectDetailActionsBar } from './ProjectDetailActionsBar';
+import { ProjectDetailProvider } from './ProjectDetailProvider';
 import { ProjectDetailTabs } from './ProjectDetailTabs';
 import { DashboardPageContent } from '@/components';
-import { ProjectDetailProvider } from './ProjectDetailProvider';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { compose } from '@/utils';
 

@@ -1,14 +1,14 @@
 // @ts-nocheck
-import { Form, Formik, FormikHelpers } from 'formik';
-import { css } from '@emotion/css';
 import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { ReceiptSendMailFormValues } from './_types';
-import { ReceiptSendMailFormSchema } from './ReceiptSendMailForm.schema';
-import { useSendSaleReceiptMail } from '@/hooks/query';
-import { AppToaster } from '@/components';
 import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
-import { useDrawerActions } from '@/hooks/state';
+import { ReceiptSendMailFormSchema } from './ReceiptSendMailForm.schema';
+import { AppToaster } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useSendSaleReceiptMail } from '@/hooks/query';
+import { useDrawerActions } from '@/hooks/state';
 import { transformToForm } from '@/utils';
 
 const initialValues: ReceiptSendMailFormValues = {

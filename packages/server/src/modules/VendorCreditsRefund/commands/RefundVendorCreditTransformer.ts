@@ -6,14 +6,14 @@ export class RefundVendorCreditTransformer extends Transformer {
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
-    return ['formttedAmount', 'formattedDate'];
+    return ['formattedAmount', 'formattedDate'];
   };
 
   /**
    * Formatted amount.
    * @returns {string}
    */
-  protected formttedAmount = (item) => {
+  protected formattedAmount = (item) => {
     return this.formatNumber(item.amount, {
       currencyCode: item.currencyCode,
     });

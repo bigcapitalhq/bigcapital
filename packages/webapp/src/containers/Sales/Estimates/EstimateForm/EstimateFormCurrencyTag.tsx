@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 import { useEstimateFormContext } from './EstimateFormProvider';
+import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 
 /**
  * Estimate form currency tag.

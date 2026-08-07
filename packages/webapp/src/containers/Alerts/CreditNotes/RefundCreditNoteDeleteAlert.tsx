@@ -1,41 +1,45 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
-
-import { useDeleteRefundCreditNote } from '@/hooks/query';
-
+import { AppToaster, FormattedMessage as T } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { useDeleteRefundCreditNote } from '@/hooks/query';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface RefundCreditNoteDeleteAlertPayload {
+  creditNoteId: number;
+}
+
+interface RefundCreditNoteDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: RefundCreditNoteDeleteAlertPayload;
+}
 
 /**
  * Refund credit transactions delete alert
  */
 function RefundCreditNoteDeleteAlertInner({
   name,
-  // #withAlertStoreConnect
   isOpen,
   payload: { creditNoteId },
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteRefundCreditMutate, isLoading } =
+}: RefundCreditNoteDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteRefundCreditMutate, isPending: isLoading } =
     useDeleteRefundCreditNote();
 
-  // Handle cancel delete.
   const handleCancelAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete .
   const handleConfirmRefundCreditDelete = () => {
     deleteRefundCreditMutate(creditNoteId)
       .then(() => {
@@ -45,7 +49,13 @@ function RefundCreditNoteDeleteAlertInner({
         });
         closeDrawer(DRAWERS.REFUND_CREDIT_NOTE_DETAILS);
       })
-      .catch(() => {})
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had an empty `.catch(() => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -53,8 +63,8 @@ function RefundCreditNoteDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}

@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
-import intl from 'react-intl-universal';
-import styled from 'styled-components';
 import {
   Menu,
   Popover,
@@ -12,8 +8,22 @@ import {
   Intent,
   Tag,
 } from '@blueprintjs/core';
+import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import type { Currency } from '@bigcapital/sdk-ts';
 import { Icon } from '@/components';
 import { safeCallback } from '@/utils';
+
+export interface ActionMenuListPayload {
+  onEditCurrency?: (currency: Currency) => void;
+  onDeleteCurrency?: (currency: Currency) => void;
+}
+
+interface ActionMenuListProps {
+  row: { original: Currency };
+  payload: ActionMenuListPayload;
+}
 
 /**
  * Row actions menu list.
@@ -21,7 +31,7 @@ import { safeCallback } from '@/utils';
 export function ActionMenuList({
   row: { original },
   payload: { onEditCurrency, onDeleteCurrency },
-}) {
+}: ActionMenuListProps) {
   return (
     <Menu>
       <MenuItem
@@ -40,10 +50,15 @@ export function ActionMenuList({
   );
 }
 
+interface ActionsCellProps {
+  payload: ActionMenuListPayload;
+  row: { original: Currency };
+}
+
 /**
  * Actions cell.
  */
-export const ActionsCell = (props) => {
+export const ActionsCell = (props: ActionsCellProps) => {
   return (
     <Popover
       position={Position.RIGHT_BOTTOM}
@@ -54,10 +69,10 @@ export const ActionsCell = (props) => {
   );
 };
 
-export const CurrencyNameAccessor = (value) => {
+export const CurrencyNameAccessor = (value: Currency) => {
   return (
     <CurrencyNameRoot>
-      {value.currency_name} {value.is_base_currency && <Tag>Base Currency</Tag>}
+      {value.currencyName} {value.isBaseCurrency && <Tag>Base Currency</Tag>}
     </CurrencyNameRoot>
   );
 };
@@ -77,14 +92,14 @@ export function useCurrenciesTableColumns() {
       },
       {
         Header: intl.get('currency_code'),
-        accessor: 'currency_code',
+        accessor: 'currencyCode',
         className: 'currency_code',
         width: 120,
       },
       {
         Header: intl.get('currency_sign'),
         width: 120,
-        accessor: 'currency_sign',
+        accessor: 'currencySign',
       },
       {
         id: 'actions',

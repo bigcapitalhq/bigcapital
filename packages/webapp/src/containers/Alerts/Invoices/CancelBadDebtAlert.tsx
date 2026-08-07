@@ -1,36 +1,39 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-import { useCancelBadDebt } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useCancelBadDebt } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface CancelBadDebtAlertPayload {
+  invoiceId: number;
+}
+
+interface CancelBadDebtAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: CancelBadDebtAlertPayload;
+}
 
 /**
  * Cancel bad debt alert.
  */
 function CancelBadDebtAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { invoiceId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  // handle cancel  alert.
+}: CancelBadDebtAlertProps): React.ReactElement {
+  const { mutateAsync: cancelBadDebtMutate, isPending: isLoading } =
+    useCancelBadDebt();
+
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  const { mutateAsync: cancelBadDebtMutate, isLoading } = useCancelBadDebt();
-
-  // handleConfirm alert.
   const handleConfirm = () => {
     cancelBadDebtMutate(invoiceId)
       .then(() => {
@@ -39,7 +42,13 @@ function CancelBadDebtAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(() => {})
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had an empty `.catch(() => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -47,8 +56,8 @@ function CancelBadDebtAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'save'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('save')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancel}

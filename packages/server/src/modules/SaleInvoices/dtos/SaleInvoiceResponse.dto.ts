@@ -1,7 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
+import { CustomerLinkDto } from '@/modules/Customers/dtos/CustomerLink.dto';
+import { BranchLinkDto } from '@/modules/Branches/dtos/BranchLink.dto';
+import { CustomerResponseDto } from '@/modules/Customers/dtos/CustomerResponse.dto';
 import { PaymentMethodDto } from '../dtos/SaleInvoice.dto';
+import { SaleInvoiceTaxEntryDto } from './SaleInvoiceTaxEntry.dto';
 import { DiscountType } from '@/common/types/Discount';
 
 export class SaleInvoiceResponseDto {
@@ -84,10 +89,11 @@ export class SaleInvoiceResponseDto {
   entries: ItemEntryDto[];
 
   @ApiProperty({
-    description: 'Whether the invoice has been delivered',
-    example: false,
+    description: 'The tax entries of the invoice',
+    type: [SaleInvoiceTaxEntryDto],
+    required: false,
   })
-  delivered: boolean;
+  taxes?: SaleInvoiceTaxEntryDto[];
 
   @ApiProperty({
     description: 'The date when the invoice was delivered',
@@ -109,6 +115,13 @@ export class SaleInvoiceResponseDto {
     required: false,
   })
   branchId?: number;
+
+  @ApiProperty({
+    description: 'The nested branch summary',
+    type: BranchLinkDto,
+    required: false,
+  })
+  branch?: BranchLinkDto;
 
   @ApiProperty({
     description: 'The ID of the project',
@@ -137,6 +150,13 @@ export class SaleInvoiceResponseDto {
     required: false,
   })
   discount?: number;
+
+  @ApiProperty({
+    description: 'The computed discount amount',
+    example: 10,
+    required: false,
+  })
+  discountAmount?: number;
 
   @ApiProperty({
     description: 'The type of discount (percentage or fixed)',
@@ -223,6 +243,13 @@ export class SaleInvoiceResponseDto {
   isFullyPaid: boolean;
 
   @ApiProperty({
+    description: 'Whether the invoice is written off as bad debt',
+    example: false,
+    required: false,
+  })
+  isWrittenoff?: boolean;
+
+  @ApiProperty({
     description: 'The date when the invoice was created',
     example: '2023-01-01T00:00:00Z',
   })
@@ -234,4 +261,123 @@ export class SaleInvoiceResponseDto {
     required: false,
   })
   updatedAt?: Date;
+
+  // Formatted fields from transformer
+  @ApiProperty({
+    description: 'Formatted invoice date',
+    example: '2023-01-01',
+  })
+  invoiceDateFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted due date',
+    example: '2023-01-15',
+  })
+  dueDateFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted created at date',
+    example: '2023-01-01',
+  })
+  createdAtFormatted: string;
+
+  @ApiProperty({ description: 'Formatted due amount', example: '$500.00' })
+  dueAmountFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted payment amount',
+    example: '$500.00',
+  })
+  paymentAmountFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted balance amount',
+    example: '$500.00',
+  })
+  balanceAmountFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted exchange rate',
+    example: '1.00',
+  })
+  exchangeRateFormatted: string;
+
+  @ApiProperty({ description: 'Formatted subtotal', example: '$900.00' })
+  subtotalFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted subtotal in local currency',
+    example: '$900.00',
+  })
+  subtotalLocalFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted subtotal excluding tax',
+    example: '$800.00',
+  })
+  subtotalExludingTaxFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted tax amount withheld',
+    example: '$50.00',
+  })
+  taxAmountWithheldFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted tax amount withheld in local currency',
+    example: '$50.00',
+  })
+  taxAmountWithheldLocalFormatted: string;
+
+  @ApiProperty({ description: 'Formatted total', example: '$1,000.00' })
+  totalFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted total in local currency',
+    example: '$1,000.00',
+  })
+  totalLocalFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted discount amount',
+    example: '$10.00',
+  })
+  discountAmountFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted discount percentage',
+    example: '10%',
+  })
+  discountPercentageFormatted: string;
+
+  @ApiProperty({
+    description: 'Formatted adjustment amount',
+    example: '$5.00',
+  })
+  adjustmentFormatted: string;
+
+  @ApiProperty({
+    description: 'The customer of the invoice',
+    type: () => CustomerResponseDto,
+  })
+  @Type(() => CustomerResponseDto)
+  customer: CustomerResponseDto;
+
+  @ApiProperty({
+    description: 'Whether the invoice has been delivered',
+    example: false,
+  })
+  isDelivered: boolean;
+
+  @ApiProperty({
+    description: 'Number of days the invoice is overdue',
+    example: 0,
+  })
+  overdueDays: number;
+
+  @ApiProperty({
+    description: 'Number of days remaining until the invoice is due',
+    example: 15,
+  })
+  remainingDays: number;
 }

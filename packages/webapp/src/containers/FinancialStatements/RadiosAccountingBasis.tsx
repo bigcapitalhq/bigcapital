@@ -1,8 +1,8 @@
+import { RadioGroup, Radio } from '@blueprintjs/core';
+import { FastField } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FastField } from 'formik';
 import { handleStringChange } from '@/utils';
-import { RadioGroup, Radio } from '@blueprintjs/core';
 
 interface RadiosAccountingBasisProps {
   key?: string;

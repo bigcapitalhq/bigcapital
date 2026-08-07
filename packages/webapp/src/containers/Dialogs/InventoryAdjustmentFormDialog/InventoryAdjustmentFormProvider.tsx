@@ -1,8 +1,7 @@
-// @ts-nocheck
-import React, { useState, createContext } from 'react';
+import React, { createContext, useState } from 'react';
+import type { InventoryAdjustmentContextValue, SubmitPayload } from './types';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import {
   useItem,
   useAccounts,
@@ -10,32 +9,40 @@ import {
   useWarehouses,
   useCreateInventoryAdjustment,
 } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-const InventoryAdjustmentContext = createContext();
+const InventoryAdjustmentContext =
+  createContext<InventoryAdjustmentContextValue>(
+    {} as InventoryAdjustmentContextValue,
+  );
 
-/**
- * Inventory adjustment dialog provider.
- */
-function InventoryAdjustmentFormProvider({ itemId, dialogName, ...props }) {
-  // Features guard.
+interface InventoryAdjustmentFormProviderProps {
+  itemId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
+
+function InventoryAdjustmentFormProvider({
+  itemId,
+  dialogName,
+  ...props
+}: InventoryAdjustmentFormProviderProps) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
 
-  // Fetches accounts list.
   const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
 
-  // Fetches the item details.
-  const { isFetching: isItemLoading, data: item } = useItem(itemId);
+  const { isFetching: isItemLoading, data: item } = useItem(
+    itemId ?? undefined,
+  );
 
-  // Fetch warehouses list.
   const {
     data: warehouses,
     isLoading: isWarehouesLoading,
     isSuccess: isWarehousesSuccess,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
-  // Fetches the branches list.
   const {
     data: branches,
     isLoading: isBranchesLoading,
@@ -45,19 +52,16 @@ function InventoryAdjustmentFormProvider({ itemId, dialogName, ...props }) {
   const { mutateAsync: createInventoryAdjMutate } =
     useCreateInventoryAdjustment();
 
-  // Submit payload.
-  const [submitPayload, setSubmitPayload] = useState({});
+  const [submitPayload, setSubmitPayload] = useState<SubmitPayload>({});
 
-  // Determines whether the warehouse and branches are loading.
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
-  // State provider.
-  const provider = {
+  const provider: InventoryAdjustmentContextValue = {
     item,
     itemId,
-    branches,
-    warehouses,
-    accounts,
+    branches: branches ?? [],
+    warehouses: warehouses ?? [],
+    accounts: accounts ?? [],
 
     dialogName,
     submitPayload,

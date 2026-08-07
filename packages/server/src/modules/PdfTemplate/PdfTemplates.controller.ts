@@ -8,12 +8,22 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PdfTemplateApplication } from './PdfTemplate.application';
-import { ICreateInvoicePdfTemplateDTO, IEditPdfTemplateDTO } from './types';
+import {
+  CreatePdfTemplateDto,
+  EditPdfTemplateDto,
+} from './dtos/PdfTemplate.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { PreferencesAction } from '@/modules/Settings/Settings.types';
 
 @Controller('pdf-templates')
+@UseGuards(AuthorizationGuard, PermissionGuard)
 @ApiTags('Pdf Templates')
 @ApiCommonHeaders()
 export class PdfTemplatesController {
@@ -27,16 +37,9 @@ export class PdfTemplatesController {
     status: 200,
     description: 'The PDF template has been successfully created.',
   })
-  async createPdfTemplate(
-    @Body('templateName') templateName: string,
-    @Body('resource') resource: string,
-    @Body() invoiceTemplateDTO: ICreateInvoicePdfTemplateDTO,
-  ) {
-    return this.pdfTemplateApplication.createPdfTemplate(
-      templateName,
-      resource,
-      invoiceTemplateDTO,
-    );
+  @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
+  async createPdfTemplate(@Body() createDTO: CreatePdfTemplateDto) {
+    return this.pdfTemplateApplication.createPdfTemplate(createDTO);
   }
 
   @Delete(':id')
@@ -46,6 +49,7 @@ export class PdfTemplatesController {
     description: 'The PDF template has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'The PDF template not found.' })
+  @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   async deletePdfTemplate(@Param('id') templateId: number) {
     return this.pdfTemplateApplication.deletePdfTemplate(templateId);
   }
@@ -89,9 +93,10 @@ export class PdfTemplatesController {
     description: 'The PDF template has been successfully edited.',
   })
   @ApiResponse({ status: 404, description: 'The PDF template not found.' })
+  @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   async editPdfTemplate(
     @Param('id') templateId: number,
-    @Body() editDTO: IEditPdfTemplateDTO,
+    @Body() editDTO: EditPdfTemplateDto,
   ) {
     return this.pdfTemplateApplication.editPdfTemplate(templateId, editDTO);
   }
@@ -103,6 +108,7 @@ export class PdfTemplatesController {
     description: 'The PDF template has been successfully assigned as default.',
   })
   @ApiResponse({ status: 404, description: 'The PDF template not found.' })
+  @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   async assignPdfTemplateAsDefault(@Param('id') templateId: number) {
     return this.pdfTemplateApplication.assignPdfTemplateAsDefault(templateId);
   }

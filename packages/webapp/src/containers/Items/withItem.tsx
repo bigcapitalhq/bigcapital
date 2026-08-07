@@ -1,7 +1,7 @@
 import { connect, MapStateToProps } from 'react-redux';
-import { getItemById } from '@/store/selectors';
-import { ApplicationState } from '@/store/reducers';
 import type { MapState } from '@/containers/hoc.types';
+import { ApplicationState } from '@/store/reducers';
+import { getItemById } from '@/store/selectors';
 
 export interface WithItemProps {
   item: ReturnType<typeof getItemById>;

@@ -1,37 +1,39 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster, FormattedMessage as T } from '@/components';
-
-import { useActivateContact } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useActivateContact } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface ContactActivateAlertPayload {
+  contactId: number;
+}
+
+interface ContactActivateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ContactActivateAlertPayload;
+}
 
 /**
  *  Contact activate alert.
  */
 function ContactActivateAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
-  payload: { contactId, service },
-
-  // #withAlertActions
+  payload: { contactId },
   closeAlert,
-}) {
-  const { mutateAsync: activateContact, isLoading } = useActivateContact();
+}: ContactActivateAlertProps): React.ReactElement {
+  const { mutateAsync: activateContact, isPending: isLoading } =
+    useActivateContact();
 
-  // Handle activate contact alert cancel.
   const handleCancelActivateContact = () => {
     closeAlert(name);
   };
 
-  // Handle confirm contact activated.
   const handleConfirmContactActivate = () => {
     activateContact(contactId)
       .then(() => {
@@ -40,7 +42,13 @@ function ContactActivateAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -48,8 +56,8 @@ function ContactActivateAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('activate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelActivateContact}

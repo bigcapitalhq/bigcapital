@@ -1,4 +1,8 @@
-// @ts-nocheck
 import { createContext } from 'react';
+import type { TableContextValue } from './types';
 
-export default createContext();
+const TableContext = createContext<TableContextValue<any>>(
+  {} as TableContextValue<any>,
+);
+
+export default TableContext;

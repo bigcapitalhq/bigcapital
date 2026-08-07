@@ -1,13 +1,11 @@
 // @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
-import { Alert, Intent } from '@blueprintjs/core';
-import { useAssignPdfTemplateAsDefault } from '@/hooks/query/pdf-templates';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useAssignPdfTemplateAsDefault } from '@/hooks/query/pdf-templates';
 import { compose } from '@/utils';
 
 /**

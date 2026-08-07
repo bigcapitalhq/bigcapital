@@ -1,30 +1,25 @@
 // @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { compose } from '@/utils';
+import { useReceiptsTableColumns, ActionsMenu } from './components';
+import { ReceiptsEmptyStatus } from './ReceiptsEmptyStatus';
+import { useReceiptsListContext } from './ReceiptsListProvider';
+import { withReceipts } from './withReceipts';
+import { withReceiptsActions } from './withReceiptsActions';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { TABLES } from '@/constants/tables';
-
-import { ReceiptsEmptyStatus } from './ReceiptsEmptyStatus';
-
-import { withReceipts } from './withReceipts';
-import { withReceiptsActions } from './withReceiptsActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { useReceiptsListContext } from './ReceiptsListProvider';
-import { useReceiptsTableColumns, ActionsMenu } from './components';
-import { useMemorizedColumnsWidths } from '@/hooks';
-import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { compose } from '@/utils';
 
 /**
  * Sale receipts datatable.
@@ -45,9 +40,6 @@ function ReceiptsDataTable({
 
   // #withDialogAction
   openDialog,
-
-  // #withSettings
-  receiptsTableSize,
 }) {
   const history = useHistory();
 
@@ -58,7 +50,9 @@ function ReceiptsDataTable({
     isReceiptsFetching,
     isReceiptsLoading,
     isEmptyStatus,
+    receiptSettings,
   } = useReceiptsListContext();
+  const receiptsTableSize = receiptSettings?.tableSize;
 
   // Receipts table columns.
   const columns = useReceiptsTableColumns();
@@ -168,7 +162,4 @@ export const ReceiptsTable = compose(
   withDrawerActions,
   withDialogActions,
   withReceipts(({ receiptTableState }) => ({ receiptTableState })),
-  withSettings(({ receiptSettings }) => ({
-    receiptsTableSize: receiptSettings?.tableSize,
-  })),
 )(ReceiptsDataTable);

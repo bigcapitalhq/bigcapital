@@ -1,9 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import styled from 'styled-components';
-import { curry } from 'lodash/fp';
-import { useHistory } from 'react-router-dom';
 import {
   Popover,
   Menu,
@@ -12,9 +6,12 @@ import {
   MenuItem,
   Classes,
 } from '@blueprintjs/core';
-import { Icon } from '@/components';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { Icon } from '@/components';
 import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
 
 function AccountSwitchButton() {
@@ -25,7 +22,7 @@ function AccountSwitchButton() {
       minimal={true}
       rightIcon={<Icon icon={'caret-down-16'} iconSize={16} />}
     >
-      <AccountSwitchText>{currentAccount.name}</AccountSwitchText>
+      <AccountSwitchText>{currentAccount?.name}</AccountSwitchText>
     </AccountSwitchButtonBase>
   );
 }
@@ -35,15 +32,15 @@ function AccountSwitchItem() {
   const { cashflowAccounts, accountId } = useAccountTransactionsContext();
 
   // Handle item click.
-  const handleItemClick = curry((account, event) => {
+  const handleItemClick = (account: { id: number }) =>
     push(`/cashflow-accounts/${account.id}/transactions`);
-  });
 
   const items = cashflowAccounts.map((account) => (
     <AccountSwitchMenuItem
+      key={account.id}
       name={account.name}
-      balance={account.formatted_amount}
-      onClick={handleItemClick(account)}
+      balance={account.formattedAmount}
+      onClick={() => handleItemClick(account)}
       active={account.id === accountId}
     />
   ));
@@ -66,7 +63,7 @@ function AccountBalanceItem() {
     <AccountBalanceItemWrap>
       {intl.get('cash_flow_transaction.balance_in_bigcapital')} {''}
       <AccountBalanceAmount>
-        {currentAccount.formatted_amount}
+        {currentAccount?.formattedAmount}
       </AccountBalanceAmount>
     </AccountBalanceItemWrap>
   );
@@ -79,20 +76,8 @@ function AccountBankBalanceItem() {
     <AccountBalanceItemWrap>
       Balance in Bank Account
       <AccountBalanceAmount>
-        {currentAccount.bank_balance_formatted}
+        {currentAccount?.bankBalanceFormatted}
       </AccountBalanceAmount>
-    </AccountBalanceItemWrap>
-  );
-}
-
-function AccountNumberItem() {
-  const { currentAccount } = useAccountTransactionsContext();
-
-  if (!currentAccount.account_mask) return null;
-
-  return (
-    <AccountBalanceItemWrap>
-      Account Number: xxx{currentAccount.account_mask}
     </AccountBalanceItemWrap>
   );
 }
@@ -118,8 +103,7 @@ function AccountTransactionsDetailsContent() {
       <AccountSwitchItem />
 
       {/** Hide some details once the aside opens to preserve space on details bar. */}
-      {hideAside && <AccountNumberItem />}
-      <AccountBalanceItem />
+      {hideAside && <AccountBalanceItem />}
       {hideAside && <AccountBankBalanceItem />}
     </React.Fragment>
   );
@@ -139,15 +123,24 @@ export function AccountTransactionsDetailsBar() {
   );
 }
 
+interface AccountSwitchMenuItemProps {
+  name: string;
+  balance?: string;
+  active?: boolean;
+  onClick?: () => void;
+}
+
 function AccountSwitchMenuItem({
   name,
   balance,
-  transactionsNumber,
-  ...restProps
-}) {
+  active,
+  onClick,
+}: AccountSwitchMenuItemProps) {
   return (
     <MenuItem
       label={balance}
+      active={active}
+      onClick={onClick}
       text={
         <React.Fragment>
           <AccountSwitchItemName>{name}</AccountSwitchItemName>
@@ -158,7 +151,6 @@ function AccountSwitchMenuItem({
           <AccountSwitchItemUpdatedAt></AccountSwitchItemUpdatedAt>
         </React.Fragment>
       }
-      {...restProps}
     />
   );
 }
@@ -173,7 +165,6 @@ const DetailsBarSkeletonBase = styled.div`
 
 const AccountBalanceItemWrap = styled.div`
   margin-left: 18px;
-  // color: #5f6d86;
 `;
 
 const AccountTransactionDetailsWrap = styled.div`
@@ -193,7 +184,6 @@ const AccountSwitchText = styled.div`
 const AccountBalanceAmount = styled.span`
   font-weight: 600;
   display: inline-block;
-  // color: rgb(31, 50, 85);
   margin-left: 10px;
 `;
 

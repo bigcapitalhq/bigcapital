@@ -1,6 +1,4 @@
-// @ts-nocheck
 import React from 'react';
-
 import { GeneralFormPage } from './GeneralFormPage';
 import { GeneralFormProvider } from './GeneralFormProvider';
 

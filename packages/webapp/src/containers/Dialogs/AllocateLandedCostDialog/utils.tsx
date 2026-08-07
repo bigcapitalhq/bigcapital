@@ -1,33 +1,41 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import { sumBy, round } from 'lodash';
 import * as R from 'ramda';
-
-import { defaultFastFieldShouldUpdate } from '@/utils';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type {
+  AllocateLandedCostFormEntry,
+  AllocateLandedCostItem,
+  LandedCostTransaction,
+} from './types';
 import { MoneyFieldCell } from '@/components';
+import { defaultFastFieldShouldUpdate } from '@/utils';
 
-export const defaultInitialItem = {
-  entry_id: '',
+export const defaultInitialItem: AllocateLandedCostItem = {
+  entryId: '',
   cost: '',
 };
 
 // Default form initial values.
 export const defaultInitialValues = {
-  transaction_type: 'Bill',
-  transaction_id: '',
-  transaction_entry_id: '',
+  transactionType: 'Bill',
+  transactionId: '',
+  transactionEntryId: '',
   amount: '',
-  allocation_method: 'quantity',
+  allocationMethod: 'quantity',
   items: [defaultInitialItem],
 };
 
 /**
  * Retrieve transaction entries of the given transaction id.
  */
-export function getEntriesByTransactionId(transactions, id) {
-  const transaction = transactions.find((trans) => trans.id === id);
-  return transaction ? transaction.entries : [];
+export function getEntriesByTransactionId(
+  transactions:
+    | { id: number; entries?: AllocateLandedCostFormEntry[] }[]
+    | undefined,
+  id: number | null,
+): AllocateLandedCostFormEntry[] {
+  const transaction = transactions?.find((trans) => trans.id === id);
+  return transaction ? (transaction.entries ?? []) : [];
 }
 
 /**
@@ -36,8 +44,11 @@ export function getEntriesByTransactionId(transactions, id) {
  * @param {*} transactionEntryId
  * @returns
  */
-export function getTransactionEntryById(transaction, transactionEntryId) {
-  return transaction.entries.find((entry) => entry.id === transactionEntryId);
+export function getTransactionEntryById(
+  transaction: { entries?: AllocateLandedCostFormEntry[] } | null | undefined,
+  transactionEntryId: number | null,
+): AllocateLandedCostFormEntry | undefined {
+  return transaction?.entries?.find((entry) => entry.id === transactionEntryId);
 }
 
 /**
@@ -47,7 +58,11 @@ export function getTransactionEntryById(transaction, transactionEntryId) {
  * @param {*} entries
  * @returns
  */
-export function allocateCostToEntries(total, allocateType, entries) {
+export function allocateCostToEntries(
+  total: number | string,
+  allocateType: string,
+  entries: AllocateLandedCostFormEntry[],
+): AllocateLandedCostFormEntry[] {
   return R.compose(
     R.when(
       R.always(allocateType === 'value'),
@@ -57,7 +72,7 @@ export function allocateCostToEntries(total, allocateType, entries) {
       R.always(allocateType === 'quantity'),
       R.curry(allocateCostByQuantity)(total),
     ),
-  )(entries);
+  )(entries) as AllocateLandedCostFormEntry[];
 }
 
 /**
@@ -66,17 +81,20 @@ export function allocateCostToEntries(total, allocateType, entries) {
  * @param {*} total
  * @returns
  */
-export function allocateCostByValue(total, entries) {
-  const totalAmount = sumBy(entries, 'amount');
+export function allocateCostByValue(
+  total: number | string,
+  entries: AllocateLandedCostFormEntry[],
+): AllocateLandedCostFormEntry[] {
+  const totalAmount = sumBy(entries, (e) => Number(e.amount ?? 0));
 
   const entriesMapped = entries.map((entry) => ({
     ...entry,
-    percentageOfValue: entry.amount / totalAmount,
+    percentageOfValue: Number(entry.amount ?? 0) / totalAmount,
   }));
 
   return entriesMapped.map((entry) => ({
     ...entry,
-    cost: round(entry.percentageOfValue * total, 2),
+    cost: round(entry.percentageOfValue * Number(total), 2),
   }));
 }
 
@@ -86,31 +104,44 @@ export function allocateCostByValue(total, entries) {
  * @param {*} total
  * @returns
  */
-export function allocateCostByQuantity(total, entries) {
-  const totalQuantity = sumBy(entries, 'quantity');
+export function allocateCostByQuantity(
+  total: number | string,
+  entries: AllocateLandedCostFormEntry[],
+): AllocateLandedCostFormEntry[] {
+  const totalQuantity = sumBy(entries, (e) => Number(e.quantity ?? 0));
 
   const _entries = entries.map((entry) => ({
     ...entry,
-    percentageOfQuantity: entry.quantity / totalQuantity,
+    percentageOfQuantity: Number(entry.quantity ?? 0) / totalQuantity,
   }));
 
   return _entries.map((entry) => ({
     ...entry,
-    cost: round(entry.percentageOfQuantity * total, 2),
+    cost: round(entry.percentageOfQuantity * Number(total), 2),
   }));
 }
 
 /**
  * Retrieve the landed cost transaction by the given id.
  */
-export function getCostTransactionById(id, transactions) {
-  return transactions.find((trans) => trans.id === id);
+export function getCostTransactionById(
+  id: number | null,
+  transactions:
+    | { id: number; entries?: AllocateLandedCostFormEntry[] }[]
+    | undefined,
+): LandedCostTransaction | undefined {
+  return transactions?.find((trans) => trans.id === id) as
+    | LandedCostTransaction
+    | undefined;
 }
 
 /**
  * Detarmines the transactions selet field when should update.
  */
-export function transactionsSelectShouldUpdate(newProps, oldProps) {
+export function transactionsSelectShouldUpdate(
+  newProps: { transactions?: unknown } & Record<string, unknown>,
+  oldProps: { transactions?: unknown } & Record<string, unknown>,
+): boolean {
   return (
     newProps.transactions !== oldProps.transactions ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -122,7 +153,9 @@ export function transactionsSelectShouldUpdate(newProps, oldProps) {
  * @param {*} entries
  * @returns
  */
-export function resetAllocatedCostEntries(entries) {
+export function resetAllocatedCostEntries(
+  entries: AllocateLandedCostFormEntry[],
+): AllocateLandedCostFormEntry[] {
   return entries.map((entry) => ({ ...entry, cost: 0 }));
 }
 

@@ -1,18 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  RolesListResponse,
-  Role,
-  RolePermissionsSchema,
-  CreateRoleBody,
-  EditRoleBody,
-} from '@bigcapital/sdk-ts';
-import {
   fetchRoles,
   fetchRole,
   fetchRolePermissionsSchema,
@@ -20,8 +6,22 @@ import {
   editRole,
   deleteRole,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { rolesKeys } from './query-keys';
+import type {
+  RolesListResponse,
+  Role,
+  RolePermissionsSchema,
+  CreateRoleBody,
+  EditRoleBody,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,

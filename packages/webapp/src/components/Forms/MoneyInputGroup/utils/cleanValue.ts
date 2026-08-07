@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { parseAbbrValue } from './parseAbbrValue';
-import { removeSeparators } from './removeSeparators';
-import { removeInvalidChars } from './removeInvalidChars';
 import { escapeRegExp } from './escapeRegExp';
+import { parseAbbrValue } from './parseAbbrValue';
+import { removeInvalidChars } from './removeInvalidChars';
+import { removeSeparators } from './removeSeparators';
 
 export type CleanValueOptions = {
   value: string;

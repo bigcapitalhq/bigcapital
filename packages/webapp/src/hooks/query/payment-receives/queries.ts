@@ -1,4 +1,18 @@
 import {
+  fetchPaymentsReceived,
+  fetchPaymentReceived,
+  createPaymentReceived,
+  editPaymentReceived,
+  deletePaymentReceived,
+  bulkDeletePaymentsReceived,
+  validateBulkDeletePaymentsReceived,
+  fetchPaymentReceiveEditPage,
+  fetchPaymentReceiveMail,
+  sendPaymentReceiveMail,
+  fetchPaymentReceivedState,
+  fetchPaymentReceiveHtmlContent,
+} from '@bigcapital/sdk-ts';
+import {
   useMutation,
   useQueryClient,
   useQuery,
@@ -7,6 +21,17 @@ import {
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query';
+import { useRequestQuery } from '../../useQueryRequest';
+import useApiRequest, { useApiFetcher } from '../../useRequest';
+import { useRequestPdf } from '../../useRequestPdf';
+import { accountsKeys } from '../accounts/query-keys';
+import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
+import { creditNotesKeys } from '../credit-note/query-keys';
+import { customersKeys } from '../customers/query-keys';
+import { financialReportsKeys } from '../FinancialReports/query-keys';
+import { invoicesKeys } from '../invoices/query-keys';
+import { settingsKeys } from '../settings/query-keys';
+import { paymentReceivesKeys } from './query-keys';
 import type {
   PaymentsReceivedListResponse,
   PaymentReceived,
@@ -21,33 +46,7 @@ import type {
   SendPaymentReceiveMailBody,
   SendPaymentReceiveMailResponse,
 } from '@bigcapital/sdk-ts';
-import {
-  fetchPaymentsReceived,
-  fetchPaymentReceived,
-  createPaymentReceived,
-  editPaymentReceived,
-  deletePaymentReceived,
-  bulkDeletePaymentsReceived,
-  validateBulkDeletePaymentsReceived,
-  fetchPaymentReceiveEditPage,
-  fetchPaymentReceiveMail,
-  sendPaymentReceiveMail,
-  fetchPaymentReceivedState,
-  fetchPaymentReceiveHtmlContent,
-} from '@bigcapital/sdk-ts';
-
-import useApiRequest, { useApiFetcher } from '../../useRequest';
-import { useRequestQuery } from '../../useQueryRequest';
-import { saveInvoke, transformToCamelCase } from '@/utils';
-import { useRequestPdf } from '../../useRequestPdf';
-import { paymentReceivesKeys } from './query-keys';
-import { invoicesKeys } from '../invoices/query-keys';
-import { accountsKeys } from '../accounts/query-keys';
-import { customersKeys } from '../customers/query-keys';
-import { creditNotesKeys } from '../credit-note/query-keys';
-import { financialReportsKeys } from '../FinancialReports/query-keys';
-import { settingsKeys } from '../settings/query-keys';
-import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
+import { saveInvoke } from '@/utils';
 
 const commonInvalidateQueries = (client: ReturnType<typeof useQueryClient>) => {
   client.invalidateQueries({ queryKey: paymentReceivesKeys.all() });
@@ -83,7 +82,7 @@ export function usePaymentReceives(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: paymentReceivesKeys.list(query),
@@ -178,7 +177,7 @@ export function usePaymentReceive(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<PaymentReceived>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: paymentReceivesKeys.detail(id),
@@ -194,7 +193,7 @@ export function usePaymentReceiveEditPage(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: paymentReceivesKeys.editPage(id),

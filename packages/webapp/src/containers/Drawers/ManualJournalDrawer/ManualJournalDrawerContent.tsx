@@ -1,11 +1,14 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/components/Drawers/ManualJournalDrawer.scss';
 
-import { DrawerBody } from '@/components';
-import { ManualJournalDrawerProvider } from './ManualJournalDrawerProvider';
 import { ManualJournalDrawerDetails } from './ManualJournalDrawerDetails';
+import { ManualJournalDrawerProvider } from './ManualJournalDrawerProvider';
+import { DrawerBody } from '@/components';
+
+interface ManualJournalDrawerContentProps {
+  manualJournalId: number | undefined;
+}
 
 /**
  * Manual Journal drawer content.
@@ -13,7 +16,7 @@ import { ManualJournalDrawerDetails } from './ManualJournalDrawerDetails';
 export function ManualJournalDrawerContent({
   // #ownProp
   manualJournalId,
-}) {
+}: ManualJournalDrawerContentProps) {
   return (
     <ManualJournalDrawerProvider manualJournalId={manualJournalId}>
       <DrawerBody>

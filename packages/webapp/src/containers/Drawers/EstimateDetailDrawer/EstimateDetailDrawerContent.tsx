@@ -1,17 +1,17 @@
-// @ts-nocheck
-import React from 'react';
-import { DrawerBody } from '@/components';
-
 import { EstimateDetail } from './EstimateDetail';
 import { EstimateDetailDrawerProvider } from './EstimateDetailDrawerProvider';
+import { DrawerBody } from '@/components';
+
+interface EstimateDetailDrawerContentProps {
+  estimateId: number | undefined;
+}
 
 /**
  * Estimate detail drawer content.
  */
 export function EstimateDetailDrawerContent({
-  // #ownProp
   estimateId,
-}) {
+}: EstimateDetailDrawerContentProps) {
   return (
     <EstimateDetailDrawerProvider estimateId={estimateId}>
       <DrawerBody>

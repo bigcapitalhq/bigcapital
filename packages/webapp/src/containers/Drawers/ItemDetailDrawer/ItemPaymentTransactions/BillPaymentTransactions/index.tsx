@@ -1,36 +1,35 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
+import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
+import {
+  useBillTransactionsColumns,
+  ActionsMenu,
+  type ItemBillTransaction,
+} from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { DataTable, TableSkeletonRows } from '@/components';
 import { TableStyle } from '@/constants';
-
-import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
-import { useItemAssociatedBillTransactions } from '@/hooks/query';
-import { useBillTransactionsColumns, ActionsMenu } from './components';
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { useItemAssociatedBillTransactions } from '@/hooks/query';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface BillPaymentTransactionsInnerProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'> {}
 
 /**
  * Bill payment transactions data table.
  */
 function BillPaymentTransactions({
-  // #withAlertActions
   openAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
+}: BillPaymentTransactionsInnerProps) {
   const history = useHistory();
-
   const columns = useBillTransactionsColumns();
-
   const { itemId } = useItemDetailDrawerContext();
-
-  // Handle fetch Estimate associated transactions.
   const {
     isLoading: isBillTransactionsLoading,
     isFetching: isBillTransactionFetching,
@@ -39,22 +38,20 @@ function BillPaymentTransactions({
     enabled: !!itemId,
   });
 
-  // Handles delete payment transactions.
-  const handleDeletePaymentTransactons = ({ bill_id }) => {
+  const handleDeletePaymentTransactons = ({ billId }: ItemBillTransaction) => {
     openAlert('bill-delete', {
-      billId: bill_id,
+      billId,
     });
   };
 
-  // Handles edit payment transactions.
-  const handleEditPaymentTransactions = ({ bill_id }) => {
-    history.push(`/bills/${bill_id}/edit`);
+  const handleEditPaymentTransactions = ({ billId }: ItemBillTransaction) => {
+    history.push(`/bills/${billId}/edit`);
     closeDrawer(DRAWERS.ITEM_DETAILS);
   };
   return (
     <DataTable
       columns={columns}
-      data={paymentTransactions}
+      data={paymentTransactions ?? []}
       loading={isBillTransactionsLoading}
       headerLoading={isBillTransactionsLoading}
       progressBarLoading={isBillTransactionFetching}

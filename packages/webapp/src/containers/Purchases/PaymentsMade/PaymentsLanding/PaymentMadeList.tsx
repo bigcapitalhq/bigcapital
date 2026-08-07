@@ -1,30 +1,33 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/PaymentMade/List.scss';
 
-import { DashboardPageContent } from '@/components';
-import { PaymentMadesListProvider } from './PaymentMadesListProvider';
 import { PaymentMadeActionsBar } from './PaymentMadeActionsBar';
+import { PaymentMadeListDrawers } from './PaymentMadeListDrawers';
+import { PaymentMadesListProvider } from './PaymentMadesListProvider';
 import { PaymentMadesTable } from './PaymentMadesTable';
-
 import { withPaymentMade } from './withPaymentMade';
 import { withPaymentMadeActions } from './withPaymentMadeActions';
-
+import type { WithPaymentMadeProps } from './withPaymentMade';
+import { DashboardPageContent } from '@/components';
 import { compose, transformTableStateToQuery } from '@/utils';
 
-/**
- * Payment mades list.
- */
+interface WithPaymentMadeActionsProps {
+  resetPaymentMadesTableState: () => void;
+}
+
+interface PaymentMadeListProps
+  extends Pick<
+      WithPaymentMadeProps,
+      'paymentMadesTableState' | 'paymentsTableStateChanged'
+    >,
+    WithPaymentMadeActionsProps {}
+
 function PaymentMadeListInner({
-  // #withPaymentMade
   paymentMadesTableState,
   paymentsTableStateChanged,
-
-  // #withPaymentMadeActions
   resetPaymentMadesTableState,
-}) {
-  // Resets the invoices table state once the page unmount.
+}: PaymentMadeListProps) {
   React.useEffect(
     () => () => {
       resetPaymentMadesTableState();
@@ -38,6 +41,7 @@ function PaymentMadeListInner({
       tableStateChanged={paymentsTableStateChanged}
     >
       <PaymentMadeActionsBar />
+      <PaymentMadeListDrawers />
 
       <DashboardPageContent>
         <PaymentMadesTable />

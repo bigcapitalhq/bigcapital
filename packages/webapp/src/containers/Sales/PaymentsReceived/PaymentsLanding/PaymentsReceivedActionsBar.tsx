@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Button,
   Classes,
@@ -14,11 +12,18 @@ import {
   Position,
 } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useBulkDeletePaymentReceivesDialog } from './hooks/use-bulk-delete-payment-receives-dialog';
+import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
+import { withPaymentsReceived } from './withPaymentsReceived';
+import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
+import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   Icon,
   Can,
-  If,
   DashboardFilterButton,
   AdvancedFilterPopover,
   FormattedMessage as T,
@@ -26,92 +31,76 @@ import {
   DashboardActionViewsList,
   DashboardActionsBar,
 } from '@/components';
-
-import { withPaymentsReceived } from './withPaymentsReceived';
-import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
-
-import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
-import { useRefreshPaymentReceive } from '@/hooks/query/payment-receives';
-import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
-import { useBulkDeletePaymentReceivesDialog } from './hooks/use-bulk-delete-payment-receives-dialog';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useRefreshPaymentReceive } from '@/hooks/query/payment-receives';
+import { useSaveSettings } from '@/hooks/query';
+import { compose } from '@/utils';
 
-/**
- * Payment receives actions bar.
- */
+interface WithPaymentsReceivedActionsProps {
+  setPaymentReceivesTableState: (state: Record<string, any>) => void;
+}
+
+interface PaymentsReceivedActionsBarProps
+  extends Pick<WithPaymentsReceivedProps, 'paymentReceivesSelectedRows'>,
+    WithPaymentsReceivedActionsProps,
+    WithDialogActionsProps,
+    WithDrawerActionsProps {
+  paymentFilterConditions: any[];
+}
+
 function PaymentsReceivedActionsBarInner({
-  // #withPaymentsReceivedActions
   setPaymentReceivesTableState,
-
-  // #withPaymentsReceived
   paymentFilterConditions,
   paymentReceivesSelectedRows,
-
-  // #withSettings
-  paymentReceivesTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
-  // #withDialogActions
   openDialog,
-
-  // #withDrawerActions
   openDrawer,
-}) {
-  // History context.
+}: PaymentsReceivedActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
   const history = useHistory();
 
-  // Payment receives list context.
-  const { paymentReceivesViews, fields } = usePaymentsReceivedListContext();
+  const { paymentReceivesViews, fields, paymentReceiveSettings } =
+    usePaymentsReceivedListContext();
+  const paymentReceivesTableSize = paymentReceiveSettings?.tableSize as
+    | string
+    | undefined;
 
-  // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
-  // Handle new payment button click.
   const handleClickNewPaymentReceive = () => {
     history.push('/payment-received/new');
   };
 
-  // Payment receive refresh action.
   const { refresh } = useRefreshPaymentReceive();
 
-  // Handle tab changing.
-  const handleTabChange = (viewId) => {
+  const handleTabChange = (viewId: { id?: number }) => {
     setPaymentReceivesTableState({ customViewId: viewId.id || null });
   };
-  // Handle click a refresh payment receives
   const handleRefreshBtnClick = () => {
     refresh();
   };
-  // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('paymentReceives', 'tableSize', size);
+  const handleTableRowSizeChange = (size: any) => {
+    saveSettings({
+      options: [{ group: 'paymentReceives', key: 'tableSize', value: size }],
+    });
   };
-  // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/payments-received/import');
   };
-  // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'payment_receive' });
   };
-  // Handles the print button click.
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'PaymentReceive' });
   };
-  // Handle the customize button click.
   const handleCustomizeBtnClick = () => {
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'PaymentReceive' });
   };
@@ -121,7 +110,7 @@ function PaymentsReceivedActionsBarInner({
 
   if (!isEmpty(paymentReceivesSelectedRows)) {
     const handleBulkDelete = () => {
-      openBulkDeleteDialog(paymentReceivesSelectedRows);
+      openBulkDeleteDialog(paymentReceivesSelectedRows as number[]);
     };
     return (
       <DashboardActionsBar>
@@ -160,7 +149,7 @@ function PaymentsReceivedActionsBarInner({
             conditions: paymentFilterConditions,
             defaultFieldKey: 'payment_receive_no',
             fields: fields,
-            onFilterChange: (filterConditions) => {
+            onFilterChange: (filterConditions: any) => {
               setPaymentReceivesTableState({ filterRoles: filterConditions });
             },
           }}
@@ -171,7 +160,7 @@ function PaymentsReceivedActionsBarInner({
         </AdvancedFilterPopover>
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'print-16'} iconSize={'16'} />}
+          icon={<Icon icon={'print-16'} iconSize={16} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
         />
@@ -183,7 +172,7 @@ function PaymentsReceivedActionsBarInner({
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
+          icon={<Icon icon={'file-export-16'} iconSize={16} />}
           text={<T id={'export'} />}
           onClick={handleExportBtnClick}
         />
@@ -226,7 +215,6 @@ function PaymentsReceivedActionsBarInner({
 
 export const PaymentsReceivedActionsBar = compose(
   withPaymentsReceivedActions,
-  withSettingsActions,
   withPaymentsReceived(
     ({ paymentReceivesTableState, paymentReceivesSelectedRows }) => ({
       paymentReceivesTableState,
@@ -234,9 +222,6 @@ export const PaymentsReceivedActionsBar = compose(
       paymentReceivesSelectedRows,
     }),
   ),
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
-  })),
   withDialogActions,
   withDrawerActions,
 )(PaymentsReceivedActionsBarInner);

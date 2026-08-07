@@ -1,25 +1,24 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
-import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
-import { DRAWERS } from '@/constants/drawers';
+import { lazy } from 'react';
+import { Drawer, DrawerSuspense } from '@/components';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
+import { compose } from '@/utils';
 
-const TaxRateDetailsDrawerContent = React.lazy(() =>
+const TaxRateDetailsDrawerContent = lazy(() =>
   import('./TaxRateDetailsContent').then((m) => ({
     default: m.TaxRateDetailsContent,
   })),
 );
+
+type TaxRateDetailsDrawerInnerProps = WithDrawersProps & { name: string };
 
 /**
  * Tax rate details drawer.
  */
 function TaxRateDetailsDrawerInner({
   name,
-  // #withDrawer
   isOpen,
   payload: { taxRateId },
-}) {
+}: TaxRateDetailsDrawerInnerProps) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -28,12 +27,15 @@ function TaxRateDetailsDrawerInner({
       size={'65%'}
     >
       <DrawerSuspense>
-        <TaxRateDetailsDrawerContent name={name} taxRateId={taxRateId} />
+        <TaxRateDetailsDrawerContent
+          name={name}
+          taxRateId={taxRateId as number}
+        />
       </DrawerSuspense>
     </Drawer>
   );
 }
 
-export const TaxRateDetailsDrawer = R.compose(withDrawers())(
+export const TaxRateDetailsDrawer = compose(withDrawers())(
   TaxRateDetailsDrawerInner,
 );

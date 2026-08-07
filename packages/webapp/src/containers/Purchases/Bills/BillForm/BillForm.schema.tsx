@@ -1,15 +1,14 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import moment from 'moment';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 import { isBlank } from '@/utils';
 
 const BillFormSchema = Yup.object().shape({
-  vendor_id: Yup.number().required().label(intl.get('vendor_name_')),
-  bill_date: Yup.date().required().label(intl.get('bill_date_')),
-  due_date: Yup.date()
-    .min(Yup.ref('bill_date'), ({ path, min }) =>
+  vendorId: Yup.number().required().label(intl.get('vendor_name_')),
+  billDate: Yup.date().required().label(intl.get('bill_date_')),
+  dueDate: Yup.date()
+    .min(Yup.ref('billDate'), ({ path, min }) =>
       intl.get('bill.validation.due_date', {
         path,
         min: moment(min).format('YYYY/MM/DD'),
@@ -17,33 +16,34 @@ const BillFormSchema = Yup.object().shape({
     )
     .required()
     .label(intl.get('due_date_')),
-  bill_number: Yup.string()
+  billNumber: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('bill_number_')),
-  reference_no: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
+  referenceNo: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
   note: Yup.string()
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
     .label(intl.get('note')),
   open: Yup.boolean(),
-  branch_id: Yup.string(),
-  warehouse_id: Yup.string(),
-  exchange_rate: Yup.number(),
+  branchId: Yup.string(),
+  warehouseId: Yup.string(),
+  exchangeRate: Yup.number(),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()
         .nullable()
         .max(DATATYPES_LENGTH.INT_10)
         .when(['rate'], {
-          is: (rate) => rate,
+          is: (rate: unknown) => rate,
           then: Yup.number().required(),
         }),
       rate: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
-      item_id: Yup.number()
+      itemId: Yup.number()
         .nullable()
         .when(['quantity', 'rate'], {
-          is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),
+          is: (quantity: unknown, rate: unknown) =>
+            !isBlank(quantity) && !isBlank(rate),
           then: Yup.number().required(),
         }),
       total: Yup.number().nullable(),

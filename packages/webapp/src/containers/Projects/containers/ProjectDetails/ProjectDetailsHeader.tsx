@@ -1,12 +1,11 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormatDate } from '@/components';
 import { DetailFinancialCard, DetailFinancialSection } from './components';
-import { calculateStatus } from '@/utils';
-import { useCalculateProject } from './utils';
-
 import { useProjectDetailContext } from './ProjectDetailProvider';
+import { useCalculateProject } from './utils';
+import { FormatDate } from '@/components';
+import { calculateStatus } from '@/utils';
 
 /**
  * Project details header.

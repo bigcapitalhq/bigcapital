@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from 'react';
-import { useCustomers } from '@/hooks/query';
 import { useCreateProject, useEditProject, useProject } from '../../hooks';
 import { DialogContent } from '@/components';
+import { useCustomers } from '@/hooks/query';
 
 const ProjectFormContext = React.createContext();
 

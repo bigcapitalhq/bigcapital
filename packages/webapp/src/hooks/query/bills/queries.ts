@@ -1,20 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  Bill,
-  BillsListResponse,
-  CreateBillBody,
-  EditBillBody,
-  GetBillsQuery,
-  BulkDeleteBillsBody,
-  BillPaymentTransactionsResponse,
-} from '@bigcapital/sdk-ts';
-import {
   fetchBills,
   fetchBill,
   createBill,
@@ -26,8 +10,24 @@ import {
   fetchDueBills,
   fetchBillPaymentTransactions,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { billsKeys } from './query-keys';
+import type {
+  Bill,
+  BillsListResponse,
+  CreateBillBody,
+  EditBillBody,
+  GetBillsQuery,
+  BulkDeleteBillsBody,
+  BillPaymentTransactionsResponse,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -145,7 +145,7 @@ export function useBills(
   query?: GetBillsQuery,
   props?: Omit<UseQueryOptions<BillsListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: billsKeys.list(query),
@@ -157,7 +157,7 @@ export function useBill(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<Bill>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: billsKeys.detail(id),
@@ -196,7 +196,7 @@ export function useBillPaymentTransactions(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: billsKeys.paymentTransactions(id),

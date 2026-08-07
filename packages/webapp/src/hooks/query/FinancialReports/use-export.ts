@@ -1,13 +1,13 @@
-// @ts-nocheck
+import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { downloadFile } from '@/hooks/useDownloadFile';
 import useApiRequest from '@/hooks/useRequest';
-import { AxiosError } from 'axios';
-import { useMutation } from '@tanstack/react-query';
 
 interface ResourceExportValues {
   resource: string;
   format: string;
 }
+
 /**
  * Initiates a download of the balance sheet in XLSX format.
  * @param {Object} query - The query parameters for the request.
@@ -17,9 +17,9 @@ interface ResourceExportValues {
 export const useResourceExport = () => {
   const apiRequest = useApiRequest();
 
-  return useMutation<void, AxiosError, any>((data: ResourceExportValues) => {
-    return apiRequest
-      .get('/export', {
+  return useMutation<unknown, AxiosError, ResourceExportValues>({
+    mutationFn: (data: ResourceExportValues) => {
+      return apiRequest.get('/export', {
         responseType: 'blob',
         headers: {
           accept:
@@ -29,10 +29,7 @@ export const useResourceExport = () => {
           resource: data.resource,
           format: data.format,
         },
-      })
-      .then((res) => {
-        downloadFile(res.data, `${data.resource}.${data.format}`);
-        return res;
       });
+    },
   });
 };

@@ -1,5 +1,5 @@
-import { Dispatch, AnyAction } from 'redux';
 import { connect } from 'react-redux';
+import { Dispatch, AnyAction } from 'redux';
 import {
   SubscriptionPlansPeriod,
   changePlansPeriod,

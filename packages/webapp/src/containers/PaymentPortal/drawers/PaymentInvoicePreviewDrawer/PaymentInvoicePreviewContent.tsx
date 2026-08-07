@@ -1,7 +1,7 @@
 // @ts-nocheck
+import { usePaymentPortalBoot } from '../../PaymentPortalBoot';
 import { Box, DrawerBody, DrawerHeaderContent } from '@/components';
 import { InvoicePaperTemplate } from '@/containers/Sales/Invoices/InvoiceCustomize/InvoicePaperTemplate';
-import { usePaymentPortalBoot } from '../../PaymentPortalBoot';
 
 export function PaymentInvoicePreviewContent() {
   const { sharableLinkMeta } = usePaymentPortalBoot();

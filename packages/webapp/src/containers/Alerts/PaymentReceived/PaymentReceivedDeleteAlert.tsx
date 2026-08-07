@@ -1,48 +1,46 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
-import { useDeletePaymentReceive } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
 import { handleDeleteErrors } from './_utils';
-import { compose } from '@/utils';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { useDeletePaymentReceive } from '@/hooks/query';
+import { compose } from '@/utils';
+
+interface PaymentReceivedDeleteAlertPayload {
+  paymentReceiveId: number;
+}
+
+interface PaymentReceivedDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: PaymentReceivedDeleteAlertPayload;
+}
 
 /**
  * Payment receive delete alert.
  */
 function PaymentReceivedDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { paymentReceiveId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deletePaymentReceiveMutate, isLoading } =
+}: PaymentReceivedDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deletePaymentReceiveMutate, isPending: isLoading } =
     useDeletePaymentReceive();
 
-  // Handle cancel payment Receive.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete payment receive.
   const handleConfirmPaymentReceiveDelete = () => {
     deletePaymentReceiveMutate(paymentReceiveId)
       .then(() => {
@@ -55,11 +53,7 @@ function PaymentReceivedDeleteAlertInner({
         closeDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS);
       })
       .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
           handleDeleteErrors(errors);
         },
       )
@@ -70,8 +64,8 @@ function PaymentReceivedDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -80,6 +74,7 @@ function PaymentReceivedDeleteAlertInner({
       loading={isLoading}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_payment_received_you_will_able_to_restore_it'}
         />

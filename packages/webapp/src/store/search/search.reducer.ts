@@ -1,3 +1,4 @@
+import { createReducer } from '@reduxjs/toolkit';
 import {
   CLOSE_SEARCH,
   OPEN_SEARCH,
@@ -6,7 +7,6 @@ import {
   UNIVERSAL_SEARCH_SET_ITEM_SELECT,
   UNIVERSAL_SEARCH_SET_RESOURCE_TYPE,
 } from '@/store/types';
-import { createReducer } from '@reduxjs/toolkit';
 
 interface SearchState {
   isOpen: boolean;

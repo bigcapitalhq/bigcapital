@@ -1,12 +1,17 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
-
+import type { ItemTableRow } from './components';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { AbilitySubject, ItemAction } from '@/constants/abilityOption';
+import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { DRAWERS } from '@/constants/drawers';
-
-import { AbilitySubject, ItemAction } from '@/constants/abilityOption';
+interface ItemUniversalSearchSelectComponentProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+  onAction?: () => void;
+}
 
 /**
  * Item univrsal search item select action.
@@ -19,7 +24,7 @@ function ItemUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: ItemUniversalSearchSelectComponentProps) {
   if (resourceType === RESOURCES_TYPES.ITEM) {
     openDrawer(DRAWERS.ITEM_DETAILS, { itemId: resourceId });
     onAction && onAction();
@@ -33,14 +38,12 @@ export const ItemUniversalSearchSelectAction = withDrawerActions(
 
 /**
  * Transformes items to search.
- * @param {*} item
- * @returns
  */
-const transfromItemsToSearch = (item) => ({
+const transfromItemsToSearch = (item: ItemTableRow) => ({
   id: item.id,
   text: item.name,
   subText: item.code,
-  label: item.type_formatted,
+  label: item.typeFormatted,
   reference: item,
 });
 

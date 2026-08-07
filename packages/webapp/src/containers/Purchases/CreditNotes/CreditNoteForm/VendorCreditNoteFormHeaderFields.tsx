@@ -1,19 +1,18 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import classNames from 'classnames';
-import {
-  FormGroup,
-  InputGroup,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { useTheme } from '@emotion/react';
+import { Position, ControlGroup } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-
-import { CLASSES } from '@/constants/classes';
+import { Theme, useTheme } from '@emotion/react';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { VendorCreditNoteExchangeRateInputField } from './components';
+import {
+  vendorsFieldShouldUpdate,
+  useObserveVendorCreditNoSettings,
+  type VendorCreditFormValues,
+} from './utils';
+import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   FFormGroup,
   FieldRequiredHint,
@@ -26,26 +25,10 @@ import {
   FDateInput,
   FInputGroup,
 } from '@/components';
-import {
-  vendorsFieldShouldUpdate,
-  useObserveVendorCreditNoSettings,
-} from './utils';
-
-import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
-import { VendorCreditNoteExchangeRateInputField } from './components';
-import {
-  momentFormatter,
-  compose,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
-
-import { withSettings } from '@/containers/Settings/withSettings';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import intl from 'react-intl-universal';
+import { momentFormatter, compose } from '@/utils';
 
-const getFieldsStyle = (theme: Theme) => css`
+const getFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
     margin-bottom: 0;
 
@@ -62,21 +45,28 @@ const getFieldsStyle = (theme: Theme) => css`
   }
 `;
 
+interface VendorCreditNoteFormHeaderFieldsInnerProps
+  extends Pick<WithDialogActionsProps, 'openDialog'> {}
+
 /**
  * Vendor Credit note form header fields.
  */
 function VendorCreditNoteFormHeaderFieldsInner({
-  // #withDialogActions
   openDialog,
-
-  // #withSettings
-  vendorcreditAutoIncrement,
-  vendorcreditNumberPrefix,
-  vendorcreditNextNumber,
-}) {
+}: VendorCreditNoteFormHeaderFieldsInnerProps) {
   const theme = useTheme();
   const fieldsClassName = getFieldsStyle(theme);
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<VendorCreditFormValues>();
+  const { vendorCreditSettings } = useVendorCreditNoteFormContext();
+  const vendorcreditAutoIncrement = vendorCreditSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const vendorcreditNextNumber = vendorCreditSettings?.nextNumber as
+    | number
+    | undefined;
+  const vendorcreditNumberPrefix = vendorCreditSettings?.numberPrefix as
+    | string
+    | undefined;
 
   // Handle vendor credit number changing.
   const handleVendorCreditNumberChange = () => {
@@ -84,9 +74,11 @@ function VendorCreditNoteFormHeaderFieldsInner({
   };
 
   // Handle vendor credit no. field blur.
-  const handleVendorCreditNoBlur = (event) => {
+  const handleVendorCreditNoBlur: React.FocusEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
     const newValue = event.target.value;
-    const oldValue = values.vendor_credit_number;
+    const oldValue = values.vendorCreditNumber;
 
     if (oldValue !== newValue && vendorcreditAutoIncrement) {
       openDialog('vendor-credit-form', {
@@ -110,20 +102,19 @@ function VendorCreditNoteFormHeaderFieldsInner({
 
       {/* ----------- Exchange rate ----------- */}
       <VendorCreditNoteExchangeRateInputField
-        name={'exchange_rate'}
+        name={'exchangeRate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
       {/* ------- Vendor Credit date ------- */}
       <FFormGroup
-        name={'vendor_credit_date'}
+        name={'vendorCreditDate'}
         label={intl.get('credit_note.label_credit_note_date')}
         inline
         labelInfo={<FieldRequiredHint />}
-        fill
         fastField
       >
         <FDateInput
-          name={'vendor_credit_date'}
+          name={'vendorCreditDate'}
           {...momentFormatter('YYYY/MM/DD')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} />, fill: true }}
@@ -134,7 +125,7 @@ function VendorCreditNoteFormHeaderFieldsInner({
 
       {/* ----------- Vendor Credit No # ----------- */}
       <FFormGroup
-        name={'vendor_credit_number'}
+        name={'vendorCreditNumber'}
         label={intl.get('credit_note.label_credit_note')}
         inline={true}
         labelInfo={<FieldRequiredHint />}
@@ -142,11 +133,9 @@ function VendorCreditNoteFormHeaderFieldsInner({
       >
         <ControlGroup fill={true}>
           <FInputGroup
-            name={'vendor_credit_number'}
-            minimal={true}
+            name={'vendorCreditNumber'}
             asyncControl={true}
             onBlur={handleVendorCreditNoBlur}
-            fastField
           />
           <InputPrependButton
             buttonProps={{
@@ -166,68 +155,64 @@ function VendorCreditNoteFormHeaderFieldsInner({
 
       {/* ----------- Reference ----------- */}
       <FFormGroup
-        name={'reference_no'}
+        name={'referenceNo'}
         label={intl.get('reference_no')}
         inline={true}
         fastField
       >
-        <FInputGroup name={'reference_no'} minimal={true} fastField />
+        <FInputGroup name={'referenceNo'} />
       </FFormGroup>
     </Stack>
   );
 }
 
+type VendorOption = { id: number; currencyCode: string };
+
 /**
  * Vendor select field of vendor credit form.
- * @returns {React.ReactNode}
  */
 function VendorCreditFormVendorSelect() {
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<VendorCreditFormValues>();
 
   // Vendor Credit form context.
   const { vendors } = useVendorCreditNoteFormContext();
 
   return (
     <FFormGroup
-      name={'vendor_id'}
+      name={'vendorId'}
       label={intl.get('vendor_name')}
       inline={true}
       labelInfo={<FieldRequiredHint />}
       fastField={true}
-      shouldUpdate={vendorsFieldShouldUpdate}
-      shouldUpdateDeps={{ items: vendors }}
     >
-      <VendorsSelect
-        name={'vendor_id'}
-        items={vendors}
-        placeholder={<T id={'select_vender_account'} />}
-        onItemChange={(contact) => {
-          setFieldValue('vendor_id', contact.id);
-          setFieldValue('currency_code', contact?.currency_code);
-        }}
-        popoverFill={true}
-        allowCreate={true}
-        fastField={true}
-        shouldUpdate={vendorsFieldShouldUpdate}
-        shouldUpdateDeps={{ items: vendors }}
-      />
-      {values.vendor_id && (
-        <VendorButtonLink vendorId={values.vendor_id}>
-          <T id={'view_vendor_details'} />
-        </VendorButtonLink>
-      )}
+      <>
+        <VendorsSelect
+          name={'vendorId'}
+          items={vendors}
+          placeholder={<T id={'select_vender_account'} />}
+          onItemChange={(contact: VendorOption) => {
+            setFieldValue('vendorId', contact.id);
+            setFieldValue('currencyCode', contact?.currencyCode);
+          }}
+          popoverFill={true}
+          allowCreate={true}
+          fastField={true}
+          shouldUpdate={vendorsFieldShouldUpdate}
+          shouldUpdateDeps={{ items: vendors }}
+        />
+        {values.vendorId && (
+          <VendorButtonLink vendorId={Number(values.vendorId)}>
+            <T id={'view_vendor_details'} />
+          </VendorButtonLink>
+        )}
+      </>
     </FFormGroup>
   );
 }
 
-export const VendorCreditNoteFormHeaderFields = compose(
-  withDialogActions,
-  withSettings(({ vendorsCreditNoteSetting }) => ({
-    vendorcreditAutoIncrement: vendorsCreditNoteSetting?.autoIncrement,
-    vendorcreditNextNumber: vendorsCreditNoteSetting?.nextNumber,
-    vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
-  })),
-)(VendorCreditNoteFormHeaderFieldsInner);
+export const VendorCreditNoteFormHeaderFields = compose(withDialogActions)(
+  VendorCreditNoteFormHeaderFieldsInner,
+);
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;

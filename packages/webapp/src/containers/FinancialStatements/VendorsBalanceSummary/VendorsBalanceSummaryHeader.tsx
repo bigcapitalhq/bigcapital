@@ -1,14 +1,10 @@
-import React from 'react';
-
-import moment from 'moment';
-import styled from 'styled-components';
-import { Formik, Form, FormikHelpers } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-
-import { FormattedMessage as T } from '@/components';
-import { compose, transformToForm } from '@/utils';
-
+import { Formik, Form, FormikHelpers } from 'formik';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import { getVendorsBalanceQuerySchema } from './utils';
 import { VendorsBalanceSummaryHeaderGeneral } from './VendorsBalanceSummaryHeaderGeneral';
 import {
   withVendorsBalanceSummary,
@@ -18,7 +14,8 @@ import {
   withVendorsBalanceSummaryActions,
   WithVendorsBalanceSummaryActionsProps,
 } from './withVendorsBalanceSummaryActions';
-import { getVendorsBalanceQuerySchema } from './utils';
+import { FormattedMessage as T } from '@/components';
+import { compose, transformToForm } from '@/utils';
 
 interface VendorsBalanceSummaryHeaderOwnProps {
   pageFilter: Record<string, unknown>;

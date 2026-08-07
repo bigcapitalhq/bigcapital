@@ -1,14 +1,8 @@
-// @ts-nocheck
+import { useFormikContext } from 'formik';
 import React from 'react';
 import styled from 'styled-components';
-import { useFormikContext } from 'formik';
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { AdjustmentTotalLine } from './AdjustmentTotalLine';
+import { DiscountTotalLine } from './DiscountTotalLine';
 import {
   useInvoiceAdjustmentAmountFormatted,
   useInvoiceAggregatedTaxRates,
@@ -18,14 +12,20 @@ import {
   useInvoiceSubtotalFormatted,
   useInvoiceTotalFormatted,
 } from './utils';
+import type { InvoiceFormValues } from './utils';
+import {
+  T,
+  TotalLines,
+  TotalLine,
+  TotalLineBorderStyle,
+  TotalLineTextStyle,
+} from '@/components';
 import { TaxType } from '@/interfaces/TaxRates';
-import { AdjustmentTotalLine } from './AdjustmentTotalLine';
-import { DiscountTotalLine } from './DiscountTotalLine';
 
 export function InvoiceFormFooterRight() {
   const {
-    values: { inclusive_exclusive_tax, currency_code },
-  } = useFormikContext();
+    values: { inclusiveExclusiveTax, currencyCode },
+  } = useFormikContext<InvoiceFormValues>();
 
   const taxEntries = useInvoiceAggregatedTaxRates();
   const adjustmentAmount = useInvoiceAdjustmentAmountFormatted();
@@ -40,7 +40,7 @@ export function InvoiceFormFooterRight() {
       <TotalLine
         title={
           <>
-            {inclusive_exclusive_tax === TaxType.Inclusive
+            {inclusiveExclusiveTax === TaxType.Inclusive
               ? 'Subtotal (Tax Inclusive)'
               : 'Subtotal'}
           </>
@@ -48,7 +48,7 @@ export function InvoiceFormFooterRight() {
         value={subtotalFormatted}
       />
       <DiscountTotalLine
-        currencyCode={currency_code}
+        currencyCode={currencyCode}
         discountAmount={discountAmount}
       />
       <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
@@ -62,7 +62,7 @@ export function InvoiceFormFooterRight() {
         />
       ))}
       <TotalLine
-        title={`Total (${currency_code})`}
+        title={`Total (${currencyCode})`}
         value={totalFormatted}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}

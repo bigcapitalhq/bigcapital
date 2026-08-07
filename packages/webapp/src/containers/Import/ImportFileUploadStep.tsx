@@ -1,14 +1,13 @@
-// @ts-nocheck
 import { Callout, Classes, Intent } from '@blueprintjs/core';
-import { Stack } from '@/components';
-import { ImportDropzone } from './ImportDropzone';
-import { ImportSampleDownload } from './ImportSampleDownload';
-import { ImportFileUploadForm } from './ImportFileUploadForm';
-import { ImportFileUploadFooterActions } from './ImportFileFooterActions';
-import { ImportFileContainer } from './ImportFileContainer';
-import { useImportFileContext } from './ImportFileProvider';
-import { AlertsManager, useAlertsManager } from './AlertsManager';
 import { ImportAlert } from './_types';
+import { AlertsManager, useAlertsManager } from './AlertsManager';
+import { ImportDropzone } from './ImportDropzone';
+import { ImportFileContainer } from './ImportFileContainer';
+import { ImportFileUploadFooterActions } from './ImportFileFooterActions';
+import { useImportFileContext } from './ImportFileProvider';
+import { ImportFileUploadForm } from './ImportFileUploadForm';
+import { ImportSampleDownload } from './ImportSampleDownload';
+import { Stack } from '@/components';
 
 function ImportFileUploadCallouts() {
   const { isAlertActive } = useAlertsManager();

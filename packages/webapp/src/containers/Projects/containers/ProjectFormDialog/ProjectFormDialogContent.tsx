@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-
-import { ProjectFormProvider } from './ProjectFormProvider';
 import { ProjectForm } from './ProjectForm';
+import { ProjectFormProvider } from './ProjectFormProvider';
 
 /**
  * Project form dialog content.

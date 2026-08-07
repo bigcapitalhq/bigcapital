@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { useMemo, useState } from 'react';
 import { Button, MenuItem } from '@blueprintjs/core';
-import { SelectOptionProps } from '@blueprintjs-formik/select';
-import { useFormikContext } from 'formik';
-import { css } from '@emotion/css';
 import { FormGroupProps } from '@blueprintjs-formik/core';
-import { FFormGroup, FMultiSelect, Group, Stack } from '@/components';
+import { SelectOptionProps } from '@blueprintjs-formik/select';
+import { css } from '@emotion/css';
+import { useFormikContext } from 'formik';
+import { useMemo, useState } from 'react';
 import { SendMailViewFormValues } from './_types';
+import { FFormGroup, FMultiSelect, Group, Stack } from '@/components';
 
 const fieldsWrapStyle = css`
   > :not(:first-of-type) .bp4-input {

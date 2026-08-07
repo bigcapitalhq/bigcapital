@@ -1,56 +1,45 @@
-// @ts-nocheck
-import intl from 'react-intl-universal';
-import { css } from '@emotion/css';
-import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { sumBy, isEmpty, defaultTo } from 'lodash';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-
-import {
-  CreateEstimateFormSchema,
-  EditEstimateFormSchema,
-} from './EstimateForm.schema';
-
-import { EstimateFormHeader } from './EstimateFormHeader';
-import { EstimateFormItemsEntriesField as EstimateItemsEntriesField } from './EstimateItemsEntriesField';
-import { EstimateFloatingActions } from './EstimateFloatingActions';
-import { EstiamteFormFooter as EstimateFormFooter } from './EstimateFormFooter';
-import { EstimateFormDialogs } from './EstimateFormDialogs';
-import { EstimtaeFormTopBar } from './EstimtaeFormTopBar';
 import {
   EstimateIncrementSyncSettingsToForm,
   EstimateSyncAutoExRateToForm,
 } from './components';
-
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
-import { AppToaster } from '@/components';
-import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';
+import { EstimateFloatingActions } from './EstimateFloatingActions';
+import {
+  CreateEstimateFormSchema,
+  EditEstimateFormSchema,
+} from './EstimateForm.schema';
+import { EstimateFormDialogs } from './EstimateFormDialogs';
+import { EstiamteFormFooter as EstimateFormFooter } from './EstimateFormFooter';
+import { EstimateFormHeader } from './EstimateFormHeader';
 import { useEstimateFormContext } from './EstimateFormProvider';
+import { EstimateFormItemsEntriesField as EstimateItemsEntriesField } from './EstimateItemsEntriesField';
+import { EstimtaeFormTopBar } from './EstimtaeFormTopBar';
 import {
   transformToEditForm,
   defaultEstimate,
-  transfromsFormValuesToRequest,
+  transformValueToRequest,
   handleErrors,
   resetFormState,
 } from './utils';
+import type { EstimateFormValues } from './utils';
+import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';
+
+type EstimateFormRootProps = Record<string, never>;
 
 /**
  * Estimate form.
  */
-function EstimateFormInner({
-  // #withSettings
-  estimateNextNumber,
-  estimateNumberPrefix,
-  estimateAutoIncrementMode,
-  estimateCustomerNotes,
-  estimateTermsConditions,
+function EstimateFormInner({}: EstimateFormRootProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
   const history = useHistory();
   const {
     estimate,
@@ -59,42 +48,61 @@ function EstimateFormInner({
     createEstimateMutate,
     editEstimateMutate,
     saleEstimateState,
+    estimatesSettings,
   } = useEstimateFormContext();
+
+  const estimateNextNumber = estimatesSettings?.nextNumber as
+    | number
+    | undefined;
+  const estimateNumberPrefix = estimatesSettings?.numberPrefix as
+    | string
+    | undefined;
+  const estimateAutoIncrementMode = estimatesSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const estimateCustomerNotes = estimatesSettings?.customerNotes as
+    | string
+    | undefined;
+  const estimateTermsConditions = estimatesSettings?.termsConditions as
+    | string
+    | undefined;
 
   const estimateNumber = transactionNumber(
     estimateNumberPrefix,
     estimateNextNumber,
   );
+  // Form initial values.
+  const isEditMode = !isEmpty(estimate) && !!estimate;
   // Initial values in create and edit mode.
-  const initialValues = {
-    ...(!isEmpty(estimate)
-      ? { ...transformToEditForm(estimate) }
-      : {
-          ...defaultEstimate,
-          // If the auto-increment mode is enabled, take the next estimate
-          // number from the settings.
-          ...(estimateAutoIncrementMode && {
-            estimate_number: estimateNumber,
-          }),
-          entries: orderingLinesIndexes(defaultEstimate.entries),
-          currency_code: base_currency,
-          terms_conditions: defaultTo(estimateTermsConditions, ''),
-          note: defaultTo(estimateCustomerNotes, ''),
-          pdf_template_id: saleEstimateState?.defaultTemplateId,
+  const initialValues: EstimateFormValues = isEditMode
+    ? transformToEditForm(estimate)
+    : {
+        ...defaultEstimate,
+        // If the auto-increment mode is enabled, take the next estimate
+        // number from the settings.
+        ...(estimateAutoIncrementMode && {
+          estimateNumber,
         }),
-  };
+        entries: orderingLinesIndexes(defaultEstimate.entries),
+        currencyCode: baseCurrency ?? '',
+        termsConditions: defaultTo(estimateTermsConditions, ''),
+        note: defaultTo(estimateCustomerNotes, ''),
+        pdfTemplateId: saleEstimateState?.defaultTemplateId ?? '',
+      };
 
   // Handles form submit.
   const handleFormSubmit = (
-    values,
-    { setSubmitting, setErrors, resetForm },
+    values: EstimateFormValues,
+    { setSubmitting, setErrors, resetForm }: FormikHelpers<EstimateFormValues>,
   ) => {
     setSubmitting(true);
 
     const entries = values.entries.filter(
-      (item) => item.item_id && item.quantity,
+      (item) => item.itemId && item.quantity,
     );
-    const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
+    const totalQuantity = sumBy(entries, (entry) =>
+      parseInt(String(entry.quantity), 10),
+    );
 
     // Validate the entries quantity should be bigger than zero.
     if (totalQuantity === 0) {
@@ -106,17 +114,17 @@ function EstimateFormInner({
       return;
     }
     const form = {
-      ...transfromsFormValuesToRequest(values),
+      ...transformValueToRequest(values),
       delivered: submitPayload.deliver,
     };
     // Handle the request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
             ? 'the_estimate_has_been_created_successfully'
             : 'the_estimate_has_been_edited_successfully',
-          { number: values.estimate_number },
+          { number: values.estimateNumber },
         ),
         intent: Intent.SUCCESS,
       });
@@ -131,16 +139,16 @@ function EstimateFormInner({
     };
     // Handle the request error.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
     }) => {
       if (errors) {
         handleErrors(errors, { setErrors });
       }
       setSubmitting(false);
     };
-    if (!isNewMode) {
+    if (!isNewMode && estimate) {
       editEstimateMutate([estimate.id, form]).then(onSuccess).catch(onError);
     } else {
       createEstimateMutate(form).then(onSuccess).catch(onError);
@@ -187,13 +195,4 @@ function EstimateFormInner({
   );
 }
 
-export const EstimateForm = compose(
-  withSettings(({ estimatesSettings }) => ({
-    estimateNextNumber: estimatesSettings?.nextNumber,
-    estimateNumberPrefix: estimatesSettings?.numberPrefix,
-    estimateAutoIncrementMode: estimatesSettings?.autoIncrement,
-    estimateCustomerNotes: estimatesSettings?.customerNotes,
-    estimateTermsConditions: estimatesSettings?.termsConditions,
-  })),
-  withCurrentOrganization(),
-)(EstimateFormInner);
+export const EstimateForm = EstimateFormInner;

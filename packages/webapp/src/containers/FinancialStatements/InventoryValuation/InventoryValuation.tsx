@@ -1,26 +1,22 @@
-import React, { useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { DashboardPageContent } from '@/components';
+import React, { useEffect, useCallback } from 'react';
+import { InventoryValuationLoadingBar } from './components';
 import { InventoryValuationActionsBar } from './InventoryValuationActionsBar';
+import { InventoryValuationBody } from './InventoryValuationBody';
+import { InventoryValuationDialogs } from './InventoryValuationDialogs';
 import { InventoryValuationHeader } from './InventoryValuationHeader';
 import { InventoryValuationProvider } from './InventoryValuationProvider';
-import { InventoryValuationBody } from './InventoryValuationBody';
-import { InventoryValuationLoadingBar } from './components';
 import { useInventoryValuationQuery } from './utils';
-import { compose } from '@/utils';
 import {
   withInventoryValuationActions,
   WithInventoryValuationActionsProps,
 } from './withInventoryValuationActions';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
-import { InventoryValuationDialogs } from './InventoryValuationDialogs';
+import { DashboardPageContent } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
+import { compose } from '@/utils';
 
 interface InventoryValuationProps {
   toggleInventoryValuationFilterDrawer: WithInventoryValuationActionsProps['toggleInventoryValuationFilterDrawer'];
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
 }
 
 /**
@@ -30,6 +26,7 @@ function InventoryValuationInner({
   // #withInventoryValuationActions
   toggleInventoryValuationFilterDrawer,
 }: InventoryValuationProps) {
+  const organizationName = useCurrentOrganizationName();
   const { query, setLocationQuery } = useInventoryValuationQuery();
 
   // Handle filter form submit.
@@ -79,9 +76,6 @@ function InventoryValuationInner({
   );
 }
 
-export const InventoryValuation = compose(
-  withInventoryValuationActions,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(InventoryValuationInner);
+export const InventoryValuation = compose(withInventoryValuationActions)(
+  InventoryValuationInner,
+);

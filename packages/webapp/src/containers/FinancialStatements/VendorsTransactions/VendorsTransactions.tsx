@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
 import moment from 'moment';
-import { FinancialStatement, DashboardPageContent } from '@/components';
-import { VendorsTransactionsBody } from './VendorsTransactionsBody';
-import { VendorsTransactionsProvider } from './VendorsTransactionsProvider';
+import React, { useEffect } from 'react';
+import { useVendorsTransactionsQuery } from './_utils';
 import { VendorsTransactionsLoadingBar } from './components';
-import { VendorsTransactionsHeader } from './VendorsTransactionsHeader';
 import { VendorsTransactionsActionsBar } from './VendorsTransactionsActionsBar';
+import { VendorsTransactionsBody } from './VendorsTransactionsBody';
+import { VendorsTransactionsHeader } from './VendorsTransactionsHeader';
+import { VendorsTransactionsProvider } from './VendorsTransactionsProvider';
+import { VendorTransactionsDialogs } from './VendorTransactionsDialogs';
 import {
   withVendorsTransactionsActions,
   WithVendorsTransactionsActionsProps,
 } from './withVendorsTransactionsActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { compose } from '@/utils';
-import { useVendorsTransactionsQuery } from './_utils';
-import { VendorTransactionsDialogs } from './VendorTransactionsDialogs';
 
 interface VendorsTransactionsProps {
   toggleVendorsTransactionsFilterDrawer: WithVendorsTransactionsActionsProps['toggleVendorsTransactionsFilterDrawer'];

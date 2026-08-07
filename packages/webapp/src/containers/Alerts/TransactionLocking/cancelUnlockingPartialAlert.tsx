@@ -1,43 +1,41 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster, FormattedMessage as T } from '@/components';
-
-import { useCancelUnlockingPartialTransactions } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useCancelUnlockingPartialTransactions } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface CancelUnlockingPartialAlertPayload {
+  module: string;
+}
+
+interface CancelUnlockingPartialAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: CancelUnlockingPartialAlertPayload;
+}
 
 /**
  * Cancel Unlocking partial transactions alerts.
  */
 function CancelUnlockingPartialTarnsactions({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { module },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: cancelUnlockingPartial, isLoading } =
+}: CancelUnlockingPartialAlertProps): React.ReactElement {
+  const { mutateAsync: cancelUnlockingPartial, isPending: isLoading } =
     useCancelUnlockingPartialTransactions();
 
-  // Handle cancel.
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm.
   const handleConfirm = () => {
-    const values = {
-      module: module,
-    };
-    cancelUnlockingPartial(values)
+    cancelUnlockingPartial({ module })
       .then(() => {
         AppToaster.show({
           message: intl.get(
@@ -46,13 +44,13 @@ function CancelUnlockingPartialTarnsactions({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had an empty `.catch(({ data: { errors } }) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -60,8 +58,8 @@ function CancelUnlockingPartialTarnsactions({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'yes'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('yes')}
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancel}

@@ -1,21 +1,18 @@
-// @ts-nocheck
-import React from 'react';
-import { useParams } from 'react-router-dom';
 import { css } from '@emotion/css';
-
+import { useParams } from 'react-router-dom';
 import { EstimateForm } from './EstimateForm';
 import {
   EstimateFormProvider,
   useEstimateFormContext,
 } from './EstimateFormProvider';
-import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 import { DashboardInsider } from '@/components';
+import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 
 /**
  * Estimate form page.
  */
 export function EstimateFormPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id?: string }>();
   const idInteger = id ? parseInt(id, 10) : undefined;
 
   return (

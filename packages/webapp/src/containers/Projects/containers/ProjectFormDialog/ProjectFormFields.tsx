@@ -1,12 +1,11 @@
 // @ts-nocheck
+import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import { FastField } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useFormikContext } from 'formik';
-
-import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
-import { FastField } from 'formik';
-import { CLASSES } from '@/constants/classes';
-import classNames from 'classnames';
+import { useProjectFormContext } from './ProjectFormProvider';
 import {
   FFormGroup,
   FInputGroup,
@@ -17,8 +16,8 @@ import {
   Stack,
   CustomersSelect,
 } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { momentFormatter } from '@/utils';
-import { useProjectFormContext } from './ProjectFormProvider';
 
 /**
  * Project form fields.

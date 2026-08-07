@@ -1,4 +1,11 @@
 import {
+  fetchSubscriptions,
+  fetchLemonSubscriptions,
+  cancelSubscription,
+  resumeSubscription,
+  changeSubscriptionPlan,
+} from '@bigcapital/sdk-ts';
+import {
   useMutation,
   UseMutationOptions,
   UseMutationResult,
@@ -8,17 +15,12 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
+import { subscriptionKeys } from './query-keys';
 import type {
   SubscriptionsListResponse,
+  LemonSubscriptionsListResponse,
   ChangeSubscriptionPlanBody,
 } from '@bigcapital/sdk-ts';
-import {
-  fetchSubscriptions,
-  cancelSubscription,
-  resumeSubscription,
-  changeSubscriptionPlan,
-} from '@bigcapital/sdk-ts';
-import { subscriptionKeys } from './query-keys';
 
 export function useCancelMainSubscription(
   options?: UseMutationOptions<void, Error, void>,
@@ -66,18 +68,9 @@ export function useChangeSubscriptionPlan(
   });
 }
 
-export type GetSubscriptionsResponse = {
-  subscriptions?: unknown[];
-  [key: string]: unknown;
-};
-
 export function useGetSubscriptions(
-  options?: UseQueryOptions<
-    SubscriptionsListResponse,
-    Error,
-    GetSubscriptionsResponse
-  >,
-): UseQueryResult<GetSubscriptionsResponse, Error> {
+  options?: UseQueryOptions<SubscriptionsListResponse, Error>,
+): UseQueryResult<SubscriptionsListResponse, Error> {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
@@ -85,4 +78,43 @@ export function useGetSubscriptions(
     queryFn: () => fetchSubscriptions(fetcher),
     ...options,
   });
+}
+
+/**
+ * Derived subscription-status flags for the current organization.
+ * Backed by the `useGetSubscriptions` query cache (single shared fetch).
+ */
+export function useSubscription(slug = 'main') {
+  const { data } = useGetSubscriptions();
+  const subscription = data?.subscriptions?.find((s) => s.slug === slug);
+  return {
+    isSubscriptionActive: !!subscription?.active,
+    isSubscriptionInactive: !!subscription?.inactive,
+    isSubscriptionOnTrial: !!subscription?.onTrial,
+  };
+}
+
+/**
+ * Lemon Squeezy subscription details (urls) for the current organization's
+ * subscriptions. Fetched from the dedicated `/api/subscription/lemon` endpoint
+ * so the system-subscriptions list stays lemon-free.
+ */
+export function useGetLemonSubscriptions(
+  options?: UseQueryOptions<LemonSubscriptionsListResponse, Error>,
+): UseQueryResult<LemonSubscriptionsListResponse, Error> {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useQuery({
+    queryKey: subscriptionKeys.lemon(),
+    queryFn: () => fetchLemonSubscriptions(fetcher),
+    ...options,
+  });
+}
+
+/**
+ * The Lemon Squeezy subscription entry for the given slug (default `'main'`).
+ */
+export function useLemonSubscription(slug = 'main') {
+  const { data } = useGetLemonSubscriptions();
+  return data?.lemonSubscriptions?.find((s) => s.slug === slug);
 }

@@ -1,11 +1,11 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import { SendMailViewMessageField } from '../../Estimates/SendMailViewDrawer/SendMailViewMessageField';
+import { SendMailViewToAddressField } from '../../Estimates/SendMailViewDrawer/SendMailViewToAddressField';
+import { useInvoiceMailItems, useSendInvoiceFormatArgsOptions } from './_hooks';
 import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
-import { useInvoiceMailItems, useSendInvoiceFormatArgsOptions } from './_hooks';
-import { SendMailViewToAddressField } from '../../Estimates/SendMailViewDrawer/SendMailViewToAddressField';
-import { SendMailViewMessageField } from '../../Estimates/SendMailViewDrawer/SendMailViewMessageField';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function InvoiceSendMailFields() {

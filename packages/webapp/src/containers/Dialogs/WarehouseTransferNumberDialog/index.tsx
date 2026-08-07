@@ -1,25 +1,29 @@
-// @ts-nocheck
-import React from 'react';
+import React, { lazy } from 'react';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
 
-const WarehouseTransferNumberDialogContent = React.lazy(() =>
+const WarehouseTransferNumberDialogContent = lazy(() =>
   import('./WarehouseTransferNumberDialogContent').then((m) => ({
     default: m.WarehouseTransferNumberDialogContent,
   })),
 );
 
-/**
- * Warehouse transfer number dialog.
- */
+interface WarehouseTransferNumberDialogProps {
+  dialogName: string;
+  payload: { initialFormValues?: Partial<ReferenceNumberFormValues> };
+  isOpen: boolean | undefined;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
 function WarehouseTransferNumberDilaog({
   dialogName,
-  payload: { initialFormValues },
+  payload: { initialFormValues } = {},
   isOpen,
   onConfirm,
-}) {
-  const handleConfirm = (values) => {
+}: WarehouseTransferNumberDialogProps): React.ReactElement {
+  const handleConfirm = (values: ReferenceNumberFormValues) => {
     saveInvoke(onConfirm, values);
   };
   return (
@@ -32,6 +36,7 @@ function WarehouseTransferNumberDilaog({
     >
       <DialogSuspense>
         <WarehouseTransferNumberDialogContent
+          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />

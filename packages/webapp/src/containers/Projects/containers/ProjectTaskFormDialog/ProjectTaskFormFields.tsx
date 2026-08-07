@@ -1,7 +1,9 @@
 // @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Classes, ControlGroup } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { EstimateAmount } from './utils';
 import {
   FFormGroup,
   FInputGroup,
@@ -9,19 +11,15 @@ import {
   Row,
   InputPrependText,
 } from '@/components';
-import { EstimateAmount } from './utils';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
-import intl from 'react-intl-universal';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 /**
  * Project task form fields.
  * @returns
  */
-function ProjectTaskFormFieldsInner({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+function ProjectTaskFormFieldsInner() {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+
   // Formik context.
   const { values } = useFormikContext();
 
@@ -62,11 +60,9 @@ function ProjectTaskFormFieldsInner({
         </Col>
       </Row>
       {/*------------ Estimated Amount -----------*/}
-      <EstimateAmount baseCurrency={base_currency} />
+      <EstimateAmount baseCurrency={baseCurrency} />
     </div>
   );
 }
 
-export const ProjectTaskFormFields = compose(withCurrentOrganization())(
-  ProjectTaskFormFieldsInner,
-);
+export const ProjectTaskFormFields = ProjectTaskFormFieldsInner;

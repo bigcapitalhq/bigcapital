@@ -1,18 +1,14 @@
-// @ts-nocheck
+import { Tab } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Tab } from '@blueprintjs/core';
-
-import { DrawerMainTabs } from '@/components';
-
-import { PaymentReceiveDetailTab } from './PaymentReceiveDetailTab';
 import { PaymentReceiveActionsBar } from './PaymentReceiveActionsBar';
+import { PaymentReceiveDetailTab } from './PaymentReceiveDetailTab';
 import { PaymentReceiveGLEntriesPanel } from './PaymentReceiveGLEntriesPanel';
+import { DrawerMainTabs } from '@/components';
 
 /**
  * Payment receive details tabs.
- * @returns {React.JSX}
  */
 function PaymentReceiveDetailsTabs() {
   return (
@@ -33,7 +29,6 @@ function PaymentReceiveDetailsTabs() {
 
 /**
  * Payment receive view detail.
- * @returns {React.JSX}
  */
 export function PaymentReceiveDetail() {
   return (

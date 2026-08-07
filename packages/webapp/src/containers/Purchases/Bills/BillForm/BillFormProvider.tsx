@@ -3,14 +3,15 @@ import type {
   Bill,
   CreateBillBody,
   EditBillBody,
+  Vendor,
+  Item,
   AccountsList,
   WarehousesListResponse,
   BranchesListResponse,
   TaxRatesListResponse,
 } from '@bigcapital/sdk-ts';
-import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components/Dashboard';
+import { Features } from '@/constants';
 import { useProjects } from '@/containers/Projects/hooks';
 import {
   useAccounts,
@@ -24,18 +25,21 @@ import {
   useEditBill,
 } from '@/hooks/query';
 import { useTaxRates } from '@/hooks/query/tax-rates';
+import { useFeatureCan } from '@/hooks/state';
 
 type BillFormSubmitPayload = {
   redirect?: boolean;
+  status?: boolean;
+  resetForm?: boolean;
 };
 type BillFormContextValue = {
   accounts: AccountsList | undefined;
-  vendors: any[] | undefined;
-  items: any[] | undefined;
+  vendors: Vendor[];
+  items: Item[];
   bill: Bill | undefined;
-  warehouses: WarehousesListResponse | undefined;
-  branches: BranchesListResponse | undefined;
-  projects: any[] | undefined;
+  warehouses: WarehousesListResponse;
+  branches: BranchesListResponse;
+  projects: unknown[];
   taxRates: TaxRatesListResponse | undefined;
   submitPayload: BillFormSubmitPayload;
   isNewMode: boolean;
@@ -46,6 +50,8 @@ type BillFormContextValue = {
   isItemsLoading: boolean;
   isVendorsLoading: boolean;
   isFeatureLoading: boolean;
+  isBranchesLoading: boolean;
+  isWarehousesLoading: boolean;
   isBranchesSuccess: boolean;
   isWarehousesSuccess: boolean;
   isTaxRatesLoading: boolean;
@@ -112,7 +118,7 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
   // Fetch warehouses list.
   const {
     data: warehouses,
-    isLoading: isWarehouesLoading,
+    isLoading: isWarehousesLoading,
     isSuccess: isWarehousesSuccess,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
@@ -146,7 +152,7 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading ||
+    isWarehousesLoading ||
     isBranchesLoading ||
     isProjectsLoading ||
     isTaxRatesLoading;
@@ -158,7 +164,7 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
     bill,
     warehouses: warehouses ?? [],
     branches: branches ?? [],
-    projects: projectsData?.projects,
+    projects: projectsData?.projects ?? [],
     taxRates: taxRates ?? [],
     submitPayload,
     isNewMode,
@@ -169,16 +175,14 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
     isItemsLoading,
     isVendorsLoading,
     isFeatureLoading,
+    isBranchesLoading,
+    isWarehousesLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
     isTaxRatesLoading,
 
-    createBillMutate: createBillMutate as (
-      values: CreateBillBody,
-    ) => Promise<void>,
-    editBillMutate: editBillMutate as (
-      args: [number, EditBillBody],
-    ) => Promise<void>,
+    createBillMutate,
+    editBillMutate,
     setSubmitPayload,
   };
 

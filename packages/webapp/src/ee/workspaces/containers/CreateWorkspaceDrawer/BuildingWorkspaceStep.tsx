@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
 import { ProgressBar, Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
+import React, { useEffect } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { useJob } from '@/hooks/query';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
@@ -18,13 +18,15 @@ export default function BuildingWorkspaceStep({
 }: BuildingWorkspaceStepProps) {
   const isDarkMode = useIsDarkMode();
 
-  const {
-    data: { isRunning, isWaiting, isFailed, isCompleted },
-    isFetching: isJobFetching,
-  } = useJob(jobId, {
+  const { data: jobState, isFetching: isJobFetching } = useJob(jobId, {
     refetchInterval: 2000,
     enabled: !!jobId,
   });
+
+  const isRunning = jobState?.isRunning;
+  const isWaiting = jobState?.isWaiting;
+  const isFailed = jobState?.isFailed;
+  const isCompleted = jobState?.isCompleted;
 
   useEffect(() => {
     if (isCompleted) {

@@ -1,12 +1,11 @@
 // @ts-nocheck
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
-
-import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import intl from 'react-intl-universal';
+import { FormattedMessage as T } from '@/components';
+import { CLASSES } from '@/constants/classes';
 
 export function ContactsSuggestField({
   contactsList,

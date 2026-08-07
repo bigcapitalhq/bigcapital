@@ -1,24 +1,15 @@
 import React from 'react';
-import { pipe } from 'fp-ts/function';
-import { PurchasesByItemsTable } from './PurchasesByItemsTable';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '@/components';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
-
-interface PurchasesByItemsBodyJSXProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
+import { PurchasesByItemsTable } from './PurchasesByItemsTable';
+import { FinancialSheetSkeleton } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * Purchases by items.
  */
-function PurchasesByItemsBodyJSX({
-  organizationName,
-}: PurchasesByItemsBodyJSXProps) {
+function PurchasesByItemsBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = usePurchaseByItemsContext();
 
   return (
@@ -32,9 +23,4 @@ function PurchasesByItemsBodyJSX({
   );
 }
 
-export const PurchasesByItemsBody = pipe(
-  PurchasesByItemsBodyJSX,
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-);
+export const PurchasesByItemsBody = PurchasesByItemsBodyJSX;

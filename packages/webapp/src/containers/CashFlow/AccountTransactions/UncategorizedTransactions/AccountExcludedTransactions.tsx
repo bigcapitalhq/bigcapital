@@ -1,15 +1,13 @@
-// @ts-nocheck
 import { useEffect } from 'react';
-import * as R from 'ramda';
-import {
-  WithBankingActionsProps,
-  withBankingActions,
-} from '../../withBankingActions';
+import { withBankingActions } from '../../withBankingActions';
 import { ExcludedTransactionsTable } from '../ExcludedTransactions/ExcludedTransactionsTable';
 import { ExcludedBankTransactionsTableBoot } from '../ExcludedTransactions/ExcludedTransactionsTableBoot';
 import { AccountTransactionsCard } from './AccountTransactionsCard';
+import type { WithBankingActionsProps } from '../../withBankingActions';
+import { compose } from '@/utils';
 
-interface AccountExcludedTransactionsProps extends WithBankingActionsProps {}
+interface AccountExcludedTransactionsProps
+  extends Pick<WithBankingActionsProps, 'resetExcludedTransactionsSelected'> {}
 
 function AccountExcludedTransactionsRoot({
   // #withBankingActions
@@ -31,6 +29,6 @@ function AccountExcludedTransactionsRoot({
   );
 }
 
-export const AccountExcludedTransactions = R.compose(withBankingActions)(
+export const AccountExcludedTransactions = compose(withBankingActions)(
   AccountExcludedTransactionsRoot,
 );

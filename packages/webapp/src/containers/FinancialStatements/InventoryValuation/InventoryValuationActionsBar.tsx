@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -9,20 +8,21 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import React from 'react';
+import { InventoryValuationExportMenu } from './components';
+import { useInventoryValuationContext } from './InventoryValuationProvider';
 import { withInventoryValuation } from './withInventoryValuation';
 import {
   withInventoryValuationActions,
   WithInventoryValuationActionsProps,
 } from './withInventoryValuationActions';
+import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { useInventoryValuationContext } from './InventoryValuationProvider';
-import { InventoryValuationExportMenu } from './components';
-import { DialogsName } from '@/constants/dialogs';
 import { compose, saveInvoke } from '@/utils';
 
 interface InventoryValuationActionsBarOwnProps {

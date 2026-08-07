@@ -1,11 +1,9 @@
-// @ts-nocheck
 import React from 'react';
-
+import { BillDetailFooter } from './BillDetailFooter';
 import { BillDetailHeader } from './BillDetailHeader';
 import { BillDetailTable } from './BillDetailTable';
-import { BillDetailFooter } from './BillDetailFooter';
-import { CommercialDocBox } from '@/components';
 import { BillDetailTableFooter } from './BillDetailTableFooter';
+import { CommercialDocBox } from '@/components';
 
 /**
  * Bill detail panel tab.

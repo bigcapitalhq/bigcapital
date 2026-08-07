@@ -220,6 +220,20 @@ export class SaleReceiptResponseDto {
   discountAmountFormatted: string;
 
   @ApiProperty({
+    description: 'The discount amount computed from the discount type',
+    example: 100,
+    required: false,
+  })
+  discountAmount?: number;
+
+  @ApiProperty({
+    description: 'The formatted paid amount',
+    example: '1,000.00',
+    required: false,
+  })
+  paidFormatted?: string;
+
+  @ApiProperty({
     description: 'The formatted discount percentage',
     example: '10%',
   })

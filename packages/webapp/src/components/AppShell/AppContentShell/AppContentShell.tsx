@@ -1,11 +1,10 @@
-// @ts-nocheck
-import React, { forwardRef, Ref } from 'react';
+import React, { forwardRef } from 'react';
+import { Box, BoxProps } from '../../Layout';
+import styles from './AppContentShell.module.scss';
 import {
   AppShellProvider,
   useAppShellContext,
 } from './AppContentShellProvider';
-import { Box, BoxProps } from '../../Layout';
-import styles from './AppContentShell.module.scss';
 
 interface AppContentShellProps {
   topbarOffset?: number;
@@ -16,7 +15,10 @@ interface AppContentShellProps {
   hideMain?: boolean;
 }
 
-export const AppContentShell = forwardRef(
+const AppContentShellComponent = forwardRef<
+  HTMLDivElement,
+  AppContentShellProps
+>(
   (
     {
       asideProps,
@@ -25,8 +27,8 @@ export const AppContentShell = forwardRef(
       hideAside = false,
       hideMain = false,
       ...restProps
-    }: AppContentShellProps,
-    ref: Ref<HTMLDivElement>,
+    },
+    ref,
   ) => {
     return (
       <AppShellProvider
@@ -41,25 +43,24 @@ export const AppContentShell = forwardRef(
     );
   },
 );
-AppContentShell.displayName = 'AppContentShell';
+AppContentShellComponent.displayName = 'AppContentShell';
 
 interface AppContentShellMainProps extends BoxProps {}
 
 /**
  * Main content of the app shell.
- * @param {AppContentShellMainProps} props -
- * @returns {React.ReactNode}
  */
-const AppContentShellMain = forwardRef(
-  ({ ...props }: AppContentShellMainProps, ref: Ref<HTMLDivElement>) => {
-    const { hideMain } = useAppShellContext();
+const AppContentShellMain = forwardRef<
+  HTMLDivElement,
+  AppContentShellMainProps
+>((props, ref) => {
+  const { hideMain } = useAppShellContext();
 
-    if (hideMain === true) {
-      return null;
-    }
-    return <Box {...props} className={styles.main} ref={ref} />;
-  },
-);
+  if (hideMain === true) {
+    return null;
+  }
+  return <Box {...props} className={styles.main} ref={ref} />;
+});
 
 AppContentShellMain.displayName = 'AppContentShellMain';
 
@@ -69,20 +70,21 @@ interface AppContentShellAsideProps extends BoxProps {
 
 /**
  * Aside content of the app shell.
- * @param {AppContentShellAsideProps} props
- * @returns {React.ReactNode}
  */
-const AppContentShellAside = forwardRef(
-  ({ ...props }: AppContentShellAsideProps, ref: Ref<HTMLDivElement>) => {
-    const { hideAside } = useAppShellContext();
+const AppContentShellAside = forwardRef<
+  HTMLDivElement,
+  AppContentShellAsideProps
+>((props, ref) => {
+  const { hideAside } = useAppShellContext();
 
-    if (hideAside === true) {
-      return null;
-    }
-    return <Box {...props} className={styles.aside} ref={ref} />;
-  },
-);
+  if (hideAside === true) {
+    return null;
+  }
+  return <Box {...props} className={styles.aside} ref={ref} />;
+});
 AppContentShellAside.displayName = 'AppContentShellAside';
 
-AppContentShell.Main = AppContentShellMain;
-AppContentShell.Aside = AppContentShellAside;
+export const AppContentShell = Object.assign(AppContentShellComponent, {
+  Main: AppContentShellMain,
+  Aside: AppContentShellAside,
+});

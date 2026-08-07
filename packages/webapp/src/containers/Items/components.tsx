@@ -1,8 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { isNumber } from 'lodash';
 import {
   Menu,
   MenuDivider,
@@ -14,19 +9,52 @@ import {
   Popover,
   Classes,
 } from '@blueprintjs/core';
+import clsx from 'classnames';
+import { isNumber } from 'lodash';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { Item } from '@bigcapital/sdk-ts';
 import { FormattedMessage as T, Icon, Money, If, Can } from '@/components';
-import { isBlank, safeCallback } from '@/utils';
 import {
   AbilitySubject,
   ItemAction,
   InventoryAdjustmentAction,
 } from '@/constants/abilityOption';
+import { isBlank, safeCallback } from '@/utils';
+
+export type ItemTableRow = Item & {
+  // Runtime-only fields not declared on the SDK type.
+  isPublished?: boolean;
+  active?: boolean;
+  quantityOnHand?: number;
+  category?: { id?: number; name?: string };
+};
+
+interface CellProps {
+  cell: { value: unknown };
+}
+
+interface ActionsMenuPayload {
+  onEditItem: (item: ItemTableRow) => void;
+  onInactivateItem: (item: ItemTableRow) => void;
+  onActivateItem: (item: ItemTableRow) => void;
+  onMakeAdjustment: (item: ItemTableRow) => void;
+  onDeleteItem: (item: ItemTableRow) => void;
+  onDuplicate: (item: ItemTableRow) => void;
+  onViewDetails: (item: ItemTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: ItemTableRow };
+  payload: ActionsMenuPayload;
+}
 
 /**
  * Publish accessor
  */
-export const PublishAccessor = (r) => {
-  return r.is_published ? (
+export const PublishAccessor = (r: ItemTableRow) => {
+  return r.isPublished ? (
     <Tag minimal={true}>
       <T id={'published'} />
     </Tag>
@@ -37,7 +65,7 @@ export const PublishAccessor = (r) => {
   );
 };
 
-export const TypeAccessor = (row) => {
+export const TypeAccessor = (row: ItemTableRow) => {
   return row.type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
       {intl.get(row.type)}
@@ -47,7 +75,7 @@ export const TypeAccessor = (row) => {
   );
 };
 
-export const ItemCodeAccessor = (row) =>
+export const ItemCodeAccessor = (row: ItemTableRow) =>
   row.type ? (
     <Tag minimal={true} round={true} intent={Intent.NONE}>
       {intl.get(row.type)}
@@ -56,24 +84,29 @@ export const ItemCodeAccessor = (row) =>
     ''
   );
 
-export const QuantityOnHandCell = ({ cell: { value } }) => {
+export const QuantityOnHandCell = ({ cell: { value } }: CellProps) => {
+  const num = value as number;
   return isNumber(value) ? (
-    <span className={value < 0 ? 'quantity_on_hand' : null}>{value}</span>
+    <span className={num < 0 ? 'quantity_on_hand' : undefined}>{value}</span>
   ) : null;
 };
 
-export const CostPriceCell = ({ cell: { value } }) => {
-  return !isBlank(value) ? <Money amount={value} currency={'USD'} /> : null;
+export const CostPriceCell = ({ cell: { value } }: CellProps) => {
+  return !isBlank(value) ? (
+    <Money amount={value as number} currency={'USD'} />
+  ) : null;
 };
 
-export const SellPriceCell = ({ cell: { value } }) => {
-  return !isBlank(value) ? <Money amount={value} currency={'USD'} /> : null;
+export const SellPriceCell = ({ cell: { value } }: CellProps) => {
+  return !isBlank(value) ? (
+    <Money amount={value as number} currency={'USD'} />
+  ) : null;
 };
 
-export const ItemTypeAccessor = (row) => {
-  return row.type_formatted ? (
+export const ItemTypeAccessor = (row: ItemTableRow) => {
+  return row.typeFormatted ? (
     <Tag round minimal intent={Intent.NONE}>
-      {row.type_formatted}
+      {row.typeFormatted}
     </Tag>
   ) : null;
 };
@@ -89,7 +122,7 @@ export function ItemsActionMenuList({
     onDuplicate,
     onViewDetails,
   },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -113,7 +146,7 @@ export function ItemsActionMenuList({
         />
       </Can>
       <Can I={ItemAction.Edit} a={AbilitySubject.Item}>
-        <If condition={original.active}>
+        <If condition={!!original.active}>
           <MenuItem
             text={intl.get('inactivate_item')}
             icon={<Icon icon="pause-16" iconSize={16} />}
@@ -154,7 +187,7 @@ export function ItemsActionMenuList({
   );
 }
 
-export const ItemsActionsTableCell = (props) => {
+export const ItemsActionsTableCell = (props: ActionsMenuProps) => {
   return (
     <Popover
       position={Position.RIGHT_BOTTOM}
@@ -168,72 +201,73 @@ export const ItemsActionsTableCell = (props) => {
 /**
  * Retrieve all items table columns.
  */
-export const useItemsTableColumns = () => {
+export const useItemsTableColumns = (): DataTableColumn<ItemTableRow>[] => {
   return React.useMemo(
-    () => [
-      {
-        id: 'name',
-        Header: intl.get('item_name'),
-        accessor: 'name',
-        className: 'name',
-        width: 180,
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'code',
-        Header: intl.get('item_code'),
-        accessor: 'code',
-        className: clsx(Classes.TEXT_MUTED),
-        width: 120,
-        clickable: true,
-      },
-      {
-        id: 'type',
-        Header: intl.get('item_type'),
-        accessor: ItemTypeAccessor,
-        className: 'item_type',
-        width: 120,
-        clickable: true,
-      },
-      {
-        id: 'category',
-        Header: intl.get('category'),
-        accessor: 'category.name',
-        className: clsx(Classes.TEXT_MUTED),
-        width: 150,
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'sell_price',
-        Header: intl.get('sell_price'),
-        accessor: 'sell_price_formatted',
-        align: 'right',
-        width: 150,
-        clickable: true,
-        money: true,
-      },
-      {
-        id: 'cost_price',
-        Header: intl.get('cost_price'),
-        accessor: 'cost_price_formatted',
-        align: 'right',
-        width: 150,
-        clickable: true,
-        money: true,
-      },
-      {
-        id: 'quantity_on_hand',
-        Header: intl.get('quantity_on_hand'),
-        accessor: 'quantity_on_hand',
-        Cell: QuantityOnHandCell,
-        align: 'right',
-        width: 140,
-        clickable: true,
-        money: true,
-      },
-    ],
+    () =>
+      [
+        {
+          id: 'name',
+          Header: intl.get('item_name'),
+          accessor: 'name',
+          className: 'name',
+          width: 180,
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'code',
+          Header: intl.get('item_code'),
+          accessor: 'code',
+          className: clsx(Classes.TEXT_MUTED),
+          width: 120,
+          clickable: true,
+        },
+        {
+          id: 'type',
+          Header: intl.get('item_type'),
+          accessor: ItemTypeAccessor,
+          className: 'item_type',
+          width: 120,
+          clickable: true,
+        },
+        {
+          id: 'category',
+          Header: intl.get('category'),
+          accessor: 'category.name',
+          className: clsx(Classes.TEXT_MUTED),
+          width: 150,
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'sell_price',
+          Header: intl.get('sell_price'),
+          accessor: 'sellPriceFormatted',
+          align: 'right',
+          width: 150,
+          clickable: true,
+          money: true,
+        },
+        {
+          id: 'cost_price',
+          Header: intl.get('cost_price'),
+          accessor: 'costPriceFormatted',
+          align: 'right',
+          width: 150,
+          clickable: true,
+          money: true,
+        },
+        {
+          id: 'quantity_on_hand',
+          Header: intl.get('quantity_on_hand'),
+          accessor: 'quantityOnHand',
+          Cell: QuantityOnHandCell,
+          align: 'right',
+          width: 140,
+          clickable: true,
+          money: true,
+        },
+      ] as DataTableColumn<ItemTableRow>[],
     [],
   );
 };

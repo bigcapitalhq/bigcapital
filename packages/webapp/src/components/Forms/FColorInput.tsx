@@ -1,7 +1,7 @@
-import React from 'react';
-import { getIn, FieldConfig, FieldProps } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { Field } from '@blueprintjs-formik/core';
+import { getIn, FieldConfig, FieldProps } from 'formik';
+import React from 'react';
 import { ColorInput, ColorInputProps } from './ColorInput';
 
 interface ColorInputInputGroupProps

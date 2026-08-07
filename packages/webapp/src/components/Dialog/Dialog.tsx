@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import { Dialog } from '@blueprintjs/core';
+import React from 'react';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 

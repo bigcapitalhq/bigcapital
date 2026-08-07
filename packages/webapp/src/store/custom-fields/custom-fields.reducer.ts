@@ -1,9 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { CUSTOM_FIELDS_RESOURCE_SET } from '@/store/types';
 import type {
   CustomFieldsState,
   CustomFieldsAction,
 } from './custom-fields.types';
+import { CUSTOM_FIELDS_RESOURCE_SET } from '@/store/types';
 
 const initialState: CustomFieldsState = {
   custom_fields: {

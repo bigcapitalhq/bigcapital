@@ -1,13 +1,8 @@
-// @ts-nocheck
-import React from 'react';
 import clsx from 'classnames';
-
-import { Card } from '@/components';
-
 import { CustomerDetailsActionsBar } from './CustomerDetailsActionsBar';
-import { CustomerDetailsHeader } from './CustomerDetailsHeader';
-
 import Style from './CustomerDetailsDrawer.module.scss';
+import { CustomerDetailsHeader } from './CustomerDetailsHeader';
+import { Card } from '@/components';
 
 /**
  * contact detail.

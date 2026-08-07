@@ -1,38 +1,34 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-
-import { AppToaster } from '@/components';
-import { CreateWarehouseFormSchema } from './WarehouseForm.schema';
-import { useWarehouseFormContext } from './WarehouseFormProvider';
-import { WarehouseFormContent } from './WarehouseFormContent';
 import { transformErrors } from './utils';
-
+import { CreateWarehouseFormSchema } from './WarehouseForm.schema';
+import { WarehouseFormContent } from './WarehouseFormContent';
+import { useWarehouseFormContext } from './WarehouseFormProvider';
+import type { WarehouseFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
 
-const defaultInitialValues = {
+const defaultInitialValues: WarehouseFormValues = {
   name: '',
   code: '',
   address: '',
   city: '',
   country: '',
-  phone_number: '',
+  phoneNumber: '',
   website: '',
   email: '',
+  primary: false,
 };
 
-/**
- * Warehouse form.
- * @returns
- */
+interface WarehouseFormProps extends WithDialogActionsProps {}
+
 function WarehouseFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: WarehouseFormProps): React.ReactElement {
   const {
     dialogName,
     warehouse,
@@ -41,18 +37,18 @@ function WarehouseFormInner({
     editWarehouseMutate,
   } = useWarehouseFormContext();
 
-  // Initial form values.
-  const initialValues = {
+  const initialValues: WarehouseFormValues = {
     ...defaultInitialValues,
     ...transformToForm(warehouse, defaultInitialValues),
   };
 
-  // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: WarehouseFormValues,
+    { setSubmitting, setErrors }: FormikHelpers<WarehouseFormValues>,
+  ) => {
     const form = { ...values };
 
-    // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('warehouse.dialog.success_message'),
         intent: Intent.SUCCESS,
@@ -60,16 +56,15 @@ function WarehouseFormInner({
       closeDialog(dialogName);
     };
 
-    // Handle request response errors.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
     }) => {
       if (errors) {
+        // no-op (preserved from @ts-nocheck original).
       }
       transformErrors(errors, { setErrors });
-
       setSubmitting(false);
     };
 

@@ -1,37 +1,35 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useInvoicesListContext } from './InvoicesListProvider';
+import { withInvoiceActions } from './withInvoiceActions';
+import { withInvoices } from './withInvoices';
+import type { WithInvoicesProps } from './withInvoices';
 import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
-import { useInvoicesListContext } from './InvoicesListProvider';
 
-import { withInvoices } from './withInvoices';
-import { withInvoiceActions } from './withInvoiceActions';
+interface WithInvoiceActionsProps {
+  setInvoicesTableState: (state: Record<string, any>) => void;
+}
 
-/**
- * Invoices views tabs.
- */
+interface InvoiceViewTabsProps {
+  setInvoicesTableState: WithInvoiceActionsProps['setInvoicesTableState'];
+  invoicesCurrentView: string;
+}
+
 function InvoiceViewTabsInner({
-  // #withInvoiceActions
   setInvoicesTableState,
-
-  // #withInvoices
   invoicesCurrentView,
-}) {
+}: InvoiceViewTabsProps) {
   const history = useHistory();
 
-  // Invoices list context.
   const { invoicesViews } = useInvoicesListContext();
 
   const tabs = transfromViewsToTabs(invoicesViews);
 
-  // Handle tab change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string) => {
     setInvoicesTableState({ viewSlug });
   };
-  // Handle click a new view tab.
   const handleClickNewView = () => {
     history.push('/custom_views/invoices/new');
   };
@@ -53,7 +51,7 @@ function InvoiceViewTabsInner({
 
 export const InvoiceViewTabs = compose(
   withInvoiceActions,
-  withInvoices(({ invoicesTableState }) => ({
+  withInvoices(({ invoicesTableState }: WithInvoicesProps) => ({
     invoicesCurrentView: invoicesTableState.viewSlug,
   })),
 )(InvoiceViewTabsInner);

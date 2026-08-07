@@ -1,10 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import * as R from 'ramda';
-
-import { withUniversalSearch } from './withUniversalSearch';
-
+import React from 'react';
 import { getUniversalSearchItemsActions } from './utils';
+import { withUniversalSearch } from './withUniversalSearch';
 import { withUniversalSearchActions } from './withUniversalSearchActions';
 
 /**

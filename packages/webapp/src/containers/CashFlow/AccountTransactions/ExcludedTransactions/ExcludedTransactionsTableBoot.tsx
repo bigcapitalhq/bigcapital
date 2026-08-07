@@ -1,16 +1,23 @@
-// @ts-nocheck
 import React from 'react';
-import * as R from 'ramda';
-import { IntersectionObserver } from '@/components';
+import { withBanking } from '../../withBanking';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
+import type { ExcludedTransactionRow } from './_utils';
+import type { WithBankingProps } from '../../withBanking';
+import type { ExcludedBankTransactionsListPage } from '@bigcapital/sdk-ts';
+import { IntersectionObserver } from '@/components';
 import { useExcludedBankTransactionsInfinity } from '@/hooks/query/banking';
 import { useFlattenInfinityPages } from '@/hooks/utils';
-import { withBanking } from '../../withBanking';
+import { compose } from '@/utils';
 
-interface ExcludedBankTransactionsContextValue {
+export interface ExcludedBankTransactionsContextValue {
+  excludedBankTransactions: ExcludedTransactionRow[];
   isExcludedTransactionsLoading: boolean;
   isExcludedTransactionsFetching: boolean;
-  excludedBankTransactions: Array<any>;
+}
+
+interface ExcludedBankTransactionsTableBootProps
+  extends Pick<WithBankingProps, 'uncategorizedTransactionsFilter'> {
+  children: React.ReactNode;
 }
 
 const ExcludedTransactionsContext =
@@ -18,12 +25,8 @@ const ExcludedTransactionsContext =
     {} as ExcludedBankTransactionsContextValue,
   );
 
-interface ExcludedBankTransactionsTableBootProps {
-  children: React.ReactNode;
-}
-
 /**
- * Account uncategorized transctions provider.
+ * Account excluded transactions provider.
  */
 function ExcludedBankTransactionsTableBootRoot({
   // #withBanking
@@ -34,41 +37,41 @@ function ExcludedBankTransactionsTableBootRoot({
 }: ExcludedBankTransactionsTableBootProps) {
   const { accountId } = useAccountTransactionsContext();
 
-  // Fetches the uncategorized transactions.
+  // Fetches the excluded transactions.
   const {
-    data: recognizedTransactionsPage,
+    data: excludedTransactionsPage,
     isFetching: isExcludedTransactionsFetching,
     isLoading: isExcludedTransactionsLoading,
-    isSuccess: isRecognizedTransactionsSuccess,
-    isFetchingNextPage: isUncategorizedTransactionFetchNextPage,
-    fetchNextPage: fetchNextrecognizedTransactionsPage,
-    hasNextPage: hasUncategorizedTransactionsNextPage,
+    isSuccess: isExcludedTransactionsSuccess,
+    hasNextPage: hasExcludedTransactionsNextPage,
+    fetchNextPage: fetchNextExcludedTransactionsPage,
   } = useExcludedBankTransactionsInfinity({
-    page_size: 50,
-    account_id: accountId,
-    min_date: uncategorizedTransactionsFilter?.fromDate || null,
-    max_date: uncategorizedTransactionsFilter.toDate || null,
+    pageSize: 50,
+    accountId,
+    minDate: uncategorizedTransactionsFilter?.fromDate || undefined,
+    maxDate: uncategorizedTransactionsFilter?.toDate || undefined,
   });
-  // Memorized the cashflow account transactions.
-  const excludedBankTransactions = useFlattenInfinityPages(
-    isRecognizedTransactionsSuccess ? recognizedTransactionsPage : undefined,
+  // Memorized the excluded bank transactions.
+  const excludedBankTransactions = useFlattenInfinityPages<
+    ExcludedBankTransactionsListPage,
+    ExcludedTransactionRow
+  >(
+    isExcludedTransactionsSuccess ? excludedTransactionsPage : undefined,
+    (page) => page?.data ?? [],
   );
   // Handle the observer ineraction.
   const handleObserverInteract = React.useCallback(() => {
-    if (
-      !isExcludedTransactionsFetching &&
-      hasUncategorizedTransactionsNextPage
-    ) {
-      fetchNextrecognizedTransactionsPage();
+    if (!isExcludedTransactionsFetching && hasExcludedTransactionsNextPage) {
+      fetchNextExcludedTransactionsPage();
     }
   }, [
     isExcludedTransactionsFetching,
-    hasUncategorizedTransactionsNextPage,
-    fetchNextrecognizedTransactionsPage,
+    hasExcludedTransactionsNextPage,
+    fetchNextExcludedTransactionsPage,
   ]);
   // Provider payload.
-  const provider = {
-    excludedBankTransactions,
+  const provider: ExcludedBankTransactionsContextValue = {
+    excludedBankTransactions: excludedBankTransactions ?? [],
     isExcludedTransactionsFetching,
     isExcludedTransactionsLoading,
   };
@@ -76,15 +79,12 @@ function ExcludedBankTransactionsTableBootRoot({
   return (
     <ExcludedTransactionsContext.Provider value={provider}>
       {children}
-      <IntersectionObserver
-        onIntersect={handleObserverInteract}
-        enabled={!isUncategorizedTransactionFetchNextPage}
-      />
+      <IntersectionObserver onIntersect={handleObserverInteract} />
     </ExcludedTransactionsContext.Provider>
   );
 }
 
-const ExcludedBankTransactionsTableBoot = R.compose(
+const ExcludedBankTransactionsTableBoot = compose(
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),

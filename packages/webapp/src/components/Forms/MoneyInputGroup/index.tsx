@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { FC, useState, useEffect, useRef } from 'react';
 import { InputGroup } from '@blueprintjs/core';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import { CurrencyInputProps } from './CurrencyInputProps';
 import {
   isNumber,

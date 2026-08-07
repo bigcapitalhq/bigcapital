@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Intent,
   Button,
@@ -9,11 +8,11 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-
-import { Group, Icon, FormattedMessage as T } from '@/components';
+import styled from 'styled-components';
+import type { VendorFormSubmitPayload } from './VendorFormProvider';
 import { useVendorFormContext } from './VendorFormProvider';
+import { Group, Icon, FormattedMessage as T } from '@/components';
 
 /**
  * Vendor floating actions bar.
@@ -33,7 +32,7 @@ export function VendorFloatingActions() {
   // Handle the submit & new button click.
   const handleSubmitAndNewClick = () => {
     submitForm();
-    setSubmitPayload({ noRedirect: true });
+    setSubmitPayload({ noRedirect: true } as VendorFormSubmitPayload);
   };
 
   return (

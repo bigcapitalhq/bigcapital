@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-
 import {
   Button,
   NavbarGroup,
@@ -9,13 +5,9 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
 import {
   Can,
   Icon,
@@ -23,8 +15,25 @@ import {
   DrawerActionsBar,
 } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { compose } from '@/utils';
+
+interface PaymentMadeDetailActionsBarInnerProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Payment made - Details panel - actions bar.
@@ -35,7 +44,7 @@ function PaymentMadeDetailActionsBarInner({
 
   // #withDrawerActions
   closeDrawer,
-}) {
+}: PaymentMadeDetailActionsBarInnerProps) {
   const history = useHistory();
 
   const { paymentMadeId } = usePaymentMadeDetailContext();

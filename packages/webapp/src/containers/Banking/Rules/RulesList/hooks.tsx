@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useMemo } from 'react';
 import { Intent, Tag } from '@blueprintjs/core';
+import { useMemo } from 'react';
 
 const applyToTypeAccessor = (rule) => {
   return rule.apply_if_transaction_type === 'deposit' ? (

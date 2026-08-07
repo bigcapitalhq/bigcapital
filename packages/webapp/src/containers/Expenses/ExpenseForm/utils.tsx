@@ -1,14 +1,23 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
-import intl from 'react-intl-universal';
-import moment from 'moment';
-import { AppToaster } from '@/components';
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { first, sumBy } from 'lodash';
+import moment from 'moment';
+import * as R from 'ramda';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { Expense } from '@bigcapital/sdk-ts';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
-
+import type {
+  ExpenseEntry,
+  ExpenseErrorResponse,
+  ExpenseFormValues,
+} from './types';
+import { AppToaster } from '@/components';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
   transformToForm,
@@ -17,11 +26,6 @@ import {
   orderingLinesIndexes,
   formattedAmount,
 } from '@/utils';
-import { useCurrentOrganization } from '@/hooks/state';
-import {
-  transformAttachmentsToForm,
-  transformAttachmentsToRequest,
-} from '@/containers/Attachments/utils';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
@@ -31,24 +35,24 @@ const ERROR = {
 
 export const MIN_LINES_NUMBER = 1;
 
-export const defaultExpenseEntry = {
+export const defaultExpenseEntry: ExpenseEntry = {
   amount: '',
-  expense_account_id: '',
+  expenseAccountId: '',
   description: '',
-  landed_cost: 0,
-  project_id: '',
+  landedCost: 0,
+  projectId: '',
 };
 
-export const defaultExpense = {
-  payment_account_id: '',
+export const defaultExpense: ExpenseFormValues = {
+  paymentAccountId: '',
   beneficiary: '',
-  payment_date: moment(new Date()).format('YYYY-MM-DD'),
+  paymentDate: moment(new Date()).format('YYYY-MM-DD'),
   description: '',
-  reference_no: '',
-  currency_code: '',
+  referenceNo: '',
+  currencyCode: '',
   publish: '',
-  branch_id: '',
-  exchange_rate: 1,
+  branchId: '',
+  exchangeRate: 1,
   categories: [...repeatValue(defaultExpenseEntry, MIN_LINES_NUMBER)],
   attachments: [],
 };
@@ -56,8 +60,12 @@ export const defaultExpense = {
 /**
  * Transform API errors in toasts messages.
  */
-export const transformErrors = (errors, { setErrors }) => {
-  const hasError = (errorType) => errors.some((e) => e.type === errorType);
+export const transformErrors = (
+  errors: ExpenseErrorResponse[],
+  { setErrors }: { setErrors: (errors: any) => void },
+) => {
+  const hasError = (errorType: string) =>
+    errors.some((e) => e.type === errorType);
 
   if (hasError(ERROR.EXPENSE_ALREADY_PUBLISHED)) {
     setErrors(
@@ -80,11 +88,11 @@ export const transformErrors = (errors, { setErrors }) => {
  * Transformes the expense to form initial values in edit mode.
  */
 export const transformToEditForm = (
-  expense,
-  defaultExpense,
+  expense: Expense,
+  defaultValues: ExpenseFormValues,
   linesNumber = 4,
-) => {
-  const expenseEntry = defaultExpense.categories[0];
+): ExpenseFormValues => {
+  const expenseEntry = defaultValues.categories[0];
   const initialEntries = [
     ...expense.categories.map((category) => ({
       ...transformToForm(category, expenseEntry),
@@ -96,21 +104,21 @@ export const transformToEditForm = (
   ];
   const categories = R.compose(
     ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry),
-  )(initialEntries);
+  )(initialEntries) as unknown as ExpenseEntry[];
 
   const attachments = transformAttachmentsToForm(expense);
 
   return {
-    ...transformToForm(expense, defaultExpense),
+    ...transformToForm(expense, defaultValues),
     categories,
     attachments,
-  };
+  } as ExpenseFormValues;
 };
 
 /**
  * Detarmine cusotmers fast-field should update.
  */
-export const customersFieldShouldUpdate = (newProps, oldProps) => {
+export const customersFieldShouldUpdate = (newProps: any, oldProps: any) => {
   return (
     newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -120,7 +128,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Detarmine accounts fast-field should update.
  */
-export const accountsFieldShouldUpdate = (newProps, oldProps) => {
+export const accountsFieldShouldUpdate = (newProps: any, oldProps: any) => {
   return (
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -130,16 +138,16 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Filter expense entries that has no amount or expense account.
  */
-export const filterNonZeroEntries = (categories) => {
+export const filterNonZeroEntries = (categories: ExpenseEntry[]) => {
   return categories.filter(
-    (category) => category.amount && category.expense_account_id,
+    (category) => category.amount && category.expenseAccountId,
   );
 };
 
 /**
  * Transformes the form values to request body.
  */
-export const transformFormValuesToRequest = (values) => {
+export const transformFormValuesToRequest = (values: ExpenseFormValues) => {
   const categories = filterNonZeroEntries(values.categories);
   const attachments = transformAttachmentsToRequest(values);
 
@@ -151,7 +159,7 @@ export const transformFormValuesToRequest = (values) => {
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<ExpenseFormValues>();
   const { branches, isBranchesSuccess, isNewMode } = useExpenseFormContext();
 
   React.useEffect(() => {
@@ -159,7 +167,7 @@ export const useSetPrimaryBranchToForm = () => {
       const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches, isNewMode]);
@@ -172,9 +180,8 @@ export const useSetPrimaryBranchToForm = () => {
 export const useExpenseSubtotal = () => {
   const {
     values: { categories },
-  } = useFormikContext();
+  } = useFormikContext<ExpenseFormValues>();
 
-  // Calculates the expense entries amount.
   return React.useMemo(() => sumBy(categories, 'amount'), [categories]);
 };
 
@@ -185,10 +192,10 @@ export const useExpenseSubtotal = () => {
 export const useExpenseSubtotalFormatted = () => {
   const subtotal = useExpenseSubtotal();
   const {
-    values: { currency_code },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<ExpenseFormValues>();
 
-  return formattedAmount(subtotal, currency_code);
+  return formattedAmount(subtotal, currencyCode);
 };
 
 /**
@@ -208,10 +215,10 @@ export const useExpenseTotal = () => {
 export const useExpenseTotalFormatted = () => {
   const total = useExpenseTotal();
   const {
-    values: { currency_code },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<ExpenseFormValues>();
 
-  return formattedAmount(total, currency_code);
+  return formattedAmount(total, currencyCode);
 };
 
 /**
@@ -219,12 +226,12 @@ export const useExpenseTotalFormatted = () => {
  * @returns {boolean}
  */
 export const useExpensesIsForeign = () => {
-  const { values } = useFormikContext();
-  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext<ExpenseFormValues>();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const isForeignExpenses = React.useMemo(
-    () => values.currency_code !== currentOrganization.base_currency,
-    [values.currency_code, currentOrganization.base_currency],
+    () => values.currencyCode !== baseCurrency,
+    [values.currencyCode, baseCurrency],
   );
   return isForeignExpenses;
 };

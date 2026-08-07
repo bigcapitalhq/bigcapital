@@ -1,8 +1,8 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   PROJECTS_TABLE_STATE_RESET,
   PROJECTS_TABLE_STATE_SET,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 export const setProjectsTableState = (queries: Partial<TableQuery>) => {
   return {

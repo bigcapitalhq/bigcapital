@@ -1,12 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { ReportDataTable, FinancialSheet } from '@/components';
-import { useSalesByItemsContext } from './SalesByItemProvider';
 import { useSalesByItemsTableColumns } from './dynamicColumns';
-import { tableRowTypesToClassnames } from '@/utils';
+import { useSalesByItemsContext } from './SalesByItemProvider';
+import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
+import { tableRowTypesToClassnames } from '@/utils';
 
 interface SalesByItemsTableProps {
   companyName: string;

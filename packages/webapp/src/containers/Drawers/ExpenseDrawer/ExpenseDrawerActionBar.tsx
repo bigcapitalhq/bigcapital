@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   Classes,
@@ -8,6 +5,9 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import {
   Icon,
   DrawerActionsBar,
@@ -15,24 +15,28 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
-import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { compose } from '@/utils';
+
+interface ExpenseDrawerActionBarInnerProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Expense drawer action bar.
  */
 function ExpenseDrawerActionBarInner({
-  // #withAlertsDialog
   openAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
+}: ExpenseDrawerActionBarInnerProps) {
   const history = useHistory();
 
   // Expense drawer context.
@@ -40,13 +44,13 @@ function ExpenseDrawerActionBarInner({
 
   // Handle the expense edit action.
   const handleEditExpense = () => {
-    history.push(`/expenses/${expense.id}/edit`);
+    history.push(`/expenses/${expense?.id}/edit`);
     closeDrawer(DRAWERS.EXPENSE_DETAILS);
   };
 
   // Handle the expense delete action.
   const handleDeleteExpense = () => {
-    openAlert('expense-delete', { expenseId: expense.id });
+    openAlert('expense-delete', { expenseId: expense?.id });
   };
 
   return (

@@ -1,14 +1,12 @@
 // @ts-nocheck
+import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem, Intent } from '@blueprintjs/core';
-
 import { Icon, Choose, T, TextStatus } from '@/components';
-
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { AbilitySubject, CreditNoteAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Credit note universal search item select action.

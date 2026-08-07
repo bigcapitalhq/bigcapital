@@ -1,15 +1,27 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext } from 'react';
+import type { ContactDuplicateContextValue } from './types';
 import { DialogContent } from '@/components';
 
-const ContactDuplicateContext = React.createContext();
+const ContactDuplicateContext = createContext<ContactDuplicateContextValue>(
+  {} as ContactDuplicateContextValue,
+);
+
+interface ContactDuplicateProviderProps {
+  contactId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  *  contact duplicate provider.
  */
-function ContactDuplicateProvider({ contactId, dialogName, ...props }) {
+function ContactDuplicateProvider({
+  contactId,
+  dialogName,
+  ...props
+}: ContactDuplicateProviderProps) {
   // Provider state.
-  const provider = {
+  const provider: ContactDuplicateContextValue = {
     dialogName,
     contactId,
   };

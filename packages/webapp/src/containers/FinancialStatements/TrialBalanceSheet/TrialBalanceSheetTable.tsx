@@ -1,13 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
+import { useTrialBalanceSheetTableColumns } from './hooks';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
+import { ReportDataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
 import { tableRowTypesToClassnames } from '@/utils';
-import { ReportDataTable, FinancialSheet } from '@/components';
-
-import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
-import { useTrialBalanceSheetTableColumns } from './hooks';
 
 interface TrialBalanceSheetTableProps {
   companyName: string;

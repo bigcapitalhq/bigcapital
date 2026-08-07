@@ -1,27 +1,46 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
+import { WarehouseTransfersEmptyStatus } from './WarehouseTransfersEmptyStatus';
+import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
+import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
 import {
   DataTable,
   TableSkeletonRows,
   TableSkeletonHeader,
   DashboardContentTable,
 } from '@/components';
-import { TABLES } from '@/constants/tables';
-import { useMemorizedColumnsWidths } from '@/hooks';
-import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
-import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
-
-import { WarehouseTransfersEmptyStatus } from './WarehouseTransfersEmptyStatus';
-import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { compose } from '@/utils';
+
+interface WarehouseTransferRow {
+  id: number;
+}
+
+interface DataTableFetchParams {
+  pageSize: number;
+  pageIndex: number;
+  sortBy: { id: string; desc: boolean }[];
+}
+
+interface WarehouseTransfersDataTableInnerProps
+  extends Pick<
+      WithWarehouseTransfersActionsProps,
+      'setWarehouseTransferTableState'
+    >,
+    Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'openDrawer'>,
+    Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Warehouse transfers datatable.
@@ -35,13 +54,7 @@ function WarehouseTransfersDataTableInner({
 
   // #withDrawerActions
   openDrawer,
-
-  // #withDialogAction
-  openDialog,
-
-  // #withSettings
-  warehouseTransferTableSize,
-}) {
+}: WarehouseTransfersDataTableInnerProps) {
   const history = useHistory();
 
   // Warehouse transfers list context.
@@ -51,7 +64,9 @@ function WarehouseTransfersDataTableInner({
     isEmptyStatus,
     isWarehouseTransfersLoading,
     isWarehouseTransfersFetching,
+    warehouseTransferSettings,
   } = useWarehouseTranfersListContext();
+  const warehouseTransferTableSize = warehouseTransferSettings?.tableSize;
 
   // Invoices table columns.
   const columns = useWarehouseTransfersTableColumns();
@@ -62,7 +77,7 @@ function WarehouseTransfersDataTableInner({
 
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = React.useCallback(
-    ({ pageSize, pageIndex, sortBy }) => {
+    ({ pageSize, pageIndex, sortBy }: DataTableFetchParams) => {
       setWarehouseTransferTableState({
         pageSize,
         pageIndex,
@@ -78,31 +93,33 @@ function WarehouseTransfersDataTableInner({
   }
 
   // Handle view detail.
-  const handleViewDetailWarehouseTransfer = ({ id }) => {
+  const handleViewDetailWarehouseTransfer = ({ id }: WarehouseTransferRow) => {
     openDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS, { warehouseTransferId: id });
   };
 
   // Handle edit warehouse transfer.
-  const handleEditWarehouseTransfer = ({ id }) => {
+  const handleEditWarehouseTransfer = ({ id }: WarehouseTransferRow) => {
     history.push(`/warehouses-transfers/${id}/edit`);
   };
 
   // Handle delete warehouse transfer.
-  const handleDeleteWarehouseTransfer = ({ id }) => {
+  const handleDeleteWarehouseTransfer = ({ id }: WarehouseTransferRow) => {
     openAlert('warehouse-transfer-delete', { warehouseTransferId: id });
   };
 
   // Handle initiate warehouse transfer.
-  const handleInitateWarehouseTransfer = ({ id }) => {
+  const handleInitateWarehouseTransfer = ({ id }: WarehouseTransferRow) => {
     openAlert('warehouse-transfer-initate', { warehouseTransferId: id });
   };
   // Handle transferred warehouse transfer.
-  const handleTransferredWarehouseTransfer = ({ id }) => {
+  const handleTransferredWarehouseTransfer = ({ id }: WarehouseTransferRow) => {
     openAlert('transferred-warehouse-transfer', { warehouseTransferId: id });
   };
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (cell: {
+    row: { original: WarehouseTransferRow };
+  }) => {
     openDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS, {
       warehouseTransferId: cell.row.original.id,
     });
@@ -150,7 +167,4 @@ export const WarehouseTransfersDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ warehouseTransferSettings }) => ({
-    warehouseTransferTableSize: warehouseTransferSettings?.tableSize,
-  })),
 )(WarehouseTransfersDataTableInner);

@@ -1,8 +1,7 @@
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
-
-import { Align } from '@/constants';
 import { CellTextSpan } from '@/components/Datatable/Cells';
+import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
 interface ReportTableColumn {

@@ -1,25 +1,38 @@
-// @ts-nocheck
+import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-
+import type { SMSNotification } from './SMSIntegrationProvider';
 import { SwitchFieldCell } from '@/components/DataTableCells';
 import { safeInvoke } from '@/utils';
+
+interface Row {
+  row: { original: SMSNotification };
+}
+
+interface Payload {
+  onEditMessageText?: (n: SMSNotification) => void;
+  onEnableNotification?: (n: SMSNotification) => void;
+  onDisableNotification?: (n: SMSNotification) => void;
+}
 
 /**
  * Notification accessor.
  */
-export const NotificationAccessor = (row) => {
+export const NotificationAccessor = (row: SMSNotification) => {
   return (
     <span className="notification">
-      <NotificationLabel>{row.notification_label}</NotificationLabel>
+      <NotificationLabel>{row.notificationLabel}</NotificationLabel>
       <NotificationDescription>
-        {row.notification_description}
+        {row.notificationDescription}
       </NotificationDescription>
     </span>
   );
 };
+
+interface SMSMessageCellProps extends Row {
+  payload: { onEditMessageText?: (n: SMSNotification) => void };
+}
 
 /**
  * SMS notification message cell.
@@ -27,9 +40,9 @@ export const NotificationAccessor = (row) => {
 export const SMSMessageCell = ({
   payload: { onEditMessageText },
   row: { original },
-}) => (
+}: SMSMessageCellProps) => (
   <div>
-    <MessageBox>{original.sms_message}</MessageBox>
+    <MessageBox>{original.smsMessage}</MessageBox>
     <MessageBoxActions>
       <Button
         minimal={true}
@@ -43,13 +56,17 @@ export const SMSMessageCell = ({
   </div>
 );
 
+interface ActionsMenuProps extends Row {
+  payload: Payload;
+}
+
 /**
  * Context menu of SMS notification messages.
  */
 export function ActionsMenu({
   payload: { onEditMessageText, onEnableNotification, onDisableNotification },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -57,7 +74,7 @@ export function ActionsMenu({
         onClick={() => safeInvoke(onEditMessageText, original)}
       />
       <MenuDivider />
-      {!original.is_notification_enabled ? (
+      {!original.isNotificationEnabled ? (
         <MenuItem
           text={intl.get('sms_notifications.enable_notification')}
           onClick={() => safeInvoke(onEnableNotification, original)}
@@ -72,11 +89,20 @@ export function ActionsMenu({
   );
 }
 
+interface UseSMSIntegrationTableColumnsArgs {
+  onSwitchChange: (
+    event: unknown,
+    value: boolean,
+    notification: SMSNotification,
+  ) => void;
+}
+
 /**
  * Retrieve SMS notifications messages table columns
- * @returns
  */
-export function useSMSIntegrationTableColumns({ onSwitchChange }) {
+export function useSMSIntegrationTableColumns({
+  onSwitchChange,
+}: UseSMSIntegrationTableColumnsArgs) {
   return React.useMemo(
     () => [
       {

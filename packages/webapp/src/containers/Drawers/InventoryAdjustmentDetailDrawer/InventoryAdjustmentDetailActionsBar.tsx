@@ -1,11 +1,6 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
-
+import React from 'react';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
 import {
   Icon,
   DrawerActionsBar,
@@ -16,19 +11,23 @@ import {
   InventoryAdjustmentAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
-
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
+
+interface InventoryAdjustmentDetailActionsBarInnerProps
+  extends Pick<WithAlertActionsProps, 'openAlert'> {}
 
 /**
  * Inventory adjustment detail actions bar.
  */
 function InventoryAdjustmentDetailActionsBarInner({
-  // #withAlertActions
   openAlert,
-}) {
+}: InventoryAdjustmentDetailActionsBarInnerProps) {
   const { inventoryId } = useInventoryAdjustmentDrawerContext();
 
-  // Handle delete inventory adjustment.
   const handleDeleteInventoryAdjustment = () => {
     openAlert('inventory-adjustment-delete', { inventoryId });
   };

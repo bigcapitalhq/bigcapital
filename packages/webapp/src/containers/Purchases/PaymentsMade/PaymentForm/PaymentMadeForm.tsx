@@ -1,56 +1,54 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Formik, Form, type FormikHelpers } from 'formik';
+import { defaultTo } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { Formik, Form, FormikHelpers } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { css } from '@emotion/css';
-
-import { CLASSES } from '@/constants/classes';
-import { AppToaster, Box } from '@/components';
-import { PaymentMadeFormHeader as PaymentMadeHeader } from './PaymentMadeFormHeader';
+import { PaymentMadeDialogs } from './PaymentMadeDialogs';
 import { PaymentMadeFloatingActions } from './PaymentMadeFloatingActions';
 import { PaymentMadeFooter } from './PaymentMadeFooter';
-import { PaymentMadeFormBody } from './PaymentMadeFormBody';
-import { PaymentMadeFormTopBar } from './PaymentMadeFormTopBar';
-import { PaymentMadeDialogs } from './PaymentMadeDialogs';
-
-import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
-import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { compose, orderingLinesIndexes } from '@/utils';
-
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { PageForm } from '@/components/PageForm';
-
 import {
   EditPaymentMadeFormSchema,
   CreatePaymentMadeFormSchema,
 } from './PaymentMadeForm.schema';
+import { PaymentMadeFormBody } from './PaymentMadeFormBody';
+import { PaymentMadeFormHeader as PaymentMadeHeader } from './PaymentMadeFormHeader';
+import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+import { PaymentMadeFormTopBar } from './PaymentMadeFormTopBar';
+import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 import {
   defaultPaymentMade,
   transformToEditForm,
   transformErrors,
   transformFormToRequest,
   getPaymentExcessAmountFromValues,
+  type PaymentMadeFormValues,
+  type PaymentMadeErrorResponse,
+  type PaymentMadeEditEntry,
 } from './utils';
+import type {
+  CreateBillPaymentBody,
+  EditBillPaymentBody,
+} from '@bigcapital/sdk-ts';
+import { AppToaster, Box } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { compose, orderingLinesIndexes } from '@/utils';
+
+type WithDialogActionsProps = {
+  openDialog: (name: string, payload?: Record<string, unknown>) => void;
+};
+
+type PaymentMadeFormRootProps = WithDialogActionsProps;
 
 /**
  * Payment made form component.
  */
-function PaymentMadeFormInner({
-  // #withSettings
-  preferredPaymentAccount,
+function PaymentMadeFormInner({ openDialog }: PaymentMadeFormRootProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  // #withCurrentOrganization
-  organization: { base_currency },
-
-  // #withDialogActions
-  openDialog,
-}) {
   const history = useHistory();
 
   // Payment made form context.
@@ -63,33 +61,44 @@ function PaymentMadeFormInner({
     createPaymentMadeMutate,
     editPaymentMadeMutate,
     isExcessConfirmed,
+    billPaymentSettings,
   } = usePaymentMadeFormContext();
 
+  const preferredPaymentAccount = parseInt(
+    (billPaymentSettings?.withdrawalAccount as string | undefined) ?? '',
+  ) as number | undefined;
+
   // Form initial values.
-  const initialValues = useMemo(
+  const initialValues: PaymentMadeFormValues = useMemo(
     () => ({
       ...(!isNewMode
-        ? {
-            ...transformToEditForm(paymentMadeEditPage, paymentEntriesEditPage),
-          }
+        ? transformToEditForm(
+            paymentMadeEditPage ?? {},
+            (paymentEntriesEditPage ?? []) as PaymentMadeEditEntry[],
+          )
         : {
             ...defaultPaymentMade,
-            payment_account_id: defaultTo(preferredPaymentAccount),
-            currency_code: base_currency,
+            paymentAccountId: defaultTo(preferredPaymentAccount, ''),
+            currencyCode: baseCurrency ?? '',
             entries: orderingLinesIndexes(defaultPaymentMade.entries),
           }),
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isNewMode, paymentMadeEditPage, paymentEntriesEditPage],
   );
 
   // Handle the form submit.
   const handleSubmitForm = (
-    values,
-    { setSubmitting, resetForm, setFieldError }: FormikHelpers<any>,
+    values: PaymentMadeFormValues,
+    {
+      setSubmitting,
+      resetForm,
+      setFieldError,
+    }: FormikHelpers<PaymentMadeFormValues>,
   ) => {
     setSubmitting(true);
 
-    if (values.amount <= 0) {
+    if (Number(values.amount) <= 0) {
       AppToaster.show({
         message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
         intent: Intent.DANGER,
@@ -127,9 +136,9 @@ function PaymentMadeFormInner({
     };
 
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors?: PaymentMadeErrorResponse[] };
     }) => {
       if (errors) {
         transformErrors(errors, { setFieldError });
@@ -137,16 +146,21 @@ function PaymentMadeFormInner({
       setSubmitting(false);
     };
     if (!isNewMode) {
-      return editPaymentMadeMutate([paymentMadeId, form])
+      return editPaymentMadeMutate([
+        paymentMadeId as number,
+        form as unknown as EditBillPaymentBody,
+      ])
         .then(onSaved)
         .catch(onError);
     } else {
-      return createPaymentMadeMutate(form).then(onSaved).catch(onError);
+      return createPaymentMadeMutate(form as unknown as CreateBillPaymentBody)
+        .then(onSaved)
+        .catch(onError);
     }
   };
 
   return (
-    <Formik
+    <Formik<PaymentMadeFormValues>
       initialValues={initialValues}
       validationSchema={
         isNewMode ? CreatePaymentMadeFormSchema : EditPaymentMadeFormSchema
@@ -186,12 +200,4 @@ function PaymentMadeFormInner({
   );
 }
 
-export const PaymentMadeForm = compose(
-  withSettings(({ billPaymentSettings }) => ({
-    paymentNextNumber: billPaymentSettings?.next_number,
-    paymentNumberPrefix: billPaymentSettings?.number_prefix,
-    preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
-  })),
-  withCurrentOrganization(),
-  withDialogActions,
-)(PaymentMadeFormInner);
+export const PaymentMadeForm = compose(withDialogActions)(PaymentMadeFormInner);

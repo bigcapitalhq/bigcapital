@@ -1,7 +1,7 @@
 import React from 'react';
-import { Row, Col, FSelect, FFormGroup } from '@/components';
-import { displayColumnsByOptions } from './constants';
 import intl from 'react-intl-universal';
+import { displayColumnsByOptions } from './constants';
+import { Row, Col, FSelect, FFormGroup } from '@/components';
 
 interface SelectDisplayColumnsByProps {
   formGroupProps?: Record<string, unknown>;

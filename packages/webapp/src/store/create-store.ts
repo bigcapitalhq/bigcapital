@@ -3,12 +3,13 @@ import {
   applyMiddleware,
   compose,
 } from 'redux';
-import thunkMiddleware from 'redux-thunk';
 import { persistStore } from 'redux-persist';
+import thunkMiddleware from 'redux-thunk';
+import ResetMiddleware from './reset-middleware';
+import type { StoreEnhancer } from 'redux';
 import monitorReducerEnhancer from '@/store/enhancers/monitor-reducer';
 import loggerMiddleware from '@/store/logger.middleware';
 import rootReducer from '@/store/reducers';
-import ResetMiddleware from './reset-middleware';
 
 declare global {
   interface Window {
@@ -18,7 +19,7 @@ declare global {
 
 const createStoreFactory = (initialState = {}) => {
   const middleware = [thunkMiddleware, loggerMiddleware];
-  const enhancers = [monitorReducerEnhancer, ResetMiddleware] as any[];
+  const enhancers = [monitorReducerEnhancer, ResetMiddleware];
   let composeEnhancers: typeof compose = compose;
 
   if (process.env.NODE_ENV === 'development') {
@@ -27,13 +28,12 @@ const createStoreFactory = (initialState = {}) => {
     }
   }
 
-  const store = createReduxStore(
-    rootReducer,
-    initialState,
-    composeEnhancers(applyMiddleware(...middleware), ...enhancers),
-  );
-  (store as any).asyncReducers = {};
-  return store;
+  const enhancer = composeEnhancers(
+    applyMiddleware(...middleware),
+    ...enhancers,
+  ) as StoreEnhancer;
+
+  return createReduxStore(rootReducer, initialState, enhancer);
 };
 
 export const createStore = createStoreFactory;

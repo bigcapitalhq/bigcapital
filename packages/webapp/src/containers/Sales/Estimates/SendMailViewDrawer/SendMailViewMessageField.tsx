@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { useCallback, useRef } from 'react';
-import { useFormikContext } from 'formik';
 import { Button, Icon, Position } from '@blueprintjs/core';
-import { SelectOptionProps } from '@blueprintjs-formik/select';
 import { FormGroupProps, TextAreaProps } from '@blueprintjs-formik/core';
+import { SelectOptionProps } from '@blueprintjs-formik/select';
 import { css } from '@emotion/css';
-import { FFormGroup, FSelect, FTextArea, Group, Stack } from '@/components';
+import { useFormikContext } from 'formik';
+import { useCallback, useRef } from 'react';
 import { InvoiceSendMailFormValues } from '../../Invoices/InvoiceSendMailDrawer/_types';
+import { FFormGroup, FSelect, FTextArea, Group, Stack } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 interface SendMailViewMessageFieldProps {

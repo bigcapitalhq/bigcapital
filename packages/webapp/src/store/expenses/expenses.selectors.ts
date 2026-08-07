@@ -1,9 +1,9 @@
 import { isEqual } from 'lodash';
-import { createDeepEqualSelector } from '@/utils';
-import { paginationLocationQuery } from '@/store/selectors';
-import { defaultTableQuery } from './expenses.reducer';
 import { createSelector } from 'reselect';
+import { defaultTableQuery } from './expenses.reducer';
 import type { RootState } from '@/store/reducers';
+import { paginationLocationQuery } from '@/store/selectors';
+import { createDeepEqualSelector } from '@/utils';
 
 // Items table state selectors.
 const expensesTableStateSelector = (state: RootState) =>

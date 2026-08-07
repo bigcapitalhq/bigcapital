@@ -1,9 +1,7 @@
-// @ts-nocheck
 import React from 'react';
-
-import { Row, Col, Paper, Stack } from '@/components';
 import { CreditNoteFormFooterLeft } from './CreditNoteFormFooterLeft';
 import { CreditNoteFormFooterRight } from './CreditNoteFormFooterRight';
+import { Row, Col, Paper, Stack } from '@/components';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**

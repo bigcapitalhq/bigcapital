@@ -1,12 +1,18 @@
-import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
+import React, { createContext } from 'react';
+import { transformItemsTableState } from './utils';
+import { DashboardInsider } from '@/components';
+import {
+  useResourceViews,
+  useResourceMeta,
+  useItems,
+  useSettingsItems,
+} from '@/hooks/query';
 import {
   getFieldsFromResourceMeta,
   transformTableQueryToParams,
 } from '@/utils';
-import { transformItemsTableState } from './utils';
-import { DashboardInsider } from '@/components';
-import { useResourceViews, useResourceMeta, useItems } from '@/hooks/query';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 type UseItemsResult = ReturnType<typeof useItems>;
 type UseResourceViewsResult = ReturnType<typeof useResourceViews>;
@@ -17,6 +23,8 @@ type ItemsListContextValue = {
   pagination: NonNullable<UseItemsResult['data']>['pagination'] | undefined;
 
   fields: ReturnType<typeof getFieldsFromResourceMeta> | [];
+
+  itemsSettings: SettingsGroup | undefined;
 
   isViewsLoading: boolean;
   isItemsLoading: boolean;
@@ -63,12 +71,12 @@ function ItemsListProvider({
     data: itemsData,
     isFetching: isItemsFetching,
     isLoading: isItemsLoading,
-  } = useItems(
-    {
-      ...(transformTableQueryToParams(tableQuery) as Record<string, unknown>),
-    },
-    { keepPreviousData: true } as any,
-  );
+  } = useItems({
+    ...(transformTableQueryToParams(tableQuery) as Record<string, unknown>),
+  });
+
+  // Fetch the items settings.
+  const { data: itemsSettings } = useSettingsItems();
 
   // Detarmines the datatable empty status.
   const isEmptyStatus =
@@ -82,6 +90,8 @@ function ItemsListProvider({
     fields: resourceMeta?.fields
       ? getFieldsFromResourceMeta(resourceMeta.fields)
       : [],
+
+    itemsSettings,
 
     isViewsLoading,
     isItemsLoading,

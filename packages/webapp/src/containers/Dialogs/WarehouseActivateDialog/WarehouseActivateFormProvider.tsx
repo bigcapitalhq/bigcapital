@@ -1,19 +1,28 @@
-// @ts-nocheck
-import React from 'react';
-
+import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
 import { useActivateWarehouses } from '@/hooks/query';
 
-const WarehouseActivateContext = React.createContext();
+interface WarehouseActivateContextValue {
+  activateWarehouses: (id: number) => Promise<unknown>;
+  dialogName: string;
+}
 
-/**
- * warehouse activate form provider.
- */
-function WarehouseActivateFormProvider({ dialogName, ...props }) {
+const WarehouseActivateContext = createContext<WarehouseActivateContextValue>(
+  {} as WarehouseActivateContextValue,
+);
+
+interface WarehouseActivateFormProviderProps {
+  dialogName: string;
+  children?: React.ReactNode;
+}
+
+function WarehouseActivateFormProvider({
+  dialogName,
+  ...props
+}: WarehouseActivateFormProviderProps) {
   const { mutateAsync: activateWarehouses } = useActivateWarehouses();
 
-  // State provider.
-  const provider = {
+  const provider: WarehouseActivateContextValue = {
     activateWarehouses,
     dialogName,
   };

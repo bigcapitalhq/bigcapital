@@ -1,40 +1,32 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import React from 'react';
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import { compose } from '@/utils';
+
+interface MoneyOutFloatingActionsInnerProps
+  extends Pick<WithDialogActionsProps, 'closeDialog'> {}
 
 /**
  * Money out floating actions.
  */
 function MoneyOutFloatingActionsInner({
-  // #withDialogActions
   closeDialog,
-}) {
-  // Formik context.
+}: MoneyOutFloatingActionsInnerProps) {
   const { isSubmitting, submitForm } = useFormikContext();
-  //  money in  dialog context.
   const { dialogName, setSubmitPayload, submitPayload } =
     useMoneyOutDialogContext();
 
-  // handle submit as draft button click.
-  const handleSubmitDraftBtnClick = () => {
-    setSubmitPayload({ publish: false });
-    submitForm();
-  };
-  // Handle submit  button click.
+  // Handle submit button click.
   const handleSubmittBtnClick = () => {
     setSubmitPayload({ publish: true });
   };
   // Handle close button click.
   const handleCloseBtnClick = () => {
-    closeDialog(dialogName);
+    if (dialogName) closeDialog(dialogName);
   };
 
   return (

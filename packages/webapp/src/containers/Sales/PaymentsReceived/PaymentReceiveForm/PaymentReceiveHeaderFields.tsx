@@ -1,19 +1,26 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
+import { Position, Classes, ControlGroup, Button } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { useTheme } from '@emotion/react';
+import { Theme } from '@xstyled/emotion';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import { isEmpty, toSafeInteger } from 'lodash';
+import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import {
-  InputGroup,
-  Position,
-  Classes,
-  ControlGroup,
-  Button,
-} from '@blueprintjs/core';
-import { isEmpty, toSafeInteger } from 'lodash';
-import { useFormikContext } from 'formik';
-import { css } from '@emotion/css';
-import { Theme, useTheme } from '@emotion/react';
-
+  PaymentReceiveExchangeRateInputField,
+  PaymentReceiveProjectSelectButton,
+} from './components';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+import { PaymentReceivePaymentNoField } from './PaymentReceivePaymentNoField';
+import {
+  amountPaymentEntries,
+  fullAmountPaymentEntries,
+  customersFieldShouldUpdate,
+  accountsFieldShouldUpdate,
+  type PaymentReceiveFormValues,
+} from './utils';
 import {
   FeatureCan,
   CustomersSelect,
@@ -22,7 +29,6 @@ import {
   Stack,
   FDateInput,
 } from '@/components';
-import { safeSumBy } from '@/utils';
 import {
   FFormGroup,
   AccountsSelect,
@@ -32,24 +38,12 @@ import {
   CustomerDrawerLink,
   Hint,
   Money,
+  FInputGroup,
 } from '@/components';
-import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { ProjectsSelect } from '@/containers/Projects/components';
-import {
-  PaymentReceiveExchangeRateInputField,
-  PaymentReceiveProjectSelectButton,
-} from './components';
-
-import {
-  amountPaymentEntries,
-  fullAmountPaymentEntries,
-  customersFieldShouldUpdate,
-  accountsFieldShouldUpdate,
-} from './utils';
-import { Features } from '@/constants';
-import { PaymentReceivePaymentNoField } from './PaymentReceivePaymentNoField';
-import intl from 'react-intl-universal';
+import { safeSumBy } from '@/utils';
 
 const getHeaderFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -71,33 +65,28 @@ const getHeaderFieldsStyle = (theme: Theme) => css`
  * Payment receive header fields.
  */
 export function PaymentReceiveHeaderFields() {
-  const theme = useTheme();
+  const theme = useTheme() as Theme;
   const styleClassName = getHeaderFieldsStyle(theme);
 
-  // Payment receive form context.
   const { accounts, projects } = usePaymentReceiveFormContext();
 
-  // Formik form context.
   const {
-    values: { entries, currency_code },
+    values: { entries, currencyCode },
     setFieldValue,
-  } = useFormikContext();
+  } = useFormikContext<PaymentReceiveFormValues>();
 
-  // Calculates the full-amount received.
   const totalDueAmount = useMemo(
-    () => safeSumBy(entries, 'due_amount'),
+    () => safeSumBy(entries, 'dueAmount'),
     [entries],
   );
-  // Handle receive full-amount link click.
   const handleReceiveFullAmountClick = () => {
     const newEntries = fullAmountPaymentEntries(entries);
-    const fullAmount = safeSumBy(newEntries, 'payment_amount');
+    const fullAmount = safeSumBy(newEntries, 'paymentAmount');
 
     setFieldValue('entries', newEntries);
     setFieldValue('amount', fullAmount);
   };
-  // Handles the full-amount field blur.
-  const onFullAmountBlur = (value) => {
+  const onFullAmountBlur = (value: string | number) => {
     const newEntries = amountPaymentEntries(toSafeInteger(value), entries);
     setFieldValue('entries', newEntries);
   };
@@ -109,22 +98,22 @@ export function PaymentReceiveHeaderFields() {
 
       {/* ----------- Exchange rate ----------- */}
       <PaymentReceiveExchangeRateInputField
-        name={'exchange_rate'}
+        name={'exchangeRate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
 
       {/* ------------- Payment date ------------- */}
       <FFormGroup
-        name={'payment_date'}
+        name={'paymentDate'}
         label={intl.get('payment_date')}
         labelInfo={<FieldRequiredHint />}
         inline
         fastField
       >
         <FDateInput
-          name={'payment_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          name={'paymentDate'}
+          formatDate={(date: Date) => date.toLocaleDateString()}
+          parseDate={(str: string) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
@@ -143,42 +132,44 @@ export function PaymentReceiveHeaderFields() {
         labelInfo={<Hint />}
         fastField
       >
-        <ControlGroup>
-          <InputPrependText text={currency_code} />
-          <FMoneyInputGroup
-            name={'amount'}
-            onBlurValue={onFullAmountBlur}
-            fastField
-          />
-        </ControlGroup>
+        <>
+          <ControlGroup>
+            <InputPrependText text={currencyCode}>{null}</InputPrependText>
+            <FMoneyInputGroup
+              name={'amount'}
+              onBlurValue={onFullAmountBlur}
+              fastField
+            />
+          </ControlGroup>
 
-        {!isEmpty(entries) && (
-          <Button
-            onClick={handleReceiveFullAmountClick}
-            className={css`
-              &:not([class*='${theme.bpPrefix}-intent-']) {
-                &.${theme.bpPrefix}-minimal {
-                  width: auto;
-                  padding: 0;
-                  min-height: auto;
-                  font-size: 12px;
-                  margin-top: 4px;
-                  background-color: transparent;
-                  color: #0052cc;
+          {!isEmpty(entries) && (
+            <Button
+              onClick={handleReceiveFullAmountClick}
+              className={css`
+                &:not([class*='${theme.bpPrefix}-intent-']) {
+                  &.${theme.bpPrefix}-minimal {
+                    width: auto;
+                    padding: 0;
+                    min-height: auto;
+                    font-size: 12px;
+                    margin-top: 4px;
+                    background-color: transparent;
+                    color: #0052cc;
 
-                  &:hover {
-                    text-decoration: underline;
+                    &:hover {
+                      text-decoration: underline;
+                    }
                   }
                 }
-              }
-            `}
-            small
-            minimal
-          >
-            <T id={'receive_full_amount'} /> (
-            <Money amount={totalDueAmount} currency={currency_code} />)
-          </Button>
-        )}
+              `}
+              small
+              minimal
+            >
+              <T id={'receive_full_amount'} /> (
+              <Money amount={totalDueAmount} currency={currencyCode} />)
+            </Button>
+          )}
+        </>
       </FFormGroup>
 
       {/* ------------ Payment receive no. ------------ */}
@@ -186,17 +177,17 @@ export function PaymentReceiveHeaderFields() {
 
       {/* ------------ Deposit account ------------ */}
       <FFormGroup
-        name={'deposit_account_id'}
+        name={'depositAccountId'}
         label={intl.get('deposit_to')}
         inline={true}
         labelInfo={<FieldRequiredHint />}
-        items={accounts}
+        // @ts-expect-error shouldUpdate is forwarded to FastField at runtime; FormGroupProps type doesn't expose it
         shouldUpdate={accountsFieldShouldUpdate}
         fastField={true}
       >
         <AccountsSelect
-          name={'deposit_account_id'}
-          items={accounts}
+          name={'depositAccountId'}
+          items={accounts ?? []}
           labelInfo={<FieldRequiredHint />}
           placeholder={<T id={'select_deposit_account'} />}
           filterByTypes={[
@@ -212,24 +203,24 @@ export function PaymentReceiveHeaderFields() {
 
       {/* ------------ Reference No. ------------ */}
       <FFormGroup
-        name={'reference_no'}
+        name={'referenceNo'}
         label={intl.get('reference')}
         inline
         fastField
       >
-        <InputGroup name={'reference_no'} minimal fastField />
+        <FInputGroup name={'referenceNo'} fill />
       </FFormGroup>
 
       {/*------------ Project name -----------*/}
       <FeatureCan feature={Features.Projects}>
         <FFormGroup
-          name={'project_id'}
+          name={'projectId'}
           label={intl.get('payment_receive.project_name.label')}
           inline={true}
           className={classNames('form-group--select-list', Classes.FILL)}
         >
           <ProjectsSelect
-            name={'project_id'}
+            name={'projectId'}
             projects={projects}
             input={PaymentReceiveProjectSelectButton}
             popoverFill={true}
@@ -245,48 +236,54 @@ const CustomerButtonLink = styled(CustomerDrawerLink)`
   margin-top: 6px;
 `;
 
+type CustomerOption = {
+  id: string | number;
+  currencyCode?: string;
+};
+
 /**
  * Customer select field of payment receive form.
- * @returns {React.ReactNode}
  */
 function PaymentReceiveCustomerSelect() {
-  // Payment receive form context.
   const { customers, isNewMode } = usePaymentReceiveFormContext();
 
-  // Formik form context.
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } =
+    useFormikContext<PaymentReceiveFormValues>();
 
   return (
     <FFormGroup
       label={intl.get('customer_name')}
       inline={true}
       labelInfo={<FieldRequiredHint />}
-      name={'customer_id'}
+      name={'customerId'}
       fastField={true}
+      // @ts-expect-error shouldUpdate/shouldUpdateDeps are forwarded to FastField at runtime; FormGroupProps type doesn't expose them
       shouldUpdate={customersFieldShouldUpdate}
       shouldUpdateDeps={{ items: customers }}
     >
-      <CustomersSelect
-        name={'customer_id'}
-        items={customers}
-        placeholder={<T id={'select_customer_account'} />}
-        onItemChange={(customer) => {
-          setFieldValue('customer_id', customer.id);
-          setFieldValue('full_amount', '');
-          setFieldValue('currency_code', customer?.currency_code);
-        }}
-        popoverFill={true}
-        disabled={!isNewMode}
-        allowCreate={true}
-        fastField={true}
-        shouldUpdate={customersFieldShouldUpdate}
-        shouldUpdateDeps={{ items: customers }}
-      />
-      {values.customer_id && (
-        <CustomerButtonLink customerId={values.customer_id}>
-          <T id={'view_customer_details'} />
-        </CustomerButtonLink>
-      )}
+      <>
+        <CustomersSelect
+          name={'customerId'}
+          items={customers}
+          placeholder={<T id={'select_customer_account'} />}
+          onItemChange={(customer: CustomerOption) => {
+            setFieldValue('customerId', customer.id);
+            setFieldValue('amount', '');
+            setFieldValue('currencyCode', customer?.currencyCode);
+          }}
+          popoverFill={true}
+          disabled={!isNewMode}
+          allowCreate={true}
+          fastField={true}
+          shouldUpdate={customersFieldShouldUpdate}
+          shouldUpdateDeps={{ items: customers }}
+        />
+        {values.customerId && (
+          <CustomerButtonLink customerId={values.customerId}>
+            <T id={'view_customer_details'} />
+          </CustomerButtonLink>
+        )}
+      </>
     </FFormGroup>
   );
 }

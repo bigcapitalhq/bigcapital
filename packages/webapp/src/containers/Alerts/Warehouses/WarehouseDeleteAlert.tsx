@@ -1,44 +1,37 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import {
   AppToaster,
-  FormattedMessage as T,
   FormattedHTMLMessage,
+  FormattedMessage as T,
 } from '@/components';
-
-import { useDeleteWarehouse } from '@/hooks/query';
-import { handleDeleteErrors } from '@/containers/Preferences/Warehouses/utils';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { handleDeleteErrors } from '@/containers/Preferences/Warehouses/utils';
+import { useDeleteWarehouse } from '@/hooks/query';
 import { compose } from '@/utils';
 
-/**
- * Warehouse delete alert
- * @returns
- */
+interface WarehouseDeleteAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { warehouseId: number };
+}
+
 function WarehouseDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { warehouseId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: deleteWarehouseMutate, isLoading } =
+}: WarehouseDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteWarehouseMutate, isPending } =
     useDeleteWarehouse();
 
-  // handle cancel delete warehouse alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // handleConfirm delete invoice
   const handleConfirmWarehouseDelete = () => {
     deleteWarehouseMutate(warehouseId)
       .then(() => {
@@ -47,15 +40,9 @@ function WarehouseDeleteAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
-          handleDeleteErrors(errors);
-        },
-      )
+      .catch(({ data: { errors } }) => {
+        handleDeleteErrors(errors);
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -63,16 +50,17 @@ function WarehouseDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelDeleteAlert}
       onConfirm={handleConfirmWarehouseDelete}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch */}
         <FormattedHTMLMessage id={'warehouse.once_delete_this_warehouse'} />
       </p>
     </Alert>

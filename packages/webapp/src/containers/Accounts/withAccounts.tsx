@@ -1,10 +1,10 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getAccountsTableStateFactory,
   accountsTableStateChangedFactory,
 } from '@/store/accounts/accounts.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithAccountsProps {
   accountsTableState: ReturnType<
@@ -13,7 +13,7 @@ export interface WithAccountsProps {
   accountsTableStateChanged: ReturnType<
     ReturnType<typeof accountsTableStateChangedFactory>
   >;
-  accountsSelectedRows: unknown[];
+  accountsSelectedRows: number[];
 }
 
 export function withAccounts<Props = unknown>(

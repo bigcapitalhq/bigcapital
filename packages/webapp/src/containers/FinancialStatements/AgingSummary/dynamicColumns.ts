@@ -1,6 +1,6 @@
 import * as R from 'ramda';
-import { getColumnWidth } from '@/utils';
 import { Align } from '@/constants';
+import { getColumnWidth } from '@/utils';
 
 interface AgingSummaryColumn {
   key: string;

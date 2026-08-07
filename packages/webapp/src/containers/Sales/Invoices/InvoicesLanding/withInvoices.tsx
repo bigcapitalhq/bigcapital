@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getInvoicesTableStateFactory,
   isInvoicesTableStateChangedFactory,
   getInvoicesSelectedRowsFactory,
 } from '@/store/invoice/invoices.selector';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithInvoicesProps {
   invoicesTableState: ReturnType<

@@ -1,10 +1,10 @@
 import { Tab } from '@blueprintjs/core';
-import { Card, Group } from '@/components';
 import { Tabs } from '@blueprintjs/core';
-import { useState } from 'react';
 import { css } from '@emotion/css';
+import { useState } from 'react';
 import { CustomerFloatingActions } from './CustomerFloatingActions';
 import { CustomerFormSections } from './CustomerFormFields';
+import { Card, Group } from '@/components';
 
 export function CustomerFormContent() {
   const [selectedTabId, setSelectedTabId] = useState('primary');

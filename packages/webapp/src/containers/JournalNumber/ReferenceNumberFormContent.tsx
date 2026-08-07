@@ -1,10 +1,9 @@
-// @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Radio } from '@blueprintjs/core';
-
-import { Row, Col, FFormGroup, FInputGroup, FRadioGroup } from '@/components';
+import { useFormikContext } from 'formik';
+import React from 'react';
 import intl from 'react-intl-universal';
+import type { ReferenceNumberFormValues } from './types';
+import { Row, Col, FFormGroup, FInputGroup, FRadioGroup } from '@/components';
 
 /**
  * Reference number form content.
@@ -33,7 +32,7 @@ export function ReferenceNumberFormContent() {
 }
 
 function ReferenceNumberAutoIncrement() {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<ReferenceNumberFormValues>();
   if (values.incrementMode !== 'auto') return null;
 
   return (
@@ -66,7 +65,7 @@ function ReferenceNumberAutoIncrement() {
 }
 
 function ReferenceNumberManualOnce() {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<ReferenceNumberFormValues>();
 
   // Do not show the field if the one manual transaction number is not presented.
   if (!values.onceManualNumber) return null;

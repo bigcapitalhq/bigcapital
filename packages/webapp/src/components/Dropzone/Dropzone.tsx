@@ -1,7 +1,7 @@
 // @ts-nocheck
+import clsx from 'classnames';
 import React from 'react';
 import { Ref, useCallback } from 'react';
-import clsx from 'classnames';
 import {
   Accept,
   DropEvent,
@@ -10,11 +10,11 @@ import {
   FileWithPath,
   useDropzone,
 } from 'react-dropzone-esm';
+import { CloudLoadingIndicator } from '../Indicator';
+import { Box } from '../Layout';
+import styles from './Dropzone.module.css';
 import { DropzoneProvider } from './DropzoneProvider';
 import { DropzoneAccept, DropzoneIdle, DropzoneReject } from './DropzoneStatus';
-import { Box } from '../Layout';
-import { CloudLoadingIndicator } from '../Indicator';
-import styles from './Dropzone.module.css';
 
 export type DropzoneStylesNames = 'root' | 'inner';
 export type DropzoneVariant = 'filled' | 'light';

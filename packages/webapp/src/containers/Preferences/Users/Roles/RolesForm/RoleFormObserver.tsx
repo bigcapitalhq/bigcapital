@@ -1,14 +1,14 @@
 // @ts-nocheck
-import React from 'react';
 import { useFormikContext } from 'formik';
+import React from 'react';
+import type { RolesFormValues } from './types';
 import { FormikObserver } from '@/components';
 
 /**
  * Role form observer.
- * @returns {React.JSX}
  */
 export function RoleFormObserver() {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<RolesFormValues>();
 
   // Handles the form change.
   const handleFormChange = () => {};

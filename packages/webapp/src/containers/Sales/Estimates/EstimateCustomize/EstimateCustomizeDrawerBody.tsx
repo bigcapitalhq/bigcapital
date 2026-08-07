@@ -1,8 +1,8 @@
+import { Classes } from '@blueprintjs/core';
+import { EstimateCustomizeContent } from './EstimateCustomizeContent';
 import { Box } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { BrandingTemplateBoot } from '@/containers/BrandingTemplates/BrandingTemplateBoot';
-import { Classes } from '@blueprintjs/core';
-import { EstimateCustomizeContent } from './EstimateCustomizeContent';
 
 export function EstimateCustomizeDrawerBody() {
   const { payload } = useDrawerContext();

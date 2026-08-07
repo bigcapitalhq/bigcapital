@@ -1,5 +1,4 @@
-// @ts-nocheck
-import React from 'react';
+import React, { ComponentType, LazyExoticComponent } from 'react';
 
 const ItemDeleteAlert = React.lazy(() =>
   import('@/containers/Alerts/Items/ItemDeleteAlert').then((m) => ({
@@ -19,16 +18,25 @@ const ItemActivateAlert = React.lazy(() =>
   })),
 );
 
+// Note: lowercase default export name preserved from @ts-nocheck original.
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const cancelUnlockingPartialAlert = React.lazy(() =>
   import(
     '@/containers/Alerts/TransactionLocking/cancelUnlockingPartialAlert'
   ).then((m) => ({ default: m.cancelUnlockingPartialAlert })),
 );
 
+void cancelUnlockingPartialAlert;
+
+interface AlertItem {
+  name: string;
+  component: LazyExoticComponent<ComponentType<unknown>>;
+}
+
 /**
  * Items alert.
  */
-export const ItemsAlerts = [
+export const ItemsAlerts: AlertItem[] = [
   {
     name: 'item-delete',
     component: ItemDeleteAlert,

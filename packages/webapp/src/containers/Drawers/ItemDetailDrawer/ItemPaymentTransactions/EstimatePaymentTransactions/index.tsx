@@ -1,38 +1,36 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
+import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
+import {
+  useEstimateTransactionsColumns,
+  ActionsMenu,
+  type ItemEstimateTransaction,
+} from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { DataTable, TableSkeletonRows } from '@/components';
 import { TableStyle } from '@/constants';
-
-import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
-import { useItemAssociatedEstimateTransactions } from '@/hooks/query';
-import { useEstimateTransactionsColumns, ActionsMenu } from './components';
-
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { useItemAssociatedEstimateTransactions } from '@/hooks/query';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface EstimatePaymentTransactionsInnerProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'> {}
 
 /**
- * Esimtate payment transactions.
+ * Estimate payment transactions.
  */
 function EstimatePaymentTransactions({
-  // #withAlertActions
   openAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
+}: EstimatePaymentTransactionsInnerProps) {
   const history = useHistory();
-
-  // Estimate transactions table columns.
   const columns = useEstimateTransactionsColumns();
-
   const { itemId } = useItemDetailDrawerContext();
 
-  // Handle fetch Estimate associated transactions.
   const {
     isLoading: isEstimateTransactionsLoading,
     isFetching: isEstimateTransactionFetching,
@@ -41,23 +39,25 @@ function EstimatePaymentTransactions({
     enabled: !!itemId,
   });
 
-  // Handles delete payment transactions.
-  const handleDeletePaymentTransactons = ({ estimate_id }) => {
+  const handleDeletePaymentTransactons = ({
+    estimateId,
+  }: ItemEstimateTransaction) => {
     openAlert('estimate-delete', {
-      estimateId: estimate_id,
+      estimateId,
     });
   };
 
-  // Handles edit payment transactions.
-  const handleEditPaymentTransactions = ({ estimate_id }) => {
-    history.push(`/estimates/${estimate_id}/edit`);
+  const handleEditPaymentTransactions = ({
+    estimateId,
+  }: ItemEstimateTransaction) => {
+    history.push(`/estimates/${estimateId}/edit`);
     closeDrawer(DRAWERS.ITEM_DETAILS);
   };
 
   return (
     <DataTable
       columns={columns}
-      data={paymentTransactions}
+      data={paymentTransactions ?? []}
       loading={isEstimateTransactionsLoading}
       headerLoading={isEstimateTransactionsLoading}
       progressBarLoading={isEstimateTransactionFetching}

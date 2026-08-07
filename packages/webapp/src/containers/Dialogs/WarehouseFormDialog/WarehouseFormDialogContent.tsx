@@ -1,18 +1,17 @@
-// @ts-nocheck
 import React from 'react';
-
 import '@/style/pages/Warehouses/warehouseFormDialog.scss';
-import { WarehouseFormProvider } from './WarehouseFormProvider';
 import { WarehouseForm } from './WarehouseForm';
+import { WarehouseFormProvider } from './WarehouseFormProvider';
 
-/**
- * Warehouse form dialog content.
- */
+interface WarehouseFormDialogContentProps {
+  dialogName: string;
+  warehouseId?: number | null;
+}
+
 export function WarehouseFormDialogContent({
-  // #ownProps
   dialogName,
   warehouseId,
-}) {
+}: WarehouseFormDialogContentProps): React.ReactElement {
   return (
     <WarehouseFormProvider warehouseId={warehouseId} dialogName={dialogName}>
       <WarehouseForm />

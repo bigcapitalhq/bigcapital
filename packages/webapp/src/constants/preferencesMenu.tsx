@@ -1,8 +1,8 @@
-// @ts-nocheck
 import React from 'react';
+import type { PreferencesMenuItem } from './types';
 import { FormattedMessage as T } from '@/components';
 
-export const PreferencesMenu = [
+export const PreferencesMenu: PreferencesMenuItem[] = [
   {
     text: <T id={'general'} />,
     disabled: false,

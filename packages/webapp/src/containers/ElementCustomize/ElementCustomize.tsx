@@ -1,17 +1,17 @@
+import { TabProps } from '@blueprintjs/core';
 import React from 'react';
-import { Group } from '@/components';
+import { useBrandingState } from '../BrandingTemplates/_utils';
+import { ElementPreviewState } from '../BrandingTemplates/types';
+import { ElementCustomizeFields } from './ElementCustomizeFields';
+import { ElementCustomizePreview } from './ElementCustomizePreview';
 import { ElementCustomizeProvider } from './ElementCustomizeProvider';
 import {
   ElementCustomizeForm,
   ElementCustomizeFormProps,
 } from './ElementCustomizerForm';
 import { ElementCustomizeTabsControllerProvider } from './ElementCustomizeTabsController';
-import { ElementCustomizeFields } from './ElementCustomizeFields';
-import { ElementCustomizePreview } from './ElementCustomizePreview';
+import { Group } from '@/components';
 import { extractChildren } from '@/utils/extract-children';
-import { ElementPreviewState } from '../BrandingTemplates/types';
-import { TabProps } from '@blueprintjs/core';
-import { useBrandingState } from '../BrandingTemplates/_utils';
 
 export interface ElementCustomizeProps<T, Y>
   extends ElementCustomizeFormProps<T, Y> {

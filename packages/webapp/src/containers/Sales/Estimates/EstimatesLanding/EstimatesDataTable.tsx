@@ -1,123 +1,115 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-
+import { ActionsMenu, useEstiamtesTableColumns } from './components';
 import { EstimatesEmptyStatus } from './EstimatesEmptyStatus';
-
-import { withEstimatesActions } from './withEstimatesActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
+import { useEstimatesListContext } from './EstimatesListProvider';
 import { withEstimates } from './withEstimates';
-
-import { TABLES } from '@/constants/tables';
+import { withEstimatesActions } from './withEstimatesActions';
+import type { EstimateTableRow } from './components';
+import type { WithEstimatesProps } from './withEstimates';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { ActionsMenu, useEstiamtesTableColumns } from './components';
-import { useEstimatesListContext } from './EstimatesListProvider';
+import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
-import { DialogsName } from '@/constants/dialogs';
 
-/**
- * Estimates datatable.
- */
+interface WithEstimatesActionsProps {
+  setEstimatesTableState: (state: Record<string, any>) => void;
+  setEstimatesSelectedRows: (ids: number[]) => void;
+}
+
+interface EstimatesDataTableProps
+  extends Pick<WithEstimatesProps, 'estimatesTableState'>,
+    WithEstimatesActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps,
+    WithDialogActionsProps {}
+
 function EstimatesDataTableInner({
-  // #withEstimatesActions
   setEstimatesTableState,
   setEstimatesSelectedRows,
-
-  // #withAlertActions
   openAlert,
-
-  // #withDrawerActions
   openDrawer,
-
-  // #withDialogAction
   openDialog,
-
-  // #withSettings
-  estimatesTableSize,
-
-  // #withEstimates
   estimatesTableState,
-}) {
+}: EstimatesDataTableProps) {
   const history = useHistory();
 
-  // Estimates list context.
   const {
     estimates,
     pagination,
     isEmptyStatus,
     isEstimatesLoading,
     isEstimatesFetching,
+    estimatesSettings,
   } = useEstimatesListContext();
+  const estimatesTableSize = estimatesSettings?.tableSize as string | undefined;
 
-  // Estimates table columns.
   const columns = useEstiamtesTableColumns();
 
-  // Handle estimate edit action.
-  const handleEditEstimate = (estimate) => {
+  const handleEditEstimate = (estimate: EstimateTableRow) => {
     history.push(`/estimates/${estimate.id}/edit`);
   };
-  // Handle estimate delete action.
-  const handleDeleteEstimate = ({ id }) => {
+  const handleDeleteEstimate = ({ id }: EstimateTableRow) => {
     openAlert('estimate-delete', { estimateId: id });
   };
 
-  // Handle cancel/confirm estimate deliver.
-  const handleDeliverEstimate = ({ id }) => {
+  const handleDeliverEstimate = ({ id }: EstimateTableRow) => {
     openAlert('estimate-deliver', { estimateId: id });
   };
 
-  // Handle cancel/confirm estimate approve.
-  const handleApproveEstimate = ({ id }) => {
+  const handleApproveEstimate = ({ id }: EstimateTableRow) => {
     openAlert('estimate-Approve', { estimateId: id });
   };
 
-  // Handle cancel/confirm estimate reject.
-  const handleRejectEstimate = ({ id }) => {
+  const handleRejectEstimate = ({ id }: EstimateTableRow) => {
     openAlert('estimate-reject', { estimateId: id });
   };
 
-  // Handle convent to invoice.
-  const handleConvertToInvoice = ({ id }) => {
+  const handleConvertToInvoice = ({ id }: EstimateTableRow) => {
     history.push(`/invoices/new?from_estimate_id=${id}`, { action: id });
   };
 
-  // Handle view detail estimate.
-  const handleViewDetailEstimate = ({ id }) => {
+  const handleViewDetailEstimate = ({ id }: EstimateTableRow) => {
     openDrawer(DRAWERS.ESTIMATE_DETAILS, { estimateId: id });
   };
 
-  // Handle print estimate.
-  const handlePrintEstimate = ({ id }) => {
+  const handlePrintEstimate = ({ id }: EstimateTableRow) => {
     openDialog('estimate-pdf-preview', { estimateId: id });
   };
 
-  // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
     openDrawer(DRAWERS.ESTIMATE_DETAILS, { estimateId: cell.row.original.id });
   };
 
-  // Handle mail send estimate.
-  const handleMailSendEstimate = ({ id }) => {
+  const handleMailSendEstimate = ({ id }: EstimateTableRow) => {
     openDrawer(DRAWERS.ESTIMATE_SEND_MAIL, { estimateId: id });
   };
 
-  // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.ESTIMATES);
 
-  // Handles fetch data.
   const handleFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
+    ({
+      pageIndex,
+      pageSize,
+      sortBy,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      sortBy: Array<{ id: string; desc: boolean }>;
+    }) => {
       setEstimatesTableState({
         pageIndex,
         pageSize,
@@ -127,16 +119,14 @@ function EstimatesDataTableInner({
     [setEstimatesTableState],
   );
 
-  // Handle selected rows change.
   const handleSelectedRowsChange = useCallback(
-    (selectedFlatRows) => {
+    (selectedFlatRows: Array<{ original: EstimateTableRow }>) => {
       const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
       setEstimatesSelectedRows(selectedIds);
     },
     [setEstimatesSelectedRows],
   );
 
-  // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <EstimatesEmptyStatus />;
   }
@@ -188,8 +178,5 @@ export const EstimatesDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ estimatesSettings }) => ({
-    estimatesTableSize: estimatesSettings?.tableSize,
-  })),
   withEstimates(({ estimatesTableState }) => ({ estimatesTableState })),
 )(EstimatesDataTableInner);

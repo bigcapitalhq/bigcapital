@@ -1,5 +1,5 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
+import type { CurrencyFormDialogPayload } from './types';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
@@ -11,6 +11,12 @@ const CurrencyFormDialogContent = lazy(() =>
   })),
 );
 
+interface CurrencyFormDialogProps {
+  dialogName: string;
+  payload: CurrencyFormDialogPayload;
+  isOpen: boolean | undefined;
+}
+
 /**
  * Currency form dialog.
  */
@@ -18,7 +24,7 @@ function CurrencyFormDialog({
   dialogName,
   payload = { action: '', id: null, currency: '' },
   isOpen,
-}) {
+}: CurrencyFormDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}

@@ -1,13 +1,13 @@
 import { ComponentType } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import type { TableQuery } from '@/store/store.types';
 import {
   setCustomersTableState,
   resetCustomersTableState,
   setCustomersSelectedRows,
   resetCustomersSelectedRows,
 } from '@/store/customers/customers.actions';
-import type { TableQuery } from '@/store/store.types';
 
 export interface WithCustomersActionsProps {
   setCustomersTableState: (state: Partial<TableQuery>) => void;

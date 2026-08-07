@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
+import { isEmpty } from 'lodash';
 import { lighten } from 'polished';
 import { Group, Stack, StackProps } from '@/components';
-import { isEmpty } from 'lodash';
 
 export interface InvoiceMailReceiptProps extends StackProps {
   // # Company

@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { FInputGroup, FSwitch, Group, Stack } from '@/components';
-import { CLASSES } from '@/constants';
 import { Classes } from '@blueprintjs/core';
 import { fieldsGroups } from './constants';
+import { FInputGroup, FSwitch, Group, Stack } from '@/components';
+import { CLASSES } from '@/constants';
 
 export function EstimateCustomizeContentFields() {
   return (

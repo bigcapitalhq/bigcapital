@@ -1,23 +1,32 @@
-// @ts-nocheck
 import React from 'react';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
 const DisconnectBankAccountDialogContent = React.lazy(() =>
   import('./DisconnectBankAccountDialogContent').then((m) => ({
-    default: m.DisconnectBankAccountDialogContent,
+    default: m.DisconnectBankAccountDialogContent as React.ComponentType<{
+      dialogName?: string;
+      bankAccountId: number;
+    }>,
   })),
 );
+
+interface DisconnectBankAccountDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
 
 /**
  * Disconnect bank account confirmation dialog.
  */
 function DisconnectBankAccountDialogRoot({
   dialogName,
-  payload: { bankAccountId },
+  payload,
   isOpen,
-}) {
+}: DisconnectBankAccountDialogProps) {
+  const bankAccountId = payload?.bankAccountId as number;
+
   return (
     <Dialog
       name={dialogName}

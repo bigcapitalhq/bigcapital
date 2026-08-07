@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
+import { ApplicationState } from '@/store/reducers';
 import {
   getWarehouseTransfersTableStateFactory,
   isWarehouseTransferTableStateChangedFactory,
 } from '@/store/warehouse-transfer/warehouse-transfer.selector';
-import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithWarehouseTransfersProps {
   warehouseTransferTableState: ReturnType<

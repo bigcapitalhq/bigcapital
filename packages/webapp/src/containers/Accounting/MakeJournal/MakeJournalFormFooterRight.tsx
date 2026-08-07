@@ -1,6 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import {
+  useManualJournalSubtotalFormatted,
+  useManualJournalTotalFormatted,
+} from './utils';
 import {
   T,
   TotalLines,
@@ -8,10 +11,6 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import {
-  useManualJournalSubtotalFormatted,
-  useManualJournalTotalFormatted,
-} from './utils';
 
 export function MakeJournalFormFooterRight() {
   const formattedSubtotal = useManualJournalSubtotalFormatted();

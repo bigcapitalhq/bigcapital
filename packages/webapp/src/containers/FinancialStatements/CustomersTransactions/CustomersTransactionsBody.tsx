@@ -1,24 +1,14 @@
-import * as R from 'ramda';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
-import { CustomersTransactionsTable } from './CustomersTransactionsTable';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
-
-interface CustomersTransactionsBodyProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
+import { CustomersTransactionsTable } from './CustomersTransactionsTable';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * Customers transactions body.
  */
-function CustomersTransactionsBodyJSX({
-  // #withCurrentOrganization
-  organizationName,
-}: CustomersTransactionsBodyProps) {
+function CustomersTransactionsBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isCustomersTransactionsLoading } = useCustomersTransactionsContext();
 
   return (
@@ -32,8 +22,4 @@ function CustomersTransactionsBodyJSX({
   );
 }
 
-export const CustomersTransactionsBody = R.compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(CustomersTransactionsBodyJSX);
+export const CustomersTransactionsBody = CustomersTransactionsBodyJSX;

@@ -1,8 +1,8 @@
-import React from 'react';
 import { Button, Classes, NavbarGroup, NavbarDivider } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, Icon } from '@/components';
+import React from 'react';
 import { useAuditLogContext } from './AuditLogProvider';
+import { DashboardActionsBar, Icon } from '@/components';
 
 interface AuditLogActionsBarProps {
   isFilterDrawerOpen: boolean;

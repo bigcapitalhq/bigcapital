@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
 import { x } from '@xstyled/emotion';
-import { Box, Group, Stack } from '@/components';
+import React, { useMemo } from 'react';
 import { useSendInvoiceMailForm, useSendInvoiceMailSubject } from './_hooks';
 import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
+import { Box, Group, Stack } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function InvoiceSendMailHeaderPreview() {

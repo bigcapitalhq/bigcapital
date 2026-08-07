@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
-import { getExpensesCurrentPageFactory } from '@/store/users/users.selectors';
-import { ApplicationState } from '@/store/reducers';
 import type { MapState } from '@/containers/hoc.types';
+import { ApplicationState } from '@/store/reducers';
+import { getExpensesCurrentPageFactory } from '@/store/users/users.selectors';
 
 export interface WithUsersProps {
   usersList: ReturnType<typeof getExpensesCurrentPageFactory>;

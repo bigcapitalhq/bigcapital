@@ -1,73 +1,59 @@
-import { index as AccountDialog } from '@/containers/Dialogs/AccountDialog';
-import { index as InviteUserDialog } from '@/containers/Dialogs/InviteUserDialog';
-import { index as UserFormDialog } from '@/containers/Dialogs/UserFormDialog';
-import { index as ItemCategoryDialog } from '@/containers/Dialogs/ItemCategoryDialog';
-import { index as CurrencyFormDialog } from '@/containers/Dialogs/CurrencyFormDialog';
-import { index as InventoryAdjustmentDialog } from '@/containers/Dialogs/InventoryAdjustmentFormDialog';
-import { index as KeyboardShortcutsDialog } from '@/containers/Dialogs/keyboardShortcutsDialog';
-import { index as ContactDuplicateDialog } from '@/containers/Dialogs/ContactDuplicateDialog';
-import { index as QuickPaymentReceiveFormDialog } from '@/containers/Dialogs/QuickPaymentReceiveFormDialog';
-import { index as QuickPaymentMadeFormDialog } from '@/containers/Dialogs/QuickPaymentMadeFormDialog';
-import { index as AllocateLandedCostDialog } from '@/containers/Dialogs/AllocateLandedCostDialog';
-import { index as InvoicePdfPreviewDialog } from '@/containers/Dialogs/InvoicePdfPreviewDialog';
-import { index as EstimatePdfPreviewDialog } from '@/containers/Dialogs/EstimatePdfPreviewDialog';
-import { index as MoneyInDialog } from '@/containers/CashFlow/MoneyInDialog';
-import { index as MoneyOutDialog } from '@/containers/CashFlow/MoneyOutDialog';
-import { index as BadDebtDialog } from '@/containers/Dialogs/BadDebtDialog';
-import { index as NotifyInvoiceViaSMSDialog } from '@/containers/Dialogs/NotifyInvoiceViaSMSDialog';
-import { index as NotifyReceiptViaSMSDialog } from '@/containers/Dialogs/NotifyReceiptViaSMSDialog';
-import { index as NotifyEstimateViaSMSDialog } from '@/containers/Dialogs/NotifyEstimateViaSMSDialog';
-import { index as NotifyPaymentReceiveViaSMSDialog } from '@/containers/Dialogs/NotifyPaymentReceiveViaSMSDialog';
-import { index as SMSMessageDialog } from '@/containers/Dialogs/SMSMessageDialog';
-import { index as RefundCreditNoteDialog } from '@/containers/Dialogs/RefundCreditNoteDialog';
-import { index as RefundVendorCreditDialog } from '@/containers/Dialogs/RefundVendorCreditDialog';
-import { index as ReconcileCreditNoteDialog } from '@/containers/Dialogs/ReconcileCreditNoteDialog';
-import { index as ReconcileVendorCreditDialog } from '@/containers/Dialogs/ReconcileVendorCreditDialog';
-import { index as LockingTransactionsDialog } from '@/containers/Dialogs/LockingTransactionsDialog';
-import { index as UnlockingTransactionsDialog } from '@/containers/Dialogs/UnlockingTransactionsDialog';
-import { index as UnlockingPartialTransactionsDialog } from '@/containers/Dialogs/UnlockingPartialTransactionsDialog';
-import { index as CreditNotePdfPreviewDialog } from '@/containers/Dialogs/CreditNotePdfPreviewDialog';
-import { index as PaymentReceivePdfPreviewDialog } from '@/containers/Dialogs/PaymentReceivePdfPreviewDialog';
-import { index as WarehouseFormDialog } from '@/containers/Dialogs/WarehouseFormDialog';
-import { index as BranchFormDialog } from '@/containers/Dialogs/BranchFormDialog';
-import { index as BranchActivateDialog } from '@/containers/Dialogs/BranchActivateDialog';
-import { index as WarehouseActivateDialog } from '@/containers/Dialogs/WarehouseActivateDialog';
-import { index as CustomerOpeningBalanceDialog } from '@/containers/Dialogs/CustomerOpeningBalanceDialog';
-import { index as VendorOpeningBalanceDialog } from '@/containers/Dialogs/VendorOpeningBalanceDialog';
-import { index as ProjectFormDialog } from '@/containers/Projects/containers/ProjectFormDialog';
-import { index as ProjectTaskFormDialog } from '@/containers/Projects/containers/ProjectTaskFormDialog';
-import { index as ProjectTimeEntryFormDialog } from '@/containers/Projects/containers/ProjectTimeEntryFormDialog';
-import { index as ProjectExpenseForm } from '@/containers/Projects/containers/ProjectExpenseForm';
-import { index as EstimatedExpenseFormDialog } from '@/containers/Projects/containers/EstimatedExpenseFormDialog';
-import { index as ProjectInvoicingFormDialog } from '@/containers/Projects/containers/ProjectInvoicingFormDialog';
-import { index as ProjectBillableEntriesFormDialog } from '@/containers/Projects/containers/ProjectBillableEntriesFormDialog';
-import { TaxRateFormDialog } from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import { DialogsName } from '@/constants/dialogs';
-import { InvoiceExchangeRateChangeDialog } from '@/containers/Sales/Invoices/InvoiceForm/Dialogs/InvoiceExchangeRateChangeDialog';
-import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
-import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
-import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
+import { index as MoneyInDialog } from '@/containers/CashFlow/MoneyInDialog';
+import { index as MoneyOutDialog } from '@/containers/CashFlow/MoneyOutDialog';
+import { index as AccountDialog } from '@/containers/Dialogs/AccountDialog';
+import { index as AllocateLandedCostDialog } from '@/containers/Dialogs/AllocateLandedCostDialog';
 import { ApiKeysGenerateDialog } from '@/containers/Dialogs/ApiKeysGenerateDialog';
+import { index as BadDebtDialog } from '@/containers/Dialogs/BadDebtDialog';
+import { index as BranchActivateDialog } from '@/containers/Dialogs/BranchActivateDialog';
+import { index as BranchFormDialog } from '@/containers/Dialogs/BranchFormDialog';
+import { index as ContactDuplicateDialog } from '@/containers/Dialogs/ContactDuplicateDialog';
+import { index as CurrencyFormDialog } from '@/containers/Dialogs/CurrencyFormDialog';
+import { index as CustomerOpeningBalanceDialog } from '@/containers/Dialogs/CustomerOpeningBalanceDialog';
+import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
+import { index as InventoryAdjustmentDialog } from '@/containers/Dialogs/InventoryAdjustmentFormDialog';
+import { index as InviteUserDialog } from '@/containers/Dialogs/InviteUserDialog';
+import { index as ItemCategoryDialog } from '@/containers/Dialogs/ItemCategoryDialog';
+import { index as KeyboardShortcutsDialog } from '@/containers/Dialogs/keyboardShortcutsDialog';
+import { index as LockingTransactionsDialog } from '@/containers/Dialogs/LockingTransactionsDialog';
+import { index as NotifyEstimateViaSMSDialog } from '@/containers/Dialogs/NotifyEstimateViaSMSDialog';
+import { index as NotifyInvoiceViaSMSDialog } from '@/containers/Dialogs/NotifyInvoiceViaSMSDialog';
+import { index as NotifyPaymentReceiveViaSMSDialog } from '@/containers/Dialogs/NotifyPaymentReceiveViaSMSDialog';
+import { index as NotifyReceiptViaSMSDialog } from '@/containers/Dialogs/NotifyReceiptViaSMSDialog';
+import { index as QuickPaymentMadeFormDialog } from '@/containers/Dialogs/QuickPaymentMadeFormDialog';
+import { index as QuickPaymentReceiveFormDialog } from '@/containers/Dialogs/QuickPaymentReceiveFormDialog';
+import { index as ReconcileCreditNoteDialog } from '@/containers/Dialogs/ReconcileCreditNoteDialog';
+import { index as ReconcileVendorCreditDialog } from '@/containers/Dialogs/ReconcileVendorCreditDialog';
+import { index as RefundCreditNoteDialog } from '@/containers/Dialogs/RefundCreditNoteDialog';
+import { index as RefundVendorCreditDialog } from '@/containers/Dialogs/RefundVendorCreditDialog';
+import { index as SMSMessageDialog } from '@/containers/Dialogs/SMSMessageDialog';
+import { index as UnlockingPartialTransactionsDialog } from '@/containers/Dialogs/UnlockingPartialTransactionsDialog';
+import { index as UnlockingTransactionsDialog } from '@/containers/Dialogs/UnlockingTransactionsDialog';
+import { index as UserFormDialog } from '@/containers/Dialogs/UserFormDialog';
+import { index as VendorOpeningBalanceDialog } from '@/containers/Dialogs/VendorOpeningBalanceDialog';
+import { index as WarehouseActivateDialog } from '@/containers/Dialogs/WarehouseActivateDialog';
+import { index as WarehouseFormDialog } from '@/containers/Dialogs/WarehouseFormDialog';
+import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
+import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
+import { index as EstimatedExpenseFormDialog } from '@/containers/Projects/containers/EstimatedExpenseFormDialog';
+import { index as ProjectBillableEntriesFormDialog } from '@/containers/Projects/containers/ProjectBillableEntriesFormDialog';
+import { index as ProjectExpenseForm } from '@/containers/Projects/containers/ProjectExpenseForm';
+import { index as ProjectFormDialog } from '@/containers/Projects/containers/ProjectFormDialog';
+import { index as ProjectInvoicingFormDialog } from '@/containers/Projects/containers/ProjectInvoicingFormDialog';
+import { index as ProjectTaskFormDialog } from '@/containers/Projects/containers/ProjectTaskFormDialog';
+import { index as ProjectTimeEntryFormDialog } from '@/containers/Projects/containers/ProjectTimeEntryFormDialog';
+import { TaxRateFormDialog } from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import WorkspaceDeleteDialog from '@/ee/workspaces/containers/Dialogs/WorkspaceDeleteDialog';
 import WorkspaceInactivateDialog from '@/ee/workspaces/containers/Dialogs/WorkspaceInactivateDialog';
-import { InvoiceBulkDeleteDialog } from '@/containers/Dialogs/Invoices/InvoiceBulkDeleteDialog';
-import { EstimateBulkDeleteDialog } from '@/containers/Dialogs/Estimates/EstimateBulkDeleteDialog';
-import { ReceiptBulkDeleteDialog } from '@/containers/Dialogs/Receipts/ReceiptBulkDeleteDialog';
-import { CreditNoteBulkDeleteDialog } from '@/containers/Dialogs/CreditNotes/CreditNoteBulkDeleteDialog';
-import { PaymentReceivedBulkDeleteDialog } from '@/containers/Dialogs/PaymentsReceived/PaymentReceivedBulkDeleteDialog';
-import { BillBulkDeleteDialog } from '@/containers/Dialogs/Bills/BillBulkDeleteDialog';
-import { VendorCreditBulkDeleteDialog } from '@/containers/Dialogs/VendorCredits/VendorCreditBulkDeleteDialog';
-import { ManualJournalBulkDeleteDialog } from '@/containers/Dialogs/ManualJournals/ManualJournalBulkDeleteDialog';
-import { ExpenseBulkDeleteDialog } from '@/containers/Dialogs/Expenses/ExpenseBulkDeleteDialog';
-import { AccountBulkDeleteDialog } from '@/containers/Dialogs/Accounts/AccountBulkDeleteDialog';
-import { ItemBulkDeleteDialog } from '@/containers/Dialogs/Items/ItemBulkDeleteDialog';
-import { CustomerBulkDeleteDialog } from '@/containers/Dialogs/Customers/CustomerBulkDeleteDialog';
-import { VendorBulkDeleteDialog } from '@/containers/Dialogs/Vendors/VendorBulkDeleteDialog';
 
 /**
  * Dialogs container.
+ *
+ * Hosts dialogs that are cross-cutting or feature-scoped without a single
+ * clear page home. Page-scoped and form-scoped dialogs are mounted in
+ * co-located `<Page>Dialogs` / `<PageForm>Dialogs` components.
  */
 export default function DialogsContainer() {
   return (
@@ -91,8 +77,6 @@ export default function DialogsContainer() {
       <AllocateLandedCostDialog
         dialogName={DialogsName.AllocateLandedCostForm}
       />
-      <InvoicePdfPreviewDialog dialogName={DialogsName.InvoicePdfForm} />
-      <EstimatePdfPreviewDialog dialogName={DialogsName.EstimatePdfForm} />
       <MoneyInDialog dialogName={DialogsName.MoneyInForm} />
       <MoneyOutDialog dialogName={DialogsName.MoneyOutForm} />
 
@@ -123,8 +107,6 @@ export default function DialogsContainer() {
       <UnlockingPartialTransactionsDialog
         dialogName={DialogsName.PartialTransactionsUnlocking}
       />
-      <CreditNotePdfPreviewDialog dialogName={DialogsName.CreditNotePdfForm} />
-      <PaymentReceivePdfPreviewDialog dialogName={DialogsName.PaymentPdfForm} />
       <WarehouseFormDialog dialogName={DialogsName.WarehouseForm} />
       <BranchFormDialog dialogName={DialogsName.BranchForm} />
       <BranchActivateDialog dialogName={DialogsName.BranchActivateForm} />
@@ -151,30 +133,6 @@ export default function DialogsContainer() {
         dialogName={DialogsName.ProjectBillableEntriesForm}
       />
       <TaxRateFormDialog dialogName={DialogsName.TaxRateForm} />
-      <InvoiceExchangeRateChangeDialog
-        dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
-      />
-      <InvoiceBulkDeleteDialog dialogName={DialogsName.InvoiceBulkDelete} />
-      <EstimateBulkDeleteDialog dialogName={DialogsName.EstimateBulkDelete} />
-      <ReceiptBulkDeleteDialog dialogName={DialogsName.ReceiptBulkDelete} />
-      <CreditNoteBulkDeleteDialog
-        dialogName={DialogsName.CreditNoteBulkDelete}
-      />
-      <PaymentReceivedBulkDeleteDialog
-        dialogName={DialogsName.PaymentReceivedBulkDelete}
-      />
-      <BillBulkDeleteDialog dialogName={DialogsName.BillBulkDelete} />
-      <VendorCreditBulkDeleteDialog
-        dialogName={DialogsName.VendorCreditBulkDelete}
-      />
-      <ManualJournalBulkDeleteDialog
-        dialogName={DialogsName.ManualJournalBulkDelete}
-      />
-      <ExpenseBulkDeleteDialog dialogName={DialogsName.ExpenseBulkDelete} />
-      <AccountBulkDeleteDialog dialogName={DialogsName.AccountBulkDelete} />
-      <ItemBulkDeleteDialog dialogName={DialogsName.ItemBulkDelete} />
-      <CustomerBulkDeleteDialog dialogName={DialogsName.CustomerBulkDelete} />
-      <VendorBulkDeleteDialog dialogName={DialogsName.VendorBulkDelete} />
       <ExportDialog dialogName={DialogsName.Export} />
       <RuleFormDialog dialogName={DialogsName.BankRuleForm} />
       <DisconnectBankAccountDialog

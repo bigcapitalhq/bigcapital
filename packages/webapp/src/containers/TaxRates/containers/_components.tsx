@@ -1,9 +1,21 @@
-// @ts-nocheck
-import React from 'react';
+import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import type { TaxRate } from '@bigcapital/sdk-ts';
 import { Can, Icon } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
-import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+
+interface TaxRatesTableActionsMenuProps {
+  payload: {
+    onEdit: (taxRate: TaxRate) => void;
+    onDelete: (taxRate: TaxRate) => void;
+    onViewDetails: (taxRate: TaxRate) => void;
+    onActivate: (taxRate: TaxRate) => void;
+    onInactivate: (taxRate: TaxRate) => void;
+  };
+  row: {
+    original: TaxRate;
+  };
+}
 
 /**
  * Tax rates table actions menu.
@@ -12,7 +24,7 @@ import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 export function TaxRatesTableActionsMenu({
   payload: { onEdit, onDelete, onViewDetails, onActivate, onInactivate },
   row: { original },
-}) {
+}: TaxRatesTableActionsMenuProps) {
   return (
     <Menu>
       <MenuItem

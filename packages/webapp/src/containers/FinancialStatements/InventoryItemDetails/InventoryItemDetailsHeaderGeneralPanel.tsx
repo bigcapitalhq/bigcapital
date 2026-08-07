@@ -1,12 +1,11 @@
 import React from 'react';
-import { ItemsMultiSelect, Row, Col, FFormGroup } from '@/components';
+import intl from 'react-intl-universal';
 import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
-
 import {
   InventoryItemDetailsHeaderGeneralProvider,
   useInventoryItemDetailsHeaderGeneralContext,
 } from './InventoryItemDetailsHeaderGeneralProvider';
-import intl from 'react-intl-universal';
+import { FItemsMultiSelect, Row, Col, FFormGroup } from '@/components';
 
 /**
  * Inventory item details header - General panel.
@@ -32,7 +31,7 @@ function InventoryItemDetailsHeaderGeneralPanelContent() {
       <Row>
         <Col xs={4}>
           <FFormGroup label={intl.get('Specific items')} name={'itemsIds'}>
-            <ItemsMultiSelect name={'itemsIds'} items={items} />
+            <FItemsMultiSelect name={'itemsIds'} items={items} />
           </FFormGroup>
         </Col>
       </Row>

@@ -1,10 +1,10 @@
 // @ts-nocheck
-import React, { lazy } from 'react';
-import * as R from 'ramda';
-import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { Position } from '@blueprintjs/core';
+import * as R from 'ramda';
+import React, { lazy } from 'react';
+import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { withDrawers } from '@/containers/Drawer/withDrawers';
 
 const ChangeSubscriptionPlanContent = lazy(() =>
   import('./ChangeSubscriptionPlanContent').then((m) => ({

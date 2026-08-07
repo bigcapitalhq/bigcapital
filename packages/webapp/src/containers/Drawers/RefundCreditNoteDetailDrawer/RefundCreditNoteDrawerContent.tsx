@@ -1,9 +1,8 @@
 // @ts-nocheck
 import React from 'react';
-
-import { DrawerBody } from '@/components';
-import { RefundCreditNoteDrawerProvider } from './RefundCreditNoteDrawerProvider';
 import { RefundCreditNoteDetail } from './RefundCreditNoteDetail';
+import { RefundCreditNoteDrawerProvider } from './RefundCreditNoteDrawerProvider';
+import { DrawerBody } from '@/components';
 
 /**
  * Refund credit note drawer content.

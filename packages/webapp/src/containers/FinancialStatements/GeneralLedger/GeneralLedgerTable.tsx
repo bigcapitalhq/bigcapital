@@ -1,18 +1,16 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { useGeneralLedgerTableColumns } from './dynamicColumns';
+import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import {
   FinancialSheet,
   ReportDataTable,
   TableFastCell,
   TableVirtualizedListRows,
 } from '@/components';
-
-import { useGeneralLedgerContext } from './GeneralLedgerProvider';
-import { useGeneralLedgerTableColumns } from './dynamicColumns';
+import { TableStyle } from '@/constants';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 interface GeneralLedgerTableProps {
   companyName: string;

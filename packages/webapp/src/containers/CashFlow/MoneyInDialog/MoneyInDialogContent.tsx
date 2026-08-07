@@ -1,16 +1,21 @@
-// @ts-nocheck
+import React from 'react';
 import { MoneyInDialogProvider } from './MoneyInDialogProvider';
 import { MoneyInForm } from './MoneyInForm';
+
+interface MoneyInDialogContentProps {
+  dialogName?: string;
+  accountId?: number | null;
+  accountType?: string | null;
+}
 
 /**
  * Money in dialog content.
  */
 export function MoneyInDialogContent({
-  // #ownProps
   dialogName,
   accountId,
   accountType,
-}) {
+}: MoneyInDialogContentProps) {
   return (
     <MoneyInDialogProvider
       accountId={accountId}

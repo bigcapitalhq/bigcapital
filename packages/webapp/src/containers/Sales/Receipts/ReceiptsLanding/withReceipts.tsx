@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getReceiptsSelectedRowsFactory,
   getReceiptsTableStateFactory,
   receiptsTableStateChangedFactory,
 } from '@/store/receipts/receipts.selector';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithReceiptsProps {
   receiptTableState: ReturnType<

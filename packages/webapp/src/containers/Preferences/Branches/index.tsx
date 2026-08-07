@@ -1,8 +1,6 @@
-// @ts-nocheck
 import React from 'react';
-
-import { BranchesProvider } from './BranchesProvider';
 import { Branches } from './Branches';
+import { BranchesProvider } from './BranchesProvider';
 
 /**
  * Branches .

@@ -1,6 +1,5 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
 import { castArray, uniq } from 'lodash';
+import React, { useMemo } from 'react';
 
 interface CategorizeTransactionTabsValue {
   uncategorizedTransactionIds: Array<number>;
@@ -20,25 +19,27 @@ const CategorizeTransactionTabsBootContext =
  * Categorize transcation tabs boot.
  */
 export function CategorizeTransactionTabsBoot({
-  uncategorizedTransactionId,
+  uncategorizedTransactionIds,
   children,
 }: CategorizeTransactionTabsBootProps) {
-  const uncategorizedTransactionIds = useMemo(
-    () => uniq(castArray(uncategorizedTransactionId)),
-    [uncategorizedTransactionId],
+  const normalizedIds = useMemo(
+    () => uniq(castArray(uncategorizedTransactionIds)),
+    [uncategorizedTransactionIds],
   );
 
-  const provider = {
-    uncategorizedTransactionIds,
+  const provider: CategorizeTransactionTabsValue = {
+    uncategorizedTransactionIds: normalizedIds,
   };
   // Use a key prop to force re-render of children when `uncategorizedTransactionIds` changes
   const childrenPerKey = React.useMemo(() => {
     return React.Children.map(children, (child) =>
-      React.cloneElement(child, {
-        key: uncategorizedTransactionIds?.join(','),
-      }),
+      React.isValidElement(child)
+        ? React.cloneElement(child, {
+            key: normalizedIds?.join(','),
+          })
+        : child,
     );
-  }, [children, uncategorizedTransactionIds]);
+  }, [children, normalizedIds]);
 
   return (
     <CategorizeTransactionTabsBootContext.Provider value={provider}>
@@ -48,6 +49,4 @@ export function CategorizeTransactionTabsBoot({
 }
 
 export const useCategorizeTransactionTabsBoot = () =>
-  React.useContext<CategorizeTransactionTabsValue>(
-    CategorizeTransactionTabsBootContext,
-  );
+  React.useContext(CategorizeTransactionTabsBootContext);

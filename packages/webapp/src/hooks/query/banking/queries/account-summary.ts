@@ -1,18 +1,18 @@
 import {
+  fetchAutofillCategorizeTransaction,
+  fetchBankingAccountSummary,
+} from '@bigcapital/sdk-ts';
+import {
   UseQueryOptions,
   UseQueryResult,
   useQuery,
 } from '@tanstack/react-query';
+import { useApiFetcher } from '../../../useRequest';
+import { bankingKeys } from '../query-keys';
 import type {
   AutofillCategorizeTransactionResponse,
   BankingAccountSummaryResponse,
 } from '@bigcapital/sdk-ts';
-import {
-  fetchAutofillCategorizeTransaction,
-  fetchBankingAccountSummary,
-} from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../../../useRequest';
-import { bankingKeys } from '../query-keys';
 
 /** @deprecated Use AutofillCategorizeTransactionResponse from @bigcapital/sdk-ts */
 export type GetAutofillCategorizeTransaction =

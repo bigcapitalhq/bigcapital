@@ -1,25 +1,4 @@
 import {
-  useQueryClient,
-  useMutation,
-  useQuery,
-  UseQueryResult,
-  UseQueryOptions,
-  UseMutationOptions,
-} from '@tanstack/react-query';
-import type {
-  SaleReceiptsListResponse,
-  SaleReceipt,
-  CreateSaleReceiptBody,
-  EditSaleReceiptBody,
-  ValidateBulkDeleteReceiptsResponse,
-  SaleReceiptStateResponse,
-  SaleReceiptMailResponse,
-  SaleReceiptSendMailBody,
-  SaleReceiptHtmlContentResponse,
-  GetSaleReceiptsQuery,
-  BulkDeleteReceiptsBody,
-} from '@bigcapital/sdk-ts';
-import {
   fetchSaleReceipts,
   fetchSaleReceipt,
   createSaleReceipt,
@@ -33,16 +12,37 @@ import {
   fetchSaleReceiptState,
   fetchSaleReceiptHtmlContent,
 } from '@bigcapital/sdk-ts';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseQueryResult,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { useRequestQuery } from '../../useQueryRequest';
 import useApiRequest, { useApiFetcher } from '../../useRequest';
 import { useRequestPdf } from '../../useRequestPdf';
-import { useRequestQuery } from '../../useQueryRequest';
-import { receiptsKeys } from './query-keys';
-import { itemsKeys } from '../items/query-keys';
 import { accountsKeys } from '../accounts/query-keys';
-import { financialReportsKeys } from '../FinancialReports/query-keys';
-import { settingsKeys } from '../settings/query-keys';
-import { organizationKeys } from '../organization/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
+import { financialReportsKeys } from '../FinancialReports/query-keys';
+import { itemsKeys } from '../items/query-keys';
+import { organizationKeys } from '../organization/query-keys';
+import { settingsKeys } from '../settings/query-keys';
+import { receiptsKeys } from './query-keys';
+import type {
+  SaleReceiptsListResponse,
+  SaleReceipt,
+  CreateSaleReceiptBody,
+  EditSaleReceiptBody,
+  ValidateBulkDeleteReceiptsResponse,
+  SaleReceiptStateResponse,
+  SaleReceiptMailResponse,
+  SaleReceiptSendMailBody,
+  SaleReceiptHtmlContentResponse,
+  GetSaleReceiptsQuery,
+  BulkDeleteReceiptsBody,
+} from '@bigcapital/sdk-ts';
 
 function commonInvalidateQueries(
   queryClient: ReturnType<typeof useQueryClient>,
@@ -168,7 +168,6 @@ export function useReceipts(
   props?: UseQueryOptions<SaleReceiptsListResponse, Error>,
 ) {
   const fetcher = useApiFetcher();
-
   return useQuery({
     ...props,
     queryKey: receiptsKeys.list(query),
@@ -178,9 +177,9 @@ export function useReceipts(
 
 export function useReceipt(
   id: number | null | undefined,
-  props?: UseQueryOptions<SaleReceipt, Error>,
+  props?: Omit<UseQueryOptions<SaleReceipt>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: receiptsKeys.detail(id),

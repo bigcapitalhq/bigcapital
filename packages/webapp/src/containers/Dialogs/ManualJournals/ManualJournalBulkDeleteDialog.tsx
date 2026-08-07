@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
 import intl from 'react-intl-universal';
-
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithManualJournalsActionsProps } from '@/containers/Accounting/JournalsLanding/withManualJournalsActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
+import { withManualJournalsActions } from '@/containers/Accounting/JournalsLanding/withManualJournalsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { useBulkDeleteManualJournals } from '@/hooks/query/manual-journals';
-import withDialogRedux from '@/components/DialogReduxConnect';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withManualJournalsActions } from '@/containers/Accounting/JournalsLanding/withManualJournalsActions';
 import { compose } from '@/utils';
+
+interface ManualJournalBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface ManualJournalBulkDeleteDialogProps
+  extends WithManualJournalsActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
 
 function ManualJournalBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
-    ids = [],
-    deletableCount = 0,
-    undeletableCount = 0,
-    totalSelected = ids.length,
-  } = {},
+  payload,
 
   // #withManualJournalsActions
   setManualJournalsSelectedRows,
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteManualJournals, isLoading } =
+}: ManualJournalBulkDeleteDialogProps) {
+  const {
+    ids = [],
+    deletableCount = 0,
+    undeletableCount = 0,
+    totalSelected = ids.length,
+  }: ManualJournalBulkDeleteDialogPayload = payload ?? {};
+
+  const { mutateAsync: bulkDeleteManualJournals, isPending: isLoading } =
     useBulkDeleteManualJournals();
 
   const handleCancel = () => {

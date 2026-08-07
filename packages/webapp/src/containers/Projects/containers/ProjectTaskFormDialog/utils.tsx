@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React from 'react';
-import _ from 'lodash';
 import { useFormikContext } from 'formik';
+import _ from 'lodash';
+import React from 'react';
 import styled from 'styled-components';
 import { Choose, Money, FormattedMessage as T } from '@/components';
 

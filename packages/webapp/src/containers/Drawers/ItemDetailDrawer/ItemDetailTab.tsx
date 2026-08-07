@@ -1,12 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { Tab } from '@blueprintjs/core';
-
-import { DrawerMainTabs, FormattedMessage as T } from '@/components';
-import { ItemPaymentTransactions } from './ItemPaymentTransactions';
+import React from 'react';
 import { ItemDetailHeader } from './ItemDetailHeader';
+import { ItemPaymentTransactions } from './ItemPaymentTransactions';
 import { WarehouseLocationsTable as WarehousesLocationsTable } from './WarehousesLocations';
-
+import { DrawerMainTabs, FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 

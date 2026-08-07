@@ -1,9 +1,10 @@
 import React, { createContext, useContext } from 'react';
-import { useItems } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
+import type { Item } from '@bigcapital/sdk-ts';
+import { useItems } from '@/hooks/query';
 
 interface InventoryItemDetailsHeaderGeneralContextValue {
-  items: Record<string, unknown>[] | undefined;
+  items: Item[] | undefined;
   isItemsFetching: boolean;
   isItemsLoading: boolean;
 }

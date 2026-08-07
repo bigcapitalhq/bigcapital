@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import React from 'react';
 import { Can, Icon } from '@/components';
 import { AbilitySubject, BankRuleAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';

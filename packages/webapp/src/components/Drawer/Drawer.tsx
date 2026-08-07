@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import { Position, Drawer } from '@blueprintjs/core';
+import React from 'react';
 
 import '@/style/components/Drawer.scss';
 

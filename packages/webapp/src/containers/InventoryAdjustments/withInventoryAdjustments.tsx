@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import { getInventroyAdjsTableStateFactory } from '@/store/inventory-adjustments/inventory-adjustment.selector';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithInventoryAdjustmentsProps {
   inventoryAdjustmentTableState: ReturnType<

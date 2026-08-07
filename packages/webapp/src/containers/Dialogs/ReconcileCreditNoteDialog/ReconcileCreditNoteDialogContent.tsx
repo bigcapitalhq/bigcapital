@@ -1,16 +1,19 @@
-// @ts-nocheck
 import React from 'react';
-import { ReconcileCreditNoteFormProvider } from './ReconcileCreditNoteFormProvider';
 import { ReconcileCreditNoteForm } from './ReconcileCreditNoteForm';
+import { ReconcileCreditNoteFormProvider } from './ReconcileCreditNoteFormProvider';
+
+interface ReconcileCreditNoteDialogContentProps {
+  dialogName: string;
+  creditNoteId?: number | null;
+}
 
 /**
  * Reconcile credit note dialog content.
  */
 export function ReconcileCreditNoteDialogContent({
-  // #ownProps
   dialogName,
   creditNoteId,
-}) {
+}: ReconcileCreditNoteDialogContentProps): React.ReactElement {
   return (
     <ReconcileCreditNoteFormProvider
       creditNoteId={creditNoteId}

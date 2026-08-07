@@ -1,33 +1,24 @@
-// @ts-nocheck
-import React from 'react';
-import { isEmpty, defaultTo } from 'lodash';
-import intl from 'react-intl-universal';
-import { Formik, Form } from 'formik';
-import { useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-
-import { PaymentReceiveFormHeader as PaymentReceiveHeader } from './PaymentReceiveFormHeader';
-import { PaymentReceiveFormBody } from './PaymentReceiveFormBody';
+import { Formik, Form, type FormikHelpers } from 'formik';
+import { isEmpty, defaultTo } from 'lodash';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useHistory } from 'react-router-dom';
+import { PaymentReceiveSyncIncrementSettingsToForm } from './components';
 import { PaymentReceiveFormFloatingActions as PaymentReceiveFloatingActions } from './PaymentReceiveFloatingActions';
-import { PaymentReceiveFormFooter } from './PaymentReceiveFormFooter';
-import { PaymentReceiveFormAlerts } from './PaymentReceiveFormAlerts';
-import { PaymentReceiveFormDialogs } from './PaymentReceiveFormDialogs';
-import { PaymentReceiveFormTopBar } from './PaymentReceiveFormTopBar';
-import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
-
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import {
   EditPaymentReceiveFormSchema,
   CreatePaymentReceiveFormSchema,
 } from './PaymentReceiveForm.schema';
-import { AppToaster } from '@/components';
-import { transactionNumber, compose } from '@/utils';
-
+import { PaymentReceiveFormAlerts } from './PaymentReceiveFormAlerts';
+import { PaymentReceiveFormBody } from './PaymentReceiveFormBody';
+import { PaymentReceiveFormDialogs } from './PaymentReceiveFormDialogs';
+import { PaymentReceiveFormFooter } from './PaymentReceiveFormFooter';
+import { PaymentReceiveFormHeader as PaymentReceiveHeader } from './PaymentReceiveFormHeader';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+import { PaymentReceiveFormTopBar } from './PaymentReceiveFormTopBar';
+import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 import {
   defaultPaymentReceive,
   transformToEditForm,
@@ -35,29 +26,34 @@ import {
   transformErrors,
   resetFormState,
   getExceededAmountFromValues,
+  type PaymentReceiveFormValues,
+  type PaymentReceiveErrorResponse,
+  type PaymentReceiveEditEntry,
 } from './utils';
-import { PaymentReceiveSyncIncrementSettingsToForm } from './components';
+import type {
+  CreatePaymentReceivedBody,
+  EditPaymentReceivedBody,
+} from '@bigcapital/sdk-ts';
+import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { transactionNumber, compose } from '@/utils';
+
+type WithDialogActionsProps = {
+  openDialog: (name: string, payload?: Record<string, unknown>) => void;
+};
+
+type PaymentReceiveFormRootProps = WithDialogActionsProps;
 
 /**
  * Payment Receive form.
  */
-function PaymentReceiveFormRoot({
-  // #withSettings
-  preferredDepositAccount,
-  paymentReceiveNextNumber,
-  paymentReceiveNumberPrefix,
-  paymentReceiveAutoIncrement,
+function PaymentReceiveFormRoot({ openDialog }: PaymentReceiveFormRootProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  // #withCurrentOrganization
-  organization: { base_currency },
-
-  // #withDialogActions
-  openDialog,
-}) {
   const history = useHistory();
 
-  // Payment receive form context.
   const {
     isNewMode,
     paymentReceiveEditPage,
@@ -68,39 +64,58 @@ function PaymentReceiveFormRoot({
     createPaymentReceiveMutate,
     isExcessConfirmed,
     paymentReceivedState,
+    paymentReceiveSettings,
   } = usePaymentReceiveFormContext();
 
-  // Payment receive number.
+  const paymentReceiveNextNumber = paymentReceiveSettings?.nextNumber as
+    | number
+    | undefined;
+  const paymentReceiveNumberPrefix = paymentReceiveSettings?.numberPrefix as
+    | string
+    | undefined;
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const preferredDepositAccount =
+    paymentReceiveSettings?.preferredDepositAccount as
+      | number
+      | string
+      | undefined;
+
   const nextPaymentNumber = transactionNumber(
     paymentReceiveNumberPrefix,
     paymentReceiveNextNumber,
   );
-  // Form initial values.
-  const initialValues = {
+
+  const initialValues: PaymentReceiveFormValues = {
     ...(!isEmpty(paymentReceiveEditPage)
-      ? transformToEditForm(paymentReceiveEditPage, paymentEntriesEditPage)
+      ? transformToEditForm(
+          paymentReceiveEditPage,
+          (paymentEntriesEditPage ?? []) as PaymentReceiveEditEntry[],
+        )
       : {
           ...defaultPaymentReceive,
-          // If the auto-increment mode is enabled, take the next payment
-          // number from the settings.
           ...(paymentReceiveAutoIncrement && {
-            payment_receive_no: nextPaymentNumber,
+            paymentReceiveNo: nextPaymentNumber,
           }),
-          deposit_account_id: defaultTo(preferredDepositAccount, ''),
-          currency_code: base_currency,
-          pdf_template_id: paymentReceivedState?.defaultTemplateId,
+          depositAccountId: defaultTo(preferredDepositAccount, ''),
+          currencyCode: baseCurrency ?? '',
+          pdfTemplateId: paymentReceivedState?.defaultTemplateId ?? '',
         }),
   };
-  // Handle form submit.
+
   const handleSubmitForm = (
-    values,
-    { setSubmitting, resetForm, setFieldError },
+    values: PaymentReceiveFormValues,
+    {
+      setSubmitting,
+      resetForm,
+      setFieldError,
+    }: FormikHelpers<PaymentReceiveFormValues>,
   ) => {
     setSubmitting(true);
     const exceededAmount = getExceededAmountFromValues(values);
 
-    // Validates the amount should be bigger than zero.
-    if (values.amount <= 0) {
+    if (Number(values.amount) <= 0) {
       AppToaster.show({
         message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
         intent: Intent.DANGER,
@@ -108,17 +123,13 @@ function PaymentReceiveFormRoot({
       setSubmitting(false);
       return;
     }
-    // Show the confirm popup if the excessed amount bigger than zero and
-    // excess confirmation has not been confirmed yet.
     if (exceededAmount > 0 && !isExcessConfirmed) {
       setSubmitting(false);
       openDialog('payment-received-excessed-payment');
       return;
     }
-    // Transformes the form values to request body.
     const form = transformFormToRequest(values);
 
-    // Handle request response success.
     const onSaved = () => {
       setSubmitting(false);
       AppToaster.show({
@@ -137,11 +148,10 @@ function PaymentReceiveFormRoot({
         resetFormState({ resetForm, initialValues, values });
       }
     };
-    // Handle request response errors.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors?: PaymentReceiveErrorResponse[] };
     }) => {
       if (errors) {
         transformErrors(errors, { setFieldError });
@@ -150,11 +160,18 @@ function PaymentReceiveFormRoot({
     };
 
     if (paymentReceiveId) {
-      return editPaymentReceiveMutate([paymentReceiveId, form])
+      return editPaymentReceiveMutate([
+        paymentReceiveId,
+        form as unknown as EditPaymentReceivedBody,
+      ])
         .then(onSaved)
         .catch(onError);
     } else {
-      return createPaymentReceiveMutate(form).then(onSaved).catch(onError);
+      return createPaymentReceiveMutate(
+        form as unknown as CreatePaymentReceivedBody,
+      )
+        .then(onSaved)
+        .catch(onError);
     }
   };
 
@@ -202,14 +219,6 @@ function PaymentReceiveFormRoot({
   );
 }
 
-export const PaymentReceivedForm = compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveSettings,
-    paymentReceiveNextNumber: paymentReceiveSettings?.nextNumber,
-    paymentReceiveNumberPrefix: paymentReceiveSettings?.numberPrefix,
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-    preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
-  })),
-  withCurrentOrganization(),
-  withDialogActions,
-)(PaymentReceiveFormRoot);
+export const PaymentReceivedForm = compose(withDialogActions)(
+  PaymentReceiveFormRoot,
+);

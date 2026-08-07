@@ -48,7 +48,8 @@ export class ExportResourceService {
     const resource = sanitizeResourceName(resourceName);
     const resourceMeta = this.getResourceMeta(resource);
 
-    const resourceColumns = this.resourceService.getResourceColumns(resource);
+    const resourceColumns =
+      await this.resourceService.getResourceColumns(resource);
     this.validateResourceMeta(resourceMeta);
 
     const data = await this.getExportableData(resource);

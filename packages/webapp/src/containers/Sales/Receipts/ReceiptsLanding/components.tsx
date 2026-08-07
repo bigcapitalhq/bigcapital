@@ -1,8 +1,4 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { FormattedMessage as T } from '@/components';
 import {
   Position,
   Menu,
@@ -13,11 +9,14 @@ import {
   Tag,
   Button,
 } from '@blueprintjs/core';
-
-import { CLASSES } from '@/constants/classes';
-import { safeCallback } from '@/utils';
+import clsx from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FormattedMessage as T } from '@/components';
 import { FormatDateCell, Choose, Money, Icon, If, Can } from '@/components';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
+import { safeCallback } from '@/utils';
 
 /**
  * Receipts table row actions menu.

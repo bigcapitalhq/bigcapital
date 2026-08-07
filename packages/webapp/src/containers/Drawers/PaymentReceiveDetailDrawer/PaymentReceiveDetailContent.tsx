@@ -1,9 +1,11 @@
-// @ts-nocheck
 import React from 'react';
-
-import { DrawerBody } from '@/components';
 import { PaymentReceiveDetail } from './PaymentReceiveDetail';
 import { PaymentReceiveDetailProvider } from './PaymentReceiveDetailProvider';
+import { DrawerBody } from '@/components';
+
+interface PaymentReceiveDetailContentProps {
+  paymentReceiveId: number | undefined;
+}
 
 /**
  * Payment receive detail content.
@@ -11,7 +13,7 @@ import { PaymentReceiveDetailProvider } from './PaymentReceiveDetailProvider';
 export function PaymentReceiveDetailContent({
   // #ownProp
   paymentReceiveId,
-}) {
+}: PaymentReceiveDetailContentProps) {
   return (
     <PaymentReceiveDetailProvider paymentReceiveId={paymentReceiveId}>
       <DrawerBody>

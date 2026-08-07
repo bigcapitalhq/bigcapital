@@ -1,4 +1,5 @@
-// @ts-nocheck
+import intl from 'react-intl-universal';
+import { VendorFormSectionTitle } from './VendorFormSectionTitle';
 import { Box } from '@/components';
 import {
   FormattedMessage as T,
@@ -6,8 +7,6 @@ import {
   FInputGroup,
   FTextArea,
 } from '@/components';
-import { VendorFormSectionTitle } from './VendorFormSectionTitle';
-import intl from 'react-intl-universal';
 
 export function VendorShippingAddress() {
   return (
@@ -16,73 +15,66 @@ export function VendorShippingAddress() {
         <T id={'shipping_address'} />
       </VendorFormSectionTitle>
       <FFormGroup
-        name={'shipping_address_country'}
+        name={'shippingAddressCountry'}
         label={intl.get('country')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'shipping_address_country'} fill fastField />
+        <FInputGroup name={'shippingAddressCountry'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'shipping_address1'}
+        name={'shippingAddress1'}
         label={intl.get('address_line_1')}
         inline
-        fill
         fastField
       >
-        <FTextArea name={'shipping_address1'} fill fastField />
+        <FTextArea name={'shippingAddress1'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'shipping_address2'}
+        name={'shippingAddress2'}
         label={intl.get('address_line_2')}
         inline
-        fill
         fastField
       >
-        <FTextArea name={'shipping_address2'} fill fastField />
+        <FTextArea name={'shippingAddress2'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'shipping_address_city'}
+        name={'shippingAddressCity'}
         label={intl.get('city_town')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'shipping_address_city'} fill fastField />
+        <FInputGroup name={'shippingAddressCity'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'shipping_address_state'}
+        name={'shippingAddressState'}
         label={intl.get('state')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'shipping_address_state'} fill fastField />
+        <FInputGroup name={'shippingAddressState'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'shipping_address_postcode'}
+        name={'shippingAddressPostcode'}
         label={intl.get('zip_code')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'shipping_address_postcode'} fill fastField />
+        <FInputGroup name={'shippingAddressPostcode'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'shipping_address_phone'}
+        name={'shippingAddressPhone'}
         label={intl.get('phone')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'shipping_address_phone'} fill fastField />
+        <FInputGroup name={'shippingAddressPhone'} fill fastField />
       </FFormGroup>
     </Box>
   );

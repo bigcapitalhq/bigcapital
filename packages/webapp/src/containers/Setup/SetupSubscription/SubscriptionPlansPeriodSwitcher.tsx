@@ -1,13 +1,13 @@
-import { ChangeEvent } from 'react';
-import * as R from 'ramda';
 import { Intent, Switch, Tag, Text } from '@blueprintjs/core';
+import * as R from 'ramda';
+import { ChangeEvent } from 'react';
+import styles from './SetupSubscription.module.scss';
 import { Group } from '@/components';
 import {
   withSubscriptionPlansActions,
   WithSubscriptionPlansActionsProps,
 } from '@/containers/Subscriptions/withSubscriptionPlansActions';
 import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
-import styles from './SetupSubscription.module.scss';
 
 interface SubscriptionPlansPeriodsSwitchCombinedProps
   extends WithSubscriptionPlansActionsProps {}

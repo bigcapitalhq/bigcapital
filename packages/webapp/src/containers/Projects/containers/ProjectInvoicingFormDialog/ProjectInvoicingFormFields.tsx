@@ -1,16 +1,15 @@
 // @ts-nocheck
+import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
+import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
 import {
   FFormGroup,
   FCheckbox,
   FDateInput,
   FieldRequiredHint,
 } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { momentFormatter } from '@/utils';
 
 /**

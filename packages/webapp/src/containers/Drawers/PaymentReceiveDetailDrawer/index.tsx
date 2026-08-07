@@ -1,8 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
-
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { compose } from '@/utils';
 
 const PaymentReceiveDetailContent = React.lazy(() =>
@@ -11,15 +9,21 @@ const PaymentReceiveDetailContent = React.lazy(() =>
   })),
 );
 
+interface PaymentReceiveDetailDrawerProps extends WithDrawersProps {
+  name: string;
+}
+
 /**
- * Payment receive detail drawer
+ * Payment receive detail drawer.
  */
 function PaymentReceiveDetailDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { paymentReceiveId },
-}) {
+  payload,
+}: PaymentReceiveDetailDrawerProps) {
+  const paymentReceiveId = payload?.paymentReceiveId as number | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}

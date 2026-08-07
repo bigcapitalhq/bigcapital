@@ -1,16 +1,16 @@
 // @ts-nocheck
-import clsx from 'classnames';
-import { Field, useFormikContext } from 'formik';
 import {
   Button,
   Classes,
   Popover,
   PopoverInteractionKind,
 } from '@blueprintjs/core';
-import { FFormGroup } from '@/components';
-import { UploadAttachmentsPopoverContent } from './UploadAttachmentsPopoverContent';
-import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
+import clsx from 'classnames';
+import { Field, useFormikContext } from 'formik';
 import styles from './UploadAttachmentButton.module.scss';
+import { UploadAttachmentsPopoverContent } from './UploadAttachmentsPopoverContent';
+import { FFormGroup } from '@/components';
+import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 
 function UploadAttachmentButtonButtonContentField() {
   return (

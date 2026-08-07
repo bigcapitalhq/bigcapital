@@ -1,9 +1,9 @@
 // @ts-nocheck
+import clsx from 'classnames';
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { CLASSES } from '@/constants/classes';
 import { FormatDateCell } from '@/components';
+import { CLASSES } from '@/constants/classes';
 
 export function useProjectSalesColumns() {
   return useMemo(

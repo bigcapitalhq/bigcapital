@@ -1,36 +1,35 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { TableStyle } from '@/constants';
-import { DataTable, TableSkeletonRows } from '@/components';
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
-import { useItemAssociatedReceiptTransactions } from '@/hooks/query';
-import { useReceiptTransactionsColumns, ActionsMenu } from './components';
-
+import {
+  useReceiptTransactionsColumns,
+  ActionsMenu,
+  type ItemReceiptTransaction,
+} from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { DataTable, TableSkeletonRows } from '@/components';
+import { TableStyle } from '@/constants';
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { useItemAssociatedReceiptTransactions } from '@/hooks/query';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface ReceiptPaymentTransactionsInnerProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'> {}
 
 /**
  * Receipt payment transactions.
  */
 function ReceiptPaymentTransactions({
-  // #withAlertActions
   openAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
+}: ReceiptPaymentTransactionsInnerProps) {
   const history = useHistory();
-
   const columns = useReceiptTransactionsColumns();
-
   const { itemId } = useItemDetailDrawerContext();
-
-  // Handle fetch receipts associated transactions.
   const {
     isLoading: isReceiptTransactionsLoading,
     isFetching: isReceiptTransactionFetching,
@@ -39,23 +38,25 @@ function ReceiptPaymentTransactions({
     enabled: !!itemId,
   });
 
-  // Handles delete payment transactions.
-  const handleDeletePaymentTransactons = ({ receipt_id }) => {
+  const handleDeletePaymentTransactons = ({
+    receiptId,
+  }: ItemReceiptTransaction) => {
     openAlert('receipt-delete', {
-      receiptId: receipt_id,
+      receiptId,
     });
   };
 
-  // Handles edit payment transactions.
-  const handleEditPaymentTransactions = ({ receipt_id }) => {
-    history.push(`/receipts/${receipt_id}/edit`);
+  const handleEditPaymentTransactions = ({
+    receiptId,
+  }: ItemReceiptTransaction) => {
+    history.push(`/receipts/${receiptId}/edit`);
     closeDrawer(DRAWERS.ITEM_DETAILS);
   };
 
   return (
     <DataTable
       columns={columns}
-      data={paymentTransactions}
+      data={paymentTransactions ?? []}
       loading={isReceiptTransactionsLoading}
       headerLoading={isReceiptTransactionsLoading}
       progressBarLoading={isReceiptTransactionFetching}

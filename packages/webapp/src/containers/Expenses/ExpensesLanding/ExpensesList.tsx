@@ -1,18 +1,24 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 
 import '@/style/pages/Expense/List.scss';
-
-import { DashboardPageContent } from '@/components';
-
 import { ExpenseActionsBar } from './ExpenseActionsBar';
 import { ExpenseDataTable } from './ExpenseDataTable';
-
+import { ExpensesListDialogs } from './ExpensesListDialogs';
+import { ExpensesListDrawers } from './ExpensesListDrawers';
+import { ExpensesListProvider } from './ExpensesListProvider';
 import { withExpenses } from './withExpenses';
 import { withExpensesActions } from './withExpensesActions';
-
+import type { WithExpensesProps } from './withExpenses';
+import type { WithExpensesActionsProps } from './withExpensesActions';
+import { DashboardPageContent } from '@/components';
 import { compose, transformTableStateToQuery } from '@/utils';
-import { ExpensesListProvider } from './ExpensesListProvider';
+
+interface ExpensesListInnerProps
+  extends Pick<
+      WithExpensesProps,
+      'expensesTableState' | 'expensesTableStateChanged'
+    >,
+    Pick<WithExpensesActionsProps, 'resetExpensesTableState'> {}
 
 /**
  * Expenses list.
@@ -24,8 +30,8 @@ function ExpensesListInner({
 
   // #withExpensesActions
   resetExpensesTableState,
-}) {
-  // Resets the accounts table state once the page unmount.
+}: ExpensesListInnerProps) {
+  // Resets the expenses table state once the page unmount.
   useEffect(
     () => () => {
       resetExpensesTableState();
@@ -39,6 +45,8 @@ function ExpensesListInner({
       tableStateChanged={expensesTableStateChanged}
     >
       <ExpenseActionsBar />
+      <ExpensesListDrawers />
+      <ExpensesListDialogs />
 
       <DashboardPageContent>
         <ExpenseDataTable />

@@ -1,7 +1,7 @@
-import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
-import { Align } from '@/constants';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
+import { Align } from '@/constants';
+import { getColumnWidth } from '@/utils';
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 

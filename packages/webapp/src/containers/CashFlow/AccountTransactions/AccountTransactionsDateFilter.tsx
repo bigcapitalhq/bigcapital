@@ -1,8 +1,13 @@
-// @ts-nocheck
 import { Button, FormGroup, Intent, Position } from '@blueprintjs/core';
-import * as Yup from 'yup';
+import {
+  Form,
+  Formik,
+  FormikConfig,
+  FormikHelpers,
+  useFormikContext,
+} from 'formik';
 import moment from 'moment';
-import { Form, Formik, FormikConfig, useFormikContext } from 'formik';
+import * as Yup from 'yup';
 import {
   FDateInput,
   FFormGroup,
@@ -12,7 +17,13 @@ import {
   Stack,
 } from '@/components';
 
-const defaultValues = {
+export interface AccountTransactionsDateFilterFormValues {
+  period: string;
+  fromDate: string | Date | null;
+  toDate: string | Date | null;
+}
+
+const defaultValues: AccountTransactionsDateFilterFormValues = {
   period: 'all_dates',
   fromDate: '',
   toDate: '',
@@ -29,26 +40,28 @@ const validationSchema = Yup.object().shape({
     .min(Yup.ref('fromDate'), 'To Date cannot be before From Date'),
 });
 
-interface AccountTransactionsDateFilterFormValues {
-  period: string;
-  fromDate: string;
-  toDate: string;
+interface UncategorizedTransactionsDateFilterProps {
+  initialValues?: Partial<AccountTransactionsDateFilterFormValues>;
+  onSubmit?: FormikConfig<AccountTransactionsDateFilterFormValues>['onSubmit'];
 }
 
-interface UncategorizedTransactionsDateFilterProps {
-  initialValues?: AccountTransactionsDateFilterFormValues;
-  onSubmit?: FormikConfig<AccountTransactionsDateFilterFormValues>['onSubmit'];
+interface DatePeriodOption {
+  text: string;
+  value: string;
 }
 
 export function AccountTransactionsDateFilterForm({
   initialValues = {},
   onSubmit,
 }: UncategorizedTransactionsDateFilterProps) {
-  const handleSubmit = (values, bag) => {
+  const handleSubmit = (
+    values: AccountTransactionsDateFilterFormValues,
+    bag: FormikHelpers<AccountTransactionsDateFilterFormValues>,
+  ) => {
     return onSubmit && onSubmit(values, bag);
   };
 
-  const formInitialValues = {
+  const formInitialValues: AccountTransactionsDateFilterFormValues = {
     ...defaultValues,
     ...initialValues,
   };
@@ -72,8 +85,8 @@ export function AccountTransactionsDateFilterForm({
               <FDateInput
                 name={'fromDate'}
                 popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date) => date.toLocaleDateString()}
-                parseDate={(str) => new Date(str)}
+                formatDate={(date: Date) => date.toLocaleDateString()}
+                parseDate={(str: string) => new Date(str)}
                 inputProps={{
                   fill: true,
                   placeholder: 'MM/DD/YYY',
@@ -82,16 +95,12 @@ export function AccountTransactionsDateFilterForm({
               />
             </FFormGroup>
 
-            <FormGroup
-              label={'To Date'}
-              name={'toDate'}
-              style={{ marginBottom: 0, flex: '1' }}
-            >
+            <FormGroup label={'To Date'} style={{ marginBottom: 0, flex: '1' }}>
               <FDateInput
                 name={'toDate'}
                 popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date) => date.toLocaleDateString()}
-                parseDate={(str) => new Date(str)}
+                formatDate={(date: Date) => date.toLocaleDateString()}
+                parseDate={(str: string) => new Date(str)}
                 inputProps={{
                   fill: true,
                   placeholder: 'MM/DD/YYY',
@@ -109,7 +118,8 @@ export function AccountTransactionsDateFilterForm({
 }
 
 function AccountTransactionsDateFilterFooter() {
-  const { submitForm, setValues } = useFormikContext();
+  const { submitForm, setValues } =
+    useFormikContext<AccountTransactionsDateFilterFormValues>();
 
   const handleFilterBtnClick = () => {
     submitForm();
@@ -145,9 +155,10 @@ function AccountTransactionsDateFilterFooter() {
 }
 
 function AccountTransactionDatePeriodField() {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } =
+    useFormikContext<AccountTransactionsDateFilterFormValues>();
 
-  const handleItemChange = (item) => {
+  const handleItemChange = (item: DatePeriodOption) => {
     const { fromDate, toDate } = getDateRangePeriod(item.value);
 
     setFieldValue('fromDate', fromDate);
@@ -171,7 +182,7 @@ function AccountTransactionDatePeriodField() {
   );
 }
 
-const periodOptions = [
+const periodOptions: DatePeriodOption[] = [
   { text: 'All Dates', value: 'all_dates' },
   { text: 'Custom', value: 'custom' },
   { text: 'Today', value: 'today' },
@@ -185,7 +196,9 @@ const periodOptions = [
   { text: 'Last month', value: 'last_month' },
 ];
 
-const getDateRangePeriod = (period: string) => {
+const getDateRangePeriod = (
+  period: string,
+): { fromDate: Date | null; toDate: Date | null } => {
   switch (period) {
     case 'today':
       return {

@@ -1,14 +1,16 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-
+import React from 'react';
 import { useExpensesListContext } from './ExpensesListProvider';
 import { withExpenses } from './withExpenses';
 import { withExpensesActions } from './withExpensesActions';
-
+import type { WithExpensesProps } from './withExpenses';
+import type { WithExpensesActionsProps } from './withExpensesActions';
+import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
+
+interface ExpenseViewTabsInnerProps extends WithExpensesActionsProps {
+  expensesCurrentView: WithExpensesProps['expensesTableState']['viewSlug'];
+}
 
 /**
  * Expesne views tabs.
@@ -19,18 +21,19 @@ function ExpenseViewTabsInner({
 
   // #withExpenses
   expensesCurrentView,
-}) {
+}: ExpenseViewTabsInnerProps) {
   // Expenses list context.
   const { expensesViews } = useExpensesListContext();
 
   // Handle the tabs change.
-  const handleTabChange = (viewSlug) => {
+  const handleTabChange = (viewSlug: string) => {
     setExpensesTableState({
-      viewSlug: viewSlug || null,
+      viewSlug: viewSlug || (null as unknown as string),
     });
   };
 
-  const tabs = transfromViewsToTabs(expensesViews);
+  // `transfromViewsToTabs` is untyped; surface as `unknown[]`.
+  const tabs = transfromViewsToTabs(expensesViews) as unknown[];
 
   // Handle click a new view tab.
   const handleClickNewView = () => {};

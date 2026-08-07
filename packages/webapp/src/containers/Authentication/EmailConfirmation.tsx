@@ -1,9 +1,8 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
 import { useEffect, useMemo } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
-import { useAuthSignUpVerify } from '@/hooks/query';
 import { AppToaster } from '@/components';
-import { Intent } from '@blueprintjs/core';
+import { useAuthSignUpVerify } from '@/hooks/query';
 
 function useQuery() {
   const { search } = useLocation();
@@ -25,6 +24,9 @@ export function EmailConfirmation() {
   }, [history, token, email]);
 
   useEffect(() => {
+    if (!token || !email) {
+      return;
+    }
     authSignupVerify({ token, email })
       .then(() => {
         AppToaster.show({

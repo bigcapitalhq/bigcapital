@@ -1,14 +1,9 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { defaultTo } from 'lodash';
-
-import { T, DetailsMenu, DetailItem } from '@/components';
-
-import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
-
+import intl from 'react-intl-universal';
 import Style from './VendorDetailsDrawer.module.scss';
+import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
+import { T, DetailsMenu, DetailItem } from '@/components';
 
 /**
  * Vendor details header.
@@ -26,7 +21,8 @@ export function VendorDetailsHeader() {
           name={'outstanding-payable'}
           label={intl.get('vendor.drawer.label.outstanding_payable')}
         >
-          <h3 class="big-number">{vendor.formatted_balance}</h3>
+          {/* @ts-expect-error — latent bug preserved: original used `class` instead of `className`, so React ignores it; the CSS class never applied. */}
+          <h3 class="big-number">{vendor?.formattedBalance}</h3>
         </DetailItem>
 
         <DetailItem label={intl.get('vendor.drawer.label.unused_credits')}>
@@ -39,20 +35,20 @@ export function VendorDetailsHeader() {
           label={intl.get('vendor.drawer.label.vendor')}
           name={'name'}
         >
-          <strong>{vendor?.display_name}</strong>
+          <strong>{vendor?.displayName}</strong>
         </DetailItem>
 
         <DetailItem
           label={intl.get('vendor.drawer.label.company_name')}
-          children={defaultTo(vendor?.company_name, '--')}
+          children={defaultTo(vendor?.companyName, '--')}
         />
         <DetailItem
           label={intl.get('email')}
-          children={defaultTo(vendor.email, '--')}
+          children={defaultTo(vendor?.email, '--')}
         />
         <DetailItem label={intl.get('vendor.drawer.label.phone_number')}>
-          <div>{vendor?.personal_phone} </div>
-          <div>{vendor?.work_phone} </div>
+          <div>{vendor?.personalPhone} </div>
+          <div>{vendor?.workPhone} </div>
         </DetailItem>
 
         <DetailItem
@@ -61,15 +57,15 @@ export function VendorDetailsHeader() {
         />
         <DetailItem
           label={intl.get('vendor.drawer.label.opening_balance')}
-          children={vendor?.formatted_opening_balance}
+          children={vendor?.formattedOpeningBalance}
         />
         <DetailItem
           label={intl.get('vendor.drawer.label.opening_balance_at')}
-          children={vendor?.formatted_opening_balance_at}
+          children={vendor?.formattedOpeningBalanceAt}
         />
         <DetailItem
           label={intl.get('vendor.drawer.label.currency')}
-          children={vendor?.currency_code}
+          children={vendor?.currencyCode}
         />
         <DetailItem
           label={intl.get('vendor.drawer.label.note')}

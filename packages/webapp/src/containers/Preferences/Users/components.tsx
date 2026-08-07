@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import { FormattedMessage as T, Icon, If } from '@/components';
 import {
   Intent,
   Button,
@@ -12,13 +8,40 @@ import {
   MenuItem,
   Position,
 } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { User } from '@bigcapital/sdk-ts';
+import { FormattedMessage as T, Icon, If } from '@/components';
 import { safeCallback, firstLettersArgs } from '@/utils';
+
+// The SDK User type is narrower than what the runtime exposes; preserve the
+// legacy property accesses (inviteAcceptedAt, fullName) by widening.
+type UserRow = User & {
+  inviteAcceptedAt?: string;
+  fullName?: string;
+};
+
+interface RowShape {
+  row: { original: UserRow };
+}
 
 /**
  * Avatar cell.
  */
-function AvatarCell(row) {
-  return <span className={'avatar'}>{firstLettersArgs(row.email)}</span>;
+function AvatarCell({ email }: { email: string } & Record<string, unknown>) {
+  return <span className={'avatar'}>{firstLettersArgs(email)}</span>;
+}
+
+export interface ActionsMenuPayload {
+  onEdit?: (user: UserRow) => void;
+  onInactivate?: (user: UserRow) => void;
+  onActivate?: (user: UserRow) => void;
+  onDelete?: (user: UserRow) => void;
+  onResendInvitation?: (user: UserRow) => void;
+}
+
+interface ActionsMenuProps extends RowShape {
+  payload: ActionsMenuPayload;
 }
 
 /**
@@ -27,10 +50,10 @@ function AvatarCell(row) {
 export function ActionsMenu({
   row: { original },
   payload: { onEdit, onInactivate, onActivate, onDelete, onResendInvitation },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
-      <If condition={original.invite_accepted_at}>
+      <If condition={!!original.inviteAcceptedAt}>
         <MenuItem
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_user')}
@@ -53,7 +76,7 @@ export function ActionsMenu({
         )}
       </If>
 
-      <If condition={!original.invite_accepted_at}>
+      <If condition={!original.inviteAcceptedAt}>
         <MenuItem
           text={'Resend invitation'}
           onClick={safeCallback(onResendInvitation, original)}
@@ -74,8 +97,8 @@ export function ActionsMenu({
 /**
  * Status accessor.
  */
-function StatusAccessor(user) {
-  return !user.is_invite_accepted ? (
+function StatusAccessor(user: UserRow) {
+  return !user.inviteAcceptedAt ? (
     <Tag minimal={true}>
       <T id={'inviting'} />
     </Tag>
@@ -90,10 +113,15 @@ function StatusAccessor(user) {
   );
 }
 
+interface ActionsCellProps {
+  payload: ActionsMenuPayload;
+  row: { original: UserRow };
+}
+
 /**
  * Actions cell.
  */
-function ActionsCell(props) {
+function ActionsCell(props: ActionsCellProps) {
   return (
     <Popover
       content={<ActionsMenu {...props} />}
@@ -104,8 +132,8 @@ function ActionsCell(props) {
   );
 }
 
-function FullNameAccessor(user) {
-  return user.is_invite_accepted ? user.full_name : user.email;
+function FullNameAccessor(user: UserRow) {
+  return user.inviteAcceptedAt ? user.fullName : user.email;
 }
 
 export const useUsersListColumns = () => {

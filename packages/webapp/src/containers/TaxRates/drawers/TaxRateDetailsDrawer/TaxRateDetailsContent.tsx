@@ -1,24 +1,20 @@
-// @ts-nocheck
-import React from 'react';
 import { TaxRateDetailsContentActionsBar } from './TaxRateDetailsContentActionsBar';
 import { TaxRateDetailsContentBoot } from './TaxRateDetailsContentBoot';
-import { DrawerBody, DrawerHeaderContent } from '@/components';
 import { TaxRateDetailsContentDetails } from './TaxRateDetailsContentDetails';
-import { DRAWERS } from '@/constants/drawers';
+import { DrawerBody, DrawerHeaderContent } from '@/components';
 
 interface TaxRateDetailsContentProps {
-  taxRateid: number;
+  name: string;
+  taxRateId: number;
 }
 
 export function TaxRateDetailsContent({
+  name,
   taxRateId,
 }: TaxRateDetailsContentProps) {
   return (
     <TaxRateDetailsContentBoot taxRateId={taxRateId}>
-      <DrawerHeaderContent
-        name={DRAWERS.TAX_RATE_DETAILS}
-        title={'Tax Rate Details'}
-      />
+      <DrawerHeaderContent name={name} title={'Tax Rate Details'} />
       <TaxRateDetailsContentActionsBar />
 
       <DrawerBody>

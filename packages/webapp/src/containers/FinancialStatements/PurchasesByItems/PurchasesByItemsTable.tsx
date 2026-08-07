@@ -1,14 +1,11 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { ReportDataTable, FinancialSheet } from '@/components';
-
-import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
-
-import { tableRowTypesToClassnames } from '@/utils';
-import { TableStyle } from '@/constants';
 import { usePurchasesByItemsTableColumns } from './dynamicColumns';
+import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
+import { tableRowTypesToClassnames } from '@/utils';
 
 interface PurchasesByItemsTableProps {
   companyName: string;

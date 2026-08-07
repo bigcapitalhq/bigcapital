@@ -1,29 +1,14 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { Formik, Form, type FormikHelpers } from 'formik';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Formik, Form } from 'formik';
-import { isEmpty } from 'lodash';
-import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { CLASSES } from '@/constants/classes';
-import classNames from 'classnames';
-
-import {
-  CreateWarehouseFormSchema,
-  EditWarehouseFormSchema,
-} from './WarehouseTransferForm.schema';
-
-import { WarehouseTransferFormHeader } from './WarehouseTransferFormHeader';
-import { WarehouseTransferEditorField } from './WarehouseTransferEditorField';
-import { WarehouseTransferFormFooter } from './WarehouseTransferFormFooter';
-import { WarehouseTransferFloatingActions } from './WarehouseTransferFloatingActions';
-import { WarehouseTransferFormDialog } from './WarehouseTransferFormDialog';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { AppToaster } from '@/components';
-import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
-import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
+import type {
+  CreateWarehouseTransferBody,
+  EditWarehouseTransferBody,
+} from '@bigcapital/sdk-ts';
 import { WarehouseTransferObserveItemsCost } from './components';
 import {
   defaultWarehouseTransfer,
@@ -31,13 +16,29 @@ import {
   transformErrors,
   transformToEditForm,
 } from './utils';
+import { WarehouseTransferEditorField } from './WarehouseTransferEditorField';
+import { WarehouseTransferFloatingActions } from './WarehouseTransferFloatingActions';
+import {
+  CreateWarehouseFormSchema,
+  EditWarehouseFormSchema,
+} from './WarehouseTransferForm.schema';
+import { WarehouseTransferFormDialog } from './WarehouseTransferFormDialog';
+import { WarehouseTransferFormFooter } from './WarehouseTransferFormFooter';
+import { WarehouseTransferFormHeader } from './WarehouseTransferFormHeader';
+import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import type { WarehouseTransferFormValues } from './types';
+import { AppToaster } from '@/components';
+import { CLASSES } from '@/constants/classes';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 
-function WarehouseTransferFormInner({
-  // #withSettings
-  warehouseTransferNextNumber,
-  warehouseTransferNumberPrefix,
-  warehouseTransferIncrementMode,
-}) {
+interface WarehouseTransferFormInnerProps {}
+
+interface ApiError {
+  data?: { errors?: { type: string }[] };
+}
+
+function WarehouseTransferFormInner({}: WarehouseTransferFormInnerProps) {
   const history = useHistory();
 
   const {
@@ -46,7 +47,16 @@ function WarehouseTransferFormInner({
     createWarehouseTransferMutate,
     editWarehouseTransferMutate,
     submitPayload,
+    warehouseTransferSettings,
   } = useWarehouseTransferFormContext();
+
+  const warehouseTransferNextNumber = warehouseTransferSettings?.nextNumber as
+    | number
+    | undefined;
+  const warehouseTransferNumberPrefix =
+    warehouseTransferSettings?.numberPrefix as string | undefined;
+  const warehouseTransferIncrementMode =
+    warehouseTransferSettings?.autoIncrement as boolean | undefined;
 
   // WarehouseTransfer number.
   const warehouseTransferNumber = transactionNumber(
@@ -55,29 +65,39 @@ function WarehouseTransferFormInner({
   );
 
   // Form initial values.
-  const initialValues = React.useMemo(
-    () => ({
-      ...(!isEmpty(warehouseTransfer)
-        ? { ...transformToEditForm(warehouseTransfer) }
-        : {
-            ...defaultWarehouseTransfer,
-            ...(warehouseTransferIncrementMode && {
-              transaction_number: warehouseTransferNumber,
-            }),
-            entries: orderingLinesIndexes(defaultWarehouseTransfer.entries),
-          }),
-    }),
-    [],
-  );
+  const initialValues = React.useMemo<WarehouseTransferFormValues>(() => {
+    if (!isEmpty(warehouseTransfer)) {
+      return transformToEditForm(
+        warehouseTransfer as unknown as Record<string, unknown> & {
+          entries?: unknown[];
+        },
+      );
+    }
+    return {
+      ...defaultWarehouseTransfer,
+      ...(warehouseTransferIncrementMode
+        ? { transactionNumber: warehouseTransferNumber }
+        : {}),
+      entries: orderingLinesIndexes(defaultWarehouseTransfer.entries),
+    } as WarehouseTransferFormValues;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Handles form submit.
-  const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+  const handleSubmit = (
+    values: WarehouseTransferFormValues,
+    {
+      setSubmitting,
+      setErrors,
+      resetForm,
+    }: FormikHelpers<WarehouseTransferFormValues>,
+  ) => {
     setSubmitting(true);
     // Transformes the values of the form to request.
     const form = {
       ...transformValueToRequest(values),
-      transfer_initiated: submitPayload.initiate,
-      transfer_delivered: submitPayload.deliver,
+      transferInitiated: submitPayload?.initiate,
+      transferDelivered: submitPayload?.deliver,
     };
 
     // Handle the request success.
@@ -92,30 +112,35 @@ function WarehouseTransferFormInner({
       });
       setSubmitting(false);
 
-      if (submitPayload.redirect) {
+      if (submitPayload?.redirect) {
         history.push('/warehouses-transfers');
       }
-      if (submitPayload.resetForm) {
+      if (submitPayload?.resetForm) {
         resetForm();
       }
     };
 
     // Handle the request error.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
-      if (errors) {
-        transformErrors(errors, { setErrors });
+    const onError = ({ data }: ApiError) => {
+      if (data?.errors) {
+        transformErrors(data.errors, {
+          setErrors: setErrors as (errors: unknown) => void,
+        });
       }
       setSubmitting(false);
     };
 
     if (isNewMode) {
-      createWarehouseTransferMutate(form).then(onSuccess).catch(onError);
+      createWarehouseTransferMutate(
+        form as unknown as CreateWarehouseTransferBody,
+      )
+        .then(onSuccess)
+        .catch(onError);
     } else {
-      editWarehouseTransferMutate([warehouseTransfer.id, form])
+      editWarehouseTransferMutate([
+        warehouseTransfer!.id,
+        form as unknown as EditWarehouseTransferBody,
+      ])
         .then(onSuccess)
         .catch(onError);
     }
@@ -149,11 +174,6 @@ function WarehouseTransferFormInner({
   );
 }
 
-export const WarehouseTransferForm = compose(
-  withDashboardActions,
-  withSettings(({ warehouseTransferSettings }) => ({
-    warehouseTransferNextNumber: warehouseTransferSettings?.nextNumber,
-    warehouseTransferNumberPrefix: warehouseTransferSettings?.numberPrefix,
-    warehouseTransferIncrementMode: warehouseTransferSettings?.autoIncrement,
-  })),
-)(WarehouseTransferFormInner);
+export const WarehouseTransferForm = compose(withDashboardActions)(
+  WarehouseTransferFormInner,
+);

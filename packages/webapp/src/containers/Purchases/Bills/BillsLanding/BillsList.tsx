@@ -1,31 +1,30 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { DashboardPageContent } from '@/components';
 
 import '@/style/pages/Bills/List.scss';
-
-import { BillsListProvider } from './BillsListProvider';
-
 import { BillsActionsBar } from './BillsActionsBar';
+import { BillsListDialogs } from './BillsListDialogs';
+import { BillsListDrawers } from './BillsListDrawers';
+import { BillsListProvider } from './BillsListProvider';
 import { BillsTable } from './BillsTable';
-
 import { withBills } from './withBills';
 import { withBillsActions } from './withBillsActions';
-
+import type { WithBillsProps } from './withBills';
 import { transformTableStateToQuery, compose } from '@/utils';
 
-/**
- * Bills list.
- */
+interface WithBillsActionsProps {
+  resetBillsTableState: () => void;
+}
+
+interface BillsListProps
+  extends Pick<WithBillsProps, 'billsTableState' | 'billsTableStateChanged'>,
+    WithBillsActionsProps {}
+
 function BillsListInner({
-  // #withBills
   billsTableState,
   billsTableStateChanged,
-
-  // #withBillsActions
   resetBillsTableState,
-}) {
-  // Resets the accounts table state once the page unmount.
+}: BillsListProps) {
   useEffect(
     () => () => {
       resetBillsTableState();
@@ -39,6 +38,8 @@ function BillsListInner({
       tableStateChanged={billsTableStateChanged}
     >
       <BillsActionsBar />
+      <BillsListDrawers />
+      <BillsListDialogs />
 
       <DashboardPageContent>
         <BillsTable />

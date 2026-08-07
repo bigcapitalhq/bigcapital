@@ -1,5 +1,5 @@
-// @ts-nocheck
 import React from 'react';
+import type { FinancialSection } from '@/containers/FinancialStatements/FilterFinancialReports';
 import { FormattedMessage as T } from '@/components';
 import {
   ReportsAction,
@@ -7,7 +7,7 @@ import {
   AuditLogAction,
 } from '@/constants/abilityOption';
 
-export const financialReportMenus: Array<FinancialSection> = [
+export const financialReportMenus: FinancialSection[] = [
   {
     sectionTitle: <T id={'financial_accounting'} />,
     reports: [

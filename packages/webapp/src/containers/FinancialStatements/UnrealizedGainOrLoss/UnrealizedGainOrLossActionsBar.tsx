@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -8,18 +7,16 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
+import React from 'react';
 import { useUnrealizedGainOrLossContext } from './UnrealizedGainOrLossProvider';
 import { withUnrealizedGainOrLoss } from './withUnrealizedGainOrLoss';
 import {
   withUnrealizedGainOrLossActions,
   WithUnrealizedGainOrLossActionsProps,
 } from './withUnrealizedGainOrLossActions';
-
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { compose, saveInvoke } from '@/utils';
 
 interface UnrealizedGainOrLossActionsBarOwnProps {

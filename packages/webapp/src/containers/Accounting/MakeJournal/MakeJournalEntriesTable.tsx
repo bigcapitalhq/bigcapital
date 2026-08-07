@@ -1,5 +1,7 @@
-// @ts-nocheck
 import React from 'react';
+import { useJournalTableEntriesColumns } from './components';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { updateAdjustEntries, type MakeJournalEntry } from './utils';
 import { DataTableEditable } from '@/components';
 import {
   compose,
@@ -9,15 +11,21 @@ import {
   updateAutoAddNewLine,
   updateTableCell,
 } from '@/utils';
-import { useMakeJournalFormContext } from './MakeJournalProvider';
-import { useJournalTableEntriesColumns } from './components';
-import { updateAdjustEntries } from './utils';
+
+type MakeJournalEntriesTableProps = {
+  onChange?: (entries: MakeJournalEntry[]) => void;
+  entries: MakeJournalEntry[];
+  defaultEntry: MakeJournalEntry;
+  error?: unknown;
+  initialLinesNumber?: number;
+  minLinesNumber?: number;
+  currencyCode?: string;
+};
 
 /**
  * Make journal entries table component.
  */
 export function MakeJournalEntriesTable({
-  // #ownPorps
   onChange,
   entries,
   defaultEntry,
@@ -25,7 +33,7 @@ export function MakeJournalEntriesTable({
   initialLinesNumber = 1,
   minLinesNumber = 1,
   currencyCode,
-}) {
+}: MakeJournalEntriesTableProps) {
   const { accounts, contacts, branches, projects } =
     useMakeJournalFormContext();
 
@@ -33,11 +41,15 @@ export function MakeJournalEntriesTable({
   const columns = useJournalTableEntriesColumns();
 
   // Handles update datatable data.
-  const handleUpdateData = (rowIndex, columnId, value) => {
-    const newRows = compose(
+  const handleUpdateData = (
+    rowIndex: number,
+    columnId: string,
+    value: string | number,
+  ) => {
+    const newRows: MakeJournalEntry[] = compose(
       // Auto-adding new lines.
-      updateAutoAddNewLine(defaultEntry, ['account_id', 'credit', 'debit']),
-      // Update items entries total.
+      updateAutoAddNewLine(defaultEntry, ['accountId', 'credit', 'debit']),
+      // Update journal entries total.
       updateAdjustEntries(rowIndex, columnId, value),
       // Update entry of the given row index and column id.
       updateTableCell(rowIndex, columnId, value),
@@ -47,8 +59,8 @@ export function MakeJournalEntriesTable({
   };
 
   // Handle remove datatable row.
-  const handleRemoveRow = (rowIndex) => {
-    const newRows = compose(
+  const handleRemoveRow = (rowIndex: number) => {
+    const newRows: MakeJournalEntry[] = compose(
       // Ensure minimum lines count.
       updateMinEntriesLines(minLinesNumber, defaultEntry),
       // Remove the line by the given index.
@@ -59,6 +71,7 @@ export function MakeJournalEntriesTable({
   };
 
   return (
+    // @ts-expect-error DataTableEditable is untyped and infers required actions/name props that are unused at runtime
     <DataTableEditable
       columns={columns}
       data={entries}
@@ -72,7 +85,7 @@ export function MakeJournalEntriesTable({
         contacts,
         branches,
         projects,
-        autoFocus: ['account_id', 0],
+        autoFocus: ['accountId', 0],
         currencyCode,
       }}
     />

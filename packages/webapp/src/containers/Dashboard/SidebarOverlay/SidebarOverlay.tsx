@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import { Overlay, OverlayProps } from '@blueprintjs/core';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { SidebarOverlayContainer } from './SidebarOverlayContainer';
 import { ISidebarMenuItem, ISidebarMenuItemType } from '../Sidebar/interfaces';
+import { SidebarOverlayContainer } from './SidebarOverlayContainer';
 
 export interface ISidebarOverlayItem {
   text: string;

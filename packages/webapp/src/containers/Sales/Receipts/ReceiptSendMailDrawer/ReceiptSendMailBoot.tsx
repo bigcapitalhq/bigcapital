@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
+import React, { createContext, useContext } from 'react';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import {
   GetSaleReceiptMailStateResponse,

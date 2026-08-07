@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
+import type { RootState } from '@/store/reducers';
 import {
   isDialogOpenFactory,
   getDialogPayloadFactory,
 } from '@/store/dashboard/dashboard.selectors';
-import type { RootState } from '@/store/reducers';
 
 export type DialogBaseProps = {
   isOpen: boolean | undefined;

@@ -1,19 +1,19 @@
-import React from 'react';
 import moment from 'moment';
-import { ProfitLossSheetHeader } from './ProfitLossSheetHeader';
+import React from 'react';
+import { ProfitLossSheetAlerts, ProfitLossSheetLoadingBar } from './components';
 import { ProfitLossActionsBar } from './ProfitLossActionsBar';
-import { DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { ProfitLossBody } from './ProfitLossBody';
+import { ProfitLossSheetProvider } from './ProfitLossProvider';
+import { ProfitLossSheetDialogs } from './ProfitLossSheetDialogs';
+import { ProfitLossSheetHeader } from './ProfitLossSheetHeader';
+import { useProfitLossSheetQuery } from './utils';
 import {
   withProfitLossActions,
   WithProfitLossActionsProps,
 } from './withProfitLossActions';
-import { useProfitLossSheetQuery } from './utils';
-import { ProfitLossSheetProvider } from './ProfitLossProvider';
-import { ProfitLossSheetAlerts, ProfitLossSheetLoadingBar } from './components';
-import { ProfitLossBody } from './ProfitLossBody';
-import { ProfitLossSheetDialogs } from './ProfitLossSheetDialogs';
+import { DashboardPageContent } from '@/components';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { compose } from '@/utils';
 
 type ProfitLossSheetProps = Pick<
   WithProfitLossActionsProps,

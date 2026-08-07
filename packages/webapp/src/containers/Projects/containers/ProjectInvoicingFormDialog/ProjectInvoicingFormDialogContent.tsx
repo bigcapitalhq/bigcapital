@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-
-import { ProjectInvoicingFormProvider } from './ProjectInvoicingFormProvider';
 import { ProjectInvoicingForm } from './ProjectInvoicingForm';
+import { ProjectInvoicingFormProvider } from './ProjectInvoicingFormProvider';
 
 /**
  * Project Invoicing form dialog content.

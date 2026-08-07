@@ -1,20 +1,18 @@
 // @ts-nocheck
 import * as R from 'ramda';
+import { BankRulesTableActionsMenu } from './_components';
+import { BankRulesLandingEmptyState } from './BankRulesLandingEmptyState';
+import { useBankRulesTableColumns } from './hooks';
+import { useRulesListBoot } from './RulesListBoot';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonHeader,
   TableSkeletonRows,
 } from '@/components';
-
+import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { useBankRulesTableColumns } from './hooks';
-import { BankRulesTableActionsMenu } from './_components';
-import { BankRulesLandingEmptyState } from './BankRulesLandingEmptyState';
-import { useRulesListBoot } from './RulesListBoot';
-import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Retrieves the rules table.

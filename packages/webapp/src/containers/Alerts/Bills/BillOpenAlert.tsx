@@ -1,36 +1,38 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
-import { AppToaster, FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useOpenBill } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface BillOpenAlertPayload {
+  billId: number;
+}
+
+interface BillOpenAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: BillOpenAlertPayload;
+}
 
 /**
  * Bill open alert.
  */
 function BillOpenAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { billId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { isLoading, mutateAsync: openBillMutate } = useOpenBill();
+}: BillOpenAlertProps): React.ReactElement {
+  const { isPending: isLoading, mutateAsync: openBillMutate } = useOpenBill();
 
-  // Handle cancel open bill alert.
   const handleCancelOpenBill = () => {
     closeAlert(name);
   };
 
-  // Handle confirm bill open.
   const handleConfirmBillOpen = () => {
     openBillMutate(billId)
       .then(() => {
@@ -38,17 +40,23 @@ function BillOpenAlertInner({
           message: intl.get('the_bill_has_been_opened_successfully'),
           intent: Intent.SUCCESS,
         });
-        closeAlert(name);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck silently closed the alert on error without surfacing the failure.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
+      .finally(() => {
         closeAlert(name);
       });
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'open'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('open')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelOpenBill}

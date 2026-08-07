@@ -1,15 +1,21 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import intl from 'react-intl-universal';
-import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { keyBy, omit } from 'lodash';
 import { useFormikContext } from 'formik';
-
-import { useWatch } from '@/hooks/utils';
-import { AppToaster } from '@/components';
+import { keyBy, omit } from 'lodash';
+import moment from 'moment';
+import * as R from 'ramda';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import type {
+  WarehouseTransferEntry,
+  WarehouseTransferFormValues,
+} from './types';
+import { AppToaster } from '@/components';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+} from '@/containers/Entries/utils';
+import { useWatch } from '@/hooks/utils';
 import {
   compose,
   transformToForm,
@@ -23,32 +29,28 @@ import {
   updateAutoAddNewLine,
   updateTableCell,
 } from '@/utils';
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
 
 export const MIN_LINES_NUMBER = 1;
 
 // Default warehouse transfer entry.
-export const defaultWarehouseTransferEntry = {
+export const defaultWarehouseTransferEntry: WarehouseTransferEntry = {
   index: 0,
-  item_id: '',
-  source_warehouse: '',
-  destination_warehouse: '',
+  itemId: '',
+  sourceWarehouse: '',
+  destinationWarehouse: '',
   description: '',
   quantity: '',
 };
 
 // Default warehouse transfer entry.
-export const defaultWarehouseTransfer = {
+export const defaultWarehouseTransfer: WarehouseTransferFormValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
-  transaction_number: '',
-  from_warehouse_id: '',
-  to_warehouse_id: '',
+  transactionNumber: '',
+  fromWarehouseId: '',
+  toWarehouseId: '',
   reason: '',
-  transfer_initiated: '',
-  transfer_delivered: '',
+  transferInitiated: '',
+  transferDelivered: '',
   entries: [...repeatValue(defaultWarehouseTransferEntry, MIN_LINES_NUMBER)],
 };
 
@@ -56,17 +58,25 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
   { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
 ]);
 
+interface TransformError {
+  type: string;
+}
+
 /**
  * Transform warehouse transfer to initial values in edit mode.
  */
-export function transformToEditForm(warehouse) {
+export function transformToEditForm(
+  warehouse: { entries?: unknown[] } & Record<string, unknown>,
+): WarehouseTransferFormValues {
+  const warehouseEntries =
+    (warehouse.entries as WarehouseTransferEntry[]) ?? [];
   const initialEntries = [
-    ...warehouse.entries.map((warehouse) => ({
-      ...transformToForm(warehouse, defaultWarehouseTransferEntry),
+    ...warehouseEntries.map((entry) => ({
+      ...transformToForm(entry, defaultWarehouseTransferEntry),
     })),
     ...repeatValue(
       defaultWarehouseTransferEntry,
-      Math.max(MIN_LINES_NUMBER - warehouse.entries.length, 0),
+      Math.max(MIN_LINES_NUMBER - warehouseEntries.length, 0),
     ),
   ];
   const entries = compose(
@@ -77,31 +87,44 @@ export function transformToEditForm(warehouse) {
   return {
     ...transformToForm(warehouse, defaultWarehouseTransfer),
     entries,
-  };
+  } as WarehouseTransferFormValues;
 }
 
 /**
  * Syncs transfer no. settings with form.
  */
-export const useObserveTransferNoSettings = (prefix, nextNumber) => {
-  const { setFieldValue } = useFormikContext();
+export const useObserveTransferNoSettings = (
+  prefix: string,
+  nextNumber: number,
+) => {
+  const { setFieldValue } = useFormikContext<WarehouseTransferFormValues>();
 
   React.useEffect(() => {
     const transferNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('transaction_number', transferNo);
+    setFieldValue('transactionNumber', transferNo);
   }, [setFieldValue, prefix, nextNumber]);
 };
+
+interface EntriesFieldProps {
+  items: unknown;
+  formik: {
+    values: WarehouseTransferFormValues;
+  };
+}
 
 /**
  * Detarmines warehouse entries field when should update.
  */
-export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+export const entriesFieldShouldUpdate = (
+  newProps: EntriesFieldProps,
+  oldProps: EntriesFieldProps,
+) => {
   return (
     newProps.items !== oldProps.items ||
-    newProps.formik.values.from_warehouse_id !==
-      oldProps.formik.values.from_warehouse_id ||
-    newProps.formik.values.to_warehouse_id !==
-      oldProps.formik.values.to_warehouse_id ||
+    newProps.formik.values.fromWarehouseId !==
+      oldProps.formik.values.fromWarehouseId ||
+    newProps.formik.values.toWarehouseId !==
+      oldProps.formik.values.toWarehouseId ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -109,17 +132,15 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Transformes the form values to request body values.
  */
-export function transformValueToRequest(values) {
-  const entries = values.entries.filter(
-    (item) => item.item_id && item.quantity,
-  );
+export function transformValueToRequest(values: WarehouseTransferFormValues) {
+  const entries = values.entries.filter((item) => item.itemId && item.quantity);
   return {
     ...values,
     entries: entries.map((entry) => ({
       ...omit(entry, [
         'warehouses',
-        'destination_warehouse',
-        'source_warehouse',
+        'destinationWarehouse',
+        'sourceWarehouse',
         'cost',
       ]),
     })),
@@ -129,7 +150,10 @@ export function transformValueToRequest(values) {
 /**
  * Transformes the response errors types.
  */
-export const transformErrors = (errors, { setErrors }) => {
+export const transformErrors = (
+  errors: TransformError[],
+  _opts: { setErrors: (errors: unknown) => void },
+) => {
   if (
     errors.some(({ type }) => type === 'WAREHOUSES_TRANSFER_SHOULD_NOT_BE_SAME')
   ) {
@@ -144,18 +168,18 @@ export const transformErrors = (errors, { setErrors }) => {
 
 /**
  * Mutates table cell.
- * @param {*} rowIndex
- * @param {*} columnId
- * @param {*} defaultEntry
- * @param {*} value
- * @param {*} entries
- * @returns
  */
 export const mutateTableCell = R.curry(
-  (rowIndex, columnId, defaultEntry, value, entries) => {
+  (
+    rowIndex: number,
+    columnId: string,
+    defaultEntry: WarehouseTransferEntry,
+    value: unknown,
+    entries: WarehouseTransferEntry[],
+  ): WarehouseTransferEntry[] => {
     return compose(
       // Update auto-adding new line.
-      updateAutoAddNewLine(defaultEntry, ['item_id']),
+      updateAutoAddNewLine(defaultEntry, ['itemId']),
       // Update the row value of the given row index and column id.
       updateTableCell(rowIndex, columnId, value),
     )(entries);
@@ -165,21 +189,41 @@ export const mutateTableCell = R.curry(
 /**
  * Compose table rows when insert a new row to table rows.
  */
-export const mutateTableRow = R.curry((rowIndex, newRow, rows) => {
-  return compose(orderingLinesIndexes, updateTableRow(rowIndex, newRow))(rows);
-});
+export const mutateTableRow = R.curry(
+  (
+    rowIndex: number,
+    newRow: WarehouseTransferEntry,
+    rows: WarehouseTransferEntry[],
+  ): WarehouseTransferEntry[] => {
+    return compose(
+      orderingLinesIndexes,
+      updateTableRow(rowIndex, newRow),
+    )(rows);
+  },
+);
 
 /**
  * Deletes the table row from the given rows.
  */
-export const deleteTableRow = R.curry((rowIndex, defaultEntry, rows) => {
-  return compose(
-    // Ensure minimum lines count.
-    updateMinEntriesLines(MIN_LINES_NUMBER, defaultEntry),
-    // Remove the line by the given index.
-    updateRemoveLineByIndex(rowIndex),
-  )(rows);
-});
+export const deleteTableRow = R.curry(
+  (
+    rowIndex: number,
+    defaultEntry: WarehouseTransferEntry,
+    rows: WarehouseTransferEntry[],
+  ): WarehouseTransferEntry[] => {
+    return compose(
+      // Ensure minimum lines count.
+      updateMinEntriesLines(MIN_LINES_NUMBER, defaultEntry),
+      // Remove the line by the given index.
+      updateRemoveLineByIndex(rowIndex),
+    )(rows);
+  },
+);
+
+interface InventoryItemCost {
+  itemId: number;
+  average?: number;
+}
 
 /**
  * Watches the inventory items cost and sets the cost to form entries.
@@ -191,11 +235,11 @@ export function useWatchItemsCostSetCostEntries() {
   const {
     setFieldValue,
     values: { entries },
-  } = useFormikContext();
+  } = useFormikContext<WarehouseTransferFormValues>();
 
   // Transformes items cost map by item id.
   const itemsCostByItemId = React.useMemo(
-    () => keyBy(inventoryItemsCost, 'item_id'),
+    () => keyBy(inventoryItemsCost as InventoryItemCost[], 'itemId'),
     [inventoryItemsCost],
   );
 
@@ -204,9 +248,9 @@ export function useWatchItemsCostSetCostEntries() {
     if (!isItemsCostSuccess) return;
 
     const newEntries = entries.map((entry) => {
-      const costEntry = itemsCostByItemId[entry.item_id];
+      const costEntry = itemsCostByItemId[Number(entry.itemId)];
 
-      return entry.item_id
+      return entry.itemId
         ? {
             ...entry,
             cost: costEntry?.average,

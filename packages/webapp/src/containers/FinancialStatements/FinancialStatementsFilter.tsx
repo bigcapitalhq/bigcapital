@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   PopoverInteractionKind,
   Tooltip,
@@ -7,6 +6,8 @@ import {
   PopperModifiers,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import React from 'react';
+import { filterAccountsOptions } from './constants';
 import {
   FFormGroup,
   FSelect,
@@ -14,7 +15,6 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { filterAccountsOptions } from './constants';
 
 interface FilterItem {
   key: string;

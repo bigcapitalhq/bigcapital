@@ -1,9 +1,9 @@
-import { Box, Group, Stack } from '@/components';
 import {
   PaperTemplate,
   PaperTemplateProps,
   PaperTemplateTotalBorder,
 } from '../../Invoices/InvoiceCustomize/PaperTemplate';
+import { Box, Group, Stack } from '@/components';
 import {
   DefaultPdfTemplateAddressBilledFrom,
   DefaultPdfTemplateAddressBilledTo,

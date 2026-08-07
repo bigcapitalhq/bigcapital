@@ -1,9 +1,9 @@
 // @ts-nocheck
-import * as R from 'ramda';
 import { Callout, Classes } from '@blueprintjs/core';
+import * as R from 'ramda';
+import { ChangeSubscriptionPlans } from './ChangeSubscriptionPlans';
 import { Box } from '@/components';
 import { SubscriptionPlansPeriodSwitcher } from '@/containers/Setup/SetupSubscription/SubscriptionPlansPeriodSwitcher';
-import { ChangeSubscriptionPlans } from './ChangeSubscriptionPlans';
 
 export function ChangeSubscriptionPlanContent() {
   return (

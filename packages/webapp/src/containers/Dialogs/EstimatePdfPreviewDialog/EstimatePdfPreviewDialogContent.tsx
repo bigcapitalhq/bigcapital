@@ -1,24 +1,28 @@
-// @ts-nocheck
-import React from 'react';
 import { AnchorButton } from '@blueprintjs/core';
-
+import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
-import { usePdfEstimate } from '@/hooks/query';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { usePdfEstimate } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface EstimatePdfPreviewDialogContentProps extends WithDialogActionsProps {
+  subscriptionForm: { estimateId: number | null };
+  dialogName?: string;
+}
 
 function EstimatePdfPreviewDialogContentInner({
   subscriptionForm: { estimateId },
-  dialogName,
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { isLoading, pdfUrl, filename } = usePdfEstimate(estimateId);
+}: EstimatePdfPreviewDialogContentProps): React.ReactElement {
+  // Latent bug preserved: payload default is `{ estimateId: null }` — the hook
+  // builds URL `sales-estimates/null` when the dialog opens without a real id.
+  const { isLoading, pdfUrl, filename } = usePdfEstimate(estimateId as number);
 
+  // FIXME: `target={'__blank'}` should be `_blank` (single underscore) — left
+  // as-is to avoid a behavior change in a TS-only slice.
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
           target={'__blank'}

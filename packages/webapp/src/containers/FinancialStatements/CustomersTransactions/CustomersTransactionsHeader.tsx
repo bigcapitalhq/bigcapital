@@ -1,21 +1,21 @@
-import React from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import { Formik, Form, FormikHelpers } from 'formik';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import {
+  getCustomersTransactionsDefaultQuery,
+  getCustomersTransactionsQuerySchema,
+} from './_utils';
 import { CustomersTransactionsHeaderGeneralPanel } from './CustomersTransactionsHeaderGeneralPanel';
 import { withCustomersTransactions } from './withCustomersTransactions';
 import {
   withCustomersTransactionsActions,
   WithCustomersTransactionsActionsProps,
 } from './withCustomersTransactionsActions';
+import { FormattedMessage as T } from '@/components';
 import { compose, transformToForm } from '@/utils';
-import {
-  getCustomersTransactionsDefaultQuery,
-  getCustomersTransactionsQuerySchema,
-} from './_utils';
 
 interface CustomersTransactionsHeaderFormValues {
   fromDate: Date;

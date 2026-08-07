@@ -1,14 +1,14 @@
 // @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
 import { CreateProjectTaskFormSchema } from './ProjectTaskForm.schema';
-import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
-import { compose, transformToForm } from '@/utils';
 import { TaskFormContent as ProjectTaskFormContent } from './ProjectTaskFormContent';
+import { useProjectTaskFormContext } from './ProjectTaskFormProvider';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues = {
   name: '',
@@ -60,11 +60,7 @@ function ProjectTaskFormInner({
     };
 
     // Handle request response errors.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = ({ data: { errors } }) => {
       setSubmitting(false);
     };
     if (isNewMode) {

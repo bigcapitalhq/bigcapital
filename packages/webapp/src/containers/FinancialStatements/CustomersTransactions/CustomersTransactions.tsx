@@ -1,22 +1,18 @@
-import React, { useEffect } from 'react';
 import moment from 'moment';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-
-import { CustomersTransactionsHeader } from './CustomersTransactionsHeader';
+import React, { useEffect } from 'react';
+import { useCustomersTransactionsQuery } from './_utils';
+import { CustomersTransactionsLoadingBar } from './components';
 import { CustomersTransactionsActionsBar } from './CustomersTransactionsActionsBar';
-
+import { CustomersTransactionsBody } from './CustomersTransactionsBody';
+import { CustomersTransactionsDialogs } from './CustomersTransactionsDialogs';
+import { CustomersTransactionsHeader } from './CustomersTransactionsHeader';
+import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 import {
   withCustomersTransactionsActions,
   WithCustomersTransactionsActionsProps,
 } from './withCustomersTransactionsActions';
-import { CustomersTransactionsLoadingBar } from './components';
-import { CustomersTransactionsBody } from './CustomersTransactionsBody';
-import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
-
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { compose } from '@/utils';
-import { useCustomersTransactionsQuery } from './_utils';
-import { CustomersTransactionsDialogs } from './CustomersTransactionsDialogs';
 
 interface CustomersTransactionsProps
   extends WithCustomersTransactionsActionsProps {}

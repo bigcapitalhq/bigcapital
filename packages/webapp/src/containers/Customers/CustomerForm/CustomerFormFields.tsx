@@ -1,12 +1,11 @@
 import { Divider } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-import { Box } from '@/components';
-
+import { CustomerBillingAddress } from './CustomerBillingAddress';
 import { CustomerFormBasicSection } from './CustomerFormBasicSection';
 import { CustomerFormFinancialSection } from './CustomerFormFinancialSection';
-import { CustomerBillingAddress } from './CustomerBillingAddress';
-import { CustomerShippingAddress } from './CustomerShippingAddress';
 import { CustomerFormNotesSection } from './CustomerFormNotesSection';
+import { CustomerShippingAddress } from './CustomerShippingAddress';
+import { Box } from '@/components';
 
 const customerFormSectionDividerClass = css`
   margin: 20px 0;

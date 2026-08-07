@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { DialogsName } from '@/constants/dialogs';
-import { useValidateBulkDeleteBills } from '@/hooks/query/bills';
 import { useBulkDeleteDialog } from '@/hooks/dialogs/useBulkDeleteDialog';
+import { useValidateBulkDeleteBills } from '@/hooks/query/bills';
 
 export const useBulkDeleteBillsDialog = () => {
   const validateBulkDeleteMutation = useValidateBulkDeleteBills();

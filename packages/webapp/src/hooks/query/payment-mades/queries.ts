@@ -1,19 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  BillPaymentsListResponse,
-  BillPayment,
-  CreateBillPaymentBody,
-  EditBillPaymentBody,
-  BillPaymentEditPageResponse,
-  BillPaymentNewPageEntriesResponse,
-} from '@bigcapital/sdk-ts';
-import {
   fetchBillPayments,
   fetchBillPayment,
   createBillPayment,
@@ -22,8 +7,23 @@ import {
   fetchBillPaymentEditPage,
   fetchBillPaymentNewPageEntries,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { paymentMadesKeys } from './query-keys';
+import type {
+  BillPaymentsListResponse,
+  BillPayment,
+  CreateBillPaymentBody,
+  EditBillPaymentBody,
+  BillPaymentEditPageResponse,
+  BillPaymentNewPageEntriesResponse,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (client: ReturnType<typeof useQueryClient>) => {
   client.invalidateQueries({ queryKey: paymentMadesKeys.all() });
@@ -40,7 +40,7 @@ export function usePaymentMades(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: paymentMadesKeys.list(query),
@@ -102,7 +102,7 @@ export function usePaymentMadeEditPage(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: paymentMadesKeys.editPage(id),
@@ -119,7 +119,7 @@ export function usePaymentMadeNewPageEntries(
     'queryKey' | 'queryFn' | 'enabled'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: paymentMadesKeys.newEntries(vendorId),
@@ -141,7 +141,7 @@ export function usePaymentMade(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<BillPayment>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: paymentMadesKeys.detail(id),

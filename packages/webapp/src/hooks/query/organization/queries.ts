@@ -1,4 +1,9 @@
-import { useEffect } from 'react';
+import {
+  fetchOrganizationCurrent,
+  buildOrganization,
+  updateOrganization,
+  fetchOrgBaseCurrencyMutateAbilities,
+} from '@bigcapital/sdk-ts';
 import {
   useMutation,
   useQuery,
@@ -6,24 +11,15 @@ import {
   UseMutationOptions,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { batch } from 'react-redux';
-import { omit } from 'lodash';
+import { useRequestQuery } from '../../useQueryRequest';
+import { useApiFetcher } from '../../useRequest';
+import { organizationKeys } from './query-keys';
 import type {
   OrganizationCurrent,
   UpdateOrganizationBody,
   BuildOrganizationBody,
   OrgBaseCurrencyMutateAbilitiesResponse,
 } from '@bigcapital/sdk-ts';
-import {
-  fetchOrganizationCurrent,
-  buildOrganization,
-  updateOrganization,
-  fetchOrgBaseCurrencyMutateAbilities,
-} from '@bigcapital/sdk-ts';
-import { organizationKeys } from './query-keys';
-import { useApiFetcher } from '../../useRequest';
-import { useRequestQuery } from '../../useQueryRequest';
-import { useSetOrganizations, useSetSubscriptions } from '../../state';
 
 /**
  * Retrieve organizations of the authenticated user.
@@ -48,35 +44,41 @@ export function useOrganizations(props?: Record<string, unknown>) {
 }
 
 /**
- * Retrieve the current organization metadata.
+ * Retrieve the current organization. Response keys are transformed to camelCase
+ * to match the SDK types (the API serializes to snake_case).
  */
 export function useCurrentOrganization(
   props?: Omit<UseQueryOptions<OrganizationCurrent>, 'queryKey' | 'queryFn'>,
 ) {
-  const setOrganizations = useSetOrganizations();
-  const setSubscriptions = useSetSubscriptions();
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
-  const result = useQuery({
+  return useQuery({
     ...props,
     queryKey: organizationKeys.current(),
     queryFn: () => fetchOrganizationCurrent(fetcher),
   });
+}
 
-  useEffect(() => {
-    if (result.isSuccess && result.data) {
-      const data = result.data as OrganizationCurrent & {
-        subscriptions?: unknown;
-      };
-      const organization = omit(data, ['subscriptions']);
-      batch(() => {
-        setSubscriptions(data.subscriptions);
-        setOrganizations([organization]);
-      });
-    }
-  }, [result.isSuccess, result.data, setSubscriptions, setOrganizations]);
+/**
+ * The current organization's metadata object.
+ */
+export function useCurrentOrganizationMetadata() {
+  const { data } = useCurrentOrganization();
+  return data?.metadata;
+}
 
-  return result;
+/**
+ * The current organization's base currency code (e.g. "USD").
+ */
+export function useCurrentOrganizationBaseCurrency() {
+  return useCurrentOrganizationMetadata()?.baseCurrency;
+}
+
+/**
+ * The current organization's display name (empty string while loading).
+ */
+export function useCurrentOrganizationName() {
+  return useCurrentOrganizationMetadata()?.name ?? '';
 }
 
 /**

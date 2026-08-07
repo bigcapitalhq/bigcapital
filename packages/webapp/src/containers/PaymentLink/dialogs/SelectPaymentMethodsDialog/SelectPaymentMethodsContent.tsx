@@ -1,7 +1,3 @@
-import { SelectPaymentMethodsBoot } from './SelectPaymentMethodsBoot';
-import { SelectPaymentMethodsForm } from './SelectPaymemtMethodsForm';
-import styled from 'styled-components';
-import { Group, Stack } from '@/components';
 import {
   DialogFooter,
   Button,
@@ -10,8 +6,12 @@ import {
   Intent,
   Text,
 } from '@blueprintjs/core';
-import { useDialogActions } from '@/hooks/state';
+import styled from 'styled-components';
+import { SelectPaymentMethodsForm } from './SelectPaymemtMethodsForm';
+import { SelectPaymentMethodsBoot } from './SelectPaymentMethodsBoot';
+import { Group, Stack } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+import { useDialogActions } from '@/hooks/state';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 
 export function SelectPaymentMethodsContent() {

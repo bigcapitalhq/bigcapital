@@ -1,12 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import moment from 'moment';
 import { Button, Intent, Tab, Tabs } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
-import { FormattedMessage as T } from '@/components';
-import { useFeatureCan } from '@/hooks/state';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
 import { FinancialStatementHeader } from '../../FinancialStatements/FinancialStatementHeader';
-import { compose, transformToForm } from '@/utils';
+import { SalesTaxLiabilitySummaryHeaderGeneral } from './SalesTaxLiabilitySummaryHeaderGeneralPanel';
 import {
   getDefaultSalesTaxLiablitySummaryQuery,
   getSalesTaxLiabilitySummaryQueryValidation,
@@ -19,7 +17,9 @@ import {
   withSalesTaxLiabilitySummaryActions,
   WithSalesTaxLiabilitySummaryActionsProps,
 } from './withSalesTaxLiabilitySummaryActions';
-import { SalesTaxLiabilitySummaryHeaderGeneral } from './SalesTaxLiabilitySummaryHeaderGeneralPanel';
+import { FormattedMessage as T } from '@/components';
+import { useFeatureCan } from '@/hooks/state';
+import { compose, transformToForm } from '@/utils';
 
 interface SalesTaxLiabilitySummaryFormValues {
   fromDate: Date;

@@ -1,7 +1,14 @@
-// @ts-nocheck
 import { pick } from 'lodash';
 
-export const transformPaymentViewsToTabs = (paymentMadeViews) => {
+interface PaymentView {
+  name?: string;
+  id?: number;
+  [key: string]: any;
+}
+
+export const transformPaymentViewsToTabs = (
+  paymentMadeViews: PaymentView[],
+) => {
   return paymentMadeViews.map((view) => ({
     ...pick(view, ['name', 'id']),
   }));

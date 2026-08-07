@@ -1,21 +1,19 @@
-import React, { useEffect } from 'react';
 import moment from 'moment';
-
+import React, { useEffect } from 'react';
 import { SalesTaxLiabilitySummaryLoadingBar } from './components';
-import { FinancialStatement, DashboardPageContent } from '@/components';
-
-import { SalesTaxLiabilitySummaryHeader } from './SalesTaxLiabilitySummaryHeader';
-import { SalesTaxLiabilitySummaryActionsBar } from './SalesTaxLiabilitySummaryActionsBar';
-import { SalesTaxLiabilitySummaryBoot } from './SalesTaxLiabilitySummaryBoot';
-import { SalesTaxLiabilitySummaryBody } from './SalesTaxLiabilitySummaryBody';
-import { useSalesTaxLiabilitySummaryQuery } from './utils';
 import { SalesTaxLiabiltiyPdfDialog } from './SalesTaxLiabilityPdfDialog';
+import { SalesTaxLiabilitySummaryActionsBar } from './SalesTaxLiabilitySummaryActionsBar';
+import { SalesTaxLiabilitySummaryBody } from './SalesTaxLiabilitySummaryBody';
+import { SalesTaxLiabilitySummaryBoot } from './SalesTaxLiabilitySummaryBoot';
+import { SalesTaxLiabilitySummaryHeader } from './SalesTaxLiabilitySummaryHeader';
+import { useSalesTaxLiabilitySummaryQuery } from './utils';
 import {
   withSalesTaxLiabilitySummaryActions,
   WithSalesTaxLiabilitySummaryActionsProps,
 } from './withSalesTaxLiabilitySummaryActions';
-import { compose } from '@/utils';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+import { compose } from '@/utils';
 
 interface SalesTaxLiabilitySummaryProps
   extends WithSalesTaxLiabilitySummaryActionsProps {}

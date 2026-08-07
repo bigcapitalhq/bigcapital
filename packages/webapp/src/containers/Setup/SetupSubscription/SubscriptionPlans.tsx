@@ -1,18 +1,29 @@
-// @ts-nocheck
-import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster, Group, GroupProps } from '@/components';
-import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
-import { SubscriptionPlan } from '@/containers/Subscriptions/component/SubscriptionPlan';
-import { useGetLemonSqueezyCheckout } from '@/hooks/query';
+import * as R from 'ramda';
 import { useSubscriptionPlans } from './hooks';
-import { withPlans } from '@/containers/Subscriptions/withPlans';
+import { AppToaster, Group, GroupProps } from '@/components';
+import {
+  SubscriptionPlan,
+  SubscriptionPricingProps,
+} from '@/containers/Subscriptions/component/SubscriptionPlan';
 import { withSubscriptionPlanMapper } from '@/containers/Subscriptions/component/withSubscriptionPlanMapper';
+import { withPlans } from '@/containers/Subscriptions/withPlans';
+import { useGetLemonSqueezyCheckout } from '@/hooks/query';
+import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 
 interface SubscriptionPlansProps {
   wrapProps?: GroupProps;
   onSubscribe?: (variantId: number) => void;
 }
+
+type SubscriptionPlanMappedProps = Omit<
+  SubscriptionPricingProps,
+  'onSubscribe'
+> & {
+  plansPeriod: SubscriptionPlansPeriod;
+  monthlyVariantId: string;
+  annuallyVariantId: string;
+};
 
 export function SubscriptionPlans({
   wrapProps,
@@ -32,8 +43,13 @@ export function SubscriptionPlans({
 const SubscriptionPlanMapped = R.compose(
   withSubscriptionPlanMapper,
   withPlans(({ plansPeriod }) => ({ plansPeriod })),
-)(({ plansPeriod, monthlyVariantId, annuallyVariantId, ...props }) => {
-  const { mutateAsync: getLemonCheckout, isLoading } =
+)(({
+  plansPeriod,
+  monthlyVariantId,
+  annuallyVariantId,
+  ...planProps
+}: SubscriptionPlanMappedProps) => {
+  const { mutateAsync: getLemonCheckout, isPending } =
     useGetLemonSqueezyCheckout();
 
   const handleSubscribeBtnClick = () => {
@@ -45,7 +61,7 @@ const SubscriptionPlanMapped = R.compose(
     getLemonCheckout({ variantId })
       .then((res) => {
         const checkoutUrl = res.data.data.attributes.url;
-        window.LemonSqueezy.Url.Open(checkoutUrl);
+        window.LemonSqueezy?.Url.Open(checkoutUrl);
       })
       .catch(() => {
         AppToaster.show({
@@ -56,10 +72,10 @@ const SubscriptionPlanMapped = R.compose(
   };
   return (
     <SubscriptionPlan
-      {...props}
+      {...planProps}
       onSubscribe={handleSubscribeBtnClick}
       subscribeButtonProps={{
-        loading: isLoading,
+        loading: isPending,
       }}
     />
   );

@@ -1,7 +1,7 @@
-import { useFormikContext } from 'formik';
-import { useMemo } from 'react';
 import { SelectOptionProps } from '@blueprintjs-formik/select';
+import { useFormikContext } from 'formik';
 import { chain, defaultTo, mapKeys, snakeCase, startCase } from 'lodash';
+import { useMemo } from 'react';
 import { InvoiceSendMailFormValues } from './_types';
 import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
 

@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { useEffect, useRef } from 'react';
 
-export function useWatch(callback, argument) {
+export function useWatch<T>(callback: (argument: T) => void, argument: T) {
   const flag = useRef(false);
 
   useEffect(() => {
@@ -14,7 +13,10 @@ export function useWatch(callback, argument) {
   }, [argument]);
 }
 
-export function useWatchImmediate(callback, argument) {
+export function useWatchImmediate<T>(
+  callback: (argument: T) => void,
+  argument: T,
+) {
   useEffect(() => {
     callback(argument);
     // eslint-disable-next-line react-hooks/exhaustive-deps

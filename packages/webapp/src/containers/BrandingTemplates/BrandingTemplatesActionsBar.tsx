@@ -1,14 +1,14 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
 import { Button, NavbarGroup, Intent } from '@blueprintjs/core';
-import { DrawerActionsBar, Icon } from '@/components';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import React, { useMemo } from 'react';
 import {
   getButtonLabelFromResource,
   getCustomizeDrawerNameFromResource,
 } from './_utils';
-import { compose } from '@/utils';
+import { DrawerActionsBar, Icon } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { compose } from '@/utils';
 
 /**
  * Account drawer action bar.

@@ -1,22 +1,31 @@
-// @ts-nocheck
 import React from 'react';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import type { BankingTransactionResponse } from '@bigcapital/sdk-ts';
 import { IntersectionObserver } from '@/components';
 import { useAccountTransactionsInfinity } from '@/hooks/query';
 import { useFlattenInfinityPages } from '@/hooks/utils';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 
-const AccountTransactionsAllBootContext = React.createContext();
+export interface AccountTransactionsAllContextValue {
+  cashflowTransactions: BankingTransactionResponse[];
+  isCashFlowTransactionsFetching: boolean;
+  isCashFlowTransactionsLoading: boolean;
+}
 
-interface AccountTransactionsAllPoviderProps {
+interface AccountTransactionsAllProviderProps {
   children: React.ReactNode;
 }
+
+const AccountTransactionsAllBootContext =
+  React.createContext<AccountTransactionsAllContextValue>(
+    {} as AccountTransactionsAllContextValue,
+  );
 
 /**
  * Account transctions all provider.
  */
 function AccountTransactionsAllProvider({
   children,
-}: AccountTransactionsAllPoviderProps) {
+}: AccountTransactionsAllProviderProps) {
   const { accountId } = useAccountTransactionsContext();
 
   // Fetch cashflow account transactions list
@@ -26,18 +35,17 @@ function AccountTransactionsAllProvider({
     isLoading: isCashFlowTransactionsLoading,
     isSuccess: isCashflowTransactionsSuccess,
     fetchNextPage: fetchNextTransactionsPage,
-    isFetchingNextPage: isCashflowTransactionsFetchingNextPage,
     hasNextPage: hasCashflowTransactionsNextPgae,
   } = useAccountTransactionsInfinity(accountId, {
-    page_size: 50,
-    account_id: accountId,
+    accountId,
+    pageSize: 50,
   });
   // Memorized the cashflow account transactions.
   const cashflowTransactions = useFlattenInfinityPages(
     isCashflowTransactionsSuccess ? cashflowTransactionsPages : undefined,
-    (page) => page.transactions,
+    (page) => page?.transactions ?? [],
   );
-  // Handle the observer ineraction.
+  // Handle the observer inersection.
   const handleObserverInteract = React.useCallback(() => {
     if (!isCashFlowTransactionsFetching && hasCashflowTransactionsNextPgae) {
       fetchNextTransactionsPage();
@@ -48,8 +56,8 @@ function AccountTransactionsAllProvider({
     fetchNextTransactionsPage,
   ]);
   // Provider payload.
-  const provider = {
-    cashflowTransactions,
+  const provider: AccountTransactionsAllContextValue = {
+    cashflowTransactions: cashflowTransactions ?? [],
     isCashFlowTransactionsFetching,
     isCashFlowTransactionsLoading,
   };
@@ -57,10 +65,7 @@ function AccountTransactionsAllProvider({
   return (
     <AccountTransactionsAllBootContext.Provider value={provider}>
       {children}
-      <IntersectionObserver
-        onIntersect={handleObserverInteract}
-        enabled={!isCashflowTransactionsFetchingNextPage}
-      />
+      <IntersectionObserver onIntersect={handleObserverInteract} />
     </AccountTransactionsAllBootContext.Provider>
   );
 }

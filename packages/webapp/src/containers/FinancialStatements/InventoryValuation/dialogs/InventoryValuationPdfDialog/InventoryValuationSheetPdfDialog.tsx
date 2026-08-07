@@ -1,6 +1,5 @@
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';

@@ -1,8 +1,8 @@
 import { useFormikContext } from 'formik';
 import { SendViewPreviewHeader } from '../../Estimates/SendMailViewDrawer/SendMailViewPreviewHeader';
 import { useSendReceiptMailSubject } from './_hooks';
-import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
 import { ReceiptSendMailFormValues } from './_types';
+import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
 
 export function ReceiptSendMailPreviewHeader() {
   const subject = useSendReceiptMailSubject();

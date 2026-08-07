@@ -20,11 +20,13 @@ import {
   AbilitySubject,
   ISubjectAbilitiesSchema,
   ISubjectAbilitySchema,
+  RoleAction,
 } from './Roles.types';
 import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.types';
 import { PreferencesAction } from '../Settings/Settings.types';
 import { AuditLogAction } from '../EE/AuditLogs/types/AuditLogs.types';
 import { AttachmentAction } from '../Attachments/Attachments.types';
+import { WarehouseTransferAction } from '../Warehouses/Warehouse.types';
 
 export const AbilitySchema: ISubjectAbilitiesSchema[] = [
   {
@@ -324,7 +326,44 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
     subjectLabel: 'ability.attachments',
     abilities: [
       { key: AttachmentAction.View, label: 'ability.view', default: true },
+      { key: AttachmentAction.Create, label: 'ability.create', default: true },
       { key: AttachmentAction.Delete, label: 'ability.delete', default: true },
+    ],
+  },
+  {
+    subject: AbilitySubject.Role,
+    subjectLabel: 'ability.roles',
+    abilities: [
+      { key: RoleAction.View, label: 'ability.view', default: false },
+      { key: RoleAction.Create, label: 'ability.create', default: false },
+      { key: RoleAction.Edit, label: 'ability.edit', default: false },
+      { key: RoleAction.Delete, label: 'ability.delete', default: false },
+    ],
+  },
+  {
+    subject: AbilitySubject.Warehouse,
+    subjectLabel: 'ability.warehouse_transfers',
+    abilities: [
+      {
+        key: WarehouseTransferAction.VIEW,
+        label: 'ability.view',
+        default: true,
+      },
+      {
+        key: WarehouseTransferAction.CREATE,
+        label: 'ability.create',
+        default: true,
+      },
+      {
+        key: WarehouseTransferAction.EDIT,
+        label: 'ability.edit',
+        default: true,
+      },
+      {
+        key: WarehouseTransferAction.DELETE,
+        label: 'ability.delete',
+        default: true,
+      },
     ],
   },
 ];

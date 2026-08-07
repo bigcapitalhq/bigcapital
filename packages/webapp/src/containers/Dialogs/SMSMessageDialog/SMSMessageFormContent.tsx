@@ -1,29 +1,32 @@
-// @ts-nocheck
+import { Classes } from '@blueprintjs/core';
+import { Form, useFormikContext } from 'formik';
+import { castArray } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Form, useFormikContext } from 'formik';
-import { Classes } from '@blueprintjs/core';
-import { castArray } from 'lodash';
-
+import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import { SMSMessageFormFields } from './SMSMessageFormFields';
 import { SMSMessageFormFloatingActions } from './SMSMessageFormFloatingActions';
-
-import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
+import type { SMSMessageFormValues } from './types';
 import { SMSMessagePreview } from '@/components';
 import { getSMSUnits } from '@/containers/NotifyViaSMS/utils';
+
+interface SMSVariable {
+  variable: string;
+  description: string;
+}
 
 /**
  * SMS message form content.
  */
-export function SMSMessageFormContent() {
+export function SMSMessageFormContent(): React.ReactElement {
   // SMS message dialog context.
   const { smsNotification } = useSMSMessageDialogContext();
 
   // Ensure always returns array.
-  const messageVariables = React.useMemo(
-    () => castArray(smsNotification.allowed_variables),
-    [smsNotification.allowed_variables],
+  const messageVariables = React.useMemo<SMSVariable[]>(
+    () => castArray(smsNotification.allowedVariables ?? []),
+    [smsNotification.allowedVariables],
   );
 
   return (
@@ -34,7 +37,7 @@ export function SMSMessageFormContent() {
             <SMSMessageFormFields />
             <SMSMessageVariables>
               {messageVariables.map(({ variable, description }) => (
-                <MessageVariable>
+                <MessageVariable key={variable}>
                   <strong>{`{${variable}}`}</strong> {description}
                 </MessageVariable>
               ))}
@@ -53,12 +56,11 @@ export function SMSMessageFormContent() {
 
 /**
  * SMS Message preview section.
- * @returns {JSX}
  */
-function SMSMessagePreviewSection() {
+function SMSMessagePreviewSection(): React.ReactElement {
   const {
-    values: { message_text: message },
-  } = useFormikContext();
+    values: { messageText: message },
+  } = useFormikContext<SMSMessageFormValues>();
 
   const messagesUnits = getSMSUnits(message);
 

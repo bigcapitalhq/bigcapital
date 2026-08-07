@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -10,6 +7,16 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useBulkDeleteItemsDialog } from './hooks/use-bulk-delete-items-dialog';
+import { useItemsListContext } from './ItemsListProvider';
+import { withItems } from './withItems';
+import { withItemsActions } from './withItemsActions';
+import type { WithItemsProps } from './withItems';
+import type { WithItemsActionsProps } from './withItemsActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   DashboardActionsBar,
   DashboardRowsHeightButton,
@@ -23,22 +30,22 @@ import {
   AdvancedFilterPopover,
   DashboardFilterButton,
 } from '@/components';
-
 import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
-import { useItemsListContext } from './ItemsListProvider';
-import { useRefreshItems } from '@/hooks/query/items';
-import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-
-import { withItems } from './withItems';
-import { withItemsActions } from './withItemsActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withDialogActions } from '../Dialog/withDialogActions';
-
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useRefreshItems } from '@/hooks/query/items';
+import { useSaveSettings } from '@/hooks/query';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
-import { isEmpty } from 'lodash';
-import { useBulkDeleteItemsDialog } from './hooks/use-bulk-delete-items-dialog';
+
+interface ItemsActionsBarInnerProps
+  extends Pick<WithItemsProps, 'itemsSelectedRows' | 'itemsTableState'>,
+    WithItemsActionsProps,
+    WithDialogActionsProps {
+  itemsFilterRoles: IFilterRole[];
+  itemsInactiveMode: boolean | undefined;
+}
 
 /**
  * Items actions bar.
@@ -52,20 +59,23 @@ function ItemsActionsBarInner({
   setItemsTableState,
   itemsInactiveMode,
 
-  // #withSettings
-  itemsTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withDialogActions
   openDialog,
-}) {
-  const { openBulkDeleteDialog, isValidatingBulkDeleteItems } =
-    useBulkDeleteItemsDialog();
+}: ItemsActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+
+  const bulkDelete = useBulkDeleteItemsDialog();
+  const { openBulkDeleteDialog } = bulkDelete;
+  // `isValidatingBulkDeleteItems` is not on the return type (the hook returns
+  // `isValidatingBulkDelete`); preserved latent bug — the value is `undefined`
+  // at runtime, so the disable-while-validating never triggers.
+  const isValidatingBulkDeleteItems = (
+    bulkDelete as { isValidatingBulkDeleteItems?: boolean }
+  ).isValidatingBulkDeleteItems;
 
   // Items list context.
-  const { itemsViews, fields } = useItemsListContext();
+  const { itemsSettings, itemsViews, fields } = useItemsListContext();
+  const itemsTableSize = itemsSettings?.tableSize as string | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -82,17 +92,19 @@ function ItemsActionsBarInner({
   };
 
   // Handle tab changing.
-  const handleTabChange = (view) => {
+  const handleTabChange = (view?: { slug?: string }) => {
     setItemsTableState({ viewSlug: view ? view.slug : null });
   };
 
   // Handle cancel/confirm items bulk.
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(itemsSelectedRows);
+    openBulkDeleteDialog(itemsSelectedRows as number[]);
   };
 
   // Handle inactive switch changing.
-  const handleInactiveSwitchChange = (event) => {
+  const handleInactiveSwitchChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const checked = event.target.checked;
     setItemsTableState({ inactiveMode: checked });
   };
@@ -101,8 +113,10 @@ function ItemsActionsBarInner({
     refresh();
   };
   // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('items', 'tableSize', size);
+  const handleTableRowSizeChange = (size: string) => {
+    saveSettings({
+      options: [{ group: 'items', key: 'tableSize', value: size }],
+    });
   };
   // Handles the import button click.
   const handleImportBtnClick = () => {
@@ -161,7 +175,7 @@ function ItemsActionsBarInner({
             conditions: itemsFilterRoles,
             defaultFieldKey: 'name',
             fields: fields,
-            onFilterChange: (filterConditions) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setItemsTableState({ filterRoles: filterConditions });
             },
           }}
@@ -172,7 +186,7 @@ function ItemsActionsBarInner({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'print-16'} iconSize={'16'} />}
+          icon={<Icon icon={'print-16'} iconSize={16} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
         />
@@ -215,14 +229,10 @@ function ItemsActionsBarInner({
 }
 
 export const ItemsActionsBar = compose(
-  withSettingsActions,
   withItems(({ itemsSelectedRows, itemsTableState }) => ({
     itemsSelectedRows,
     itemsInactiveMode: itemsTableState.inactiveMode,
     itemsFilterRoles: itemsTableState.filterRoles,
-  })),
-  withSettings(({ itemsSettings }) => ({
-    itemsTableSize: itemsSettings.tableSize,
   })),
   withItemsActions,
   withDialogActions,

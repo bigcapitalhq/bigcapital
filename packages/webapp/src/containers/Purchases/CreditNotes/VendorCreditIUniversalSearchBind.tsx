@@ -1,12 +1,11 @@
 // @ts-nocheck
+import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem, Intent } from '@blueprintjs/core';
-
 import { TextStatus, Icon, Choose, T } from '@/components';
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, VendorCreditAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
 /**

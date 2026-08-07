@@ -1,42 +1,46 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { handleDeleteErrors } from '@/containers/Purchases/Bills/BillForm/utils';
 import { useDeleteBill } from '@/hooks/query';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface BillDeleteAlertPayload {
+  billId: number;
+}
+
+interface BillDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: BillDeleteAlertPayload;
+}
 
 /**
  * Bill delete alert.
  */
 function BillDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { billId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { isLoading, mutateAsync: deleteBillMutate } = useDeleteBill();
+}: BillDeleteAlertProps): React.ReactElement {
+  const { isPending: isLoading, mutateAsync: deleteBillMutate } =
+    useDeleteBill();
 
-  // Handle cancel Bill
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete invoice
   const handleConfirmBillDelete = () => {
     deleteBillMutate(billId)
       .then(() => {
@@ -47,11 +51,7 @@ function BillDeleteAlertInner({
         closeDrawer(DRAWERS.BILL_DETAILS);
       })
       .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
           handleDeleteErrors(errors);
         },
       )
@@ -62,8 +62,8 @@ function BillDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon={'trash'}
       intent={Intent.DANGER}
       isOpen={isOpen}

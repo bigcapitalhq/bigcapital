@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { Intent } from '@blueprintjs/core';
 import { useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
+import { AppToaster } from '@/components';
 import { AccountsQueryKeys } from '@/hooks/query/accounts';
 import { CashflowAccountsQueryKeys } from '@/hooks/query/cashflow-accounts';
-import { AppToaster } from '@/components';
-import { Intent } from '@blueprintjs/core';
 
 export function DashboardSockets() {
   const socket = useRef<any>();
@@ -41,4 +41,5 @@ export function DashboardSockets() {
       socket.current.close();
     };
   }, []);
+  return null;
 }

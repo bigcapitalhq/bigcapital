@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   getPaymentMadesTableStateFactory,
   paymentsTableStateChangedFactory,
 } from '@/store/payment-mades/payment-mades.selector';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithPaymentMadeProps {
   paymentMadesTableState: ReturnType<

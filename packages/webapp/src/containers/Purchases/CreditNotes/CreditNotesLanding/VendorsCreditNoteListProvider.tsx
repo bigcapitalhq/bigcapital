@@ -1,54 +1,82 @@
-// @ts-nocheck
-import React from 'react';
 import { isEmpty } from 'lodash';
-
+import React from 'react';
+import type { VendorCreditTableRow } from './components';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
   useResourceMeta,
   useVendorCredits,
   useRefreshVendorCredits,
+  useSettingsVendorCredits,
 } from '@/hooks/query';
-
 import { getFieldsFromResourceMeta } from '@/utils';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
-const VendorsCreditNoteListContext = React.createContext();
+interface VendorsCreditNoteListProviderProps {
+  query?: any;
+  tableStateChanged?: boolean;
+  children?: React.ReactNode;
+}
 
-/**
- * Vendors Credit note data provider.
- */
-function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
-  // Vendor Credits refresh action.
+export interface VendorsCreditNoteListContextValue {
+  vendorCredits: VendorCreditTableRow[] | undefined;
+  pagination: { total?: number; [key: string]: any } | undefined;
+  VendorCreditsViews: any;
+  refresh: () => void;
+  resourceMeta: any;
+  fields: IResourceField[];
+  vendorCreditSettings: SettingsGroup | undefined;
+  isResourceLoading: boolean;
+  isResourceFetching: boolean;
+  isVendorCreditsFetching: boolean;
+  isVendorCreditsLoading: boolean;
+  isViewsLoading: boolean;
+  isEmptyStatus: boolean;
+}
+
+const VendorsCreditNoteListContext =
+  React.createContext<VendorsCreditNoteListContextValue>(
+    {} as VendorsCreditNoteListContextValue,
+  );
+
+function VendorsCreditNoteListProvider({
+  query,
+  tableStateChanged,
+  ...props
+}: VendorsCreditNoteListProviderProps) {
   const { refresh } = useRefreshVendorCredits();
 
-  // Fetch accounts resource views and fields.
   const { data: VendorCreditsViews, isLoading: isViewsLoading } =
     useResourceViews('vendor_credits');
 
-  // Fetch the accounts resource fields.
   const {
     data: resourceMeta,
     isLoading: isResourceLoading,
     isFetching: isResourceFetching,
   } = useResourceMeta('vendor_credits');
 
-  // Fetch vendor credits list.
   const {
     data: vendorCreditsData,
     isLoading: isVendorCreditsLoading,
     isFetching: isVendorCreditsFetching,
-  } = useVendorCredits(query, { keepPreviousData: true });
+  } = useVendorCredits(query);
 
-  // Detarmines the datatable empty status.
+  const listData = vendorCreditsData as
+    | {
+        data?: VendorCreditTableRow[];
+        pagination?: { total?: number; [key: string]: any };
+      }
+    | undefined;
+
+  const { data: vendorCreditSettings } = useSettingsVendorCredits();
+
   const isEmptyStatus =
-    isEmpty(vendorCreditsData?.data) &&
-    !isVendorCreditsLoading &&
-    !tableStateChanged;
+    isEmpty(listData?.data) && !isVendorCreditsLoading && !tableStateChanged;
 
-  // Provider payload.
-  const provider = {
-    vendorCredits: vendorCreditsData?.data,
-    pagination: vendorCreditsData?.pagination,
+  const provider: VendorsCreditNoteListContextValue = {
+    vendorCredits: listData?.data,
+    pagination: listData?.pagination,
     VendorCreditsViews,
     refresh,
 
@@ -56,6 +84,7 @@ function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
     fields: resourceMeta?.fields
       ? getFieldsFromResourceMeta(resourceMeta.fields)
       : [],
+    vendorCreditSettings,
     isResourceLoading,
     isResourceFetching,
 

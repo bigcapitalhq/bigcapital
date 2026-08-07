@@ -1,11 +1,11 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import {
   expensesTableStateChangedFactory,
   getExpensesSelectedRowsFactory,
   getExpensesTableStateFactory,
 } from '@/store/expenses/expenses.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithExpensesProps {
   expensesTableState: ReturnType<

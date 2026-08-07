@@ -1,15 +1,15 @@
+import { Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import styled from 'styled-components';
-import { Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-import { DataTable, AppToaster, TableSkeletonRows } from '@/components';
+import styled from 'styled-components';
 import { useRolesTableColumns, ActionsMenu } from './components';
+import { useRolesContext } from './RolesListProvider';
+import { DataTable, AppToaster, TableSkeletonRows } from '@/components';
 import {
   withAlertActions,
   type WithAlertActionsProps,
 } from '@/containers/Alert/withAlertActions';
-import { useRolesContext } from './RolesListProvider';
 import { compose } from '@/utils';
 
 /**

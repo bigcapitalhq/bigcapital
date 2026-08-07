@@ -1,17 +1,15 @@
 // @ts-nocheck
+import classNames from 'classnames';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
-import { UsersActions } from '@/containers/Preferences/Users/UsersActions';
-import { CurrenciesActions } from '@/containers/Preferences/Currencies/CurrenciesActions';
-import { WarehousesActions } from '@/containers/Preferences/Warehouses/WarehousesActions';
-import { BranchesActions } from '@/containers/Preferences/Branches/BranchesActions';
-import { ApiKeysActions } from '@/containers/Preferences/ApiKeys/ApiKeysActions';
+import { CLASSES } from '@/constants/classes';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
-
+import { ApiKeysActions } from '@/containers/Preferences/ApiKeys/ApiKeysActions';
+import { BranchesActions } from '@/containers/Preferences/Branches/BranchesActions';
+import { CurrenciesActions } from '@/containers/Preferences/Currencies/CurrenciesActions';
+import { UsersActions } from '@/containers/Preferences/Users/UsersActions';
+import { WarehousesActions } from '@/containers/Preferences/Warehouses/WarehousesActions';
 import { compose } from '@/utils';
 
 import '@/style/pages/Preferences/Topbar.scss';

@@ -1,12 +1,11 @@
-// @ts-nocheck
-import React from 'react';
-import { Form } from 'formik';
-import intl from 'react-intl-universal';
 import { Intent, Button } from '@blueprintjs/core';
-import { Link } from 'react-router-dom';
 import { Tooltip2 } from '@blueprintjs/popover2';
+import { Form } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
+import { AuthSubmitButton, AuthenticationLoadingOverlay } from './_components';
 import {
   FFormGroup,
   FInputGroup,
@@ -14,12 +13,11 @@ import {
   Col,
   FormattedMessage as T,
 } from '@/components';
-import { AuthSubmitButton, AuthenticationLoadingOverlay } from './_components';
 
 /**
  * Register form.
  */
-export function RegisterForm({ isSubmitting }) {
+export function RegisterForm({ isSubmitting }: { isSubmitting: boolean }) {
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
   // Handle password revealer changing.
@@ -70,8 +68,8 @@ export function RegisterForm({ isSubmitting }) {
 
       <TermsConditionsText>
         {intl.getHTML('signing_in_or_creating', {
-          terms: (msg) => <Link>{msg}</Link>,
-          privacy: (msg) => <Link>{msg}</Link>,
+          terms: (msg: string) => <Link to={'#'}>{msg}</Link>,
+          privacy: (msg: string) => <Link to={'#'}>{msg}</Link>,
         })}
       </TermsConditionsText>
 

@@ -1,10 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { VendorCreditNoteFormHeaderFields } from './VendorCreditNoteFormHeaderFields';
-import { PageForm } from '@/components/PageForm';
-import { PageFormBigNumber } from '@/components';
 import { useVendorCreditTotalFormatted } from './utils';
+import { VendorCreditNoteFormHeaderFields } from './VendorCreditNoteFormHeaderFields';
+import { PageFormBigNumber } from '@/components';
+import { PageForm } from '@/components/PageForm';
 
 /**
  * Vendor Credit note header.

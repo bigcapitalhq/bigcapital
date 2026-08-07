@@ -1,10 +1,10 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   INVOICES_TABLE_STATE_RESET,
   INVOICES_TABLE_STATE_SET,
   INVOICES_SET_SELECTED_ROWS,
   INVOICES_RESET_SELECTED_ROWS,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 export const setInvoicesTableState = (queries: Partial<TableQuery>) => {
   return {

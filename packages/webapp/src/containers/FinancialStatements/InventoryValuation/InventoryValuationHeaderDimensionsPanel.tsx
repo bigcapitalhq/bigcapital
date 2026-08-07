@@ -1,18 +1,18 @@
+import { FormGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormGroup, Classes } from '@blueprintjs/core';
+import {
+  InventoryValuationHeaderDimensionsProvider,
+  useInventoryValuationHeaderDimensionsPanelContext,
+} from './InventoryValuationHeaderDimensionsPanelProvider';
 import {
   BranchMultiSelect,
   WarehouseMultiSelect,
   Row,
   Col,
 } from '@/components';
-import {
-  InventoryValuationHeaderDimensionsProvider,
-  useInventoryValuationHeaderDimensionsPanelContext,
-} from './InventoryValuationHeaderDimensionsPanelProvider';
-import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Inventory Valuation header dismension panel.

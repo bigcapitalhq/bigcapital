@@ -1,8 +1,8 @@
 import { ComponentType, useMemo } from 'react';
-import { PaymentReceivedMailReceiptProps } from './PaymentReceivedMailReceipt';
+import { defaultPaymentReceiptMailProps } from './_constants';
 import { useSendPaymentReceivedtMailMessage } from './_hooks';
 import { usePaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
-import { defaultPaymentReceiptMailProps } from './_constants';
+import { PaymentReceivedMailReceiptProps } from './PaymentReceivedMailReceipt';
 
 /**
  * Injects props from invoice mail state into the InvoiceMailReceiptPreview component.

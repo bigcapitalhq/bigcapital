@@ -1,9 +1,9 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   VENDOR_CREDITS_NOTES_TABLE_STATE_RESET,
   VENDOR_CREDITS_TABLE_STATE_SET,
   VENDOR_CREDITS_SET_SELECTED_ROWS,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 export const setVendorCreditTableState = (queries: Partial<TableQuery>) => {
   return {

@@ -1,11 +1,19 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { DashboardViewsTabs } from '@/components';
+import React from 'react';
+import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
 import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
-import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
+import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
+
+interface WarehouseTransfersViewTabsInnerProps
+  extends Pick<
+    WithWarehouseTransfersActionsProps,
+    'setWarehouseTransferTableState'
+  > {
+  warehouseTransferCurrentView?: string;
+}
 
 /**
  * Warehouse transfer view tabs.
@@ -16,7 +24,7 @@ function WarehouseTransfersViewTabsInner({
 
   // #withWarehouseTransfersActions
   setWarehouseTransferTableState,
-}) {
+}: WarehouseTransfersViewTabsInnerProps) {
   const { WarehouseTransferView } = useWarehouseTranfersListContext();
 
   const tabs = transfromViewsToTabs(WarehouseTransferView);
@@ -25,7 +33,7 @@ function WarehouseTransfersViewTabsInner({
   const handleClickNewView = () => {};
 
   // Handles the active tab chaing.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string) => {
     setWarehouseTransferTableState({ viewSlug });
   };
 

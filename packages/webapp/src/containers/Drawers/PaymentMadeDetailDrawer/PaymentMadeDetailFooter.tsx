@@ -1,15 +1,7 @@
-// @ts-nocheck
 import React from 'react';
-
-import {
-  T,
-  CommercialDocFooter,
-  DetailsMenu,
-  If,
-  DetailItem,
-} from '@/components';
-import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 import intl from 'react-intl-universal';
+import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
+import { CommercialDocFooter, DetailsMenu, If, DetailItem } from '@/components';
 
 /**
  * Payment made - Details panel - Footer.
@@ -17,10 +9,14 @@ import intl from 'react-intl-universal';
 export function PaymentMadeDetailFooter() {
   const { paymentMade } = usePaymentMadeDetailContext();
 
+  if (!paymentMade) {
+    return null;
+  }
+
   return (
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-        <If condition={paymentMade.statement}>
+        <If condition={!!paymentMade.statement}>
           <DetailItem
             label={intl.get('payment_made.details.statement')}
             multiline

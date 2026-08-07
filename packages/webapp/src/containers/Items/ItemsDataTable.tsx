@@ -1,7 +1,17 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { TABLES } from '@/constants/tables';
+import { useItemsTableColumns, ItemsActionMenuList } from './components';
+import { ItemsEmptyStatus } from './ItemsEmptyStatus';
+import { useItemsListContext } from './ItemsListProvider';
+import { withItems } from './withItems';
+import { withItemsActions } from './withItemsActions';
+import type { ItemTableRow } from './components';
+import type { WithItemsProps } from './withItems';
+import type { WithItemsActionsProps } from './withItemsActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { Row } from 'react-table';
 import { FormattedMessage as T } from '@/components';
 import {
   DashboardContentTable,
@@ -9,21 +19,32 @@ import {
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-
-import { ItemsEmptyStatus } from './ItemsEmptyStatus';
-
-import { withItemsActions } from './withItemsActions';
+import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withItems } from './withItems';
-
-import { useItemsListContext } from './ItemsListProvider';
-import { useItemsTableColumns, ItemsActionMenuList } from './components';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface ItemsDataTableProps
+  extends WithItemsActionsProps,
+    WithAlertActionsProps,
+    WithDialogActionsProps,
+    WithDrawerActionsProps,
+    Pick<WithItemsProps, 'itemsTableState'> {
+  tableProps?: Record<string, unknown>;
+}
+
+interface ActionsMenuPayload {
+  onDeleteItem: (item: ItemTableRow) => void;
+  onEditItem: (item: ItemTableRow) => void;
+  onInactivateItem: (item: ItemTableRow) => void;
+  onActivateItem: (item: ItemTableRow) => void;
+  onMakeAdjustment: (item: ItemTableRow) => void;
+  onDuplicate: (item: ItemTableRow) => void;
+  onViewDetails: (item: ItemTableRow) => void;
+}
 
 /**
  * Items datatable.
@@ -42,18 +63,22 @@ function ItemsDataTableInner({
   // #withDrawerActions
   openDrawer,
 
-  // #withSettings
-  itemsTableSize,
-
   // #withItems
   itemsTableState,
 
   // #ownProps
   tableProps,
-}) {
+}: ItemsDataTableProps) {
   // Items list context.
-  const { items, pagination, isItemsLoading, isEmptyStatus, isItemsFetching } =
-    useItemsListContext();
+  const {
+    items,
+    pagination,
+    isItemsLoading,
+    isEmptyStatus,
+    isItemsFetching,
+    itemsSettings,
+  } = useItemsListContext();
+  const itemsTableSize = itemsSettings?.tableSize as string | undefined;
 
   // Datatable columns.
   const columns = useItemsTableColumns();
@@ -62,7 +87,7 @@ function ItemsDataTableInner({
   const history = useHistory();
 
   // Table row class names.
-  const rowClassNames = (row) => ({
+  const rowClassNames = (row: Row<ItemTableRow>) => ({
     inactive: !row.original.active,
   });
 
@@ -72,7 +97,15 @@ function ItemsDataTableInner({
 
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(
-    ({ pageSize, pageIndex, sortBy }) => {
+    ({
+      pageSize,
+      pageIndex,
+      sortBy,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      sortBy: Array<{ id: string; desc: boolean }>;
+    }) => {
       setItemsTableState({
         pageIndex,
         pageSize,
@@ -84,7 +117,7 @@ function ItemsDataTableInner({
 
   // Handle selected rows change.
   const handleSelectedRowsChange = React.useCallback(
-    (selectedFlatRows) => {
+    (selectedFlatRows: Array<{ original: ItemTableRow }>) => {
       const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
       setItemsSelectedRows(selectedIds);
     },
@@ -92,37 +125,37 @@ function ItemsDataTableInner({
   );
 
   // Handle delete action Item.
-  const handleDeleteItem = ({ id }) => {
+  const handleDeleteItem = ({ id }: ItemTableRow) => {
     openAlert('item-delete', { itemId: id });
   };
 
   // Handle cancel/confirm item inactive.
-  const handleInactiveItem = ({ id }) => {
+  const handleInactiveItem = ({ id }: ItemTableRow) => {
     openAlert('item-inactivate', { itemId: id });
   };
 
   // Handle cancel/confirm item activate.
-  const handleActivateItem = ({ id }) => {
+  const handleActivateItem = ({ id }: ItemTableRow) => {
     openAlert('item-activate', { itemId: id });
   };
 
   // Handle Edit item.
-  const handleEditItem = ({ id }) => {
+  const handleEditItem = ({ id }: ItemTableRow) => {
     history.push(`/items/${id}/edit`);
   };
 
   // Handle item make adjustment.
-  const handleMakeAdjustment = ({ id }) => {
+  const handleMakeAdjustment = ({ id }: ItemTableRow) => {
     openDialog('inventory-adjustment', { itemId: id });
   };
 
   // Display empty status instead of the table.
-  const handleDuplicate = ({ id }) => {
+  const handleDuplicate = ({ id }: ItemTableRow) => {
     history.push(`/items/new?duplicate=${id}`, { action: id });
   };
 
   // Handle view detail item.
-  const handleViewDetailItem = ({ id }) => {
+  const handleViewDetailItem = ({ id }: ItemTableRow) => {
     openDrawer(DRAWERS.ITEM_DETAILS, { itemId: id });
   };
 
@@ -132,8 +165,21 @@ function ItemsDataTableInner({
   }
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (
+    cell: { row: { original: ItemTableRow } },
+    _event: React.MouseEvent,
+  ) => {
     openDrawer(DRAWERS.ITEM_DETAILS, { itemId: cell.row.original.id });
+  };
+
+  const payload: ActionsMenuPayload = {
+    onDeleteItem: handleDeleteItem,
+    onEditItem: handleEditItem,
+    onInactivateItem: handleInactiveItem,
+    onActivateItem: handleActivateItem,
+    onMakeAdjustment: handleMakeAdjustment,
+    onDuplicate: handleDuplicate,
+    onViewDetails: handleViewDetailItem,
   };
 
   return (
@@ -167,15 +213,7 @@ function ItemsDataTableInner({
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
         size={itemsTableSize}
-        payload={{
-          onDeleteItem: handleDeleteItem,
-          onEditItem: handleEditItem,
-          onInactivateItem: handleInactiveItem,
-          onActivateItem: handleActivateItem,
-          onMakeAdjustment: handleMakeAdjustment,
-          onDuplicate: handleDuplicate,
-          onViewDetails: handleViewDetailItem,
-        }}
+        payload={payload}
         noResults={<T id={'there_is_no_items_in_the_table_yet'} />}
         {...tableProps}
       />
@@ -188,8 +226,5 @@ export const ItemsDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withSettings(({ itemsSettings }) => ({
-    itemsTableSize: itemsSettings.tableSize,
-  })),
   withItems(({ itemsTableState }) => ({ itemsTableState })),
 )(ItemsDataTableInner);

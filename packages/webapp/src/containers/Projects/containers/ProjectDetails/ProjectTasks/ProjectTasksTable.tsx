@@ -1,31 +1,31 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { ActionsMenu } from './components';
+import { useProjectTaskColumns } from './hooks';
+import { useProjectTaskContext } from './ProjectTaskProvider';
 import {
   DataTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-import { ActionsMenu } from './components';
-import { useProjectTaskColumns } from './hooks';
-import { useMemorizedColumnsWidths } from '@/hooks';
-import { useProjectTaskContext } from './ProjectTaskProvider';
-import { withSettings } from '@/containers/Settings/withSettings';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
+import { useMemorizedColumnsWidths } from '@/hooks';
+import { useProjectDetailContext } from '../ProjectDetailProvider';
 import { compose } from '@/utils';
 
 function ProjectTaskTableRoot({
-  // #withSettings
-  projectTasksTableSize,
-
   // #withDialog
   openDialog,
   // #withAlertActions
   openAlert,
 }) {
+  // Settings hook.
+  const { projectTasksSettings } = useProjectDetailContext();
+  const projectTasksTableSize = projectTasksSettings?.tableSize;
+
   const { projectTasks } = useProjectTaskContext();
 
   // Retrieve project task table columns.
@@ -72,9 +72,6 @@ function ProjectTaskTableRoot({
 export const ProjectTasksTable = compose(
   withAlertActions,
   withDialogActions,
-  withSettings(({ projectTasksSettings }) => ({
-    projectTasksTableSize: projectTasksSettings?.tableSize,
-  })),
 )(ProjectTaskTableRoot);
 
 const ProjectTaksDataTable = styled(DataTable)`

@@ -1,10 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import { Intent, Menu } from '@blueprintjs/core';
-
+import React from 'react';
+import { useIsSidebarMenuItemActive } from './hooks';
 import { MenuItem, MenuItemLabel } from '@/components';
 import { ISidebarMenuItemType } from '@/containers/Dashboard/Sidebar/interfaces';
-import { useIsSidebarMenuItemActive } from './hooks';
 
 /**
  * Sidebar menu item.

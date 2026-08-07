@@ -1,14 +1,21 @@
-// @ts-nocheck
+import { useFormikContext } from 'formik';
 import React from 'react';
-import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+import {
+  usePaymentMadeIsForeignCustomer,
+  type PaymentMadeFormValues,
+} from './utils';
+import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 
 /**
  * Payment made form currency tag.
- * @returns
  */
 export function PaymentMadeFormCurrencyTag() {
-  const { isForeignVendor, selectVendor } = usePaymentMadeFormContext();
+  const { values } = useFormikContext<PaymentMadeFormValues>();
+  const { vendors } = usePaymentMadeFormContext();
+  const isForeignVendor = usePaymentMadeIsForeignCustomer();
+
+  const selectVendor = vendors?.find((v) => v.id === Number(values.vendorId));
 
   if (!isForeignVendor) {
     return null;
@@ -16,7 +23,7 @@ export function PaymentMadeFormCurrencyTag() {
 
   return (
     <BaseCurrencyRoot>
-      <BaseCurrency currency={selectVendor?.currency_code} />
+      <BaseCurrency currency={selectVendor?.currencyCode} />
     </BaseCurrencyRoot>
   );
 }

@@ -1,26 +1,16 @@
 import React from 'react';
-import * as R from 'ramda';
-import { FinancialSheetSkeleton } from '@/components';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { TrialBalanceSheetTable } from './TrialBalanceSheetTable';
-import {
-  withCurrentOrganization,
-  WithCurrentOrganizationProps,
-} from '@/containers/Organization/withCurrentOrganization';
-
-interface TrialBalanceSheetBodyProps {
-  organizationName: WithCurrentOrganizationProps['organization']['name'];
-}
+import { FinancialSheetSkeleton } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * Trial balance sheet body.
  * @returns {React.JSX}
  */
-function TrialBalanceSheetBodyJSX({
-  // #withCurrentOrganization
-  organizationName,
-}: TrialBalanceSheetBodyProps) {
+function TrialBalanceSheetBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = useTrialBalanceSheetContext();
 
   return (
@@ -34,8 +24,4 @@ function TrialBalanceSheetBodyJSX({
   );
 }
 
-export const TrialBalanceSheetBody = R.compose(
-  withCurrentOrganization(({ organization }: WithCurrentOrganizationProps) => ({
-    organizationName: organization.name,
-  })),
-)(TrialBalanceSheetBodyJSX);
+export const TrialBalanceSheetBody = TrialBalanceSheetBodyJSX;

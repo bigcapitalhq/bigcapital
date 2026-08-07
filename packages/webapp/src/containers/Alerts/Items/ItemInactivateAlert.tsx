@@ -1,37 +1,31 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
-import { useInactivateItem } from '@/hooks/query';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { useInactivateItem } from '@/hooks/query';
 import { compose } from '@/utils';
 
-/**
- * Item inactivate alert.
- */
+interface ItemInactivateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { itemId: number };
+}
+
 function ItemInactivateAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { itemId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: inactivateItem, isLoading } = useInactivateItem();
+}: ItemInactivateAlertProps): React.ReactElement {
+  const { mutateAsync: inactivateItem, isPending } = useInactivateItem();
 
-  // Handle cancel inactivate alert.
   const handleCancelInactivateItem = () => {
     closeAlert(name);
   };
 
-  // Handle confirm item Inactive.
   const handleConfirmItemInactive = () => {
     inactivateItem(itemId)
       .then(() => {
@@ -40,7 +34,7 @@ function ItemInactivateAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -48,13 +42,13 @@ function ItemInactivateAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'inactivate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('inactivate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelInactivateItem}
       onConfirm={handleConfirmItemInactive}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         <T id={'are_sure_to_inactive_this_item'} />

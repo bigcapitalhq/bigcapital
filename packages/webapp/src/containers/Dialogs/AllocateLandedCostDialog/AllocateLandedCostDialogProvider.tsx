@@ -1,19 +1,36 @@
-// @ts-nocheck
-import React from 'react';
 import { defaultTo, get } from 'lodash';
+import React from 'react';
+import {
+  getEntriesByTransactionId,
+  getCostTransactionById,
+  getTransactionEntryById,
+} from './utils';
+import type {
+  AllocateLandedCostBill,
+  AllocateLandedCostDialogContextValue,
+  AllocateLandedCostFormEntry,
+  LandedCostTransaction,
+  LandedCostTransactionEntry,
+} from './types';
 import { DialogContent } from '@/components';
 import {
   useBill,
   useCreateLandedCost,
   useLandedCostTransaction,
 } from '@/hooks/query';
-import {
-  getEntriesByTransactionId,
-  getCostTransactionById,
-  getTransactionEntryById,
-} from './utils';
 
-const AllocateLandedCostDialogContext = React.createContext();
+const AllocateLandedCostDialogContext =
+  React.createContext<AllocateLandedCostDialogContextValue>(
+    // @ts-expect-error — intentionally provide no default; consumers must render inside Provider.
+    {},
+  );
+
+interface AllocateLandedCostDialogProviderProps {
+  billId?: number | null;
+  query?: Record<string, unknown>;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Allocate landed cost provider.
@@ -23,12 +40,17 @@ function AllocateLandedCostDialogProvider({
   query,
   dialogName,
   ...props
-}) {
-  const [transactionsType, setTransactionsType] = React.useState('Bill');
-  const [transactionId, setTransactionId] = React.useState(null);
-  const [transactionEntryId, setTransactionEntryId] = React.useState(null);
+}: AllocateLandedCostDialogProviderProps) {
+  const [transactionsType, setTransactionsType] =
+    React.useState<string>('Bill');
+  const [transactionId, setTransactionId] = React.useState<number | null>(null);
+  const [transactionEntryId, setTransactionEntryId] = React.useState<
+    number | null
+  >(null);
 
   // Handle fetch bill details.
+  // FIXME: SDK `Bill` is camelCase but form code reads `bill.entries` with snake_case
+  // entry fields. Cast to loose `AllocateLandedCostBill` shape.
   const { isLoading: isBillLoading, data: bill } = useBill(billId, {
     enabled: !!billId,
   });
@@ -39,61 +61,75 @@ function AllocateLandedCostDialogProvider({
   } = useLandedCostTransaction(transactionsType, {
     enabled: !!transactionsType,
   });
+  const landedCostTransactionsLoose = React.useMemo(
+    () => (landedCostTransactions as LandedCostTransaction[] | undefined) ?? [],
+    [landedCostTransactions],
+  );
   // Landed cost selected transaction.
   const costTransaction = React.useMemo(
     () =>
       transactionId
-        ? getCostTransactionById(transactionId, landedCostTransactions)
+        ? getCostTransactionById(transactionId, landedCostTransactionsLoose)
         : null,
-    [transactionId, landedCostTransactions],
+    [transactionId, landedCostTransactionsLoose],
   );
   // Retrieve the cost transaction entry.
-  const costTransactionEntry = React.useMemo(
+  const costTransactionEntry = React.useMemo<
+    LandedCostTransactionEntry | undefined
+  >(
     () =>
       costTransaction && transactionEntryId
-        ? getTransactionEntryById(costTransaction, transactionEntryId)
-        : null,
+        ? (getTransactionEntryById(costTransaction, transactionEntryId) as
+            | LandedCostTransactionEntry
+            | undefined)
+        : undefined,
     [costTransaction, transactionEntryId],
   );
   // Retrieve entries of the given transaction id.
-  const costTransactionEntries = React.useMemo(
+  const costTransactionEntries = React.useMemo<LandedCostTransactionEntry[]>(
     () =>
       transactionId
-        ? getEntriesByTransactionId(landedCostTransactions, transactionId)
+        ? (getEntriesByTransactionId(
+            landedCostTransactionsLoose,
+            transactionId,
+          ) as LandedCostTransactionEntry[])
         : [],
-    [landedCostTransactions, transactionId],
+    [landedCostTransactionsLoose, transactionId],
   );
   // Create landed cost mutations.
-  const { mutateAsync: createLandedCostMutate } = useCreateLandedCost();
+  // FIXME: `useCreateLandedCost` requires a `props` argument; original code passed none.
+  const { mutateAsync: createLandedCostMutate } =
+    useCreateLandedCost(undefined);
 
   // Retrieve the unallocate cost amount of cost transaction.
   const unallocatedCostAmount = defaultTo(
-    get(costTransactionEntry, 'unallocated_cost_amount'),
+    get(costTransactionEntry, 'unallocatedCostAmount'),
     0,
   );
 
   // Retrieve the unallocate cost amount of cost transaction.
   const formattedUnallocatedCostAmount = defaultTo(
-    get(costTransactionEntry, 'formatted_unallocated_cost_amount'),
+    get(costTransactionEntry, 'formattedUnallocatedCostAmount'),
     0,
   );
 
   // Provider payload.
-  const provider = {
+  const provider: AllocateLandedCostDialogContextValue = {
     isBillLoading,
-    bill,
+    bill: bill as AllocateLandedCostBill | undefined,
     dialogName,
     query,
     createLandedCostMutate,
     costTransaction,
     costTransactionEntries,
     transactionsType,
-    landedCostTransactions,
+    landedCostTransactions: landedCostTransactionsLoose,
     isLandedCostTransactionsLoading,
     setTransactionsType,
     setTransactionId,
     setTransactionEntryId,
-    costTransactionEntry,
+    costTransactionEntry: (costTransactionEntry ??
+      null) as LandedCostTransactionEntry | null,
     transactionEntryId,
     transactionId,
     billId,
@@ -115,3 +151,5 @@ export {
   AllocateLandedCostDialogProvider,
   useAllocateLandedConstDialogContext,
 };
+
+export type { AllocateLandedCostFormEntry };

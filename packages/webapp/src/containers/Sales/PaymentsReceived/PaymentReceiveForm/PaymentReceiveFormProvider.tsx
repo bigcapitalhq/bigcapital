@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
+import type {
+  PaymentReceiveEditPageResponse,
+  SettingsGroup,
+} from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import { useProjects } from '@/containers/Projects/hooks';
 import {
   useSettingsPaymentReceives,
@@ -13,30 +16,47 @@ import {
   usePaymentReceivedState,
 } from '@/hooks/query';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { useFeatureCan } from '@/hooks/state';
 
 type UseAccountsResult = ReturnType<typeof useAccounts>;
 type UseBranchesResult = ReturnType<typeof useBranches>;
+type UseCustomersResult = ReturnType<typeof useCustomers>;
+type UseProjectsResult = ReturnType<typeof useProjects>;
 type UseGetPdfTemplatesResult = ReturnType<typeof useGetPdfTemplates>;
 type UseCreatePaymentReceiveResult = ReturnType<typeof useCreatePaymentReceive>;
 type UseEditPaymentReceiveResult = ReturnType<typeof useEditPaymentReceive>;
 type UsePaymentReceivedStateResult = ReturnType<typeof usePaymentReceivedState>;
 
-type PaymentReceiveSubmitPayload = Record<string, unknown>;
+type PaymentReceiveSubmitPayload = {
+  redirect?: boolean;
+  resetForm?: boolean;
+  publish?: boolean;
+};
+
+type PaymentReceiveEditPageData =
+  | PaymentReceiveEditPageResponse['data']
+  | undefined;
+type PaymentReceiveEditPageEntries =
+  | PaymentReceiveEditPageResponse['entries']
+  | undefined;
 
 interface PaymentReceiveFormContextValue {
   paymentReceiveId?: number;
-  paymentReceiveEditPage: any;
-  paymentEntriesEditPage: any;
+  paymentReceiveEditPage: PaymentReceiveEditPageData;
+  paymentEntriesEditPage: PaymentReceiveEditPageEntries extends Array<infer T>
+    ? T[]
+    : PaymentReceiveEditPageEntries;
   accounts: UseAccountsResult['data'];
-  customers: any;
+  customers: NonNullable<UseCustomersResult['data']>['data'];
   branches: UseBranchesResult['data'];
-  projects: any;
+  projects: NonNullable<NonNullable<UseProjectsResult['data']>['projects']>;
 
   isPaymentLoading: boolean;
   isAccountsLoading: boolean;
   isPaymentFetching: boolean;
   isCustomersLoading: boolean;
   isFeatureLoading: boolean;
+  isBranchesLoading: boolean;
   isBranchesSuccess: boolean;
   isNewMode: boolean;
 
@@ -57,6 +77,7 @@ interface PaymentReceiveFormContextValue {
   isPaymentReceivedStateLoading: boolean;
   paymentReceivedState: UsePaymentReceivedStateResult['data'];
 
+  paymentReceiveSettings: SettingsGroup | undefined;
   isBootLoading: boolean;
 }
 
@@ -101,7 +122,7 @@ function PaymentReceiveFormProvider({
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Fetch payment made settings.
-  useSettingsPaymentReceives();
+  const { data: paymentReceiveSettings } = useSettingsPaymentReceives();
 
   // Fetches customers list.
   const { data: customersData, isLoading: isCustomersLoading } = useCustomers({
@@ -162,6 +183,7 @@ function PaymentReceiveFormProvider({
     isPaymentFetching,
     isCustomersLoading,
     isFeatureLoading,
+    isBranchesLoading,
     isBranchesSuccess,
     isNewMode,
 
@@ -179,6 +201,8 @@ function PaymentReceiveFormProvider({
 
     isPaymentReceivedStateLoading,
     paymentReceivedState,
+
+    paymentReceiveSettings,
 
     isBootLoading,
   };

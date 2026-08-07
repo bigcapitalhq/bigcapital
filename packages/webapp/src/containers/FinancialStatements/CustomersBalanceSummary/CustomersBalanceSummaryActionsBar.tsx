@@ -7,24 +7,22 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T, DashboardActionsBar } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
+import { CustomerBalanceSummaryExportMenu } from './components';
+import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { withCustomersBalanceSummary } from './withCustomersBalanceSummary';
 import {
   withCustomersBalanceSummaryActions,
   WithCustomersBalanceSummaryActionsProps,
 } from './withCustomersBalanceSummaryActions';
-import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
-import { compose, saveInvoke } from '@/utils';
-import { CustomerBalanceSummaryExportMenu } from './components';
+import { Icon, FormattedMessage as T, DashboardActionsBar } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { compose, saveInvoke } from '@/utils';
 
 interface CustomersBalanceSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;

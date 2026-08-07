@@ -1,10 +1,7 @@
 // @ts-nocheck
-import React from 'react';
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
-
+import React from 'react';
 import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import {
   Icon,
   DrawerActionsBar,
@@ -12,7 +9,7 @@ import {
   Can,
 } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
 
 /**

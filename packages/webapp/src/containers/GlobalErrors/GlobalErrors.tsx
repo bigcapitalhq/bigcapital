@@ -1,10 +1,9 @@
 // @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
-import { AppToaster } from '@/components';
-
 import { withGlobalErrors } from './withGlobalErrors';
 import { withGlobalErrorsActions } from './withGlobalErrorsActions';
+import { AppToaster } from '@/components';
 import { compose } from '@/utils';
 
 let toastKeySessionExpired;

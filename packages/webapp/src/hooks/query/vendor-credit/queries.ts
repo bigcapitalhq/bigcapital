@@ -1,20 +1,4 @@
 import {
-  useQuery,
-  useQueryClient,
-  useMutation,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  CreateVendorCreditBody,
-  EditVendorCreditBody,
-  GetVendorCreditsQuery,
-  BulkDeleteVendorCreditsBody,
-  CreateRefundVendorCreditBody,
-  ApplyVendorCreditToBillsBody,
-  ValidateBulkDeleteVendorCreditsResponse,
-} from '@bigcapital/sdk-ts';
-import {
   fetchVendorCredits,
   fetchVendorCredit,
   createVendorCredit,
@@ -32,16 +16,36 @@ import {
   fetchAppliedBillsToVendorCredit,
   deleteAppliedBillToVendorCredit,
 } from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useQueryClient,
+  useMutation,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { vendorCreditsKeys } from './query-keys';
-import { vendorsKeys } from '../vendors/query-keys';
-import { itemsKeys } from '../items/query-keys';
 import { accountsKeys } from '../accounts/query-keys';
 import { billsKeys } from '../bills/query-keys';
-import { organizationKeys } from '../organization/query-keys';
-import { financialReportsKeys } from '../FinancialReports/query-keys';
-import { settingsKeys } from '../settings/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
+import { financialReportsKeys } from '../FinancialReports/query-keys';
+import { itemsKeys } from '../items/query-keys';
+import { organizationKeys } from '../organization/query-keys';
+import { settingsKeys } from '../settings/query-keys';
+import { vendorsKeys } from '../vendors/query-keys';
+import { vendorCreditsKeys } from './query-keys';
+import type {
+  CreateVendorCreditBody,
+  EditVendorCreditBody,
+  GetVendorCreditsQuery,
+  BulkDeleteVendorCreditsBody,
+  CreateRefundVendorCreditBody,
+  ApplyVendorCreditToBillsBody,
+  ValidateBulkDeleteVendorCreditsResponse,
+  VendorCreditRefund,
+  VendorCreditAppliedBill,
+  VendorCreditsListResponse,
+  VendorCredit,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -169,9 +173,9 @@ export function useValidateBulkDeleteVendorCredits(
  */
 export function useVendorCredits(
   query?: GetVendorCreditsQuery,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: UseQueryOptions<VendorCreditsListResponse, Error>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -182,10 +186,10 @@ export function useVendorCredits(
 
 export function useVendorCredit(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<UseQueryOptions<VendorCredit>, 'queryKey' | 'queryFn'>,
   _requestProps?: unknown,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -244,7 +248,7 @@ export function useDeleteRefundVendorCredit(
 
 export function useRefundVendorCredit(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<UseQueryOptions<VendorCreditRefund[]>, 'queryKey' | 'queryFn'>,
   _requestProps?: unknown,
 ) {
   const fetcher = useApiFetcher();
@@ -299,8 +303,7 @@ export function useReconcileVendorCredit(
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
   _requestProps?: unknown,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: vendorCreditsKeys.reconcile(id),
@@ -311,7 +314,10 @@ export function useReconcileVendorCredit(
 
 export function useReconcileVendorCredits(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<
+    UseQueryOptions<VendorCreditAppliedBill[]>,
+    'queryKey' | 'queryFn'
+  >,
   _requestProps?: unknown,
 ) {
   const fetcher = useApiFetcher();

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { useFormikContext } from 'formik';
 import {
   Button,
   Classes,
@@ -11,6 +10,8 @@ import {
   Position,
   Tooltip,
 } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { useSharePaymentLink } from './SharePaymentLinkProvider';
 import {
   DialogFooterActions,
   FDateInput,
@@ -19,10 +20,9 @@ import {
   Icon,
   Stack,
 } from '@/components';
-import { useSharePaymentLink } from './SharePaymentLinkProvider';
-import { useClipboard } from '@/hooks/utils/useClipboard';
-import { useDialogActions } from '@/hooks/state';
 import { useDialogContext } from '@/components/Dialog/DialogProvider';
+import { useDialogActions } from '@/hooks/state';
+import { useClipboard } from '@/hooks/utils/useClipboard';
 
 export function SharePaymentLinkFormContent() {
   const { url } = useSharePaymentLink();

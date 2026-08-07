@@ -1,8 +1,13 @@
-// @ts-nocheck
-import intl from 'react-intl-universal';
-import * as R from 'ramda';
 import { isUndefined } from 'lodash';
+import * as R from 'ramda';
+import intl from 'react-intl-universal';
+import type { AccountDialogPayload } from './types';
 import { defaultFastFieldShouldUpdate } from '@/utils';
+import { Account } from '@bigcapital/sdk-ts';
+
+interface ResponseError {
+  type: string;
+}
 
 export const AccountDialogAction = {
   Edit: 'edit',
@@ -13,8 +18,8 @@ export const AccountDialogAction = {
 /**
  * Transformes the response API errors.
  */
-export const transformApiErrors = (errors) => {
-  const fields = {};
+export const transformApiErrors = (errors: ResponseError[]) => {
+  const fields: Record<string, string> = {};
   if (errors.find((e) => e.type === 'account_code_required')) {
     fields.code = intl.get('account_code_is_required');
   }
@@ -30,7 +35,7 @@ export const transformApiErrors = (errors) => {
   if (
     errors.find((e) => e.type === 'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT')
   ) {
-    fields.parent_account_id = intl.get(
+    fields.parentAccountId = intl.get(
       'accounts.error.account_currency_not_same_parent_account',
     );
   }
@@ -40,10 +45,13 @@ export const transformApiErrors = (errors) => {
 /**
  * Payload transformer in account edit mode.
  */
-function tranformNewChildAccountPayload(account, payload) {
+function tranformNewChildAccountPayload(
+  _account: Account | undefined,
+  payload: AccountDialogPayload,
+) {
   return {
-    parent_account_id: payload.parentAccountId || '',
-    account_type: payload.accountType || '',
+    parentAccountId: payload.parentAccountId || '',
+    accountType: payload.accountType || '',
     subaccount: true,
   };
 }
@@ -51,33 +59,46 @@ function tranformNewChildAccountPayload(account, payload) {
 /**
  * Payload transformer in new account with defined type.
  */
-function transformNewDefinedTypePayload(account, payload) {
+function transformNewDefinedTypePayload(
+  _account: Account | undefined,
+  payload: AccountDialogPayload,
+) {
   return {
-    account_type: payload.accountType || '',
+    accountType: payload.accountType || '',
   };
 }
 
 /**
  * Merged the fetched account with transformed payload.
  */
-const mergeWithAccount = R.curry((transformed, account) => {
-  return {
-    ...account,
-    ...transformed,
-  };
-});
+const mergeWithAccount = R.curry(
+  (transformed: Record<string, unknown>, account: Account | undefined) => {
+    return {
+      ...account,
+      ...transformed,
+    };
+  },
+);
 
 /**
  * Default account payload transformer.
  */
-const defaultPayloadTransform = (account, payload) => ({
-  subaccount: !!account.parent_account_id,
+const defaultPayloadTransform = (
+  account: Account | undefined,
+  _payload: AccountDialogPayload,
+) => ({
+  subaccount: !!account?.parentAccountId,
 });
+
+type AccountTransformer = (
+  account: Account | undefined,
+  payload: AccountDialogPayload,
+) => Record<string, unknown>;
 
 /**
  * Defined payload transformers.
  */
-function getConditions() {
+function getConditions(): Array<[string, AccountTransformer?]> {
   return [
     [AccountDialogAction.Edit],
     [AccountDialogAction.NewChild, tranformNewChildAccountPayload],
@@ -88,12 +109,14 @@ function getConditions() {
 /**
  * Transformes the given payload to account form initial values.
  */
-export const transformAccountToForm = (account, payload) => {
+export const transformAccountToForm = (
+  account: Account | undefined,
+  payload: AccountDialogPayload,
+) => {
   const conditions = getConditions();
-
   const results = conditions.map((condition) => {
-    const transformer = !isUndefined(condition[1])
-      ? condition[1]
+    const transformer: AccountTransformer = !isUndefined(condition[1])
+      ? (condition[1] as AccountTransformer)
       : defaultPayloadTransform;
 
     return [
@@ -101,13 +124,18 @@ export const transformAccountToForm = (account, payload) => {
       mergeWithAccount(transformer(account, payload)),
     ];
   });
-  return R.cond(results)(account);
+  // ramda's `cond` overload is finicky with our heterogeneous pairs.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (R.cond as any)(results)(account);
 };
 
 /**
  * Detarmines whether the for fields are disabled.
  */
-export const getDisabledFormFields = (account, payload) => {
+export const getDisabledFormFields = (
+  _account: Account | undefined,
+  payload: AccountDialogPayload,
+) => {
   return {
     accountType:
       payload.action === AccountDialogAction.Edit ||
@@ -122,7 +150,10 @@ export const getDisabledFormFields = (account, payload) => {
  * @param oldProps
  * @returns {boolean}
  */
-export const parentAccountShouldUpdate = (newProps, oldProps) => {
+export const parentAccountShouldUpdate = (
+  newProps: { formik: { values: { subaccount: boolean } } },
+  oldProps: { formik: { values: { subaccount: boolean } } },
+) => {
   return (
     newProps.formik.values.subaccount !== oldProps.formik.values.subaccount ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -132,12 +163,15 @@ export const parentAccountShouldUpdate = (newProps, oldProps) => {
 /**
  * Transformes the form values to the request.
  */
-export const transformFormToReq = (form) => {
+export const transformFormToReq = (form: Record<string, unknown>) => {
   return R.compose(
     R.omit(['subaccount']),
     R.when(
       R.propSatisfies(R.equals(R.__, false), 'subaccount'),
-      R.assoc(['parent_account_id'], ''),
+      // FIXME: latent bug — `R.assoc` expects a string key, not an array.
+      // Preserved from original; runtime coerces array to string.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      R.assoc(['parentAccountId'] as any, '') as any,
     ),
   )(form);
 };

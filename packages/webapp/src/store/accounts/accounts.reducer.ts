@@ -1,13 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import type { TableQuery } from '@/store/store.types';
 import { createTableStateReducers } from '@/store/table-state.reducer';
 import { RESET, ACCOUNTS_SET_SELECTED_ROWS } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 interface AccountsState {
   tableState: Partial<TableQuery>;
-  selectedRows: Array<unknown>;
+  selectedRows: number[];
 }
 
 export const defaultTableQuery: Partial<TableQuery> = {
@@ -34,7 +34,7 @@ const reducerInstance = createReducer(initialState, {
 
   [ACCOUNTS_SET_SELECTED_ROWS]: (
     state: AccountsState,
-    action: { payload: Array<unknown> },
+    action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
   },

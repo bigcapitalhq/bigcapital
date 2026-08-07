@@ -1,17 +1,22 @@
-// @ts-nocheck
-import React, { useCallback } from 'react';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import React, { useCallback } from 'react';
+import { usePaymentMadeEntriesTableColumns } from './components';
+import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
+import type { PaymentMadeEntry, PaymentMadeFormValues } from './utils';
 import {
   DataTableEditable,
   CloudLoadingIndicator,
   FormattedMessage as T,
 } from '@/components';
-
 import { CLASSES } from '@/constants/classes';
-import { usePaymentMadeEntriesTableColumns } from './components';
-import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
 import { compose, updateTableCell } from '@/utils';
-import { useFormikContext } from 'formik';
+
+type PaymentMadeEntriesTableProps = {
+  onUpdateData: (entries: PaymentMadeEntry[]) => void;
+  entries: PaymentMadeEntry[];
+  currencyCode: string;
+};
 
 /**
  * Payment made items table.
@@ -20,7 +25,7 @@ export function PaymentMadeEntriesTable({
   onUpdateData,
   entries,
   currencyCode,
-}) {
+}: PaymentMadeEntriesTableProps) {
   // Payment made inner context.
   const { isNewEntriesFetching } = usePaymentMadeInnerContext();
 
@@ -29,13 +34,13 @@ export function PaymentMadeEntriesTable({
 
   // Formik context.
   const {
-    values: { vendor_id },
+    values: { vendorId },
     errors,
-  } = useFormikContext();
+  } = useFormikContext<PaymentMadeFormValues>();
 
   // Handle update data.
   const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
+    (rowIndex: number, columnId: string, value: unknown) => {
       const newRows = compose(updateTableCell(rowIndex, columnId, value))(
         entries,
       );
@@ -45,7 +50,7 @@ export function PaymentMadeEntriesTable({
   );
   // Detarmines the right no results message before selecting vendor and after
   // selecting vendor id.
-  const noResultsMessage = vendor_id ? (
+  const noResultsMessage = vendorId ? (
     <T
       id={
         'there_is_no_payable_bills_for_this_vendor_that_can_be_applied_for_this_payment'
@@ -57,6 +62,7 @@ export function PaymentMadeEntriesTable({
 
   return (
     <CloudLoadingIndicator isLoading={isNewEntriesFetching}>
+      {/* @ts-expect-error DataTableEditable requires actions/name props not provided here */}
       <DataTableEditable
         progressBarLoading={isNewEntriesFetching}
         className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
@@ -64,7 +70,7 @@ export function PaymentMadeEntriesTable({
         data={entries}
         spinnerProps={false}
         payload={{
-          errors: errors?.entries || [],
+          errors: (errors?.entries || []) as unknown[],
           updateData: handleUpdateData,
           currencyCode,
         }}

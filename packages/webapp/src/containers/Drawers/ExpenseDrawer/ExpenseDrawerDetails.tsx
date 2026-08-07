@@ -1,13 +1,10 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
-import { CommercialDocBox } from '@/components';
-
 import { ExpenseDrawerActionBar } from './ExpenseDrawerActionBar';
+import { ExpenseDrawerFooter } from './ExpenseDrawerFooter';
 import { ExpenseDrawerHeader } from './ExpenseDrawerHeader';
 import { ExpenseDrawerTable } from './ExpenseDrawerTable';
-import { ExpenseDrawerFooter } from './ExpenseDrawerFooter';
+import { CommercialDocBox } from '@/components';
 
 /**
  * Expense view details.

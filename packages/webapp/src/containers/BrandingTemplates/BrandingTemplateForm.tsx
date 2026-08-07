@@ -1,6 +1,8 @@
 // @ts-nocheck
-import * as Yup from 'yup';
+import { Intent } from '@blueprintjs/core';
+import { FormikHelpers } from 'formik';
 import { useState } from 'react';
+import * as Yup from 'yup';
 import {
   ElementCustomize,
   ElementCustomizeProps,
@@ -11,15 +13,13 @@ import {
   useBrandingState,
   useBrandingTemplateFormInitialValues,
 } from './_utils';
+import { BrandingTemplateValues, BrandingState } from './types';
 import { AppToaster } from '@/components';
-import { Intent } from '@blueprintjs/core';
+import { useUploadAttachments } from '@/hooks/query/attachments';
 import {
   useCreatePdfTemplate,
   useEditPdfTemplate,
 } from '@/hooks/query/pdf-templates';
-import { FormikHelpers } from 'formik';
-import { BrandingTemplateValues, BrandingState } from './types';
-import { useUploadAttachments } from '@/hooks/query/attachments';
 import { excludePrivateProps } from '@/utils';
 
 interface BrandingTemplateFormProps<

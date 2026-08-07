@@ -1,12 +1,13 @@
 import React, { createContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useWatchItemError } from './utils';
 import type {
   Item,
   AccountsList,
   TaxRatesListResponse,
   CreateItemBody,
   EditItemBody,
-  ItemsCategoriesListResult,
+  ItemCategoriesListResponse,
 } from '@bigcapital/sdk-ts';
 import {
   useItem,
@@ -16,7 +17,6 @@ import {
   useEditItem,
   useAccounts,
 } from '@/hooks/query';
-import { useWatchItemError } from './utils';
 import { useTaxRates } from '@/hooks/query/tax-rates';
 
 type ItemFormSubmitPayload = {
@@ -30,10 +30,10 @@ type ItemFormProviderProps = {
 
 type ItemFormContextValue = {
   itemId?: number;
-  accounts: AccountsList | undefined;
+  accounts: AccountsList;
   item: Item | undefined;
-  itemsCategories: ItemsCategoriesListResult['itemsCategories'];
-  taxRates: TaxRatesListResponse | undefined;
+  itemsCategories: ItemCategoriesListResponse;
+  taxRates: TaxRatesListResponse;
   submitPayload: ItemFormSubmitPayload;
   isNewMode: boolean;
 
@@ -63,7 +63,7 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
   // Fetches the items categories list.
-  const { isLoading: isItemsCategoriesLoading, data: itemsCategoriesData } =
+  const { isLoading: isItemsCategoriesLoading, data: itemsCategories } =
     useItemsCategories();
 
   const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
@@ -72,7 +72,6 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
   const itemQuery = useItem(itemId || (duplicateId as number | undefined), {
     enabled: !!itemId || !!duplicateId,
   });
-
   const { isLoading: isItemLoading, data: item } = itemQuery;
 
   // Watches and handles item not found response error.
@@ -102,10 +101,10 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
   // Provider state.
   const provider: ItemFormContextValue = {
     itemId,
-    accounts,
+    accounts: accounts ?? [],
     item,
-    itemsCategories: itemsCategoriesData?.itemsCategories ?? [],
-    taxRates,
+    itemsCategories: itemsCategories ?? [],
+    taxRates: taxRates ?? [],
     submitPayload,
     isNewMode,
 

@@ -1,7 +1,15 @@
-// @ts-nocheck
-import React, { useState, createContext } from 'react';
 import { omit } from 'lodash';
+import type {
+  ContactResponse,
+  CreateVendorBody,
+  CurrenciesListResponse,
+  BranchesListResponse,
+  EditVendorBody,
+  Vendor,
+} from '@bigcapital/sdk-ts';
+import React, { useState, createContext } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Features } from '@/constants';
 import {
   useVendor,
   useContact,
@@ -10,24 +18,66 @@ import {
   useEditVendor,
   useBranches,
 } from '@/hooks/query';
-import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
-const VendorFormContext = createContext();
+type UseEditVendorResult = ReturnType<typeof useEditVendor>;
+type UseCreateVendorResult = ReturnType<typeof useCreateVendor>;
+
+type VendorFormSubmitPayload = {
+  noRedirect?: boolean;
+};
+
+type VendorFormContextValue = {
+  vendorId?: number;
+  vendor?: Vendor | undefined;
+  currencies: CurrenciesListResponse;
+  branches: BranchesListResponse;
+  contactDuplicate: Partial<ContactResponse>;
+  submitPayload: VendorFormSubmitPayload;
+  isNewMode: boolean;
+
+  isVendorLoading: boolean;
+  isCurrenciesLoading: boolean;
+  isBranchesSuccess: boolean;
+  isFormLoading: boolean;
+
+  setSubmitPayload: React.Dispatch<
+    React.SetStateAction<VendorFormSubmitPayload>
+  >;
+
+  editVendorMutate: UseEditVendorResult['mutateAsync'];
+  createVendorMutate: UseCreateVendorResult['mutateAsync'];
+};
+
+type VendorFormProviderProps = {
+  query?: Record<string, unknown>;
+  vendorId?: number;
+  children?: React.ReactNode;
+};
+
+const VendorFormContext = createContext<VendorFormContextValue | undefined>(
+  undefined,
+);
 
 /**
  * Vendor form provider.
  */
-function VendorFormProvider({ query, vendorId, ...props }) {
-  const { state } = useLocation();
-  const contactId = state?.action;
+function VendorFormProvider({
+  query,
+  vendorId,
+  children,
+}: VendorFormProviderProps) {
+  const { state } = useLocation<{ action?: number | string }>();
+  const contactId =
+    typeof state?.action === 'number' ? state.action : undefined;
 
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch Currencies data table
-  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
+  const { data: currencies, isLoading: isCurrenciesLoading } =
+    useCurrencies(undefined);
 
   // Handle fetch vendor details.
   const { data: vendor, isLoading: isVendorLoading } = useVendor(vendorId, {
@@ -51,10 +101,12 @@ function VendorFormProvider({ query, vendorId, ...props }) {
   const { mutateAsync: editVendorMutate } = useEditVendor();
 
   // Form submit payload.
-  const [submitPayload, setSubmitPayload] = useState({});
+  const [submitPayload, setSubmitPayload] = useState<VendorFormSubmitPayload>(
+    {},
+  );
 
   // determines whether the form new or duplicate mode.
-  const isNewMode = contactId || !vendorId;
+  const isNewMode = Boolean(contactId) || !vendorId;
 
   const isFormLoading =
     isVendorLoading ||
@@ -62,26 +114,42 @@ function VendorFormProvider({ query, vendorId, ...props }) {
     isCurrenciesLoading ||
     isBranchesLoading;
 
-  const provider = {
+  const provider: VendorFormContextValue = {
     vendorId,
-    currencies,
+    currencies: currencies ?? [],
     vendor,
-    branches,
-    contactDuplicate: { ...omit(contactDuplicate, ['opening_balance_at']) },
+    branches: branches ?? [],
+    contactDuplicate: contactDuplicate
+      ? { ...omit(contactDuplicate, ['opening_balance_at']) }
+      : {},
     submitPayload,
-
     isNewMode,
     isFormLoading,
     isBranchesSuccess,
+    isVendorLoading,
+    isCurrenciesLoading,
 
     createVendorMutate,
     editVendorMutate,
     setSubmitPayload,
   };
 
-  return <VendorFormContext.Provider value={provider} {...props} />;
+  return (
+    <VendorFormContext.Provider value={provider}>
+      {children}
+    </VendorFormContext.Provider>
+  );
 }
 
-const useVendorFormContext = () => React.useContext(VendorFormContext);
+const useVendorFormContext = () => {
+  const ctx = React.useContext(VendorFormContext);
+  if (!ctx) {
+    throw new Error(
+      'useVendorFormContext must be used within a VendorFormProvider',
+    );
+  }
+  return ctx;
+};
 
 export { VendorFormProvider, useVendorFormContext };
+export type { VendorFormSubmitPayload };

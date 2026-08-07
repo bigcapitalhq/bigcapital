@@ -1,11 +1,6 @@
-// @ts-nocheck
 import React from 'react';
+import { DialogsName } from './dialogs';
 import { FormattedMessage as T } from '@/components';
-import { Features } from '@/constants/features';
-import {
-  ISidebarMenuItemType,
-  ISidebarMenuOverlayIds,
-} from '@/containers/Dashboard/Sidebar/interfaces';
 import {
   ReportsAction,
   AbilitySubject,
@@ -26,9 +21,32 @@ import {
   PreferencesAbility,
   TaxRateAction,
 } from '@/constants/abilityOption';
-import { DialogsName } from './dialogs';
+import { Features } from '@/constants/features';
+import {
+  ISidebarMenuItemType,
+  ISidebarMenuOverlayIds,
+} from '@/containers/Dashboard/Sidebar/interfaces';
 
-export const SidebarMenu = [
+export interface SidebarMenuItemPermission {
+  subject: string;
+  ability: string;
+}
+
+export interface SidebarMenuItem {
+  text: React.ReactNode;
+  type: ISidebarMenuItemType;
+  disabled?: boolean;
+  href?: string;
+  matchExact?: boolean;
+  overlayId?: ISidebarMenuOverlayIds;
+  dialogName?: DialogsName;
+  divider?: boolean;
+  feature?: string;
+  permission?: SidebarMenuItemPermission;
+  children?: SidebarMenuItem[];
+}
+
+export const SidebarMenu: SidebarMenuItem[] = [
   // ---------------
   // # Homepage
   // ---------------

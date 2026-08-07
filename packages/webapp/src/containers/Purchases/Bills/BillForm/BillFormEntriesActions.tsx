@@ -1,10 +1,8 @@
-// @ts-nocheck
-import styled from 'styled-components';
 import { useFormikContext } from 'formik';
+import styled from 'styled-components';
+import { composeEntriesOnEditInclusiveTax, type BillFormValues } from './utils';
 import { FFormGroup, FSelect } from '@/components';
 import { InclusiveTaxOptions } from '@/constants/InclusiveTaxOptions';
-
-import { composeEntriesOnEditInclusiveTax } from './utils';
 import { EntriesActionsBar } from '@/containers/Entries/EntriesActionBar';
 
 export function BillFormEntriesActions() {
@@ -15,30 +13,32 @@ export function BillFormEntriesActions() {
   );
 }
 
+type InclusiveTaxOption = { key: string; label: string };
+
 /**
  * Bill exclusive/inclusive select.
  * @returns {React.ReactNode}
  */
-export function BillExclusiveInclusiveSelect(props) {
-  const { values, setFieldValue } = useFormikContext();
+export function BillExclusiveInclusiveSelect(props: Record<string, unknown>) {
+  const { values, setFieldValue } = useFormikContext<BillFormValues>();
 
-  const handleItemSelect = (item) => {
+  const handleItemSelect = (item: InclusiveTaxOption) => {
     const newEntries = composeEntriesOnEditInclusiveTax(
       item.key,
       values.entries,
     );
-    setFieldValue('inclusive_exclusive_tax', item.key);
+    setFieldValue('inclusiveExclusiveTax', item.key);
     setFieldValue('entries', newEntries);
   };
 
   return (
     <InclusiveFormGroup
-      name={'inclusive_exclusive_tax'}
+      name={'inclusiveExclusiveTax'}
       label={'Amounts are'}
       inline={true}
     >
       <FSelect
-        name={'inclusive_exclusive_tax'}
+        name={'inclusiveExclusiveTax'}
         items={InclusiveTaxOptions}
         textAccessor={'label'}
         labelAccessor={() => ''}

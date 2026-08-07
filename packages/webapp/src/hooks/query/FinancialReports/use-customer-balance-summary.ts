@@ -1,15 +1,19 @@
 import {
-  useQuery,
-  useMutation,
-  UseQueryOptions,
-  UseMutationOptions,
-} from '@tanstack/react-query';
-import {
   fetchCustomerBalanceTable,
   fetchCustomerBalanceXlsx,
   fetchCustomerBalanceCsv,
   fetchCustomerBalancePdf,
 } from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
 import type {
   CustomerBalanceTableQuery,
   CustomerBalanceTableResponse,
@@ -17,10 +21,6 @@ import type {
   CustomerBalanceCsvQuery,
   CustomerBalancePdfQuery,
 } from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../../useRequest';
-import { useFetcherPdf } from '../../useRequestPdf';
-import { downloadFile } from '../../useDownloadFile';
-import { financialReportsKeys } from './query-keys';
 
 export function useCustomerBalanceSummaryReport(
   query: CustomerBalanceTableQuery,

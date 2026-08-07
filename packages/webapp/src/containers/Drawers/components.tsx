@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import moment from 'moment';
+import React from 'react';
 import { Icon, If, Money } from '@/components';
 
 export const TemplateHeader = ({ defaultLabels }) => (

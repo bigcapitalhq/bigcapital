@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Button,
   Classes,
@@ -9,6 +8,16 @@ import {
   Text,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import React from 'react';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { FinancialComputeAlert } from '../FinancialReportPage';
+import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
+import { dynamicColumns } from './utils';
+import { useInventoryValuationHttpQuery } from './utils2';
+import type {
+  InventoryItemDetailsXlsxQuery,
+  InventoryItemDetailsCsvQuery,
+} from '@bigcapital/sdk-ts';
 import {
   AppToaster,
   Icon,
@@ -16,20 +25,10 @@ import {
   Stack,
   FormattedMessage as T,
 } from '@/components';
-
-import { dynamicColumns } from './utils';
-import { FinancialLoadingBar } from '../FinancialLoadingBar';
 import {
   useInventoryItemDetailsCsvExport,
   useInventoryItemDetailsXlsxExport,
 } from '@/hooks/query';
-import type {
-  InventoryItemDetailsXlsxQuery,
-  InventoryItemDetailsCsvQuery,
-} from '@bigcapital/sdk-ts';
-import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
-import { FinancialComputeAlert } from '../FinancialReportPage';
-import { useInventoryValuationHttpQuery } from './utils2';
 
 /**
  * Retrieve inventory item details columns.

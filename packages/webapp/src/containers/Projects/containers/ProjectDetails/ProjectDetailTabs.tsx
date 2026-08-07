@@ -1,12 +1,12 @@
 // @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import intl from 'react-intl-universal';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { ProjectTimeSheets } from './ProjectTimeSheets';
-import { ProjectTasks } from './ProjectTasks';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import { ProjectPurchasesTableRoot as ProjectPurchasesTable } from './ProjectPurchasesTable';
 import { ProjectSalesTableRoot as ProjectSalesTable } from './ProjectSalesTable';
+import { ProjectTasks } from './ProjectTasks';
+import { ProjectTimeSheets } from './ProjectTimeSheets';
 
 /**
  * Project detail tabs.

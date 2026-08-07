@@ -1,5 +1,6 @@
-// @ts-nocheck
 import React from 'react';
+import intl from 'react-intl-universal';
+import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import {
   CommercialDocFooter,
   T,
@@ -8,30 +9,30 @@ import {
   DetailItem,
 } from '@/components';
 
-import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
-import intl from 'react-intl-universal';
-
 /**
  * Receipt details footer
- * @returns {React.JSX}
  */
 export function ReceiptDetailFooter() {
   const { receipt } = useReceiptDetailDrawerContext();
 
+  if (!receipt) {
+    return null;
+  }
+
   return (
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-        <If condition={receipt.statement}>
+        <If condition={!!receipt.statement}>
           <DetailItem label={intl.get('receipt.details.statement')} multiline>
             {receipt.statement}
           </DetailItem>
         </If>
-        <If condition={receipt.receipt_message}>
+        <If condition={!!receipt.receiptMessage}>
           <DetailItem
             label={intl.get('receipt.details.receipt_message')}
             multiline
           >
-            {receipt.receipt_message}
+            {receipt.receiptMessage}
           </DetailItem>
         </If>
       </DetailsMenu>

@@ -1,18 +1,18 @@
-import { useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { PurchasesByItemsActionsBar } from './PurchasesByItemsActionsBar';
-import { PurchasesByItemsHeader } from './PurchasesByItemsHeader';
-import { FinancialStatement, DashboardPageContent } from '@/components';
+import { useEffect, useCallback } from 'react';
 import { PurchasesByItemsLoadingBar } from './components';
-import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
+import { PurchasesByItemsActionsBar } from './PurchasesByItemsActionsBar';
 import { PurchasesByItemsBody } from './PurchasesByItemsBody';
+import { PurchasesByItemsDialogs } from './PurchasesByItemsDialogs';
+import { PurchasesByItemsHeader } from './PurchasesByItemsHeader';
+import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
 import { usePurchasesByItemsQuery } from './utils';
-import { compose } from '@/utils';
 import {
   withPurchasesByItemsActions,
   WithPurchasesByItemsActionsProps,
 } from './withPurchasesByItemsActions';
-import { PurchasesByItemsDialogs } from './PurchasesByItemsDialogs';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+import { compose } from '@/utils';
 
 interface PurchasesByItemsProps {
   togglePurchasesByItemsFilterDrawer: WithPurchasesByItemsActionsProps['togglePurchasesByItemsFilterDrawer'];

@@ -1,8 +1,8 @@
-import { Box } from '@/components';
-import { CreditNoteCustomizeContent } from './CreditNoteCustomizeContent';
 import { Classes } from '@blueprintjs/core';
-import { BrandingTemplateBoot } from '@/containers/BrandingTemplates/BrandingTemplateBoot';
+import { CreditNoteCustomizeContent } from './CreditNoteCustomizeContent';
+import { Box } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { BrandingTemplateBoot } from '@/containers/BrandingTemplates/BrandingTemplateBoot';
 
 export function CreditNoteCustomizeDrawerBody() {
   const { payload } = useDrawerContext();

@@ -9,6 +9,8 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { DiscountType } from '@/common/types/Discount';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import type { Branch } from '@/modules/Branches/models/Branch.model';
+import type { Customer } from '@/modules/Customers/models/Customer';
 import { ISearchRole } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { sanitizeSortDirection } from '@/modules/DynamicListing/DynamicFilter/sanitizeSortDirection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
@@ -64,6 +66,8 @@ export class SaleInvoice extends TenantBaseModel {
   public attachments!: Document[];
   public writtenoffExpenseAccount!: Account;
   public paymentMethods!: TransactionPaymentServiceEntry[];
+  public branch?: Branch;
+  public customer?: Customer;
   /**
    * Table name
    */

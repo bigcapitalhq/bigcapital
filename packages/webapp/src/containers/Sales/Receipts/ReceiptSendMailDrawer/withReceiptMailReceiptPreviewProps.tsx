@@ -1,11 +1,11 @@
 import { ComponentType, useMemo } from 'react';
+import { defaultReceiptMailProps } from './_constants';
+import { useSendReceiptMailMessage } from './_hooks';
+import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
 import {
   ReceiptSendMailReceipt,
   ReceiptSendMailReceiptProps,
 } from './ReceiptSendMailReceipt';
-import { useSendReceiptMailMessage } from './_hooks';
-import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
-import { defaultReceiptMailProps } from './_constants';
 
 /**
  * Injects props from receipt mail state into the `ReceiptMailPreviewConnected` component.

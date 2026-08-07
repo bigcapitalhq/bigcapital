@@ -1,25 +1,32 @@
-// @ts-nocheck
-import * as Yup from 'yup';
-import * as R from 'ramda';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
-import { FormatNumber } from '@/components';
+import * as R from 'ramda';
+import * as Yup from 'yup';
 import { usePaymentReceiveFormContext } from '../../PaymentReceiveFormProvider';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePaymentReceivedTotalExceededAmount } from '../../utils';
+import { FormatNumber } from '@/components';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-interface ExcessPaymentValues {}
+type ExcessPaymentValues = Record<string, never>;
 
-export function ExcessPaymentDialogContentRoot({ dialogName, closeDialog }) {
-  const {
-    submitForm,
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+type WithDialogActionsProps = {
+  closeDialog: (name: string) => void;
+};
+
+type ExcessPaymentDialogContentRootProps = WithDialogActionsProps & {
+  dialogName: string;
+};
+
+export function ExcessPaymentDialogContentRoot({
+  dialogName,
+  closeDialog,
+}: ExcessPaymentDialogContentRootProps) {
+  const { submitForm, values } = useFormikContext<{ currencyCode?: string }>();
   const { setIsExcessConfirmed } = usePaymentReceiveFormContext();
   const exceededAmount = usePaymentReceivedTotalExceededAmount();
 
   const handleSubmit = (
-    values: ExcessPaymentValues,
+    _values: ExcessPaymentValues,
     { setSubmitting }: FormikHelpers<ExcessPaymentValues>,
   ) => {
     setSubmitting(true);
@@ -35,11 +42,19 @@ export function ExcessPaymentDialogContentRoot({ dialogName, closeDialog }) {
   };
 
   return (
-    <Formik initialValues={{}} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={{} as ExcessPaymentValues}
+      validationSchema={Yup.object().shape({})}
+      onSubmit={handleSubmit}
+    >
       <Form>
         <ExcessPaymentDialogContentForm
           exceededAmount={
-            <FormatNumber value={exceededAmount} currency={currencyCode} />
+            <FormatNumber
+              value={exceededAmount}
+              currency={values.currencyCode}
+              noZero={false}
+            />
           }
           onClose={handleClose}
         />
@@ -52,7 +67,15 @@ export const ExcessPaymentDialogContent = R.compose(withDialogActions)(
   ExcessPaymentDialogContentRoot,
 );
 
-function ExcessPaymentDialogContentForm({ onClose, exceededAmount }) {
+type ExcessPaymentDialogContentFormProps = {
+  onClose?: () => void;
+  exceededAmount: React.ReactNode;
+};
+
+function ExcessPaymentDialogContentForm({
+  onClose,
+  exceededAmount,
+}: ExcessPaymentDialogContentFormProps) {
   const { submitForm, isSubmitting } = useFormikContext();
 
   const handleCloseBtn = () => {

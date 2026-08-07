@@ -1,12 +1,11 @@
+import { HTMLSelect, FormGroup, Position } from '@blueprintjs/core';
+import { FastField } from 'formik';
+import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
-import { FastField } from 'formik';
-import { HTMLSelect, FormGroup, Position } from '@blueprintjs/core';
-
+import { dateRangeOptions } from './constants';
 import { Row, Col, Hint, FDateInput, FFormGroup } from '@/components';
 import { momentFormatter, parseDateRangeQuery } from '@/utils';
-import { dateRangeOptions } from './constants';
 
 const FINANCIAL_REPORT_MAX_DATE = moment().add(5, 'years').toDate();
 

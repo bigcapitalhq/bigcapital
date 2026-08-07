@@ -1,9 +1,9 @@
 // @ts-nocheck
+import { Spinner } from '@blueprintjs/core';
 import React, { Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { getPreferenceRoutes } from '@/routes/preferences';
-import { Spinner } from '@blueprintjs/core';
 import { Box } from '../Layout';
+import { getPreferenceRoutes } from '@/routes/preferences';
 
 export default function DashboardContentRoute() {
   const preferencesRoutes = getPreferenceRoutes();

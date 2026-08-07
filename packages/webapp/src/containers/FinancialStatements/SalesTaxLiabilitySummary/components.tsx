@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import {
   Classes,
   Intent,
@@ -7,17 +6,18 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
-import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
+import classNames from 'classnames';
 import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
+import type {
+  SalesTaxLiabilityXlsxQuery,
+  SalesTaxLiabilityCsvQuery,
+} from '@bigcapital/sdk-ts';
 import { AppToaster, Stack } from '@/components';
 import {
   useSalesTaxLiabilitySummaryCsvExport,
   useSalesTaxLiabilitySummaryXlsxExport,
 } from '@/hooks/query';
-import type {
-  SalesTaxLiabilityXlsxQuery,
-  SalesTaxLiabilityCsvQuery,
-} from '@bigcapital/sdk-ts';
 
 /**
  * Sales tax liability summary loading bar.

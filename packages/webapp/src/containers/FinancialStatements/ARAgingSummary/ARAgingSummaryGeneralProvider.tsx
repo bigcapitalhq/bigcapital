@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
-import { useCustomers } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
+import { useCustomers } from '@/hooks/query';
 
 type UseCustomersResult = ReturnType<typeof useCustomers>;
 

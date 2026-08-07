@@ -1,30 +1,33 @@
-// @ts-nocheck
 import React from 'react';
 import { DashboardPageContent } from '@/components';
 
 import '@/style/pages/SaleEstimate/List.scss';
-
 import { EstimatesActionsBar } from './EstimatesActionsBar';
 import { EstimatesDataTable } from './EstimatesDataTable';
-
+import { EstimatesListDialogs } from './EstimatesListDialogs';
+import { EstimatesListDrawers } from './EstimatesListDrawers';
+import { EstimatesListProvider } from './EstimatesListProvider';
 import { withEstimates } from './withEstimates';
 import { withEstimatesActions } from './withEstimatesActions';
-
-import { EstimatesListProvider } from './EstimatesListProvider';
+import type { WithEstimatesProps } from './withEstimates';
 import { compose, transformTableStateToQuery } from '@/utils';
 
-/**
- * Sale estimates list page.
- */
+interface WithEstimatesActionsProps {
+  resetEstimatesTableState: () => void;
+}
+
+interface EstimatesListProps
+  extends Pick<
+      WithEstimatesProps,
+      'estimatesTableState' | 'estimatesTableStateChanged'
+    >,
+    WithEstimatesActionsProps {}
+
 function EstimatesListInner({
-  // #withEstimate
   estimatesTableState,
   estimatesTableStateChanged,
-
-  // #withEstimatesActions
   resetEstimatesTableState,
-}) {
-  // Resets the estimates table state once the page unmount.
+}: EstimatesListProps) {
   React.useEffect(
     () => () => {
       resetEstimatesTableState();
@@ -38,6 +41,8 @@ function EstimatesListInner({
       tableStateChanged={estimatesTableStateChanged}
     >
       <EstimatesActionsBar />
+      <EstimatesListDrawers />
+      <EstimatesListDialogs />
 
       <DashboardPageContent>
         <EstimatesDataTable />

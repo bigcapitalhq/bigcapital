@@ -1,10 +1,10 @@
 // @ts-nocheck
+import { Button } from '@blueprintjs/core';
+import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import styled from 'styled-components';
-import { Popover2 } from '@blueprintjs/popover2';
-import { Button } from '@blueprintjs/core';
-import { CellType } from '@/constants';
 import { Icon, FormattedMessage as T } from '@/components';
+import { CellType } from '@/constants';
 import { ProjectBillableEntries } from '@/containers/Projects/containers/ProjectBillableEntries';
 
 /**

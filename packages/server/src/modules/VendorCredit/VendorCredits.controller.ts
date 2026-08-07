@@ -22,6 +22,7 @@ import {
   CreateVendorCreditDto,
   EditVendorCreditDto,
 } from './dtos/VendorCredit.dto';
+import { VendorCreditResponseDto } from './dtos/VendorCreditResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
@@ -36,7 +37,7 @@ import { VendorCreditAction } from './types/VendorCredit.types';
 @Controller('vendor-credits')
 @ApiTags('Vendor Credits')
 @ApiCommonHeaders()
-@ApiExtraModels(ValidateBulkDeleteResponseDto)
+@ApiExtraModels(ValidateBulkDeleteResponseDto, VendorCreditResponseDto)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class VendorCreditsController {
   constructor(
@@ -122,6 +123,11 @@ export class VendorCreditsController {
   @Get(':id')
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
   @ApiOperation({ summary: 'Retrieves the vendor credit details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The vendor credit details have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(VendorCreditResponseDto) },
+  })
   async getVendorCredit(@Param('id') vendorCreditId: number) {
     return this.vendorCreditsApplication.getVendorCredit(vendorCreditId);
   }

@@ -1,9 +1,12 @@
-// @ts-nocheck
-import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 
-export const handleDeleteErrors = (errors) => {
+interface DeleteError {
+  type: string;
+}
+
+export const handleDeleteErrors = (errors: DeleteError[]) => {
   if (
     errors.find((error) => error.type === 'VENDOR_CREDIT_HAS_APPLIED_BILLS')
   ) {

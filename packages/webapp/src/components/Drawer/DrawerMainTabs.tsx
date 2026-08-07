@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import { Tabs } from '@blueprintjs/core';
+import React from 'react';
 import styled from 'styled-components';
 
 /**

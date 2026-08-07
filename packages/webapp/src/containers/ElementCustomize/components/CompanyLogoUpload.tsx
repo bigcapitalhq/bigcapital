@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { useRef, useState } from 'react';
-import clsx from 'classnames';
 import { Button, Intent } from '@blueprintjs/core';
+import clsx from 'classnames';
+import { useRef, useState } from 'react';
+import styles from './CompanyLogoUpload.module.scss';
 import { Icon, Stack } from '@/components';
 import { Dropzone, DropzoneProps } from '@/components/Dropzone';
 import { MIME_TYPES } from '@/components/Dropzone/mine-types';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
-import styles from './CompanyLogoUpload.module.scss';
 
 export interface CompanyLogoUploadProps {
   /** Initial preview uri. */

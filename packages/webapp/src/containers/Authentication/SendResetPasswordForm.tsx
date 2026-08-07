@@ -1,17 +1,19 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Form } from 'formik';
-import styled from 'styled-components';
-
-import { FInputGroup, FFormGroup, FormattedMessage as T } from '@/components';
-import { AuthSubmitButton } from './_components';
+import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { AuthSubmitButton } from './_components';
+import { FInputGroup, FFormGroup, FormattedMessage as T } from '@/components';
 
 /**
  * Send reset password form.
  */
-export function SendResetPasswordForm({ isSubmitting }) {
+export function SendResetPasswordForm({
+  isSubmitting,
+}: {
+  isSubmitting: boolean;
+}) {
   return (
     <Form>
       <TopParagraph>

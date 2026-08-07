@@ -1,57 +1,57 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
-import { omit } from 'lodash';
+import '@/style/pages/Preferences/Accounting.scss';
 import { ItemPreferencesSchema } from './ItemPreferences.schema';
-import { ItemForm as ItemPreferencesForm } from './ItemPreferencesForm';
-
+import {
+  ItemForm as ItemPreferencesForm,
+  type ItemPreferencesFormValues,
+} from './ItemPreferencesForm';
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
 import {
   compose,
   optionsMapToArray,
-  transformGeneralSettings,
   transformToForm,
+  transfromToSnakeCase,
 } from '@/utils';
 
-import '@/style/pages/Preferences/Accounting.scss';
-
-const defaultFormValues = {
-  preferred_sell_account: '',
-  preferred_cost_account: '',
-  preferred_inventory_account: '',
+const defaultFormValues: ItemPreferencesFormValues = {
+  preferredSellAccount: '',
+  preferredCostAccount: '',
+  preferredInventoryAccount: '',
 };
 
-// item form page preferences.
+interface ItemPreferencesFormPageProps extends WithDashboardActionsProps {}
+
 function ItemPreferencesFormPageInner({
-  // #withSettings
-  itemsSettings,
-
-  // #withDashboardActions
   changePreferencesPageTitle,
-}) {
-  const { saveSettingMutate } = useItemPreferencesFormContext();
+}: ItemPreferencesFormPageProps): React.ReactElement {
+  const { itemsSettings, saveSettingMutate } = useItemPreferencesFormContext();
 
-  // Initial values.
-  const initialValues = {
+  const initialValues: ItemPreferencesFormValues = {
     ...defaultFormValues,
-    ...transformToForm(
-      transformGeneralSettings(itemsSettings),
-      defaultFormValues,
-    ),
+    ...transformToForm(itemsSettings, defaultFormValues),
   };
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('items'));
   }, [changePreferencesPageTitle]);
 
-  // Handle form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const options = optionsMapToArray(values).map((option) => ({
+  const handleFormSubmit = (
+    values: ItemPreferencesFormValues,
+    { setSubmitting }: FormikHelpers<ItemPreferencesFormValues>,
+  ) => {
+    const options = optionsMapToArray(
+      transfromToSnakeCase({
+        preferredSellAccount: values.preferredSellAccount,
+        preferredCostAccount: values.preferredCostAccount,
+        preferredInventoryAccount: values.preferredInventoryAccount,
+      }),
+    ).map((option) => ({
       ...option,
       group: 'items',
     }));
@@ -64,7 +64,7 @@ function ItemPreferencesFormPageInner({
       setSubmitting(false);
     };
 
-    const onError = (errors) => {
+    const onError = () => {
       setSubmitting(false);
     };
     saveSettingMutate({ options }).then(onSuccess).catch(onError);
@@ -80,7 +80,6 @@ function ItemPreferencesFormPageInner({
   );
 }
 
-export const ItemPreferencesFormPage = compose(
-  withSettings(({ itemsSettings }) => ({ itemsSettings })),
-  withDashboardActions,
-)(ItemPreferencesFormPageInner);
+export const ItemPreferencesFormPage = compose(withDashboardActions)(
+  ItemPreferencesFormPageInner,
+);

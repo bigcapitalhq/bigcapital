@@ -1,6 +1,13 @@
-// @ts-nocheck
 import React from 'react';
-
+import { useAccountsChartContext } from './AccountsChartProvider';
+import { ActionsMenu } from './components';
+import { useAccountsTableColumns, rowClassNames } from './utils';
+import { withAccountsTableActions } from './withAccountsTableActions';
+import type { AccountTableRow } from './components';
+import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   TableFastCell,
   DataTable,
@@ -8,23 +15,30 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
 } from '@/components';
-import { useAccountsTableColumns, rowClassNames } from './utils';
-import { ActionsMenu } from './components';
-import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
-
-import { useAccountsChartContext } from './AccountsChartProvider';
-import { useMemorizedColumnsWidths } from '@/hooks';
-
-import { TABLES } from '@/constants/tables';
 import { DialogsName } from '@/constants/dialogs';
-
-import { withSettings } from '@/containers/Settings/withSettings';
+import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withAccountsTableActions } from './withAccountsTableActions';
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+
+interface AccountsDataTableProps
+  extends WithAlertActionsProps,
+    WithDialogActionsProps,
+    WithDrawerActionsProps,
+    WithAccountsTableActionsProps {}
+
+interface ActionsMenuPayload {
+  onEdit: (account: AccountTableRow) => void;
+  onViewDetails: (account: AccountTableRow) => void;
+  onDelete: (account: AccountTableRow) => void;
+  onNewChild: (account: AccountTableRow) => void;
+  onActivate: (account: AccountTableRow) => void;
+  onInactivate: (account: AccountTableRow) => void;
+}
 
 /**
  * Accounts data-table.
@@ -39,35 +53,33 @@ function AccountsDataTableInner({
   // #withDrawerActions
   openDrawer,
 
-  // #withSettings
-  accountsTableSize,
-
   // #withAccountsTableActions
   setAccountsSelectedRows,
-}) {
-  const { isAccountsLoading, isAccountsFetching, accounts } =
+}: AccountsDataTableProps) {
+  const { isAccountsLoading, isAccountsFetching, accounts, accountsSettings } =
     useAccountsChartContext();
+  const accountsTableSize = accountsSettings?.tableSize as string | undefined;
 
   // Retrieve accounts table columns.
   const columns = useAccountsTableColumns();
 
   // Handle delete action account.
-  const handleDeleteAccount = (account) => {
+  const handleDeleteAccount = (account: AccountTableRow) => {
     openAlert('account-delete', { accountId: account.id });
   };
 
   // Handle activate action account.
-  const handleActivateAccount = (account) => {
+  const handleActivateAccount = (account: AccountTableRow) => {
     openAlert('account-activate', { accountId: account.id });
   };
 
   // Handle inactivate action account.
-  const handleInactivateAccount = (account) => {
+  const handleInactivateAccount = (account: AccountTableRow) => {
     openAlert('account-inactivate', { accountId: account.id });
   };
 
   // Handle edit account action.
-  const handleEditAccount = (account) => {
+  const handleEditAccount = (account: AccountTableRow) => {
     openDialog(DialogsName.AccountForm, {
       action: AccountDialogAction.Edit,
       accountId: account.id,
@@ -75,30 +87,46 @@ function AccountsDataTableInner({
   };
 
   // Handle view detail account.
-  const handleViewDetailAccount = ({ id }) => {
+  const handleViewDetailAccount = ({ id }: AccountTableRow) => {
     openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: id });
   };
 
   // Handle new child button click.
-  const handleNewChildAccount = (account) => {
+  const handleNewChildAccount = (account: AccountTableRow) => {
     openDialog(DialogsName.AccountForm, {
       action: AccountDialogAction.NewChild,
       parentAccountId: account.id,
-      accountType: account.account_type,
+      accountType: account.accountType,
     });
   };
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
-    openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: cell.row.original.id });
+  const handleCellClick = (
+    cell: { row: { original: AccountTableRow } },
+    _event: React.MouseEvent,
+  ) => {
+    openDrawer(DRAWERS.ACCOUNT_DETAILS, {
+      accountId: cell.row.original.id,
+    });
   };
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.ACCOUNTS);
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = (selectedFlatRows) => {
+  const handleSelectedRowsChange = (
+    selectedFlatRows: Array<{ original: AccountTableRow }>,
+  ) => {
     const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
     setAccountsSelectedRows(selectedIds);
+  };
+
+  const payload: ActionsMenuPayload = {
+    onEdit: handleEditAccount,
+    onDelete: handleDeleteAccount,
+    onActivate: handleActivateAccount,
+    onInactivate: handleInactivateAccount,
+    onNewChild: handleNewChildAccount,
+    onViewDetails: handleViewDetailAccount,
   };
 
   return (
@@ -125,21 +153,14 @@ function AccountsDataTableInner({
       TableHeaderSkeletonRenderer={TableSkeletonHeader}
       ContextMenu={ActionsMenu}
       // #TableVirtualizedListRows props.
-      vListrowHeight={accountsTableSize == 'small' ? 40 : 42}
+      vListrowHeight={accountsTableSize === 'small' ? 40 : 42}
       vListOverscanRowCount={0}
       onCellClick={handleCellClick}
       onSelectedRowsChange={handleSelectedRowsChange}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       size={accountsTableSize}
-      payload={{
-        onEdit: handleEditAccount,
-        onDelete: handleDeleteAccount,
-        onActivate: handleActivateAccount,
-        onInactivate: handleInactivateAccount,
-        onNewChild: handleNewChildAccount,
-        onViewDetails: handleViewDetailAccount,
-      }}
+      payload={payload}
     />
   );
 }
@@ -149,7 +170,4 @@ export const AccountsDataTable = compose(
   withDrawerActions,
   withDialogActions,
   withAccountsTableActions,
-  withSettings(({ accountsSettings }) => ({
-    accountsTableSize: accountsSettings.tableSize,
-  })),
 )(AccountsDataTableInner);

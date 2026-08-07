@@ -1,10 +1,10 @@
+import type { TableQuery } from '@/store/store.types';
 import {
   VENDORS_TABLE_STATE_RESET,
   VENDORS_TABLE_STATE_SET,
   VENDORS_SET_SELECTED_ROWS,
   VENDORS_RESET_SELECTED_ROWS,
 } from '@/store/types';
-import type { TableQuery } from '@/store/store.types';
 
 export const setVendorsTableState = (queries: Partial<TableQuery>) => {
   return {

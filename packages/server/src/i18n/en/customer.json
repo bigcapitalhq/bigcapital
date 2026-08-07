@@ -1,5 +1,15 @@
 {
   "type.business": "Business",
-  "type.individual": "Individual"
+  "type.individual": "Individual",
+  "field.first_name": "First Name",
+  "field.last_name": "Last Name",
+  "field.display_name": "Display Name",
+  "field.email": "Email",
+  "field.work_phone": "Work Phone",
+  "field.personal_phone": "Personal Phone",
+  "field.company_name": "Company Name",
+  "field.website": "Website",
+  "field.opening_balance": "Opening balance",
+  "field.opening_balance_at": "Opening balance at",
+  "field.currency": "Currency"
 }
-

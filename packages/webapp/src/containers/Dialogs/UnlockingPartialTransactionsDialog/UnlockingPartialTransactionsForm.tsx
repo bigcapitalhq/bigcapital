@@ -1,50 +1,52 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
+import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
-import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
-
 import '@/style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
-
-import { AppToaster } from '@/components';
 import { CreateUnLockingPartialTransactionsFormSchema } from './UnlockingPartialTransactionsForm.schema';
-
-import { useUnlockingPartialTransactionsContext } from './UnlockingPartialTransactionsFormProvider';
 import { PartialUnlockingTransactionsFormContent as UnlockingPartialTransactionsFormContent } from './UnlockingPartialTransactionsFormContent';
-
+import { useUnlockingPartialTransactionsContext } from './UnlockingPartialTransactionsFormProvider';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
+import type { UnlockingPartialTransactionsFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 
-const defaultInitialValues = {
+const defaultInitialValues: UnlockingPartialTransactionsFormValues = {
   module: '',
-  unlock_from_date: moment(new Date()).format('YYYY-MM-DD'),
-  unlock_to_date: moment(new Date()).format('YYYY-MM-DD'),
+  unlockFromDate: moment(new Date()).format('YYYY-MM-DD'),
+  unlockToDate: moment(new Date()).format('YYYY-MM-DD'),
   reason: '',
 };
+
+interface UnlockingPartialTransactionsFormProps
+  extends WithDialogActionsProps {}
 
 /**
  * Partial Unlocking transactions form.
  */
 function UnlockingPartialTransactionsFormInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: UnlockingPartialTransactionsFormProps): React.ReactElement {
   const { dialogName, moduleName, createUnlockingPartialTransactionsMutate } =
     useUnlockingPartialTransactionsContext();
 
   // Initial form values.
-  const initialValues = {
+  const initialValues: UnlockingPartialTransactionsFormValues = {
     ...defaultInitialValues,
     module: moduleName,
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: UnlockingPartialTransactionsFormValues,
+    { setSubmitting }: FormikHelpers<UnlockingPartialTransactionsFormValues>,
+  ) => {
     setSubmitting(true);
 
     // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           'unlocking_partial_transactions.dialog.success_message',
@@ -55,10 +57,12 @@ function UnlockingPartialTransactionsFormInner({
     };
     // Handle request response errors.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
     }) => {
+      // errors read but unused (preserved from original).
+      void errors;
       setSubmitting(false);
     };
 

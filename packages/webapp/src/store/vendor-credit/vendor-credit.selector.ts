@@ -1,9 +1,9 @@
 import { isEqual } from 'lodash';
 import { createSelector } from 'reselect';
-import { paginationLocationQuery } from '@/store/selectors';
-import { createDeepEqualSelector } from '@/utils';
 import { defaultTableQuery } from './vendor-credit.reducer';
 import type { RootState } from '@/store/reducers';
+import { paginationLocationQuery } from '@/store/selectors';
+import { createDeepEqualSelector } from '@/utils';
 
 const vendorCreditsTableStateSelector = (state: RootState) => {
   return state.vendorCredit.tableState;

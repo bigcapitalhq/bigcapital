@@ -1,5 +1,7 @@
-// @ts-nocheck
 import { Position } from '@blueprintjs/core';
+import React from 'react';
+import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
+import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 import {
   AccountsSelect,
   FDateInput,
@@ -8,20 +10,21 @@ import {
   FTextArea,
   Icon,
 } from '@/components';
-import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
-import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 
 export function CategorizeTransactionOwnerContribution() {
   const { accounts } = useCategorizeTransactionBoot();
 
+  if (!accounts) {
+    return null;
+  }
   return (
     <>
       <FFormGroup name={'date'} label={'Date'} fastField inline>
         <FDateInput
           name={'date'}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          formatDate={(date: Date) => date.toLocaleDateString()}
+          parseDate={(str: string) => new Date(str)}
           inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
         />
       </FFormGroup>
@@ -59,7 +62,7 @@ export function CategorizeTransactionOwnerContribution() {
       </FFormGroup>
 
       <FFormGroup name={'referenceNo'} label={'Reference No.'} fastField inline>
-        <FInputGroup name={'reference_no'} fill />
+        <FInputGroup name={'referenceNo'} fill />
       </FFormGroup>
 
       <FFormGroup name={'description'} label={'Description'} fastField inline>

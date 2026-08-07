@@ -1,14 +1,12 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import {
   ControlGroup,
   Divider,
   Icon as BlueprintIcon,
 } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
+import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
+import { CustomerTypeRadioField } from './CustomerTypeRadioField';
 import {
-  Hint,
-  FieldRequiredHint,
   SalutationList,
   DisplayNameList,
   FInputGroup,
@@ -17,12 +15,10 @@ import {
   Icon,
   Stack,
 } from '@/components';
-import { CustomerTypeRadioField } from './CustomerTypeRadioField';
-import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
 import { useAutofocus } from '@/hooks';
 
-export function CustomerFormBasicSection({}) {
-  const firstNameFieldRef = useAutofocus();
+export function CustomerFormBasicSection() {
+  const firstNameFieldRef = useAutofocus<HTMLInputElement>();
 
   return (
     <Box data-section-id="primary">
@@ -32,25 +28,22 @@ export function CustomerFormBasicSection({}) {
       <CustomerTypeRadioField />
 
       {/**----------- Contact name -----------*/}
-      <FFormGroup
-        name={'salutation'}
-        label={intl.get('contact_name')}
-        inline
-        fill
-      >
+      <FFormGroup name={'salutation'} label={intl.get('contact_name')} inline>
         <ControlGroup fill>
           <SalutationList
             name={'salutation'}
             popoverProps={{ minimal: true }}
           />
           <FInputGroup
-            name={'first_name'}
+            name={'firstName'}
             placeholder={intl.get('first_name')}
-            inputRef={(ref) => (firstNameFieldRef.current = ref)}
+            inputRef={(ref: HTMLInputElement | null) => {
+              if (ref) firstNameFieldRef.current = ref;
+            }}
             fill
           />
           <FInputGroup
-            name={'last_name'}
+            name={'lastName'}
             placeholder={intl.get('last_name')}
             fill
           />
@@ -62,31 +55,24 @@ export function CustomerFormBasicSection({}) {
         label={'Customer Code'}
         helperText="Add a unique account number to identify, reference and search for the contact."
         inline
-        fill
       >
         <FInputGroup name={'code'} fill />
       </FFormGroup>
 
       {/*----------- Company Name -----------*/}
-      <FFormGroup
-        name={'company_name'}
-        label={intl.get('company_name')}
-        inline
-        fill
-      >
-        <FInputGroup name={'company_name'} fill />
+      <FFormGroup name={'companyName'} label={intl.get('company_name')} inline>
+        <FInputGroup name={'companyName'} fill />
       </FFormGroup>
 
       {/*----------- Display Name -----------*/}
       <FFormGroup
-        name={'display_name'}
+        name={'displayName'}
         label={intl.get('display_name')}
         helperText="This is the name that appears on invoices and emails."
         inline
-        fill
       >
         <DisplayNameList
-          name={'display_name'}
+          name={'displayName'}
           popoverProps={{ minimal: true }}
           buttonProps={{ fill: true }}
         />
@@ -101,19 +87,19 @@ export function CustomerFormBasicSection({}) {
 
       {/*------------ Phone number -----------*/}
       <FFormGroup
-        name={'work_phone'}
+        name={'workPhone'}
         className={'form-group--phone-number'}
         label={intl.get('phone_number')}
         inline={true}
       >
         <Stack spacing={10}>
           <FInputGroup
-            name={'work_phone'}
+            name={'workPhone'}
             placeholder={intl.get('work')}
             leftIcon="phone"
           />
           <FInputGroup
-            name={'personal_phone'}
+            name={'personalPhone'}
             placeholder={intl.get('mobile')}
           />
         </Stack>

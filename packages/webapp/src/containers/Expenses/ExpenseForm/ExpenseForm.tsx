@@ -1,79 +1,77 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Formik, Form, FormikHelpers } from 'formik';
+import { defaultTo, sumBy, isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { Intent } from '@blueprintjs/core';
-import { defaultTo, sumBy, isEmpty } from 'lodash';
-import { Formik, Form } from 'formik';
 import { useHistory } from 'react-router-dom';
-import { css } from '@emotion/css';
-
-import { ExpenseFormBody } from './ExpenseFormBody';
-import { ExpenseFormHeader } from './ExpenseFormHeader';
+import type { CreateExpenseBody, EditExpenseBody } from '@bigcapital/sdk-ts';
 import { ExpenseFloatingFooter } from './ExpenseFloatingActions';
-import { ExpenseFormFooter } from './ExpenseFormFooter';
-import { ExpenseFormTopBar } from './ExpenseFormTopBar';
-
-import { useExpenseFormContext } from './ExpenseFormPageProvider';
-
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
-import { AppToaster, Box } from '@/components';
-import { PageForm } from '@/components/PageForm';
 import {
   CreateExpenseFormSchema,
   EditExpenseFormSchema,
 } from './ExpenseForm.schema';
+import { ExpenseFormBody } from './ExpenseFormBody';
+import { ExpenseFormFooter } from './ExpenseFormFooter';
+import { ExpenseFormHeader } from './ExpenseFormHeader';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
+import { ExpenseFormTopBar } from './ExpenseFormTopBar';
+import type { ExpenseErrorResponse, ExpenseFormValues } from './types';
 import {
   transformErrors,
   defaultExpense,
   transformToEditForm,
   transformFormValuesToRequest,
 } from './utils';
+import { AppToaster, Box } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose } from '@/utils';
 
 /**
  * Expense form.
  */
-function ExpenseFormInner({
-  // #withSettings
-  preferredPaymentAccount,
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
-  // Expense form context.
+function ExpenseFormInner() {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+
   const {
     editExpenseMutate,
     createExpenseMutate,
     expense,
     expenseId,
     submitPayloadRef,
+    expenseSettings,
   } = useExpenseFormContext();
+
+  const preferredPaymentAccount = parseInt(
+    (expenseSettings?.preferredPaymentAccount as string | undefined) ?? '',
+    10,
+  );
 
   const isNewMode = !expenseId;
 
-  // History context.
   const history = useHistory();
 
-  // Form initial values.
-  const initialValues = useMemo(
+  const initialValues = useMemo<ExpenseFormValues>(
     () => ({
       ...(!isEmpty(expense)
         ? {
-            ...transformToEditForm(expense, defaultExpense),
+            ...transformToEditForm(expense!, defaultExpense),
           }
         : {
             ...defaultExpense,
-            currency_code: base_currency,
-            payment_account_id: defaultTo(preferredPaymentAccount, ''),
+            currencyCode: baseCurrency ?? '',
+            paymentAccountId: defaultTo(preferredPaymentAccount, ''),
           }),
     }),
-    [expense, base_currency, preferredPaymentAccount],
+    [expense, baseCurrency, preferredPaymentAccount],
   );
 
-  //  Handle form submit.
-  const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
+  const handleSubmit = (
+    values: ExpenseFormValues,
+    { setSubmitting, setErrors, resetForm }: FormikHelpers<ExpenseFormValues>,
+  ) => {
     setSubmitting(true);
     const totalAmount = sumBy(values.categories, 'amount');
 
@@ -86,21 +84,19 @@ function ExpenseFormInner({
       return;
     }
 
-    // Get submit payload from ref for synchronous access
     const currentSubmitPayload = submitPayloadRef?.current || {};
 
     const form = {
       ...transformFormValuesToRequest(values),
       publish: currentSubmitPayload.publish,
     };
-    // Handle request success.
-    const handleSuccess = (response) => {
+    const handleSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
             ? 'the_expense_has_been_created_successfully'
             : 'the_expense_has_been_edited_successfully',
-          { number: values.payment_account_id },
+          { number: values.paymentAccountId },
         ),
         intent: Intent.SUCCESS,
       });
@@ -114,19 +110,20 @@ function ExpenseFormInner({
       }
     };
 
-    // Handle the request error.
     const handleError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: ExpenseErrorResponse[] };
     }) => {
       transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
     if (isNewMode) {
-      createExpenseMutate(form).then(handleSuccess).catch(handleError);
+      createExpenseMutate(form as unknown as CreateExpenseBody)
+        .then(handleSuccess)
+        .catch(handleError);
     } else {
-      editExpenseMutate([expense.id, form])
+      editExpenseMutate([expense!.id, form as unknown as EditExpenseBody])
         .then(handleSuccess)
         .catch(handleError);
     }
@@ -168,13 +165,4 @@ function ExpenseFormInner({
   );
 }
 
-export const ExpenseForm = compose(
-  withDashboardActions,
-  withSettings(({ expenseSettings }) => ({
-    preferredPaymentAccount: parseInt(
-      expenseSettings?.preferredPaymentAccount,
-      10,
-    ),
-  })),
-  withCurrentOrganization(),
-)(ExpenseFormInner);
+export const ExpenseForm = compose(withDashboardActions)(ExpenseFormInner);

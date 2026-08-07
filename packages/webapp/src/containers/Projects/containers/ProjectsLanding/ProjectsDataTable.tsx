@@ -1,22 +1,20 @@
 // @ts-nocheck
 import React from 'react';
-import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+import { useProjectsListColumns, ActionsMenu } from './components';
+import { ProjectsEmptyStatus } from './ProjectsEmptyStatus';
+import { useProjectsListContext } from './ProjectsListProvider';
+import { withProjectsActions } from './withProjectsActions';
 import {
   DataTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-import { ProjectsEmptyStatus } from './ProjectsEmptyStatus';
-import { useProjectsListContext } from './ProjectsListProvider';
-import { useMemorizedColumnsWidths } from '@/hooks';
-import { useProjectsListColumns, ActionsMenu } from './components';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withProjectsActions } from './withProjectsActions';
-
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
 /**
@@ -29,15 +27,18 @@ function ProjectsDataTableInner({
 
   // #withAlertActions
   openAlert,
-
-  // #withSettings
-  projectsTableSize,
 }) {
   const history = useHistory();
 
   // Projects list context.
-  const { projects, isEmptyStatus, isProjectsLoading, isProjectsFetching } =
-    useProjectsListContext();
+  const {
+    projects,
+    isEmptyStatus,
+    isProjectsLoading,
+    isProjectsFetching,
+    projectSettings,
+  } = useProjectsListContext();
+  const projectsTableSize = projectSettings?.tableSize;
 
   // Retrieve projects table columns.
   const columns = useProjectsListColumns();
@@ -123,9 +124,6 @@ export const ProjectsDataTable = compose(
   withDialogActions,
   withAlertActions,
   withProjectsActions,
-  withSettings(({ projectSettings }) => ({
-    projectsTableSize: projectSettings?.tableSize,
-  })),
 )(ProjectsDataTableInner);
 
 const ProjectsTable = styled(DataTable)`

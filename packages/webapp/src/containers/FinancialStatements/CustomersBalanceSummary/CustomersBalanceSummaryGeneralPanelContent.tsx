@@ -1,5 +1,8 @@
 import { Position } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import { filterCustomersOptions } from '../constants';
+import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
+import { useCustomersBalanceSummaryGeneralContext } from './CustomersBalanceSummaryGeneralProvider';
 import {
   Row,
   Col,
@@ -10,9 +13,6 @@ import {
   FCheckbox,
 } from '@/components';
 import { momentFormatter } from '@/utils';
-import { filterCustomersOptions } from '../constants';
-import { useCustomersBalanceSummaryGeneralContext } from './CustomersBalanceSummaryGeneralProvider';
-import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
 
 /**
  * Customers balance header - General panel - Content

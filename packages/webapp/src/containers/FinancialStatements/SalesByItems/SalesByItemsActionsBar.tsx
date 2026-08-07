@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -9,21 +8,22 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import React from 'react';
+import { SalesByItemsSheetExportMenu } from './components';
+import { useSalesByItemsContext } from './SalesByItemProvider';
 import { withSalesByItems } from './withSalesByItems';
 import {
   withSalesByItemsActions,
   WithSalesByItemsActionsProps,
 } from './withSalesByItemsActions';
-import { compose, saveInvoke } from '@/utils';
-import { useSalesByItemsContext } from './SalesByItemProvider';
-import { SalesByItemsSheetExportMenu } from './components';
+import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { DialogsName } from '@/constants/dialogs';
 import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { compose, saveInvoke } from '@/utils';
 
 interface SalesByItemsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;

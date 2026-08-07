@@ -1,13 +1,10 @@
 // @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-
+import React from 'react';
+import { useProjectsListContext } from './ProjectsListProvider';
 import { withProjects } from './withProjects';
 import { withProjectsActions } from './withProjectsActions';
-import { useProjectsListContext } from './ProjectsListProvider';
-
+import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
 
 /**

@@ -1,6 +1,11 @@
 import { ComponentType } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import {
+  toggleExpendSidebar,
+  splashStartLoading,
+  splashStopLoading,
+} from '@/store/dashboard/dashboard.actions';
 import {
   ALTER_DASHBOARD_PAGE_SUBTITLE,
   CHANGE_DASHBOARD_PAGE_HINT,
@@ -11,11 +16,6 @@ import {
   SET_DASHBOARD_REQUEST_LOADING,
   SET_TOPBAR_EDIT_VIEW,
 } from '@/store/types';
-import {
-  toggleExpendSidebar,
-  splashStartLoading,
-  splashStopLoading,
-} from '@/store/dashboard/dashboard.actions';
 
 export interface WithDashboardActionsProps {
   changePageTitle: (pageTitle: string) => void;

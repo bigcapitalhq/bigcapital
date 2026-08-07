@@ -1,5 +1,3 @@
-import { isUndefined } from 'lodash';
-import clsx from 'classnames';
 import {
   Classes,
   Intent,
@@ -7,6 +5,8 @@ import {
   Text,
   ToastProps,
 } from '@blueprintjs/core';
+import clsx from 'classnames';
+import { isUndefined } from 'lodash';
 import { AppToaster } from '@/components';
 
 interface AsyncToastProgress {

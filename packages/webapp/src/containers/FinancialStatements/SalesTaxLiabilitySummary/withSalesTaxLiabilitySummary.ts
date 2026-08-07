@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import { getSalesTaxLiabilitySummaryFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithSalesTaxLiabilitySummaryProps {
   salesTaxLiabilitySummaryFilter: ReturnType<

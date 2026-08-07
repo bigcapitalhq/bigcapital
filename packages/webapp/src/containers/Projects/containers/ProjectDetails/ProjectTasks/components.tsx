@@ -1,9 +1,9 @@
 // @ts-nocheck
+import { Menu, MenuItem, Intent, ProgressBar } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Icon, If, Choose, FormattedMessage as T } from '@/components';
-import { Menu, MenuItem, Intent, ProgressBar } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
 
 /**

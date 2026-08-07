@@ -1,11 +1,11 @@
 // @ts-nocheck
-import React, { useState } from 'react';
 import { css } from '@emotion/css';
-import { Stepper } from '@/components/Stepper';
-import CreateWorkspaceForm from './CreateWorkspaceForm';
-import BuildingWorkspaceStep from './BuildingWorkspaceStep';
-import InviteUsersStep from './InviteUsersStep';
+import React, { useState } from 'react';
 import intl from 'react-intl-universal';
+import BuildingWorkspaceStep from './BuildingWorkspaceStep';
+import CreateWorkspaceForm from './CreateWorkspaceForm';
+import InviteUsersStep from './InviteUsersStep';
+import { Stepper } from '@/components/Stepper';
 
 interface CreateWorkspaceStepperProps {
   onClose: () => void;

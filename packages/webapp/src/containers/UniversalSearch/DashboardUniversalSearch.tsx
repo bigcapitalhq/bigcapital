@@ -1,20 +1,17 @@
 // @ts-nocheck
-import React from 'react';
 import { debounce } from 'lodash';
 import { isUndefined } from 'lodash';
-
-import { useUniversalSearch } from '@/hooks/query';
-import { UniversalSearch } from '@/components';
-
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { compose } from '@/utils';
-import { withUniversalSearchActions } from './withUniversalSearchActions';
-import { withUniversalSearch } from './withUniversalSearch';
-
-import { useGetUniversalSearchTypeOptions } from './utils';
-import { DashboardUniversalSearchItemActions } from './DashboardUniversalSearchItemActions';
+import React from 'react';
 import { DashboardUniversalSearchItem } from './components';
 import { DashboardUniversalSearchHotkeys } from './DashboardUniversalSearchHotkeys';
+import { DashboardUniversalSearchItemActions } from './DashboardUniversalSearchItemActions';
+import { useGetUniversalSearchTypeOptions } from './utils';
+import { withUniversalSearch } from './withUniversalSearch';
+import { withUniversalSearchActions } from './withUniversalSearchActions';
+import { UniversalSearch } from '@/components';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { useUniversalSearch } from '@/hooks/query';
+import { compose } from '@/utils';
 
 /**
  * Dashboard universal search.
@@ -35,7 +32,7 @@ function DashboardUniversalSearchInner({
 
   // Default search type.
   const [defaultSearchType, setDefaultSearchType] = React.useState(
-    defaultUniversalResourceType || RESOURCES_TYPES.CUSTOMR,
+    defaultUniversalResourceType || RESOURCES_TYPES.CUSTOMER,
   );
   // Search type.
   const [searchType, setSearchType] = React.useState(defaultSearchType);

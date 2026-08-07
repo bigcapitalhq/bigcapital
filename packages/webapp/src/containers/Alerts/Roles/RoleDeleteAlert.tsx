@@ -1,42 +1,39 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
-import { useDeleteRole } from '@/hooks/query';
-import { handleDeleteErrors } from '@/containers/Preferences/Users/Roles/utils';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { handleDeleteErrors } from '@/containers/Preferences/Users/Roles/utils';
+import { useDeleteRole } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface RoleDeleteAlertPayload {
+  roleId: number;
+}
+
+interface RoleDeleteAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: RoleDeleteAlertPayload;
+}
 
 /**
  * Role delete alert.
  */
 function RoleDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { roleId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: deleteRole, isLoading } = useDeleteRole();
+}: RoleDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteRole, isPending: isLoading } = useDeleteRole();
 
-  // Handle cancel delete role alert.
   const handleCancelDelete = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete role.
   const handleConfirmDeleteRole = () => {
     deleteRole(roleId)
       .then(() => {
@@ -46,11 +43,7 @@ function RoleDeleteAlertInner({
         });
       })
       .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
           handleDeleteErrors(errors);
         },
       )
@@ -61,8 +54,8 @@ function RoleDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -71,6 +64,7 @@ function RoleDeleteAlertInner({
       loading={isLoading}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={
             'roles.permission_schema.once_delete_this_role_you_will_able_to_restore_it'

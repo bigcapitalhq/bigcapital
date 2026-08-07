@@ -1,13 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-  UseMutationResult,
-  UseQueryResult,
-} from '@tanstack/react-query';
-import {
   fetchPdfTemplates,
   fetchPdfTemplate,
   createPdfTemplate,
@@ -16,6 +7,22 @@ import {
   assignPdfTemplateAsDefault,
   fetchPdfTemplateBrandingState,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+  UseMutationResult,
+  UseQueryResult,
+} from '@tanstack/react-query';
+import { useApiFetcher } from '../../useRequest';
+import { creditNotesKeys } from '../credit-note/query-keys';
+import { estimatesKeys } from '../estimates/query-keys';
+import { invoicesKeys } from '../invoices/query-keys';
+import { paymentReceivesKeys } from '../payment-receives/query-keys';
+import { receiptsKeys } from '../receipts/query-keys';
+import { pdfTemplatesKeys } from './query-keys';
 import type {
   CreatePdfTemplateBody,
   EditPdfTemplateBody,
@@ -24,13 +31,6 @@ import type {
   PdfTemplateBrandingStateResponse,
   GetPdfTemplatesQuery,
 } from '@bigcapital/sdk-ts';
-import { useApiFetcher } from '../../useRequest';
-import { pdfTemplatesKeys } from './query-keys';
-import { invoicesKeys } from '../invoices/query-keys';
-import { estimatesKeys } from '../estimates/query-keys';
-import { receiptsKeys } from '../receipts/query-keys';
-import { creditNotesKeys } from '../credit-note/query-keys';
-import { paymentReceivesKeys } from '../payment-receives/query-keys';
 
 // Re-export types for consumers (aliases for SDK types)
 export type CreatePdfTemplateValues = CreatePdfTemplateBody;
@@ -138,7 +138,7 @@ export function useGetPdfTemplate(
     'queryKey' | 'queryFn'
   >,
 ): UseQueryResult<GetPdfTemplateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: pdfTemplatesKeys.detail(templateId),
@@ -153,7 +153,7 @@ export function useGetPdfTemplates(
   query?: GetPdfTemplatesQuery,
   options?: UseQueryOptions<GetPdfTemplatesResponse, Error>,
 ): UseQueryResult<GetPdfTemplatesResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: pdfTemplatesKeys.list(query),
@@ -196,7 +196,7 @@ export function useAssignPdfTemplateAsDefault(
 export function useGetPdfTemplateBrandingState(
   options?: UseQueryOptions<GetPdfTemplateBrandingStateResponse, Error>,
 ): UseQueryResult<GetPdfTemplateBrandingStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: pdfTemplatesKeys.state(),

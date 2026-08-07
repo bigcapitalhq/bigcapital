@@ -1,11 +1,14 @@
+import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import { Formik, Form } from 'formik';
+import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
-import { Formik, Form } from 'formik';
-import type { FormikHelpers } from 'formik';
-import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import { CustomersBalanceSummaryGeneralPanel } from './CustomersBalanceSummaryGeneralPanel';
+import {
+  getCustomersBalanceQuerySchema,
+  getDefaultCustomersBalanceQuery,
+} from './utils';
 import {
   withCustomersBalanceSummary,
   WithCustomersBalanceSummaryProps,
@@ -14,12 +17,9 @@ import {
   withCustomersBalanceSummaryActions,
   WithCustomersBalanceSummaryActionsProps,
 } from './withCustomersBalanceSummaryActions';
-import { CustomersBalanceSummaryGeneralPanel } from './CustomersBalanceSummaryGeneralPanel';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
 import { compose, transformToForm } from '@/utils';
-import {
-  getCustomersBalanceQuerySchema,
-  getDefaultCustomersBalanceQuery,
-} from './utils';
 
 type CustomerBalanceFormValues = ReturnType<
   typeof getDefaultCustomersBalanceQuery

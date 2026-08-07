@@ -1,7 +1,7 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
 import { getARAgingSummaryFilterDrawer } from '@/store/financial-statement/financial-statements.selectors';
 import { ApplicationState } from '@/store/reducers';
-import type { MapState } from '@/containers/hoc.types';
 
 export interface WithARAgingSummaryProps {
   ARAgingSummaryFilterDrawer: ReturnType<typeof getARAgingSummaryFilterDrawer>;

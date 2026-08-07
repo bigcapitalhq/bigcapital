@@ -1,17 +1,15 @@
-import React from 'react';
-
-import moment from 'moment';
-import { Formik, Form } from 'formik';
-import type { FormikHelpers } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import { Formik, Form } from 'formik';
+import moment from 'moment';
+import React from 'react';
 import styled from 'styled-components';
-
-import { FormattedMessage as T } from '@/components';
-
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
-import { InventoryItemDetailsHeaderGeneralPanel } from './InventoryItemDetailsHeaderGeneralPanel';
 import { InventoryItemDetailsHeaderDimensionsPanel } from './InventoryItemDetailsHeaderDimensionsPanel';
-
+import { InventoryItemDetailsHeaderGeneralPanel } from './InventoryItemDetailsHeaderGeneralPanel';
+import {
+  getInventoryItemDetailsDefaultQuery,
+  getInventoryItemDetailsQuerySchema,
+} from './utils2';
 import {
   withInventoryItemDetails,
   WithInventoryItemDetailsProps,
@@ -20,14 +18,11 @@ import {
   withInventoryItemDetailsActions,
   WithInventoryItemDetailsActionsProps,
 } from './withInventoryItemDetailsActions';
-
-import {
-  getInventoryItemDetailsDefaultQuery,
-  getInventoryItemDetailsQuerySchema,
-} from './utils2';
-import { compose, transformToForm } from '@/utils';
-import { useFeatureCan } from '@/hooks/state';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
+import { compose, transformToForm } from '@/utils';
 
 type InventoryItemDetailsFormValues = Omit<
   ReturnType<typeof getInventoryItemDetailsDefaultQuery>,

@@ -1,20 +1,4 @@
 import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseMutationOptions,
-  UseQueryOptions,
-} from '@tanstack/react-query';
-import type {
-  CreateManualJournalBody,
-  EditManualJournalBody,
-  ManualJournal,
-  ManualJournalsListQuery,
-  ManualJournalsListResponse,
-  BulkDeleteManualJournalsBody,
-  ValidateBulkDeleteManualJournalsResponse,
-} from '@bigcapital/sdk-ts';
-import {
   fetchManualJournals,
   fetchManualJournal,
   createManualJournal,
@@ -24,37 +8,40 @@ import {
   bulkDeleteManualJournals,
   validateBulkDeleteManualJournals,
 } from '@bigcapital/sdk-ts';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationOptions,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { manualJournalsKeys, MANUAL_JOURNAL } from './query-keys';
 import { accountsKeys } from '../accounts/query-keys';
-import { customersKeys } from '../customers/query-keys';
-import { vendorsKeys } from '../vendors/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
+import { customersKeys } from '../customers/query-keys';
 import { financialReportsKeys } from '../FinancialReports/query-keys';
 import { settingsKeys } from '../settings/query-keys';
+import { vendorsKeys } from '../vendors/query-keys';
+import { manualJournalsKeys } from './query-keys';
+import type {
+  CreateManualJournalBody,
+  EditManualJournalBody,
+  ManualJournal,
+  ManualJournalsListQuery,
+  ManualJournalsListResponse,
+  BulkDeleteManualJournalsBody,
+  ValidateBulkDeleteManualJournalsResponse,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
 ) => {
-  // Invalidate manual journals.
   queryClient.invalidateQueries({ queryKey: manualJournalsKeys.all() });
-
-  // Invalidate customers.
   queryClient.invalidateQueries({ queryKey: customersKeys.all() });
-
-  // Invalidate vendors.
   queryClient.invalidateQueries({ queryKey: vendorsKeys.all() });
-
-  // Invalidate accounts.
   queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
-
-  // Invalidate settings.
   queryClient.invalidateQueries({ queryKey: settingsKeys.manualJournals() });
-
-  // Invalidate financial reports.
   queryClient.invalidateQueries({ queryKey: financialReportsKeys.all() });
-
-  // Invalidate the cashflow transactions.
   queryClient.invalidateQueries({
     queryKey: cashflowAccountsKeys.transactions(),
   });
@@ -71,7 +58,6 @@ export function useCreateJournal(
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
-
   return useMutation({
     ...props,
     mutationFn: (values: CreateManualJournalBody) =>
@@ -87,7 +73,6 @@ export function useEditJournal(
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
-
   return useMutation({
     ...props,
     mutationFn: ([id, values]: [number, EditManualJournalBody]) =>
@@ -179,8 +164,7 @@ export function useJournals(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: manualJournalsKeys.list(query ?? undefined),
@@ -192,8 +176,7 @@ export function useJournal(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<ManualJournal>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: manualJournalsKeys.detail(id),
@@ -204,7 +187,6 @@ export function useJournal(
 
 export function useRefreshJournals() {
   const queryClient = useQueryClient();
-
   return {
     refresh: () => {
       queryClient.invalidateQueries({ queryKey: manualJournalsKeys.all() });

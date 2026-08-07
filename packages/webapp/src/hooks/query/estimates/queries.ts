@@ -1,23 +1,4 @@
 import {
-  useQueryClient,
-  useMutation,
-  useQuery,
-  UseQueryOptions,
-  UseQueryResult,
-  UseMutationOptions,
-} from '@tanstack/react-query';
-import type {
-  SaleEstimate,
-  SaleEstimatesListResponse,
-  CreateSaleEstimateBody,
-  EditSaleEstimateBody,
-  SaleEstimateHtmlContentResponse,
-  BulkDeleteEstimatesBody,
-  ValidateBulkDeleteEstimatesResponse,
-  SaleEstimatesStateResponse,
-  SaleEstimateMailStateResponse,
-} from '@bigcapital/sdk-ts';
-import {
   fetchSaleEstimates,
   fetchSaleEstimate,
   createSaleEstimate,
@@ -35,11 +16,30 @@ import {
   fetchSaleEstimatesState,
   fetchSaleEstimateHtmlContent,
 } from '@bigcapital/sdk-ts';
+import {
+  useQueryClient,
+  useMutation,
+  useQuery,
+  UseQueryOptions,
+  UseQueryResult,
+  UseMutationOptions,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { estimatesKeys } from './query-keys';
-import { itemsKeys } from '../items/query-keys';
 import { useRequestPdf } from '../../useRequestPdf';
+import { itemsKeys } from '../items/query-keys';
 import { settingsKeys } from '../settings/query-keys';
+import { estimatesKeys } from './query-keys';
+import type {
+  SaleEstimate,
+  SaleEstimatesListResponse,
+  CreateSaleEstimateBody,
+  EditSaleEstimateBody,
+  SaleEstimateHtmlContentResponse,
+  BulkDeleteEstimatesBody,
+  ValidateBulkDeleteEstimatesResponse,
+  SaleEstimatesStateResponse,
+  SaleEstimateMailStateResponse,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -88,7 +88,25 @@ export function useEstimate(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<SaleEstimate>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: estimatesKeys.detail(id),
+    queryFn: () => fetchSaleEstimate(fetcher, id!),
+    enabled: id != null,
+  });
+}
+
+/**
+ * Variant of {@link useEstimate} that enables the snake_case → camelCase
+ * response transform, so the returned data matches the `SaleEstimate` SDK type
+ * at runtime. Use this for new camelCase-consuming code (e.g. detail drawers).
+ */
+export function useEstimateDetail(
+  id: number | null | undefined,
+  props?: Omit<UseQueryOptions<SaleEstimate>, 'queryKey' | 'queryFn'>,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: estimatesKeys.detail(id),
@@ -104,7 +122,7 @@ export function useEstimates(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: estimatesKeys.list(query),

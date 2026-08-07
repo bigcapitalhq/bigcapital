@@ -21,6 +21,7 @@ import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { NewSubscriptionService } from './commands/NewSubscription.service';
 import { GetSubscriptionsService } from './queries/GetSubscriptions.service';
 import { GetLemonSqueezyCheckoutService } from './queries/GetLemonSqueezyCheckout.service';
+import { GetLemonSubscriptionsService } from './queries/GetLemonSubscriptions.service';
 import { PlanSubscriptionRepository } from './repositories/PlanSubscription.repository';
 
 const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
@@ -32,6 +33,7 @@ const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
     PlanSubscriptionRepository,
     NewSubscriptionService,
     GetSubscriptionsService,
+    GetLemonSubscriptionsService,
     CancelLemonSubscription,
     ChangeLemonSubscription,
     ResumeLemonSubscription,

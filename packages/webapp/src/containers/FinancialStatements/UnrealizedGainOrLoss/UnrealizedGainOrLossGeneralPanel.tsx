@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
 import { SelectDisplayColumnsBy } from '../SelectDisplayColumnsBy';
 

@@ -1,14 +1,14 @@
 // @ts-nocheck
 import * as R from 'ramda';
-import { DataTable, TableSkeletonRows } from '@/components';
-import { useBrandingTemplatesBoot } from './BrandingTemplatesBoot';
 import { ActionsMenu } from './_components';
+import { useBrandingTemplatesColumns } from './_hooks';
+import { getCustomizeDrawerNameFromResource } from './_utils';
+import { useBrandingTemplatesBoot } from './BrandingTemplatesBoot';
+import styles from './BrandTemplates.module.scss';
+import { DataTable, TableSkeletonRows } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { getCustomizeDrawerNameFromResource } from './_utils';
-import { useBrandingTemplatesColumns } from './_hooks';
-import styles from './BrandTemplates.module.scss';
 
 interface BrandingTemplatesTableProps {}
 

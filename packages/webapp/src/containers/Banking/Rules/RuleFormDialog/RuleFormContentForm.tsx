@@ -1,9 +1,19 @@
 // @ts-nocheck
-import { useCallback, useMemo } from 'react';
+import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { get } from 'lodash';
-import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import * as R from 'ramda';
+import { useCallback, useMemo } from 'react';
+import {
+  Fields,
+  RuleFormValues,
+  TransactionTypeOptions,
+  getAccountRootFromMoneyCategory,
+  getDefaultFieldConditionByFieldKey,
+  getFieldConditionsByFieldKey,
+  initialValues,
+} from './_utils';
+import { useRuleFormDialogBoot } from './RuleFormBoot';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
 import {
   AccountsSelect,
@@ -16,25 +26,15 @@ import {
   Group,
   Stack,
 } from '@/components';
+import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
+import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useCreateBankRule, useEditBankRule } from '@/hooks/query/banking';
-import {
-  Fields,
-  RuleFormValues,
-  TransactionTypeOptions,
-  getAccountRootFromMoneyCategory,
-  getDefaultFieldConditionByFieldKey,
-  getFieldConditionsByFieldKey,
-  initialValues,
-} from './_utils';
-import { useRuleFormDialogBoot } from './RuleFormBoot';
 import {
   transformToCamelCase,
   transformToForm,
   transfromToSnakeCase,
 } from '@/utils';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
-import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();

@@ -1,20 +1,18 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import intl from 'react-intl-universal';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import { useAutofocus } from '@/hooks';
-import { isEqual } from 'lodash';
 import { Classes, Position, ControlGroup } from '@blueprintjs/core';
-import classNames from 'classnames';
-import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
+import { useFormikContext } from 'formik';
+import { isEqual } from 'lodash';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
+import { useSetPrimaryBranchToForm } from './utils';
+import type { QuickPaymentReceiveFormValues } from './types';
 import {
   Row,
   Col,
   FieldRequiredHint,
   FAccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
   Icon,
   If,
   FeatureCan,
@@ -26,27 +24,24 @@ import {
   FDateInput,
   FMoneyInputGroup,
 } from '@/components';
-import { momentFormatter, compose } from '@/utils';
-import { useSetPrimaryBranchToForm } from './utils';
-import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { withSettings } from '@/containers/Settings/withSettings';
+import { Features, ACCOUNT_TYPE } from '@/constants';
+import { useAutofocus } from '@/hooks';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { momentFormatter } from '@/utils';
 
 /**
  * Quick payment receive form fields.
  */
-function QuickPaymentReceiveFormFieldsInner({
-  paymentReceiveAutoIncrement,
+function QuickPaymentReceiveFormFieldsInner(): React.ReactElement {
+  const { accounts, branches, paymentReceiveSettings } =
+    useQuickPaymentReceiveContext();
+  const paymentReceiveAutoIncrement = paymentReceiveSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
-  const { accounts, branches, baseCurrency } = useQuickPaymentReceiveContext();
-
-  // Intl context.
-  const { values } = useFormikContext();
-
-  const paymentReceiveFieldRef = useAutofocus();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<QuickPaymentReceiveFormValues>();
+  const paymentReceiveFieldRef = useAutofocus<HTMLInputElement>();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -56,9 +51,9 @@ function QuickPaymentReceiveFormFieldsInner({
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup name={'branch_id'} label={intl.get('branch')}>
+            <FFormGroup name={'branchId'} label={intl.get('branch')}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -72,60 +67,58 @@ function QuickPaymentReceiveFormFieldsInner({
         <Col xs={5}>
           {/* ------------- Customer name ------------- */}
           <FFormGroup
-            name={'customer_id'}
+            name={'customerId'}
             label={intl.get('customer_name')}
             labelInfo={<FieldRequiredHint />}
           >
-            <FInputGroup name={'customer_id'} minimal={true} disabled={true} />
+            <FInputGroup name={'customerId'} disabled />
           </FFormGroup>
         </Col>
 
         <Col xs={5}>
           {/* ------------ Payment receive no. ------------ */}
-          <FFormGroup
-            name={'payment_receive_no'}
-            label={intl.get('payment_no')}
-          >
+          <FFormGroup name={'paymentReceiveNo'} label={intl.get('payment_no')}>
             <FInputGroup
-              name={'payment_receive_no'}
-              minimal={true}
+              name={'paymentReceiveNo'}
               disabled={paymentReceiveAutoIncrement}
             />
           </FFormGroup>
         </Col>
       </Row>
-      {/*------------ Amount Received -----------*/}
+      {/*------------ Amount Received ----------- */}
 
       <FFormGroup name={'amount'} label={intl.get('amount_received')}>
         <ControlGroup>
-          <InputPrependText text={values.currency_code} />
+          <InputPrependText text={values.currencyCode} />
           <FMoneyInputGroup
             name={'amount'}
             minimal={true}
-            inputRef={(ref) => (paymentReceiveFieldRef.current = ref)}
+            inputRef={(ref: HTMLInputElement | null) => {
+              paymentReceiveFieldRef.current = ref;
+            }}
           />
         </ControlGroup>
       </FFormGroup>
 
-      <If condition={!isEqual(base_currency, values.currency_code)}>
-        {/*------------ exchange rate -----------*/}
+      <If condition={!isEqual(baseCurrency, values.currencyCode)}>
+        {/*------------ exchange rate ----------- */}
         <ExchangeRateMutedField
-          name={'exchange_rate'}
-          fromCurrency={base_currency}
-          toCurrency={values.currency_code}
+          name={'exchangeRate'}
+          fromCurrency={baseCurrency}
+          toCurrency={values.currencyCode}
           formGroupProps={{ label: '', inline: false }}
-          date={values.payment_date}
-          exchangeRate={values.exchange_rate}
+          date={values.paymentDate}
+          exchangeRate={values.exchangeRate}
         />
       </If>
 
       <Row>
         <Col xs={5}>
           {/* ------------- Payment date ------------- */}
-          <FFormGroup name={'payment_date'} label={intl.get('payment_date')}>
+          <FFormGroup name={'paymentDate'} label={intl.get('payment_date')}>
             <FDateInput
               {...momentFormatter('YYYY/MM/DD')}
-              name={'payment_date'}
+              name={'paymentDate'}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,
@@ -136,13 +129,10 @@ function QuickPaymentReceiveFormFieldsInner({
 
         <Col xs={5}>
           {/* ------------ Deposit account ------------ */}
-          <FFormGroup
-            name={'deposit_account_id'}
-            label={intl.get('deposit_to')}
-          >
+          <FFormGroup name={'depositAccountId'} label={intl.get('deposit_to')}>
             <FAccountsSuggestField
-              name={'deposit_account_id'}
-              items={accounts}
+              name={'depositAccountId'}
+              items={accounts ?? []}
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}
@@ -157,8 +147,8 @@ function QuickPaymentReceiveFormFieldsInner({
       </Row>
 
       {/* ------------ Reference No. ------------ */}
-      <FFormGroup label={intl.get('reference')} name={'reference_no'}>
-        <FInputGroup name={'reference_no'} minimal={true} />
+      <FFormGroup label={intl.get('reference')} name={'referenceNo'}>
+        <FInputGroup name={'referenceNo'} />
       </FFormGroup>
 
       {/* --------- Statement --------- */}
@@ -173,12 +163,7 @@ function QuickPaymentReceiveFormFieldsInner({
   );
 }
 
-export const QuickPaymentReceiveFormFields = compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-  withCurrentOrganization(),
-)(QuickPaymentReceiveFormFieldsInner);
+export const QuickPaymentReceiveFormFields = QuickPaymentReceiveFormFieldsInner;
 
 export const BranchRowDivider = styled.div`
   height: 1px;

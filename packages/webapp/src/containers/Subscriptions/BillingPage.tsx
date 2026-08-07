@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { useEffect } from 'react';
 import * as R from 'ramda';
+import { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
+import { withAlertActions } from '../Alert/withAlertActions';
+import { withDashboardActions } from '../Dashboard/withDashboardActions';
 import { BillingPageBoot } from './BillingPageBoot';
 import { BillingPageContent } from './BillingPageContent';
 import { useDashboardMeta } from '@/hooks/query';
-import { withAlertActions } from '../Alert/withAlertActions';
-import { withDashboardActions } from '../Dashboard/withDashboardActions';
 
 function BillingPageRoot({
   openAlert,

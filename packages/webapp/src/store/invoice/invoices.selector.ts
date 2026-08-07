@@ -1,9 +1,9 @@
 import { isEqual } from 'lodash';
+import { createSelector } from 'reselect';
+import { defaultTableQuery } from './invoices.reducer';
+import type { RootState } from '@/store/reducers';
 import { paginationLocationQuery } from '@/store/selectors';
 import { createDeepEqualSelector } from '@/utils';
-import { defaultTableQuery } from './invoices.reducer';
-import { createSelector } from 'reselect';
-import type { RootState } from '@/store/reducers';
 
 const invoicesTableStateSelector = (state: RootState) =>
   state.salesInvoices.tableState;

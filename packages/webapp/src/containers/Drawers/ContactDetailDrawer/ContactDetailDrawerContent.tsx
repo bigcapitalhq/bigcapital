@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-
 import { ContactDetail } from './ContactDetail';
 import { ContactDetailDrawerProvider } from './ContactDetailDrawerProvider';
 

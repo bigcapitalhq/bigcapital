@@ -1,8 +1,8 @@
-import React from 'react';
 import clsx from 'classnames';
 import { get, isFunction } from 'lodash';
-import { Box, BoxProps, Group, GroupProps } from '@/components';
+import React from 'react';
 import styles from './InvoicePaperTemplate.module.scss';
+import { Box, BoxProps, Group, GroupProps } from '@/components';
 
 export interface PaperTemplateProps extends BoxProps {
   primaryColor?: string;

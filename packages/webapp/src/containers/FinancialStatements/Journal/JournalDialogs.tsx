@@ -1,6 +1,6 @@
 import React from 'react';
-import { DialogsName } from '@/constants/dialogs';
 import { JournalPdfDialog } from './dialogs/JournalPdfDialog';
+import { DialogsName } from '@/constants/dialogs';
 
 export function JournalDialogs() {
   return (

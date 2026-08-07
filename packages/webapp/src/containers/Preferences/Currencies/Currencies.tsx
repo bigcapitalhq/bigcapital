@@ -1,10 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 import styled from 'styled-components';
+import { CurrenciesList } from './CurrenciesList';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { CurrenciesList } from './CurrenciesList';
 
 export function PreferencesCurrenciesPage() {
   return (

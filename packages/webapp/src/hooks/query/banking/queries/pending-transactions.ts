@@ -1,3 +1,4 @@
+import { fetchPendingTransactions } from '@bigcapital/sdk-ts';
 import {
   useInfiniteQuery,
   UseQueryOptions,
@@ -7,14 +8,16 @@ import {
   InfiniteData,
   QueryKey,
 } from '@tanstack/react-query';
-import { fetchPendingTransactions } from '@bigcapital/sdk-ts';
-import type { PendingBankTransactionsListPage } from '@bigcapital/sdk-ts';
 import { useApiFetcher } from '../../../useRequest';
-import { bankingKeys } from '../query-keys';
 import {
   getNextPageFromPagination,
   getPrevPageFromPagination,
 } from '../../utils/infinite-pagination';
+import { bankingKeys } from '../query-keys';
+import type {
+  GetPendingTransactionsQuery,
+  PendingBankTransactionsListPage,
+} from '@bigcapital/sdk-ts';
 
 export type PendingBankAccountTransactionsResponse = Awaited<
   ReturnType<typeof fetchPendingTransactions>
@@ -33,7 +36,7 @@ export function usePendingBankAccountTransactions(
 }
 
 export function usePendingBankTransactionsInfinity(
-  query: Record<string, unknown>,
+  query: GetPendingTransactionsQuery,
   infinityProps?: Omit<
     UseInfiniteQueryOptions<
       PendingBankTransactionsListPage,

@@ -1,7 +1,7 @@
 import { Callout } from '@blueprintjs/core';
 import { SubscriptionPlans } from './SubscriptionPlans';
-import { SubscriptionPlansPeriodSwitcher } from './SubscriptionPlansPeriodSwitcher';
 import { SubscriptionPlansOfferChecks } from './SubscriptionPlansOfferChecks';
+import { SubscriptionPlansPeriodSwitcher } from './SubscriptionPlansPeriodSwitcher';
 
 /**
  * Billing plans.

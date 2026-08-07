@@ -1,18 +1,21 @@
 // @ts-nocheck
-import * as R from 'ramda';
+import { Button, Card, Classes, Intent, Text } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { includes } from 'lodash';
-import { Box, Group, Stack } from '@/components';
-import { Button, Card, Classes, Intent, Text } from '@blueprintjs/core';
+import * as R from 'ramda';
 import { withAlertActions } from '../Alert/withAlertActions';
-import styles from './BillingSubscription.module.scss';
 import { withDrawerActions } from '../Drawer/withDrawerActions';
-import { DRAWERS } from '@/constants/drawers';
-import { useBillingPageBoot } from './BillingPageBoot';
 import { getSubscriptionStatusText } from './_utils';
+import { useBillingPageBoot } from './BillingPageBoot';
+import styles from './BillingSubscription.module.scss';
+import { SubscriptionsDrawers } from './SubscriptionsDrawers';
+import { Box, Group, Stack } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { useLemonSubscription } from '@/hooks/query/subscription';
 
 function SubscriptionRoot({ openAlert, openDrawer }) {
   const { mainSubscription } = useBillingPageBoot();
+  const lemonSubscription = useLemonSubscription('main');
 
   // Can't continue if the main subscription is not loaded.
   if (!mainSubscription) {
@@ -25,9 +28,7 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
     openAlert('resume-main-subscription');
   };
   const handleUpdatePaymentMethod = () => {
-    window.LemonSqueezy.Url.Open(
-      mainSubscription.lemonUrls?.updatePaymentMethod,
-    );
+    window.LemonSqueezy.Url.Open(lemonSubscription?.urls?.updatePaymentMethod);
   };
   // Handle upgrade button click.
   const handleUpgradeBtnClick = () => {
@@ -36,6 +37,7 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
 
   return (
     <Card className={styles.root}>
+      <SubscriptionsDrawers />
       <Stack spacing={6}>
         <h1 className={styles.title}>{mainSubscription.planName}</h1>
 

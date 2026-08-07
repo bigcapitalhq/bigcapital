@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
 import moment from 'moment';
 import * as R from 'ramda';
-import { FinancialStatement, DashboardPageContent } from '@/components';
+import React, { useEffect } from 'react';
+import { CustomersBalanceLoadingBar } from './components';
+import { CustomerBalanceSummaryPdfDialog } from './CustomerBalancePdfDialog';
+import { CustomerBalanceSummaryBody } from './CustomerBalanceSummaryBody';
 import { CustomersBalanceSummaryActionsBar } from './CustomersBalanceSummaryActionsBar';
 import { CustomersBalanceSummaryHeader } from './CustomersBalanceSummaryHeader';
-import { CustomerBalanceSummaryBody } from './CustomerBalanceSummaryBody';
 import { CustomersBalanceSummaryProvider } from './CustomersBalanceSummaryProvider';
 import { useCustomerBalanceSummaryQuery } from './utils';
-import { CustomersBalanceLoadingBar } from './components';
 import {
   withCustomersBalanceSummaryActions,
   WithCustomersBalanceSummaryActionsProps,
 } from './withCustomersBalanceSummaryActions';
-import { CustomerBalanceSummaryPdfDialog } from './CustomerBalancePdfDialog';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 
 type CustomersBalanceSummaryProps = Pick<

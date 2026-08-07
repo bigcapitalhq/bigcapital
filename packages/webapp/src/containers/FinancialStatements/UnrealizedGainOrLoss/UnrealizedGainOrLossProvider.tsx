@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { FinancialReportPage } from '../FinancialReportPage';
 
 type UnrealizedGainOrLossContextValue = Record<string, unknown>;
