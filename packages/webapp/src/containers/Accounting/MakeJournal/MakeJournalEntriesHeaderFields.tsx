@@ -114,7 +114,7 @@ export function MakeJournalEntriesHeader() {
           name={'currencyCode'}
           items={currencies}
           onItemChange={(currencyItem: Record<string, unknown>) => {
-            form.setFieldValue('currencyCode', currencyItem.currency_code);
+            form.setFieldValue('currencyCode', currencyItem.currencyCode);
             form.setFieldValue('exchangeRate', '');
           }}
           popoverProps={{
@@ -122,9 +122,9 @@ export function MakeJournalEntriesHeader() {
             minimal: true,
             captureDismiss: true,
           }}
-          valueAccessor={'currency_code'}
-          labelAccessor={'currency_name'}
-          textAccessor={'currency_code'}
+          valueAccessor={'currencyCode'}
+          labelAccessor={'currencyName'}
+          textAccessor={'currencyCode'}
           fastField
         />
       </FFormGroup>

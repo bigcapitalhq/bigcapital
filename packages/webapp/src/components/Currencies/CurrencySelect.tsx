@@ -12,14 +12,14 @@ import { FSelect } from '../Forms';
  * @returns
  */
 const currencyItemPredicate = (query, currency, _index, exactMatch) => {
-  const normalizedTitle = currency.currency_code.toLowerCase();
+  const normalizedTitle = currency.currencyCode.toLowerCase();
   const normalizedQuery = query.toLowerCase();
 
   if (exactMatch) {
     return normalizedTitle === normalizedQuery;
   } else {
     return (
-      `${currency.currency_code}. ${normalizedTitle}`.indexOf(
+      `${currency.currencyCode}. ${normalizedTitle}`.indexOf(
         normalizedQuery,
       ) >= 0
     );
@@ -35,9 +35,9 @@ export function CurrencySelect({ currencies, ...rest }) {
   return (
     <FSelect
       itemPredicate={currencyItemPredicate}
-      valueAccessor={'currency_code'}
-      textAccessor={'currency_name'}
-      labelAccessor={'currency_code'}
+      valueAccessor={'currencyCode'}
+      textAccessor={'currencyName'}
+      labelAccessor={'currencyCode'}
       {...rest}
       items={currencies}
       placeholder={intl.get('select_currency_code')}
