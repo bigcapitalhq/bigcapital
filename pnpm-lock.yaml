@@ -523,6 +523,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: 2.1.13
         version: 2.1.13(@tiptap/pm@2.1.13)
+      '@types/history':
+        specifier: ^4.7.11
+        version: 4.7.11
       '@types/js-money':
         specifier: ^0.6.1
         version: 0.6.5
