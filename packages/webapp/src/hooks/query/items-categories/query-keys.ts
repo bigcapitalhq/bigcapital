@@ -1,6 +1,6 @@
 // Query key constants
-export const ITEMS_CATEGORIES = 'ITEMS_CATEGORIES';
-export const ITEM_CATEGORY = 'ITEM_CATEGORY';
+import { ITEMS_CATEGORIES, ITEM_CATEGORY } from '../items/query-keys';
+export { ITEMS_CATEGORIES, ITEM_CATEGORY } from '../items/query-keys';
 
 // Query key factory
 export const itemsCategoriesKeys = {

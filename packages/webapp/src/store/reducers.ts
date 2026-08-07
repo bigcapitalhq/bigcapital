@@ -5,7 +5,6 @@ import { PlaidSlice } from './banking/banking.reducer';
 import { billsPersistReducer as bills } from './bills/bills.reducer';
 import { cashflowAccountsPersistReducer as cashflowAccounts } from './cashflow-accounts/cashflow-accounts.reducer';
 import { creditNotesPersistReducer as creditNotes } from './credit-note/credit-note.reducer';
-import { currenciesReducer as currencies } from './currencies/currencies.reducer';
 import { customFieldsReducer as fields } from './custom-fields/custom-fields.reducer';
 import { customViewsReducer as views } from './custom-views/custom-views.reducer';
 import { customersPersistReducer as customers } from './customers/customers.reducer';
@@ -45,7 +44,6 @@ const appReducer = combineReducers({
   fields,
   views,
   expenses,
-  currencies,
   resources,
   financialStatements,
   items,

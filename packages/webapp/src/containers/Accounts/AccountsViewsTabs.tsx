@@ -45,9 +45,6 @@ function AccountsViewsTabsInner({
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          // `defaultTabText` is typed as `Element` but the original passes a
-          // string from intl.get — preserved latent bug.
-          // @ts-expect-error see comment above
           defaultTabText={intl.get('all_accounts_')}
           currentViewSlug={accountsCurrentView}
           resourceName={'accounts'}

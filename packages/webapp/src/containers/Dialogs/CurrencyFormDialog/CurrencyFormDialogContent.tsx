@@ -2,11 +2,8 @@ import React from 'react';
 import '@/style/pages/Currency/CurrencyFormDialog.scss';
 import { CurrencyForm } from './CurrencyForm';
 import { CurrencyFormProvider } from './CurrencyFormProvider';
-import type { WithCurrencyDetailProps } from '@/containers/Currencies/withCurrencyDetail';
-import { withCurrencyDetail } from '@/containers/Currencies/withCurrencyDetail';
-import { compose } from '@/utils';
 
-interface CurrencyFormDialogContentInnerProps extends WithCurrencyDetailProps {
+interface CurrencyFormDialogContentInnerProps {
   action?: string;
   currencyCode?: string;
   dialogName: string;
@@ -30,6 +27,4 @@ function CurrencyFormDialogContentInner({
   );
 }
 
-export const CurrencyFormDialogContent = compose(withCurrencyDetail)(
-  CurrencyFormDialogContentInner,
-);
+export const CurrencyFormDialogContent = CurrencyFormDialogContentInner;

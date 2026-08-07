@@ -82,13 +82,15 @@ export function createStateFactoryHOC<TInjectedProps extends object>(
  *
  * @example
  * ```tsx
- * export interface WithCurrencyDetailProps {
- *   currency: Record<string, unknown> | null;
+ * export interface WithItemDetailProps {
+ *   item: Record<string, unknown> | null;
  * }
  *
- * export const withCurrencyDetail = createStateHOC<WithCurrencyDetailProps>((state, props) => ({
- *   currency: getCurrencyByCode(state, props),
- * }));
+ * export const withItemDetail = createStateHOC<WithItemDetailProps>(
+ *   (state, props) => ({
+ *     item: getItemById(state, props),
+ *   }),
+ * );
  * ```
  */
 export function createStateHOC<TInjectedProps extends object>(

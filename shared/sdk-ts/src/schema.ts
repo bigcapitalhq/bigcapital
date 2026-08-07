@@ -4949,6 +4949,24 @@ export interface components {
              */
             password: string;
         };
+        AuthedAccountResponseDto: {
+            /** @description User ID */
+            id: number;
+            /** @description User first name */
+            firstName: string;
+            /** @description User last name */
+            lastName: string;
+            /** @description User email */
+            email: string;
+            /** @description Whether the user account is active */
+            active: boolean;
+            /** @description User language */
+            language?: string;
+            /** @description Tenant ID */
+            tenantId: number;
+            /** @description Whether the user email is verified */
+            verified: boolean;
+        };
         ApiKeyResponseDto: {
             /**
              * @description API key ID
@@ -16841,11 +16859,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description The authenticated account. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["AuthedAccountResponseDto"];
+                };
             };
         };
     };

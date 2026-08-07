@@ -1,4 +1,4 @@
-// @ts-nocheck
+import { useHistory } from 'react-router-dom';
 import {
   CollapsibleList,
   MenuItem,
@@ -7,9 +7,17 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
-import { useHistory } from 'react-router-dom';
 
-function DashboardBreadcrumbs({ breadcrumbs }) {
+export interface DashboardBreadcrumbItem {
+  breadcrumb: React.ReactNode;
+  match: { url: string };
+}
+
+function DashboardBreadcrumbs({
+  breadcrumbs,
+}: {
+  breadcrumbs: React.ReactNode[];
+}) {
   const history = useHistory();
 
   return (
@@ -19,7 +27,9 @@ function DashboardBreadcrumbs({ breadcrumbs }) {
       collapseFrom={Boundary.START}
       visibleItemCount={0}
     >
-      {breadcrumbs.map(({ breadcrumb, match }) => {
+      {breadcrumbs.map((crumb) => {
+        const { breadcrumb, match } =
+          crumb as unknown as DashboardBreadcrumbItem;
         return (
           <MenuItem
             key={match.url}

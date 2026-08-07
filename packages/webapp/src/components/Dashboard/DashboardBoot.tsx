@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { useWatch, useWatchImmediate, useWhen } from '@/hooks';
 import {
@@ -19,9 +18,7 @@ export function useDashboardMetaBoot() {
     data: dashboardMeta,
     isLoading: isDashboardMetaLoading,
     isSuccess: isDashboardMetaSuccess,
-  } = useDashboardMeta({
-    keepPreviousData: true,
-  });
+  } = useDashboardMeta();
   const [startLoading, stopLoading] = useSplashLoading();
 
   useWatchImmediate((value) => {

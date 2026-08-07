@@ -1,13 +1,12 @@
-// @ts-nocheck
 import { useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { setGlobalErrors } from '@/store/global-errors/global-errors.actions';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export const useSetGlobalErrors = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
-    (errors) => {
+    (errors: Record<string, unknown>) => {
       dispatch(setGlobalErrors(errors));
     },
     [dispatch],
@@ -15,7 +14,7 @@ export const useSetGlobalErrors = () => {
 };
 
 export const useGlobalErrors = () => {
-  const globalErrors = useSelector((state) => state.globalErrors.data);
+  const globalErrors = useAppSelector((state) => state.globalErrors.data);
 
   return { globalErrors };
 };

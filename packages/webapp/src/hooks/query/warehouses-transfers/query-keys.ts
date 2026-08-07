@@ -1,7 +1,8 @@
 // Query key constants
+import { ITEM_WAREHOUSES_LOCATION } from '../items/query-keys';
+export { ITEM_WAREHOUSES_LOCATION } from '../items/query-keys';
 export const WAREHOUSE_TRANSFERS = 'WAREHOUSE_TRANSFERS';
 export const WAREHOUSE_TRANSFER = 'WAREHOUSE_TRANSFER';
-export const ITEM_WAREHOUSES_LOCATION = 'ITEM_WAREHOUSES_LOCATION';
 
 // Query key factory
 export const warehousesTransfersKeys = {

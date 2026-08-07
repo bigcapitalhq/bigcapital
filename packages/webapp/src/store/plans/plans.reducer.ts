@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import type { SubscriptionPlan } from '@/constants/subscriptionModels';
 import { SubscriptionPlans } from '@/constants/subscriptionModels';
 
 export enum SubscriptionPlansPeriod {
@@ -7,7 +8,7 @@ export enum SubscriptionPlansPeriod {
 }
 
 interface StorePlansState {
-  plans: any;
+  plans: SubscriptionPlan[];
   plansPeriod: SubscriptionPlansPeriod;
 }
 

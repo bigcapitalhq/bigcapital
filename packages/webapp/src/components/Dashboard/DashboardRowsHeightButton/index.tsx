@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   PopoverInteractionKind,
@@ -15,22 +14,24 @@ import React from 'react';
 import Style from './style.module.scss';
 import { Icon, T } from '@/components';
 
+interface DashboardRowsHeightButtonProps {
+  initialValue?: any;
+  value?: any;
+  onChange?: (size: any, event?: React.SyntheticEvent) => void;
+}
+
 /**
  * Dashboard rows height button control.
  */
 export function DashboardRowsHeightButton({
-  initialValue,
+  initialValue = 'medium',
   value,
   onChange,
-}: {
-  initialValue?: any;
-  value?: any;
-  onChange?: (size: any, event?: any) => void;
-}) {
+}: DashboardRowsHeightButtonProps) {
   const [localSize, setLocalSize] = React.useState(initialValue);
 
   // Handle menu item click.
-  const handleItemClick = (size) => (event) => {
+  const handleItemClick = (size: string) => (event: React.SyntheticEvent) => {
     setLocalSize(size);
     onChange && onChange(size, event);
   };
@@ -72,7 +73,3 @@ export function DashboardRowsHeightButton({
     </Popover>
   );
 }
-
-DashboardRowsHeightButton.defaultProps = {
-  initialValue: 'medium',
-};

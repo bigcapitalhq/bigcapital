@@ -43,7 +43,6 @@ function CurrencyFormDialog({
     >
       <DialogSuspense>
         <CurrencyFormDialogContent
-          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           dialogName={dialogName}
           currencyCode={payload.currency}
           action={payload.action}

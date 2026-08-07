@@ -19,9 +19,8 @@ const currencyItemPredicate = (query, currency, _index, exactMatch) => {
     return normalizedTitle === normalizedQuery;
   } else {
     return (
-      `${currency.currencyCode}. ${normalizedTitle}`.indexOf(
-        normalizedQuery,
-      ) >= 0
+      `${currency.currencyCode}. ${normalizedTitle}`.indexOf(normalizedQuery) >=
+      0
     );
   }
 };

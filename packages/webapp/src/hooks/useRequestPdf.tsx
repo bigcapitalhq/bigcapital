@@ -1,15 +1,24 @@
-// @ts-nocheck
 import React from 'react';
 import { normalizeApiPath } from '../utils';
 import useApiRequest from './useRequest';
-import { useApiFetcher } from './useRequest';
+import type {
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosResponseHeaders,
+} from 'axios';
 
-export const useRequestPdf = (httpProps) => {
+export interface PdfRequestProps extends AxiosRequestConfig {
+  url: string;
+}
+
+export const useRequestPdf = (httpProps?: PdfRequestProps) => {
   const apiRequest = useApiRequest();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [pdfUrl, setPdfUrl] = React.useState('');
-  const [response, setResponse] = React.useState(null);
+  const [response, setResponse] = React.useState<AxiosResponse<Blob> | null>(
+    null,
+  );
   const [filename, setFilename] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -19,7 +28,7 @@ export const useRequestPdf = (httpProps) => {
         headers: { accept: 'application/pdf' },
         responseType: 'blob',
         ...httpProps,
-        url: `/api/${normalizeApiPath(httpProps?.url)}`,
+        url: `/api/${normalizeApiPath(httpProps?.url || '')}`,
       })
       .then((response) => {
         // Create a Blob from the PDF Stream.
@@ -29,7 +38,9 @@ export const useRequestPdf = (httpProps) => {
         const fileURL = URL.createObjectURL(file);
 
         // Extract the filename from the Content-Disposition header
-        const contentDisposition = response.headers.get('Content-Disposition');
+        const contentDisposition = (
+          response.headers as AxiosResponseHeaders
+        ).get('Content-Disposition') as string | undefined;
         let _filename = 'default.pdf'; // Default filename if not provided by server
 
         if (contentDisposition && contentDisposition.includes('filename=')) {

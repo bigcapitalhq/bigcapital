@@ -2,7 +2,6 @@ export * from './authentication/authentication.types';
 export * from './accounts/accounts.types';
 export * from './cashflow-accounts/cashflow-accounts.types';
 export * from './manual-journals/manual-journals.types';
-export * from './currencies/currencies.types';
 export * from './custom-fields/custom-fields.types';
 export * from './custom-views/custom-views.types';
 export * from './dashboard/dashboard.types';
