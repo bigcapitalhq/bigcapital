@@ -40,15 +40,23 @@ export function downloadFile(
   mime = 'application/octet-stream',
   bom?: BlobPart,
 ) {
-  const blobData: BlobPart[] = typeof bom !== 'undefined' ? [bom, data] : [data];
+  const blobData: BlobPart[] =
+    typeof bom !== 'undefined' ? [bom, data] : [data];
   const blob = new Blob(blobData, { type: mime });
 
-  if (typeof (window.navigator as Navigator & { msSaveBlob?: unknown }).msSaveBlob !== 'undefined') {
+  if (
+    typeof (window.navigator as Navigator & { msSaveBlob?: unknown })
+      .msSaveBlob !== 'undefined'
+  ) {
     // IE workaround for "HTML7007: One or more blob URLs were
     // revoked by closing the blob for which they were created.
     // These URLs will no longer resolve as the data backing
     // the URL has been freed."
-    (window.navigator as unknown as { msSaveBlob: (blob: Blob, name: string) => void }).msSaveBlob(blob, filename);
+    (
+      window.navigator as unknown as {
+        msSaveBlob: (blob: Blob, name: string) => void;
+      }
+    ).msSaveBlob(blob, filename);
   } else {
     const blobURL =
       window.URL && window.URL.createObjectURL

@@ -26,7 +26,10 @@ const handleToggleDarkMode = () => {
   }
 };
 
-type GlobalHotkeysProps = Pick<WithDashboardActionsProps, 'toggleSidebarExpand'> &
+type GlobalHotkeysProps = Pick<
+  WithDashboardActionsProps,
+  'toggleSidebarExpand'
+> &
   Pick<WithUniversalSearchActionsProps, 'openGlobalSearch'> &
   Pick<WithDialogActionsProps, 'openDialog'>;
 

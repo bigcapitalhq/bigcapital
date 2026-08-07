@@ -17,10 +17,7 @@ interface UseMediaArgs {
   deleteCallback: (files: MediaFile[]) => Promise<unknown>;
 }
 
-const showToast = AppToaster.show as (
-  message: unknown,
-  key?: string,
-) => string;
+const showToast = AppToaster.show as (message: unknown, key?: string) => string;
 
 const useMedia = ({ saveCallback, deleteCallback }: UseMediaArgs) => {
   const [files, setFiles] = useState<MediaFile[]>([]);
@@ -63,7 +60,11 @@ const useMedia = ({ saveCallback, deleteCallback }: UseMediaArgs) => {
         });
       };
       return (
-        saveFilesInAsync(notUploadedFiles, saveAction, undefined) as unknown as {
+        saveFilesInAsync(
+          notUploadedFiles,
+          saveAction,
+          undefined,
+        ) as unknown as {
           onProgress: (cb: (progress: number) => void) => unknown;
         }
       ).onProgress((progress) => {

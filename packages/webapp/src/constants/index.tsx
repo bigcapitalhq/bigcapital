@@ -5,4 +5,8 @@ export * from './cellTypes';
 export * from './classes';
 export * from './cashflowOptions';
 
-export const Align = { Left: 'left', Right: 'right', Center: 'center' } as const;
+export const Align = {
+  Left: 'left',
+  Right: 'right',
+  Center: 'center',
+} as const;

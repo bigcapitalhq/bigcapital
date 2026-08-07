@@ -13,7 +13,9 @@ export function DashboardTopbarSubscriptionMessage() {
   );
 }
 
-export function DashboardHamburgerButton(props: React.ComponentProps<typeof Button>) {
+export function DashboardHamburgerButton(
+  props: React.ComponentProps<typeof Button>,
+) {
   return (
     <Button minimal={true} {...props}>
       <svg

@@ -28,7 +28,8 @@ function DashboardBreadcrumbs({
       visibleItemCount={0}
     >
       {breadcrumbs.map((crumb) => {
-        const { breadcrumb, match } = crumb as unknown as DashboardBreadcrumbItem;
+        const { breadcrumb, match } =
+          crumb as unknown as DashboardBreadcrumbItem;
         return (
           <MenuItem
             key={match.url}

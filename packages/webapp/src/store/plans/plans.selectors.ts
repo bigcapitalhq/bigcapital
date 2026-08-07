@@ -16,7 +16,8 @@ export const getPlansSelector = () =>
   createSelector(plansSelector, (plans) => plans);
 
 // Retrieve plan details.
-export const getPlanSelector = () => createSelector(planSelector, (plan) => plan);
+export const getPlanSelector = () =>
+  createSelector(planSelector, (plan) => plan);
 
 // Retrieves the plans period (monthly or annually).
 export const getPlansPeriodSelector = () =>

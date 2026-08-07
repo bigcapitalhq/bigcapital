@@ -14,7 +14,11 @@ type ResourceDataTransformer = (response: any) => ResourceData;
  * @param {*} query
  * @returns
  */
-export function useResourceData(type: string, query?: unknown, props?: unknown) {
+export function useResourceData(
+  type: string,
+  query?: unknown,
+  props?: unknown,
+) {
   const url = getResourceUrlFromType(type);
 
   return useRequestQuery<{ items: unknown[] }>(

@@ -51,7 +51,10 @@ export function DashboardViewsTabs({
   }, [currentView, setCurrentView, currentViewSlug]);
 
   const throttledOnChange = useRef(
-    debounce((viewId: any) => saveInvoke(OnThrottledChange, viewId), throttleTime),
+    debounce(
+      (viewId: any) => saveInvoke(OnThrottledChange, viewId),
+      throttleTime,
+    ),
   );
 
   // Trigger `onChange` and `onThrottledChange` events.
@@ -85,9 +88,11 @@ export function DashboardViewsTabs({
       >
         {allTab && <Tab id={0} title={defaultTabText} />}
 
-        {(tabs as Array<{ slug?: string | number; name?: React.ReactNode }>).map(
-          (tab) => <Tab id={tab.slug} title={tab.name} />,
-        )}
+        {(
+          tabs as Array<{ slug?: string | number; name?: React.ReactNode }>
+        ).map((tab) => (
+          <Tab id={tab.slug} title={tab.name} />
+        ))}
         <If condition={newViewTab}>
           <Tooltip
             content={<T id={'create_a_new_view'} />}

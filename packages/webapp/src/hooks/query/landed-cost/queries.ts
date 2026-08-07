@@ -64,10 +64,7 @@ export function useDeleteLandedCost(
 
 export function useLandedCostTransaction(
   query: string | undefined,
-  props?: Omit<
-    UseQueryOptions<unknown>,
-    'queryKey' | 'queryFn'
-  >,
+  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
 ) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({

@@ -36,8 +36,13 @@ export function useCreateOneClickDemo(
   return useMutation<CreateOneClickDemoRes, Error, CreateOneClickDemoValues>({
     ...props,
     mutationFn: () =>
-      apiRequest.post(`/demo/one_click`) as unknown as Promise<CreateOneClickDemoRes>,
-    onSuccess: (_res: CreateOneClickDemoRes, _id: CreateOneClickDemoValues) => {},
+      apiRequest.post(
+        `/demo/one_click`,
+      ) as unknown as Promise<CreateOneClickDemoRes>,
+    onSuccess: (
+      _res: CreateOneClickDemoRes,
+      _id: CreateOneClickDemoValues,
+    ) => {},
   });
 }
 

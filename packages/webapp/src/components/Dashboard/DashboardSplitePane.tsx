@@ -21,11 +21,13 @@ interface SplitPaneWithChildrenProps {
   children?: React.ReactNode;
 }
 
-const SplitPaneComponent = SplitPane as unknown as React.ComponentType<
-  SplitPaneWithChildrenProps
->;
+const SplitPaneComponent =
+  SplitPane as unknown as React.ComponentType<SplitPaneWithChildrenProps>;
 
-function DashboardSplitPane({ sidebarExpended, children }: DashboardSplitPaneProps) {
+function DashboardSplitPane({
+  sidebarExpended,
+  children,
+}: DashboardSplitPaneProps) {
   const initialSize = 220;
 
   const [defaultSize, setDefaultSize] = useState(

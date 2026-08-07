@@ -1,7 +1,11 @@
 import React from 'react';
 import { normalizeApiPath } from '../utils';
 import useApiRequest from './useRequest';
-import type { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders } from 'axios';
+import type {
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosResponseHeaders,
+} from 'axios';
 
 export interface PdfRequestProps extends AxiosRequestConfig {
   url: string;

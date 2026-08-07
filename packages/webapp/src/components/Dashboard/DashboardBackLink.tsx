@@ -12,7 +12,10 @@ interface DashboardBackLinkProps {
   breadcrumbs: DashboardBreadcrumbItem[];
 }
 
-function DashboardBackLink({ dashboardBackLink, breadcrumbs }: DashboardBackLinkProps) {
+function DashboardBackLink({
+  dashboardBackLink,
+  breadcrumbs,
+}: DashboardBackLinkProps) {
   const history = useHistory();
   const crumb = breadcrumbs[breadcrumbs.length - 2];
 
