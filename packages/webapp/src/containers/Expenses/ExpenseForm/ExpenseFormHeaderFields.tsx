@@ -113,9 +113,9 @@ export function ExpenseFormHeader() {
         <FSelect
           name={'currencyCode'}
           items={currencies}
-          valueAccessor={'currency_code'}
-          textAccessor={'currency_code'}
-          labelAccessor={'currency_code'}
+          valueAccessor={'currencyCode'}
+          textAccessor={'currencyCode'}
+          labelAccessor={'currencyCode'}
           popoverProps={{ minimal: true }}
           fill={true}
           fastField={true}

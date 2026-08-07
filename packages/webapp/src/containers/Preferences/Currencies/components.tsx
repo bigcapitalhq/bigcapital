@@ -92,14 +92,14 @@ export function useCurrenciesTableColumns() {
       },
       {
         Header: intl.get('currency_code'),
-        accessor: 'currency_code',
+        accessor: 'currencyCode',
         className: 'currency_code',
         width: 120,
       },
       {
         Header: intl.get('currency_sign'),
         width: 120,
-        accessor: 'currency_sign',
+        accessor: 'currencySign',
       },
       {
         id: 'actions',

@@ -18,8 +18,8 @@ export function CurrencySelectList({
     <FSelect
       name={name}
       items={items}
-      textAccessor={'currency_code'}
-      valueAccessor={'currency_code'}
+      textAccessor={'currencyCode'}
+      valueAccessor={'currencyCode'}
       placeholder={placeholder}
       popoverProps={{ minimal: true, usePortal: true, inline: false }}
       {...props}
