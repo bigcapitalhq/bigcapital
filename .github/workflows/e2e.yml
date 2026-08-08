@@ -126,6 +126,12 @@ jobs:
           MAIL_FROM_ADDRESS=test@bigcapital.app
           EOF
 
+      - name: Grant tenant database privileges
+        run: |
+          CID=$(docker ps -qf "ancestor=mariadb:10.6" | head -1)
+          docker exec "$CID" mysql -uroot -proot -e \
+            "GRANT ALL PRIVILEGES ON *.* TO 'bigcapital'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+
       - name: Run database migrations
         run: pnpm system:migrate:latest
 
