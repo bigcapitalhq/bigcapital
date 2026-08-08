@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { defaultPageConfig } from './_utils';
+import { newUnauthenticatedPage } from './_utils';
 
 // This spec exercises the onboarding UI itself with its own freshly
 // registered user, so it must not reuse the shared onboarded session.
@@ -11,7 +11,7 @@ let businessLegalName: string = faker.company.name();
 
 test.describe('onboarding', () => {
   test.beforeAll(async ({ browser }) => {
-    authPage = await browser.newPage({ ...defaultPageConfig() });
+    authPage = await newUnauthenticatedPage(browser);
     await authPage.goto('/auth/register');
 
     const form = authPage.locator('form');
