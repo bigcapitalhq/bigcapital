@@ -47,7 +47,7 @@ const transformFormToCreateBody = (
     sellAccountId: toAccountId(values.sellAccountId),
     inventoryAccountId: toAccountId(values.inventoryAccountId),
     costMethod: values.costMethod,
-  } as CreateItemCategoryBody);
+  }) as CreateItemCategoryBody;
 
 const transformFormToEditBody = (
   values: ItemCategoryFormValues,
