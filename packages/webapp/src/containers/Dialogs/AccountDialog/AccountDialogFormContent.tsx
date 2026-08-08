@@ -73,6 +73,7 @@ export function AccountDialogFormContent({
               accountNameFieldRef.current = ref;
             }}
             name={'name'}
+            data-testId={'account-name-input'}
             fastField={true}
           />
         </FFormGroup>
@@ -84,7 +85,11 @@ export function AccountDialogFormContent({
           inline={true}
           fastField={true}
         >
-          <FInputGroup name={'code'} fastField={true} />
+          <FInputGroup
+            name={'code'}
+            data-testId={'account-code-input'}
+            fastField={true}
+          />
         </FFormGroup>
 
         <FFormGroup

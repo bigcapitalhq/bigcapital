@@ -141,6 +141,7 @@ export interface DataTableProps<D extends object = any> {
   expandSubRows?: boolean;
   expanded?: any;
   rowClassNames?: (row: Row<D>) => string | undefined;
+  rowTestId?: string;
   payload?: Record<string, any>;
   expandable?: boolean;
   noInitialFetch?: boolean;

@@ -10,10 +10,17 @@ function LoadingContent() {
   );
 }
 
-export function DialogSuspense({ children }) {
+interface DialogSuspenseProps {
+  children?: React.ReactNode;
+  testId?: string;
+}
+
+export function DialogSuspense({ children, testId }: DialogSuspenseProps) {
   return (
     <Suspense fallback={<LoadingContent />}>
-      <div className={'dialog__suspense-wrapper'}>{children}</div>
+      <div className={'dialog__suspense-wrapper'} data-testId={testId}>
+        {children}
+      </div>
     </Suspense>
   );
 }

@@ -126,6 +126,12 @@ jobs:
           MAIL_FROM_ADDRESS=test@bigcapital.app
           EOF
 
+      - name: Grant tenant database privileges
+        run: |
+          CID=$(docker ps -qf "ancestor=mariadb:10.6" | head -1)
+          docker exec "$CID" mysql -uroot -proot -e \
+            "GRANT ALL PRIVILEGES ON *.* TO 'bigcapital'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+
       - name: Run database migrations
         run: pnpm system:migrate:latest
 
@@ -138,15 +144,16 @@ jobs:
 
       - name: Start webapp in background
         run: |
-          cd packages/webapp && pnpm dev &
+          cd packages/webapp && VITE_REACT_QUERY_DEVTOOLS=false pnpm dev &
           sleep 10
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium
 
       - name: Run E2E tests
-        run: pnpm run test:e2e
+        run: pnpm run e2e:webapp
         env:
+          PLAYWRIGHT_TEST_API_URL: http://localhost:3000
           PLAYWRIGHT_TEST_BASE_URL: http://localhost:4000
 
       - uses: actions/upload-artifact@v4
