@@ -28,21 +28,26 @@ const defaultInitialValues: ItemCategoryFormValues = {
 };
 
 // Coerce form-friendly string|number fields to the strict SDK body shape.
-// Empty strings become 0 — preserves the original broken runtime behavior
-// (server would have rejected empty values either way).
-const toAccountId = (v: string | number): number =>
-  typeof v === 'number' ? v : Number(v) || 0;
+// Empty strings become `undefined` so the account fields are omitted from the
+// request body — sending `0` makes the server insert an account_id of 0, which
+// violates the foreign key constraint.
+const toAccountId = (v: string | number): number | undefined =>
+  typeof v === 'number' ? v || undefined : Number(v) || undefined;
 
 const transformFormToCreateBody = (
   values: ItemCategoryFormValues,
-): CreateItemCategoryBody => ({
-  name: values.name,
-  description: values.description,
-  costAccountId: toAccountId(values.costAccountId),
-  sellAccountId: toAccountId(values.sellAccountId),
-  inventoryAccountId: toAccountId(values.inventoryAccountId),
-  costMethod: values.costMethod,
-});
+): CreateItemCategoryBody =>
+  // The SDK body type requires the account fields though the server DTO makes
+  // them optional — `undefined` fields are omitted by `JSON.stringify` at
+  // request time, so the cast is purely to satisfy the generated types.
+  ({
+    name: values.name,
+    description: values.description,
+    costAccountId: toAccountId(values.costAccountId),
+    sellAccountId: toAccountId(values.sellAccountId),
+    inventoryAccountId: toAccountId(values.inventoryAccountId),
+    costMethod: values.costMethod,
+  } as CreateItemCategoryBody);
 
 const transformFormToEditBody = (
   values: ItemCategoryFormValues,

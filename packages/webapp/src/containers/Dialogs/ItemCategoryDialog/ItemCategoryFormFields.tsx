@@ -26,6 +26,7 @@ export function ItemCategoryFormFields(): React.ReactElement {
           inputRef={(ref: HTMLInputElement | null) => {
             categoryNameFieldRef.current = ref;
           }}
+          data-testId={'category-name-input'}
           fastField
         />
       </FFormGroup>
@@ -40,6 +41,7 @@ export function ItemCategoryFormFields(): React.ReactElement {
           name={'description'}
           growVertically={true}
           large={true}
+          data-testId={'category-description-input'}
           fastField
         />
       </FFormGroup>
