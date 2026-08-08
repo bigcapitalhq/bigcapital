@@ -64,14 +64,13 @@ test.describe('onboarding', () => {
 
       // Fill Timezone.
       // The timezone select only shows a minimal list until a query is typed,
-      // so search for the target zone before selecting it.
+      // and the IANA code is not part of the option text, so search by the
+      // short label ("Marquesas") before selecting the option.
       await authPage.getByRole('button', { name: 'Select Time Zone...' }).click();
       await authPage
         .getByPlaceholder('Search for timezones...')
-        .fill('Pacific/Marquesas');
-      await authPage
-        .getByRole('menuitem', { name: /Pacific\/Marquesas/ })
-        .click();
+        .fill('Marquesas');
+      await authPage.getByRole('menuitem', { name: /Marquesas/ }).click();
 
       // Click on Submit button
       await authPage.getByRole('button', { name: 'Save & Continue' }).click();
