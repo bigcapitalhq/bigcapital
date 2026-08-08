@@ -38,7 +38,7 @@ function AccountFormDialog({
       canEscapeKeyClose={true}
       isOpen={isOpen}
     >
-      <DialogSuspense>
+      <DialogSuspense testId={'account-form-dialog'}>
         <AccountDialogContent dialogName={dialogName} payload={payload} />
       </DialogSuspense>
     </Dialog>

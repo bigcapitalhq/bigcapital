@@ -70,7 +70,7 @@ function AccountDeleteAlertInner({
       onConfirm={handleConfirmAccountDelete}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'account-delete-alert'}>
         {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_account_you_will_able_to_restore_it'}

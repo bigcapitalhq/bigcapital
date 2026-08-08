@@ -141,6 +141,7 @@ function AccountsDataTableInner({
       headerLoading={isAccountsLoading}
       progressBarLoading={isAccountsFetching}
       rowClassNames={rowClassNames}
+      rowTestId={'account-row'}
       autoResetExpanded={false}
       autoResetSortBy={false}
       autoResetSelectedRows={false}

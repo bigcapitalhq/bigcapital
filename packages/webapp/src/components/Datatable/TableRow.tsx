@@ -64,6 +64,7 @@ export default function TableRow({ row, className, style }: TableRowProps) {
     props: {
       TableCellRenderer,
       rowClassNames,
+      rowTestId,
       ContextMenu: ContextMenuContent,
     },
   } = useContext(TableContext);
@@ -78,6 +79,7 @@ export default function TableRow({ row, className, style }: TableRowProps) {
           className,
         ),
         style,
+        ...(rowTestId ? { 'data-testId': rowTestId } : {}),
       })}
     >
       <ConditionalWrapper
