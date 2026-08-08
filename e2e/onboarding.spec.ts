@@ -63,10 +63,15 @@ test.describe('onboarding', () => {
       await authPage.locator('a').filter({ hasText: 'June - May' }).click();
 
       // Fill Timezone.
+      // The timezone select only shows a minimal list until a query is typed,
+      // so search for the target zone before selecting it.
+      await authPage.getByRole('button', { name: 'Select Time Zone...' }).click();
       await authPage
-        .getByRole('button', { name: 'Select Time Zone...' })
+        .getByPlaceholder('Search for timezones...')
+        .fill('Pacific/Marquesas');
+      await authPage
+        .getByRole('menuitem', { name: /Pacific\/Marquesas/ })
         .click();
-      await authPage.getByText('Pacific/Marquesas-09:30').click();
 
       // Click on Submit button
       await authPage.getByRole('button', { name: 'Save & Continue' }).click();
