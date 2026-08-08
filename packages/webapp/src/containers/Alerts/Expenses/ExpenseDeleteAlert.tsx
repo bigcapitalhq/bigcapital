@@ -73,7 +73,7 @@ function ExpenseDeleteAlertInner({
       onConfirm={handleConfirmExpenseDelete}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'expense-delete-alert'}>
         <T id={'once_delete_this_expense_you_will_able_to_restore_it'} />
       </p>
     </Alert>

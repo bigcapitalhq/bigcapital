@@ -8,7 +8,7 @@ import { CLASSES } from '@/constants/classes';
 // Input form cell renderer.
 const MoneyFieldCellRenderer = ({
   row: { index, moneyInputGroupProps = {} },
-  column: { id },
+  column: { id, moneyInputGroupProps: columnMoneyInputGroupProps = {} },
   cell: { value: initialValue },
   payload: { errors, updateData },
 }) => {
@@ -46,6 +46,7 @@ const MoneyFieldCellRenderer = ({
         onChange={handleFieldChange}
         onBlur={handleFieldBlur}
         {...moneyInputGroupProps}
+        {...columnMoneyInputGroupProps}
       />
     </FormGroup>
   );

@@ -142,6 +142,7 @@ function ExpensesDataTable({
         selectionColumn={true}
         noInitialFetch={true}
         sticky={true}
+        rowTestId={'expense-row'}
         onFetchData={handleFetchData}
         pagination={true}
         initialPageSize={expensesTableState?.pageSize ?? 10}

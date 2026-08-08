@@ -69,6 +69,7 @@ function ItemsCategoryTable({
       selectionColumn={true}
       TableLoadingRenderer={TableSkeletonRows}
       noResults={intl.get('there_is_no_items_categories_in_table_yet')}
+      rowTestId={'category-row'}
       payload={payload}
       ContextMenu={ActionMenuList}
       {...tableProps}
