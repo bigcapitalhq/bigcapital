@@ -130,6 +130,7 @@ export function useExpenseFormTableColumns({
         disableSortBy: true,
         width: 40,
         align: Align.Right,
+        moneyInputGroupProps: { 'data-testId': 'expense-entry-amount-input' },
       },
       {
         Header: intl.get('description'),

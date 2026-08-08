@@ -100,6 +100,7 @@ export function ExpenseFormHeader() {
           fastField={true}
           shouldUpdate={accountsFieldShouldUpdate}
           fill={true}
+          buttonProps={{ 'data-testId': 'expense-payment-account-select' }}
         />
       </FFormGroup>
 
@@ -135,8 +136,11 @@ export function ExpenseFormHeader() {
         inline={true}
         fastField
       >
-        {/* @ts-expect-error FInputGroup does not declare `minimal` / `fastField` */}
-        <FInputGroup minimal={true} name={'referenceNo'} fastField />
+        <FInputGroup
+          name={'referenceNo'}
+          data-testId={'expense-reference-no-input'}
+          fastField
+        />
       </FFormGroup>
 
       {/* ----------- Customer ----------- */}
