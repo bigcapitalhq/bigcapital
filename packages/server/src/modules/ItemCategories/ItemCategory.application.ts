@@ -6,6 +6,8 @@ import { DeleteItemCategoryService } from './commands/DeleteItemCategory.service
 import { EditItemCategoryService } from './commands/EditItemCategory.service';
 import { GetItemCategoryService } from './queries/GetItemCategory.service';
 import { GetItemCategoriesService } from './queries/GetItemCategories.service';
+import { BulkDeleteItemCategoriesService } from './BulkDeleteItemCategories.service';
+import { ValidateBulkDeleteItemCategoriesService } from './ValidateBulkDeleteItemCategories.service';
 import {
   CreateItemCategoryDto,
   EditItemCategoryDto,
@@ -26,6 +28,8 @@ export class ItemCategoryApplication {
     private readonly getItemCategoryService: GetItemCategoryService,
     private readonly deleteItemCategoryService: DeleteItemCategoryService,
     private readonly getItemCategoriesService: GetItemCategoriesService,
+    private readonly bulkDeleteItemCategoriesService: BulkDeleteItemCategoriesService,
+    private readonly validateBulkDeleteItemCategoriesService: ValidateBulkDeleteItemCategoriesService,
   ) {}
 
   /**
@@ -81,5 +85,33 @@ export class ItemCategoryApplication {
    */
   public getItemCategories(filterDTO: GetItemCategoriesQueryDto) {
     return this.getItemCategoriesService.getItemCategories(filterDTO);
+  }
+
+  /**
+   * Deletes multiple item categories in bulk.
+   * @param {number[]} itemCategoryIds - The item category ids to delete.
+   * @param {{ skipUndeletable?: boolean }} options - Delete options.
+   * @returns {Promise<void>}
+   */
+  public bulkDeleteItemCategories(
+    itemCategoryIds: number[],
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteItemCategoriesService.bulkDeleteItemCategories(
+      itemCategoryIds,
+      options,
+    );
+  }
+
+  /**
+   * Validates which item categories can be deleted and returns counts of
+   * deletable and non-deletable item categories.
+   * @param {number[]} itemCategoryIds - The item category ids to validate.
+   * @returns {Promise<{ deletableCount: number; nonDeletableCount: number; deletableIds: number[]; nonDeletableIds: number[]; }>}
+   */
+  public validateBulkDeleteItemCategories(itemCategoryIds: number[]) {
+    return this.validateBulkDeleteItemCategoriesService.validateBulkDeleteItemCategories(
+      itemCategoryIds,
+    );
   }
 }

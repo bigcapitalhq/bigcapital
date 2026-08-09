@@ -4,6 +4,8 @@ import {
   createItemCategory,
   editItemCategory,
   deleteItemCategory,
+  bulkDeleteItemCategories,
+  validateBulkDeleteItemCategories,
 } from '@bigcapital/sdk-ts';
 import {
   useMutation,
@@ -19,6 +21,8 @@ import type {
   ItemCategoriesListResponse,
   CreateItemCategoryBody,
   EditItemCategoryBody,
+  BulkDeleteItemCategoriesBody,
+  ValidateBulkDeleteItemCategoriesResponse,
   GetItemCategoriesQuery,
 } from '@bigcapital/sdk-ts';
 
@@ -76,6 +80,52 @@ export function useDeleteItemCategory(
       });
       commonInvalidateQueries(queryClient);
     },
+  });
+}
+
+export function useBulkDeleteItemCategories(
+  props?: UseMutationOptions<
+    void,
+    Error,
+    { ids: number[]; skipUndeletable?: boolean }
+  >,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ({
+      ids,
+      skipUndeletable = false,
+    }: {
+      ids: number[];
+      skipUndeletable?: boolean;
+    }) =>
+      bulkDeleteItemCategories(fetcher, {
+        ids,
+        skipUndeletable,
+      } as BulkDeleteItemCategoriesBody),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+export function useValidateBulkDeleteItemCategories(
+  props?: UseMutationOptions<
+    ValidateBulkDeleteItemCategoriesResponse,
+    Error,
+    number[]
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useMutation({
+    ...props,
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteItemCategories(fetcher, {
+        ids,
+        skipUndeletable: false,
+      } as BulkDeleteItemCategoriesBody),
   });
 }
 

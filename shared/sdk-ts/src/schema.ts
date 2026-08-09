@@ -1720,6 +1720,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/item-categories/validate-bulk-delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validates which item categories can be deleted and returns counts of deletable and non-deletable item categories. */
+        post: operations["ItemCategoryController_validateBulkDeleteItemCategories"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/item-categories/bulk-delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Deletes multiple item categories in bulk. */
+        post: operations["ItemCategoryController_bulkDeleteItemCategories"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/expenses/validate-bulk-delete": {
         parameters: {
             query?: never;
@@ -5086,6 +5120,33 @@ export interface components {
              */
             nonDeletableIds: number[];
         };
+        ValidateBulkDeleteItemCategoriesResponseDto: {
+            /**
+             * @description Number of item categories that can be deleted
+             * @example 2
+             */
+            deletableCount: number;
+            /**
+             * @description Number of item categories that cannot be deleted
+             * @example 1
+             */
+            nonDeletableCount: number;
+            /**
+             * @description IDs of item categories that can be deleted
+             * @example [
+             *       1,
+             *       2
+             *     ]
+             */
+            deletableIds: number[];
+            /**
+             * @description IDs of item categories that cannot be deleted
+             * @example [
+             *       3
+             *     ]
+             */
+            nonDeletableIds: number[];
+        };
         ItemReceiptsResponseDto: {
             /**
              * @description The unique identifier of the receipt.
@@ -5639,6 +5700,22 @@ export interface components {
             ids: number[];
             /**
              * @description When true, undeletable items will be skipped and only deletable ones removed.
+             * @default false
+             */
+            skipUndeletable: boolean;
+        };
+        BulkDeleteItemCategoriesDto: {
+            /**
+             * @description Array of item category IDs to delete
+             * @example [
+             *       1,
+             *       2,
+             *       3
+             *     ]
+             */
+            ids: number[];
+            /**
+             * @description When true, undeletable item categories will be skipped and only deletable ones removed.
              * @default false
              */
             skipUndeletable: boolean;
@@ -20470,6 +20547,62 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ItemCategoryController_validateBulkDeleteItemCategories: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkDeleteItemCategoriesDto"];
+            };
+        };
+        responses: {
+            /** @description Validation completed. Returns counts and IDs of deletable and non-deletable item categories. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidateBulkDeleteItemCategoriesResponseDto"];
+                };
+            };
+        };
+    };
+    ItemCategoryController_bulkDeleteItemCategories: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkDeleteItemCategoriesDto"];
+            };
+        };
+        responses: {
+            /** @description The item categories have been successfully deleted. */
             200: {
                 headers: {
                     [name: string]: unknown;

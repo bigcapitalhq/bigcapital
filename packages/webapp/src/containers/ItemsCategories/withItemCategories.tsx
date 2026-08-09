@@ -7,6 +7,7 @@ export interface WithItemCategoriesProps {
   itemsCategoriesTableState: ReturnType<
     ReturnType<typeof getItemsCategoriesTableStateFactory>
   >;
+  itemsCategoriesSelectedRows: Array<unknown>;
 }
 
 export const withItemCategories = <
@@ -19,6 +20,7 @@ export const withItemCategories = <
   const mapStateToProps = (state: ApplicationState, props: Props) => {
     const mapped: WithItemCategoriesProps = {
       itemsCategoriesTableState: getItemsCategoriesTableState(state, props),
+      itemsCategoriesSelectedRows: state.itemsCategories.selectedRows,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
