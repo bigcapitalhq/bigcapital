@@ -35,8 +35,13 @@ function ItemsCategoryTable({
   openAlert,
 }: ItemsCategoryTableProps) {
   // Items categories context.
-  const { isCategoriesLoading, isCategoriesFetching, itemsCategories } =
-    useItemsCategoriesContext();
+  const {
+    isCategoriesLoading,
+    isCategoriesFetching,
+    itemsCategories,
+    itemsCategoriesSettings,
+  } = useItemsCategoriesContext();
+  const tableSize = itemsCategoriesSettings?.tableSize as string | undefined;
 
   // Table columns.
   const columns = useItemsCategoriesTableColumns();
@@ -72,6 +77,7 @@ function ItemsCategoryTable({
       rowTestId={'category-row'}
       payload={payload}
       ContextMenu={ActionMenuList}
+      size={tableSize}
       {...tableProps}
     />
   );
