@@ -3,10 +3,11 @@ import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import type { TableQuery } from '@/store/store.types';
 import { createTableStateReducers } from '@/store/table-state.reducer';
-import { RESET } from '@/store/types';
+import { RESET, ITEMS_CATEGORIES_SET_SELECTED_ROWS } from '@/store/types';
 
 interface ItemCategoriesState {
   tableState: TableQuery;
+  selectedRows: Array<unknown>;
 }
 
 export const defaultTableQuery: TableQuery = {
@@ -17,6 +18,7 @@ export const defaultTableQuery: TableQuery = {
 
 const initialState: ItemCategoriesState = {
   tableState: defaultTableQuery,
+  selectedRows: [],
 };
 
 const STORAGE_KEY = 'bigcapital:itemCategories';
@@ -29,6 +31,13 @@ const CONFIG = {
 
 const reducerInstance = createReducer(initialState, {
   ...createTableStateReducers('ITEMS_CATEGORIES', defaultTableQuery),
+
+  [ITEMS_CATEGORIES_SET_SELECTED_ROWS]: (
+    state: ItemCategoriesState,
+    action: { payload: Array<unknown> },
+  ) => {
+    state.selectedRows = action.payload;
+  },
 
   [RESET]: () => {
     purgeStoredState(CONFIG);

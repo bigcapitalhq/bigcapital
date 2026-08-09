@@ -12,18 +12,29 @@ export class BulkDeleteItemCategoriesService {
 
   async bulkDeleteItemCategories(
     itemCategoryIds: number | Array<number>,
+    options?: { skipUndeletable?: boolean },
     trx?: Knex.Transaction,
   ): Promise<void> {
+    const { skipUndeletable = false } = options ?? {};
     const categoriesIds = uniq(castArray(itemCategoryIds));
 
     const results = await PromisePool.withConcurrency(1)
       .for(categoriesIds)
       .process(async (itemCategoryId: number) => {
-        await this.deleteItemCategoryService.deleteItemCategory(itemCategoryId);
+        try {
+          await this.deleteItemCategoryService.deleteItemCategory(
+            itemCategoryId,
+            trx,
+          );
+        } catch (error) {
+          if (!skipUndeletable) {
+            throw error;
+          }
+        }
       });
 
-    if (results.errors && results.errors.length > 0) {
-      throw results.errors[0].raw;
+    if (!skipUndeletable && results.errors && results.errors.length > 0) {
+      throw results.errors[0].raw ?? results.errors[0];
     }
   }
 }

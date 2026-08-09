@@ -12,6 +12,8 @@ import { GetItemCategoriesService } from './queries/GetItemCategories.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { ItemCategoriesExportable } from './ItemCategoriesExportable';
 import { ItemCategoriesImportable } from './ItemCategoriesImportable';
+import { BulkDeleteItemCategoriesService } from './BulkDeleteItemCategories.service';
+import { ValidateBulkDeleteItemCategoriesService } from './ValidateBulkDeleteItemCategories.service';
 
 @Module({
   imports: [TenancyModule, TenancyDatabaseModule, DynamicListModule],
@@ -22,6 +24,8 @@ import { ItemCategoriesImportable } from './ItemCategoriesImportable';
     GetItemCategoryService,
     GetItemCategoriesService,
     DeleteItemCategoryService,
+    BulkDeleteItemCategoriesService,
+    ValidateBulkDeleteItemCategoriesService,
     ItemCategoryApplication,
     CommandItemCategoryValidatorService,
     ItemCategoriesExportable,

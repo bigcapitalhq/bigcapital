@@ -2,8 +2,13 @@ import {
   fetchPlaidExchangeToken,
   fetchPlaidLinkToken,
 } from '@bigcapital/sdk-ts';
-import { UseMutationOptions, useMutation } from '@tanstack/react-query';
+import {
+  UseMutationOptions,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useApiFetcher } from '../../../useRequest';
+import { cashflowAccountsKeys } from '../../cashflow-accounts/query-keys';
 import type {
   PlaidExchangeTokenBody,
   PlaidLinkTokenResponse,
@@ -29,10 +34,16 @@ export function usePlaidExchangeToken(
   props?: UseMutationOptions<void, Error, PlaidExchangeTokenBody>,
 ) {
   const fetcher = useApiFetcher();
+  const queryClient = useQueryClient();
 
   return useMutation({
     ...props,
     mutationFn: (data: PlaidExchangeTokenBody) =>
       fetchPlaidExchangeToken(fetcher, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: cashflowAccountsKeys.all(),
+      });
+    },
   });
 }
