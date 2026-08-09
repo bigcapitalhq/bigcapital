@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useSalesByItemsTableColumns } from './dynamicColumns';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -38,6 +39,7 @@ export function SalesByItemsTable({ companyName }: SalesByItemsTableProps) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('sales-by-items')}
         noResults={intl.get(
           'there_were_no_sales_during_the_selected_date_range',
         )}

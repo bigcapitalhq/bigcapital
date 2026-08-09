@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 import { useCashFlowStatementColumns } from './components';
 import { DataTable, FinancialSheet } from '@/components';
@@ -35,6 +36,7 @@ export function CashFlowStatementTable({
         columns={columns}
         data={tableRows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('cash-flow')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}

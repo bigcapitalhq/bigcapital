@@ -65,10 +65,20 @@ export function FinancialSheet({
       {hasHead && (
         <div>
           {companyName && (
-            <FinancialSheetTitle>{companyName}</FinancialSheetTitle>
+            <FinancialSheetTitle data-testId="financial-sheet-title">
+              {companyName}
+            </FinancialSheetTitle>
           )}
-          {sheetType && <FinancialSheetType>{sheetType}</FinancialSheetType>}
-          {dateText && <FinancialSheetDate>{dateText}</FinancialSheetDate>}
+          {sheetType && (
+            <FinancialSheetType data-testId="financial-sheet-type">
+              {sheetType}
+            </FinancialSheetType>
+          )}
+          {dateText && (
+            <FinancialSheetDate data-testId="financial-sheet-date">
+              {dateText}
+            </FinancialSheetDate>
+          )}
         </div>
       )}
 
@@ -79,7 +89,7 @@ export function FinancialSheet({
 
       <FinancialSheetFooter>
         {basisLabel && (
-          <FinancialSheetFooterBasis>
+          <FinancialSheetFooterBasis data-testId="financial-sheet-accounting-basis">
             <T id={'accounting_basis'} /> {basisLabel}
           </FinancialSheetFooterBasis>
         )}

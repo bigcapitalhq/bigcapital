@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useTrialBalanceSheetTableColumns } from './hooks';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -41,6 +42,7 @@ export function TrialBalanceSheetTable({
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('trial-balance')}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>

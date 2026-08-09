@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useGeneralLedgerTableColumns } from './dynamicColumns';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import {
@@ -49,6 +50,7 @@ export function GeneralLedgerTable({ companyName }: GeneralLedgerTableProps) {
         columns={columns}
         data={table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('general-ledger')}
         expanded={expandedRows}
         virtualizedRows={true}
         fixedItemSize={30}

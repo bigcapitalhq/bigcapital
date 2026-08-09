@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useProfitLossSheetColumns } from './hooks';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -39,6 +40,7 @@ export function ProfitLossSheetTable({
         noInitialFetch={true}
         expanded={expandedRows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('profit-loss')}
         expandable={true}
         expandToggleColumn={1}
         sticky={true}

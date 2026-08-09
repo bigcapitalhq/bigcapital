@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useVendorsTransactionsColumns } from './components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import { DataTable, FinancialSheet } from '@/components';
@@ -44,6 +45,7 @@ export function VendorsTransactionsTable({
         columns={columns}
         data={table?.rows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('vendors-transactions')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}

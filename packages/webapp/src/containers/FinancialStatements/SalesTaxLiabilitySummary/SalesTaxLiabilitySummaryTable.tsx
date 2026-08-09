@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
 import { useSalesTaxLiabilitySummaryColumns } from './utils';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -33,6 +34,7 @@ function SalesTaxLiabilitySummaryTableRoot() {
         columns={columns}
         data={table?.rows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('sales-tax-liability')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}

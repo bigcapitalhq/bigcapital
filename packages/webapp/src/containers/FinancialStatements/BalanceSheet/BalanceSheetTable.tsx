@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportCellTestId, getReportRowTestId } from '../reportTestIds';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { useBalanceSheetColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -38,6 +39,8 @@ export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
         columns={tableColumns}
         data={balanceSheet?.table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('balance-sheet')}
+        cellTestId={getReportCellTestId('balance-sheet')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}
