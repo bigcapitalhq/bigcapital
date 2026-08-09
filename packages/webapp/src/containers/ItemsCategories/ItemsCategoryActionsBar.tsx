@@ -11,6 +11,7 @@ import { withItemCategories } from './withItemCategories';
 import { withItemCategoriesActions } from './withItemCategoriesActions';
 import type { WithItemCategoriesProps } from './withItemCategories';
 import type { WithItemCategoriesActionsProps } from './withItemCategoriesActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
@@ -20,11 +21,12 @@ import {
   AdvancedFilterPopover,
   DashboardFilterButton,
   DashboardActionsBar,
+  DashboardRowsHeightButton,
 } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
+import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface ItemsCategoryActionsBarInnerProps
@@ -57,7 +59,11 @@ function ItemsCategoryActionsBarInner({
   // #withAlertActions
   openAlert,
 }: ItemsCategoryActionsBarInnerProps) {
-  const { fields } = useItemsCategoriesContext();
+  const { mutateAsync: saveSettings } = useSaveSettings();
+  const { fields, itemsCategoriesSettings } = useItemsCategoriesContext();
+  const itemsCategoriesTableSize = itemsCategoriesSettings?.tableSize as
+    | string
+    | undefined;
   const history = useHistory();
 
   const onClickNewCategory = () => {
@@ -77,6 +83,12 @@ function ItemsCategoryActionsBarInner({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'item_category' });
+  };
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size: string) => {
+    saveSettings({
+      options: [{ group: 'item_categories', key: 'table_size', value: size }],
+    });
   };
 
   return (
@@ -126,6 +138,11 @@ function ItemsCategoryActionsBarInner({
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
           onClick={handleExportBtnClick}
+        />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={itemsCategoriesTableSize}
+          onChange={handleTableRowSizeChange}
         />
       </NavbarGroup>
     </DashboardActionsBar>

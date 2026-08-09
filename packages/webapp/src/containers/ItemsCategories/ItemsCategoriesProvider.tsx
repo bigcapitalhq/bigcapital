@@ -1,9 +1,14 @@
 import React, { createContext } from 'react';
 import type { ItemCategoryTableRow } from './components';
-import { DashboardInsider } from '@/components';
-import { useItemsCategories, useResourceMeta } from '@/hooks/query';
-import { transformTableStateToQuery, getFieldsFromResourceMeta } from '@/utils';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
+import { DashboardInsider } from '@/components';
+import {
+  useItemsCategories,
+  useResourceMeta,
+  useSettingsItemCategories,
+} from '@/hooks/query';
+import { transformTableStateToQuery, getFieldsFromResourceMeta } from '@/utils';
 
 interface ItemsCategoriesProviderProps {
   // The store-injected `itemsCategoriesTableState` is a complex selector return;
@@ -21,6 +26,7 @@ export interface ItemsCategoriesContextValue {
   resourceMeta: any;
   isResourceLoading: boolean;
   isResourceFetching: boolean;
+  itemsCategoriesSettings: SettingsGroup | undefined;
   // FIXME: response shape mismatch — `ItemCategoriesListResponse` is the array
   // type but the original code reads `.itemsCategories`/`.pagination`. Preserved
   // from @ts-nocheck original; both are `undefined` at runtime.
@@ -57,6 +63,9 @@ function ItemsCategoriesProvider({
     isFetching: isResourceFetching,
   } = useResourceMeta('item_category');
 
+  // Fetch the item categories settings.
+  const { data: itemsCategoriesSettings } = useSettingsItemCategories();
+
   const state: ItemsCategoriesContextValue = {
     isCategoriesFetching,
     isCategoriesLoading,
@@ -69,6 +78,7 @@ function ItemsCategoriesProvider({
     isResourceFetching,
 
     itemsCategories: itemsCategoriesData,
+    itemsCategoriesSettings,
     query,
   };
 
