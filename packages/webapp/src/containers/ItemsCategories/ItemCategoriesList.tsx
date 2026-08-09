@@ -1,8 +1,7 @@
 import React from 'react';
-
 import '@/style/pages/ItemsCategories/List.scss';
-
 import { ItemCategoriesTable } from './ItemCategoriesTable';
+import { ItemsCategoriesListDialogs } from './ItemsCategoriesListDialogs';
 import { ItemsCategoriesProvider } from './ItemsCategoriesProvider';
 import { ItemsCategoryActionsBar } from './ItemsCategoryActionsBar';
 import { withItemCategories } from './withItemCategories';
@@ -23,6 +22,7 @@ function ItemCategoryList({
   return (
     <ItemsCategoriesProvider tableState={itemsCategoriesTableState}>
       <ItemsCategoryActionsBar />
+      <ItemsCategoriesListDialogs />
 
       <DashboardPageContent>
         <DashboardContentTable>

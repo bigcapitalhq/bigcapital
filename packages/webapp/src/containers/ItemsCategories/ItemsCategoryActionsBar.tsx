@@ -6,16 +6,15 @@ import {
   Intent,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
+import { useBulkDeleteItemCategoriesDialog } from './hooks/use-bulk-delete-item-categories-dialog';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 import { withItemCategories } from './withItemCategories';
 import { withItemCategoriesActions } from './withItemCategoriesActions';
-import type { WithItemCategoriesProps } from './withItemCategories';
 import type { WithItemCategoriesActionsProps } from './withItemCategoriesActions';
 import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
-  If,
   Icon,
   FormattedMessage as T,
   AdvancedFilterPopover,
@@ -33,11 +32,7 @@ interface ItemsCategoryActionsBarInnerProps
   extends WithItemCategoriesActionsProps,
     WithDialogActionsProps,
     WithAlertActionsProps {
-  // NOTE: `itemCategoriesSelectedRows` was destructured from the mapper in the
-  // @ts-nocheck original even though `WithItemCategoriesProps` doesn't define
-  // it — preserved latent bug; the value is `undefined` at runtime, which means
-  // the bulk-delete button never renders.
-  itemCategoriesSelectedRows: unknown[];
+  itemsCategoriesSelectedRows: number[];
   categoriesFilterConditions: IFilterRole[];
 }
 
@@ -46,7 +41,7 @@ interface ItemsCategoryActionsBarInnerProps
  */
 function ItemsCategoryActionsBarInner({
   // #withItemCategories
-  itemCategoriesSelectedRows = [],
+  itemsCategoriesSelectedRows,
 
   categoriesFilterConditions,
 
@@ -66,6 +61,9 @@ function ItemsCategoryActionsBarInner({
     | undefined;
   const history = useHistory();
 
+  const bulkDelete = useBulkDeleteItemCategoriesDialog();
+  const { openBulkDeleteDialog } = bulkDelete;
+
   const onClickNewCategory = () => {
     openDialog('item-category-form', {});
   };
@@ -75,10 +73,8 @@ function ItemsCategoryActionsBarInner({
   };
 
   // Handle the items categories bulk delete.
-  const handelBulkDelete = () => {
-    openAlert('item-categories-bulk-delete', {
-      itemCategoriesIds: itemCategoriesSelectedRows,
-    });
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(itemsCategoriesSelectedRows as number[]);
   };
   // Handle the export button click.
   const handleExportBtnClick = () => {
@@ -90,6 +86,22 @@ function ItemsCategoryActionsBarInner({
       options: [{ group: 'item_categories', key: 'table_size', value: size }],
     });
   };
+
+  if (itemsCategoriesSelectedRows?.length) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -117,16 +129,6 @@ function ItemsCategoryActionsBarInner({
           />
         </AdvancedFilterPopover>
 
-        <If condition={!!itemCategoriesSelectedRows?.length}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handelBulkDelete}
-          />
-        </If>
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
@@ -152,11 +154,8 @@ function ItemsCategoryActionsBarInner({
 export const ItemsCategoryActionsBar = compose(
   withDialogActions,
   withItemCategories(
-    // `itemCategoriesSelectedRows` is not on `WithItemCategoriesProps` — the
-    // @ts-nocheck original destructured it anyway, so the value is `undefined`.
-    // Preserved latent bug.
-    ({ itemsCategoriesTableState }) => ({
-      itemCategoriesSelectedRows: undefined,
+    ({ itemsCategoriesTableState, itemsCategoriesSelectedRows }) => ({
+      itemsCategoriesSelectedRows,
       categoriesFilterConditions: itemsCategoriesTableState.filterRoles,
     }),
   ),

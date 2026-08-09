@@ -2,7 +2,9 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
+import { withItemCategoriesActions } from './withItemCategoriesActions';
 import type { ItemCategoryTableRow } from './components';
+import type { WithItemCategoriesActionsProps } from './withItemCategoriesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DataTable, TableSkeletonRows } from '@/components';
@@ -12,7 +14,8 @@ import { compose } from '@/utils';
 
 interface ItemsCategoryTableProps
   extends WithAlertActionsProps,
-    WithDialogActionsProps {
+    WithDialogActionsProps,
+    WithItemCategoriesActionsProps {
   tableProps?: Record<string, unknown>;
 }
 
@@ -27,6 +30,9 @@ interface ActionMenuListPayload {
 function ItemsCategoryTable({
   // #ownProps
   tableProps,
+
+  // #withItemCategoriesActions
+  setItemsCategoriesSelectedRows,
 
   // #withDialogActions
   openDialog,
@@ -45,6 +51,15 @@ function ItemsCategoryTable({
 
   // Table columns.
   const columns = useItemsCategoriesTableColumns();
+
+  // Handle selected rows change.
+  const handleSelectedRowsChange = React.useCallback(
+    (selectedFlatRows: Array<{ original: ItemCategoryTableRow }>) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) ?? [];
+      setItemsCategoriesSelectedRows(selectedIds);
+    },
+    [setItemsCategoriesSelectedRows],
+  );
 
   // Handle delete Item.
   const handleDeleteCategory = ({ id }: ItemCategoryTableRow) => {
@@ -72,6 +87,8 @@ function ItemsCategoryTable({
       expandable={false}
       sticky={true}
       selectionColumn={true}
+      onSelectedRowsChange={handleSelectedRowsChange}
+      autoResetSelectedRows={false}
       TableLoadingRenderer={TableSkeletonRows}
       noResults={intl.get('there_is_no_items_categories_in_table_yet')}
       rowTestId={'category-row'}
@@ -86,4 +103,5 @@ function ItemsCategoryTable({
 export const ItemCategoriesTable = compose(
   withDialogActions,
   withAlertActions,
+  withItemCategoriesActions,
 )(ItemsCategoryTable);
