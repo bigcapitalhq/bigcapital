@@ -14,20 +14,16 @@ interface PaymentReceivePdfPreviewContentProps extends WithDialogActionsProps {
 function PaymentReceivePdfPreviewDialogContent({
   subscriptionForm: { paymentReceiveId },
 }: PaymentReceivePdfPreviewContentProps): React.ReactElement {
-  // Latent bug preserved: payload default is `{ paymentReceiveId: null }` — the
-  // hook builds URL `payment-receives/null` when the dialog opens without a real id.
-  const { isLoading, pdfUrl, filename } = usePdfPaymentReceive(
+  const { isLoading, isError, pdfUrl, filename } = usePdfPaymentReceive(
     paymentReceiveId as number,
   );
 
-  // FIXME: `target={'__blank'}` should be `_blank` (single underscore) — left
-  // as-is to avoid a behavior change in a TS-only slice.
   return (
     <DialogContent>
       <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -48,6 +44,7 @@ function PaymentReceivePdfPreviewDialogContent({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>
