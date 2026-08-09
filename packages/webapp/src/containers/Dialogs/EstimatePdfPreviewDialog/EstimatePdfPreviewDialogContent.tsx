@@ -14,18 +14,16 @@ interface EstimatePdfPreviewDialogContentProps extends WithDialogActionsProps {
 function EstimatePdfPreviewDialogContentInner({
   subscriptionForm: { estimateId },
 }: EstimatePdfPreviewDialogContentProps): React.ReactElement {
-  // Latent bug preserved: payload default is `{ estimateId: null }` — the hook
-  // builds URL `sales-estimates/null` when the dialog opens without a real id.
-  const { isLoading, pdfUrl, filename } = usePdfEstimate(estimateId as number);
+  const { isLoading, isError, pdfUrl, filename } = usePdfEstimate(
+    estimateId as number,
+  );
 
-  // FIXME: `target={'__blank'}` should be `_blank` (single underscore) — left
-  // as-is to avoid a behavior change in a TS-only slice.
   return (
     <DialogContent>
       <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -46,6 +44,7 @@ function EstimatePdfPreviewDialogContentInner({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>

@@ -44,12 +44,17 @@ export const useDownloadExportPdf = () => {
   const downloadAsync = (values: ResourceExportValues) => {
     if (!isExportPdfLoading) {
       startProgress();
-      return mutateAsync(values).then((res) => {
-        downloadFile(res.data, `${values.resource}.pdf`);
-        stopProgress();
+      return mutateAsync(values)
+        .then((res) => {
+          downloadFile(res.data, `${values.resource}.pdf`);
+          stopProgress();
 
-        return res;
-      });
+          return res;
+        })
+        .catch((error) => {
+          stopProgress();
+          throw error;
+        });
     }
     return undefined;
   };

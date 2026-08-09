@@ -15,20 +15,16 @@ interface CreditNotePdfPreviewDialogContentProps
 function CreditNotePdfPreviewDialogContentInner({
   subscriptionForm: { creditNoteId },
 }: CreditNotePdfPreviewDialogContentProps): React.ReactElement {
-  // Latent bug preserved: payload default is `{ creditNoteId: null }` — the
-  // hook builds URL `credit-notes/null` when the dialog opens without a real id.
-  const { isLoading, pdfUrl, filename } = usePdfCreditNote(
+  const { isLoading, isError, pdfUrl, filename } = usePdfCreditNote(
     creditNoteId as number | string,
   );
 
-  // FIXME: `target={'__blank'}` should be `_blank` (single underscore) — left
-  // as-is to avoid a behavior change in a TS-only slice.
   return (
     <DialogContent>
       <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -49,6 +45,7 @@ function CreditNotePdfPreviewDialogContentInner({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>

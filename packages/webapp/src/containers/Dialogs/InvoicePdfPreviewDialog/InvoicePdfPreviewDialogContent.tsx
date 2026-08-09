@@ -14,18 +14,16 @@ interface InvoicePdfPreviewDialogContentProps extends WithDialogActionsProps {
 function InvoicePdfPreviewDialogContentInner({
   subscriptionForm: { invoiceId },
 }: InvoicePdfPreviewDialogContentProps): React.ReactElement {
-  // Latent bug preserved: payload default is `{ invoiceId: null }` — the hook
-  // builds URL `sale-invoices/null` when the dialog opens without a real id.
-  const { isLoading, pdfUrl, filename } = usePdfInvoice(invoiceId as number);
+  const { isLoading, isError, pdfUrl, filename } = usePdfInvoice(
+    invoiceId as number,
+  );
 
-  // FIXME: `target={'__blank'}` should be `_blank` (single underscore) — left
-  // as-is to avoid a behavior change in a TS-only slice.
   return (
     <DialogContent>
       <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -46,6 +44,7 @@ function InvoicePdfPreviewDialogContentInner({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>
