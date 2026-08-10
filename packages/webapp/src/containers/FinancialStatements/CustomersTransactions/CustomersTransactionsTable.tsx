@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useCustomersTransactionsColumns } from './components';
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
 import { DataTable, FinancialSheet } from '@/components';
@@ -43,6 +44,7 @@ export function CustomersTransactionsTable({
         columns={columns}
         data={tableRows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('customers-transactions')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}

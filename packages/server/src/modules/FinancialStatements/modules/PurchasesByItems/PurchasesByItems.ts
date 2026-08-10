@@ -78,7 +78,7 @@ export class PurchasesByItems extends FinancialSheet {
    * @returns {boolean}
    */
   private filterPurchaseNoneTransaction = (node) => {
-    const anyTransaction = this.itemsTransactions.get(node.id);
+    const anyTransaction = this.itemsTransactions.get(node.id.toString());
 
     return !isEmpty(anyTransaction);
   };

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useJournalSheetColumns } from './dynamicColumns';
 import { useJournalSheetContext } from './JournalProvider';
 import {
@@ -44,6 +45,7 @@ export function JournalTable({ companyName }: JournalTableProps) {
         columns={columns}
         data={table?.rows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('journal')}
         noResults={intl.get(
           'this_report_does_not_contain_any_data_between_date_period',
         )}

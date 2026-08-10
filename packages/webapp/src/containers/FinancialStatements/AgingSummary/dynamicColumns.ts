@@ -77,9 +77,9 @@ const dynamicColumnMapper = R.curry(
     return R.compose(
       R.when(R.pathEq(['key'], 'total'), totalAccessorColumn),
       R.when(R.pathEq(['key'], 'current'), currentAccessorColumn),
-      R.when(R.pathEq(['key'], 'customerName'), customerNameAccessorColumn),
-      R.when(R.pathEq(['key'], 'vendorName'), customerNameAccessorColumn),
-      R.when(R.pathEq(['key'], 'agingPeriod'), agingPeriodAccessorColumn),
+      R.when(R.pathEq(['key'], 'customer_name'), customerNameAccessorColumn),
+      R.when(R.pathEq(['key'], 'vendor_name'), customerNameAccessorColumn),
+      R.when(R.pathEq(['key'], 'aging_period'), agingPeriodAccessorColumn),
     )(column);
   },
 );

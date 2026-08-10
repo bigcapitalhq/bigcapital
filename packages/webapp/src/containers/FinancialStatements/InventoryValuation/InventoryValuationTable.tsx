@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useInventoryValuationColumns } from './dynamicColumns';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -42,6 +43,7 @@ export function InventoryValuationTable({
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('inventory-valuation')}
         styleName={TableStyle.Constrant}
         noResults={intl.get(
           'there_were_no_inventory_transactions_during_the_selected_date_range',
