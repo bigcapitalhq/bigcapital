@@ -65,6 +65,7 @@ function RulesTable({
         ContextMenu={BankRulesTableActionsMenu}
         // onCellClick={handleCellClick}
         size={'medium'}
+        rowTestId={'bank-rule-row'}
         payload={{
           onDelete: handleDeleteBankRule,
           onEdit: handleEditBankRule,
