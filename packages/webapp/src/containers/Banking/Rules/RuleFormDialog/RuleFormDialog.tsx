@@ -25,7 +25,7 @@ function RuleFormDialogRoot({
       autoFocus={true}
       style={{ width: 600 }}
     >
-      <DialogSuspense>
+      <DialogSuspense testId={'rule-form-dialog'}>
         <RuleFormContent dialogName={dialogName} bankRuleId={bankRuleId} />
       </DialogSuspense>
     </Dialog>

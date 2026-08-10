@@ -60,7 +60,9 @@ function BankRuleDeleteAlert({
       onConfirm={handleConfirmBtnClick}
       loading={isLoading}
     >
-      <p>Are you sure want to delete the bank rule?</p>
+      <p data-testId={'bank-rule-delete-alert'}>
+        Are you sure want to delete the bank rule?
+      </p>
     </Alert>
   );
 }
