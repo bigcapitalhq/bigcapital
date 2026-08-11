@@ -165,6 +165,7 @@ function VendorsTableInner({
         expandable={false}
         sticky={true}
         pagination={true}
+        rowTestId={'vendor-row'}
         initialPageSize={vendorsTableState?.pageSize ?? 10}
         manualSortBy={true}
         rowsCount={pagination?.total ?? 0}
