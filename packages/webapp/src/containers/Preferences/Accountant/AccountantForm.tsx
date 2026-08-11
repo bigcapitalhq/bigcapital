@@ -117,6 +117,9 @@ export function AccountantForm() {
             ACCOUNT_TYPE.BANK,
             ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
           ]}
+          buttonProps={{
+            'data-testId': 'preferences-accountant-deposit-account-select',
+          }}
           fastField={true}
         />
       </AccountantFormGroup>
@@ -148,6 +151,9 @@ export function AccountantForm() {
             ACCOUNT_TYPE.BANK,
             ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
           ]}
+          buttonProps={{
+            'data-testId': 'preferences-accountant-withdrawal-account-select',
+          }}
           fastField={true}
         />
       </AccountantFormGroup>
@@ -175,6 +181,9 @@ export function AccountantForm() {
           items={accountsForSelect(accounts)}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
+          buttonProps={{
+            'data-testId': 'preferences-accountant-advance-deposit-select',
+          }}
           fastField={true}
         />
       </AccountantFormGroup>
