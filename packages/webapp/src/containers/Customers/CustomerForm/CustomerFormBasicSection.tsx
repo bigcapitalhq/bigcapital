@@ -46,12 +46,14 @@ export function CustomerFormBasicSection() {
             inputRef={(ref: HTMLInputElement | null) => {
               if (ref) firstNameFieldRef.current = ref;
             }}
+            data-testId={'customer-first-name-input'}
             onChange={createFieldOnChange('firstName')}
             fill
           />
           <FInputGroup
             name={'lastName'}
             placeholder={intl.get('last_name')}
+            data-testId={'customer-last-name-input'}
             onChange={createFieldOnChange('lastName')}
             fill
           />
@@ -64,13 +66,14 @@ export function CustomerFormBasicSection() {
         helperText="Add a unique account number to identify, reference and search for the contact."
         inline
       >
-        <FInputGroup name={'code'} fill />
+        <FInputGroup name={'code'} data-testId={'customer-code-input'} fill />
       </FFormGroup>
 
       {/*----------- Company Name -----------*/}
       <FFormGroup name={'companyName'} label={intl.get('company_name')} inline>
         <FInputGroup
           name={'companyName'}
+          data-testId={'customer-company-name-input'}
           onChange={createFieldOnChange('companyName')}
           fill
         />
@@ -86,7 +89,10 @@ export function CustomerFormBasicSection() {
         <DisplayNameList
           name={'displayName'}
           popoverProps={{ minimal: true }}
-          buttonProps={{ fill: true }}
+          buttonProps={{
+            fill: true,
+            'data-testId': 'customer-display-name-select',
+          }}
         />
       </FFormGroup>
 

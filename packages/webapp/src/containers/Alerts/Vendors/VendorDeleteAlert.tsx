@@ -79,7 +79,7 @@ function VendorDeleteAlertInner({
       onConfirm={handleConfirmDeleteVendor}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'vendor-delete-alert'}>
         {/* `intl.formatHTMLMessage` returns a React fragment containing the
             translated HTML markup. The shape is not a JSX component so we
             inline the call here. */}

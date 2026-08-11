@@ -161,6 +161,7 @@ function CustomersTableInner({
         sticky={true}
         spinnerProps={{ size: 30 }}
         pagination={true}
+        rowTestId={'customer-row'}
         initialPageSize={customersTableState?.pageSize ?? 10}
         manualSortBy={true}
         manualPagination={true}

@@ -48,6 +48,7 @@ export function VendorFormBasicSection() {
             inputRef={(ref: HTMLInputElement | null) => {
               if (ref) firstNameFieldRef.current = ref;
             }}
+            data-testId={'vendor-first-name-input'}
             onChange={createFieldOnChange('firstName')}
             fill
             fastField
@@ -55,6 +56,7 @@ export function VendorFormBasicSection() {
           <FInputGroup
             name={'lastName'}
             placeholder={intl.get('last_name')}
+            data-testId={'vendor-last-name-input'}
             onChange={createFieldOnChange('lastName')}
             fill
             fastField
@@ -69,7 +71,12 @@ export function VendorFormBasicSection() {
         inline
         fastField
       >
-        <FInputGroup name={'code'} fill fastField />
+        <FInputGroup
+          name={'code'}
+          data-testId={'vendor-code-input'}
+          fill
+          fastField
+        />
       </FFormGroup>
 
       {/*----------- Company Name -----------*/}
@@ -81,6 +88,7 @@ export function VendorFormBasicSection() {
       >
         <FInputGroup
           name={'companyName'}
+          data-testId={'vendor-company-name-input'}
           onChange={createFieldOnChange('companyName')}
           fill
           fastField
@@ -98,7 +106,10 @@ export function VendorFormBasicSection() {
         <DisplayNameList
           name={'displayName'}
           popoverProps={{ minimal: true }}
-          buttonProps={{ fill: true }}
+          buttonProps={{
+            fill: true,
+            'data-testId': 'vendor-display-name-select',
+          }}
         />
       </FFormGroup>
 
