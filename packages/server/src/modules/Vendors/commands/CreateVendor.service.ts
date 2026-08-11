@@ -10,6 +10,7 @@ import {
   IVendorNewDTO,
 } from '../types/Vendors.types';
 import { CreateEditVendorDTOService } from './CreateEditVendorDTO';
+import { VendorValidators } from './VendorValidators';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateVendorDto } from '../dtos/CreateVendor.dto';
 
@@ -25,6 +26,7 @@ export class CreateVendorService {
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
     private readonly transformDTO: CreateEditVendorDTOService,
+    private readonly validators: VendorValidators,
 
     @Inject(Vendor.name)
     private readonly vendorModel: TenantModelProxy<typeof Vendor>,
@@ -41,6 +43,9 @@ export class CreateVendorService {
   ) {
     // Transforms create DTO to customer object.
     const vendorObject = await this.transformDTO.transformCreateDTO(vendorDTO);
+
+    // Validates the vendor code uniqueness.
+    await this.validators.validateVendorCodeUnique(vendorObject.code);
 
     // Creates vendor contact under unit-of-work environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {

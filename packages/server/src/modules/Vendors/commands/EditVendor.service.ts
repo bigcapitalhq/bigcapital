@@ -5,6 +5,7 @@ import {
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateEditVendorDTOService } from './CreateEditVendorDTO';
+import { VendorValidators } from './VendorValidators';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { Vendor } from '../models/Vendor';
@@ -18,6 +19,7 @@ export class EditVendorService {
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly transformDTO: CreateEditVendorDTOService,
+    private readonly validators: VendorValidators,
 
     @Inject(Vendor.name)
     private readonly vendorModel: TenantModelProxy<typeof Vendor>,
@@ -38,6 +40,9 @@ export class EditVendorService {
 
     // Transforms vendor DTO to object.
     const vendorObj = this.transformDTO.transformEditDTO(vendorDTO);
+
+    // Validates the vendor code uniqueness.
+    await this.validators.validateVendorCodeUnique(vendorObj.code, vendorId);
 
     // Edits vendor contact under unit-of-work environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {

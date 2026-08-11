@@ -476,6 +476,8 @@
   "no_accounts": "No hay cuentas",
   "the_accounts_have_been_successfully_inactivated": "Las cuentas han sido inactivadas exitosamente.",
   "account_code_is_not_unique": "El código de cuenta no es único.",
+  "customer_code_is_already_used": "El código del cliente ya está en uso.",
+  "vendor_code_is_already_used": "El código del proveedor ya está en uso.",
   "are_sure_to_publish_this_expense": "¿Estás seguro de que quieres publicar este gasto?",
   "once_delete_these_journals_you_will_not_able_restore_them": "Una vez que elimines estos diarios, no podrás recuperarlos más tarde. ¿Estás seguro de que quieres eliminarlos?",
   "once_delete_this_journal_you_will_able_to_restore_it": "Una vez que elimines este diario, no podrás restaurarlo más tarde. ¿Estás seguro de que quieres eliminarlo?",

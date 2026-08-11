@@ -476,6 +476,8 @@
   "no_accounts": "لاتوجد حسابات",
   "the_accounts_have_been_successfully_inactivated": "تم تعطيل الحسابات بنجاح.",
   "account_code_is_not_unique": "رمز الحساب ليس فريدًا.",
+  "customer_code_is_already_used": "رمز العميل مستخدم بالفعل.",
+  "vendor_code_is_already_used": "رمز المورّد مستخدم بالفعل.",
   "are_sure_to_publish_this_expense": "هل أنت متأكد أنك تريد نشر هذا المصروف؟",
   "once_delete_these_journals_you_will_not_able_restore_them": "بمجرد حذف هذه المجلات ، لن تتمكن من استعادتها لاحقًا. هل أنت متأكد أنك تريد حذفها؟",
   "once_delete_this_journal_you_will_able_to_restore_it": "بمجرد حذف هذه القيد ، لن تتمكن من استعادتها لاحقًا. هل أنت متأكد أنك تريد حذف ؟",
