@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { CreateEditCustomerDTO } from './CreateEditCustomerDTO.service';
+import { CustomerValidators } from './CustomerValidators.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Customer } from '../models/Customer';
@@ -24,6 +25,7 @@ export class CreateCustomer {
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
     private readonly customerDTO: CreateEditCustomerDTO,
+    private readonly validators: CustomerValidators,
 
     @Inject(Customer.name)
     private readonly customerModel: TenantModelProxy<typeof Customer>,
@@ -40,6 +42,9 @@ export class CreateCustomer {
   ): Promise<Customer> {
     // Transformes the customer DTO to customer object.
     const customerObj = await this.customerDTO.transformCreateDTO(customerDTO);
+
+    // Validates the customer code uniqueness.
+    await this.validators.validateCustomerCodeUnique(customerObj.code);
 
     // Creates a new customer under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {

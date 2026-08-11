@@ -2,6 +2,7 @@ import { useFormikContext } from 'formik';
 import { first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
+import intl from 'react-intl-universal';
 import type {
   CreateCustomerBody,
   Customer,
@@ -218,6 +219,18 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+/**
+ * Transforms the submit response API errors to Formik field errors.
+ */
+export const transformApiErrors = (errors: Array<{ type: string }>) => {
+  const fields: Record<string, string> = {};
+
+  if (errors.find((e) => e.type === 'CUSTOMER_CODE_NOT_UNIQUE')) {
+    fields.code = intl.get('customer_code_is_already_used');
+  }
+  return fields;
 };
 
 /**

@@ -2,6 +2,7 @@ import { useFormikContext } from 'formik';
 import { first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
+import intl from 'react-intl-universal';
 import type {
   CreateVendorBody,
   EditVendorBody,
@@ -201,6 +202,18 @@ export const transformFormToEditRequest = (
   shippingAddressPhone: values.shippingAddressPhone,
   shippingAddressState: values.shippingAddressState,
 });
+
+/**
+ * Transforms the submit response API errors to Formik field errors.
+ */
+export const transformApiErrors = (errors: Array<{ type: string }>) => {
+  const fields: Record<string, string> = {};
+
+  if (errors.find((e) => e.type === 'VENDOR_CODE_NOT_UNIQUE')) {
+    fields.code = intl.get('vendor_code_is_already_used');
+  }
+  return fields;
+};
 
 export const useSetPrimaryBranchToForm = () => {
   const { setFieldValue } = useFormikContext<VendorFormValues>();

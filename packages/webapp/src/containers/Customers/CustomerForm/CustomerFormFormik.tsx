@@ -9,6 +9,7 @@ import { useCustomerFormContext } from './CustomerFormProvider';
 import {
   CustomerFormValues,
   defaultInitialValues,
+  transformApiErrors,
   transformCustomerToForm,
   transformFormToCreateRequest,
   transformFormToEditRequest,
@@ -87,7 +88,7 @@ function CustomerFormFormikRoot({
     values: CustomerFormValues,
     formArgs: FormikHelpers<CustomerFormValues>,
   ) => {
-    const { setSubmitting, resetForm } = formArgs;
+    const { setSubmitting, setErrors, resetForm } = formArgs;
 
     const onSuccess = () => {
       AppToaster.show({
@@ -103,7 +104,17 @@ function CustomerFormFormikRoot({
       saveInvoke(onSubmitSuccess, values, formArgs, submitPayload);
     };
 
-    const onError = () => {
+    const onError = (error: {
+      data?: { errors?: Array<{ type: string; message?: string }> };
+    }) => {
+      const errors = error?.data?.errors ?? [];
+      const fieldErrors = transformApiErrors(errors);
+
+      if (Object.keys(fieldErrors).length > 0) {
+        setErrors(fieldErrors);
+      } else if (errors[0]?.message) {
+        AppToaster.show({ message: errors[0].message, intent: Intent.DANGER });
+      }
       setSubmitting(false);
       saveInvoke(onSubmitError, values, formArgs, submitPayload);
     };
