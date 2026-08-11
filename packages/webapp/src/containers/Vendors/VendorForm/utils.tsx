@@ -21,6 +21,7 @@ export type VendorFormValues = {
   lastName: string;
   companyName: string;
   displayName: string;
+  displayNameFormat: string;
   code: string;
 
   email: string;
@@ -60,6 +61,7 @@ export const defaultInitialValues: VendorFormValues = {
   lastName: '',
   companyName: '',
   displayName: '',
+  displayNameFormat: '',
   code: '',
 
   email: '',

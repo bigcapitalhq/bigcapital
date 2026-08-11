@@ -8,7 +8,9 @@ import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
 import { CustomerTypeRadioField } from './CustomerTypeRadioField';
 import {
   SalutationList,
+  SalutationItem,
   DisplayNameList,
+  useDisplayNameSynchronizer,
   FInputGroup,
   FFormGroup,
   Box,
@@ -19,6 +21,7 @@ import { useAutofocus } from '@/hooks';
 
 export function CustomerFormBasicSection() {
   const firstNameFieldRef = useAutofocus<HTMLInputElement>();
+  const { syncDisplayName, createFieldOnChange } = useDisplayNameSynchronizer();
 
   return (
     <Box data-section-id="primary">
@@ -33,6 +36,9 @@ export function CustomerFormBasicSection() {
           <SalutationList
             name={'salutation'}
             popoverProps={{ minimal: true }}
+            onItemChange={(item: SalutationItem) =>
+              syncDisplayName({ salutation: item.key })
+            }
           />
           <FInputGroup
             name={'firstName'}
@@ -40,11 +46,13 @@ export function CustomerFormBasicSection() {
             inputRef={(ref: HTMLInputElement | null) => {
               if (ref) firstNameFieldRef.current = ref;
             }}
+            onChange={createFieldOnChange('firstName')}
             fill
           />
           <FInputGroup
             name={'lastName'}
             placeholder={intl.get('last_name')}
+            onChange={createFieldOnChange('lastName')}
             fill
           />
         </ControlGroup>
@@ -61,7 +69,11 @@ export function CustomerFormBasicSection() {
 
       {/*----------- Company Name -----------*/}
       <FFormGroup name={'companyName'} label={intl.get('company_name')} inline>
-        <FInputGroup name={'companyName'} fill />
+        <FInputGroup
+          name={'companyName'}
+          onChange={createFieldOnChange('companyName')}
+          fill
+        />
       </FFormGroup>
 
       {/*----------- Display Name -----------*/}

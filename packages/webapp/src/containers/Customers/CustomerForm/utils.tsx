@@ -22,6 +22,7 @@ export type CustomerFormValues = {
   lastName: string;
   companyName: string;
   displayName: string;
+  displayNameFormat: string;
   code: string;
 
   email: string;
@@ -62,6 +63,7 @@ export const defaultInitialValues: CustomerFormValues = {
   lastName: '',
   companyName: '',
   displayName: '',
+  displayNameFormat: '',
   code: '',
 
   email: '',
