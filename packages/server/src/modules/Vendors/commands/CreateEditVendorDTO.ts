@@ -20,8 +20,14 @@ export class CreateEditVendorDTOService {
    * @returns {IVendorNewDTO | IVendorEditDTO}
    */
   private transformCommonDTO = (vendorDTO: IVendorNewDTO | IVendorEditDTO) => {
+    const { code, ...rest } = vendorDTO;
+
     return {
-      ...vendorDTO,
+      ...rest,
+      // Blank codes are stored as NULL to avoid `CONTACTS_CODE_UNIQUE` collisions.
+      ...(typeof code === 'string'
+        ? { code: code.trim() ? code.trim() : null }
+        : {}),
     };
   };
 
