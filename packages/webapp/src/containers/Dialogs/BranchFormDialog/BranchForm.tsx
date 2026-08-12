@@ -35,6 +35,9 @@ function BranchFormInner({ closeDialog }: BranchFormProps): React.ReactElement {
   const initialValues: BranchFormValues = {
     ...defaultInitialValues,
     ...transformToForm(branch, defaultInitialValues),
+    // The API returns `primary` as a 0/1 integer which fails the server-side
+    // `@IsBoolean()` validation — normalize it back to a boolean.
+    primary: branch?.primary ? true : false,
   };
 
   // Handles the form submit.

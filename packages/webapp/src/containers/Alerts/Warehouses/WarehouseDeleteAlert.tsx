@@ -59,7 +59,7 @@ function WarehouseDeleteAlertInner({
       onConfirm={handleConfirmWarehouseDelete}
       loading={isPending}
     >
-      <p>
+      <p data-testId={'warehouse-delete-alert'}>
         {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch */}
         <FormattedHTMLMessage id={'warehouse.once_delete_this_warehouse'} />
       </p>

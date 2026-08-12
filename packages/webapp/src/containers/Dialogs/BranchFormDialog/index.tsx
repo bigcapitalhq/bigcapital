@@ -39,7 +39,7 @@ function BranchFormDialog({
       autoFocus={true}
       className={'dialog--branch-form'}
     >
-      <DialogSuspense>
+      <DialogSuspense testId="branch-form-dialog">
         <BranchFormDialogContent dialogName={dialogName} branchId={branchId} />
       </DialogSuspense>
     </Dialog>
