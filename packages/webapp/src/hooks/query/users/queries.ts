@@ -164,7 +164,7 @@ export const useDashboardMeta = (
   >,
 ) => {
   const setFeatureDashboardMeta = useSetFeatureDashboardMeta();
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   const state = useQuery({
     ...props,
