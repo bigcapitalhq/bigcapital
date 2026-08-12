@@ -1766,6 +1766,7 @@
   "permissions.inventory_valuation_summary": "ملخص تقييم المخزون ",
   "permissions.inventory_items_details": "تفاصيل منتج المخزون",
   "permissions.cashflow_account_transactions": "معاملات حسابات التدفقات النقدية",
+  "permissions.sales_tax_liability_summary": "ملخص التزامات ضريبة المبيعات",
   "permissions.more_permissions": "عرض المزيد ",
   "estimate.status.expired": "منتهية الصلاحية",
   "refund_credit.drawer.title": " تفاصيل استرجاع الأموال لإشعار الدائن ",

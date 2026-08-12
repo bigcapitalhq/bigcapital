@@ -24,6 +24,7 @@
   "transactions_locking": "Ability to transactions locking.",
 
   "balance_sheet_report": "Balance sheet.",
+  "trial_balance_sheet_report": "Trial balance sheet.",
   "profit_loss_sheet": "Profit/loss sheet",
   "journal": "Journal",
   "general_ledger": "General ledger",
@@ -37,5 +38,7 @@
   "customers_summary_balance_report": "Customers summary balance",
   "vendors_summary_balance_report": "Vendors summary balance",
   "inventory_valuation_summary": "Inventory valuation summary",
-  "inventory_items_details": "Inventory items details"
+  "inventory_items_details": "Inventory items details",
+  "cashflow_account_transactions": "Cashflow account transactions",
+  "sales_tax_liability_summary_report": "Sales tax liability summary"
 }

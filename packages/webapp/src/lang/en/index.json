@@ -1830,6 +1830,7 @@
   "permissions.inventory_valuation_summary": "Inventory valuation summary",
   "permissions.inventory_items_details": "Inventory valuation summary",
   "permissions.cashflow_account_transactions": "Bank account transactions",
+  "permissions.sales_tax_liability_summary": "Sales tax liability summary",
   "permissions.more_permissions": "More Permissions",
   "estimate.status.expired": "Expired",
   "refund_credit.drawer.title": "Refund credit note",

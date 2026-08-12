@@ -1,4 +1,11 @@
-import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ITransactionsByVendorsFilter } from './TransactionsByVendor.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
@@ -18,6 +25,11 @@ import {
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { TransactionsByVendorQueryDto } from './TransactionsByVendorQuery.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('/reports/transactions-by-vendors')
 @ApiTags('Reports')
@@ -27,12 +39,18 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
   TransactionsByVendorTableResponseDto,
   NumberFormatQueryDto,
 )
+// Restrict this financial report to authenticated users granted the vendors-transactions read permission.
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class TransactionsByVendorController {
   constructor(
     private readonly transactionsByVendorsApp: TransactionsByVendorApplication,
   ) {}
 
   @Get()
+  @RequirePermission(
+    ReportsAction.READ_VENDORS_TRANSACTIONS,
+    AbilitySubject.Report,
+  )
   @ApiOperation({ summary: 'Get transactions by vendor' })
   @ApiQuery({
     name: 'numberFormat',
