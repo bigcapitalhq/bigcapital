@@ -8,7 +8,14 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AcceptType } from '@/constants/accept-type';
 import { SalesTaxLiabilitySummaryApplication } from './SalesTaxLiabilitySummaryApplication';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
@@ -18,6 +25,11 @@ import {
   SalesTaxLiabilitySummaryTableResponseDto,
 } from './SalesTaxLiabilitySummaryResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('/reports/sales-tax-liability-summary')
 @ApiTags('Reports')
@@ -27,12 +39,18 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
   SalesTaxLiabilitySummaryTableResponseDto,
   NumberFormatQueryDto,
 )
+// Restrict this financial report to authenticated users granted the sales-tax-liability read permission.
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class SalesTaxLiabilitySummaryController {
   constructor(
     private readonly salesTaxLiabilitySummaryApp: SalesTaxLiabilitySummaryApplication,
   ) {}
 
   @Get()
+  @RequirePermission(
+    ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+    AbilitySubject.Report,
+  )
   @ApiResponse({
     status: 200,
     description: 'Sales tax liability summary report',

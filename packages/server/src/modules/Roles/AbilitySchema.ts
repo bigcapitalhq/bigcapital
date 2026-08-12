@@ -255,6 +255,10 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
         label: 'ability.balance_sheet_report',
       },
       {
+        key: ReportsAction.READ_TRIAL_BALANCE_SHEET,
+        label: 'ability.trial_balance_sheet_report',
+      },
+      {
         key: ReportsAction.READ_PROFIT_LOSS,
         label: 'ability.profit_loss_sheet',
       },
@@ -303,6 +307,14 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       {
         key: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
         label: 'ability.inventory_items_details',
+      },
+      {
+        key: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
+        label: 'ability.cashflow_account_transactions',
+      },
+      {
+        key: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+        label: 'ability.sales_tax_liability_summary_report',
       },
     ],
   },

@@ -660,6 +660,10 @@ export const getPermissionsSchema = (): PermissionModule[] => [
             label: intl.get('permissions.cashflow_account_transactions'),
             key: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
           },
+          {
+            label: intl.get('permissions.sales_tax_liability_summary'),
+            key: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+          },
         ],
       },
     ],

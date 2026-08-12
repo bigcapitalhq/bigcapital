@@ -1768,6 +1768,7 @@
   "permissions.inventory_valuation_summary": "Resumen de valoración de inventario",
   "permissions.inventory_items_details": "Resumen de valoración de inventario",
   "permissions.cashflow_account_transactions": "Transacciones de cuentas de flujo de caja",
+  "permissions.sales_tax_liability_summary": "Resumen de impuestos de ventas por pagar",
   "permissions.more_permissions": "Más permisos",
   "estimate.status.expired": "Expirado",
   "refund_credit.drawer.title": "Reembolsar nota de crédito",

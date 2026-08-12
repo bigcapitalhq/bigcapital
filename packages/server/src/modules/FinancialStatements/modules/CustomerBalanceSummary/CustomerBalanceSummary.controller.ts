@@ -8,7 +8,14 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { CustomerBalanceSummaryApplication } from './CustomerBalanceSummaryApplication';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { CustomerBalanceSummaryQueryDto } from './CustomerBalanceSummaryQuery.dto';
@@ -18,6 +25,11 @@ import {
   CustomerBalanceSummaryTableResponseDto,
 } from './CustomerBalanceSummaryResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('/reports/customer-balance-summary')
 @ApiTags('Reports')
@@ -27,12 +39,18 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
   CustomerBalanceSummaryTableResponseDto,
   NumberFormatQueryDto,
 )
+// Restrict this financial report to authenticated users granted the customer-balance read permission.
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class CustomerBalanceSummaryController {
   constructor(
     private readonly customerBalanceSummaryApp: CustomerBalanceSummaryApplication,
   ) {}
 
   @Get()
+  @RequirePermission(
+    ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
+    AbilitySubject.Report,
+  )
   @ApiResponse({
     status: 200,
     description: 'Customer balance summary report',
