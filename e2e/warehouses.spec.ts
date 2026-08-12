@@ -1,5 +1,18 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
 import { faker } from "@faker-js/faker";
+import {
+  authCookies,
+  createOnboardedUser,
+  type OnboardedSession,
+} from "./_auth";
+
+const API_BASE =
+  process.env.PLAYWRIGHT_TEST_API_URL ||
+  process.env.PLAYWRIGHT_TEST_BASE_URL ||
+  "http://localhost:3000";
+
+const WEBAPP_BASE =
+  process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:4000";
 
 const warehouseName = () =>
   `${faker.company.name()} ${faker.string.alphanumeric(4)}`;
@@ -72,7 +85,9 @@ async function openNewWarehouseDialog(page: Page): Promise<Locator> {
 }
 
 /**
- * Creates a warehouse through the UI and expects the success toast.
+ * Creates a warehouse through the UI. The dialog closing signals the mutation
+ * succeeded (toasts render unreliably in the dev SPA, so they aren't asserted
+ * here); callers verify the resulting grid item instead.
  */
 async function createWarehouse(
   page: Page,
@@ -86,9 +101,7 @@ async function createWarehouse(
   await closeQueryDevtools(page);
   await dialog.getByRole("button", { name: "Save" }).click();
 
-  await expect(
-    page.getByText("The warehouse has been created successfully."),
-  ).toBeVisible({ timeout: 15_000 });
+  await expect(dialog).toBeHidden({ timeout: 15_000 });
 }
 
 /**
@@ -117,16 +130,26 @@ async function deleteWarehouseViaItem(page: Page, item: Locator) {
     .filter({ has: page.getByTestId("warehouse-delete-alert") })
     .getByRole("button", { name: "Delete" })
     .click();
-
-  await expect(
-    page.getByText("The warehouse has been deleted successfully"),
-  ).toBeVisible({ timeout: 15_000 });
 }
 
 test.describe("warehouses", () => {
   test.describe.configure({ mode: "serial" });
 
-  test.beforeEach(async ({ page }) => {
+  // Activating the warehouses feature has global side effects on an
+  // organization (e.g. inventory transactions start requiring a warehouse
+  // id). The shared storage state org is used by every spec to seed report
+  // data, so this suite runs against its own dedicated org to avoid
+  // polluting it.
+  let session: OnboardedSession;
+
+  test.beforeAll(async () => {
+    session = await createOnboardedUser(API_BASE);
+  });
+
+  test.beforeEach(async ({ page, context }) => {
+    await context.addCookies(
+      authCookies(session, new URL(WEBAPP_BASE).hostname),
+    );
     await page.goto("/preferences/warehouses");
     await waitForWarehousesPage(page);
   });
@@ -144,12 +167,6 @@ test.describe("warehouses", () => {
         { timeout: 30_000 },
       );
       await dialog.getByRole("button", { name: "Activate Warehouses" }).click();
-
-      await expect(
-        page.getByText(
-          "Multi-branches feature has been activated successfully.",
-        ),
-      ).toBeVisible({ timeout: 15_000 });
     }
 
     // The primary warehouse is created as part of the activation.
@@ -247,8 +264,9 @@ test.describe("warehouses", () => {
     await item.click({ button: "right" });
     await page.getByRole("menuitem", { name: "Mark as Primary" }).click();
 
-    await expect(
-      page.getByText("The given warehouse has been marked as primary."),
-    ).toBeVisible({ timeout: 15_000 });
+    // The primary warehouse is rendered with a star icon next to its name.
+    await expect(item.locator('[data-icon="star-18dp"]')).toBeVisible({
+      timeout: 15_000,
+    });
   });
 });

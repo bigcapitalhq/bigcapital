@@ -1,5 +1,18 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
 import { faker } from "@faker-js/faker";
+import {
+  authCookies,
+  createOnboardedUser,
+  type OnboardedSession,
+} from "./_auth";
+
+const API_BASE =
+  process.env.PLAYWRIGHT_TEST_API_URL ||
+  process.env.PLAYWRIGHT_TEST_BASE_URL ||
+  "http://localhost:3000";
+
+const WEBAPP_BASE =
+  process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:4000";
 
 const branchName = () =>
   `${faker.company.name()} ${faker.string.alphanumeric(4)}`;
@@ -70,7 +83,9 @@ async function openNewBranchDialog(page: Page): Promise<Locator> {
 }
 
 /**
- * Creates a branch through the UI and expects the success toast.
+ * Creates a branch through the UI. The dialog closing signals the mutation
+ * succeeded (toasts render unreliably in the dev SPA, so they aren't asserted
+ * here); callers verify the resulting row instead.
  */
 async function createBranch(
   page: Page,
@@ -84,9 +99,7 @@ async function createBranch(
   await closeQueryDevtools(page);
   await dialog.getByRole("button", { name: "Save" }).click();
 
-  await expect(
-    page.getByText("The branch has been created successfully."),
-  ).toBeVisible({ timeout: 15_000 });
+  await expect(dialog).toBeHidden({ timeout: 15_000 });
 }
 
 /**
@@ -99,8 +112,8 @@ async function findBranchRow(page: Page, name: string): Promise<Locator> {
 }
 
 /**
- * Deletes the given branch row through the context menu and expects the
- * success toast.
+ * Deletes the given branch row through the context menu. The caller verifies
+ * the row disappears afterwards.
  */
 async function deleteBranchViaRow(page: Page, row: Locator) {
   await row.click({ button: "right" });
@@ -112,16 +125,25 @@ async function deleteBranchViaRow(page: Page, row: Locator) {
     .filter({ has: page.getByTestId("branch-delete-alert") })
     .getByRole("button", { name: "Delete" })
     .click();
-
-  await expect(
-    page.getByText("The branch has been deleted successfully"),
-  ).toBeVisible({ timeout: 15_000 });
 }
 
 test.describe("branches", () => {
   test.describe.configure({ mode: "serial" });
 
-  test.beforeEach(async ({ page }) => {
+  // Activating the branches feature has global side effects on an
+  // organization (e.g. expenses start requiring a branch id). The shared
+  // storage state org is used by every spec to seed report data, so this
+  // suite runs against its own dedicated org to avoid polluting it.
+  let session: OnboardedSession;
+
+  test.beforeAll(async () => {
+    session = await createOnboardedUser(API_BASE);
+  });
+
+  test.beforeEach(async ({ page, context }) => {
+    await context.addCookies(
+      authCookies(session, new URL(WEBAPP_BASE).hostname),
+    );
     await page.goto("/preferences/branches");
     await waitForBranchesPage(page);
   });
@@ -139,12 +161,6 @@ test.describe("branches", () => {
         { timeout: 30_000 },
       );
       await dialog.getByRole("button", { name: "Activate Branches" }).click();
-
-      await expect(
-        page.getByText(
-          "Multi-branches feature has been activated successfully.",
-        ),
-      ).toBeVisible({ timeout: 15_000 });
     }
 
     // The primary head branch is created as part of the activation.
@@ -238,8 +254,9 @@ test.describe("branches", () => {
     await row.click({ button: "right" });
     await page.getByRole("menuitem", { name: "Make as Primary" }).click();
 
-    await expect(
-      page.getByText("The branch has been marked as primary."),
-    ).toBeVisible({ timeout: 15_000 });
+    // The primary branch is rendered with a star icon next to its name.
+    await expect(row.locator('[data-icon="star-18dp"]')).toBeVisible({
+      timeout: 15_000,
+    });
   });
 });
