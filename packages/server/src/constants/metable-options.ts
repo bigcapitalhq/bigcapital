@@ -259,10 +259,10 @@ export const SettingsOptions = {
     ]),
   },
   features: {
-    'multi-warehouses': {
+    warehouses: {
       type: 'boolean',
     },
-    'multi-branches': {
+    branches: {
       type: 'boolean',
     },
   },
