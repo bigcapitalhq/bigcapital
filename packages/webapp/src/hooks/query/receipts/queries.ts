@@ -139,7 +139,7 @@ export function useValidateBulkDeleteReceipts(
     number[]
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
