@@ -26,6 +26,12 @@ export const paymentsTableStateChangedFactory = () =>
     return !isEqual(tableState, defaultTableQuery);
   });
 
+export const getPaymentMadesSelectedRowsFactory = () =>
+  createSelector(
+    (state: RootState) => state.paymentMades.selectedRows,
+    (selectedRows) => selectedRows,
+  );
+
 export const getPaymentMadeByIdFactory = () =>
   createSelector(
     (_state: RootState, paymentMadeId: number | string) => paymentMadeId,

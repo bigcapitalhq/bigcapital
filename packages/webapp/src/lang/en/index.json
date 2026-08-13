@@ -734,6 +734,7 @@
   "the_payment_made_has_been_edited_successfully": "The payment has been edited successfully.",
   "the_payment_made_has_been_created_successfully": "The payment has been created successfully.",
   "the_payment_made_has_been_deleted_successfully": "The payment has been deleted successfully.",
+  "the_payments_made_has_been_deleted_successfully": "The payments made have been deleted successfully.",
   "once_delete_this_payment_made_you_will_able_to_restore_it": "Once you delete this payment transaction, you won't be able to restore it later. Are you sure you want to delete it?",
   "sellable": "Sellable",
   "purchasable": "Purchasable",

@@ -33,6 +33,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @Controller('item-categories')
 @ApiTags('Item Categories')
 @ApiExtraModels(ItemCategoryResponseDto)
+@ApiExtraModels(ValidateBulkDeleteItemCategoriesResponseDto)
 @ApiCommonHeaders()
 export class ItemCategoryController {
   constructor(

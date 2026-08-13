@@ -4,6 +4,8 @@ import {
   createBillPayment,
   editBillPayment,
   deleteBillPayment,
+  bulkDeleteBillPayments,
+  validateBulkDeleteBillPayments,
   fetchBillPaymentEditPage,
   fetchBillPaymentNewPageEntries,
 } from '@bigcapital/sdk-ts';
@@ -21,6 +23,8 @@ import type {
   BillPayment,
   CreateBillPaymentBody,
   EditBillPaymentBody,
+  BulkDeleteBillPaymentsBody,
+  ValidateBulkDeleteBillPaymentsResponse,
   BillPaymentEditPageResponse,
   BillPaymentNewPageEntriesResponse,
 } from '@bigcapital/sdk-ts';
@@ -92,6 +96,35 @@ export function useDeletePaymentMade(
       commonInvalidateQueries(client);
       client.invalidateQueries({ queryKey: paymentMadesKeys.detail(id) });
     },
+  });
+}
+
+export function useBulkDeletePaymentMades(
+  props?: UseMutationOptions<void, Error, BulkDeleteBillPaymentsBody>,
+) {
+  const client = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (body: BulkDeleteBillPaymentsBody) =>
+      bulkDeleteBillPayments(fetcher, body),
+    onSuccess: () => commonInvalidateQueries(client),
+  });
+}
+
+export function useValidateBulkDeletePaymentMades(
+  props?: UseMutationOptions<
+    ValidateBulkDeleteBillPaymentsResponse,
+    Error,
+    number[]
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useMutation({
+    ...props,
+    mutationFn: (ids: number[]) => validateBulkDeleteBillPayments(fetcher, ids),
   });
 }
 

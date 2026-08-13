@@ -3,6 +3,7 @@ import type { MapState } from '@/containers/hoc.types';
 import {
   getPaymentMadesTableStateFactory,
   paymentsTableStateChangedFactory,
+  getPaymentMadesSelectedRowsFactory,
 } from '@/store/payment-mades/payment-mades.selector';
 import { ApplicationState } from '@/store/reducers';
 
@@ -13,6 +14,9 @@ export interface WithPaymentMadeProps {
   paymentsTableStateChanged: ReturnType<
     ReturnType<typeof paymentsTableStateChangedFactory>
   >;
+  paymentMadesSelectedRows: ReturnType<
+    ReturnType<typeof getPaymentMadesSelectedRowsFactory>
+  >;
 }
 
 export const withPaymentMade = <
@@ -22,11 +26,13 @@ export const withPaymentMade = <
 ) => {
   const getPaymentMadesTableState = getPaymentMadesTableStateFactory();
   const paymentsTableStateChanged = paymentsTableStateChangedFactory();
+  const getPaymentMadesSelectedRows = getPaymentMadesSelectedRowsFactory();
 
   const mapStateToProps = (state: ApplicationState, props: Props) => {
     const mapped: WithPaymentMadeProps = {
       paymentMadesTableState: getPaymentMadesTableState(state, props),
       paymentsTableStateChanged: paymentsTableStateChanged(state),
+      paymentMadesSelectedRows: getPaymentMadesSelectedRows(state),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
