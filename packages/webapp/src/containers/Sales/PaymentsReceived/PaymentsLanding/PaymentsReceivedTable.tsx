@@ -30,7 +30,10 @@ interface WithPaymentsReceivedActionsProps {
 }
 
 interface PaymentsReceivedDataTableProps
-  extends Pick<WithPaymentsReceivedProps, 'paymentReceivesTableState'>,
+  extends Pick<
+      WithPaymentsReceivedProps,
+      'paymentReceivesTableState' | 'paymentReceivesSelectedRows'
+    >,
     WithPaymentsReceivedActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
@@ -40,6 +43,7 @@ function PaymentsReceivedDataTable({
   setPaymentReceivesTableState,
   setPaymentReceivesSelectedRows,
   paymentReceivesTableState,
+  paymentReceivesSelectedRows,
   openAlert,
   openDrawer,
   openDialog,
@@ -104,12 +108,13 @@ function PaymentsReceivedDataTable({
     [setPaymentReceivesTableState],
   );
 
-  const handleSelectedRowsChange = (
-    selectedRows: Array<{ original: PaymentReceiveTableRow }>,
-  ) => {
-    const selectedIds = selectedRows?.map((row) => row.original.id) || [];
-    setPaymentReceivesSelectedRows(selectedIds);
-  };
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows: Array<{ original: PaymentReceiveTableRow }>) => {
+      const selectedIds = selectedRows?.map((row) => row.original.id) || [];
+      setPaymentReceivesSelectedRows(selectedIds);
+    },
+    [setPaymentReceivesSelectedRows],
+  );
 
   if (isEmptyStatus) {
     return <PaymentReceivesEmptyStatus />;
@@ -124,6 +129,9 @@ function PaymentsReceivedDataTable({
         headerLoading={isPaymentReceivesLoading}
         progressBarLoading={isPaymentReceivesFetching}
         onFetchData={handleDataTableFetchData}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={paymentReceivesSelectedRows}
+        autoResetSelectedRows={false}
         manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}
@@ -131,7 +139,6 @@ function PaymentsReceivedDataTable({
         autoResetSortBy={false}
         autoResetPage={false}
         pagination={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
         initialPageSize={paymentReceivesTableState?.pageSize ?? 10}
         rowsCount={pagination?.total ?? 0}
         TableLoadingRenderer={TableSkeletonRows}
@@ -157,7 +164,10 @@ export const PaymentsReceivedTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withPaymentsReceived(({ paymentReceivesTableState }) => ({
-    paymentReceivesTableState,
-  })),
+  withPaymentsReceived(
+    ({ paymentReceivesTableState, paymentReceivesSelectedRows }) => ({
+      paymentReceivesTableState,
+      paymentReceivesSelectedRows,
+    }),
+  ),
 )(PaymentsReceivedDataTable);

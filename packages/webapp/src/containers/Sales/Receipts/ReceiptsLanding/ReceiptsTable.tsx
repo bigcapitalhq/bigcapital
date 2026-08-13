@@ -31,6 +31,7 @@ function ReceiptsDataTable({
 
   // #withReceipts
   receiptTableState,
+  receiptSelectedRows,
 
   // #withAlertActions
   openAlert,
@@ -107,10 +108,13 @@ function ReceiptsDataTable({
     openDrawer(DRAWERS.RECEIPT_DETAILS, { receiptId: cell.row.original.id });
   };
   // Handle selected rows change.
-  const handleSelectedRowsChange = (selectedRows) => {
-    const selectedIds = selectedRows?.map((row) => row.original.id) || [];
-    setReceiptsSelectedRows(selectedIds);
-  };
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows) => {
+      const selectedIds = selectedRows?.map((row) => row.original.id) || [];
+      setReceiptsSelectedRows(selectedIds);
+    },
+    [setReceiptsSelectedRows],
+  );
 
   if (isEmptyStatus) {
     return <ReceiptsEmptyStatus />;
@@ -143,6 +147,8 @@ function ReceiptsDataTable({
         onColumnResizing={handleColumnResizing}
         size={receiptsTableSize}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={receiptSelectedRows}
+        autoResetSelectedRows={false}
         payload={{
           onEdit: handleEditReceipt,
           onDelete: handleDeleteReceipt,
@@ -161,5 +167,8 @@ export const ReceiptsTable = compose(
   withReceiptsActions,
   withDrawerActions,
   withDialogActions,
-  withReceipts(({ receiptTableState }) => ({ receiptTableState })),
+  withReceipts(({ receiptTableState, receiptSelectedRows }) => ({
+    receiptTableState,
+    receiptSelectedRows,
+  })),
 )(ReceiptsDataTable);
