@@ -18,7 +18,10 @@ interface ExpensesListInnerProps
       WithExpensesProps,
       'expensesTableState' | 'expensesTableStateChanged'
     >,
-    Pick<WithExpensesActionsProps, 'resetExpensesTableState'> {}
+    Pick<
+      WithExpensesActionsProps,
+      'resetExpensesTableState' | 'resetExpensesSelectedRows'
+    > {}
 
 /**
  * Expenses list.
@@ -30,13 +33,15 @@ function ExpensesListInner({
 
   // #withExpensesActions
   resetExpensesTableState,
+  resetExpensesSelectedRows,
 }: ExpensesListInnerProps) {
-  // Resets the expenses table state once the page unmount.
+  // Resets the expenses table state and selected rows once the page unmount.
   useEffect(
     () => () => {
       resetExpensesTableState();
+      resetExpensesSelectedRows();
     },
-    [resetExpensesTableState],
+    [resetExpensesSelectedRows, resetExpensesTableState],
   );
 
   return (

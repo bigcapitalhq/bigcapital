@@ -6,12 +6,14 @@ import {
   setAccountsTableState,
   resetAccountsTableState,
   setAccountsSelectedRows,
+  resetAccountsSelectedRows,
 } from '@/store/accounts/accounts.actions';
 
 export interface WithAccountsTableActionsProps {
   setAccountsTableState: (queries: Partial<TableQuery>) => void;
   resetAccountsTableState: () => void;
   setAccountsSelectedRows: (selectedRows: Array<unknown>) => void;
+  resetAccountsSelectedRows: () => void;
 }
 
 export const mapDispatchToProps = (
@@ -21,6 +23,7 @@ export const mapDispatchToProps = (
   resetAccountsTableState: () => dispatch(resetAccountsTableState()),
   setAccountsSelectedRows: (selectedRows) =>
     dispatch(setAccountsSelectedRows(selectedRows)),
+  resetAccountsSelectedRows: () => dispatch(resetAccountsSelectedRows()),
 });
 
 export const withAccountsTableActions = connect(null, mapDispatchToProps);

@@ -22,13 +22,15 @@ function ReceiptsListInner({
 
   // #withReceiptsActions
   resetReceiptsTableState,
+  resetReceiptsSelectedRows,
 }) {
-  // Resets the receipts table state once the page unmount.
+  // Resets the receipts table state and selected rows once the page unmount.
   React.useEffect(
     () => () => {
       resetReceiptsTableState();
+      resetReceiptsSelectedRows();
     },
-    [resetReceiptsTableState],
+    [resetReceiptsSelectedRows, resetReceiptsTableState],
   );
 
   return (

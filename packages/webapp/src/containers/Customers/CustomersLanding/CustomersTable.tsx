@@ -26,7 +26,10 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
 interface CustomersTableInnerProps
-  extends Pick<WithCustomersProps, 'customersTableState'>,
+  extends Pick<
+      WithCustomersProps,
+      'customersTableState' | 'customersSelectedRows'
+    >,
     WithCustomersActionsProps,
     WithAlertActionsProps,
     WithDialogActionsProps,
@@ -45,6 +48,7 @@ function CustomersTableInner({
 
   // #withCustomers
   customersTableState,
+  customersSelectedRows,
 
   // #withAlerts
   openAlert,
@@ -167,6 +171,7 @@ function CustomersTableInner({
         manualPagination={true}
         rowsCount={pagination?.total ?? 0}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={customersSelectedRows}
         autoResetSelectedRows={false}
         autoResetSortBy={false}
         autoResetPage={false}
@@ -195,5 +200,8 @@ export const CustomersTable = compose(
   withDialogActions,
   withCustomersActions,
   withDrawerActions,
-  withCustomers(({ customersTableState }) => ({ customersTableState })),
+  withCustomers(({ customersTableState, customersSelectedRows }) => ({
+    customersTableState,
+    customersSelectedRows,
+  })),
 )(CustomersTableInner);

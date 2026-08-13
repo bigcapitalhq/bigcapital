@@ -8,12 +8,14 @@ import {
   setExpensesTableState,
   resetExpensesTableState,
   setExpensesSelectedRows,
+  resetExpensesSelectedRows,
 } from '@/store/expenses/expenses.actions';
 
 export interface WithExpensesActionsProps {
   setExpensesTableState: (state: Partial<TableQuery>) => void;
   resetExpensesTableState: () => void;
   setExpensesSelectedRows: (selectedRows: Array<unknown>) => void;
+  resetExpensesSelectedRows: () => void;
 }
 
 const mapDispatchToProps = (
@@ -23,6 +25,7 @@ const mapDispatchToProps = (
   resetExpensesTableState: () => dispatch(resetExpensesTableState()),
   setExpensesSelectedRows: (selectedRows) =>
     dispatch(setExpensesSelectedRows(selectedRows)),
+  resetExpensesSelectedRows: () => dispatch(resetExpensesSelectedRows()),
 });
 
 export const withExpensesActions = connect(null, mapDispatchToProps);

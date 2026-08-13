@@ -34,7 +34,7 @@ function BillBulkDeleteDialogInner({
   payload,
 
   // #withBillsActions
-  setBillsSelectedRows,
+  resetBillsSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -63,7 +63,7 @@ function BillBulkDeleteDialogInner({
           message: intl.get('the_bills_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setBillsSelectedRows([]);
+        resetBillsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

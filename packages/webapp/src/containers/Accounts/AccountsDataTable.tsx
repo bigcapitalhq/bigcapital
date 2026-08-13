@@ -2,8 +2,10 @@ import React from 'react';
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { ActionsMenu } from './components';
 import { useAccountsTableColumns, rowClassNames } from './utils';
+import { withAccounts } from './withAccounts';
 import { withAccountsTableActions } from './withAccountsTableActions';
 import type { AccountTableRow } from './components';
+import type { WithAccountsProps } from './withAccounts';
 import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -29,7 +31,8 @@ interface AccountsDataTableProps
   extends WithAlertActionsProps,
     WithDialogActionsProps,
     WithDrawerActionsProps,
-    WithAccountsTableActionsProps {}
+    WithAccountsTableActionsProps,
+    Pick<WithAccountsProps, 'accountsSelectedRows'> {}
 
 interface ActionsMenuPayload {
   onEdit: (account: AccountTableRow) => void;
@@ -55,6 +58,9 @@ function AccountsDataTableInner({
 
   // #withAccountsTableActions
   setAccountsSelectedRows,
+
+  // #withAccounts
+  accountsSelectedRows,
 }: AccountsDataTableProps) {
   const { isAccountsLoading, isAccountsFetching, accounts, accountsSettings } =
     useAccountsChartContext();
@@ -158,6 +164,7 @@ function AccountsDataTableInner({
       vListOverscanRowCount={0}
       onCellClick={handleCellClick}
       onSelectedRowsChange={handleSelectedRowsChange}
+      selectedRowsIds={accountsSelectedRows}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       size={accountsTableSize}
@@ -171,4 +178,5 @@ export const AccountsDataTable = compose(
   withDrawerActions,
   withDialogActions,
   withAccountsTableActions,
+  withAccounts(({ accountsSelectedRows }) => ({ accountsSelectedRows })),
 )(AccountsDataTableInner);

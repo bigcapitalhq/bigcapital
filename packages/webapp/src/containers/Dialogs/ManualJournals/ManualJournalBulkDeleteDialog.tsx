@@ -31,7 +31,7 @@ function ManualJournalBulkDeleteDialogInner({
   payload,
 
   // #withManualJournalsActions
-  setManualJournalsSelectedRows,
+  resetManualJournalsSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -60,7 +60,7 @@ function ManualJournalBulkDeleteDialogInner({
           message: intl.get('the_journals_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setManualJournalsSelectedRows([]);
+        resetManualJournalsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

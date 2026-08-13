@@ -3,7 +3,11 @@ import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import type { TableQuery } from '@/store/store.types';
 import { createTableStateReducers } from '@/store/table-state.reducer';
-import { RESET, ACCOUNTS_SET_SELECTED_ROWS } from '@/store/types';
+import {
+  RESET,
+  ACCOUNTS_SET_SELECTED_ROWS,
+  ACCOUNTS_RESET_SELECTED_ROWS,
+} from '@/store/types';
 
 interface AccountsState {
   tableState: Partial<TableQuery>;
@@ -37,6 +41,10 @@ const reducerInstance = createReducer(initialState, {
     action: { payload: number[] },
   ) => {
     state.selectedRows = action.payload;
+  },
+
+  [ACCOUNTS_RESET_SELECTED_ROWS]: (state: AccountsState) => {
+    state.selectedRows = [];
   },
 
   [RESET]: (): void => {

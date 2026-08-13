@@ -2,6 +2,8 @@ import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
+import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTableActions';
+import type { WithAccountsTableActionsProps } from '@/containers/Accounts/withAccountsTableActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
@@ -12,7 +14,9 @@ interface AccountBulkInactivateAlertPayload {
   accountsIds: number[];
 }
 
-interface AccountBulkInactivateAlertProps extends WithAlertActionsProps {
+interface AccountBulkInactivateAlertProps
+  extends WithAlertActionsProps,
+    WithAccountsTableActionsProps {
   name: string;
   isOpen: boolean;
   payload: AccountBulkInactivateAlertPayload;
@@ -23,6 +27,7 @@ function AccountBulkInactivateAlertInner({
   isOpen,
   payload: { accountsIds },
   closeAlert,
+  resetAccountsSelectedRows,
 }: AccountBulkInactivateAlertProps): React.ReactElement {
   const { mutateAsync: bulkInactivate, isPending } =
     useBulkInactivateAccounts();
@@ -38,6 +43,7 @@ function AccountBulkInactivateAlertInner({
         message: intl.get('the_accounts_have_been_successfully_inactivated'),
         intent: Intent.SUCCESS,
       });
+      resetAccountsSelectedRows();
     } catch (error: unknown) {
       // Replaced `(error as Error)?.message` cast with instanceof narrowing.
       const message =
@@ -73,4 +79,5 @@ function AccountBulkInactivateAlertInner({
 export const AccountBulkInactivateAlert = compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withAccountsTableActions,
 )(AccountBulkInactivateAlertInner);

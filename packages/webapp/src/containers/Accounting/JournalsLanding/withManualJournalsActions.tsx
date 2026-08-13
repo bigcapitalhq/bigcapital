@@ -4,11 +4,13 @@ import type { TableQuery } from '@/store/store.types';
 import {
   setManualJournalsTableState,
   setManualJournalsSelectedRows,
+  resetManualJournalsSelectedRows,
 } from '@/store/manual-journals/manual-journals.actions';
 
 export interface WithManualJournalsActionsProps {
   setManualJournalsTableState: (queries: Partial<TableQuery>) => void;
   setManualJournalsSelectedRows: (selectedRows: Array<unknown>) => void;
+  resetManualJournalsSelectedRows: () => void;
 }
 
 export const mapDispatchToProps = (
@@ -18,6 +20,8 @@ export const mapDispatchToProps = (
     dispatch(setManualJournalsTableState(queries)),
   setManualJournalsSelectedRows: (selectedRows) =>
     dispatch(setManualJournalsSelectedRows(selectedRows)),
+  resetManualJournalsSelectedRows: () =>
+    dispatch(resetManualJournalsSelectedRows()),
 });
 
 export const withManualJournalsActions = connect(null, mapDispatchToProps);

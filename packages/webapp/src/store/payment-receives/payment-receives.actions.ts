@@ -3,6 +3,7 @@ import {
   PAYMENT_RECEIVES_TABLE_STATE_RESET,
   PAYMENT_RECEIVES_TABLE_STATE_SET,
   PAYMENT_RECEIVES_SET_SELECTED_ROWS,
+  PAYMENT_RECEIVES_RESET_SELECTED_ROWS,
 } from '@/store/types';
 
 export const setPaymentReceivesTableState = (queries: Partial<TableQuery>) => {
@@ -24,5 +25,11 @@ export const setPaymentReceivesSelectedRows = (
   return {
     type: PAYMENT_RECEIVES_SET_SELECTED_ROWS,
     payload: selectedRows,
+  };
+};
+
+export const resetPaymentReceivesSelectedRows = () => {
+  return {
+    type: PAYMENT_RECEIVES_RESET_SELECTED_ROWS,
   };
 };

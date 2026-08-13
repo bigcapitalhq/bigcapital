@@ -31,7 +31,7 @@ function ExpenseBulkDeleteDialogInner({
   payload,
 
   // #withExpensesActions
-  setExpensesSelectedRows,
+  resetExpensesSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -60,7 +60,7 @@ function ExpenseBulkDeleteDialogInner({
           message: intl.get('the_expenses_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setExpensesSelectedRows([]);
+        resetExpensesSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

@@ -31,7 +31,7 @@ function EstimateBulkDeleteDialogInner({
   payload,
 
   // #withEstimatesActions
-  setEstimatesSelectedRows,
+  resetEstimatesSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -60,7 +60,7 @@ function EstimateBulkDeleteDialogInner({
           message: intl.get('the_estimates_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setEstimatesSelectedRows([]);
+        resetEstimatesSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

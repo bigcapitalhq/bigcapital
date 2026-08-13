@@ -2,8 +2,10 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
+import { withItemCategories } from './withItemCategories';
 import { withItemCategoriesActions } from './withItemCategoriesActions';
 import type { ItemCategoryTableRow } from './components';
+import type { WithItemCategoriesProps } from './withItemCategories';
 import type { WithItemCategoriesActionsProps } from './withItemCategoriesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -15,7 +17,8 @@ import { compose } from '@/utils';
 interface ItemsCategoryTableProps
   extends WithAlertActionsProps,
     WithDialogActionsProps,
-    WithItemCategoriesActionsProps {
+    WithItemCategoriesActionsProps,
+    Pick<WithItemCategoriesProps, 'itemsCategoriesSelectedRows'> {
   tableProps?: Record<string, unknown>;
 }
 
@@ -33,6 +36,9 @@ function ItemsCategoryTable({
 
   // #withItemCategoriesActions
   setItemsCategoriesSelectedRows,
+
+  // #withItemCategories
+  itemsCategoriesSelectedRows,
 
   // #withDialogActions
   openDialog,
@@ -88,6 +94,7 @@ function ItemsCategoryTable({
       sticky={true}
       selectionColumn={true}
       onSelectedRowsChange={handleSelectedRowsChange}
+      selectedRowsIds={itemsCategoriesSelectedRows}
       autoResetSelectedRows={false}
       TableLoadingRenderer={TableSkeletonRows}
       noResults={intl.get('there_is_no_items_categories_in_table_yet')}
@@ -104,4 +111,7 @@ export const ItemCategoriesTable = compose(
   withDialogActions,
   withAlertActions,
   withItemCategoriesActions,
+  withItemCategories(({ itemsCategoriesSelectedRows }) => ({
+    itemsCategoriesSelectedRows,
+  })),
 )(ItemsCategoryTable);

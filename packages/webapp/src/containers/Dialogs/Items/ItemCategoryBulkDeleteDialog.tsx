@@ -33,7 +33,7 @@ function ItemCategoryBulkDeleteDialogInner({
     undeletableCount = 0,
     totalSelected = ids.length,
   } = {},
-  setItemsCategoriesSelectedRows,
+  resetItemsCategoriesSelectedRows,
   closeDialog,
 }: ItemCategoryBulkDeleteDialogProps): React.ReactElement {
   const { mutateAsync: bulkDeleteItemCategories, isPending } =
@@ -55,7 +55,7 @@ function ItemCategoryBulkDeleteDialogInner({
           ),
           intent: Intent.SUCCESS,
         });
-        setItemsCategoriesSelectedRows([]);
+        resetItemsCategoriesSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

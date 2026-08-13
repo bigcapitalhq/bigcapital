@@ -3,6 +3,7 @@ import {
   ITEMS_TABLE_STATE_RESET,
   ITEMS_TABLE_STATE_SET,
   ITEMS_SET_SELECTED_ROWS,
+  ITEMS_RESET_SELECTED_ROWS,
 } from '@/store/types';
 
 export const setItemsTableState = (queries: Partial<TableQuery>) => {
@@ -22,5 +23,11 @@ export const setItemsSelectedRows = (selectedRows: Array<unknown>) => {
   return {
     type: ITEMS_SET_SELECTED_ROWS,
     payload: selectedRows,
+  };
+};
+
+export const resetItemsSelectedRows = () => {
+  return {
+    type: ITEMS_RESET_SELECTED_ROWS,
   };
 };

@@ -26,7 +26,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
 interface VendorsTableInnerProps
-  extends Pick<WithVendorsProps, 'vendorsTableState'>,
+  extends Pick<WithVendorsProps, 'vendorsTableState' | 'vendorsSelectedRows'>,
     WithVendorsActionsProps,
     WithAlertActionsProps,
     WithDialogActionsProps,
@@ -45,6 +45,7 @@ function VendorsTableInner({
 
   // #withVendors
   vendorsTableState,
+  vendorsSelectedRows,
 
   // #withAlertActions
   openAlert,
@@ -172,6 +173,7 @@ function VendorsTableInner({
         autoResetSortBy={false}
         autoResetPage={false}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={vendorsSelectedRows}
         autoResetSelectedRows={false}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
@@ -198,5 +200,8 @@ export const VendorsTable = compose(
   withAlertActions,
   withDialogActions,
   withDrawerActions,
-  withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
+  withVendors(({ vendorsTableState, vendorsSelectedRows }) => ({
+    vendorsTableState,
+    vendorsSelectedRows,
+  })),
 )(VendorsTableInner);

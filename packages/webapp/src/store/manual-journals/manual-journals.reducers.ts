@@ -3,7 +3,11 @@ import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import type { TableQuery } from '@/store/store.types';
 import { createTableStateReducers } from '@/store/table-state.reducer';
-import { RESET, MANUAL_JOURNALS_SET_SELECTED_ROWS } from '@/store/types';
+import {
+  RESET,
+  MANUAL_JOURNALS_SET_SELECTED_ROWS,
+  MANUAL_JOURNALS_RESET_SELECTED_ROWS,
+} from '@/store/types';
 
 interface ManualJournalsState {
   tableState: Partial<TableQuery>;
@@ -38,6 +42,10 @@ const reducerInstance = createReducer(initialState, {
     action: { payload: Array<unknown> },
   ) => {
     state.selectedRows = action.payload;
+  },
+
+  [MANUAL_JOURNALS_RESET_SELECTED_ROWS]: (state: ManualJournalsState) => {
+    state.selectedRows = [];
   },
 
   [RESET]: (): void => {

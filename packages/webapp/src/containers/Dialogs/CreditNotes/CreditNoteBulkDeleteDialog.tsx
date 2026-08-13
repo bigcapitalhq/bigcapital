@@ -31,7 +31,7 @@ function CreditNoteBulkDeleteDialogInner({
   payload,
 
   // #withCreditNotesActions
-  setCreditNotesSelectedRows,
+  resetCreditNotesSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -60,7 +60,7 @@ function CreditNoteBulkDeleteDialogInner({
           message: intl.get('the_credit_notes_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setCreditNotesSelectedRows([]);
+        resetCreditNotesSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

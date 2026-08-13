@@ -31,7 +31,7 @@ function VendorCreditBulkDeleteDialogInner({
   payload,
 
   // #withVendorsCreditNotesActions
-  setVendorsCreditNoteSelectedRows,
+  resetVendorsCreditNoteSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -60,7 +60,7 @@ function VendorCreditBulkDeleteDialogInner({
           message: intl.get('the_vendor_credits_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setVendorsCreditNoteSelectedRows([]);
+        resetVendorsCreditNoteSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

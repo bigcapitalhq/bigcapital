@@ -14,6 +14,7 @@ import { transformTableStateToQuery, compose } from '@/utils';
 
 interface WithBillsActionsProps {
   resetBillsTableState: () => void;
+  resetBillsSelectedRows: () => void;
 }
 
 interface BillsListProps
@@ -24,12 +25,14 @@ function BillsListInner({
   billsTableState,
   billsTableStateChanged,
   resetBillsTableState,
+  resetBillsSelectedRows,
 }: BillsListProps) {
   useEffect(
     () => () => {
       resetBillsTableState();
+      resetBillsSelectedRows();
     },
-    [resetBillsTableState],
+    [resetBillsSelectedRows, resetBillsTableState],
   );
 
   return (

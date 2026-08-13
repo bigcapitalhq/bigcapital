@@ -5,12 +5,14 @@ import {
   setPaymentReceivesTableState,
   resetPaymentReceivesTableState,
   setPaymentReceivesSelectedRows,
+  resetPaymentReceivesSelectedRows,
 } from '@/store/payment-receives/payment-receives.actions';
 
 export interface WithPaymentsReceivedActionsProps {
   setPaymentReceivesTableState: (state: Partial<TableQuery>) => void;
   resetPaymentReceivesTableState: () => void;
   setPaymentReceivesSelectedRows: (selectedRows: number[]) => void;
+  resetPaymentReceivesSelectedRows: () => void;
 }
 
 export const mapDispatchToProps = (
@@ -24,6 +26,9 @@ export const mapDispatchToProps = (
 
   setPaymentReceivesSelectedRows: (selectedRows: number[]) =>
     dispatch(setPaymentReceivesSelectedRows(selectedRows)),
+
+  resetPaymentReceivesSelectedRows: () =>
+    dispatch(resetPaymentReceivesSelectedRows()),
 });
 
 export const withPaymentsReceivedActions = connect(null, mapDispatchToProps);
