@@ -53,6 +53,7 @@ export enum DialogsName {
   ReceiptBulkDelete = 'receipts-bulk-delete',
   CreditNoteBulkDelete = 'credit-notes-bulk-delete',
   PaymentReceivedBulkDelete = 'payments-received-bulk-delete',
+  PaymentMadeBulkDelete = 'payments-made-bulk-delete',
   BillBulkDelete = 'bills-bulk-delete',
   VendorCreditBulkDelete = 'vendor-credits-bulk-delete',
   ManualJournalBulkDelete = 'manual-journals-bulk-delete',

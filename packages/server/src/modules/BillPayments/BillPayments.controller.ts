@@ -27,6 +27,10 @@ import { GetBillPaymentsFilterDto } from './dtos/GetBillPaymentsFilter.dto';
 import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
 import { BillPaymentResponseDto } from './dtos/BillPaymentResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
+import {
+  BulkDeleteDto,
+  ValidateBulkDeleteResponseDto,
+} from '@/common/dtos/BulkDelete.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
@@ -42,6 +46,7 @@ import { BillPaymentEditPageResponseDto } from './dtos/BillPaymentEditPageRespon
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(BillPaymentPageEntryDto)
 @ApiExtraModels(BillPaymentEditPageResponseDto)
+@ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class BillPaymentsController {
@@ -55,6 +60,42 @@ export class BillPaymentsController {
   @ApiOperation({ summary: 'Create a new bill payment.' })
   public createBillPayment(@Body() billPaymentDTO: CreateBillPaymentDto) {
     return this.billPaymentsApplication.createBillPayment(billPaymentDTO);
+  }
+
+  @Post('validate-bulk-delete')
+  @RequirePermission(IPaymentMadeAction.Delete, AbilitySubject.PaymentMade)
+  @ApiOperation({
+    summary:
+      'Validates which bill payments can be deleted and returns the results.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Validation completed with counts and IDs of deletable and non-deletable bill payments.',
+    schema: {
+      $ref: getSchemaPath(ValidateBulkDeleteResponseDto),
+    },
+  })
+  public validateBulkDeleteBillPayments(
+    @Body() bulkDeleteDto: BulkDeleteDto,
+  ): Promise<ValidateBulkDeleteResponseDto> {
+    return this.billPaymentsApplication.validateBulkDeleteBillPayments(
+      bulkDeleteDto.ids,
+    );
+  }
+
+  @Post('bulk-delete')
+  @RequirePermission(IPaymentMadeAction.Delete, AbilitySubject.PaymentMade)
+  @ApiOperation({ summary: 'Deletes multiple bill payments.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Bill payments deleted successfully.',
+  })
+  public bulkDeleteBillPayments(@Body() bulkDeleteDto: BulkDeleteDto) {
+    return this.billPaymentsApplication.bulkDeleteBillPayments(
+      bulkDeleteDto.ids,
+      { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
+    );
   }
 
   @Delete(':billPaymentId')

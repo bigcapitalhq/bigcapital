@@ -4,11 +4,15 @@ import type { TableQuery } from '@/store/store.types';
 import {
   setPaymentMadesTableState,
   resetPaymentMadesTableState,
+  setPaymentMadesSelectedRows,
+  resetPaymentMadesSelectedRows,
 } from '@/store/payment-mades/payment-mades.actions';
 
 export interface WithPaymentMadeActionsProps {
   setPaymentMadesTableState: (state: Partial<TableQuery>) => void;
   resetPaymentMadesTableState: () => void;
+  setPaymentMadesSelectedRows: (selectedRows: number[]) => void;
+  resetPaymentMadesSelectedRows: () => void;
 }
 
 export const mapDispatchToProps = (
@@ -18,5 +22,11 @@ export const mapDispatchToProps = (
     dispatch(setPaymentMadesTableState(state)),
 
   resetPaymentMadesTableState: () => dispatch(resetPaymentMadesTableState()),
+
+  setPaymentMadesSelectedRows: (selectedRows: number[]) =>
+    dispatch(setPaymentMadesSelectedRows(selectedRows)),
+
+  resetPaymentMadesSelectedRows: () =>
+    dispatch(resetPaymentMadesSelectedRows()),
 });
 export const withPaymentMadeActions = connect(null, mapDispatchToProps);

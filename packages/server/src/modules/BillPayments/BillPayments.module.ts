@@ -22,6 +22,8 @@ import { BillPaymentsImportable } from './commands/BillPaymentsImportable';
 import { GetBillPaymentsService } from './queries/GetBillPayments.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
+import { BulkDeleteBillPaymentsService } from './BulkDeleteBillPayments.service';
+import { ValidateBulkDeleteBillPaymentsService } from './ValidateBulkDeleteBillPayments.service';
 
 @Module({
   imports: [TenancyModule, LedgerModule, AccountsModule, DynamicListModule],
@@ -31,6 +33,8 @@ import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
     EditBillPayment,
     GetBillPayment,
     DeleteBillPayment,
+    BulkDeleteBillPaymentsService,
+    ValidateBulkDeleteBillPaymentsService,
     BillPaymentBillSync,
     GetPaymentBills,
     BillPaymentValidators,

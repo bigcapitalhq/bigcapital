@@ -6480,6 +6480,103 @@
         ]
       }
     },
+    "/api/item-categories/validate-bulk-delete": {
+      "post": {
+        "operationId": "ItemCategoryController_validateBulkDeleteItemCategories",
+        "summary": "Validates which item categories can be deleted and returns counts of deletable and non-deletable item categories.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteItemCategoriesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation completed. Returns counts and IDs of deletable and non-deletable item categories.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateBulkDeleteItemCategoriesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Item Categories"
+        ]
+      }
+    },
+    "/api/item-categories/bulk-delete": {
+      "post": {
+        "operationId": "ItemCategoryController_bulkDeleteItemCategories",
+        "summary": "Deletes multiple item categories in bulk.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteItemCategoriesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The item categories have been successfully deleted."
+          }
+        },
+        "tags": [
+          "Item Categories"
+        ]
+      }
+    },
     "/api/expenses/validate-bulk-delete": {
       "post": {
         "operationId": "ExpensesController_validateBulkDeleteExpenses",
@@ -12311,6 +12408,103 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "Bill Payments"
+        ]
+      }
+    },
+    "/api/bill-payments/validate-bulk-delete": {
+      "post": {
+        "operationId": "BillPaymentsController_validateBulkDeleteBillPayments",
+        "summary": "Validates which bill payments can be deleted and returns the results.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation completed with counts and IDs of deletable and non-deletable bill payments.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateBulkDeleteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Bill Payments"
+        ]
+      }
+    },
+    "/api/bill-payments/bulk-delete": {
+      "post": {
+        "operationId": "BillPaymentsController_bulkDeleteBillPayments",
+        "summary": "Deletes multiple bill payments.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bill payments deleted successfully."
           }
         },
         "tags": [
@@ -29410,6 +29604,48 @@
           "clientSecret"
         ]
       },
+      "ValidateBulkDeleteItemCategoriesResponseDto": {
+        "type": "object",
+        "properties": {
+          "deletableCount": {
+            "type": "number",
+            "description": "Number of item categories that can be deleted",
+            "example": 2
+          },
+          "nonDeletableCount": {
+            "type": "number",
+            "description": "Number of item categories that cannot be deleted",
+            "example": 1
+          },
+          "deletableIds": {
+            "description": "IDs of item categories that can be deleted",
+            "example": [
+              1,
+              2
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "nonDeletableIds": {
+            "description": "IDs of item categories that cannot be deleted",
+            "example": [
+              3
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "deletableCount",
+          "nonDeletableCount",
+          "deletableIds",
+          "nonDeletableIds"
+        ]
+      },
       "ItemCategoryResponseDto": {
         "type": "object",
         "properties": {
@@ -29564,6 +29800,31 @@
           "sellAccountId",
           "inventoryAccountId",
           "costMethod"
+        ]
+      },
+      "BulkDeleteItemCategoriesDto": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "description": "Array of item category IDs to delete",
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "skipUndeletable": {
+            "type": "boolean",
+            "description": "When true, undeletable item categories will be skipped and only deletable ones removed.",
+            "default": false
+          }
+        },
+        "required": [
+          "ids"
         ]
       },
       "ExpenseCategoryResponseDto": {

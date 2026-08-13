@@ -3048,6 +3048,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/bill-payments/validate-bulk-delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validates which bill payments can be deleted and returns the results. */
+        post: operations["BillPaymentsController_validateBulkDeleteBillPayments"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bill-payments/bulk-delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Deletes multiple bill payments. */
+        post: operations["BillPaymentsController_bulkDeleteBillPayments"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/bill-payments/{billPaymentId}": {
         parameters: {
             query?: never;
@@ -5120,33 +5154,6 @@ export interface components {
              */
             nonDeletableIds: number[];
         };
-        ValidateBulkDeleteItemCategoriesResponseDto: {
-            /**
-             * @description Number of item categories that can be deleted
-             * @example 2
-             */
-            deletableCount: number;
-            /**
-             * @description Number of item categories that cannot be deleted
-             * @example 1
-             */
-            nonDeletableCount: number;
-            /**
-             * @description IDs of item categories that can be deleted
-             * @example [
-             *       1,
-             *       2
-             *     ]
-             */
-            deletableIds: number[];
-            /**
-             * @description IDs of item categories that cannot be deleted
-             * @example [
-             *       3
-             *     ]
-             */
-            nonDeletableIds: number[];
-        };
         ItemReceiptsResponseDto: {
             /**
              * @description The unique identifier of the receipt.
@@ -5700,22 +5707,6 @@ export interface components {
             ids: number[];
             /**
              * @description When true, undeletable items will be skipped and only deletable ones removed.
-             * @default false
-             */
-            skipUndeletable: boolean;
-        };
-        BulkDeleteItemCategoriesDto: {
-            /**
-             * @description Array of item category IDs to delete
-             * @example [
-             *       1,
-             *       2,
-             *       3
-             *     ]
-             */
-            ids: number[];
-            /**
-             * @description When true, undeletable item categories will be skipped and only deletable ones removed.
              * @default false
              */
             skipUndeletable: boolean;
@@ -8500,6 +8491,33 @@ export interface components {
             /** @description Stripe AccountLink object for onboarding */
             clientSecret: components["schemas"]["StripeAccountLinkResponseDto"];
         };
+        ValidateBulkDeleteItemCategoriesResponseDto: {
+            /**
+             * @description Number of item categories that can be deleted
+             * @example 2
+             */
+            deletableCount: number;
+            /**
+             * @description Number of item categories that cannot be deleted
+             * @example 1
+             */
+            nonDeletableCount: number;
+            /**
+             * @description IDs of item categories that can be deleted
+             * @example [
+             *       1,
+             *       2
+             *     ]
+             */
+            deletableIds: number[];
+            /**
+             * @description IDs of item categories that cannot be deleted
+             * @example [
+             *       3
+             *     ]
+             */
+            nonDeletableIds: number[];
+        };
         ItemCategoryResponseDto: {
             /**
              * @description The unique identifier of the item category
@@ -8622,6 +8640,22 @@ export interface components {
              * @example FIFO
              */
             costMethod: string;
+        };
+        BulkDeleteItemCategoriesDto: {
+            /**
+             * @description Array of item category IDs to delete
+             * @example [
+             *       1,
+             *       2,
+             *       3
+             *     ]
+             */
+            ids: number[];
+            /**
+             * @description When true, undeletable item categories will be skipped and only deletable ones removed.
+             * @default false
+             */
+            skipUndeletable: boolean;
         };
         ExpenseCategoryResponseDto: {
             /**
@@ -23814,6 +23848,62 @@ export interface operations {
         };
         responses: {
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BillPaymentsController_validateBulkDeleteBillPayments: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkDeleteDto"];
+            };
+        };
+        responses: {
+            /** @description Validation completed with counts and IDs of deletable and non-deletable bill payments. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidateBulkDeleteResponseDto"];
+                };
+            };
+        };
+    };
+    BillPaymentsController_bulkDeleteBillPayments: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkDeleteDto"];
+            };
+        };
+        responses: {
+            /** @description Bill payments deleted successfully. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

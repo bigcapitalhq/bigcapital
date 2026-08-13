@@ -7,6 +7,7 @@ import { withPaymentMade } from './withPaymentMade';
 import { withPaymentMadeActions } from './withPaymentMadeActions';
 import type { PaymentMadeTableRow } from './components';
 import type { WithPaymentMadeProps } from './withPaymentMade';
+import type { WithPaymentMadeActionsProps } from './withPaymentMadeActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
@@ -22,19 +23,20 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 
-interface WithPaymentMadeActionsProps {
-  setPaymentMadesTableState: (state: Record<string, any>) => void;
-}
-
 interface PaymentMadesTableProps
-  extends Pick<WithPaymentMadeProps, 'paymentMadesTableState'>,
+  extends Pick<
+      WithPaymentMadeProps,
+      'paymentMadesTableState' | 'paymentMadesSelectedRows'
+    >,
     WithPaymentMadeActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps {}
 
 function PaymentMadesTableInner({
   setPaymentMadesTableState,
+  setPaymentMadesSelectedRows,
   paymentMadesTableState,
+  paymentMadesSelectedRows,
   openAlert,
   openDrawer,
 }: PaymentMadesTableProps) {
@@ -90,6 +92,14 @@ function PaymentMadesTableInner({
     [setPaymentMadesTableState],
   );
 
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows: Array<{ original: PaymentMadeTableRow }>) => {
+      const selectedIds = selectedRows?.map((row) => row.original.id) || [];
+      setPaymentMadesSelectedRows(selectedIds);
+    },
+    [setPaymentMadesSelectedRows],
+  );
+
   if (isEmptyStatus) {
     return <PaymentMadesEmptyStatus />;
   }
@@ -100,6 +110,9 @@ function PaymentMadesTableInner({
         columns={columns}
         data={paymentMades ?? []}
         onFetchData={handleDataTableFetchData}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={paymentMadesSelectedRows}
+        autoResetSelectedRows={false}
         loading={isPaymentsLoading}
         headerLoading={isPaymentsLoading}
         progressBarLoading={isPaymentsFetching}
@@ -131,7 +144,10 @@ function PaymentMadesTableInner({
 
 export const PaymentMadesTable = compose(
   withPaymentMadeActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
+  withPaymentMade(({ paymentMadesTableState, paymentMadesSelectedRows }) => ({
+    paymentMadesTableState,
+    paymentMadesSelectedRows,
+  })),
   withAlertActions,
   withDrawerActions,
 )(PaymentMadesTableInner);
