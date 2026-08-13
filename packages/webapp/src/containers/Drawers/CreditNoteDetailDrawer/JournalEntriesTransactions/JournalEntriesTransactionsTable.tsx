@@ -21,7 +21,7 @@ export function CreditNoteGLEntriesTable() {
   const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
     {
       referenceId: creditNoteId ?? 0,
-      referenceType: 'creditNote',
+      referenceType: 'CreditNote',
     },
     { enabled: !!creditNoteId },
   );
