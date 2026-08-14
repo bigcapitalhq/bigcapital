@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { ActionsMenu } from './components';
 import { useAccountsTableColumns, rowClassNames } from './utils';
@@ -119,12 +119,13 @@ function AccountsDataTableInner({
     useMemorizedColumnsWidths(TABLES.ACCOUNTS);
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = (
-    selectedFlatRows: Array<{ original: AccountTableRow }>,
-  ) => {
-    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-    setAccountsSelectedRows(selectedIds);
-  };
+  const handleSelectedRowsChange = useCallback(
+    (selectedFlatRows: Array<{ original: AccountTableRow }>) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setAccountsSelectedRows(selectedIds);
+    },
+    [setAccountsSelectedRows],
+  );
 
   const payload: ActionsMenuPayload = {
     onEdit: handleEditAccount,

@@ -121,13 +121,14 @@ function ManualJournalsDataTableInner({
     [setManualJournalsTableState],
   );
   // Handle selected rows change.
-  const handleSelectedRowsChange = (
-    selectedFlatRows: Array<{ original: ManualJournalTableRow }>,
-  ) => {
-    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-    setManualJournalsSelectedRows(selectedIds);
-    onSelectedRowsChange?.(selectedFlatRows);
-  };
+  const handleSelectedRowsChange = useCallback(
+    (selectedFlatRows: Array<{ original: ManualJournalTableRow }>) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setManualJournalsSelectedRows(selectedIds);
+      onSelectedRowsChange?.(selectedFlatRows);
+    },
+    [setManualJournalsSelectedRows, onSelectedRowsChange],
+  );
 
   // Display manual journal empty status instead of the table.
   if (isEmptyStatus) {

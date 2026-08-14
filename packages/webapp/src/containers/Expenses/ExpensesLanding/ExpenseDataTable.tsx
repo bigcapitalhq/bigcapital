@@ -119,12 +119,13 @@ function ExpensesDataTable({
   };
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = (
-    selectedFlatRows: Array<{ original: ExpenseTableRow }>,
-  ) => {
-    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-    setExpensesSelectedRows(selectedIds);
-  };
+  const handleSelectedRowsChange = useCallback(
+    (selectedFlatRows: Array<{ original: ExpenseTableRow }>) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setExpensesSelectedRows(selectedIds);
+    },
+    [setExpensesSelectedRows],
+  );
 
   // Display empty status instead of the table.
   if (isEmptyStatus) {
