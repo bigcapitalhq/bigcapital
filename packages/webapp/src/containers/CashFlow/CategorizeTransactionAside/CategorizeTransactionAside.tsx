@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { withBanking } from '../withBanking';
 import { withBankingActions } from '../withBankingActions';
@@ -16,7 +17,7 @@ interface CategorizeTransactionAsideProps
       | 'resetTransactionsToCategorizeSelected'
       | 'enableMultipleCategorization'
     >,
-    Pick<WithBankingProps, 'selectedUncategorizedTransactionId'> {}
+    Pick<WithBankingProps, 'transactionsToCategorizeIdsSelected'> {}
 
 function CategorizeTransactionAsideRoot({
   // #withBankingActions
@@ -26,7 +27,7 @@ function CategorizeTransactionAsideRoot({
   enableMultipleCategorization,
 
   // #withBanking
-  selectedUncategorizedTransactionId,
+  transactionsToCategorizeIdsSelected,
 }: CategorizeTransactionAsideProps) {
   useEffect(
     () => () => {
@@ -50,14 +51,16 @@ function CategorizeTransactionAsideRoot({
     closeMatchingTransactionAside();
   };
   // Cannot continue if there is no selected transaction.
-  if (!selectedUncategorizedTransactionId) {
+  if (isEmpty(transactionsToCategorizeIdsSelected)) {
     return null;
   }
   return (
     <Aside title={'Categorize Bank Transaction'} onClose={handleClose}>
       <Aside.Body>
         <CategorizeTransactionTabsBoot
-          uncategorizedTransactionIds={selectedUncategorizedTransactionId}
+          uncategorizedTransactionIds={transactionsToCategorizeIdsSelected.filter(
+            (id): id is number => typeof id === 'number',
+          )}
         >
           <CategorizeTransactionTabs />
         </CategorizeTransactionTabsBoot>
@@ -68,7 +71,7 @@ function CategorizeTransactionAsideRoot({
 
 export const CategorizeTransactionAside = compose(
   withBankingActions,
-  withBanking(({ selectedUncategorizedTransactionId }) => ({
-    selectedUncategorizedTransactionId,
+  withBanking(({ transactionsToCategorizeIdsSelected }) => ({
+    transactionsToCategorizeIdsSelected,
   })),
 )(CategorizeTransactionAsideRoot);
