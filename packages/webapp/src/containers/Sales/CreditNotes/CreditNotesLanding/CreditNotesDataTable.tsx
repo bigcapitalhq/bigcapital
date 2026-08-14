@@ -31,7 +31,10 @@ interface WithCreditNotesActionsProps {
 }
 
 interface CreditNotesDataTableProps
-  extends Pick<WithCreditNotesProps, 'creditNoteTableState'>,
+  extends Pick<
+      WithCreditNotesProps,
+      'creditNoteTableState' | 'creditNotesSelectedRows'
+    >,
     WithCreditNotesActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
@@ -44,6 +47,7 @@ function CreditNotesDataTableInner({
   openDrawer,
   openDialog,
   creditNoteTableState,
+  creditNotesSelectedRows,
 }: CreditNotesDataTableProps) {
   const history = useHistory();
 
@@ -135,6 +139,7 @@ function CreditNotesDataTableInner({
         progressBarLoading={isCreditNotesFetching}
         onFetchData={handleDataTableFetchData}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={creditNotesSelectedRows}
         autoResetSelectedRows={false}
         manualSortBy={true}
         selectionColumn={true}
@@ -169,5 +174,8 @@ export const CreditNotesDataTable = compose(
   withDrawerActions,
   withAlertActions,
   withDialogActions,
-  withCreditNotes(({ creditNoteTableState }) => ({ creditNoteTableState })),
+  withCreditNotes(({ creditNoteTableState, creditNotesSelectedRows }) => ({
+    creditNoteTableState,
+    creditNotesSelectedRows,
+  })),
 )(CreditNotesDataTableInner);

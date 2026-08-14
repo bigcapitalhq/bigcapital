@@ -89,15 +89,16 @@ function AccountTransactionsDataTable({
     setTransactionsToCategorizeSelected([transaction.id]);
   };
   // handles table selected rows change.
-  const handleSelectedRowsChange = (
-    selected: Array<{ original: UncategorizedTransactionRow }>,
-  ) => {
-    const transactionIds =
-      selected
-        ?.map((r) => r.original.id)
-        .filter((id): id is number => id != null) ?? [];
-    setUncategorizedTransactionsSelected(transactionIds);
-  };
+  const handleSelectedRowsChange = React.useCallback(
+    (selected: Array<{ original: UncategorizedTransactionRow }>) => {
+      const transactionIds =
+        selected
+          ?.map((r) => r.original.id)
+          .filter((id): id is number => id != null) ?? [];
+      setUncategorizedTransactionsSelected(transactionIds);
+    },
+    [setUncategorizedTransactionsSelected],
+  );
   // Handle exclude transaction.
   const handleExcludeTransaction = (
     transaction: UncategorizedTransactionRow,

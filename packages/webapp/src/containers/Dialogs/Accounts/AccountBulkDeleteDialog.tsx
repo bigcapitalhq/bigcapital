@@ -32,7 +32,7 @@ function AccountBulkDeleteDialogInner({
   payload,
 
   // #withAccountsTableActions
-  setAccountsSelectedRows,
+  resetAccountsSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -61,7 +61,7 @@ function AccountBulkDeleteDialogInner({
           message: intl.get('the_accounts_has_been_successfully_deleted'),
           intent: Intent.SUCCESS,
         });
-        setAccountsSelectedRows([]);
+        resetAccountsSelectedRows();
         closeDialog(dialogName);
       })
       .catch((errors: unknown) => {

@@ -114,15 +114,16 @@ function AccountTransactionsDataTableInner({
   };
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = (
-    selected: Array<{ original: AccountTransactionRow }>,
-  ) => {
-    const selectedIds = selected
-      ?.filter((row) => row.original.uncategorizedTransactionId)
-      ?.map((row) => row.original.uncategorizedTransactionId);
+  const handleSelectedRowsChange = React.useCallback(
+    (selected: Array<{ original: AccountTransactionRow }>) => {
+      const selectedIds = selected
+        ?.filter((row) => row.original.uncategorizedTransactionId)
+        ?.map((row) => row.original.uncategorizedTransactionId);
 
-    setCategorizedTransactionsSelected(selectedIds);
-  };
+      setCategorizedTransactionsSelected(selectedIds);
+    },
+    [setCategorizedTransactionsSelected],
+  );
 
   return (
     <CashflowTransactionsTable

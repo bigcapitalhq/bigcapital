@@ -125,6 +125,7 @@ export interface DataTableProps<D extends object = any> {
     sortBy: Array<{ id: string; desc: boolean }>;
   }) => void;
   onSelectedRowsChange?: (selectedFlatRows: Row<D>[]) => void;
+  selectedRowsIds?: Array<unknown>;
   onColumnResizing?: (
     currentColumnId: string,
     columnWidth: number,

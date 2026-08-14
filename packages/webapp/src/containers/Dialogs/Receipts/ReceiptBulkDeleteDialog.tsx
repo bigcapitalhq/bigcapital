@@ -31,7 +31,7 @@ function ReceiptBulkDeleteDialogInner({
   payload,
 
   // #withReceiptsActions
-  setReceiptsSelectedRows,
+  resetReceiptsSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -60,7 +60,7 @@ function ReceiptBulkDeleteDialogInner({
           message: intl.get('the_receipts_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setReceiptsSelectedRows([]);
+        resetReceiptsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

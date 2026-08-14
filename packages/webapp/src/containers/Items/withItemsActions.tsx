@@ -6,12 +6,14 @@ import {
   setItemsTableState,
   resetItemsTableState,
   setItemsSelectedRows,
+  resetItemsSelectedRows,
 } from '@/store/items/items.actions';
 
 export interface WithItemsActionsProps {
   setItemsTableState: (queries: Partial<TableQuery>) => void;
   resetItemsTableState: () => void;
   setItemsSelectedRows: (selectedRows: Array<unknown>) => void;
+  resetItemsSelectedRows: () => void;
 }
 
 export const mapDispatchToProps = (
@@ -21,6 +23,7 @@ export const mapDispatchToProps = (
   resetItemsTableState: () => dispatch(resetItemsTableState()),
   setItemsSelectedRows: (selectedRows) =>
     dispatch(setItemsSelectedRows(selectedRows)),
+  resetItemsSelectedRows: () => dispatch(resetItemsSelectedRows()),
 });
 
 export function withItemsActions<P>(

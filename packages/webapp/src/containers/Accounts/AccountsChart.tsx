@@ -18,6 +18,7 @@ interface AccountsChartInnerProps {
   accountsTableState: WithAccountsProps['accountsTableState'];
   accountsTableStateChanged: WithAccountsProps['accountsTableStateChanged'];
   resetAccountsTableState: WithAccountsTableActionsProps['resetAccountsTableState'];
+  resetAccountsSelectedRows: WithAccountsTableActionsProps['resetAccountsSelectedRows'];
 }
 
 /**
@@ -28,13 +29,15 @@ function AccountsChartInner({
   accountsTableStateChanged,
 
   resetAccountsTableState,
+  resetAccountsSelectedRows,
 }: AccountsChartInnerProps) {
-  // Resets the accounts table state once the page unmount.
+  // Resets the accounts table state and selected rows once the page unmount.
   useEffect(
     () => () => {
       resetAccountsTableState();
+      resetAccountsSelectedRows();
     },
-    [resetAccountsTableState],
+    [resetAccountsSelectedRows, resetAccountsTableState],
   );
 
   return (

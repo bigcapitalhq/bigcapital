@@ -1,6 +1,8 @@
 import { Intent, Alert } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { withBankingActions } from '../../withBankingActions';
+import type { WithBankingActionsProps } from '../../withBankingActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
 import { AppToaster } from '@/components';
@@ -11,6 +13,7 @@ import { compose } from '@/utils';
 
 interface UncategorizeBankTransactionsBulkAlertProps
   extends Pick<WithAlertActionsProps, 'closeAlert'>,
+    Pick<WithBankingActionsProps, 'resetCategorizedTransactionsSelected'>,
     WithAlertStoreConnectProps {
   name: string;
 }
@@ -27,6 +30,9 @@ function UncategorizeBankTransactionsBulkAlertInner({
 
   // #withAlertActions
   closeAlert,
+
+  // #withBankingActions
+  resetCategorizedTransactionsSelected,
 }: UncategorizeBankTransactionsBulkAlertProps) {
   const { mutateAsync: uncategorizeTransactions, isPending: isLoading } =
     useUncategorizeTransactionsBulkAction();
@@ -47,6 +53,7 @@ function UncategorizeBankTransactionsBulkAlertInner({
           message: 'The selected transactions have been uncategorized.',
           intent: Intent.SUCCESS,
         });
+        resetCategorizedTransactionsSelected();
       })
       .catch(() => {
         AppToaster.show({
@@ -80,4 +87,5 @@ function UncategorizeBankTransactionsBulkAlertInner({
 export const UncategorizeBankTransactionsBulkAlert = compose(
   withAlertStoreConnect(),
   withAlertActions,
+  withBankingActions,
 )(UncategorizeBankTransactionsBulkAlertInner);

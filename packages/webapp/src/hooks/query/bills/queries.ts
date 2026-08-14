@@ -132,7 +132,7 @@ export type ValidateBulkDeleteBillsResponse = {
 export function useValidateBulkDeleteBills(
   props?: UseMutationOptions<ValidateBulkDeleteBillsResponse, Error, number[]>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,

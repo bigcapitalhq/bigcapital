@@ -83,6 +83,14 @@ function VendorsCreditNoteDataTableInner({
     [setVendorsCreditNoteTableState],
   );
 
+  const handleSelectedRowsChange = React.useCallback(
+    (selectedFlatRows: Array<{ original: VendorCreditTableRow }>) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setVendorsCreditNoteSelectedRows(selectedIds);
+    },
+    [setVendorsCreditNoteSelectedRows],
+  );
+
   if (isEmptyStatus) {
     return <VendorsCreditNoteEmptyStatus />;
   }
@@ -115,13 +123,6 @@ function VendorsCreditNoteDataTableInner({
 
   const handleReconcileVendorCredit = ({ id }: VendorCreditTableRow) => {
     openDialog('reconcile-vendor-credit', { vendorCreditId: id });
-  };
-
-  const handleSelectedRowsChange = (
-    selectedFlatRows: Array<{ original: VendorCreditTableRow }>,
-  ) => {
-    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-    setVendorsCreditNoteSelectedRows(selectedIds);
   };
 
   return (

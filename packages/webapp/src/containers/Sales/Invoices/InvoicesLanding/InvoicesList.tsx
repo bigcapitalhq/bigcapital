@@ -15,6 +15,7 @@ import { transformTableStateToQuery, compose } from '@/utils';
 
 interface WithInvoiceActionsProps {
   resetInvoicesTableState: () => void;
+  resetInvoicesSelectedRows: () => void;
 }
 
 interface InvoicesListProps
@@ -28,12 +29,14 @@ function InvoicesListInner({
   invoicesTableState,
   invoicesTableStateChanged,
   resetInvoicesTableState,
+  resetInvoicesSelectedRows,
 }: InvoicesListProps) {
   React.useEffect(
     () => () => {
       resetInvoicesTableState();
+      resetInvoicesSelectedRows();
     },
-    [resetInvoicesTableState],
+    [resetInvoicesSelectedRows, resetInvoicesTableState],
   );
 
   return (

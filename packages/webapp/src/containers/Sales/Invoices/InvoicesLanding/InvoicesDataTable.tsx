@@ -31,7 +31,10 @@ interface WithInvoiceActionsProps {
 }
 
 interface InvoicesDataTableProps
-  extends Pick<WithInvoicesProps, 'invoicesTableState'>,
+  extends Pick<
+      WithInvoicesProps,
+      'invoicesTableState' | 'invoicesSelectedRows'
+    >,
     WithInvoiceActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
@@ -41,6 +44,7 @@ function InvoicesDataTableInner({
   setInvoicesTableState,
   setInvoicesSelectedRows,
   invoicesTableState,
+  invoicesSelectedRows,
   openAlert,
   openDrawer,
   openDialog,
@@ -141,6 +145,7 @@ function InvoicesDataTableInner({
         manualSortBy={true}
         selectionColumn={true}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={invoicesSelectedRows}
         noInitialFetch={true}
         sticky={true}
         pagination={true}
@@ -178,5 +183,8 @@ export const InvoicesDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withInvoices(({ invoicesTableState }) => ({ invoicesTableState })),
+  withInvoices(({ invoicesTableState, invoicesSelectedRows }) => ({
+    invoicesTableState,
+    invoicesSelectedRows,
+  })),
 )(InvoicesDataTableInner);

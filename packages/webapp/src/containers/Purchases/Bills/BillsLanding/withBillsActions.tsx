@@ -8,12 +8,14 @@ import {
   setBillsTableState,
   resetBillsTableState,
   setBillsSelectedRows,
+  resetBillsSelectedRows,
 } from '@/store/bills/bills.actions';
 
 export interface WithBillsActionsProps {
   setBillsTableState: (queries: Partial<TableQuery>) => void;
   resetBillsTableState: () => void;
   setBillsSelectedRows: (selectedRows: Array<unknown>) => void;
+  resetBillsSelectedRows: () => void;
 }
 
 export const mapDispatchToProps = (
@@ -23,6 +25,7 @@ export const mapDispatchToProps = (
   resetBillsTableState: () => dispatch(resetBillsTableState()),
   setBillsSelectedRows: (selectedRows) =>
     dispatch(setBillsSelectedRows(selectedRows)),
+  resetBillsSelectedRows: () => dispatch(resetBillsSelectedRows()),
 });
 
 export const withBillsActions = connect(null, mapDispatchToProps);

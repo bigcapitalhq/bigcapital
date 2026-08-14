@@ -2,6 +2,7 @@ import type { TableQuery } from '@/store/store.types';
 import {
   ITEMS_CATEGORIES_TABLE_STATE_SET,
   ITEMS_CATEGORIES_SET_SELECTED_ROWS,
+  ITEMS_CATEGORIES_RESET_SELECTED_ROWS,
 } from '@/store/types';
 
 /**
@@ -23,5 +24,14 @@ export const setItemsCategoriesSelectedRows = (
   return {
     type: ITEMS_CATEGORIES_SET_SELECTED_ROWS,
     payload: selectedRows,
+  };
+};
+
+/**
+ * Resets the items categories selected rows.
+ */
+export const resetItemsCategoriesSelectedRows = () => {
+  return {
+    type: ITEMS_CATEGORIES_RESET_SELECTED_ROWS,
   };
 };

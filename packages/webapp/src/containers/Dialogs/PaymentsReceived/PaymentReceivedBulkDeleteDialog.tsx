@@ -31,7 +31,7 @@ function PaymentReceivedBulkDeleteDialogInner({
   payload,
 
   // #withPaymentsReceivedActions
-  setPaymentReceivesSelectedRows,
+  resetPaymentReceivesSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -62,7 +62,7 @@ function PaymentReceivedBulkDeleteDialogInner({
           ),
           intent: Intent.SUCCESS,
         });
-        setPaymentReceivesSelectedRows([]);
+        resetPaymentReceivesSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

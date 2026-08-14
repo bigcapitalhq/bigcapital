@@ -33,7 +33,7 @@ function ItemBulkDeleteDialogInner({
     undeletableCount = 0,
     totalSelected = ids.length,
   } = {},
-  setItemsSelectedRows,
+  resetItemsSelectedRows,
   closeDialog,
 }: ItemBulkDeleteDialogProps): React.ReactElement {
   const { mutateAsync: bulkDeleteItems, isPending } = useBulkDeleteItems();
@@ -52,7 +52,7 @@ function ItemBulkDeleteDialogInner({
           message: intl.get('the_items_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setItemsSelectedRows([]);
+        resetItemsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
