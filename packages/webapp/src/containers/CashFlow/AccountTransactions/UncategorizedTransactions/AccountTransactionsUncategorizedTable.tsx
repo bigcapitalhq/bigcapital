@@ -31,7 +31,6 @@ interface AccountTransactionsDataTableProps
     >,
     Pick<
       WithBankingActionsProps,
-      | 'setUncategorizedTransactionIdForMatching'
       | 'setUncategorizedTransactionsSelected'
       | 'addTransactionsToCategorizeSelected'
       | 'setTransactionsToCategorizeSelected'
@@ -45,7 +44,6 @@ function AccountTransactionsDataTable({
   enableMultipleCategorization,
 
   // #withBankingActions
-  setUncategorizedTransactionIdForMatching,
   setUncategorizedTransactionsSelected,
   addTransactionsToCategorizeSelected,
   setTransactionsToCategorizeSelected,
@@ -88,7 +86,7 @@ function AccountTransactionsDataTable({
     transaction: UncategorizedTransactionRow,
   ) => {
     if (transaction.id == null) return;
-    setUncategorizedTransactionIdForMatching(transaction.id);
+    setTransactionsToCategorizeSelected([transaction.id]);
   };
   // handles table selected rows change.
   const handleSelectedRowsChange = (
