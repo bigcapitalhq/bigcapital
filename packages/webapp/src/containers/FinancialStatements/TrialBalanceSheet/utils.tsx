@@ -6,15 +6,17 @@ import { transformFilterFormToQuery } from '../common';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
+type TrialBalanceQuery = TrialBalanceTableQuery & { filterByOption?: string };
+
 /**
  * Retrieves the default trial balance query.
  */
-export function getDefaultTrialBalanceQuery(): TrialBalanceTableQuery {
+export function getDefaultTrialBalanceQuery(): TrialBalanceQuery {
   return {
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().format('YYYY-MM-DD'),
     basis: 'accrual',
-    // filterByOption: 'with-transactions',
+    filterByOption: 'with-transactions',
     branchesIds: [] as number[],
     // numberFormat: {},
   };
@@ -25,7 +27,7 @@ export function getDefaultTrialBalanceQuery(): TrialBalanceTableQuery {
  */
 const parseTrialBalanceSheetQuery = (
   locationQuery: Record<string, unknown>,
-): TrialBalanceTableQuery => {
+): TrialBalanceQuery => {
   const defaultQuery = getDefaultTrialBalanceQuery();
   const transformed = {
     ...defaultQuery,

@@ -15,7 +15,7 @@ export function TrialBalanceSheetHeaderGeneralPanel() {
       <Row>
         <Col xs={4}>
           <FinancialStatementsFilter
-            initialSelectedItem={'with-transactions'}
+            initialSelectedValue={'with-transactions'}
           />
         </Col>
       </Row>
