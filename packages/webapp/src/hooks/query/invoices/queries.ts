@@ -235,7 +235,7 @@ export function useInvoiceHtml(
 }
 
 export function useDueInvoices(
-  customerId: number | null | undefined,
+  customerId: number | string | null | undefined,
   props?: UseQueryOptions<unknown, Error>,
 ) {
   const fetcher = useApiFetcher();
@@ -244,7 +244,8 @@ export function useDueInvoices(
     queryKey: invoicesKeys.due(customerId),
     queryFn: () =>
       fetchReceivableSaleInvoices(fetcher, customerId ?? undefined),
-    enabled: customerId != null,
+    enabled:
+      customerId != null && customerId !== '' && (props?.enabled ?? true),
   });
 }
 

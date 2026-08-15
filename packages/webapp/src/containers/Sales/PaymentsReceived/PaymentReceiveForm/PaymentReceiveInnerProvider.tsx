@@ -57,13 +57,23 @@ function PaymentReceiveInnerProvider({
   } = useDueInvoices(customerId as number | undefined, dueInvoicesQuery);
 
   useEffect(() => {
-    if (!isDueInvoicesFetching && dueInvoices && isNewMode) {
-      const transformed = transformInvoicesNewPageEntries(
-        dueInvoices as DueInvoice[],
-      );
-      setFieldValue('entries', transformed);
+    if (!isDueInvoicesFetching && isNewMode) {
+      if (dueInvoices) {
+        const transformed = transformInvoicesNewPageEntries(
+          dueInvoices as DueInvoice[],
+        );
+        setFieldValue('entries', transformed);
+      } else if (!customerId) {
+        setFieldValue('entries', []);
+      }
     }
-  }, [isDueInvoicesFetching, dueInvoices, isNewMode, setFieldValue]);
+  }, [
+    isDueInvoicesFetching,
+    dueInvoices,
+    isNewMode,
+    customerId,
+    setFieldValue,
+  ]);
 
   const provider: PaymentReceiveInnerContextValue = {
     dueInvoices: dueInvoices as DueInvoice[] | undefined,
