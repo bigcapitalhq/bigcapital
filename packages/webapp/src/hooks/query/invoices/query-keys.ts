@@ -15,7 +15,7 @@ export const invoicesKeys = {
   all: () => [SALE_INVOICES] as const,
   list: (query?: Record<string, unknown>) => [SALE_INVOICES, query] as const,
   detail: (id: number | null | undefined) => [SALE_INVOICE, id] as const,
-  due: (customerId?: number | null) =>
+  due: (customerId?: number | string | null) =>
     [SALE_INVOICES, SALE_INVOICES_DUE, customerId] as const,
   paymentTransactions: (id: number | null | undefined) =>
     [SALE_INVOICE_PAYMENT_TRANSACTIONS, id] as const,
