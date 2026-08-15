@@ -1,11 +1,5 @@
 import { Transform, Type } from 'class-transformer';
-import {
-  IsBoolean,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsPositive,
-} from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { parseBoolean } from '@/utils/parse-boolean';
 
@@ -16,7 +10,7 @@ export class NumberFormatQueryDto {
   })
   @Type(() => Number)
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   @IsOptional()
   readonly precision: number;
 

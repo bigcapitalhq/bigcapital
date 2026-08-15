@@ -11,6 +11,7 @@ export const getDefaultVendorsBalanceQuery = () => {
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
     filterByOption: 'with-transactions',
     vendorsIds: [] as string[],
+    numberFormat: {},
   };
 };
 

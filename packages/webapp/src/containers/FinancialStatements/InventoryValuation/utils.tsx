@@ -24,6 +24,7 @@ export const getInventoryValuationQuery = () => ({
   itemsIds: [] as number[],
   branchesIds: [] as number[],
   warehousesIds: [] as number[],
+  numberFormat: {},
 });
 
 /**
