@@ -33,9 +33,21 @@ import { ExpensesActivateBranches } from './integrations/Expense/ExpensesActivat
 import { BillActivateBranches } from './integrations/Purchases/BillBranchesActivate';
 import { VendorCreditActivateBranches } from './integrations/Purchases/VendorCreditBranchesActivate';
 import { BillPaymentsActivateBranches } from './integrations/Purchases/PaymentMadeBranchesActivate';
+import { SaleInvoiceActivateBranches } from './integrations/Sales/SaleInvoiceBranchesActivate';
+import { SaleReceiptActivateBranches } from './integrations/Sales/SaleReceiptBranchesActivate';
+import { SaleEstimateActivateBranches } from './integrations/Sales/SaleEstimatesBranchesActivate';
+import { PaymentReceiveActivateBranches } from './integrations/Sales/PaymentReceiveBranchesActivate';
+import { CreditNoteActivateBranches } from './integrations/Sales/CreditNoteBranchesActivate';
 import { BillBranchesActivateSubscriber } from './subscribers/Activate/BillBranchesActivateSubscriber';
 import { VendorCreditBranchesActivateSubscriber } from './subscribers/Activate/VendorCreditBranchesActivateSubscriber';
 import { PaymentMadeActivateBranchesSubscriber } from './subscribers/Activate/PaymentMadeBranchesActivateSubscriber';
+import { CashflowActivateBranchesSubscriber } from './subscribers/Activate/CashflowBranchesActivateSubscriber';
+import { CreditNoteActivateBranchesSubscriber } from './subscribers/Activate/CreditNoteBranchesActivateSubscriber';
+import { ExpenseActivateBranchesSubscriber } from './subscribers/Activate/ExpenseBranchesActivateSubscriber';
+import { PaymentReceiveActivateBranchesSubscriber } from './subscribers/Activate/PaymentReceiveBranchesActivateSubscriber';
+import { SaleEstimatesActivateBranchesSubscriber } from './subscribers/Activate/SaleEstiamtesBranchesActivateSubscriber';
+import { SaleInvoicesActivateBranchesSubscriber } from './subscribers/Activate/SaleInvoiceBranchesActivateSubscriber';
+import { SaleReceiptsActivateBranchesSubscriber } from './subscribers/Activate/SaleReceiptsBranchesActivateSubscriber';
 import { FeaturesModule } from '../Features/Features.module';
 
 @Module({
@@ -73,9 +85,21 @@ import { FeaturesModule } from '../Features/Features.module';
     BillActivateBranches,
     VendorCreditActivateBranches,
     BillPaymentsActivateBranches,
+    SaleInvoiceActivateBranches,
+    SaleReceiptActivateBranches,
+    SaleEstimateActivateBranches,
+    PaymentReceiveActivateBranches,
+    CreditNoteActivateBranches,
     BillBranchesActivateSubscriber,
     VendorCreditBranchesActivateSubscriber,
     PaymentMadeActivateBranchesSubscriber,
+    CashflowActivateBranchesSubscriber,
+    CreditNoteActivateBranchesSubscriber,
+    ExpenseActivateBranchesSubscriber,
+    PaymentReceiveActivateBranchesSubscriber,
+    SaleEstimatesActivateBranchesSubscriber,
+    SaleInvoicesActivateBranchesSubscriber,
+    SaleReceiptsActivateBranchesSubscriber,
   ],
   exports: [
     BranchesSettingsService,

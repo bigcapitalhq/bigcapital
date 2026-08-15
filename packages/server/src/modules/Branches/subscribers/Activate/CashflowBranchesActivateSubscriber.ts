@@ -5,7 +5,7 @@ import { IBranchesActivatedPayload } from '../../Branches.types';
 import { events } from '@/common/events/events';
 
 @Injectable()
-export class CreditNoteActivateBranchesSubscriber {
+export class CashflowActivateBranchesSubscriber {
   constructor(
     private readonly cashflowActivateBranches: CashflowTransactionsActivateBranches,
   ) {}
