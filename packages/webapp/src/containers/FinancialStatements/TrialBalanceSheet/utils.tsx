@@ -18,7 +18,7 @@ export function getDefaultTrialBalanceQuery(): TrialBalanceQuery {
     basis: 'accrual',
     filterByOption: 'with-transactions',
     branchesIds: [] as number[],
-    // numberFormat: {},
+    numberFormat: {},
   };
 }
 

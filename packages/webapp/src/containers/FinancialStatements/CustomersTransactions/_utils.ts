@@ -22,6 +22,7 @@ export const getCustomersTransactionsDefaultQuery = () => ({
   toDate: moment().format('YYYY-MM-DD'),
   customersIds: [] as string[],
   filterByOption: 'with-transactions',
+  numberFormat: {},
 });
 
 const parseCustomersTransactionsQuery = (

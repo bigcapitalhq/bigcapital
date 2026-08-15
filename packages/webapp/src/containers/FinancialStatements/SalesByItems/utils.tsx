@@ -28,6 +28,7 @@ export const getDefaultSalesByItemsQuery = () => ({
   toDate: moment().format('YYYY-MM-DD'),
   filterByOption: 'with-transactions',
   itemsIds: [],
+  numberFormat: {},
 });
 
 /**

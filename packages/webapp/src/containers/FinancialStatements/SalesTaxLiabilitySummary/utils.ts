@@ -15,6 +15,7 @@ export const getDefaultSalesTaxLiablitySummaryQuery = () => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
   basis: 'cash',
+  numberFormat: {},
 });
 
 /**

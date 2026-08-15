@@ -37,6 +37,7 @@ export const getDefaultBalanceSheetQuery = (): BalanceSheetTableQuery => ({
   percentageOfRow: false,
 
   branchesIds: [],
+  numberFormat: {},
 });
 
 const parseBalanceSheetQuery = (
