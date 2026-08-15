@@ -93,7 +93,7 @@ describe('Warehouse Transfers (e2e)', () => {
       .expect(200);
   });
 
-  it('/warehouse-transfers/:id (POST)', async () => {
+  it('/warehouse-transfers/:id (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/warehouse-transfers')
       .set('organization-id', orgainzationId)
@@ -102,7 +102,7 @@ describe('Warehouse Transfers (e2e)', () => {
     const transferId = response.body.id;
 
     return request(app.getHttpServer())
-      .post(`/warehouse-transfers/${transferId}`)
+      .put(`/warehouse-transfers/${transferId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createWarehouseTransferRequest())

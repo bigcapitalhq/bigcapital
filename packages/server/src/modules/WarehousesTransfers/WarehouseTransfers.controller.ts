@@ -75,7 +75,7 @@ export class WarehouseTransfersController {
   /**
    * Edits warehouse transfer transaction.
    */
-  @Post(':id')
+  @Put(':id')
   @RequirePermission(WarehouseTransferAction.EDIT, AbilitySubject.Warehouse)
   @ApiOperation({ summary: 'Edit the given warehouse transfer transaction.' })
   @ApiResponse({
@@ -195,7 +195,7 @@ export class WarehouseTransfersController {
     const warehouseTransfer =
       await this.warehouseTransferApplication.getWarehouseTransfer(id);
 
-    return { data: warehouseTransfer };
+    return warehouseTransfer;
   }
 
   /**
