@@ -1,5 +1,6 @@
 import type { OpArgType } from 'openapi-typescript-fetch';
 import type { ApiFetcher } from './fetch-utils';
+import { withNestedQuery } from './fetch-utils';
 import { paths } from './schema';
 import { OpForPath, OpQueryParams } from './utils';
 
@@ -29,6 +30,7 @@ export async function fetchInventoryCostItems(
   query: GetInventoryItemsCostQuery
 ): Promise<GetInventoryItemsCostResponse> {
   const get = fetcher.path(INVENTORY_COST_ROUTES.ITEMS).method('get').create();
-  const { data } = await get(query as GetItemsCostArg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as GetItemsCostArg, init);
   return (data ?? { costs: [] }) as GetInventoryItemsCostResponse;
 }

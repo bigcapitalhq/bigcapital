@@ -14,13 +14,17 @@ import {
 
 /**
  * Splits a query object into a primitive-only payload and a per-call `init`
- * carrying any nested object values via the SDK's sentinel header. The
- * snake-case request middleware reads that header and re-serializes the
- * nested values as bracket-style query params (`number_format[no_cents]=true`)
- * so Express's `extended` qs parser can reconstruct them server-side.
+ * carrying any nested object or array values via the SDK's sentinel header.
+ * The snake-case request middleware reads that header and re-serializes the
+ * nested values as bracket-style query params (`number_format[no_cents]=true`,
+ * `items_ids[]=1003`) so Express's `extended` qs parser can reconstruct them
+ * server-side.
  *
  * openapi-typescript-fetch's built-in query serializer calls `String(value)`,
  * which would otherwise turn nested objects into the literal `[object Object]`.
+ * Arrays are routed the same way so that a single-element array is emitted as
+ * `key[]=value` instead of a bare scalar, which `qs` would parse as a string
+ * rather than an array.
  */
 export function withNestedQuery<T>(
   query: T,
@@ -32,7 +36,6 @@ export function withNestedQuery<T>(
     if (
       value !== null &&
       typeof value === 'object' &&
-      !Array.isArray(value) &&
       !(value instanceof Date) &&
       !(value instanceof Blob)
     ) {

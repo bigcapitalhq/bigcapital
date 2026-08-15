@@ -1869,9 +1869,9 @@ export interface paths {
         };
         /** Retrieve warehouse transfer transaction details. */
         get: operations["WarehouseTransfersController_getWarehouseTransfer"];
-        put?: never;
         /** Edit the given warehouse transfer transaction. */
-        post: operations["WarehouseTransfersController_editWarehouseTransfer"];
+        put: operations["WarehouseTransfersController_editWarehouseTransfer"];
+        post?: never;
         /** Delete the given warehouse transfer transaction. */
         delete: operations["WarehouseTransfersController_deleteWarehouseTransfer"];
         options?: never;

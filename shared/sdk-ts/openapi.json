@@ -7142,7 +7142,7 @@
       }
     },
     "/api/warehouse-transfers/{id}": {
-      "post": {
+      "put": {
         "operationId": "WarehouseTransfersController_editWarehouseTransfer",
         "summary": "Edit the given warehouse transfer transaction.",
         "parameters": [
