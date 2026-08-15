@@ -62,39 +62,39 @@ function getResourceUrlFromType(type: string): string {
  * Transformes invoices to resource data.
  */
 const transformInvoices: ResourceDataTransformer = (response) => ({
-  items: response.data.sales_invoices,
+  items: response.data.data,
 });
 
 /**
  * Transformes items to resource data.
  */
 const transformItems: ResourceDataTransformer = (response) => ({
-  items: response.data.items,
+  items: response.data.data,
 });
 
 /**
  * Transformes payment receives to resource data.
  */
 const transformPaymentReceives: ResourceDataTransformer = (response) => ({
-  items: response.data.payment_receives,
+  items: response.data.data,
 });
 
 /**
  * Transformes customers to resoruce data.
  */
 const transformCustomers: ResourceDataTransformer = (response) => ({
-  items: response.data.customers,
+  items: response.data.data,
 });
 
 /**
  * Transformes customers to resoruce data.
  */
 const transformVendors: ResourceDataTransformer = (response) => ({
-  items: response.data.vendors,
+  items: response.data.data,
 });
 
 const transformPaymentMades: ResourceDataTransformer = (response) => ({
-  items: response.data.bill_payments,
+  items: response.data.data,
 });
 
 const transformSaleReceipts: ResourceDataTransformer = (response) => ({
@@ -102,15 +102,15 @@ const transformSaleReceipts: ResourceDataTransformer = (response) => ({
 });
 
 const transformBills: ResourceDataTransformer = (response) => ({
-  items: response.data.bills,
+  items: response.data.data,
 });
 
 const transformManualJournals: ResourceDataTransformer = (response) => ({
-  items: response.data.manual_journals,
+  items: response.data.data,
 });
 
 const transformsEstimates: ResourceDataTransformer = (response) => ({
-  items: response.data.sales_estimates,
+  items: response.data.data,
 });
 
 const transformAccounts: ResourceDataTransformer = (response) => ({
@@ -118,11 +118,11 @@ const transformAccounts: ResourceDataTransformer = (response) => ({
 });
 
 const transformCreditNotes: ResourceDataTransformer = (response) => ({
-  items: response.data.credit_notes,
+  items: response.data.data,
 });
 
 const transformVendorCredits: ResourceDataTransformer = (response) => ({
-  items: response.data.vendor_credits,
+  items: response.data.data,
 });
 
 /**
