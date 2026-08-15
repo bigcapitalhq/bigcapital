@@ -136,6 +136,8 @@ export class GetBankAccountTransactions extends FinancialSheet {
   private transactionRunningBalance = (
     transaction: ICashflowAccountTransaction,
   ): ICashflowAccountTransaction => {
+    const runningBalance = this.runningBalance.amount();
+
     const amount = transaction.deposit - transaction.withdrawal;
 
     const biggerThanZero = R.lt(0, amount);
@@ -145,8 +147,6 @@ export class GetBankAccountTransactions extends FinancialSheet {
 
     R.when(R.always(biggerThanZero), this.runningBalance.decrement)(absAmount);
     R.when(R.always(lowerThanZero), this.runningBalance.increment)(absAmount);
-
-    const runningBalance = this.runningBalance.amount();
 
     return {
       ...transaction,
@@ -163,10 +163,7 @@ export class GetBankAccountTransactions extends FinancialSheet {
   private transactionBalance = (
     transaction: ICashflowAccountTransaction,
   ): ICashflowAccountTransaction => {
-    const balance =
-      transaction.runningBalance +
-      transaction.withdrawal * -1 +
-      transaction.deposit;
+    const balance = transaction.runningBalance;
 
     return {
       ...transaction,
