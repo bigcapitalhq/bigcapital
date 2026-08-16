@@ -58,14 +58,14 @@ export function VendorsBalanceSummaryHeaderGeneralContent() {
 
       <Row>
         <Col xs={5}>
-          <FastField name={'percentage_column'} type={'checkbox'}>
+          <FastField name={'percentageColumn'} type={'checkbox'}>
             {({ field }: { field: any }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
                   inline={true}
                   small={true}
                   label={intl.get('percentage_of_column')}
-                  name={'percentage_column'}
+                  name={'percentageColumn'}
                   {...field}
                 />
               </FormGroup>
