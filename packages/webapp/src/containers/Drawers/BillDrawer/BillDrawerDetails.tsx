@@ -8,7 +8,9 @@ import { BillGLEntriesTable } from './BillGLEntriesTable';
 import { BillPaymentTransactionTable } from './BillPaymentTransactions/BillPaymentTransactionTable';
 import { LocatedLandedCostTable } from './LocatedLandedCostTable';
 import { DrawerMainTabs } from '@/components';
+import { Features } from '@/constants';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
+import { useFeatureCan } from '@/hooks/state';
 import { useAbilityContext } from '@/hooks/utils';
 
 /**
@@ -16,6 +18,8 @@ import { useAbilityContext } from '@/hooks/utils';
  */
 function BillDetailsTabs() {
   const ability = useAbilityContext();
+  const { featureCan } = useFeatureCan();
+  const isLandedCostEnabled = featureCan(Features.LandedCost);
 
   return (
     <DrawerMainTabs
@@ -39,11 +43,13 @@ function BillDetailsTabs() {
           panel={<BillPaymentTransactionTable />}
         />
       )}
-      <Tab
-        title={intl.get('located_landed_cost')}
-        id={'landed_cost'}
-        panel={<LocatedLandedCostTable />}
-      />
+      {isLandedCostEnabled && (
+        <Tab
+          title={intl.get('located_landed_cost')}
+          id={'landed_cost'}
+          panel={<LocatedLandedCostTable />}
+        />
+      )}
     </DrawerMainTabs>
   );
 }

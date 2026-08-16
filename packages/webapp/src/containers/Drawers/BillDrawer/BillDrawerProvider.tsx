@@ -30,6 +30,7 @@ function BillDrawerProvider({
 }: BillDrawerProviderProps & { children?: React.ReactNode }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
+  const isLandedCostEnabled = featureCan(Features.LandedCost);
 
   // Handle fetch bill details.
   const { isLoading: isBillLoading, data: bill } = useBill(billId, {
@@ -39,7 +40,7 @@ function BillDrawerProvider({
   // Handle fetch bill located landed cost transaction.
   const { isLoading: isLandedCostLoading, data: transactions } =
     useBillLocatedLandedCost(billId, {
-      enabled: !!billId,
+      enabled: !!billId && isLandedCostEnabled,
     });
 
   //provider.

@@ -16,9 +16,15 @@ import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { TransactionLandedCost } from './commands/TransctionLandedCost.service';
 import { ExpenseLandedCost } from './commands/ExpenseLandedCost.service';
 import { BillLandedCost } from './commands/BillLandedCost.service';
+import { FeaturesModule } from '../Features/Features.module';
+import { LandedCostFeatureGuard } from './LandedCostFeatureGuard';
 
 @Module({
-  imports: [forwardRef(() => InventoryCostModule), LedgerModule],
+  imports: [
+    forwardRef(() => InventoryCostModule),
+    LedgerModule,
+    FeaturesModule,
+  ],
   providers: [
     AllocateLandedCostService,
     TransactionLandedCostEntriesService,
@@ -34,6 +40,7 @@ import { BillLandedCost } from './commands/BillLandedCost.service';
     LandedCostGLEntriesSubscriber,
     LandedCostInventoryTransactionsSubscriber,
     LandedCostSyncCostTransactionsSubscriber,
+    LandedCostFeatureGuard,
   ],
   exports: [TransactionLandedCostEntriesService],
   controllers: [BillAllocateLandedCostController],

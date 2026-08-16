@@ -59,6 +59,11 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     href: '/preferences/accountant',
   },
   {
+    text: <T id={'features.label'} />,
+    disabled: false,
+    href: '/preferences/features',
+  },
+  {
     text: <T id={'items'} />,
     disabled: false,
     href: '/preferences/items',
