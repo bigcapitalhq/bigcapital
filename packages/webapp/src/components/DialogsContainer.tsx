@@ -84,20 +84,24 @@ export default function DialogsContainer() {
       <MoneyInDialog dialogName={DialogsName.MoneyInForm} />
       <MoneyOutDialog dialogName={DialogsName.MoneyOutForm} />
 
-      <NotifyInvoiceViaSMSDialog
-        dialogName={DialogsName.NotifyInvoiceViaForm}
-      />
-      <NotifyReceiptViaSMSDialog
-        dialogName={DialogsName.NotifyReceiptViaForm}
-      />
-      <NotifyEstimateViaSMSDialog
-        dialogName={DialogsName.NotifyEstimateViaForm}
-      />
-      <NotifyPaymentReceiveViaSMSDialog
-        dialogName={DialogsName.NotifyPaymentViaForm}
-      />
+      <FeatureCan feature={Features.SmsNotification}>
+        <NotifyInvoiceViaSMSDialog
+          dialogName={DialogsName.NotifyInvoiceViaForm}
+        />
+        <NotifyReceiptViaSMSDialog
+          dialogName={DialogsName.NotifyReceiptViaForm}
+        />
+        <NotifyEstimateViaSMSDialog
+          dialogName={DialogsName.NotifyEstimateViaForm}
+        />
+        <NotifyPaymentReceiveViaSMSDialog
+          dialogName={DialogsName.NotifyPaymentViaForm}
+        />
+      </FeatureCan>
       <BadDebtDialog dialogName={DialogsName.BadDebtForm} />
-      <SMSMessageDialog dialogName={DialogsName.SMSMessageForm} />
+      <FeatureCan feature={Features.SmsNotification}>
+        <SMSMessageDialog dialogName={DialogsName.SMSMessageForm} />
+      </FeatureCan>
       <RefundCreditNoteDialog dialogName={DialogsName.RefundCreditNote} />
       <RefundVendorCreditDialog dialogName={DialogsName.RefundVendorCredit} />
       <ReconcileCreditNoteDialog dialogName={DialogsName.ReconcileCreditNote} />

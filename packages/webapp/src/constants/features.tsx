@@ -5,4 +5,5 @@ export const Features = {
   Projects: 'Projects',
   BankSyncing: 'BankSyncing',
   LandedCost: 'landed_cost',
+  SmsNotification: 'sms_notification',
 };

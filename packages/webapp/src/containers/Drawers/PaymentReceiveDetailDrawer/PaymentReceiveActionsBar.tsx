@@ -14,12 +14,14 @@ import {
   Icon,
   FormattedMessage as T,
   DrawerActionsBar,
+  FeatureCan,
 } from '@/components';
 import {
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
+import { Features } from '@/constants/features';
 import {
   withAlertActions,
   WithAlertActionsProps,
@@ -126,12 +128,14 @@ function PaymentsReceivedActionsBar({
           I={PaymentReceiveAction.NotifyBySms}
           a={AbilitySubject.PaymentReceive}
         >
-          <NavbarDivider />
-          <PaymentReceiveMoreMenuItems
-            payload={{
-              onNotifyViaSMS: handleNotifyViaSMS,
-            }}
-          />
+          <FeatureCan feature={Features.SmsNotification}>
+            <NavbarDivider />
+            <PaymentReceiveMoreMenuItems
+              payload={{
+                onNotifyViaSMS: handleNotifyViaSMS,
+              }}
+            />
+          </FeatureCan>
         </Can>
       </NavbarGroup>
     </DrawerActionsBar>

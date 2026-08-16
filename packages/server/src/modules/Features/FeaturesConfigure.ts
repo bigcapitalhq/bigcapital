@@ -30,6 +30,10 @@ export class FeaturesConfigure {
         name: Features.LANDED_COST,
         defaultValue: false,
       },
+      {
+        name: Features.SMS_NOTIFICATION,
+        defaultValue: false,
+      },
     ];
   }
 }

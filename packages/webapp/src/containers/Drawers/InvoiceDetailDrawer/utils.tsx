@@ -20,8 +20,10 @@ import {
   Can,
   If,
   TextOverviewTooltipCell,
+  FeatureCan,
 } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
+import { Features } from '@/constants/features';
 import { getColumnWidth } from '@/utils';
 
 interface InvoiceDetailsStatusProps {
@@ -166,10 +168,12 @@ export const BadDebtMenuItem = ({ payload }: BadDebtMenuItemProps) => {
             />
           </Can>
           <Can I={SaleInvoiceAction.NotifyBySms} a={AbilitySubject.Invoice}>
-            <MenuItem
-              onClick={onNotifyViaSMS}
-              text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-            />
+            <FeatureCan feature={Features.SmsNotification}>
+              <MenuItem
+                onClick={onNotifyViaSMS}
+                text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
+              />
+            </FeatureCan>
           </Can>
         </Menu>
       }
