@@ -1,15 +1,12 @@
 import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useCustomers } from '@/hooks/query';
+import { CustomersListResponse } from '@bigcapital/sdk-ts';
 
 type UseCustomersResult = ReturnType<typeof useCustomers>;
 
 type ARAgingSummaryGeneralContextValue = {
-  customers: UseCustomersResult['data'] extends
-    | { customers?: infer C }
-    | undefined
-    ? C
-    : undefined;
+  customers: CustomersListResponse['data'] | undefined;
   isCustomersLoading: boolean;
 };
 
@@ -26,7 +23,7 @@ function ARAgingSummaryGeneralProvider({
   const { data: customersData, isLoading: isCustomersLoading } = useCustomers();
 
   const provider: ARAgingSummaryGeneralContextValue = {
-    customers: (customersData as any)?.customers,
+    customers: customersData?.data,
     isCustomersLoading,
   };
 

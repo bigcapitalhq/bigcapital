@@ -1,9 +1,10 @@
 import React, { createContext, useContext } from 'react';
+import { VendorsListResponse } from '@bigcapital/sdk-ts';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useVendors } from '@/hooks/query';
 
 interface VendorsBalanceSummaryGeneralPanelContextValue {
-  vendors: any;
+  vendors: VendorsListResponse['data'] | undefined;
   isVendorsFetching: boolean;
   isVendorsLoading: boolean;
 }
@@ -29,7 +30,7 @@ function VendorsBalanceSummaryGeneralPanelProvider({
 
   // Provider.
   const provider: VendorsBalanceSummaryGeneralPanelContextValue = {
-    vendors: (vendorsData as any)?.vendors,
+    vendors: vendorsData?.data,
     isVendorsFetching,
     isVendorsLoading,
   };

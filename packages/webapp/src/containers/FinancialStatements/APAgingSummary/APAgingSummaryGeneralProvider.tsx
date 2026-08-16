@@ -1,13 +1,10 @@
 import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useVendors } from '@/hooks/query';
-
-type UseVendorsResult = ReturnType<typeof useVendors>;
+import { VendorsListResponse } from '@bigcapital/sdk-ts';
 
 type APAgingSummaryGeneralContextValue = {
-  vendors: UseVendorsResult['data'] extends { vendors?: infer V } | undefined
-    ? V
-    : undefined;
+  vendors: VendorsListResponse['data'] | undefined;
   isVendorsLoading: boolean;
 };
 
@@ -26,7 +23,7 @@ function APAgingSummaryGeneralProvider({
   const { data: vendorsData, isFetching: isVendorsLoading } = useVendors();
 
   const provider: APAgingSummaryGeneralContextValue = {
-    vendors: (vendorsData as any)?.vendors,
+    vendors: vendorsData?.data,
     isVendorsLoading,
   };
 
