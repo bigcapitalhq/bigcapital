@@ -202,7 +202,9 @@ export class InventoryDetails extends FinancialSheet {
     return {
       nodeType: INodeTypes.TRANSACTION,
       date: this.getDateMeta(transaction.date),
-      transactionType: this.i18n.t(transaction.transcationTypeFormatted),
+      transactionType: transaction.transcationTypeFormatted
+        ? this.i18n.t(transaction.transcationTypeFormatted)
+        : '',
       transactionNumber: transaction?.meta?.transactionNumber,
       direction: transaction.direction,
 
