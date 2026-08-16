@@ -12,6 +12,7 @@ export const getDefaultVendorsBalanceQuery = () => {
     filterByOption: 'with-transactions',
     vendorsIds: [] as string[],
     numberFormat: {},
+    percentageColumn: false,
   };
 };
 

@@ -36,7 +36,7 @@ function SalesByItemGeneralPanelProvider({
   });
 
   const provider: SalesByItemGeneralPanelContextValue = {
-    items: (itemsData as any)?.items,
+    items: (itemsData as any)?.data,
     isItemsLoading,
     isItemsFetching,
   };

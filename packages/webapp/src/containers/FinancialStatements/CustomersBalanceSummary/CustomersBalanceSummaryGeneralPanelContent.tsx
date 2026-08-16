@@ -44,12 +44,12 @@ export function CustomersBalanceSummaryGeneralPanelContent() {
       <Row>
         <Col xs={5}>
           <FFormGroup
-            name={'percentage_column'}
+            name={'percentageColumn'}
             labelInfo={<FieldHint />}
             fastField
           >
             <FCheckbox
-              name={'percentage_column'}
+              name={'percentageColumn'}
               inline={true}
               label={intl.get('percentage_of_column')}
               fastField
