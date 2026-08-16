@@ -1,9 +1,10 @@
 import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useVendors } from '@/hooks/query';
+import { VendorsListResponse } from '@bigcapital/sdk-ts';
 
 interface VendorsTransactionsGeneralPanelContextValue {
-  vendors: any;
+  vendors: VendorsListResponse['data'] | undefined;
   isVendorsLoading: boolean;
   isVendorsFetching: boolean;
 }
@@ -28,11 +29,10 @@ function VendorsTransactionsGeneralPanelProvider({
   } = useVendors({ page_size: 100000 });
 
   const provider: VendorsTransactionsGeneralPanelContextValue = {
-    vendors: (vendorsData as any)?.vendors,
+    vendors: vendorsData?.data,
     isVendorsLoading,
     isVendorsFetching,
   };
-
   const loading = isVendorsLoading;
 
   return loading ? (

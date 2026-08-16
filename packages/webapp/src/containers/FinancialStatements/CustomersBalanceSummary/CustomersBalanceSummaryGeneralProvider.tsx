@@ -1,15 +1,12 @@
 import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useCustomers } from '@/hooks/query';
-
-type UseCustomersResult = ReturnType<typeof useCustomers>;
+import { CustomersListResponse } from '@bigcapital/sdk-ts';
 
 type CustomersBalanceSummaryGeneralContextValue = {
   isCustomersLoading: boolean;
   isCustomersFetching: boolean;
-  customers: UseCustomersResult['data'] extends { customers: infer C }
-    ? C
-    : unknown;
+  customers: CustomersListResponse['data'] | undefined;
 };
 
 type CustomersBalanceSummaryGeneralProviderProps = {
@@ -32,7 +29,7 @@ function CustomersBalanceSummaryGeneralProvider({
   const provider: CustomersBalanceSummaryGeneralContextValue = {
     isCustomersLoading,
     isCustomersFetching,
-    customers: (customersData as any)?.customers,
+    customers: customersData?.data ?? [],
   };
 
   return isCustomersLoading ? (

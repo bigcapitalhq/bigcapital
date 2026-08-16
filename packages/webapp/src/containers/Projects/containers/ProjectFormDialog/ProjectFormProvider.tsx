@@ -34,7 +34,7 @@ function ProjectFormProvider({
 
   // State provider.
   const provider = {
-    customers: customersData?.customers,
+    customers: customersData?.data,
     dialogName,
     project,
     projectId,
