@@ -55,8 +55,11 @@ export async function fetchCustomerBalanceCsv(
   query: CustomerBalanceCsvQuery
 ): Promise<CustomerBalanceCsvResponse> {
   const get = fetcher.path(CUSTOMER_BALANCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/csv" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as CustomerBalanceCsvResponse;
 }
 
@@ -69,8 +72,11 @@ export async function fetchCustomerBalanceXlsx(
   query: CustomerBalanceXlsxQuery
 ): Promise<CustomerBalanceXlsxResponse> {
   const get = fetcher.path(CUSTOMER_BALANCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/xlsx" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as CustomerBalanceXlsxResponse;
 }
 
@@ -83,7 +89,10 @@ export async function fetchCustomerBalancePdf(
   query: CustomerBalancePdfQuery
 ): Promise<CustomerBalancePdfResponse> {
   const get = fetcher.path(CUSTOMER_BALANCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/pdf" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as CustomerBalancePdfResponse;
 }
