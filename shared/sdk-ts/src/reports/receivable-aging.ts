@@ -55,8 +55,11 @@ export async function fetchReceivableAgingCsv(
   query: ReceivableAgingCsvQuery
 ): Promise<ReceivableAgingCsvResponse> {
   const get = fetcher.path(RECEIVABLE_AGING_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/csv" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as ReceivableAgingCsvResponse;
 }
 
@@ -69,8 +72,11 @@ export async function fetchReceivableAgingXlsx(
   query: ReceivableAgingXlsxQuery
 ): Promise<ReceivableAgingXlsxResponse> {
   const get = fetcher.path(RECEIVABLE_AGING_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/xlsx" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as ReceivableAgingXlsxResponse;
 }
 
@@ -83,7 +89,10 @@ export async function fetchReceivableAgingPdf(
   query: ReceivableAgingPdfQuery
 ): Promise<ReceivableAgingPdfResponse> {
   const get = fetcher.path(RECEIVABLE_AGING_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/pdf" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as ReceivableAgingPdfResponse;
 }

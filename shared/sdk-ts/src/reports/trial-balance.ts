@@ -55,8 +55,11 @@ export async function fetchTrialBalanceCsv(
   query: TrialBalanceCsvQuery
 ): Promise<TrialBalanceCsvResponse> {
   const get = fetcher.path(TRIAL_BALANCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/csv" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as TrialBalanceCsvResponse;
 }
 
@@ -69,8 +72,11 @@ export async function fetchTrialBalanceXlsx(
   query: TrialBalanceXlsxQuery
 ): Promise<TrialBalanceXlsxResponse> {
   const get = fetcher.path(TRIAL_BALANCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/xlsx" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as TrialBalanceXlsxResponse;
 }
 
@@ -83,7 +89,10 @@ export async function fetchTrialBalancePdf(
   query: TrialBalancePdfQuery
 ): Promise<TrialBalancePdfResponse> {
   const get = fetcher.path(TRIAL_BALANCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/pdf" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as TrialBalancePdfResponse;
 }

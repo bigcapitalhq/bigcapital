@@ -55,8 +55,11 @@ export async function fetchSalesTaxLiabilityCsv(
   query: SalesTaxLiabilityCsvQuery
 ): Promise<SalesTaxLiabilityCsvResponse> {
   const get = fetcher.path(SALES_TAX_LIABILITY_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/csv" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as SalesTaxLiabilityCsvResponse;
 }
 
@@ -69,8 +72,11 @@ export async function fetchSalesTaxLiabilityXlsx(
   query: SalesTaxLiabilityXlsxQuery
 ): Promise<SalesTaxLiabilityXlsxResponse> {
   const get = fetcher.path(SALES_TAX_LIABILITY_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/xlsx" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as SalesTaxLiabilityXlsxResponse;
 }
 
@@ -83,7 +89,10 @@ export async function fetchSalesTaxLiabilityPdf(
   query: SalesTaxLiabilityPdfQuery
 ): Promise<SalesTaxLiabilityPdfResponse> {
   const get = fetcher.path(SALES_TAX_LIABILITY_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/pdf" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as SalesTaxLiabilityPdfResponse;
 }

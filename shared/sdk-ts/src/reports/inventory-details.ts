@@ -55,8 +55,11 @@ export async function fetchInventoryItemDetailsCsv(
   query: InventoryItemDetailsCsvQuery
 ): Promise<InventoryItemDetailsCsvResponse> {
   const get = fetcher.path(INVENTORY_DETAILS_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/csv" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as InventoryItemDetailsCsvResponse;
 }
 
@@ -69,8 +72,11 @@ export async function fetchInventoryItemDetailsXlsx(
   query: InventoryItemDetailsXlsxQuery
 ): Promise<InventoryItemDetailsXlsxResponse> {
   const get = fetcher.path(INVENTORY_DETAILS_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/xlsx" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as InventoryItemDetailsXlsxResponse;
 }
 
@@ -83,7 +89,10 @@ export async function fetchInventoryItemDetailsPdf(
   query: InventoryItemDetailsPdfQuery
 ): Promise<InventoryItemDetailsPdfResponse> {
   const get = fetcher.path(INVENTORY_DETAILS_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/pdf" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as InventoryItemDetailsPdfResponse;
 }
