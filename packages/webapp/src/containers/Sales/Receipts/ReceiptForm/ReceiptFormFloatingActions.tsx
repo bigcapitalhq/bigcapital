@@ -99,7 +99,7 @@ export function ReceiptFormFloatingActions() {
     <PageForm.FooterActions spacing={10} position="apart">
       <Group spacing={10}>
         {/* ----------- Save And Close ----------- */}
-        <If condition={!receipt || !receipt?.closed}>
+        <If condition={!receipt || !receipt?.isClosed}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}
@@ -167,7 +167,7 @@ export function ReceiptFormFloatingActions() {
         </If>
 
         {/* ----------- Save and New ----------- */}
-        <If condition={Boolean(receipt && receipt?.closed)}>
+        <If condition={Boolean(receipt && receipt?.isClosed)}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}

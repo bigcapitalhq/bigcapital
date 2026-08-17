@@ -32392,9 +32392,14 @@
             "description": "The statement on the receipt",
             "example": "Paid in full"
           },
-          "closed": {
+          "isClosed": {
             "type": "boolean",
-            "description": "Whether the receipt is closed",
+            "description": "Whether the sale receipt is closed",
+            "example": false
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Whether the sale receipt is draft",
             "example": false
           },
           "closedAt": {
@@ -32567,7 +32572,7 @@
           "customer",
           "depositAccountId",
           "depositAccount",
-          "closed",
+          "isClosed",
           "entries",
           "subtotal",
           "subtotalLocal",
