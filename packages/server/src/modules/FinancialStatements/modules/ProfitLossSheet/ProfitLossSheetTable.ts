@@ -24,6 +24,7 @@ import { I18nService } from 'nestjs-i18n';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialTable } from '../../common/FinancialTable';
 import { tableRowMapper } from '../../utils/Table.utils';
+import { PROFIT_LOSS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export class ProfitLossSheetTable extends R.pipe(
   ProfitLossTablePreviousPeriod,
@@ -68,7 +69,12 @@ export class ProfitLossSheetTable extends R.pipe(
         R.concat(this.previousYearColumnAccessor()),
       ),
       R.concat(this.percentageColumnsAccessor()),
-      R.concat([{ key: 'total', accessor: 'total.formattedAmount' }]),
+      R.concat([
+        {
+          key: PROFIT_LOSS_COLUMN_KEYS.TOTAL,
+          accessor: 'total.formattedAmount',
+        },
+      ]),
     )([]);
   };
 
@@ -78,7 +84,7 @@ export class ProfitLossSheetTable extends R.pipe(
    */
   private commonColumnsAccessors = (): ITableColumnAccessor[] => {
     return R.compose(
-      R.concat([{ key: 'name', accessor: 'name' }]),
+      R.concat([{ key: PROFIT_LOSS_COLUMN_KEYS.NAME, accessor: 'name' }]),
       R.ifElse(
         this.query.isDatePeriodsColumnsType,
         R.concat(this.datePeriodsColumnsAccessors()),
@@ -189,7 +195,10 @@ export class ProfitLossSheetTable extends R.pipe(
       R.unless(
         R.isEmpty,
         R.concat([
-          { key: 'total', label: this.i18n.t('profit_loss_sheet.total') },
+          {
+            key: PROFIT_LOSS_COLUMN_KEYS.TOTAL,
+            label: this.i18n.t('profit_loss_sheet.total'),
+          },
         ]),
       ),
       R.concat(this.percentageColumns()),
@@ -211,7 +220,7 @@ export class ProfitLossSheetTable extends R.pipe(
   private totalColumn = (): ITableColumn[] => {
     return [
       {
-        key: 'total',
+        key: PROFIT_LOSS_COLUMN_KEYS.TOTAL,
         label: this.i18n.t('profit_loss_sheet.total'),
         children: this.tableColumnChildren(),
       },
@@ -226,7 +235,10 @@ export class ProfitLossSheetTable extends R.pipe(
     return R.compose(
       this.tableColumnsCellIndexing,
       R.concat([
-        { key: 'name', label: this.i18n.t('profit_loss_sheet.account_name') },
+        {
+          key: PROFIT_LOSS_COLUMN_KEYS.NAME,
+          label: this.i18n.t('profit_loss_sheet.account_name'),
+        },
       ]),
       R.ifElse(
         this.query.isDatePeriodsColumnsType,

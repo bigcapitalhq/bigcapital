@@ -4,8 +4,13 @@ import {
   FinancialReportTotalDto,
   FinancialReportPercentageDto,
   FinancialReportMetaDto,
+  FinancialTableColumnDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  BALANCE_SHEET_COLUMN_KEYS,
+  BalanceSheetColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class BalanceSheetDataNodeDto {
   @ApiProperty({
@@ -192,16 +197,30 @@ export class BalanceSheetResponseDto {
 export {
   FinancialTableCellDto as BalanceSheetTableCellDto,
   FinancialTableRowDto as BalanceSheetTableRowDto,
-  FinancialTableColumnDto as BalanceSheetTableColumnDto,
-  FinancialTableDataDto as BalanceSheetTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class BalanceSheetTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(BALANCE_SHEET_COLUMN_KEYS),
+  })
+  key: BalanceSheetColumnKey;
+}
+
+export class BalanceSheetTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [BalanceSheetTableColumnDto],
+  })
+  columns: BalanceSheetTableColumnDto[];
+}
 
 export class BalanceSheetTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => BalanceSheetTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: BalanceSheetTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

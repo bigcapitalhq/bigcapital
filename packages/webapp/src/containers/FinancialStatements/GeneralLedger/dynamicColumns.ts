@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import React from 'react';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
+import type { GeneralLedgerColumnKey } from '@bigcapital/sdk-ts';
 import { Align, CLASSES } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
@@ -27,6 +28,8 @@ function DescriptionCell({ cell: { value } }: CellProps) {
 }
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
+
+const isColumnKey = (key: GeneralLedgerColumnKey) => R.pathEq(['key'], key);
 
 const getReportColWidth = (
   data: unknown[],
@@ -115,14 +118,14 @@ const dynamiColumnMapper = R.curry((data: unknown[], column: ColumnDef) => {
   const _numericColumnAccessor = numericColumnAccessor(data);
 
   return R.compose(
-    R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
-    R.when(R.pathEq(['key'], 'referenceType'), transactionTypeColumnAccessor),
-    R.when(R.pathEq(['key'], 'referenceNumber'), transactionIdColumnAccessor),
-    R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
-    R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'amount'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'runningBalance'), _numericColumnAccessor),
+    R.when(isColumnKey('date'), dateColumnAccessor),
+    R.when(isColumnKey('reference_type'), transactionTypeColumnAccessor),
+    R.when(isColumnKey('reference_number'), transactionIdColumnAccessor),
+    R.when(isColumnKey('description'), descriptionColumnAccessor),
+    R.when(isColumnKey('credit'), _numericColumnAccessor),
+    R.when(isColumnKey('debit'), _numericColumnAccessor),
+    R.when(isColumnKey('amount'), _numericColumnAccessor),
+    R.when(isColumnKey('running_balance'), _numericColumnAccessor),
     commonColumnMapper(data),
   )(column);
 });

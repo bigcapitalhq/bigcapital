@@ -16,6 +16,7 @@ import {
   ITableRow,
 } from '../../types/Table.types';
 import { mapValuesDeep } from '@/utils/deepdash';
+import { INVENTORY_ITEM_DETAILS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 enum IROW_TYPE {
   ITEM = 'ITEM',
@@ -61,18 +62,42 @@ export class InventoryItemDetailsTable {
     transaction: IInventoryDetailsItemTransaction,
   ) => {
     const columns = [
-      { key: 'date', accessor: 'date.formattedDate' },
-      { key: 'transaction_type', accessor: 'transactionType' },
-      { key: 'transaction_id', accessor: 'transactionNumber' },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.DATE,
+        accessor: 'date.formattedDate',
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.TRANSACTION_TYPE,
+        accessor: 'transactionType',
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.TRANSACTION_ID,
+        accessor: 'transactionNumber',
+      },
       {
         key: 'quantity_movement',
         accessor: 'quantityMovement.formattedNumber',
       },
-      { key: 'rate', accessor: 'rate.formattedNumber' },
-      { key: 'total', accessor: 'total.formattedNumber' },
-      { key: 'value', accessor: 'valueMovement.formattedNumber' },
-      { key: 'profit_margin', accessor: 'profitMargin.formattedNumber' },
-      { key: 'running_quantity', accessor: 'runningQuantity.formattedNumber' },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.RATE,
+        accessor: 'rate.formattedNumber',
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.TOTAL,
+        accessor: 'total.formattedNumber',
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.VALUE,
+        accessor: 'valueMovement.formattedNumber',
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.PROFIT_MARGIN,
+        accessor: 'profitMargin.formattedNumber',
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.RUNNING_QUANTITY,
+        accessor: 'runningQuantity.formattedNumber',
+      },
       {
         key: 'running_valuation',
         accessor: 'runningValuation.formattedNumber',
@@ -92,16 +117,25 @@ export class InventoryItemDetailsTable {
     transaction: IInventoryDetailsOpening,
   ): ITableRow => {
     const columns: Array<IColumnMapperMeta> = [
-      { key: 'date', accessor: 'date.formattedDate' },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.DATE,
+        accessor: 'date.formattedDate',
+      },
       {
         key: 'closing',
         value: this.i18n.t('inventory_item_details.opening_balance'),
       },
       { key: 'empty', value: '' },
-      { key: 'quantity', accessor: 'quantity.formattedNumber' },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.QUANTITY,
+        accessor: 'quantity.formattedNumber',
+      },
       { key: 'empty', value: '' },
       { key: 'empty', value: '' },
-      { key: 'value', accessor: 'value.formattedNumber' },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.VALUE,
+        accessor: 'value.formattedNumber',
+      },
     ];
     return tableRowMapper(transaction, columns, {
       rowTypes: [IROW_TYPE.OPENING_ENTRY],
@@ -117,16 +151,25 @@ export class InventoryItemDetailsTable {
     transaction: IInventoryDetailsClosing,
   ): ITableRow => {
     const columns: Array<IColumnMapperMeta> = [
-      { key: 'date', accessor: 'date.formattedDate' },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.DATE,
+        accessor: 'date.formattedDate',
+      },
       {
         key: 'closing',
         value: this.i18n.t('inventory_item_details.closing_balance'),
       },
       { key: 'empty', value: '' },
-      { key: 'quantity', accessor: 'quantity.formattedNumber' },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.QUANTITY,
+        accessor: 'quantity.formattedNumber',
+      },
       { key: 'empty', value: '' },
       { key: 'empty', value: '' },
-      { key: 'value', accessor: 'value.formattedNumber' },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.VALUE,
+        accessor: 'value.formattedNumber',
+      },
       { key: 'profitMargin', accessor: 'profitMargin.formattedNumber' },
     ];
     return tableRowMapper(transaction, columns, {
@@ -199,32 +242,44 @@ export class InventoryItemDetailsTable {
    */
   public tableColumns = (): ITableColumn[] => {
     return [
-      { key: 'date', label: this.i18n.t('inventory_item_details.date') },
       {
-        key: 'transaction_type',
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.DATE,
+        label: this.i18n.t('inventory_item_details.date'),
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.TRANSACTION_TYPE,
         label: this.i18n.t('inventory_item_details.transaction_type'),
       },
       {
-        key: 'transaction_id',
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.TRANSACTION_ID,
         label: this.i18n.t('inventory_item_details.transaction_number'),
       },
       {
-        key: 'quantity',
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.QUANTITY,
         label: this.i18n.t('inventory_item_details.quantity'),
       },
-      { key: 'rate', label: this.i18n.t('inventory_item_details.rate') },
-      { key: 'total', label: this.i18n.t('inventory_item_details.total') },
-      { key: 'value', label: this.i18n.t('inventory_item_details.value') },
       {
-        key: 'profit_margin',
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.RATE,
+        label: this.i18n.t('inventory_item_details.rate'),
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.TOTAL,
+        label: this.i18n.t('inventory_item_details.total'),
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.VALUE,
+        label: this.i18n.t('inventory_item_details.value'),
+      },
+      {
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.PROFIT_MARGIN,
         label: this.i18n.t('inventory_item_details.profit_margin'),
       },
       {
-        key: 'running_quantity',
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.RUNNING_QUANTITY,
         label: this.i18n.t('inventory_item_details.running_quantity'),
       },
       {
-        key: 'running_value',
+        key: INVENTORY_ITEM_DETAILS_COLUMN_KEYS.RUNNING_VALUE,
         label: this.i18n.t('inventory_item_details.running_value'),
       },
     ];

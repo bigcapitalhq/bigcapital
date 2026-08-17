@@ -5,6 +5,7 @@ import { I18nService } from 'nestjs-i18n';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { ITableColumn, ITableColumnAccessor } from '../../types/Table.types';
+import { PROFIT_LOSS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export const ProfitLossSheetTablePercentage = <
   T extends GConstructor<FinancialSheet>,
@@ -31,28 +32,28 @@ export const ProfitLossSheetTablePercentage = <
         R.when(
           this.query.isIncomePercentage,
           R.append({
-            key: 'percentage_income',
+            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_INCOME,
             label: this.i18n.t('profit_loss_sheet.percentage_of_income'),
           }),
         ),
         R.when(
           this.query.isExpensesPercentage,
           R.append({
-            key: 'percentage_expenses',
+            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_EXPENSES,
             label: this.i18n.t('profit_loss_sheet.percentage_of_expenses'),
           }),
         ),
         R.when(
           this.query.isColumnPercentage,
           R.append({
-            key: 'percentage_column',
+            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
             label: this.i18n.t('profit_loss_sheet.percentage_of_column'),
           }),
         ),
         R.when(
           this.query.isRowPercentage,
           R.append({
-            key: 'percentage_row',
+            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_ROW,
             label: this.i18n.t('profit_loss_sheet.percentage_of_row'),
           }),
         ),
@@ -71,7 +72,7 @@ export const ProfitLossSheetTablePercentage = <
         R.when(
           this.query.isIncomePercentage,
           R.append({
-            key: 'percentage_income',
+            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_INCOME,
             accessor: 'percentageIncome.formattedAmount',
           }),
         ),
@@ -85,14 +86,14 @@ export const ProfitLossSheetTablePercentage = <
         R.when(
           this.query.isColumnPercentage,
           R.append({
-            key: 'percentage_column',
+            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
             accessor: 'percentageColumn.formattedAmount',
           }),
         ),
         R.when(
           this.query.isRowPercentage,
           R.append({
-            key: 'percentage_row',
+            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_ROW,
             accessor: 'percentageRow.formattedAmount',
           }),
         ),

@@ -16,6 +16,7 @@ import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { I18nService } from 'nestjs-i18n';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { IROW_TYPE } from './_constants';
+import { TRIAL_BALANCE_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export class TrialBalanceSheetTable extends R.compose(
   FinancialTable,
@@ -58,10 +59,10 @@ export class TrialBalanceSheetTable extends R.compose(
    */
   private commonColumnsAccessors = (): ITableColumnAccessor[] => {
     return [
-      { key: 'account', accessor: 'formattedName' },
-      { key: 'debit', accessor: 'formattedDebit' },
-      { key: 'credit', accessor: 'formattedCredit' },
-      { key: 'total', accessor: 'formattedBalance' },
+      { key: TRIAL_BALANCE_COLUMN_KEYS.ACCOUNT, accessor: 'formattedName' },
+      { key: TRIAL_BALANCE_COLUMN_KEYS.DEBIT, accessor: 'formattedDebit' },
+      { key: TRIAL_BALANCE_COLUMN_KEYS.CREDIT, accessor: 'formattedCredit' },
+      { key: TRIAL_BALANCE_COLUMN_KEYS.TOTAL, accessor: 'formattedBalance' },
     ];
   };
 
@@ -141,10 +142,22 @@ export class TrialBalanceSheetTable extends R.compose(
     return R.compose(
       this.tableColumnsCellIndexing,
       R.concat([
-        { key: 'account', label: this.i18n.t('trial_balance_sheet.account') },
-        { key: 'debit', label: this.i18n.t('trial_balance_sheet.debit') },
-        { key: 'credit', label: this.i18n.t('trial_balance_sheet.credit') },
-        { key: 'total', label: this.i18n.t('trial_balance_sheet.total') },
+        {
+          key: TRIAL_BALANCE_COLUMN_KEYS.ACCOUNT,
+          label: this.i18n.t('trial_balance_sheet.account'),
+        },
+        {
+          key: TRIAL_BALANCE_COLUMN_KEYS.DEBIT,
+          label: this.i18n.t('trial_balance_sheet.debit'),
+        },
+        {
+          key: TRIAL_BALANCE_COLUMN_KEYS.CREDIT,
+          label: this.i18n.t('trial_balance_sheet.credit'),
+        },
+        {
+          key: TRIAL_BALANCE_COLUMN_KEYS.TOTAL,
+          label: this.i18n.t('trial_balance_sheet.total'),
+        },
       ]),
     )([]);
   };

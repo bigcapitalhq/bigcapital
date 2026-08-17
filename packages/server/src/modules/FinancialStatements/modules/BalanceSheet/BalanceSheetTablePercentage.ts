@@ -5,6 +5,7 @@ import { ITableColumn } from '../../types/Table.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { BALANCE_SHEET_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export const BalanceSheetTablePercentage = <
   T extends GConstructor<FinancialSheet>,
@@ -27,14 +28,14 @@ export const BalanceSheetTablePercentage = <
         R.when(
           this.query.isColumnsPercentageActive,
           R.append({
-            key: 'percentage_of_column',
+            key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
             label: this.i18n.t('balance_sheet.percentage_of_column'),
           }),
         ),
         R.when(
           this.query.isRowsPercentageActive,
           R.append({
-            key: 'percentage_of_row',
+            key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_ROW,
             label: this.i18n.t('balance_sheet.percentage_of_row'),
           }),
         ),
@@ -53,14 +54,14 @@ export const BalanceSheetTablePercentage = <
         R.when(
           this.query.isColumnsPercentageActive,
           R.append({
-            key: 'percentage_of_column',
+            key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
             accessor: 'percentageColumn.formattedAmount',
           }),
         ),
         R.when(
           this.query.isRowsPercentageActive,
           R.append({
-            key: 'percentage_of_row',
+            key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_ROW,
             accessor: 'percentageRow.formattedAmount',
           }),
         ),

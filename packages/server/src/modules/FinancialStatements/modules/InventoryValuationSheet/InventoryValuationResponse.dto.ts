@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  INVENTORY_VALUATION_COLUMN_KEYS,
+  InventoryValuationColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class InventoryValuationItemDto {
   @ApiProperty({ description: 'Item ID', type: Number })
@@ -87,16 +92,30 @@ export class InventoryValuationResponseDto {
 export {
   FinancialTableCellDto as InventoryValuationTableCellDto,
   FinancialTableRowDto as InventoryValuationTableRowDto,
-  FinancialTableColumnDto as InventoryValuationTableColumnDto,
-  FinancialTableDataDto as InventoryValuationTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class InventoryValuationTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(INVENTORY_VALUATION_COLUMN_KEYS),
+  })
+  key: InventoryValuationColumnKey;
+}
+
+export class InventoryValuationTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [InventoryValuationTableColumnDto],
+  })
+  columns: InventoryValuationTableColumnDto[];
+}
 
 export class InventoryValuationTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => InventoryValuationTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: InventoryValuationTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',
