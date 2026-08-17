@@ -76,8 +76,14 @@ export const ProfitLossSheetDatePeriods = <
       fromDate: Date,
       toDate: Date,
     ) => {
+      const accountIds = R.uniq(
+        R.append(
+          node.id,
+          this.repository.accountsGraph.dependenciesOf(node.id),
+        ),
+      );
       const periodTotal = this.repository.periodsAccountsLedger
-        .whereAccountId(node.id)
+        .whereAccountsIds(accountIds)
         .whereFromDate(fromDate)
         .whereToDate(toDate)
         .getClosingBalance();

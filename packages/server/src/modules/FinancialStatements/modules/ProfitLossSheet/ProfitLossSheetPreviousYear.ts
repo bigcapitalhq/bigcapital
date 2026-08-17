@@ -35,8 +35,14 @@ export const ProfitLossSheetPreviousYear = <
     private assocPreviousYearTotalAccountNode = (
       accountNode: IProfitLossSheetAccountNode,
     ) => {
-      const total = this.repository.PYTotalAccountsLedger.whereAccountId(
-        accountNode.id,
+      const accountIds = R.uniq(
+        R.append(
+          accountNode.id,
+          this.repository.accountsGraph.dependenciesOf(accountNode.id),
+        ),
+      );
+      const total = this.repository.PYTotalAccountsLedger.whereAccountsIds(
+        accountIds,
       ).getClosingBalance();
 
       return R.assoc('previousYear', this.getAmountMeta(total), accountNode);
@@ -177,8 +183,14 @@ export const ProfitLossSheetPreviousYear = <
      */
     private assocPreviousYearAccountHorizTotal = R.curry(
       (node: IProfitLossSheetAccountNode, totalNode) => {
-        const total = this.repository.PYPeriodsAccountsLedger.whereAccountId(
-          node.id,
+        const accountIds = R.uniq(
+          R.append(
+            node.id,
+            this.repository.accountsGraph.dependenciesOf(node.id),
+          ),
+        );
+        const total = this.repository.PYPeriodsAccountsLedger.whereAccountsIds(
+          accountIds,
         )
           .whereFromDate(totalNode.previousYearFromDate.date)
           .whereToDate(totalNode.previousYearToDate.date)

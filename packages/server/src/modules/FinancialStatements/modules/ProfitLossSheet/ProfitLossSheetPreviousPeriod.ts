@@ -35,8 +35,14 @@ export const ProfitLossSheetPreviousPeriod = <
     protected assocPreviousPeriodTotalAccountNode = (
       node: IProfitLossSheetAccountNode,
     ): IProfitLossSheetAccountNode => {
-      const total = this.repository.PPTotalAccountsLedger.whereAccountId(
-        node.id,
+      const accountIds = R.uniq(
+        R.append(
+          node.id,
+          this.repository.accountsGraph.dependenciesOf(node.id),
+        ),
+      );
+      const total = this.repository.PPTotalAccountsLedger.whereAccountsIds(
+        accountIds,
       ).getClosingBalance();
 
       return R.assoc('previousPeriod', this.getAmountMeta(total), node);
@@ -181,8 +187,14 @@ export const ProfitLossSheetPreviousPeriod = <
         node: IProfitLossSheetAccountNode,
         totalNode: IProfitLossHorizontalDatePeriodNode,
       ): IProfitLossHorizontalDatePeriodNode => {
-        const total = this.repository.PPPeriodsAccountsLedger.whereAccountId(
-          node.id,
+        const accountIds = R.uniq(
+          R.append(
+            node.id,
+            this.repository.accountsGraph.dependenciesOf(node.id),
+          ),
+        );
+        const total = this.repository.PPPeriodsAccountsLedger.whereAccountsIds(
+          accountIds,
         )
           .whereFromDate(totalNode.previousPeriodFromDate.date)
           .whereToDate(totalNode.previousPeriodToDate.date)
