@@ -1,8 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  FinancialTableColumnDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  JOURNAL_COLUMN_KEYS,
+  JournalColumnKey,
+} from '../../common/constants/tableColumnKeys';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 
 export class JournalEntryDto {
@@ -127,16 +132,30 @@ export class JournalSheetResponseDto {
 export {
   FinancialTableCellDto as JournalSheetTableCellDto,
   FinancialTableRowDto as JournalSheetTableRowDto,
-  FinancialTableColumnDto as JournalSheetTableColumnDto,
-  FinancialTableDataDto as JournalSheetTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class JournalSheetTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(JOURNAL_COLUMN_KEYS),
+  })
+  key: JournalColumnKey;
+}
+
+export class JournalSheetTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [JournalSheetTableColumnDto],
+  })
+  columns: JournalSheetTableColumnDto[];
+}
 
 export class JournalSheetTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => JournalSheetTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: JournalSheetTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

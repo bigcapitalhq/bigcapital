@@ -1,8 +1,11 @@
 import * as R from 'ramda';
 import React from 'react';
 import { useJournalSheetContext } from './JournalProvider';
+import type { JournalColumnKey } from '@bigcapital/sdk-ts';
 import { Align, CLASSES } from '@/constants';
 import { getColumnWidth } from '@/utils';
+
+const isColumnKey = (key: JournalColumnKey) => R.pathEq(['key'], key);
 
 interface DescriptionCellProps {
   cell: { value: string };
@@ -133,19 +136,16 @@ const dynamicColumnMapper = R.curry(
     const _numericColumnAccessor = numericColumnAccessor(data);
 
     return R.compose(
-      R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
+      R.when(isColumnKey('date'), dateColumnAccessor),
+      R.when(isColumnKey('transaction_type'), transactionTypeColumnAccessor),
       R.when(
-        R.pathEq(['key'], 'transaction_type'),
-        transactionTypeColumnAccessor,
-      ),
-      R.when(
-        R.pathEq(['key'], 'transaction_number'),
+        isColumnKey('transaction_number'),
         transactionNumberColumnAccessor,
       ),
-      R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
-      R.when(R.pathEq(['key'], 'account_code'), accountCodeColumnAccessor),
-      R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
+      R.when(isColumnKey('description'), descriptionColumnAccessor),
+      R.when(isColumnKey('account_code'), accountCodeColumnAccessor),
+      R.when(isColumnKey('credit'), _numericColumnAccessor),
+      R.when(isColumnKey('debit'), _numericColumnAccessor),
       _commonAccessor,
     )(column);
   },

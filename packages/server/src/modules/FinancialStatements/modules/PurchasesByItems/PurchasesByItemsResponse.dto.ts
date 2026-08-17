@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  PURCHASES_BY_ITEMS_COLUMN_KEYS,
+  PurchasesByItemsColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class PurchasesByItemDto {
   @ApiProperty({ description: 'Item ID', type: Number })
@@ -87,16 +92,30 @@ export class PurchasesByItemsResponseDto {
 export {
   FinancialTableCellDto as PurchasesByItemsTableCellDto,
   FinancialTableRowDto as PurchasesByItemsTableRowDto,
-  FinancialTableColumnDto as PurchasesByItemsTableColumnDto,
-  FinancialTableDataDto as PurchasesByItemsTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class PurchasesByItemsTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(PURCHASES_BY_ITEMS_COLUMN_KEYS),
+  })
+  key: PurchasesByItemsColumnKey;
+}
+
+export class PurchasesByItemsTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [PurchasesByItemsTableColumnDto],
+  })
+  columns: PurchasesByItemsTableColumnDto[];
+}
 
 export class PurchasesByItemsTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => PurchasesByItemsTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: PurchasesByItemsTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

@@ -1,9 +1,12 @@
 import * as R from 'ramda';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
+import type { PurchasesByItemsColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
+
+const isColumnKey = (key: PurchasesByItemsColumnKey) => R.pathEq(['key'], key);
 
 const getReportColWidth = (
   data: any[],
@@ -70,10 +73,10 @@ const dynamicColumnMapper = R.curry(
     const _itemNameColumnAccessor = itemNameColumnAccessor(data);
 
     return R.compose(
-      R.when(R.pathEq(['key'], 'itemName'), _itemNameColumnAccessor),
-      R.when(R.pathEq(['key'], 'quantityPurchases'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'purchaseAmount'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'averageCost'), _numericColumnAccessor),
+      R.when(isColumnKey('item_name'), _itemNameColumnAccessor),
+      R.when(isColumnKey('quantity_purchases'), _numericColumnAccessor),
+      R.when(isColumnKey('purchase_amount'), _numericColumnAccessor),
+      R.when(isColumnKey('average_cost'), _numericColumnAccessor),
       commonColumnMapper(data),
     )(column);
   },

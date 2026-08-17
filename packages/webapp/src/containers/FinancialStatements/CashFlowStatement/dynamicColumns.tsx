@@ -1,8 +1,11 @@
 import * as R from 'ramda';
 import intl from 'react-intl-universal';
+import type { CashFlowColumnKey } from '@bigcapital/sdk-ts';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
+
+const isColumnKey = (key: CashFlowColumnKey) => R.pathEq(['key'], key);
 
 interface ReportTableColumn {
   key: string;
@@ -75,8 +78,8 @@ export const dynamicColumns = (
         R.pathSatisfies(isMatchesDateRange, ['key']),
         R.curry(dateRangeMapper)(data, index),
       ),
-      R.when(R.pathEq(['key'], 'name'), accountNameMapper),
-      R.when(R.pathEq(['key'], 'total'), R.curry(totalMapper)(data, index)),
+      R.when(isColumnKey('name'), accountNameMapper),
+      R.when(isColumnKey('total'), R.curry(totalMapper)(data, index)),
     )(column);
   };
   return columns.map(mapper);

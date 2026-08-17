@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  INVENTORY_ITEM_DETAILS_COLUMN_KEYS,
+  InventoryItemDetailsColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class InventoryItemTransactionDto {
   @ApiProperty({ description: 'Transaction date' })
@@ -113,16 +118,30 @@ export class InventoryItemDetailsResponseDto {
 export {
   FinancialTableCellDto as InventoryItemDetailsTableCellDto,
   FinancialTableRowDto as InventoryItemDetailsTableRowDto,
-  FinancialTableColumnDto as InventoryItemDetailsTableColumnDto,
-  FinancialTableDataDto as InventoryItemDetailsTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class InventoryItemDetailsTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(INVENTORY_ITEM_DETAILS_COLUMN_KEYS),
+  })
+  key: InventoryItemDetailsColumnKey;
+}
+
+export class InventoryItemDetailsTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [InventoryItemDetailsTableColumnDto],
+  })
+  columns: InventoryItemDetailsTableColumnDto[];
+}
 
 export class InventoryItemDetailsTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => InventoryItemDetailsTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: InventoryItemDetailsTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

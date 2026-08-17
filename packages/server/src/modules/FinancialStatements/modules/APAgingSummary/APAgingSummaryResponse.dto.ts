@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  AGING_SUMMARY_COLUMN_KEYS,
+  AgingSummaryColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class APAgingPeriodDto {
   @ApiProperty({ description: 'From period date' })
@@ -102,16 +107,30 @@ export class APAgingSummaryResponseDto {
 export {
   FinancialTableCellDto as APAgingSummaryTableCellDto,
   FinancialTableRowDto as APAgingSummaryTableRowDto,
-  FinancialTableColumnDto as APAgingSummaryTableColumnDto,
-  FinancialTableDataDto as APAgingSummaryTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class APAgingSummaryTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(AGING_SUMMARY_COLUMN_KEYS),
+  })
+  key: AgingSummaryColumnKey;
+}
+
+export class APAgingSummaryTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [APAgingSummaryTableColumnDto],
+  })
+  columns: APAgingSummaryTableColumnDto[];
+}
 
 export class APAgingSummaryTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => APAgingSummaryTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: APAgingSummaryTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

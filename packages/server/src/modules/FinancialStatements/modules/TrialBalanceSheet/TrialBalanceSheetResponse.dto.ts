@@ -1,9 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  TRIAL_BALANCE_COLUMN_KEYS,
+  TrialBalanceColumnKey,
+} from '../../common/constants/tableColumnKeys';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 
 export class TrialBalanceSheetAccountDto {
@@ -153,16 +158,30 @@ export class TrialBalanceSheetResponseDto {
 export {
   FinancialTableCellDto as TrialBalanceSheetTableCellDto,
   FinancialTableRowDto as TrialBalanceSheetTableRowDto,
-  FinancialTableColumnDto as TrialBalanceSheetTableColumnDto,
-  FinancialTableDataDto as TrialBalanceSheetTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class TrialBalanceSheetTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(TRIAL_BALANCE_COLUMN_KEYS),
+  })
+  key: TrialBalanceColumnKey;
+}
+
+export class TrialBalanceSheetTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [TrialBalanceSheetTableColumnDto],
+  })
+  columns: TrialBalanceSheetTableColumnDto[];
+}
 
 export class TrialBalanceSheetTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => TrialBalanceSheetTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: TrialBalanceSheetTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

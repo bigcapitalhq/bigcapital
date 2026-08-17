@@ -12,6 +12,7 @@ import {
   ITableRow,
 } from '../../types/Table.types';
 import { tableMapper, tableRowMapper } from '../../utils/Table.utils';
+import { CONTACT_BALANCE_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 enum TABLE_ROWS_TYPES {
   CUSTOMER = 'CUSTOMER',
@@ -58,8 +59,11 @@ export class CustomerBalanceSummaryTable {
    */
   private getCustomerColumnsAccessor = (): IColumnMapperMeta[] => {
     const columns = [
-      { key: 'name', accessor: 'customerName' },
-      { key: 'total', accessor: 'total.formattedAmount' },
+      { key: CONTACT_BALANCE_COLUMN_KEYS.NAME, accessor: 'customerName' },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        accessor: 'total.formattedAmount',
+      },
     ];
     return R.compose(
       R.concat(columns),
@@ -91,8 +95,14 @@ export class CustomerBalanceSummaryTable {
    */
   private getTotalColumnsAccessor = (): IColumnMapperMeta[] => {
     const columns = [
-      { key: 'name', value: this.i18n.t('contact_summary_balance.total') },
-      { key: 'total', accessor: 'total.formattedAmount' },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.NAME,
+        value: this.i18n.t('contact_summary_balance.total'),
+      },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        accessor: 'total.formattedAmount',
+      },
     ];
     // @ts-ignore
     return R.compose(
@@ -136,21 +146,24 @@ export class CustomerBalanceSummaryTable {
    * @returns {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
-    const columns = [
+    const columns: ITableColumn[] = [
       {
-        key: 'name',
+        key: CONTACT_BALANCE_COLUMN_KEYS.NAME,
         label: this.i18n.t('contact_summary_balance.account_name'),
       },
-      { key: 'total', label: this.i18n.t('contact_summary_balance.total') },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        label: this.i18n.t('contact_summary_balance.total'),
+      },
     ];
     // @ts-ignore
     return R.compose(
       R.when(
         R.always(this.query.percentageColumn),
         R.append({
-          key: 'percentage_of_column',
+          key: CONTACT_BALANCE_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
           label: this.i18n.t('contact_summary_balance.percentage_column'),
-        }),
+        } as ITableColumn),
       ),
       R.concat(columns),
     )([]);
