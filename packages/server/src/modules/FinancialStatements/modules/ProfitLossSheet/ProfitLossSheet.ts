@@ -104,12 +104,10 @@ export default class ProfitLossSheet extends R.pipe(
   private accountNodeMapper = (
     account: ModelObject<Account>,
   ): IProfitLossSheetAccountNode => {
-    // Retrieves the children account ids of the given account id.
-    const childrenAccountIds = this.repository.accountsGraph.dependenciesOf(
+    // Retrieves the account ids including its children account ids.
+    const accountIds = this.repository.getAccountsIdsIncludingChildren(
       account.id,
     );
-    // Concat the children and the given account id.
-    const accountIds = R.uniq(R.append(account.id, childrenAccountIds));
 
     // Retrieves the closing balance of the account included children accounts.
     const total = this.repository.totalAccountsLedger

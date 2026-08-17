@@ -91,10 +91,9 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
     private reportSchemaAccountNodeMapper = (
       account: Account,
     ): IBalanceSheetAccountNode => {
-      const childrenAccountsIds = this.repository.accountsGraph.dependenciesOf(
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
         account.id,
       );
-      const accountIds = R.uniq(R.append(account.id, childrenAccountsIds));
       const total = this.repository.totalAccountsLedger
         .whereAccountsIds(accountIds)
         .getClosingBalance();

@@ -58,6 +58,17 @@ export class BalanceSheetRepository extends R.compose(
   public accountsByType: any;
 
   /**
+   * Retrieves the given account id with its children account ids.
+   * @param {number} accountId
+   * @returns {number[]}
+   */
+  public getAccountsIdsIncludingChildren = (accountId: number): number[] => {
+    const childrenAccountIds = this.accountsGraph.dependenciesOf(accountId);
+
+    return R.uniq(R.append(accountId, childrenAccountIds));
+  };
+
+  /**
    * PY from date.
    * @param {Date}
    */

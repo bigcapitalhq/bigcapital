@@ -38,9 +38,13 @@ export const BalanceSheetComparsionPreviousPeriod = <
     public assocPreviousPeriodAccountNode = (
       node: IBalanceSheetDataNode,
     ): IBalanceSheetDataNode => {
-      const total = this.repository.PPTotalAccountsLedger.whereAccountId(
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
         node.id,
-      ).getClosingBalance();
+      );
+      const total =
+        this.repository.PPTotalAccountsLedger.whereAccountsIds(
+          accountIds,
+        ).getClosingBalance();
 
       return R.assoc('previousPeriod', this.getAmountMeta(total), node);
     };
@@ -84,7 +88,7 @@ export const BalanceSheetComparsionPreviousPeriod = <
     public assocPreviousPeriodAggregateNode = (
       node: IBalanceSheetAggregateNode,
     ): IBalanceSheetAggregateNode => {
-      const total = sumBy(node.children, 'previousYear.amount');
+      const total = sumBy(node.children, 'previousPeriod.amount');
 
       return R.assoc('previousPeriod', this.getTotalAmountMeta(total), node);
     };
@@ -129,14 +133,16 @@ export const BalanceSheetComparsionPreviousPeriod = <
      */
     private getAccountPPDatePeriodTotal = R.curry(
       (accountId: number, fromDate: Date, toDate: Date): number => {
+        const accountIds =
+          this.repository.getAccountsIdsIncludingChildren(accountId);
         const PPPeriodsTotal =
-          this.repository.PPPeriodsAccountsLedger.whereAccountId(accountId)
+          this.repository.PPPeriodsAccountsLedger.whereAccountsIds(accountIds)
             .whereToDate(toDate)
             .getClosingBalance();
 
         const PPPeriodsOpeningTotal =
-          this.repository.PPPeriodsOpeningAccountLedger.whereAccountId(
-            accountId,
+          this.repository.PPPeriodsOpeningAccountLedger.whereAccountsIds(
+            accountIds,
           ).getClosingBalance();
 
         return PPPeriodsOpeningTotal + PPPeriodsTotal;

@@ -35,9 +35,12 @@ export const BalanceSheetComparsionPreviousYear = <
     protected assocPreviousYearAccountNode = (
       node: IBalanceSheetDataNode,
     ): IBalanceSheetDataNode => {
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
+        node.id,
+      );
       const closingBalance =
-        this.repository.PYTotalAccountsLedger.whereAccountId(
-          node.id,
+        this.repository.PYTotalAccountsLedger.whereAccountsIds(
+          accountIds,
         ).getClosingBalance();
 
       return R.assoc('previousYear', this.getAmountMeta(closingBalance), node);
@@ -189,14 +192,16 @@ export const BalanceSheetComparsionPreviousYear = <
      */
     private getAccountPYDatePeriodTotal = R.curry(
       (accountId: number, fromDate: Date, toDate: Date): number => {
+        const accountIds =
+          this.repository.getAccountsIdsIncludingChildren(accountId);
         const PYPeriodsTotal =
-          this.repository.PYPeriodsAccountsLedger.whereAccountId(accountId)
+          this.repository.PYPeriodsAccountsLedger.whereAccountsIds(accountIds)
             .whereToDate(toDate)
             .getClosingBalance();
 
         const PYPeriodsOpeningTotal =
-          this.repository.PYPeriodsOpeningAccountLedger.whereAccountId(
-            accountId,
+          this.repository.PYPeriodsOpeningAccountLedger.whereAccountsIds(
+            accountIds,
           ).getClosingBalance();
 
         return PYPeriodsOpeningTotal + PYPeriodsTotal;
