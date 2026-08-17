@@ -10312,10 +10312,15 @@ export interface components {
              */
             statement?: string;
             /**
-             * @description Whether the receipt is closed
+             * @description Whether the sale receipt is closed
              * @example false
              */
-            closed: boolean;
+            isClosed: boolean;
+            /**
+             * @description Whether the sale receipt is draft
+             * @example false
+             */
+            isDraft?: boolean;
             /**
              * @description The date when the receipt was closed
              * @example 2024-01-02T00:00:00Z
