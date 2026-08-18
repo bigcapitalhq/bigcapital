@@ -35,7 +35,7 @@ function InventoryValuationGeneralPanelProvider({
 
   // Provider data.
   const provider: InventoryValuationGeneralPanelContextValue = {
-    items: (itemsData as any)?.items,
+    items: (itemsData as any)?.data,
     isItemsFetching,
     isItemsLoading,
   };
