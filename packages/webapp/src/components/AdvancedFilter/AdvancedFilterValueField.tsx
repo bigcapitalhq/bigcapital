@@ -129,14 +129,7 @@ export default function AdvancedFilterValueField({
       </Choose.When>
 
       <Choose.When condition={fieldType === IFieldType.BOOLEAN}>
-        <Checkbox
-          value={
-            typeof localValue === 'string'
-              ? localValue
-              : String(localValue ?? '')
-          }
-          onChange={handleInputChange}
-        />
+        <Checkbox checked={localValue === true} onChange={handleInputChange} />
       </Choose.When>
 
       <Choose.Otherwise>

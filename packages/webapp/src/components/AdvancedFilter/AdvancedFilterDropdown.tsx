@@ -252,7 +252,7 @@ function FilterValueField(): JSX.Element | null {
         <FFormGroup className={'form-group--value'} name={valueFieldPath}>
           <AdvancedFilterValueField
             isFocus={conditionIndex === 0}
-            value={typeof field.value === 'string' ? field.value : ''}
+            value={field.value as string | boolean | undefined}
             key={'name'}
             label={fieldName}
             fieldType={fieldType}
