@@ -36,7 +36,7 @@ export const CustomerMeta = {
       fieldType: 'text',
     },
     personal_phone: {
-      name: 'vendor.field.personal_pone',
+      name: 'vendor.field.personal_phone',
       column: 'personal_phone',
       fieldType: 'text',
     },
