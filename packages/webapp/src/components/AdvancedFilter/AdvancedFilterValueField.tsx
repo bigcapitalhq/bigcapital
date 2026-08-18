@@ -4,20 +4,20 @@ import { isUndefined } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Choose } from '@/components';
-import { Select } from '@/components/Forms';
-import { useAutofocus } from '@/hooks';
-import { momentFormatter } from '@/utils';
 import {
   IFieldType,
   type IFilterOption,
   type IAdvancedFilterValueField,
 } from './interfaces';
+import { Choose } from '@/components';
+import { Select } from '@/components/Forms';
+import { useAutofocus } from '@/hooks';
+import { momentFormatter } from '@/utils';
 
 function AdvancedFilterEnumerationField({
   options,
   value,
-  ...rest
+  onItemSelect,
 }: {
   options: IFilterOption[];
   value?: string | boolean;
@@ -26,6 +26,7 @@ function AdvancedFilterEnumerationField({
   return (
     <Select
       items={options}
+      selectedValue={typeof value === 'string' ? value : undefined}
       popoverProps={{
         fill: true,
         minimal: true,
@@ -34,7 +35,7 @@ function AdvancedFilterEnumerationField({
       placeholder={intl.get('filter.select_option')}
       textAccessor={'label'}
       valueAccessor={'key'}
-      {...rest}
+      onItemChange={(option: IFilterOption) => onItemSelect?.(option)}
     />
   );
 }
