@@ -98,30 +98,42 @@ export class ResourceService {
   };
 
   /**
-   * Localizes a single field by translating its name and importHint.
+   * Localizes a single field by translating its name, importHint and the
+   * enumeration options labels.
    * @param {IModelMetaField2} field - The field to localize.
    * @returns {IModelMetaField2} - The localized field.
    */
   private localizeField(field: IModelMetaField2): IModelMetaField2 {
-    const localizedField = {
+    return {
       ...field,
       name: this.i18nService.t(field.name, { defaultValue: field.name }),
+      ...(field.importHint
+        ? {
+            importHint: this.i18nService.t(field.importHint, {
+              defaultValue: field.importHint,
+            }),
+          }
+        : {}),
+      // Localize the enumeration options labels.
+      ...(field.fieldType === 'enumeration' && field.options
+        ? {
+            options: field.options.map((option) => ({
+              ...option,
+              label: this.i18nService.t(option.label, {
+                defaultValue: option.label,
+              }),
+            })),
+          }
+        : {}),
+      // Recursively localize nested fields (for collection types)
+      ...(field.fields
+        ? {
+            fields: this.localizeFields(
+              field.fields as unknown as Record<string, IModelMetaField2>,
+            ) as unknown as typeof field.fields,
+          }
+        : {}),
     } as IModelMetaField2;
-
-    if (field.importHint) {
-      localizedField.importHint = this.i18nService.t(field.importHint, {
-        defaultValue: field.importHint,
-      });
-    }
-
-    // Recursively localize nested fields (for collection types)
-    if (field.fields) {
-      localizedField.fields = this.localizeFields(
-        field.fields as unknown as Record<string, IModelMetaField2>,
-      ) as unknown as typeof field.fields;
-    }
-
-    return localizedField;
   }
 
   /**
@@ -133,6 +145,55 @@ export class ResourceService {
     fields: Record<string, IModelMetaField2>,
   ): Record<string, IModelMetaField2> {
     return mapValues(fields, (field) => this.localizeField(field));
+  }
+
+  /**
+   * Localizes a single column by translating its name.
+   * @param {IModelMetaColumn} column - The column to localize.
+   * @returns {IModelMetaColumn} - The localized column.
+   */
+  private localizeColumn(column: IModelMetaColumn): IModelMetaColumn {
+    return {
+      ...column,
+      name: this.i18nService.t(column.name, { defaultValue: column.name }),
+      // Recursively localize nested columns (for collection types)
+      ...('columns' in column
+        ? {
+            columns: mapValues(
+              column.columns as Record<string, IModelMetaColumn>,
+              (nestedColumn) => this.localizeColumn(nestedColumn),
+            ),
+          }
+        : {}),
+    } as IModelMetaColumn;
+  }
+
+  /**
+   * Localizes the columns of the given columns map.
+   * @param {Record<string, IModelMetaColumn>} columns - The columns to localize.
+   * @returns {Record<string, IModelMetaColumn>} - The localized columns.
+   */
+  private localizeColumns(
+    columns: Record<string, IModelMetaColumn>,
+  ): Record<string, IModelMetaColumn> {
+    return mapValues(columns, (column) => this.localizeColumn(column));
+  }
+
+  /**
+   * Localizes the resource meta fields, fields2 and columns names and the
+   * enumeration options labels based on the current request language.
+   * @param {IModelMeta} meta - The resource meta to localize.
+   * @returns {IModelMeta} - The localized resource meta.
+   */
+  public localizeResourceMeta(meta: IModelMeta): IModelMeta {
+    return {
+      ...meta,
+      fields: this.localizeFields(
+        meta.fields as unknown as Record<string, IModelMetaField2>,
+      ) as Record<string, IModelMetaField>,
+      fields2: this.localizeFields(meta.fields2),
+      columns: this.localizeColumns(meta.columns),
+    };
   }
 
   /**
@@ -174,40 +235,4 @@ export class ResourceService {
 
     return pickBy(fields, (field) => field.importable);
   }
-
-  /**
-   * Retrieve the resource meta localized based on the current user language.
-   */
-  // public getResourceMetaLocalized(meta, tenantId) {
-  //   const $enumerationType = (field) =>
-  //     field.fieldType === 'enumeration' ? field : undefined;
-
-  //   const $hasFields = (field) =>
-  //     'undefined' !== typeof field.fields ? field : undefined;
-
-  //   const $ColumnHasColumns = (column) =>
-  //     'undefined' !== typeof column.columns ? column : undefined;
-
-  //   const $hasColumns = (columns) =>
-  //     'undefined' !== typeof columns ? columns : undefined;
-
-  //   const naviagations = [
-  //     ['fields', qim.$each, 'name'],
-  //     ['fields', qim.$each, $enumerationType, 'options', qim.$each, 'label'],
-  //     ['fields2', qim.$each, 'name'],
-  //     ['fields2', qim.$each, $enumerationType, 'options', qim.$each, 'label'],
-  //     ['fields2', qim.$each, $hasFields, 'fields', qim.$each, 'name'],
-  //     ['columns', $hasColumns, qim.$each, 'name'],
-  //     [
-  //       'columns',
-  //       $hasColumns,
-  //       qim.$each,
-  //       $ColumnHasColumns,
-  //       'columns',
-  //       qim.$each,
-  //       'name',
-  //     ],
-  //   ];
-  //   return this.i18nService.i18nApply(naviagations, meta, tenantId);
-  // }
 }
