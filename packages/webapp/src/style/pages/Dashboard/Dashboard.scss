@@ -240,7 +240,10 @@ $dashboard-views-bar-height: 44px;
           &,
           &.bp4-active,
           &:active {
-            background: #eafbe4;
+            background: var(--color-dark-gray1);
+          }
+          .bp4-dark & {
+            background: rgba(52, 152, 219, 0.1);
           }
         }
 
