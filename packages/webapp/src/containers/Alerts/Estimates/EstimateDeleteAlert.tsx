@@ -83,7 +83,7 @@ function EstimateDeleteAlertInner({
       onCancel={handleAlertCancel}
       onConfirm={handleAlertConfirm}
     >
-      <p>
+      <p data-testId={'estimate-delete-alert'}>
         {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_estimate_you_will_able_to_restore_it'}

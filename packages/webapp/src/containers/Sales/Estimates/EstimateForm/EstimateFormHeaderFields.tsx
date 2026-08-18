@@ -113,7 +113,10 @@ export function EstimateFormHeader() {
 
       {/* ----------- Reference ----------- */}
       <FFormGroup name={'reference'} label={intl.get('reference')} inline>
-        <FInputGroup name={'reference'} />
+        <FInputGroup
+          name={'reference'}
+          data-testId="estimate-reference-input"
+        />
       </FFormGroup>
 
       {/*------------ Project name -----------*/}
@@ -172,6 +175,7 @@ function EstimateFormCustomerSelect() {
           fastField={true}
           shouldUpdate={customersFieldShouldUpdate}
           shouldUpdateDeps={{ items: customers }}
+          buttonProps={{ 'data-testId': 'estimate-customer-select' }}
         />
         {values.customerId && (
           <CustomerButtonLink customerId={values.customerId}>

@@ -65,6 +65,7 @@ export const EstimateFormEstimateNumberField = compose(withDialogActions)(({
       <ControlGroup fill={true}>
         <FInputGroup
           name={'estimateNumber'}
+          data-testId={'estimate-number-input'}
           asyncControl={true}
           onBlur={handleEstimateNoBlur}
           onChange={() => {}}
