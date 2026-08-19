@@ -72,6 +72,7 @@ export const InvoiceFormInvoiceNumberField = compose(withDialogActions)(({
       <ControlGroup fill={true}>
         <FInputGroup
           name={'invoiceNo'}
+          data-testId={'invoice-number-input'}
           onBlur={handleInvoiceNoBlur}
           onChange={() => {}}
         />

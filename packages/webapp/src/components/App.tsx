@@ -99,9 +99,8 @@ export default function App() {
         <AppInsider history={history} />
       </AppIntlLoader>
 
-      {import.meta.env.VITE_REACT_QUERY_DEVTOOLS !== 'false' && (
-        <ReactQueryDevtools initialIsOpen />
-      )}
+      {import.meta.env.VITE_REACT_QUERY_DEVTOOLS !== 'false' &&
+        !navigator.webdriver && <ReactQueryDevtools initialIsOpen />}
     </QueryClientProvider>
   );
 }
