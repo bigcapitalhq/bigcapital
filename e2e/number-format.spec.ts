@@ -412,11 +412,21 @@ test.describe('number format', () => {
           timeout: 30_000,
         });
 
-        const after = parseFormattedAmount(
-          (await cellLocator.textContent()) ?? '',
-        );
         // The amount was divided by 1000 (allow 2-decimal rounding error).
-        expect(Math.abs(after * 1000 - before)).toBeLessThan(10);
+        // Poll until the divided value is actually rendered, since the report
+        // passes through an empty loading state on refetch that would otherwise
+        // be read as zero.
+        await expect
+          .poll(
+            async () => {
+              const after = parseFormattedAmount(
+                (await cellLocator.textContent()) ?? '',
+              );
+              return Math.abs(after * 1000 - before);
+            },
+            { timeout: 30_000 },
+          )
+          .toBeLessThan(10);
       }
     });
   }
