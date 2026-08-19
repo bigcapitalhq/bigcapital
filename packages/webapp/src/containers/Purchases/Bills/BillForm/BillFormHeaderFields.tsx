@@ -111,7 +111,7 @@ function BillFormHeader() {
         inline
         fastField
       >
-        <FInputGroup name={'billNumber'} />
+        <FInputGroup name={'billNumber'} data-testId={'bill-number-input'} />
       </FFormGroup>
 
       {/* ------- Reference ------- */}
@@ -121,7 +121,7 @@ function BillFormHeader() {
         inline={true}
         fastField
       >
-        <FInputGroup name={'referenceNo'} />
+        <FInputGroup name={'referenceNo'} data-testId="bill-reference-input" />
       </FFormGroup>
 
       {/*------------ Project name -----------*/}
@@ -175,6 +175,7 @@ function BillFormVendorField() {
           fastField={true}
           shouldUpdate={vendorsFieldShouldUpdate}
           shouldUpdateDeps={{ items: vendors }}
+          buttonProps={{ 'data-testId': 'bill-vendor-select' }}
         />
         {values.vendorId && (
           <VendorButtonLink vendorId={Number(values.vendorId)}>
