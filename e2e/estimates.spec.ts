@@ -2,7 +2,6 @@ import { test, expect, type Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { createCustomerViaApi, createItemViaApi, readApiAuth } from './_api';
 import {
-  closeQueryDevtools,
   createEstimate,
   deleteEstimateViaRow,
   filterEstimatesByNumber,
@@ -74,7 +73,6 @@ test.describe('estimates', () => {
     await page.getByRole('button', { name: 'New Estimate' }).first().click();
     await waitForEstimateForm(page, 'New Estimate');
 
-    await closeQueryDevtools(page);
     await page.getByRole('button', { name: 'Save as Draft' }).click();
 
     await expect(
@@ -112,7 +110,6 @@ test.describe('estimates', () => {
     );
 
     await page.getByTestId('estimate-reference-input').fill(newReference);
-    await closeQueryDevtools(page);
     await page.getByRole('button', { name: 'Save as Draft' }).click();
 
     await waitForEstimatesList(page);

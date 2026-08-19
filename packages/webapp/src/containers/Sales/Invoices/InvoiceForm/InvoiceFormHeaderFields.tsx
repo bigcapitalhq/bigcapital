@@ -123,7 +123,10 @@ export function InvoiceFormHeaderFields() {
 
       {/* ----------- Reference ----------- */}
       <FFormGroup name={'referenceNo'} label={intl.get('reference')} inline>
-        <FInputGroup name={'referenceNo'} />
+        <FInputGroup
+          name={'referenceNo'}
+          data-testId="invoice-reference-input"
+        />
       </FFormGroup>
 
       {/*------------ Project name -----------*/}
@@ -194,6 +197,7 @@ function InvoiceFormCustomerSelect() {
           fastField={true}
           shouldUpdate={customerNameFieldShouldUpdate}
           shouldUpdateDeps={{ items: customers }}
+          buttonProps={{ 'data-testId': 'invoice-customer-select' }}
         />
         {values.customerId && (
           <CustomerButtonLink customerId={values.customerId}>
