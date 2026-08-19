@@ -406,22 +406,17 @@ test.describe('number format', () => {
       });
 
       if (cell) {
-        // Wait for the report to re-render with the divided amounts.
         const cellLocator = moneyCellLocator(page, cell);
-        await expect(cellLocator).not.toHaveText(cell.text, {
-          timeout: 30_000,
-        });
 
-        // The amount was divided by 1000 (allow 2-decimal rounding error).
-        // Poll until the divided value is actually rendered, since the report
-        // passes through an empty loading state on refetch that would otherwise
-        // be read as zero.
+        // The report clears its rows while it refetches after the
+        // number-format change, so wait until the money cell is back in the
+        // DOM and reflects the divided amount (allow 2-decimal rounding error).
         await expect
           .poll(
             async () => {
-              const after = parseFormattedAmount(
-                (await cellLocator.textContent()) ?? '',
-              );
+              const text = await cellLocator.textContent();
+              // Missing/empty cell: keep polling instead of parsing as 0.
+              const after = text === null ? NaN : parseFormattedAmount(text);
               return Math.abs(after * 1000 - before);
             },
             { timeout: 30_000 },
