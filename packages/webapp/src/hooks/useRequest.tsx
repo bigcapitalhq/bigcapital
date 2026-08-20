@@ -166,7 +166,7 @@ export function useApiFetcher(options?: {
       baseUrl: '',
       init: { headers },
       disableCamelCaseTransform: !options?.enableCamelCaseTransform,
-      // onError,
+      onError,
     });
   }, [
     token,
