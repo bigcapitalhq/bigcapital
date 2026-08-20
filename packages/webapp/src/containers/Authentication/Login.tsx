@@ -36,6 +36,7 @@ export function Login() {
     loginMutate({
       email: values.crediential,
       password: values.password,
+      rememberMe: values.keepLoggedIn,
     }).catch((response: ApiError) => {
       const toastMessages = transformLoginErrorsToToasts(response.data);
 

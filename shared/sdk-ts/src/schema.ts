@@ -4968,6 +4968,11 @@ export interface components {
              * @example user@example.com
              */
             email: string;
+            /**
+             * @description Whether to keep the user signed in for a longer period (remember me).
+             * @example true
+             */
+            rememberMe?: boolean;
         };
         AuthSignupDto: {
             /**

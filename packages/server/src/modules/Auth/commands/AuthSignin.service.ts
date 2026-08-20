@@ -125,12 +125,14 @@ export class AuthSigninService {
   /**
    *
    * @param {SystemUser} user
+   * @param {boolean} rememberMe - Extends the token lifetime when the user opted to stay signed in.
    * @returns {string}
    */
-  signToken(user: SystemUser): string {
+  signToken(user: SystemUser, rememberMe = false): string {
     const payload = {
       sub: user.email,
     };
-    return this.jwtService.sign(payload);
+    const expiresIn = rememberMe ? '30d' : '1d';
+    return this.jwtService.sign(payload, { expiresIn });
   }
 }
