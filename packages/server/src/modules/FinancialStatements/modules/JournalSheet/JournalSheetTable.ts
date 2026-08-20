@@ -151,6 +151,10 @@ export class JournalSheetTable extends R.pipe(
   ): ITableRow => {
     const meta = {
       rowTypes: [ROW_TYPE.ENTRY],
+      meta: {
+        referenceType: group.transactionType,
+        referenceId: group.referenceId,
+      },
     };
     const computedGroup = { ...group, entry: first(group.entries) };
     const columns = this.groupColumnsAccessors();

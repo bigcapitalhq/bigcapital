@@ -98,14 +98,45 @@ const transactionTypeColumnAccessor = (column: DynamicColumn) => {
 };
 
 /**
- * Transaction number column accessor.
+ * Transaction number cell - renders the reference number as a link that opens
+ * the underlying transaction detail drawer.
  */
-const transactionNumberColumnAccessor = (column: DynamicColumn) => {
-  return {
-    ...column,
-    width: 70,
+const createTransactionLinkCell = (
+  onViewDetail?: (referenceType: string, referenceId: number) => void,
+) => {
+  return function TransactionLinkCell({ cell }: any) {
+    const { value, row } = cell;
+    const { referenceType, referenceId } = row?.original?.meta ?? {};
+
+    if (!referenceType || !referenceId) {
+      return React.createElement('span', null, value);
+    }
+    const handleClick = (event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      onViewDetail?.(referenceType, referenceId);
+    };
+
+    return React.createElement(
+      'a',
+      { className: 'report-transaction-link', onClick: handleClick },
+      value,
+    );
   };
 };
+
+/**
+ * Transaction number column accessor.
+ */
+const transactionNumberColumnAccessor =
+  (onViewDetail?: (referenceType: string, referenceId: number) => void) =>
+  (column: DynamicColumn) => {
+    return {
+      ...column,
+      width: 70,
+      Cell: createTransactionLinkCell(onViewDetail),
+    };
+  };
 
 /**
  * Account code column accessor.
@@ -131,16 +162,22 @@ const descriptionColumnAccessor = (column: DynamicColumn) => {
  * Dynamic column mapper.
  */
 const dynamicColumnMapper = R.curry(
-  (data: unknown[], column: DynamicColumn) => {
+  (
+    onViewDetail: (referenceType: string, referenceId: number) => void,
+    data: unknown[],
+    column: DynamicColumn,
+  ) => {
     const _commonAccessor = commonAccessor(data);
     const _numericColumnAccessor = numericColumnAccessor(data);
+    const _transactionNumberColumnAccessor =
+      transactionNumberColumnAccessor(onViewDetail);
 
     return R.compose(
       R.when(isColumnKey('date'), dateColumnAccessor),
       R.when(isColumnKey('transaction_type'), transactionTypeColumnAccessor),
       R.when(
         isColumnKey('transaction_number'),
-        transactionNumberColumnAccessor,
+        _transactionNumberColumnAccessor,
       ),
       R.when(isColumnKey('description'), descriptionColumnAccessor),
       R.when(isColumnKey('account_code'), accountCodeColumnAccessor),
@@ -155,14 +192,20 @@ const dynamicColumnMapper = R.curry(
  * Composes the fetched dynamic columns from the server to the columns to pass it
  * to the table component.
  */
-export const dynamicColumns = (columns: DynamicColumn[], data: unknown[]) => {
-  return R.map(dynamicColumnMapper(data), columns);
+export const dynamicColumns = (
+  onViewDetail: (referenceType: string, referenceId: number) => void,
+  columns: DynamicColumn[],
+  data: unknown[],
+) => {
+  return R.map(dynamicColumnMapper(onViewDetail, data), columns);
 };
 
 /**
  * Retrieves the table columns of journal sheet.
  */
-export const useJournalSheetColumns = () => {
+export const useJournalSheetColumns = (
+  onViewDetail: (referenceType: string, referenceId: number) => void,
+) => {
   const { journalSheet } = useJournalSheetContext();
 
   if (!journalSheet) {
@@ -170,5 +213,5 @@ export const useJournalSheetColumns = () => {
   }
   const table = (journalSheet as any)?.table;
 
-  return dynamicColumns(table.columns, table.rows);
+  return dynamicColumns(onViewDetail, table.columns, table.rows);
 };

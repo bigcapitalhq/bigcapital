@@ -227,6 +227,10 @@ export class GeneralLedgerTable extends R.compose(
       const data = { ...transaction, account };
       const meta = {
         rowTypes: [ROW_TYPE.TRANSACTION],
+        meta: {
+          referenceType: transaction.referenceType,
+          referenceId: transaction.referenceId,
+        },
       };
       return tableRowMapper(data, columns, meta);
     },

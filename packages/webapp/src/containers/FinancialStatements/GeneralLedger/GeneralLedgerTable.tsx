@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { getReportRowTestId } from '../reportTestIds';
 import { useGeneralLedgerTableColumns } from './dynamicColumns';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   FinancialSheet,
   ReportDataTable,
@@ -11,24 +12,40 @@ import {
   TableVirtualizedListRows,
 } from '@/components';
 import { TableStyle } from '@/constants';
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { handleViewTransactionDetail } from '@/containers/FinancialStatements/utils/transactionDrawer';
+import {
+  compose,
+  defaultExpanderReducer,
+  tableRowTypesToClassnames,
+} from '@/utils';
 
-interface GeneralLedgerTableProps {
+interface GeneralLedgerTableProps extends WithDrawerActionsProps {
   companyName: string;
 }
 
 /**
  * General ledger table.
  */
-export function GeneralLedgerTable({ companyName }: GeneralLedgerTableProps) {
+function GeneralLedgerTableInner({
+  companyName,
+
+  // #withDrawerActions
+  openDrawer,
+}: GeneralLedgerTableProps) {
   // General ledger context.
   const { generalLedger } = useGeneralLedgerContext();
 
   const table = (generalLedger as any)?.table;
   const meta = (generalLedger as any)?.meta;
 
+  // Opens the detail drawer of the given transaction reference.
+  const handleViewDetail = (referenceType: string, referenceId: number) => {
+    handleViewTransactionDetail({ referenceType, referenceId }, openDrawer);
+  };
+
   // General ledger table columns.
-  const columns = useGeneralLedgerTableColumns();
+  const columns = useGeneralLedgerTableColumns(handleViewDetail);
 
   // Default expanded rows of general ledger table.
   const expandedRows = useMemo(
@@ -68,6 +85,10 @@ export function GeneralLedgerTable({ companyName }: GeneralLedgerTableProps) {
     </FinancialSheet>
   );
 }
+
+export const GeneralLedgerTable = compose(withDrawerActions)(
+  GeneralLedgerTableInner,
+);
 
 const GeneralLedgerDataTable = styled(ReportDataTable)`
   --color-table-text-color: #252a31;
