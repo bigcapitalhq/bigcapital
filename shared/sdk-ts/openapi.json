@@ -24374,6 +24374,11 @@
             "type": "string",
             "example": "user@example.com",
             "description": "User email address"
+          },
+          "rememberMe": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether to keep the user signed in for a longer period (remember me)."
           }
         },
         "required": [
