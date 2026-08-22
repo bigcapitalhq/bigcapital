@@ -58,7 +58,8 @@ export class CloseSaleReceipt {
         .query(trx)
         .patchAndFetchById(saleReceiptId, {
           closedAt: moment().toMySqlDateTime(),
-        });
+        })
+        .withGraphFetched('entries');
 
       // Triggers `onSaleReceiptClosed` event.
       await this.eventEmitter.emitAsync(events.saleReceipt.onClosed, {

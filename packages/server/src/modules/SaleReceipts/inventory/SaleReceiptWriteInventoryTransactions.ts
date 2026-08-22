@@ -2,6 +2,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import {
   ISaleReceiptCreatedPayload,
   ISaleReceiptEditedPayload,
+  ISaleReceiptEventClosedPayload,
   ISaleReceiptEventDeletedPayload,
 } from '../types/SaleReceipts.types';
 import { Injectable } from '@nestjs/common';
@@ -15,14 +16,16 @@ export class SaleReceiptInventoryTransactionsSubscriber {
   ) {}
 
   /**
-   * Handles the writing inventory transactions once the receipt created.
-   * @param {ISaleReceiptCreatedPayload} payload -
+   * Handles the writing inventory transactions once the receipt created
+   * or closed in case it was created as draft.
+   * @param {ISaleReceiptCreatedPayload | ISaleReceiptEventClosedPayload} payload -
    */
   @OnEvent(events.saleReceipt.onCreated)
+  @OnEvent(events.saleReceipt.onClosed)
   public async handleWritingInventoryTransactions({
     saleReceipt,
     trx,
-  }: ISaleReceiptCreatedPayload) {
+  }: ISaleReceiptCreatedPayload | ISaleReceiptEventClosedPayload) {
     // Can't continue if the sale receipt is not closed yet.
     if (!saleReceipt.closedAt) return null;
 

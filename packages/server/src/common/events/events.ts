@@ -542,6 +542,7 @@ export const events = {
     onDeleted: 'onVendorCreditDeleted',
 
     onOpen: 'onVendorCreditOpen',
+    onOpening: 'onVendorCreditOpening',
     onOpened: 'onVendorCreditOpened',
 
     onRefundCreating: 'onVendorCreditRefundCreating',

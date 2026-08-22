@@ -4,7 +4,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Item } from './models/Item';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 import { ServiceError } from './ServiceError';
-import { IItemEntryDTO } from '../TransactionItemEntry/ItemEntry.types';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { entriesAmountDiff } from '@/utils/entries-amount-diff';
 import { ItemEntryDto } from '../TransactionItemEntry/dto/ItemEntry.dto';
@@ -188,7 +187,7 @@ export class ItemsEntriesService {
       const changeQuantityOper = this.itemModel()
         .query()
         .where({ id: entry.itemId, type: 'inventory' })
-        .modify('quantityOnHand', entry.quantity);
+        .modify('updateQuantityOnHand', entry.quantity);
 
       opers.push(changeQuantityOper);
     });
@@ -208,12 +207,12 @@ export class ItemsEntriesService {
    * @param {IItemEntry[]} entries - Items entries.
    */
   public async decrementItemsQuantity(entries: ItemEntry[]): Promise<void> {
-    // return this.changeItemsQuantity(
-    //   entries.map((entry) => ({
-    //     ...entry,
-    //     quantity: entry.quantity * -1,
-    //   })),
-    // );
+    return this.changeItemsQuantity(
+      entries.map((entry) => ({
+        ...entry,
+        quantity: entry.quantity * -1,
+      })) as ItemEntry[],
+    );
   }
 
   /**
