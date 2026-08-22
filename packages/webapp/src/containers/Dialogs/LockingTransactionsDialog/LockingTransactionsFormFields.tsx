@@ -10,7 +10,6 @@ import {
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useAutofocus } from '@/hooks';
-import { momentFormatter } from '@/utils';
 
 /**
  * Locking transactions form fields.
@@ -30,7 +29,6 @@ export function LockingTransactionsFormFields(): React.ReactElement {
       >
         <FDateInput
           name={'lock_to_date'}
-          {...momentFormatter('YYYY/MM/DD')}
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,

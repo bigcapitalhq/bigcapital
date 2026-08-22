@@ -25,12 +25,8 @@ import {
   Hint,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { useDateFormatter } from '@/hooks';
+import { handleDateChange, inputIntent, tansformDateValue } from '@/utils';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -56,6 +52,7 @@ export function ExpenseFormHeader() {
   const { currencies, accounts, customers } = useExpenseFormContext();
   const theme = useTheme() as unknown as Theme;
   const fieldsClassName = getFieldsStyle(theme);
+  const dateFormatter = useDateFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={fieldsClassName}>
@@ -70,7 +67,7 @@ export function ExpenseFormHeader() {
             inline={true}
           >
             <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateFormatter}
               value={tansformDateValue(value)}
               onChange={handleDateChange((formattedDate: string) => {
                 form.setFieldValue('paymentDate', formattedDate);

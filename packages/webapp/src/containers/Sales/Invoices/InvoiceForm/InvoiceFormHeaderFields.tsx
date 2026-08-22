@@ -77,8 +77,6 @@ export function InvoiceFormHeaderFields() {
       >
         <FDateInput
           name={'invoiceDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
@@ -102,8 +100,6 @@ export function InvoiceFormHeaderFields() {
       >
         <FDateInput
           name={'dueDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,

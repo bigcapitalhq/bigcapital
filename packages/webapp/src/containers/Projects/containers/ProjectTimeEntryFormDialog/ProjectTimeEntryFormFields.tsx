@@ -21,7 +21,6 @@ import {
   Stack,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { momentFormatter } from '@/utils';
 
 /**
  * Project time entry form fields.
@@ -45,7 +44,6 @@ export function ProjectTimeEntryFormFields() {
           className={classNames(CLASSES.FILL, 'form-group--date')}
         >
           <FDateInput
-            {...momentFormatter('YYYY/MM/DD')}
             name="date"
             formatDate={(date) => date.toLocaleString()}
             popoverProps={{

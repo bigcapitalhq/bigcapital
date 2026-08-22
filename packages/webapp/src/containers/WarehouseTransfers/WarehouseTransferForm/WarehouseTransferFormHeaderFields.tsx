@@ -17,7 +17,7 @@ import { FieldRequiredHint, Icon, InputPrependButton } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import { momentFormatter, compose } from '@/utils';
+import { compose } from '@/utils';
 
 /** Blueprint FormGroup/InputGroup support `fastField`/`asyncControl`; package typings omit them. */
 interface FFormGroupFieldProps {
@@ -106,7 +106,6 @@ function WarehouseTransferFormHeaderFieldsInner({
       >
         <FDateInput
           name={'date'}
-          {...momentFormatter('YYYY/MM/DD')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

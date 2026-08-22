@@ -27,7 +27,6 @@ import {
 import { Features, ACCOUNT_TYPE } from '@/constants';
 import { useAutofocus } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter } from '@/utils';
 
 /**
  * Quick payment receive form fields.
@@ -117,7 +116,6 @@ function QuickPaymentReceiveFormFieldsInner(): React.ReactElement {
           {/* ------------- Payment date ------------- */}
           <FFormGroup name={'paymentDate'} label={intl.get('payment_date')}>
             <FDateInput
-              {...momentFormatter('YYYY/MM/DD')}
               name={'paymentDate'}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{

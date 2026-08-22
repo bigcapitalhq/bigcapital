@@ -16,12 +16,6 @@ import {
   FieldRequiredHint,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
 
 /**
  * Project billable entries form fields.
@@ -43,7 +37,6 @@ export function ProjectBillableEntriesFormFields() {
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
           name="date"
           formatDate={(date) => date.toLocaleString()}
           popoverProps={{

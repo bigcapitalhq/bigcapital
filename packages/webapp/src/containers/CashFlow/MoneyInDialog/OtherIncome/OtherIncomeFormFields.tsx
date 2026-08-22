@@ -23,7 +23,6 @@ import {
   FDateInput,
 } from '@/components';
 import { ACCOUNT_TYPE, Features } from '@/constants';
-import { momentFormatter } from '@/utils';
 
 /**
  * Other income form fields.
@@ -61,7 +60,6 @@ export function OtherIncomeFormFields() {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
               popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
               inputProps={{
                 fill: true,

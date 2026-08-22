@@ -26,7 +26,7 @@ import {
   FInputGroup,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { momentFormatter, compose } from '@/utils';
+import { compose } from '@/utils';
 
 const getFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
@@ -115,7 +115,6 @@ function VendorCreditNoteFormHeaderFieldsInner({
       >
         <FDateInput
           name={'vendorCreditDate'}
-          {...momentFormatter('YYYY/MM/DD')}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} />, fill: true }}
           fill

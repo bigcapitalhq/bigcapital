@@ -92,8 +92,6 @@ function VendorOpeningBalanceAtField() {
         name={'openingBalanceAt'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
         disabled={Boolean(vendorId)}
-        formatDate={(date: Date) => date.toLocaleDateString()}
-        parseDate={(str: string) => new Date(str)}
         inputProps={{
           leftIcon: <Icon icon={'date-range'} />,
         }}

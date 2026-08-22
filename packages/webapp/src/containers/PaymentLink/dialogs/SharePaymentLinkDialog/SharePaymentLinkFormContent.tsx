@@ -84,8 +84,6 @@ export function SharePaymentLinkFormContent() {
             <FDateInput
               name={'expiryDate'}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              formatDate={(date) => date.toLocaleDateString()}
-              parseDate={(str) => new Date(str)}
               inputProps={{
                 fill: true,
                 style: { minWidth: 260 },

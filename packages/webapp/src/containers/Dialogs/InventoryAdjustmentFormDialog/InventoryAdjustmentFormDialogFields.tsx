@@ -31,7 +31,7 @@ import {
 import { Features } from '@/constants';
 import { useAutofocus } from '@/hooks';
 import { useFeatureCan } from '@/hooks/state';
-import { momentFormatter, toSafeNumber } from '@/utils';
+import { toSafeNumber } from '@/utils';
 
 export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
   const { featureCan } = useFeatureCan();
@@ -100,7 +100,6 @@ export function InventoryAdjustmentFormDialogFields(): React.ReactElement {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,

@@ -205,8 +205,6 @@ export function AuditLogHeader({
                         position: Position.BOTTOM,
                         minimal: true,
                       }}
-                      formatDate={(date: Date) => date.toLocaleDateString()}
-                      parseDate={(str: string) => new Date(str)}
                       inputProps={{ fill: true }}
                       fastField
                     />
@@ -220,8 +218,6 @@ export function AuditLogHeader({
                         position: Position.BOTTOM,
                         minimal: true,
                       }}
-                      formatDate={(date: Date) => date.toLocaleDateString()}
-                      parseDate={(str: string) => new Date(str)}
                       inputProps={{ fill: true }}
                       fastField
                     />

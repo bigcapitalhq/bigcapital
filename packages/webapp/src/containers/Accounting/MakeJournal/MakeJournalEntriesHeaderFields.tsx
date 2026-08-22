@@ -58,8 +58,6 @@ export function MakeJournalEntriesHeader() {
       >
         <FDateInput
           name={'date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,

@@ -19,7 +19,6 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { momentFormatter } from '@/utils';
 
 /**
  * Project expense form fields.
@@ -55,7 +54,6 @@ export function ProjectExpenseFormFields() {
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
           name="expemseDate"
           formatDate={(date) => date.toLocaleString()}
           popoverProps={{

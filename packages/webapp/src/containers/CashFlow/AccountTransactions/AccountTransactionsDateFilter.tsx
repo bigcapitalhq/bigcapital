@@ -85,11 +85,8 @@ export function AccountTransactionsDateFilterForm({
               <FDateInput
                 name={'fromDate'}
                 popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date: Date) => date.toLocaleDateString()}
-                parseDate={(str: string) => new Date(str)}
                 inputProps={{
                   fill: true,
-                  placeholder: 'MM/DD/YYY',
                   leftElement: <Icon icon={'date-range'} />,
                 }}
               />
@@ -99,11 +96,8 @@ export function AccountTransactionsDateFilterForm({
               <FDateInput
                 name={'toDate'}
                 popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date: Date) => date.toLocaleDateString()}
-                parseDate={(str: string) => new Date(str)}
                 inputProps={{
                   fill: true,
-                  placeholder: 'MM/DD/YYY',
                   leftElement: <Icon icon={'date-range'} />,
                 }}
               />

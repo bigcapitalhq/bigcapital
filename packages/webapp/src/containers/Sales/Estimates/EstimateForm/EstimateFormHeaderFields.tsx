@@ -75,8 +75,6 @@ export function EstimateFormHeader() {
       >
         <FDateInput
           name={'estimateDate'}
-          formatDate={(date: Date) => date.toLocaleDateString()}
-          parseDate={(str: string) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
@@ -96,8 +94,6 @@ export function EstimateFormHeader() {
       >
         <FDateInput
           name={'expirationDate'}
-          formatDate={(date: Date) => date.toLocaleDateString()}
-          parseDate={(str: string) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

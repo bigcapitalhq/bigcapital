@@ -1,5 +1,4 @@
 import { Position } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
@@ -66,8 +65,6 @@ export function CreditNoteFormHeaderFields() {
       >
         <FDateInput
           name={'creditNoteDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

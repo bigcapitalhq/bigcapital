@@ -36,7 +36,7 @@ import {
 } from '@/components';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter, safeSumBy } from '@/utils';
+import { safeSumBy } from '@/utils';
 
 type VendorContact = {
   id: string | number;
@@ -115,7 +115,6 @@ function PaymentMadeFormHeaderFieldsInner() {
       >
         <FDateInput
           name={'paymentDate'}
-          {...momentFormatter('YYYY/MM/DD')}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
           fill

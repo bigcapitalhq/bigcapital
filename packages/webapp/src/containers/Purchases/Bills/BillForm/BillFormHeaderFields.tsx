@@ -27,7 +27,7 @@ import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ProjectsSelect } from '@/containers/Projects/components';
-import { momentFormatter, compose } from '@/utils';
+import { compose } from '@/utils';
 
 const getBillFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -77,7 +77,6 @@ function BillFormHeader() {
       >
         <FDateInput
           name={'billDate'}
-          {...momentFormatter('YYYY/MM/DD')}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
           fill
@@ -94,7 +93,6 @@ function BillFormHeader() {
       >
         <FDateInput
           name={'dueDate'}
-          {...momentFormatter('YYYY/MM/DD')}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

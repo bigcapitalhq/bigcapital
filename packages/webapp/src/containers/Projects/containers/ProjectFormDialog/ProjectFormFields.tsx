@@ -17,7 +17,6 @@ import {
   CustomersSelect,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { momentFormatter } from '@/utils';
 
 /**
  * Project form fields.
@@ -49,7 +48,6 @@ export function ProjectFormFields() {
             className={classNames(CLASSES.FILL, 'form-group--date')}
           >
             <FDateInput
-              {...momentFormatter('YYYY/MM/DD')}
               name="deadline"
               formatDate={(date) => date.toLocaleString()}
               popoverProps={{

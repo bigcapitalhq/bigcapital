@@ -22,7 +22,6 @@ import {
   FDateInput,
 } from '@/components';
 import { Features, ACCOUNT_TYPE } from '@/constants';
-import { momentFormatter } from '@/utils';
 
 /**
  * Owner drawings form fields.
@@ -60,7 +59,6 @@ export function OwnerDrawingsFormFields() {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
               popoverProps={{
                 position: Position.BOTTOM_LEFT,
                 minimal: true,

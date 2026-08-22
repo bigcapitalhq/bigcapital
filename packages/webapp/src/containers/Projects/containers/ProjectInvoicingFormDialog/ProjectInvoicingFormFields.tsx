@@ -10,7 +10,6 @@ import {
   FieldRequiredHint,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { momentFormatter } from '@/utils';
 
 /**
  * Project invoicing form fields.
@@ -26,7 +25,6 @@ export function ProjectInvoicingFormFields() {
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
           name="date"
           formatDate={(date) => date.toLocaleString()}
           popoverProps={{

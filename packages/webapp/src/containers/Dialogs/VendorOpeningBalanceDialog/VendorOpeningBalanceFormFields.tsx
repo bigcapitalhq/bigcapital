@@ -56,8 +56,6 @@ function VendorOpeningBalanceFormFieldsInner() {
       >
         <FDateInput
           name={'openingBalanceAt'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

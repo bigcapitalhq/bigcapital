@@ -23,7 +23,6 @@ import {
   FInputGroup,
 } from '@/components';
 import { ACCOUNT_TYPE, Features } from '@/constants';
-import { momentFormatter } from '@/utils';
 
 /**
  * Transfer from account form fields.
@@ -61,7 +60,6 @@ export function TransferFromAccountFormFields() {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
               popoverProps={{
                 position: Position.BOTTOM_LEFT,
                 minimal: true,

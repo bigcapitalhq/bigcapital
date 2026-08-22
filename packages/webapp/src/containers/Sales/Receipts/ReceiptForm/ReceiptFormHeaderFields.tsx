@@ -97,8 +97,6 @@ export function ReceiptFormHeader() {
       >
         <FDateInput
           name={'receiptDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

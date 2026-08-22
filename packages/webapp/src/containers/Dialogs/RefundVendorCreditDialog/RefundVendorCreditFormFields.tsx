@@ -27,7 +27,6 @@ import {
 import { Features, ACCOUNT_TYPE } from '@/constants';
 import { useAutofocus } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter } from '@/utils';
 
 /**
  * Refund Vendor credit form fields.
@@ -71,7 +70,6 @@ function RefundVendorCreditFormFieldsInner(): React.ReactElement {
           >
             <FDateInput
               name={'refundDate'}
-              {...momentFormatter('YYYY/MM/DD')}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,

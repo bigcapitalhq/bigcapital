@@ -34,7 +34,6 @@ import { ContentTabs } from '@/components/ContentTabs';
 import { Features } from '@/constants';
 import { useCreateCashflowTransaction } from '@/hooks/query';
 import { compose } from '@/utils';
-import { momentFormatter } from '@/utils';
 
 interface ReconcileSubmitSuccessPayload {
   id: number;
@@ -185,7 +184,6 @@ function CreateReconcileTransactionContent() {
 
       <FFormGroup label={'Date'} name={'date'} fastField>
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
           name={'date'}
           popoverProps={{
             minimal: false,

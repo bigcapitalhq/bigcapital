@@ -112,8 +112,6 @@ export function PaymentReceiveHeaderFields() {
       >
         <FDateInput
           name={'paymentDate'}
-          formatDate={(date: Date) => date.toLocaleDateString()}
-          parseDate={(str: string) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

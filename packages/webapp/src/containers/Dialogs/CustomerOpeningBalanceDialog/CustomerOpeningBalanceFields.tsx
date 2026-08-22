@@ -17,7 +17,6 @@ import {
 import { FMoneyInputGroup, FFormGroup, FDateInput } from '@/components/Forms';
 import { Features } from '@/constants';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 
 /**
  * Customer Opening balance fields.
@@ -58,8 +57,6 @@ function CustomerOpeningBalanceFieldsInner() {
       >
         <FDateInput
           name={'openingBalanceAt'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

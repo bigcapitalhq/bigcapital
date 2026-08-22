@@ -23,7 +23,6 @@ import {
   Icon,
 } from '@/components';
 import { ACCOUNT_TYPE, Features } from '@/constants';
-import { momentFormatter } from '@/utils';
 
 /**
  * Owner contribution form fields.
@@ -61,7 +60,6 @@ export function OwnerContributionFormFields() {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
               popoverProps={{
                 position: Position.BOTTOM_LEFT,
                 minimal: true,
