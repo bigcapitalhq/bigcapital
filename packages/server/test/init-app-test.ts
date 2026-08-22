@@ -5,7 +5,7 @@ import { AppModule } from '../src/modules/App/App.module';
 
 let app: INestApplication;
 
-const email = 'bigcapital@bigcapital.com';
+const email = 'kk@kk.com';
 const password = '123123123';
 
 let orgainzationId = '';

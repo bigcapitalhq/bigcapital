@@ -8,7 +8,7 @@ const makeAccountRequest = () => ({
   code: faker.string.alphanumeric({ length: 6 }).toUpperCase(),
 });
 
-describe.only('Accounts (e2e)', () => {
+describe('Accounts (e2e)', () => {
   it('/accounts (POST)', () => {
     return request(app.getHttpServer())
       .post('/accounts')
