@@ -87,12 +87,15 @@ const dateColumnAccessor = R.curry((column: ColumnDef) => {
 /**
  * Transaction type column accessor.
  */
-const transactionTypeColumnAccessor = (column: ColumnDef) => {
-  return {
-    ...column,
-    width: 125,
+const transactionTypeColumnAccessor =
+  (onViewDetail?: (referenceType: string, referenceId: number) => void) =>
+  (column: ColumnDef) => {
+    return {
+      ...column,
+      width: 125,
+      Cell: createTransactionLinkCell(onViewDetail),
+    };
   };
-};
 
 /**
  * Transaction number cell - renders the reference number as a link that opens
@@ -116,7 +119,7 @@ const createTransactionLinkCell = (
 
     return React.createElement(
       'a',
-      { className: 'report-transaction-link', onClick: handleClick },
+      { className: CLASSES.TEXT_LINK, onClick: handleClick },
       value,
     );
   };
@@ -157,7 +160,10 @@ const dynamiColumnMapper = R.curry(
 
     return R.compose(
       R.when(isColumnKey('date'), dateColumnAccessor),
-      R.when(isColumnKey('reference_type'), transactionTypeColumnAccessor),
+      R.when(
+        isColumnKey('reference_type'),
+        transactionTypeColumnAccessor(onViewDetail),
+      ),
       R.when(isColumnKey('reference_number'), _transactionIdColumnAccessor),
       R.when(isColumnKey('description'), descriptionColumnAccessor),
       R.when(isColumnKey('credit'), _numericColumnAccessor),
