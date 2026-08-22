@@ -163,11 +163,11 @@ jobs:
 
           API_URL=http://localhost:3000/api
 
-          curl -sf -X POST "$API_URL/auth/signup" \
+          curl --fail-with-body -sS -X POST "$API_URL/auth/signup" \
             -H 'Content-Type: application/json' \
             -d '{"firstName":"Test","lastName":"User","email":"kk@kk.com","password":"123123123"}'
 
-          SIGNIN=$(curl -sf -X POST "$API_URL/auth/signin" \
+          SIGNIN=$(curl --fail-with-body -sS -X POST "$API_URL/auth/signin" \
             -H 'Content-Type: application/json' \
             -d '{"email":"kk@kk.com","password":"123123123"}')
 
@@ -180,13 +180,13 @@ jobs:
             exit 1
           fi
 
-          BUILD=$(curl -sf -X POST "$API_URL/organization/build" \
+          BUILD=$(curl --fail-with-body -sS -X POST "$API_URL/organization/build" \
             -H 'Content-Type: application/json' \
             -H "Authorization: Bearer $TOKEN" \
             -H "organization-id: $ORG_ID" \
-            -d '{"name":"Test Organization","location":"US","baseCurrency":"USD","timezone":"America/New_York","fiscalYear":"January","language":"en-US"}')
+            -d '{"name":"Test Organization","location":"US","baseCurrency":"USD","timezone":"America/New_York","fiscalYear":"january","language":"en"}')
 
-          JOB_ID=$(printf '%s' "$BUILD" | jq -r '.data.jobId')
+          JOB_ID=$(printf '%s' "$BUILD" | jq -r '.data.job_id // .data.jobId')
 
           if [ -z "$JOB_ID" ] || [ "$JOB_ID" = "null" ]; then
             echo '::error::Organization build job was not queued.'
@@ -196,7 +196,7 @@ jobs:
 
           BUILD_COMPLETED=false
           for i in $(seq 1 60); do
-            JOB=$(curl -sf "$API_URL/organization/build/$JOB_ID" \
+            JOB=$(curl --fail-with-body -sS "$API_URL/organization/build/$JOB_ID" \
               -H "Authorization: Bearer $TOKEN" \
               -H "organization-id: $ORG_ID")
             STATE=$(printf '%s' "$JOB" | jq -r '.state')
