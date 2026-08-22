@@ -59,7 +59,8 @@ export class OpenCreditNoteService {
         .query(trx)
         .updateAndFetchById(creditNoteId, {
           openedAt: new Date(),
-        });
+        })
+        .withGraphFetched('entries');
       // Triggers `onCreditNoteOpened` event.
       await this.eventPublisher.emitAsync(events.creditNote.onOpened, {
         ...eventPayload,
