@@ -89,6 +89,9 @@ export class InventoryItemsQuantitySyncService {
     const opers = [];
 
     itemsQuantity.forEach((itemQuantity: IItemsQuantityChanges) => {
+      // Skip the items that have no quantity changes.
+      if (!itemQuantity.balanceChange) return;
+
       const changeQuantityOper = this.itemModel()
         .query(trx)
         .where({ id: itemQuantity.itemId, type: 'inventory' })
