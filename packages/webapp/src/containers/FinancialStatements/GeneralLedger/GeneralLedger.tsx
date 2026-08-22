@@ -14,6 +14,7 @@ import { withGeneralLedgerActions } from './withGeneralLedgerActions';
 import type { WithGeneralLedgerActionsProps } from './withGeneralLedgerActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+import { TransactionDetailDrawers } from '@/containers/FinancialStatements/TransactionDetailDrawers';
 import { compose } from '@/utils';
 
 interface GeneralLedgerFilterValues {
@@ -70,6 +71,8 @@ function GeneralLedgerInner({
       <GeneralLedgerPdfDialog
         dialogName={DialogsName.GeneralLedgerPdfPreview}
       />
+
+      <TransactionDetailDrawers />
     </GeneralLedgerProvider>
   );
 }

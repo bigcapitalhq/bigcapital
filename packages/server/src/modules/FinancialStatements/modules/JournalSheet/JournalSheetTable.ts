@@ -151,6 +151,10 @@ export class JournalSheetTable extends R.pipe(
   ): ITableRow => {
     const meta = {
       rowTypes: [ROW_TYPE.ENTRY],
+      meta: {
+        referenceType: group.transactionType,
+        referenceId: group.referenceId,
+      },
     };
     const computedGroup = { ...group, entry: first(group.entries) };
     const columns = this.groupColumnsAccessors();
@@ -163,10 +167,19 @@ export class JournalSheetTable extends R.pipe(
    * @param {IJournalEntry} entry
    * @returns {ITableRow}
    */
-  private entryMapper = (entry: IJournalSheetEntry): ITableRow => {
+  private entryMapper = (
+    entry: IJournalSheetEntry,
+    reference?: { referenceType?: string; referenceId?: number },
+  ): ITableRow => {
     const columns = this.entryColumnsAccessors();
     const meta = {
       rowTypes: [ROW_TYPE.ENTRY],
+      ...(reference && {
+        meta: {
+          referenceType: reference.referenceType,
+          referenceId: reference.referenceId,
+        },
+      }),
     };
     return tableRowMapper(entry, columns, meta);
   };
@@ -178,8 +191,11 @@ export class JournalSheetTable extends R.pipe(
    */
   private entriesMapper = (group: IJournalReportEntriesGroup): ITableRow[] => {
     const entries = R.remove(0, 1, group.entries);
-
-    return R.map(this.entryMapper, entries);
+    const reference = {
+      referenceType: group.transactionType,
+      referenceId: group.referenceId,
+    };
+    return R.map((entry) => this.entryMapper(entry, reference), entries);
   };
 
   /**

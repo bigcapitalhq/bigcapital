@@ -123,6 +123,7 @@ const CLASSES = {
   CARD: 'card',
   ALIGN_RIGHT: 'align-right',
   FONT_BOLD: 'font-bold',
+  TEXT_LINK: 'text-link',
 
   NS,
   PADDED,
