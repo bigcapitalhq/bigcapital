@@ -54,7 +54,8 @@ export class DeliverSaleInvoice {
         .query(trx)
         .patchAndFetchById(saleInvoiceId, {
           deliveredAt: moment().toMySqlDateTime(),
-        });
+        })
+        .withGraphFetched('entries');
 
       // Triggers `onSaleInvoiceDelivered` event.
       await this.eventEmitter.emitAsync(events.saleInvoice.onDelivered, {
