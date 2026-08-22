@@ -1,4 +1,4 @@
-import { useCurrentOrganizationMetadata } from '@/hooks/query';
+import { useOrganizationMeta } from '@/components/Organization/OrganizationMetaProvider';
 import { momentFormatter } from '@/utils';
 
 /**
@@ -6,7 +6,7 @@ import { momentFormatter } from '@/utils';
  * selected date format, used to display/parse dates in date inputs.
  */
 export function useDateFormatter() {
-  const metadata = useCurrentOrganizationMetadata();
+  const metadata = useOrganizationMeta();
   const dateFormat = metadata?.dateFormat ?? 'DD MMM YYYY';
 
   return momentFormatter(dateFormat);

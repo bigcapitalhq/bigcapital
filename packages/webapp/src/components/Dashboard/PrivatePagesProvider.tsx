@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApplicationBoot } from '@/components';
+import { OrganizationMetaProvider } from '@/components/Organization/OrganizationMetaProvider';
 import { useAuthMetadata } from '@/hooks/query/authentication';
 
 interface PrivatePagesProviderProps {
@@ -15,5 +16,11 @@ export function PrivatePagesProvider({ children }: PrivatePagesProviderProps) {
 
   const isLoading = isAppBootLoading || isAuthMetaLoading;
 
-  return <React.Fragment>{!isLoading ? children : null}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {!isLoading ? (
+        <OrganizationMetaProvider>{children}</OrganizationMetaProvider>
+      ) : null}
+    </React.Fragment>
+  );
 }
