@@ -24,7 +24,7 @@ import {
 } from '@/components';
 import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Transfer to account form fields.
@@ -34,6 +34,7 @@ export function TransferToAccountFormFields() {
   const { account } = useMoneyOutFieldsContext();
 
   useSetPrimaryBranchToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <React.Fragment>
@@ -63,7 +64,7 @@ export function TransferToAccountFormFields() {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{
                 position: Position.BOTTOM_LEFT,
                 minimal: true,

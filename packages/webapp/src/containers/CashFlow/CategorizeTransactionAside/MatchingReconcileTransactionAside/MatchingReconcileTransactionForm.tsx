@@ -32,9 +32,9 @@ import {
 import { Aside } from '@/components/Aside/Aside';
 import { ContentTabs } from '@/components/ContentTabs';
 import { Features } from '@/constants';
+import { useDateInputFormatter } from '@/hooks';
 import { useCreateCashflowTransaction } from '@/hooks/query';
 import { compose } from '@/utils';
-import { momentFormatter } from '@/utils';
 
 interface ReconcileSubmitSuccessPayload {
   id: number;
@@ -178,6 +178,7 @@ function ReconcileMatchingType() {
 
 function CreateReconcileTransactionContent() {
   const { branches } = useMatchingReconcileTransactionBoot();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Box className={styles.content}>
@@ -185,7 +186,7 @@ function CreateReconcileTransactionContent() {
 
       <FFormGroup label={'Date'} name={'date'} fastField>
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           name={'date'}
           popoverProps={{
             minimal: false,

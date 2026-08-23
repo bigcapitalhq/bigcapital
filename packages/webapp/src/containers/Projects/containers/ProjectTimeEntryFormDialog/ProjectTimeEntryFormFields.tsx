@@ -21,7 +21,7 @@ import {
   Stack,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Project time entry form fields.
@@ -34,6 +34,7 @@ export function ProjectTimeEntryFormFields() {
 
   // Sets the project id.
   useSetProjectToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -45,9 +46,8 @@ export function ProjectTimeEntryFormFields() {
           className={classNames(CLASSES.FILL, 'form-group--date')}
         >
           <FDateInput
-            {...momentFormatter('YYYY/MM/DD')}
+            {...dateInputFormatter}
             name="date"
-            formatDate={(date) => date.toLocaleString()}
             popoverProps={{
               position: Position.BOTTOM,
               minimal: true,

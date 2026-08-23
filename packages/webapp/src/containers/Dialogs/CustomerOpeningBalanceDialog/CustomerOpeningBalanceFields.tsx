@@ -16,8 +16,9 @@ import {
 } from '@/components';
 import { FMoneyInputGroup, FFormGroup, FDateInput } from '@/components/Forms';
 import { Features } from '@/constants';
+import { useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
+import { tansformDateValue, handleDateChange } from '@/utils';
 
 /**
  * Customer Opening balance fields.
@@ -32,6 +33,7 @@ function CustomerOpeningBalanceFieldsInner() {
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -58,8 +60,7 @@ function CustomerOpeningBalanceFieldsInner() {
       >
         <FDateInput
           name={'openingBalanceAt'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

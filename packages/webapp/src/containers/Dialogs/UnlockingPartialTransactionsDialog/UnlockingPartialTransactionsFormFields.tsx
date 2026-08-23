@@ -9,14 +9,14 @@ import {
   FTextArea,
   FFormGroup,
 } from '@/components';
-import { useAutofocus } from '@/hooks';
-import { momentFormatter } from '@/utils';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 
 /**
  * Parial Unlocking transactions form fields.
  */
 export function UnlockingPartialTransactionsFormFields(): React.ReactElement {
   const reasonFieldRef = useAutofocus<HTMLTextAreaElement>();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -31,7 +31,7 @@ export function UnlockingPartialTransactionsFormFields(): React.ReactElement {
           >
             <FDateInput
               name={'unlockFromDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,
@@ -51,7 +51,7 @@ export function UnlockingPartialTransactionsFormFields(): React.ReactElement {
           >
             <FDateInput
               name={'unlockToDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,

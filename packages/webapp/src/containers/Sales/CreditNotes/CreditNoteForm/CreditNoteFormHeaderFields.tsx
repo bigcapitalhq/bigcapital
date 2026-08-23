@@ -24,6 +24,7 @@ import {
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
+import { useDateInputFormatter } from '@/hooks';
 
 const getCreditNoteFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
@@ -47,6 +48,7 @@ const getCreditNoteFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
 export function CreditNoteFormHeaderFields() {
   const theme = useTheme();
   const styleClassName = getCreditNoteFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={styleClassName}>
@@ -66,8 +68,7 @@ export function CreditNoteFormHeaderFields() {
       >
         <FDateInput
           name={'creditNoteDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

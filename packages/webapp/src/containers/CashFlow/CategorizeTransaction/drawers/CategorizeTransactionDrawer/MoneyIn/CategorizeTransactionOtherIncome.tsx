@@ -10,9 +10,11 @@ import {
   FTextArea,
   Icon,
 } from '@/components';
+import { useDateInputFormatter } from '@/hooks';
 
 export function CategorizeTransactionOtherIncome() {
   const { accounts } = useCategorizeTransactionBoot();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <>
@@ -20,8 +22,7 @@ export function CategorizeTransactionOtherIncome() {
         <FDateInput
           name={'date'}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          formatDate={(date: Date) => date.toLocaleDateString()}
-          parseDate={(str: string) => new Date(str)}
+          {...dateInputFormatter}
           inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
         />
       </FFormGroup>

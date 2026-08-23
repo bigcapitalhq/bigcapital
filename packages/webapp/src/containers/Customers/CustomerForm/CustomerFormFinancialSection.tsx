@@ -24,6 +24,7 @@ import {
   Box,
 } from '@/components';
 import { Features } from '@/constants';
+import { useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 export function CustomerFormFinancialSection() {
@@ -75,6 +76,7 @@ export function CustomerFormFinancialSection() {
 
 function CustomerOpeningBalanceAtField() {
   const { customerId } = useCustomerFormContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   // Cannot continue if the customer id is defined.
   if (customerId) return null;
@@ -90,8 +92,7 @@ function CustomerOpeningBalanceAtField() {
         name={'openingBalanceAt'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
         disabled={Boolean(customerId)}
-        formatDate={(date: Date) => date.toLocaleDateString()}
-        parseDate={(str: string) => new Date(str)}
+        {...dateInputFormatter}
         inputProps={{
           leftIcon: <Icon icon={'date-range'} />,
         }}

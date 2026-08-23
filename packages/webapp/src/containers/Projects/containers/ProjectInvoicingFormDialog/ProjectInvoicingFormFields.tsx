@@ -10,13 +10,15 @@ import {
   FieldRequiredHint,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Project invoicing form fields.
  * @returns
  */
 export function ProjectInvoicingFormFields() {
+  const dateInputFormatter = useDateInputFormatter();
+
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Date -----------*/}
@@ -26,9 +28,8 @@ export function ProjectInvoicingFormFields() {
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           name="date"
-          formatDate={(date) => date.toLocaleString()}
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,
