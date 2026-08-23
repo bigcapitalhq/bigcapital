@@ -11,8 +11,7 @@ import {
 } from './interfaces';
 import { Choose } from '@/components';
 import { Select } from '@/components/Forms';
-import { useAutofocus } from '@/hooks';
-import { momentFormatter } from '@/utils';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 
 function AdvancedFilterEnumerationField({
   options,
@@ -57,6 +56,7 @@ export default function AdvancedFilterValueField({
   isFocus,
 }: IAdvancedFilterValueField) {
   const [localValue, setLocalValue] = React.useState(value);
+  const dateInputFormatter = useDateInputFormatter();
 
   React.useEffect(() => {
     if (localValue !== value && !isUndefined(value)) {
@@ -112,7 +112,7 @@ export default function AdvancedFilterValueField({
 
       <Choose.When condition={fieldType === IFieldType.DATE}>
         <DateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           value={tansformDateValue(localValue)}
           onChange={handleDateChange}
           popoverProps={{

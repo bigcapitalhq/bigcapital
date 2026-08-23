@@ -13,18 +13,15 @@ import {
   FFormGroup,
   VendorsMultiSelect,
 } from '@/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
+import { tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 
 /**
  * Vendors balance header - General panel - Content.
  */
 export function VendorsBalanceSummaryHeaderGeneralContent() {
   const { vendors } = useVendorsBalanceSummaryGeneralPanelContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
@@ -42,7 +39,7 @@ export function VendorsBalanceSummaryHeaderGeneralContent() {
             }) => (
               <FormGroup label={intl.get('as_date')} labelInfo={<FieldHint />}>
                 <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
+                  {...dateInputFormatter}
                   value={tansformDateValue(value)}
                   onChange={handleDateChange((selectedDate: Date) => {
                     form.setFieldValue('asDate', selectedDate);

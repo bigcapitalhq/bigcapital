@@ -26,9 +26,8 @@ import {
 } from '@/components';
 import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { useAutofocus } from '@/hooks';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter } from '@/utils';
 
 // FFormGroup / FMoneyInputGroup / FInputGroup (blueprintjs-formik) wrappers
 // don't expose all underlying props (`fill`, `minimal`) in their public type.
@@ -68,6 +67,7 @@ function RefundCreditNoteFormFieldsInner(): React.ReactElement {
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -97,7 +97,7 @@ function RefundCreditNoteFormFieldsInner(): React.ReactElement {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,

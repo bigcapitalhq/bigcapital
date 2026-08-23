@@ -23,7 +23,7 @@ import {
   FDateInput,
 } from '@/components';
 import { ACCOUNT_TYPE, Features } from '@/constants';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Other income form fields.
@@ -33,6 +33,7 @@ export function OtherIncomeFormFields() {
   const { account } = useMoneyInFieldsContext();
 
   useSetPrimaryBranchToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <React.Fragment>
@@ -61,7 +62,7 @@ export function OtherIncomeFormFields() {
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
               inputProps={{
                 fill: true,

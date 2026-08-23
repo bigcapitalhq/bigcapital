@@ -16,6 +16,7 @@ import {
   Icon,
   Stack,
 } from '@/components';
+import { useDateInputFormatter } from '@/hooks';
 
 export interface AccountTransactionsDateFilterFormValues {
   period: string;
@@ -54,6 +55,8 @@ export function AccountTransactionsDateFilterForm({
   initialValues = {},
   onSubmit,
 }: UncategorizedTransactionsDateFilterProps) {
+  const dateInputFormatter = useDateInputFormatter();
+
   const handleSubmit = (
     values: AccountTransactionsDateFilterFormValues,
     bag: FormikHelpers<AccountTransactionsDateFilterFormValues>,
@@ -85,8 +88,7 @@ export function AccountTransactionsDateFilterForm({
               <FDateInput
                 name={'fromDate'}
                 popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date: Date) => date.toLocaleDateString()}
-                parseDate={(str: string) => new Date(str)}
+                {...dateInputFormatter}
                 inputProps={{
                   fill: true,
                   placeholder: 'MM/DD/YYY',
@@ -99,8 +101,7 @@ export function AccountTransactionsDateFilterForm({
               <FDateInput
                 name={'toDate'}
                 popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                formatDate={(date: Date) => date.toLocaleDateString()}
-                parseDate={(str: string) => new Date(str)}
+                {...dateInputFormatter}
                 inputProps={{
                   fill: true,
                   placeholder: 'MM/DD/YYY',

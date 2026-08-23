@@ -14,7 +14,7 @@ import {
   FFormGroup,
   FDateInput,
 } from '@/components';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Inventory valuation - Drawer Header - General panel.
@@ -32,6 +32,7 @@ export function InventoryValuationHeaderGeneralPanel() {
  */
 function InventoryValuationHeaderGeneralPanelContent() {
   const { items } = useInventoryValuationGeneralPanelContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
@@ -45,7 +46,7 @@ function InventoryValuationHeaderGeneralPanelContent() {
           >
             <FDateInput
               name={'asDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
               fill
               fastField
