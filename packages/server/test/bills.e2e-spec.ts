@@ -40,6 +40,7 @@ describe('Bills (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send({
         name: faker.commerce.productName(),
+        type: 'service',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,
