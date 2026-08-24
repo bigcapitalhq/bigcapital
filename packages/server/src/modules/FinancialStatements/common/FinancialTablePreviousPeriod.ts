@@ -49,7 +49,7 @@ export const FinancialTablePreviousPeriod = <
     public getPreviousPeriodChangeColumn = (): ITableColumn => {
       return {
         key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD_CHANGE,
-        label: this.i18n.t('fianncial_sheet.previous_period_change'),
+        label: this.i18n.t('financial_sheet.previous_period_change'),
       };
     };
 
