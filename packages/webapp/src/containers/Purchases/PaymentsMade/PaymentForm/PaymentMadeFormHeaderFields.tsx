@@ -35,8 +35,9 @@ import {
   VendorsSelect,
 } from '@/components';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter, safeSumBy } from '@/utils';
+import { safeSumBy } from '@/utils';
 
 type VendorContact = {
   id: string | number;
@@ -72,6 +73,7 @@ function PaymentMadeFormHeaderFieldsInner() {
   } = useFormikContext<PaymentMadeFormValues>();
 
   const theme = useTheme() as Theme;
+  const dateInputFormatter = useDateInputFormatter();
   const fieldsClassName = getFieldsStyle(theme);
 
   const { accounts } = usePaymentMadeFormContext();
@@ -115,7 +117,7 @@ function PaymentMadeFormHeaderFieldsInner() {
       >
         <FDateInput
           name={'paymentDate'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
           fill

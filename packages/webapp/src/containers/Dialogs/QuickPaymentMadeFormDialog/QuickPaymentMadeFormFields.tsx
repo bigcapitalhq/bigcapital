@@ -26,9 +26,8 @@ import {
   FMoneyInputGroup,
 } from '@/components';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
-import { useAutofocus } from '@/hooks';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter } from '@/utils';
 
 /**
  * Quick payment made form fields.
@@ -44,6 +43,7 @@ function QuickPaymentMadeFormFieldsInner(): React.ReactElement {
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -115,7 +115,7 @@ function QuickPaymentMadeFormFieldsInner(): React.ReactElement {
           >
             <FDateInput
               name={'paymentDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,

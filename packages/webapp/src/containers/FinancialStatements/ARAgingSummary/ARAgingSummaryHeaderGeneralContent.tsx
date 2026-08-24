@@ -12,10 +12,11 @@ import {
   CustomersMultiSelect,
   FDateInput,
 } from '@/components';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 export function ARAgingSummaryHeaderGeneralContent() {
   const { customers } = useARAgingSummaryGeneralContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
@@ -29,7 +30,7 @@ export function ARAgingSummaryHeaderGeneralContent() {
           >
             <FDateInput
               name={'asDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
               fill
               fastField

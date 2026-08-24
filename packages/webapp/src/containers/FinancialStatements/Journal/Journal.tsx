@@ -11,6 +11,7 @@ import { withJournalActions } from './withJournalActions';
 import type { WithJournalActionsProps } from './withJournalActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { TransactionDetailDrawers } from '@/containers/FinancialStatements/TransactionDetailDrawers';
 import { compose } from '@/utils';
 
 type JournalProps = WithJournalActionsProps;
@@ -61,6 +62,8 @@ function JournalInner({
       </DashboardPageContent>
 
       <JournalDialogs />
+
+      <TransactionDetailDrawers />
     </JournalSheetProvider>
   );
 }

@@ -32,6 +32,7 @@ import {
   ProjectsSelect,
   ProjectBillableEntriesLink,
 } from '@/containers/Projects/components';
+import { useDateInputFormatter } from '@/hooks';
 
 const getInvoiceFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
@@ -58,6 +59,7 @@ export function InvoiceFormHeaderFields() {
   const { projects } = useInvoiceFormContext();
   const { values } = useFormikContext<InvoiceFormValues>();
   const invoiceFieldsClassName = getInvoiceFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={invoiceFieldsClassName}>
@@ -77,8 +79,7 @@ export function InvoiceFormHeaderFields() {
       >
         <FDateInput
           name={'invoiceDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
@@ -102,8 +103,7 @@ export function InvoiceFormHeaderFields() {
       >
         <FDateInput
           name={'dueDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,

@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -8,7 +8,7 @@ const makeAccountRequest = () => ({
   code: faker.string.alphanumeric({ length: 6 }).toUpperCase(),
 });
 
-describe.only('Accounts (e2e)', () => {
+describe('Accounts (e2e)', () => {
   it('/accounts (POST)', () => {
     return request(app.getHttpServer())
       .post('/accounts')

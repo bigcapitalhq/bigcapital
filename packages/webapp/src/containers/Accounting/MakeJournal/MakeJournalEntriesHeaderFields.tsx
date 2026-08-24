@@ -19,6 +19,7 @@ import {
   FDateInput,
   Stack,
 } from '@/components';
+import { useDateInputFormatter } from '@/hooks';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -45,6 +46,7 @@ export function MakeJournalEntriesHeader() {
   const form = useFormikContext<MakeJournalFormValues>();
   const theme = useTheme();
   const fieldsClassName = getFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={fieldsClassName}>
@@ -58,8 +60,7 @@ export function MakeJournalEntriesHeader() {
       >
         <FDateInput
           name={'date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,

@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 import { faker } from '@faker-js/faker';
 
@@ -25,11 +25,21 @@ const requestCreditNote = () => ({
 
 describe('Credit Notes (e2e)', () => {
   beforeAll(async () => {
+    await request(app.getHttpServer())
+      .put('/transactions-locking/cancel-lock')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ reason: 'Cancel lock for e2e test' });
+
     const customer = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send({ displayName: 'Test Customer' });
+      .send({
+        displayName: 'Test Customer',
+        customerType: 'business',
+        currencyCode: 'USD',
+      });
 
     customerId = customer.body.id;
 
@@ -38,7 +48,8 @@ describe('Credit Notes (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'service',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,

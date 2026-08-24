@@ -31,6 +31,7 @@ import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import { ProjectsSelect } from '@/containers/Projects/components';
+import { useDateInputFormatter } from '@/hooks';
 
 const getEstimateFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
@@ -56,6 +57,7 @@ export function ReceiptFormHeader() {
   const theme = useTheme();
   const receiptFieldsClassName = getEstimateFieldsStyle(theme);
   const { accounts, projects } = useReceiptFormContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={receiptFieldsClassName}>
@@ -97,8 +99,7 @@ export function ReceiptFormHeader() {
       >
         <FDateInput
           name={'receiptDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
