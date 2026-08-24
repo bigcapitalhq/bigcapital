@@ -28,7 +28,8 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'inventory',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,
@@ -67,7 +68,7 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createWarehouseTransferRequest())
-      .expect(200);
+      .expect(201);
   });
 
   it('/warehouse-transfers (GET)', () => {
