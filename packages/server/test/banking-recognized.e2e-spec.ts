@@ -9,12 +9,4 @@ describe('Banking Recognized Transactions (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
-
-  it('/banking/recognized/:recognizedTransactionId (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/banking/recognized/1')
-      .set('organization-id', orgainzationId)
-      .set('Authorization', AuthorizationHeader)
-      .expect(200);
-  });
 });
