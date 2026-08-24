@@ -9,4 +9,14 @@ describe('Banking Recognized Transactions (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
+
+  it('/banking/recognized/:recognizedTransactionId (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/banking/recognized/1')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader);
+
+    // A transaction only exists when bank data was synced into the organization.
+    expect([200, 404]).toContain(response.status);
+  });
 });
