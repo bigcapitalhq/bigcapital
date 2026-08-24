@@ -48,6 +48,10 @@ describe('Warehouses (e2e)', () => {
       .put(`/warehouses/${warehouseId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
+      .send({
+        name: response.body.name,
+        code: response.body.code,
+      })
       .expect(200);
   });
 

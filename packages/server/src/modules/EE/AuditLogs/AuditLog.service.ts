@@ -36,7 +36,8 @@ export class AuditLogService {
   async record(params: RecordAuditLogParams): Promise<void> {
     const userId = this.cls.get<number>('userId') ?? null;
     const ip = (this.cls.get<string>('ip') as string) ?? null;
-    const executor = params.trx ?? this.tenantKnex();
+    const executor =
+      params.trx && !params.trx.isCompleted() ? params.trx : this.tenantKnex();
     const metadata = this.normalizeMetadata(params.metadata);
 
     await this.auditLogModel()
@@ -45,12 +46,26 @@ export class AuditLogService {
         userId,
         action: params.action,
         subject: params.subject,
-        subjectId: params.subjectId ?? null,
+        subjectId: this.normalizeSubjectId(params.subjectId),
         metadata,
         ip,
         // MySQL DATETIME expects `YYYY-MM-DD HH:mm:ss`, not ISO-8601 with `T`/`Z`.
         createdAt: moment().toMySqlDateTime(),
       });
+  }
+
+  /**
+   * Normalizes the audit subject id into an integer or null. Controllers pass
+   * ids as strings when `ParseIntPipe` is not applied, which would otherwise
+   * fail the model `integer` validation.
+   */
+  private normalizeSubjectId(
+    subjectId: number | string | null | undefined,
+  ): number | null {
+    if (subjectId == null || subjectId === '') return null;
+
+    const value = Number(subjectId);
+    return Number.isInteger(value) ? value : null;
   }
 
   private normalizeMetadata(

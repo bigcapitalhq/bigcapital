@@ -226,7 +226,13 @@ jobs:
           sleep 5
 
       - name: Run server tests
-        run: pnpm --filter @bigcapital/server test:e2e
+        run: |
+          pnpm --filter @bigcapital/server test:e2e --shard=1/4
+          pnpm --filter @bigcapital/server test:e2e --shard=2/4
+          pnpm --filter @bigcapital/server test:e2e --shard=3/4
+          pnpm --filter @bigcapital/server test:e2e --shard=4/4
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Print server log on failure
         if: failure()

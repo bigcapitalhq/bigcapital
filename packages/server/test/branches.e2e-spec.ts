@@ -48,6 +48,10 @@ describe('Branches (e2e)', () => {
       .put(`/branches/${branchId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
+      .send({
+        name: response.body.name,
+        code: response.body.code,
+      })
       .expect(200);
   });
 

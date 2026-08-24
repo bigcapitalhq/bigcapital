@@ -12,7 +12,7 @@ describe('Item Categories(e2e)', () => {
         name: faker.person.fullName(),
         rate: 2,
         code: faker.string.uuid(),
-        active: 1,
+        active: true,
       })
       .expect(201);
   });
@@ -26,7 +26,7 @@ describe('Item Categories(e2e)', () => {
         name: faker.person.fullName(),
         rate: 2,
         code: faker.string.uuid(),
-        active: 1,
+        active: true,
       });
     const taxRateId = response.body.id;
 
