@@ -118,6 +118,9 @@ export class InventoryValuationSheetRepository {
       builder.select('itemId');
       builder.groupBy('itemId');
 
+      if (this.filter.asDate) {
+        builder.modify('filterDateRange', null, this.filter.asDate);
+      }
       if (!isEmpty(this.filter.branchesIds)) {
         builder.modify('filterByBranches', this.filter.branchesIds);
       }
