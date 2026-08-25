@@ -11,7 +11,7 @@ describe('Organization (e2e)', () => {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       email: faker.internet.email(),
-      password: '123123123',
+      password: '1231231230',
     };
     signupResponse = await request(app.getHttpServer())
       .post('/auth/signup')

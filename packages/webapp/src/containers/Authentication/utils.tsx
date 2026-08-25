@@ -61,20 +61,30 @@ export type InviteAcceptFormValues = {
   password: string;
 };
 
+export const PASSWORD_MIN_LENGTH = 10;
+export const PASSWORD_MAX_LENGTH = 128;
+
+const validPassword = () =>
+  Yup.string()
+    .required()
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
+    .label(intl.get('password'));
+
 export const LoginSchema = Yup.object().shape({
   crediential: Yup.string().required().email().label(intl.get('email')),
-  password: Yup.string().required().min(4).label(intl.get('password')),
+  password: Yup.string().required().label(intl.get('password')),
 });
 
 export const RegisterSchema = Yup.object().shape({
   first_name: Yup.string().required().label(intl.get('first_name_')),
   last_name: Yup.string().required().label(intl.get('last_name_')),
   email: Yup.string().email().required().label(intl.get('email')),
-  password: Yup.string().min(6).required().label(intl.get('password')),
+  password: validPassword(),
 });
 
 export const ResetPasswordSchema = Yup.object().shape({
-  password: Yup.string().min(6).required().label(intl.get('password')),
+  password: validPassword(),
   confirm_password: Yup.string()
     .nullable()
     .oneOf([Yup.ref('password'), null])
@@ -90,7 +100,7 @@ export const SendResetPasswordSchema = Yup.object().shape({
 export const InviteAcceptSchema = Yup.object().shape({
   first_name: Yup.string().required().label(intl.get('first_name_')),
   last_name: Yup.string().required().label(intl.get('last_name_')),
-  password: Yup.string().min(4).required().label(intl.get('password')),
+  password: validPassword(),
 });
 
 export const transformSendResetPassErrorsToToasts = (
