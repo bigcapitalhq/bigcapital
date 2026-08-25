@@ -165,11 +165,11 @@ jobs:
 
           curl --fail-with-body -sS -X POST "$API_URL/auth/signup" \
             -H 'Content-Type: application/json' \
-            -d '{"firstName":"Test","lastName":"User","email":"kk@kk.com","password":"123123123"}'
+            -d '{"firstName":"Test","lastName":"User","email":"kk@kk.com","password":"1231231230"}'
 
           SIGNIN=$(curl --fail-with-body -sS -X POST "$API_URL/auth/signin" \
             -H 'Content-Type: application/json' \
-            -d '{"email":"kk@kk.com","password":"123123123"}')
+            -d '{"email":"kk@kk.com","password":"1231231230"}')
 
           TOKEN=$(printf '%s' "$SIGNIN" | jq -r '.access_token')
           ORG_ID=$(printf '%s' "$SIGNIN" | jq -r '.organization_id')

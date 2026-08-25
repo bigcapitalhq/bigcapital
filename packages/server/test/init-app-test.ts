@@ -6,7 +6,7 @@ import { AppModule } from '../src/modules/App/App.module';
 let app: INestApplication;
 
 const email = 'kk@kk.com';
-const password = '123123123';
+const password = '1231231230';
 
 let orgainzationId = '';
 let authenticationToken = '';
