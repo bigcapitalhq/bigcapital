@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
@@ -11,7 +10,17 @@ const BillNumberDialogContent = lazy(() =>
   })),
 );
 
-function BillNumberDialog({ dialogName, payload = { id: null }, isOpen }) {
+interface BillNumberDialogProps {
+  dialogName: string;
+  payload?: { id?: number | null; [key: string]: unknown };
+  isOpen: boolean | undefined;
+}
+
+function BillNumberDialog({
+  dialogName,
+  payload = { id: null },
+  isOpen,
+}: BillNumberDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -22,7 +31,10 @@ function BillNumberDialog({ dialogName, payload = { id: null }, isOpen }) {
       className={'dialog--journal-number-settings'}
     >
       <DialogSuspense>
-        <BillNumberDialogContent billNumberId={payload.id} />
+        <BillNumberDialogContent
+          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
+          billNumberId={payload.id}
+        />
       </DialogSuspense>
     </Dialog>
   );

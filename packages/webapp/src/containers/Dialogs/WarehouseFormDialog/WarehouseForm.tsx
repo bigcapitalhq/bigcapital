@@ -40,6 +40,9 @@ function WarehouseFormInner({
   const initialValues: WarehouseFormValues = {
     ...defaultInitialValues,
     ...transformToForm(warehouse, defaultInitialValues),
+    // The API returns `primary` as a 0/1 integer which fails the server-side
+    // `@IsBoolean()` validation — normalize it back to a boolean.
+    primary: warehouse?.primary ? true : false,
   };
 
   const handleFormSubmit = (

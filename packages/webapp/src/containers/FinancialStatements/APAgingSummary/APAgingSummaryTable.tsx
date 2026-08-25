@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { useAPAgingSummaryColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -30,6 +31,7 @@ export function APAgingSummaryTable({
         columns={columns}
         data={table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('ap-aging')}
         noInitialFetch={true}
         sticky={true}
         styleName={TableStyle.Constrant}

@@ -1,7 +1,7 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
+import type { MenuItemOption } from './types';
 
-export const getAddMoneyInOptions = () => [
+export const getAddMoneyInOptions = (): MenuItemOption[] => [
   {
     name: intl.get('banking.owner_contribution'),
     value: 'owner_contribution',
@@ -16,7 +16,7 @@ export const getAddMoneyInOptions = () => [
   },
 ];
 
-export const getAddMoneyOutOptions = () => [
+export const getAddMoneyOutOptions = (): MenuItemOption[] => [
   {
     name: intl.get('banking.owner_drawings'),
     value: 'owner_drawing',
@@ -31,7 +31,7 @@ export const getAddMoneyOutOptions = () => [
   },
 ];
 
-export const TRANSACTIONS_TYPE = [
+export const TRANSACTIONS_TYPE: string[] = [
   'OwnerContribution',
   'OtherIncome',
   'TransferFromAccount',
@@ -40,7 +40,7 @@ export const TRANSACTIONS_TYPE = [
   'TransferToAccount',
 ];
 
-export const MoneyCategoryPerCreditAccountRootType = {
+export const MoneyCategoryPerCreditAccountRootType: Record<string, string[]> = {
   OwnerContribution: ['equity'],
   OtherIncome: ['income'],
   OwnerDrawing: ['equity'],

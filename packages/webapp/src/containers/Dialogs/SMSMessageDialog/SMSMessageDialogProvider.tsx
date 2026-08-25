@@ -1,27 +1,42 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext } from 'react';
+import type { SMSMessageDialogContextValue, SMSNotification } from './types';
 import { DialogContent } from '@/components';
 import {
   useSettingEditSMSNotification,
   useSettingSMSNotification,
 } from '@/hooks/query';
 
-const SMSMessageDialogContext = React.createContext();
+const SMSMessageDialogContext = createContext<SMSMessageDialogContextValue>(
+  {} as SMSMessageDialogContextValue,
+);
+
+interface SMSMessageDialogProviderProps {
+  notificationkey: string;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * SMS Message dialog provider.
  */
-function SMSMessageDialogProvider({ notificationkey, dialogName, ...props }) {
+function SMSMessageDialogProvider({
+  notificationkey,
+  dialogName,
+  ...props
+}: SMSMessageDialogProviderProps) {
   // Edit SMS message notification mutations.
   const { mutateAsync: editSMSNotificationMutate } =
     useSettingEditSMSNotification();
 
-  // SMS notificiation details
-  const { data: smsNotification, isLoading: isSMSNotificationLoading } =
+  // SMS notificiation details. SDK leaves this typed as `unknown`; cast narrow.
+  const { data: smsNotificationRaw, isLoading: isSMSNotificationLoading } =
     useSettingSMSNotification(notificationkey);
+  const smsNotification =
+    (smsNotificationRaw as SMSNotification | undefined) ??
+    ({} as SMSNotification);
 
   //  provider.
-  const provider = {
+  const provider: SMSMessageDialogContextValue = {
     dialogName,
     smsNotification,
     editSMSNotificationMutate,

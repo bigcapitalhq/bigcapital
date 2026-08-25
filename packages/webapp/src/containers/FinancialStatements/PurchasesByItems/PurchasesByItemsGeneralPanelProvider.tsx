@@ -33,7 +33,7 @@ function PurchasesByItemsGeneralPanelProvider({
   });
 
   const provider: PurchasesByItemsGeneralPanelContextValue = {
-    items: (itemsData as any)?.items,
+    items: (itemsData as any)?.data,
     isItemsLoading,
     isItemsFetching,
   };

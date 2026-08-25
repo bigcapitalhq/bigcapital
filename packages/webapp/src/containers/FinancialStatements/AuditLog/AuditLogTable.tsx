@@ -105,6 +105,7 @@ export function AuditLogTable() {
         noResults={'No audit log entries found'}
         columns={columns}
         data={auditLogs}
+        rowTestId={'audit-log-row'}
         virtualizedRows={true}
         fixedItemSize={30}
         fixedSizeHeight={1000}

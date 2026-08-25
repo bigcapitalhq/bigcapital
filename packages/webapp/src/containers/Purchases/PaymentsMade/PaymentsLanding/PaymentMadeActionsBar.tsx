@@ -6,14 +6,15 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
+import { useBulkDeletePaymentMadesDialog } from './hooks/use-bulk-delete-payment-mades-dialog';
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { withPaymentMade } from './withPaymentMade';
 import { withPaymentMadeActions } from './withPaymentMadeActions';
 import type { WithPaymentMadeProps } from './withPaymentMade';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
-  If,
   Can,
   Icon,
   FormattedMessage as T,
@@ -26,9 +27,9 @@ import {
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshPaymentMades } from '@/hooks/query/payment-mades';
-import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithPaymentMadeActionsProps {
@@ -36,7 +37,7 @@ interface WithPaymentMadeActionsProps {
 }
 
 interface PaymentMadeActionsBarProps
-  extends Pick<WithPaymentMadeProps, never>,
+  extends Pick<WithPaymentMadeProps, 'paymentMadesSelectedRows'>,
     WithPaymentMadeActionsProps,
     WithDialogActionsProps {
   paymentMadesFilterConditions: any[];
@@ -45,6 +46,7 @@ interface PaymentMadeActionsBarProps
 function PaymentMadeActionsBarInner({
   setPaymentMadesTableState,
   paymentMadesFilterConditions,
+  paymentMadesSelectedRows,
   openDialog,
 }: PaymentMadeActionsBarProps) {
   const { mutateAsync: saveSettings } = useSaveSettings();
@@ -85,6 +87,29 @@ function PaymentMadeActionsBarInner({
     downloadExportPdf({ resource: 'BillPayment' });
   };
 
+  const { openBulkDeleteDialog, isValidatingBulkDeletePaymentMades } =
+    useBulkDeletePaymentMadesDialog();
+
+  if (!isEmpty(paymentMadesSelectedRows)) {
+    const handleBulkDelete = () => {
+      openBulkDeleteDialog(paymentMadesSelectedRows as number[]);
+    };
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeletePaymentMades}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -117,14 +142,6 @@ function PaymentMadeActionsBarInner({
           />
         </AdvancedFilterPopover>
 
-        <If condition={false}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon={'trash-16'} iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-          />
-        </If>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={16} />}
@@ -164,8 +181,9 @@ function PaymentMadeActionsBarInner({
 
 export const PaymentMadeActionsBar = compose(
   withPaymentMadeActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({
+  withPaymentMade(({ paymentMadesTableState, paymentMadesSelectedRows }) => ({
     paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
+    paymentMadesSelectedRows,
   })),
   withDialogActions,
 )(PaymentMadeActionsBarInner);

@@ -12,13 +12,14 @@ import {
   FDateInput,
   FCheckbox,
 } from '@/components';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Customers balance header - General panel - Content
  */
 export function CustomersBalanceSummaryGeneralPanelContent() {
   const { customers } = useCustomersBalanceSummaryGeneralContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
@@ -32,7 +33,7 @@ export function CustomersBalanceSummaryGeneralPanelContent() {
           >
             <FDateInput
               name={'asDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               fill={true}
               fastField
@@ -44,12 +45,12 @@ export function CustomersBalanceSummaryGeneralPanelContent() {
       <Row>
         <Col xs={5}>
           <FFormGroup
-            name={'percentage_column'}
+            name={'percentageColumn'}
             labelInfo={<FieldHint />}
             fastField
           >
             <FCheckbox
-              name={'percentage_column'}
+              name={'percentageColumn'}
               inline={true}
               label={intl.get('percentage_of_column')}
               fastField

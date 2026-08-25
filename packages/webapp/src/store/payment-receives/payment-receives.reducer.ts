@@ -3,7 +3,11 @@ import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import type { TableQuery } from '@/store/store.types';
 import { createTableStateReducers } from '@/store/table-state.reducer';
-import { RESET, PAYMENT_RECEIVES_SET_SELECTED_ROWS } from '@/store/types';
+import {
+  RESET,
+  PAYMENT_RECEIVES_SET_SELECTED_ROWS,
+  PAYMENT_RECEIVES_RESET_SELECTED_ROWS,
+} from '@/store/types';
 
 interface PaymentReceivesState {
   tableState: Partial<TableQuery>;
@@ -38,6 +42,10 @@ const reducerInstance = createReducer(initialState, {
     action: { payload: Array<unknown> },
   ) => {
     state.selectedRows = action.payload;
+  },
+
+  [PAYMENT_RECEIVES_RESET_SELECTED_ROWS]: (state: PaymentReceivesState) => {
+    state.selectedRows = [];
   },
 
   [RESET]: () => {

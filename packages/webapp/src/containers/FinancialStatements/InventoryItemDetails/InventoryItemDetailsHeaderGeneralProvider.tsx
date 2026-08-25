@@ -39,7 +39,7 @@ function InventoryItemDetailsHeaderGeneralProvider({
   const provider: InventoryItemDetailsHeaderGeneralContextValue = {
     isItemsFetching,
     isItemsLoading,
-    items: (itemsData as any)?.items,
+    items: (itemsData as any)?.data,
   };
   // Loading state.
   const loading = isItemsLoading;

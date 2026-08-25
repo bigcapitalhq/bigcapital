@@ -14,6 +14,7 @@ import { compose, transformTableStateToQuery } from '@/utils';
 
 interface WithEstimatesActionsProps {
   resetEstimatesTableState: () => void;
+  resetEstimatesSelectedRows: () => void;
 }
 
 interface EstimatesListProps
@@ -27,12 +28,14 @@ function EstimatesListInner({
   estimatesTableState,
   estimatesTableStateChanged,
   resetEstimatesTableState,
+  resetEstimatesSelectedRows,
 }: EstimatesListProps) {
   React.useEffect(
     () => () => {
       resetEstimatesTableState();
+      resetEstimatesSelectedRows();
     },
-    [resetEstimatesTableState],
+    [resetEstimatesSelectedRows, resetEstimatesTableState],
   );
 
   return (

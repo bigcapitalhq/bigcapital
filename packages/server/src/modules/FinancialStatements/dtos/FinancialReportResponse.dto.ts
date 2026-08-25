@@ -65,6 +65,11 @@ export class FinancialTableRowDto {
   id: string | number;
 
   @ApiPropertyOptional({
+    description: 'Row-level metadata (e.g. transaction reference link)',
+  })
+  meta?: Record<string, unknown>;
+
+  @ApiPropertyOptional({
     description: 'Child rows',
     type: () => [FinancialTableRowDto],
   })

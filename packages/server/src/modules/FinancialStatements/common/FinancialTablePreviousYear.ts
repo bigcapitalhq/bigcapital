@@ -5,6 +5,7 @@ import { IDateRange } from '../types/Report.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { I18nService } from 'nestjs-i18n';
 import { FinancialSheet } from './FinancialSheet';
+import { COMPARISON_COLUMN_KEYS } from './constants/tableColumnKeys';
 
 export const FinancialTablePreviousYear = <
   T extends GConstructor<FinancialSheet>,
@@ -37,7 +38,7 @@ export const FinancialTablePreviousYear = <
       const PYFormatted = moment(PYDate).format('YYYY-MM-DD');
 
       return {
-        key: 'previous_year',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR,
         label: this.i18n.t('financial_sheet.previous_year_date', {
           args: { date: PYFormatted },
         }),
@@ -50,7 +51,7 @@ export const FinancialTablePreviousYear = <
      */
     public getPreviousYearChangeColumn = (): ITableColumn => {
       return {
-        key: 'previous_year_change',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR_CHANGE,
         label: this.i18n.t('financial_sheet.previous_year_change'),
       };
     };
@@ -61,7 +62,7 @@ export const FinancialTablePreviousYear = <
      */
     public getPreviousYearPercentageColumn = (): ITableColumn => {
       return {
-        key: 'previous_year_percentage',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR_PERCENTAGE,
         label: this.i18n.t('financial_sheet.previous_year_percentage'),
       };
     };
@@ -75,7 +76,7 @@ export const FinancialTablePreviousYear = <
      */
     public getPreviousYearTotalAccessor = (): ITableColumnAccessor => {
       return {
-        key: 'previous_year',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR,
         accessor: 'previousYear.formattedAmount',
       };
     };
@@ -86,7 +87,7 @@ export const FinancialTablePreviousYear = <
      */
     public getPreviousYearChangeAccessor = (): ITableColumnAccessor => {
       return {
-        key: 'previous_year_change',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR_CHANGE,
         accessor: 'previousYearChange.formattedAmount',
       };
     };
@@ -97,7 +98,7 @@ export const FinancialTablePreviousYear = <
      */
     public getPreviousYearPercentageAccessor = (): ITableColumnAccessor => {
       return {
-        key: 'previous_year_percentage',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR_PERCENTAGE,
         accessor: 'previousYearPercentage.formattedAmount',
       };
     };
@@ -111,7 +112,7 @@ export const FinancialTablePreviousYear = <
       index: number,
     ): ITableColumnAccessor => {
       return {
-        key: 'previous_year',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR,
         accessor: `horizontalTotals[${index}].previousYear.formattedAmount`,
       };
     };
@@ -125,7 +126,7 @@ export const FinancialTablePreviousYear = <
       index: number,
     ): ITableColumnAccessor => {
       return {
-        key: 'previous_year_change',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR_CHANGE,
         accessor: `horizontalTotals[${index}].previousYearChange.formattedAmount`,
       };
     };
@@ -139,7 +140,7 @@ export const FinancialTablePreviousYear = <
       index: number,
     ): ITableColumnAccessor => {
       return {
-        key: 'previous_year_percentage',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_YEAR_PERCENTAGE,
         accessor: `horizontalTotals[${index}].previousYearPercentage.formattedAmount`,
       };
     };

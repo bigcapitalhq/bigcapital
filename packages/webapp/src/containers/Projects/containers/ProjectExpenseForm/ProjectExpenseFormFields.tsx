@@ -19,13 +19,15 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Project expense form fields.
  * @returns
  */
 export function ProjectExpenseFormFields() {
+  const dateInputFormatter = useDateInputFormatter();
+
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Expense Name -----------*/}
@@ -55,9 +57,8 @@ export function ProjectExpenseFormFields() {
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           name="expemseDate"
-          formatDate={(date) => date.toLocaleString()}
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,

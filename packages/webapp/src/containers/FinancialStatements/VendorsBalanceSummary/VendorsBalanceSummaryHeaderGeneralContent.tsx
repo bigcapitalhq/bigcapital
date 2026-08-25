@@ -13,18 +13,15 @@ import {
   FFormGroup,
   VendorsMultiSelect,
 } from '@/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
+import { tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 
 /**
  * Vendors balance header - General panel - Content.
  */
 export function VendorsBalanceSummaryHeaderGeneralContent() {
   const { vendors } = useVendorsBalanceSummaryGeneralPanelContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
@@ -42,7 +39,7 @@ export function VendorsBalanceSummaryHeaderGeneralContent() {
             }) => (
               <FormGroup label={intl.get('as_date')} labelInfo={<FieldHint />}>
                 <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
+                  {...dateInputFormatter}
                   value={tansformDateValue(value)}
                   onChange={handleDateChange((selectedDate: Date) => {
                     form.setFieldValue('asDate', selectedDate);
@@ -58,14 +55,14 @@ export function VendorsBalanceSummaryHeaderGeneralContent() {
 
       <Row>
         <Col xs={5}>
-          <FastField name={'percentage_column'} type={'checkbox'}>
+          <FastField name={'percentageColumn'} type={'checkbox'}>
             {({ field }: { field: any }) => (
               <FormGroup labelInfo={<FieldHint />}>
                 <Checkbox
                   inline={true}
                   small={true}
                   label={intl.get('percentage_of_column')}
-                  name={'percentage_column'}
+                  name={'percentageColumn'}
                   {...field}
                 />
               </FormGroup>

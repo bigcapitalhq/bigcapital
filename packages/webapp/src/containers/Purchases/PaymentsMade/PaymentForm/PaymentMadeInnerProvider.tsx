@@ -1,7 +1,7 @@
 import { useFormikContext } from 'formik';
 import React, { createContext, useContext, useEffect } from 'react';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { transformToNewPageEntries } from './utils';
+import { transformToNewPageEntries, type PaymentMadeFormValues } from './utils';
 import { usePaymentMadeNewPageEntries } from '@/hooks/query';
 
 type BillRow = {
@@ -38,12 +38,10 @@ function PaymentMadeInnerProvider({
   const { isNewMode } = usePaymentMadeFormContext();
 
   // Formik context.
-  // Note: `vendor_id` is destructured to preserve historical runtime behavior;
-  // the form values type uses `vendorId` (camelCase), so this reads undefined.
   const {
-    values: { vendor_id: vendorId },
+    values: { vendorId },
     setFieldValue,
-  } = useFormikContext<{ vendor_id?: string | number }>();
+  } = useFormikContext<PaymentMadeFormValues>();
 
   // `usePaymentMadeNewPageEntries` manages `enabled` internally based on vendorId.
   const {

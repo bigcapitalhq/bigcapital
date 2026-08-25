@@ -26,7 +26,8 @@ import {
   FInputGroup,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { momentFormatter, compose } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
+import { compose } from '@/utils';
 
 const getFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
@@ -56,6 +57,7 @@ function VendorCreditNoteFormHeaderFieldsInner({
 }: VendorCreditNoteFormHeaderFieldsInnerProps) {
   const theme = useTheme();
   const fieldsClassName = getFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
   const { values } = useFormikContext<VendorCreditFormValues>();
   const { vendorCreditSettings } = useVendorCreditNoteFormContext();
   const vendorcreditAutoIncrement = vendorCreditSettings?.autoIncrement as
@@ -115,7 +117,7 @@ function VendorCreditNoteFormHeaderFieldsInner({
       >
         <FDateInput
           name={'vendorCreditDate'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} />, fill: true }}
           fill
@@ -166,7 +168,7 @@ function VendorCreditNoteFormHeaderFieldsInner({
   );
 }
 
-type VendorOption = { id: number; currency_code: string };
+type VendorOption = { id: number; currencyCode: string };
 
 /**
  * Vendor select field of vendor credit form.
@@ -192,7 +194,7 @@ function VendorCreditFormVendorSelect() {
           placeholder={<T id={'select_vender_account'} />}
           onItemChange={(contact: VendorOption) => {
             setFieldValue('vendorId', contact.id);
-            setFieldValue('currencyCode', contact?.currency_code);
+            setFieldValue('currencyCode', contact?.currencyCode);
           }}
           popoverFill={true}
           allowCreate={true}

@@ -13,10 +13,11 @@ import {
   FDateInput,
   FInputGroup,
 } from '@/components';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 export function APAgingSummaryHeaderGeneralContent() {
   const { vendors } = useAPAgingSummaryGeneralContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
@@ -30,7 +31,7 @@ export function APAgingSummaryHeaderGeneralContent() {
           >
             <FDateInput
               name={'asDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
               fill
               fastField

@@ -83,8 +83,11 @@ export class CommandCreditNoteDTOTransform {
         !oldCreditNote?.openedAt && {
           openedAt: moment().toMySqlDateTime(),
         }),
-      refundedAmount: 0,
-      invoicesAmount: 0,
+      // Only initialize usage columns on create; editing must not clobber them.
+      ...(!oldCreditNote && {
+        refundedAmount: 0,
+        invoicesAmount: 0,
+      }),
     };
     const asyncDto = (await composeAsync(
       this.branchDTOTransform.transformDTO<CreditNote>,
@@ -110,6 +113,23 @@ export class CommandCreditNoteDTOTransform {
   ) => {
     if (creditNote.creditsRemaining < amount) {
       throw new ServiceError(ERRORS.CREDIT_NOTE_HAS_NO_REMAINING_AMOUNT);
+    }
+  };
+
+  /**
+   * Validates the new credit note amount is not smaller than the already
+   * refunded and applied-to-invoices amounts.
+   * @param {CreditNote} creditNote
+   * @param {number} newAmount
+   */
+  public validateCreditAmountNotBelowUsed = (
+    creditNote: CreditNote,
+    newAmount: number,
+  ) => {
+    const usedAmount = creditNote.refundedAmount + creditNote.invoicesAmount;
+
+    if (newAmount < usedAmount) {
+      throw new ServiceError(ERRORS.CREDIT_NOTE_AMOUNT_SMALLER_THAN_USED);
     }
   };
 }

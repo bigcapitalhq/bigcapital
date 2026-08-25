@@ -106,11 +106,11 @@ export async function cancelWrittenOffSaleInvoice(fetcher: ApiFetcher, id: numbe
 
 export async function fetchReceivableSaleInvoices(
   fetcher: ApiFetcher,
-  customerId?: number
+  customerId?: number | string
 ): Promise<unknown> {
   const get = fetcher.path(SALE_INVOICES_ROUTES.RECEIVABLE).method('get').create();
-  const { data } = await (get as (params?: { customerId?: number }) => Promise<{ data: unknown }>)(
-    customerId != null ? { customerId } : {}
+  const { data } = await (get as (params?: { customerId?: number | string }) => Promise<{ data: unknown }>)(
+    customerId != null && customerId !== '' ? { customerId } : {}
   );
   return data;
 }

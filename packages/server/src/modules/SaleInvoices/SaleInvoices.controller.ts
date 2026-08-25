@@ -241,6 +241,7 @@ export class SaleInvoicesController {
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}.pdf"`,
       });
       res.send(pdfContent);
     } else if (acceptHeader?.includes(AcceptType.ApplicationTextHtml)) {

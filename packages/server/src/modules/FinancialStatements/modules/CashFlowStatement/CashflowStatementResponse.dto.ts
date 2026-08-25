@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  CASH_FLOW_COLUMN_KEYS,
+  CashFlowColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class CashflowStatementDataNodeDto {
   @ApiProperty({
@@ -122,16 +127,30 @@ export class CashflowStatementResponseDto {
 export {
   FinancialTableCellDto as CashflowStatementTableCellDto,
   FinancialTableRowDto as CashflowStatementTableRowDto,
-  FinancialTableColumnDto as CashflowStatementTableColumnDto,
-  FinancialTableDataDto as CashflowStatementTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class CashflowStatementTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(CASH_FLOW_COLUMN_KEYS),
+  })
+  key: CashFlowColumnKey;
+}
+
+export class CashflowStatementTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [CashflowStatementTableColumnDto],
+  })
+  columns: CashflowStatementTableColumnDto[];
+}
 
 export class CashflowStatementTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => CashflowStatementTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: CashflowStatementTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

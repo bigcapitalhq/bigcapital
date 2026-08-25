@@ -8,7 +8,7 @@ import {
   IPurchasesByItemsTotal,
 } from './types/PurchasesByItems.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
-import { transformToMapBy } from '@/utils/transform-to-map-by';
+import { transformToMap } from '@/utils/transform-to-key';
 import { Item } from '@/modules/Items/models/Item';
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
 import {
@@ -19,7 +19,7 @@ import {
 export class PurchasesByItems extends FinancialSheet {
   readonly baseCurrency: string;
   readonly items: Item[];
-  readonly itemsTransactions: Map<string, InventoryTransaction[]>;
+  readonly itemsTransactions: Map<number, InventoryTransaction>;
   readonly query: IPurchasesByItemsReportQuery;
 
   /**
@@ -38,7 +38,7 @@ export class PurchasesByItems extends FinancialSheet {
     super();
     this.baseCurrency = meta.baseCurrency;
     this.items = items;
-    this.itemsTransactions = transformToMapBy(itemsTransactions, 'itemId');
+    this.itemsTransactions = transformToMap(itemsTransactions, 'itemId');
     this.query = query;
     this.numberFormat = this.query.numberFormat;
     this.dateFormat = meta.dateFormat || DEFAULT_REPORT_META.dateFormat;
@@ -53,7 +53,7 @@ export class PurchasesByItems extends FinancialSheet {
     cost: number;
     average: number;
   } {
-    const transaction = this.itemsTransactions.get(itemId.toString());
+    const transaction = this.itemsTransactions.get(itemId);
 
     const quantity = get(transaction, 'quantity', 0);
     const cost = get(transaction, 'cost', 0);

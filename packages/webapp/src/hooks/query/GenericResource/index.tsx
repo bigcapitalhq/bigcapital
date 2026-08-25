@@ -1,6 +1,11 @@
-// @ts-nocheck
 import { useRequestQuery } from '../../useQueryRequest';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+
+interface ResourceData {
+  items: unknown[];
+}
+
+type ResourceDataTransformer = (response: any) => ResourceData;
 
 /**
  *
@@ -9,10 +14,14 @@ import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
  * @param {*} query
  * @returns
  */
-export function useResourceData(type, query, props) {
+export function useResourceData(
+  type: string,
+  query?: unknown,
+  props?: unknown,
+) {
   const url = getResourceUrlFromType(type);
 
-  return useRequestQuery(
+  return useRequestQuery<{ items: unknown[] }>(
     ['UNIVERSAL_SEARCH', type, query],
     { method: 'get', url, params: query },
     {
@@ -20,7 +29,7 @@ export function useResourceData(type, query, props) {
       defaultData: {
         items: [],
       },
-      ...props,
+      ...(props as Record<string, unknown>),
     },
   );
 }
@@ -30,8 +39,8 @@ export function useResourceData(type, query, props) {
  * @param {string} type
  * @returns {string}
  */
-function getResourceUrlFromType(type) {
-  const config = {
+function getResourceUrlFromType(type: string): string {
+  const config: Record<string, string> = {
     [RESOURCES_TYPES.INVOICE]: '/sale-invoices',
     [RESOURCES_TYPES.ESTIMATE]: '/sale-estimates',
     [RESOURCES_TYPES.ITEM]: '/items',
@@ -52,92 +61,94 @@ function getResourceUrlFromType(type) {
 /**
  * Transformes invoices to resource data.
  */
-const transformInvoices = (response) => ({
-  items: response.data.sales_invoices,
+const transformInvoices: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
 });
 
 /**
  * Transformes items to resource data.
  */
-const transformItems = (response) => ({
-  items: response.data.items,
+const transformItems: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
 });
 
 /**
  * Transformes payment receives to resource data.
  */
-const transformPaymentReceives = (response) => ({
-  items: response.data.payment_receives,
-});
-
-/**
- * Transformes customers to resoruce data.
- */
-const transformCustomers = (response) => ({
-  items: response.data.customers,
-});
-
-/**
- * Transformes customers to resoruce data.
- */
-const transformVendors = (response) => ({
-  items: response.data.vendors,
-});
-
-const transformPaymentMades = (response) => ({
-  items: response.data.bill_payments,
-});
-
-const transformSaleReceipts = (response) => ({
+const transformPaymentReceives: ResourceDataTransformer = (response) => ({
   items: response.data.data,
 });
 
-const transformBills = (response) => ({
-  items: response.data.bills,
+/**
+ * Transformes customers to resoruce data.
+ */
+const transformCustomers: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
 });
 
-const transformManualJournals = (response) => ({
-  items: response.data.manual_journals,
+/**
+ * Transformes customers to resoruce data.
+ */
+const transformVendors: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
 });
 
-const transformsEstimates = (response) => ({
-  items: response.data.sales_estimates,
+const transformPaymentMades: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
 });
 
-const transformAccounts = (response) => ({
+const transformSaleReceipts: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
+});
+
+const transformBills: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
+});
+
+const transformManualJournals: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
+});
+
+const transformsEstimates: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
+});
+
+const transformAccounts: ResourceDataTransformer = (response) => ({
   items: response.data.accounts,
 });
 
-const transformCreditNotes = (response) => ({
-  items: response.data.credit_notes,
+const transformCreditNotes: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
 });
 
-const transformVendorCredits = (response) => ({
-  items: response.data.vendor_credits,
+const transformVendorCredits: ResourceDataTransformer = (response) => ({
+  items: response.data.data,
 });
 
 /**
  * Detarmines the transformer based on the given resource type.
  * @param {string} type - Resource type.
  */
-const transformResourceData = (type) => (response) => {
-  const pairs = {
-    [RESOURCES_TYPES.ESTIMATE]: transformsEstimates,
-    [RESOURCES_TYPES.INVOICE]: transformInvoices,
-    [RESOURCES_TYPES.RECEIPT]: transformSaleReceipts,
-    [RESOURCES_TYPES.ITEM]: transformItems,
-    [RESOURCES_TYPES.PAYMENT_RECEIVE]: transformPaymentReceives,
-    [RESOURCES_TYPES.PAYMENT_MADE]: transformPaymentMades,
-    [RESOURCES_TYPES.CUSTOMER]: transformCustomers,
-    [RESOURCES_TYPES.VENDOR]: transformVendors,
-    [RESOURCES_TYPES.BILL]: transformBills,
-    [RESOURCES_TYPES.MANUAL_JOURNAL]: transformManualJournals,
-    [RESOURCES_TYPES.ACCOUNT]: transformAccounts,
-    [RESOURCES_TYPES.CREDIT_NOTE]: transformCreditNotes,
-    [RESOURCES_TYPES.VENDOR_CREDIT]: transformVendorCredits,
+const transformResourceData =
+  (type: string): ((response: any) => { items: unknown[]; _type: string }) =>
+  (response) => {
+    const pairs: Record<string, ResourceDataTransformer> = {
+      [RESOURCES_TYPES.ESTIMATE]: transformsEstimates,
+      [RESOURCES_TYPES.INVOICE]: transformInvoices,
+      [RESOURCES_TYPES.RECEIPT]: transformSaleReceipts,
+      [RESOURCES_TYPES.ITEM]: transformItems,
+      [RESOURCES_TYPES.PAYMENT_RECEIVE]: transformPaymentReceives,
+      [RESOURCES_TYPES.PAYMENT_MADE]: transformPaymentMades,
+      [RESOURCES_TYPES.CUSTOMER]: transformCustomers,
+      [RESOURCES_TYPES.VENDOR]: transformVendors,
+      [RESOURCES_TYPES.BILL]: transformBills,
+      [RESOURCES_TYPES.MANUAL_JOURNAL]: transformManualJournals,
+      [RESOURCES_TYPES.ACCOUNT]: transformAccounts,
+      [RESOURCES_TYPES.CREDIT_NOTE]: transformCreditNotes,
+      [RESOURCES_TYPES.VENDOR_CREDIT]: transformVendorCredits,
+    };
+    return {
+      ...pairs[type](response),
+      _type: type,
+    };
   };
-  return {
-    ...pairs[type](response),
-    _type: type,
-  };
-};

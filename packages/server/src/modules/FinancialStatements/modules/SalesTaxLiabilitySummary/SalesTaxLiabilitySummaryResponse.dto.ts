@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  SALES_TAX_LIABILITY_COLUMN_KEYS,
+  SalesTaxLiabilityColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class TaxRateSummaryDto {
   @ApiProperty({ description: 'Tax rate ID', type: Number })
@@ -78,16 +83,30 @@ export class SalesTaxLiabilitySummaryResponseDto {
 export {
   FinancialTableCellDto as SalesTaxLiabilitySummaryTableCellDto,
   FinancialTableRowDto as SalesTaxLiabilitySummaryTableRowDto,
-  FinancialTableColumnDto as SalesTaxLiabilitySummaryTableColumnDto,
-  FinancialTableDataDto as SalesTaxLiabilitySummaryTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class SalesTaxLiabilitySummaryTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(SALES_TAX_LIABILITY_COLUMN_KEYS),
+  })
+  key: SalesTaxLiabilityColumnKey;
+}
+
+export class SalesTaxLiabilitySummaryTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [SalesTaxLiabilitySummaryTableColumnDto],
+  })
+  columns: SalesTaxLiabilitySummaryTableColumnDto[];
+}
 
 export class SalesTaxLiabilitySummaryTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => SalesTaxLiabilitySummaryTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: SalesTaxLiabilitySummaryTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

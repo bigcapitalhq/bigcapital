@@ -1,10 +1,10 @@
-// @ts-nocheck
-import { Button, Classes, FormGroup, Intent } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useAccountDialogContext } from './AccountDialogProvider';
 import { parentAccountShouldUpdate } from './utils';
+import type { AccountFormValues } from './types';
 import {
   If,
   FieldRequiredHint,
@@ -19,23 +19,22 @@ import {
   FTextArea,
 } from '@/components';
 import { FOREIGN_CURRENCY_ACCOUNTS } from '@/constants/accountTypes';
-import { withAccounts } from '@/containers/Accounts/withAccounts';
 import { useAutofocus } from '@/hooks';
-import { compose } from '@/utils';
 
-/**
- * Account form dialogs fields.
- */
-function AccountFormDialogFields({
+interface AccountFormDialogFieldsProps {
+  onClose: () => void;
+  action?: string;
+}
+
+export function AccountDialogFormContent({
   // #ownProps
   onClose,
   action,
-}) {
-  const { values, isSubmitting, setFieldValue } = useFormikContext();
-  const accountNameFieldRef = useAutofocus();
-
-  // Account form context.
-  const { fieldsDisabled, accounts, accountsTypes, currencies } =
+}: AccountFormDialogFieldsProps): React.ReactElement {
+  const { values, isSubmitting, setFieldValue } =
+    useFormikContext<AccountFormValues>();
+  const accountNameFieldRef = useAutofocus<HTMLInputElement>();
+  const { fieldsDisabled, currencies, accounts, accountsTypes } =
     useAccountDialogContext();
 
   return (
@@ -45,15 +44,15 @@ function AccountFormDialogFields({
           inline={true}
           label={intl.get('account_type')}
           labelInfo={<FieldRequiredHint />}
-          name={'account_type'}
+          name={'accountType'}
           fastField={true}
         >
           <AccountsTypesSelect
-            name={'account_type'}
-            items={accountsTypes}
-            onItemSelect={(accountType) => {
-              setFieldValue('account_type', accountType.key);
-              setFieldValue('currency_code', '');
+            name={'accountType'}
+            items={accountsTypes as []}
+            onItemSelect={(accountType: { key: string }) => {
+              setFieldValue('accountType', accountType.key);
+              setFieldValue('currencyCode', '');
             }}
             disabled={fieldsDisabled.accountType}
             popoverProps={{ minimal: true }}
@@ -70,9 +69,11 @@ function AccountFormDialogFields({
           fastField={true}
         >
           <FInputGroup
-            medium={true}
-            inputRef={(ref) => (accountNameFieldRef.current = ref)}
+            inputRef={(ref: HTMLInputElement | null) => {
+              accountNameFieldRef.current = ref;
+            }}
             name={'name'}
+            data-testId={'account-name-input'}
             fastField={true}
           />
         </FFormGroup>
@@ -84,7 +85,11 @@ function AccountFormDialogFields({
           inline={true}
           fastField={true}
         >
-          <FInputGroup medium={true} name={'code'} fastField={true} />
+          <FInputGroup
+            name={'code'}
+            data-testId={'account-code-input'}
+            fastField={true}
+          />
         </FFormGroup>
 
         <FFormGroup
@@ -103,18 +108,18 @@ function AccountFormDialogFields({
 
         {values.subaccount && (
           <FFormGroup
-            name={'parent_account_id'}
+            name={'parentAccountId'}
             shouldUpdate={parentAccountShouldUpdate}
             label={intl.get('parent_account')}
             inline={true}
             fastField={true}
           >
             <AccountsSelect
-              name={'parent_account_id'}
-              items={accounts}
+              name={'parentAccountId'}
+              items={accounts as []}
               shouldUpdate={parentAccountShouldUpdate}
               placeholder={<T id={'select_parent_account'} />}
-              filterByTypes={values.account_type}
+              filterByTypes={[values.accountType]}
               buttonProps={{ disabled: !values.subaccount }}
               fastField={true}
               fill={true}
@@ -123,20 +128,20 @@ function AccountFormDialogFields({
           </FFormGroup>
         )}
 
-        <If condition={FOREIGN_CURRENCY_ACCOUNTS.includes(values.account_type)}>
-          {/*------------ Currency  -----------*/}
+        <If condition={FOREIGN_CURRENCY_ACCOUNTS.includes(values.accountType)}>
+          {/*------------ Currency  ----------- */}
           <FFormGroup
             label={intl.get('currency')}
-            name={'currency_code'}
-            inline={true}
-            fastField={true}
+            name={'currencyCode'}
+            inline
+            fastField
           >
             <CurrencySelect
-              name={'currency_code'}
-              currencies={currencies}
+              name={'currencyCode'}
+              currencies={currencies as []}
               popoverProps={{ minimal: true }}
-              fastField={true}
-              fill={true}
+              fastField
+              fill
             />
           </FFormGroup>
         </If>
@@ -144,15 +149,14 @@ function AccountFormDialogFields({
         <FFormGroup
           label={intl.get('description')}
           name={'description'}
-          inline={true}
-          fastField={true}
+          inline
+          fastField
         >
           <FTextArea
             name={'description'}
             growVertically={true}
-            height={280}
-            fill={true}
-            fastField={true}
+            fill
+            fastField
           />
         </FFormGroup>
       </div>
@@ -180,10 +184,3 @@ function AccountFormDialogFields({
     </Form>
   );
 }
-
-export const AccountDialogFormContent = compose(
-  withAccounts(({ accountsTypes, accountsList }) => ({
-    accountsTypes,
-    accounts: accountsList,
-  })),
-)(AccountFormDialogFields);

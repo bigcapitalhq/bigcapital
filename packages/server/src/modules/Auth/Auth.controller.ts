@@ -68,7 +68,7 @@ export class AuthController {
     }
 
     return {
-      accessToken: this.authSignin.signToken(user),
+      accessToken: this.authSignin.signToken(user, signinDto?.rememberMe),
       organizationId: tenant.organizationId,
       tenantId: tenant.id,
       userId: user.id,

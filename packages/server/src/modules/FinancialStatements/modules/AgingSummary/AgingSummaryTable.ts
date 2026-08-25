@@ -17,6 +17,7 @@ import {
   ITableRow,
 } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
+import { AGING_SUMMARY_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export abstract class AgingSummaryTable extends R.pipe(
   FinancialSheetStructure,
@@ -63,7 +64,7 @@ export abstract class AgingSummaryTable extends R.pipe(
     node: IAgingSummaryContact | IAgingSummaryTotal,
   ): ITableColumnAccessor[] => {
     return node.aging.map((aging, index) => ({
-      key: 'aging_period',
+      key: AGING_SUMMARY_COLUMN_KEYS.AGING_PERIOD,
       accessor: `aging[${index}].total.formattedAmount`,
     }));
   };
@@ -73,7 +74,10 @@ export abstract class AgingSummaryTable extends R.pipe(
    * @returns {ITableColumnAccessor}
    */
   protected get contactNameNodeAccessor(): ITableColumnAccessor {
-    return { key: 'customer_name', accessor: 'customerName' };
+    return {
+      key: AGING_SUMMARY_COLUMN_KEYS.CUSTOMER_NAME,
+      accessor: 'customerName',
+    };
   }
 
   /**
@@ -87,9 +91,15 @@ export abstract class AgingSummaryTable extends R.pipe(
     return R.compose(
       R.concat([
         this.contactNameNodeAccessor,
-        { key: 'current', accessor: 'current.formattedAmount' },
+        {
+          key: AGING_SUMMARY_COLUMN_KEYS.CURRENT,
+          accessor: 'current.formattedAmount',
+        },
         ...this.agingNodeAccessors(node),
-        { key: 'total', accessor: 'total.formattedAmount' },
+        {
+          key: AGING_SUMMARY_COLUMN_KEYS.TOTAL,
+          accessor: 'total.formattedAmount',
+        },
       ]),
     )([]);
   };
@@ -128,9 +138,15 @@ export abstract class AgingSummaryTable extends R.pipe(
     return R.compose(
       R.concat([
         { key: 'blank', value: '' },
-        { key: 'current', accessor: 'current.formattedAmount' },
+        {
+          key: AGING_SUMMARY_COLUMN_KEYS.CURRENT,
+          accessor: 'current.formattedAmount',
+        },
         ...this.agingNodeAccessors(node),
-        { key: 'total', accessor: 'total.formattedAmount' },
+        {
+          key: AGING_SUMMARY_COLUMN_KEYS.TOTAL,
+          accessor: 'total.formattedAmount',
+        },
       ]),
     )([]);
   };
@@ -191,7 +207,7 @@ export abstract class AgingSummaryTable extends R.pipe(
         label: `${agingPeriod.beforeDays} - ${
           agingPeriod.toDays || 'And Over'
         }`,
-        key: 'aging_period',
+        key: AGING_SUMMARY_COLUMN_KEYS.AGING_PERIOD,
       };
     });
   };

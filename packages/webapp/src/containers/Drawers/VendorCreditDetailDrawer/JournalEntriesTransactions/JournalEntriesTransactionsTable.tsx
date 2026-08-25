@@ -19,7 +19,7 @@ export function VendorCreditGLEntriesTable() {
   const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
     {
       referenceId: vendorCreditId ?? 0,
-      referenceType: 'vendorCredit',
+      referenceType: 'VendorCredit',
     },
     { enabled: !!vendorCreditId },
   );

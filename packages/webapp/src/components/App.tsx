@@ -1,9 +1,8 @@
-// @ts-nocheck
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory, History } from 'history';
 import { lazy, Suspense } from 'react';
-import { Router, Switch, Route } from 'react-router';
+import { Router, Switch, Route } from 'react-router-dom';
 
 import '@/style/App.scss';
 
@@ -46,7 +45,7 @@ const PaymentPortalPage = lazy(() =>
 /**
  * App inner.
  */
-function AppInsider({ history }) {
+function AppInsider({ history }: { history: History }) {
   return (
     <div className="App">
       <DashboardThemeProvider>
@@ -100,7 +99,8 @@ export default function App() {
         <AppInsider history={history} />
       </AppIntlLoader>
 
-      <ReactQueryDevtools initialIsOpen />
+      {import.meta.env.VITE_REACT_QUERY_DEVTOOLS !== 'false' &&
+        !navigator.webdriver && <ReactQueryDevtools initialIsOpen />}
     </QueryClientProvider>
   );
 }

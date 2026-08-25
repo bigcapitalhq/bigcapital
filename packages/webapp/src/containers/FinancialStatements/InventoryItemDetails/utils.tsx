@@ -1,6 +1,10 @@
 import * as R from 'ramda';
+import type { InventoryItemDetailsColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
+
+const isColumnKey = (key: InventoryItemDetailsColumnKey) =>
+  R.pathEq(['key'], key);
 
 const itemNameOrDateColumn = R.curry(
   (data: unknown[], index: number, column: Record<string, any>) => ({
@@ -60,14 +64,14 @@ export const dynamicColumns = (
   const mapper = (column: Record<string, any>, index: number) => {
     return R.compose(
       R.cond([
-        [R.pathEq(['key'], 'date'), itemNameOrDateColumn(data, index)],
-        [R.pathEq(['key'], 'runningQuantity'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'profitMargin'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'runningValue'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'quantity'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'rate'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'total'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'value'), numericColumn(data, index)],
+        [isColumnKey('date'), itemNameOrDateColumn(data, index)],
+        [isColumnKey('running_quantity'), numericColumn(data, index)],
+        [isColumnKey('profit_margin'), numericColumn(data, index)],
+        [isColumnKey('running_value'), numericColumn(data, index)],
+        [isColumnKey('quantity'), numericColumn(data, index)],
+        [isColumnKey('rate'), numericColumn(data, index)],
+        [isColumnKey('total'), numericColumn(data, index)],
+        [isColumnKey('value'), numericColumn(data, index)],
         [R.T, columnsMapper(data, index)],
       ]),
     )(column);

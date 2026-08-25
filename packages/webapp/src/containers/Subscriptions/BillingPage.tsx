@@ -23,7 +23,7 @@ function BillingPageRoot({
   }, [changePreferencesPageTitle]);
 
   // In case the edition is not Bigcapital Cloud, redirect to the homepage.
-  if (!dashboardMeta.is_bigcapital_cloud) {
+  if (!dashboardMeta.isBigcapitalCloud) {
     return <Redirect to={{ pathname: '/' }} />;
   }
 

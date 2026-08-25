@@ -32,6 +32,7 @@ import type {
   CreateCashflowTransactionBody,
   CashflowAccountTransactionsQuery,
   CashflowAccountUncategorizedTransactionsQuery,
+  GetBankingAccountsQuery,
   CategorizeTransactionBody,
   UncategorizedTransactionResponse,
 } from '@bigcapital/sdk-ts';
@@ -88,7 +89,8 @@ export function useCashflowAccounts(
   >({
     ...props,
     queryKey: cashflowAccountsKeys.list(query),
-    queryFn: () => fetchCashflowAccounts(fetcher),
+    queryFn: () =>
+      fetchCashflowAccounts(fetcher, query as GetBankingAccountsQuery),
   });
 }
 
@@ -207,8 +209,7 @@ export function useAccountUncategorizedTransactionsInfinity(
     'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
   >,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useInfiniteQuery<
     AccountUncategorizedTransactionsInfinityPage,
     Error,
@@ -240,7 +241,6 @@ export function useRefreshCashflowAccounts() {
 
 export function useRefreshCashflowTransactions() {
   const queryClient = useQueryClient();
-
   return {
     refresh: () => {
       queryClient.invalidateQueries({
@@ -261,8 +261,7 @@ export function useUncategorizedTransaction(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
-
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery<
     UncategorizedTransactionResponse,
     Error,

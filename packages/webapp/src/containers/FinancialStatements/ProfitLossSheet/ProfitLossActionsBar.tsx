@@ -48,7 +48,7 @@ function ProfitLossActionsBarInner({
   const { sheetRefetch, isLoading } = useProfitLossSheetContext();
 
   const handleFilterClick = () => {
-    toggleFilterDrawer(false);
+    toggleFilterDrawer();
   };
 
   const handleRecalcReport = () => {

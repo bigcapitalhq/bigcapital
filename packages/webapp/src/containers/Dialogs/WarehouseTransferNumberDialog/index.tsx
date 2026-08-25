@@ -1,4 +1,5 @@
 import React, { lazy } from 'react';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
@@ -11,9 +12,9 @@ const WarehouseTransferNumberDialogContent = lazy(() =>
 
 interface WarehouseTransferNumberDialogProps {
   dialogName: string;
-  payload: { initialFormValues?: Record<string, unknown> };
+  payload: { initialFormValues?: Partial<ReferenceNumberFormValues> };
   isOpen: boolean | undefined;
-  onConfirm?: (values: Record<string, unknown>) => void;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
 }
 
 function WarehouseTransferNumberDilaog({
@@ -22,7 +23,7 @@ function WarehouseTransferNumberDilaog({
   isOpen,
   onConfirm,
 }: WarehouseTransferNumberDialogProps): React.ReactElement {
-  const handleConfirm = (values: Record<string, unknown>) => {
+  const handleConfirm = (values: ReferenceNumberFormValues) => {
     saveInvoke(onConfirm, values);
   };
   return (
@@ -35,7 +36,7 @@ function WarehouseTransferNumberDilaog({
     >
       <DialogSuspense>
         <WarehouseTransferNumberDialogContent
-          // @ts-expect-error — HOC-composed component loses generic props via compose; runtime passes through.
+          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />

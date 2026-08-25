@@ -1,6 +1,9 @@
 import * as R from 'ramda';
+import type { TrialBalanceColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
+
+const isColumnKey = (key: TrialBalanceColumnKey) => R.pathEq(['key'], key);
 
 const ACCOUNT_NAME_COLUMN_WIDTH = 320;
 const AMOUNT_COLUMNS_MIN_WIDTH = 120;
@@ -44,10 +47,10 @@ const dynamicColumnMapper = R.curry((data: any, column: any) => {
   const totalColumn = amountAccessor(data);
 
   return R.compose(
-    R.when(R.pathEq(['key'], 'account'), accountNameColumn),
-    R.when(R.pathEq(['key'], 'credit'), creditColumn),
-    R.when(R.pathEq(['key'], 'debit'), debitColumn),
-    R.when(R.pathEq(['key'], 'total'), totalColumn),
+    R.when(isColumnKey('account'), accountNameColumn),
+    R.when(isColumnKey('credit'), creditColumn),
+    R.when(isColumnKey('debit'), debitColumn),
+    R.when(isColumnKey('total'), totalColumn),
   )(column);
 });
 

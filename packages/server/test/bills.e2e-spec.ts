@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -26,6 +26,12 @@ const createBillRequest = () => ({
 
 describe('Bills (e2e)', () => {
   beforeAll(async () => {
+    await request(app.getHttpServer())
+      .put('/transactions-locking/cancel-lock')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ reason: 'Cancel lock for e2e test' });
+
     const vendor = await request(app.getHttpServer())
       .post('/vendors')
       .set('organization-id', orgainzationId)
@@ -39,7 +45,8 @@ describe('Bills (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'service',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,

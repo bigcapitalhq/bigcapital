@@ -31,7 +31,7 @@ function VendorBulkDeleteDialogInner({
   payload,
 
   // #withVendorsActions
-  setVendorsSelectedRows,
+  resetVendorsSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -60,7 +60,7 @@ function VendorBulkDeleteDialogInner({
           message: intl.get('the_vendors_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setVendorsSelectedRows([]);
+        resetVendorsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

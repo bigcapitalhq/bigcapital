@@ -47,6 +47,17 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
   public accounts: ModelObject<Account>[];
 
   /**
+   * Retrieves the given account id with its children account ids.
+   * @param {number} accountId
+   * @returns {number[]}
+   */
+  public getAccountsIdsIncludingChildren = (accountId: number): number[] => {
+    const childrenAccountIds = this.accountsGraph.dependenciesOf(accountId);
+
+    return R.uniq(R.append(accountId, childrenAccountIds));
+  };
+
+  /**
    * Accounts graph.
    */
   public accountsGraph: any;

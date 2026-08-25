@@ -32,7 +32,7 @@ interface ItemsDataTableProps
     WithAlertActionsProps,
     WithDialogActionsProps,
     WithDrawerActionsProps,
-    Pick<WithItemsProps, 'itemsTableState'> {
+    Pick<WithItemsProps, 'itemsTableState' | 'itemsSelectedRows'> {
   tableProps?: Record<string, unknown>;
 }
 
@@ -65,6 +65,7 @@ function ItemsDataTableInner({
 
   // #withItems
   itemsTableState,
+  itemsSelectedRows,
 
   // #ownProps
   tableProps,
@@ -193,6 +194,7 @@ function ItemsDataTableInner({
         noInitialFetch={true}
         selectionColumn={true}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={itemsSelectedRows}
         autoResetSelectedRows={false}
         spinnerProps={{ size: 30 }}
         expandable={false}
@@ -226,5 +228,8 @@ export const ItemsDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withItems(({ itemsTableState }) => ({ itemsTableState })),
+  withItems(({ itemsTableState, itemsSelectedRows }) => ({
+    itemsTableState,
+    itemsSelectedRows,
+  })),
 )(ItemsDataTableInner);

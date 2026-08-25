@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Classes,
@@ -11,31 +10,37 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import * as R from 'ramda';
-import React from 'react';
 import { useTaxRateDetailsContext } from './TaxRateDetailsContentBoot';
 import { AppToaster, Can, DrawerActionsBar, Icon } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import {
   useActivateTaxRate,
   useInactivateTaxRate,
 } from '@/hooks/query/tax-rates';
+import { compose } from '@/utils';
+
+interface TaxRateDetailsContentActionsBarInnerProps
+  extends Pick<WithDialogActionsProps, 'openDialog'>,
+    Pick<WithAlertActionsProps, 'openAlert'> {}
 
 /**
  * Tax rate details content actions bar.
  * @returns {JSX.Element}
  */
 function TaxRateDetailsContentActionsBarInner({
-  // #withDrawerActions
   openDialog,
-
-  // #withAlertActions
   openAlert,
-}) {
+}: TaxRateDetailsContentActionsBarInnerProps) {
   const { taxRateId, taxRate } = useTaxRateDetailsContext();
 
   const { mutateAsync: activateTaxRateMutate } = useActivateTaxRate();
@@ -115,13 +120,13 @@ function TaxRateDetailsContentActionsBarInner({
             }}
             content={
               <Menu>
-                {!taxRate.active && (
+                {!taxRate?.active && (
                   <MenuItem
                     text={'Activate Tax Rate'}
                     onClick={handleActivateTaxRate}
                   />
                 )}
-                {!!taxRate.active && (
+                {!!taxRate?.active && (
                   <MenuItem
                     text={'Inactivate Tax Rate'}
                     onClick={handleInactivateTaxRate}
@@ -141,7 +146,7 @@ function TaxRateDetailsContentActionsBarInner({
   );
 }
 
-export const TaxRateDetailsContentActionsBar = R.compose(
+export const TaxRateDetailsContentActionsBar = compose(
   withDrawerActions,
   withDialogActions,
   withAlertActions,

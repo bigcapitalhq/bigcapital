@@ -14,6 +14,7 @@ import { transformTableStateToQuery, compose } from '@/utils';
 
 interface WithCreditNotesActionsProps {
   resetCreditNotesTableState: () => void;
+  resetCreditNotesSelectedRows: () => void;
 }
 
 interface CreditNotesListProps
@@ -27,12 +28,14 @@ function CreditNotesListInner({
   creditNoteTableState,
   creditNoteTableStateChanged,
   resetCreditNotesTableState,
+  resetCreditNotesSelectedRows,
 }: CreditNotesListProps) {
   React.useEffect(
     () => () => {
       resetCreditNotesTableState();
+      resetCreditNotesSelectedRows();
     },
-    [resetCreditNotesTableState],
+    [resetCreditNotesSelectedRows, resetCreditNotesTableState],
   );
 
   return (

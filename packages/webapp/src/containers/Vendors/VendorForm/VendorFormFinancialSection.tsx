@@ -23,6 +23,7 @@ import {
   Box,
 } from '@/components';
 import { Features } from '@/constants';
+import { useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 export function VendorFormFinancialSection() {
@@ -77,6 +78,7 @@ export function VendorFormFinancialSection() {
  */
 function VendorOpeningBalanceAtField() {
   const { vendorId } = useVendorFormContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   // Cannot continue if the vendor id is defined.
   if (vendorId) return null;
@@ -92,8 +94,7 @@ function VendorOpeningBalanceAtField() {
         name={'openingBalanceAt'}
         popoverProps={{ position: Position.BOTTOM, minimal: true }}
         disabled={Boolean(vendorId)}
-        formatDate={(date: Date) => date.toLocaleDateString()}
-        parseDate={(str: string) => new Date(str)}
+        {...dateInputFormatter}
         inputProps={{
           leftIcon: <Icon icon={'date-range'} />,
         }}

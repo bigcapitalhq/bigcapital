@@ -30,7 +30,10 @@ interface WithEstimatesActionsProps {
 }
 
 interface EstimatesDataTableProps
-  extends Pick<WithEstimatesProps, 'estimatesTableState'>,
+  extends Pick<
+      WithEstimatesProps,
+      'estimatesTableState' | 'estimatesSelectedRows'
+    >,
     WithEstimatesActionsProps,
     WithAlertActionsProps,
     WithDrawerActionsProps,
@@ -43,6 +46,7 @@ function EstimatesDataTableInner({
   openDrawer,
   openDialog,
   estimatesTableState,
+  estimatesSelectedRows,
 }: EstimatesDataTableProps) {
   const history = useHistory();
 
@@ -141,6 +145,7 @@ function EstimatesDataTableInner({
         progressBarLoading={isEstimatesFetching}
         onFetchData={handleFetchData}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={estimatesSelectedRows}
         autoResetSelectedRows={false}
         noInitialFetch={true}
         manualSortBy={true}
@@ -153,6 +158,7 @@ function EstimatesDataTableInner({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
+        rowTestId={'estimate-row'}
         onCellClick={handleCellClick}
         initialColumnsWidths={initialColumnsWidths}
         onColumnResizing={handleColumnResizing}
@@ -178,5 +184,8 @@ export const EstimatesDataTable = compose(
   withAlertActions,
   withDrawerActions,
   withDialogActions,
-  withEstimates(({ estimatesTableState }) => ({ estimatesTableState })),
+  withEstimates(({ estimatesTableState, estimatesSelectedRows }) => ({
+    estimatesTableState,
+    estimatesSelectedRows,
+  })),
 )(EstimatesDataTableInner);

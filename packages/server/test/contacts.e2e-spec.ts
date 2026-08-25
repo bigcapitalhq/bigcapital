@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -11,7 +11,11 @@ describe('Contacts (e2e)', () => {
       .post('/customers')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send({ displayName: 'Test Customer' });
+      .send({
+        displayName: 'Test Customer',
+        customerType: 'business',
+        currencyCode: 'USD',
+      });
 
     customerId = customer.body.id;
 
@@ -34,10 +38,17 @@ describe('Contacts (e2e)', () => {
 
   it('/contacts/:id/activate (PATCH)', () => {
     return request(app.getHttpServer())
-      .patch(`/contacts/${customerId}/activate`)
+      .patch(`/contacts/${customerId}/inactivate`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .expect(200);
+      .expect(200)
+      .then(() =>
+        request(app.getHttpServer())
+          .patch(`/contacts/${customerId}/activate`)
+          .set('organization-id', orgainzationId)
+          .set('Authorization', AuthorizationHeader)
+          .expect(200),
+      );
   });
 
   it('/contacts/:id/inactivate (PATCH)', () => {

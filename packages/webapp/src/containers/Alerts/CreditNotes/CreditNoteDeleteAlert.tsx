@@ -1,43 +1,46 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { handleDeleteErrors } from '@/containers/Sales/CreditNotes/CreditNotesLanding/utils';
 import { useDeleteCreditNote } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface CreditNoteDeleteAlertPayload {
+  creditNoteId: number;
+}
+
+interface CreditNoteDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: CreditNoteDeleteAlertPayload;
+}
 
 /**
  * Credit note delete alert.
  */
 function CreditNoteDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { creditNoteId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { isLoading, mutateAsync: deleteCreditNoteMutate } =
+}: CreditNoteDeleteAlertProps): React.ReactElement {
+  const { isPending: isLoading, mutateAsync: deleteCreditNoteMutate } =
     useDeleteCreditNote();
 
-  // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
+
   const handleConfirmCreditNoteDelete = () => {
     deleteCreditNoteMutate(creditNoteId)
       .then(() => {
@@ -47,9 +50,11 @@ function CreditNoteDeleteAlertInner({
         });
         closeDrawer(DRAWERS.CREDIT_NOTE_DETAILS);
       })
-      .catch(({ data: { errors } }) => {
-        handleDeleteErrors(errors);
-      })
+      .catch(
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
+          handleDeleteErrors(errors);
+        },
+      )
       .finally(() => {
         closeAlert(name);
       });
@@ -57,8 +62,8 @@ function CreditNoteDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -67,6 +72,7 @@ function CreditNoteDeleteAlertInner({
       loading={isLoading}
     >
       <p>
+        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage id={'credit_note.once_delete_this_credit_note'} />
       </p>
     </Alert>

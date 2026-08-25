@@ -24,6 +24,8 @@ import { InvoicesActivateWarehousesSubscriber } from './subscribers/Activate/Inv
 import { CreditsActivateWarehousesSubscriber } from './subscribers/Activate/CreditNoteWarehousesActivateSubscriber';
 import { InventoryAdjustmentWarehouseValidatorSubscriber } from './subscribers/Validators/InventoryAdjustment/InventoryAdjustmentWarehouseValidatorSubscriber';
 import { DeleteItemWarehousesQuantitySubscriber } from './subscribers/DeleteItemWarehousesQuantitySubscriber';
+import { EstimatesActivateWarehousesSubscriber } from './subscribers/Activate/EstimateWarehousesActivateSubscriber';
+import { InventoryActivateWarehousesSubscriber } from './subscribers/Activate/InventoryTransactionsWarehousesActivateSubscriber';
 import { VendorCreditWarehousesValidateSubscriber } from './subscribers/Validators/Purchases/VendorCreditWarehousesSubscriber';
 import { SaleInvoicesWarehousesValidateSubscriber } from './subscribers/Validators/Sales/SaleInvoicesWarehousesSubscriber';
 import { SaleEstimateWarehousesValidateSubscriber } from './subscribers/Validators/Sales/SaleEstimateWarehousesSubscriber';
@@ -36,6 +38,12 @@ import { CreditNotesActivateWarehouses } from './Activate/CreditNoteWarehousesAc
 import { VendorCreditActivateWarehouses } from './Activate/VendorCreditWarehousesActivate';
 import { InvoicesActivateWarehouses } from './Activate/InvoiceWarehousesActivate';
 import { ReceiptActivateWarehouses } from './Activate/ReceiptWarehousesActivate';
+import { EstimatesActivateWarehouses } from './Activate/EstimateWarehousesActivate';
+import { InventoryActivateWarehouses } from './Activate/InventoryTransactionsWarehousesActivate';
+import { ActivateWarehousesSubscriber } from './ActivateWarehousesSubscriber';
+import { UpdateInventoryTransactionsWithWarehouse } from './UpdateInventoryTransactionsWithWarehouse';
+import { CreateInitialWarehousesItemsQuantity } from './CreateInitialWarehousesitemsQuantity';
+import { WarehousesItemsQuantitySync } from './Integrations/WarehousesItemsQuantitySync';
 import { WarehousesDTOValidators } from './Integrations/WarehousesDTOValidators';
 import { DeleteItemWarehousesQuantity } from './commands/DeleteItemWarehousesQuantity';
 import { InventoryTransactionsWarehouses } from './AccountsTransactionsWarehouses';
@@ -83,6 +91,14 @@ const models = [RegisterTenancyModel(Warehouse)];
     CreditNotesActivateWarehouses,
     InvoicesActivateWarehouses,
     ReceiptActivateWarehouses,
+    EstimatesActivateWarehouses,
+    InventoryActivateWarehouses,
+    ActivateWarehousesSubscriber,
+    UpdateInventoryTransactionsWithWarehouse,
+    CreateInitialWarehousesItemsQuantity,
+    WarehousesItemsQuantitySync,
+    EstimatesActivateWarehousesSubscriber,
+    InventoryActivateWarehousesSubscriber,
     WarehousesDTOValidators,
     DeleteItemWarehousesQuantity,
     InventoryTransactionsWarehouses,

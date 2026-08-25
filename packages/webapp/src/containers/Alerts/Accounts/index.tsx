@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AccountDeleteAlert } from './AccountDeleteAlert';
 
 export const AccountsIndex = {

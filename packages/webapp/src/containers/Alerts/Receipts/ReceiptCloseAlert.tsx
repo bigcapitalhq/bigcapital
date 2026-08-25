@@ -1,34 +1,39 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useCloseReceipt } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface ReceiptCloseAlertPayload {
+  receiptId: number;
+}
+
+interface ReceiptCloseAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ReceiptCloseAlertPayload;
+}
 
 /**
  * Receipt close alert.
  */
 function ReceiptCloseAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { receiptId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: closeReceiptMutate, isLoading } = useCloseReceipt();
+}: ReceiptCloseAlertProps): React.ReactElement {
+  const { mutateAsync: closeReceiptMutate, isPending: isLoading } =
+    useCloseReceipt();
 
-  // handle cancel delete alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm receipt close.
   const handleConfirmReceiptClose = () => {
     closeReceiptMutate(receiptId)
       .then(() => {
@@ -37,7 +42,13 @@ function ReceiptCloseAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: original @ts-nocheck had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -45,8 +56,8 @@ function ReceiptCloseAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'close'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('close')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelDeleteAlert}

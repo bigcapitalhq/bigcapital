@@ -6,6 +6,7 @@ import {
   Query,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { AcceptType } from '@/constants/accept-type';
 import { SalesByItemsApplication } from './SalesByItemsApplication';
@@ -25,6 +26,11 @@ import {
   SalesByItemsTableResponseDto,
 } from './SalesByItemsResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('/reports/sales-by-items')
 @ApiTags('Reports')
@@ -34,10 +40,13 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
   SalesByItemsTableResponseDto,
   NumberFormatQueryDto,
 )
+// Restrict this financial report to authenticated users granted the sales-by-items read permission.
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class SalesByItemsController {
   constructor(private readonly salesByItemsApp: SalesByItemsApplication) {}
 
   @Get()
+  @RequirePermission(ReportsAction.READ_SALES_BY_ITEMS, AbilitySubject.Report)
   @ApiResponse({
     status: 200,
     description: 'Sales by items report',

@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import { Icon } from '@/components/Icon';
 
 export function AuthCopyright() {

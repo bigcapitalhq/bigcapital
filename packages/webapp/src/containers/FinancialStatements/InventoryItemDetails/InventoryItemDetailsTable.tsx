@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useInventoryItemDetailsColumns } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -42,6 +43,7 @@ export function InventoryItemDetailsTable({
         columns={columns}
         data={tableRows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('inventory-item-details')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}

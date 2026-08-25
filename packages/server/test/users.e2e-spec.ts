@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -45,7 +45,7 @@ describe('Users (e2e)', () => {
     }
   });
 
-  it('/users/:id (POST)', async () => {
+  it('/users/:id (PUT)', async () => {
     if (!userId) {
       const usersResponse = await request(app.getHttpServer())
         .get('/users')
@@ -57,13 +57,20 @@ describe('Users (e2e)', () => {
       }
     }
     if (userId) {
+      const userResponse = await request(app.getHttpServer())
+        .get(`/users/${userId}`)
+        .set('organization-id', orgainzationId)
+        .set('Authorization', AuthorizationHeader);
+
       return request(app.getHttpServer())
-        .post(`/users/${userId}`)
+        .put(`/users/${userId}`)
         .set('organization-id', orgainzationId)
         .set('Authorization', AuthorizationHeader)
         .send({
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
+          email: userResponse.body.email,
+          roleId: userResponse.body.role_id,
         })
         .expect(200);
     }

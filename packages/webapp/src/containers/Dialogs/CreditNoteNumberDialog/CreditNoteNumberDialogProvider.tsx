@@ -1,18 +1,31 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { useSettingsCreditNotes } from '@/hooks/query';
 
-const CreditNoteNumberDialogContext = React.createContext();
+interface CreditNoteNumberDialogContextValue {
+  isSettingsLoading: boolean;
+}
+
+const CreditNoteNumberDialogContext =
+  React.createContext<CreditNoteNumberDialogContextValue>(
+    {} as CreditNoteNumberDialogContextValue,
+  );
+
+interface CreditNoteNumberDialogProviderProps {
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+}
 
 /**
  *Credit Note number dialog provider
  */
-function CreditNoteNumberDialogProvider({ query, ...props }) {
+function CreditNoteNumberDialogProvider({
+  ...props
+}: CreditNoteNumberDialogProviderProps) {
   const { isLoading: isSettingsLoading } = useSettingsCreditNotes();
 
   // Provider payload.
-  const provider = {
+  const provider: CreditNoteNumberDialogContextValue = {
     isSettingsLoading,
   };
 

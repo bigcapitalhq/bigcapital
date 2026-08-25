@@ -19,6 +19,7 @@ import {
   FDateInput,
   Stack,
 } from '@/components';
+import { useDateInputFormatter } from '@/hooks';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -45,6 +46,7 @@ export function MakeJournalEntriesHeader() {
   const form = useFormikContext<MakeJournalFormValues>();
   const theme = useTheme();
   const fieldsClassName = getFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={fieldsClassName}>
@@ -58,8 +60,7 @@ export function MakeJournalEntriesHeader() {
       >
         <FDateInput
           name={'date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
@@ -114,7 +115,7 @@ export function MakeJournalEntriesHeader() {
           name={'currencyCode'}
           items={currencies}
           onItemChange={(currencyItem: Record<string, unknown>) => {
-            form.setFieldValue('currencyCode', currencyItem.currency_code);
+            form.setFieldValue('currencyCode', currencyItem.currencyCode);
             form.setFieldValue('exchangeRate', '');
           }}
           popoverProps={{
@@ -122,9 +123,9 @@ export function MakeJournalEntriesHeader() {
             minimal: true,
             captureDismiss: true,
           }}
-          valueAccessor={'currency_code'}
-          labelAccessor={'currency_name'}
-          textAccessor={'currency_code'}
+          valueAccessor={'currencyCode'}
+          labelAccessor={'currencyName'}
+          textAccessor={'currencyCode'}
           fastField
         />
       </FFormGroup>

@@ -1,5 +1,5 @@
-// @ts-nocheck
 import React from 'react';
+import type { ReconcileCreditNoteDialogPayload } from './types';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
@@ -10,14 +10,20 @@ const ReconcileCreditNoteDialogContent = React.lazy(() =>
   })),
 );
 
+interface ReconcileCreditNoteDialogProps {
+  dialogName: string;
+  payload: ReconcileCreditNoteDialogPayload;
+  isOpen: boolean | undefined;
+}
+
 /**
  * Reconcile credit note dialog.
  */
 function ReconcileCreditNoteDialog({
   dialogName,
-  payload: { creditNoteId },
+  payload: { creditNoteId } = {},
   isOpen,
-}) {
+}: ReconcileCreditNoteDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -28,7 +34,7 @@ function ReconcileCreditNoteDialog({
     >
       <DialogSuspense>
         <ReconcileCreditNoteDialogContent
-          creditNoteId={creditNoteId}
+          creditNoteId={creditNoteId ?? null}
           dialogName={dialogName}
         />
       </DialogSuspense>

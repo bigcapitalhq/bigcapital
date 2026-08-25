@@ -26,6 +26,7 @@ export const getVendorsTransactionsDefaultQuery = () => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
   vendorsIds: [] as string[],
+  numberFormat: {},
 });
 
 /**

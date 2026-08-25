@@ -1,23 +1,29 @@
-// @ts-nocheck
 import { AnchorButton } from '@blueprintjs/core';
 import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfPaymentReceive } from '@/hooks/query';
 import { compose } from '@/utils';
 
+interface PaymentReceivePdfPreviewContentProps extends WithDialogActionsProps {
+  subscriptionForm: { paymentReceiveId: number | null };
+  dialogName?: string;
+}
+
 function PaymentReceivePdfPreviewDialogContent({
   subscriptionForm: { paymentReceiveId },
-}) {
-  const { isLoading, pdfUrl, filename } =
-    usePdfPaymentReceive(paymentReceiveId);
+}: PaymentReceivePdfPreviewContentProps): React.ReactElement {
+  const { isLoading, isError, pdfUrl, filename } = usePdfPaymentReceive(
+    paymentReceiveId as number,
+  );
 
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -38,6 +44,7 @@ function PaymentReceivePdfPreviewDialogContent({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>

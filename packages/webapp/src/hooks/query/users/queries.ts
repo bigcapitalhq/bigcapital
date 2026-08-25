@@ -26,8 +26,8 @@ import type {
   User,
   EditUserBody,
   InviteUserBody,
-  AuthedAccount,
   GetDashboardBootMetaResponse,
+  AuthedAccount,
 } from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
@@ -117,7 +117,7 @@ export function useDeleteUser(props?: UseMutationOptions<void, Error, number>) {
 export function useUsers(
   props?: Omit<UseQueryOptions<UsersListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: usersKeys.all(),
@@ -129,7 +129,7 @@ export function useUser(
   id: number | null | undefined,
   props?: Omit<UseQueryOptions<User>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: usersKeys.detail(id),
@@ -142,19 +142,16 @@ export function useAuthenticatedAccount(
   props?: Omit<UseQueryOptions<AuthedAccount>, 'queryKey' | 'queryFn'>,
 ) {
   const setEmailConfirmed = useSetAuthEmailConfirmed();
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
-  const state = useQuery({
+  const state = useQuery<AuthedAccount, Error>({
     ...props,
     queryKey: usersKeys.authenticatedAccount(),
     queryFn: () => fetchAuthedAccount(fetcher),
   });
   useEffect(() => {
     if (state.isSuccess && state.data) {
-      setEmailConfirmed(
-        (state.data as { verified?: boolean }).verified,
-        (state.data as { email?: string }).email ?? '',
-      );
+      setEmailConfirmed(state.data.verified, state.data.email);
     }
   }, [state.isSuccess, state.data, setEmailConfirmed]);
   return { ...state, data: state.data ?? ({} as AuthedAccount) };
@@ -167,7 +164,7 @@ export const useDashboardMeta = (
   >,
 ) => {
   const setFeatureDashboardMeta = useSetFeatureDashboardMeta();
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   const state = useQuery({
     ...props,

@@ -7,7 +7,9 @@ import intl from 'react-intl-universal';
 import { VendorFormSectionTitle } from './VendorFormSectionTitle';
 import {
   SalutationList,
+  SalutationItem,
   DisplayNameList,
+  useDisplayNameSynchronizer,
   FInputGroup,
   FFormGroup,
   Box,
@@ -18,6 +20,7 @@ import { useAutofocus } from '@/hooks';
 
 export function VendorFormBasicSection() {
   const firstNameFieldRef = useAutofocus<HTMLInputElement>();
+  const { syncDisplayName, createFieldOnChange } = useDisplayNameSynchronizer();
 
   return (
     <Box data-section-id="primary">
@@ -35,6 +38,9 @@ export function VendorFormBasicSection() {
             name={'salutation'}
             popoverProps={{ minimal: true }}
             fastField
+            onItemChange={(item: SalutationItem) =>
+              syncDisplayName({ salutation: item.key })
+            }
           />
           <FInputGroup
             name={'firstName'}
@@ -42,12 +48,16 @@ export function VendorFormBasicSection() {
             inputRef={(ref: HTMLInputElement | null) => {
               if (ref) firstNameFieldRef.current = ref;
             }}
+            data-testId={'vendor-first-name-input'}
+            onChange={createFieldOnChange('firstName')}
             fill
             fastField
           />
           <FInputGroup
             name={'lastName'}
             placeholder={intl.get('last_name')}
+            data-testId={'vendor-last-name-input'}
+            onChange={createFieldOnChange('lastName')}
             fill
             fastField
           />
@@ -61,7 +71,12 @@ export function VendorFormBasicSection() {
         inline
         fastField
       >
-        <FInputGroup name={'code'} fill fastField />
+        <FInputGroup
+          name={'code'}
+          data-testId={'vendor-code-input'}
+          fill
+          fastField
+        />
       </FFormGroup>
 
       {/*----------- Company Name -----------*/}
@@ -71,7 +86,13 @@ export function VendorFormBasicSection() {
         inline
         fastField
       >
-        <FInputGroup name={'companyName'} fill fastField />
+        <FInputGroup
+          name={'companyName'}
+          data-testId={'vendor-company-name-input'}
+          onChange={createFieldOnChange('companyName')}
+          fill
+          fastField
+        />
       </FFormGroup>
 
       {/*----------- Display Name -----------*/}
@@ -85,8 +106,10 @@ export function VendorFormBasicSection() {
         <DisplayNameList
           name={'displayName'}
           popoverProps={{ minimal: true }}
-          buttonProps={{ fill: true }}
-          fastField
+          buttonProps={{
+            fill: true,
+            'data-testId': 'vendor-display-name-select',
+          }}
         />
       </FFormGroup>
 

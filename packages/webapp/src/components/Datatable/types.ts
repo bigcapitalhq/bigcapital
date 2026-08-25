@@ -1,5 +1,6 @@
 import type { ComponentType, ReactNode } from 'react';
 import type {
+  Cell,
   Column,
   ColumnInstance,
   Row,
@@ -124,6 +125,7 @@ export interface DataTableProps<D extends object = any> {
     sortBy: Array<{ id: string; desc: boolean }>;
   }) => void;
   onSelectedRowsChange?: (selectedFlatRows: Row<D>[]) => void;
+  selectedRowsIds?: Array<unknown>;
   onColumnResizing?: (
     currentColumnId: string,
     columnWidth: number,
@@ -141,6 +143,8 @@ export interface DataTableProps<D extends object = any> {
   expandSubRows?: boolean;
   expanded?: any;
   rowClassNames?: (row: Row<D>) => string | undefined;
+  rowTestId?: string | ((row: Row<D>) => string | undefined);
+  cellTestId?: (row: Row<D>, cell: Cell<D>) => string | undefined;
   payload?: Record<string, any>;
   expandable?: boolean;
   noInitialFetch?: boolean;

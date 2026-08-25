@@ -28,13 +28,15 @@ function ItemsListInner({
 
   // #withItemsActions
   resetItemsTableState,
+  resetItemsSelectedRows,
 }: ItemsListInnerProps) {
-  // Resets items table query state once the page unmount.
+  // Resets items table query state and selected rows once the page unmount.
   React.useEffect(
     () => () => {
       resetItemsTableState();
+      resetItemsSelectedRows();
     },
-    [resetItemsTableState],
+    [resetItemsSelectedRows, resetItemsTableState],
   );
 
   return (

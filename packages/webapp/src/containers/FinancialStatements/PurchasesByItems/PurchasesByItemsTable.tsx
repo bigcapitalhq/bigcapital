@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { usePurchasesByItemsTableColumns } from './dynamicColumns';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -40,6 +41,7 @@ export function PurchasesByItemsTable({
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('purchases-by-items')}
         noResults={intl.get(
           'there_were_no_purchases_during_the_selected_date_range',
         )}

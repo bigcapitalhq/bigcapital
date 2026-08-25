@@ -55,8 +55,11 @@ export async function fetchProfitLossCsv(
   query: ProfitLossCsvQuery
 ): Promise<ProfitLossCsvResponse> {
   const get = fetcher.path(PROFIT_LOSS_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/csv" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as ProfitLossCsvResponse;
 }
 
@@ -69,8 +72,11 @@ export async function fetchProfitLossXlsx(
   query: ProfitLossXlsxQuery
 ): Promise<ProfitLossXlsxResponse> {
   const get = fetcher.path(PROFIT_LOSS_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/xlsx" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as ProfitLossXlsxResponse;
 }
 
@@ -83,7 +89,10 @@ export async function fetchProfitLossPdf(
   query: ProfitLossPdfQuery
 ): Promise<ProfitLossPdfResponse> {
   const get = fetcher.path(PROFIT_LOSS_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/pdf" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as ProfitLossPdfResponse;
 }

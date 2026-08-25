@@ -16,9 +16,7 @@ export class PaymentReceivedBrandingTemplate {
    * @param {number} paymentTemplateId
    * @returns
    */
-  public async getPaymentReceivedPdfTemplate(paymentTemplateId: number) {
-    const template =
-      await this.getPdfTemplateService.getPdfTemplate(paymentTemplateId);
+  public async getPaymentReceivedPdfTemplate(paymentTemplateId?: number) {
     // Retrieves the organization branding attributes.
     const commonOrgBrandingAttrs =
       await this.getOrgBrandingAttributes.execute();
@@ -28,6 +26,22 @@ export class PaymentReceivedBrandingTemplate {
       ...defaultPaymentReceivedPdfTemplateAttributes,
       ...commonOrgBrandingAttrs,
     };
+
+    // The payment may have no assigned template and no default template set for
+    // the resource, in which case we fall back to the default branding attributes.
+    let template = null;
+    if (paymentTemplateId != null) {
+      try {
+        template =
+          await this.getPdfTemplateService.getPdfTemplate(paymentTemplateId);
+      } catch {
+        template = null;
+      }
+    }
+    if (!template) {
+      return { attributes: organizationBrandingAttrs };
+    }
+
     const brandingTemplateAttrs = {
       ...template.attributes,
       companyLogoUri: template.companyLogoUri,

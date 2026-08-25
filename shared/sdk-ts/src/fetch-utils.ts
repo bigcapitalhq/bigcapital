@@ -6,16 +6,25 @@ import {
   NESTED_QUERY_HEADER,
 } from './middleware/snake-case-request-middleware';
 import { createErrorReporterMiddleware } from './middleware/error-reporter-middleware';
+import { createRawResponseMiddleware } from './middleware/raw-response-middleware';
+import {
+  FORM_DATA_INIT_KEY,
+  createFormDataMiddleware,
+} from './middleware/form-data-middleware';
 
 /**
  * Splits a query object into a primitive-only payload and a per-call `init`
- * carrying any nested object values via the SDK's sentinel header. The
- * snake-case request middleware reads that header and re-serializes the
- * nested values as bracket-style query params (`number_format[no_cents]=true`)
- * so Express's `extended` qs parser can reconstruct them server-side.
+ * carrying any nested object or array values via the SDK's sentinel header.
+ * The snake-case request middleware reads that header and re-serializes the
+ * nested values as bracket-style query params (`number_format[no_cents]=true`,
+ * `items_ids[]=1003`) so Express's `extended` qs parser can reconstruct them
+ * server-side.
  *
  * openapi-typescript-fetch's built-in query serializer calls `String(value)`,
  * which would otherwise turn nested objects into the literal `[object Object]`.
+ * Arrays are routed the same way so that a single-element array is emitted as
+ * `key[]=value` instead of a bare scalar, which `qs` would parse as a string
+ * rather than an array.
  */
 export function withNestedQuery<T>(
   query: T,
@@ -27,7 +36,6 @@ export function withNestedQuery<T>(
     if (
       value !== null &&
       typeof value === 'object' &&
-      !Array.isArray(value) &&
       !(value instanceof Date) &&
       !(value instanceof Blob)
     ) {
@@ -48,6 +56,27 @@ export function withNestedQuery<T>(
       },
     },
   };
+}
+
+/**
+ * Attaches a `FormData` body to a per-call RequestInit via a custom property
+ * that survives openapi-typescript-fetch's init merging (its computed JSON
+ * body always overrides `init.body`). The form-data middleware swaps it back
+ * in as the real body before `fetch` executes, so the request still flows
+ * through the full middleware pipeline (snake-case request, camelCase
+ * response, error reporter, etc.). Pass the returned init as the second
+ * argument to the generated typed fetcher:
+ *
+ *   fetcher.path('/api/...').method('post').create()({}, withFormData(fd));
+ */
+export function withFormData(
+  formData: FormData,
+  init?: RequestInit,
+): RequestInit {
+  return {
+    ...(init ?? {}),
+    [FORM_DATA_INIT_KEY]: formData,
+  } as RequestInit;
 }
 
 export type ApiFetcher = ReturnType<typeof Fetcher.for<paths>>;
@@ -82,11 +111,21 @@ export function createApiFetcher(config?: CreateApiFetcherConfig): ApiFetcher {
     baseUrl: parsedConfig.baseUrl,
     init: parsedConfig?.init,
     use: [
+      createFormDataMiddleware(),
       ...(parsedConfig.disableSnakeCaseTransform ? [] : [createSnakeCaseRequestMiddleware()]),
       ...(parsedConfig.disableCamelCaseTransform ? [] : [createCamelCaseMiddleware()]),
       ...(parsedConfig.onError ? [createErrorReporterMiddleware(parsedConfig.onError)] : []),
+      createRawResponseMiddleware(),
     ],
   });
+
+  // Expose the runtime config so manual helpers (rawRequest) can read the
+  // configured baseUrl and default headers (Authorization, organization-id).
+  (fetcher as FetcherWithConfig).config = {
+    baseUrl: parsedConfig.baseUrl,
+    init: parsedConfig.init,
+  };
+
   return fetcher;
 }
 
@@ -155,63 +194,4 @@ export async function rawRequest<T = unknown>(
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
   return response.json() as Promise<T>;
-}
-
-/**
- * Sends a multipart/form-data request using the fetcher's configured baseUrl
- * and headers. Use for endpoints that accept file uploads where the generated
- * client's typed JSON body is the wrong shape (FormData carries File/Blob parts).
- * `formData` is passed untouched to `fetch`, which sets the multipart boundary.
- */
-export async function postFormData<T>(
-  fetcher: ApiFetcher,
-  path: string,
-  formData: FormData,
-  headers?: Record<string, string>
-): Promise<T> {
-  const { baseUrl, init } = getFetcherConfig(fetcher);
-  const url = `${baseUrl}${path}`;
-
-  const response = await fetch(url, {
-    ...init,
-    method: 'POST',
-    headers: {
-      ...((init?.headers as Record<string, string> | undefined) ?? {}),
-      ...(headers ?? {}),
-    },
-    body: formData,
-  });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-  }
-  return (await response.json()) as T;
-}
-
-/**
- * Downloads a binary resource as a Blob using the fetcher's configured baseUrl
- * and headers. Use for endpoints that return files (csv/xlsx/pdf) where the
- * generated client's JSON parser would corrupt the payload.
- */
-export async function getBlob(
-  fetcher: ApiFetcher,
-  path: string,
-  params?: Record<string, string>,
-  headers?: Record<string, string>
-): Promise<Blob> {
-  const { baseUrl, init } = getFetcherConfig(fetcher);
-  const query = params ? `?${new URLSearchParams(params).toString()}` : '';
-  const url = `${baseUrl}${path}${query}`;
-
-  const response = await fetch(url, {
-    ...init,
-    method: 'GET',
-    headers: {
-      ...((init?.headers as Record<string, string> | undefined) ?? {}),
-      ...(headers ?? {}),
-    },
-  });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-  }
-  return response.blob();
 }

@@ -6,6 +6,7 @@ import {
   fetchSettingsReceipts,
   fetchSettingsManualJournals,
   fetchSettingsItems,
+  fetchSettingsItemCategories,
   fetchSettingCashFlow,
   fetchSettingsCreditNotes,
   fetchSettingsVendorCredits,
@@ -123,6 +124,15 @@ export function useSettingsItems(props?: GroupQueryOptions) {
     ...props,
     queryKey: settingsKeys.items(),
     queryFn: () => fetchSettingsItems(fetcher),
+  });
+}
+
+export function useSettingsItemCategories(props?: GroupQueryOptions) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: settingsKeys.itemCategories(),
+    queryFn: () => fetchSettingsItemCategories(fetcher),
   });
 }
 

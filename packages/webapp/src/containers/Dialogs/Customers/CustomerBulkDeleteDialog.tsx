@@ -31,7 +31,7 @@ function CustomerBulkDeleteDialogInner({
   payload,
 
   // #withCustomersActions
-  setCustomersSelectedRows,
+  resetCustomersSelectedRows,
 
   // #withDialogActions
   closeDialog,
@@ -60,7 +60,7 @@ function CustomerBulkDeleteDialogInner({
           message: intl.get('the_customers_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setCustomersSelectedRows([]);
+        resetCustomersSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {

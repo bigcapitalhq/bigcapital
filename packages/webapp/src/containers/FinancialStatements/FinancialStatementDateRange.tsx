@@ -5,11 +5,14 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { dateRangeOptions } from './constants';
 import { Row, Col, Hint, FDateInput, FFormGroup } from '@/components';
-import { momentFormatter, parseDateRangeQuery } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
+import { parseDateRangeQuery } from '@/utils';
 
 const FINANCIAL_REPORT_MAX_DATE = moment().add(5, 'years').toDate();
 
 export function FinancialStatementDateRange() {
+  const dateInputFormatter = useDateInputFormatter();
+
   return (
     <>
       <Row>
@@ -60,7 +63,7 @@ export function FinancialStatementDateRange() {
           >
             <FDateInput
               name={'fromDate'}
-              {...momentFormatter('YYYY-MM-DD')}
+              {...dateInputFormatter}
               popoverProps={{ minimal: true, position: Position.BOTTOM_LEFT }}
               maxDate={FINANCIAL_REPORT_MAX_DATE}
               canClearSelection={false}
@@ -78,7 +81,7 @@ export function FinancialStatementDateRange() {
           >
             <FDateInput
               name={'toDate'}
-              {...momentFormatter('YYYY-MM-DD')}
+              {...dateInputFormatter}
               popoverProps={{ minimal: true, position: Position.BOTTOM }}
               canClearSelection={false}
               fill

@@ -16,12 +16,8 @@ import {
   FieldRequiredHint,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
+import { inputIntent, tansformDateValue, handleDateChange } from '@/utils';
 
 /**
  * Project billable entries form fields.
@@ -32,6 +28,7 @@ export function ProjectBillableEntriesFormFields() {
   const { values } = useFormikContext();
 
   const { billableEntries } = useProjectBillableEntriesFormContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -43,9 +40,8 @@ export function ProjectBillableEntriesFormFields() {
         className={classNames(CLASSES.FILL, 'form-group--date')}
       >
         <FDateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           name="date"
-          formatDate={(date) => date.toLocaleString()}
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,

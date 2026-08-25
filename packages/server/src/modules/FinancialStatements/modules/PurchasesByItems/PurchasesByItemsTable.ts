@@ -14,6 +14,7 @@ import { FinancialTable } from '../../common/FinancialTable';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { tableRowMapper } from '../../utils/Table.utils';
+import { PURCHASES_BY_ITEMS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export class PurchasesByItemsTable extends R.compose(
   FinancialTable,
@@ -36,10 +37,19 @@ export class PurchasesByItemsTable extends R.compose(
    */
   private commonTableAccessors(): ITableColumnAccessor[] {
     return [
-      { key: 'item_name', accessor: 'name' },
-      { key: 'quantity_purchases', accessor: 'quantityPurchasedFormatted' },
-      { key: 'purchase_amount', accessor: 'purchaseCostFormatted' },
-      { key: 'average_cost', accessor: 'averageCostPriceFormatted' },
+      { key: PURCHASES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME, accessor: 'name' },
+      {
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.QUANTITY_PURCHASES,
+        accessor: 'quantityPurchasedFormatted',
+      },
+      {
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.PURCHASE_AMOUNT,
+        accessor: 'purchaseCostFormatted',
+      },
+      {
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.AVERAGE_COST,
+        accessor: 'averageCostPriceFormatted',
+      },
     ];
   }
 
@@ -49,10 +59,19 @@ export class PurchasesByItemsTable extends R.compose(
    */
   private commonTableColumns(): ITableColumn[] {
     return [
-      { label: 'Item name', key: 'item_name' },
-      { label: 'Quantity Purchased', key: 'quantity_purchases' },
-      { label: 'Purchase Amount', key: 'purchase_amount' },
-      { label: 'Average Price', key: 'average_cost' },
+      { label: 'Item name', key: PURCHASES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME },
+      {
+        label: 'Quantity Purchased',
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.QUANTITY_PURCHASES,
+      },
+      {
+        label: 'Purchase Amount',
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.PURCHASE_AMOUNT,
+      },
+      {
+        label: 'Average Price',
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.AVERAGE_COST,
+      },
     ];
   }
 

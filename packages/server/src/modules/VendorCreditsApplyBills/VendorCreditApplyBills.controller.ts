@@ -19,6 +19,7 @@ import {
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { ApplyVendorCreditToBillsDto } from './dtos/ApplyVendorCreditToBills.dto';
 import { VendorCreditAppliedBillResponseDto } from './dtos/VendorCreditAppliedBillResponse.dto';
+import { VendorCreditBillToApplyResponseDto } from './dtos/VendorCreditBillToApplyResponse.dto';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
@@ -28,7 +29,10 @@ import { VendorCreditAction } from '../VendorCredit/types/VendorCredit.types';
 @Controller('vendor-credits')
 @ApiTags('Vendor Credits Apply Bills')
 @ApiCommonHeaders()
-@ApiExtraModels(VendorCreditAppliedBillResponseDto)
+@ApiExtraModels(
+  VendorCreditAppliedBillResponseDto,
+  VendorCreditBillToApplyResponseDto,
+)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class VendorCreditApplyBillsController {
   constructor(
@@ -39,6 +43,14 @@ export class VendorCreditApplyBillsController {
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
   @ApiOperation({
     summary: 'Get bills that can be applied with this vendor credit.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Bills that can be applied with this vendor credit.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(VendorCreditBillToApplyResponseDto) },
+    },
   })
   async getVendorCreditToApplyBills(
     @Param('vendorCreditId') vendorCreditId: number,

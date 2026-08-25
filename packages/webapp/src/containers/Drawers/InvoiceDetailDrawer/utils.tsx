@@ -139,7 +139,7 @@ export const BadDebtMenuItem = ({ payload }: BadDebtMenuItemProps) => {
       }}
       content={
         <Menu>
-          <If condition={!invoice.delivered}>
+          <If condition={!invoice.isDelivered}>
             <MenuItem
               onClick={onDeliver}
               text={<T id={'mark_as_delivered'} />}
@@ -186,13 +186,13 @@ export const BadDebtMenuItem = ({ payload }: BadDebtMenuItemProps) => {
 export function InvoiceDetailsStatus({ invoice }: InvoiceDetailsStatusProps) {
   return (
     <Choose>
-      <Choose.When condition={!!invoice.isFullyPaid && !!invoice.delivered}>
+      <Choose.When condition={!!invoice.isFullyPaid && !!invoice.isDelivered}>
         <StatusTag intent={Intent.SUCCESS} round={true}>
           <T id={'paid'} />
         </StatusTag>
       </Choose.When>
 
-      <Choose.When condition={!!invoice.delivered}>
+      <Choose.When condition={!!invoice.isDelivered}>
         <Choose>
           <Choose.When condition={!!invoice.isOverdue}>
             <StatusTag intent={Intent.WARNING} round={true}>

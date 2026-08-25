@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -48,6 +48,10 @@ describe('Branches (e2e)', () => {
       .put(`/branches/${branchId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
+      .send({
+        name: response.body.name,
+        code: response.body.code,
+      })
       .expect(200);
   });
 

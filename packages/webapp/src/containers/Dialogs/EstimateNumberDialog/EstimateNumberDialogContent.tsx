@@ -1,6 +1,8 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { DialogContent } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
@@ -11,31 +13,43 @@ import {
 import { useSaveSettings, useSettingsEstimates } from '@/hooks/query';
 import { compose, saveInvoke } from '@/utils';
 
+interface EstimateNumberDialogContentProps extends WithDialogActionsProps {
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
 /**
  * Estimate number dialog's content.
  */
 function EstimateNumberDialogContentInner({
-  // #withDialogActions
   closeDialog,
-
-  // #ownProps
   initialValues,
   onConfirm,
-}) {
-  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+}: EstimateNumberDialogContentProps): React.ReactElement {
+  const [referenceFormValues, setReferenceFormValues] =
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
 
   // Fetches the estimates settings.
   const { data: estimatesSettings, isLoading: isSettingsLoading } =
     useSettingsEstimates();
-  const nextNumber = estimatesSettings?.nextNumber as number | undefined;
+  const nextNumber = estimatesSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
   const numberPrefix = estimatesSettings?.numberPrefix as string | undefined;
-  const autoIncrement = estimatesSettings?.autoIncrement as boolean | undefined;
+  const autoIncrement = estimatesSettings?.autoIncrement as
+    | boolean
+    | string
+    | undefined;
 
   // Mutates the settings.
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   // Handle the submit form.
-  const handleSubmitForm = (values, { setSubmitting }) => {
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     // Transformes the form values to settings to save it.
     const options = transformFormToSettings(values, 'sales_estimates');
 
@@ -59,7 +73,7 @@ function EstimateNumberDialogContentInner({
   }, [closeDialog]);
 
   // Handle form change.
-  const handleChange = (values) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
 

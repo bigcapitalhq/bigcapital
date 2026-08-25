@@ -15,6 +15,7 @@ export const getDefaultPurchasesByItemsQuery = () => ({
   toDate: moment().format('YYYY-MM-DD'),
   filterByOption: 'with-transactions',
   itemsIds: [] as number[],
+  numberFormat: {},
 });
 
 /**

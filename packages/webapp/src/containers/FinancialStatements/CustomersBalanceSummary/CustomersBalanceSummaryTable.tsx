@@ -1,6 +1,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { getReportRowTestId } from '../reportTestIds';
 import { useCustomersSummaryColumns } from './components';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -30,6 +31,7 @@ export function CustomersBalanceSummaryTable({
         columns={columns}
         data={table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('customers-balance')}
         noInitialFetch={true}
         sticky={true}
         styleName={TableStyle.Constrant}

@@ -5,6 +5,7 @@ import { IDateRange } from '../types/Report.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { I18nService } from 'nestjs-i18n';
 import { FinancialSheet } from './FinancialSheet';
+import { COMPARISON_COLUMN_KEYS } from './constants/tableColumnKeys';
 
 export const FinancialTablePreviousPeriod = <
   T extends GConstructor<FinancialSheet>,
@@ -34,7 +35,7 @@ export const FinancialTablePreviousPeriod = <
       const PPFormatted = moment(PPDate).format('YYYY-MM-DD');
 
       return {
-        key: 'previous_period',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD,
         label: this.i18n.t(`financial_sheet.previoud_period_date`, {
           args: { date: PPFormatted },
         }),
@@ -47,8 +48,8 @@ export const FinancialTablePreviousPeriod = <
      */
     public getPreviousPeriodChangeColumn = (): ITableColumn => {
       return {
-        key: 'previous_period_change',
-        label: this.i18n.t('fianncial_sheet.previous_period_change'),
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD_CHANGE,
+        label: this.i18n.t('financial_sheet.previous_period_change'),
       };
     };
 
@@ -58,7 +59,7 @@ export const FinancialTablePreviousPeriod = <
      */
     public getPreviousPeriodPercentageColumn = (): ITableColumn => {
       return {
-        key: 'previous_period_percentage',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD_PERCENTAGE,
         label: this.i18n.t('financial_sheet.previous_period_percentage'),
       };
     };
@@ -69,7 +70,7 @@ export const FinancialTablePreviousPeriod = <
      */
     public getPreviousPeriodTotalAccessor = (): ITableColumnAccessor => {
       return {
-        key: 'previous_period',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD,
         accessor: 'previousPeriod.formattedAmount',
       };
     };
@@ -80,7 +81,7 @@ export const FinancialTablePreviousPeriod = <
      */
     public getPreviousPeriodChangeAccessor = () => {
       return {
-        key: 'previous_period_change',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD_CHANGE,
         accessor: 'previousPeriodChange.formattedAmount',
       };
     };
@@ -91,7 +92,7 @@ export const FinancialTablePreviousPeriod = <
      */
     public getPreviousPeriodPercentageAccessor = (): ITableColumnAccessor => {
       return {
-        key: 'previous_period_percentage',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD_PERCENTAGE,
         accessor: 'previousPeriodPercentage.formattedAmount',
       };
     };
@@ -105,7 +106,7 @@ export const FinancialTablePreviousPeriod = <
       index: number,
     ): ITableColumnAccessor => {
       return {
-        key: 'previous_period',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD,
         accessor: `horizontalTotals[${index}].previousPeriod.formattedAmount`,
       };
     };
@@ -119,7 +120,7 @@ export const FinancialTablePreviousPeriod = <
       index: number,
     ): ITableColumnAccessor => {
       return {
-        key: 'previous_period_change',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD_CHANGE,
         accessor: `horizontalTotals[${index}].previousPeriodChange.formattedAmount`,
       };
     };
@@ -133,7 +134,7 @@ export const FinancialTablePreviousPeriod = <
       index: number,
     ): ITableColumnAccessor => {
       return {
-        key: 'previous_period_percentage',
+        key: COMPARISON_COLUMN_KEYS.PREVIOUS_PERIOD_PERCENTAGE,
         accessor: `horizontalTotals[${index}].previousPeriodPercentage.formattedAmount`,
       };
     };

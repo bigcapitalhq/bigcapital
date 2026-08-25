@@ -1,8 +1,9 @@
-// @ts-nocheck
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
+import type { SMSMessageFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   DialogFooter,
   DialogFooterActions,
@@ -11,15 +12,16 @@ import {
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
+interface SMSMessageFormFloatingActionsProps extends WithDialogActionsProps {}
+
 /**
  * SMS Message Form floating actions.
  */
 function SMSMessageFormFloatingActionsInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: SMSMessageFormFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<SMSMessageFormValues>();
 
   // SMS Message dialog contxt.
   const { dialogName } = useSMSMessageDialogContext();

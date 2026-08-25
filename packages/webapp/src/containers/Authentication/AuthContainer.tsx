@@ -1,9 +1,9 @@
-// @ts-nocheck
+import { ReactNode } from 'react';
 import styled from 'styled-components';
-import { Icon, FormattedMessage as T } from '@/components';
+import { Icon } from '@/components';
 
 interface AuthContainerProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function AuthContainer({ children }: AuthContainerProps) {

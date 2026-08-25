@@ -36,7 +36,7 @@ function WarehouseFormDialog({
       autoFocus={true}
       className={'dialog--warehouse-form'}
     >
-      <DialogSuspense>
+      <DialogSuspense testId="warehouse-form-dialog">
         <WarehouseFormDialogContent
           dialogName={dialogName}
           warehouseId={warehouseId}

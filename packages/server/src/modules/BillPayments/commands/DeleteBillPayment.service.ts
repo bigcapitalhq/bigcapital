@@ -35,9 +35,13 @@ export class DeleteBillPayment {
   /**
    * Deletes the bill payment and associated transactions.
    * @param {Integer} billPaymentId - The given bill payment id.
+   * @param {Knex.Transaction} trx - Database transaction instance.
    * @return {Promise}
    */
-  public async deleteBillPayment(billPaymentId: number) {
+  public async deleteBillPayment(
+    billPaymentId: number,
+    trx?: Knex.Transaction,
+  ) {
     // Retrieve the bill payment or throw not found service error.
     const oldBillPayment = await this.billPaymentModel()
       .query()
@@ -72,6 +76,6 @@ export class DeleteBillPayment {
         oldBillPayment,
         trx,
       } as IBillPaymentEventDeletedPayload);
-    });
+    }, trx);
   }
 }

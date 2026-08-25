@@ -247,7 +247,9 @@ function SidebarHeadJSX({
             {metadata?.name}
           </Button>
         </Popover>
-        <span class="subtitle">{user.full_name}</span>
+        <span className="subtitle">
+          {user.firstName} {user.lastName}
+        </span>
       </div>
 
       <div className="sidebar__head-logo">

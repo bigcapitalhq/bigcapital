@@ -218,7 +218,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The authenticated account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthedAccountResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -3898,6 +3905,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePdfTemplateDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The PDF template has been successfully created."
@@ -4070,6 +4087,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditPdfTemplateDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The PDF template has been successfully edited."
@@ -6453,6 +6480,103 @@
         ]
       }
     },
+    "/api/item-categories/validate-bulk-delete": {
+      "post": {
+        "operationId": "ItemCategoryController_validateBulkDeleteItemCategories",
+        "summary": "Validates which item categories can be deleted and returns counts of deletable and non-deletable item categories.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteItemCategoriesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation completed. Returns counts and IDs of deletable and non-deletable item categories.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateBulkDeleteItemCategoriesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Item Categories"
+        ]
+      }
+    },
+    "/api/item-categories/bulk-delete": {
+      "post": {
+        "operationId": "ItemCategoryController_bulkDeleteItemCategories",
+        "summary": "Deletes multiple item categories in bulk.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteItemCategoriesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The item categories have been successfully deleted."
+          }
+        },
+        "tags": [
+          "Item Categories"
+        ]
+      }
+    },
     "/api/expenses/validate-bulk-delete": {
       "post": {
         "operationId": "ExpensesController_validateBulkDeleteExpenses",
@@ -7018,7 +7142,7 @@
       }
     },
     "/api/warehouse-transfers/{id}": {
-      "post": {
+      "put": {
         "operationId": "WarehouseTransfersController_editWarehouseTransfer",
         "summary": "Edit the given warehouse transfer transaction.",
         "parameters": [
@@ -12025,7 +12149,17 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Bills that can be applied with this vendor credit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VendorCreditBillToApplyResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -12274,6 +12408,103 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "Bill Payments"
+        ]
+      }
+    },
+    "/api/bill-payments/validate-bulk-delete": {
+      "post": {
+        "operationId": "BillPaymentsController_validateBulkDeleteBillPayments",
+        "summary": "Validates which bill payments can be deleted and returns the results.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation completed with counts and IDs of deletable and non-deletable bill payments.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateBulkDeleteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Bill Payments"
+        ]
+      }
+    },
+    "/api/bill-payments/bulk-delete": {
+      "post": {
+        "operationId": "BillPaymentsController_bulkDeleteBillPayments",
+        "summary": "Deletes multiple bill payments.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bill payments deleted successfully."
           }
         },
         "tags": [
@@ -24143,6 +24374,11 @@
             "type": "string",
             "example": "user@example.com",
             "description": "User email address"
+          },
+          "rememberMe": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether to keep the user signed in for a longer period (remember me)."
           }
         },
         "required": [
@@ -24224,6 +24460,52 @@
         },
         "required": [
           "password"
+        ]
+      },
+      "AuthedAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "User ID"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "User first name"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "User last name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the user account is active"
+          },
+          "language": {
+            "type": "string",
+            "description": "User language"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "Tenant ID"
+          },
+          "verified": {
+            "type": "boolean",
+            "description": "Whether the user email is verified"
+          }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "email",
+          "active",
+          "tenantId",
+          "verified"
         ]
       },
       "ApiKeyResponseDto": {
@@ -25697,7 +25979,7 @@
             "description": "Branch country",
             "example": "USA"
           },
-          "phone_number": {
+          "phoneNumber": {
             "type": "string",
             "description": "Branch phone number",
             "example": "+1-555-123-4567"
@@ -25751,7 +26033,7 @@
             "description": "Branch country",
             "example": "USA"
           },
-          "phone_number": {
+          "phoneNumber": {
             "type": "string",
             "description": "Branch phone number",
             "example": "+1-555-123-4567"
@@ -27116,11 +27398,6 @@
               "$ref": "#/components/schemas/SaleInvoiceTaxEntryDto"
             }
           },
-          "delivered": {
-            "type": "boolean",
-            "description": "Whether the invoice has been delivered",
-            "example": false
-          },
           "deliveredAt": {
             "format": "date-time",
             "type": "string",
@@ -27376,7 +27653,6 @@
           "invoiceNo",
           "customerId",
           "entries",
-          "delivered",
           "balance",
           "paymentAmount",
           "subtotal",
@@ -27680,6 +27956,14 @@
           "entries",
           "attachments"
         ]
+      },
+      "CreatePdfTemplateDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "EditPdfTemplateDto": {
+        "type": "object",
+        "properties": {}
       },
       "UploadAttachmentDto": {
         "type": "object",
@@ -29325,6 +29609,48 @@
           "clientSecret"
         ]
       },
+      "ValidateBulkDeleteItemCategoriesResponseDto": {
+        "type": "object",
+        "properties": {
+          "deletableCount": {
+            "type": "number",
+            "description": "Number of item categories that can be deleted",
+            "example": 2
+          },
+          "nonDeletableCount": {
+            "type": "number",
+            "description": "Number of item categories that cannot be deleted",
+            "example": 1
+          },
+          "deletableIds": {
+            "description": "IDs of item categories that can be deleted",
+            "example": [
+              1,
+              2
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "nonDeletableIds": {
+            "description": "IDs of item categories that cannot be deleted",
+            "example": [
+              3
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "deletableCount",
+          "nonDeletableCount",
+          "deletableIds",
+          "nonDeletableIds"
+        ]
+      },
       "ItemCategoryResponseDto": {
         "type": "object",
         "properties": {
@@ -29479,6 +29805,31 @@
           "sellAccountId",
           "inventoryAccountId",
           "costMethod"
+        ]
+      },
+      "BulkDeleteItemCategoriesDto": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "description": "Array of item category IDs to delete",
+            "example": [
+              1,
+              2,
+              3
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "skipUndeletable": {
+            "type": "boolean",
+            "description": "When true, undeletable item categories will be skipped and only deletable ones removed.",
+            "default": false
+          }
+        },
+        "required": [
+          "ids"
         ]
       },
       "ExpenseCategoryResponseDto": {
@@ -32046,9 +32397,14 @@
             "description": "The statement on the receipt",
             "example": "Paid in full"
           },
-          "closed": {
+          "isClosed": {
             "type": "boolean",
-            "description": "Whether the receipt is closed",
+            "description": "Whether the sale receipt is closed",
+            "example": false
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Whether the sale receipt is draft",
             "example": false
           },
           "closedAt": {
@@ -32221,7 +32577,7 @@
           "customer",
           "depositAccountId",
           "depositAccount",
-          "closed",
+          "isClosed",
           "entries",
           "subtotal",
           "subtotalLocal",
@@ -35114,6 +35470,85 @@
           "createdAt"
         ]
       },
+      "VendorCreditBillToApplyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "billNo": {
+            "type": "string",
+            "example": "BILL-0001"
+          },
+          "billDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "dueDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-20"
+          },
+          "amount": {
+            "type": "number",
+            "example": 500
+          },
+          "dueAmount": {
+            "type": "number",
+            "example": 500
+          },
+          "paymentAmount": {
+            "type": "number",
+            "example": 0
+          },
+          "referenceNo": {
+            "type": "string",
+            "example": "PO-001",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "USD",
+            "nullable": true
+          },
+          "formattedBillDate": {
+            "type": "string",
+            "example": "2024-01-10"
+          },
+          "formattedDueDate": {
+            "type": "string",
+            "example": "2024-01-20"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "example": "$500.00"
+          },
+          "formattedDueAmount": {
+            "type": "string",
+            "example": "$500.00"
+          },
+          "formattedPaymentAmount": {
+            "type": "string",
+            "example": "$0.00"
+          }
+        },
+        "required": [
+          "id",
+          "billNo",
+          "billDate",
+          "dueDate",
+          "amount",
+          "dueAmount",
+          "paymentAmount",
+          "formattedBillDate",
+          "formattedDueDate",
+          "formattedAmount",
+          "formattedDueAmount",
+          "formattedPaymentAmount"
+        ]
+      },
       "ApplyVendorCreditToBillEntryDto": {
         "type": "object",
         "properties": {
@@ -37617,6 +38052,46 @@
           "label"
         ]
       },
+      "BalanceSheetTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total",
+              "previous_period",
+              "previous_period_change",
+              "previous_period_percentage",
+              "previous_year",
+              "previous_year_change",
+              "previous_year_percentage",
+              "percentage_of_column",
+              "percentage_of_row"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
       "FinancialTableCellDto": {
         "type": "object",
         "properties": {
@@ -37669,14 +38144,14 @@
           "id"
         ]
       },
-      "FinancialTableDataDto": {
+      "BalanceSheetTableDataDto": {
         "type": "object",
         "properties": {
           "columns": {
             "description": "Table column definitions",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FinancialTableColumnDto"
+              "$ref": "#/components/schemas/BalanceSheetTableColumnDto"
             }
           },
           "rows": {
@@ -37699,7 +38174,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/BalanceSheetTableDataDto"
               }
             ]
           },
@@ -37893,6 +38368,63 @@
           "meta"
         ]
       },
+      "PurchasesByItemsTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "quantity_purchases",
+              "purchase_amount",
+              "average_cost"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "PurchasesByItemsTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchasesByItemsTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "PurchasesByItemsTableResponseDto": {
         "type": "object",
         "properties": {
@@ -37900,7 +38432,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/PurchasesByItemsTableDataDto"
               }
             ]
           },
@@ -38091,6 +38623,62 @@
           "meta"
         ]
       },
+      "CustomerBalanceSummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total",
+              "percentage_of_column"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "CustomerBalanceSummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerBalanceSummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "CustomerBalanceSummaryTableResponseDto": {
         "type": "object",
         "properties": {
@@ -38098,7 +38686,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/CustomerBalanceSummaryTableDataDto"
               }
             ]
           },
@@ -38289,6 +38877,62 @@
           "meta"
         ]
       },
+      "VendorBalanceSummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total",
+              "percentage_of_column"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "VendorBalanceSummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorBalanceSummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "VendorBalanceSummaryTableResponseDto": {
         "type": "object",
         "properties": {
@@ -38296,7 +38940,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/VendorBalanceSummaryTableDataDto"
               }
             ]
           },
@@ -38510,6 +39154,63 @@
           "meta"
         ]
       },
+      "SalesByItemsTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "sold_quantity",
+              "sold_amount",
+              "average_price"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "SalesByItemsTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalesByItemsTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "SalesByItemsTableResponseDto": {
         "type": "object",
         "properties": {
@@ -38517,7 +39218,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/SalesByItemsTableDataDto"
               }
             ]
           },
@@ -38834,6 +39535,68 @@
           "meta"
         ]
       },
+      "GeneralLedgerTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "date",
+              "account_name",
+              "reference_type",
+              "reference_number",
+              "description",
+              "credit",
+              "debit",
+              "amount",
+              "running_balance"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "GeneralLedgerTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeneralLedgerTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "GeneralLedgerTableResponseDto": {
         "type": "object",
         "properties": {
@@ -38841,7 +39604,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/GeneralLedgerTableDataDto"
               }
             ]
           },
@@ -39129,6 +39892,63 @@
           "meta"
         ]
       },
+      "TrialBalanceSheetTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "account",
+              "debit",
+              "credit",
+              "total"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "TrialBalanceSheetTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrialBalanceSheetTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "TrialBalanceSheetTableResponseDto": {
         "type": "object",
         "properties": {
@@ -39136,7 +39956,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/TrialBalanceSheetTableDataDto"
               }
             ]
           },
@@ -39395,6 +40215,29 @@
           "query",
           "data",
           "meta"
+        ]
+      },
+      "FinancialTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
         ]
       },
       "TransactionsByVendorTableResponseDto": {
@@ -40080,6 +40923,64 @@
           "meta"
         ]
       },
+      "ARAgingSummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "customer_name",
+              "vendor_name",
+              "current",
+              "total",
+              "aging_period"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "ARAgingSummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ARAgingSummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "ARAgingSummaryTableResponseDto": {
         "type": "object",
         "properties": {
@@ -40087,7 +40988,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/ARAgingSummaryTableDataDto"
               }
             ]
           },
@@ -40289,6 +41190,64 @@
           "meta"
         ]
       },
+      "APAgingSummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "customer_name",
+              "vendor_name",
+              "current",
+              "total",
+              "aging_period"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "APAgingSummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/APAgingSummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "APAgingSummaryQueryResponseDto": {
         "type": "object",
         "properties": {
@@ -40348,7 +41307,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/APAgingSummaryTableDataDto"
               }
             ]
           },
@@ -40589,6 +41548,69 @@
           "meta"
         ]
       },
+      "InventoryItemDetailsTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "date",
+              "transaction_type",
+              "transaction_id",
+              "quantity",
+              "rate",
+              "total",
+              "value",
+              "profit_margin",
+              "running_quantity",
+              "running_value"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "InventoryItemDetailsTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemDetailsTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "InventoryItemDetailsTableResponseDto": {
         "type": "object",
         "properties": {
@@ -40596,7 +41618,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/InventoryItemDetailsTableDataDto"
               }
             ]
           },
@@ -40783,6 +41805,63 @@
           "meta"
         ]
       },
+      "InventoryValuationTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "quantity",
+              "valuation",
+              "average"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "InventoryValuationTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryValuationTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "InventoryValuationTableResponseDto": {
         "type": "object",
         "properties": {
@@ -40790,7 +41869,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/InventoryValuationTableDataDto"
               }
             ]
           },
@@ -40972,6 +42051,64 @@
           "meta"
         ]
       },
+      "SalesTaxLiabilitySummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "taxName",
+              "taxPercentage",
+              "taxableAmount",
+              "collectedTax",
+              "taxRate"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "SalesTaxLiabilitySummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalesTaxLiabilitySummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "SalesTaxLiabilitySummaryTableResponseDto": {
         "type": "object",
         "properties": {
@@ -40979,7 +42116,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/SalesTaxLiabilitySummaryTableDataDto"
               }
             ]
           },
@@ -41246,6 +42383,67 @@
           "meta"
         ]
       },
+      "JournalSheetTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "date",
+              "transaction_type",
+              "transaction_number",
+              "description",
+              "account_code",
+              "account_name",
+              "debit",
+              "credit"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "JournalSheetTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JournalSheetTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "JournalSheetTableResponseDto": {
         "type": "object",
         "properties": {
@@ -41253,7 +42451,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/JournalSheetTableDataDto"
               }
             ]
           },
@@ -41626,6 +42824,71 @@
           "meta"
         ]
       },
+      "ProfitLossSheetTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total",
+              "previous_period",
+              "previous_period_change",
+              "previous_period_percentage",
+              "previous_year",
+              "previous_year_change",
+              "previous_year_percentage",
+              "percentage_income",
+              "percentage_expenses",
+              "percentage_column",
+              "percentage_row"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "ProfitLossSheetTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfitLossSheetTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "ProfitLossSheetTableResponseDto": {
         "type": "object",
         "properties": {
@@ -41633,7 +42896,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/ProfitLossSheetTableDataDto"
               }
             ]
           },
@@ -41876,6 +43139,61 @@
           "meta"
         ]
       },
+      "CashflowStatementTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "CashflowStatementTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CashflowStatementTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "CashflowStatementTableResponseDto": {
         "type": "object",
         "properties": {
@@ -41883,7 +43201,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/CashflowStatementTableDataDto"
               }
             ]
           },
@@ -42689,6 +44007,35 @@
           "language"
         ]
       },
+      "OrganizationAddressDto": {
+        "type": "object",
+        "properties": {
+          "address1": {
+            "type": "string",
+            "example": "123 Main St"
+          },
+          "address2": {
+            "type": "string",
+            "example": "Suite 100"
+          },
+          "postalCode": {
+            "type": "string",
+            "example": "10001"
+          },
+          "city": {
+            "type": "string",
+            "example": "New York"
+          },
+          "stateProvince": {
+            "type": "string",
+            "example": "NY"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+1-555-123-4567"
+          }
+        }
+      },
       "UpdateOrganizationDto": {
         "type": "object",
         "properties": {
@@ -42733,16 +44080,12 @@
             "example": "MM/DD/YYYY"
           },
           "address": {
-            "type": "object",
             "description": "Organization address details",
-            "example": {
-              "address_1": "123 Main St",
-              "address_2": "Suite 100",
-              "postal_code": "10001",
-              "city": "New York",
-              "stateProvince": "NY",
-              "phone": "+1-555-123-4567"
-            }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OrganizationAddressDto"
+              }
+            ]
           },
           "primaryColor": {
             "type": "string",

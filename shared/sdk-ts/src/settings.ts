@@ -116,6 +116,12 @@ export async function fetchSettingsItems(
   return fetchSettingsGroup(fetcher, 'items');
 }
 
+export async function fetchSettingsItemCategories(
+  fetcher: ApiFetcher
+): Promise<SettingsGroup> {
+  return fetchSettingsGroup(fetcher, 'item_categories');
+}
+
 export async function fetchSettingCashFlow(
   fetcher: ApiFetcher
 ): Promise<SettingsGroup> {

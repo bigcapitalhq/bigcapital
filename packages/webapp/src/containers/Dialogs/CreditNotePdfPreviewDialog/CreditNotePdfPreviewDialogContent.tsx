@@ -1,22 +1,30 @@
-// @ts-nocheck
 import { AnchorButton } from '@blueprintjs/core';
 import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfCreditNote } from '@/hooks/query';
 import { compose } from '@/utils';
 
+interface CreditNotePdfPreviewDialogContentProps
+  extends WithDialogActionsProps {
+  subscriptionForm: { creditNoteId: number | string | null };
+  dialogName?: string;
+}
+
 function CreditNotePdfPreviewDialogContentInner({
   subscriptionForm: { creditNoteId },
-}) {
-  const { isLoading, pdfUrl, filename } = usePdfCreditNote(creditNoteId);
+}: CreditNotePdfPreviewDialogContentProps): React.ReactElement {
+  const { isLoading, isError, pdfUrl, filename } = usePdfCreditNote(
+    creditNoteId as number | string,
+  );
 
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -37,6 +45,7 @@ function CreditNotePdfPreviewDialogContentInner({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>

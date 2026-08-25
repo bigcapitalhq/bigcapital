@@ -25,12 +25,8 @@ import {
   Hint,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
+import { tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -56,6 +52,7 @@ export function ExpenseFormHeader() {
   const { currencies, accounts, customers } = useExpenseFormContext();
   const theme = useTheme() as unknown as Theme;
   const fieldsClassName = getFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={fieldsClassName}>
@@ -70,7 +67,7 @@ export function ExpenseFormHeader() {
             inline={true}
           >
             <DateInput
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               value={tansformDateValue(value)}
               onChange={handleDateChange((formattedDate: string) => {
                 form.setFieldValue('paymentDate', formattedDate);
@@ -100,6 +97,7 @@ export function ExpenseFormHeader() {
           fastField={true}
           shouldUpdate={accountsFieldShouldUpdate}
           fill={true}
+          buttonProps={{ 'data-testId': 'expense-payment-account-select' }}
         />
       </FFormGroup>
 
@@ -113,9 +111,9 @@ export function ExpenseFormHeader() {
         <FSelect
           name={'currencyCode'}
           items={currencies}
-          valueAccessor={'currency_code'}
-          textAccessor={'currency_code'}
-          labelAccessor={'currency_code'}
+          valueAccessor={'currencyCode'}
+          textAccessor={'currencyCode'}
+          labelAccessor={'currencyCode'}
           popoverProps={{ minimal: true }}
           fill={true}
           fastField={true}
@@ -135,8 +133,11 @@ export function ExpenseFormHeader() {
         inline={true}
         fastField
       >
-        {/* @ts-expect-error FInputGroup does not declare `minimal` / `fastField` */}
-        <FInputGroup minimal={true} name={'referenceNo'} fastField />
+        <FInputGroup
+          name={'referenceNo'}
+          data-testId={'expense-reference-no-input'}
+          fastField
+        />
       </FFormGroup>
 
       {/* ----------- Customer ----------- */}

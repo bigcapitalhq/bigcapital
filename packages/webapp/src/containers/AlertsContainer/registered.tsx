@@ -1,4 +1,4 @@
-// @ts-nocheck
+import type { ComponentType } from 'react';
 import { BankRulesAlerts } from '../Banking/Rules/RulesList/BankRulesAlerts';
 import { BrandingTemplatesAlerts } from '../BrandingTemplates/alerts/BrandingTemplatesAlerts';
 import { CashflowAlerts } from '../CashFlow/CashflowAlerts';
@@ -33,7 +33,21 @@ import { VendorsAlerts } from '@/containers/Vendors/VendorsAlerts';
 import { WarehousesTransfersAlerts } from '@/containers/WarehouseTransfers/WarehousesTransfersAlerts';
 import WorkspacesAlerts from '@/ee/workspaces/containers/Alerts/WorkspacesAlerts';
 
-export const registered = [
+export interface RegisteredAlert {
+  name: string;
+  component: ComponentType<{ name: string }>;
+}
+
+// Aggregator files declare their entries with a mix of `ComponentType<{ name: string }>` and
+// `ComponentType<unknown>` (the latter for `React.lazy`-wrapped alerts). Both shapes accept
+// `{ name: string }` at the call site, so we widen the registered array's element type to a
+// supertype each variant is assignable to.
+type RegisteredEntry = {
+  name: string;
+  component: ComponentType<{ name: string }> | ComponentType<unknown>;
+};
+
+export const registered: RegisteredEntry[] = [
   ...AccountsAlerts,
   ...ItemsAlerts,
   ...ItemsCategoriesAlerts,

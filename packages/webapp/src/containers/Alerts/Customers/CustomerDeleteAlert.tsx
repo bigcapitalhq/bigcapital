@@ -79,7 +79,7 @@ function CustomerDeleteAlertInner({
       onConfirm={handleConfirmDeleteCustomer}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'customer-delete-alert'}>
         {/* `intl.formatHTMLMessage` returns a React fragment containing the
             translated HTML markup. The shape is not a JSX component so we
             inline the call here. */}

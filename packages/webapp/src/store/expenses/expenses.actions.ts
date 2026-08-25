@@ -3,6 +3,7 @@ import {
   EXPENSES_TABLE_STATE_RESET,
   EXPENSES_TABLE_STATE_SET,
   EXPENSES_SET_SELECTED_ROWS,
+  EXPENSES_RESET_SELECTED_ROWS,
 } from '@/store/types';
 
 /**
@@ -26,5 +27,11 @@ export const setExpensesSelectedRows = (selectedRows: Array<unknown>) => {
   return {
     type: EXPENSES_SET_SELECTED_ROWS,
     payload: selectedRows,
+  };
+};
+
+export const resetExpensesSelectedRows = () => {
+  return {
+    type: EXPENSES_RESET_SELECTED_ROWS,
   };
 };

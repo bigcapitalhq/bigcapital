@@ -1,11 +1,12 @@
 import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 
 @Injectable()
 export class PaymentReceiveActivateBranches {
   constructor(
+    @Inject(PaymentReceived.name)
     private readonly paymentReceivedModel: TenantModelProxy<
       typeof PaymentReceived
     >,

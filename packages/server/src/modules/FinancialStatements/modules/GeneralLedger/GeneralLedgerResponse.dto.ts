@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  GENERAL_LEDGER_COLUMN_KEYS,
+  GeneralLedgerColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class GeneralLedgerTransactionDto {
   @ApiProperty({ description: 'Transaction date' })
@@ -158,16 +163,30 @@ export class GeneralLedgerResponseDto {
 export {
   FinancialTableCellDto as GeneralLedgerTableCellDto,
   FinancialTableRowDto as GeneralLedgerTableRowDto,
-  FinancialTableColumnDto as GeneralLedgerTableColumnDto,
-  FinancialTableDataDto as GeneralLedgerTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class GeneralLedgerTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(GENERAL_LEDGER_COLUMN_KEYS),
+  })
+  key: GeneralLedgerColumnKey;
+}
+
+export class GeneralLedgerTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [GeneralLedgerTableColumnDto],
+  })
+  columns: GeneralLedgerTableColumnDto[];
+}
 
 export class GeneralLedgerTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => GeneralLedgerTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: GeneralLedgerTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

@@ -4,20 +4,19 @@ import { isUndefined } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Choose } from '@/components';
-import { Select } from '@/components/Forms';
-import { useAutofocus } from '@/hooks';
-import { momentFormatter } from '@/utils';
 import {
   IFieldType,
   type IFilterOption,
   type IAdvancedFilterValueField,
 } from './interfaces';
+import { Choose } from '@/components';
+import { Select } from '@/components/Forms';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 
 function AdvancedFilterEnumerationField({
   options,
   value,
-  ...rest
+  onItemSelect,
 }: {
   options: IFilterOption[];
   value?: string | boolean;
@@ -26,6 +25,7 @@ function AdvancedFilterEnumerationField({
   return (
     <Select
       items={options}
+      selectedValue={typeof value === 'string' ? value : undefined}
       popoverProps={{
         fill: true,
         minimal: true,
@@ -34,7 +34,7 @@ function AdvancedFilterEnumerationField({
       placeholder={intl.get('filter.select_option')}
       textAccessor={'label'}
       valueAccessor={'key'}
-      {...rest}
+      onItemChange={(option: IFilterOption) => onItemSelect?.(option)}
     />
   );
 }
@@ -56,6 +56,7 @@ export default function AdvancedFilterValueField({
   isFocus,
 }: IAdvancedFilterValueField) {
   const [localValue, setLocalValue] = React.useState(value);
+  const dateInputFormatter = useDateInputFormatter();
 
   React.useEffect(() => {
     if (localValue !== value && !isUndefined(value)) {
@@ -111,7 +112,7 @@ export default function AdvancedFilterValueField({
 
       <Choose.When condition={fieldType === IFieldType.DATE}>
         <DateInput
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           value={tansformDateValue(localValue)}
           onChange={handleDateChange}
           popoverProps={{
@@ -128,14 +129,7 @@ export default function AdvancedFilterValueField({
       </Choose.When>
 
       <Choose.When condition={fieldType === IFieldType.BOOLEAN}>
-        <Checkbox
-          value={
-            typeof localValue === 'string'
-              ? localValue
-              : String(localValue ?? '')
-          }
-          onChange={handleInputChange}
-        />
+        <Checkbox checked={localValue === true} onChange={handleInputChange} />
       </Choose.When>
 
       <Choose.Otherwise>

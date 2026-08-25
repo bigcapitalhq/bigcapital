@@ -3,6 +3,7 @@ import {
   ACCOUNTS_TABLE_STATE_RESET,
   ACCOUNTS_TABLE_STATE_SET,
   ACCOUNTS_SET_SELECTED_ROWS,
+  ACCOUNTS_RESET_SELECTED_ROWS,
 } from '@/store/types';
 
 export const setAccountsTableState = (queries: Partial<TableQuery>) => {
@@ -28,5 +29,14 @@ export const setAccountsSelectedRows = (selectedRows: Array<unknown>) => {
   return {
     type: ACCOUNTS_SET_SELECTED_ROWS,
     payload: selectedRows,
+  };
+};
+
+/**
+ * Resets the selected rows for accounts table.
+ */
+export const resetAccountsSelectedRows = () => {
+  return {
+    type: ACCOUNTS_RESET_SELECTED_ROWS,
   };
 };

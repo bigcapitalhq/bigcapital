@@ -76,8 +76,11 @@ export const ProfitLossSheetDatePeriods = <
       fromDate: Date,
       toDate: Date,
     ) => {
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
+        node.id,
+      );
       const periodTotal = this.repository.periodsAccountsLedger
-        .whereAccountId(node.id)
+        .whereAccountsIds(accountIds)
         .whereFromDate(fromDate)
         .whereToDate(toDate)
         .getClosingBalance();

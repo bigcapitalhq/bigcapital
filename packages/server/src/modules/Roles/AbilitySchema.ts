@@ -20,6 +20,7 @@ import {
   AbilitySubject,
   ISubjectAbilitiesSchema,
   ISubjectAbilitySchema,
+  RoleAction,
 } from './Roles.types';
 import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.types';
 import { PreferencesAction } from '../Settings/Settings.types';
@@ -254,6 +255,10 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
         label: 'ability.balance_sheet_report',
       },
       {
+        key: ReportsAction.READ_TRIAL_BALANCE_SHEET,
+        label: 'ability.trial_balance_sheet_report',
+      },
+      {
         key: ReportsAction.READ_PROFIT_LOSS,
         label: 'ability.profit_loss_sheet',
       },
@@ -303,6 +308,14 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
         key: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
         label: 'ability.inventory_items_details',
       },
+      {
+        key: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
+        label: 'ability.cashflow_account_transactions',
+      },
+      {
+        key: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+        label: 'ability.sales_tax_liability_summary_report',
+      },
     ],
   },
   {
@@ -325,7 +338,18 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
     subjectLabel: 'ability.attachments',
     abilities: [
       { key: AttachmentAction.View, label: 'ability.view', default: true },
+      { key: AttachmentAction.Create, label: 'ability.create', default: true },
       { key: AttachmentAction.Delete, label: 'ability.delete', default: true },
+    ],
+  },
+  {
+    subject: AbilitySubject.Role,
+    subjectLabel: 'ability.roles',
+    abilities: [
+      { key: RoleAction.View, label: 'ability.view', default: false },
+      { key: RoleAction.Create, label: 'ability.create', default: false },
+      { key: RoleAction.Edit, label: 'ability.edit', default: false },
+      { key: RoleAction.Delete, label: 'ability.delete', default: false },
     ],
   },
   {

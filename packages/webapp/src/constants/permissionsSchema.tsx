@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { chain } from 'lodash';
 import intl from 'react-intl-universal';
 import {
@@ -23,16 +22,43 @@ import {
 export const ModulePermissionsStyle = {
   Columns: 'columns',
   Vertical: 'vertical',
-};
+} as const;
 
 const PermissionColumn = {
   View: 'view',
   Create: 'create',
   Delete: 'delete',
   Edit: 'edit',
-};
+} as const;
 
-export const getPermissionsSchema = () => [
+export interface PermissionItem {
+  label: string;
+  key: string;
+  relatedColumn?: string;
+  depend?: Array<{ key: string }>;
+}
+
+export interface PermissionService {
+  label: string;
+  subject: string;
+  permissions: PermissionItem[];
+}
+
+export interface PermissionColumnOption {
+  label: string;
+  key: string;
+}
+
+export interface PermissionModule {
+  label: string;
+  type: string;
+  serviceFullAccess: boolean;
+  moduleFullAccess?: boolean;
+  columns?: PermissionColumnOption[];
+  services: PermissionService[];
+}
+
+export const getPermissionsSchema = (): PermissionModule[] => [
   {
     label: intl.get('permissions.items_inventory'),
     type: ModulePermissionsStyle.Columns,
@@ -634,13 +660,19 @@ export const getPermissionsSchema = () => [
             label: intl.get('permissions.cashflow_account_transactions'),
             key: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
           },
+          {
+            label: intl.get('permissions.sales_tax_liability_summary'),
+            key: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+          },
         ],
       },
     ],
   },
 ];
 
-export function getPermissionsSchemaService(subject) {
+export function getPermissionsSchemaService(
+  subject: string,
+): PermissionService | undefined {
   const permissions = getPermissionsSchema();
 
   return chain(permissions)
@@ -650,7 +682,7 @@ export function getPermissionsSchemaService(subject) {
     .value();
 }
 
-export function getPermissionsSchemaServices() {
+export function getPermissionsSchemaServices(): PermissionService[] {
   const permissions = getPermissionsSchema();
 
   return chain(permissions)

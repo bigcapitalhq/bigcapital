@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Spinner } from '@blueprintjs/core';
 import { Suspense } from 'react';
 import BodyClassName from 'react-body-classname';
@@ -6,7 +5,7 @@ import { Route, Switch, useLocation } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 import { AuthMetaBootProvider } from './AuthMetaBoot';
-import { Box, Icon, FormattedMessage as T } from '@/components';
+import { Box, Icon } from '@/components';
 import { BigcapitalAlt } from '@/components/Icons/BigcapitalAlt';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 import authenticationRoutes from '@/routes/authentication';
@@ -62,12 +61,7 @@ function AuthenticationRoutes() {
       >
         <Switch>
           {authenticationRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              exact={route.exact}
-              component={route.component}
-            />
+            <Route key={index} path={route.path} component={route.component} />
           ))}
         </Switch>
       </CSSTransition>

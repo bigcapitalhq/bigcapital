@@ -1,5 +1,5 @@
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { omit } from 'lodash';
 import { IItemWarehouseQuantityChange } from '../Warehouse.types';
@@ -10,7 +10,7 @@ import { ItemWarehouseQuantity } from '../models/ItemWarehouseQuantity';
 @Injectable()
 export class WarehousesItemsQuantitySync {
   constructor(
-    private readonly warehouseItemsQuantityModel: WarehousesItemsQuantity,
+    @Inject(ItemWarehouseQuantity.name)
     private readonly itemWarehouseQuantityModel: TenantModelProxy<
       typeof ItemWarehouseQuantity
     >,

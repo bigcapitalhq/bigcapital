@@ -52,8 +52,6 @@ export function useWorkspaces(
         includeInactive: String(includeInactive),
         currentOrganizationId: currentOrganizationId ?? '',
       }),
-    initialDataUpdatedAt: 0,
-    initialData: [],
   });
 }
 

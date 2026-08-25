@@ -20,10 +20,6 @@ export class EditPdfTemplateDto {
   @IsNotEmpty()
   templateName: string;
 
-  @IsString()
-  @IsNotEmpty()
-  resource: string;
-
   @IsObject()
   @IsNotEmpty()
   attributes: Record<string, any>;

@@ -154,6 +154,11 @@ export const SettingsOptions = {
       type: 'number',
     },
   },
+  item_categories: {
+    table_size: {
+      type: 'string',
+    },
+  },
   expenses: {
     preferred_payment_account: {
       type: 'number',
@@ -254,10 +259,10 @@ export const SettingsOptions = {
     ]),
   },
   features: {
-    'multi-warehouses': {
+    warehouses: {
       type: 'boolean',
     },
-    'multi-branches': {
+    branches: {
       type: 'boolean',
     },
   },

@@ -17,6 +17,7 @@ import {
   ITableRow,
 } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
+import { GENERAL_LEDGER_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export class GeneralLedgerTable extends R.compose(
   FinancialTable,
@@ -49,15 +50,21 @@ export class GeneralLedgerTable extends R.compose(
    */
   private accountColumnsAccessors(): ITableColumnAccessor[] {
     return [
-      { key: 'date', accessor: 'name' },
-      { key: 'account_name', accessor: '_empty_' },
-      { key: 'reference_type', accessor: '_empty_' },
-      { key: 'reference_number', accessor: '_empty_' },
-      { key: 'description', accessor: 'description' },
-      { key: 'credit', accessor: '_empty_' },
-      { key: 'debit', accessor: '_empty_' },
-      { key: 'amount', accessor: 'amount.formattedAmount' },
-      { key: 'running_balance', accessor: 'closingBalance.formattedAmount' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DATE, accessor: 'name' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_NUMBER, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DESCRIPTION, accessor: 'description' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.CREDIT, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DEBIT, accessor: '_empty_' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.AMOUNT,
+        accessor: 'amount.formattedAmount',
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.RUNNING_BALANCE,
+        accessor: 'closingBalance.formattedAmount',
+      },
     ];
   }
 
@@ -67,15 +74,27 @@ export class GeneralLedgerTable extends R.compose(
    */
   private transactionColumnAccessors(): ITableColumnAccessor[] {
     return [
-      { key: 'date', accessor: 'dateFormatted' },
-      { key: 'account_name', accessor: 'account.name' },
-      { key: 'reference_type', accessor: 'transactionTypeFormatted' },
-      { key: 'reference_number', accessor: 'transactionNumber' },
-      { key: 'description', accessor: 'note' },
-      { key: 'credit', accessor: 'formattedCredit' },
-      { key: 'debit', accessor: 'formattedDebit' },
-      { key: 'amount', accessor: 'formattedAmount' },
-      { key: 'running_balance', accessor: 'formattedRunningBalance' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DATE, accessor: 'dateFormatted' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME,
+        accessor: 'account.name',
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE,
+        accessor: 'transactionTypeFormatted',
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_NUMBER,
+        accessor: 'transactionNumber',
+      },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DESCRIPTION, accessor: 'note' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.CREDIT, accessor: 'formattedCredit' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DEBIT, accessor: 'formattedDebit' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.AMOUNT, accessor: 'formattedAmount' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.RUNNING_BALANCE,
+        accessor: 'formattedRunningBalance',
+      },
     ];
   }
 
@@ -85,15 +104,21 @@ export class GeneralLedgerTable extends R.compose(
    */
   private openingBalanceColumnsAccessors(): IColumnMapperMeta[] {
     return [
-      { key: 'date', value: 'Opening Balance' },
-      { key: 'account_name', value: '' },
-      { key: 'reference_type', accessor: '_empty_' },
-      { key: 'reference_number', accessor: '_empty_' },
-      { key: 'description', accessor: 'description' },
-      { key: 'credit', accessor: '_empty_' },
-      { key: 'debit', accessor: '_empty_' },
-      { key: 'amount', accessor: 'openingBalance.formattedAmount' },
-      { key: 'running_balance', accessor: 'openingBalance.formattedAmount' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DATE, value: 'Opening Balance' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME, value: '' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_NUMBER, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DESCRIPTION, accessor: 'description' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.CREDIT, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DEBIT, accessor: '_empty_' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.AMOUNT,
+        accessor: 'openingBalance.formattedAmount',
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.RUNNING_BALANCE,
+        accessor: 'openingBalance.formattedAmount',
+      },
     ];
   }
 
@@ -106,15 +131,24 @@ export class GeneralLedgerTable extends R.compose(
     account: IGeneralLedgerSheetAccount,
   ): IColumnMapperMeta[] {
     return [
-      { key: 'date', value: `Closing balance for ${account.name}` },
-      { key: 'account_name', value: `` },
-      { key: 'reference_type', accessor: '_empty_' },
-      { key: 'reference_number', accessor: '_empty_' },
-      { key: 'description', accessor: '_empty_' },
-      { key: 'credit', accessor: '_empty_' },
-      { key: 'debit', accessor: '_empty_' },
-      { key: 'amount', accessor: 'closingBalance.formattedAmount' },
-      { key: 'running_balance', accessor: 'closingBalance.formattedAmount' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.DATE,
+        value: `Closing balance for ${account.name}`,
+      },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME, value: `` },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_NUMBER, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DESCRIPTION, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.CREDIT, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DEBIT, accessor: '_empty_' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.AMOUNT,
+        accessor: 'closingBalance.formattedAmount',
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.RUNNING_BALANCE,
+        accessor: 'closingBalance.formattedAmount',
+      },
     ];
   }
 
@@ -128,21 +162,24 @@ export class GeneralLedgerTable extends R.compose(
   ): IColumnMapperMeta[] {
     return [
       {
-        key: 'date',
+        key: GENERAL_LEDGER_COLUMN_KEYS.DATE,
         value: `Closing Balance for ${account.name} with sub-accounts`,
       },
       {
-        key: 'account_name',
+        key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME,
         value: ``,
       },
-      { key: 'reference_type', accessor: '_empty_' },
-      { key: 'reference_number', accessor: '_empty_' },
-      { key: 'description', accessor: '_empty_' },
-      { key: 'credit', accessor: '_empty_' },
-      { key: 'debit', accessor: '_empty_' },
-      { key: 'amount', accessor: 'closingBalanceSubaccounts.formattedAmount' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_NUMBER, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DESCRIPTION, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.CREDIT, accessor: '_empty_' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DEBIT, accessor: '_empty_' },
       {
-        key: 'running_balance',
+        key: GENERAL_LEDGER_COLUMN_KEYS.AMOUNT,
+        accessor: 'closingBalanceSubaccounts.formattedAmount',
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.RUNNING_BALANCE,
         accessor: 'closingBalanceSubaccounts.formattedAmount',
       },
     ];
@@ -154,15 +191,24 @@ export class GeneralLedgerTable extends R.compose(
    */
   private commonColumns(): ITableColumn[] {
     return [
-      { key: 'date', label: 'Date' },
-      { key: 'account_name', label: 'Account Name' },
-      { key: 'reference_type', label: 'Transaction Type' },
-      { key: 'reference_number', label: 'Transaction #' },
-      { key: 'description', label: 'Description' },
-      { key: 'credit', label: 'Credit' },
-      { key: 'debit', label: 'Debit' },
-      { key: 'amount', label: 'Amount' },
-      { key: 'running_balance', label: 'Running Balance' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DATE, label: 'Date' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME, label: 'Account Name' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE,
+        label: 'Transaction Type',
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_NUMBER,
+        label: 'Transaction #',
+      },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DESCRIPTION, label: 'Description' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.CREDIT, label: 'Credit' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.DEBIT, label: 'Debit' },
+      { key: GENERAL_LEDGER_COLUMN_KEYS.AMOUNT, label: 'Amount' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.RUNNING_BALANCE,
+        label: 'Running Balance',
+      },
     ];
   }
 
@@ -181,6 +227,10 @@ export class GeneralLedgerTable extends R.compose(
       const data = { ...transaction, account };
       const meta = {
         rowTypes: [ROW_TYPE.TRANSACTION],
+        meta: {
+          referenceType: transaction.referenceType,
+          referenceId: transaction.referenceId,
+        },
       };
       return tableRowMapper(data, columns, meta);
     },

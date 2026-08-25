@@ -31,6 +31,7 @@ import { BalanceSheetTablePreviousPeriod } from './BalanceSheetTablePreviousPeri
 import { FinancialTable } from '../../common/FinancialTable';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BalanceSheetTableDatePeriods } from './BalanceSheetTableDatePeriods';
+import { BALANCE_SHEET_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export class BalanceSheetTable extends R.pipe(
   BalanceSheetBase,
@@ -96,7 +97,7 @@ export class BalanceSheetTable extends R.pipe(
    */
   public commonColumnsAccessors = (): ITableColumnAccessor[] => {
     return R.compose(
-      R.concat([{ key: 'name', accessor: 'name' }]),
+      R.concat([{ key: BALANCE_SHEET_COLUMN_KEYS.NAME, accessor: 'name' }]),
       R.ifElse(
         R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
         R.concat(this.datePeriodsColumnsAccessors()),
@@ -114,7 +115,12 @@ export class BalanceSheetTable extends R.pipe(
       R.concat(this.previousPeriodColumnAccessor()),
       R.concat(this.previousYearColumnAccessor()),
       R.concat(this.percentageColumnsAccessor()),
-      R.concat([{ key: 'total', accessor: 'total.formattedAmount' }]),
+      R.concat([
+        {
+          key: BALANCE_SHEET_COLUMN_KEYS.TOTAL,
+          accessor: 'total.formattedAmount',
+        },
+      ]),
     )([]);
   };
 
@@ -228,7 +234,12 @@ export class BalanceSheetTable extends R.pipe(
     return R.compose(
       R.unless(
         R.isEmpty,
-        R.concat([{ key: 'total', label: this.i18n.t('balance_sheet.total') }]),
+        R.concat([
+          {
+            key: BALANCE_SHEET_COLUMN_KEYS.TOTAL,
+            label: this.i18n.t('balance_sheet.total'),
+          },
+        ]),
       ),
       R.concat(this.percentageColumns()),
       R.concat(this.getPreviousYearColumns()),
@@ -243,7 +254,7 @@ export class BalanceSheetTable extends R.pipe(
   public totalColumn = (): ITableColumn[] => {
     return [
       {
-        key: 'total',
+        key: BALANCE_SHEET_COLUMN_KEYS.TOTAL,
         label: this.i18n.t('balance_sheet.total'),
         children: this.totalColumnChildren(),
       },
@@ -272,7 +283,10 @@ export class BalanceSheetTable extends R.pipe(
     return R.compose(
       this.tableColumnsCellIndexing,
       R.concat([
-        { key: 'name', label: this.i18n.t('balance_sheet.account_name') },
+        {
+          key: BALANCE_SHEET_COLUMN_KEYS.NAME,
+          label: this.i18n.t('balance_sheet.account_name'),
+        },
       ]),
       R.ifElse(
         this.query.isDatePeriodsColumnsType,

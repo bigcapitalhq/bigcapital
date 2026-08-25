@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import {
@@ -11,14 +10,16 @@ import {
 import { RegisterForm } from './RegisterForm';
 import {
   RegisterSchema,
+  RegisterValues,
   transformRegisterErrorsToForm,
   transformRegisterToastMessages,
 } from './utils';
+import type { ApiError } from 'openapi-typescript-fetch';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { AuthInsider } from '@/containers/Authentication/AuthInsider';
 import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
-const initialValues = {
+const initialValues: RegisterValues = {
   first_name: '',
   last_name: '',
   email: '',
@@ -32,23 +33,30 @@ export function RegisterUserForm() {
   const { mutateAsync: authLoginMutate } = useAuthLogin();
   const { mutateAsync: authRegisterMutate } = useAuthRegister();
 
-  const handleSubmit = (values, { setSubmitting, setErrors }) => {
-    authRegisterMutate(values)
+  const handleSubmit = (
+    values: RegisterValues,
+    { setSubmitting, setErrors }: FormikHelpers<RegisterValues>,
+  ) => {
+    authRegisterMutate({
+      firstName: values.first_name,
+      lastName: values.last_name,
+      email: values.email,
+      password: values.password,
+    })
       .then(() => {
         authLoginMutate({
           email: values.email,
           password: values.password,
-        }).catch(({ data: { errors } }) => {
+        }).catch(() => {
           AppToaster.show({
             message: intl.get('something_wentwrong'),
             intent: Intent.SUCCESS,
           });
         });
       })
-      .catch(({ response }) => {
-        const {
-          data: { errors },
-        } = response;
+      .catch((response: ApiError) => {
+        const errors =
+          (response.data?.errors as Array<{ type?: string }> | undefined) ?? [];
 
         const formErrors = transformRegisterErrorsToForm(errors);
         const toastMessages = transformRegisterToastMessages(errors);

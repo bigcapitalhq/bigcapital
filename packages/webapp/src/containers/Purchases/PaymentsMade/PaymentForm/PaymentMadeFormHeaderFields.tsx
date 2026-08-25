@@ -35,12 +35,12 @@ import {
   VendorsSelect,
 } from '@/components';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { useDateInputFormatter } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { momentFormatter, safeSumBy } from '@/utils';
+import { safeSumBy } from '@/utils';
 
 type VendorContact = {
   id: string | number;
-  currency_code?: string;
   currencyCode?: string;
 };
 
@@ -73,6 +73,7 @@ function PaymentMadeFormHeaderFieldsInner() {
   } = useFormikContext<PaymentMadeFormValues>();
 
   const theme = useTheme() as Theme;
+  const dateInputFormatter = useDateInputFormatter();
   const fieldsClassName = getFieldsStyle(theme);
 
   const { accounts } = usePaymentMadeFormContext();
@@ -116,7 +117,7 @@ function PaymentMadeFormHeaderFieldsInner() {
       >
         <FDateInput
           name={'paymentDate'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
           fill
@@ -232,7 +233,7 @@ function PaymentFormVendorSelect() {
           placeholder={<T id={'select_vender_account'} />}
           onItemChange={(contact: VendorContact) => {
             setFieldValue('vendorId', contact.id);
-            setFieldValue('currencyCode', contact?.currency_code);
+            setFieldValue('currencyCode', contact?.currencyCode);
             setPaymentVendorId(Number(contact.id));
           }}
           disabled={!isNewMode}

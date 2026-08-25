@@ -8,6 +8,8 @@ export const BILL_PAYMENTS_ROUTES = {
   NEW_PAGE_ENTRIES: '/api/bill-payments/new-page/entries',
   BILLS: '/api/bill-payments/{billPaymentId}/bills',
   EDIT_PAGE: '/api/bill-payments/{billPaymentId}/edit-page',
+  VALIDATE_BULK_DELETE: '/api/bill-payments/validate-bulk-delete',
+  BULK_DELETE: '/api/bill-payments/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
 export type BillPaymentsListResponse = OpResponseBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.LIST, 'get'>>;
@@ -49,6 +51,31 @@ export async function editBillPayment(
 export async function deleteBillPayment(fetcher: ApiFetcher, billPaymentId: number): Promise<void> {
   const del = fetcher.path(BILL_PAYMENTS_ROUTES.BY_ID).method('delete').create();
   await del({ billPaymentId });
+}
+
+export type BulkDeleteBillPaymentsBody = { ids: number[]; skipUndeletable?: boolean };
+export type ValidateBulkDeleteBillPaymentsResponse = {
+  deletableCount: number;
+  nonDeletableCount: number;
+  deletableIds: number[];
+  nonDeletableIds: number[];
+};
+
+export async function bulkDeleteBillPayments(
+  fetcher: ApiFetcher,
+  body: BulkDeleteBillPaymentsBody
+): Promise<void> {
+  const post = fetcher.path(BILL_PAYMENTS_ROUTES.BULK_DELETE).method('post').create();
+  await post({ ids: body.ids, skipUndeletable: body.skipUndeletable ?? false } as never);
+}
+
+export async function validateBulkDeleteBillPayments(
+  fetcher: ApiFetcher,
+  ids: number[]
+): Promise<ValidateBulkDeleteBillPaymentsResponse> {
+  const post = fetcher.path(BILL_PAYMENTS_ROUTES.VALIDATE_BULK_DELETE).method('post').create();
+  const { data } = await post({ ids, skipUndeletable: false } as never);
+  return data as ValidateBulkDeleteBillPaymentsResponse;
 }
 
 export async function fetchBillPaymentEditPage(

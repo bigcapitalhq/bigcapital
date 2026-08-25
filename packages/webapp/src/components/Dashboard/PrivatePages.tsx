@@ -1,6 +1,5 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
-import { Switch, Route } from 'react-router';
+import { Switch, Route } from 'react-router-dom';
 import { EnsureAuthenticated } from '../Guards/EnsureAuthenticated';
 import EnsureOrganizationIsReady from '../Guards/EnsureOrganizationIsReady';
 import { EnsureUserEmailVerified } from '../Guards/EnsureUserEmailVerified';

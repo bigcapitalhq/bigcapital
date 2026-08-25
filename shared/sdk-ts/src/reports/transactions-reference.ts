@@ -55,8 +55,11 @@ export async function fetchTransactionsByReferenceCsv(
   query: TransactionsByReferenceCsvQuery
 ): Promise<TransactionsByReferenceCsvResponse> {
   const get = fetcher.path(TRANSACTIONS_REFERENCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/csv" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as TransactionsByReferenceCsvResponse;
 }
 
@@ -69,8 +72,11 @@ export async function fetchTransactionsByReferenceXlsx(
   query: TransactionsByReferenceXlsxQuery
 ): Promise<TransactionsByReferenceXlsxResponse> {
   const get = fetcher.path(TRANSACTIONS_REFERENCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/xlsx" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as TransactionsByReferenceXlsxResponse;
 }
 
@@ -83,7 +89,10 @@ export async function fetchTransactionsByReferencePdf(
   query: TransactionsByReferencePdfQuery
 ): Promise<TransactionsByReferencePdfResponse> {
   const get = fetcher.path(TRANSACTIONS_REFERENCE_ROUTE).method('get').create();
-  const { payload, init } = withNestedQuery({ ...query, Accept: "application/pdf" } as Record<string, unknown>);
-  const response = await get(payload as Arg, init);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as TransactionsByReferencePdfResponse;
 }

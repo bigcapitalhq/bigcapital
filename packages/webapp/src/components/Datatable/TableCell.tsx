@@ -26,6 +26,7 @@ export default function TableCell({ cell, row, index }: TableCellProps) {
       expandable,
       cellsLoading,
       cellsLoadingCoords,
+      cellTestId,
       onCellClick,
     },
   } = useContext(TableContext);
@@ -73,6 +74,7 @@ export default function TableCell({ cell, row, index }: TableCellProps) {
           [`td-${cell.column.id}`]: cell.column.id,
           [`td-${cellType}-type`]: !!cellType,
         }),
+        ...(cellTestId ? { 'data-testId': cellTestId(row, cell) } : {}),
       })}
       tabIndex={0}
       onClick={handleCellClick}
@@ -96,6 +98,7 @@ export default function TableCell({ cell, row, index }: TableCellProps) {
             {...getToggleRowExpandedProps({
               className: 'expand-toggle',
             })}
+            data-testId="expand-toggle"
             style={{}}
           >
             <span

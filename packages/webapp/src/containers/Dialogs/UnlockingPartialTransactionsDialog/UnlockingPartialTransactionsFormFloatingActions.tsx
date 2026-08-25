@@ -1,26 +1,30 @@
-// @ts-nocheck
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import { useUnlockingPartialTransactionsContext } from './UnlockingPartialTransactionsFormProvider';
+import type { UnlockingPartialTransactionsFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
+
+interface UnlockingPartialTransactionsFormFloatingActionsProps
+  extends WithDialogActionsProps {}
 
 /**
  * Partial Unlocking transactions floating actions
  */
 function UnlockingPartialTransactionsFormFloatingActionsInner({
-  // #withDialogActions
   closeDialog,
-}) {
+}: UnlockingPartialTransactionsFormFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } =
+    useFormikContext<UnlockingPartialTransactionsFormValues>();
 
   const { dialogName } = useUnlockingPartialTransactionsContext();
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = () => {
     closeDialog(dialogName);
   };
 
@@ -33,8 +37,9 @@ function UnlockingPartialTransactionsFormFloatingActionsInner({
           type="submit"
           loading={isSubmitting}
         >
-          {<T id={'save'} />}
+          <T id={'save'} />
         </Button>
+
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
           <T id={'cancel'} />
         </Button>

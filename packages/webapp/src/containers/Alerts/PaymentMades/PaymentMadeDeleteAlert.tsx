@@ -1,41 +1,46 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { handleDeleteErrors } from './_utils';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useDeletePaymentMade } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface PaymentMadeDeleteAlertPayload {
+  paymentMadeId: number;
+}
+
+interface PaymentMadeDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: PaymentMadeDeleteAlertPayload;
+}
 
 /**
  * Payment made delete alert.
  */
 function PaymentMadeDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { paymentMadeId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deletePaymentMadeMutate, isLoading } =
+}: PaymentMadeDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deletePaymentMadeMutate, isPending: isLoading } =
     useDeletePaymentMade();
 
-  // Handle cancel payment made.
   const handleCancelPaymentMadeDelete = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete payment made
   const handleConfirmPaymentMadeDelete = () => {
     deletePaymentMadeMutate(paymentMadeId)
       .then(() => {
@@ -45,9 +50,11 @@ function PaymentMadeDeleteAlertInner({
         });
         closeDrawer(DRAWERS.PAYMENT_MADE_DETAILS);
       })
-      .catch(({ data: { errors } }) => {
-        handleDeleteErrors(errors);
-      })
+      .catch(
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
+          handleDeleteErrors(errors);
+        },
+      )
       .finally(() => {
         closeAlert(name);
       });
@@ -55,8 +62,8 @@ function PaymentMadeDeleteAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon={'trash'}
       intent={Intent.DANGER}
       isOpen={isOpen}

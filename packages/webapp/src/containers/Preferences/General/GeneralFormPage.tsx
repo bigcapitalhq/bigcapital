@@ -18,12 +18,12 @@ const defaultValues: GeneralFormValues = {
   name: '',
   industry: '',
   location: '',
-  base_currency: '',
+  baseCurrency: '',
   language: '',
-  fiscal_year: '',
-  date_format: '',
+  fiscalYear: '',
+  dateFormat: '',
   timezone: '',
-  tax_number: '',
+  taxNumber: '',
   address: {},
 };
 
@@ -77,7 +77,7 @@ function GeneralFormPageInner({
     const onError = () => {
       setSubmitting(false);
     };
-    updateOrganization({ ...values } as never)
+    updateOrganization({ ...values })
       .then(onSuccess)
       .catch(onError);
   };

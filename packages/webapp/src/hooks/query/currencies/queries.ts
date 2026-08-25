@@ -68,7 +68,7 @@ export function useDeleteCurrency(
 export function useCurrencies(
   props?: Omit<UseQueryOptions<CurrenciesListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: currenciesKeys.all(),

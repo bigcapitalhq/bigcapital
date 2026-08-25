@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -28,7 +28,8 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'inventory',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,
@@ -67,7 +68,7 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createWarehouseTransferRequest())
-      .expect(200);
+      .expect(201);
   });
 
   it('/warehouse-transfers (GET)', () => {
@@ -93,7 +94,7 @@ describe('Warehouse Transfers (e2e)', () => {
       .expect(200);
   });
 
-  it('/warehouse-transfers/:id (POST)', async () => {
+  it('/warehouse-transfers/:id (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/warehouse-transfers')
       .set('organization-id', orgainzationId)
@@ -102,7 +103,7 @@ describe('Warehouse Transfers (e2e)', () => {
     const transferId = response.body.id;
 
     return request(app.getHttpServer())
-      .post(`/warehouse-transfers/${transferId}`)
+      .put(`/warehouse-transfers/${transferId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createWarehouseTransferRequest())

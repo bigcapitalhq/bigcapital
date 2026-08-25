@@ -54,8 +54,8 @@ function CustomerSelectRoot({
     <FSelect
       name={name}
       items={items}
-      textAccessor={'display_name'}
-      labelAccessor={'formatted_balance'}
+      textAccessor={'displayName'}
+      labelAccessor={'formattedBalance'}
       valueAccessor={'id'}
       popoverProps={{ minimal: true, usePortal: true, inline: false }}
       createNewItemRenderer={maybeCreateNewItemRenderer}

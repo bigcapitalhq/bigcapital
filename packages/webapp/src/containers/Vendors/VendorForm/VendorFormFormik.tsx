@@ -19,6 +19,7 @@ import {
   transformVendorToForm,
 } from './utils';
 import { AppToaster } from '@/components';
+import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { saveInvoke } from '@/utils';
 
@@ -69,6 +70,10 @@ function VendorFormFormikBase({
     };
     if (!merged.currencyCode && baseCurrency) {
       merged.currencyCode = baseCurrency;
+    }
+    // Infer the selected display-name format from the existing display name.
+    if (merged.displayName && !merged.displayNameFormat) {
+      merged.displayNameFormat = inferDisplayNameFormat(merged);
     }
     return merged;
   }, [vendor, contactDuplicate, baseCurrency, initialValues]);

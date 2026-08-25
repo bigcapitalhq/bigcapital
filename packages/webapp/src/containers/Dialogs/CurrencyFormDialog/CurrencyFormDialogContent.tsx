@@ -1,20 +1,24 @@
-// @ts-nocheck
 import React from 'react';
+import '@/style/pages/Currency/CurrencyFormDialog.scss';
 import { CurrencyForm } from './CurrencyForm';
 import { CurrencyFormProvider } from './CurrencyFormProvider';
-import { withCurrencyDetail } from '@/containers/Currencies/withCurrencyDetail';
-import { compose } from '@/utils';
-import '@/style/pages/Currency/CurrencyFormDialog.scss';
+
+interface CurrencyFormDialogContentInnerProps {
+  action?: string;
+  currencyCode?: string;
+  dialogName: string;
+}
 
 function CurrencyFormDialogContentInner({
-  // #ownProp
   action,
   currencyCode,
   dialogName,
-}) {
+}: CurrencyFormDialogContentInnerProps): React.ReactElement {
   return (
     <CurrencyFormProvider
-      isEditMode={action}
+      // FIXME: `isEditMode` receives the action string, not a boolean —
+      // consumers truthy-check it, so behavior is preserved.
+      isEditMode={action ?? false}
       currency={currencyCode}
       dialogName={dialogName}
     >
@@ -23,6 +27,4 @@ function CurrencyFormDialogContentInner({
   );
 }
 
-export const CurrencyFormDialogContent = compose(withCurrencyDetail)(
-  CurrencyFormDialogContentInner,
-);
+export const CurrencyFormDialogContent = CurrencyFormDialogContentInner;

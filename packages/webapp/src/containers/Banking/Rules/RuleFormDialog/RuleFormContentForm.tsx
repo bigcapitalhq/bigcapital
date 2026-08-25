@@ -101,7 +101,11 @@ function RuleFormContentFormRoot({
           style={{ maxWidth: 300 }}
           fastField
         >
-          <FInputGroup name={'name'} fastField />
+          <FInputGroup
+            name={'name'}
+            fastField
+            data-testId={'rule-name-input'}
+          />
         </FFormGroup>
 
         <FFormGroup
@@ -116,6 +120,7 @@ function RuleFormContentFormRoot({
             items={accounts}
             filterByTypes={['cash', 'bank']}
             fastField
+            buttonProps={{ 'data-testId': 'rule-apply-account-select' }}
           />
         </FFormGroup>
 
@@ -229,7 +234,11 @@ function RuleFormConditions() {
               style={{ marginBottom: 0, flex: '1 0 ', width: '40%' }}
               fastField
             >
-              <FInputGroup name={`conditions[${index}].value`} fastField />
+              <FInputGroup
+                name={`conditions[${index}].value`}
+                fastField
+                data-testId={'rule-condition-value-input'}
+              />
             </FFormGroup>
           </Group>
         ))}
@@ -311,6 +320,7 @@ function RuleApplyIfTransactionTypeField() {
         popoverProps={{ minimal: true, inline: false }}
         onItemChange={handleItemChange}
         fastField
+        buttonProps={{ 'data-testId': 'rule-apply-type-select' }}
       />
     </FFormGroup>
   );
@@ -353,6 +363,7 @@ function RuleAssignCategoryField() {
         textAccessor={'name'}
         onItemChange={handleItemChange}
         fastField
+        buttonProps={{ 'data-testId': 'rule-assign-category-select' }}
       />
     </FFormGroup>
   );
@@ -382,6 +393,7 @@ function RuleAssignCategoryAccountField() {
         filterByRootTypes={accountRoot}
         shouldUpdateDeps={{ accountRoot }}
         fastField
+        buttonProps={{ 'data-testId': 'rule-assign-account-select' }}
       />
     </FFormGroup>
   );

@@ -31,7 +31,6 @@ interface AccountTransactionsDataTableProps
     >,
     Pick<
       WithBankingActionsProps,
-      | 'setUncategorizedTransactionIdForMatching'
       | 'setUncategorizedTransactionsSelected'
       | 'addTransactionsToCategorizeSelected'
       | 'setTransactionsToCategorizeSelected'
@@ -45,7 +44,6 @@ function AccountTransactionsDataTable({
   enableMultipleCategorization,
 
   // #withBankingActions
-  setUncategorizedTransactionIdForMatching,
   setUncategorizedTransactionsSelected,
   addTransactionsToCategorizeSelected,
   setTransactionsToCategorizeSelected,
@@ -88,18 +86,19 @@ function AccountTransactionsDataTable({
     transaction: UncategorizedTransactionRow,
   ) => {
     if (transaction.id == null) return;
-    setUncategorizedTransactionIdForMatching(transaction.id);
+    setTransactionsToCategorizeSelected([transaction.id]);
   };
   // handles table selected rows change.
-  const handleSelectedRowsChange = (
-    selected: Array<{ original: UncategorizedTransactionRow }>,
-  ) => {
-    const transactionIds =
-      selected
-        ?.map((r) => r.original.id)
-        .filter((id): id is number => id != null) ?? [];
-    setUncategorizedTransactionsSelected(transactionIds);
-  };
+  const handleSelectedRowsChange = React.useCallback(
+    (selected: Array<{ original: UncategorizedTransactionRow }>) => {
+      const transactionIds =
+        selected
+          ?.map((r) => r.original.id)
+          .filter((id): id is number => id != null) ?? [];
+      setUncategorizedTransactionsSelected(transactionIds);
+    },
+    [setUncategorizedTransactionsSelected],
+  );
   // Handle exclude transaction.
   const handleExcludeTransaction = (
     transaction: UncategorizedTransactionRow,

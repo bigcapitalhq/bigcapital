@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -13,6 +13,7 @@ const makeEstimateRequest = ({ ...props } = {}) => ({
   estimateNumber: faker.string.uuid(),
   discount: 100,
   discountType: 'amount',
+  branchId: 1,
   entries: [
     {
       index: 1,
@@ -31,7 +32,11 @@ describe('Sale Estimates (e2e)', () => {
       .post('/customers')
       .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
-      .send({ displayName: 'Test Customer' });
+      .send({
+        displayName: 'Test Customer',
+        customerType: 'business',
+        currencyCode: 'USD',
+      });
 
     customerId = customer.body.id;
 
@@ -40,8 +45,8 @@ describe('Sale Estimates (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
-        type: 'inventory',
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'service',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,

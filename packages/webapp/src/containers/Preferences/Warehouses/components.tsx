@@ -88,7 +88,7 @@ export function WarehousesGridItemBox({
   primary,
 }: WarehousesGridItemBoxProps): React.ReactElement {
   return (
-    <WarehouseBoxRoot>
+    <WarehouseBoxRoot data-testId="warehouse-item">
       <WarehouseHeader>
         <WarehouseTitle>
           {title} {primary ? <Icon icon={'star-18dp'} iconSize={16} /> : null}

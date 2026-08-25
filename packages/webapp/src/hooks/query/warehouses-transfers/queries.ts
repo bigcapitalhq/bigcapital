@@ -124,7 +124,7 @@ export function useWarehouseTransfer(
   props?: Omit<UseQueryOptions<WarehouseTransfer>, 'queryKey' | 'queryFn'>,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: warehousesTransfersKeys.detail(id),

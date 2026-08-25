@@ -1,1 +1,4 @@
-export { ApiKeysGenerateDialog } from './ApiKeysGenerateDialog';
+export {
+  ApiKeysGenerateDialog,
+  ApiKeysGenerateDialogContent,
+} from './ApiKeysGenerateDialog';

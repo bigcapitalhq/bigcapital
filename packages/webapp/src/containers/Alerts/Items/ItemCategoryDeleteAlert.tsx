@@ -56,7 +56,7 @@ function ItemCategoryDeleteAlertInner({
       onConfirm={handleConfirmItemDelete}
       loading={isPending}
     >
-      <p>
+      <p data-testId={'category-delete-alert'}>
         {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch */}
         <FormattedHTMLMessage
           id={'once_delete_this_item_category_you_will_able_to_restore_it'}

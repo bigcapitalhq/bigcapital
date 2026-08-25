@@ -3,6 +3,7 @@ import {
   ESTIMATES_TABLE_STATE_RESET,
   ESTIMATES_TABLE_STATE_SET,
   ESTIMATES_SET_SELECTED_ROWS,
+  ESTIMATES_RESET_SELECTED_ROWS,
 } from '@/store/types';
 
 export const setEstimatesTableState = (queries: Partial<TableQuery>) => {
@@ -22,5 +23,11 @@ export const setEstimatesSelectedRows = (selectedRows: Array<unknown>) => {
   return {
     type: ESTIMATES_SET_SELECTED_ROWS,
     payload: selectedRows,
+  };
+};
+
+export const resetEstimatesSelectedRows = () => {
+  return {
+    type: ESTIMATES_RESET_SELECTED_ROWS,
   };
 };

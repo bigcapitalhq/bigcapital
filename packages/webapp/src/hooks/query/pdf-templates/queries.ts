@@ -138,7 +138,7 @@ export function useGetPdfTemplate(
     'queryKey' | 'queryFn'
   >,
 ): UseQueryResult<GetPdfTemplateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: pdfTemplatesKeys.detail(templateId),
@@ -153,7 +153,7 @@ export function useGetPdfTemplates(
   query?: GetPdfTemplatesQuery,
   options?: UseQueryOptions<GetPdfTemplatesResponse, Error>,
 ): UseQueryResult<GetPdfTemplatesResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: pdfTemplatesKeys.list(query),
@@ -196,7 +196,7 @@ export function useAssignPdfTemplateAsDefault(
 export function useGetPdfTemplateBrandingState(
   options?: UseQueryOptions<GetPdfTemplateBrandingStateResponse, Error>,
 ): UseQueryResult<GetPdfTemplateBrandingStateResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: pdfTemplatesKeys.state(),

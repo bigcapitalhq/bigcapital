@@ -12,7 +12,7 @@ export const useJournalEntriesTransactionsColumns = () => {
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'formatted_date',
+        accessor: 'date.formattedDate',
         Cell: FormatDateCell,
         width: 140,
         className: 'date',
@@ -20,26 +20,26 @@ export const useJournalEntriesTransactionsColumns = () => {
       },
       {
         Header: intl.get('account_name'),
-        accessor: 'account_name',
+        accessor: 'accountName',
         width: 140,
         className: 'account_name',
         textOverview: true,
       },
       {
         Header: intl.get('contact'),
-        accessor: 'contactTypeFormatted',
+        accessor: 'formattedContactType',
         width: 140,
       },
       {
         Header: intl.get('credit'),
-        accessor: 'credit.formatted_amount',
+        accessor: 'credit.formattedAmount',
         width: 100,
         className: 'credit',
         align: 'right',
       },
       {
         Header: intl.get('debit'),
-        accessor: 'debit.formatted_amount',
+        accessor: 'debit.formattedAmount',
         width: 100,
         className: 'debit',
         align: 'right',

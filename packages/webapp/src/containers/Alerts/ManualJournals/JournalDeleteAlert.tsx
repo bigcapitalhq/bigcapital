@@ -1,40 +1,47 @@
-// @ts-nocheck
-import { Intent, Alert } from '@blueprintjs/core';
+import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { handleDeleteErrors } from './_utils';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteJournal } from '@/hooks/query';
 import { compose } from '@/utils';
+
+interface JournalDeleteAlertPayload {
+  manualJournalId: number;
+  journalNumber: string;
+}
+
+interface JournalDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: JournalDeleteAlertPayload;
+}
 
 /**
  * Journal delete alert.
  */
 function JournalDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { manualJournalId, journalNumber },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteJournalMutate, isLoading } = useDeleteJournal();
+}: JournalDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteJournalMutate, isPending: isLoading } =
+    useDeleteJournal();
 
-  // Handle cancel delete manual journal.
   const handleCancelAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete manual journal.
   const handleConfirmManualJournalDelete = () => {
     deleteJournalMutate(manualJournalId)
       .then(() => {
@@ -44,19 +51,22 @@ function JournalDeleteAlertInner({
           }),
           intent: Intent.SUCCESS,
         });
-        closeAlert(name);
         closeDrawer(DRAWERS.JOURNAL_DETAILS);
       })
-      .catch(({ data: { errors } }) => {
-        handleDeleteErrors(errors);
+      .catch(
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
+          handleDeleteErrors(errors);
+        },
+      )
+      .finally(() => {
         closeAlert(name);
       });
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}

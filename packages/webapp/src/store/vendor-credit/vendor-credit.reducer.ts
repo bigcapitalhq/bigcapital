@@ -3,7 +3,11 @@ import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import type { TableQuery } from '@/store/store.types';
 import { createTableStateReducers } from '@/store/table-state.reducer';
-import { RESET, VENDOR_CREDITS_SET_SELECTED_ROWS } from '@/store/types';
+import {
+  RESET,
+  VENDOR_CREDITS_SET_SELECTED_ROWS,
+  VENDOR_CREDITS_RESET_SELECTED_ROWS,
+} from '@/store/types';
 
 interface VendorCreditState {
   tableState: Partial<TableQuery>;
@@ -38,6 +42,10 @@ const reducerInstance = createReducer(initialState, {
     action: { payload: Array<unknown> },
   ) => {
     state.selectedRows = action.payload;
+  },
+
+  [VENDOR_CREDITS_RESET_SELECTED_ROWS]: (state: VendorCreditState) => {
+    state.selectedRows = [];
   },
 
   [RESET]: () => {

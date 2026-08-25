@@ -36,7 +36,7 @@ function ItemCategoryFormDialog({
       autoFocus={true}
       canEscapeKeyClose={true}
     >
-      <DialogSuspense>
+      <DialogSuspense testId={'category-form-dialog'}>
         <ItemCategoryFormDialogContent
           dialogName={dialogName}
           action={payload.action}

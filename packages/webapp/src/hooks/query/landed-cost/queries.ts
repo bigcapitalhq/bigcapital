@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   fetchLandedCostTransactions,
   allocateLandedCost,
@@ -9,6 +8,8 @@ import {
   useQueryClient,
   useMutation,
   useQuery,
+  type QueryClient,
+  type UseMutationOptions,
   type UseQueryOptions,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
@@ -19,32 +20,41 @@ import type {
   BillLandedCostTransactionsResponse,
 } from '@bigcapital/sdk-ts';
 
-const commonInvalidateQueries = (queryClient) => {
+const commonInvalidateQueries = (queryClient: QueryClient) => {
   queryClient.invalidateQueries({ queryKey: billsKeys.all() });
   queryClient.invalidateQueries({ queryKey: landedCostKeys.all() });
   queryClient.invalidateQueries({ queryKey: landedCostKeys.transaction() });
 };
 
-export function useCreateLandedCost(props) {
+export function useCreateLandedCost(
+  props?: UseMutationOptions<unknown, Error, [number, unknown]>,
+) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
   return useMutation({
     ...props,
-    mutationFn: ([id, values]) => allocateLandedCost(fetcher, id, values),
+    mutationFn: ([id, values]: [number, unknown]) =>
+      allocateLandedCost(
+        fetcher,
+        id,
+        values as Parameters<typeof allocateLandedCost>[2],
+      ),
     onSuccess: () => {
       commonInvalidateQueries(queryClient);
     },
   });
 }
 
-export function useDeleteLandedCost(props) {
+export function useDeleteLandedCost(
+  props?: UseMutationOptions<void, Error, number>,
+) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
   return useMutation({
     ...props,
-    mutationFn: (landedCostId) =>
+    mutationFn: (landedCostId: number) =>
       deleteAllocatedLandedCost(fetcher, landedCostId),
     onSuccess: () => {
       commonInvalidateQueries(queryClient);
@@ -52,8 +62,11 @@ export function useDeleteLandedCost(props) {
   });
 }
 
-export function useLandedCostTransaction(query, props) {
-  const fetcher = useApiFetcher();
+export function useLandedCostTransaction(
+  query: string | undefined,
+  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: landedCostKeys.list({ query }),

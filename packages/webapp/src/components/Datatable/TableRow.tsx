@@ -64,9 +64,13 @@ export default function TableRow({ row, className, style }: TableRowProps) {
     props: {
       TableCellRenderer,
       rowClassNames,
+      rowTestId,
       ContextMenu: ContextMenuContent,
     },
   } = useContext(TableContext);
+
+  const rowTestIdValue =
+    typeof rowTestId === 'function' ? saveInvoke(rowTestId, row) : rowTestId;
 
   return (
     <div
@@ -78,6 +82,7 @@ export default function TableRow({ row, className, style }: TableRowProps) {
           className,
         ),
         style,
+        ...(rowTestIdValue ? { 'data-testId': rowTestIdValue } : {}),
       })}
     >
       <ConditionalWrapper

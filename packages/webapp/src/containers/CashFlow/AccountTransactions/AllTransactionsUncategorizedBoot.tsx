@@ -50,14 +50,11 @@ function AccountUncategorizedTransactionsBootRoot({
     maxDate: uncategorizedTransactionsFilter?.toDate,
   });
   // Memorized the cashflow account transactions.
-  // SDK types the page's array as `data`, but runtime sends `transactions`.
   const uncategorizedTransactions = useFlattenInfinityPages(
     isUncategorizedTransactionsSuccess
       ? uncategorizedTransactionsPage
       : undefined,
-    (page) =>
-      ((page as { transactions?: unknown[] })?.transactions ??
-        []) as UncategorizedTransactionResponse[],
+    (page) => (page.data ?? []) as UncategorizedTransactionResponse[],
   );
   // Handle the observer inersection.
   const handleObserverInteract = React.useCallback(() => {

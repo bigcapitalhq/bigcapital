@@ -1,42 +1,37 @@
-// @ts-nocheck
 import { Classes, Position } from '@blueprintjs/core';
-import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
 import {
   FieldRequiredHint,
   Col,
   Row,
-  FFormGroup,
   FDateInput,
   FTextArea,
+  FFormGroup,
 } from '@/components';
-import { CLASSES } from '@/constants/classes';
-import { useAutofocus } from '@/hooks';
-import { momentFormatter } from '@/utils';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 
 /**
  * Parial Unlocking transactions form fields.
  */
-export function UnlockingPartialTransactionsFormFields() {
-  const reasonFieldRef = useAutofocus();
+export function UnlockingPartialTransactionsFormFields(): React.ReactElement {
+  const reasonFieldRef = useAutofocus<HTMLTextAreaElement>();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
       <Row>
         <Col xs={6}>
-          {/*------------  Unlocking from date  -----------*/}
+          {/*------------  Unlocking from date  ----------- */}
           <FFormGroup
-            name={'unlock_from_date'}
+            name={'unlockFromDate'}
             label={intl.get('unlocking_partial_transactions.dialog.from_date')}
             labelInfo={<FieldRequiredHint />}
-            fill
-            minimal
             fastField
           >
             <FDateInput
-              name={'unlock_from_date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              name={'unlockFromDate'}
+              {...dateInputFormatter}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,
@@ -47,18 +42,16 @@ export function UnlockingPartialTransactionsFormFields() {
         </Col>
 
         <Col xs={6}>
-          {/*------------  Unlocking to date  -----------*/}
+          {/*------------  Unlocking to date  ----------- */}
           <FFormGroup
-            name={'unlock_to_date'}
+            name={'unlockToDate'}
             label={intl.get('unlocking_partial_transactions.dialog.to_date')}
             labelInfo={<FieldRequiredHint />}
-            minimal={true}
-            fill
             fastField
           >
             <FDateInput
-              name={'unlock_to_date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              name={'unlockToDate'}
+              {...dateInputFormatter}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,
@@ -69,7 +62,7 @@ export function UnlockingPartialTransactionsFormFields() {
         </Col>
       </Row>
 
-      {/*------------ unLocking  reason -----------*/}
+      {/*------------ unLocking  reason ----------- */}
       <FFormGroup
         name={'reason'}
         label={intl.get('unlocking_partial_transactions.dialog.reason')}
@@ -80,7 +73,9 @@ export function UnlockingPartialTransactionsFormFields() {
           name={'reason'}
           growVertically={true}
           large={true}
-          inputRef={(ref) => (reasonFieldRef.current = ref)}
+          inputRef={(ref: HTMLTextAreaElement | null) => {
+            reasonFieldRef.current = ref;
+          }}
           fill
           fastField
         />

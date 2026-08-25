@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
+import { Formik, type FormikHelpers } from 'formik';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { AccountDialogFormContent } from './AccountDialogFormContent';
@@ -14,29 +13,33 @@ import {
   transformAccountToForm,
   transformFormToReq,
 } from './utils';
+import type { AccountFormValues } from './types';
+import type { CreateAccountBody, EditAccountBody } from '@bigcapital/sdk-ts';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
 import '@/style/pages/Accounts/AccountFormDialog.scss';
 
 // Default initial form values.
-const defaultInitialValues = {
-  account_type: '',
-  parent_account_id: '',
+const defaultInitialValues: AccountFormValues = {
+  accountType: '',
+  parentAccountId: '',
   name: '',
   code: '',
   description: '',
-  currency_code: '',
+  currencyCode: '',
   subaccount: false,
 };
+
+interface AccountFormDialogContentProps extends WithDialogActionsProps {}
 
 /**
  * Account form dialog content.
  */
 function AccountFormDialogContent({
-  // #withDialogActions
   closeDialog,
-}) {
+}: AccountFormDialogContentProps): React.ReactElement {
   // Account form context.
   const {
     editAccountMutate,
@@ -54,7 +57,10 @@ function AccountFormDialogContent({
     : EditAccountFormSchema;
 
   // Callbacks handles form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: AccountFormValues,
+    { setSubmitting, setErrors }: FormikHelpers<AccountFormValues>,
+  ) => {
     const form = transformFormToReq(values);
     const toastAccountName = values.code
       ? `${values.code} - ${values.name}`
@@ -78,7 +84,9 @@ function AccountFormDialogContent({
       });
     };
     // Handle request error.
-    const handleError = (error) => {
+    const handleError = (error: {
+      data: { errors: Array<{ type: string }> };
+    }) => {
       const {
         data: { errors },
       } = error;
@@ -87,28 +95,30 @@ function AccountFormDialogContent({
       setErrors({ ...errorsTransformed });
       setSubmitting(false);
     };
+    // `transformFormToReq` returns a loose ramda-inferred type; the runtime
+    // shape matches the SDK body after the snake→camel conversion.
     if (payload.accountId) {
-      editAccountMutate([payload.accountId, form])
+      editAccountMutate([payload.accountId as number, form as EditAccountBody])
         .then(handleSuccess)
         .catch(handleError);
     } else {
-      createAccountMutate({ ...form })
+      createAccountMutate({ ...form } as CreateAccountBody)
         .then(handleSuccess)
         .catch(handleError);
     }
   };
   // Form initial values in create and edit mode.
-  const initialValues = {
+  const initialValues: AccountFormValues = {
     ...defaultInitialValues,
     /**
      * We only care about the fields in the form. Previously unfilled optional
      * values such as `notes` come back from the API as null, so remove those
      * as well.
      */
-    ...transformToForm(
+    ...(transformToForm(
       transformAccountToForm(account, payload),
       defaultInitialValues,
-    ),
+    ) as Partial<AccountFormValues>),
   };
   // Handles dialog close.
   const handleClose = useCallback(() => {

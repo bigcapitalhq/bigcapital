@@ -1,4 +1,4 @@
-import sanitizeHtml from 'sanitize-html';
+import * as sanitizeHtml from 'sanitize-html';
 
 const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
   allowedTags: [
@@ -27,7 +27,8 @@ export function sanitizePdfTemplateAttributes(
 ): Record<string, unknown> {
   const sanitized: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(attributes)) {
-    sanitized[key] = typeof value === 'string' ? sanitizeHtml(value, SANITIZE_OPTIONS) : value;
+    sanitized[key] =
+      typeof value === 'string' ? sanitizeHtml(value, SANITIZE_OPTIONS) : value;
   }
   return sanitized;
 }

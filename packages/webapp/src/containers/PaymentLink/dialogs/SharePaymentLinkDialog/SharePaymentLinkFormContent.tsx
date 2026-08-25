@@ -21,6 +21,7 @@ import {
   Stack,
 } from '@/components';
 import { useDialogContext } from '@/components/Dialog/DialogProvider';
+import { useDateInputFormatter } from '@/hooks';
 import { useDialogActions } from '@/hooks/state';
 import { useClipboard } from '@/hooks/utils/useClipboard';
 
@@ -31,6 +32,7 @@ export function SharePaymentLinkFormContent() {
   const { isSubmitting } = useFormikContext();
 
   const clipboard = useClipboard();
+  const dateInputFormatter = useDateInputFormatter();
 
   const handleCopyBtnClick = () => {
     clipboard.copy(url);
@@ -84,8 +86,7 @@ export function SharePaymentLinkFormContent() {
             <FDateInput
               name={'expiryDate'}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              formatDate={(date) => date.toLocaleDateString()}
-              parseDate={(str) => new Date(str)}
+              {...dateInputFormatter}
               inputProps={{
                 fill: true,
                 style: { minWidth: 260 },

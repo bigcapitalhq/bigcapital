@@ -1,8 +1,9 @@
-// @ts-nocheck
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithAccountsTableActionsProps } from '@/containers/Accounts/withAccountsTableActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { handleDeleteErrors } from '@/containers/Accounts/utils';
 import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTableActions';
@@ -11,23 +12,39 @@ import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDel
 import { useBulkDeleteAccounts } from '@/hooks/query/accounts';
 import { compose } from '@/utils';
 
+interface AccountBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface AccountBulkDeleteDialogProps
+  extends WithAccountsTableActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
 function AccountBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withAccountsTableActions
+  resetAccountsSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: AccountBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: AccountBulkDeleteDialogPayload = payload ?? {};
 
-  // #withAccountsTableActions
-  setAccountsSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteAccounts, isLoading } =
+  const { mutateAsync: bulkDeleteAccounts, isPending: isLoading } =
     useBulkDeleteAccounts();
 
   const handleCancel = () => {
@@ -44,11 +61,13 @@ function AccountBulkDeleteDialogInner({
           message: intl.get('the_accounts_has_been_successfully_deleted'),
           intent: Intent.SUCCESS,
         });
-        setAccountsSelectedRows([]);
+        resetAccountsSelectedRows();
         closeDialog(dialogName);
       })
-      .catch((errors) => {
-        handleDeleteErrors(errors);
+      .catch((errors: unknown) => {
+        // Account dialog uses the shared `handleDeleteErrors` helper for
+        // richer error rendering (vs the generic toast used by other dialogs).
+        handleDeleteErrors(errors as never);
       });
   };
 

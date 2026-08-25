@@ -72,15 +72,16 @@ function ExcludedTransactionsTableRoot({
   };
 
   // Handle selected rows change.
-  const handleSelectedRowsChange = (
-    selected: Array<{ original: ExcludedTransactionRow }>,
-  ) => {
-    const selectedIds =
-      selected
-        ?.map((row) => row.original.id)
-        .filter((id): id is number => id != null) ?? [];
-    setExcludedTransactionsSelected(selectedIds);
-  };
+  const handleSelectedRowsChange = React.useCallback(
+    (selected: Array<{ original: ExcludedTransactionRow }>) => {
+      const selectedIds =
+        selected
+          ?.map((row) => row.original.id)
+          .filter((id): id is number => id != null) ?? [];
+      setExcludedTransactionsSelected(selectedIds);
+    },
+    [setExcludedTransactionsSelected],
+  );
 
   return (
     <BankAccountDataTable

@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -11,6 +11,7 @@ const makeExpenseRequest = () => ({
   paymentDate: faker.date.recent(),
   categories: [
     {
+      index: 1,
       expenseAccountId: 1021,
       amount: faker.number.float({ min: 10, max: 1000, precision: 0.01 }),
       description: faker.lorem.sentence(),

@@ -23,6 +23,8 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
+import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
+import { financialReportsKeys } from '../FinancialReports/query-keys';
 import { accountsKeys } from './query-keys';
 import type {
   Account,
@@ -37,6 +39,11 @@ const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
 ) => {
   queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
+  queryClient.invalidateQueries({
+    queryKey: accountsKeys.transactions(null).slice(0, 1),
+  });
+  queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.all() });
+  queryClient.invalidateQueries({ queryKey: financialReportsKeys.all() });
 };
 
 export function useAccounts(

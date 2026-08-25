@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Classes,
@@ -13,6 +12,11 @@ import classNames from 'classnames';
 import React, { useMemo, useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Icon } from '@/components';
+
+export interface DashboardViewItem {
+  name?: React.ReactNode;
+  [key: string]: unknown;
+}
 
 /**
  * Dashboard action views list.
@@ -30,11 +34,11 @@ export function DashboardActionViewsList({
   views: any;
   onChange?: (view: any) => void;
 }) {
-  const handleClickViewItem = (view) => {
+  const handleClickViewItem = (view: any) => {
     onChange && onChange(view);
   };
 
-  const viewsMenuItems = views.map((view) => (
+  const viewsMenuItems = (views as DashboardViewItem[]).map((view) => (
     <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />
   ));
 

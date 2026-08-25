@@ -63,6 +63,7 @@ function BranchesDataTableInner({
         loading={isBranchesLoading}
         headerLoading={isBranchesLoading}
         progressBarLoading={isBranchesFetching}
+        rowTestId={'branch-row'}
         TableLoadingRenderer={TableSkeletonRows}
         noInitialFetch={true}
         ContextMenu={ActionsMenu}

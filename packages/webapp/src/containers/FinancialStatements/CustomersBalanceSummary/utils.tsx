@@ -2,7 +2,6 @@ import { castArray } from 'lodash';
 import moment from 'moment';
 import { useMemo } from 'react';
 import * as Yup from 'yup';
-import { getDefaultARAgingSummaryQuery } from '../ARAgingSummary/common';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -14,6 +13,8 @@ export const getDefaultCustomersBalanceQuery = () => {
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
     filterByOption: 'with-transactions',
     customersIds: [],
+    numberFormat: {},
+    percentageColumn: false,
   };
 };
 
@@ -30,7 +31,7 @@ export const getCustomersBalanceQuerySchema = () => {
 const parseCustomersBalanceSummaryQuery = (
   locationQuery: Record<string, unknown>,
 ) => {
-  const defaultQuery = getDefaultARAgingSummaryQuery();
+  const defaultQuery = getDefaultCustomersBalanceQuery();
 
   const transformed = {
     ...defaultQuery,

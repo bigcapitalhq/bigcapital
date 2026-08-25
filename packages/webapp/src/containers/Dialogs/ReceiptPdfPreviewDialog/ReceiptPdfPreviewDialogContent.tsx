@@ -1,24 +1,29 @@
-// @ts-nocheck
 import { AnchorButton } from '@blueprintjs/core';
 import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfReceipt } from '@/hooks/query';
 import { compose } from '@/utils';
 
+interface ReceiptPdfPreviewDialogContentProps extends WithDialogActionsProps {
+  subscriptionForm: { receiptId: number | null };
+  dialogName?: string;
+}
+
 function ReceiptPdfPreviewDialogContentInner({
   subscriptionForm: { receiptId },
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { isLoading, pdfUrl, filename } = usePdfReceipt(receiptId);
+}: ReceiptPdfPreviewDialogContentProps): React.ReactElement {
+  const { isLoading, isError, pdfUrl, filename } = usePdfReceipt(
+    receiptId as number,
+  );
 
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -39,6 +44,7 @@ function ReceiptPdfPreviewDialogContentInner({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>

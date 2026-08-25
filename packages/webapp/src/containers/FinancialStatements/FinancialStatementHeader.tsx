@@ -44,6 +44,7 @@ export function FinancialStatementHeader({
 
   return (
     <div
+      data-testId="financial-report-drawer"
       className={classNames(
         'financial-statement__header',
         'financial-header-drawer',

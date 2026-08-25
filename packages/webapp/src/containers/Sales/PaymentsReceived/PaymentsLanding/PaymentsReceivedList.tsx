@@ -14,6 +14,7 @@ import { compose, transformTableStateToQuery } from '@/utils';
 
 interface WithPaymentsReceivedActionsProps {
   resetPaymentReceivesTableState: () => void;
+  resetPaymentReceivesSelectedRows: () => void;
 }
 
 interface PaymentsReceivedListProps
@@ -27,12 +28,14 @@ function PaymentsReceivedListInner({
   paymentReceivesTableState,
   paymentsTableStateChanged,
   resetPaymentReceivesTableState,
+  resetPaymentReceivesSelectedRows,
 }: PaymentsReceivedListProps) {
   React.useEffect(
     () => () => {
       resetPaymentReceivesTableState();
+      resetPaymentReceivesSelectedRows();
     },
-    [resetPaymentReceivesTableState],
+    [resetPaymentReceivesSelectedRows, resetPaymentReceivesTableState],
   );
 
   return (

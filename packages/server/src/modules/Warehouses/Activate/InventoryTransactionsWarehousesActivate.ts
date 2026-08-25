@@ -1,15 +1,18 @@
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Warehouse } from '../models/Warehouse.model';
 import { InventoryCostLotTracker } from '@/modules/InventoryCost/models/InventoryCostLotTracker';
 
 @Injectable()
 export class InventoryActivateWarehouses {
   constructor(
+    @Inject(InventoryTransaction.name)
     private readonly inventoryTransactionModel: TenantModelProxy<
       typeof InventoryTransaction
     >,
+
+    @Inject(InventoryCostLotTracker.name)
     private readonly inventoryCostLotTrackerModel: TenantModelProxy<
       typeof InventoryCostLotTracker
     >,

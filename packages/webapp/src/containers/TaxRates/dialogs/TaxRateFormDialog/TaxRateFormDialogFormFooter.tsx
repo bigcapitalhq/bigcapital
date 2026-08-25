@@ -1,12 +1,15 @@
-// @ts-nocheck
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
-import React from 'react';
 import { DialogsName } from '@/constants/dialogs';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
 
-function TaxRateFormDialogFormFooterRoot({ closeDialog }) {
+function TaxRateFormDialogFormFooterRoot({
+  closeDialog,
+}: Pick<WithDialogActionsProps, 'closeDialog'>) {
   const { isSubmitting } = useFormikContext();
 
   const handleClose = () => {

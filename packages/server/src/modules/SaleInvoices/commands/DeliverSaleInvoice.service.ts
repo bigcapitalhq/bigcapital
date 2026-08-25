@@ -37,21 +37,12 @@ export class DeliverSaleInvoice {
    * @return {Promise<void>}
    */
   public async deliverSaleInvoice(saleInvoiceId: number): Promise<void> {
-    // Retrieve details of the given sale invoice id.
-    const oldSaleInvoice = await this.saleInvoiceModel()
-      .query()
-      .findById(saleInvoiceId);
-
-    // Validates the given invoice existence.
-    this.validators.validateInvoiceExistance(oldSaleInvoice);
-
-    // Throws error in case the sale invoice already published.
-    if (oldSaleInvoice.isDelivered) {
-      throw new ServiceError(ERRORS.SALE_INVOICE_ALREADY_DELIVERED);
-    }
     // Update sale invoice transaction with associate transactions
     // under unit-of-work environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the deliver operation against the locked invoice row.
+      const oldSaleInvoice = await this.validate(saleInvoiceId, trx);
+
       // Triggers `onSaleInvoiceDelivering` event.
       await this.eventEmitter.emitAsync(events.saleInvoice.onDelivering, {
         oldSaleInvoice,
@@ -73,5 +64,31 @@ export class DeliverSaleInvoice {
         trx,
       } as ISaleInvoiceEventDeliveredPayload);
     });
+  }
+
+  /**
+   * Validates the deliver sale invoice operation against the locked invoice
+   * row: existence and not already delivered.
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {Knex.Transaction} trx - Locks the invoice row (FOR UPDATE).
+   * @returns {Promise<SaleInvoice>} The locked sale invoice.
+   */
+  async validate(
+    saleInvoiceId: number,
+    trx: Knex.Transaction,
+  ): Promise<SaleInvoice> {
+    // Re-read the invoice with a row lock to validate against current state.
+    const oldSaleInvoice = await this.saleInvoiceModel()
+      .query(trx)
+      .findById(saleInvoiceId)
+      .forUpdate()
+      .withGraphFetched('entries')
+      .throwIfNotFound();
+
+    // Throws error in case the sale invoice already published.
+    if (oldSaleInvoice.isDelivered) {
+      throw new ServiceError(ERRORS.SALE_INVOICE_ALREADY_DELIVERED);
+    }
+    return oldSaleInvoice;
   }
 }
