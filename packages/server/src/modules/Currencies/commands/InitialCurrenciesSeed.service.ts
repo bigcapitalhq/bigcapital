@@ -5,6 +5,22 @@ import { InitialCurrencies } from '../Currencies.constants';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 import { Currency } from '../models/Currency.model';
 
+/**
+ * Metadata for ISO 4217 currencies that the js-money library does not
+ * carry. Used when seeding so a currency outside js-money's list seeds
+ * instead of crashing on an undefined lookup.
+ */
+const ExtraCurrencyMeta: Record<
+  string,
+  { code: string; name: string; symbol: string }
+> = {
+  XCD: {
+    code: 'XCD',
+    name: 'East Caribbean Dollar',
+    symbol: 'EC$',
+  },
+};
+
 @Injectable()
 export class InitialCurrenciesSeedService {
   constructor(
@@ -17,7 +33,8 @@ export class InitialCurrenciesSeedService {
    * @param {string} baseCurrency - Base currency code.
    */
   public async seedCurrencyByCode(currencyCode: string): Promise<void> {
-    const currencyMeta = Currencies[currencyCode];
+    const currencyMeta =
+      Currencies[currencyCode] ?? ExtraCurrencyMeta[currencyCode];
 
     const foundBaseCurrency = await this.currencyModel()
       .query()

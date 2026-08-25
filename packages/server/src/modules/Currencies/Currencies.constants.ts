@@ -7,6 +7,7 @@ export const InitialCurrencies = [
   'CNY',
   'AUD',
   'INR',
+  'XCD',
 ];
 
 export const ERRORS = {
