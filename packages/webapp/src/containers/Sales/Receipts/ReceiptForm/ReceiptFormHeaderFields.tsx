@@ -155,10 +155,10 @@ function ReceiptFormCustomerSelect() {
   // Handles the customer item change.
   const handleItemChange = (customer: {
     id: number;
-    currency_code: string;
+    currencyCode: string;
   }) => {
     setFieldValue('customerId', customer.id);
-    setFieldValue('currencyCode', customer?.currency_code);
+    setFieldValue('currencyCode', customer?.currencyCode);
 
     updateEntries(customer);
   };
