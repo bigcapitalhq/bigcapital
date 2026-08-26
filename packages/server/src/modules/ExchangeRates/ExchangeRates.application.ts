@@ -11,14 +11,12 @@ export class ExchangeRateApplication {
 
   /**
    * Gets the latest exchange rate.
-   * @param {number} tenantId
    * @param {ExchangeRateLatestDTO} exchangeRateLatestDTO
    * @returns {Promise<EchangeRateLatestPOJO>}
    */
   public latest(
-    tenantId: number,
     exchangeRateLatestDTO: ExchangeRateLatestDTO,
   ): Promise<EchangeRateLatestPOJO> {
-    return this.exchangeRateService.latest(tenantId, exchangeRateLatestDTO);
+    return this.exchangeRateService.latest(exchangeRateLatestDTO);
   }
 }

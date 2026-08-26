@@ -48,7 +48,7 @@ const getEstimateFieldsStyle = (theme: Theme) => css`
   }
 `;
 
-type Customer = { id: number; currency_code: string };
+type Customer = { id: number; currencyCode: string };
 
 /**
  * Estimate form header.
@@ -152,7 +152,7 @@ function EstimateFormCustomerSelect() {
   // Handles the customer item change.
   const handleItemChange = (customer: Customer) => {
     setFieldValue('customerId', customer.id);
-    setFieldValue('currencyCode', customer?.currency_code);
+    setFieldValue('currencyCode', customer?.currencyCode);
 
     updateEntries(customer);
   };
