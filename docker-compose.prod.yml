@@ -22,6 +22,8 @@ services:
     container_name: bigcapital-webapp
     image: bigcapitalhq/webapp:latest
     restart: on-failure
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - bigcapital_network
 
@@ -38,6 +40,8 @@ services:
       - redis
       - garage
     restart: on-failure
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - bigcapital_network
     environment:
@@ -199,6 +203,19 @@ services:
     expose:
       - '3900'
       - '3903'
+    networks:
+      - bigcapital_network
+
+  # Auto-updates the containers labelled "com.centurylinklabs.watchtower.enable=true"
+  # (webapp and server) by polling the registry for newer :latest images.
+  # Everything else (mysql, redis, gotenberg, proxy) is untouched.
+  auto-update:
+    container_name: bigcapital-auto-update
+    image: containrrr/watchtower:1.7.1
+    restart: on-failure
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: --label-enable --cleanup --interval ${AUTO_UPDATE_INTERVAL:-3600}
     networks:
       - bigcapital_network
 
