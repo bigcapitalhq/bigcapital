@@ -36,6 +36,10 @@ export type CreditNoteEntry = {
   quantity: string | number;
   description: string;
   amount: string | number;
+  sourceInvoiceId?: string | number;
+  sourceInvoiceEntryId?: string | number;
+  sourceReceiptId?: string | number;
+  sourceReceiptEntryId?: string | number;
 };
 
 export type CreditNoteFormValues = {
@@ -68,6 +72,10 @@ export const defaultCreditNoteEntry: CreditNoteEntry = {
   quantity: '',
   description: '',
   amount: '',
+  sourceInvoiceId: '',
+  sourceInvoiceEntryId: '',
+  sourceReceiptId: '',
+  sourceReceiptEntryId: '',
 };
 
 // Default credit note object.
@@ -135,6 +143,10 @@ const defaultReqCreditNoteEntry = {
   discount: '',
   quantity: '',
   description: '',
+  sourceInvoiceId: '',
+  sourceInvoiceEntryId: '',
+  sourceReceiptId: '',
+  sourceReceiptEntryId: '',
 };
 
 /**

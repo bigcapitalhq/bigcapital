@@ -10,9 +10,11 @@ export class ItemTransformer extends Transformer {
   public includeAttributes = (): string[] => {
     return [
       'typeFormatted',
+      'costMethodFormatted',
       'sellPriceFormatted',
       'costPriceFormatted',
       'itemWarehouses',
+      'costMethodLocked',
     ];
   };
 
@@ -23,6 +25,17 @@ export class ItemTransformer extends Transformer {
    */
   public typeFormatted(item: Item): string {
     return this.context.i18n.t(`item.field.type.${item.type}`);
+  }
+
+  public costMethodFormatted(item: Item): string {
+    const method = item.costMethod || 'AVG';
+    return this.context.i18n.t(`item.field.cost_method.${method}`);
+  }
+
+  public costMethodLocked(
+    item: Item & { costMethodLocked?: boolean },
+  ): boolean {
+    return Boolean((item as any).costMethodLocked);
   }
 
   /**

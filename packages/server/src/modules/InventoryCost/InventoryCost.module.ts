@@ -20,6 +20,8 @@ import { BullBoardModule } from '@bull-board/nestjs';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
 import { InventoryAverageCostMethodService } from './commands/InventoryAverageCostMethod.service';
+import { InventoryLayerCostMethodService } from './commands/InventoryLayerCostMethod.service';
+import { InventoryOriginalCostResolver } from './commands/InventoryOriginalCostResolver.service';
 import { InventoryItemCostService } from './commands/InventoryCosts.service';
 import { InventoryItemOpeningAvgCostService } from './commands/InventoryItemOpeningAvgCost.service';
 import { InventoryCostSubscriber } from './subscribers/InventoryCost.subscriber';
@@ -63,6 +65,8 @@ const models = [
     ComputeItemCostProcessor,
     WriteInventoryTransactionsGLEntriesProcessor,
     InventoryAverageCostMethodService,
+    InventoryLayerCostMethodService,
+    InventoryOriginalCostResolver,
     InventoryItemCostService,
     InventoryItemOpeningAvgCostService,
     InventoryCostSubscriber,
@@ -73,6 +77,7 @@ const models = [
     InventoryTransactionsService,
     InventoryItemCostService,
     InventoryComputeCostService,
+    InventoryOriginalCostResolver,
   ],
   controllers: [InventoryCostController],
 })

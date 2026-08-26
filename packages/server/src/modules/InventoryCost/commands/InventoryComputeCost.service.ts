@@ -12,26 +12,20 @@ import {
   ComputeItemCostQueueJob,
 } from '../types/InventoryCost.types';
 import { InventoryAverageCostMethodService } from './InventoryAverageCostMethod.service';
+import { InventoryLayerCostMethodService } from './InventoryLayerCostMethod.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { InjectQueue } from '@nestjs/bullmq';
 import { RedisService } from '@liaoliaots/nestjs-redis';
+import * as moment from 'moment';
 
 @Injectable()
 export class InventoryComputeCostService {
   private readonly redisClient: Redis;
 
-  /**
-   * @param {UnitOfWork} uow - Unit of work.
-   * @param {InventoryAverageCostMethodService} inventoryAverageCostMethod - Inventory average cost method.
-   * @param {RedisService} redisService - Redis service.
-   * @param {ClsService} clsService - Cls service.
-   * @param {Queue} computeItemCostProcessor - Compute item cost processor.
-   * @param {TenantModelProxy<typeof Item>} itemModel - Item model.
-   * @param {() => SettingsStore} settingsStore - Settings store.
-   */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly inventoryAverageCostMethod: InventoryAverageCostMethodService,
+    private readonly inventoryLayerCostMethod: InventoryLayerCostMethodService,
     private readonly clsService: ClsService,
     private readonly redisService: RedisService,
 
@@ -72,13 +66,23 @@ export class InventoryComputeCostService {
     itemId: number,
     trx?: Knex.Transaction,
   ) {
-    // Fetches the item with associated item category.
     const item = await this.itemModel().query().findById(itemId);
 
-    // Cannot continue if the given item was not inventory item.
     if (item.type !== 'inventory') {
       throw new Error('You could not compute item cost has no inventory type.');
     }
+
+    const costMethod = (item.costMethod || 'AVG') as string;
+
+    if (costMethod === 'FIFO' || costMethod === 'LIFO') {
+      return this.inventoryLayerCostMethod.computeItemCost(
+        fromDate,
+        itemId,
+        costMethod,
+        trx,
+      );
+    }
+
     return this.inventoryAverageCostMethod.computeItemCost(
       fromDate,
       itemId,
@@ -88,43 +92,63 @@ export class InventoryComputeCostService {
 
   /**
    * Schedule item cost compute job.
+   * Keeps the earliest startingDate when debouncing so mid-history edits
+   * are not skipped by a later-scheduled job.
    * @param {number} itemId
    * @param {Date} startingDate
    */
   async scheduleComputeItemCost(itemId: number, startingDate: Date | string) {
     const debounceKey = `inventory-cost-compute-debounce:${itemId}`;
+    const debounceDateKey = `inventory-cost-compute-debounce-date:${itemId}`;
     const debounceTime = 1000 * 10; // 10 seconds
 
-    // Generate a unique job ID or use a custom identifier
-    const jobId = `task-${Date.now()}-${Math.random().toString(36).substring(2)}`;
+    const incomingDate = moment(startingDate).toDate();
+    const existingDateRaw = await this.redisClient.get(debounceDateKey);
+    let effectiveDate = incomingDate;
 
-    // Check if there's an existing debounced job
+    if (existingDateRaw) {
+      const existingDate = moment(existingDateRaw).toDate();
+      if (moment(existingDate).isBefore(incomingDate)) {
+        effectiveDate = existingDate;
+      }
+    }
+
+    const jobId = `task-${Date.now()}-${Math.random().toString(36).substring(2)}`;
     const existingJobId = await this.redisClient.get(debounceKey);
 
     if (existingJobId) {
-      // Attempt to remove or mark the previous job as skippable
       const existingJob =
         await this.computeItemCostProcessor.getJob(existingJobId);
       const state = await existingJob?.getState();
 
       if (existingJob && ['waiting', 'delayed'].includes(state)) {
-        await existingJob.remove(); // Remove the previous job if it's still waiting
+        await existingJob.remove();
       }
     }
     const organizationId = this.clsService.get('organizationId');
     const userId = this.clsService.get('userId');
 
-    // Add the new job with a delay (debounce period)
-    const job = await this.computeItemCostProcessor.add(
+    await this.computeItemCostProcessor.add(
       ComputeItemCostQueueJob,
-      { itemId, startingDate, jobId, organizationId, userId },
       {
-        jobId, // Custom job ID
-        delay: debounceTime, // Delay execution by 1 minute
+        itemId,
+        startingDate: effectiveDate,
+        jobId,
+        organizationId,
+        userId,
+      },
+      {
+        jobId,
+        delay: debounceTime,
       },
     );
-    // Store the latest job ID in Redis with an expiration
     await this.redisClient.set(debounceKey, jobId, 'PX', debounceTime);
+    await this.redisClient.set(
+      debounceDateKey,
+      effectiveDate.toISOString(),
+      'PX',
+      debounceTime,
+    );
 
     return { jobId, message: 'Task added with debounce' };
   }

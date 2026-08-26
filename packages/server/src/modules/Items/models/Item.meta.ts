@@ -20,6 +20,16 @@ export const ItemMeta = {
         { key: 'non-inventory', label: 'item.field.type.non-inventory' },
       ],
     },
+    costMethod: {
+      name: 'item.field.cost_method',
+      column: 'cost_method',
+      fieldType: 'enumeration',
+      options: [
+        { key: 'FIFO', label: 'item.field.cost_method.FIFO' },
+        { key: 'LIFO', label: 'item.field.cost_method.LIFO' },
+        { key: 'AVG', label: 'item.field.cost_method.AVG' },
+      ],
+    },
     name: {
       name: 'item.field.name',
       column: 'name',

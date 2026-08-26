@@ -19,6 +19,7 @@ export class Item extends TenantBaseModel {
   public readonly name: string;
   public readonly active: boolean;
   public readonly type: string;
+  public readonly costMethod: string;
   public readonly code: string;
   public readonly sellable: boolean;
   public readonly purchasable: boolean;

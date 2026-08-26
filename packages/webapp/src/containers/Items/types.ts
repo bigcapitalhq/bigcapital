@@ -13,6 +13,7 @@ export interface ItemFormValues {
   sellAccountId: number | string;
   sellTaxRateId: number | string;
   inventoryAccountId: number | string;
+  costMethod: 'FIFO' | 'LIFO' | 'AVG' | string;
   categoryId: number | string;
   sellable: boolean;
   purchasable: boolean;
