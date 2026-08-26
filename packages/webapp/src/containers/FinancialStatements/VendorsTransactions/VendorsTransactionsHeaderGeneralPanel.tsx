@@ -35,7 +35,7 @@ function VendorsTransactionsHeaderGeneralPanelContent() {
           <FinancialStatementsFilter
             items={filterVendorsOptions}
             label={intl.get('vendors.label_filter_vendors')}
-            initialSelectedItem={'all-vendors'}
+            initialSelectedItem={'with-transactions'}
           />
         </Col>
       </Row>
