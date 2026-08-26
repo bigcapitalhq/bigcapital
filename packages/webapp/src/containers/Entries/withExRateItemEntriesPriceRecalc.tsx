@@ -90,10 +90,7 @@ export const useCustomerUpdateExRate = () => {
         setFieldValue('exchangeRate', DEFAULT_EX_RATE + '');
         setFieldValue(
           'entries',
-          updateEntriesOnExChange(
-            Number(values.exchangeRate),
-            DEFAULT_EX_RATE,
-          ),
+          updateEntriesOnExChange(Number(values.exchangeRate), DEFAULT_EX_RATE),
         );
       } else {
         // Sets the currency code to fetch exchange rate of the given currency code.

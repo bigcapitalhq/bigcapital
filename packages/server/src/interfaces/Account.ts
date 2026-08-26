@@ -169,4 +169,5 @@ export enum TaxRateAction {
 
 export interface CreateAccountParams {
   ignoreUniqueName: boolean;
+  ignoreAccountCode?: boolean;
 }

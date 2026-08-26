@@ -101,10 +101,7 @@ function CreditNoteCustomersSelect() {
   const updateEntries = useCustomerUpdateExRate();
 
   // Handles item change.
-  const handleItemChange = (customer: {
-    id: number;
-    currencyCode: string;
-  }) => {
+  const handleItemChange = (customer: { id: number; currencyCode: string }) => {
     setFieldValue('customerId', customer.id);
     setFieldValue('currencyCode', customer?.currencyCode);
 

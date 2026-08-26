@@ -67,6 +67,7 @@ export class PlaidSyncDb {
     }
     await this.createAccountService.createAccount(createBankAccountDTO, trx, {
       ignoreUniqueName: true,
+      ignoreAccountCode: true,
     });
   }
 
