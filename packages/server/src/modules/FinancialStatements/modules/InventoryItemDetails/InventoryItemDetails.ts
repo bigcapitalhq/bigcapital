@@ -129,7 +129,7 @@ export class InventoryDetails extends FinancialSheet {
       return [accum, accum];
     };
     return R.mapAccum(
-      // @ts-ignore
+      // @ts-expect-error -- TODO: fix underlying type error
       mapAccumAppender,
       { runningQuantity: initial },
       transactions,
@@ -155,7 +155,7 @@ export class InventoryDetails extends FinancialSheet {
       return [accum, accum];
     };
     return R.mapAccum(
-      // @ts-ignore
+      // @ts-expect-error -- TODO: fix underlying type error
       mapAccumAppender,
       { runningValuation: initial },
       transactions,
@@ -394,9 +394,9 @@ export class InventoryDetails extends FinancialSheet {
    * @return {boolean}
    */
   public isFilterNode(item: IInventoryDetailsItem): boolean {
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.ifElse(
-      // @ts-ignore
+      // @ts-expect-error -- TODO: fix underlying type error
       R.curry(this.isNodeTypeEquals)(INodeTypes.ITEM),
       this.isItemNodeHasTransactions.bind(this),
       R.always(true),
@@ -423,7 +423,7 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsItem[]}
    */
   public itemsNodes(items: ModelObject<Item>[]): IInventoryDetailsItem[] {
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       this.filterItemsNodes.bind(this),
       R.map(this.itemsNodeMapper.bind(this)),

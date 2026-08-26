@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as uniqid from 'uniqid';
 import * as moment from 'moment';
 import {
-  IUserSendInviteDTO,
   IUserInvitedEventPayload,
   IUserInviteResendEventPayload,
 } from '../Users.types';
@@ -39,9 +38,6 @@ export class InviteTenantUserService {
   public async sendInvite(sendInviteDTO: SendInviteUserDto): Promise<{
     invitedUser: TenantUser;
   }> {
-    // Get the given role or throw not found service error.
-    const role = await this.roleModel().query().findById(sendInviteDTO.roleId);
-
     // Validates the given email not exists on the storage.
     await this.validateUserEmailNotExists(sendInviteDTO.email);
 

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { AutoIncrementOrdersService } from './AutoIncrementOrders.service';
 

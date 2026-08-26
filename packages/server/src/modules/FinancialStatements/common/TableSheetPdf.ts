@@ -80,7 +80,7 @@ export class TableSheetPdf {
     const flatNestedTree = curriedFlatNestedTree(R.__, {
       nestedPrefix: '<span style="padding-left: 15px;"></span>',
     });
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(tableClassNames, flatNestedTree)(rows);
   };
 }

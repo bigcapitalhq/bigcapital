@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ICreditNoteRefundDTO } from '../CreditNotes/types/CreditNotes.types';
+
 import { CreateRefundCreditNoteService } from './commands/CreateRefundCreditNote.service';
 import { DeleteRefundCreditNoteService } from './commands/DeleteRefundCreditNote.service';
 import { RefundCreditNoteService } from './commands/RefundCreditNote.service';

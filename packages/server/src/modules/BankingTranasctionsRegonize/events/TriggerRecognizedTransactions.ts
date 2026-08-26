@@ -51,7 +51,7 @@ export class TriggerRecognizedTransactionsSubscriber {
    */
   @OnEvent(events.bankRules.onEdited)
   async recognizedTransactionsOnRuleEdited({
-    editRuleDTO,
+    editRuleDTO: _editRuleDTO,
     oldBankRule,
     bankRule,
   }: IBankRuleEventEditedPayload) {
@@ -108,9 +108,9 @@ export class TriggerRecognizedTransactionsSubscriber {
    */
   @OnEvent(events.import.onImportCommitted)
   async triggerRecognizeTransactionsOnImportCommitted({
-    importId,
+    importId: _importId,
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
   }: IImportFileCommitedEventPayload) {
     // const importFile = await Import.query().findOne({ importId });
     // const batch = importFile.paramsParsed.batch;

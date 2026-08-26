@@ -25,7 +25,7 @@ export class GetAppliedBillsToVendorCreditService {
    * @returns
    */
   public getAppliedBills = async (vendorCreditId: number) => {
-    const vendorCredit = await this.vendorCreditModel()
+    await this.vendorCreditModel()
       .query()
       .findById(vendorCreditId)
       .throwIfNotFound();

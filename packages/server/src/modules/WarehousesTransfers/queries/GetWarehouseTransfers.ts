@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import { Inject, Injectable } from '@nestjs/common';
 import { WarehouseTransferTransformer } from './WarehouseTransferTransfomer';
-import { IGetWarehousesTransfersFilterDTO } from '../../Warehouses/Warehouse.types';
+
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { DynamicListService } from '../../DynamicListing/DynamicList.service';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';

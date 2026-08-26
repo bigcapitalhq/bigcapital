@@ -4,7 +4,9 @@ import * as R from 'ramda';
  * @param condsPairFilters
  * @returns
  */
-export const allPassedConditionsPass = (condsPairFilters: any[]): Function => {
+export const allPassedConditionsPass = (
+  condsPairFilters: any[],
+): ((...args: any[]) => boolean) => {
   const filterCallbacks = condsPairFilters
     .filter((cond) => cond[0])
     .map((cond) => cond[1]);

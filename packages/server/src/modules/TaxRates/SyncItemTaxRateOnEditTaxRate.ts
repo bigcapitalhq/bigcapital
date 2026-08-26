@@ -18,7 +18,7 @@ export class SyncItemTaxRateOnEditTaxRate {
   public updateItemSellTaxRate = async (
     oldSellTaxRateId: number,
     sellTaxRateId: number,
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ) => {
     // Can't continue if the old and new sell tax rate id are equal.
     if (oldSellTaxRateId === sellTaxRateId) return;

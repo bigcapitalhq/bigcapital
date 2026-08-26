@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as R from 'ramda';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { FinancialPreviousPeriod } from '../../common/FinancialPreviousPeriod';

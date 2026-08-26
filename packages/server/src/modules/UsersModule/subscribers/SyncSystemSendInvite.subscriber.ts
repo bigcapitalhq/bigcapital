@@ -86,7 +86,7 @@ export class SyncSystemSendInviteSubscriber {
     // Clear all invite tokens of the given user id.
     await this.clearInviteTokensByUserId(tenantId, user.systemUserId);
 
-    const invite = await this.inviteModel.query().insert({
+    await this.inviteModel.query().insert({
       email: user.email,
       tenantId,
       userId: user.systemUserId,

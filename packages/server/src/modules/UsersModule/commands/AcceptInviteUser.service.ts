@@ -53,11 +53,6 @@ export class AcceptInviteUserService {
     // Hash the given password.
     const hashedPassword = await hashPassword(inviteUserDTO.password);
 
-    // Retrieve the system user.
-    const user = await this.systemUserModel
-      .query()
-      .findOne('email', inviteToken.email);
-
     // Sets the invited user details after invite accepting.
     const systemUser = await this.systemUserModel
       .query()

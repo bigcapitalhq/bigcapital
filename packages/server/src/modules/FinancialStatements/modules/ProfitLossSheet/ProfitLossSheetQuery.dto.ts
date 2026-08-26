@@ -1,5 +1,5 @@
 import { FinancialSheetBranchesQueryDto } from '../../dtos/FinancialSheetBranchesQuery.dto';
-import { INumberFormatQuery } from '../../types/Report.types';
+
 import {
   IsArray,
   IsBoolean,

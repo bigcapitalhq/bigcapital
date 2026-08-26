@@ -1,3 +1,5 @@
+type AnyFunction = (...args: any[]) => any;
+
 export interface IModel {
   name: string;
   tableName: string;
@@ -32,7 +34,7 @@ export interface IModelMetaFieldCommon {
   name: string;
   column: string;
   columnable?: boolean;
-  customQuery?: Function;
+  customQuery?: AnyFunction;
   required?: boolean;
   importHint?: string;
   importable?: boolean;
@@ -40,8 +42,8 @@ export interface IModelMetaFieldCommon {
   order?: number;
   unique?: number;
   dataTransferObjectKey?: string;
-  filterCustomQuery?: Function;
-  sortCustomQuery?: Function;
+  filterCustomQuery?: AnyFunction;
+  sortCustomQuery?: AnyFunction;
 }
 
 export interface IModelMetaFieldText {

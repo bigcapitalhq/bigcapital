@@ -7,7 +7,6 @@ import { events } from '@/common/events/events';
 import {
   IVendorEventCreatedPayload,
   IVendorEventCreatingPayload,
-  IVendorNewDTO,
 } from '../types/Vendors.types';
 import { CreateEditVendorDTOService } from './CreateEditVendorDTO';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';

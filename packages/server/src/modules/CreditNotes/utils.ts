@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { CreditNotePdfTemplateAttributes, ICreditNote } from '@/interfaces';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
 

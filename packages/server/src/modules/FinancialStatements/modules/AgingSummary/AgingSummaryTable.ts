@@ -134,7 +134,7 @@ export abstract class AgingSummaryTable extends R.pipe(
   protected totalNodeAccessors = (
     node: IAgingSummaryTotal,
   ): ITableColumnAccessor[] => {
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       R.concat([
         { key: 'blank', value: '' },

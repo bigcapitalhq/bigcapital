@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as moment from 'moment';
 import * as R from 'ramda';
 import { IFilterRole, IDynamicFilter } from './DynamicFilter.types';

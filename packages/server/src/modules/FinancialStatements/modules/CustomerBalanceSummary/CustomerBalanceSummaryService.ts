@@ -35,7 +35,7 @@ export class CustomerBalanceSummaryService {
       await this.reportRepository.getCustomersTransactions(asDate);
     const commonProps = { accountNormal: 'debit', date: asDate };
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.map(R.mergeRight(commonProps))(transactions);
   }
 

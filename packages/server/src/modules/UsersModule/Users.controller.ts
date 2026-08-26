@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  Post,
   Put,
   Query,
 } from '@nestjs/common';
@@ -100,8 +99,8 @@ export class UsersController {
     },
   })
   async listUsers(
-    @Query('page_size') pageSize?: number,
-    @Query('page') page?: number,
+    @Query('page_size') _pageSize?: number,
+    @Query('page') _page?: number,
   ) {
     return this.usersApplication.getUsers();
   }

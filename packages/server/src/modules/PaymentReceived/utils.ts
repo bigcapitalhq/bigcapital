@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { PaymentReceived } from './models/PaymentReceived';
 import { PaymentReceivedPdfTemplateAttributes } from './types/PaymentReceived.types';
 import { contactAddressTextFormat } from '@/utils/address-text-format';

@@ -32,9 +32,9 @@ export class CategorizeTransactionAsExpense {
    */
   public async categorize(
     cashflowTransactionId: number,
-    transactionDTO: ICategorizeCashflowTransactioDTO,
+    _transactionDTO: ICategorizeCashflowTransactioDTO,
   ) {
-    const transaction = await this.bankTransactionModel()
+    await this.bankTransactionModel()
       .query()
       .findById(cashflowTransactionId)
       .throwIfNotFound();
@@ -49,7 +49,7 @@ export class CategorizeTransactionAsExpense {
       );
       // Creates a new expense transaction.
       // TODO: the DTO is not complete, we need to add the missing properties.
-      // @ts-ignore
+      // @ts-expect-error -- TODO: fix underlying type error
       const expenseTransaction = await this.createExpenseService.newExpense({
         // ...transactionDTO,
         // publishedAt: transaction.publishedAt,

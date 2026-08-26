@@ -5,14 +5,13 @@ import { CustomerMeta } from './Customer.meta';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { CustomerDefaultViews } from '../constants';
 import { BaseQueryBuilder } from '@/models/Model';
-import { Knex } from 'knex';
 
 export class CustomerQueryBuilder<
   M extends Model,
   R = M[],
 > extends BaseQueryBuilder<M, R> {
   constructor(...args) {
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     super(...args);
 
     this.onBuild((builder) => {

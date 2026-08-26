@@ -1,7 +1,6 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  ISaleInvoiceEditDTO,
   ISaleInvoiceEditedPayload,
   ISaleInvoiceEditingPayload,
 } from '../SaleInvoice.types';

@@ -1,8 +1,4 @@
-import {
-  IBillEditDTO,
-  IBillEditedPayload,
-  IBillEditingPayload,
-} from '../Bills.types';
+import { IBillEditedPayload, IBillEditingPayload } from '../Bills.types';
 import { Inject, Injectable } from '@nestjs/common';
 import { BillsValidators } from './BillsValidators.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';

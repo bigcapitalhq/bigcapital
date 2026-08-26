@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SaleReceiptTransformer } from './SaleReceiptTransformer';
-import { SaleReceiptValidators } from '../commands/SaleReceiptValidators.service';
+
 import { SaleReceipt } from '../models/SaleReceipt';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';

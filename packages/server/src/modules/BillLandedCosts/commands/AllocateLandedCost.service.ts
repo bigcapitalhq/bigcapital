@@ -1,9 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import {
-  IAllocatedLandedCostCreatedPayload,
-  ILandedCostDTO,
-} from '../types/BillLandedCosts.types';
+import { IAllocatedLandedCostCreatedPayload } from '../types/BillLandedCosts.types';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';

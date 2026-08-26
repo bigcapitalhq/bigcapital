@@ -171,7 +171,7 @@ export class ExportResourceService {
     ) => {
       return (
         Object.entries(columns)
-          // @ts-expect-error
+          // @ts-expect-error -- TODO: fix underlying type error
           .filter(([_, value]) => value.printable !== false)
           .flatMap(([key, value]) => {
             if (

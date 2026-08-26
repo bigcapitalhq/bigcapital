@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { lemonSqueezySetup } from '@lemonsqueezy/lemonsqueezy.js';
 
 /**
@@ -23,7 +24,6 @@ export function configureLemonSqueezy() {
   lemonSqueezySetup({
     apiKey: process.env.LEMONSQUEEZY_API_KEY,
     onError: (error) => {
-      // eslint-disable-next-line no-console -- allow logging
       console.error(error);
       throw new Error(`Lemon Squeezy API error: ${error.message}`);
     },
@@ -87,14 +87,11 @@ export function webhookHasData(obj: unknown): obj is {
 }
 
 export function createHmacSignature(secretKey, body) {
-  return require('crypto')
-    .createHmac('sha256', secretKey)
-    .update(body)
-    .digest('hex');
+  return crypto.createHmac('sha256', secretKey).update(body).digest('hex');
 }
 
 export function compareSignatures(signature, comparison_signature) {
   const source = Buffer.from(signature, 'utf8');
   const comparison = Buffer.from(comparison_signature, 'utf8');
-  return require('crypto').timingSafeEqual(source, comparison);
+  return crypto.timingSafeEqual(source, comparison);
 }

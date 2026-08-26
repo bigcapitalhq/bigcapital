@@ -2,7 +2,6 @@ import { omit } from 'lodash';
 import {
   ITransactionLockingPartiallyDTO,
   ITransactionMeta,
-  ITransactionsLockingAllDTO,
   ITransactionsLockingCanceled,
   ITransactionsLockingPartialUnlocked,
   TransactionsLockingGroup,

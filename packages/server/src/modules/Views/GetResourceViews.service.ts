@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { View } from './models/View.model';
 import { ResourceService } from '../Resource/ResourceService';
-import { I18nService } from 'nestjs-i18n';
+
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { GetResourceViewTransformer } from './GetResourceView.transformer';
 

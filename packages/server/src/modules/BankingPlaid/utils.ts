@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import {
   Item as PlaidItem,
   Institution as PlaidInstitution,

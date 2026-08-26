@@ -3,7 +3,7 @@ import { GetMatchedTransactionsByBills } from '../queries/GetMatchedTransactions
 import { GetMatchedTransactionsByManualJournals } from '../queries/GetMatchedTransactionsByManualJournals.service';
 import { MatchTransactionsTypesRegistry } from './MatchTransactionsTypesRegistry';
 import { GetMatchedTransactionsByInvoices } from '../queries/GetMatchedTransactionsByInvoices.service';
-import { GetMatchedTransactionCashflowTransformer } from '../queries/GetMatchedTransactionCashflowTransformer';
+
 import { GetMatchedTransactionsByCashflow } from '../queries/GetMatchedTransactionsByCashflow';
 import { Injectable } from '@nestjs/common';
 

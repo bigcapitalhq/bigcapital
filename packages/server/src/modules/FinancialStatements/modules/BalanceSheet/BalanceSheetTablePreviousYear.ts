@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as R from 'ramda';
 import { IDateRange } from '../../types/Report.types';
 import { ITableColumn } from '../../types/Table.types';

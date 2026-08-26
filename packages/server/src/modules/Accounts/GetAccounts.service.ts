@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
-import { IAccountsFilter, IAccountsStructureType } from './Accounts.types';
+import { IAccountsStructureType } from './Accounts.types';
 import { DynamicListService } from '../DynamicListing/DynamicList.service';
 import { AccountTransformer } from './Account.transformer';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';

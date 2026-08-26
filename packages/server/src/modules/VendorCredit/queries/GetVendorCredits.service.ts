@@ -56,7 +56,7 @@ export class GetVendorCreditsService {
         dynamicFilter.buildQuery()(builder);
 
         // Gives ability to inject custom query to filter results.
-        filterDto?.filterQuery && filterDto?.filterQuery(builder);
+        filterDto?.filterQuery?.(builder);
       })
       .pagination(filterDto.page - 1, filterDto.pageSize);
 

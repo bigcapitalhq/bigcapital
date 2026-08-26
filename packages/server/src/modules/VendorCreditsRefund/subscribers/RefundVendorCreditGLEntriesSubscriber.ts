@@ -21,7 +21,7 @@ export class RefundVendorCreditGLEntriesSubscriber {
   async writeRefundVendorCreditGLEntriesOnceCreated({
     trx,
     refundVendorCredit,
-    vendorCredit,
+    vendorCredit: _vendorCredit,
   }: IRefundVendorCreditCreatedPayload) {
     await this.refundVendorCreditGLEntries.createRefundVendorCreditGLEntries(
       refundVendorCredit.id,
@@ -37,7 +37,7 @@ export class RefundVendorCreditGLEntriesSubscriber {
   async revertRefundVendorCreditGLEntriesOnceDeleted({
     trx,
     refundCreditId,
-    oldRefundCredit,
+    oldRefundCredit: _oldRefundCredit,
   }: IRefundVendorCreditDeletedPayload) {
     await this.refundVendorCreditGLEntries.revertRefundVendorCreditGLEntries(
       refundCreditId,

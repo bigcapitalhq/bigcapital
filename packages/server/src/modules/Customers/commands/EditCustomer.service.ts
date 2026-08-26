@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
-  ICustomerEditDTO,
   ICustomerEventEditedPayload,
   ICustomerEventEditingPayload,
 } from '../types/Customers.types';
@@ -41,10 +40,7 @@ export class EditCustomer {
     customerDTO: EditCustomerDto,
   ): Promise<Customer> {
     // Retrieve the customer or throw not found error.
-    const oldCustomer = await this.customerModel()
-      .query()
-      .findById(customerId)
-      .throwIfNotFound();
+    await this.customerModel().query().findById(customerId).throwIfNotFound();
 
     // Transforms the given customer DTO to object.
     const customerObj = this.customerDTO.transformEditDTO(customerDTO);

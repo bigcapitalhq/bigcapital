@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as R from 'ramda';
 import { isEmpty } from 'lodash';
 import * as moment from 'moment';
@@ -189,8 +189,8 @@ export class CashFlowTable {
    */
   private sectionMapper = (
     section: ICashFlowStatementSection,
-    key: string,
-    parentSection: ICashFlowStatementSection,
+    _key: string,
+    _parentSection: ICashFlowStatementSection,
   ): ITableRow => {
     const isSectionHasType = R.curry(this.isSectionHasType);
 
@@ -355,7 +355,7 @@ export class CashFlowTable {
    * Determines the given column type is the current.
    * @reutrns {boolean}
    */
-  private isDisplayColumnsBy = (displayColumnsType: string): Boolean => {
+  private isDisplayColumnsBy = (displayColumnsType: string): boolean => {
     return this.report.query.displayColumnsType === displayColumnsType;
   };
 
@@ -364,7 +364,7 @@ export class CashFlowTable {
    * @param {string} displayColumnsBy
    * @returns {boolean}
    */
-  private isDisplayColumnsType = (displayColumnsBy: string): Boolean => {
+  private isDisplayColumnsType = (displayColumnsBy: string): boolean => {
     return this.report.query.displayColumnsBy === displayColumnsBy;
   };
 

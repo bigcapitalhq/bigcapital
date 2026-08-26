@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 /**
  * A simple dependency graph
  */
@@ -202,7 +202,7 @@ DepGraph.prototype = {
    * to the nodes, it will only be shallow copied.
    */
   clone: function () {
-    var source = this;
+    var source = this; // eslint-disable-line @typescript-eslint/no-this-alias -- vendored graph implementation
     var result = new DepGraph();
     var keys = Object.keys(source.nodes);
     keys.forEach(function (n) {
@@ -273,7 +273,7 @@ DepGraph.prototype = {
    * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned.
    */
   overallOrder: function (leavesOnly) {
-    var self = this;
+    var self = this; // eslint-disable-line @typescript-eslint/no-this-alias -- vendored graph implementation
     var result = [];
     var keys = Object.keys(this.nodes);
     if (keys.length === 0) {
@@ -321,7 +321,7 @@ DepGraph.prototype = {
     }
   },
 
-  mapNodes(mapper) {},
+  mapNodes(_mapper) {},
 };
 
 /**

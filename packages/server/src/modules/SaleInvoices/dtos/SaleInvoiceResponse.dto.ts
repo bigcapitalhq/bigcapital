@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
 import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
-import { CustomerLinkDto } from '@/modules/Customers/dtos/CustomerLink.dto';
+
 import { BranchLinkDto } from '@/modules/Branches/dtos/BranchLink.dto';
 import { CustomerResponseDto } from '@/modules/Customers/dtos/CustomerResponse.dto';
 import { PaymentMethodDto } from '../dtos/SaleInvoice.dto';

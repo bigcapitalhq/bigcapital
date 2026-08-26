@@ -3,8 +3,7 @@ import { CreateVendorCreditService } from './commands/CreateVendorCredit.service
 import { DeleteVendorCreditService } from './commands/DeleteVendorCredit.service';
 import { EditVendorCreditService } from './commands/EditVendorCredit.service';
 import { GetVendorCreditService } from './queries/GetVendorCredit.service';
-import { IVendorCreditEditDTO } from './types/VendorCredit.types';
-import { IVendorCreditCreateDTO } from './types/VendorCredit.types';
+
 import { GetVendorCreditsQueryDto } from './dtos/GetVendorCreditsQuery.dto';
 import { Injectable } from '@nestjs/common';
 import { OpenVendorCreditService } from './commands/OpenVendorCredit.service';

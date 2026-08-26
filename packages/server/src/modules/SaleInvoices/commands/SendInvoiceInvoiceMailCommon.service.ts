@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { GetSaleInvoice } from '../queries/GetSaleInvoice.service';
 import {
   DEFAULT_INVOICE_MAIL_CONTENT,

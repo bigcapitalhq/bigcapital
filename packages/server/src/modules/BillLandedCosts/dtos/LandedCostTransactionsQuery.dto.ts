@@ -1,6 +1,5 @@
 import {
   IsDateString,
-  IsEnum,
   IsIn,
   IsNotEmpty,
   IsOptional,

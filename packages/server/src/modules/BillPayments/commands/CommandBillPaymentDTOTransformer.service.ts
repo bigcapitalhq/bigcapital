@@ -27,7 +27,7 @@ export class CommandBillPaymentDTOTransformer {
   public async transformDTOToModel(
     billPaymentDTO: CreateBillPaymentDto | EditBillPaymentDto,
     vendor: Vendor,
-    oldBillPayment?: BillPayment,
+    _oldBillPayment?: BillPayment,
   ): Promise<BillPayment> {
     const amount =
       billPaymentDTO.amount ?? sumBy(billPaymentDTO.entries, 'paymentAmount');

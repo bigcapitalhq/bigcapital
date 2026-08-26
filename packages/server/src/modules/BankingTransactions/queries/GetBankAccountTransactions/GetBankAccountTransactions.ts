@@ -1,6 +1,6 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as R from 'ramda';
-import * as moment from 'moment';
+
 import { first, isEmpty } from 'lodash';
 import {
   ICashflowAccountTransaction,

@@ -17,7 +17,7 @@ export class SubscriptionsLemonWebhook {
   async lemonWebhooks(@Req() req: Request) {
     const data = req.body;
     const signature = (req.headers['x-signature'] as string) ?? '';
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     const rawBody = req.rawBody;
 
     await this.lemonWebhooksService.handlePostWebhook(rawBody, data, signature);

@@ -6,7 +6,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ITransactionsByVendorsFilter } from './TransactionsByVendor.types';
+
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
 import { TransactionsByVendorApplication } from './TransactionsByVendorApplication';

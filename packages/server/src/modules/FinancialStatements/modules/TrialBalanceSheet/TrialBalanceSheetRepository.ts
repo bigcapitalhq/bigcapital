@@ -97,7 +97,7 @@ export class TrialBalanceSheetRepository {
         query.modify('filterDateRange', null, openingDate);
         query.withGraphFetched('account');
 
-        // @ts-ignore
+        // @ts-expect-error -- TODO: fix underlying type error
         this.commonFilterBranchesQuery(query);
       });
   };
@@ -108,7 +108,7 @@ export class TrialBalanceSheetRepository {
    */
   private commonFilterBranchesQuery = (query: Knex.QueryBuilder) => {
     if (!isEmpty(this.query.branchesIds)) {
-      // @ts-ignore
+      // @ts-expect-error -- TODO: fix underlying type error
       query.modify('filterByBranches', this.query.branchesIds);
     }
   };

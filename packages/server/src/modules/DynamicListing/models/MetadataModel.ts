@@ -22,7 +22,7 @@ export interface IMetadataModel {
   getMeta(key?: string): IModelMeta;
 }
 
-type GConstructor<T = {}> = new (...args: any[]) => T;
+type GConstructor<T = object> = new (...args: any[]) => T;
 
 export const MetadataModelMixin = <T extends GConstructor<BaseModel>>(
   Model: T,

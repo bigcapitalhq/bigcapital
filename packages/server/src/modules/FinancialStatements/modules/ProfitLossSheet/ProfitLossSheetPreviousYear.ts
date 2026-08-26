@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as R from 'ramda';
 import { sumBy } from 'lodash';
 import {
@@ -7,7 +7,6 @@ import {
   IProfitLossSchemaNode,
   IProfitLossSheetNode,
   IProfitLossSheetTotal,
-  IProfitLossSheetQuery,
 } from './ProfitLossSheet.types';
 import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 import { FinancialPreviousYear } from '../../common/FinancialPreviousYear';

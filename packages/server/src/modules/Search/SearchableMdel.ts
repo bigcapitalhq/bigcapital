@@ -2,7 +2,7 @@ import * as O from 'objection';
 import { IModelMeta } from '@/interfaces/Model';
 
 export const SearchableModel: O.Plugin = (Model) =>
-  // @ts-ignore
+  // @ts-expect-error -- TODO: fix underlying type error
   class extends Model {
     additionalProperty: string;
 

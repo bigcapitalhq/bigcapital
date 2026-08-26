@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
 import { VendorCredit } from '../models/VendorCredit';

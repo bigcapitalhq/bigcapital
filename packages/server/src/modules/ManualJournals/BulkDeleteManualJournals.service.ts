@@ -13,7 +13,7 @@ export class BulkDeleteManualJournalsService {
   async bulkDeleteManualJournals(
     manualJournalIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const journalsIds = uniq(castArray(manualJournalIds));

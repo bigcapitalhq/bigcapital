@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { BillsApplication } from '../Bills.application';
 import { Injectable } from '@nestjs/common';
 import { Exportable } from '@/modules/Export/Exportable';

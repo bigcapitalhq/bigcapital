@@ -242,7 +242,7 @@ export class ItemsValidators {
       .count('item_id', { as: 'transactions' })
       .first();
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     if (itemTransactionsCount.transactions > 0) {
       throw new ServiceError(
         ERRORS.TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS,

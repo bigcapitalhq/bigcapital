@@ -1,12 +1,6 @@
 import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsInt,
-  MinLength,
-  MaxLength,
-  IsBoolean,
-} from 'class-validator';
+import { IsString, MinLength, MaxLength, IsBoolean } from 'class-validator';
 
 export class CreateAccountDTO {
   @IsString()

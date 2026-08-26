@@ -1,8 +1,8 @@
 import { BaseModel } from '@/models/Model';
-import { IModelMeta } from '@/interfaces/Model';
+
 import { ISearchRole } from '../DynamicFilter/DynamicFilter.types';
 
-type GConstructor<T = {}> = new (...args: any[]) => T;
+type GConstructor<T = object> = new (...args: any[]) => T;
 
 export interface ISearchableBaseModel {
   searchRoles: ISearchRole[];

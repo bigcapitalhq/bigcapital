@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Injectable } from '@nestjs/common';
@@ -61,7 +61,7 @@ export class InvoiceInventoryTransactions {
     trx?: Knex.Transaction,
   ): Promise<void> {
     // Delete the inventory transaction of the given sale invoice.
-    const { oldInventoryTransactions } =
+    const { oldInventoryTransactions: _oldInventoryTransactions } =
       await this.inventoryService.deleteInventoryTransactions(
         saleInvoiceId,
         'SaleInvoice',

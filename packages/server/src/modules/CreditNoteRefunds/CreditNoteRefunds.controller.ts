@@ -14,7 +14,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ICreditNoteRefundDTO } from '../CreditNotes/types/CreditNotes.types';
+
 import { CreditNotesRefundsApplication } from './CreditNotesRefundsApplication.service';
 import { RefundCreditNote } from './models/RefundCreditNote';
 import { CreditNoteRefundDto } from './dto/CreditNoteRefund.dto';

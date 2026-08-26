@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import { Transaction } from 'objection';
+
 import * as uniqid from 'uniqid';
 import * as moment from 'moment';
 import { TenantRepository as TenantBaseRepository } from '@/common/repository/TenantRepository';

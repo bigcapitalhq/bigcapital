@@ -33,7 +33,7 @@ export class GetCreditNoteAssociatedAppliedInvoices {
     creditNoteId: number,
   ): Promise<CreditNoteAppliedInvoice[]> {
     // Retrieve credit note or throw not found service error.
-    const creditNote = await this.creditNoteModel()
+    await this.creditNoteModel()
       .query()
       .findById(creditNoteId)
       .throwIfNotFound();

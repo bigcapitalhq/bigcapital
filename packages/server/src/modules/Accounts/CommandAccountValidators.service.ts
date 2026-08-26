@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { Inject, Injectable, Scope } from '@nestjs/common';
 // import { IAccountDTO, IAccount, IAccountCreateDTO } from './Accounts.types';
 // import AccountTypesUtils from '@/lib/AccountTypes';

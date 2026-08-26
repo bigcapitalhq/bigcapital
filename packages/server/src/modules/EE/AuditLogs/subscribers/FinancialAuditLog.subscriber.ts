@@ -1139,7 +1139,11 @@ export class FinancialAuditLogSubscriber {
   }
 
   @OnEvent(events.taxRates.onEdited)
-  async onTaxRateEdited({ taxRate, oldTaxRate, trx }: ITaxRateEditedPayload) {
+  async onTaxRateEdited({
+    taxRate,
+    oldTaxRate: _oldTaxRate,
+    trx,
+  }: ITaxRateEditedPayload) {
     await this.write(trx, 'edited', AbilitySubject.TaxRate, taxRate.id, {
       name: taxRate.name,
       rate: taxRate.rate,
@@ -1266,7 +1270,7 @@ export class FinancialAuditLogSubscriber {
   @OnEvent(events.bankRules.onEdited)
   async onBankRuleEdited({
     bankRule,
-    oldBankRule,
+    oldBankRule: _oldBankRule,
     trx,
   }: IBankRuleEventEditedPayload) {
     await this.write(trx, 'edited', 'BankRule', bankRule.id, {

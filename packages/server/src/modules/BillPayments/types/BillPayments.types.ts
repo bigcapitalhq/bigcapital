@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { BillPayment } from '../models/BillPayment';
-import { AttachmentLinkDTO } from '@/modules/Attachments/Attachments.types';
+
 import {
   CreateBillPaymentDto,
   EditBillPaymentDto,

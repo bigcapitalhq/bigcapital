@@ -13,7 +13,7 @@ export class BulkDeletePaymentReceivedService {
   async bulkDeletePaymentReceived(
     paymentReceiveIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const paymentsIds = uniq(castArray(paymentReceiveIds));

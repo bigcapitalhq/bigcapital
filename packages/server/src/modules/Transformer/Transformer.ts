@@ -7,7 +7,7 @@ import { TransformerContext } from './Transformer.types';
 
 const EXPORT_DTE_FORMAT = 'YYYY-MM-DD';
 
-export class Transformer<T = {}, ExtraContext = {}> {
+export class Transformer<_T = object, ExtraContext = object> {
   public context: ExtraContext & TransformerContext;
   public options: Record<string, any>;
 

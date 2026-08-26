@@ -15,5 +15,5 @@ exports.up = (knex) => {
 };
 
 exports.down = (knex) => {
-  return knex.schema.table('contacts', (table) => {});
+  return knex.schema.table('contacts', (_table) => {});
 };

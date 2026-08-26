@@ -1,8 +1,7 @@
-import { Item } from './models/Item';
 import { CreateItemService } from './CreateItem.service';
 import { DeleteItemService } from './DeleteItem.service';
 import { EditItemService } from './EditItem.service';
-import { IItem, IItemDTO } from '@/interfaces/Item';
+
 import { Knex } from 'knex';
 import { InactivateItem } from './InactivateItem.service';
 import { ActivateItemService } from './ActivateItem.service';
@@ -10,7 +9,7 @@ import { GetItemService } from './GetItem.service';
 import { ItemTransactionsService } from './ItemTransactions.service';
 import { Injectable } from '@nestjs/common';
 import { GetItemsService } from './GetItems.service';
-import { IItemsFilter } from './types/Items.types';
+
 import { EditItemDto, CreateItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
 import { BulkDeleteItemsService } from './BulkDeleteItems.service';
@@ -39,7 +38,7 @@ export class ItemsApplicationService {
    */
   async createItem(
     createItemDto: CreateItemDto,
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<number> {
     return this.createItemService.createItem(createItemDto);
   }

@@ -145,7 +145,7 @@ export class SaleEstimatesApplication {
    * @param {number} saleEstimateId - Sale estimate ID.
    * @returns {Promise<ISaleEstimate>}
    */
-  public notifySaleEstimateBySms = async (saleEstimateId: number) => {
+  public notifySaleEstimateBySms = async (_saleEstimateId: number) => {
     // return this.saleEstimateNotifyBySmsService.notifyBySms(
     //   saleEstimateId,
     // );
@@ -156,7 +156,7 @@ export class SaleEstimatesApplication {
    * @param {number} saleEstimateId - Sale estimate ID.
    * @returns {Promise<IPaymentReceivedSmsDetails>}
    */
-  public getSaleEstimateSmsDetails = (saleEstimateId: number) => {
+  public getSaleEstimateSmsDetails = (_saleEstimateId: number) => {
     // return this.saleEstimateNotifyBySmsService.smsDetails(
     //   saleEstimateId,
     // );

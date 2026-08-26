@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import * as R from 'ramda';
 import { Knex } from 'knex';

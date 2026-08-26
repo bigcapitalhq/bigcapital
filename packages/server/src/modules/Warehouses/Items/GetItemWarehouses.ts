@@ -25,10 +25,7 @@ export class GetItemWarehouses {
    */
   public getItemWarehouses = async (itemId: number) => {
     // Retrieves specific item or throw not found service error.
-    const item = await this.itemModel()
-      .query()
-      .findById(itemId)
-      .throwIfNotFound();
+    await this.itemModel().query().findById(itemId).throwIfNotFound();
 
     const itemWarehouses = await this.itemWarehouseQuantityModel()
       .query()

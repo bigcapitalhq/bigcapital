@@ -7,8 +7,7 @@ import {
   LandedCostTransactionType,
 } from '../types/BillLandedCosts.types';
 import { Injectable } from '@nestjs/common';
-import { Bill } from '@/modules/Bills/models/Bill';
-import { Expense } from '@/modules/Expenses/models/Expense.model';
+
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 import { sanitizeModelName } from '@/utils/sanitize-model-name';
