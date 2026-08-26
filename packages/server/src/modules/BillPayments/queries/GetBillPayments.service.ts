@@ -45,7 +45,7 @@ export class GetBillPaymentsService {
         builder.withGraphFetched('paymentAccount');
 
         dynamicList.buildQuery()(builder);
-        filter?.filterQuery && filter?.filterQuery(builder);
+        filter?.filterQuery?.(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 

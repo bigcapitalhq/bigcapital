@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { PromisePool } from '@supercharge/promise-pool';
+
 import { DeleteCashflowTransaction } from '../commands/DeleteCashflowTransaction.service';
 import { events } from '@/common/events/events';
 import { ICashflowTransactionUncategorizedPayload } from '@/modules/BankingCategorize/types/BankingCategorize.types';

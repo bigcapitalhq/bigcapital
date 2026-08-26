@@ -2,7 +2,7 @@ import { createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
 import { configureLemonSqueezy } from '../utils';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { SystemUser } from '@/modules/System/models/SystemUser';
+
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 
 @Injectable()

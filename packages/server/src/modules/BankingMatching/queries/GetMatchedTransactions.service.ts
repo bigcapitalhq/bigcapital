@@ -68,7 +68,7 @@ export class GetMatchedTransactions {
 
     const matchedTransactions = await PromisePool.withConcurrency(2)
       .for(filtered)
-      .process(async ({ type, service }) => {
+      .process(async ({ type: _type, service }) => {
         return service.getMatchedTransactions(filter);
       });
     const { perfectMatches, possibleMatches } = this.groupMatchedResults(

@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as R from 'ramda';
 import { sumBy } from 'lodash';
 import {
@@ -207,7 +207,7 @@ export const ProfitLossSheetPreviousPeriod = <
       (
         node: IProfitLossSheetAccountNode,
         horizontalTotalNode: IProfitLossHorizontalDatePeriodNode,
-        index: number,
+        _index: number,
       ): IProfitLossHorizontalDatePeriodNode => {
         return R.compose(
           R.when(

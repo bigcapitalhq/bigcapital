@@ -7,7 +7,6 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
-  IsDate,
   IsDateString,
   IsEnum,
   IsInt,

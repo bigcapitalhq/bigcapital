@@ -3,7 +3,6 @@ import { Knex } from 'knex';
 import {
   ISaleEstimateCreatedPayload,
   ISaleEstimateCreatingPayload,
-  ISaleEstimateDTO,
 } from '../types/SaleEstimates.types';
 import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer.service';
 import { SaleEstimateValidators } from './SaleEstimateValidators.service';

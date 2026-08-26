@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import {
   BALANCE_SHEET_SCHEMA_NODE_ID,
   BALANCE_SHEET_SCHEMA_NODE_TYPE,

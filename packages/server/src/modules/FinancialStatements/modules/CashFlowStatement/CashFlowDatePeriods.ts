@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as R from 'ramda';
 import { sumBy, mapValues, get } from 'lodash';
 import { ACCOUNT_ROOT_TYPE } from '@/constants/accounts';
@@ -140,7 +140,7 @@ export const CashFlowStatementDatePeriods = <
      * @returns {ICashFlowDatePeriod[]}
      */
     public getNetIncomeDatePeriods = (
-      section: ICashFlowStatementNetIncomeSection,
+      _section: ICashFlowStatementNetIncomeSection,
     ): ICashFlowDatePeriod[] => {
       return this.dateRangeSet.map(this.getNetIncomeDatePeriod.bind(this));
     };
@@ -354,7 +354,7 @@ export const CashFlowStatementDatePeriods = <
     public getBeginningCashAccountDateRange = (
       node: ICashFlowStatementSection,
       fromDate: Date,
-      toDate: Date,
+      _toDate: Date,
     ) => {
       const cashToDate = this.beginningCashFrom(fromDate);
 

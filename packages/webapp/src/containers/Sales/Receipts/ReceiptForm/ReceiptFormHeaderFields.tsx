@@ -153,10 +153,7 @@ function ReceiptFormCustomerSelect() {
   const updateEntries = useCustomerUpdateExRate();
 
   // Handles the customer item change.
-  const handleItemChange = (customer: {
-    id: number;
-    currencyCode: string;
-  }) => {
+  const handleItemChange = (customer: { id: number; currencyCode: string }) => {
     setFieldValue('customerId', customer.id);
     setFieldValue('currencyCode', customer?.currencyCode);
 

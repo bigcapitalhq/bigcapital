@@ -8,7 +8,7 @@ import {
   IInvetoryItemDetailDOO,
 } from './InventoryItemDetails.types';
 import { I18nService } from 'nestjs-i18n';
-import { IInventoryDetailsData } from './InventoryItemDetails.types';
+
 import { tableRowMapper } from '../../utils/Table.utils';
 import {
   IColumnMapperMeta,
@@ -198,15 +198,15 @@ export class InventoryItemDetailsTable {
   private itemMapper = (node: IInventoryDetailsNode): ITableRow => {
     console.log(node, 'node');
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       R.when(
-        // @ts-ignore
+        // @ts-expect-error -- TODO: fix underlying type error
         R.curry(this.isNodeTypeEquals)('OPENING_ENTRY'),
         this.openingNodeMapper,
       ),
       R.when(
-        // @ts-ignore
+        // @ts-expect-error -- TODO: fix underlying type error
         R.curry(this.isNodeTypeEquals)('CLOSING_ENTRY'),
         this.closingNodeMapper,
       ),
@@ -224,7 +224,7 @@ export class InventoryItemDetailsTable {
    * @returns {ITableRow[]}
    */
   private itemsMapper = (items: IInventoryDetailsItem[]): ITableRow[] => {
-    // @ts-ignore
+    // @ts-ignore -- TODO: fix underlying type error
     return mapValuesDeep(items, this.itemMapper, MAP_CONFIG);
   };
 

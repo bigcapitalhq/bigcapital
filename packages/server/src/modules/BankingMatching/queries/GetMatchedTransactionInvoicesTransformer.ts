@@ -99,7 +99,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {String}
    */
-  protected transactionType(invoice) {
+  protected transactionType(_invoice) {
     return 'SaleInvoice';
   }
 
@@ -108,7 +108,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {string}
    */
-  protected transsactionTypeFormatted(invoice) {
+  protected transsactionTypeFormatted(_invoice) {
     return 'Sale invoice';
   }
 

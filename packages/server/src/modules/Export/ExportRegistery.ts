@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { camelCase, upperFirst } from 'lodash';
 import { Exportable } from './Exportable';
 

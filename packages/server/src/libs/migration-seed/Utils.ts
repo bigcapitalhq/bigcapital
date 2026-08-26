@@ -1,6 +1,8 @@
-// @ts-nocheck
+// @ts-nocheck -- legacy CLI utilities pending type fixes
 import * as fs from 'fs';
 import * as path from 'path';
+import { promisify } from 'util';
+import * as url from 'url';
 
 /**
  * Detarmines the module type of the given file path.
@@ -9,7 +11,6 @@ import * as path from 'path';
  */
 async function isModuleType(filepath: string): boolean {
   if (process.env.npm_package_json) {
-    const { promisify } = require('util');
     const readFile = promisify(fs.readFile);
     // npm >= 7.0.0
     const packageJson = JSON.parse(
@@ -29,8 +30,9 @@ async function isModuleType(filepath: string): boolean {
  */
 export async function importFile(filepath: string): any {
   return (await isModuleType(filepath))
-    ? import(require('url').pathToFileURL(filepath))
-    : require(filepath);
+    ? import(url.pathToFileURL(filepath))
+    : // eslint-disable-next-line @typescript-eslint/no-require-imports -- dynamic module loading (knex migrations/seeds)
+      require(filepath);
 }
 
 /**

@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { Model } from 'objection';
 
-type Constructor<T = {}> = new (...args: any[]) => T;
+type Constructor<T = object> = new (...args: any[]) => T;
 
 export const withDateSessionMixin = <T extends Constructor<Model>>(
   BaseModel: T,

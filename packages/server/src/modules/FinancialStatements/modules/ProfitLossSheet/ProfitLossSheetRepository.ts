@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { ModelObject } from 'objection';
 import { castArray } from 'lodash';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { Inject, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
 import { Knex } from 'knex';

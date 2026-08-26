@@ -11,6 +11,7 @@ export interface MailAttachmentContent {
 }
 
 export interface IMailable {
+  // eslint-disable-next-line @typescript-eslint/no-misused-new -- documents the implementing class constructor signature
   constructor(view: string, data?: { [key: string]: string | number });
   send(): Promise<any>;
   build(): void;

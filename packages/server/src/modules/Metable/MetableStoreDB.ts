@@ -5,6 +5,8 @@ import { EntityRepository } from '@/common/repository/EntityRepository';
 import { isBlank } from '@/utils/is-blank';
 import { parseBoolean } from '@/utils/parse-boolean';
 
+type AnyFunction = (...args: any[]) => any;
+
 export class MetableDBStore
   extends MetableStore
   implements IMetableStoreStorage
@@ -13,8 +15,8 @@ export class MetableDBStore
   KEY_COLUMN: string;
   VALUE_COLUMN: string;
   TYPE_COLUMN: string;
-  extraQuery: Function;
-  loaded: Boolean;
+  extraQuery: AnyFunction;
+  loaded: boolean;
   config: MetableConfig;
   extraColumns: Array<string>;
 

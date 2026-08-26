@@ -34,10 +34,10 @@ export class TransactionsByContact extends FinancialSheet {
       currencyCode: this.baseCurrency,
       transactionNumber: entry.transactionNumber,
 
-      // @ts-ignore
+      // @ts-ignore -- TODO: fix underlying type error
       // transactionType: this.i18n.t(entry.referenceTypeFormatted),
       transactionType: '',
-      // @ts-ignore
+      // @ts-expect-error -- TODO: fix underlying type error
       date: entry.date,
       createdAt: entry.createdAt,
     };

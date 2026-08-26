@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ModelObject } from 'objection';
-import { IGetWarehousesTransfersFilterDTO } from '@/modules/Warehouses/Warehouse.types';
+
 import { CreateWarehouseTransfer } from './commands/CreateWarehouseTransfer';
 import { DeleteWarehouseTransfer } from './commands/DeleteWarehouseTransfer';
 import { EditWarehouseTransfer } from './commands/EditWarehouseTransfer';

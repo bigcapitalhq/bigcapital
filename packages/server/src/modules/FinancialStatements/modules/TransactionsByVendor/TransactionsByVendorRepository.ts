@@ -143,7 +143,7 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
       customersIds,
     );
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       R.map(R.assoc('date', openingDate)),
       R.map(R.assoc('accountNormal', 'credit')),
@@ -163,13 +163,13 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
       fromDate,
       toDate,
     );
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       R.map(R.assoc('accountNormal', 'credit')),
       R.map((trans) => ({
-        // @ts-ignore
+        // @ts-expect-error -- TODO: fix underlying type error
         ...trans,
-        // @ts-ignore
+        // @ts-expect-error -- TODO: fix underlying type error
         referenceTypeFormatted: trans.referenceTypeFormatted,
       })),
     )(transactions);

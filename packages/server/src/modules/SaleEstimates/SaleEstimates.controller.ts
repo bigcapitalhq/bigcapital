@@ -36,7 +36,7 @@ import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleEstiamteStateResponseDto } from './dtos/SaleEstimateStateResponse.dto';
 import { SaleEstimateHtmlContentResponseDto } from './dtos/SaleEstimateHtmlResponse.dto';
 import { SaleEstimateMailStateResponseDto } from './dtos/SaleEstimateMailStateResponse.dto';
-import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+
 import {
   BulkDeleteDto,
   ValidateBulkDeleteResponseDto,

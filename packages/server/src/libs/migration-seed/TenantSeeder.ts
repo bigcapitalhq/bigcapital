@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { I18nService } from 'nestjs-i18n';
 import { Seeder } from './Seeder';
 

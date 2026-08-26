@@ -66,7 +66,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
     const node = {
       total: this.getTotalFormat(customersTotal),
     };
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       R.when(
         R.always(this.filter.percentageColumn),
@@ -108,7 +108,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
       this.contactCamparsionPercentageOfColumnMapper,
     )(customersTotal);
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return contacts.map(camparsionPercentageOfColummn);
   };
 

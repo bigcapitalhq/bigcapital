@@ -31,10 +31,7 @@ export class EditVendorService {
    */
   public async editVendor(vendorId: number, vendorDTO: EditVendorDto) {
     // Retrieve the vendor or throw not found error.
-    const oldVendor = await this.vendorModel()
-      .query()
-      .findById(vendorId)
-      .throwIfNotFound();
+    await this.vendorModel().query().findById(vendorId).throwIfNotFound();
 
     // Transforms vendor DTO to object.
     const vendorObj = this.transformDTO.transformEditDTO(vendorDTO);

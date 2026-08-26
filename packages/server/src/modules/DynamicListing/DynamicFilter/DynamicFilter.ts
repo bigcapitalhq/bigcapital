@@ -4,7 +4,7 @@ import { IFilterRole } from './DynamicFilter.types';
 import { DynamicFilterRoleAbstractor } from './DynamicFilterRoleAbstractor';
 import { MetableModel } from '../types/DynamicList.types';
 
-export class DynamicFilter<R extends {}> extends DynamicFilterAbstractor {
+export class DynamicFilter<R extends object> extends DynamicFilterAbstractor {
   public model: MetableModel;
   public dynamicFilters: DynamicFilterRoleAbstractor[];
 
@@ -62,7 +62,6 @@ export class DynamicFilter<R extends {}> extends DynamicFilterAbstractor {
    */
   public buildQuery = () => {
     const buildersCallbacks = this.dynamicFiltersBuildQuery();
-    const tableColumns = this.dynamicFilterTableColumns();
 
     return (builder) => {
       buildersCallbacks.forEach((builderCallback) => {

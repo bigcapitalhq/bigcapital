@@ -1,7 +1,7 @@
 import { BaseModel } from '@/models/Model';
 import { IView } from '../Views/Views.types';
 
-type GConstructor<T = {}> = new (...args: any[]) => T;
+type GConstructor<T = object> = new (...args: any[]) => T;
 
 export interface ICustomViewBaseModel {
   defaultViews: IView[];

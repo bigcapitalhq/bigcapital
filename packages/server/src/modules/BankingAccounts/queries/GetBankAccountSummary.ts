@@ -6,7 +6,7 @@ import { Knex } from 'knex';
 import { TENANCY_DB_CONNECTION } from '@/modules/Tenancy/TenancyDB/TenancyDB.constants';
 import { initialize } from 'objection';
 import { MatchedBankTransaction } from '@/modules/BankingMatching/models/MatchedBankTransaction';
-import { TenantModel } from '@/modules/System/models/TenantModel';
+
 import { RecognizedBankTransaction } from '@/modules/BankingTranasctionsRegonize/models/RecognizedBankTransaction';
 
 @Injectable()
@@ -126,13 +126,13 @@ export class GetBankAccountSummary {
         });
 
     const totalUncategorizedTransactions =
-      // @ts-ignore
+      // @ts-expect-error -- TODO: fix underlying type error
       uncategorizedTranasctionsCount?.total || 0;
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     const totalRecognizedTransactions = recognizedTransactionsCount?.total || 0;
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     const totalExcludedTransactions = excludedTransactionsCount?.total || 0;
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     const totalPendingTransactions = pendingTransactionsCount?.total || 0;
 
     return {

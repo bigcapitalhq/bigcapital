@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { pickBy } from 'lodash';
 import { InvoicePdfTemplateAttributes, ISaleInvoice } from '@/interfaces';
 import { contactAddressTextFormat } from '@/utils/address-text-format';

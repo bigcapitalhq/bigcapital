@@ -32,10 +32,7 @@ export class BillAllocatedLandedCostTransactions {
     billId: number,
   ): Promise<Array<IBillLandedCostTransaction>> => {
     // Retrieve the given bill id or throw not found service error.
-    const bill = await this.billModel()
-      .query()
-      .findById(billId)
-      .throwIfNotFound();
+    await this.billModel().query().findById(billId).throwIfNotFound();
     // Retrieve the bill associated allocated landed cost with bill and expense entry.
     const landedCostTransactions = await this.billLandedCostModel()
       .query()

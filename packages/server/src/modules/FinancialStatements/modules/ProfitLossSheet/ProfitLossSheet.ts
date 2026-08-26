@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as R from 'ramda';
 import { ModelObject } from 'objection';
 import { I18nService } from 'nestjs-i18n';
@@ -297,7 +297,7 @@ export default class ProfitLossSheet extends R.pipe(
     key: number,
     parentValue: IProfitLossSheetNode | IProfitLossSchemaNode,
     accNodes: (IProfitLossSheetNode | IProfitLossSchemaNode)[],
-    context,
+    _context,
   ): IProfitLossSheetEquationNode => {
     return R.compose(
       R.when(

@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { chain } from 'lodash';
 import { pick } from 'lodash';
 import { IItemEntryTransactionType } from '../TransactionItemEntry/ItemEntry.types';

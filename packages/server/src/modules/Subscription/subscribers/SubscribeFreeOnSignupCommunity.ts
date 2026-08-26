@@ -17,7 +17,11 @@ export class SubscribeFreeOnSignupCommunity {
    * @returns {Promise<void>}
    */
   @OnEvent(events.auth.signUp)
-  async subscribeFreeOnSigupCommunity({ signupDTO, tenant, user }) {
+  async subscribeFreeOnSigupCommunity({
+    signupDTO: _signupDTO,
+    tenant: _tenant,
+    user: _user,
+  }) {
     if (this.configService.get('cloud.hostedOnCloud')) return null;
 
     await this.subscriptionApp.createNewSubscription('free');

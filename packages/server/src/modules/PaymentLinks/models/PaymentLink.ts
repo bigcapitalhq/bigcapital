@@ -1,5 +1,4 @@
 import { SystemModel } from '@/modules/System/models/SystemModel';
-import { Model } from 'objection';
 
 export class PaymentLink extends SystemModel {
   public id!: number;

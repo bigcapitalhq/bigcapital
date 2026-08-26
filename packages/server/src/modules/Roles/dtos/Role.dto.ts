@@ -8,8 +8,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
-  Length,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
 

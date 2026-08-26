@@ -198,6 +198,7 @@ export interface ICashFlowStatement {
    * Constructor method.
    * @constructor
    */
+  // eslint-disable-next-line @typescript-eslint/no-misused-new -- documents the implementing class constructor signature
   constructor(
     accounts: Account[],
     ledger: Ledger,
@@ -211,6 +212,7 @@ export interface ICashFlowStatement {
 }
 
 export interface ICashFlowTable {
+  // eslint-disable-next-line @typescript-eslint/no-misused-new -- documents the implementing class constructor signature
   constructor(reportStatement: ICashFlowStatement): void;
   tableRows(): ITableRow[];
 }

@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 const validGrouping = (integerPart, sep) =>
   integerPart.split(sep).reduce((acc, group, idx) => {
     if (idx > 0) {

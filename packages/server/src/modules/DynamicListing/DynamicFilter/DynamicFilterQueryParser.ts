@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { OPERATION } from '@/libs/logic-evaluation/Parser';
 
 export class DynamicFilterQueryParser {

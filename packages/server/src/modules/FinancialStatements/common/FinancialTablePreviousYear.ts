@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import * as moment from 'moment';
 import { ITableColumn, ITableColumnAccessor } from '../types/Table.types';
 import { IDateRange } from '../types/Report.types';

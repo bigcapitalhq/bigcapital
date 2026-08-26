@@ -1,4 +1,4 @@
-import request = require('supertest');
+import request from 'supertest';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Banking Categorize (e2e)', () => {

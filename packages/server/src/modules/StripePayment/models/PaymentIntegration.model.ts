@@ -1,5 +1,4 @@
 import { BaseModel } from '@/models/Model';
-import { Model } from 'objection';
 
 export class PaymentIntegration extends BaseModel {
   paymentEnabled!: boolean;

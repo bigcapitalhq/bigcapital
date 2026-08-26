@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { Knex } from 'knex';
+
 import { Inject, Injectable } from '@nestjs/common';
 import { SaleInvoiceTransformer } from './SaleInvoice.transformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';

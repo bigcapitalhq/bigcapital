@@ -246,7 +246,7 @@ export class GeneralLedgerTable extends R.compose(
   ): ITableRow[] => {
     const transactionMapper = this.transactionMapper(account);
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.map(transactionMapper)(account.transactions);
   };
 
@@ -331,7 +331,7 @@ export class GeneralLedgerTable extends R.compose(
     const isAppendClosingSubaccounts = () =>
       account.children?.length > 0 && !!account.closingBalanceSubaccounts;
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     const children = R.compose(
       R.when(
         isAppendClosingSubaccounts,

@@ -12,7 +12,7 @@ export class VendorQueryBuilder<
   R = M[],
 > extends BaseQueryBuilder<M, R> {
   constructor(...args) {
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     super(...args);
 
     this.onBuild((builder) => {

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GetBankRuleTransformer } from './GetBankRuleTransformer';
+
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { BankRule } from '../models/BankRule';
 import { GetBankRulesTransformer } from './GetBankRulesTransformer';

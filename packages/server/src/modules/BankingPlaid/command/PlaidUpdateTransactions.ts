@@ -131,7 +131,6 @@ export class PlaidUpdateTransactions {
     const batchSize = 100;
     try {
       // Iterate through each page of new transaction updates for item
-      /* eslint-disable no-await-in-loop */
       while (hasMore) {
         const request = {
           access_token: plaidAccessToken,

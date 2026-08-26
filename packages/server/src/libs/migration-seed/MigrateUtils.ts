@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { differenceWith } from 'lodash';
 import * as path from 'path';
 import { FsMigrations } from './FsMigrations';

@@ -41,7 +41,7 @@ export class SeedStripeAccountsOnOAuthGrantedSubscriber {
       .findById(paymentIntegrationId)
       .patch({
         options: {
-          // @ts-ignore
+          // @ts-expect-error -- TODO: fix underlying type error
           bankAccountId: bankAccount.id,
           clearingAccountId: clearingAccount.id,
         },

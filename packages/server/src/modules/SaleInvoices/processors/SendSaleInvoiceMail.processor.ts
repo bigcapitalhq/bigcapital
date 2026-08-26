@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { SendSaleInvoiceMailJob, SendSaleInvoiceQueue } from '../constants';
+import { SendSaleInvoiceQueue } from '../constants';
 import { SendSaleInvoiceMail } from '../commands/SendSaleInvoiceMail';
 import { Scope } from '@nestjs/common';
 import { ClsService, UseCls } from 'nestjs-cls';

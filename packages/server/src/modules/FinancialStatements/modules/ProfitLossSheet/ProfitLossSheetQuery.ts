@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { merge } from 'lodash';
 import * as R from 'ramda';
 import { IProfitLossSheetQuery } from './ProfitLossSheet.types';

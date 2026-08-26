@@ -1,5 +1,5 @@
 import { BaseModel } from '@/models/Model';
-import { Model, raw } from 'objection';
+import { Model } from 'objection';
 
 export class InventoryTransactionMeta extends BaseModel {
   transactionNumber!: string;

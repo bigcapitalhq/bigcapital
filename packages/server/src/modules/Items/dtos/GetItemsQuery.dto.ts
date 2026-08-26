@@ -1,7 +1,7 @@
 import { ToNumber } from '@/common/decorators/Validators';
 import { DynamicFilterQueryDto } from '@/modules/DynamicListing/dtos/DynamicFilterQuery.dto';
 import { parseBoolean } from '@/utils/parse-boolean';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { IsBoolean, IsInt, IsOptional } from 'class-validator';
 
 export class GetItemsQueryDto extends DynamicFilterQueryDto {

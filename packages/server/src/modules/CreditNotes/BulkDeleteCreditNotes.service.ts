@@ -13,7 +13,7 @@ export class BulkDeleteCreditNotesService {
   async bulkDeleteCreditNotes(
     creditNoteIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const notesIds = uniq(castArray(creditNoteIds));

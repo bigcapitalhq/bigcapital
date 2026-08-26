@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { PaymentIntegrationTransactionLinkDeleteEventPayload } from '../SaleInvoice.types';
 import { PaymentIntegrationTransactionLinkEventPayload } from '../SaleInvoice.types';
-import { PaymentIntegrationTransactionLink } from '../SaleInvoice.types';
+
 import { omit } from 'lodash';
 import {
   ISaleInvoiceCreatedPayload,
@@ -23,7 +23,7 @@ export class InvoicePaymentIntegrationSubscriber {
    */
   @OnEvent(events.saleInvoice.onCreated)
   public handleCreatePaymentIntegrationEvents({
-    saleInvoiceDTO,
+    saleInvoiceDTO: _saleInvoiceDTO,
     saleInvoice,
     trx,
   }: ISaleInvoiceCreatedPayload) {

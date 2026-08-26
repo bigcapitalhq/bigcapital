@@ -153,7 +153,7 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
         openingDate,
         customersIds,
       );
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       R.map(R.assoc('date', openingDate)),
       R.map(R.assoc('accountNormal', 'debit')),
@@ -176,12 +176,12 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
       toDate,
     );
 
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.pipe(
       R.map(R.assoc('accountNormal', 'debit')),
       R.map((trans) => ({
         ...trans,
-        // @ts-ignore
+        // @ts-ignore -- TODO: fix underlying type error
         referenceTypeFormatted: '',
         // referenceTypeFormatted: trans.referenceTypeFormatted,
       })),

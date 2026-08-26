@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { IDynamicFilter } from './DynamicFilter.types';
 import { MetableModel } from '../types/DynamicList.types';
 

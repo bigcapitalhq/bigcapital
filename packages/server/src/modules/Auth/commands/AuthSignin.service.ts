@@ -58,7 +58,6 @@ export class AuthSigninService {
    */
   async verifyPayload(payload: JwtPayload): Promise<any> {
     let user: SystemUser;
-    let tenant: TenantModel | undefined;
 
     try {
       user = await this.systemUserModel

@@ -8,7 +8,7 @@ import {
   RawBodyRequest,
   Req,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ConfigService } from '@nestjs/config';

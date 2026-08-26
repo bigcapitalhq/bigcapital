@@ -18,9 +18,9 @@ export class UncategorizeBankTransactionsBulk {
   ) {
     const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
 
-    const result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
+    await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
       .for(uncategorizedTransactionIds)
-      .process(async (_uncategorizedTransactionId: number, index, pool) => {
+      .process(async (_uncategorizedTransactionId: number, _index, _pool) => {
         await this.uncategorizeTransactionService.uncategorize(
           _uncategorizedTransactionId,
         );

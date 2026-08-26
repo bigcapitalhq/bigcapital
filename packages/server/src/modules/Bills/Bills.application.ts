@@ -2,7 +2,7 @@ import { CreateBill } from './commands/CreateBill.service';
 import { EditBillService } from './commands/EditBill.service';
 import { GetBill } from './queries/GetBill';
 import { DeleteBill } from './commands/DeleteBill.service';
-import { IBillDTO, IBillEditDTO } from './Bills.types';
+
 import { GetBillsQueryDto } from './dtos/GetBillsQuery.dto';
 import { GetDueBills } from './queries/GetDueBills.service';
 import { OpenBillService } from './commands/OpenBill.service';

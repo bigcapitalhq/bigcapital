@@ -104,7 +104,7 @@ export class CustomerBalanceSummaryTable {
         accessor: 'total.formattedAmount',
       },
     ];
-    // @ts-ignore
+    // @ts-ignore -- TODO: fix underlying type error
     return R.compose(
       R.concat(columns),
       R.when(
@@ -156,7 +156,7 @@ export class CustomerBalanceSummaryTable {
         label: this.i18n.t('contact_summary_balance.total'),
       },
     ];
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       R.when(
         R.always(this.query.percentageColumn),

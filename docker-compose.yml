@@ -42,26 +42,26 @@ services:
     ports:
       - '9000:3000'
 
-  garage:
-    image: dxflrs/garage:v1.3.1
-    container_name: bigcapital-garage
-    environment:
-      - GARAGE_CONFIG_FILE=/etc/garage.toml
-      - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
-      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
-    volumes:
-      - ./docker/garage/garage.toml:/etc/garage.toml
-      - ./docker/garage/setup.sh:/garage-setup/setup.sh
-      - garage:/var/lib/garage
-    ports:
-      - '3900:3900'
-      - '3903:3903'
-    expose:
-      - '3900'
-      - '3903'
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+  # garage:
+  #   image: dxflrs/garage:v1.3.1
+  #   container_name: bigcapital-garage
+  #   environment:
+  #     - GARAGE_CONFIG_FILE=/etc/garage.toml
+  #     - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
+  #     - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
+  #   volumes:
+  #     - ./docker/garage/garage.toml:/etc/garage.toml
+  #     - ./docker/garage/setup.sh:/garage-setup/setup.sh
+  #     - garage:/var/lib/garage
+  #   ports:
+  #     - '3900:3900'
+  #     - '3903:3903'
+  #   expose:
+  #     - '3900'
+  #     - '3903'
+  #   deploy:
+  #     restart_policy:
+  #       condition: unless-stopped
 
 # Volumes
 volumes:

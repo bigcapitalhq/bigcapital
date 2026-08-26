@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- TODO: remove and fix underlying type errors
 import { Injectable, Inject } from '@nestjs/common';
 import { BankAccount } from '../models/BankAccount';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';

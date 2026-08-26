@@ -1,4 +1,4 @@
-import request = require('supertest');
+import request from 'supertest';
 
 import { faker } from '@faker-js/faker';
 import { app } from './init-app-test';
@@ -25,7 +25,7 @@ describe('Authentication (e2e)', () => {
       email: faker.internet.email(),
       password: '1231231230',
     };
-    const response = request(app.getHttpServer())
+    const _response = request(app.getHttpServer())
       .post('/auth/signup')
       .send(signupBody);
 
@@ -45,7 +45,7 @@ describe('Authentication (e2e)', () => {
       email: faker.internet.email(),
       password: '1231231230',
     };
-    const signupResponse = request(app.getHttpServer())
+    const _signupResponse = request(app.getHttpServer())
       .post('/auth/signup')
       .send(signupBody);
 

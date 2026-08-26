@@ -1,3 +1,3 @@
-interface ReportsEvents {
+interface _ReportsEvents {
   tenantId: number;
 }

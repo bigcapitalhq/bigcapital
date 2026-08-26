@@ -9,7 +9,6 @@ import { GetSaleReceipt } from './queries/GetSaleReceipt.service';
 import { EditSaleReceipt } from './commands/EditSaleReceipt.service';
 import {
   ISaleReceiptState,
-  SaleReceiptMailOpts,
   SaleReceiptMailOptsDTO,
 } from './types/SaleReceipts.types';
 import { GetSaleReceiptsQueryDto } from './dtos/GetSaleReceiptsQuery.dto';

@@ -204,7 +204,7 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @returns {IInventoryValuationItem[]}
    */
   private itemsMapper = (
-    items: ModelObject<Item>[],
+    _items: ModelObject<Item>[],
   ): IInventoryValuationItem[] => {
     return this.repository.inventoryItems.map(this.itemMapper.bind(this));
   };

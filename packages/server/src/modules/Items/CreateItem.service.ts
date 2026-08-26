@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { defaultTo } from 'lodash';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject, Injectable, Scope } from '@nestjs/common';
-import { IItemDTO, IItemEventCreatedPayload } from '@/interfaces/Item';
+import { IItemEventCreatedPayload } from '@/interfaces/Item';
 import { events } from '@/common/events/events';
 import { ItemsValidators } from './ItemValidator.service';
 import { Item } from './models/Item';

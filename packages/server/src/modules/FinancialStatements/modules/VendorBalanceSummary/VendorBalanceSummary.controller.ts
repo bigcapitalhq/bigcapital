@@ -6,7 +6,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { IVendorBalanceSummaryQuery } from './VendorBalanceSummary.types';
+
 import { VendorBalanceSummaryApplication } from './VendorBalanceSummaryApplication';
 import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';

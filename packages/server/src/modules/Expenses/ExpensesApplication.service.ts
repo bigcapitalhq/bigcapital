@@ -4,7 +4,7 @@ import { EditExpense } from './commands/EditExpense.service';
 import { DeleteExpense } from './commands/DeleteExpense.service';
 import { PublishExpense } from './commands/PublishExpense.service';
 import { GetExpenseService } from './queries/GetExpense.service';
-import { IExpensesFilter } from './interfaces/Expenses.interface';
+
 import { GetExpensesService } from './queries/GetExpenses.service';
 import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
 import { GetExpensesQueryDto } from './dtos/GetExpensesQuery.dto';

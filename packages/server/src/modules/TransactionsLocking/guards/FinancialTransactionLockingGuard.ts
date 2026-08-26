@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { TransactionsLockingGroup } from '../types/TransactionsLocking.types';
 import { TransactionsLockingGuard } from './TransactionsLockingGuard';
 

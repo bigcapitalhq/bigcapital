@@ -170,7 +170,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     ClsModule.forRoot({
       global: true,
       middleware: {
-        setup: (cls: ClsService, req: Request, res: Response) => {
+        setup: (cls: ClsService, req: Request, _res: Response) => {
           cls.set('organizationId', req.headers['organization-id']);
         },
         mount: true,

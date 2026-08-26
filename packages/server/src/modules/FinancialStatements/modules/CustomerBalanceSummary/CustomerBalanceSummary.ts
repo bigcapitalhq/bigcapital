@@ -91,7 +91,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
   private getCustomersSection = (
     customers: ModelObject<Customer>[],
   ): ICustomerBalanceSummaryCustomer[] => {
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     return R.compose(
       R.when(this.isCustomersPostFilter, this.contactsFilter),
       R.when(

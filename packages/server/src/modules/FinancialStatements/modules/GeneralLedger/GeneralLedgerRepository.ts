@@ -85,7 +85,7 @@ export class GeneralLedgerRepository {
    * Initialize the accounts.
    */
   public async initAccounts() {
-    // @ts-ignore
+    // @ts-expect-error -- TODO: fix underlying type error
     this.accounts = await this.accountRepository.all().orderBy('name', 'ASC');
   }
 
@@ -187,7 +187,7 @@ export class GeneralLedgerRepository {
 
       return R.concat(childrenIds, parentIds);
     });
-    // @ts-ignore\
+    // @ts-expect-error -- TODO: fix underlying type error\
     this.accountNodeInclude = R.compose(
       R.uniq,
       R.flatten,

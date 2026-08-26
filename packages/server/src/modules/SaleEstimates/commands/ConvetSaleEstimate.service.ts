@@ -26,7 +26,7 @@ export class ConvertSaleEstimate {
     trx?: Knex.Transaction,
   ): Promise<void> {
     // Retrieve details of the given sale estimate.
-    const saleEstimate = await this.saleEstimateModel()
+    await this.saleEstimateModel()
       .query()
       .findById(estimateId)
       .throwIfNotFound();

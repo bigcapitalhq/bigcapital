@@ -1,7 +1,7 @@
 import { keyBy, get } from 'lodash';
 import { IInventoryItemCostMeta } from '../types/InventoryCost.types';
 import { Inject, Injectable } from '@nestjs/common';
-import { InventoryTransaction } from '../models/InventoryTransaction';
+
 import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
 import { Item } from '../../Items/models/Item';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
