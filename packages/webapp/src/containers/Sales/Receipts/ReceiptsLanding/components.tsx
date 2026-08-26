@@ -23,7 +23,15 @@ import { safeCallback } from '@/utils';
  * @returns {React.JSX}
  */
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onClose, onSendMail, onViewDetails, onPrint },
+  payload: {
+    onEdit,
+    onDelete,
+    onClose,
+    onSendMail,
+    onViewDetails,
+    onPrint,
+    onCreateCreditNote,
+  },
   row: { original: receipt },
 }) {
   return (
@@ -59,6 +67,11 @@ export function ActionsMenu({
           icon={<Icon icon={'print-16'} iconSize={16} />}
           text={intl.get('print')}
           onClick={safeCallback(onPrint, receipt)}
+        />
+        <MenuItem
+          icon={<Icon icon="credit-card" iconSize={16} />}
+          text={intl.get('new_credit_note') || 'New credit note'}
+          onClick={safeCallback(onCreateCreditNote, receipt)}
         />
       </Can>
       <Can I={SaleReceiptAction.Delete} a={AbilitySubject.Receipt}>

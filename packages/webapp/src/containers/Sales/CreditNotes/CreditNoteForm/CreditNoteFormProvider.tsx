@@ -24,6 +24,7 @@ import {
   useBranches,
   useSettingsCreditNotes,
   useInvoice,
+  useReceipt,
   useGetCreditNoteState,
 } from '@/hooks/query';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
@@ -87,6 +88,7 @@ function CreditNoteFormProvider({
 }: CreditNoteFormProviderProps) {
   const { state } = useLocation();
   const invoiceId = (state as { invoiceId?: number } | null)?.invoiceId;
+  const receiptId = (state as { receiptId?: number } | null)?.receiptId;
 
   // Features guard.
   const { featureCan } = useFeatureCan();
@@ -109,7 +111,13 @@ function CreditNoteFormProvider({
     },
   );
   // Handle fetch invoice detail.
-  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId);
+  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
+    enabled: !!invoiceId,
+  });
+  // Handle fetch receipt detail.
+  const { data: receipt, isLoading: isReceiptLoading } = useReceipt(receiptId, {
+    enabled: !!receiptId,
+  });
 
   // Fetch warehouses list.
   const {
@@ -153,15 +161,30 @@ function CreditNoteFormProvider({
 
   const newCreditNote = !isEmpty(invoice)
     ? transformToEditForm({
-        ...pick(invoice, ['customerId', 'currencyCode', 'entries']),
+        ...pick(invoice, ['customerId', 'currencyCode']),
+        entries: (invoice.entries || []).map((entry: any) => ({
+          ...entry,
+          sourceInvoiceId: invoice.id,
+          sourceInvoiceEntryId: entry.id,
+        })),
       })
-    : ([] as []);
+    : !isEmpty(receipt)
+      ? transformToEditForm({
+          ...pick(receipt, ['customerId', 'currencyCode']),
+          entries: (receipt.entries || []).map((entry: any) => ({
+            ...entry,
+            sourceReceiptId: receipt.id,
+            sourceReceiptEntryId: entry.id,
+          })),
+        })
+      : ([] as []);
 
   const isBootLoading =
     isItemsLoading ||
     isCustomersLoading ||
     isCreditNoteLoading ||
     isInvoiceLoading ||
+    isReceiptLoading ||
     isBrandingTemplatesLoading;
 
   // Provider payload.

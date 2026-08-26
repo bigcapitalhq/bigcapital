@@ -88,6 +88,11 @@ function ReceiptsDataTable({
     openDrawer(DRAWERS.RECEIPT_SEND_MAIL, { receiptId: id });
   };
 
+  // Handle create credit note from receipt.
+  const handleCreateCreditNote = ({ id }) => {
+    history.push(`/credit-notes/new?from_receipt_id=${id}`, { receiptId: id });
+  };
+
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.RECEIPTS);
@@ -156,6 +161,7 @@ function ReceiptsDataTable({
           onViewDetails: handleViewDetailReceipt,
           onPrint: handlePrintInvoice,
           onSendMail: handleSendMailReceipt,
+          onCreateCreditNote: handleCreateCreditNote,
         }}
       />
     </DashboardContentTable>

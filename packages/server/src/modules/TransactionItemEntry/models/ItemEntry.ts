@@ -37,6 +37,13 @@ export class ItemEntry extends BaseModel {
 
   public warehouseId: number;
 
+  public sourceInvoiceId?: number;
+  public sourceInvoiceEntryId?: number;
+  public sourceReceiptId?: number;
+  public sourceReceiptEntryId?: number;
+  public sourceBillId?: number;
+  public sourceBillEntryId?: number;
+
   item: Item;
   allocatedCostEntries: BillLandedCostEntry[];
 

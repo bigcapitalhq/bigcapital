@@ -318,4 +318,32 @@ export class ItemsValidators {
       throw new ServiceError(ERRORS.SELL_TAX_RATE_NOT_FOUND);
     }
   }
+
+  /**
+   * Rejects cost method changes once the item has inventory transactions.
+   */
+  public async validateCostMethodNotLocked(
+    itemDTO: CreateItemDto | EditItemDto,
+    oldItem: Item,
+  ): Promise<void> {
+    const nextMethod = itemDTO.costMethod ?? oldItem.costMethod ?? 'AVG';
+    const prevMethod = oldItem.costMethod ?? 'AVG';
+
+    if (nextMethod === prevMethod) {
+      return;
+    }
+
+    const hasTx = await (this.itemModel() as any)
+      .knex()
+      .from('inventory_transactions')
+      .where('item_id', oldItem.id)
+      .first();
+
+    if (hasTx) {
+      throw new ServiceError(
+        ERRORS.COST_METHOD_LOCKED,
+        'Cost method cannot be changed after inventory transactions exist.',
+      );
+    }
+  }
 }

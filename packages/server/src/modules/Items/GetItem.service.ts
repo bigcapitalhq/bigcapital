@@ -35,10 +35,18 @@ export class GetItemService {
       .withGraphFetched('purchaseTaxRate')
       .throwIfNotFound();
 
+    const hasInventoryTx = await (this.itemModel() as any)
+      .knex()
+      .from('inventory_transactions')
+      .where('item_id', itemId)
+      .first();
+
     const transformed = await this.transformerInjectable.transform(
       item,
       new ItemTransformer(),
     );
+    transformed.costMethodLocked = Boolean(hasInventoryTx);
+
     const eventPayload = { itemId };
 
     // Triggers the `onItemViewed` event.

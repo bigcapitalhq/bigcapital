@@ -1,0 +1,186 @@
+From e385e5b19cc7858b9d1aff422e019fd39d22ccf6 Mon Sep 17 00:00:00 2001
+From: Sachin Garg <ascii79@gmail.com>
+Date: Tue, 25 Aug 2026 10:40:04 +0530
+Subject: [PATCH] fix: prevent quantity_on_hand drift when rewriting inventory
+ transactions
+
+Editing multi-line receipts/invoices/bills deleted inventory rows per line,
+reversing on-hand quantity multiple times while cost lots stayed correct.
+Delete once per document on override, and only write adjustment inventory
+when published.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+---
+ ...justmentInventoryTransactionsSubscriber.ts | 10 ++-
+ .../InventoryTransactions.service.spec.ts     | 84 +++++++++++++++++++
+ .../commands/InventoryTransactions.service.ts | 24 ++++--
+ 3 files changed, 111 insertions(+), 7 deletions(-)
+ create mode 100644 packages/server/src/modules/InventoryCost/commands/InventoryTransactions.service.spec.ts
+
+diff --git a/packages/server/src/modules/InventoryAdjutments/inventory/InventoryAdjustmentInventoryTransactionsSubscriber.ts b/packages/server/src/modules/InventoryAdjutments/inventory/InventoryAdjustmentInventoryTransactionsSubscriber.ts
+index dfc7b64..8cf1caa 100644
+--- a/packages/server/src/modules/InventoryAdjutments/inventory/InventoryAdjustmentInventoryTransactionsSubscriber.ts
++++ b/packages/server/src/modules/InventoryAdjutments/inventory/InventoryAdjustmentInventoryTransactionsSubscriber.ts
+@@ -15,17 +15,25 @@ export class InventoryAdjustmentInventoryTransactionsSubscriber {
+   ) {}
+
+   /**
+-   * Handles writing inventory transactions once the quick adjustment created.
++   * Handles writing inventory transactions once the adjustment is published
++   * (either created as published, or published later from draft).
+    * @param {IInventoryAdjustmentEventPublishedPayload} payload
+    * @param {IInventoryAdjustmentEventCreatedPayload} payload -
+    */
+   @OnEvent(events.inventoryAdjustment.onQuickCreated)
++  @OnEvent(events.inventoryAdjustment.onPublished)
+   public async handleWriteInventoryTransactionsOncePublished({
+     inventoryAdjustment,
+     trx,
+   }:
+     | IInventoryAdjustmentEventPublishedPayload
+     | IInventoryAdjustmentEventCreatedPayload) {
++    // Draft adjustments must not change on-hand quantity until published;
++    // otherwise deleting an unpublished draft skips revert and leaves qty wrong.
++    if (!inventoryAdjustment.isPublished) {
++      return;
++    }
++
+     await this.inventoryTransactions.writeInventoryTransactions(
+       inventoryAdjustment,
+       false,
+diff --git a/packages/server/src/modules/InventoryCost/commands/InventoryTransactions.service.spec.ts b/packages/server/src/modules/InventoryCost/commands/InventoryTransactions.service.spec.ts
+new file mode 100644
+index 0000000..bc5ad9b
+--- /dev/null
++++ b/packages/server/src/modules/InventoryCost/commands/InventoryTransactions.service.spec.ts
+@@ -0,0 +1,84 @@
++import { EventEmitter2 } from '@nestjs/event-emitter';
++import { InventoryTransactionsService } from './InventoryTransactions.service';
++import { events } from '@/common/events/events';
++
++describe('InventoryTransactionsService', () => {
++  const createService = () => {
++    const eventEmitter = {
++      emitAsync: jest.fn().mockResolvedValue(undefined),
++    } as unknown as jest.Mocked<EventEmitter2>;
++
++    const service = new InventoryTransactionsService(
++      eventEmitter,
++      jest.fn() as any,
++      jest.fn() as any,
++    );
++
++    jest
++      .spyOn(service, 'deleteInventoryTransactions')
++      .mockResolvedValue({ oldInventoryTransactions: [] } as any);
++    jest
++      .spyOn(service, 'recordInventoryTransaction')
++      .mockImplementation(async (transaction) => transaction as any);
++
++    return { service, eventEmitter };
++  };
++
++  const multiLineReceipt = [
++    {
++      itemId: 1,
++      quantity: 5,
++      direction: 'OUT',
++      transactionId: 42,
++      transactionType: 'SaleReceipt',
++    },
++    {
++      itemId: 2,
++      quantity: 3,
++      direction: 'OUT',
++      transactionId: 42,
++      transactionType: 'SaleReceipt',
++    },
++    {
++      itemId: 3,
++      quantity: 1,
++      direction: 'OUT',
++      transactionId: 42,
++      transactionType: 'SaleReceipt',
++    },
++  ] as any[];
++
++  it('deletes existing document transactions once when override is true', async () => {
++    const { service, eventEmitter } = createService();
++
++    await service.recordInventoryTransactions(multiLineReceipt, true);
++
++    expect(service.deleteInventoryTransactions).toHaveBeenCalledTimes(1);
++    expect(service.deleteInventoryTransactions).toHaveBeenCalledWith(
++      42,
++      'SaleReceipt',
++      undefined,
++    );
++    expect(service.recordInventoryTransaction).toHaveBeenCalledTimes(3);
++    expect(service.recordInventoryTransaction).toHaveBeenCalledWith(
++      multiLineReceipt[0],
++      false,
++      undefined,
++    );
++    expect(eventEmitter.emitAsync).toHaveBeenCalledWith(
++      events.inventory.onInventoryTransactionsCreated,
++      expect.objectContaining({
++        inventoryTransactions: expect.any(Array),
++      }),
++    );
++  });
++
++  it('does not delete existing transactions when override is false', async () => {
++    const { service } = createService();
++
++    await service.recordInventoryTransactions(multiLineReceipt, false);
++
++    expect(service.deleteInventoryTransactions).not.toHaveBeenCalled();
++    expect(service.recordInventoryTransaction).toHaveBeenCalledTimes(3);
++  });
++});
+diff --git a/packages/server/src/modules/InventoryCost/commands/InventoryTransactions.service.ts b/packages/server/src/modules/InventoryCost/commands/InventoryTransactions.service.ts
+index d84af15..d353c98 100644
+--- a/packages/server/src/modules/InventoryCost/commands/InventoryTransactions.service.ts
++++ b/packages/server/src/modules/InventoryCost/commands/InventoryTransactions.service.ts
+@@ -37,6 +37,10 @@ export class InventoryTransactionsService {
+
+   /**
+    * Records the inventory transactions.
++   * When `override` is true, existing transactions for the same document are
++   * deleted once (reversing quantity once) before inserting the new rows.
++   * Deleting per line item would reverse quantity multiple times and drift
++   * `items.quantity_on_hand` away from inventory transactions / valuation.
+    * @param {InventoryTransaction[]} transactions - Inventory transactions.
+    * @param {boolean} override - Override the existing transactions.
+    * @param {Knex.Transaction} trx - Knex transaction.
+@@ -47,13 +51,21 @@ export class InventoryTransactionsService {
+     override: boolean = false,
+     trx?: Knex.Transaction,
+   ): Promise<void> {
+-    const bulkInsertOpers = [];
++    if (override && transactions.length > 0) {
++      const { transactionId, transactionType } = transactions[0];
+
+-    transactions.forEach((transaction: InventoryTransaction) => {
+-      const oper = this.recordInventoryTransaction(transaction, override, trx);
+-      bulkInsertOpers.push(oper);
+-    });
+-    const inventoryTransactions = await Promise.all(bulkInsertOpers);
++      await this.deleteInventoryTransactions(
++        transactionId,
++        transactionType,
++        trx,
++      );
++    }
++
++    const inventoryTransactions = await Promise.all(
++      transactions.map((transaction: InventoryTransaction) =>
++        this.recordInventoryTransaction(transaction, false, trx),
++      ),
++    );
+
+     // Triggers `onInventoryTransactionsCreated` event.
+     await this.eventEmitter.emitAsync(
+--
+2.43.0
+

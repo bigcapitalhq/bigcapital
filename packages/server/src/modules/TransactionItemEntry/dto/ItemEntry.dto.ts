@@ -162,6 +162,60 @@ export class ItemEntryDto {
   })
   costAccountId?: number;
 
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'Source sale invoice id for linked returns',
+    required: false,
+  })
+  sourceInvoiceId?: number;
+
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'Source sale invoice entry id for linked returns',
+    required: false,
+  })
+  sourceInvoiceEntryId?: number;
+
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'Source sale receipt id for linked returns',
+    required: false,
+  })
+  sourceReceiptId?: number;
+
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'Source sale receipt entry id for linked returns',
+    required: false,
+  })
+  sourceReceiptEntryId?: number;
+
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'Source bill id for linked purchase returns',
+    required: false,
+  })
+  sourceBillId?: number;
+
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  @ApiProperty({
+    description: 'Source bill entry id for linked purchase returns',
+    required: false,
+  })
+  sourceBillEntryId?: number;
+
   // Formatted fields from transformer
   @ApiProperty({
     description: 'The computed amount of the item entry (quantity * rate)',

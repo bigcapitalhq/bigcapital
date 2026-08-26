@@ -42,6 +42,7 @@ const defaultInitialValues: ItemFormValues = {
   sellAccountId: '',
   sellTaxRateId: '',
   inventoryAccountId: '',
+  costMethod: 'AVG',
   categoryId: '',
   sellable: true,
   purchasable: true,

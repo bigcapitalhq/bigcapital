@@ -85,6 +85,10 @@ export class CreateItemService {
       ...itemDTO,
       active: Boolean(defaultTo(itemDTO.active, true)),
       quantityOnHand: itemDTO.type === 'inventory' ? 0 : null,
+      costMethod:
+        itemDTO.type === 'inventory'
+          ? defaultTo(itemDTO.costMethod, 'AVG')
+          : null,
     };
   }
 
