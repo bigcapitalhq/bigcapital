@@ -132,6 +132,7 @@ export class PlaidSyncDb {
     await this.eventPublisher.emitAsync(events.plaid.onTransactionsSynced, {
       plaidAccountId,
       batch,
+      trx,
     } as IPlaidTransactionsSyncedEventPayload);
   }
 

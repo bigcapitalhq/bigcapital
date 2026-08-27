@@ -17,7 +17,7 @@ export const RecognizeUncategorizedTransactionsQueue =
 
 export interface RecognizeUncategorizedTransactionsJobPayload
   extends TenantJobPayload {
-  ruleId: number;
+  ruleId?: number;
   transactionsCriteria?: RecognizeTransactionsCriteria;
   /**
    * When true, first reverts recognized transactions before recognizing again.
