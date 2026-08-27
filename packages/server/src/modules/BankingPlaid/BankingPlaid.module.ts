@@ -39,7 +39,13 @@ const models = [RegisterTenancyModel(PlaidItem)];
     BankingCategorizeModule,
     BankingTransactionsModule,
     BankingTransactionsRegonizeModule,
-    BullModule.registerQueue({ name: UpdateBankingPlaidTransitionsQueueJob }),
+    BullModule.registerQueue({
+      name: UpdateBankingPlaidTransitionsQueueJob,
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: true,
+      },
+    }),
     BullBoardModule.forFeature({
       name: UpdateBankingPlaidTransitionsQueueJob,
       adapter: BullMQAdapter,

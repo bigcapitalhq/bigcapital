@@ -28,6 +28,12 @@ export interface IPlaidItemCreatedEventPayload {
   plaidInstitutionId: string;
 }
 
+export interface IPlaidWebhookReceivedEventPayload {
+  plaidItemId: string;
+  webhookType: string;
+  webhookCode: string;
+}
+
 export const UpdateBankingPlaidTransitionsJob =
   'update-banking-plaid-transitions-job';
 

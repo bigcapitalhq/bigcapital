@@ -138,11 +138,25 @@ import {
   IBankRuleEventDeletedPayload,
 } from '@/modules/BankRules/types';
 import { IUncategorizedTransactionCreatedEventPayload } from '@/modules/BankingCategorize/types/BankingCategorize.types';
-import { IPlaidTransactionsSyncedEventPayload } from '@/modules/BankingPlaid/types/BankingPlaid.types';
+import {
+  IPlaidItemCreatedEventPayload,
+  IPlaidTransactionsSyncedEventPayload,
+  IPlaidWebhookReceivedEventPayload,
+} from '@/modules/BankingPlaid/types/BankingPlaid.types';
 import {
   IBankTransactionExcludedEventPayload,
   IBankTransactionUnexcludedEventPayload,
 } from '@/modules/BankingTransactionsExclude/types/BankTransactionsExclude.types';
+import { IBankAccountDisconnectedEventPayload } from '@/modules/BankingAccounts/types/BankAccounts.types';
+import {
+  IBankTransactionMatchedEventPayload,
+  IBankTransactionUnmatchedEventPayload,
+} from '@/modules/BankingMatching/types';
+import { IPendingTransactionRemovedEventPayload } from '@/modules/BankingTransactions/types/BankingTransactions.types';
+import {
+  IBankTransactionRecognizedEventPayload,
+  IBankTransactionRevertedEventPayload,
+} from '@/modules/BankingTranasctionsRegonize/_types';
 
 @Injectable()
 export class FinancialAuditLogSubscriber {
@@ -1314,6 +1328,20 @@ export class FinancialAuditLogSubscriber {
     });
   }
 
+  // --- Plaid webhook received ---
+  @OnEvent(events.plaid.onWebhookReceived)
+  async onPlaidWebhookReceived({
+    plaidItemId,
+    webhookType,
+    webhookCode,
+  }: IPlaidWebhookReceivedEventPayload) {
+    await this.write(undefined, 'webhook_received', 'PlaidWebhook', null, {
+      plaidItemId,
+      webhookType,
+      webhookCode,
+    });
+  }
+
   // --- Excluded Bank Transactions ---
   @OnEvent(events.bankTransactions.onExcluded)
   async onBankTransactionExcluded({
@@ -1355,5 +1383,107 @@ export class FinancialAuditLogSubscriber {
         accountId: uncategorizedTransaction?.accountId,
       },
     );
+  }
+
+  // --- Plaid item linked ---
+  @OnEvent(events.plaid.onItemCreated)
+  async onPlaidItemCreated({
+    plaidItemId,
+    plaidInstitutionId,
+  }: IPlaidItemCreatedEventPayload) {
+    await this.write(undefined, 'linked', 'PlaidItem', null, {
+      plaidItemId,
+      plaidInstitutionId,
+    });
+  }
+
+  // --- Bank account disconnected ---
+  @OnEvent(events.bankAccount.onDisconnected)
+  async onBankAccountDisconnected({
+    bankAccountId,
+    trx,
+  }: IBankAccountDisconnectedEventPayload) {
+    await this.write(trx, 'disconnected', 'BankAccount', bankAccountId, {
+      bankAccountId,
+    });
+  }
+
+  // --- Bank transaction matched ---
+  @OnEvent(events.bankMatch.onMatched)
+  async onBankTransactionMatched({
+    uncategorizedTransactionIds,
+    matchedTransactions,
+    trx,
+  }: IBankTransactionMatchedEventPayload) {
+    await this.write(trx, 'matched', 'BankTransaction', null, {
+      uncategorizedTransactionIds,
+      matchedTransactions,
+      count: uncategorizedTransactionIds?.length,
+    });
+  }
+
+  // --- Bank transaction unmatched ---
+  @OnEvent(events.bankMatch.onUnmatched)
+  async onBankTransactionUnmatched({
+    uncategorizedTransactionId,
+    trx,
+  }: IBankTransactionUnmatchedEventPayload) {
+    await this.write(
+      trx,
+      'unmatched',
+      'BankTransaction',
+      uncategorizedTransactionId,
+      { uncategorizedTransactionId },
+    );
+  }
+
+  // --- Pending bank transaction removed ---
+  @OnEvent(events.bankTransactions.onPendingRemoved)
+  async onPendingTransactionRemoved({
+    uncategorizedTransactionId,
+    pendingTransaction,
+    trx,
+  }: IPendingTransactionRemovedEventPayload) {
+    await this.write(
+      trx,
+      'removed',
+      'UncategorizedTransaction',
+      uncategorizedTransactionId,
+      {
+        amount: pendingTransaction?.amount,
+        currencyCode: pendingTransaction?.currencyCode,
+        payee: pendingTransaction?.payee,
+        description: pendingTransaction?.description,
+        accountId: pendingTransaction?.accountId,
+      },
+    );
+  }
+
+  // --- Bank transactions recognized ---
+  @OnEvent(events.bankRecognize.onRecognized)
+  async onBankTransactionsRecognized({
+    ruleId,
+    uncategorizedTransactionIds,
+    recognizedCount,
+    trx,
+  }: IBankTransactionRecognizedEventPayload) {
+    await this.write(trx, 'recognized', 'RecognizedTransaction', null, {
+      ruleId,
+      count: recognizedCount,
+      uncategorizedTransactionIds,
+    });
+  }
+
+  // --- Bank transactions reverted ---
+  @OnEvent(events.bankRecognize.onReverted)
+  async onBankTransactionsReverted({
+    ruleId,
+    uncategorizedTransactionIds,
+    trx,
+  }: IBankTransactionRevertedEventPayload) {
+    await this.write(trx, 'reverted', 'RecognizedTransaction', null, {
+      ruleId,
+      uncategorizedTransactionIds,
+    });
   }
 }

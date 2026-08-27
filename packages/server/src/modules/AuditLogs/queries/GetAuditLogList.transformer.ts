@@ -64,6 +64,7 @@ export class GetAuditLogListTransformer extends Transformer {
       item.metadata,
       item.subject,
       this.context.i18n.t.bind(this.context.i18n),
+      item.action,
     );
   };
 
