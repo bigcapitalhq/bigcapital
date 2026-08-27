@@ -102,7 +102,7 @@ export interface CreateApiFetcherConfig {
 export function createApiFetcher(config?: CreateApiFetcherConfig): ApiFetcher {
   const parsedConfig = {
     baseUrl: '',
-    disableCamelCaseTransform: true,
+    disableCamelCaseTransform: false,
     disableSnakeCaseTransform: false,
     ...config,
   };

@@ -54,13 +54,18 @@ const accountRenderer: ItemRenderer<AccountSelectModel> = (
   if (!modifiers.matchesPredicate) {
     return null;
   }
+  const level =
+    (item as unknown as { accountLevel?: unknown; account_level?: unknown })
+      .accountLevel ??
+    (item as unknown as { account_level?: unknown }).account_level ??
+    1;
   return (
     <MenuItem
       active={modifiers.active}
       disabled={modifiers.disabled}
       label={item.code}
       key={item.id}
-      text={<MenuItemNestedText level={item.accountLevel} text={item.name} />}
+      text={<MenuItemNestedText level={level} text={item.name} />}
       onClick={handleClick}
     />
   );
