@@ -1,3 +1,4 @@
+import { Knex } from 'knex';
 import { TenantJobPayload } from '@/interfaces/Tenant';
 
 export interface RevertRecognizedTransactionsCriteria {
@@ -25,4 +26,17 @@ export interface RecognizeUncategorizedTransactionsJobPayload
    * by lower-priority rules are re-evaluated against the updated rule.
    */
   shouldRevert?: boolean;
+}
+
+export interface IBankTransactionRecognizedEventPayload {
+  ruleId?: number | Array<number>;
+  uncategorizedTransactionIds: Array<number>;
+  recognizedCount: number;
+  trx?: Knex.Transaction;
+}
+
+export interface IBankTransactionRevertedEventPayload {
+  ruleId?: number | Array<number>;
+  uncategorizedTransactionIds: Array<number>;
+  trx?: Knex.Transaction;
 }
