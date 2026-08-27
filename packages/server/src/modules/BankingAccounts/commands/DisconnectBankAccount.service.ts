@@ -58,7 +58,7 @@ export class DisconnectBankAccountService {
       // Remove the Plaid item from the system.
       await this.plaidItemModel()
         .query(trx)
-        .findById(account.plaidItemId)
+        .findOne('plaidItemId', account.plaidItemId)
         .delete();
 
       // Remove the plaid item association to the bank account.
