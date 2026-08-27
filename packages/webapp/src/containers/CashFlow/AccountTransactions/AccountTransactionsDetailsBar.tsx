@@ -11,8 +11,18 @@ import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import type { BankingAccountsListResponse } from '@bigcapital/sdk-ts';
 import { Icon } from '@/components';
 import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
+
+/**
+ * Bank account row surfaced with the per-account uncategorized transactions
+ * count, which the SDK type does not declare yet.
+ */
+export type CashflowAccountRowWithCount =
+  BankingAccountsListResponse[number] & {
+    uncategorizedTransactionsCount?: number;
+  };
 
 function AccountSwitchButton() {
   const { currentAccount } = useAccountTransactionsContext();
@@ -35,11 +45,12 @@ function AccountSwitchItem() {
   const handleItemClick = (account: { id: number }) =>
     push(`/cashflow-accounts/${account.id}/transactions`);
 
-  const items = cashflowAccounts.map((account) => (
+  const items = cashflowAccounts.map((account: CashflowAccountRowWithCount) => (
     <AccountSwitchMenuItem
       key={account.id}
       name={account.name}
       balance={account.formattedAmount}
+      uncategorizedTransactionsCount={account.uncategorizedTransactionsCount}
       onClick={() => handleItemClick(account)}
       active={account.id === accountId}
     />
@@ -47,7 +58,7 @@ function AccountSwitchItem() {
 
   return (
     <Popover
-      content={<Menu>{items}</Menu>}
+      content={<AccountSwitchMenu>{items}</AccountSwitchMenu>}
       position={Position.BOTTOM_LEFT}
       minimal={true}
     >
@@ -126,6 +137,7 @@ export function AccountTransactionsDetailsBar() {
 interface AccountSwitchMenuItemProps {
   name: string;
   balance?: string;
+  uncategorizedTransactionsCount?: number;
   active?: boolean;
   onClick?: () => void;
 }
@@ -133,6 +145,7 @@ interface AccountSwitchMenuItemProps {
 function AccountSwitchMenuItem({
   name,
   balance,
+  uncategorizedTransactionsCount,
   active,
   onClick,
 }: AccountSwitchMenuItemProps) {
@@ -145,7 +158,9 @@ function AccountSwitchMenuItem({
         <React.Fragment>
           <AccountSwitchItemName>{name}</AccountSwitchItemName>
           <AccountSwitchItemTranscations>
-            {intl.get('cash_flow_transaction.switch_item', { value: '25' })}
+            {intl.get('cash_flow_transaction.switch_item', {
+              value: uncategorizedTransactionsCount ?? 0,
+            })}
           </AccountSwitchItemTranscations>
 
           <AccountSwitchItemUpdatedAt></AccountSwitchItemUpdatedAt>
@@ -198,6 +213,11 @@ const AccountSwitchItemTranscations = styled.div`
 const AccountSwitchItemUpdatedAt = styled.div`
   font-size: 12px;
   opacity: 0.5;
+`;
+
+const AccountSwitchMenu = styled(Menu)`
+  max-height: 320px;
+  overflow-y: auto;
 `;
 
 const AccountSwitchButtonBase = styled(Button)`
