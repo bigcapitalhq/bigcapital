@@ -1,7 +1,10 @@
 import { castArray } from 'lodash';
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { RevertRecognizedTransactionsCriteria } from '../_types';
+import { IBankTransactionRevertedEventPayload } from '../_types';
+import { events } from '@/common/events/events';
 import { RecognizedBankTransaction } from '../models/RecognizedBankTransaction';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
@@ -10,6 +13,7 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 @Injectable()
 export class RevertRecognizedTransactionsService {
   constructor(
+    private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
 
     @Inject(RecognizedBankTransaction.name)
@@ -72,6 +76,15 @@ export class RevertRecognizedTransactionsService {
         .query(trx)
         .whereIn('uncategorizedTransactionId', uncategorizedTransactionIds)
         .delete();
+
+      // Triggers `onBankTransactionsReverted` event.
+      if (uncategorizedTransactionIds.length > 0) {
+        await this.eventPublisher.emitAsync(events.bankRecognize.onReverted, {
+          ruleId,
+          uncategorizedTransactionIds,
+          trx,
+        } as IBankTransactionRevertedEventPayload);
+      }
     }, trx);
   }
 }

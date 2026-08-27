@@ -2,8 +2,11 @@ import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { castArray, isEmpty } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { bankRulesMatchTransaction } from '../_utils';
 import { RecognizeTransactionsCriteria } from '../_types';
+import { IBankTransactionRecognizedEventPayload } from '../_types';
+import { events } from '@/common/events/events';
 import { BankRule } from '@/modules/BankRules/models/BankRule';
 import { RecognizedBankTransaction } from '../models/RecognizedBankTransaction';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
@@ -13,6 +16,8 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 @Injectable()
 export class RecognizeTranasctionsService {
   constructor(
+    private readonly eventPublisher: EventEmitter2,
+
     @Inject(UncategorizedBankTransaction.name)
     private readonly uncategorizedCashflowTransactionModel: TenantModelProxy<
       typeof UncategorizedBankTransaction
@@ -55,6 +60,8 @@ export class RecognizeTranasctionsService {
       .patch({
         recognizedTransactionId: recognizedTransaction.id,
       });
+
+    return transaction.id;
   }
 
   /**
@@ -104,6 +111,7 @@ export class RecognizeTranasctionsService {
       'applyIfAccountId',
     );
     // Try to recognize the transaction.
+    const recognizedTransactionIds: Array<number> = [];
     const regonizeTransaction = async (
       transaction: UncategorizedBankTransaction,
     ) => {
@@ -116,11 +124,12 @@ export class RecognizeTranasctionsService {
         accountBankRules,
       );
       if (recognizedBankRule) {
-        await this.markBankRuleAsRecognized(
+        const recognizedId = await this.markBankRuleAsRecognized(
           recognizedBankRule,
           transaction,
           trx,
         );
+        recognizedTransactionIds.push(recognizedId);
       }
     };
     const result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
@@ -128,6 +137,16 @@ export class RecognizeTranasctionsService {
       .process((transaction: UncategorizedBankTransaction, index, pool) => {
         return regonizeTransaction(transaction);
       });
+
+    // Triggers `onBankTransactionsRecognized` event.
+    if (recognizedTransactionIds.length > 0) {
+      await this.eventPublisher.emitAsync(events.bankRecognize.onRecognized, {
+        ruleId,
+        uncategorizedTransactionIds: recognizedTransactionIds,
+        recognizedCount: recognizedTransactionIds.length,
+        trx,
+      } as IBankTransactionRecognizedEventPayload);
+    }
   }
 
   /**

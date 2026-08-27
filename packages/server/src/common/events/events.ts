@@ -685,6 +685,7 @@ export const events = {
   plaid: {
     onItemCreated: 'onPlaidItemCreated',
     onTransactionsSynced: 'onPlaidTransactionsSynced',
+    onWebhookReceived: 'onPlaidWebhookReceived',
   },
 
   // Bank rules.
@@ -722,6 +723,12 @@ export const events = {
   bankAccount: {
     onDisconnecting: 'onBankAccountDisconnecting',
     onDisconnected: 'onBankAccountDisconnected',
+  },
+
+  // Bank transactions recognize.
+  bankRecognize: {
+    onRecognized: 'onBankTransactionsRecognized',
+    onReverted: 'onBankTransactionsReverted',
   },
 
   // Import files.
