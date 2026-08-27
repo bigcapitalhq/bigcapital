@@ -1,15 +1,21 @@
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { PlaidItem } from '../models/PlaidItem';
-import { PlaidUpdateTransactions } from './PlaidUpdateTransactions';
 import { Inject, Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import {
+  UpdateBankingPlaidTransitionsJob,
+  UpdateBankingPlaidTransitionsQueueJob,
+} from '../types/BankingPlaid.types';
 
 @Injectable()
 export class PlaidWebooks {
   constructor(
-    private readonly updateTransactionsService: PlaidUpdateTransactions,
-
     @Inject(PlaidItem.name)
     private readonly plaidItemModel: TenantModelProxy<typeof PlaidItem>,
+
+    @InjectQueue(UpdateBankingPlaidTransitionsQueueJob)
+    private readonly updateTransitionsQueue: Queue,
   ) {}
 
   /**
@@ -95,12 +101,18 @@ export class PlaidWebooks {
           );
           return;
         }
-        // Fired when new transactions data becomes available.
-        const { addedCount, modifiedCount, removedCount } =
-          await this.updateTransactionsService.updateTransactions(plaidItemId);
+        // Fired when new transactions data becomes available. Enqueue a
+        // transaction sync job deduplicated by the Plaid item id so that
+        // overlapping webhooks (or Plaid retries) coalesce into a single
+        // in-flight sync instead of running concurrently.
+        await this.updateTransitionsQueue.add(
+          UpdateBankingPlaidTransitionsJob,
+          { plaidItemId },
+          { jobId: plaidItemId },
+        );
 
         this.serverLogAndEmitSocket(
-          `Transactions: ${addedCount} added, ${modifiedCount} modified, ${removedCount} removed`,
+          'Transactions sync queued.',
           webhookCode,
           plaidItemId,
         );
