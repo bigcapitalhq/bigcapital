@@ -42,11 +42,35 @@ export class CreateUncategorizedTransactionService {
         } as IUncategorizedTransactionCreatingEventPayload,
       );
 
-      const uncategorizedTransaction = await this.uncategorizedBankTransaction()
-        .query(trx)
-        .insertAndFetch({
-          ...createUncategorizedTransactionDTO,
-        });
+      let uncategorizedTransaction;
+      try {
+        uncategorizedTransaction = await this.uncategorizedBankTransaction()
+          .query(trx)
+          .insertAndFetch({
+            ...createUncategorizedTransactionDTO,
+          });
+      } catch (error) {
+        // A duplicated Plaid transaction id means the transaction was already
+        // synced (e.g. by a concurrent sync run), so treat it as a no-op and
+        // return the existing row to keep the sync idempotent.
+        if (
+          this.isDuplicatePlaidTransactionError(
+            error,
+            createUncategorizedTransactionDTO,
+          )
+        ) {
+          uncategorizedTransaction = await this.uncategorizedBankTransaction()
+            .query(trx)
+            .findOne({
+              plaidTransactionId:
+                createUncategorizedTransactionDTO.plaidTransactionId,
+              accountId: createUncategorizedTransactionDTO.accountId,
+            })
+            .throwIfNotFound();
+        } else {
+          throw error;
+        }
+      }
 
       await this.eventPublisher.emitAsync(
         events.cashflow.onTransactionUncategorizedCreated,
@@ -58,5 +82,23 @@ export class CreateUncategorizedTransactionService {
       );
       return uncategorizedTransaction;
     }, trx);
+  }
+
+  /**
+   * Determines whether the given error is a duplicate key violation on the
+   * unique `plaid_transaction_id` index for the given create DTO.
+   * @param {any} error - The insert error.
+   * @param {UncategorizedBankTransactionDto} createDTO - Create DTO.
+   * @returns {boolean}
+   */
+  private isDuplicatePlaidTransactionError(
+    error: any,
+    createDTO: UncategorizedBankTransactionDto,
+  ): boolean {
+    return (
+      !!createDTO.plaidTransactionId &&
+      error?.code === 'ER_DUP_ENTRY' &&
+      error?.errno === 1062
+    );
   }
 }

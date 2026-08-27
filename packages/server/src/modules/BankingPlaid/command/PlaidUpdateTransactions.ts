@@ -62,9 +62,25 @@ export class PlaidUpdateTransactions {
     modifiedCount: number;
     removedCount: number;
   }> {
+    // Lock the Plaid item row (FOR UPDATE) to serialize concurrent syncs for
+    // the same item across the webhook and the background job, then use the
+    // locked row's cursor so the second run only fetches the pending delta.
+    const plaidItem = await this.plaidItemModel()
+      .query(trx)
+      .findOne({ plaidItemId })
+      .forUpdate();
+
+    // Can't continue if the Plaid item is not found or the feeds syncing is
+    // paused (re-checked under the lock to avoid a race with pausing).
+    if (!plaidItem || plaidItem.isPaused) {
+      return { addedCount: 0, modifiedCount: 0, removedCount: 0 };
+    }
     // Fetch new transactions from plaid api.
     const { added, modified, removed, cursor, accessToken } =
-      await this.fetchTransactionUpdates(plaidItemId);
+      await this.fetchTransactionUpdates(
+        plaidItem.plaidAccessToken,
+        plaidItem.lastCursor,
+      );
 
     const request = { access_token: accessToken };
     const {
@@ -103,22 +119,16 @@ export class PlaidUpdateTransactions {
 
   /**
    * Fetches transactions from the `Plaid API` for a given item.
-   * @param {string} plaidItemId - The Plaid ID for the item.
+   * @param {string} plaidAccessToken - Plaid access token.
+   * @param {string} lastCursor - Last transactions cursor.
    * @returns {Promise<PlaidFetchedTransactionsUpdates>}
    */
   private async fetchTransactionUpdates(
-    plaidItemId: string,
+    plaidAccessToken: string,
+    lastCursor: string,
   ): Promise<PlaidFetchedTransactionsUpdates> {
     // the transactions endpoint is paginated, so we may need to hit it multiple times to
     // retrieve all available transactions.
-    const plaidItem = await this.plaidItemModel()
-      .query()
-      .findOne('plaidItemId', plaidItemId);
-
-    if (!plaidItem) {
-      throw new Error('The given Plaid item id is not found.');
-    }
-    const { plaidAccessToken, lastCursor } = plaidItem;
     let cursor = lastCursor;
 
     // New transaction updates since "cursor"
@@ -131,7 +141,6 @@ export class PlaidUpdateTransactions {
     const batchSize = 100;
     try {
       // Iterate through each page of new transaction updates for item
-      /* eslint-disable no-await-in-loop */
       while (hasMore) {
         const request = {
           access_token: plaidAccessToken,
