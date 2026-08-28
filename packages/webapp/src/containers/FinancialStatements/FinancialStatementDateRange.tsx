@@ -1,9 +1,10 @@
 import { HTMLSelect, FormGroup, Position } from '@blueprintjs/core';
-import { FastField } from 'formik';
+import { useFormikContext } from 'formik';
 import moment from 'moment';
-import React from 'react';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { dateRangeOptions } from './constants';
+import { resolveDateRange } from './dateRange';
 import { Row, Col, Hint, FDateInput, FFormGroup } from '@/components';
 import { useDateInputFormatter } from '@/hooks';
 import { parseDateRangeQuery } from '@/utils';
@@ -12,44 +13,40 @@ const FINANCIAL_REPORT_MAX_DATE = moment().add(5, 'years').toDate();
 
 export function FinancialStatementDateRange() {
   const dateInputFormatter = useDateInputFormatter();
+  const { values, setFieldValue } = useFormikContext<any>();
+
+  const selectedDateRange = useMemo(
+    () => resolveDateRange(values.dateRange, values.fromDate, values.toDate),
+    [values.dateRange, values.fromDate, values.toDate],
+  );
 
   return (
     <>
       <Row>
         <Col xs={4}>
-          <FastField name={'date_range'}>
-            {({ form: { setFieldValue }, field: { value } }: any) => (
-              <FormGroup
-                label={intl.get('report_date_range')}
-                labelInfo={<Hint />}
-              >
-                <HTMLSelect
-                  fill={true}
-                  options={dateRangeOptions}
-                  value={value}
-                  onChange={(e) => {
-                    const newValue = e.target.value;
+          <FormGroup label={intl.get('report_date_range')} labelInfo={<Hint />}>
+            <HTMLSelect
+              fill={true}
+              options={dateRangeOptions}
+              value={selectedDateRange}
+              onChange={(e) => {
+                const newValue = e.target.value;
 
-                    if (newValue !== 'custom') {
-                      const dateRange = parseDateRangeQuery(newValue);
+                if (newValue !== 'custom') {
+                  const dateRange = parseDateRangeQuery(newValue);
 
-                      if (dateRange) {
-                        setFieldValue(
-                          'fromDate',
-                          moment(dateRange.fromDate).toDate(),
-                        );
-                        setFieldValue(
-                          'toDate',
-                          moment(dateRange.toDate).toDate(),
-                        );
-                      }
-                    }
-                    setFieldValue('dateRange', newValue);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+                  if (dateRange) {
+                    setFieldValue(
+                      'fromDate',
+                      moment(dateRange.fromDate).toDate(),
+                    );
+                    setFieldValue('toDate', moment(dateRange.toDate).toDate());
+                  }
+                }
+                setFieldValue('dateRange', newValue);
+              }}
+            />
+          </FormGroup>
         </Col>
       </Row>
 
