@@ -29,6 +29,7 @@ import {
 import { Features } from '@/constants';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import { ProjectsSelect } from '@/containers/Projects/components';
+import { useDateInputFormatter } from '@/hooks';
 
 const getEstimateFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -47,7 +48,7 @@ const getEstimateFieldsStyle = (theme: Theme) => css`
   }
 `;
 
-type Customer = { id: number; currency_code: string };
+type Customer = { id: number; currencyCode: string };
 
 /**
  * Estimate form header.
@@ -56,6 +57,7 @@ export function EstimateFormHeader() {
   const theme = useTheme();
   const { projects } = useEstimateFormContext();
   const styleClassName = getEstimateFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={styleClassName}>
@@ -75,8 +77,7 @@ export function EstimateFormHeader() {
       >
         <FDateInput
           name={'estimateDate'}
-          formatDate={(date: Date) => date.toLocaleDateString()}
-          parseDate={(str: string) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
@@ -96,8 +97,7 @@ export function EstimateFormHeader() {
       >
         <FDateInput
           name={'expirationDate'}
-          formatDate={(date: Date) => date.toLocaleDateString()}
-          parseDate={(str: string) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
@@ -113,7 +113,10 @@ export function EstimateFormHeader() {
 
       {/* ----------- Reference ----------- */}
       <FFormGroup name={'reference'} label={intl.get('reference')} inline>
-        <FInputGroup name={'reference'} />
+        <FInputGroup
+          name={'reference'}
+          data-testId="estimate-reference-input"
+        />
       </FFormGroup>
 
       {/*------------ Project name -----------*/}
@@ -149,7 +152,7 @@ function EstimateFormCustomerSelect() {
   // Handles the customer item change.
   const handleItemChange = (customer: Customer) => {
     setFieldValue('customerId', customer.id);
-    setFieldValue('currencyCode', customer?.currency_code);
+    setFieldValue('currencyCode', customer?.currencyCode);
 
     updateEntries(customer);
   };
@@ -172,6 +175,7 @@ function EstimateFormCustomerSelect() {
           fastField={true}
           shouldUpdate={customersFieldShouldUpdate}
           shouldUpdateDeps={{ items: customers }}
+          buttonProps={{ 'data-testId': 'estimate-customer-select' }}
         />
         {values.customerId && (
           <CustomerButtonLink customerId={values.customerId}>

@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
+import type { BalanceSheetColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
@@ -25,6 +26,8 @@ interface TableColumn {
 }
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
+
+const isColumnKey = (key: BalanceSheetColumnKey) => R.pathEq(['key'], key);
 
 const getReportColWidth = (
   data: unknown[],
@@ -286,34 +289,31 @@ const previousPeriodPercentageAccessor = R.curry(
 const totalColumnsMapper = R.curry(
   (data: unknown[], column: ReportTableColumn): TableColumn => {
     return R.compose(
-      R.when(R.pathEq(['key'], 'total'), totalMapper(data)),
+      R.when(isColumnKey('total'), totalMapper(data)),
       // Percetage of column/row.
       R.when(
-        R.pathEq(['key'], 'percentageOfColumn'),
+        isColumnKey('percentage_of_column'),
         percentageOfColumnAccessor(data),
       ),
-      R.when(
-        R.pathEq(['key'], 'percentageOfRow'),
-        percentageOfRowAccessor(data),
-      ),
+      R.when(isColumnKey('percentage_of_row'), percentageOfRowAccessor(data)),
       // Previous year.
-      R.when(R.pathEq(['key'], 'previousYear'), previousYearAccessor(data)),
+      R.when(isColumnKey('previous_year'), previousYearAccessor(data)),
       R.when(
-        R.pathEq(['key'], 'previousYearChange'),
+        isColumnKey('previous_year_change'),
         previousYearChangeAccessor(data),
       ),
       R.when(
-        R.pathEq(['key'], 'previousYearPercentage'),
+        isColumnKey('previous_year_percentage'),
         previousYearPercentageAccessor(data),
       ),
       // Pervious period.
-      R.when(R.pathEq(['key'], 'previousPeriod'), previousPeriodAccessor(data)),
+      R.when(isColumnKey('previous_period'), previousPeriodAccessor(data)),
       R.when(
-        R.pathEq(['key'], 'previousPeriodChange'),
+        isColumnKey('previous_period_change'),
         previousPeriodChangeAccessor(data),
       ),
       R.when(
-        R.pathEq(['key'], 'previousPeriodPercentage'),
+        isColumnKey('previous_period_percentage'),
         previousPeriodPercentageAccessor(data),
       ),
     )(column);
@@ -391,8 +391,8 @@ const dynamicColumnMapper = R.curry(
         R.pathSatisfies(isMatchesDateRange, ['key']),
         indexDatePeriodMapper,
       ),
-      R.when(R.pathEq(['key'], 'name'), indexAccountNameMapper),
-      R.when(R.pathEq(['key'], 'total'), indexTotalMapper),
+      R.when(isColumnKey('name'), indexAccountNameMapper),
+      R.when(isColumnKey('total'), indexTotalMapper),
     )(column);
   },
 );

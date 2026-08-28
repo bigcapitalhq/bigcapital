@@ -9,7 +9,7 @@ interface AutoExchangeRateProviderValue {
   autoExRateCurrency: string | null;
   setAutoExRateCurrency: (currency: string | null) => void;
   isAutoExchangeRateLoading: boolean;
-  autoExchangeRate?: { exchange_rate?: number } | null;
+  autoExchangeRate?: { exchangeRate?: number } | null;
 }
 
 const AutoExchangeRateContext =

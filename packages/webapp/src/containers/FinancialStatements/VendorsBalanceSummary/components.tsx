@@ -5,6 +5,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { FinancialLoadingBar } from '../FinancialLoadingBar';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
+import type { VendorsBalanceColumnKey } from '@bigcapital/sdk-ts';
 import { AppToaster, If, Stack } from '@/components';
 import { Align, CLASSES } from '@/constants';
 import {
@@ -67,18 +68,17 @@ const totalColumnAccessor = () => ({
   money: true,
 });
 
+const isColumnKey = (key: VendorsBalanceColumnKey) => R.pathEq(['key'], key);
+
 /**
  * Composes the response columns to table component columns.
  */
 const dynamicColumns = (columns: ColumnDef[]) => {
   return R.map(
     R.compose(
-      R.when(R.pathEq(['key'], 'name'), vendorColumnAccessor),
-      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
-      R.when(
-        R.pathEq(['key'], 'percentage_of_column'),
-        percentageColumnAccessor,
-      ),
+      R.when(isColumnKey('name'), vendorColumnAccessor),
+      R.when(isColumnKey('total'), totalColumnAccessor),
+      R.when(isColumnKey('percentage_of_column'), percentageColumnAccessor),
     ),
   )(columns);
 };

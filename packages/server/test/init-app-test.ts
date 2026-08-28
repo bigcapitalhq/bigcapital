@@ -1,12 +1,12 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { INestApplication, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/modules/App/App.module';
 
 let app: INestApplication;
 
-const email = 'bigcapital@bigcapital.com';
-const password = '123123123';
+const email = 'kk@kk.com';
+const password = '1231231230';
 
 let orgainzationId = '';
 let authenticationToken = '';

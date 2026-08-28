@@ -99,6 +99,12 @@ export class BankAccountResponseDto {
   formattedAmount: string;
 
   @ApiProperty({
+    description: 'The uncategorized transactions count of the account',
+    example: 0,
+  })
+  uncategorizedTransactionsCount: number;
+
+  @ApiProperty({
     description: 'The Plaid item ID',
     example: 'plaid-item-123',
   })

@@ -30,7 +30,7 @@ interface ReceiptMoreMenuItemsProps {
 export function ReceiptDetailsStatus({ receipt }: ReceiptDetailsStatusProps) {
   return (
     <Choose>
-      <Choose.When condition={receipt.closed}>
+      <Choose.When condition={receipt.isClosed}>
         <Tag round={true} intent={Intent.SUCCESS}>
           <T id={'closed'} />
         </Tag>

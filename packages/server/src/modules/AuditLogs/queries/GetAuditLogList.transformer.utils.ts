@@ -33,10 +33,14 @@ export function formatMetadataSummary(
   metadata: Record<string, unknown> | null,
   subject: string,
   t: TranslateFn = defaultT,
+  action?: string,
 ): string {
   if (metadata == null) return '';
 
-  const formatters: Record<string, (m: Record<string, unknown>) => string> = {
+  const formatters: Record<
+    string,
+    (m: Record<string, unknown>, action?: string) => string
+  > = {
     Bill: (m) => {
       if (m.billNumber) {
         return m.amount
@@ -371,7 +375,26 @@ export function formatMetadataSummary(
       }
       return t('audit_log.metadata.refund_plain');
     },
-    UncategorizedTransaction: (m) => {
+    UncategorizedTransaction: (m, action) => {
+      if (action === 'removed') {
+        if (m.amount) {
+          return m.payee
+            ? t('audit_log.metadata.bank_removed_with_payee', {
+                args: {
+                  payee: String(m.payee),
+                  amount: String(m.amount),
+                  currencyCode: String(m.currencyCode || ''),
+                },
+              })
+            : t('audit_log.metadata.bank_removed', {
+                args: {
+                  amount: String(m.amount),
+                  currencyCode: String(m.currencyCode || ''),
+                },
+              });
+        }
+        return t('audit_log.metadata.bank_removed_plain');
+      }
       if (m.amount) {
         return m.payee
           ? t('audit_log.metadata.imported_with_payee', {
@@ -405,7 +428,39 @@ export function formatMetadataSummary(
       }
       return t('audit_log.metadata.plaid_plain');
     },
-    BankTransaction: (m) => {
+    BankTransaction: (m, action) => {
+      if (action === 'matched') {
+        if (m.count) {
+          const references = Array.isArray(m.matchedTransactions)
+            ? m.matchedTransactions
+                .map((mt) => (mt as { referenceType?: string }).referenceType)
+                .filter(Boolean)
+                .filter((v, i, arr) => arr.indexOf(v) === i)
+                .join(', ')
+            : '';
+          return references
+            ? t('audit_log.metadata.bank_matched_with_refs', {
+                args: {
+                  count: String(m.count),
+                  references,
+                },
+              })
+            : t('audit_log.metadata.bank_matched', {
+                args: { count: String(m.count) },
+              });
+        }
+        return t('audit_log.metadata.bank_matched_plain');
+      }
+      if (action === 'unmatched') {
+        if (m.uncategorizedTransactionId != null) {
+          return t('audit_log.metadata.bank_unmatched', {
+            args: {
+              uncategorizedTransactionId: String(m.uncategorizedTransactionId),
+            },
+          });
+        }
+        return t('audit_log.metadata.bank_unmatched_plain');
+      }
       if (m.amount) {
         return m.payee
           ? t('audit_log.metadata.bank_with_payee', {
@@ -424,12 +479,79 @@ export function formatMetadataSummary(
       }
       return t('audit_log.metadata.bank_plain');
     },
+    PlaidItem: (m) => {
+      if (m.plaidItemId) {
+        return m.plaidInstitutionId
+          ? t('audit_log.metadata.plaid_item_with_institution', {
+              args: {
+                plaidItemId: String(m.plaidItemId),
+                plaidInstitutionId: String(m.plaidInstitutionId),
+              },
+            })
+          : t('audit_log.metadata.plaid_item', {
+              args: { plaidItemId: String(m.plaidItemId) },
+            });
+      }
+      return t('audit_log.metadata.plaid_item_plain');
+    },
+    BankAccount: (m) => {
+      if (m.bankAccountId != null) {
+        return t('audit_log.metadata.bank_account_with_id', {
+          args: { bankAccountId: String(m.bankAccountId) },
+        });
+      }
+      return t('audit_log.metadata.bank_account_plain');
+    },
+    RecognizedTransaction: (m, action) => {
+      const count = m.count != null ? String(m.count) : '';
+      const ruleId = m.ruleId != null ? String(m.ruleId) : '';
+      if (action === 'reverted') {
+        return ruleId
+          ? t('audit_log.metadata.reverted_with_rule', {
+              args: { count, ruleId },
+            })
+          : t('audit_log.metadata.reverted', {
+              args: { count },
+            });
+      }
+      return ruleId
+        ? t('audit_log.metadata.recognized_with_rule', {
+            args: { count, ruleId },
+          })
+        : t('audit_log.metadata.recognized', {
+            args: { count },
+          });
+    },
+    PlaidWebhook: (m) => {
+      if (m.webhookCode) {
+        const webhookType = m.webhookType
+          ? String(m.webhookType)
+              .replace(/^./, (str) => str.toUpperCase())
+              .trim()
+          : '';
+        return webhookType
+          ? t('audit_log.metadata.plaid_webhook_with_code', {
+              args: {
+                webhookType,
+                webhookCode: String(m.webhookCode),
+                plaidItemId: String(m.plaidItemId || ''),
+              },
+            })
+          : t('audit_log.metadata.plaid_webhook', {
+              args: {
+                webhookCode: String(m.webhookCode),
+                plaidItemId: String(m.plaidItemId || ''),
+              },
+            });
+      }
+      return t('audit_log.metadata.plaid_webhook_plain');
+    },
   };
 
   const formatter = formatters[subject];
   if (formatter) {
     try {
-      return formatter(metadata);
+      return formatter(metadata, action);
     } catch (e) {
       // Fallback to default below
     }

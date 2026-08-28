@@ -6,6 +6,7 @@ import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
 import { IDateRange } from '../CashFlow/Cashflow.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { BALANCE_SHEET_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export const BalanceSheetTableDatePeriods = <
   T extends GConstructor<FinancialSheet>,
@@ -106,7 +107,10 @@ export const BalanceSheetTableDatePeriods = <
         R.unless(
           R.isEmpty,
           R.concat([
-            { key: `total`, label: this.i18n.t('balance_sheet.total') },
+            {
+              key: BALANCE_SHEET_COLUMN_KEYS.TOTAL,
+              label: this.i18n.t('balance_sheet.total'),
+            },
           ]),
         ),
         R.concat(this.percentageColumns()),

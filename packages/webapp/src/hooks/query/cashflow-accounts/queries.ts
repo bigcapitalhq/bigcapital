@@ -32,6 +32,7 @@ import type {
   CreateCashflowTransactionBody,
   CashflowAccountTransactionsQuery,
   CashflowAccountUncategorizedTransactionsQuery,
+  GetBankingAccountsQuery,
   CategorizeTransactionBody,
   UncategorizedTransactionResponse,
 } from '@bigcapital/sdk-ts';
@@ -88,7 +89,8 @@ export function useCashflowAccounts(
   >({
     ...props,
     queryKey: cashflowAccountsKeys.list(query),
-    queryFn: () => fetchCashflowAccounts(fetcher),
+    queryFn: () =>
+      fetchCashflowAccounts(fetcher, query as GetBankingAccountsQuery),
   });
 }
 

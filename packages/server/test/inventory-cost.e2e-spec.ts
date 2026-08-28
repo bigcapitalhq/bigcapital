@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Inventory Cost (e2e)', () => {

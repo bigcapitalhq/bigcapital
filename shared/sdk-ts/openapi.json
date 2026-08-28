@@ -24374,6 +24374,11 @@
             "type": "string",
             "example": "user@example.com",
             "description": "User email address"
+          },
+          "rememberMe": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether to keep the user signed in for a longer period (remember me)."
           }
         },
         "required": [
@@ -32392,9 +32397,14 @@
             "description": "The statement on the receipt",
             "example": "Paid in full"
           },
-          "closed": {
+          "isClosed": {
             "type": "boolean",
-            "description": "Whether the receipt is closed",
+            "description": "Whether the sale receipt is closed",
+            "example": false
+          },
+          "isDraft": {
+            "type": "boolean",
+            "description": "Whether the sale receipt is draft",
             "example": false
           },
           "closedAt": {
@@ -32567,7 +32577,7 @@
           "customer",
           "depositAccountId",
           "depositAccount",
-          "closed",
+          "isClosed",
           "entries",
           "subtotal",
           "subtotalLocal",
@@ -38042,6 +38052,46 @@
           "label"
         ]
       },
+      "BalanceSheetTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total",
+              "previous_period",
+              "previous_period_change",
+              "previous_period_percentage",
+              "previous_year",
+              "previous_year_change",
+              "previous_year_percentage",
+              "percentage_of_column",
+              "percentage_of_row"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
       "FinancialTableCellDto": {
         "type": "object",
         "properties": {
@@ -38094,14 +38144,14 @@
           "id"
         ]
       },
-      "FinancialTableDataDto": {
+      "BalanceSheetTableDataDto": {
         "type": "object",
         "properties": {
           "columns": {
             "description": "Table column definitions",
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FinancialTableColumnDto"
+              "$ref": "#/components/schemas/BalanceSheetTableColumnDto"
             }
           },
           "rows": {
@@ -38124,7 +38174,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/BalanceSheetTableDataDto"
               }
             ]
           },
@@ -38318,6 +38368,63 @@
           "meta"
         ]
       },
+      "PurchasesByItemsTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "quantity_purchases",
+              "purchase_amount",
+              "average_cost"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "PurchasesByItemsTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchasesByItemsTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "PurchasesByItemsTableResponseDto": {
         "type": "object",
         "properties": {
@@ -38325,7 +38432,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/PurchasesByItemsTableDataDto"
               }
             ]
           },
@@ -38516,6 +38623,62 @@
           "meta"
         ]
       },
+      "CustomerBalanceSummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total",
+              "percentage_of_column"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "CustomerBalanceSummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerBalanceSummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "CustomerBalanceSummaryTableResponseDto": {
         "type": "object",
         "properties": {
@@ -38523,7 +38686,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/CustomerBalanceSummaryTableDataDto"
               }
             ]
           },
@@ -38714,6 +38877,62 @@
           "meta"
         ]
       },
+      "VendorBalanceSummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total",
+              "percentage_of_column"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "VendorBalanceSummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorBalanceSummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "VendorBalanceSummaryTableResponseDto": {
         "type": "object",
         "properties": {
@@ -38721,7 +38940,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/VendorBalanceSummaryTableDataDto"
               }
             ]
           },
@@ -38935,6 +39154,63 @@
           "meta"
         ]
       },
+      "SalesByItemsTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "sold_quantity",
+              "sold_amount",
+              "average_price"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "SalesByItemsTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalesByItemsTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "SalesByItemsTableResponseDto": {
         "type": "object",
         "properties": {
@@ -38942,7 +39218,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/SalesByItemsTableDataDto"
               }
             ]
           },
@@ -39259,6 +39535,68 @@
           "meta"
         ]
       },
+      "GeneralLedgerTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "date",
+              "account_name",
+              "reference_type",
+              "reference_number",
+              "description",
+              "credit",
+              "debit",
+              "amount",
+              "running_balance"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "GeneralLedgerTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GeneralLedgerTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "GeneralLedgerTableResponseDto": {
         "type": "object",
         "properties": {
@@ -39266,7 +39604,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/GeneralLedgerTableDataDto"
               }
             ]
           },
@@ -39554,6 +39892,63 @@
           "meta"
         ]
       },
+      "TrialBalanceSheetTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "account",
+              "debit",
+              "credit",
+              "total"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "TrialBalanceSheetTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrialBalanceSheetTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "TrialBalanceSheetTableResponseDto": {
         "type": "object",
         "properties": {
@@ -39561,7 +39956,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/TrialBalanceSheetTableDataDto"
               }
             ]
           },
@@ -39820,6 +40215,29 @@
           "query",
           "data",
           "meta"
+        ]
+      },
+      "FinancialTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
         ]
       },
       "TransactionsByVendorTableResponseDto": {
@@ -40505,6 +40923,64 @@
           "meta"
         ]
       },
+      "ARAgingSummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "customer_name",
+              "vendor_name",
+              "current",
+              "total",
+              "aging_period"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "ARAgingSummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ARAgingSummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "ARAgingSummaryTableResponseDto": {
         "type": "object",
         "properties": {
@@ -40512,7 +40988,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/ARAgingSummaryTableDataDto"
               }
             ]
           },
@@ -40714,6 +41190,64 @@
           "meta"
         ]
       },
+      "APAgingSummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "customer_name",
+              "vendor_name",
+              "current",
+              "total",
+              "aging_period"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "APAgingSummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/APAgingSummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "APAgingSummaryQueryResponseDto": {
         "type": "object",
         "properties": {
@@ -40773,7 +41307,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/APAgingSummaryTableDataDto"
               }
             ]
           },
@@ -41014,6 +41548,69 @@
           "meta"
         ]
       },
+      "InventoryItemDetailsTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "date",
+              "transaction_type",
+              "transaction_id",
+              "quantity",
+              "rate",
+              "total",
+              "value",
+              "profit_margin",
+              "running_quantity",
+              "running_value"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "InventoryItemDetailsTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryItemDetailsTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "InventoryItemDetailsTableResponseDto": {
         "type": "object",
         "properties": {
@@ -41021,7 +41618,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/InventoryItemDetailsTableDataDto"
               }
             ]
           },
@@ -41208,6 +41805,63 @@
           "meta"
         ]
       },
+      "InventoryValuationTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "quantity",
+              "valuation",
+              "average"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "InventoryValuationTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryValuationTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "InventoryValuationTableResponseDto": {
         "type": "object",
         "properties": {
@@ -41215,7 +41869,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/InventoryValuationTableDataDto"
               }
             ]
           },
@@ -41397,6 +42051,64 @@
           "meta"
         ]
       },
+      "SalesTaxLiabilitySummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "taxName",
+              "taxPercentage",
+              "taxableAmount",
+              "collectedTax",
+              "taxRate"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "SalesTaxLiabilitySummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalesTaxLiabilitySummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "SalesTaxLiabilitySummaryTableResponseDto": {
         "type": "object",
         "properties": {
@@ -41404,7 +42116,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/SalesTaxLiabilitySummaryTableDataDto"
               }
             ]
           },
@@ -41671,6 +42383,67 @@
           "meta"
         ]
       },
+      "JournalSheetTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "date",
+              "transaction_type",
+              "transaction_number",
+              "description",
+              "account_code",
+              "account_name",
+              "debit",
+              "credit"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "JournalSheetTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JournalSheetTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "JournalSheetTableResponseDto": {
         "type": "object",
         "properties": {
@@ -41678,7 +42451,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/JournalSheetTableDataDto"
               }
             ]
           },
@@ -42051,6 +42824,71 @@
           "meta"
         ]
       },
+      "ProfitLossSheetTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total",
+              "previous_period",
+              "previous_period_change",
+              "previous_period_percentage",
+              "previous_year",
+              "previous_year_change",
+              "previous_year_percentage",
+              "percentage_income",
+              "percentage_expenses",
+              "percentage_column",
+              "percentage_row"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "ProfitLossSheetTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfitLossSheetTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "ProfitLossSheetTableResponseDto": {
         "type": "object",
         "properties": {
@@ -42058,7 +42896,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/ProfitLossSheetTableDataDto"
               }
             ]
           },
@@ -42301,6 +43139,61 @@
           "meta"
         ]
       },
+      "CashflowStatementTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "name",
+              "total"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "CashflowStatementTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CashflowStatementTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
       "CashflowStatementTableResponseDto": {
         "type": "object",
         "properties": {
@@ -42308,7 +43201,7 @@
             "description": "Table data structure",
             "allOf": [
               {
-                "$ref": "#/components/schemas/FinancialTableDataDto"
+                "$ref": "#/components/schemas/CashflowStatementTableDataDto"
               }
             ]
           },

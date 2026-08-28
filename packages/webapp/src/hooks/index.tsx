@@ -5,6 +5,7 @@ import type { RefObject } from 'react';
 
 export * from './utils';
 export * from './useQueryString';
+export * from './useDateInputFormatter';
 
 export function useIsValuePassed<T>(value: T, compatatorValue: T) {
   const cache = useRef<T[]>([value]);

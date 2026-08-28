@@ -12,6 +12,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { FinancialLoadingBar } from '../FinancialLoadingBar';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
+import type { CustomersBalanceColumnKey } from '@bigcapital/sdk-ts';
 import type {
   CustomerBalanceXlsxQuery,
   CustomerBalanceCsvQuery,
@@ -68,15 +69,14 @@ const percentageColumnAccessor = () => ({
   align: Align.Right,
 });
 
+const isColumnKey = (key: CustomersBalanceColumnKey) => R.pathEq(['key'], key);
+
 const dynamicColumns = (columns) => {
   return R.map(
     R.compose(
-      R.when(R.pathEq(['key'], 'name'), accountNameColumnAccessor),
-      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
-      R.when(
-        R.pathEq(['key'], 'percentage_of_column'),
-        percentageColumnAccessor,
-      ),
+      R.when(isColumnKey('name'), accountNameColumnAccessor),
+      R.when(isColumnKey('total'), totalColumnAccessor),
+      R.when(isColumnKey('percentage_of_column'), percentageColumnAccessor),
     ),
   )(columns);
 };

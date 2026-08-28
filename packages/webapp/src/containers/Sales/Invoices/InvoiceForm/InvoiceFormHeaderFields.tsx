@@ -32,6 +32,7 @@ import {
   ProjectsSelect,
   ProjectBillableEntriesLink,
 } from '@/containers/Projects/components';
+import { useDateInputFormatter } from '@/hooks';
 
 const getInvoiceFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
@@ -58,6 +59,7 @@ export function InvoiceFormHeaderFields() {
   const { projects } = useInvoiceFormContext();
   const { values } = useFormikContext<InvoiceFormValues>();
   const invoiceFieldsClassName = getInvoiceFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={invoiceFieldsClassName}>
@@ -77,8 +79,7 @@ export function InvoiceFormHeaderFields() {
       >
         <FDateInput
           name={'invoiceDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
@@ -102,8 +103,7 @@ export function InvoiceFormHeaderFields() {
       >
         <FDateInput
           name={'dueDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
@@ -123,7 +123,10 @@ export function InvoiceFormHeaderFields() {
 
       {/* ----------- Reference ----------- */}
       <FFormGroup name={'referenceNo'} label={intl.get('reference')} inline>
-        <FInputGroup name={'referenceNo'} />
+        <FInputGroup
+          name={'referenceNo'}
+          data-testId="invoice-reference-input"
+        />
       </FFormGroup>
 
       {/*------------ Project name -----------*/}
@@ -164,14 +167,11 @@ function InvoiceFormCustomerSelect() {
   const updateEntries = useCustomerUpdateExRate();
 
   // Handles the customer item change.
-  const handleItemChange = (customer: {
-    id: number;
-    currency_code: string;
-  }) => {
+  const handleItemChange = (customer: { id: number; currencyCode: string }) => {
     // If the customer id has changed change the customer id and currency code.
     if (values.customerId !== customer.id) {
       setFieldValue('customerId', customer.id);
-      setFieldValue('currencyCode', customer.currency_code);
+      setFieldValue('currencyCode', customer.currencyCode);
     }
     updateEntries(customer);
   };
@@ -194,6 +194,7 @@ function InvoiceFormCustomerSelect() {
           fastField={true}
           shouldUpdate={customerNameFieldShouldUpdate}
           shouldUpdateDeps={{ items: customers }}
+          buttonProps={{ 'data-testId': 'invoice-customer-select' }}
         />
         {values.customerId && (
           <CustomerButtonLink customerId={values.customerId}>

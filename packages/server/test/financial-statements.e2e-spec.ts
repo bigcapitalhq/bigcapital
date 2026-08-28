@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Financial Statements (e2e)', () => {
@@ -136,7 +136,7 @@ describe('Financial Statements (e2e)', () => {
   it('/reports/sales-tax-liability-summary (GET)', () => {
     return request(app.getHttpServer())
       .get('/reports/sales-tax-liability-summary')
-      .query(baseQuery)
+      .query({ ...baseQuery, basis: 'accrual' })
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

@@ -9,5 +9,11 @@
   "field.website": "Website",
   "field.opening_balance": "Opening balance",
   "field.opening_balance_at": "Opening balance at",
-  "field.currency": "Currency"
+  "field.currency": "Currency",
+  "field.created_at": "Created At",
+  "field.balance": "Balance",
+  "field.note": "Note",
+  "field.status": "Status",
+  "field.status.overdue": "Overdue",
+  "field.status.unpaid": "Unpaid"
 }

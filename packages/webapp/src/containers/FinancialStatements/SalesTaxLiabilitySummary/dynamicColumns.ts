@@ -1,6 +1,9 @@
 import * as R from 'ramda';
+import type { SalesTaxLiabilityColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
+
+const isColumnKey = (key: SalesTaxLiabilityColumnKey) => R.pathEq(['key'], key);
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
@@ -36,11 +39,11 @@ const dynamicColumnMapper = R.curry(
     const taxableAmountColumn = taxableAmountAccessor(data);
 
     return R.compose(
-      R.when(R.pathEq(['key'], 'taxName'), taxNameAccessorColumn),
-      R.when(R.pathEq(['key'], 'taxableAmount'), taxableAmountColumn),
-      R.when(R.pathEq(['key'], 'taxRate'), taxableAmountColumn),
-      R.when(R.pathEq(['key'], 'taxPercentage'), taxableAmountColumn),
-      R.when(R.pathEq(['key'], 'collectedTax'), taxableAmountColumn),
+      R.when(isColumnKey('taxName'), taxNameAccessorColumn),
+      R.when(isColumnKey('taxableAmount'), taxableAmountColumn),
+      R.when(isColumnKey('taxRate'), taxableAmountColumn),
+      R.when(isColumnKey('taxPercentage'), taxableAmountColumn),
+      R.when(isColumnKey('collectedTax'), taxableAmountColumn),
     )(column);
   },
 );

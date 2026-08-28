@@ -9,14 +9,14 @@ import {
   FFormGroup,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { useAutofocus } from '@/hooks';
-import { momentFormatter } from '@/utils';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 
 /**
  * Locking transactions form fields.
  */
 export function LockingTransactionsFormFields(): React.ReactElement {
   const reasonFieldRef = useAutofocus<HTMLTextAreaElement>();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -30,7 +30,7 @@ export function LockingTransactionsFormFields(): React.ReactElement {
       >
         <FDateInput
           name={'lock_to_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM,
             minimal: true,

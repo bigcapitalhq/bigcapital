@@ -22,6 +22,8 @@ services:
     container_name: bigcapital-webapp
     image: bigcapitalhq/webapp:latest
     restart: on-failure
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - bigcapital_network
 
@@ -36,7 +38,10 @@ services:
     depends_on:
       - mysql
       - redis
+      - garage
     restart: on-failure
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - bigcapital_network
     environment:
@@ -119,6 +124,7 @@ services:
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_BUCKET=${S3_BUCKET}
+      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE}
 
       # Stripe
       - STRIPE_PAYMENT_SECRET_KEY=${STRIPE_PAYMENT_SECRET_KEY}
@@ -182,6 +188,37 @@ services:
     networks:
       - bigcapital_network
 
+  garage:
+    container_name: bigcapital-garage
+    image: dxflrs/garage:v1.3.1
+    restart: on-failure
+    environment:
+      - GARAGE_CONFIG_FILE=/etc/garage.toml
+      - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
+      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
+    volumes:
+      - ./docker/garage/garage.toml:/etc/garage.toml
+      - ./docker/garage/setup.sh:/garage-setup/setup.sh
+      - garage:/var/lib/garage
+    expose:
+      - '3900'
+      - '3903'
+    networks:
+      - bigcapital_network
+
+  # Auto-updates the containers labelled "com.centurylinklabs.watchtower.enable=true"
+  # (webapp and server) by polling the registry for newer :latest images.
+  # Everything else (mysql, redis, gotenberg, proxy) is untouched.
+  auto-update:
+    container_name: bigcapital-auto-update
+    image: containrrr/watchtower:1.7.1
+    restart: on-failure
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: --label-enable --cleanup --interval ${AUTO_UPDATE_INTERVAL:-3600}
+    networks:
+      - bigcapital_network
+
 # Volumes
 volumes:
   mysql:
@@ -190,6 +227,10 @@ volumes:
 
   redis:
     name: bigcapital_prod_redis
+    driver: local
+
+  garage:
+    name: bigcapital_prod_garage
     driver: local
 
 # Networks

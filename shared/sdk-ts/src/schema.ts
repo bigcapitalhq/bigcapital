@@ -4968,6 +4968,11 @@ export interface components {
              * @example user@example.com
              */
             email: string;
+            /**
+             * @description Whether to keep the user signed in for a longer period (remember me).
+             * @example true
+             */
+            rememberMe?: boolean;
         };
         AuthSignupDto: {
             /**
@@ -10312,10 +10317,15 @@ export interface components {
              */
             statement?: string;
             /**
-             * @description Whether the receipt is closed
+             * @description Whether the sale receipt is closed
              * @example false
              */
-            closed: boolean;
+            isClosed: boolean;
+            /**
+             * @description Whether the sale receipt is draft
+             * @example false
+             */
+            isDraft?: boolean;
             /**
              * @description The date when the receipt was closed
              * @example 2024-01-02T00:00:00Z
@@ -14278,6 +14288,19 @@ export interface components {
             /** @description Nested column definitions */
             children?: components["schemas"]["FinancialTableColumnDto"][];
         };
+        BalanceSheetTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "name" | "total" | "previous_period" | "previous_period_change" | "previous_period_percentage" | "previous_year" | "previous_year_change" | "previous_year_percentage" | "percentage_of_column" | "percentage_of_row";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
         FinancialTableCellDto: {
             /** @description Cell key */
             key: string;
@@ -14294,15 +14317,15 @@ export interface components {
             /** @description Child rows */
             children?: components["schemas"]["FinancialTableRowDto"][];
         };
-        FinancialTableDataDto: {
+        BalanceSheetTableDataDto: {
             /** @description Table column definitions */
-            columns: components["schemas"]["FinancialTableColumnDto"][];
+            columns: components["schemas"]["BalanceSheetTableColumnDto"][];
             /** @description Table row data */
             rows: components["schemas"]["FinancialTableRowDto"][];
         };
         BalanceSheetTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["BalanceSheetTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["BalanceSheetQueryResponseDto"];
             /** @description Report metadata */
@@ -14362,9 +14385,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["PurchasesByItemsMetaDto"];
         };
+        PurchasesByItemsTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "item_name" | "quantity_purchases" | "purchase_amount" | "average_cost";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        PurchasesByItemsTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["PurchasesByItemsTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         PurchasesByItemsTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["PurchasesByItemsTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["PurchasesByItemsQueryResponseDto"];
             /** @description Report metadata */
@@ -14420,9 +14462,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["CustomerBalanceSummaryMetaDto"];
         };
+        CustomerBalanceSummaryTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "name" | "total" | "percentage_of_column";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        CustomerBalanceSummaryTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["CustomerBalanceSummaryTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         CustomerBalanceSummaryTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["CustomerBalanceSummaryTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["CustomerBalanceSummaryQueryResponseDto"];
             /** @description Report metadata */
@@ -14478,9 +14539,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["VendorBalanceSummaryMetaDto"];
         };
+        VendorBalanceSummaryTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "name" | "total" | "percentage_of_column";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        VendorBalanceSummaryTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["VendorBalanceSummaryTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         VendorBalanceSummaryTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["VendorBalanceSummaryTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["VendorBalanceSummaryQueryResponseDto"];
             /** @description Report metadata */
@@ -14546,9 +14626,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["SalesByItemsMetaDto"];
         };
+        SalesByItemsTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "item_name" | "sold_quantity" | "sold_amount" | "average_price";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        SalesByItemsTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["SalesByItemsTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         SalesByItemsTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["SalesByItemsTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["SalesByItemsQueryResponseDto"];
             /** @description Report metadata */
@@ -14657,9 +14756,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["GeneralLedgerMetaDto"];
         };
+        GeneralLedgerTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "date" | "account_name" | "reference_type" | "reference_number" | "description" | "credit" | "debit" | "amount" | "running_balance";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        GeneralLedgerTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["GeneralLedgerTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         GeneralLedgerTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["GeneralLedgerTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["GeneralLedgerQueryResponseDto"];
             /** @description Report metadata */
@@ -14763,9 +14881,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["TrialBalanceSheetMetaDto"];
         };
+        TrialBalanceSheetTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "account" | "debit" | "credit" | "total";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        TrialBalanceSheetTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["TrialBalanceSheetTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         TrialBalanceSheetTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["TrialBalanceSheetTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["TrialBalanceSheetQueryResponseDto"];
             /** @description Report metadata */
@@ -14844,6 +14981,12 @@ export interface components {
             data: components["schemas"]["VendorWithTransactionsDto"][];
             /** @description Report metadata */
             meta: components["schemas"]["TransactionsByVendorMetaDto"];
+        };
+        FinancialTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["FinancialTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
         };
         TransactionsByVendorTableResponseDto: {
             /** @description Table data structure */
@@ -15056,9 +15199,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["ARAgingSummaryMetaDto"];
         };
+        ARAgingSummaryTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "customer_name" | "vendor_name" | "current" | "total" | "aging_period";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        ARAgingSummaryTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["ARAgingSummaryTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         ARAgingSummaryTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["ARAgingSummaryTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["ARAgingSummaryQueryResponseDto"];
             /** @description Report metadata */
@@ -15116,6 +15278,25 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["APAgingSummaryMetaDto"];
         };
+        APAgingSummaryTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "customer_name" | "vendor_name" | "current" | "total" | "aging_period";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        APAgingSummaryTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["APAgingSummaryTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         APAgingSummaryQueryResponseDto: {
             /** @description As-of date */
             asDate: string;
@@ -15134,7 +15315,7 @@ export interface components {
         };
         APAgingSummaryTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["APAgingSummaryTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["APAgingSummaryQueryResponseDto"];
             /** @description Report metadata */
@@ -15212,9 +15393,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["InventoryItemDetailsMetaDto"];
         };
+        InventoryItemDetailsTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "date" | "transaction_type" | "transaction_id" | "quantity" | "rate" | "total" | "value" | "profit_margin" | "running_quantity" | "running_value";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        InventoryItemDetailsTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["InventoryItemDetailsTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         InventoryItemDetailsTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["InventoryItemDetailsTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["InventoryItemDetailsQueryResponseDto"];
             /** @description Report metadata */
@@ -15274,9 +15474,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["InventoryValuationMetaDto"];
         };
+        InventoryValuationTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "item_name" | "quantity" | "valuation" | "average";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        InventoryValuationTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["InventoryValuationTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         InventoryValuationTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["InventoryValuationTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["InventoryValuationQueryResponseDto"];
             /** @description Report metadata */
@@ -15330,9 +15549,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["SalesTaxLiabilitySummaryMetaDto"];
         };
+        SalesTaxLiabilitySummaryTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "taxName" | "taxPercentage" | "taxableAmount" | "collectedTax" | "taxRate";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        SalesTaxLiabilitySummaryTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["SalesTaxLiabilitySummaryTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         SalesTaxLiabilitySummaryTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["SalesTaxLiabilitySummaryTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["SalesTaxLiabilitySummaryQueryResponseDto"];
             /** @description Report metadata */
@@ -15424,9 +15662,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["JournalSheetMetaDto"];
         };
+        JournalSheetTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "date" | "transaction_type" | "transaction_number" | "description" | "account_code" | "account_name" | "debit" | "credit";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        JournalSheetTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["JournalSheetTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         JournalSheetTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["JournalSheetTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["JournalSheetQueryResponseDto"];
             /** @description Report metadata */
@@ -15550,9 +15807,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["ProfitLossSheetMetaDto"];
         };
+        ProfitLossSheetTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "name" | "total" | "previous_period" | "previous_period_change" | "previous_period_percentage" | "previous_year" | "previous_year_change" | "previous_year_percentage" | "percentage_income" | "percentage_expenses" | "percentage_column" | "percentage_row";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        ProfitLossSheetTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["ProfitLossSheetTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         ProfitLossSheetTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["ProfitLossSheetTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["ProfitLossSheetQueryResponseDto"];
             /** @description Report metadata */
@@ -15636,9 +15912,28 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["CashflowStatementMetaDto"];
         };
+        CashflowStatementTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "name" | "total";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        CashflowStatementTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["CashflowStatementTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
         CashflowStatementTableResponseDto: {
             /** @description Table data structure */
-            table: components["schemas"]["FinancialTableDataDto"];
+            table: components["schemas"]["CashflowStatementTableDataDto"];
             /** @description Query parameters used to generate the report */
             query: components["schemas"]["CashflowStatementQueryResponseDto"];
             /** @description Report metadata */

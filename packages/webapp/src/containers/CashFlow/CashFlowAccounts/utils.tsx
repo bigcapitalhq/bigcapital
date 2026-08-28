@@ -5,6 +5,6 @@ export const transformAccountsStateToQuery = (
 ) => {
   return {
     ...transformTableStateToQuery(tableState),
-    inactive_mode: tableState.inactiveMode,
+    inactiveMode: tableState.inactiveMode,
   };
 };

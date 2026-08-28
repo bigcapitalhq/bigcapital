@@ -9,6 +9,11 @@
   "field.entries": "Entries",
   "field.entries.bill": "Bill",
   "field.entries.payment_amount": "Payment Amount",
+  "field.amount": "Amount",
+  "field.due_amount": "Due Amount",
+  "field.reference_no": "Reference No.",
+  "field.description": "Description",
+  "field.created_at": "Created At",
   "field.payment_number_hint": "The payment number should be unique.",
   "field.bill_hint": "Matches the bill number."
 }

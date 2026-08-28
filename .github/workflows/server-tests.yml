@@ -1,0 +1,239 @@
+name: Server Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**.ts'
+      - '**.tsx'
+      - '**/tsconfig.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/server-tests.yml'
+  pull_request:
+    paths:
+      - '**.ts'
+      - '**.tsx'
+      - '**/tsconfig.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/server-tests.yml'
+
+defaults:
+  run:
+    shell: 'bash'
+
+jobs:
+  test_server:
+    runs-on: ubuntu-latest
+    name: Jest e2e tests
+    timeout-minutes: 40
+
+    services:
+      mysql:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bigcapital_system
+          MYSQL_USER: bigcapital
+          MYSQL_PASSWORD: bigcapital
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.16.1
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+        id: pnpm-cache
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages and server
+        run: pnpm build:server
+
+      - name: Create server .env file
+        run: |
+          cat > packages/server/.env << EOF
+          # Database
+          DB_HOST=127.0.0.1
+          DB_USER=bigcapital
+          DB_PASSWORD=bigcapital
+          DB_ROOT_PASSWORD=root
+          DB_CHARSET=utf8
+
+          # System database
+          SYSTEM_DB_NAME=bigcapital_system
+
+          # Tenant databases
+          TENANT_DB_NAME_PERFIX=bigcapital_tenant_
+
+          # Application
+          BASE_URL=http://localhost:3000
+          JWT_SECRET=test-jwt-secret-for-server-testing
+          APP_JWT_SECRET=test-app-jwt-secret
+
+          # Sign-up
+          SIGNUP_DISABLED=false
+          SIGNUP_EMAIL_CONFIRMATION=false
+
+          # API throttling
+          THROTTLE_GLOBAL_TTL=60000
+          THROTTLE_GLOBAL_LIMIT=300
+          THROTTLE_AUTH_TTL=60000
+          THROTTLE_AUTH_LIMIT=300
+
+          # Redis
+          REDIS_HOST=127.0.0.1
+          REDIS_PORT=6379
+
+          # S3 (placeholder values for testing)
+          S3_REGION=us-east-1
+          S3_ACCESS_KEY_ID=test-access-key
+          S3_SECRET_ACCESS_KEY=test-secret-key
+          S3_ENDPOINT=http://localhost:9000
+          S3_BUCKET=test-bucket
+
+          # Mail (placeholder values for testing)
+          MAIL_HOST=localhost
+          MAIL_PORT=1025
+          MAIL_FROM_NAME=Bigcapital
+          MAIL_FROM_ADDRESS=test@bigcapital.app
+          EOF
+
+      - name: Grant tenant database privileges
+        run: |
+          CID=$(docker ps -qf "ancestor=mariadb:10.6" | head -1)
+          docker exec "$CID" mysql -uroot -proot -e \
+            "GRANT ALL PRIVILEGES ON *.* TO 'bigcapital'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+
+      - name: Run database migrations
+        run: pnpm system:migrate:latest
+
+      - name: Start server in background
+        run: |
+          cd packages/server && NODE_ENV=production node dist/main > /tmp/bigcapital-server.log 2>&1 &
+          echo $! > /tmp/bigcapital-server.pid
+
+          SERVER_READY=false
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:3000/api/auth/meta > /dev/null; then
+              SERVER_READY=true
+              break
+            fi
+            sleep 2
+          done
+
+          if [ "$SERVER_READY" != "true" ]; then
+            echo '::error::Server failed to become ready.'
+            tail -100 /tmp/bigcapital-server.log
+            exit 1
+          fi
+
+      - name: Seed test user and organization
+        run: |
+          set -euo pipefail
+
+          API_URL=http://localhost:3000/api
+
+          curl --fail-with-body -sS -X POST "$API_URL/auth/signup" \
+            -H 'Content-Type: application/json' \
+            -d '{"firstName":"Test","lastName":"User","email":"kk@kk.com","password":"1231231230"}'
+
+          SIGNIN=$(curl --fail-with-body -sS -X POST "$API_URL/auth/signin" \
+            -H 'Content-Type: application/json' \
+            -d '{"email":"kk@kk.com","password":"1231231230"}')
+
+          TOKEN=$(printf '%s' "$SIGNIN" | jq -r '.access_token')
+          ORG_ID=$(printf '%s' "$SIGNIN" | jq -r '.organization_id')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ] || [ -z "$ORG_ID" ] || [ "$ORG_ID" = "null" ]; then
+            echo '::error::Sign-in failed.'
+            printf '%s\n' "$SIGNIN"
+            exit 1
+          fi
+
+          BUILD=$(curl --fail-with-body -sS -X POST "$API_URL/organization/build" \
+            -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "organization-id: $ORG_ID" \
+            -d '{"name":"Test Organization","location":"US","baseCurrency":"USD","timezone":"America/New_York","fiscalYear":"january","language":"en"}')
+
+          JOB_ID=$(printf '%s' "$BUILD" | jq -r '.data.job_id // .data.jobId')
+
+          if [ -z "$JOB_ID" ] || [ "$JOB_ID" = "null" ]; then
+            echo '::error::Organization build job was not queued.'
+            printf '%s\n' "$BUILD"
+            exit 1
+          fi
+
+          BUILD_COMPLETED=false
+          for i in $(seq 1 60); do
+            JOB=$(curl --fail-with-body -sS "$API_URL/organization/build/$JOB_ID" \
+              -H "Authorization: Bearer $TOKEN" \
+              -H "organization-id: $ORG_ID")
+            STATE=$(printf '%s' "$JOB" | jq -r '.state')
+
+            if [ "$STATE" = "completed" ]; then
+              BUILD_COMPLETED=true
+              break
+            fi
+            if [ "$STATE" = "failed" ]; then
+              echo '::error::Organization build job failed.'
+              tail -100 /tmp/bigcapital-server.log
+              exit 1
+            fi
+            sleep 5
+          done
+
+          if [ "$BUILD_COMPLETED" != "true" ]; then
+            echo '::error::Timed out waiting for the organization build job to complete.'
+            tail -100 /tmp/bigcapital-server.log
+            exit 1
+          fi
+
+      - name: Stop server
+        run: |
+          kill "$(cat /tmp/bigcapital-server.pid)" 2>/dev/null || true
+          pkill -f 'packages/server/dist/main' 2>/dev/null || true
+          sleep 5
+
+      - name: Run server tests
+        run: |
+          pnpm --filter @bigcapital/server test:e2e --shard=1/4
+          pnpm --filter @bigcapital/server test:e2e --shard=2/4
+          pnpm --filter @bigcapital/server test:e2e --shard=3/4
+          pnpm --filter @bigcapital/server test:e2e --shard=4/4
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      - name: Print server log on failure
+        if: failure()
+        run: tail -200 /tmp/bigcapital-server.log || true

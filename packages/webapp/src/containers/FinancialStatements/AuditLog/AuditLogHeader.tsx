@@ -8,6 +8,7 @@ import { FinancialStatementHeader } from '../FinancialStatementHeader';
 import { getDefaultAuditLogQuery, getAuditLogQuerySchema } from './common';
 import { FormattedMessage as T, FFormGroup, FDateInput } from '@/components';
 import { FMultiSelect } from '@/components/Forms';
+import { useDateInputFormatter } from '@/hooks';
 import { useAuditLogFilterOptionsQuery } from '@/hooks/query';
 import { saveInvoke, transformToForm } from '@/utils';
 
@@ -56,6 +57,8 @@ export function AuditLogHeader({
   isFilterDrawerOpen,
   toggleFilterDrawer,
 }: AuditLogHeaderProps) {
+  const dateInputFormatter = useDateInputFormatter();
+
   const { data: filterOptions, isLoading: isFilterOptionsLoading } =
     useAuditLogFilterOptionsQuery({
       enabled: isFilterDrawerOpen,
@@ -205,8 +208,7 @@ export function AuditLogHeader({
                         position: Position.BOTTOM,
                         minimal: true,
                       }}
-                      formatDate={(date: Date) => date.toLocaleDateString()}
-                      parseDate={(str: string) => new Date(str)}
+                      {...dateInputFormatter}
                       inputProps={{ fill: true }}
                       fastField
                     />
@@ -220,8 +222,7 @@ export function AuditLogHeader({
                         position: Position.BOTTOM,
                         minimal: true,
                       }}
-                      formatDate={(date: Date) => date.toLocaleDateString()}
-                      parseDate={(str: string) => new Date(str)}
+                      {...dateInputFormatter}
                       inputProps={{ fill: true }}
                       fastField
                     />

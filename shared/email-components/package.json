@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc && vite build",
     "lint": "eslint .",
+    "lint:check": "eslint .",
     "preview": "vite preview",
     "storybook:dev": "storybook dev -p 6006",
     "storybook:build": "storybook build"

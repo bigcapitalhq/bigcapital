@@ -43,6 +43,7 @@ import {
 import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { ProjectsSelect } from '@/containers/Projects/components';
+import { useDateInputFormatter } from '@/hooks';
 import { safeSumBy } from '@/utils';
 
 const getHeaderFieldsStyle = (theme: Theme) => css`
@@ -67,6 +68,7 @@ const getHeaderFieldsStyle = (theme: Theme) => css`
 export function PaymentReceiveHeaderFields() {
   const theme = useTheme() as Theme;
   const styleClassName = getHeaderFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   const { accounts, projects } = usePaymentReceiveFormContext();
 
@@ -112,8 +114,7 @@ export function PaymentReceiveHeaderFields() {
       >
         <FDateInput
           name={'paymentDate'}
-          formatDate={(date: Date) => date.toLocaleDateString()}
-          parseDate={(str: string) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,

@@ -52,6 +52,7 @@ export class PurchasesByItemsQueryDto {
   })
   @IsBoolean()
   @Transform(({ value }) => parseBoolean(value, false))
+  @IsOptional()
   noneTransactions: boolean;
 
   @ApiPropertyOptional({
@@ -62,5 +63,6 @@ export class PurchasesByItemsQueryDto {
   })
   @IsBoolean()
   @Transform(({ value }) => parseBoolean(value, false))
+  @IsOptional()
   onlyActive: boolean;
 }

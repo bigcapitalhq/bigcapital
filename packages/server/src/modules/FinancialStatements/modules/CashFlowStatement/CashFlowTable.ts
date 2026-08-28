@@ -13,6 +13,7 @@ import { ITableRow, ITableColumn } from '../../types/Table.types';
 import { dateRangeFromToCollection } from '@/utils/date-range-collection';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { mapValuesDeep } from '@/utils/deepdash';
+import { CASH_FLOW_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 enum IROW_TYPE {
   AGGREGATE = 'AGGREGATE',
@@ -69,7 +70,9 @@ export class CashFlowTable {
    * Retrieve the total column accessor.
    */
   private totalColumnAccessor = () => {
-    return [{ key: 'total', accessor: 'total.formattedAmount' }];
+    return [
+      { key: CASH_FLOW_COLUMN_KEYS.TOTAL, accessor: 'total.formattedAmount' },
+    ];
   };
 
   /**
@@ -77,7 +80,7 @@ export class CashFlowTable {
    */
   private commonColumns = () => {
     return R.compose(
-      R.concat([{ key: 'name', accessor: 'label' }]),
+      R.concat([{ key: CASH_FLOW_COLUMN_KEYS.NAME, accessor: 'label' }]),
       R.when(
         R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
         R.concat(this.datePeriodsColumnsAccessors()),
@@ -302,7 +305,12 @@ export class CashFlowTable {
    * @returns {ITableColumn}
    */
   private totalColumns = (): ITableColumn[] => {
-    return [{ key: 'total', label: this.i18n.t('cash_flow_statement.total') }];
+    return [
+      {
+        key: CASH_FLOW_COLUMN_KEYS.TOTAL,
+        label: this.i18n.t('cash_flow_statement.total'),
+      },
+    ];
   };
 
   /**
@@ -367,7 +375,10 @@ export class CashFlowTable {
   public tableColumns = (): ITableColumn[] => {
     return R.compose(
       R.concat([
-        { key: 'name', label: this.i18n.t('cash_flow_statement.account_name') },
+        {
+          key: CASH_FLOW_COLUMN_KEYS.NAME,
+          label: this.i18n.t('cash_flow_statement.account_name'),
+        },
       ]),
       R.when(
         R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),

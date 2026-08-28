@@ -1,8 +1,11 @@
 import * as R from 'ramda';
 import React from 'react';
 import { useJournalSheetContext } from './JournalProvider';
+import type { JournalColumnKey } from '@bigcapital/sdk-ts';
 import { Align, CLASSES } from '@/constants';
 import { getColumnWidth } from '@/utils';
+
+const isColumnKey = (key: JournalColumnKey) => R.pathEq(['key'], key);
 
 interface DescriptionCellProps {
   cell: { value: string };
@@ -87,22 +90,56 @@ const dateColumnAccessor = (column: DynamicColumn) => {
 /**
  * Transaction type column accessor.
  */
-const transactionTypeColumnAccessor = (column: DynamicColumn) => {
-  return {
-    ...column,
-    width: 120,
+const transactionTypeColumnAccessor =
+  (onViewDetail?: (referenceType: string, referenceId: number) => void) =>
+  (column: DynamicColumn) => {
+    return {
+      ...column,
+      width: 120,
+      Cell: createTransactionLinkCell(onViewDetail),
+    };
+  };
+
+/**
+ * Transaction number cell - renders the reference number as a link that opens
+ * the underlying transaction detail drawer.
+ */
+const createTransactionLinkCell = (
+  onViewDetail?: (referenceType: string, referenceId: number) => void,
+) => {
+  return function TransactionLinkCell({ cell }: any) {
+    const { value, row } = cell;
+    const { referenceType, referenceId } = row?.original?.meta ?? {};
+
+    if (!referenceType || !referenceId) {
+      return React.createElement('span', null, value);
+    }
+    const handleClick = (event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      onViewDetail?.(referenceType, referenceId);
+    };
+
+    return React.createElement(
+      'a',
+      { className: CLASSES.TEXT_LINK, onClick: handleClick },
+      value,
+    );
   };
 };
 
 /**
  * Transaction number column accessor.
  */
-const transactionNumberColumnAccessor = (column: DynamicColumn) => {
-  return {
-    ...column,
-    width: 70,
+const transactionNumberColumnAccessor =
+  (onViewDetail?: (referenceType: string, referenceId: number) => void) =>
+  (column: DynamicColumn) => {
+    return {
+      ...column,
+      width: 70,
+      Cell: createTransactionLinkCell(onViewDetail),
+    };
   };
-};
 
 /**
  * Account code column accessor.
@@ -128,24 +165,30 @@ const descriptionColumnAccessor = (column: DynamicColumn) => {
  * Dynamic column mapper.
  */
 const dynamicColumnMapper = R.curry(
-  (data: unknown[], column: DynamicColumn) => {
+  (
+    onViewDetail: (referenceType: string, referenceId: number) => void,
+    data: unknown[],
+    column: DynamicColumn,
+  ) => {
     const _commonAccessor = commonAccessor(data);
     const _numericColumnAccessor = numericColumnAccessor(data);
+    const _transactionNumberColumnAccessor =
+      transactionNumberColumnAccessor(onViewDetail);
 
     return R.compose(
-      R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
+      R.when(isColumnKey('date'), dateColumnAccessor),
       R.when(
-        R.pathEq(['key'], 'transaction_type'),
-        transactionTypeColumnAccessor,
+        isColumnKey('transaction_type'),
+        transactionTypeColumnAccessor(onViewDetail),
       ),
       R.when(
-        R.pathEq(['key'], 'transaction_number'),
-        transactionNumberColumnAccessor,
+        isColumnKey('transaction_number'),
+        _transactionNumberColumnAccessor,
       ),
-      R.when(R.pathEq(['key'], 'description'), descriptionColumnAccessor),
-      R.when(R.pathEq(['key'], 'account_code'), accountCodeColumnAccessor),
-      R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
+      R.when(isColumnKey('description'), descriptionColumnAccessor),
+      R.when(isColumnKey('account_code'), accountCodeColumnAccessor),
+      R.when(isColumnKey('credit'), _numericColumnAccessor),
+      R.when(isColumnKey('debit'), _numericColumnAccessor),
       _commonAccessor,
     )(column);
   },
@@ -155,14 +198,20 @@ const dynamicColumnMapper = R.curry(
  * Composes the fetched dynamic columns from the server to the columns to pass it
  * to the table component.
  */
-export const dynamicColumns = (columns: DynamicColumn[], data: unknown[]) => {
-  return R.map(dynamicColumnMapper(data), columns);
+export const dynamicColumns = (
+  onViewDetail: (referenceType: string, referenceId: number) => void,
+  columns: DynamicColumn[],
+  data: unknown[],
+) => {
+  return R.map(dynamicColumnMapper(onViewDetail, data), columns);
 };
 
 /**
  * Retrieves the table columns of journal sheet.
  */
-export const useJournalSheetColumns = () => {
+export const useJournalSheetColumns = (
+  onViewDetail: (referenceType: string, referenceId: number) => void,
+) => {
   const { journalSheet } = useJournalSheetContext();
 
   if (!journalSheet) {
@@ -170,5 +219,5 @@ export const useJournalSheetColumns = () => {
   }
   const table = (journalSheet as any)?.table;
 
-  return dynamicColumns(table.columns, table.rows);
+  return dynamicColumns(onViewDetail, table.columns, table.rows);
 };

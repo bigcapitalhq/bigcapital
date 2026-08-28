@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -83,6 +83,33 @@ describe('Manual Journals (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send(manualJournal)
       .expect(200);
+  });
+
+  it('/manual-journals (GET) honors page and pageSize query params', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/manual-journals?page=2&pageSize=5')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(response.body.pagination).toBeDefined();
+    expect(response.body.pagination.page).toBe(2);
+    expect(response.body.pagination.page_size).toBe(5);
+    // Ensure data array present
+    expect(Array.isArray(response.body.data)).toBe(true);
+  });
+
+  it('/manual-journals (GET) defaults to page 1 pageSize 12 when params absent', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/manual-journals')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(response.body.pagination).toBeDefined();
+    expect(response.body.pagination.page).toBe(1);
+    expect(response.body.pagination.page_size).toBe(12);
+    expect(Array.isArray(response.body.data)).toBe(true);
   });
 
   it('/manual-journals/:id/publish (PATCH)', async () => {

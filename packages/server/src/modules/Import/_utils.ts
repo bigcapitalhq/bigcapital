@@ -456,7 +456,12 @@ export const deleteImportFile = async (filename: string) => {
   const filePath = getImportsStoragePath();
 
   // Deletes the imported file.
-  await fs.unlink(`${filePath}/${filename}`);
+  await fs.unlink(`${filePath}/${filename}`).catch((error) => {
+    // Ignore the error if the file does not exist.
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
+  });
 };
 
 /**

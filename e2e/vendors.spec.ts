@@ -18,21 +18,6 @@ function contactName() {
 const companyName = () => `${faker.company.name()} ${faker.string.alphanumeric(4)}`;
 
 /**
- * Closes the TanStack Query devtools panel.
- *
- * The devtools panel is opened by default in the dev webapp and overlays the
- * bottom of the viewport, which covers the form's sticky floating actions bar.
- */
-async function closeQueryDevtools(page: Page) {
-  const closeButton = page
-    .getByRole('button', { name: 'Close tanstack query devtools' })
-    .first();
-  if (await closeButton.isVisible().catch(() => false)) {
-    await closeButton.click();
-  }
-}
-
-/**
  * Waits until the vendors list page is loaded.
  */
 async function waitForVendorsList(page: Page) {
@@ -130,7 +115,6 @@ async function createVendor(
     `${firstName} ${lastName}`,
   );
 
-  await closeQueryDevtools(page);
   await page.getByRole('button', { name: 'Save', exact: true }).click();
 
   await expect(
@@ -228,7 +212,6 @@ test.describe('vendors', () => {
     ).toContainText(displayName, { timeout: 30_000 });
 
     await page.getByTestId('vendor-company-name-input').fill(newCompanyName);
-    await closeQueryDevtools(page);
     await page.getByRole('button', { name: 'Edit', exact: true }).click();
 
     await expect(

@@ -137,7 +137,7 @@ function InventoryItemDetailsHeaderInner({
 
 export const InventoryItemDetailsHeader = compose(
   withInventoryItemDetails(({ inventoryItemDetailDrawerFilter }) => ({
-    isFilterDrawerOpen: inventoryItemDetailDrawerFilter,
+    inventoryItemDetailDrawerFilter,
   })),
   withInventoryItemDetailsActions,
 )(InventoryItemDetailsHeaderInner);

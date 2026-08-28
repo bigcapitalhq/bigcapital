@@ -89,6 +89,7 @@ export enum TaxRateAction {
 
 export interface CreateAccountParams {
   ignoreUniqueName: boolean;
+  ignoreAccountCode?: boolean;
 }
 
 export interface IGetAccountTransactionPOJO {}

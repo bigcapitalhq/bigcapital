@@ -1,11 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportPercentageDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  PROFIT_LOSS_COLUMN_KEYS,
+  ProfitLossColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class ProfitLossSheetDataNodeDto {
   @ApiProperty({
@@ -210,16 +215,30 @@ export class ProfitLossSheetResponseDto {
 export {
   FinancialTableCellDto as ProfitLossSheetTableCellDto,
   FinancialTableRowDto as ProfitLossSheetTableRowDto,
-  FinancialTableColumnDto as ProfitLossSheetTableColumnDto,
-  FinancialTableDataDto as ProfitLossSheetTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class ProfitLossSheetTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(PROFIT_LOSS_COLUMN_KEYS),
+  })
+  key: ProfitLossColumnKey;
+}
+
+export class ProfitLossSheetTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [ProfitLossSheetTableColumnDto],
+  })
+  columns: ProfitLossSheetTableColumnDto[];
+}
 
 export class ProfitLossSheetTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => ProfitLossSheetTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: ProfitLossSheetTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

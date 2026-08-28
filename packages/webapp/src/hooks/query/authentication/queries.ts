@@ -33,15 +33,19 @@ import { authenticationKeys } from './query-keys';
 /**
  * Saves the response data to cookies.
  */
-export function setAuthLoginCookies(data: AuthSigninResponse): void {
+export function setAuthLoginCookies(
+  data: AuthSigninResponse,
+  rememberMe = false,
+): void {
+  const expiry = rememberMe ? 30 : 1;
   // @ts-ignore
-  setCookie('token', data.access_token ?? '');
+  setCookie('token', data.access_token ?? '', expiry);
   // @ts-ignore
-  setCookie('authenticated_user_id', String(data.user_id ?? ''));
+  setCookie('authenticated_user_id', String(data.user_id ?? ''), expiry);
   // @ts-ignore
-  setCookie('organization_id', data.organization_id ?? '');
+  setCookie('organization_id', data.organization_id ?? '', expiry);
   // @ts-ignore
-  setCookie('tenant_id', String(data.tenant_id ?? ''));
+  setCookie('tenant_id', String(data.tenant_id ?? ''), expiry);
 }
 
 export function useAuthLogin(
@@ -56,7 +60,7 @@ export function useAuthLogin(
     ...props,
     mutationFn: (values: AuthSigninBody) => signin(fetcher, values),
     onSuccess: (data, variables, context, mutation) => {
-      setAuthLoginCookies(data);
+      setAuthLoginCookies(data, variables?.rememberMe);
       batch(() => {
         // @ts-ignore
         setAuthToken(data.access_token ?? '');

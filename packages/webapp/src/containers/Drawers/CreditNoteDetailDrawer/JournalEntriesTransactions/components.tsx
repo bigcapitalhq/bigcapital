@@ -20,7 +20,7 @@ export const useJournalEntriesTransactionsColumns = () => {
       },
       {
         Header: intl.get('account_name'),
-        accessor: 'account_name',
+        accessor: 'accountName',
         width: 140,
         className: 'account_name',
         textOverview: true,

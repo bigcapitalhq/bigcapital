@@ -14,6 +14,7 @@ import {
   ITableRow,
 } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
+import { INVENTORY_VALUATION_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export class InventoryValuationSheetTable extends R.pipe(
   FinancialTable,
@@ -36,10 +37,19 @@ export class InventoryValuationSheetTable extends R.pipe(
    */
   private commonColumnsAccessors(): ITableColumnAccessor[] {
     return [
-      { key: 'item_name', accessor: 'name' },
-      { key: 'quantity', accessor: 'quantityFormatted' },
-      { key: 'valuation', accessor: 'valuationFormatted' },
-      { key: 'average', accessor: 'averageFormatted' },
+      { key: INVENTORY_VALUATION_COLUMN_KEYS.ITEM_NAME, accessor: 'name' },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.QUANTITY,
+        accessor: 'quantityFormatted',
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.VALUATION,
+        accessor: 'valuationFormatted',
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.AVERAGE,
+        accessor: 'averageFormatted',
+      },
     ];
   }
 
@@ -97,10 +107,10 @@ export class InventoryValuationSheetTable extends R.pipe(
    */
   public tableColumns(): ITableColumn[] {
     const columns = [
-      { key: 'item_name', label: 'Item Name' },
-      { key: 'quantity', label: 'Quantity' },
-      { key: 'valuation', label: 'Valuation' },
-      { key: 'average', label: 'Average' },
+      { key: INVENTORY_VALUATION_COLUMN_KEYS.ITEM_NAME, label: 'Item Name' },
+      { key: INVENTORY_VALUATION_COLUMN_KEYS.QUANTITY, label: 'Quantity' },
+      { key: INVENTORY_VALUATION_COLUMN_KEYS.VALUATION, label: 'Valuation' },
+      { key: INVENTORY_VALUATION_COLUMN_KEYS.AVERAGE, label: 'Average' },
     ];
     return R.compose(this.tableColumnsCellIndexing)(columns);
   }

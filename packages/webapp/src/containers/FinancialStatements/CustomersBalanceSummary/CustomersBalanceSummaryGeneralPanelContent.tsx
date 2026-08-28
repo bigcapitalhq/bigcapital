@@ -12,13 +12,14 @@ import {
   FDateInput,
   FCheckbox,
 } from '@/components';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Customers balance header - General panel - Content
  */
 export function CustomersBalanceSummaryGeneralPanelContent() {
   const { customers } = useCustomersBalanceSummaryGeneralContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
@@ -32,7 +33,7 @@ export function CustomersBalanceSummaryGeneralPanelContent() {
           >
             <FDateInput
               name={'asDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               fill={true}
               fastField

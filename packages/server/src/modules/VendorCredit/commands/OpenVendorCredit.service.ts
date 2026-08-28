@@ -54,9 +54,9 @@ export class OpenVendorCreditService {
         trx,
       } as IVendorCreditOpeningPayload;
 
-      // Triggers `onCreditNoteOpening` event.
+      // Triggers `onVendorCreditOpening` event.
       await this.eventPublisher.emitAsync(
-        events.creditNote.onOpening,
+        events.vendorCredit.onOpening,
         eventPayload as IVendorCreditOpeningPayload,
       );
       // Saves the vendor credit graph to the storage.
@@ -65,7 +65,8 @@ export class OpenVendorCreditService {
         .findById(vendorCreditId)
         .updateAndFetchById(vendorCreditId, {
           openedAt: new Date(),
-        });
+        })
+        .withGraphFetched('entries');
       // Triggers `onVendorCreditOpened` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onOpened, {
         ...eventPayload,

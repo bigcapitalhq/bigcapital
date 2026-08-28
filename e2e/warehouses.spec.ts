@@ -20,21 +20,6 @@ const warehouseName = () =>
 const warehouseCode = () => faker.string.alphanumeric(5).toUpperCase();
 
 /**
- * Closes the TanStack Query devtools panel.
- *
- * The devtools panel is opened by default in the dev webapp and overlays the
- * bottom of the viewport, which can cover the dialog's floating actions bar.
- */
-async function closeQueryDevtools(page: Page) {
-  const closeButton = page
-    .getByRole("button", { name: "Close tanstack query devtools" })
-    .first();
-  if (await closeButton.isVisible().catch(() => false)) {
-    await closeButton.click();
-  }
-}
-
-/**
  * Waits until the warehouses preferences page is loaded.
  */
 async function waitForWarehousesPage(page: Page) {
@@ -72,7 +57,6 @@ async function waitForWarehousesState(page: Page): Promise<boolean> {
  * Opens the new warehouse dialog.
  */
 async function openNewWarehouseDialog(page: Page): Promise<Locator> {
-  await closeQueryDevtools(page);
   await page.getByRole("button", { name: "New Warehouse" }).click();
 
   const dialog = page.getByTestId("warehouse-form-dialog");
@@ -98,7 +82,6 @@ async function createWarehouse(
   await dialog.locator('input[name="name"]').fill(name);
   await dialog.locator('input[name="code"]').fill(code);
 
-  await closeQueryDevtools(page);
   await dialog.getByRole("button", { name: "Save" }).click();
 
   await expect(dialog).toBeHidden({ timeout: 15_000 });
@@ -158,7 +141,6 @@ test.describe("warehouses", () => {
     const needsActivation = await waitForWarehousesState(page);
 
     if (needsActivation) {
-      await closeQueryDevtools(page);
       await page.getByRole("button", { name: "Activate Warehouses" }).click();
 
       const dialog = page.getByRole("dialog");
@@ -232,7 +214,6 @@ test.describe("warehouses", () => {
 
     await dialog.locator('input[name="name"]').fill(newName);
 
-    await closeQueryDevtools(page);
     await dialog.getByRole("button", { name: "Save" }).click();
 
     // The edit mutation shares the same success toast as create, so the

@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  CONTACT_BALANCE_COLUMN_KEYS,
+  CustomersBalanceColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class CustomerBalanceDto {
   @ApiProperty({ description: 'Customer ID', type: Number })
@@ -87,16 +92,30 @@ export class CustomerBalanceSummaryResponseDto {
 export {
   FinancialTableCellDto as CustomerBalanceSummaryTableCellDto,
   FinancialTableRowDto as CustomerBalanceSummaryTableRowDto,
-  FinancialTableColumnDto as CustomerBalanceSummaryTableColumnDto,
-  FinancialTableDataDto as CustomerBalanceSummaryTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+
+export class CustomerBalanceSummaryTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(CONTACT_BALANCE_COLUMN_KEYS),
+  })
+  key: CustomersBalanceColumnKey;
+}
+
+export class CustomerBalanceSummaryTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [CustomerBalanceSummaryTableColumnDto],
+  })
+  columns: CustomerBalanceSummaryTableColumnDto[];
+}
 
 export class CustomerBalanceSummaryTableResponseDto {
   @ApiProperty({
     description: 'Table data structure',
-    type: () => FinancialTableDataDto,
+    type: () => CustomerBalanceSummaryTableDataDto,
   })
-  table: FinancialTableDataDto;
+  table: CustomerBalanceSummaryTableDataDto;
 
   @ApiProperty({
     description: 'Query parameters used to generate the report',

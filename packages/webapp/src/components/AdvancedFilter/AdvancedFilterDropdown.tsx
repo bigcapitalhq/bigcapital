@@ -1,6 +1,5 @@
 import { Button, Classes, InputGroup, MenuItem } from '@blueprintjs/core';
 import { Formik, FastField, FieldArray, useFormikContext } from 'formik';
-import type { FieldInputProps, FormikContextType, ArrayHelpers } from 'formik';
 import { get, first, defaultTo, isEqual, isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -32,6 +31,7 @@ import type {
   IResourceField,
   IResourceFieldType,
 } from './interfaces';
+import type { FieldInputProps, FormikContextType, ArrayHelpers } from 'formik';
 import {
   Choose,
   Icon,
@@ -194,6 +194,7 @@ function FilterFieldsField(): JSX.Element {
       }) => (
         <FFormGroup className={'form-group--fieldKey'} name={fieldPath}>
           <FSelect
+            name={fieldPath}
             selectedItem={field.value}
             textAccessor={'label'}
             valueAccessor={'value'}
@@ -251,7 +252,7 @@ function FilterValueField(): JSX.Element | null {
         <FFormGroup className={'form-group--value'} name={valueFieldPath}>
           <AdvancedFilterValueField
             isFocus={conditionIndex === 0}
-            value={typeof field.value === 'string' ? field.value : ''}
+            value={field.value as string | boolean | undefined}
             key={'name'}
             label={fieldName}
             fieldType={fieldType}

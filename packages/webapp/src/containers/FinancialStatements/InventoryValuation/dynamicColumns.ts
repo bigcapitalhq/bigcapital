@@ -1,9 +1,13 @@
 import * as R from 'ramda';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
+import type { InventoryValuationColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
+
+const isColumnKey = (key: InventoryValuationColumnKey) =>
+  R.pathEq(['key'], key);
 
 const getReportColWidth = (
   data: unknown[],
@@ -75,10 +79,10 @@ const dynamicColumnMapper = R.curry(
     const _itemNameColumnAccessor = itemNameColumnAccessor(data);
 
     return R.compose(
-      R.when(R.pathEq(['key'], 'itemName'), _itemNameColumnAccessor),
-      R.when(R.pathEq(['key'], 'quantity'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'valuation'), _numericColumnAccessor),
-      R.when(R.pathEq(['key'], 'average'), _numericColumnAccessor),
+      R.when(isColumnKey('item_name'), _itemNameColumnAccessor),
+      R.when(isColumnKey('quantity'), _numericColumnAccessor),
+      R.when(isColumnKey('valuation'), _numericColumnAccessor),
+      R.when(isColumnKey('average'), _numericColumnAccessor),
       _commonAccessor,
     )(column);
   },

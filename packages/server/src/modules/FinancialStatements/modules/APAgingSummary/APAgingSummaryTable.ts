@@ -5,6 +5,7 @@ import { ITableColumnAccessor } from '../../types/Table.types';
 import { IAgingSummaryQuery } from '../AgingSummary/AgingSummary.types';
 import { ITableColumn } from '../../types/Table.types';
 import { ITableRow } from '../../types/Table.types';
+import { AGING_SUMMARY_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export class APAgingSummaryTable extends AgingSummaryTable {
   readonly report: IAPAgingSummaryData;
@@ -36,7 +37,10 @@ export class APAgingSummaryTable extends AgingSummaryTable {
    * @returns {ITableColumnAccessor}
    */
   get contactNameNodeAccessor(): ITableColumnAccessor {
-    return { key: 'vendor_name', accessor: 'vendorName' };
+    return {
+      key: AGING_SUMMARY_COLUMN_KEYS.VENDOR_NAME,
+      accessor: 'vendorName',
+    };
   }
 
   /**
@@ -44,6 +48,6 @@ export class APAgingSummaryTable extends AgingSummaryTable {
    * @returns {ITableColumn}
    */
   contactNameTableColumn = (): ITableColumn => {
-    return { label: 'Vendor name', key: 'vendor_name' };
+    return { label: 'Vendor name', key: AGING_SUMMARY_COLUMN_KEYS.VENDOR_NAME };
   };
 }

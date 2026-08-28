@@ -79,8 +79,18 @@ export class SaleReceiptResponseDto {
   })
   statement?: string;
 
-  @ApiProperty({ description: 'Whether the receipt is closed', example: false })
-  closed: boolean;
+  @ApiProperty({
+    description: 'Whether the sale receipt is closed',
+    example: false,
+  })
+  isClosed: boolean;
+
+  @ApiProperty({
+    description: 'Whether the sale receipt is draft',
+    example: false,
+    required: false,
+  })
+  isDraft?: boolean;
 
   @ApiProperty({
     description: 'The date when the receipt was closed',

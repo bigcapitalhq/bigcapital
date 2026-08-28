@@ -17,7 +17,7 @@ import {
   CustomersSelect,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import { momentFormatter } from '@/utils';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Project form fields.
@@ -26,6 +26,7 @@ import { momentFormatter } from '@/utils';
 export function ProjectFormFields() {
   // Formik context.
   const { values } = useFormikContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -49,9 +50,8 @@ export function ProjectFormFields() {
             className={classNames(CLASSES.FILL, 'form-group--date')}
           >
             <FDateInput
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               name="deadline"
-              formatDate={(date) => date.toLocaleString()}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,

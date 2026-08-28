@@ -31,6 +31,7 @@ import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import { ProjectsSelect } from '@/containers/Projects/components';
+import { useDateInputFormatter } from '@/hooks';
 
 const getEstimateFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
@@ -56,6 +57,7 @@ export function ReceiptFormHeader() {
   const theme = useTheme();
   const receiptFieldsClassName = getEstimateFieldsStyle(theme);
   const { accounts, projects } = useReceiptFormContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={receiptFieldsClassName}>
@@ -97,8 +99,7 @@ export function ReceiptFormHeader() {
       >
         <FDateInput
           name={'receiptDate'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
@@ -152,12 +153,9 @@ function ReceiptFormCustomerSelect() {
   const updateEntries = useCustomerUpdateExRate();
 
   // Handles the customer item change.
-  const handleItemChange = (customer: {
-    id: number;
-    currency_code: string;
-  }) => {
+  const handleItemChange = (customer: { id: number; currencyCode: string }) => {
     setFieldValue('customerId', customer.id);
-    setFieldValue('currencyCode', customer?.currency_code);
+    setFieldValue('currencyCode', customer?.currencyCode);
 
     updateEntries(customer);
   };

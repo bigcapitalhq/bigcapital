@@ -8,6 +8,7 @@ import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { IDateRange } from '../../types/Report.types';
+import { PROFIT_LOSS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export const ProfitLossSheetTableDatePeriods = <
   T extends GConstructor<FinancialSheet>,
@@ -116,7 +117,10 @@ export const ProfitLossSheetTableDatePeriods = <
         R.unless(
           R.isEmpty,
           R.concat([
-            { key: `total`, label: this.i18n.t('profit_loss_sheet.total') },
+            {
+              key: PROFIT_LOSS_COLUMN_KEYS.TOTAL,
+              label: this.i18n.t('profit_loss_sheet.total'),
+            },
           ]),
         ),
         R.concat(this.percentageColumns()),

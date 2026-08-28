@@ -359,7 +359,9 @@ export class SaleEstimatesController {
     @Headers('accept') acceptHeader: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    const accept = acceptHeader ?? '';
+
+    if (accept.includes(AcceptType.ApplicationPdf)) {
       const [pdfContent] =
         await this.saleEstimatesApplication.getSaleEstimatePdf(estimateId);
 
@@ -368,7 +370,7 @@ export class SaleEstimatesController {
         'Content-Length': pdfContent.length,
       });
       res.send(pdfContent);
-    } else if (acceptHeader.includes(AcceptType.ApplicationTextHtml)) {
+    } else if (accept.includes(AcceptType.ApplicationTextHtml)) {
       const htmlContent =
         await this.saleEstimatesApplication.getSaleEstimateHtml(estimateId);
 

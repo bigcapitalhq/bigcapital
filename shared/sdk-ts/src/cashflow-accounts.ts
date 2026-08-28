@@ -15,6 +15,11 @@ export const BANKING_ACCOUNTS_ROUTES = {
 
 export type BankingAccountsListResponse = OpResponseBody<OpForPath<typeof BANKING_ACCOUNTS_ROUTES.LIST, 'get'>>;
 
+/** Query params for GET /api/banking/accounts. */
+export type GetBankingAccountsQuery = OpQueryParams<
+  OpForPath<typeof BANKING_ACCOUNTS_ROUTES.LIST, 'get'>
+>;
+
 /** Response for GET /api/banking/transactions/{id}. */
 export type BankingTransactionResponse = OpResponseBody<
   OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTION_BY_ID, 'get'>
@@ -32,9 +37,12 @@ export interface BankingAccountSummaryResponse {
   totalRecognizedTransactions: number;
 }
 
-export async function fetchBankingAccounts(fetcher: ApiFetcher): Promise<BankingAccountsListResponse> {
+export async function fetchBankingAccounts(
+  fetcher: ApiFetcher,
+  query?: GetBankingAccountsQuery,
+): Promise<BankingAccountsListResponse> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await get(query ?? {});
   return data;
 }
 
@@ -160,8 +168,9 @@ export type CashflowAccountUncategorizedTransactionsQuery = GetUncategorizedTran
 /** Fetch cashflow accounts (alias for fetchBankingAccounts). */
 export async function fetchCashflowAccounts(
   fetcher: ApiFetcher,
+  query?: GetBankingAccountsQuery,
 ): Promise<BankingAccountsListResponse> {
-  return fetchBankingAccounts(fetcher);
+  return fetchBankingAccounts(fetcher, query);
 }
 
 /** Create a cashflow transaction (alias for createBankingTransaction). */
