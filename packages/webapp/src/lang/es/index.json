@@ -227,7 +227,7 @@
   "accounts": "Cuentas",
   "features.label": "Características",
   "features.landed_cost": "Costo de aterrizaje",
-  "features.landed_cost.helper_text": "Habilite la asignación de costos de aterrizaje en facturas y gastos.",
+  "features.landed_cost.helper_text": "Active el costo de aterrizaje para agregar costos de compra adicionales — como envío, flete, aranceles aduaneros y cargos de manipulación — a sus facturas y gastos. Estos costos se asignan entre las líneas de cada transacción, lo que le brinda el costo real de aterrizaje de su inventario.",
   "features.saved_success_message": "Las preferencias de funciones se han guardado.",
   "homepage": "Página de inicio",
   "items": "Artículos",

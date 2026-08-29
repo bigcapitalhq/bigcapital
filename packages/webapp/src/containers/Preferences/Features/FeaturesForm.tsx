@@ -8,7 +8,7 @@ import {
   FormattedMessage as T,
   CardFooterActions,
   FFormGroup,
-  FCheckbox,
+  FSwitch,
 } from '@/components';
 
 /**
@@ -27,14 +27,14 @@ export function FeaturesForm() {
       {/* ----------- Landed Cost ----------- */}
       <FFormGroup
         name={'features.landedCost'}
-        type={'checkbox'}
+        type={'switch'}
         inline={true}
         helperText={<T id={'features.landed_cost.helper_text'} />}
       >
-        <FCheckbox
-          inline={true}
-          label={<T id={'features.landed_cost'} />}
+        <FSwitch
           name={'features.landedCost'}
+          label={<T id={'features.landed_cost'} />}
+          large={true}
         />
       </FFormGroup>
 
