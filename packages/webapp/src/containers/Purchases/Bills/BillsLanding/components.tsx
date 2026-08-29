@@ -12,12 +12,13 @@ import {
   Choose,
   Can,
 } from '@/components';
-import { CLASSES } from '@/constants';
+import { CLASSES, Features } from '@/constants';
 import {
   BillAction,
   PaymentMadeAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+import { useFeatureCan } from '@/hooks/state';
 import { formattedAmount, safeCallback } from '@/utils';
 
 export type BillTableRow = NonNullable<BillsListResponse['data']>[number];
@@ -49,6 +50,9 @@ export function ActionsMenu({
   },
   row: { original },
 }: ActionsMenuProps) {
+  const { featureCan } = useFeatureCan();
+  const isLandedCostEnabled = featureCan(Features.LandedCost);
+
   return (
     <Menu>
       <MenuItem
@@ -86,11 +90,13 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <MenuItem
-        icon={<Icon icon="receipt-24" iconSize={16} />}
-        text={intl.get('allocate_landed_coast')}
-        onClick={safeCallback(onAllocateLandedCost, original)}
-      />
+      {isLandedCostEnabled && (
+        <MenuItem
+          icon={<Icon icon="receipt-24" iconSize={16} />}
+          text={intl.get('allocate_landed_coast')}
+          onClick={safeCallback(onAllocateLandedCost, original)}
+        />
+      )}
       <Can I={BillAction.Delete} a={AbilitySubject.Bill}>
         <MenuDivider />
         <MenuItem

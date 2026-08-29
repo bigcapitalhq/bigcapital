@@ -265,5 +265,8 @@ export const SettingsOptions = {
     branches: {
       type: 'boolean',
     },
+    landed_cost: {
+      type: 'boolean',
+    },
   },
 };

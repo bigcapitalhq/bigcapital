@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,9 +23,11 @@ import { LandedCostTranasctions } from './commands/LandedCostTransactions.servic
 import { LandedCostTransactionsQueryDto } from './dtos/LandedCostTransactionsQuery.dto';
 import { BillLandedCostTransactionDto } from './dtos/BillLandedCostTransaction.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { LandedCostFeatureGuard } from './LandedCostFeatureGuard';
 
 @ApiTags('Landed Cost')
 @Controller('landed-cost')
+@UseGuards(LandedCostFeatureGuard)
 @ApiExtraModels(BillLandedCostTransactionDto)
 @ApiCommonHeaders()
 export class BillAllocateLandedCostController {

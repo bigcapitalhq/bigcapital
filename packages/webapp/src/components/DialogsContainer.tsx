@@ -1,3 +1,5 @@
+import { FeatureCan } from '@/components';
+import { Features } from '@/constants';
 import { DialogsName } from '@/constants/dialogs';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
@@ -74,9 +76,11 @@ export default function DialogsContainer() {
       <QuickPaymentMadeFormDialog
         dialogName={DialogsName.QuickPaymentMadeForm}
       />
-      <AllocateLandedCostDialog
-        dialogName={DialogsName.AllocateLandedCostForm}
-      />
+      <FeatureCan feature={Features.LandedCost}>
+        <AllocateLandedCostDialog
+          dialogName={DialogsName.AllocateLandedCostForm}
+        />
+      </FeatureCan>
       <MoneyInDialog dialogName={DialogsName.MoneyInForm} />
       <MoneyOutDialog dialogName={DialogsName.MoneyOutForm} />
 

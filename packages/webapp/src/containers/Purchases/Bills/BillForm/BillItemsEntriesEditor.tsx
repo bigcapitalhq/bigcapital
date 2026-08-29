@@ -2,8 +2,10 @@ import { FastField } from 'formik';
 import { useBillFormContext } from './BillFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
 import type { ItemEntry } from '@/interfaces/ItemEntries';
+import { Features } from '@/constants';
 import { ItemsEntriesTable } from '@/containers/Entries/ItemsEntriesTable';
 import { ITEM_TYPE } from '@/containers/Entries/utils';
+import { useFeatureCan } from '@/hooks/state';
 
 type EntriesFieldRenderProps = {
   form: {
@@ -19,6 +21,8 @@ type EntriesFieldRenderProps = {
  */
 export function BillFormBody() {
   const { items, taxRates } = useBillFormContext();
+  const { featureCan } = useFeatureCan();
+  const isLandedCostEnabled = featureCan(Features.LandedCost);
 
   return (
     <FastField
@@ -38,7 +42,7 @@ export function BillFormBody() {
           currencyCode={form.values.currencyCode}
           itemType={ITEM_TYPE.PURCHASABLE}
           taxRates={taxRates}
-          landedCost={true}
+          landedCost={isLandedCostEnabled}
         />
       )}
     </FastField>

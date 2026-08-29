@@ -16,6 +16,7 @@ import {
   DrawerActionsBar,
   FormattedMessage as T,
 } from '@/components';
+import { Features } from '@/constants';
 import {
   BillAction,
   PaymentMadeAction,
@@ -34,6 +35,7 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
+import { useFeatureCan } from '@/hooks/state';
 import { safeCallback, compose } from '@/utils';
 
 interface BillDetailActionsBarInnerProps
@@ -54,6 +56,10 @@ function BillDetailActionsBarInner({
   const history = useHistory();
 
   const { billId, bill } = useBillDrawerContext();
+
+  // Features guard.
+  const { featureCan } = useFeatureCan();
+  const isLandedCostEnabled = featureCan(Features.LandedCost);
 
   // Handle edit bill.
   const onEditBill = () => {
@@ -119,6 +125,7 @@ function BillDetailActionsBarInner({
         <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
           <NavbarDivider />
           <BillMenuItem
+            isLandedCostEnabled={isLandedCostEnabled}
             payload={{
               onConvert: handleConvertToVendorCredit,
               onAllocateLandedCost: handleAllocateCostClick,
