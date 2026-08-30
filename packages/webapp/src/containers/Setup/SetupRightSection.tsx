@@ -1,7 +1,7 @@
 import { x } from '@xstyled/emotion';
 import React from 'react';
 import { SetupWizardContent } from './SetupWizardContent';
-import { useCurrentOrganization, useSubscription } from '@/hooks/query';
+import { useCurrentOrganization } from '@/hooks/query';
 import { useIsOrganizationSetupCompleted } from '@/hooks/state';
 
 /**
@@ -12,10 +12,8 @@ export function SetupRightSection() {
   const isOrganizationReady = !!organization?.isReady;
   const isOrganizationBuildRunning = !!organization?.isBuildRunning;
   const isOrganizationSetupCompleted = useIsOrganizationSetupCompleted();
-  const { isSubscriptionActive } = useSubscription('main');
 
   const scenarios = [
-    { condition: !isSubscriptionActive, step: 'subscription' },
     {
       condition: !isOrganizationReady && !isOrganizationBuildRunning,
       step: 'organization',
