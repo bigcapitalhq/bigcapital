@@ -1,7 +1,11 @@
 import { isEmpty, pick } from 'lodash';
 import React, { createContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { transformToEditForm, ITEMS_FILTER_ROLES_QUERY } from './utils';
+import {
+  transformToEditForm,
+  transformToDuplicateForm,
+  ITEMS_FILTER_ROLES_QUERY,
+} from './utils';
 import type {
   SaleInvoice,
   CreateSaleInvoiceBody,
@@ -101,7 +105,13 @@ function InvoiceFormProvider({
   ...props
 }: InvoiceFormProviderProps) {
   const { state } = useLocation();
-  const estimateId = (state as { action?: string })?.action;
+  const locationState = state as
+    | { action?: string; duplicateInvoiceId?: string | number }
+    | undefined;
+  const duplicateInvoiceId = locationState?.duplicateInvoiceId
+    ? Number(locationState.duplicateInvoiceId)
+    : undefined;
+  const estimateId = locationState?.action;
   const estimateIdNum = estimateId ? Number(estimateId) : undefined;
 
   // Features guard.
@@ -125,8 +135,12 @@ function InvoiceFormProvider({
   // Fetches the estimate by the given id.
   const { data: estimate, isLoading: isEstimateLoading } = useEstimate(
     estimateIdNum,
-    { enabled: !!estimateIdNum },
+    { enabled: !!estimateIdNum && !duplicateInvoiceId },
   );
+
+  // Fetches the duplicate invoice.
+  const { data: duplicateInvoice, isLoading: isDuplicateInvoiceLoading } =
+    useInvoice(duplicateInvoiceId, { enabled: !!duplicateInvoiceId });
 
   // Fetches branding templates of invoice.
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
@@ -136,11 +150,17 @@ function InvoiceFormProvider({
   const { data: paymentServices, isLoading: isPaymentServicesLoading } =
     useGetPaymentServices();
 
-  const newInvoice = !isEmpty(estimate)
-    ? transformToEditForm({
-        ...pick(estimate, ['customerId', 'currencyCode', 'entries']),
-      })
-    : ([] as []);
+  const newInvoice = !isEmpty(duplicateInvoice)
+    ? transformToDuplicateForm(
+        duplicateInvoice as Partial<SaleInvoice> & {
+          entries: SaleInvoice['entries'];
+        },
+      )
+    : !isEmpty(estimate)
+      ? transformToEditForm({
+          ...pick(estimate, ['customerId', 'currencyCode', 'entries']),
+        })
+      : ([] as []);
 
   // Handle fetching the items table based on the given query.
   const { data: itemsData, isLoading: isItemsLoading } = useItems({
@@ -184,7 +204,7 @@ function InvoiceFormProvider({
   >();
 
   // Detarmines whether the form in new mode.
-  const isNewMode = !invoiceId;
+  const isNewMode = Boolean(duplicateInvoiceId) || !invoiceId;
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
@@ -198,6 +218,7 @@ function InvoiceFormProvider({
     isItemsLoading ||
     isCustomersLoading ||
     isEstimateLoading ||
+    isDuplicateInvoiceLoading ||
     isSettingsLoading ||
     isInvoiceStateLoading;
 

@@ -138,6 +138,29 @@ export const defaultReqInvoiceEntry = {
 };
 
 /**
+ * Transform a duplicated invoice to form values.
+ * Copies customer, items, notes, etc. but resets invoice-specific fields:
+ * invoice number, dates (to today), delivered status.
+ */
+export function transformToDuplicateForm(
+  invoice: Partial<SaleInvoice> & { entries: SaleInvoice['entries'] },
+): InvoiceFormValues {
+  const base = transformToEditForm(invoice);
+  const today = moment(new Date()).format('YYYY-MM-DD');
+  // Omit invoice-specific fields so auto-increment can generate a fresh number.
+  // The form's initialValues merger applies the auto next-number before spreading
+  // duplicate data, so omitting invoiceNo preserves that generated number.
+  const withoutNumber = omit(base, ['invoiceNo', 'invoiceNoManually']);
+  return {
+    ...withoutNumber,
+    invoiceDate: today,
+    dueDate: today,
+    delivered: '',
+    referenceNo: '',
+  } as unknown as InvoiceFormValues;
+}
+
+/**
  * Transform invoice to initial values in edit mode.
  *
  * Accepts a partial invoice shape: the provider seeds a new invoice from a
@@ -348,12 +371,12 @@ const transformPaymentMethodsToForm = (
 };
 
 export const useSetPrimaryWarehouseToForm = () => {
-  const { setFieldValue } = useFormikContext<InvoiceFormValues>();
+  const { values, setFieldValue } = useFormikContext<InvoiceFormValues>();
   const { warehouses, isWarehousesSuccess, isNewMode } =
     useInvoiceFormContext();
 
   React.useEffect(() => {
-    if (isWarehousesSuccess && isNewMode) {
+    if (isWarehousesSuccess && isNewMode && !values.warehouseId) {
       const primaryWarehouse =
         warehouses.find((b) => b.primary) || first(warehouses);
 
@@ -361,22 +384,22 @@ export const useSetPrimaryWarehouseToForm = () => {
         setFieldValue('warehouseId', primaryWarehouse.id);
       }
     }
-  }, [isWarehousesSuccess, setFieldValue, warehouses, isNewMode]);
+  }, [isWarehousesSuccess, setFieldValue, warehouses, isNewMode, values.warehouseId]);
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext<InvoiceFormValues>();
+  const { values, setFieldValue } = useFormikContext<InvoiceFormValues>();
   const { branches, isBranchesSuccess, isNewMode } = useInvoiceFormContext();
 
   React.useEffect(() => {
-    if (isBranchesSuccess && isNewMode) {
+    if (isBranchesSuccess && isNewMode && !values.branchId) {
       const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
         setFieldValue('branchId', primaryBranch.id);
       }
     }
-  }, [isBranchesSuccess, setFieldValue, branches, isNewMode]);
+  }, [isBranchesSuccess, setFieldValue, branches, isNewMode, values.branchId]);
 };
 
 /**
