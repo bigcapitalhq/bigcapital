@@ -14,6 +14,17 @@ import { Box, BoxProps } from '@/components';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { sanitizeToHexColor } from '@/utils/sanitize-hex-color';
 
+/** `#rgb` or `#rrggbb`. */
+const HEX_COLOR_REGEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i;
+
+/**
+ * Fallback fed to `<HexColorPicker>` when the field is empty or holds a
+ * partially-typed value. react-colorful runs the raw string through its
+ * hex→HSV math unconditionally; an invalid value yields `NaN` channels, and
+ * dragging the hue bar then paints the swatch as `NaN, NaN, NaN`.
+ */
+const FALLBACK_PICKER_COLOR = '#000000';
+
 export interface ColorInputProps {
   value?: string;
   initialValue?: string;
@@ -45,9 +56,13 @@ export function ColorInput({
     setIsOpen(false);
   };
 
+  const pickerColor = HEX_COLOR_REGEX.test(_value)
+    ? _value
+    : FALLBACK_PICKER_COLOR;
+
   return (
     <Popover
-      content={<HexColorPicker color={_value} onChange={handleChange} />}
+      content={<HexColorPicker color={pickerColor} onChange={handleChange} />}
       position={Position.BOTTOM}
       interactionKind={PopoverInteractionKind.CLICK}
       modifiers={{
