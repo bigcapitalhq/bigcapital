@@ -1,4 +1,4 @@
-import type { ApiFetcher } from './fetch-utils';
+import { withFormData, type ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
 
 export const ATTACHMENTS_ROUTES = {
@@ -18,19 +18,22 @@ export interface UploadAttachmentResponse {
 }
 
 /**
- * Upload an attachment via multipart/form-data. Uses the fetcher's baseUrl and init (headers).
- * The OpenAPI client may not support FormData, so we use fetch with the same config.
+ * Upload an attachment via multipart/form-data. The generated typed fetcher's
+ * JSON body serializer would turn a `FormData` instance into `"{}"` (dropping
+ * the file entirely), so the body is smuggled through the `withFormData` init
+ * property that the form-data middleware swaps back in before `fetch` runs.
+ * Same pattern as `uploadImportFile`; keeps the call on the full middleware
+ * pipeline (camelCase response transform, `ApiError` on failure).
  */
 export async function uploadAttachment(
   fetcher: ApiFetcher,
   formData: FormData
 ): Promise<UploadAttachmentResponse> {
   const post = fetcher.path(ATTACHMENTS_ROUTES.LIST).method('post').create();
-  // Generated client expects typed body; FormData is valid for multipart/form-data at runtime
-  const res = await (
-    post as unknown as (body: FormData) => Promise<{ data?: { data?: UploadAttachmentResponse } }>
-  )(formData);
-  const data = (res as { data?: { data?: UploadAttachmentResponse } })?.data?.data;
+  const res = (await post({} as never, withFormData(formData))) as {
+    data?: { data?: UploadAttachmentResponse };
+  };
+  const data = res?.data?.data;
   if (!data) {
     throw new Error('Upload attachment: no data in response');
   }
