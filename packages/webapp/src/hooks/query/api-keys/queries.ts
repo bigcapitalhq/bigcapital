@@ -8,7 +8,11 @@ import {
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { apiKeysKeys } from './query-keys';
-import type { ApiKeysList, GenerateApiKeyBody } from '@bigcapital/sdk-ts';
+import type {
+  ApiKeysList,
+  GenerateApiKeyBody,
+  GenerateApiKeyResponse,
+} from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -28,7 +32,7 @@ export function useApiKeys(
 }
 
 export function useGenerateApiKey(
-  props?: UseMutationOptions<void, Error, GenerateApiKeyBody>,
+  props?: UseMutationOptions<GenerateApiKeyResponse, Error, GenerateApiKeyBody>,
 ) {
   const client = useQueryClient();
   const fetcher = useApiFetcher();

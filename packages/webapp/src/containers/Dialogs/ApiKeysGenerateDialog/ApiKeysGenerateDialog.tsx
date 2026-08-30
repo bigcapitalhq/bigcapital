@@ -1,111 +1,43 @@
-import { Formik, type FormikHelpers } from 'formik';
-import React, { useState } from 'react';
-import { ApiKeyDisplayView } from './ApiKeyDisplayView';
-import { CreateApiKeyFormSchema as ApiKeysGenerateFormSchema } from './ApiKeysGenerateForm.schema';
-import { ApiKeysGenerateFormContent } from './ApiKeysGenerateFormContent';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { useGenerateApiKey } from '@/hooks/query';
+import React, { lazy } from 'react';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
+import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-interface ApiKeyFormValues {
-  name: string;
-}
+const ApiKeysGenerateDialogContent = lazy(() =>
+  import('./ApiKeysGenerateDialogContent').then((m) => ({
+    default: m.ApiKeysGenerateDialogContent,
+  })),
+);
 
-const defaultInitialValues: ApiKeyFormValues = {
-  name: '',
-};
-
-interface ApiKeysGenerateDialogContentProps extends WithDialogActionsProps {
+interface ApiKeysGenerateDialogProps extends DialogBaseProps {
   dialogName: string;
 }
 
 /**
- * API Keys Generate form dialog content.
+ * API keys generate dialog.
  */
-function ApiKeysGenerateDialogContentInner({
-  closeDialog,
+function ApiKeysGenerateDialogRoot({
   dialogName,
-}: ApiKeysGenerateDialogContentProps): React.ReactElement {
-  const [generatedApiKey, setGeneratedApiKey] = useState<string | null>(null);
-  const generateApiKeyMutate = useGenerateApiKey();
-
-  // Handles the form submit.
-  const handleFormSubmit = (
-    values: ApiKeyFormValues,
-    { setSubmitting, setErrors }: FormikHelpers<ApiKeyFormValues>,
-  ) => {
-    const form = { name: values.name || undefined };
-
-    // Handle request response errors.
-    const handleError = (error: unknown) => {
-      const err = error as {
-        response?: { data?: { errors?: Record<string, string[]> } };
-      };
-      const errors = err?.response?.data?.errors;
-      if (errors) {
-        const errorsTransformed = Object.keys(errors).reduce(
-          (acc: Record<string, string>, key) => {
-            acc[key] = errors[key][0];
-            return acc;
-          },
-          {},
-        );
-        setErrors(errorsTransformed);
-      }
-      setSubmitting(false);
-    };
-
-    generateApiKeyMutate.mutate(form, {
-      onSuccess: (response: unknown) => {
-        // The API returns { key, id }, which might be wrapped in response.data.
-        const apiKey =
-          // FIXME: response shape not typed by SDK; original runtime probing preserved.
-          ((response as { data?: { key?: string } })?.data?.key as string) ||
-          ((response as { key?: string })?.key as string);
-        if (apiKey) {
-          setGeneratedApiKey(apiKey);
-        } else {
-          setSubmitting(false);
-        }
-      },
-      onError: handleError,
-    });
-  };
-
-  // If API key has been generated, show the display view
-  if (generatedApiKey) {
-    return (
-      <ApiKeyDisplayView
-        dialogName={dialogName}
-        apiKey={generatedApiKey}
-        onClose={() => {
-          setGeneratedApiKey(null);
-          closeDialog(dialogName);
-        }}
-      />
-    );
-  }
-
-  // Otherwise, show the generate form
+  isOpen,
+}: ApiKeysGenerateDialogProps): React.ReactElement {
   return (
-    <Formik
-      validationSchema={ApiKeysGenerateFormSchema}
-      initialValues={defaultInitialValues}
-      onSubmit={handleFormSubmit}
+    <Dialog
+      name={dialogName}
+      title={<T id={'api_key.dialog.generate_title'} />}
+      isOpen={isOpen}
+      autoFocus={true}
+      canEscapeKeyClose={true}
+      canOutsideClickClose={true}
+      style={{ width: '400px' }}
     >
-      <ApiKeysGenerateFormContent dialogName={dialogName} />
-    </Formik>
+      <DialogSuspense>
+        <ApiKeysGenerateDialogContent dialogName={dialogName} />
+      </DialogSuspense>
+    </Dialog>
   );
 }
 
-export const ApiKeysGenerateDialogContent = compose(withDialogActions)(
-  ApiKeysGenerateDialogContentInner,
+export const ApiKeysGenerateDialog = compose(withDialogRedux())(
+  ApiKeysGenerateDialogRoot,
 );
-
-// FIXME: latent bug preserved — `index.tsx` re-exports `ApiKeysGenerateDialog`
-// but this module historically only exported `ApiKeysGenerateDialogContent`.
-// The Dialog wrapper (`<Dialog>...`) was never created in the original code;
-// instead the dialog content is used directly. Re-export under the dialog
-// name to keep external consumers (DialogsContainer.tsx) working.
-export { ApiKeysGenerateDialogContent as ApiKeysGenerateDialog };
