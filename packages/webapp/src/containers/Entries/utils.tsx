@@ -306,7 +306,9 @@ export const aggregateItemEntriesTaxRates = R.curry(
       return {
         taxRateId,
         taxRate: taxRate?.rate ?? 0,
-        label: taxRate ? `${taxRate.name} [${taxRate.rate}%]` : `Tax #${taxRateId} [0%]`,
+        label: taxRate
+          ? `${taxRate.name} [${taxRate.rate}%]`
+          : `Tax #${taxRateId} [0%]`,
         taxAmount: totalTaxAmount,
         taxAmountFormatted,
       };
