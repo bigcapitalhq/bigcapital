@@ -291,7 +291,7 @@ export const useComposeRowsOnRemoveTableRow = () => {
  */
 export const aggregateItemEntriesTaxRates = R.curry(
   (currencyCode, taxRates, entries) => {
-    const taxRatesById = keyBy(taxRates, 'id');
+    const taxRatesById = keyBy(taxRates ?? [], 'id');
 
     // Calculate the total tax amount of invoice entries.
     const filteredEntries = entries.filter((e) => e.taxRateId);
@@ -305,8 +305,8 @@ export const aggregateItemEntriesTaxRates = R.curry(
 
       return {
         taxRateId,
-        taxRate: taxRate.rate,
-        label: `${taxRate.name} [${taxRate.rate}%]`,
+        taxRate: taxRate?.rate ?? 0,
+        label: taxRate ? `${taxRate.name} [${taxRate.rate}%]` : `Tax #${taxRateId} [0%]`,
         taxAmount: totalTaxAmount,
         taxAmountFormatted,
       };
