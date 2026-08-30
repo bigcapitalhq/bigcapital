@@ -3,7 +3,6 @@ import { x } from '@xstyled/emotion';
 import { SetupCongratsPage } from './SetupCongratsPage';
 import { SetupInitializingForm } from './SetupInitializingForm';
 import { SetupOrganizationPage } from './SetupOrganizationPage';
-import { SetupSubscription } from './SetupSubscription/SetupSubscription';
 import { Stepper } from '@/components/Stepper';
 
 interface SetupWizardContentProps {
@@ -30,10 +29,6 @@ export function SetupWizardContent({
           items: itemsClassName,
         }}
       >
-        <Stepper.Step label={'Subscription'}>
-          <SetupSubscription />
-        </Stepper.Step>
-
         <Stepper.Step label={'Organization'}>
           <SetupOrganizationPage />
         </Stepper.Step>
