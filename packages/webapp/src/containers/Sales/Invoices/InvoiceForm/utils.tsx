@@ -384,7 +384,13 @@ export const useSetPrimaryWarehouseToForm = () => {
         setFieldValue('warehouseId', primaryWarehouse.id);
       }
     }
-  }, [isWarehousesSuccess, setFieldValue, warehouses, isNewMode, values.warehouseId]);
+  }, [
+    isWarehousesSuccess,
+    setFieldValue,
+    warehouses,
+    isNewMode,
+    values.warehouseId,
+  ]);
 };
 
 export const useSetPrimaryBranchToForm = () => {
