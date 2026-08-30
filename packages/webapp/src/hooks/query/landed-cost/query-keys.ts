@@ -6,6 +6,7 @@ export const LANDED_COST_TRANSACTION = 'LANDED_COST_TRANSACTION';
 export const landedCostKeys = {
   all: () => [LANDED_COST] as const,
   list: (query?: Record<string, unknown>) => [LANDED_COST, query] as const,
+  transactions: () => [LANDED_COST_TRANSACTION] as const,
   transaction: (id?: number | null) => [LANDED_COST_TRANSACTION, id] as const,
 };
 

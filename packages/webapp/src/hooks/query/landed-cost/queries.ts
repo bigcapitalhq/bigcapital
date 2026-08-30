@@ -23,7 +23,7 @@ import type {
 const commonInvalidateQueries = (queryClient: QueryClient) => {
   queryClient.invalidateQueries({ queryKey: billsKeys.all() });
   queryClient.invalidateQueries({ queryKey: landedCostKeys.all() });
-  queryClient.invalidateQueries({ queryKey: landedCostKeys.transaction() });
+  queryClient.invalidateQueries({ queryKey: landedCostKeys.transactions() });
 };
 
 export function useCreateLandedCost(

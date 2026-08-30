@@ -11,6 +11,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../../useRequest';
+import { accountsKeys } from '../../accounts/query-keys';
 import { bankingKeys } from '../query-keys';
 import type {
   DisconnectBankAccountParams,
@@ -39,6 +40,10 @@ export function usePauseFeedsBankAccount(
       queryClient.invalidateQueries({
         queryKey: bankingKeys.summaryMeta(values.bankAccountId),
       });
+      queryClient.invalidateQueries({
+        queryKey: accountsKeys.detail(values.bankAccountId),
+      });
+      queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
     },
     ...options,
   });
@@ -65,6 +70,10 @@ export function useResumeFeedsBankAccount(
       queryClient.invalidateQueries({
         queryKey: bankingKeys.summaryMeta(values.bankAccountId),
       });
+      queryClient.invalidateQueries({
+        queryKey: accountsKeys.detail(values.bankAccountId),
+      });
+      queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
     },
     ...options,
   });
