@@ -36,7 +36,9 @@ export class GetItemsService {
       .whereIn('itemId', ids)
       .select('itemId')
       .select(
-        raw("COALESCE(SUM(CASE WHEN direction = 'IN' THEN quantity WHEN direction = 'OUT' THEN -quantity ELSE 0 END), 0) as quantityOnHand"),
+        raw(
+          "COALESCE(SUM(CASE WHEN direction = 'IN' THEN quantity WHEN direction = 'OUT' THEN -quantity ELSE 0 END), 0) as quantityOnHand",
+        ),
       )
       .groupBy('itemId');
 

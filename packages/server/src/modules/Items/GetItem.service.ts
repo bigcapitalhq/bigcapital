@@ -24,11 +24,15 @@ export class GetItemService {
   ) {}
 
   private async getQuantityOnHand(itemId: number): Promise<number> {
-    const result = await this.inventoryTransactionModel()
+    const result = (await this.inventoryTransactionModel()
       .query()
       .where('itemId', itemId)
-      .select(raw("COALESCE(SUM(CASE WHEN direction = 'IN' THEN quantity WHEN direction = 'OUT' THEN -quantity ELSE 0 END), 0) as quantityOnHand"))
-      .first() as any;
+      .select(
+        raw(
+          "COALESCE(SUM(CASE WHEN direction = 'IN' THEN quantity WHEN direction = 'OUT' THEN -quantity ELSE 0 END), 0) as quantityOnHand",
+        ),
+      )
+      .first()) as any;
 
     return Number(result?.quantityOnHand ?? 0);
   }
