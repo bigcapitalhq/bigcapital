@@ -9,6 +9,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,7 +18,6 @@ import {
   Param,
   Post,
   Res,
-  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -68,14 +68,14 @@ export class AttachmentsController {
     description: 'The document has been uploaded successfully',
   })
   @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - File upload failed',
+    status: 400,
+    description: 'Bad request - no file was provided in the upload',
   })
   async uploadAttachment(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
-      throw new UnauthorizedException({
+      throw new BadRequestException({
         errorType: 'FILE_UPLOAD_FAILED',
-        message: 'Now file uploaded.',
+        message: 'No file uploaded.',
       });
     }
     const data = await this.attachmentsApplication.upload(file);
