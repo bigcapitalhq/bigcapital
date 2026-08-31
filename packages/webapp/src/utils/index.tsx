@@ -3,8 +3,6 @@ import { Intent } from '@blueprintjs/core';
 import accounting from 'accounting';
 import clsx from 'classnames';
 import jsCookie from 'js-cookie';
-import Currencies from 'js-money/lib/currency';
-import Currency from 'js-money/lib/currency';
 import _ from 'lodash';
 import { isEqual, castArray, isEmpty, includes, pickBy } from 'lodash';
 import moment from 'moment';
@@ -12,6 +10,7 @@ import * as R from 'ramda';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { deepMapKeys } from './map-key-deep';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import { allCurrencies } from '@/constants/currencies';
 export * from './deep';
 export * from './flatten-infinity-pages';
 
@@ -191,7 +190,7 @@ export const defaultExpanderReducer = (tableRows, level) => {
 };
 
 export function formattedAmount(cents, currencyCode = '', props = {}) {
-  const currency = Currency[currencyCode];
+  const currency = allCurrencies[currencyCode];
 
   const parsedCurrency = {
     symbol: '',
@@ -723,8 +722,8 @@ export const calculateStatus = (paymentAmount, balanceAmount) => {
 };
 
 const getCurrenciesOptions = () => {
-  return Object.keys(Currencies).map((currencyCode) => {
-    const currency = Currencies[currencyCode];
+  return Object.keys(allCurrencies).map((currencyCode) => {
+    const currency = allCurrencies[currencyCode];
 
     return {
       ...currency,
