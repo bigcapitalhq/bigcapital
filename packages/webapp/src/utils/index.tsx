@@ -5,6 +5,37 @@ import clsx from 'classnames';
 import jsCookie from 'js-cookie';
 import Currencies from 'js-money/lib/currency';
 import Currency from 'js-money/lib/currency';
+
+// Supplement missing ISO 4217 currencies not present in js-money@0.6.3.
+const EXTRA_CURRENCIES: Record<string, any> = {
+  LRD: {
+    symbol: 'L$',
+    name: 'Liberian Dollar',
+    symbol_native: 'L$',
+    decimal_digits: 2,
+    rounding: 0,
+    code: 'LRD',
+    name_plural: 'Liberian dollars',
+  },
+  SLE: {
+    symbol: 'Le',
+    name: 'Sierra Leonean Leone',
+    symbol_native: 'Le',
+    decimal_digits: 2,
+    rounding: 0,
+    code: 'SLE',
+    name_plural: 'Sierra Leonean leones',
+  },
+};
+
+Object.entries(EXTRA_CURRENCIES).forEach(([code, meta]) => {
+  if (!(Currencies as Record<string, any>)[code]) {
+    (Currencies as Record<string, any>)[code] = meta;
+  }
+  if (!(Currency as Record<string, any>)[code]) {
+    (Currency as Record<string, any>)[code] = meta;
+  }
+});
 import _ from 'lodash';
 import { isEqual, castArray, isEmpty, includes, pickBy } from 'lodash';
 import moment from 'moment';
