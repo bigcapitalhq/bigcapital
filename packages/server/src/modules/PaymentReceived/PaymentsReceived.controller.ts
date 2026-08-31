@@ -3,6 +3,7 @@ import {
   ApiBody,
   ApiExtraModels,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -43,6 +44,7 @@ import {
   BulkDeleteDto,
   ValidateBulkDeleteResponseDto,
 } from '@/common/dtos/BulkDelete.dto';
+import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
@@ -60,6 +62,7 @@ import { PaymentReceiveAction } from './types/PaymentReceived.types';
 @ApiExtraModels(PaymentReceiveMailStateResponseDto)
 @ApiExtraModels(PaymentReceiveMailResponseDto)
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
+@ApiExtraModels(SmsNotificationDetailsResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class PaymentReceivesController {
@@ -236,6 +239,53 @@ export class PaymentReceivesController {
     @Param('id', ParseIntPipe) paymentReceiveId: number,
   ) {
     return this.paymentReceivesApplication.getPaymentReceiveInvoices(
+      paymentReceiveId,
+    );
+  }
+
+  @Post(':id/notify-by-sms')
+  @RequirePermission(
+    PaymentReceiveAction.NotifyBySms,
+    AbilitySubject.PaymentReceive,
+  )
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Notify the given payment received by SMS.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The payment received has been notified by SMS.',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The payment received id',
+  })
+  public notifyPaymentReceiveBySms(
+    @Param('id', ParseIntPipe) paymentReceiveId: number,
+  ) {
+    return this.paymentReceivesApplication.notifyPaymentReceiveBySms(
+      paymentReceiveId,
+    );
+  }
+
+  @Get(':id/sms-details')
+  @RequirePermission(PaymentReceiveAction.View, AbilitySubject.PaymentReceive)
+  @ApiOperation({ summary: 'Retrieves the payment received SMS details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The payment received SMS details have been retrieved.',
+    schema: { $ref: getSchemaPath(SmsNotificationDetailsResponseDto) },
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The payment received id',
+  })
+  public getPaymentReceiveSmsDetails(
+    @Param('id', ParseIntPipe) paymentReceiveId: number,
+  ) {
+    return this.paymentReceivesApplication.getPaymentReceiveSmsDetails(
       paymentReceiveId,
     );
   }

@@ -21,6 +21,7 @@ import {
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
 import {
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -51,6 +52,8 @@ import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { SaleInvoiceAction } from './SaleInvoice.types';
 import { InvoicePaymentTransactionDto } from './dtos/InvoicePaymentTransactionResponse.dto';
 import { SaleInvoiceHtmlContentResponseDto } from './dtos/SaleInvoiceHtmlResponse.dto';
+import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
+import { NotifySaleInvoiceBySmsDto } from './dtos/NotifySaleInvoiceBySms.dto';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
@@ -62,6 +65,7 @@ import { SaleInvoiceHtmlContentResponseDto } from './dtos/SaleInvoiceHtmlRespons
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiExtraModels(InvoicePaymentTransactionDto)
 @ApiExtraModels(SaleInvoiceHtmlContentResponseDto)
+@ApiExtraModels(SmsNotificationDetailsResponseDto)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class SaleInvoicesController {
   constructor(private saleInvoiceApplication: SaleInvoiceApplication) {}
@@ -397,6 +401,57 @@ export class SaleInvoicesController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<SaleInvoiceMailState> {
     return this.saleInvoiceApplication.getSaleInvoiceMailState(id);
+  }
+
+  @Post(':id/notify-by-sms')
+  @RequirePermission(SaleInvoiceAction.NotifyBySms, AbilitySubject.SaleInvoice)
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Notify the given sale invoice by SMS.' })
+  @ApiBody({
+    description: 'The sale invoice SMS notification options.',
+    type: NotifySaleInvoiceBySmsDto,
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice has been notified by SMS.',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
+  notifySaleInvoiceBySms(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() smsOptions: NotifySaleInvoiceBySmsDto,
+  ) {
+    return this.saleInvoiceApplication.notifySaleInvoiceBySms(id, {
+      notification_key: smsOptions?.notification_key,
+    });
+  }
+
+  @Get(':id/sms-details')
+  @RequirePermission(SaleInvoiceAction.View, AbilitySubject.SaleInvoice)
+  @ApiOperation({ summary: 'Retrieves the sale invoice SMS details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice SMS details have been retrieved.',
+    schema: { $ref: getSchemaPath(SmsNotificationDetailsResponseDto) },
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
+  getSaleInvoiceSmsDetails(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('notification_key') notificationKey?: string,
+  ) {
+    return this.saleInvoiceApplication.getSaleInvoiceSmsDetails(id, {
+      notification_key: notificationKey,
+    });
   }
 
   @Post(':id/generate-link')

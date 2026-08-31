@@ -31,16 +31,20 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { GetSaleEstimatePdf } from './queries/GetSaleEstimatePdf';
 import { MailNotificationModule } from '../MailNotification/MailNotification.module';
 import { MailModule } from '../Mail/Mail.module';
+import { SMSModule } from '../SMS/SMS.module';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
+import { SaleEstimateSmsNotification } from './SaleEstimateSmsNotification';
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
 import { SaleEstimatePdfTemplate } from '../SaleInvoices/queries/SaleEstimatePdfTemplate.service';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { SendSaleEstimateMailQueue } from './types/SaleEstimates.types';
+import { SMS_QUEUE } from '../SMS/SMS.constants';
 import { SaleEstimatesExportable } from './SaleEstimatesExportable';
 import { SaleEstimatesImportable } from './SaleEstimatesImportable';
 import { GetSaleEstimateMailStateService } from './queries/GetSaleEstimateMailState.service';
 import { GetSaleEstimateMailTemplateService } from './queries/GetSaleEstimateMailTemplate.service';
 import { SaleEstimateAutoIncrementSubscriber } from './subscribers/SaleEstimateAutoIncrementSubscriber';
+import { SaleEstimateSmsNotificationSubscriber } from './subscribers/SaleEstimateSmsNotificationSubscriber';
 import { BulkDeleteSaleEstimatesService } from './BulkDeleteSaleEstimates.service';
 import { ValidateBulkDeleteSaleEstimatesService } from './ValidateBulkDeleteSaleEstimates.service';
 import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.process';
@@ -52,9 +56,11 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     DynamicListModule,
     MailNotificationModule,
     MailModule,
+    SMSModule,
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
     PdfTemplatesModule,
+    BullModule.registerQueue({ name: SMS_QUEUE }),
     BullModule.registerQueue({ name: SendSaleEstimateMailQueue }),
     BullBoardModule.forFeature({
       name: SendSaleEstimateMailQueue,
@@ -84,6 +90,7 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     WarehouseTransactionDTOTransform,
     SaleEstimateDTOTransformer,
     SaleEstimatesApplication,
+    SaleEstimateSmsNotification,
     SendSaleEstimateMail,
     GetSaleEstimatePdf,
     SaleEstimatePdfTemplate,
@@ -92,6 +99,7 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     GetSaleEstimateMailStateService,
     GetSaleEstimateMailTemplateService,
     SaleEstimateAutoIncrementSubscriber,
+    SaleEstimateSmsNotificationSubscriber,
     BulkDeleteSaleEstimatesService,
     ValidateBulkDeleteSaleEstimatesService,
     SendSaleEstimateMailProcess,

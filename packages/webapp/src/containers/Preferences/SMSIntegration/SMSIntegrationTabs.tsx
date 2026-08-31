@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
+import { SMSIntegrationForm } from './SMSIntegrationForm';
 import { SMSMessagesDataTable } from './SMSMessagesDataTable';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
@@ -35,6 +36,7 @@ function SMSIntegrationTabsInner({
           <Tab
             id="overview"
             title={intl.get('sms_integration.label.overview')}
+            panel={<SMSIntegrationForm />}
           />
           <Tab
             id="sms_messages"

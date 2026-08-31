@@ -1,7 +1,12 @@
 import classNames from 'classnames';
 import React from 'react';
 import { CLASSES } from '@/constants/classes';
-import { useSettings, useSettingSMSNotifications } from '@/hooks/query';
+import {
+  useSaveSettings,
+  useSettings,
+  useSettingSMSNotifications,
+} from '@/hooks/query';
+import type { AllSettings } from '@bigcapital/sdk-ts';
 
 export interface SMSNotification {
   key: string;
@@ -13,9 +18,11 @@ export interface SMSNotification {
 }
 
 export interface SMSIntegrationContextValue {
+  allSettings?: AllSettings;
   notifications: SMSNotification[] | undefined;
   isSMSNotificationsLoading: boolean;
   isSMSNotificationsFetching: boolean;
+  saveSettingMutate: ReturnType<typeof useSaveSettings>['mutateAsync'];
 }
 
 const SMSIntegrationContext = React.createContext<SMSIntegrationContextValue>(
@@ -31,7 +38,8 @@ export interface SMSIntegrationProviderProps {
  */
 function SMSIntegrationProvider({ children }: SMSIntegrationProviderProps) {
   //Fetches Organization Settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  const { data: allSettings, isLoading: isSettingsLoading } = useSettings();
+  const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
   const {
     data: notifications,
@@ -41,9 +49,11 @@ function SMSIntegrationProvider({ children }: SMSIntegrationProviderProps) {
 
   // Provider state.
   const provider: SMSIntegrationContextValue = {
+    allSettings,
     notifications: (notifications as SMSNotification[] | undefined) ?? [],
     isSMSNotificationsLoading: isSMSNotificationsLoading || isSettingsLoading,
     isSMSNotificationsFetching,
+    saveSettingMutate,
   };
 
   return (

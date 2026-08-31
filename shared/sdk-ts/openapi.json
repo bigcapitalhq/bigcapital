@@ -3829,6 +3829,120 @@
         ]
       }
     },
+    "/api/sale-invoices/{id}/notify-by-sms": {
+      "post": {
+        "operationId": "SaleInvoicesController_notifySaleInvoiceBySms",
+        "summary": "Notify the given sale invoice by SMS.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The sale invoice id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "description": "The sale invoice SMS notification options.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifySaleInvoiceBySmsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The sale invoice has been notified by SMS."
+          }
+        },
+        "tags": [
+          "Sale Invoices"
+        ]
+      }
+    },
+    "/api/sale-invoices/{id}/sms-details": {
+      "get": {
+        "operationId": "SaleInvoicesController_getSaleInvoiceSmsDetails",
+        "summary": "Retrieves the sale invoice SMS details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The sale invoice id",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "notification_key",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sale invoice SMS details have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmsNotificationDetailsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Sale Invoices"
+        ]
+      }
+    },
     "/api/sale-invoices/{id}/generate-link": {
       "post": {
         "operationId": "SaleInvoicesController_generateSaleInvoiceSharableLink",
@@ -4231,8 +4345,8 @@
           "200": {
             "description": "The document has been uploaded successfully"
           },
-          "401": {
-            "description": "Unauthorized - File upload failed"
+          "400": {
+            "description": "Bad request - no file was provided in the upload"
           }
         },
         "tags": [
@@ -5498,6 +5612,101 @@
         "responses": {
           "200": {
             "description": "The payment received invoices have been successfully retrieved."
+          }
+        },
+        "tags": [
+          "Payments Received"
+        ]
+      }
+    },
+    "/api/payments-received/{id}/notify-by-sms": {
+      "post": {
+        "operationId": "PaymentReceivesController_notifyPaymentReceiveBySms",
+        "summary": "Notify the given payment received by SMS.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The payment received id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The payment received has been notified by SMS."
+          }
+        },
+        "tags": [
+          "Payments Received"
+        ]
+      }
+    },
+    "/api/payments-received/{id}/sms-details": {
+      "get": {
+        "operationId": "PaymentReceivesController_getPaymentReceiveSmsDetails",
+        "summary": "Retrieves the payment received SMS details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The payment received id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The payment received SMS details have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmsNotificationDetailsResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -9240,6 +9449,101 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SaleReceiptStateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Sale Receipts"
+        ]
+      }
+    },
+    "/api/sale-receipts/{id}/notify-by-sms": {
+      "post": {
+        "operationId": "SaleReceiptsController_notifySaleReceiptBySms",
+        "summary": "Notify the given sale receipt by SMS.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The sale receipt id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sale receipt has been notified by SMS."
+          }
+        },
+        "tags": [
+          "Sale Receipts"
+        ]
+      }
+    },
+    "/api/sale-receipts/{id}/sms-details": {
+      "get": {
+        "operationId": "SaleReceiptsController_getSaleReceiptSmsDetails",
+        "summary": "Retrieves the sale receipt SMS details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The sale receipt id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The sale receipt SMS details have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmsNotificationDetailsResponseDto"
                 }
               }
             }
@@ -14000,6 +14304,123 @@
         ]
       }
     },
+    "/api/banking/recognized/{recognizedTransactionId}": {
+      "get": {
+        "operationId": "BankingRecognizedTransactionsController_getRecognizedTransaction",
+        "summary": "Get recognized transaction",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recognizedTransactionId",
+            "required": true,
+            "in": "path",
+            "description": "The ID of the recognized transaction",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the recognized transaction details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRecognizedTransactionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recognized transaction not found"
+          }
+        },
+        "tags": [
+          "Banking Recognized Transactions"
+        ]
+      }
+    },
+    "/api/banking/recognized": {
+      "get": {
+        "operationId": "BankingRecognizedTransactionsController_getRecognizedTransactions",
+        "summary": "Get a list of recognized transactions",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "description": "Query parameters for filtering recognized transactions",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of recognized transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/GetRecognizedTransactionResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking Recognized Transactions"
+        ]
+      }
+    },
     "/api/banking/rules": {
       "post": {
         "operationId": "BankRulesController_createBankRule",
@@ -14234,123 +14655,6 @@
         },
         "tags": [
           "Bank Rules"
-        ]
-      }
-    },
-    "/api/banking/recognized/{recognizedTransactionId}": {
-      "get": {
-        "operationId": "BankingRecognizedTransactionsController_getRecognizedTransaction",
-        "summary": "Get recognized transaction",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "recognizedTransactionId",
-            "required": true,
-            "in": "path",
-            "description": "The ID of the recognized transaction",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the recognized transaction details",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetRecognizedTransactionResponseDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Recognized transaction not found"
-          }
-        },
-        "tags": [
-          "Banking Recognized Transactions"
-        ]
-      }
-    },
-    "/api/banking/recognized": {
-      "get": {
-        "operationId": "BankingRecognizedTransactionsController_getRecognizedTransactions",
-        "summary": "Get a list of recognized transactions",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "query",
-            "required": false,
-            "in": "query",
-            "description": "Query parameters for filtering recognized transactions",
-            "schema": {}
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns a list of recognized transactions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/PaginatedResponseDto"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/GetRecognizedTransactionResponseDto"
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Banking Recognized Transactions"
         ]
       }
     },
@@ -15153,6 +15457,60 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/api/settings/sms-notifications": {
+      "get": {
+        "operationId": "SettingsController_getSmsNotifications",
+        "summary": "Retrieves SMS notifications settings.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/api/settings/sms-notification/{key}": {
+      "get": {
+        "operationId": "SettingsController_getSmsNotification",
+        "summary": "Retrieves a single SMS notification setting.",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Settings"
+        ]
+      }
+    },
+    "/api/settings/sms-notification": {
+      "post": {
+        "operationId": "SettingsController_editSmsNotification",
+        "summary": "Edits a single SMS notification setting.",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
           }
         },
         "tags": [
@@ -26794,6 +27152,31 @@
           "costs"
         ]
       },
+      "SmsNotificationDetailsResponseDto": {
+        "type": "object",
+        "properties": {
+          "customerName": {
+            "type": "string",
+            "description": "The display name of the customer.",
+            "example": "Acme Corp"
+          },
+          "customerPhoneNumber": {
+            "type": "string",
+            "description": "The personal phone number of the customer.",
+            "example": "+1 555 123 4567"
+          },
+          "smsMessage": {
+            "type": "string",
+            "description": "The formatted SMS message.",
+            "example": "Your receipt #R-00001 has been received."
+          }
+        },
+        "required": [
+          "customerName",
+          "customerPhoneNumber",
+          "smsMessage"
+        ]
+      },
       "SaleInvoiceHtmlContentResponseDto": {
         "type": "object",
         "properties": {
@@ -27956,6 +28339,20 @@
           "entries",
           "attachments"
         ]
+      },
+      "NotifySaleInvoiceBySmsDto": {
+        "type": "object",
+        "properties": {
+          "notification_key": {
+            "type": "string",
+            "description": "The notification key to determine the SMS template. Defaults to `details`.",
+            "enum": [
+              "details",
+              "reminder"
+            ],
+            "default": "details"
+          }
+        }
       },
       "CreatePdfTemplateDto": {
         "type": "object",
@@ -36228,6 +36625,11 @@
             "description": "The formatted amount",
             "example": "$5,000.00"
           },
+          "uncategorizedTransactionsCount": {
+            "type": "number",
+            "description": "The uncategorized transactions count of the account",
+            "example": 0
+          },
           "plaidItemId": {
             "type": "string",
             "description": "The Plaid item ID",
@@ -36302,6 +36704,7 @@
           "lastFeedsUpdatedFromNow",
           "amount",
           "formattedAmount",
+          "uncategorizedTransactionsCount",
           "plaidItemId",
           "plaidAccountId",
           "isFeedsActive",
@@ -36856,6 +37259,151 @@
           "formattedWithdrawalAmount"
         ]
       },
+      "GetRecognizedTransactionResponseDto": {
+        "type": "object",
+        "properties": {
+          "uncategorizedTransactionId": {
+            "type": "number",
+            "description": "The unique identifier of the uncategorized transaction",
+            "example": 123
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "The reference number of the transaction",
+            "example": "TRX-2024-001"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the transaction",
+            "example": "Payment for invoice #123"
+          },
+          "payee": {
+            "type": "string",
+            "description": "The payee of the transaction",
+            "example": "John Doe"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount of the transaction",
+            "example": 1500.75
+          },
+          "formattedAmount": {
+            "type": "string",
+            "description": "The formatted amount of the transaction",
+            "example": "$1,500.75"
+          },
+          "date": {
+            "type": "string",
+            "description": "The date of the transaction",
+            "example": "2024-04-01"
+          },
+          "formattedDate": {
+            "type": "string",
+            "description": "The formatted date of the transaction",
+            "example": "Apr 1, 2024"
+          },
+          "assignedAccountId": {
+            "type": "number",
+            "description": "The assigned account ID",
+            "example": 10
+          },
+          "assignedAccountName": {
+            "type": "string",
+            "description": "The assigned account name",
+            "example": "Bank Account"
+          },
+          "assignedAccountCode": {
+            "type": "string",
+            "description": "The assigned account code",
+            "example": "1001"
+          },
+          "assignedPayee": {
+            "type": "string",
+            "description": "The assigned payee",
+            "example": "Jane Smith"
+          },
+          "assignedMemo": {
+            "type": "string",
+            "description": "The assigned memo",
+            "example": "Office supplies"
+          },
+          "assignedCategory": {
+            "type": "string",
+            "description": "The assigned category",
+            "example": "Office Expenses"
+          },
+          "assignedCategoryFormatted": {
+            "type": "string",
+            "description": "The formatted assigned category",
+            "example": "Other Income"
+          },
+          "withdrawal": {
+            "type": "number",
+            "description": "The withdrawal amount",
+            "example": 500
+          },
+          "deposit": {
+            "type": "number",
+            "description": "The deposit amount",
+            "example": 1000
+          },
+          "isDepositTransaction": {
+            "type": "boolean",
+            "description": "Whether this is a deposit transaction",
+            "example": true
+          },
+          "isWithdrawalTransaction": {
+            "type": "boolean",
+            "description": "Whether this is a withdrawal transaction",
+            "example": false
+          },
+          "formattedDepositAmount": {
+            "type": "string",
+            "description": "The formatted deposit amount",
+            "example": "$1,000.00"
+          },
+          "formattedWithdrawalAmount": {
+            "type": "string",
+            "description": "The formatted withdrawal amount",
+            "example": "$500.00"
+          },
+          "bankRuleId": {
+            "type": "string",
+            "description": "The bank rule ID",
+            "example": "BR-001"
+          },
+          "bankRuleName": {
+            "type": "string",
+            "description": "The bank rule name",
+            "example": "Salary Rule"
+          }
+        },
+        "required": [
+          "uncategorizedTransactionId",
+          "referenceNo",
+          "description",
+          "payee",
+          "amount",
+          "formattedAmount",
+          "date",
+          "formattedDate",
+          "assignedAccountId",
+          "assignedAccountName",
+          "assignedAccountCode",
+          "assignedPayee",
+          "assignedMemo",
+          "assignedCategory",
+          "assignedCategoryFormatted",
+          "withdrawal",
+          "deposit",
+          "isDepositTransaction",
+          "isWithdrawalTransaction",
+          "formattedDepositAmount",
+          "formattedWithdrawalAmount",
+          "bankRuleId",
+          "bankRuleName"
+        ]
+      },
       "BankRuleConditionResponseDto": {
         "type": "object",
         "properties": {
@@ -37159,151 +37707,6 @@
           "assignAccountId",
           "assignPayee",
           "assignMemo"
-        ]
-      },
-      "GetRecognizedTransactionResponseDto": {
-        "type": "object",
-        "properties": {
-          "uncategorizedTransactionId": {
-            "type": "number",
-            "description": "The unique identifier of the uncategorized transaction",
-            "example": 123
-          },
-          "referenceNo": {
-            "type": "string",
-            "description": "The reference number of the transaction",
-            "example": "TRX-2024-001"
-          },
-          "description": {
-            "type": "string",
-            "description": "The description of the transaction",
-            "example": "Payment for invoice #123"
-          },
-          "payee": {
-            "type": "string",
-            "description": "The payee of the transaction",
-            "example": "John Doe"
-          },
-          "amount": {
-            "type": "number",
-            "description": "The amount of the transaction",
-            "example": 1500.75
-          },
-          "formattedAmount": {
-            "type": "string",
-            "description": "The formatted amount of the transaction",
-            "example": "$1,500.75"
-          },
-          "date": {
-            "type": "string",
-            "description": "The date of the transaction",
-            "example": "2024-04-01"
-          },
-          "formattedDate": {
-            "type": "string",
-            "description": "The formatted date of the transaction",
-            "example": "Apr 1, 2024"
-          },
-          "assignedAccountId": {
-            "type": "number",
-            "description": "The assigned account ID",
-            "example": 10
-          },
-          "assignedAccountName": {
-            "type": "string",
-            "description": "The assigned account name",
-            "example": "Bank Account"
-          },
-          "assignedAccountCode": {
-            "type": "string",
-            "description": "The assigned account code",
-            "example": "1001"
-          },
-          "assignedPayee": {
-            "type": "string",
-            "description": "The assigned payee",
-            "example": "Jane Smith"
-          },
-          "assignedMemo": {
-            "type": "string",
-            "description": "The assigned memo",
-            "example": "Office supplies"
-          },
-          "assignedCategory": {
-            "type": "string",
-            "description": "The assigned category",
-            "example": "Office Expenses"
-          },
-          "assignedCategoryFormatted": {
-            "type": "string",
-            "description": "The formatted assigned category",
-            "example": "Other Income"
-          },
-          "withdrawal": {
-            "type": "number",
-            "description": "The withdrawal amount",
-            "example": 500
-          },
-          "deposit": {
-            "type": "number",
-            "description": "The deposit amount",
-            "example": 1000
-          },
-          "isDepositTransaction": {
-            "type": "boolean",
-            "description": "Whether this is a deposit transaction",
-            "example": true
-          },
-          "isWithdrawalTransaction": {
-            "type": "boolean",
-            "description": "Whether this is a withdrawal transaction",
-            "example": false
-          },
-          "formattedDepositAmount": {
-            "type": "string",
-            "description": "The formatted deposit amount",
-            "example": "$1,000.00"
-          },
-          "formattedWithdrawalAmount": {
-            "type": "string",
-            "description": "The formatted withdrawal amount",
-            "example": "$500.00"
-          },
-          "bankRuleId": {
-            "type": "string",
-            "description": "The bank rule ID",
-            "example": "BR-001"
-          },
-          "bankRuleName": {
-            "type": "string",
-            "description": "The bank rule name",
-            "example": "Salary Rule"
-          }
-        },
-        "required": [
-          "uncategorizedTransactionId",
-          "referenceNo",
-          "description",
-          "payee",
-          "amount",
-          "formattedAmount",
-          "date",
-          "formattedDate",
-          "assignedAccountId",
-          "assignedAccountName",
-          "assignedAccountCode",
-          "assignedPayee",
-          "assignedMemo",
-          "assignedCategory",
-          "assignedCategoryFormatted",
-          "withdrawal",
-          "deposit",
-          "isDepositTransaction",
-          "isWithdrawalTransaction",
-          "formattedDepositAmount",
-          "formattedWithdrawalAmount",
-          "bankRuleId",
-          "bankRuleName"
         ]
       },
       "GetExcludedBankTransactionResponseDto": {
@@ -38129,6 +38532,10 @@
           "id": {
             "type": "object",
             "description": "Row identifier"
+          },
+          "meta": {
+            "type": "object",
+            "description": "Row-level metadata (e.g. transaction reference link)"
           },
           "children": {
             "description": "Child rows",

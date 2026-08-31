@@ -1,6 +1,5 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
-import { omit } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
@@ -15,7 +14,7 @@ import { compose, transformToForm } from '@/utils';
 
 const defaultInitialValues: SMSMessageFormValues = {
   notificationKey: '',
-  isNotificationEnabled: '',
+  isNotificationEnabled: false,
   messageText: '',
 };
 
@@ -47,8 +46,11 @@ function SMSMessageFormInner({
     { setSubmitting, setErrors }: FormikHelpers<SMSMessageFormValues>,
   ) => {
     const form = {
-      ...omit(values, ['isNotificationEnabled', 'smsMessage']),
-      notificationKey: smsNotification.key,
+      key: smsNotification.key,
+      values: {
+        message_text: values.messageText,
+        is_notification_enabled: values.isNotificationEnabled,
+      },
     };
     // Handle request response success.
     const onSuccess = () => {
@@ -69,10 +71,6 @@ function SMSMessageFormInner({
       }
       setSubmitting(false);
     };
-    // FIXME: latent bug — form passes `{ notification_key }` but the mutate
-    // signature expects `{ key, values }`. Original @ts-nocheck code compiled
-    // silently; preserved here to avoid a behavior change in a TS-only slice.
-    // @ts-expect-error — form body shape mismatch vs SDK hook signature.
     editSMSNotificationMutate(form).then(onSuccess).catch(onError);
   };
 

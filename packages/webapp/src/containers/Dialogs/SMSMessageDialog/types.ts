@@ -10,7 +10,7 @@ export interface SMSNotification {
 
 export interface SMSMessageFormValues {
   notificationKey: string;
-  isNotificationEnabled: string | boolean;
+  isNotificationEnabled: boolean;
   messageText: string;
   [key: string]: unknown;
 }

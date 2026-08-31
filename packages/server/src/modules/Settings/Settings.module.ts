@@ -6,6 +6,7 @@ import { SaveSettingsService } from './commands/SaveSettings.service';
 import { SettingsController } from './Settings.controller';
 import { SETTINGS_PROVIDER } from './Settings.types';
 import { GetSettingsService } from './queries/GetSettings.service';
+import { SmsNotificationSettingsService } from './SmsNotificationSettings.service';
 import { ClsModule } from 'nestjs-cls';
 
 @Global()
@@ -32,8 +33,9 @@ import { ClsModule } from 'nestjs-cls';
     GetSettingsService,
     SettingsApplicationService,
     SaveSettingsService,
+    SmsNotificationSettingsService,
   ],
-  exports: [SettingRepository],
+  exports: [SettingRepository, SmsNotificationSettingsService],
   controllers: [SettingsController],
 })
 export class SettingsModule {}

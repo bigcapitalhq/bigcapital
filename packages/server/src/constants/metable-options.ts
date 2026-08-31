@@ -227,6 +227,17 @@ export const SettingsOptions = {
       type: 'boolean',
     },
   },
+  'sms-integration': {
+    twilio_account_sid: {
+      type: 'string',
+    },
+    twilio_auth_token: {
+      type: 'string',
+    },
+    twilio_from_number: {
+      type: 'string',
+    },
+  },
   'sms-notification': {
     'sms-notification-enable.sale-invoice-details': {
       type: 'boolean',
@@ -245,6 +256,24 @@ export const SettingsOptions = {
     },
     'sms-notification-enable.customer-balance': {
       type: 'boolean',
+    },
+    'sms-message.sale-invoice-details': {
+      type: 'string',
+    },
+    'sms-message.sale-invoice-reminder': {
+      type: 'string',
+    },
+    'sms-message.sale-estimate-details': {
+      type: 'string',
+    },
+    'sms-message.sale-receipt-details': {
+      type: 'string',
+    },
+    'sms-message.payment-receive-details': {
+      type: 'string',
+    },
+    'sms-message.customer-balance': {
+      type: 'string',
     },
   },
   'transactions-locking': {
