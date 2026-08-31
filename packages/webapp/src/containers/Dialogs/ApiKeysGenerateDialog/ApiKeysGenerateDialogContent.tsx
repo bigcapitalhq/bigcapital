@@ -30,14 +30,18 @@ function ApiKeysGenerateDialogContentInner({
   const generateApiKeyMutate = useGenerateApiKey();
 
   // Handles the form submit.
-  const handleFormSubmit = (
+  const handleFormSubmit = async (
     values: ApiKeyFormValues,
     { setSubmitting, setErrors }: FormikHelpers<ApiKeyFormValues>,
   ) => {
     const form = { name: values.name || undefined };
 
-    // Handle request response errors.
-    const handleError = (error: unknown) => {
+    try {
+      const response = await generateApiKeyMutate.mutateAsync(form);
+      if (response?.key) {
+        setGeneratedApiKey(response.key);
+      }
+    } catch (error: unknown) {
       const err = error as {
         response?: { data?: { errors?: Record<string, string[]> } };
       };
@@ -52,19 +56,9 @@ function ApiKeysGenerateDialogContentInner({
         );
         setErrors(errorsTransformed);
       }
+    } finally {
       setSubmitting(false);
-    };
-
-    generateApiKeyMutate.mutate(form, {
-      onSuccess: (response) => {
-        if (response?.key) {
-          setGeneratedApiKey(response.key);
-        } else {
-          setSubmitting(false);
-        }
-      },
-      onError: handleError,
-    });
+    }
   };
 
   // If API key has been generated, show the display view
