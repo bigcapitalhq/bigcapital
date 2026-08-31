@@ -22,6 +22,7 @@ import {
   EditSaleReceiptDto,
 } from './dtos/SaleReceipt.dto';
 import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
+import { SaleReceiptSmsNotification } from './SaleReceiptSmsNotification';
 import { BulkDeleteSaleReceiptsService } from './BulkDeleteSaleReceipts.service';
 import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleReceipts.service';
 
@@ -38,6 +39,7 @@ export class SaleReceiptApplication {
     private getSaleReceiptStateService: GetSaleReceiptState,
     private saleReceiptNotifyByMailService: SaleReceiptMailNotification,
     private getSaleReceiptMailStateService: GetSaleReceiptMailStateService,
+    private saleReceiptSmsNotificationService: SaleReceiptSmsNotification,
     private bulkDeleteSaleReceiptsService: BulkDeleteSaleReceiptsService,
     private validateBulkDeleteSaleReceiptsService: ValidateBulkDeleteSaleReceiptsService,
   ) {}
@@ -134,6 +136,24 @@ export class SaleReceiptApplication {
    */
   public async closeSaleReceipt(saleReceiptId: number) {
     return this.closeSaleReceiptService.closeSaleReceipt(saleReceiptId);
+  }
+
+  /**
+   * Notify the customer of the given sale receipt by SMS.
+   * @param {number} saleReceiptId - Sale receipt id.
+   * @returns {Promise<SaleReceipt>}
+   */
+  public notifySaleReceiptBySms(saleReceiptId: number) {
+    return this.saleReceiptSmsNotificationService.triggerSms(saleReceiptId);
+  }
+
+  /**
+   * Retrieve the SMS details of the given sale receipt.
+   * @param {number} saleReceiptId - Sale receipt id.
+   * @returns {Promise<Record<string, string>>}
+   */
+  public getSaleReceiptSmsDetails(saleReceiptId: number) {
+    return this.saleReceiptSmsNotificationService.getSmsDetails(saleReceiptId);
   }
 
   /**

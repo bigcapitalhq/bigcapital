@@ -18,6 +18,7 @@ import {
 import { GetSaleInvoicesQueryDto } from './dtos/GetSaleInvoicesQuery.dto';
 import { GetSaleInvoicesService } from './queries/GetSaleInvoices';
 import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
+import { SaleInvoiceSmsNotification } from './SaleInvoiceSmsNotification';
 import {
   CreateSaleInvoiceDto,
   EditSaleInvoiceDto,
@@ -43,6 +44,7 @@ export class SaleInvoiceApplication {
     private sendSaleInvoiceMailService: SendSaleInvoiceMail,
     private getSaleInvoiceMailStateService: GetSaleInvoiceMailState,
     private generateShareLinkService: GenerateShareLink,
+    private saleInvoiceSmsNotificationService: SaleInvoiceSmsNotification,
     private bulkDeleteSaleInvoicesService: BulkDeleteSaleInvoicesService,
     private validateBulkDeleteSaleInvoicesService: ValidateBulkDeleteSaleInvoicesService,
   ) {}
@@ -231,6 +233,42 @@ export class SaleInvoiceApplication {
   ): Promise<SaleInvoiceMailState> {
     return this.getSaleInvoiceMailStateService.getInvoiceMailState(
       saleInvoiceid,
+    );
+  }
+
+  /**
+   * Notify the customer of the given sale invoice by SMS.
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {Record<string, unknown>} smsOptions - SMS options.
+   * @returns {Promise<SaleInvoice>}
+   */
+  public notifySaleInvoiceBySms(
+    saleInvoiceId: number,
+    smsOptions: Record<string, unknown>,
+  ) {
+    const notificationKey =
+      (smsOptions?.notification_key as string) || 'details';
+    return this.saleInvoiceSmsNotificationService.triggerSms(
+      saleInvoiceId,
+      notificationKey as 'details' | 'reminder',
+    );
+  }
+
+  /**
+   * Retrieve the SMS details of the given sale invoice.
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {Record<string, unknown>} smsOptions - SMS options.
+   * @returns {Promise<Record<string, string>>}
+   */
+  public getSaleInvoiceSmsDetails(
+    saleInvoiceId: number,
+    smsOptions: Record<string, unknown>,
+  ) {
+    const notificationKey =
+      (smsOptions?.notification_key as string) || 'details';
+    return this.saleInvoiceSmsNotificationService.getSmsDetails(
+      saleInvoiceId,
+      notificationKey as 'details' | 'reminder',
     );
   }
 

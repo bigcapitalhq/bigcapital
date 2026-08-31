@@ -36,8 +36,10 @@ import { SaleInvoiceWriteoffSubscriber } from './subscribers/SaleInvoiceWriteoff
 import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWriteoffGLStorage';
 import { InvoiceInventoryTransactions } from './commands/inventory/InvoiceInventoryTransactions';
 import { MailModule } from '../Mail/Mail.module';
+import { SMSModule } from '../SMS/SMS.module';
 import { GetSaleInvoicesService } from './queries/GetSaleInvoices';
 import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
+import { SaleInvoiceSmsNotification } from './SaleInvoiceSmsNotification';
 import { GetSaleInvoiceMailState } from './queries/GetSaleInvoiceMailState.service';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { SendSaleInvoiceMailCommon } from './commands/SendInvoiceInvoiceMailCommon.service';
@@ -48,12 +50,14 @@ import { BullBoardModule } from '@bull-board/nestjs';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
 import { SendSaleInvoiceQueue } from './constants';
+import { SMS_QUEUE } from '../SMS/SMS.constants';
 import { InvoicePaymentIntegrationSubscriber } from './subscribers/InvoicePaymentIntegrationSubscriber';
 import { InvoiceChangeStatusOnMailSentSubscriber } from './subscribers/InvoiceChangeStatusOnMailSentSubscriber';
 import { InvoiceCostGLEntriesSubscriber } from './subscribers/InvoiceCostGLEntriesSubscriber';
 import { InvoicePaymentGLRewriteSubscriber } from './subscribers/InvoicePaymentGLRewriteSubscriber';
 import { SaleInvoiceWriteInventoryTransactionsSubscriber } from './subscribers/InvoiceWriteInventoryTransactions';
 import { SaleInvoiceAutoIncrementSubscriber } from './subscribers/SaleInvoiceAutoIncrementSubscriber';
+import { SaleInvoiceSmsNotificationSubscriber } from './subscribers/SaleInvoiceSmsNotificationSubscriber';
 import { SaleInvoiceCostGLEntries } from './SaleInvoiceCostGLEntries';
 import { InvoicePaymentsGLEntriesRewrite } from './InvoicePaymentsGLRewrite';
 import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
@@ -78,7 +82,9 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     LedgerModule,
     AccountsModule,
     MailModule,
+    SMSModule,
     MailNotificationModule,
+    BullModule.registerQueue({ name: SMS_QUEUE }),
     forwardRef(() => InventoryCostModule),
     forwardRef(() => PaymentLinksModule),
     DynamicListModule,
@@ -119,6 +125,7 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     SendSaleInvoiceMail,
     GetSaleInvoicesService,
     GetSaleInvoiceMailState,
+    SaleInvoiceSmsNotification,
     SendSaleInvoiceMailCommon,
     SendSaleInvoiceMailProcessor,
     SaleInvoiceCostGLEntries,
@@ -128,6 +135,7 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     InvoicePaymentGLRewriteSubscriber,
     SaleInvoiceWriteInventoryTransactionsSubscriber,
     SaleInvoiceAutoIncrementSubscriber,
+    SaleInvoiceSmsNotificationSubscriber,
     InvoicePaymentsGLEntriesRewrite,
     SaleInvoicesCost,
     SaleInvoicesExportable,

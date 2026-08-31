@@ -47,6 +47,79 @@ export default class SeedSettings extends TenantSeeder {
       { group: 'warehouse_transfers', key: 'next_number', value: '00001' },
       { group: 'warehouse_transfers', key: 'number_prefix', value: 'WT-' },
       { group: 'warehouse_transfers', key: 'auto_increment', value: true },
+
+      // SMS integration settings.
+      { group: 'sms-integration', key: 'twilio_account_sid', value: '' },
+      { group: 'sms-integration', key: 'twilio_auth_token', value: '' },
+      { group: 'sms-integration', key: 'twilio_from_number', value: '' },
+
+      // SMS notification settings.
+      {
+        group: 'sms-notification',
+        key: 'sms-notification-enable.sale-invoice-details',
+        value: false,
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-notification-enable.sale-invoice-reminder',
+        value: false,
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-notification-enable.sale-estimate-details',
+        value: false,
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-notification-enable.sale-receipt-details',
+        value: false,
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-notification-enable.payment-receive-details',
+        value: false,
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-notification-enable.customer-balance',
+        value: false,
+      },
+
+      {
+        group: 'sms-notification',
+        key: 'sms-message.sale-invoice-details',
+        value:
+          'Hi {CustomerName}, invoice {InvoiceNumber} is due on {DueDate}. Amount due: {DueAmount}. - {CompanyName}',
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-message.sale-invoice-reminder',
+        value:
+          'Reminder: Invoice {InvoiceNumber} is due on {DueDate}. Amount: {DueAmount}. - {CompanyName}',
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-message.sale-estimate-details',
+        value:
+          'Hi {CustomerName}, estimate {EstimateNumber} for {Amount}. - {CompanyName}',
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-message.sale-receipt-details',
+        value:
+          'Hi {CustomerName}, receipt {ReceiptNumber} for {Amount}. - {CompanyName}',
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-message.payment-receive-details',
+        value:
+          'Hi {CustomerName}, payment {PaymentNumber} of {Amount} received. Invoices: {InvoiceNumber}. - {CompanyName}',
+      },
+      {
+        group: 'sms-notification',
+        key: 'sms-message.customer-balance',
+        value: 'Hi {CustomerName}, your balance is {Balance}. - {CompanyName}',
+      },
     ];
     return this.knex('settings').insert(settings);
   }

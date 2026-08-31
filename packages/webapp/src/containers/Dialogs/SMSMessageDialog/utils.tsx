@@ -3,7 +3,7 @@ import { castArray } from 'lodash';
 
 interface ResponseError {
   type: string;
-  data?: { unsupported_args?: string | string[]; [key: string]: unknown };
+  payload?: { unsupported_args?: string | string[]; [key: string]: unknown };
 }
 
 interface TransformErrorsArgs {
@@ -21,7 +21,7 @@ export const transformErrors = (
   );
   if (unsupportedVariablesError) {
     const variables = castArray(
-      unsupportedVariablesError.data?.unsupported_args ?? [],
+      unsupportedVariablesError.payload?.unsupported_args ?? [],
     );
     const stringifiedVariables = variables.join(', ');
 
