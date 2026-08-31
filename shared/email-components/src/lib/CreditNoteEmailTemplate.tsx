@@ -203,15 +203,6 @@ export const renderCreditNoteEmailTemplate = (props: CreditNoteEmailProps) => {
   return render(<CreditNoteEmailTemplate {...props} />);
 };
 
-const containerStyle: CSSProperties = {
-  backgroundColor: '#fff',
-  width: '100%',
-  maxWidth: '500px',
-  padding: '35px 25px',
-  color: '#000',
-  borderRadius: '5px',
-};
-
 const headerInfoStyle: CSSProperties = {
   textAlign: 'center',
   marginBottom: 20,

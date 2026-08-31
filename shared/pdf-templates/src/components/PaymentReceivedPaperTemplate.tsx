@@ -65,9 +65,6 @@ export function PaymentReceivedPaperTemplate({
   showCompanyLogo = true,
   companyLogoUri,
 
-  // # Company name
-  companyName = 'Bigcapital Technology, Inc.',
-
   // # Customer address
   showCustomerAddress = true,
   customerAddress = DefaultPdfTemplateAddressBilledTo,
