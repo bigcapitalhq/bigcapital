@@ -95,6 +95,10 @@ function InvoicesDataTableInner({
     openDrawer(DRAWERS.INVOICE_SEND_MAIL, { invoiceId: id });
   };
 
+  const handleDuplicateInvoice = ({ id }: InvoiceTableRow) => {
+    history.push('/invoices/new', { duplicateInvoiceId: id });
+  };
+
   const handleCellClick = (cell: any, _event: React.MouseEvent) => {
     openDrawer(DRAWERS.INVOICE_DETAILS, { invoiceId: cell.row.original.id });
   };
@@ -172,6 +176,7 @@ function InvoicesDataTableInner({
           onPrint: handlePrintInvoice,
           onConvert: handleConvertToCreitNote,
           onSendMail: handleSendMailInvoice,
+          onDuplicate: handleDuplicateInvoice,
         }}
       />
     </DashboardContentTable>
