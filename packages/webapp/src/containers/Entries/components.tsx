@@ -12,11 +12,9 @@ import {
   PercentFieldCell,
   NumericInputCell,
   CheckBoxFieldCell,
-  ProjectBillableEntriesCell,
 } from '@/components/DataTableCells';
 import { TaxRatesSuggestInputCell } from '@/components/TaxRates/TaxRatesSuggestInputCell';
-import { Align, CellType, Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
+import { Align, CellType } from '@/constants';
 import { formattedAmount } from '@/utils';
 
 /**
@@ -90,10 +88,7 @@ const LandedCostHeaderCell = () => {
  * Retrieve editable items entries columns.
  */
 export function useEditableItemsEntriesColumns() {
-  const { featureCan } = useFeatureCan();
   const { landedCost, enableTaxRates } = useItemEntriesTableContext();
-
-  const isProjectsFeatureEnabled = featureCan(Features.Projects);
 
   return React.useMemo(
     () => [
@@ -168,19 +163,6 @@ export function useEditableItemsEntriesColumns() {
               disabledAccessor: 'landedCostDisabled',
               disableSortBy: true,
               disableResizing: true,
-              align: Align.Center,
-            },
-          ]
-        : []),
-      ...(isProjectsFeatureEnabled
-        ? [
-            {
-              Header: '',
-              accessor: 'invoicing',
-              Cell: ProjectBillableEntriesCell,
-              disableSortBy: true,
-              disableResizing: true,
-              width: 45,
               align: Align.Center,
             },
           ]

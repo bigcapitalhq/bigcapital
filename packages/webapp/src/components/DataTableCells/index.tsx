@@ -9,8 +9,6 @@ import ItemsListCell from './ItemsListCell';
 import MoneyFieldCell from './MoneyFieldCell';
 import NumericInputCell from './NumericInputCell';
 import PercentFieldCell from './PercentFieldCell';
-import { ProjectBillableEntriesCell } from './ProjectBillableEntriesCell';
-import { ProjectsListFieldCell } from './ProjectsListFieldCell';
 import SwitchFieldCell from './SwitchFieldCell';
 import TextAreaCell from './TextAreaCell';
 import { TextOverviewTooltipCell } from './TextOverviewTooltipCell';
@@ -29,7 +27,5 @@ export {
   SwitchFieldCell,
   TextAreaCell,
   BranchesListFieldCell,
-  ProjectsListFieldCell,
-  ProjectBillableEntriesCell,
   TextOverviewTooltipCell,
 };

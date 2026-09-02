@@ -1,8 +1,7 @@
-import { Position, Classes, ControlGroup, Button } from '@blueprintjs/core';
+import { Position, ControlGroup } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Theme } from '@xstyled/emotion';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import { isEmpty, toSafeInteger } from 'lodash';
 import React, { useMemo } from 'react';
@@ -10,7 +9,6 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import {
   PaymentReceiveExchangeRateInputField,
-  PaymentReceiveProjectSelectButton,
 } from './components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { PaymentReceivePaymentNoField } from './PaymentReceivePaymentNoField';
@@ -22,12 +20,12 @@ import {
   type PaymentReceiveFormValues,
 } from './utils';
 import {
-  FeatureCan,
   CustomersSelect,
   FormattedMessage as T,
   FMoneyInputGroup,
   Stack,
   FDateInput,
+  ButtonLink,
 } from '@/components';
 import {
   FFormGroup,
@@ -40,9 +38,7 @@ import {
   Money,
   FInputGroup,
 } from '@/components';
-import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { ProjectsSelect } from '@/containers/Projects/components';
 import { useDateInputFormatter } from '@/hooks';
 import { safeSumBy } from '@/utils';
 
@@ -70,7 +66,7 @@ export function PaymentReceiveHeaderFields() {
   const styleClassName = getHeaderFieldsStyle(theme);
   const dateInputFormatter = useDateInputFormatter();
 
-  const { accounts, projects } = usePaymentReceiveFormContext();
+  const { accounts } = usePaymentReceiveFormContext();
 
   const {
     values: { entries, currencyCode },
@@ -144,31 +140,13 @@ export function PaymentReceiveHeaderFields() {
           </ControlGroup>
 
           {!isEmpty(entries) && (
-            <Button
+            <ButtonLink
               onClick={handleReceiveFullAmountClick}
-              className={css`
-                &:not([class*='${theme.bpPrefix}-intent-']) {
-                  &.${theme.bpPrefix}-minimal {
-                    width: auto;
-                    padding: 0;
-                    min-height: auto;
-                    font-size: 12px;
-                    margin-top: 4px;
-                    background-color: transparent;
-                    color: #0052cc;
-
-                    &:hover {
-                      text-decoration: underline;
-                    }
-                  }
-                }
-              `}
-              small
-              minimal
+              style={{ fontSize: '12px', marginTop: '4px' }}
             >
               <T id={'receive_full_amount'} /> (
               <Money amount={totalDueAmount} currency={currencyCode} />)
-            </Button>
+            </ButtonLink>
           )}
         </>
       </FFormGroup>
@@ -212,22 +190,6 @@ export function PaymentReceiveHeaderFields() {
         <FInputGroup name={'referenceNo'} fill />
       </FFormGroup>
 
-      {/*------------ Project name -----------*/}
-      <FeatureCan feature={Features.Projects}>
-        <FFormGroup
-          name={'projectId'}
-          label={intl.get('payment_receive.project_name.label')}
-          inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
-        >
-          <ProjectsSelect
-            name={'projectId'}
-            projects={projects}
-            input={PaymentReceiveProjectSelectButton}
-            popoverFill={true}
-          />
-        </FFormGroup>
-      </FeatureCan>
     </Stack>
   );
 }

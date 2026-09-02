@@ -3,7 +3,6 @@ import React, { createContext } from 'react';
 import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
-import { useProjects } from '@/containers/Projects/hooks';
 import {
   useCurrencies,
   useCustomers,
@@ -37,7 +36,6 @@ function ExpenseFormPageProvider({
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
-  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
@@ -58,12 +56,6 @@ function ExpenseFormPageProvider({
 
   // Fetch accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
-
-  // Fetch the  projects list.
-  const { data: projectsData, isLoading: isProjectsLoading } = useProjects(
-    {},
-    { enabled: !!isProjectsFeatureCan },
-  );
 
   // Create and edit expense mutate.
   const { mutateAsync: createExpenseMutate } = useCreateExpense();
@@ -99,7 +91,6 @@ function ExpenseFormPageProvider({
     expense,
     accounts: accounts ?? [],
     branches: branches ?? [],
-    projects: projectsData?.projects ?? [],
 
     isCurrenciesLoading,
     isExpenseLoading,
@@ -121,8 +112,7 @@ function ExpenseFormPageProvider({
         isCurrenciesLoading ||
         isExpenseLoading ||
         isCustomersLoading ||
-        isAccountsLoading ||
-        isProjectsLoading
+        isAccountsLoading
       }
       name={'expense-form'}
       className={css`

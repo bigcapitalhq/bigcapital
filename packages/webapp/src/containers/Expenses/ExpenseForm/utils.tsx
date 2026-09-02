@@ -40,7 +40,6 @@ export const defaultExpenseEntry: ExpenseEntry = {
   expenseAccountId: '',
   description: '',
   landedCost: 0,
-  projectId: '',
 };
 
 export const defaultExpense: ExpenseFormValues = {

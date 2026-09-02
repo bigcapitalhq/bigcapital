@@ -4,7 +4,6 @@ import type {
   SettingsGroup,
 } from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
-import { useProjects } from '@/containers/Projects/hooks';
 import {
   useSettingsPaymentReceives,
   usePaymentReceiveEditPage,
@@ -21,7 +20,6 @@ import { useFeatureCan } from '@/hooks/state';
 type UseAccountsResult = ReturnType<typeof useAccounts>;
 type UseBranchesResult = ReturnType<typeof useBranches>;
 type UseCustomersResult = ReturnType<typeof useCustomers>;
-type UseProjectsResult = ReturnType<typeof useProjects>;
 type UseGetPdfTemplatesResult = ReturnType<typeof useGetPdfTemplates>;
 type UseCreatePaymentReceiveResult = ReturnType<typeof useCreatePaymentReceive>;
 type UseEditPaymentReceiveResult = ReturnType<typeof useEditPaymentReceive>;
@@ -49,7 +47,6 @@ interface PaymentReceiveFormContextValue {
   accounts: UseAccountsResult['data'];
   customers: NonNullable<UseCustomersResult['data']>['data'];
   branches: UseBranchesResult['data'];
-  projects: NonNullable<NonNullable<UseProjectsResult['data']>['projects']>;
 
   isPaymentLoading: boolean;
   isAccountsLoading: boolean;
@@ -105,7 +102,6 @@ function PaymentReceiveFormProvider({
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
-  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   // Fetches payment recevie details.
   const {
@@ -135,12 +131,6 @@ function PaymentReceiveFormProvider({
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
-
-  // Fetches the projects list.
-  const { data: projectsData } = useProjects(
-    {},
-    { enabled: !!isProjectsFeatureCan },
-  );
 
   // Fetches branding templates of payment received module.
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
@@ -176,7 +166,6 @@ function PaymentReceiveFormProvider({
     accounts: accounts ?? [],
     customers: customersData?.data ?? [],
     branches: branches ?? [],
-    projects: projectsData?.projects ?? [],
 
     isPaymentLoading,
     isAccountsLoading,

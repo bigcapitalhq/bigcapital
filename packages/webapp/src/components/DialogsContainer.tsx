@@ -39,13 +39,6 @@ import { index as WarehouseActivateDialog } from '@/containers/Dialogs/Warehouse
 import { index as WarehouseFormDialog } from '@/containers/Dialogs/WarehouseFormDialog';
 import { SelectPaymentMethodsDialog } from '@/containers/PaymentLink/dialogs/SelectPaymentMethodsDialog/SelectPaymentMethodsDialog';
 import { SharePaymentLinkDialog } from '@/containers/PaymentLink/dialogs/SharePaymentLinkDialog/SharePaymentLinkDialog';
-import { index as EstimatedExpenseFormDialog } from '@/containers/Projects/containers/EstimatedExpenseFormDialog';
-import { index as ProjectBillableEntriesFormDialog } from '@/containers/Projects/containers/ProjectBillableEntriesFormDialog';
-import { index as ProjectExpenseForm } from '@/containers/Projects/containers/ProjectExpenseForm';
-import { index as ProjectFormDialog } from '@/containers/Projects/containers/ProjectFormDialog';
-import { index as ProjectInvoicingFormDialog } from '@/containers/Projects/containers/ProjectInvoicingFormDialog';
-import { index as ProjectTaskFormDialog } from '@/containers/Projects/containers/ProjectTaskFormDialog';
-import { index as ProjectTimeEntryFormDialog } from '@/containers/Projects/containers/ProjectTimeEntryFormDialog';
 import { TaxRateFormDialog } from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import WorkspaceDeleteDialog from '@/ee/workspaces/containers/Dialogs/WorkspaceDeleteDialog';
 import WorkspaceInactivateDialog from '@/ee/workspaces/containers/Dialogs/WorkspaceInactivateDialog';
@@ -120,21 +113,6 @@ export default function DialogsContainer() {
       />
       <VendorOpeningBalanceDialog
         dialogName={DialogsName.VendorOpeningBalanceForm}
-      />
-      <ProjectFormDialog dialogName={DialogsName.ProjectForm} />
-      <ProjectTaskFormDialog dialogName={DialogsName.ProjectTaskForm} />
-      <ProjectTimeEntryFormDialog
-        dialogName={DialogsName.ProjectTimeEntryForm}
-      />
-      <ProjectExpenseForm dialogName={DialogsName.ProjectExpenseForm} />
-      <EstimatedExpenseFormDialog
-        dialogName={DialogsName.EstimateExpenseForm}
-      />
-      <ProjectInvoicingFormDialog
-        dialogName={DialogsName.ProjectInvoicingForm}
-      />
-      <ProjectBillableEntriesFormDialog
-        dialogName={DialogsName.ProjectBillableEntriesForm}
       />
       <TaxRateFormDialog dialogName={DialogsName.TaxRateForm} />
       <ExportDialog dialogName={DialogsName.Export} />

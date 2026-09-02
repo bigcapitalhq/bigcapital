@@ -12,7 +12,6 @@ import type {
   PdfTemplateResponse,
 } from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
-import { useProjects } from '@/containers/Projects/hooks';
 import {
   useReceipt,
   useAccounts,
@@ -42,7 +41,6 @@ type ReceiptFormContextValue = {
   items: Item[];
   branches: Branch[];
   warehouses: Warehouse[];
-  projects: unknown[];
   submitPayload: ReceiptFormSubmitPayload | undefined;
 
   isNewMode: boolean;
@@ -95,7 +93,6 @@ function ReceiptFormProvider({
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
-  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   // Fetch sale receipt details.
   const { data: receipt, isLoading: isReceiptLoading } = useReceipt(receiptId, {
@@ -150,12 +147,6 @@ function ReceiptFormProvider({
     page_size: 10000,
     stringified_filter_roles: stringifiedFilterRoles,
   });
-  // Fetch project list.
-  const { data: projectsData } = useProjects(
-    {},
-    { enabled: !!isProjectsFeatureCan },
-  );
-
   // Fetches branding templates of receipt.
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
     useGetPdfTemplates({ resource: 'SaleReceipt' });
@@ -195,7 +186,6 @@ function ReceiptFormProvider({
     items: itemsData?.data ?? [],
     branches: branches ?? [],
     warehouses: warehouses ?? [],
-    projects: projectsData?.projects ?? [],
     submitPayload,
 
     isNewMode,

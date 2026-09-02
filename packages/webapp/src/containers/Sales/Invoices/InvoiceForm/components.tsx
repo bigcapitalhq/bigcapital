@@ -60,14 +60,6 @@ export const InvoiceExchangeRateInputField = compose(
 )(InvoiceExchangeRateInputFieldRoot);
 
 /**
- * Invoice project select.
- * @returns {JSX.Element}
- */
-export function InvoiceProjectSelectButton({ label }: { label?: string }) {
-  return <Button text={label ?? intl.get('select_project')} />;
-}
-
-/**
  * Syncs invoice auto-increment settings to invoice form once update.
  */
 export const InvoiceNoSyncSettingsToForm = () => {

@@ -12,7 +12,7 @@ import {
 import { CLASSES } from '@/constants/classes';
 
 export function MakeJournalEntriesField() {
-  const { accounts, contacts, branches, projects } =
+  const { accounts, contacts, branches } =
     useMakeJournalFormContext();
 
   return (
@@ -22,7 +22,6 @@ export function MakeJournalEntriesField() {
         contacts={contacts}
         accounts={accounts}
         branches={branches}
-        projects={projects}
         shouldUpdate={entriesFieldShouldUpdate}
       >
         {({

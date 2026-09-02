@@ -12,7 +12,6 @@ import type {
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
-import { useProjects } from '@/containers/Projects/hooks';
 import {
   useAccounts,
   useVendors,
@@ -39,7 +38,6 @@ type BillFormContextValue = {
   bill: Bill | undefined;
   warehouses: WarehousesListResponse;
   branches: BranchesListResponse;
-  projects: unknown[];
   taxRates: TaxRatesListResponse | undefined;
   submitPayload: BillFormSubmitPayload;
   isNewMode: boolean;
@@ -96,8 +94,6 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
-  const isProjectsFeatureCan = featureCan(Features.Projects);
-
   // Handle fetch accounts.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -132,12 +128,6 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
   // Fetch tax rates.
   const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
 
-  // Fetches the projects list.
-  const { data: projectsData, isLoading: isProjectsLoading } = useProjects(
-    {},
-    { enabled: !!isProjectsFeatureCan },
-  );
-
   // Handle fetching bill settings.
   const { isFetching: isSettingLoading } = useSettings();
 
@@ -154,7 +144,6 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
   const isFeatureLoading =
     isWarehousesLoading ||
     isBranchesLoading ||
-    isProjectsLoading ||
     isTaxRatesLoading;
 
   const provider: BillFormContextValue = {
@@ -164,7 +153,6 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
     bill,
     warehouses: warehouses ?? [],
     branches: branches ?? [],
-    projects: projectsData?.projects ?? [],
     taxRates: taxRates ?? [],
     submitPayload,
     isNewMode,

@@ -1281,25 +1281,6 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('sidebar.transactions_locaking'),
   },
   {
-    path: '/projects/:id/details',
-    component: lazy(() =>
-      import('@/containers/Projects/containers/ProjectDetails').then((m) => ({
-        default: m.index,
-      })),
-    ),
-    sidebarExpand: false,
-    backLink: true,
-  },
-  {
-    path: '/projects',
-    component: lazy(() =>
-      import(
-        '@/containers/Projects/containers/ProjectsLanding/ProjectsList'
-      ).then((m) => ({ default: m.ProjectsList })),
-    ),
-    pageTitle: intl.get('sidebar.projects'),
-  },
-  {
     path: '/tax-rates/import',
     component: lazy(() =>
       import('@/containers/TaxRates/containers/TaxRatesImport').then((m) => ({

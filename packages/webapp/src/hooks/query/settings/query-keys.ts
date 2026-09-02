@@ -22,9 +22,6 @@ export const SETTING_ACCOUNTS = 'SETTING_ACCOUNTS';
 export const SETTING_CUSTOMERS = 'SETTING_CUSTOMERS';
 export const SETTING_VENDORS = 'SETTING_VENDORS';
 export const SETTING_CASHFLOW_TRANSACTIONS = 'SETTING_CASHFLOW_TRANSACTIONS';
-export const SETTING_PROJECTS = 'SETTING_PROJECTS';
-export const SETTING_PROJECT_TASKS = 'SETTING_PROJECT_TASKS';
-export const SETTING_TIMESHEETS = 'SETTING_TIMESHEETS';
 
 // Query key factory
 export const settingsKeys = {
@@ -48,9 +45,6 @@ export const settingsKeys = {
   customers: () => [SETTING, SETTING_CUSTOMERS] as const,
   vendors: () => [SETTING, SETTING_VENDORS] as const,
   cashflowTransactions: () => [SETTING, SETTING_CASHFLOW_TRANSACTIONS] as const,
-  projects: () => [SETTING, SETTING_PROJECTS] as const,
-  projectTasks: () => [SETTING, SETTING_PROJECT_TASKS] as const,
-  timesheets: () => [SETTING, SETTING_TIMESHEETS] as const,
   smsNotifications: () => [SETTING_SMS_NOTIFICATIONS] as const,
   smsNotification: (key: string) => [SETTING_SMS_NOTIFICATIONS, key] as const,
 };
@@ -80,7 +74,4 @@ export const SettingsQueryKeys = {
   SETTING_CUSTOMERS,
   SETTING_VENDORS,
   SETTING_CASHFLOW_TRANSACTIONS,
-  SETTING_PROJECTS,
-  SETTING_PROJECT_TASKS,
-  SETTING_TIMESHEETS,
 } as const;

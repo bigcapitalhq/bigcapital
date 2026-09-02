@@ -19,9 +19,6 @@ import {
   fetchSettingsCustomers,
   fetchSettingsVendors,
   fetchSettingsCashflowTransactions,
-  fetchSettingsProjects,
-  fetchSettingsProjectTasks,
-  fetchSettingsTimesheets,
   fetchSettingSMSNotifications,
   fetchSettingSMSNotification,
   editSettingSMSNotification,
@@ -241,33 +238,6 @@ export function useSettingsCashflowTransactions(props?: GroupQueryOptions) {
     ...props,
     queryKey: settingsKeys.cashflowTransactions(),
     queryFn: () => fetchSettingsCashflowTransactions(fetcher),
-  });
-}
-
-export function useSettingsProjects(props?: GroupQueryOptions) {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-  return useQuery({
-    ...props,
-    queryKey: settingsKeys.projects(),
-    queryFn: () => fetchSettingsProjects(fetcher),
-  });
-}
-
-export function useSettingsProjectTasks(props?: GroupQueryOptions) {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-  return useQuery({
-    ...props,
-    queryKey: settingsKeys.projectTasks(),
-    queryFn: () => fetchSettingsProjectTasks(fetcher),
-  });
-}
-
-export function useSettingsTimesheets(props?: GroupQueryOptions) {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-  return useQuery({
-    ...props,
-    queryKey: settingsKeys.timesheets(),
-    queryFn: () => fetchSettingsTimesheets(fetcher),
   });
 }
 
