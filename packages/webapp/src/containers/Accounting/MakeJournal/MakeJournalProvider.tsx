@@ -11,7 +11,6 @@ import type {
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import { Features } from '@/constants';
-import { useProjects } from '@/containers/Projects/hooks';
 import {
   useAccounts,
   useAutoCompleteContacts,
@@ -36,7 +35,6 @@ type MakeJournalFormContextValue = {
   currencies: CurrenciesListResponse;
   branches: BranchesListResponse;
   manualJournal: ManualJournal | undefined;
-  projects: unknown[];
   submitPayload: MakeJournalFormSubmitPayload;
   isNewMode: boolean;
   manualJournalsSettings: SettingsGroup | undefined;
@@ -78,7 +76,6 @@ function MakeJournalProvider({
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
-  const isProjectFeatureCan = featureCan(Features.Projects);
 
   // Load the accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
@@ -112,25 +109,18 @@ function MakeJournalProvider({
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
-  // Fetch the projects list.
-  const { data: projectsData, isLoading: isProjectsLoading } = useProjects(
-    {},
-    { enabled: !!isProjectFeatureCan },
-  );
-
   // Submit form payload.
   const [submitPayload, setSubmitPayload] =
     useState<MakeJournalFormSubmitPayload>({});
 
   // Determines whether the branches are loading.
-  const isFeatureLoading = isBranchesLoading || isProjectsLoading;
+  const isFeatureLoading = isBranchesLoading;
 
   const provider: MakeJournalFormContextValue = {
     accounts: accounts ?? [],
     contacts: contacts ?? [],
     currencies: currencies ?? [],
     manualJournal,
-    projects: projectsData?.projects ?? [],
     branches: branches ?? [],
 
     createJournalMutate,
@@ -158,8 +148,7 @@ function MakeJournalProvider({
         isAccountsLoading ||
         isCurrenciesLoading ||
         isContactsLoading ||
-        isSettingsLoading ||
-        isProjectsLoading
+        isSettingsLoading
       }
       name={'make-journal-page'}
     >

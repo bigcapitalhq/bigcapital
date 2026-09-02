@@ -2,6 +2,7 @@ export interface RolesFormPermission {
   subject: string;
   ability: string;
   value: boolean;
+  permissionId?: number;
 }
 
 export interface RolesFormValues {

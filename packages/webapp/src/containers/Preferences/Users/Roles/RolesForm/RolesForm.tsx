@@ -79,9 +79,10 @@ function RolesFormInner({
     values: RolesFormValues,
     { setSubmitting }: FormikHelpers<RolesFormValues>,
   ) => {
-    const permission = transformToArray(values);
+    const permission = transformToArray(values, role);
     const form = {
-      ...values,
+      roleName: values.role_name,
+      roleDescription: values.role_description,
       permissions: permission,
     };
     setSubmitting(true);

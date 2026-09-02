@@ -50,7 +50,6 @@ export type EstimateFormValues = {
   termsConditions: string;
   branchId: string | number;
   warehouseId: string | number;
-  projectId: string | number;
   exchangeRate: string;
   currencyCode: string;
   pdfTemplateId: string | number;
@@ -93,7 +92,6 @@ export const defaultEstimate: EstimateFormValues = {
   termsConditions: '',
   branchId: '',
   warehouseId: '',
-  projectId: '',
   exchangeRate: '1',
   currencyCode: '',
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],

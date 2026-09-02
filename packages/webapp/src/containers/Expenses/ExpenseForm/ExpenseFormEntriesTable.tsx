@@ -34,7 +34,7 @@ export function ExpenseFormEntriesTable({
   landedCost = true,
   minLines = 1,
 }: ExpenseFormEntriesTableProps) {
-  const { accounts, projects } = useExpenseFormContext();
+  const { accounts } = useExpenseFormContext();
 
   const columns = useExpenseFormTableColumns({ landedCost });
 
@@ -70,7 +70,6 @@ export function ExpenseFormEntriesTable({
       sticky={true}
       payload={{
         accounts: accounts,
-        projects: projects,
         errors: error,
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,

@@ -37,7 +37,6 @@ export type ExpenseCategoryTableRow = {
   amount: number;
   allocatedCostAmount: number;
   expenseAccountId: number;
-  projectId?: number;
   description: string;
   unallocatedCostAmount: number;
   expenseAccount?: ExpenseAccount;

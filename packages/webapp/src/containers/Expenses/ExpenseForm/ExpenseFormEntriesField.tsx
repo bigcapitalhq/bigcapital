@@ -17,7 +17,7 @@ type ExpenseFormEntriesFieldProps = {
 export function ExpenseFormEntriesField({
   linesNumber = 4,
 }: ExpenseFormEntriesFieldProps) {
-  const { accounts, projects } = useExpenseFormContext();
+  const { accounts } = useExpenseFormContext();
   const { featureCan } = useFeatureCan();
   const isLandedCostEnabled = featureCan(Features.LandedCost);
 
@@ -25,7 +25,6 @@ export function ExpenseFormEntriesField({
     <FastField
       name={'categories'}
       accounts={accounts}
-      projects={projects}
       shouldUpdate={accountsFieldShouldUpdate}
     >
       {({

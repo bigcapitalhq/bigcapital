@@ -1,15 +1,11 @@
-import { Position, Classes } from '@blueprintjs/core';
+import { Position } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  ReceiptExchangeRateInputField,
-  ReceiptProjectSelectButton,
-} from './components';
+import { ReceiptExchangeRateInputField } from './components';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { ReceiptFormReceiptNumberField } from './ReceiptFormReceiptNumberField';
 import { accountsFieldShouldUpdate, customersFieldShouldUpdate } from './utils';
@@ -22,15 +18,12 @@ import {
   Icon,
   CustomerDrawerLink,
   FormattedMessage as T,
-  FeatureCan,
   FInputGroup,
   Stack,
   FDateInput,
 } from '@/components';
-import { Features } from '@/constants';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import { ProjectsSelect } from '@/containers/Projects/components';
 import { useDateInputFormatter } from '@/hooks';
 
 const getEstimateFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
@@ -56,7 +49,7 @@ const getEstimateFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
 export function ReceiptFormHeader() {
   const theme = useTheme();
   const receiptFieldsClassName = getEstimateFieldsStyle(theme);
-  const { accounts, projects } = useReceiptFormContext();
+  const { accounts } = useReceiptFormContext();
   const dateInputFormatter = useDateInputFormatter();
 
   return (
@@ -121,23 +114,6 @@ export function ReceiptFormHeader() {
       >
         <FInputGroup name={'referenceNo'} />
       </FFormGroup>
-
-      {/*------------ Project name -----------*/}
-      <FeatureCan feature={Features.Projects}>
-        <FFormGroup
-          name={'projectId'}
-          label={intl.get('receipt.project_name.label')}
-          inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
-        >
-          <ProjectsSelect
-            name={'projectId'}
-            projects={projects}
-            input={ReceiptProjectSelectButton}
-            popoverFill={true}
-          />
-        </FFormGroup>
-      </FeatureCan>
     </Stack>
   );
 }

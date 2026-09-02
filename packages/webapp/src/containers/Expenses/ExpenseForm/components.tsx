@@ -15,12 +15,10 @@ import {
   InputGroupCell,
   MoneyFieldCell,
   AccountsListFieldCell,
-  ProjectsListFieldCell,
   CheckBoxFieldCell,
 } from '@/components/DataTableCells';
-import { CellType, Features, Align } from '@/constants';
+import { CellType, Align } from '@/constants';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { useFeatureCan } from '@/hooks/state';
 
 type ActionsCellRendererProps = {
   row: { index: number };
@@ -108,8 +106,6 @@ export function useExpenseFormTableColumns({
 }: {
   landedCost: boolean;
 }) {
-  const { featureCan } = useFeatureCan();
-
   return React.useMemo(
     () => [
       {
@@ -139,20 +135,6 @@ export function useExpenseFormTableColumns({
         disableSortBy: true,
         width: 100,
       },
-      ...(featureCan(Features.Projects)
-        ? [
-            {
-              Header: intl.get('project'),
-              id: 'projectId',
-              accessor: 'projectId',
-              Cell: ProjectsListFieldCell,
-              className: 'project_id',
-              disableSortBy: true,
-              width: 40,
-            },
-          ]
-        : []),
-
       ...(landedCost
         ? [
             {

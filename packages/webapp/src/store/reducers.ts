@@ -23,7 +23,6 @@ import { organizationsReducer as organizations } from './organizations/organizat
 import { paymentMadesPersistReducer as paymentMades } from './payment-mades/payment-mades.reducer';
 import { paymentReceivesPersistReducer as paymentReceives } from './payment-receives/payment-receives.reducer';
 import { SubscriptionPlansSlice } from './plans/plans.reducer';
-import { projectsPersistReducer as projects } from './project/projects.reducer';
 import { salesReceiptsPersistReducer as salesReceipts } from './receipts/receipts.reducer';
 import { resourcesReducer as resources } from './resources/resources.reducer';
 import { searchReducer as globalSearch } from './search/search.reducer';
@@ -64,7 +63,6 @@ const appReducer = combineReducers({
   creditNotes,
   vendorCredit,
   warehouseTransfers,
-  projects,
   plaid: PlaidSlice.reducer,
 });
 
