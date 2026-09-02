@@ -56,18 +56,28 @@ export const FULL_ACCESS_CHECKBOX_STATE = {
 /**
  * Transformes the permissions object to array.
  */
-export const transformToArray = ({
-  permissions,
-}: {
-  permissions: Record<string, boolean>;
-}): RolesFormPermission[] => {
+export const transformToArray = (
+  { permissions }: { permissions: Record<string, boolean> },
+  role?: {
+    permissions: Array<{
+      id: number;
+      subject: string;
+      ability: string;
+      value: boolean;
+    }>;
+  },
+): RolesFormPermission[] => {
   return Object.keys(permissions).map((index) => {
-    const [value, key] = index.split('/');
+    const [subject, ability] = index.split('/');
+    const existingPerm = role?.permissions.find(
+      (p) => p.subject === subject && p.ability === ability,
+    );
 
     return {
-      subject: value,
-      ability: key,
+      subject,
+      ability,
       value: permissions[index],
+      ...(existingPerm ? { permissionId: existingPerm.id } : {}),
     };
   });
 };

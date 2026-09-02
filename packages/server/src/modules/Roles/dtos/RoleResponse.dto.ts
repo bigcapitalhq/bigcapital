@@ -4,6 +4,12 @@ import { Type } from 'class-transformer';
 // RolePermissionResponseDto
 export class RolePermissionResponseDto {
   @ApiProperty({
+    example: 1,
+    description: 'The permission ID',
+  })
+  id: number;
+
+  @ApiProperty({
     example: 'read',
     description: 'The action/ability of the permission',
   })
