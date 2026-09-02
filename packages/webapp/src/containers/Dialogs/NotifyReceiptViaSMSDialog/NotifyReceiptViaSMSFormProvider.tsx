@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+import type { SaleReceiptSmsDetailsResponse } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import {
   useCreateNotifyReceiptBySMS,
@@ -8,7 +9,7 @@ import {
 interface NotifyReceiptViaSMSContextValue {
   receiptId: number | null;
   dialogName: string;
-  receiptSMSDetail: Record<string, unknown>;
+  receiptSMSDetail: Partial<SaleReceiptSmsDetailsResponse>;
   createNotifyReceiptBySMSMutate: ReturnType<
     typeof useCreateNotifyReceiptBySMS
   >['mutateAsync'];
@@ -39,8 +40,7 @@ function NotifyReceiptViaSMSFormProvider({
     useReceiptSMSDetail(receiptId as number, {
       enabled: !!receiptId,
     });
-  const receiptSMSDetail =
-    (receiptSMSDetailRaw as Record<string, unknown> | undefined) ?? {};
+  const receiptSMSDetail = receiptSMSDetailRaw ?? {};
 
   // State provider.
   const provider: NotifyReceiptViaSMSContextValue = {

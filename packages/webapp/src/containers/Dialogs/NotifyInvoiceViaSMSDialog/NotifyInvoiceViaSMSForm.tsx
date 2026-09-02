@@ -1,5 +1,4 @@
 import { Intent } from '@blueprintjs/core';
-import { pick } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useNotifyInvoiceViaSMSContext } from './NotifyInvoiceViaSMSFormProvider';
@@ -29,12 +28,6 @@ interface NotifyViaSMSFormValues {
   notification_key: string;
   [key: string]: unknown;
 }
-
-const transformFormValuesToRequest = (
-  values: NotifyViaSMSFormValues,
-): Record<string, unknown> => {
-  return pick(values, ['notification_key']);
-};
 
 // Momerize the notification types.
 const notificationTypes = [
@@ -69,7 +62,7 @@ function NotifyInvoiceViaSMSFormInner({
 
   // Handles the form submit.
   const handleFormSubmit = (
-    values: NotifyViaSMSFormValues,
+    _values: NotifyViaSMSFormValues,
     {
       setSubmitting,
       setErrors,
@@ -100,12 +93,11 @@ function NotifyInvoiceViaSMSFormInner({
       }
       setSubmitting(false);
     };
-    // Transformes the form values to request.
-    const requestValues = transformFormValuesToRequest(values);
-
     // Submits invoice SMS notification.
-    // @ts-expect-error — invoiceId may be null in theory; dialog is only opened with a real id.
-    createNotifyInvoiceBySMSMutate([invoiceId, requestValues])
+    createNotifyInvoiceBySMSMutate([
+      invoiceId as number,
+      notificationType as 'details' | 'reminder',
+    ])
       .then(onSuccess)
       .catch(onError);
   };
@@ -114,9 +106,12 @@ function NotifyInvoiceViaSMSFormInner({
     closeDialog(dialogName);
   }, [closeDialog, dialogName]);
 
+  // `NotifyViaSMSForm` expects snake_case field keys.
   const initialValues = {
+    customer_name: invoiceSMSDetail.customerName ?? '',
+    customer_phone_number: invoiceSMSDetail.customerPhoneNumber ?? '',
+    sms_message: invoiceSMSDetail.smsMessage ?? '',
     notification_key: notificationType,
-    ...invoiceSMSDetail,
   };
   // Handle form values change.
   const handleValuesChange = (values: NotifyViaSMSFormValues) => {

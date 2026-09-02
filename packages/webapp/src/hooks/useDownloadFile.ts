@@ -1,39 +1,3 @@
-import { useMutation } from '@tanstack/react-query';
-import useApiRequest from './useRequest';
-import type { AxiosRequestConfig } from 'axios';
-
-interface IArgs {
-  url: string;
-  filename: string;
-  mime?: string;
-  config?: AxiosRequestConfig;
-  onDownloadProgress?: (progress: number) => void;
-}
-
-export const useDownloadFile = (args: IArgs) => {
-  const apiRequest = useApiRequest();
-
-  const mutation = useMutation({
-    mutationFn: () =>
-      apiRequest
-        .get(args.url, {
-          responseType: 'blob',
-          onDownloadProgress: (ev) => {
-            args.onDownloadProgress &&
-              args.onDownloadProgress(
-                Math.round((ev.loaded * 100) / (ev.total ?? 0)),
-              );
-          },
-          ...args.config,
-        })
-        .then((res) => {
-          downloadFile(res.data, args.filename, args.mime);
-          return res;
-        }),
-  });
-  return { ...mutation };
-};
-
 export function downloadFile(
   data: BlobPart,
   filename: string,

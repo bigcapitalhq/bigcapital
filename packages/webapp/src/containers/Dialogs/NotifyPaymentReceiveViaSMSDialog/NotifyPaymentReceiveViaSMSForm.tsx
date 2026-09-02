@@ -53,7 +53,7 @@ function NotifyPaymentReceiveViaSMSFormInner({
 
   // Handles the form submit.
   const handleFormSubmit = (
-    values: NotifyViaSMSFormValues,
+    _values: NotifyViaSMSFormValues,
     {
       setErrors,
     }: {
@@ -82,7 +82,7 @@ function NotifyPaymentReceiveViaSMSFormInner({
       }
     };
     // @ts-expect-error — paymentReceiveId may be null in theory; dialog only opens with real id.
-    createNotifyPaymentReceivetBySMSMutate([paymentReceiveId, values])
+    createNotifyPaymentReceivetBySMSMutate(paymentReceiveId)
       .then(onSuccess)
       .catch(onError);
   };
@@ -91,10 +91,12 @@ function NotifyPaymentReceiveViaSMSFormInner({
     closeDialog(dialogName);
   };
 
-  // Form initial values.
+  // Form initial values. `NotifyViaSMSForm` expects snake_case field keys.
   const initialValues = React.useMemo(
     () => ({
-      ...paymentReceiveMSDetail,
+      customer_name: paymentReceiveMSDetail.customerName ?? '',
+      customer_phone_number: paymentReceiveMSDetail.customerPhoneNumber ?? '',
+      sms_message: paymentReceiveMSDetail.smsMessage ?? '',
       notification_key: notificationType.key,
     }),
     [paymentReceiveMSDetail],

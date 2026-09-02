@@ -11,7 +11,6 @@ import {
   UseMutationOptions,
   UseQueryOptions,
 } from '@tanstack/react-query';
-import { useRequestQuery } from '../../useQueryRequest';
 import { useApiFetcher } from '../../useRequest';
 import { organizationKeys } from './query-keys';
 import type {
@@ -20,28 +19,6 @@ import type {
   BuildOrganizationBody,
   OrgBaseCurrencyMutateAbilitiesResponse,
 } from '@bigcapital/sdk-ts';
-
-/**
- * Retrieve organizations of the authenticated user.
- * Uses useRequestQuery because organization/all is not in OpenAPI schema.
- */
-export function useOrganizations(props?: Record<string, unknown>) {
-  return useRequestQuery(
-    organizationKeys.all(),
-    { method: 'get', url: `organization/all` },
-    {
-      select: (res: { data: { organizations: unknown[] } }) =>
-        res.data.organizations,
-      initialDataUpdatedAt: 0,
-      initialData: {
-        data: {
-          organizations: [],
-        },
-      },
-      ...props,
-    },
-  );
-}
 
 /**
  * Retrieve the current organization. Response keys are transformed to camelCase

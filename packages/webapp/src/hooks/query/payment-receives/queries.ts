@@ -11,6 +11,8 @@ import {
   sendPaymentReceiveMail,
   fetchPaymentReceivedState,
   fetchPaymentReceiveHtmlContent,
+  notifyPaymentReceiveBySms,
+  fetchPaymentReceiveSmsDetails,
 } from '@bigcapital/sdk-ts';
 import {
   useMutation,
@@ -21,8 +23,7 @@ import {
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query';
-import { useRequestQuery } from '../../useQueryRequest';
-import useApiRequest, { useApiFetcher } from '../../useRequest';
+import { useApiFetcher } from '../../useRequest';
 import { useRequestPdf } from '../../useRequestPdf';
 import { accountsKeys } from '../accounts/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
@@ -45,6 +46,7 @@ import type {
   PaymentReceiveMailStateResponse,
   SendPaymentReceiveMailBody,
   SendPaymentReceiveMailResponse,
+  PaymentReceiveSmsDetailsResponse,
 } from '@bigcapital/sdk-ts';
 import { saveInvoke } from '@/utils';
 
@@ -210,18 +212,15 @@ export function useRefreshPaymentReceive() {
   };
 }
 
-/** Notify by SMS – no SDK route in schema; kept on apiRequest. */
 export function useCreateNotifyPaymentReceiveBySMS(
-  props?: UseMutationOptions<unknown, Error, [number, Record<string, unknown>]>,
+  props?: UseMutationOptions<void, Error, number>,
 ) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
+  const fetcher = useApiFetcher();
   return useMutation({
     ...props,
-    mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
-      apiRequest.post(`payments-received/${id}/notify-by-sms`, values, {}),
-    onSuccess: (_res, [id]) => {
+    mutationFn: (id: number) => notifyPaymentReceiveBySms(fetcher, id),
+    onSuccess: (_data, id) => {
       queryClient.invalidateQueries({
         queryKey: paymentReceivesKeys.notifyBySms(id),
       });
@@ -230,25 +229,20 @@ export function useCreateNotifyPaymentReceiveBySMS(
   });
 }
 
-/** SMS detail – no SDK route in schema; kept on useRequestQuery. */
 export function usePaymentReceiveSMSDetail(
   paymentReceiveId: number | null | undefined,
-  props?: Record<string, unknown>,
-  requestProps?: Record<string, unknown>,
+  props?: Omit<
+    UseQueryOptions<PaymentReceiveSmsDetailsResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
-  return useRequestQuery(
-    paymentReceivesKeys.smsDetail(paymentReceiveId),
-    {
-      method: 'get',
-      url: `payments-received/${paymentReceiveId}/sms-details`,
-      ...requestProps,
-    },
-    {
-      select: (res: { data: unknown }) => res.data,
-      defaultData: {},
-      ...props,
-    },
-  );
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: paymentReceivesKeys.smsDetail(paymentReceiveId),
+    queryFn: () => fetchPaymentReceiveSmsDetails(fetcher, paymentReceiveId!),
+    enabled: paymentReceiveId != null,
+  });
 }
 
 export function usePdfPaymentReceive(paymentReceiveId: number) {

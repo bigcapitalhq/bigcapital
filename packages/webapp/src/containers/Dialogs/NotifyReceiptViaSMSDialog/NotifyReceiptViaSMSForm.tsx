@@ -53,7 +53,7 @@ function NotifyReceiptViaSMSFormInner({
 
   // Handles the form submit.
   const handleFormSubmit = (
-    values: NotifyViaSMSFormValues,
+    _values: NotifyViaSMSFormValues,
     {
       setErrors,
     }: {
@@ -80,18 +80,18 @@ function NotifyReceiptViaSMSFormInner({
       }
     };
     // @ts-expect-error — receiptId may be null in theory; dialog only opens with real id.
-    createNotifyReceiptBySMSMutate([receiptId, values])
-      .then(onSuccess)
-      .catch(onError);
+    createNotifyReceiptBySMSMutate(receiptId).then(onSuccess).catch(onError);
   };
   // Handle the form cancel.
   const handleFormCancel = () => {
     closeDialog(dialogName);
   };
-  // Initial values.
+  // Initial values. `NotifyViaSMSForm` expects snake_case field keys.
   const initialValues = React.useMemo(
     () => ({
-      ...receiptSMSDetail,
+      customer_name: receiptSMSDetail.customerName ?? '',
+      customer_phone_number: receiptSMSDetail.customerPhoneNumber ?? '',
+      sms_message: receiptSMSDetail.smsMessage ?? '',
       notification_key: notificationType.key,
     }),
     [receiptSMSDetail],
