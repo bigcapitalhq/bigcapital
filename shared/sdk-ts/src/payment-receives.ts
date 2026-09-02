@@ -1,7 +1,7 @@
-import type { ApiFetcher } from "./fetch-utils";
-import { rawRequest } from "./fetch-utils";
+import type { ApiFetcher, PdfDocument } from "./fetch-utils";
+import { rawRequest, toPdfDocument } from "./fetch-utils";
 import { paths } from "./schema";
-import { OpForPath, OpRequestBody, OpResponseBody } from "./utils";
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from "./utils";
 
 export const PAYMENTS_RECEIVED_ROUTES = {
   LIST: "/api/payments-received",
@@ -16,6 +16,9 @@ export const PAYMENTS_RECEIVED_ROUTES = {
 } as const satisfies Record<string, keyof paths>;
 
 export type PaymentsReceivedListResponse = OpResponseBody<
+  OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.LIST, "get">
+>;
+export type GetPaymentsReceivedQuery = OpQueryParams<
   OpForPath<typeof PAYMENTS_RECEIVED_ROUTES.LIST, "get">
 >;
 export type PaymentReceived = OpResponseBody<
@@ -49,12 +52,17 @@ export type PaymentReceivedHtmlContentResponse = { htmlContent: string };
 
 export async function fetchPaymentsReceived(
   fetcher: ApiFetcher,
+  query?: GetPaymentsReceivedQuery,
 ): Promise<PaymentsReceivedListResponse> {
   const get = fetcher
     .path(PAYMENTS_RECEIVED_ROUTES.LIST)
     .method("get")
     .create();
-  const { data } = await get({});
+  const { data } = await (
+    get as (
+      params?: GetPaymentsReceivedQuery,
+    ) => Promise<{ data: PaymentsReceivedListResponse }>
+  )(query ?? {});
   return data;
 }
 
@@ -68,6 +76,26 @@ export async function fetchPaymentReceived(
     .create();
   const { data } = await get({ id });
   return data;
+}
+
+/**
+ * Downloads the given payment received as a PDF document. The server picks the
+ * output format from the `Accept` header; the raw-response middleware returns
+ * the body as a Blob and the filename is read from Content-Disposition.
+ */
+export async function fetchPaymentReceivedPdf(
+  fetcher: ApiFetcher,
+  id: number,
+): Promise<PdfDocument> {
+  const get = fetcher
+    .path(PAYMENTS_RECEIVED_ROUTES.BY_ID)
+    .method("get")
+    .create();
+  const response = await get(
+    { id },
+    { headers: { Accept: "application/pdf" } },
+  );
+  return toPdfDocument(response);
 }
 
 export async function createPaymentReceived(

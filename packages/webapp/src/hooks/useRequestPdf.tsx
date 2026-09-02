@@ -1,71 +1,33 @@
 import React from 'react';
-import { normalizeApiPath } from '../utils';
-import useApiRequest from './useRequest';
-import type {
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosResponseHeaders,
-} from 'axios';
+import type { PdfDocument } from '@bigcapital/sdk-ts';
 
-export interface PdfRequestProps extends AxiosRequestConfig {
-  url: string;
-}
-
-export const useRequestPdf = (httpProps?: PdfRequestProps) => {
-  const apiRequest = useApiRequest();
+/**
+ * Fetches a PDF document via the given SDK fetch function and exposes it as
+ * an object URL for previewing. Replaces the legacy axios-based
+ * `useRequestPdf` hook while keeping the same state machine.
+ */
+export const usePdfDocument = (fetchFn: () => Promise<PdfDocument>) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const [pdfUrl, setPdfUrl] = React.useState('');
-  const [response, setResponse] = React.useState<AxiosResponse<Blob> | null>(
-    null,
-  );
-  const [filename, setFilename] = React.useState<string>('');
-
-  const url = `/api/${normalizeApiPath(httpProps?.url || '')}`;
+  const [filename, setFilename] = React.useState('');
 
   React.useEffect(() => {
-    if (!httpProps?.url) {
-      return;
-    }
     let isCancelled = false;
     setIsLoading(true);
     setIsError(false);
 
-    apiRequest
-      .http({
-        headers: { accept: 'application/pdf' },
-        responseType: 'blob',
-        ...httpProps,
-        url,
-      })
-      .then((response) => {
+    fetchFn()
+      .then((document) => {
         if (isCancelled) {
           return;
         }
-        // Create a Blob from the PDF Stream.
-        const file = new Blob([response.data], { type: 'application/pdf' });
-
-        // Build a URL from the file
-        const fileURL = URL.createObjectURL(file);
-
-        // Extract the filename from the Content-Disposition header
-        const contentDisposition = (
-          response.headers as AxiosResponseHeaders
-        ).get('Content-Disposition') as string | undefined;
-        let _filename = 'default.pdf'; // Default filename if not provided by server
-
-        if (contentDisposition && contentDisposition.includes('filename=')) {
-          const matches = contentDisposition.match(/filename="(.+)"/);
-          if (matches && matches[1]) {
-            _filename = matches[1];
-          }
-        }
-        setPdfUrl(fileURL);
+        // Build a URL from the PDF blob.
+        setPdfUrl(URL.createObjectURL(document.blob));
+        setFilename(document.filename);
         setIsLoading(false);
         setIsLoaded(true);
-        setResponse(response);
-        setFilename(_filename);
       })
       .catch(() => {
         if (isCancelled) {
@@ -79,17 +41,16 @@ export const useRequestPdf = (httpProps?: PdfRequestProps) => {
     return () => {
       isCancelled = true;
     };
-    // `httpProps` intentionally omitted from deps — refetching only depends on
-    // the resolved URL, and callers pass a fresh object on every render.
+    // `fetchFn` identity changes every render; the fetch runs once on mount,
+    // matching the previous `useRequestPdf` behavior.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, apiRequest]);
+  }, []);
 
   return {
     isLoading,
     isLoaded,
     isError,
     pdfUrl,
-    response,
     filename,
   };
 };

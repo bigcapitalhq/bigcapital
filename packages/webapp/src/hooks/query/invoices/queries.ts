@@ -15,6 +15,7 @@ import {
   fetchSaleInvoiceState,
   fetchInvoicePayments,
   fetchSaleInvoiceHtml,
+  fetchSaleInvoicePdf,
   notifySaleInvoiceBySms,
   fetchSaleInvoiceSmsDetails,
 } from '@bigcapital/sdk-ts';
@@ -28,8 +29,7 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import useApiRequest from '../../useRequest';
-import { useRequestPdf } from '../../useRequestPdf';
+import { usePdfDocument } from '../../useRequestPdf';
 import { accountsKeys } from '../accounts/query-keys';
 import { creditNotesKeys } from '../credit-note/query-keys';
 import { customersKeys } from '../customers/query-keys';
@@ -51,7 +51,6 @@ import type {
   SaleInvoiceHtmlContentResponse,
   SaleInvoiceSmsDetailsResponse,
 } from '@bigcapital/sdk-ts';
-import { transformToCamelCase } from '@/utils';
 
 function commonInvalidateQueries(
   queryClient: ReturnType<typeof useQueryClient>,
@@ -219,9 +218,8 @@ export function useInvoice(
  * Retrieve the invoice pdf document data.
  */
 export function usePdfInvoice(invoiceId: number) {
-  return useRequestPdf({
-    url: `sale-invoices/${invoiceId}`,
-  });
+  const fetcher = useApiFetcher();
+  return usePdfDocument(() => fetchSaleInvoicePdf(fetcher, invoiceId));
 }
 
 export function useInvoiceHtml(
@@ -460,74 +458,5 @@ export function useGetSaleInvoiceState(
         (data: GetSaleInvoiceStateResponse & { data?: unknown }) =>
           (data?.data ?? data) as GetSaleInvoiceStateResponse,
       ),
-  });
-}
-
-// # Get sale invoice branding template — not in OpenAPI schema; keep apiRequest.
-export interface GetSaleInvoiceBrandingTemplateResponse {
-  id: number;
-  default: number;
-  predefined: number;
-  resource: string;
-  resourceFormatted: string;
-  templateName: string;
-  updatedAt: string;
-  createdAt: string;
-  createdAtFormatted: string;
-  attributes: {
-    billedToLabel?: string;
-    companyLogoKey?: string | null;
-    companyLogoUri?: string;
-    dateIssueLabel?: string;
-    discountLabel?: string;
-    dueAmountLabel?: string;
-    dueDateLabel?: string;
-    invoiceNumberLabel?: string;
-    itemDescriptionLabel?: string;
-    itemNameLabel?: string;
-    itemRateLabel?: string;
-    itemTotalLabel?: string;
-    paymentMadeLabel?: string;
-    primaryColor?: string;
-    secondaryColor?: string;
-    showCompanyAddress?: boolean;
-    showCompanyLogo?: boolean;
-    showCustomerAddress?: boolean;
-    showDateIssue?: boolean;
-    showDiscount?: boolean;
-    showDueAmount?: boolean;
-    showDueDate?: boolean;
-    showInvoiceNumber?: boolean;
-    showPaymentMade?: boolean;
-    showStatement?: boolean;
-    showSubtotal?: boolean;
-    showTaxes?: boolean;
-    showTermsConditions?: boolean;
-    showTotal?: boolean;
-    statementLabel?: string;
-    subtotalLabel?: string;
-    termsConditionsLabel?: string;
-    totalLabel?: string;
-  };
-}
-
-export function useGetSaleInvoiceBrandingTemplate(
-  invoiceId: number,
-  options?: UseQueryOptions<GetSaleInvoiceBrandingTemplateResponse, Error>,
-): UseQueryResult<GetSaleInvoiceBrandingTemplateResponse, Error> {
-  const apiRequest = useApiRequest();
-
-  return useQuery({
-    ...options,
-    queryKey: invoicesKeys.brandingTemplate(invoiceId),
-    queryFn: () =>
-      apiRequest
-        .get(`/sale-invoices/${invoiceId}/template`, {})
-        .then(
-          (res: { data?: { data?: unknown } }) =>
-            transformToCamelCase(
-              res.data?.data,
-            ) as GetSaleInvoiceBrandingTemplateResponse,
-        ),
   });
 }

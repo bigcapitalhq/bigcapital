@@ -1,4 +1,5 @@
-import type { ApiFetcher } from "./fetch-utils";
+import type { ApiFetcher, PdfDocument } from "./fetch-utils";
+import { toPdfDocument } from "./fetch-utils";
 import { paths } from "./schema";
 import {
   OpForPath,
@@ -235,6 +236,23 @@ export async function fetchSaleInvoiceHtml(
   const get = fetcher.path(SALE_INVOICES_ROUTES.HTML).method("get").create();
   const { data } = await get({ id });
   return data;
+}
+
+/**
+ * Downloads the given sale invoice as a PDF document. The server picks the
+ * output format from the `Accept` header; the raw-response middleware returns
+ * the body as a Blob and the filename is read from Content-Disposition.
+ */
+export async function fetchSaleInvoicePdf(
+  fetcher: ApiFetcher,
+  id: number,
+): Promise<PdfDocument> {
+  const get = fetcher.path(SALE_INVOICES_ROUTES.BY_ID).method("get").create();
+  const response = await get(
+    { id },
+    { headers: { Accept: "application/pdf" } },
+  );
+  return toPdfDocument(response);
 }
 
 export async function generateSaleInvoiceSharableLink(

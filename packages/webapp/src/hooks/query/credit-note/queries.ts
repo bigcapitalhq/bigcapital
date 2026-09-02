@@ -16,6 +16,7 @@ import {
   deleteRefundCreditNote,
   applyCreditNoteToInvoices,
   deleteApplyCreditNoteToInvoices,
+  fetchCreditNotePdf,
 } from '@bigcapital/sdk-ts';
 import {
   useQueryClient,
@@ -26,7 +27,7 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { useRequestPdf } from '../../useRequestPdf';
+import { usePdfDocument } from '../../useRequestPdf';
 import { accountsKeys } from '../accounts/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
 import { customersKeys } from '../customers/query-keys';
@@ -388,7 +389,10 @@ export function useRefundCreditTransaction(
 }
 
 export function usePdfCreditNote(creditNoteId: number | string) {
-  return useRequestPdf({ url: `credit-notes/${creditNoteId}` });
+  const fetcher = useApiFetcher();
+  return usePdfDocument(() =>
+    fetchCreditNotePdf(fetcher, Number(creditNoteId)),
+  );
 }
 
 export interface CreditNoteStateResponse {

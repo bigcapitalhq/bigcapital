@@ -13,6 +13,7 @@ import {
   fetchPaymentReceiveHtmlContent,
   notifyPaymentReceiveBySms,
   fetchPaymentReceiveSmsDetails,
+  fetchPaymentReceivedPdf,
 } from '@bigcapital/sdk-ts';
 import {
   useMutation,
@@ -24,7 +25,7 @@ import {
   UseMutationResult,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { useRequestPdf } from '../../useRequestPdf';
+import { usePdfDocument } from '../../useRequestPdf';
 import { accountsKeys } from '../accounts/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
 import { creditNotesKeys } from '../credit-note/query-keys';
@@ -246,7 +247,10 @@ export function usePaymentReceiveSMSDetail(
 }
 
 export function usePdfPaymentReceive(paymentReceiveId: number) {
-  return useRequestPdf({ url: `payments-received/${paymentReceiveId}` });
+  const fetcher = useApiFetcher();
+  return usePdfDocument(() =>
+    fetchPaymentReceivedPdf(fetcher, paymentReceiveId),
+  );
 }
 
 export function useSendPaymentReceiveMail(

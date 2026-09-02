@@ -1,4 +1,5 @@
 import { Fetcher } from 'openapi-typescript-fetch';
+import type { ApiResponse } from 'openapi-typescript-fetch';
 import type { paths } from './schema';
 import { createCamelCaseMiddleware } from './middleware/camel-case-middleware';
 import {
@@ -80,6 +81,30 @@ export function withFormData(
 }
 
 export type ApiFetcher = ReturnType<typeof Fetcher.for<paths>>;
+
+/**
+ * A downloaded PDF document.
+ */
+export interface PdfDocument {
+  blob: Blob;
+  filename: string;
+}
+
+/**
+ * Extracts a PDF document (blob + filename) from an ApiResponse produced with
+ * an `Accept: application/pdf` header. The raw-response middleware returns the
+ * body as a Blob and preserves the response headers, so the filename is parsed
+ * from the Content-Disposition header (falling back to `default.pdf`).
+ */
+export function toPdfDocument<T>(response: ApiResponse<T>): PdfDocument {
+  const contentDisposition = response.headers.get('Content-Disposition') ?? '';
+  const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+
+  return {
+    blob: response.data as unknown as Blob,
+    filename: filenameMatch?.[1] ?? 'default.pdf',
+  };
+}
 
 export interface CreateApiFetcherConfig {
   baseUrl?: string;
