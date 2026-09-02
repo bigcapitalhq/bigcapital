@@ -130,6 +130,18 @@ export class CommandItemDto {
 
   @IsOptional()
   @IsString()
+  @IsIn(['FIFO', 'LIFO', 'AVG'])
+  @ValidateIf((o) => o.type === 'inventory')
+  @ApiProperty({
+    description: 'Inventory costing method (FIFO, LIFO, or AVG)',
+    required: false,
+    enum: ['FIFO', 'LIFO', 'AVG'],
+    example: 'AVG',
+  })
+  costMethod?: 'FIFO' | 'LIFO' | 'AVG';
+
+  @IsOptional()
+  @IsString()
   @ApiProperty({
     description: 'Description shown on sales documents',
     required: false,

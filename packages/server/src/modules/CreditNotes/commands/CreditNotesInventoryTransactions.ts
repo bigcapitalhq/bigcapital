@@ -1,41 +1,55 @@
 // @ts-nocheck
 import { Injectable } from '@nestjs/common';
 import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
+import { InventoryOriginalCostResolver } from '@/modules/InventoryCost/commands/InventoryOriginalCostResolver.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { CreditNote } from '../models/CreditNote';
 import { Knex } from 'knex';
+
 @Injectable()
 export class CreditNoteInventoryTransactions {
   constructor(
     private readonly inventoryService: InventoryTransactionsService,
     private readonly itemsEntriesService: ItemsEntriesService,
+    private readonly originalCostResolver: InventoryOriginalCostResolver,
   ) {}
 
   /**
    * Creates credit note inventory transactions.
-   * @param {number} tenantId
-   * @param {ICreditNote} creditNote
+   * Linked returns use original invoice/receipt COGS as inventory rate.
    */
   public createInventoryTransactions = async (
     creditNote: CreditNote,
     trx?: Knex.Transaction,
   ): Promise<void> => {
-    // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(creditNote.entries);
+
+    const pricedEntries =
+      await this.originalCostResolver.applyOriginalCostToEntries(
+        inventoryEntries,
+        trx,
+      );
+
+    const hasLinked = pricedEntries.some(
+      (e) =>
+        (e.sourceInvoiceId && e.sourceInvoiceEntryId) ||
+        (e.sourceReceiptId && e.sourceReceiptEntryId),
+    );
 
     const transaction = {
       transactionId: creditNote.id,
       transactionType: 'CreditNote',
       transactionNumber: creditNote.creditNoteNumber,
-      exchangeRate: creditNote.exchangeRate,
+      // Linked rates are already base-currency COGS; free-standing use doc FX.
+      exchangeRate: hasLinked ? 1 : creditNote.exchangeRate,
       date: creditNote.creditNoteDate,
       direction: 'IN',
-      entries: inventoryEntries,
+      entries: pricedEntries,
       createdAt: creditNote.createdAt,
       warehouseId: creditNote.warehouseId,
     };
-    // Writes inventory tranactions.
+
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       transaction,
       false,
@@ -43,36 +57,19 @@ export class CreditNoteInventoryTransactions {
     );
   };
 
-  /**
-   * Edits vendor credit associated inventory transactions.
-   * @param {number} tenantId
-   * @param {number} creditNoteId
-   * @param {ICreditNote} creditNote
-   * @param {Knex.Transactions} trx
-   */
   public editInventoryTransactions = async (
     creditNoteId: number,
     creditNote: CreditNote,
     trx?: Knex.Transaction,
   ): Promise<void> => {
-    // Deletes inventory transactions.
     await this.deleteInventoryTransactions(creditNoteId, trx);
-
-    // Re-write inventory transactions.
     await this.createInventoryTransactions(creditNote, trx);
   };
 
-  /**
-   * Deletes credit note associated inventory transactions.
-   * @param {number} tenantId - Tenant id.
-   * @param {number} creditNoteId - Credit note id.
-   * @param {Knex.Transaction} trx -
-   */
   public deleteInventoryTransactions = async (
     creditNoteId: number,
     trx?: Knex.Transaction,
   ): Promise<void> => {
-    // Deletes the inventory transactions by the given reference id and type.
     await this.inventoryService.deleteInventoryTransactions(
       creditNoteId,
       'CreditNote',

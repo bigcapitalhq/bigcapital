@@ -50,19 +50,19 @@ export class SaleInvoicesCost {
   }
 
   /**
-   * Retrieve the max dated inventory transactions in the transactions that
-   * have the same item id.
+   * Retrieve the earliest dated inventory transactions per item id
+   * so cost recompute starts from the oldest affected date.
    * @param {ModelObject<InventoryTransaction>[]} inventoryTransactions
    * @return {ModelObject<InventoryTransaction>[]}
    */
-  getMaxDateInventoryTransactions(
+  getMinDateInventoryTransactions(
     inventoryTransactions: ModelObject<InventoryTransaction>[],
   ): ModelObject<InventoryTransaction>[] {
     const reduced = inventoryTransactions.reduce(
       (acc: Record<number, ModelObject<InventoryTransaction>>, transaction) => {
         const existing = acc[transaction.itemId];
 
-        if (!existing || moment(existing.date).isBefore(transaction.date)) {
+        if (!existing || moment(transaction.date).isBefore(existing.date)) {
           return {
             ...acc,
             [transaction.itemId]: {
@@ -77,6 +77,13 @@ export class SaleInvoicesCost {
     return Object.values(reduced);
   }
 
+  /** @deprecated Use getMinDateInventoryTransactions */
+  getMaxDateInventoryTransactions(
+    inventoryTransactions: ModelObject<InventoryTransaction>[],
+  ): ModelObject<InventoryTransaction>[] {
+    return this.getMinDateInventoryTransactions(inventoryTransactions);
+  }
+
   /**
    * Computes items costs by the given inventory transaction.
    * @param {number} tenantId
@@ -86,7 +93,7 @@ export class SaleInvoicesCost {
     inventoryTransactions: ModelObject<InventoryTransaction>[],
   ) {
     const mutex = new Mutex();
-    const reducedTransactions = this.getMaxDateInventoryTransactions(
+    const reducedTransactions = this.getMinDateInventoryTransactions(
       inventoryTransactions,
     );
     const asyncOpers = reducedTransactions.map(async (transaction) => {

@@ -31,6 +31,8 @@ import { RefundSyncCreditNoteBalanceSubscriber } from './subscribers/RefundSyncC
 import { DeleteCustomerLinkedCreditSubscriber } from './subscribers/DeleteCustomerLinkedCreditSubscriber';
 import { CreditNoteAutoSerialSubscriber } from './subscribers/CreditNoteAutoSerialSubscriber';
 import { CreditNoteInventoryTransactions } from './commands/CreditNotesInventoryTransactions';
+import { CreditNoteCostGLEntries } from './commands/CreditNoteCostGLEntries';
+import { CreditNoteCostGLEntriesSubscriber } from './subscribers/CreditNoteCostGLEntriesSubscriber';
 import { InventoryCostModule } from '../InventoryCost/InventoryCost.module';
 import { CreditNoteRefundsModule } from '../CreditNoteRefunds/CreditNoteRefunds.module';
 import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/CreditNotesApplyInvoice.module';
@@ -72,6 +74,8 @@ import { ValidateBulkDeleteCreditNotesService } from './ValidateBulkDeleteCredit
     CreditNotesImportable,
     CreditNoteInventoryTransactions,
     CreditNoteInventoryTransactionsSubscriber,
+    CreditNoteCostGLEntries,
+    CreditNoteCostGLEntriesSubscriber,
     RefundSyncCreditNoteBalanceSubscriber,
     DeleteCustomerLinkedCreditSubscriber,
     CreditNoteAutoSerialSubscriber,

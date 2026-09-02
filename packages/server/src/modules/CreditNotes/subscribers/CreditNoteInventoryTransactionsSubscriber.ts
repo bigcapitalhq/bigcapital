@@ -25,8 +25,8 @@ export class CreditNoteInventoryTransactionsSubscriber {
     creditNote,
     trx,
   }: ICreditNoteCreatedPayload) {
-    // Can't continue if the credit note is open yet.
-    if (!creditNote.isOpen) return;
+    // Can't continue unless the credit note is published/opened.
+    if (!creditNote.isPublished) return;
 
     await this.inventoryTransactions.createInventoryTransactions(
       creditNote,
@@ -44,8 +44,8 @@ export class CreditNoteInventoryTransactionsSubscriber {
     creditNote,
     trx,
   }: ICreditNoteEditedPayload) {
-    // Can't continue if the credit note is open yet.
-    if (!creditNote.isOpen) return;
+    // Can't continue unless the credit note is published/opened.
+    if (!creditNote.isPublished) return;
 
     await this.inventoryTransactions.editInventoryTransactions(
       creditNote.id,
@@ -63,8 +63,8 @@ export class CreditNoteInventoryTransactionsSubscriber {
     oldCreditNote,
     trx,
   }: ICreditNoteDeletedPayload) {
-    // Can't continue if the credit note is open yet.
-    if (!oldCreditNote.isOpen) return;
+    // Can't continue unless the credit note was published/opened.
+    if (!oldCreditNote.isPublished) return;
 
     await this.inventoryTransactions.deleteInventoryTransactions(
       oldCreditNote.id,

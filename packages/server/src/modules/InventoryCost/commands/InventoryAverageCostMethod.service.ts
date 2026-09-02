@@ -1,4 +1,3 @@
-import { pick } from 'lodash';
 import { Knex } from 'knex';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 import { InventoryItemOpeningAvgCostService } from './InventoryItemOpeningAvgCost.service';
@@ -6,6 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InventoryAverageCostMethod } from './InventoryAverageCostMethod';
 import { StoreInventoryLotsCostService } from './StoreInventortyLotsCost.service';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';
+import { applyCostTransactionOrder } from '../InventoryCostTransactionOrder';
 
 @Injectable()
 export class InventoryAverageCostMethodService {
@@ -33,14 +33,13 @@ export class InventoryAverageCostMethodService {
     openingQuantity: number,
     openingCost: number,
   ) {
-    const afterInvTransactions = await this.inventoryTransactionModel()
-      .query()
-      .modify('filterDateRange', startingDate)
-      .orderBy('date', 'ASC')
-      .orderByRaw("FIELD(direction, 'IN', 'OUT')")
-      .orderBy('createdAt', 'ASC')
-      .where('item_id', itemId)
-      .withGraphFetched('item');
+    const afterInvTransactions = await applyCostTransactionOrder(
+      this.inventoryTransactionModel()
+        .query()
+        .modify('filterDateRange', startingDate)
+        .where('item_id', itemId)
+        .withGraphFetched('item'),
+    );
 
     const avgCostTracker = new InventoryAverageCostMethod();
 

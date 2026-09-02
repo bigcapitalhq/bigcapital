@@ -78,6 +78,7 @@ export class EditItemService {
     if (itemDTO.sellTaxRateId) {
       await this.validators.validateSellTaxRateExistance(itemDTO.sellTaxRateId);
     }
+    await this.validators.validateCostMethodNotLocked(itemDTO, oldItem);
   }
 
   /**

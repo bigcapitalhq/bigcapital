@@ -81,7 +81,7 @@ export const useEstimateTransactionsColumns = () => {
       {
         id: 'qunatity',
         Header: intl.get('item.drawer_quantity_sold'),
-        accessor: 'formattedQuantity',
+        accessor: 'quantity',
         align: 'right',
         width: 100,
       },
