@@ -31,11 +31,6 @@ const RegisterVerify = lazy(() =>
     default: m.RegisterVerify,
   })),
 );
-const OneClickDemoPage = lazy(() =>
-  import('@/containers/OneClickDemo/OneClickDemoPage').then((m) => ({
-    default: m.OneClickDemoPage,
-  })),
-);
 const PaymentPortalPage = lazy(() =>
   import('@/containers/PaymentPortal/PaymentPortalPage').then((m) => ({
     default: m.PaymentPortalPage,
@@ -52,7 +47,6 @@ function AppInsider({ history }: { history: History }) {
         <Suspense fallback={'Loading...'}>
           <Router history={history}>
             <Switch>
-              <Route path={'/one_click_demo'} children={<OneClickDemoPage />} />
               <Route path={'/auth/register/verify'}>
                 <EnsureAuthenticated>
                   <EnsureUserEmailNotVerified>

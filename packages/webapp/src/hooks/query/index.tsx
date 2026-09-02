@@ -6,7 +6,6 @@ export * from './exchange-rates';
 export * from './misc';
 export * from './attachments';
 export * from './import';
-export * from './oneclick-demo';
 export * from './accounts';
 export * from './items';
 export * from './items-categories';
