@@ -179,9 +179,7 @@ function InvoiceFormProvider({
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading ||
-    isBranchesLoading ||
-    isBrandingTemplatesLoading;
+    isWarehouesLoading || isBranchesLoading || isBrandingTemplatesLoading;
 
   const isBootLoading =
     isInvoiceLoading ||

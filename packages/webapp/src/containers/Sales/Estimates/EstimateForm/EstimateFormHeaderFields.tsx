@@ -5,9 +5,7 @@ import { Theme } from '@xstyled/emotion';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  EstimateExchangeRateInputField,
-} from './components';
+import { EstimateExchangeRateInputField } from './components';
 import { EstimateFormEstimateNumberField } from './EstimateFormEstimateNumberField';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { customersFieldShouldUpdate } from './utils';
@@ -112,7 +110,6 @@ export function EstimateFormHeader() {
           data-testId="estimate-reference-input"
         />
       </FFormGroup>
-
     </Stack>
   );
 }

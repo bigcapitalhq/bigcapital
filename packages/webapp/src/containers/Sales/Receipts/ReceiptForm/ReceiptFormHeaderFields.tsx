@@ -5,9 +5,7 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  ReceiptExchangeRateInputField,
-} from './components';
+import { ReceiptExchangeRateInputField } from './components';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { ReceiptFormReceiptNumberField } from './ReceiptFormReceiptNumberField';
 import { accountsFieldShouldUpdate, customersFieldShouldUpdate } from './utils';
@@ -116,7 +114,6 @@ export function ReceiptFormHeader() {
       >
         <FInputGroup name={'referenceNo'} />
       </FFormGroup>
-
     </Stack>
   );
 }

@@ -7,9 +7,7 @@ import { isEmpty, toSafeInteger } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  PaymentReceiveExchangeRateInputField,
-} from './components';
+import { PaymentReceiveExchangeRateInputField } from './components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { PaymentReceivePaymentNoField } from './PaymentReceivePaymentNoField';
 import {
@@ -189,7 +187,6 @@ export function PaymentReceiveHeaderFields() {
       >
         <FInputGroup name={'referenceNo'} fill />
       </FFormGroup>
-
     </Stack>
   );
 }

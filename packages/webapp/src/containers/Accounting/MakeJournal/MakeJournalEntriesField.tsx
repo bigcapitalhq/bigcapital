@@ -12,8 +12,7 @@ import {
 import { CLASSES } from '@/constants/classes';
 
 export function MakeJournalEntriesField() {
-  const { accounts, contacts, branches } =
-    useMakeJournalFormContext();
+  const { accounts, contacts, branches } = useMakeJournalFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>

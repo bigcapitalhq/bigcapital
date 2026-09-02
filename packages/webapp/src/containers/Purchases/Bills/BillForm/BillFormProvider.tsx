@@ -142,9 +142,7 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehousesLoading ||
-    isBranchesLoading ||
-    isTaxRatesLoading;
+    isWarehousesLoading || isBranchesLoading || isTaxRatesLoading;
 
   const provider: BillFormContextValue = {
     accounts: accounts ?? [],

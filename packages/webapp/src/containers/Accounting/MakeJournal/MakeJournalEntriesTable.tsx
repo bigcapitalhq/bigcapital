@@ -34,8 +34,7 @@ export function MakeJournalEntriesTable({
   minLinesNumber = 1,
   currencyCode,
 }: MakeJournalEntriesTableProps) {
-  const { accounts, contacts, branches } =
-    useMakeJournalFormContext();
+  const { accounts, contacts, branches } = useMakeJournalFormContext();
 
   // Memorized data table columns.
   const columns = useJournalTableEntriesColumns();

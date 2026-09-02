@@ -5,9 +5,7 @@ import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  InvoiceExchangeRateInputField,
-} from './components';
+import { InvoiceExchangeRateInputField } from './components';
 import { InvoiceFormInvoiceNumberField } from './InvoiceFormInvoiceNumberField';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { customerNameFieldShouldUpdate } from './utils';
@@ -118,7 +116,6 @@ export function InvoiceFormHeaderFields() {
           data-testId="invoice-reference-input"
         />
       </FFormGroup>
-
     </Stack>
   );
 }

@@ -152,8 +152,7 @@ function EstimateFormProvider({
 
   const isNewMode = !estimateId;
 
-  const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading;
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
   const isBootLoading =
     isCustomersLoading ||
