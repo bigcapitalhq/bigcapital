@@ -42,6 +42,8 @@ export function UploadAttachmentButton() {
         interactionKind={PopoverInteractionKind.CLICK}
         popoverClassName={clsx(styles.popover, Classes.POPOVER_CONTENT_SIZING)}
         placement={'top-start'}
+        enforceFocus={false}
+        autoFocus={false}
         content={<UploadAttachmentButtonButtonContentField />}
       >
         <Button className={styles.attachmentButton}>

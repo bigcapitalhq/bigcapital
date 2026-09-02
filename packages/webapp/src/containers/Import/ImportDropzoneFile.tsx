@@ -2,11 +2,18 @@ import { Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
 import type { ComponentType, PropsWithChildren, ReactNode } from 'react';
 import { useRef } from 'react';
+import { ErrorCode } from 'react-dropzone-esm';
 import styles from './ImportDropzone.module.css';
-import { Box, Icon, Stack } from '@/components';
+import { AppToaster, Box, Icon, Stack } from '@/components';
 import { Dropzone, DropzoneProps } from '@/components/Dropzone';
 import { MIME_TYPES } from '@/components/Dropzone/mine-types';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
+
+const REJECT_MESSAGES: Record<string, string> = {
+  [ErrorCode.FileTooLarge]: 'File is too large.',
+  [ErrorCode.FileInvalidType]: 'File type is not supported.',
+  [ErrorCode.TooManyFiles]: 'Too many files uploaded.',
+};
 
 // `Dropzone` reads `children` and `classNames` from props at runtime but its
 // exported type omits them. Cast once at the boundary so call sites stay typed.
@@ -52,7 +59,16 @@ export function ImportDropzoneField({
   return (
     <DropzoneWithChildren
       onDrop={(files) => handleChange(files[0])}
-      onReject={(files) => console.log('rejected files', files)}
+      onReject={(fileRejections) => {
+        fileRejections.forEach(({ errors }) => {
+          errors.forEach((error) => {
+            AppToaster.show({
+              intent: Intent.DANGER,
+              message: REJECT_MESSAGES[error.code] || 'File is invalid.',
+            });
+          });
+        });
+      }}
       maxSize={5 * 1024 ** 2}
       accept={[MIME_TYPES.csv, MIME_TYPES.xls, MIME_TYPES.xlsx]}
       classNames={{ root: classNames?.root, content: styles.dropzoneContent }}
