@@ -17,7 +17,7 @@ import { useAuthResetPassword } from '@/hooks/query';
 
 const initialValues: ResetPasswordValues = {
   password: '',
-  confirm_password: '',
+  confirmPassword: '',
 };
 /**
  * Reset password page.

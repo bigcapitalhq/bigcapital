@@ -22,14 +22,14 @@ export function LockingTransactionsFormFields(): React.ReactElement {
     <div className={Classes.DIALOG_BODY}>
       {/*------------  Locking Date ----------- */}
       <FFormGroup
-        name={'lock_to_date'}
+        name={'lockToDate'}
         label={intl.get('locking_transactions.dialog.locking_date')}
         labelInfo={<FieldRequiredHint />}
         className={classNames(CLASSES.FILL, 'form-group--date')}
         fastField
       >
         <FDateInput
-          name={'lock_to_date'}
+          name={'lockToDate'}
           {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM,

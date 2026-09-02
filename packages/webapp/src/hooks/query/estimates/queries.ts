@@ -264,7 +264,7 @@ export function useEstimateSMSDetail(
   props?: Record<string, unknown>,
   requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: estimatesKeys.smsDetail(estimateId),

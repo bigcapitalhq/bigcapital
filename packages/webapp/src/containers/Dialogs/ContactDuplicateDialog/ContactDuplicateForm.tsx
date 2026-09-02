@@ -38,11 +38,11 @@ function ContactDuplicateFormInner({
   const { dialogName, contactId } = useContactDuplicateFromContext();
 
   const validationSchema = Yup.object().shape({
-    contact_type: Yup.string().required().label(intl.get('contact_type_')),
+    contactType: Yup.string().required().label(intl.get('contact_type_')),
   });
 
   const initialValues: ContactDuplicateFormValues = {
-    contact_type: '',
+    contactType: '',
   };
 
   // Handle cancel button click.
@@ -53,7 +53,7 @@ function ContactDuplicateFormInner({
   // Handle form submit.
   const handleFormSubmit = (values: ContactDuplicateFormValues) => {
     closeDialog(dialogName);
-    history.push(`${values.contact_type}/new?duplicate=${contactId}`, {
+    history.push(`${values.contactType}/new?duplicate=${contactId}`, {
       action: contactId,
     });
   };
@@ -78,12 +78,12 @@ function ContactDuplicateFormInner({
 
             {/*------------ Contact Type -----------*/}
             <FFormGroup
-              name={'contact_type'}
+              name={'contactType'}
               label={intl.get('contact_type')}
               labelInfo={<FieldRequiredHint />}
             >
               <FSelect
-                name={'contact_type'}
+                name={'contactType'}
                 items={ContactsOptions}
                 placeholder={<T id={'select_contact'} />}
                 textAccessor={'name'}

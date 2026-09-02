@@ -11,11 +11,11 @@ import type { LockingTransactionsFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { compose, transformToCamelCase, transformToForm } from '@/utils';
 
 const defaultInitialValues: LockingTransactionsFormValues = {
   module: '',
-  lock_to_date: moment(new Date()).format('YYYY-MM-DD'),
+  lockToDate: moment(new Date()).format('YYYY-MM-DD'),
   reason: '',
 };
 
@@ -42,7 +42,7 @@ function LockingTransactionsFormInner({
       ...(isEnabled
         ? {
             ...(transformToForm(
-              transactionLocking,
+              transformToCamelCase(transactionLocking),
               defaultInitialValues,
             ) as LockingTransactionsFormValues),
             module: moduleName,

@@ -1,5 +1,5 @@
 export interface ContactDuplicateFormValues {
-  contact_type: string;
+  contactType: string;
 }
 
 export type ContactDuplicateDialogPayload = {

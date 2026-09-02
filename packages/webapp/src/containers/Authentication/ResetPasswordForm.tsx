@@ -15,8 +15,8 @@ export function ResetPasswordForm({ isSubmitting }: { isSubmitting: boolean }) {
         <FInputGroup name={'password'} type={'password'} large={true} />
       </FFormGroup>
 
-      <FFormGroup name={'confirm_password'} label={intl.get('new_password')}>
-        <FInputGroup name={'confirm_password'} type={'password'} large={true} />
+      <FFormGroup name={'confirmPassword'} label={intl.get('new_password')}>
+        <FInputGroup name={'confirmPassword'} type={'password'} large={true} />
       </FFormGroup>
 
       <AuthSubmitButton

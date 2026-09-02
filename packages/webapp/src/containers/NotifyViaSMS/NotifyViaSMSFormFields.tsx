@@ -13,13 +13,13 @@ export function NotifyViaSMSFormFields({ notificationTypes }) {
   return (
     <NotifyViaSMSFormFieldsRoot>
       <FFormGroup
-        name={'notification_key'}
+        name={'notificationKey'}
         label={intl.get('notify_via_sms.dialog.notification_type')}
         className={classNames(CLASSES.FILL)}
         fastField
       >
         <FSelect
-          name={'notification_key'}
+          name={'notificationKey'}
           items={notificationTypes}
           valueAccessor={'key'}
           textAccessor={'label'}
@@ -31,14 +31,14 @@ export function NotifyViaSMSFormFields({ notificationTypes }) {
       </FFormGroup>
 
       {/* ----------- Send Notification to ----------- */}
-      <FastField name={'customer_name'}>
+      <FastField name={'customerName'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={intl.get('notify_via_sms.dialog.send_notification_to')}
             className={classNames('form-group--customer-name', CLASSES.FILL)}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_name'} />}
+            helperText={<ErrorMessage name={'customerName'} />}
           >
             <InputGroup
               intent={inputIntent({ error, touched })}
@@ -50,13 +50,13 @@ export function NotifyViaSMSFormFields({ notificationTypes }) {
       </FastField>
 
       {/* ----------- Phone number ----------- */}
-      <FastField name={'customer_phone_number'}>
+      <FastField name={'customerPhoneNumber'}>
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={intl.get('phone_number')}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="customer_phone_number" />}
+            helperText={<ErrorMessage name="customerPhoneNumber" />}
             className={classNames(
               'form-group--customer_phone_number',
               CLASSES.FILL,

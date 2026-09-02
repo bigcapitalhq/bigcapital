@@ -25,7 +25,7 @@ const NotifyViaSMSForm =
   NotifyViaSMSFormBase as unknown as React.ComponentType<NotifyViaSMSFormProps>;
 
 interface NotifyViaSMSFormValues {
-  notification_key: string;
+  notificationKey: string;
   [key: string]: unknown;
 }
 
@@ -106,17 +106,17 @@ function NotifyInvoiceViaSMSFormInner({
     closeDialog(dialogName);
   }, [closeDialog, dialogName]);
 
-  // `NotifyViaSMSForm` expects snake_case field keys.
+  // `NotifyViaSMSForm` expects camelCase field keys.
   const initialValues = {
-    customer_name: invoiceSMSDetail.customerName ?? '',
-    customer_phone_number: invoiceSMSDetail.customerPhoneNumber ?? '',
-    sms_message: invoiceSMSDetail.smsMessage ?? '',
-    notification_key: notificationType,
+    customerName: invoiceSMSDetail.customerName ?? '',
+    customerPhoneNumber: invoiceSMSDetail.customerPhoneNumber ?? '',
+    smsMessage: invoiceSMSDetail.smsMessage ?? '',
+    notificationKey: notificationType,
   };
   // Handle form values change.
   const handleValuesChange = (values: NotifyViaSMSFormValues) => {
-    if (values.notification_key !== notificationType) {
-      setNotificationType(values.notification_key);
+    if (values.notificationKey !== notificationType) {
+      setNotificationType(values.notificationKey);
     }
   };
 

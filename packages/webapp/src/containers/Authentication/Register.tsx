@@ -20,8 +20,8 @@ import { AuthInsider } from '@/containers/Authentication/AuthInsider';
 import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
 const initialValues: RegisterValues = {
-  first_name: '',
-  last_name: '',
+  firstName: '',
+  lastName: '',
   email: '',
   password: '',
 };
@@ -38,8 +38,8 @@ export function RegisterUserForm() {
     { setSubmitting, setErrors }: FormikHelpers<RegisterValues>,
   ) => {
     authRegisterMutate({
-      firstName: values.first_name,
-      lastName: values.last_name,
+      firstName: values.firstName,
+      lastName: values.lastName,
       email: values.email,
       password: values.password,
     })

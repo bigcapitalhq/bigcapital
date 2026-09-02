@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
-  lock_to_date: Yup.date().required().label(intl.get('date')),
+  lockToDate: Yup.date().required().label(intl.get('date')),
   module: Yup.string().required(),
   reason: Yup.string()
     .required()

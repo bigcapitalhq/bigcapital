@@ -11,10 +11,10 @@ import type { ApiError } from 'openapi-typescript-fetch';
 import { AppToaster } from '@/components';
 
 const initialValues: InviteAcceptFormValues = {
-  organization_name: '',
-  invited_email: '',
-  first_name: '',
-  last_name: '',
+  organizationName: '',
+  invitedEmail: '',
+  firstName: '',
+  lastName: '',
   password: '',
 };
 
@@ -29,8 +29,8 @@ export function InviteAcceptForm() {
     ...initialValues,
     ...(!isEmpty(inviteMeta)
       ? {
-          invited_email: inviteMeta?.email ?? '',
-          organization_name: inviteMeta?.organizationName ?? '',
+          invitedEmail: inviteMeta?.email ?? '',
+          organizationName: inviteMeta?.organizationName ?? '',
         }
       : {}),
   };
@@ -40,7 +40,14 @@ export function InviteAcceptForm() {
     values: InviteAcceptFormValues,
     { setSubmitting }: FormikHelpers<InviteAcceptFormValues>,
   ) => {
-    inviteAcceptMutate([values, token])
+    inviteAcceptMutate([
+      {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        password: values.password,
+      },
+      token,
+    ])
       .then(() => {
         AppToaster.show({
           message: intl.getHTML(
