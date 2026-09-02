@@ -25,7 +25,7 @@ const NotifyViaSMSForm =
   NotifyViaSMSFormBase as unknown as React.ComponentType<NotifyViaSMSFormProps>;
 
 interface NotifyViaSMSFormValues {
-  notification_key: string;
+  notificationKey: string;
   [key: string]: unknown;
 }
 
@@ -87,9 +87,11 @@ function NotifyEstimateViaSMSFormInner({
       .catch(onError);
   };
 
+  // The SMS details are camelCase (`enableCamelCaseTransform` on the detail
+  // query), matching the camelCase field keys `NotifyViaSMSForm` expects.
   const initialValues = {
     ...estimateSMSDetail,
-    notification_key: notificationType.key,
+    notificationKey: notificationType.key,
   };
   // Handle the form cancel.
   const handleFormCancel = () => {

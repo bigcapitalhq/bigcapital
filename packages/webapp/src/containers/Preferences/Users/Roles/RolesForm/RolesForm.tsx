@@ -23,8 +23,8 @@ import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashb
 import { compose, transformToForm } from '@/utils';
 
 const defaultValues: RolesFormValues = {
-  role_name: '',
-  role_description: '',
+  roleName: '',
+  roleDescription: '',
   permissions: {},
   serviceFullAccess: {},
 };
@@ -81,8 +81,8 @@ function RolesFormInner({
   ) => {
     const permission = transformToArray(values, role);
     const form = {
-      roleName: values.role_name,
-      roleDescription: values.role_description,
+      roleName: values.roleName,
+      roleDescription: values.roleDescription,
       permissions: permission,
     };
     setSubmitting(true);

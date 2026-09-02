@@ -45,14 +45,14 @@ export function InviteUserFormContent() {
     <Form>
       <Row>
         <Col md={6}>
-          <FFormGroup name={'first_name'} label={intl.get('first_name')}>
-            <FInputGroup name={'first_name'} large={true} />
+          <FFormGroup name={'firstName'} label={intl.get('first_name')}>
+            <FInputGroup name={'firstName'} large={true} />
           </FFormGroup>
         </Col>
 
         <Col md={6}>
-          <FFormGroup name={'last_name'} label={intl.get('last_name')}>
-            <FInputGroup name={'last_name'} large={true} />
+          <FFormGroup name={'lastName'} label={intl.get('last_name')}>
+            <FInputGroup name={'lastName'} large={true} />
           </FFormGroup>
         </Col>
       </Row>

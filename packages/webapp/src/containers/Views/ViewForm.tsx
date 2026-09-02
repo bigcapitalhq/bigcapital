@@ -23,6 +23,7 @@ import { FormattedMessage as T } from '@/components';
 import { If, Icon, AppToaster } from '@/components';
 import ErrorMessage from '@/components/ErrorMessage';
 import { ViewFormContainer } from '@/containers/Views/ViewForm.container';
+import { transfromToSnakeCase } from '@/utils';
 
 function ViewFormInner({
   requestSubmitView,
@@ -68,7 +69,7 @@ function ViewFormInner({
 
   const defaultViewRole = useMemo(
     () => ({
-      field_key: '',
+      fieldKey: '',
       comparator: '',
       value: '',
       index: 1,
@@ -77,18 +78,18 @@ function ViewFormInner({
   );
 
   const validationSchema = Yup.object().shape({
-    resource_name: Yup.string().required(),
+    resourceName: Yup.string().required(),
     name: Yup.string()
       .required()
       .label(intl.formatMessage({ id: 'name_' })),
-    logic_expression: Yup.string()
+    logicExpression: Yup.string()
       .required()
       .label(intl.formatMessage({ id: 'logic_expression' })),
     roles: Yup.array().of(
       Yup.object().shape({
         comparator: Yup.string().required(),
         value: Yup.string().required(),
-        field_key: Yup.string().required(),
+        fieldKey: Yup.string().required(),
         index: Yup.number().required(),
       }),
     ),
@@ -102,9 +103,9 @@ function ViewFormInner({
 
   const initialEmptyForm = useMemo(
     () => ({
-      resource_name: resourceName || '',
+      resourceName: resourceName || '',
       name: '',
-      logic_expression: '',
+      logicExpression: '',
       roles: [defaultViewRole],
       columns: [],
     }),
@@ -117,7 +118,7 @@ function ViewFormInner({
       ...(viewMeta
         ? {
             ...viewMeta,
-            resource_name: viewMeta.resource?.name || resourceName,
+            resourceName: viewMeta.resource?.name || resourceName,
           }
         : {}),
     }),
@@ -138,19 +139,23 @@ function ViewFormInner({
     initialValues: {
       roles: [],
       ...pick(initialForm, Object.keys(initialEmptyForm)),
-      logic_expression: initialForm.roles_logic_expression || '',
+      // The view API returns `roles_logic_expression` in snake_case.
+      logicExpression: initialForm.roles_logic_expression || '',
       roles: [
         ...initialForm.roles.map((role) => {
           return {
             ...pick(role, Object.keys(defaultViewRole)),
-            field_key: role.field ? role.field.key : '',
+            fieldKey: role.field ? role.field.key : '',
           };
         }),
       ],
     },
     onSubmit: (values, { setSubmitting }) => {
+      // The views API expects snake_case payload.
+      const payload = transfromToSnakeCase(values);
+
       if (viewMeta && viewMeta.id) {
-        requestEditView(viewMeta.id, values).then((response) => {
+        requestEditView(viewMeta.id, payload).then((response) => {
           AppToaster.show({
             message: 'the_view_has_been_edited',
             intent: Intent.SUCCESS,
@@ -161,7 +166,7 @@ function ViewFormInner({
           setSubmitting(false);
         });
       } else {
-        requestSubmitView(values).then((response) => {
+        requestSubmitView(payload).then((response) => {
           AppToaster.show({
             message: 'the_view_has_been_submit',
             intent: Intent.SUCCESS,
@@ -314,13 +319,13 @@ function ViewFormInner({
 
             <Col sm={2}>
               <FormGroup
-                intent={hasError(`roles[${index}].field_key`) && Intent.DANGER}
+                intent={hasError(`roles[${index}].fieldKey`) && Intent.DANGER}
               >
                 <HTMLSelect
                   options={resourceFieldsOptions}
-                  value={role.field_key}
+                  value={role.fieldKey}
                   className={Classes.FILL}
-                  {...getFieldProps(`roles[${index}].field_key`)}
+                  {...getFieldProps(`roles[${index}].fieldKey`)}
                 />
               </FormGroup>
             </Col>
@@ -377,14 +382,14 @@ function ViewFormInner({
                 label={intl.get('Logic Expression')}
                 className={'form-group--logic-expression'}
                 intent={
-                  errors.logic_expression &&
-                  touched.logic_expression &&
+                  errors.logicExpression &&
+                  touched.logicExpression &&
                   Intent.DANGER
                 }
                 helperText={
                   <ErrorMessage
                     {...{ errors, touched }}
-                    name="logic_expression"
+                    name="logicExpression"
                   />
                 }
                 inline={true}
@@ -392,12 +397,12 @@ function ViewFormInner({
               >
                 <InputGroup
                   intent={
-                    errors.logic_expression &&
-                    touched.logic_expression &&
+                    errors.logicExpression &&
+                    touched.logicExpression &&
                     Intent.DANGER
                   }
                   fill={true}
-                  {...getFieldProps('logic_expression')}
+                  {...getFieldProps('logicExpression')}
                 />
               </FormGroup>
             </Col>

@@ -38,15 +38,15 @@ export interface LoginValues {
 }
 
 export interface RegisterValues {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }
 
 export interface ResetPasswordValues {
   password: string;
-  confirm_password: string;
+  confirmPassword: string;
 }
 
 export interface SendResetPasswordValues {
@@ -54,10 +54,10 @@ export interface SendResetPasswordValues {
 }
 
 export type InviteAcceptFormValues = {
-  organization_name: string;
-  invited_email: string;
-  first_name: string;
-  last_name: string;
+  organizationName: string;
+  invitedEmail: string;
+  firstName: string;
+  lastName: string;
   password: string;
 };
 
@@ -77,15 +77,15 @@ export const LoginSchema = Yup.object().shape({
 });
 
 export const RegisterSchema = Yup.object().shape({
-  first_name: Yup.string().required().label(intl.get('first_name_')),
-  last_name: Yup.string().required().label(intl.get('last_name_')),
+  firstName: Yup.string().required().label(intl.get('first_name_')),
+  lastName: Yup.string().required().label(intl.get('last_name_')),
   email: Yup.string().email().required().label(intl.get('email')),
   password: validPassword(),
 });
 
 export const ResetPasswordSchema = Yup.object().shape({
   password: validPassword(),
-  confirm_password: Yup.string()
+  confirmPassword: Yup.string()
     .nullable()
     .oneOf([Yup.ref('password'), null])
     .required()
@@ -98,8 +98,8 @@ export const SendResetPasswordSchema = Yup.object().shape({
 });
 
 export const InviteAcceptSchema = Yup.object().shape({
-  first_name: Yup.string().required().label(intl.get('first_name_')),
-  last_name: Yup.string().required().label(intl.get('last_name_')),
+  firstName: Yup.string().required().label(intl.get('first_name_')),
+  lastName: Yup.string().required().label(intl.get('last_name_')),
   password: validPassword(),
 });
 

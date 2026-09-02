@@ -48,9 +48,8 @@ function AllocateLandedCostDialogProvider({
     number | null
   >(null);
 
-  // Handle fetch bill details.
-  // FIXME: SDK `Bill` is camelCase but form code reads `bill.entries` with snake_case
-  // entry fields. Cast to loose `AllocateLandedCostBill` shape.
+  // Handle fetch bill details. `useBill` returns camelCase data
+  // (`bill.entries[].amount/quantity/rate`), matching the form's field keys.
   const { isLoading: isBillLoading, data: bill } = useBill(billId, {
     enabled: !!billId,
   });

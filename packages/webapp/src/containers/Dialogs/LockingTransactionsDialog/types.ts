@@ -1,6 +1,6 @@
 export interface LockingTransactionsFormValues {
   module: string;
-  lock_to_date: string;
+  lockToDate: string;
   reason: string;
   [key: string]: unknown;
 }

@@ -4,7 +4,6 @@ import { index as WarehouseTransferNumberDialog } from '@/containers/Dialogs/War
 
 interface WarehouseTransferNumberDialogResult {
   incrementNumber?: number | string;
-  manually?: boolean;
 }
 
 /**
@@ -16,10 +15,8 @@ export function WarehouseTransferFormDialog() {
   // Update the form once the credit number form submit confirm.
   const handleWarehouseNumberFormConfirm = ({
     incrementNumber,
-    manually,
   }: WarehouseTransferNumberDialogResult) => {
     setFieldValue('transactionNumber', incrementNumber || '');
-    setFieldValue('transaction_no_manually', manually);
   };
 
   return (
