@@ -1,4 +1,5 @@
-import type { ApiFetcher } from './fetch-utils';
+import type { ApiFetcher, PdfDocument } from './fetch-utils';
+import { toPdfDocument } from './fetch-utils';
 import { paths } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
@@ -46,6 +47,20 @@ export async function fetchCreditNote(fetcher: ApiFetcher, id: number): Promise<
   const getCreditNote = fetcher.path(CREDIT_NOTES_ROUTES.BY_ID).method('get').create();
   const { data } = await getCreditNote({ id });
   return data;
+}
+
+/**
+ * Downloads the given credit note as a PDF document. The server picks the
+ * output format from the `Accept` header; the raw-response middleware returns
+ * the body as a Blob and the filename is read from Content-Disposition.
+ */
+export async function fetchCreditNotePdf(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<PdfDocument> {
+  const getCreditNote = fetcher.path(CREDIT_NOTES_ROUTES.BY_ID).method('get').create();
+  const response = await getCreditNote({ id }, { headers: { Accept: 'application/pdf' } });
+  return toPdfDocument(response);
 }
 
 /** Credit note state (default template etc.). Defined in controller DTO when not in schema. */

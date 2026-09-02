@@ -1,8 +1,7 @@
+import { fetchExportResource } from '@bigcapital/sdk-ts';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import type { AxiosResponse } from 'axios';
 import { downloadFile } from '@/hooks/useDownloadFile';
-import useApiRequest from '@/hooks/useRequest';
+import { useApiFetcher } from '@/hooks/useRequest';
 import { asyncToastProgress } from '@/utils/async-toast-progress';
 
 interface ResourceExportValues {
@@ -11,24 +10,18 @@ interface ResourceExportValues {
 }
 
 /**
- * Initiates a download of the balance sheet in PDF format.
+ * Initiates a download of the given resource in PDF format.
  * @param {Object} data - The export resource values.
  * @returns {Function} A function to trigger the file download.
  */
 export const useResourceExportPdf = () => {
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
-  return useMutation<AxiosResponse, AxiosError, ResourceExportValues>({
+  return useMutation<Blob, Error, ResourceExportValues>({
     mutationFn: (data: ResourceExportValues) => {
-      return apiRequest.get('/export', {
-        responseType: 'blob',
-        headers: {
-          accept: 'application/pdf',
-        },
-        params: {
-          resource: data.resource,
-          format: data.format,
-        },
+      return fetchExportResource(fetcher, {
+        resource: data.resource,
+        format: (data.format ?? 'pdf') as 'csv' | 'xlsx' | 'pdf',
       });
     },
   });
@@ -45,11 +38,11 @@ export const useDownloadExportPdf = () => {
     if (!isExportPdfLoading) {
       startProgress();
       return mutateAsync(values)
-        .then((res) => {
-          downloadFile(res.data, `${values.resource}.pdf`);
+        .then((blob) => {
+          downloadFile(blob, `${values.resource}.pdf`);
           stopProgress();
 
-          return res;
+          return blob;
         })
         .catch((error) => {
           stopProgress();

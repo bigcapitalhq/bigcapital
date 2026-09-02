@@ -23,8 +23,6 @@ export const invoicesKeys = {
     [SALE_INVOICE_SMS_DETAIL, id] as const,
   html: (id: number | null | undefined) => ['SALE_INVOICE_HTML', id] as const,
   state: () => ['SALE_INVOICE_STATE'] as const,
-  brandingTemplate: (id: number | null | undefined) =>
-    ['SALE_INVOICE_BRANDING_TEMPLATE', id] as const,
   defaultOptions: (id: number | null | undefined) =>
     [SALE_INVOICE_DEFAULT_OPTIONS, id] as const,
   badDebt: (id: number | null | undefined) => [BAD_DEBT, id] as const,

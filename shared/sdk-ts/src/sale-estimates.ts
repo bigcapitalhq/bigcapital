@@ -1,5 +1,5 @@
-import type { ApiFetcher } from './fetch-utils';
-import { rawRequest } from './fetch-utils';
+import type { ApiFetcher, PdfDocument } from './fetch-utils';
+import { rawRequest, toPdfDocument } from './fetch-utils';
 import { paths, components } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
@@ -45,6 +45,20 @@ export async function fetchSaleEstimate(fetcher: ApiFetcher, id: number): Promis
   const get = fetcher.path(SALE_ESTIMATES_ROUTES.BY_ID).method('get').create();
   const { data } = await get({ id });
   return data;
+}
+
+/**
+ * Downloads the given sale estimate as a PDF document. The server picks the
+ * output format from the `Accept` header; the raw-response middleware returns
+ * the body as a Blob and the filename is read from Content-Disposition.
+ */
+export async function fetchSaleEstimatePdf(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<PdfDocument> {
+  const get = fetcher.path(SALE_ESTIMATES_ROUTES.BY_ID).method('get').create();
+  const response = await get({ id }, { headers: { Accept: 'application/pdf' } });
+  return toPdfDocument(response);
 }
 
 export async function createSaleEstimate(

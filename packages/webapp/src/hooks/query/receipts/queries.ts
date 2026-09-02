@@ -11,6 +11,7 @@ import {
   sendSaleReceiptMail,
   fetchSaleReceiptState,
   fetchSaleReceiptHtmlContent,
+  fetchSaleReceiptPdf,
   notifySaleReceiptBySms,
   fetchSaleReceiptSmsDetails,
 } from '@bigcapital/sdk-ts';
@@ -23,7 +24,7 @@ import {
   UseMutationOptions,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { useRequestPdf } from '../../useRequestPdf';
+import { usePdfDocument } from '../../useRequestPdf';
 import { accountsKeys } from '../accounts/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
 import { financialReportsKeys } from '../FinancialReports/query-keys';
@@ -191,7 +192,8 @@ export function useReceipt(
 }
 
 export function usePdfReceipt(receiptId: number) {
-  return useRequestPdf({ url: `sale-receipts/${receiptId}` });
+  const fetcher = useApiFetcher();
+  return usePdfDocument(() => fetchSaleReceiptPdf(fetcher, receiptId));
 }
 
 export function useRefreshReceipts() {

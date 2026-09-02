@@ -1,6 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
-import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const BILL_PAYMENTS_ROUTES = {
   LIST: '/api/bill-payments',
@@ -13,15 +13,21 @@ export const BILL_PAYMENTS_ROUTES = {
 } as const satisfies Record<string, keyof paths>;
 
 export type BillPaymentsListResponse = OpResponseBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.LIST, 'get'>>;
+export type GetBillPaymentsQuery = OpQueryParams<OpForPath<typeof BILL_PAYMENTS_ROUTES.LIST, 'get'>>;
 export type BillPayment = OpResponseBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.BY_ID, 'get'>>;
 export type CreateBillPaymentBody = OpRequestBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.LIST, 'post'>>;
 export type EditBillPaymentBody = OpRequestBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.BY_ID, 'put'>>;
 export type BillPaymentEditPageResponse = OpResponseBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.EDIT_PAGE, 'get'>>;
 export type BillPaymentNewPageEntriesResponse = OpResponseBody<OpForPath<typeof BILL_PAYMENTS_ROUTES.NEW_PAGE_ENTRIES, 'get'>>;
 
-export async function fetchBillPayments(fetcher: ApiFetcher): Promise<BillPaymentsListResponse> {
+export async function fetchBillPayments(
+  fetcher: ApiFetcher,
+  query?: GetBillPaymentsQuery
+): Promise<BillPaymentsListResponse> {
   const get = fetcher.path(BILL_PAYMENTS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await (get as (params?: GetBillPaymentsQuery) => Promise<{ data: BillPaymentsListResponse }>)(
+    query ?? {}
+  );
   return data;
 }
 

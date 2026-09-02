@@ -15,6 +15,7 @@ import {
   sendSaleEstimateMail,
   fetchSaleEstimatesState,
   fetchSaleEstimateHtmlContent,
+  fetchSaleEstimatePdf,
 } from '@bigcapital/sdk-ts';
 import {
   useQueryClient,
@@ -25,7 +26,7 @@ import {
   UseMutationOptions,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
-import { useRequestPdf } from '../../useRequestPdf';
+import { usePdfDocument } from '../../useRequestPdf';
 import { itemsKeys } from '../items/query-keys';
 import { settingsKeys } from '../settings/query-keys';
 import { estimatesKeys } from './query-keys';
@@ -225,9 +226,8 @@ export function useRejectEstimate(
 }
 
 export function usePdfEstimate(estimateId: number) {
-  return useRequestPdf({
-    url: `sale-estimates/${estimateId}`,
-  });
+  const fetcher = useApiFetcher();
+  return usePdfDocument(() => fetchSaleEstimatePdf(fetcher, estimateId));
 }
 
 export function useRefreshEstimates() {
