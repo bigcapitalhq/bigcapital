@@ -167,6 +167,15 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/sms-message`,
+    component: lazy(() =>
+      import('@/containers/Preferences/SMSIntegration').then((m) => ({
+        default: m.SMSIntegration,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/`,
     component: lazy(() =>
       import('../containers/Preferences/DefaultRoute').then((m) => ({

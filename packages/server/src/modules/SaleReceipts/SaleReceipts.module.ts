@@ -37,6 +37,7 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
 import { SendSaleReceiptMailProcess } from './processes/SendSaleReceiptMail.process';
 import { MailModule } from '../Mail/Mail.module';
 import { SMSModule } from '../SMS/SMS.module';
+import { FeaturesModule } from '../Features/Features.module';
 import { SaleReceiptSmsNotification } from './SaleReceiptSmsNotification';
 import { SendSaleReceiptMailQueue } from './constants';
 import { SMS_QUEUE } from '../SMS/SMS.constants';
@@ -68,6 +69,7 @@ import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleR
     DynamicListModule,
     MailModule,
     SMSModule,
+    FeaturesModule,
     MailNotificationModule,
     BullModule.registerQueue({ name: SMS_QUEUE }),
     BullModule.registerQueue({ name: SendSaleReceiptMailQueue }),

@@ -38,6 +38,20 @@ export function FeaturesForm() {
         />
       </FFormGroup>
 
+      {/* ----------- SMS Notifications ----------- */}
+      <FFormGroup
+        name={'features.smsNotifications'}
+        type={'switch'}
+        inline={true}
+        helperText={<T id={'features.sms_notifications.helper_text'} />}
+      >
+        <FSwitch
+          name={'features.smsNotifications'}
+          label={<T id={'features.sms_notifications'} />}
+          large={true}
+        />
+      </FFormGroup>
+
       <CardFooterActions>
         <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save'} />

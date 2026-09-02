@@ -45,6 +45,7 @@ import {
 } from '@/common/dtos/BulkDelete.dto';
 import { SaleReceiptHtmlContentResponseDto } from './dtos/SaleReceiptHtmlResponse.dto';
 import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
+import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
 
 @Controller('sale-receipts')
 @ApiTags('Sale Receipts')
@@ -141,7 +142,7 @@ export class SaleReceiptsController {
   }
 
   @Post(':id/notify-by-sms')
-  @UseGuards(AuthorizationGuard, PermissionGuard)
+  @UseGuards(AuthorizationGuard, PermissionGuard, SmsNotificationsFeatureGuard)
   @RequirePermission(SaleReceiptAction.NotifyBySms, AbilitySubject.SaleReceipt)
   @HttpCode(200)
   @ApiOperation({ summary: 'Notify the given sale receipt by SMS.' })
@@ -160,7 +161,7 @@ export class SaleReceiptsController {
   }
 
   @Get(':id/sms-details')
-  @UseGuards(AuthorizationGuard, PermissionGuard)
+  @UseGuards(AuthorizationGuard, PermissionGuard, SmsNotificationsFeatureGuard)
   @RequirePermission(SaleReceiptAction.View, AbilitySubject.SaleReceipt)
   @ApiOperation({ summary: 'Retrieves the sale receipt SMS details.' })
   @ApiResponse({

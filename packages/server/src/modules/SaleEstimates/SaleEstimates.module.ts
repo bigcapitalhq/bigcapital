@@ -32,6 +32,7 @@ import { GetSaleEstimatePdf } from './queries/GetSaleEstimatePdf';
 import { MailNotificationModule } from '../MailNotification/MailNotification.module';
 import { MailModule } from '../Mail/Mail.module';
 import { SMSModule } from '../SMS/SMS.module';
+import { FeaturesModule } from '../Features/Features.module';
 import { ChromiumlyTenancyModule } from '../ChromiumlyTenancy/ChromiumlyTenancy.module';
 import { SaleEstimateSmsNotification } from './SaleEstimateSmsNotification';
 import { TemplateInjectableModule } from '../TemplateInjectable/TemplateInjectable.module';
@@ -57,6 +58,7 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     MailNotificationModule,
     MailModule,
     SMSModule,
+    FeaturesModule,
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
     PdfTemplatesModule,

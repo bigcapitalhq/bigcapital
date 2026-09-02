@@ -14,8 +14,9 @@ import {
   useEstimateDetailDrawerContext,
   EstimateDetail,
 } from './EstimateDetailDrawerProvider';
-import { Icon, T, Choose, Can } from '@/components';
+import { Icon, T, Choose, Can, FeatureCan } from '@/components';
 import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
+import { Features } from '@/constants/features';
 import {
   withAlertActions,
   WithAlertActionsProps,
@@ -96,10 +97,12 @@ function EstimateMoreMenuItemsInner({
       minimal={true}
       content={
         <Menu>
-          <MenuItem
-            onClick={onNotifyViaSMS}
-            text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-          />
+          <FeatureCan feature={Features.SmsNotifications}>
+            <MenuItem
+              onClick={onNotifyViaSMS}
+              text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
+            />
+          </FeatureCan>
           <MenuDivider />
           <Choose>
             <Choose.When
