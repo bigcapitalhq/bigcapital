@@ -36,11 +36,3 @@ export function BillExchangeRateInputField({
     />
   );
 }
-
-/**
- * bill project select.
- * @returns {JSX.Element}
- */
-export function BillProjectSelectButton({ label }: { label?: string }) {
-  return <Button text={label ?? intl.get('select_project')} />;
-}

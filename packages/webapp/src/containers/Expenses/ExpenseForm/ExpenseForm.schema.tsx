@@ -28,7 +28,6 @@ const Schema = Yup.object().shape({
         }),
       landedCost: Yup.boolean(),
       description: Yup.string().max(DATATYPES_LENGTH.TEXT).nullable(),
-      projectId: Yup.number().nullable(),
     }),
   ),
 });

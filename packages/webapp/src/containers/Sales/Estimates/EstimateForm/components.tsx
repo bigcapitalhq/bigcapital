@@ -61,18 +61,6 @@ export const EstimateExchangeRateInputField = compose(
   withExchangeRateItemEntriesPriceRecalc,
 )(EstimateExchangeRateInputFieldRoot);
 
-type EstimateProjectSelectButtonProps = { label?: string };
-
-/**
- * Estimate project select.
- * @returns {JSX.Element}
- */
-export function EstimateProjectSelectButton({
-  label,
-}: EstimateProjectSelectButtonProps) {
-  return <Button text={label ?? intl.get('select_project')} />;
-}
-
 type EstimateIncrementSyncSettingsToFormProps = Record<string, never>;
 
 /**

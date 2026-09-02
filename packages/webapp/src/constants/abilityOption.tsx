@@ -19,7 +19,6 @@ export const AbilitySubject = {
   SubscriptionBilling: 'SubscriptionBilling',
   CreditNote: 'CreditNote',
   VendorCredit: 'VendorCredit',
-  Project: 'Project',
   TaxRate: 'TaxRate',
   BankRule: 'BankRule',
   AuditLog: 'AuditLog',
@@ -143,13 +142,6 @@ export const ExpenseAction = {
 export const CashflowAction = {
   View: 'View',
   Create: 'Create',
-  Delete: 'Delete',
-} as const;
-
-export const ProjectAction = {
-  View: 'View',
-  Create: 'Create',
-  Edit: 'Edit',
   Delete: 'Delete',
 } as const;
 

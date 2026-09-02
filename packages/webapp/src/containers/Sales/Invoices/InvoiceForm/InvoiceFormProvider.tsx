@@ -16,7 +16,6 @@ import type {
   GetPaymentServicesResponse,
 } from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
-import { useProjects } from '@/containers/Projects/hooks';
 import {
   useInvoice,
   useItems,
@@ -51,7 +50,6 @@ type InvoiceFormContextValue = {
   submitPayload: InvoiceFormSubmitPayload | undefined;
   branches: Branch[];
   warehouses: Warehouse[];
-  projects: unknown[];
   taxRates: TaxRate[];
   brandingTemplates: PdfTemplateResponse[];
   paymentServices: GetPaymentServicesResponse | undefined;
@@ -108,19 +106,12 @@ function InvoiceFormProvider({
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
-  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   // Fetch invoice data.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId);
 
   // Fetch tax rates.
   const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
-
-  // Fetch project list.
-  const { data: projectsData, isLoading: isProjectsLoading } = useProjects(
-    {},
-    { enabled: !!isProjectsFeatureCan },
-  );
 
   // Fetches the estimate by the given id.
   const { data: estimate, isLoading: isEstimateLoading } = useEstimate(
@@ -188,10 +179,7 @@ function InvoiceFormProvider({
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading ||
-    isBranchesLoading ||
-    isProjectsLoading ||
-    isBrandingTemplatesLoading;
+    isWarehouesLoading || isBranchesLoading || isBrandingTemplatesLoading;
 
   const isBootLoading =
     isInvoiceLoading ||
@@ -211,9 +199,6 @@ function InvoiceFormProvider({
     submitPayload,
     branches: branches ?? [],
     warehouses: warehouses ?? [],
-    projects:
-      (projectsData as { data?: { projects?: unknown[] } })?.data?.projects ??
-      [],
     taxRates: taxRates ?? [],
     brandingTemplates: brandingTemplates?.templates ?? [],
 

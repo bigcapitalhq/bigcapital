@@ -122,19 +122,6 @@ export function PaymentReceiveExchangeRateInputField({
   );
 }
 
-type ProjectSelectButtonProps = {
-  label?: string;
-};
-
-/**
- * payment receive project select.
- */
-export function PaymentReceiveProjectSelectButton({
-  label,
-}: ProjectSelectButtonProps) {
-  return <Button text={label ?? intl.get('select_project')} />;
-}
-
 type SyncIncrementSettingsProps = Record<string, never>;
 
 /**

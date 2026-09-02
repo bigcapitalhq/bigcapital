@@ -12,7 +12,6 @@ export type ExpenseEntry = {
   expenseAccountId: string | number;
   description: string;
   landedCost: boolean | number;
-  projectId: string | number;
 };
 
 export type ExpenseFormValues = {
@@ -50,7 +49,6 @@ export type ExpenseFormContext = {
   expense: Expense | undefined;
   accounts: Record<string, any>[];
   branches: Record<string, any>[];
-  projects: Record<string, any>[];
   isCurrenciesLoading: boolean;
   isExpenseLoading: boolean;
   isCustomersLoading: boolean;

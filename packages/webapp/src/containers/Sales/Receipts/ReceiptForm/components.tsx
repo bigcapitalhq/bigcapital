@@ -55,14 +55,6 @@ export const ReceiptExchangeRateInputField = compose(
   withExchangeRateItemEntriesPriceRecalc,
 )(ReceiptExchangeRateInputFieldRoot);
 
-/**
- * Receipt project select.
- * @returns {JSX.Element}
- */
-export function ReceiptProjectSelectButton({ label }: { label?: string }) {
-  return <Button text={label ?? intl.get('select_project')} />;
-}
-
 type ReceiptSyncIncrementSettingsToFormProps = Record<string, never>;
 
 /**

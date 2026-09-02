@@ -41,7 +41,6 @@ const getSchema = () =>
     ]),
     branchId: Yup.string(),
     warehouseId: Yup.string(),
-    projectId: Yup.string(),
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number()

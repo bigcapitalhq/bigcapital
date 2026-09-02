@@ -67,7 +67,6 @@ export type InvoiceFormValues = {
   currencyCode: string;
   branchId: string | number;
   warehouseId: string | number;
-  projectId: string | number;
   pdfTemplateId: string | number;
   entries: InvoiceEntry[];
   attachments: unknown[];
@@ -116,7 +115,6 @@ export const defaultInvoice: InvoiceFormValues = {
   currencyCode: '',
   branchId: '',
   warehouseId: '',
-  projectId: '',
   pdfTemplateId: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
   attachments: [],
