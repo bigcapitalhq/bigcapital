@@ -4,8 +4,8 @@ import { transformToForm } from '@/utils';
 const attachmentReqSchema = {
   key: '',
   size: '',
-  origin_name: '',
-  mime_type: '',
+  originName: '',
+  mimeType: '',
 };
 
 export const transformAttachmentsToForm = (values) => {
