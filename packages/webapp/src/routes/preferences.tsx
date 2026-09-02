@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { lazy } from 'react';
+import { Features } from '@/constants/features';
 
 const BASE_URL = '/preferences';
 
@@ -156,6 +157,16 @@ export const getPreferenceRoutes = () => [
       })),
     ),
     exact: true,
+  },
+  {
+    path: `${BASE_URL}/sms-message`,
+    component: lazy(() =>
+      import('@/containers/Preferences/SMSIntegration').then((m) => ({
+        default: m.SMSIntegration,
+      })),
+    ),
+    exact: true,
+    feature: Features.SmsNotification,
   },
   {
     path: `${BASE_URL}/api-keys`,

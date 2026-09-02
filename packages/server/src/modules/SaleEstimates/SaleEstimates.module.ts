@@ -48,6 +48,8 @@ import { SaleEstimateSmsNotificationSubscriber } from './subscribers/SaleEstimat
 import { BulkDeleteSaleEstimatesService } from './BulkDeleteSaleEstimates.service';
 import { ValidateBulkDeleteSaleEstimatesService } from './ValidateBulkDeleteSaleEstimates.service';
 import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.process';
+import { FeaturesModule } from '../Features/Features.module';
+import { SmsNotificationFeatureGuard } from '../Features/SmsNotificationFeatureGuard';
 
 @Module({
   imports: [
@@ -66,6 +68,7 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
       name: SendSaleEstimateMailQueue,
       adapter: BullMQAdapter,
     }),
+    FeaturesModule,
   ],
   controllers: [SaleEstimatesController],
   providers: [
@@ -103,6 +106,7 @@ import { SendSaleEstimateMailProcess } from './processes/SendSaleEstimateMail.pr
     BulkDeleteSaleEstimatesService,
     ValidateBulkDeleteSaleEstimatesService,
     SendSaleEstimateMailProcess,
+    SmsNotificationFeatureGuard,
   ],
   exports: [
     SaleEstimatesExportable,

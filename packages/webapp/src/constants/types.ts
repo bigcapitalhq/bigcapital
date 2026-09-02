@@ -25,6 +25,7 @@ export interface PreferencesMenuItem {
   text: ReactNode;
   disabled?: boolean;
   href: string;
+  feature?: string;
 }
 
 export interface QuickNewActionOption {

@@ -14,9 +14,11 @@ import {
   Icon,
   FormattedMessage as T,
   DrawerActionsBar,
+  FeatureCan,
 } from '@/components';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
+import { Features } from '@/constants/features';
 import {
   withAlertActions,
   WithAlertActionsProps,
@@ -112,12 +114,14 @@ function ReceiptDetailActionBarInner({
           />
         </Can>
         <Can I={SaleReceiptAction.NotifyBySms} a={AbilitySubject.Receipt}>
-          <NavbarDivider />
-          <ReceiptMoreMenuItems
-            payload={{
-              onNotifyViaSMS: handleNotifyViaSMS,
-            }}
-          />
+          <FeatureCan feature={Features.SmsNotification}>
+            <NavbarDivider />
+            <ReceiptMoreMenuItems
+              payload={{
+                onNotifyViaSMS: handleNotifyViaSMS,
+              }}
+            />
+          </FeatureCan>
         </Can>
       </NavbarGroup>
     </DrawerActionsBar>

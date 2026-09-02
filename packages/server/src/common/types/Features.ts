@@ -3,6 +3,7 @@ export enum Features {
   BRANCHES = 'branches',
   BankSyncing = 'BankSyncing',
   LANDED_COST = 'landed_cost',
+  SMS_NOTIFICATION = 'sms_notification',
 }
 
 export interface IFeatureAllItem {

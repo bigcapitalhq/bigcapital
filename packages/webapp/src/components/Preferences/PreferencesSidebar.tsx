@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import PreferencesSidebarContainer from './PreferencesSidebarContainer';
 import { FormattedMessage as T } from '@/components';
 import { PreferencesMenu } from '@/constants/preferencesMenu';
+import { useFeatureCan } from '@/hooks/state/feature';
 
 import '@/style/pages/Preferences/Sidebar.scss';
 
@@ -14,8 +15,11 @@ import '@/style/pages/Preferences/Sidebar.scss';
 export default function PreferencesSidebar() {
   const history = useHistory();
   const location = useLocation();
+  const { featureCan } = useFeatureCan();
 
-  const items = PreferencesMenu.map((item) =>
+  const items = PreferencesMenu.filter(
+    (item) => !item.feature || featureCan(item.feature),
+  ).map((item) =>
     item.divider ? (
       <MenuDivider title={item.title} />
     ) : (
