@@ -36,6 +36,7 @@ import { MailNotificationModule } from '../MailNotification/MailNotification.mod
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { MailModule } from '../Mail/Mail.module';
 import { SMSModule } from '../SMS/SMS.module';
+import { FeaturesModule } from '../Features/Features.module';
 import { SendPaymentReceivedMailProcessor } from './processors/PaymentReceivedMailNotification.processor';
 import { PaymentReceivedSmsNotification } from './PaymentReceivedSmsNotification';
 import { SEND_PAYMENT_RECEIVED_MAIL_QUEUE } from './constants';
@@ -103,6 +104,7 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     DynamicListModule,
     MailModule,
     SMSModule,
+    FeaturesModule,
     BullModule.registerQueue({ name: SMS_QUEUE }),
     BullModule.registerQueue({ name: SEND_PAYMENT_RECEIVED_MAIL_QUEUE }),
     BullBoardModule.forFeature({

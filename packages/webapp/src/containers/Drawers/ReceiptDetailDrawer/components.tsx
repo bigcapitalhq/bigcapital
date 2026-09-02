@@ -10,7 +10,8 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import type { ReceiptDetail } from './ReceiptDetailDrawerProvider';
-import { Icon, Choose, T } from '@/components';
+import { Icon, Choose, T, FeatureCan } from '@/components';
+import { Features } from '@/constants/features';
 
 interface ReceiptDetailsStatusProps {
   receipt: ReceiptDetail;
@@ -53,10 +54,12 @@ export function ReceiptMoreMenuItems({ payload }: ReceiptMoreMenuItemsProps) {
       minimal={true}
       content={
         <Menu>
-          <MenuItem
-            onClick={onNotifyViaSMS}
-            text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-          />
+          <FeatureCan feature={Features.SmsNotifications}>
+            <MenuItem
+              onClick={onNotifyViaSMS}
+              text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
+            />
+          </FeatureCan>
         </Menu>
       }
       interactionKind={PopoverInteractionKind.CLICK}

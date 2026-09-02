@@ -50,6 +50,7 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { PaymentReceiveAction } from './types/PaymentReceived.types';
+import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
 
 @Controller('payments-received')
 @ApiTags('Payments Received')
@@ -244,6 +245,7 @@ export class PaymentReceivesController {
   }
 
   @Post(':id/notify-by-sms')
+  @UseGuards(SmsNotificationsFeatureGuard)
   @RequirePermission(
     PaymentReceiveAction.NotifyBySms,
     AbilitySubject.PaymentReceive,
@@ -269,6 +271,7 @@ export class PaymentReceivesController {
   }
 
   @Get(':id/sms-details')
+  @UseGuards(SmsNotificationsFeatureGuard)
   @RequirePermission(PaymentReceiveAction.View, AbilitySubject.PaymentReceive)
   @ApiOperation({ summary: 'Retrieves the payment received SMS details.' })
   @ApiResponse({

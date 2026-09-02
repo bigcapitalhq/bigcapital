@@ -54,6 +54,7 @@ import { InvoicePaymentTransactionDto } from './dtos/InvoicePaymentTransactionRe
 import { SaleInvoiceHtmlContentResponseDto } from './dtos/SaleInvoiceHtmlResponse.dto';
 import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
 import { NotifySaleInvoiceBySmsDto } from './dtos/NotifySaleInvoiceBySms.dto';
+import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
@@ -404,6 +405,7 @@ export class SaleInvoicesController {
   }
 
   @Post(':id/notify-by-sms')
+  @UseGuards(SmsNotificationsFeatureGuard)
   @RequirePermission(SaleInvoiceAction.NotifyBySms, AbilitySubject.SaleInvoice)
   @HttpCode(200)
   @ApiOperation({ summary: 'Notify the given sale invoice by SMS.' })
@@ -432,6 +434,7 @@ export class SaleInvoicesController {
   }
 
   @Get(':id/sms-details')
+  @UseGuards(SmsNotificationsFeatureGuard)
   @RequirePermission(SaleInvoiceAction.View, AbilitySubject.SaleInvoice)
   @ApiOperation({ summary: 'Retrieves the sale invoice SMS details.' })
   @ApiResponse({

@@ -37,6 +37,7 @@ import { SaleInvoiceWriteoffGLStorage } from './commands/writeoff/SaleInvoiceWri
 import { InvoiceInventoryTransactions } from './commands/inventory/InvoiceInventoryTransactions';
 import { MailModule } from '../Mail/Mail.module';
 import { SMSModule } from '../SMS/SMS.module';
+import { FeaturesModule } from '../Features/Features.module';
 import { GetSaleInvoicesService } from './queries/GetSaleInvoices';
 import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
 import { SaleInvoiceSmsNotification } from './SaleInvoiceSmsNotification';
@@ -83,6 +84,7 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     AccountsModule,
     MailModule,
     SMSModule,
+    FeaturesModule,
     MailNotificationModule,
     BullModule.registerQueue({ name: SMS_QUEUE }),
     forwardRef(() => InventoryCostModule),

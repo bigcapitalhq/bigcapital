@@ -9,7 +9,8 @@ import {
 import React from 'react';
 import intl from 'react-intl-universal';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
-import { Icon } from '@/components';
+import { Icon, FeatureCan } from '@/components';
+import { Features } from '@/constants/features';
 import { getColumnWidth } from '@/utils';
 
 /**
@@ -90,10 +91,12 @@ export function PaymentReceiveMoreMenuItems({
       minimal={true}
       content={
         <Menu>
-          <MenuItem
-            onClick={onNotifyViaSMS}
-            text={intl.get('notify_via_sms.dialog.notify_via_sms')}
-          />
+          <FeatureCan feature={Features.SmsNotifications}>
+            <MenuItem
+              onClick={onNotifyViaSMS}
+              text={intl.get('notify_via_sms.dialog.notify_via_sms')}
+            />
+          </FeatureCan>
         </Menu>
       }
       interactionKind={PopoverInteractionKind.CLICK}

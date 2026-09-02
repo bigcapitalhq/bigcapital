@@ -21,6 +21,7 @@ import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 const defaultFormValues = flatten({
   features: {
     landedCost: false,
+    smsNotifications: false,
   },
 }) as FeaturesFormValues;
 

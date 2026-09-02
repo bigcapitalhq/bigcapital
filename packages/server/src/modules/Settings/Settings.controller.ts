@@ -22,6 +22,7 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { SettingItemDto } from './dtos/SettingsResponse.dto';
+import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
 
 @Controller('settings')
 @ApiTags('Settings')
@@ -55,18 +56,21 @@ export class SettingsController {
   }
 
   @Get('sms-notifications')
+  @UseGuards(SmsNotificationsFeatureGuard)
   @ApiOperation({ summary: 'Retrieves SMS notifications settings.' })
   async getSmsNotifications() {
     return this.smsNotificationSettingsService.getSmsNotifications();
   }
 
   @Get('sms-notification/:key')
+  @UseGuards(SmsNotificationsFeatureGuard)
   @ApiOperation({ summary: 'Retrieves a single SMS notification setting.' })
   async getSmsNotification(@Param('key') key: string) {
     return this.smsNotificationSettingsService.getSmsNotification(key);
   }
 
   @Post('sms-notification')
+  @UseGuards(SmsNotificationsFeatureGuard)
   @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   @ApiOperation({ summary: 'Edits a single SMS notification setting.' })
   async editSmsNotification(

@@ -297,5 +297,8 @@ export const SettingsOptions = {
     landed_cost: {
       type: 'boolean',
     },
+    sms_notifications: {
+      type: 'boolean',
+    },
   },
 };

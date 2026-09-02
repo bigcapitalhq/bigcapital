@@ -1,6 +1,7 @@
 import React from 'react';
 import type { PreferencesMenuItem } from './types';
 import { FormattedMessage as T } from '@/components';
+import { Features } from '@/constants/features';
 
 export const PreferencesMenu: PreferencesMenuItem[] = [
   {
@@ -78,9 +79,10 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     disabled: false,
     href: '/preferences/api-keys',
   },
-  // {
-  //   text: <T id={'sms_integration.label'} />,
-  //   disabled: false,
-  //   href: '/preferences/sms-message',
-  // },
+  {
+    text: <T id={'sms_integration.label'} />,
+    disabled: false,
+    href: '/preferences/sms-message',
+    feature: Features.SmsNotifications,
+  },
 ];

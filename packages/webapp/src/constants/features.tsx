@@ -4,4 +4,5 @@ export const Features = {
   ManualJournal: 'manualJournal',
   BankSyncing: 'BankSyncing',
   LandedCost: 'landed_cost',
+  SmsNotifications: 'sms_notifications',
 };
