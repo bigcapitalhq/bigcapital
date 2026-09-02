@@ -60,10 +60,10 @@ export function useResourceData(
       return fetchResource(fetcher, query as { search_keyword?: string });
     },
     select: transformResourceData(type),
-    placeholderData: defaultDataProp,
+    placeholderData: defaultDataProp ?? { items: [] },
     ...(restProps as object),
   } as any);
-  const defaultData = useRef(defaultDataProp ?? undefined);
+  const defaultData = useRef(defaultDataProp ?? { items: [] });
 
   return {
     ...states,
@@ -99,67 +99,67 @@ function getResourceFetcherFromType(type: string): ResourceFetcher | undefined {
  * Transformes invoices to resource data.
  */
 const transformInvoices: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 /**
  * Transformes items to resource data.
  */
 const transformItems: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 /**
  * Transformes payment receives to resource data.
  */
 const transformPaymentReceives: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 /**
  * Transformes customers to resoruce data.
  */
 const transformCustomers: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 /**
  * Transformes customers to resoruce data.
  */
 const transformVendors: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 const transformPaymentMades: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 const transformSaleReceipts: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 const transformBills: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 const transformManualJournals: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 const transformsEstimates: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 const transformAccounts: ResourceDataTransformer = (data) => ({
-  items: Array.isArray(data) ? data : data.accounts,
+  items: Array.isArray(data) ? data : (data?.accounts ?? []),
 });
 
 const transformCreditNotes: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 const transformVendorCredits: ResourceDataTransformer = (data) => ({
-  items: data.data,
+  items: data?.data ?? [],
 });
 
 /**
