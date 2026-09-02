@@ -39,7 +39,10 @@ export function useEditRolePermissionSchema(
     ...props,
     mutationFn: ([id, values]: [number, EditRoleBody]) =>
       editRole(fetcher, id, values),
-    onSuccess: () => commonInvalidateQueries(queryClient),
+    onSuccess: (_data, [id]) => {
+      queryClient.invalidateQueries({ queryKey: rolesKeys.detail(id) });
+      commonInvalidateQueries(queryClient);
+    },
   });
 }
 
