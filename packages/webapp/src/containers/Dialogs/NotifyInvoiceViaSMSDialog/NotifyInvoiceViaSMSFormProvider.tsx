@@ -1,4 +1,6 @@
+import { keepPreviousData } from '@tanstack/react-query';
 import React, { createContext } from 'react';
+import type { SaleInvoiceSmsDetailsResponse } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import {
   useCreateNotifyInvoiceBySMS,
@@ -7,7 +9,7 @@ import {
 
 interface NotifyInvoiceViaSMSContextValue {
   invoiceId: number | null;
-  invoiceSMSDetail: Record<string, unknown>;
+  invoiceSMSDetail: Partial<SaleInvoiceSmsDetailsResponse>;
   dialogName: string;
   createNotifyInvoiceBySMSMutate: ReturnType<
     typeof useCreateNotifyInvoiceBySMS
@@ -37,23 +39,19 @@ function NotifyInvoiceViaSMSFormProvider({
 }: NotifyInvoiceViaSMSFormProviderProps) {
   const [notificationType, setNotificationType] = React.useState('details');
 
-  // Retrieve the invoice sms notification message details. The hook returns
-  // `unknown` from the SDK; cast narrow.
+  // Retrieve the invoice sms notification message details.
   const { data: invoiceSMSDetailRaw, isLoading: isInvoiceSMSDetailLoading } =
     useInvoiceSMSDetail(
       // Hook signature requires `number`; provider may receive null when
       // dialog is closed. Cast to satisfy TS — runtime guards via `enabled`.
       invoiceId as number,
-      {
-        notification_key: notificationType,
-      },
+      notificationType as 'details' | 'reminder',
       {
         enabled: !!invoiceId,
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
       },
     );
-  const invoiceSMSDetail =
-    (invoiceSMSDetailRaw as Record<string, unknown> | undefined) ?? {};
+  const invoiceSMSDetail = invoiceSMSDetailRaw ?? {};
 
   // Create notfiy invoice by sms mutations.
   const { mutateAsync: createNotifyInvoiceBySMSMutate } =

@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+import type { PaymentReceiveSmsDetailsResponse } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import {
   useCreateNotifyPaymentReceiveBySMS,
@@ -8,7 +9,7 @@ import {
 interface NotifyPaymentReceiveViaSMSContextValue {
   paymentReceiveId: number | null;
   dialogName: string;
-  paymentReceiveMSDetail: Record<string, unknown>;
+  paymentReceiveMSDetail: Partial<PaymentReceiveSmsDetailsResponse>;
   createNotifyPaymentReceivetBySMSMutate: ReturnType<
     typeof useCreateNotifyPaymentReceiveBySMS
   >['mutateAsync'];
@@ -40,8 +41,7 @@ function NotifyPaymentReceiveViaFormProvider({
   } = usePaymentReceiveSMSDetail(paymentReceiveId as number, {
     enabled: !!paymentReceiveId,
   });
-  const paymentReceiveMSDetail =
-    (paymentReceiveMSDetailRaw as Record<string, unknown> | undefined) ?? {};
+  const paymentReceiveMSDetail = paymentReceiveMSDetailRaw ?? {};
 
   // State provider.
   const provider: NotifyPaymentReceiveViaSMSContextValue = {

@@ -11,6 +11,8 @@ import {
   sendSaleReceiptMail,
   fetchSaleReceiptState,
   fetchSaleReceiptHtmlContent,
+  notifySaleReceiptBySms,
+  fetchSaleReceiptSmsDetails,
 } from '@bigcapital/sdk-ts';
 import {
   useQueryClient,
@@ -20,8 +22,7 @@ import {
   UseQueryOptions,
   UseMutationOptions,
 } from '@tanstack/react-query';
-import { useRequestQuery } from '../../useQueryRequest';
-import useApiRequest, { useApiFetcher } from '../../useRequest';
+import { useApiFetcher } from '../../useRequest';
 import { useRequestPdf } from '../../useRequestPdf';
 import { accountsKeys } from '../accounts/query-keys';
 import { cashflowAccountsKeys } from '../cashflow-accounts/query-keys';
@@ -42,6 +43,7 @@ import type {
   SaleReceiptHtmlContentResponse,
   GetSaleReceiptsQuery,
   BulkDeleteReceiptsBody,
+  SaleReceiptSmsDetailsResponse,
 } from '@bigcapital/sdk-ts';
 
 function commonInvalidateQueries(
@@ -202,41 +204,37 @@ export function useRefreshReceipts() {
   };
 }
 
-// Not in OpenAPI schema for sale-receipts; keep using apiRequest until server exposes.
 export function useCreateNotifyReceiptBySMS(
-  props?: UseMutationOptions<unknown, Error, [number, Record<string, unknown>]>,
+  props?: UseMutationOptions<void, Error, number>,
 ) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
+
   return useMutation({
     ...props,
-    mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
-      apiRequest.post(`sale-receipts/${id}/notify-by-sms`, values),
-    onSuccess: (_data, [id]) => {
+    mutationFn: (id: number) => notifySaleReceiptBySms(fetcher, id),
+    onSuccess: (_data, id) => {
       queryClient.invalidateQueries({ queryKey: receiptsKeys.notifyBySms(id) });
       commonInvalidateQueries(queryClient);
     },
   });
 }
 
-// Not in OpenAPI schema for sale-receipts; keep using useRequestQuery.
 export function useReceiptSMSDetail(
-  receiptId: number,
-  props?: Record<string, unknown>,
-  requestProps?: Record<string, unknown>,
+  receiptId: number | null | undefined,
+  props?: Omit<
+    UseQueryOptions<SaleReceiptSmsDetailsResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
-  return useRequestQuery(
-    receiptsKeys.smsDetail(receiptId),
-    {
-      method: 'get',
-      url: `sale-receipts/${receiptId}/sms-details`,
-      ...requestProps,
-    },
-    {
-      defaultData: {},
-      ...props,
-    },
-  );
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useQuery({
+    ...props,
+    queryKey: receiptsKeys.smsDetail(receiptId),
+    queryFn: () => fetchSaleReceiptSmsDetails(fetcher, receiptId!),
+    enabled: receiptId != null,
+  });
 }
 
 export function useSendSaleReceiptMail(

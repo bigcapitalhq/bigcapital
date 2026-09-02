@@ -15,6 +15,8 @@ import {
   fetchSaleInvoiceState,
   fetchInvoicePayments,
   fetchSaleInvoiceHtml,
+  notifySaleInvoiceBySms,
+  fetchSaleInvoiceSmsDetails,
 } from '@bigcapital/sdk-ts';
 import {
   useQueryClient,
@@ -25,7 +27,6 @@ import {
   UseQueryOptions,
   UseQueryResult,
 } from '@tanstack/react-query';
-import { useRequestQuery } from '../../useQueryRequest';
 import { useApiFetcher } from '../../useRequest';
 import useApiRequest from '../../useRequest';
 import { useRequestPdf } from '../../useRequestPdf';
@@ -48,6 +49,7 @@ import type {
   SaleInvoiceStateResponse,
   InvoicePaymentTransactionsResponse,
   SaleInvoiceHtmlContentResponse,
+  SaleInvoiceSmsDetailsResponse,
 } from '@bigcapital/sdk-ts';
 import { transformToCamelCase } from '@/utils';
 
@@ -294,17 +296,18 @@ export function useCancelBadDebt(
   });
 }
 
-// Not in OpenAPI schema for sale-invoices; keep using apiRequest.
+export type InvoiceSmsNotificationKey = 'details' | 'reminder';
+
 export function useCreateNotifyInvoiceBySMS(
-  props?: UseMutationOptions<unknown, Error, [number, Record<string, unknown>]>,
+  props?: UseMutationOptions<void, Error, [number, InvoiceSmsNotificationKey]>,
 ) {
   const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+  const fetcher = useApiFetcher();
 
   return useMutation({
     ...props,
-    mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
-      apiRequest.post(`sale-invoices/${id}/notify-by-sms`, values, {}),
+    mutationFn: ([id, notificationKey]: [number, InvoiceSmsNotificationKey]) =>
+      notifySaleInvoiceBySms(fetcher, id, notificationKey),
     onSuccess: (_data, [id]) => {
       queryClient.invalidateQueries({ queryKey: invoicesKeys.notifyBySms(id) });
       commonInvalidateQueries(queryClient);
@@ -312,25 +315,23 @@ export function useCreateNotifyInvoiceBySMS(
   });
 }
 
-// Not in OpenAPI schema for sale-invoices; keep using useRequestQuery.
 export function useInvoiceSMSDetail(
-  invoiceId: number,
-  query?: Record<string, unknown>,
-  props?: Record<string, unknown>,
+  invoiceId: number | null | undefined,
+  notificationKey: InvoiceSmsNotificationKey = 'details',
+  props?: Omit<
+    UseQueryOptions<SaleInvoiceSmsDetailsResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
-  return useRequestQuery(
-    [...invoicesKeys.smsDetail(invoiceId), query],
-    {
-      method: 'get',
-      url: `sale-invoices/${invoiceId}/sms-details`,
-      params: query,
-    } as { method: string; url: string; params?: Record<string, unknown> },
-    {
-      select: (res: { data: unknown }) => res.data,
-      defaultData: {},
-      ...props,
-    },
-  );
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useQuery({
+    ...props,
+    queryKey: [...invoicesKeys.smsDetail(invoiceId), notificationKey],
+    queryFn: () =>
+      fetchSaleInvoiceSmsDetails(fetcher, invoiceId!, notificationKey),
+    enabled: invoiceId != null,
+  });
 }
 
 export function useInvoicePaymentTransactions(
