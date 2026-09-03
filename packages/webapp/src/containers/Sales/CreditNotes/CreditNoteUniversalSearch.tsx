@@ -37,13 +37,13 @@ export const CreditNoteUniversalSearchSelect = withDrawerActions(
 function CreditNoteUniversalSearchStatus({ receipt }) {
   return (
     <Choose>
-      <Choose.When condition={receipt.is_closed}>
+      <Choose.When condition={receipt.isClosed}>
         <TextStatus intent={Intent.SUCCESS}>
           <T id={'closed'} />
         </TextStatus>
       </Choose.When>
 
-      <Choose.When condition={receipt.is_open}>
+      <Choose.When condition={receipt.isOpen}>
         <TextStatus intent={Intent.WARNING}>
           <T id={'open'} />
         </TextStatus>
@@ -72,15 +72,15 @@ export function CreditNoteUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.credit_note_number}{' '}
+            {item.reference.creditNoteNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.formatted_credit_note_date}
+            {item.reference.formattedCreditNoteDate}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div class="amount">{item.reference.formattedAmount}</div>
           <CreditNoteUniversalSearchStatus receipt={item.reference} />
         </>
       }
@@ -95,8 +95,8 @@ export function CreditNoteUniversalSearchItem(
  */
 const transformReceiptsToSearch = (creditNote) => ({
   id: creditNote.id,
-  text: creditNote.customer.display_name,
-  label: creditNote.formatted_amount,
+  text: creditNote.customer?.displayName ?? '',
+  label: creditNote.formattedAmount ?? '',
   reference: creditNote,
 });
 

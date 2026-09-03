@@ -34,19 +34,19 @@ export const EstimateUniversalSearchSelect = withDrawerActions(
  */
 export const EstimateStatus = ({ estimate }) => (
   <Choose>
-    <Choose.When condition={estimate.is_delivered && estimate.is_approved}>
+    <Choose.When condition={estimate.isDelivered && estimate.isApproved}>
       <TextStatus intent={Intent.SUCCESS}>
         <T id={'approved'} />
       </TextStatus>
     </Choose.When>
-    <Choose.When condition={estimate.is_delivered && estimate.is_rejected}>
+    <Choose.When condition={estimate.isDelivered && estimate.isRejected}>
       <TextStatus intent={Intent.DANGER}>
         <T id={'rejected'} />
       </TextStatus>
     </Choose.When>
     <Choose.When
       condition={
-        estimate.is_delivered && !estimate.is_rejected && !estimate.is_approved
+        estimate.isDelivered && !estimate.isRejected && !estimate.isApproved
       }
     >
       <TextStatus intent={Intent.SUCCESS}>
@@ -75,15 +75,15 @@ export function EstimateUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.estimate_number}{' '}
+            {item.reference.estimateNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.formatted_estimate_date}
+            {item.reference.formattedEstimateDate}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div class="amount">{item.reference.formattedAmount}</div>
           <EstimateStatus estimate={item.reference} />
         </>
       }
@@ -98,8 +98,8 @@ export function EstimateUniversalSearchItem(
  */
 const transformEstimatesToSearch = (estimate) => ({
   id: estimate.id,
-  text: estimate.customer.display_name,
-  label: estimate.formatted_balance,
+  text: estimate.customer?.displayName ?? '',
+  label: estimate.formattedAmount ?? '',
   reference: estimate,
 });
 

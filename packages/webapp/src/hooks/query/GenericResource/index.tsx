@@ -26,7 +26,7 @@ interface ResourceData {
 
 type ResourceFetcher = (
   fetcher: ApiFetcher,
-  query?: { search_keyword?: string },
+  query?: { searchKeyword?: string },
 ) => Promise<unknown>;
 
 type ResourceDataTransformer = (data: any) => ResourceData;
@@ -35,8 +35,11 @@ type ResourceDataTransformer = (data: any) => ResourceData;
  * Fetches the given resource list (for universal search) through the typed
  * SDK fetch functions, keyed by resource type.
  *
+ * Responses are transformed from snake_case to camelCase via the SDK
+ * camel-case middleware, so all universal-search binds consume camelCase.
+ *
  * @param {string} type - Resource type.
- * @param {object} query - Query params, e.g. `{ search_keyword }`.
+ * @param {object} query - Query params, e.g. `{ searchKeyword }`.
  * @param {*} props - Additional react-query options.
  * @returns
  */
@@ -45,7 +48,7 @@ export function useResourceData(
   query?: unknown,
   props?: unknown,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   const fetchResource = getResourceFetcherFromType(type);
   const { defaultData: defaultDataProp, ...restProps } = (props ?? {}) as {
     defaultData?: ResourceData;
@@ -57,7 +60,7 @@ export function useResourceData(
       if (!fetchResource) {
         throw new Error(`Unknown resource type: ${type}`);
       }
-      return fetchResource(fetcher, query as { search_keyword?: string });
+      return fetchResource(fetcher, query as { searchKeyword?: string });
     },
     select: transformResourceData(type),
     placeholderData: defaultDataProp ?? { items: [] },

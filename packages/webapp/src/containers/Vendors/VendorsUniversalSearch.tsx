@@ -40,8 +40,8 @@ const VendorUniversalSearchSelectAction = withDrawerActions(
  */
 const vendorToSearch = (contact: VendorDetails) => ({
   id: contact.id,
-  text: contact.displayName,
-  label: contact.formattedBalance,
+  text: contact.displayName ?? '',
+  label: contact.formattedBalance ?? '',
   reference: contact,
 });
 

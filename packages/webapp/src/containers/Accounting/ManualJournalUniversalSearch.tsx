@@ -33,9 +33,9 @@ export const JournalUniversalSearchSelectAction = withDrawerActions(
  */
 const manualJournalsToSearch = (manualJournal) => ({
   id: manualJournal.id,
-  text: manualJournal.journal_number,
-  subText: manualJournal.formatted_date,
-  label: manualJournal.formatted_amount,
+  text: manualJournal.journalNumber ?? '',
+  subText: manualJournal.formattedDate ?? '',
+  label: manualJournal.formattedAmount ?? '',
   reference: manualJournal,
 });
 
