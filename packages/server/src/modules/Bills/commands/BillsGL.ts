@@ -97,7 +97,7 @@ export class BillGL {
    */
   private getBillLandedCostEntry(
     landedCost: BillLandedCost,
-    index: number,
+    _index: number,
   ): ILedgerEntry {
     const commonJournalMeta = this.billCommonEntry;
 

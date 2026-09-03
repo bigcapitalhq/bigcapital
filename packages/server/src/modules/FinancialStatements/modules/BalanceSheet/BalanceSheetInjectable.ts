@@ -2,7 +2,7 @@
 import { IBalanceSheetDOO, IBalanceSheetQuery } from './BalanceSheet.types';
 import { BalanceSheetRepository } from './BalanceSheetRepository';
 import { BalanceSheetMetaInjectable } from './BalanceSheetMeta';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { BalanceSheet } from './BalanceSheet';

@@ -19,7 +19,7 @@ export class InvoiceChangeStatusOnMailSentSubscriber {
   @OnEvent(events.saleInvoice.onMailSent)
   async markInvoiceDelivered({
     saleInvoiceId,
-    messageOptions,
+    messageOptions: _messageOptions,
   }: ISaleInvoiceMailSent) {
     try {
       await this.markInvoiceDelivedService.deliverSaleInvoice(saleInvoiceId);

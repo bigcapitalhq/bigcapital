@@ -7,7 +7,6 @@ import {
   IProfitLossSchemaNode,
   IProfitLossSheetNode,
   IProfitLossSheetTotal,
-  IProfitLossSheetQuery,
 } from './ProfitLossSheet.types';
 import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 import { FinancialPreviousYear } from '../../common/FinancialPreviousYear';

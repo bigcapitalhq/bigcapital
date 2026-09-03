@@ -1,7 +1,7 @@
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Contact } from '../models/Contact';
 import { Inject, Injectable } from '@nestjs/common';
-import { IContactsAutoCompleteFilter } from '../Contacts.types';
+
 import { GetContactsAutoCompleteQuery } from '../dtos/GetContactsAutoCompleteQuery.dto';
 
 @Injectable()

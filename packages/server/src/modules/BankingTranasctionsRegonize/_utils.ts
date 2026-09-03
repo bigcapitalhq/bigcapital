@@ -4,7 +4,6 @@ import {
   BankRuleApplyIfTransactionType,
   BankRuleConditionComparator,
   BankRuleConditionType,
-  IBankRuleCondition,
 } from '../BankRules/types';
 import { BankRule } from '../BankRules/models/BankRule';
 import { BankRuleCondition } from '../BankRules/models/BankRuleCondition';

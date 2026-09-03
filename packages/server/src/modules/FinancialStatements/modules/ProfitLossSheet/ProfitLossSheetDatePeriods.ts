@@ -7,7 +7,6 @@ import {
   IProfitLossSheetAccountsNode,
   IProfitLossSheetCommonNode,
   IProfitLossSheetNode,
-  IProfitLossSheetQuery,
 } from './ProfitLossSheet.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { GConstructor } from '@/common/types/Constructor';

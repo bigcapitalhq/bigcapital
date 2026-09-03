@@ -1,6 +1,5 @@
 // @ts-nocheck
-import { Knex, knex } from 'knex';
-import { knexSnakeCaseMappers } from 'objection';
+import { Knex } from 'knex';
 import { TenantDBAlreadyExists } from './exceptions/TenantDBAlreadyExists';
 import { sanitizeDatabaseName } from '@/utils/sanitize-database-name';
 import { ConfigService } from '@nestjs/config';
@@ -72,7 +71,7 @@ export class TenantDBManager {
    * @param {ITenant} tenant -
    */
   public async dropDatabaseIfExists() {
-    const tenant = await this.tenancyContext.getTenant();
+    const _tenant = await this.tenancyContext.getTenant();
     const isExists = await this.databaseExists();
 
     if (!isExists) {
@@ -114,7 +113,7 @@ export class TenantDBManager {
    * Throws error if the tenant database already exists.
    * @return {Promise<void>}
    */
-  async throwErrorIfTenantDBExists(tenant: TenantModel) {
+  async throwErrorIfTenantDBExists(_tenant: TenantModel) {
     const isExists = await this.databaseExists();
     if (isExists) {
       throw new TenantDBAlreadyExists();

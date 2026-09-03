@@ -1,6 +1,5 @@
 import { Knex } from 'knex';
 import {
-  IWarehouseTransferEditedPayload,
   IWarehouseTransferInitiatedPayload,
   IWarehouseTransferInitiatePayload,
 } from '@/modules/Warehouses/Warehouse.types';
@@ -85,7 +84,7 @@ export class InitiateWarehouseTransfer {
       } as IWarehouseTransferInitiatePayload);
 
       // Updates warehouse transfer graph on the storage.
-      const warehouseTransferUpdated = await this.warehouseTransferModel()
+      const _warehouseTransferUpdated = await this.warehouseTransferModel()
         .query(trx)
         .findById(warehouseTransferId)
         .patch({

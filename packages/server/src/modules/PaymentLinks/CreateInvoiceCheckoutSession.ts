@@ -49,7 +49,7 @@ export class CreateInvoiceCheckoutSession {
       (method) => method.paymentIntegration?.service === 'Stripe',
     );
     const stripeAccountId = stripePaymentMethod?.paymentIntegration?.accountId;
-    const paymentIntegrationId = stripePaymentMethod?.paymentIntegration?.id;
+    const _paymentIntegrationId = stripePaymentMethod?.paymentIntegration?.id;
 
     // Creates checkout session for the given invoice.
     const session = await this.createCheckoutSession(invoice, stripeAccountId, {

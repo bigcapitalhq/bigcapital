@@ -11,7 +11,7 @@ export class BulkDeleteSaleEstimatesService {
   async bulkDeleteSaleEstimates(
     saleEstimateIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const estimatesIds = uniq(castArray(saleEstimateIds));

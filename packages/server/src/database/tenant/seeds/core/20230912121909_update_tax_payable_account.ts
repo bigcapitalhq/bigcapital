@@ -1,5 +1,4 @@
 import { TenantSeeder } from '@/libs/migration-seed/TenantSeeder';
-import { InitialTaxRates } from '../data/TaxRates';
 
 export default class UpdateTaxPayableAccount extends TenantSeeder {
   /**

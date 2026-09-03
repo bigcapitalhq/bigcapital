@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { IItemDTO, IItemEventEditedPayload } from '@/interfaces/Item';
+import { IItemEventEditedPayload } from '@/interfaces/Item';
 import { events } from '@/common/events/events';
 import { ItemsValidators } from './ItemValidator.service';
 import { Item } from './models/Item';

@@ -1,10 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { difference, sumBy } from 'lodash';
 import { Knex } from 'knex';
-import {
-  IPaymentReceivedEditDTO,
-  IPaymentReceivedEntryDTO,
-} from '../types/PaymentReceived.types';
+import { IPaymentReceivedEntryDTO } from '../types/PaymentReceived.types';
 import { ERRORS } from '../constants';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { PaymentReceivedEntry } from '../models/PaymentReceivedEntry';

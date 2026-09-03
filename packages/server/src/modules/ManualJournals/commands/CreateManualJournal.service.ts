@@ -6,7 +6,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as composeAsync from 'async/compose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
-  IManualJournalDTO,
   IManualJournalEventCreatedPayload,
   IManualJournalCreatingPayload,
 } from '../types/ManualJournals.types';

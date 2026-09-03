@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import { omit, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { IMetadata, IMetaQuery, IMetableStore } from './types';
 import { itemsStartWith } from '@/utils/items-start-with';
 
@@ -31,7 +31,7 @@ export class MetableStore implements IMetableStore {
    * @returns {IMetadata} - Metadata object.
    */
   find(query: string | IMetaQuery): IMetadata {
-    const { key, value, ...extraColumns } = this.parseQuery(query);
+    const { key, _value, ...extraColumns } = this.parseQuery(query);
 
     return this.metadata.find((meta: IMetadata) => {
       const isSameKey = meta.key === key;
@@ -104,7 +104,7 @@ export class MetableStore implements IMetableStore {
    * Remove all meta data of the given group.
    * @param {string} group
    */
-  removeAll(group: string = 'default'): void {
+  removeAll(_group: string = 'default'): void {
     this.metadata = this.metadata.map((meta) => ({
       ...meta,
       _markAsDeleted: true,

@@ -149,10 +149,10 @@ export class Account extends TenantBaseModel {
           query.whereIn('account_types.account_type_id', typesIds);
         }
       },
-      viewRolesBuilder(query, conditionals, expression) {
+      viewRolesBuilder(_query, _conditionals, _expression) {
         // buildFilterQuery(Account.tableName, conditionals, expression)(query);
       },
-      sortColumnBuilder(query, columnKey, direction) {
+      sortColumnBuilder(_query, _columnKey, _direction) {
         // buildSortColumnQuery(Account.tableName, columnKey, direction)(query);
       },
 
@@ -407,7 +407,7 @@ export class Account extends TenantBaseModel {
    * @param {Array} accounts
    * @param {Object} options
    */
-  static toNestedArray(accounts, options = { children: 'children' }) {
+  static toNestedArray(accounts, _options = { children: 'children' }) {
     return flatToNestedArray(accounts, {
       id: 'id',
       parentId: 'parentAccountId',

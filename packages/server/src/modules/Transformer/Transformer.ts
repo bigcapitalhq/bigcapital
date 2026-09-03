@@ -7,6 +7,7 @@ import { TransformerContext } from './Transformer.types';
 
 const EXPORT_DTE_FORMAT = 'YYYY-MM-DD';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class Transformer<T = {}, ExtraContext = {}> {
   public context: ExtraContext & TransformerContext;
   public options: Record<string, any>;

@@ -1,14 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsBoolean,
-  IsDate,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { BranchResponseDto } from '@/modules/Branches/dtos/BranchResponse.dto';
 import { AccountResponseDto } from '@/modules/Accounts/dtos/AccountResponse.dto';
 

@@ -25,7 +25,7 @@ export class PaymentReceivedSmsNotificationSubscriber {
         await this.paymentReceivedSmsNotification.notifyDetailsBySmsAfterCreation(
           paymentReceiveId,
         );
-      } catch (error) {}
+      } catch (_error) {}
     });
   }
 }

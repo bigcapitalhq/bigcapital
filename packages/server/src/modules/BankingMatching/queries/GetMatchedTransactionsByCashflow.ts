@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionCashflowTransformer } from './GetMatchedTransactionCashflowTransformer';
 import { GetMatchedTransactionsFilter } from '../types';

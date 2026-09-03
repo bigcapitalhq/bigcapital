@@ -44,7 +44,7 @@ export class InventoryCostSubscriber {
   @OnEvent(events.inventory.onInventoryTransactionsCreated)
   async handleScheduleItemsCostOnInventoryTransactionsCreated({
     inventoryTransactions,
-    trx,
+    _trx,
   }: IInventoryTransactionsCreatedPayload) {
     const inImportPreviewScope = this.importAls.isImportPreview;
 
@@ -77,7 +77,7 @@ export class InventoryCostSubscriber {
    */
   @OnEvent(events.inventory.onComputeItemCostJobCompleted)
   async onComputeItemCostJobFinished({
-    itemId,
+    _itemId,
     startingDate,
   }: IComputeItemCostJobCompletedPayload) {
     // Convert startingDate to Date if it's a string
@@ -109,7 +109,7 @@ export class InventoryCostSubscriber {
   @OnEvent(events.inventory.onInventoryTransactionsDeleted)
   async handleScheduleItemsCostOnInventoryTransactionsDeleted({
     transactionType,
-    transactionId,
+    _transactionId,
     oldInventoryTransactions,
     trx,
   }: IInventoryTransactionsDeletedPayload) {

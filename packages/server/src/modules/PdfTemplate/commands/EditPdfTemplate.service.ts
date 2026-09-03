@@ -28,7 +28,7 @@ export class EditPdfTemplateService {
     templateId: number,
     editTemplateDTO: EditPdfTemplateDto,
   ) {
-    const oldPdfTemplate = await this.pdfTemplateModel()
+    const _oldPdfTemplate = await this.pdfTemplateModel()
       .query()
       .findById(templateId)
       .throwIfNotFound();

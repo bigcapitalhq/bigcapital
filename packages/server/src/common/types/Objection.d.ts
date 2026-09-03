@@ -1,4 +1,4 @@
-import { QueryBuilder, Model } from 'objection';
+import { Model } from 'objection';
 
 declare module 'objection' {
   interface QueryBuilder<M extends Model, R = M[]> {

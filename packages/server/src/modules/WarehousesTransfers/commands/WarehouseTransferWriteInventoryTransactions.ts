@@ -1,10 +1,8 @@
 import { Knex } from 'knex';
-import { IWarehouseTransferEntry } from '@/modules/Warehouses/Warehouse.types';
 import { Injectable } from '@nestjs/common';
 import { InventoryTransactionsService } from '../../InventoryCost/commands/InventoryTransactions.service';
 import { ModelObject } from 'objection';
 import { WarehouseTransfer } from '../models/WarehouseTransfer';
-import { InventoryTransaction } from '../../InventoryCost/models/InventoryTransaction';
 import { WarehouseTransferEntry } from '../models/WarehouseTransferEntry';
 
 @Injectable()

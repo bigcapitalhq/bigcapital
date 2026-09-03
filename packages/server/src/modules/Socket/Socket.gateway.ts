@@ -24,11 +24,11 @@ export class SocketGateway
 
   private logger: Logger = new Logger('SocketGateway');
 
-  afterInit(server: Server) {
+  afterInit(_server: Server) {
     this.logger.log('Socket.IO Gateway initialized');
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket, ..._args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
   }
 

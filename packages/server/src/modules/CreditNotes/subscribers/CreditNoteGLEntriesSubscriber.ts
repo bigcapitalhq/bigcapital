@@ -53,7 +53,7 @@ export class CreditNoteGLEntriesSubscriber {
   public async revertGLEntriesOnceCreditNoteDeleted({
     oldCreditNote,
     creditNoteId,
-    trx,
+    trx: _trx,
   }: ICreditNoteDeletedPayload) {
     // Can't continue if the credit note is not published yet.
     if (!oldCreditNote.isPublished) return;

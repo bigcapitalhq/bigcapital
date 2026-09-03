@@ -1,5 +1,3 @@
-import { pick } from 'lodash';
-import { Knex } from 'knex';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 
 export class InventoryAverageCostMethod {

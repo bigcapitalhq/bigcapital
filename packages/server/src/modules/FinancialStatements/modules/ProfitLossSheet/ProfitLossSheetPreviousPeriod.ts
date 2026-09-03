@@ -207,7 +207,7 @@ export const ProfitLossSheetPreviousPeriod = <
       (
         node: IProfitLossSheetAccountNode,
         horizontalTotalNode: IProfitLossHorizontalDatePeriodNode,
-        index: number,
+        _index: number,
       ): IProfitLossHorizontalDatePeriodNode => {
         return R.compose(
           R.when(

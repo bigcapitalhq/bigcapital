@@ -1,11 +1,6 @@
 import request = require('supertest');
 import { faker } from '@faker-js/faker';
-import {
-  app,
-  authenticationToken,
-  AuthorizationHeader,
-  orgainzationId,
-} from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 const makeItemRequest = () => ({
   name: faker.commerce.productName(),

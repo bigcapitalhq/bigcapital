@@ -34,7 +34,7 @@ export class ValidateBulkDeleteSaleInvoicesService {
             trx,
           );
           deletableIds.push(saleInvoiceId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(saleInvoiceId);
         }
       }

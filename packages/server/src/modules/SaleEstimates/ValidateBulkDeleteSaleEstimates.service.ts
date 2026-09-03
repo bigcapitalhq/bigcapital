@@ -34,7 +34,7 @@ export class ValidateBulkDeleteSaleEstimatesService {
             trx,
           );
           deletableIds.push(saleEstimateId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(saleEstimateId);
         }
       }

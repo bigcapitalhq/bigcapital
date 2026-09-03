@@ -3,7 +3,6 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBody,
-  ApiOkResponse,
   ApiExtraModels,
   getSchemaPath,
   ApiParam,

@@ -34,7 +34,7 @@ export class ValidateBulkDeleteVendorCreditsService {
             trx,
           );
           deletableIds.push(vendorCreditId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(vendorCreditId);
         }
       }

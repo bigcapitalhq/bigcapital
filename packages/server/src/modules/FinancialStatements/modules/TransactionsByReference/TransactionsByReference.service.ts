@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ITransactionsByReferencePojo } from './TransactionsByReference.types';
 import { TransactionsByReferenceRepository } from './TransactionsByReferenceRepository';
 import { TransactionsByReference } from './TransactionsByReferenceReport';

@@ -8,7 +8,7 @@ interface TenancyCacheModuleConfig {
 
 @Module({})
 export class TenancyCacheModule {
-  static register(config: TenancyCacheModuleConfig): DynamicModule {
+  static register(_config: TenancyCacheModuleConfig): DynamicModule {
     return {
       module: TenancyCacheModule,
       imports: [CacheModule.register<RedisClientOptions>({})],

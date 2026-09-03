@@ -54,7 +54,7 @@ export class AcceptInviteUserService {
     const hashedPassword = await hashPassword(inviteUserDTO.password);
 
     // Retrieve the system user.
-    const user = await this.systemUserModel
+    const _user = await this.systemUserModel
       .query()
       .findOne('email', inviteToken.email);
 

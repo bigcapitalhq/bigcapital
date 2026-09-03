@@ -32,7 +32,7 @@ export class DeletePaymentMethodService {
   public async deletePaymentMethod(
     paymentIntegrationId: number,
   ): Promise<void> {
-    const paymentIntegration = await this.paymentIntegrationModel()
+    const _paymentIntegration = await this.paymentIntegrationModel()
       .query()
       .findById(paymentIntegrationId)
       .throwIfNotFound();

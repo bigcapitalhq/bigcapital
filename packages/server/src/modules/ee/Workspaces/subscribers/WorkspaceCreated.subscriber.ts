@@ -9,10 +9,10 @@ export class WorkspaceCreatedSubscriber {
 
   @OnEvent(events.workspace.created)
   async handleWorkspaceCreated({
-    tenantId,
-    organizationId,
-    userId,
-    buildDTO,
+    tenantId: _tenantId,
+    organizationId: _organizationId,
+    userId: _userId,
+    buildDTO: _buildDTO,
   }: IWorkspaceCreatedEventPayload) {
     // Handle any setup that needs to happen after workspace creation.
     // This runs after system-level metadata is saved in tenants_metadata.

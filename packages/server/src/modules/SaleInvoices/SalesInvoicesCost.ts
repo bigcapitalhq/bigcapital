@@ -109,7 +109,7 @@ export class SaleInvoicesCost {
    * @param {Date} startingDate - Starting date.
    * @return {Promise<agenda>}
    */
-  scheduleWriteJournalEntries(startingDate?: Date) {
+  scheduleWriteJournalEntries(_startingDate?: Date) {
     // const agenda = Container.get('agenda');
     // return agenda.schedule('in 3 seconds', 'rewrite-invoices-journal-entries', {
     //   startingDate,

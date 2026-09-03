@@ -297,7 +297,7 @@ export default class ProfitLossSheet extends R.pipe(
     key: number,
     parentValue: IProfitLossSheetNode | IProfitLossSchemaNode,
     accNodes: (IProfitLossSheetNode | IProfitLossSchemaNode)[],
-    context,
+    _context,
   ): IProfitLossSheetEquationNode => {
     return R.compose(
       R.when(

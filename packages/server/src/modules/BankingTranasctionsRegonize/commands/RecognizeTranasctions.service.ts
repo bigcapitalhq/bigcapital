@@ -115,7 +115,7 @@ export class RecognizeTranasctionsService {
     const regonizeTransaction = async (
       transaction: UncategorizedBankTransaction,
     ) => {
-      const allAccountsBankRules = bankRulesByAccountId.get(`null`);
+      const _allAccountsBankRules = bankRulesByAccountId.get(`null`);
       const accountBankRules = bankRulesByAccountId.get(
         `${transaction.accountId}`,
       );
@@ -132,9 +132,9 @@ export class RecognizeTranasctionsService {
         recognizedTransactionIds.push(recognizedId);
       }
     };
-    const result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
+    const _result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
       .for(uncategorizedTranasctions)
-      .process((transaction: UncategorizedBankTransaction, index, pool) => {
+      .process((transaction: UncategorizedBankTransaction, _index, _pool) => {
         return regonizeTransaction(transaction);
       });
 
@@ -154,7 +154,7 @@ export class RecognizeTranasctionsService {
    * @param {number} uncategorizedTransaction
    */
   public async regonizeTransaction(
-    uncategorizedTransaction: UncategorizedBankTransaction,
+    _uncategorizedTransaction: UncategorizedBankTransaction,
   ) {}
 }
 

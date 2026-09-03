@@ -1,4 +1,4 @@
-exports.up = function (knex) {
+exports.up = function (_knex) {
   return knex.schema.createTable('bills_payments', (table) => {
     table.increments();
     table
@@ -24,4 +24,4 @@ exports.up = function (knex) {
   });
 };
 
-exports.down = function (knex) {};
+exports.down = function (_knex) {};
