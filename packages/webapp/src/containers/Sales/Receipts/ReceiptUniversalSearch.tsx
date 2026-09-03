@@ -37,7 +37,7 @@ export const ReceiptUniversalSearchSelect = withDrawerActions(
 function ReceiptStatus({ receipt }) {
   return (
     <Choose>
-      <Choose.When condition={receipt.is_closed}>
+      <Choose.When condition={receipt.isClosed}>
         <TextStatus intent={Intent.SUCCESS}>
           <T id={'closed'} />
         </TextStatus>
@@ -66,15 +66,15 @@ export function ReceiptUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.receipt_number}{' '}
+            {item.reference.receiptNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.formatted_receipt_date}
+            {item.reference.formattedReceiptDate}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div class="amount">{item.reference.formattedAmount}</div>
           <ReceiptStatus receipt={item.reference} />
         </>
       }
@@ -89,8 +89,8 @@ export function ReceiptUniversalSearchItem(
  */
 const transformReceiptsToSearch = (receipt) => ({
   id: receipt.id,
-  text: receipt.customer.display_name,
-  label: receipt.formatted_amount,
+  text: receipt.customer?.displayName ?? '',
+  label: receipt.formattedAmount ?? '',
   reference: receipt,
 });
 

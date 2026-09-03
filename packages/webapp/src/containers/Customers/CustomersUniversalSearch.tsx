@@ -37,8 +37,8 @@ const CustomerUniversalSearchSelectAction = withDrawerActions(
  */
 const customersToSearch = (contact: CustomerDetails) => ({
   id: contact.id,
-  text: contact.displayName,
-  label: contact.formattedBalance,
+  text: contact.displayName ?? '',
+  label: contact.formattedBalance ?? '',
   reference: contact,
 });
 

@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
-  IPaymentReceivedEditDTO,
   IPaymentReceivedEditedPayload,
   IPaymentReceivedEditingPayload,
 } from '../types/PaymentReceived.types';

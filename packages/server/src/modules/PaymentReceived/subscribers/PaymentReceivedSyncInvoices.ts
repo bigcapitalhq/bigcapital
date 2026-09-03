@@ -54,7 +54,6 @@ export class PaymentReceivedSyncInvoicesSubscriber {
    */
   @OnEvent(events.paymentReceive.onDeleted)
   private async handleInvoiceDecrementPaymentAmount({
-    paymentReceiveId,
     oldPaymentReceive,
     trx,
   }: IPaymentReceivedDeletedPayload) {

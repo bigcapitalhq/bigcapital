@@ -39,13 +39,13 @@ export const VendorCreditUniversalSearchSelect = withDrawerActions(
 function VendorCreditUniversalSearchStatus({ receipt }) {
   return (
     <Choose>
-      <Choose.When condition={receipt.is_closed}>
+      <Choose.When condition={receipt.isClosed}>
         <TextStatus intent={Intent.SUCCESS}>
           <T id={'closed'} />
         </TextStatus>
       </Choose.When>
 
-      <Choose.When condition={receipt.is_open}>
+      <Choose.When condition={receipt.isOpen}>
         <TextStatus intent={Intent.WARNING}>
           <T id={'closed'} />
         </TextStatus>
@@ -74,15 +74,15 @@ export function VendorCreditUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.vendor_credit_number}{' '}
+            {item.reference.vendorCreditNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.formatted_vendor_credit_date}
+            {item.reference.formattedVendorCreditDate}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div class="amount">{item.reference.formattedAmount}</div>
           <VendorCreditUniversalSearchStatus receipt={item.reference} />
         </>
       }
@@ -97,8 +97,8 @@ export function VendorCreditUniversalSearchItem(
  */
 const transformVendorCreditsToSearch = (vendorCredit) => ({
   id: vendorCredit.id,
-  text: vendorCredit.vendor.display_name,
-  label: vendorCredit.formatted_amount,
+  text: vendorCredit.vendor?.displayName ?? '',
+  label: vendorCredit.formattedAmount ?? '',
   reference: vendorCredit,
 });
 

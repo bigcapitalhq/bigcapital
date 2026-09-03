@@ -247,7 +247,9 @@ export class SaleInvoiceApplication {
     smsOptions: Record<string, unknown>,
   ) {
     const notificationKey =
-      (smsOptions?.notification_key as string) || 'details';
+      (smsOptions?.notificationKey as string) ||
+      (smsOptions?.notification_key as string) ||
+      'details';
     return this.saleInvoiceSmsNotificationService.triggerSms(
       saleInvoiceId,
       notificationKey as 'details' | 'reminder',
@@ -265,7 +267,9 @@ export class SaleInvoiceApplication {
     smsOptions: Record<string, unknown>,
   ) {
     const notificationKey =
-      (smsOptions?.notification_key as string) || 'details';
+      (smsOptions?.notificationKey as string) ||
+      (smsOptions?.notification_key as string) ||
+      'details';
     return this.saleInvoiceSmsNotificationService.getSmsDetails(
       saleInvoiceId,
       notificationKey as 'details' | 'reminder',

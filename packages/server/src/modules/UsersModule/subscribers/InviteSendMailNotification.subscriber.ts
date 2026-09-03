@@ -28,7 +28,7 @@ export default class InviteSendMainNotificationSubscribe {
   @OnEvent(events.inviteUser.sendInviteTenantSynced)
   async sendMailNotification({
     invite,
-    user,
+    user: _user,
     invitingUser,
   }: IUserInviteTenantSyncedEventPayload) {
     const tenant = await this.tenancyContext.getTenant();

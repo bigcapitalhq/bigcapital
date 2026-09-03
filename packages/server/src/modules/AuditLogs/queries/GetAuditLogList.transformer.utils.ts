@@ -552,7 +552,7 @@ export function formatMetadataSummary(
   if (formatter) {
     try {
       return formatter(metadata, action);
-    } catch (e) {
+    } catch (_e) {
       // Fallback to default below
     }
   }

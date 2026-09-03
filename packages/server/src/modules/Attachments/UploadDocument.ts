@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { DocumentModel } from './models/Document.model';
 

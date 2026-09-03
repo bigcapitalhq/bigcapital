@@ -1,5 +1,4 @@
 import request = require('supertest');
-import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 let customerId;

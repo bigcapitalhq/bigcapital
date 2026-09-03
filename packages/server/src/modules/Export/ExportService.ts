@@ -142,7 +142,7 @@ export class ExportResourceService {
       parent = '',
     ) => {
       return Object.entries(columns)
-        .filter(([_, value]) => value.exportable !== false)
+        .filter(([_key, value]) => value.exportable !== false)
         .flatMap(([key, value]) => {
           if (value.type === 'collection' && value.collectionOf === 'object') {
             return processColumns(value.columns, key);
@@ -172,7 +172,7 @@ export class ExportResourceService {
       return (
         Object.entries(columns)
           // @ts-expect-error
-          .filter(([_, value]) => value.printable !== false)
+          .filter(([_key, value]) => value.printable !== false)
           .flatMap(([key, value]) => {
             if (
               value.type === 'collection' &&

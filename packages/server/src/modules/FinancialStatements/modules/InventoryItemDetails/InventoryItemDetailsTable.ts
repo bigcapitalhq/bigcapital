@@ -8,7 +8,6 @@ import {
   IInvetoryItemDetailDOO,
 } from './InventoryItemDetails.types';
 import { I18nService } from 'nestjs-i18n';
-import { IInventoryDetailsData } from './InventoryItemDetails.types';
 import { tableRowMapper } from '../../utils/Table.utils';
 import {
   IColumnMapperMeta,

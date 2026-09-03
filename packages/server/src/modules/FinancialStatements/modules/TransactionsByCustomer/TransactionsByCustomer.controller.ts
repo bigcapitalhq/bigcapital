@@ -18,7 +18,6 @@ import {
   TransactionsByCustomerResponseDto,
   TransactionsByCustomerTableResponseDto,
 } from './TransactionsByCustomerResponse.dto';
-import { ITransactionsByCustomersFilter } from './TransactionsByCustomer.types';
 import { TransactionsByCustomerApplication } from './TransactionsByCustomersApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';

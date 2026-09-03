@@ -25,7 +25,7 @@ export class SaleReceiptSmsNotificationSubscriber {
         await this.saleReceiptSmsNotification.notifyDetailsBySmsAfterCreation(
           saleReceiptId,
         );
-      } catch (error) {}
+      } catch (_error) {}
     });
   }
 }

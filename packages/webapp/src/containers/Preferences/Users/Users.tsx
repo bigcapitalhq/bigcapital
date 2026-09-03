@@ -12,9 +12,16 @@ import {
   withDialogActions,
   type WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
+import { useAppQueryString } from '@/hooks';
 
 function UsersPreferences({ openDialog }: WithDialogActionsProps) {
-  const onChangeTabs = (currentTabId: string) => {};
+  const [locationQuery, setLocationQuery] = useAppQueryString();
+
+  const activeTab = locationQuery?.tab === 'roles' ? 'roles' : 'users';
+
+  const onChangeTabs = (tabId: string | number) => {
+    setLocationQuery({ tab: String(tabId) });
+  };
 
   return (
     <div
@@ -25,7 +32,13 @@ function UsersPreferences({ openDialog }: WithDialogActionsProps) {
     >
       <UsersPereferencesCard>
         <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
-          <Tabs animate={true} onChange={onChangeTabs}>
+          <Tabs
+            id="users-preferences-tabs"
+            animate={true}
+            selectedTabId={activeTab}
+            onChange={onChangeTabs}
+            renderActiveTabPanelOnly={true}
+          >
             <Tab
               id="users"
               title={intl.get('users')}

@@ -29,7 +29,7 @@ export class EditPaymentMethodService {
     paymentIntegrationId: number,
     editPaymentMethodDTO: EditPaymentMethodDTO,
   ): Promise<void> {
-    const paymentMethod = await this.paymentIntegrationModel()
+    const _paymentMethod = await this.paymentIntegrationModel()
       .query()
       .findById(paymentIntegrationId)
       .throwIfNotFound();

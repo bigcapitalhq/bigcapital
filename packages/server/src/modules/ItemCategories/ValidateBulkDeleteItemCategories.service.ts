@@ -34,7 +34,7 @@ export class ValidateBulkDeleteItemCategoriesService {
             trx,
           );
           deletableIds.push(itemCategoryId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(itemCategoryId);
         }
       }

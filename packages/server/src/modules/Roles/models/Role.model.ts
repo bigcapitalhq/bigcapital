@@ -1,4 +1,4 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { RolePermission } from './RolePermission.model';
 

@@ -21,7 +21,7 @@ export abstract class GetMatchedTransactionsByType {
    * @returns {Promise<MatchedTransactionsPOJO>}
    */
   public async getMatchedTransactions(
-    filter: GetMatchedTransactionsFilter,
+    _filter: GetMatchedTransactionsFilter,
   ): Promise<MatchedTransactionsPOJO> {
     throw new Error(
       'The `getMatchedTransactions` method is not defined for the transaction type.',
@@ -35,7 +35,7 @@ export abstract class GetMatchedTransactionsByType {
    * @returns {Promise<MatchedTransactionPOJO>}
    */
   public async getMatchedTransaction(
-    transactionId: number,
+    _transactionId: number,
   ): Promise<MatchedTransactionPOJO> {
     throw new Error(
       'The `getMatchedTransaction` method is not defined for the transaction type.',

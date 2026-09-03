@@ -38,28 +38,28 @@ export const BillUniversalSearchSelect = withDrawerActions(
 export function BillStatus({ bill }) {
   return (
     <Choose>
-      <Choose.When condition={bill.is_fully_paid && bill.is_open}>
+      <Choose.When condition={bill.isFullyPaid && bill.isOpen}>
         <TextStatus intent={Intent.SUCCESS}>
           <T id={'paid'} />
         </TextStatus>
       </Choose.When>
-      <Choose.When condition={bill.is_open}>
+      <Choose.When condition={bill.isOpen}>
         <Choose>
-          <Choose.When condition={bill.is_overdue}>
+          <Choose.When condition={bill.isOverdue}>
             <TextStatus intent={Intent.DANGER}>
-              {intl.get('overdue_by', { overdue: bill.overdue_days })}
+              {intl.get('overdue_by', { overdue: bill.overdueDays })}
             </TextStatus>
           </Choose.When>
           <Choose.Otherwise>
             <TextStatus intent={Intent.WARNING}>
-              {intl.get('due_in', { due: bill.remaining_days })}
+              {intl.get('due_in', { due: bill.remainingDays })}
             </TextStatus>
           </Choose.Otherwise>
         </Choose>
-        <If condition={bill.is_partially_paid}>
+        <If condition={bill.isPartiallyPaid}>
           <TextStatus intent={Intent.WARNING}>
             {intl.get('day_partially_paid', {
-              due: formattedAmount(bill.due_amount, bill.currency_code),
+              due: formattedAmount(bill.dueAmount, bill.currencyCode),
             })}
           </TextStatus>
         </If>
@@ -87,15 +87,15 @@ export function BillUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.bill_number}{' '}
+            {item.reference.billNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.formatted_bill_date}
+            {item.reference.formattedBillDate}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div class="amount">{item.reference.formattedAmount}</div>
           <BillStatus bill={item.reference} />
         </>
       }
@@ -107,7 +107,7 @@ export function BillUniversalSearchItem(
 
 const billsToSearch = (bill) => ({
   id: bill.id,
-  text: bill.vendor.display_name,
+  text: bill.vendor?.displayName ?? '',
   reference: bill,
 });
 

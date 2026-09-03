@@ -34,7 +34,7 @@ export class ValidateBulkDeleteManualJournalsService {
             trx,
           );
           deletableIds.push(manualJournalId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(manualJournalId);
         }
       }

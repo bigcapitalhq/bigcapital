@@ -1,5 +1,3 @@
-import currencies from 'js-money/lib/currency';
-
 export const DATE_FORMATS = [
   'MM/DD/YY',
   'DD/MM/YY',

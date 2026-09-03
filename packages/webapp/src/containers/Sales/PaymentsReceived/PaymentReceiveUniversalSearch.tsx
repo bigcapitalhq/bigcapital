@@ -50,13 +50,13 @@ export function PaymentReceiveUniversalSearchItem(
           <div>{highlightText(item.text, query)}</div>
 
           <span class="bp4-text-muted">
-            {highlightText(item.reference.payment_receive_no, query)}{' '}
+            {highlightText(item.reference.paymentReceiveNo, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {highlightText(item.reference.formatted_payment_date, query)}
+            {highlightText(item.reference.formattedPaymentDate, query)}
           </span>
         </div>
       }
-      label={<div class="amount">{item.reference.formatted_amount}</div>}
+      label={<div class="amount">{item.reference.formattedAmount}</div>}
       onClick={handleClick}
       className={'universal-search__item--invoice'}
     />
@@ -68,9 +68,9 @@ export function PaymentReceiveUniversalSearchItem(
  */
 const paymentReceivesToSearch = (payment) => ({
   id: payment.id,
-  text: payment.customer.display_name,
-  subText: payment.formatted_payment_date,
-  label: payment.formatted_amount,
+  text: payment.customer?.displayName ?? '',
+  subText: payment.formattedPaymentDate ?? '',
+  label: payment.formattedAmount ?? '',
   reference: payment,
 });
 

@@ -1,4 +1,3 @@
-import { ICreateBranchDTO, IEditBranchDTO } from './Branches.types';
 import { ActivateBranches } from './commands/ActivateBranchesFeature.service';
 import { CreateBranchService } from './commands/CreateBranch.service';
 import { DeleteBranchService } from './commands/DeleteBranch.service';

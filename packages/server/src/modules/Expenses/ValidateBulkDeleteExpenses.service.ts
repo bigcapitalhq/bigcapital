@@ -29,7 +29,7 @@ export class ValidateBulkDeleteExpensesService {
         try {
           await this.deleteExpenseService.deleteExpense(expenseId, trx);
           deletableIds.push(expenseId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(expenseId);
         }
       }

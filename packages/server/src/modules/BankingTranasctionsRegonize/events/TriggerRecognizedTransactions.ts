@@ -51,7 +51,7 @@ export class TriggerRecognizedTransactionsSubscriber {
    */
   @OnEvent(events.bankRules.onEdited)
   async recognizedTransactionsOnRuleEdited({
-    editRuleDTO,
+    editRuleDTO: _editRuleDTO,
     oldBankRule,
     bankRule,
   }: IBankRuleEventEditedPayload) {
@@ -108,7 +108,7 @@ export class TriggerRecognizedTransactionsSubscriber {
    */
   @OnEvent(events.import.onImportCommitted)
   async triggerRecognizeTransactionsOnImportCommitted({
-    importId,
+    importId: _importId,
 
     // @ts-ignore
   }: IImportFileCommitedEventPayload) {

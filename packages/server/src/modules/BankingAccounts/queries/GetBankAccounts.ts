@@ -3,7 +3,6 @@ import { ACCOUNT_TYPE } from '@/constants/accounts';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { CashflowAccountTransformer } from '@/modules/BankingTransactions/queries/BankAccountTransformer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { ICashflowAccountsFilter } from '../types/BankAccounts.types';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { BankAccountsQueryDto } from '../dtos/BankAccountsQuery.dto';

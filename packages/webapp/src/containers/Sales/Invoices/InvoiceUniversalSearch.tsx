@@ -36,22 +36,22 @@ export const InvoiceUniversalSearchSelect = withDrawerActions(
 function InvoiceStatus({ customer }) {
   return (
     <Choose>
-      <Choose.When condition={customer.is_fully_paid && customer.is_delivered}>
+      <Choose.When condition={customer.isFullyPaid && customer.isDelivered}>
         <TextStatus intent={Intent.SUCCESS}>
           <T id={'paid'} />
         </TextStatus>
       </Choose.When>
 
-      <Choose.When condition={customer.is_delivered}>
+      <Choose.When condition={customer.isDelivered}>
         <Choose>
-          <Choose.When condition={customer.is_overdue}>
+          <Choose.When condition={customer.isOverdue}>
             <TextStatus intent={Intent.DANGER}>
-              {intl.get('overdue_by', { overdue: customer.overdue_days })}
+              {intl.get('overdue_by', { overdue: customer.overdueDays })}
             </TextStatus>
           </Choose.When>
           <Choose.Otherwise>
             <TextStatus intent={Intent.WARNING}>
-              {intl.get('due_in', { due: customer.remaining_days })}
+              {intl.get('due_in', { due: customer.remainingDays })}
             </TextStatus>
           </Choose.Otherwise>
         </Choose>
@@ -79,15 +79,15 @@ export function InvoiceUniversalSearchItem(
         <div>
           <div>{highlightText(item.text, query)}</div>
           <span class="bp4-text-muted">
-            {highlightText(item.reference.invoice_no, query)}{' '}
+            {highlightText(item.reference.invoiceNo, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.invoice_date_formatted}
+            {item.reference.invoiceDateFormatted}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">{item.reference.total_formatted}</div>
+          <div class="amount">{item.reference.totalFormatted}</div>
           <InvoiceStatus customer={item.reference} />
         </>
       }
@@ -103,8 +103,8 @@ export function InvoiceUniversalSearchItem(
  */
 const transformInvoicesToSearch = (invoice) => ({
   id: invoice.id,
-  text: invoice.customer.display_name,
-  label: invoice.formatted_balance,
+  text: invoice.customer?.displayName ?? '',
+  label: invoice.totalFormatted ?? '',
   reference: invoice,
 });
 

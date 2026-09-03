@@ -9,7 +9,6 @@ import { VendorCreditApplyBillsApplicationService } from './VendorCreditApplyBil
 import { VendorCreditApplyBillsController } from './VendorCreditApplyBills.controller';
 import { BillsModule } from '../Bills/Bills.module';
 import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
-import { VendorCreditDTOTransformService } from '../VendorCredit/commands/VendorCreditDTOTransform.service';
 import { ItemsModule } from '../Items/Items.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';

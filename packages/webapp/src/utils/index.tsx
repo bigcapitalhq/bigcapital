@@ -837,6 +837,11 @@ function escapeRegExpChars(text) {
 }
 
 export function highlightText(text, query) {
+  if (text == null) {
+    return [];
+  }
+  text = String(text);
+  query = query == null ? '' : String(query);
   let lastIndex = 0;
   const words = query
     .split(/\s+/)

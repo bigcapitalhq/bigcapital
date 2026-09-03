@@ -2,7 +2,6 @@ import { IFinancialSheetCommonMeta } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import {
   IAgingPeriod,
-  IAgingSummaryQuery,
   IAgingSummaryTotal,
   IAgingSummaryContact,
   IAgingSummaryData,

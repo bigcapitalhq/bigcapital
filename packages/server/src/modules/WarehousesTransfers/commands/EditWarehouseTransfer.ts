@@ -1,7 +1,6 @@
 import { Knex } from 'knex';
 import { omit } from 'lodash';
 import {
-  IEditWarehouseTransferDTO,
   IWarehouseTransferEditPayload,
   IWarehouseTransferEditedPayload,
 } from '@/modules/Warehouses/Warehouse.types';
@@ -58,12 +57,12 @@ export class EditWarehouseTransfer {
       editWarehouseDTO,
     );
     // Retrieves the from warehouse or throw not found service error.
-    const fromWarehouse =
+    const _fromWarehouse =
       await this.commandWarehouseTransfer.getFromWarehouseOrThrow(
         editWarehouseDTO.fromWarehouseId,
       );
     // Retrieves the to warehouse or throw not found service error.
-    const toWarehouse =
+    const _toWarehouse =
       await this.commandWarehouseTransfer.getToWarehouseOrThrow(
         editWarehouseDTO.toWarehouseId,
       );

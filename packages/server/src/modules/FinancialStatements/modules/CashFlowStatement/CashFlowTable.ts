@@ -189,8 +189,8 @@ export class CashFlowTable {
    */
   private sectionMapper = (
     section: ICashFlowStatementSection,
-    key: string,
-    parentSection: ICashFlowStatementSection,
+    _key: string,
+    _parentSection: ICashFlowStatementSection,
   ): ITableRow => {
     const isSectionHasType = R.curry(this.isSectionHasType);
 

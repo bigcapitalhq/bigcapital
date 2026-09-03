@@ -1,5 +1,5 @@
 import { BaseModel } from '@/models/Model';
-import { IModelMeta } from '@/interfaces/Model';
+
 import { ISearchRole } from '../DynamicFilter/DynamicFilter.types';
 
 type GConstructor<T = {}> = new (...args: any[]) => T;

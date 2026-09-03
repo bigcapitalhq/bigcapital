@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Item } from '../models/Item';
 
 export class ItemResponseDto {
   @ApiProperty({

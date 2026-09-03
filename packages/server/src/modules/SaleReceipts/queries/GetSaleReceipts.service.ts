@@ -8,9 +8,6 @@ import { GetSaleReceiptsQueryDto } from '../dtos/GetSaleReceiptsQuery.dto';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
-interface GetSaleReceiptsSettings {
-  fetchEntriesGraph?: boolean;
-}
 @Injectable()
 export class GetSaleReceiptsService {
   constructor(

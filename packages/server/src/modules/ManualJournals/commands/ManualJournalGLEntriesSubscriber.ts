@@ -58,7 +58,6 @@ export class ManualJournalWriteGLSubscriber {
   @OnEvent(events.manualJournals.onEdited)
   public async handleRewriteJournalEntriesOnEdited({
     manualJournal,
-    oldManualJournal,
     trx,
   }: IManualJournalEventEditedPayload) {
     if (manualJournal.publishedAt) {

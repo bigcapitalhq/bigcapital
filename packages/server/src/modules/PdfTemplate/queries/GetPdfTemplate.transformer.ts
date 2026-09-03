@@ -29,7 +29,7 @@ export class GetPdfTemplateTransformer extends Transformer {
    * @param {Object} template -
    * @returns {string} A formatted string representing the creation date of the template.
    */
-  protected resourceFormatted = (template) => {
+  protected resourceFormatted = (_template) => {
     // return getTransactionTypeLabel(template.resource);
   };
 

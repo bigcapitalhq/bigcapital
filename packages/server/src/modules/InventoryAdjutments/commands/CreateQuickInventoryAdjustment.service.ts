@@ -97,7 +97,7 @@ export class CreateQuickInventoryAdjustmentService {
     quickAdjustmentDTO: CreateQuickInventoryAdjustmentDto,
   ): Promise<InventoryAdjustment> {
     // Retrieve the adjustment account or throw not found error.
-    const adjustmentAccount = await this.accountModel()
+    const _adjustmentAccount = await this.accountModel()
       .query()
       .findById(quickAdjustmentDTO.adjustmentAccountId)
       .throwIfNotFound();

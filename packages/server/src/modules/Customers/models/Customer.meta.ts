@@ -410,7 +410,7 @@ export const CustomerMeta = {
   },
 };
 
-function statusFieldFilterQuery(query, role) {
+function _statusFieldFilterQuery(query, role) {
   switch (role.value) {
     case 'overdue':
       query.modify('overdue');

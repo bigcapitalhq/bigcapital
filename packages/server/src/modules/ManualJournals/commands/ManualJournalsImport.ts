@@ -38,7 +38,10 @@ export class ManualJournalImportable extends Importable {
    * @param {ImportableContext} context
    * @returns {Record<string, any>}
    */
-  public transform(createDTO: Record<string, any>, context: ImportableContext) {
+  public transform(
+    createDTO: Record<string, any>,
+    _context: ImportableContext,
+  ) {
     return createDTO;
   }
 

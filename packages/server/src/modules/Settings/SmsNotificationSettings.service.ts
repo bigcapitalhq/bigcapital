@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SETTINGS_PROVIDER } from './Settings.types';
 import { SettingsStore } from './SettingsStore';
 import { ServiceError } from '@/modules/Items/ServiceError';
+import { SmsNotificationSettingResponseDto } from './dtos/SmsNotificationSettings.dto';
 
 export interface SmsNotificationMeta {
   key: string;
@@ -17,6 +18,10 @@ export interface SmsNotificationDto {
   isNotificationEnabled?: boolean;
   smsMessage?: string;
   messageText?: string;
+  // Deprecated snake_case aliases accepted for backwards compatibility.
+  is_notification_enabled?: boolean;
+  sms_message?: string;
+  message_text?: string;
 }
 
 @Injectable()
@@ -136,9 +141,11 @@ export class SmsNotificationSettingsService {
 
   /**
    * Retrieves all SMS notifications metadata with current settings values.
-   * @returns {Promise<Record<string, unknown>[]>}
+   * @returns {Promise<SmsNotificationSettingResponseDto[]>}
    */
-  public async getSmsNotifications(): Promise<Record<string, unknown>[]> {
+  public async getSmsNotifications(): Promise<
+    SmsNotificationSettingResponseDto[]
+  > {
     const store = await this.settingsStore();
 
     return this.notifications.map((notification) =>
@@ -149,11 +156,11 @@ export class SmsNotificationSettingsService {
   /**
    * Retrieves a single SMS notification metadata with current settings values.
    * @param {string} key - Notification key.
-   * @returns {Promise<Record<string, unknown>>}
+   * @returns {Promise<SmsNotificationSettingResponseDto>}
    */
   public async getSmsNotification(
     key: string,
-  ): Promise<Record<string, unknown>> {
+  ): Promise<SmsNotificationSettingResponseDto> {
     const store = await this.settingsStore();
     const notification = this.findNotification(key);
     return this.toResponse(store, notification);
@@ -168,17 +175,20 @@ export class SmsNotificationSettingsService {
   public async editSmsNotification(
     key: string,
     dto: SmsNotificationDto,
-  ): Promise<Record<string, unknown>> {
+  ): Promise<SmsNotificationSettingResponseDto> {
     const store = await this.settingsStore();
     const notification = this.findNotification(key);
 
-    // Inbound wire is snake_case, but the global SerializeInterceptor
-    // converts it to camelCase before it reaches the service.
-    const messageText = [dto.messageText, dto.smsMessage].find(
-      (value) => typeof value === 'string',
-    );
+    const messageText =
+      dto.messageText ?? dto.message_text ?? dto.smsMessage ?? dto.sms_message;
 
     if (typeof messageText === 'string') {
+      if (messageText.trim().length === 0) {
+        throw new ServiceError(
+          'SMS_MESSAGE_EMPTY',
+          'The SMS message text must not be empty.',
+        );
+      }
       this.validateSmsMessage(notification, messageText);
       store.set({
         group: 'sms-notification',
@@ -187,11 +197,14 @@ export class SmsNotificationSettingsService {
       });
     }
 
-    if (typeof dto.isNotificationEnabled === 'boolean') {
+    const isNotificationEnabled =
+      dto.isNotificationEnabled ?? dto.is_notification_enabled;
+
+    if (typeof isNotificationEnabled === 'boolean') {
       store.set({
         group: 'sms-notification',
         key: `sms-notification-enable.${key}`,
-        value: dto.isNotificationEnabled,
+        value: isNotificationEnabled,
       });
     }
 
@@ -221,10 +234,12 @@ export class SmsNotificationSettingsService {
   public async getSmsMessage(key: string): Promise<string> {
     const store = await this.settingsStore();
     const notification = this.findNotification(key);
-    return store.get(
+    const stored = store.get(
       { group: 'sms-notification', key: `sms-message.${key}` },
       notification.defaultSmsMessage,
     ) as string;
+
+    return this.orDefaultSmsMessage(stored, notification.defaultSmsMessage);
   }
 
   /**
@@ -271,8 +286,8 @@ export class SmsNotificationSettingsService {
   private toResponse(
     store: SettingsStore,
     notification: SmsNotificationMeta,
-  ): Record<string, unknown> {
-    const smsMessage = store.get(
+  ): SmsNotificationSettingResponseDto {
+    const storedSmsMessage = store.get(
       { group: 'sms-notification', key: `sms-message.${notification.key}` },
       notification.defaultSmsMessage,
     ) as string;
@@ -285,7 +300,6 @@ export class SmsNotificationSettingsService {
       false,
     ) as boolean;
 
-    // camelCase internally; SerializeInterceptor converts to snake_case on the wire.
     return {
       key: notification.key,
       notificationLabel: notification.notificationLabel,
@@ -294,8 +308,24 @@ export class SmsNotificationSettingsService {
       moduleFormatted: notification.moduleFormatted,
       defaultSmsMessage: notification.defaultSmsMessage,
       allowedVariables: notification.allowedVariables,
-      smsMessage,
+      smsMessage: this.orDefaultSmsMessage(
+        storedSmsMessage,
+        notification.defaultSmsMessage,
+      ),
       isNotificationEnabled: isEnabled,
     };
+  }
+
+  /**
+   * Falls back to the default SMS message when the stored template is blank.
+   * Self-heals templates that were previously persisted as empty strings.
+   */
+  private orDefaultSmsMessage(
+    stored: string,
+    defaultSmsMessage: string,
+  ): string {
+    return typeof stored === 'string' && stored.trim().length > 0
+      ? stored
+      : defaultSmsMessage;
   }
 }

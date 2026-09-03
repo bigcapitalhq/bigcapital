@@ -278,7 +278,7 @@ export async function notifySaleInvoiceBySms(
     .path(SALE_INVOICES_ROUTES.NOTIFY_BY_SMS)
     .method("post")
     .create();
-  await post({ id, notification_key: notificationKey ?? "details" } as never);
+  await post({ id, notificationKey: notificationKey ?? "details" } as never);
 }
 
 export async function fetchSaleInvoiceSmsDetails(
@@ -293,11 +293,11 @@ export async function fetchSaleInvoiceSmsDetails(
   const { data } = await (
     get as (params: {
       id: number;
-      notification_key?: "details" | "reminder";
+      notificationKey?: "details" | "reminder";
     }) => Promise<{ data: SaleInvoiceSmsDetailsResponse }>
   )({
     id,
-    notification_key: notificationKey,
+    notificationKey,
   });
   return data;
 }
