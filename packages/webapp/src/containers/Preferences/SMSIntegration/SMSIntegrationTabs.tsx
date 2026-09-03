@@ -5,10 +5,11 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { SMSIntegrationForm } from './SMSIntegrationForm';
 import { SMSMessagesDataTable } from './SMSMessagesDataTable';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import { useAppQueryString } from '@/hooks';
 import { compose } from '@/utils';
 
 import '@/style/pages/Preferences/SMSIntegration.scss';
@@ -25,6 +26,15 @@ function SMSIntegrationTabsInner({
   // #withDashboardActions
   changePreferencesPageTitle,
 }: SMSIntegrationTabsInnerProps) {
+  const [locationQuery, setLocationQuery] = useAppQueryString();
+
+  const activeTab =
+    locationQuery?.tab === 'overview' ? 'overview' : 'sms_messages';
+
+  const handleTabChange = (tabId: string | number) => {
+    setLocationQuery({ tab: String(tabId) });
+  };
+
   React.useEffect(() => {
     changePreferencesPageTitle(intl.get('sms_integration.label'));
   }, [changePreferencesPageTitle]);
@@ -32,7 +42,13 @@ function SMSIntegrationTabsInner({
   return (
     <SMSIntegrationCard>
       <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
-        <Tabs animate={true} defaultSelectedTabId={'sms_messages'}>
+        <Tabs
+          id="sms-integration-tabs"
+          animate={true}
+          selectedTabId={activeTab}
+          onChange={handleTabChange}
+          renderActiveTabPanelOnly={true}
+        >
           <Tab
             id="overview"
             title={intl.get('sms_integration.label.overview')}
