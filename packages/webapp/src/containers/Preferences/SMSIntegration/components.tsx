@@ -155,9 +155,16 @@ const NotificationDescription = styled.div`
 `;
 
 const MessageBox = styled.div`
+  --x-message-bg: #fbfbfb;
+  --x-message-border: #dcdcdc;
+
+  .bp4-dark & {
+    --x-message-bg: var(--color-dark-gray3);
+    --x-message-border: rgba(255, 255, 255, 0.2);
+  }
   padding: 10px;
-  background-color: #fbfbfb;
-  border: 1px dashed #dcdcdc;
+  background-color: var(--x-message-bg);
+  border: 1px dashed var(--x-message-border);
   font-size: 14px;
   line-height: 1.45;
 `;
