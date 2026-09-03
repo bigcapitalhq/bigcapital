@@ -14,9 +14,9 @@ export interface SmsNotificationMeta {
 }
 
 export interface SmsNotificationDto {
-  is_notification_enabled?: boolean;
-  sms_message?: string;
-  message_text?: string;
+  isNotificationEnabled?: boolean;
+  smsMessage?: string;
+  messageText?: string;
 }
 
 @Injectable()
@@ -172,8 +172,11 @@ export class SmsNotificationSettingsService {
     const store = await this.settingsStore();
     const notification = this.findNotification(key);
 
-    const messageText =
-      typeof dto.message_text === 'string' ? dto.message_text : dto.sms_message;
+    // Inbound wire is snake_case, but the global SerializeInterceptor
+    // converts it to camelCase before it reaches the service.
+    const messageText = [dto.messageText, dto.smsMessage].find(
+      (value) => typeof value === 'string',
+    );
 
     if (typeof messageText === 'string') {
       this.validateSmsMessage(notification, messageText);
@@ -184,11 +187,11 @@ export class SmsNotificationSettingsService {
       });
     }
 
-    if (typeof dto.is_notification_enabled === 'boolean') {
+    if (typeof dto.isNotificationEnabled === 'boolean') {
       store.set({
         group: 'sms-notification',
         key: `sms-notification-enable.${key}`,
-        value: dto.is_notification_enabled,
+        value: dto.isNotificationEnabled,
       });
     }
 
@@ -282,16 +285,17 @@ export class SmsNotificationSettingsService {
       false,
     ) as boolean;
 
+    // camelCase internally; SerializeInterceptor converts to snake_case on the wire.
     return {
       key: notification.key,
-      notification_label: notification.notificationLabel,
-      notification_description: notification.notificationDescription,
+      notificationLabel: notification.notificationLabel,
+      notificationDescription: notification.notificationDescription,
       module: notification.module,
-      module_formatted: notification.moduleFormatted,
-      default_sms_message: notification.defaultSmsMessage,
-      allowed_variables: notification.allowedVariables,
-      sms_message: smsMessage,
-      is_notification_enabled: isEnabled,
+      moduleFormatted: notification.moduleFormatted,
+      defaultSmsMessage: notification.defaultSmsMessage,
+      allowedVariables: notification.allowedVariables,
+      smsMessage,
+      isNotificationEnabled: isEnabled,
     };
   }
 }

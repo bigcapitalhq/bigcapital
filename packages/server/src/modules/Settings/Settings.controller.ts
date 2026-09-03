@@ -16,7 +16,10 @@ import {
 } from '@nestjs/common';
 import { SettingsApplicationService } from './SettingsApplication.service';
 import { ISettingsDTO, PreferencesAction } from './Settings.types';
-import { SmsNotificationSettingsService } from './SmsNotificationSettings.service';
+import {
+  SmsNotificationDto,
+  SmsNotificationSettingsService,
+} from './SmsNotificationSettings.service';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
@@ -75,9 +78,9 @@ export class SettingsController {
   @ApiOperation({ summary: 'Edits a single SMS notification setting.' })
   async editSmsNotification(
     @Body('key') key: string,
-    @Body() dto: Record<string, unknown>,
+    @Body() dto: SmsNotificationDto & { key: string },
   ) {
-    const { key: _key, ...values } = dto;
+    const values: SmsNotificationDto = dto;
     return this.smsNotificationSettingsService.editSmsNotification(key, values);
   }
 }

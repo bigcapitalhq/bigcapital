@@ -48,8 +48,8 @@ function SMSMessageFormInner({
     const form = {
       key: smsNotification.key,
       values: {
-        message_text: values.messageText,
-        is_notification_enabled: values.isNotificationEnabled,
+        messageText: values.messageText,
+        isNotificationEnabled: values.isNotificationEnabled,
       },
     };
     // Handle request response success.
