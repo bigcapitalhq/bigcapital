@@ -31,7 +31,7 @@ export class MetableStore implements IMetableStore {
    * @returns {IMetadata} - Metadata object.
    */
   find(query: string | IMetaQuery): IMetadata {
-    const { key, _value, ...extraColumns } = this.parseQuery(query);
+    const { key, value: _value, ...extraColumns } = this.parseQuery(query);
 
     return this.metadata.find((meta: IMetadata) => {
       const isSameKey = meta.key === key;

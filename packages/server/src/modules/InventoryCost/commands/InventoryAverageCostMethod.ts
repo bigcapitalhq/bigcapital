@@ -1,3 +1,4 @@
+import { pick } from 'lodash';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 
 export class InventoryAverageCostMethod {
