@@ -3918,9 +3918,10 @@
             }
           },
           {
-            "name": "notification_key",
-            "required": true,
+            "name": "notificationKey",
+            "required": false,
             "in": "query",
+            "description": "The SMS notification key. Defaults to `details`.",
             "schema": {
               "type": "string"
             }
@@ -15471,7 +15472,17 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The SMS notifications settings list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SmsNotificationSettingResponseDto"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -15488,6 +15499,7 @@
             "name": "key",
             "required": true,
             "in": "path",
+            "description": "The SMS notification key.",
             "schema": {
               "type": "string"
             }
@@ -15495,7 +15507,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The SMS notification setting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmsNotificationSettingResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -15508,9 +15527,26 @@
         "operationId": "SettingsController_editSmsNotification",
         "summary": "Edits a single SMS notification setting.",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditSmsNotificationBodyDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": ""
+            "description": "The SMS notification setting.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmsNotificationSettingResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -28343,7 +28379,7 @@
       "NotifySaleInvoiceBySmsDto": {
         "type": "object",
         "properties": {
-          "notification_key": {
+          "notificationKey": {
             "type": "string",
             "description": "The notification key to determine the SMS template. Defaults to `details`.",
             "enum": [
@@ -28351,6 +28387,15 @@
               "reminder"
             ],
             "default": "details"
+          },
+          "notification_key": {
+            "type": "string",
+            "description": "Deprecated alias of `notificationKey`.",
+            "enum": [
+              "details",
+              "reminder"
+            ],
+            "deprecated": true
           }
         }
       },
@@ -38065,6 +38110,128 @@
           "group"
         ]
       },
+      "SmsNotificationAllowedVariableDto": {
+        "type": "object",
+        "properties": {
+          "variable": {
+            "type": "string",
+            "description": "The template variable name without braces.",
+            "example": "CustomerName"
+          },
+          "description": {
+            "type": "string",
+            "description": "The template variable description.",
+            "example": "Customer name"
+          }
+        },
+        "required": [
+          "variable",
+          "description"
+        ]
+      },
+      "SmsNotificationSettingResponseDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The SMS notification key.",
+            "example": "sale-invoice-details"
+          },
+          "notificationLabel": {
+            "type": "string",
+            "description": "The notification label.",
+            "example": "Sale Invoice Details"
+          },
+          "notificationDescription": {
+            "type": "string",
+            "description": "The notification description.",
+            "example": "Sent to the customer when a sale invoice is created."
+          },
+          "module": {
+            "type": "string",
+            "description": "The module the notification belongs to.",
+            "example": "Sales Invoices"
+          },
+          "moduleFormatted": {
+            "type": "string",
+            "description": "The formatted module name.",
+            "example": "Invoice"
+          },
+          "defaultSmsMessage": {
+            "type": "string",
+            "description": "The default SMS message template.",
+            "example": "Hi {CustomerName}, invoice {InvoiceNumber} is due on {DueDate}. Amount due: {DueAmount}. - {CompanyName}"
+          },
+          "allowedVariables": {
+            "description": "The variables allowed in the SMS message template.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SmsNotificationAllowedVariableDto"
+            }
+          },
+          "smsMessage": {
+            "type": "string",
+            "description": "The current SMS message template.",
+            "example": "Hi {CustomerName}, invoice {InvoiceNumber} is due on {DueDate}. Amount due: {DueAmount}. - {CompanyName}"
+          },
+          "isNotificationEnabled": {
+            "type": "boolean",
+            "description": "Whether the auto SMS notification is enabled.",
+            "example": false
+          }
+        },
+        "required": [
+          "key",
+          "notificationLabel",
+          "notificationDescription",
+          "module",
+          "moduleFormatted",
+          "defaultSmsMessage",
+          "allowedVariables",
+          "smsMessage",
+          "isNotificationEnabled"
+        ]
+      },
+      "EditSmsNotificationBodyDto": {
+        "type": "object",
+        "properties": {
+          "messageText": {
+            "type": "string",
+            "description": "The SMS message template.",
+            "example": "Hi {CustomerName}, invoice {InvoiceNumber} is due. - {CompanyName}"
+          },
+          "smsMessage": {
+            "type": "string",
+            "description": "Deprecated alias of `messageText`.",
+            "deprecated": true
+          },
+          "isNotificationEnabled": {
+            "type": "boolean",
+            "description": "Whether the auto SMS notification is enabled.",
+            "example": true
+          },
+          "message_text": {
+            "type": "string",
+            "deprecated": true
+          },
+          "sms_message": {
+            "type": "string",
+            "deprecated": true
+          },
+          "is_notification_enabled": {
+            "type": "boolean",
+            "deprecated": true
+          },
+          "key": {
+            "type": "string",
+            "description": "The SMS notification key.",
+            "example": "sale-invoice-details"
+          }
+        },
+        "required": [
+          "key"
+        ]
+      },
       "BalanceSheetQueryResponseDto": {
         "type": "object",
         "properties": {
@@ -43733,6 +43900,11 @@
       "RolePermissionResponseDto": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "The permission ID"
+          },
           "ability": {
             "type": "string",
             "example": "read",
@@ -43750,6 +43922,7 @@
           }
         },
         "required": [
+          "id",
           "ability",
           "subject",
           "value"

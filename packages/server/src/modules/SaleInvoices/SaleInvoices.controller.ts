@@ -429,7 +429,8 @@ export class SaleInvoicesController {
     @Body() smsOptions: NotifySaleInvoiceBySmsDto,
   ) {
     return this.saleInvoiceApplication.notifySaleInvoiceBySms(id, {
-      notification_key: smsOptions?.notification_key,
+      notificationKey:
+        smsOptions?.notificationKey ?? smsOptions?.notification_key,
     });
   }
 
@@ -448,12 +449,18 @@ export class SaleInvoicesController {
     type: Number,
     description: 'The sale invoice id',
   })
+  @ApiQuery({
+    name: 'notificationKey',
+    required: false,
+    type: String,
+    description: 'The SMS notification key. Defaults to `details`.',
+  })
   getSaleInvoiceSmsDetails(
     @Param('id', ParseIntPipe) id: number,
-    @Query('notification_key') notificationKey?: string,
+    @Query('notificationKey') notificationKey?: string,
   ) {
     return this.saleInvoiceApplication.getSaleInvoiceSmsDetails(id, {
-      notification_key: notificationKey,
+      notificationKey,
     });
   }
 

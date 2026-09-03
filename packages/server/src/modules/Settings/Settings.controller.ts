@@ -1,6 +1,8 @@
 import {
+  ApiBody,
   ApiExtraModels,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -22,11 +24,20 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { SettingItemDto } from './dtos/SettingsResponse.dto';
+import {
+  EditSmsNotificationBodyDto,
+  SmsNotificationAllowedVariableDto,
+  SmsNotificationSettingResponseDto,
+} from './dtos/SmsNotificationSettings.dto';
 import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
 
 @Controller('settings')
 @ApiTags('Settings')
-@ApiExtraModels(SettingItemDto)
+@ApiExtraModels(
+  SettingItemDto,
+  SmsNotificationSettingResponseDto,
+  SmsNotificationAllowedVariableDto,
+)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class SettingsController {
   constructor(
@@ -58,14 +69,32 @@ export class SettingsController {
   @Get('sms-notifications')
   @UseGuards(SmsNotificationsFeatureGuard)
   @ApiOperation({ summary: 'Retrieves SMS notifications settings.' })
-  async getSmsNotifications() {
+  @ApiResponse({
+    status: 200,
+    description: 'The SMS notifications settings list.',
+    type: [SmsNotificationSettingResponseDto],
+  })
+  async getSmsNotifications(): Promise<SmsNotificationSettingResponseDto[]> {
     return this.smsNotificationSettingsService.getSmsNotifications();
   }
 
   @Get('sms-notification/:key')
   @UseGuards(SmsNotificationsFeatureGuard)
   @ApiOperation({ summary: 'Retrieves a single SMS notification setting.' })
-  async getSmsNotification(@Param('key') key: string) {
+  @ApiParam({
+    name: 'key',
+    required: true,
+    type: String,
+    description: 'The SMS notification key.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The SMS notification setting.',
+    type: SmsNotificationSettingResponseDto,
+  })
+  async getSmsNotification(
+    @Param('key') key: string,
+  ): Promise<SmsNotificationSettingResponseDto> {
     return this.smsNotificationSettingsService.getSmsNotification(key);
   }
 
@@ -73,11 +102,16 @@ export class SettingsController {
   @UseGuards(SmsNotificationsFeatureGuard)
   @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   @ApiOperation({ summary: 'Edits a single SMS notification setting.' })
+  @ApiBody({ type: EditSmsNotificationBodyDto })
+  @ApiResponse({
+    status: 201,
+    description: 'The SMS notification setting.',
+    type: SmsNotificationSettingResponseDto,
+  })
   async editSmsNotification(
-    @Body('key') key: string,
-    @Body() dto: Record<string, unknown>,
-  ) {
-    const { key: _key, ...values } = dto;
+    @Body() dto: EditSmsNotificationBodyDto,
+  ): Promise<SmsNotificationSettingResponseDto> {
+    const { key, ...values } = dto;
     return this.smsNotificationSettingsService.editSmsNotification(key, values);
   }
 }

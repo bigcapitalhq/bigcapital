@@ -115,14 +115,14 @@ export function useSMSIntegrationTableColumns({
       },
       {
         Header: intl.get('sms_messages.column.service'),
-        accessor: 'module_formatted',
+        accessor: 'moduleFormatted',
         className: 'service',
         width: '80',
         disableSortBy: true,
       },
       {
         Header: intl.get('sms_messages.column.message'),
-        accessor: 'sms_message',
+        accessor: 'smsMessage',
         Cell: SMSMessageCell,
         className: 'sms_message',
         width: '180',
@@ -130,7 +130,7 @@ export function useSMSIntegrationTableColumns({
       },
       {
         Header: intl.get('sms_messages.column.auto'),
-        accessor: 'is_notification_enabled',
+        accessor: 'isNotificationEnabled',
         Cell: SwitchFieldCell,
         className: 'is_notification_enabled',
         disableResizing: true,

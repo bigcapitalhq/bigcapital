@@ -32,7 +32,7 @@ function SMSMessagesDataTableInner({
   const toggleSmsNotification = (notificationKey: string, value: boolean) => {
     editSMSNotificationMutate({
       key: notificationKey,
-      values: { is_notification_enabled: value },
+      values: { isNotificationEnabled: value },
     }).then(() => {
       AppToaster.show({
         message: intl.get(

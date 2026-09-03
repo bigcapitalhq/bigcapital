@@ -15,5 +15,14 @@ export class NotifySaleInvoiceBySmsDto {
     enum: SaleInvoiceSmsNotificationKey,
     default: SaleInvoiceSmsNotificationKey.Details,
   })
+  notificationKey?: SaleInvoiceSmsNotificationKey;
+
+  @IsOptional()
+  @IsEnum(SaleInvoiceSmsNotificationKey)
+  @ApiPropertyOptional({
+    description: 'Deprecated alias of `notificationKey`.',
+    enum: SaleInvoiceSmsNotificationKey,
+    deprecated: true,
+  })
   notification_key?: SaleInvoiceSmsNotificationKey;
 }
