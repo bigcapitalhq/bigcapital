@@ -9,8 +9,11 @@ import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
  * @returns
  */
 function transfromResourceDataToSearch(resource: any) {
-  const selectItem = getUniversalSearchBind(resource._type, 'itemSelect');
+  const selectItem = getUniversalSearchBind(resource?._type, 'itemSelect');
 
+  if (!resource || !Array.isArray(resource.items)) {
+    return [];
+  }
   return resource.items.map((item: unknown) => ({
     ...(selectItem ? selectItem(item) : {}),
     _type: resource._type,
@@ -31,7 +34,7 @@ export function useUniversalSearch(
   const { data, ...restProps } = useResourceData(
     type,
     {
-      search_keyword: searchKeyword,
+      searchKeyword,
     },
     props,
   );
