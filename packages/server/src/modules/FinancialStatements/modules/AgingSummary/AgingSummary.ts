@@ -135,7 +135,7 @@ export abstract class AgingSummaryReport extends AgingReport {
     contactsAgingPeriods: any,
     index: number,
   ): number {
-    return this.contacts.reduce((acc, contact) => {
+    return this.contacts.reduce((acc, _contact) => {
       const totalPeriod = contactsAgingPeriods[index]
         ? contactsAgingPeriods[index].total
         : 0;

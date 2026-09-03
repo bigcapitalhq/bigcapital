@@ -39,9 +39,9 @@ export class ExpensesWriteGLSubscriber {
    */
   @OnEvent(events.expenses.onEdited)
   public async handleRewriteGLEntriesOnceEdited({
-    expenseId,
+    expenseId: _expenseId,
     expense,
-    authorizedUser,
+    authorizedUser: _authorizedUser,
     trx,
   }: IExpenseEventEditPayload) {
     // Cannot continue if the expense is not published.

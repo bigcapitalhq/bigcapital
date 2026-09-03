@@ -12,7 +12,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ServiceError } from '../Items/ServiceError';
 import { getAttachableModelsMap } from './decorators/InjectAttachable.decorator';
 import { DocumentModel } from './models/Document.model';
-import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
 
 @Injectable()
 export class LinkAttachment {

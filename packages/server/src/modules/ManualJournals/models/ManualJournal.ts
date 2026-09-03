@@ -1,4 +1,4 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import { ManualJournalEntry } from './ManualJournalEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';

@@ -34,7 +34,7 @@ export class ValidateBulkDeletePaymentReceivedService {
             trx,
           );
           deletableIds.push(paymentReceiveId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(paymentReceiveId);
         }
       }

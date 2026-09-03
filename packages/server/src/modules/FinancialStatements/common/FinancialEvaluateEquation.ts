@@ -34,7 +34,7 @@ export const FinancialEvaluateEquation = <
     public transformNodesToMap = (nodes: any[]) => {
       return this.mapAccNodesDeep(
         nodes,
-        (node, key, parentValue, acc, context) => {
+        (node, key, parentValue, acc, _context) => {
           if (node.id) {
             acc[`${node.id}`] = omit(node, ['children']);
           }

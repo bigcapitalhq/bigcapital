@@ -1,5 +1,4 @@
 import { camelCase, upperFirst } from 'lodash';
-import { Importable } from './Importable';
 import { getImportableService } from './decorators/Import.decorator';
 import { Injectable } from '@nestjs/common';
 import { ContextIdFactory, ModuleRef } from '@nestjs/core';

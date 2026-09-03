@@ -140,7 +140,7 @@ export const CashFlowStatementDatePeriods = <
      * @returns {ICashFlowDatePeriod[]}
      */
     public getNetIncomeDatePeriods = (
-      section: ICashFlowStatementNetIncomeSection,
+      _section: ICashFlowStatementNetIncomeSection,
     ): ICashFlowDatePeriod[] => {
       return this.dateRangeSet.map(this.getNetIncomeDatePeriod.bind(this));
     };
@@ -354,7 +354,7 @@ export const CashFlowStatementDatePeriods = <
     public getBeginningCashAccountDateRange = (
       node: ICashFlowStatementSection,
       fromDate: Date,
-      toDate: Date,
+      _toDate: Date,
     ) => {
       const cashToDate = this.beginningCashFrom(fromDate);
 

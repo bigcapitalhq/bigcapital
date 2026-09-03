@@ -1,7 +1,6 @@
 import * as XLSX from 'xlsx';
 import { sanitizeResourceName } from './_utils';
 import { Injectable } from '@nestjs/common';
-import { getImportableService } from './decorators/Import.decorator';
 import { ImportableRegistry } from './ImportableRegistry';
 
 @Injectable()

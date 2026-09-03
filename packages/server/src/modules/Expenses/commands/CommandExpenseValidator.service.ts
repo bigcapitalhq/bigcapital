@@ -84,8 +84,8 @@ export class CommandExpenseValidator {
    * @param {Knex.Transaction} trx
    */
   public async validateNoAssociatedLandedCost(
-    expenseId: number,
-    trx?: Knex.Transaction,
+    _expenseId: number,
+    _trx?: Knex.Transaction,
   ) {
     // const { BillLandedCost } = this.tenancy.models(tenantId);
     // const associatedLandedCosts = await BillLandedCost.query()

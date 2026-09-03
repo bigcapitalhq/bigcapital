@@ -61,11 +61,10 @@ export class InvoiceInventoryTransactions {
     trx?: Knex.Transaction,
   ): Promise<void> {
     // Delete the inventory transaction of the given sale invoice.
-    const { oldInventoryTransactions } =
-      await this.inventoryService.deleteInventoryTransactions(
-        saleInvoiceId,
-        'SaleInvoice',
-        trx,
-      );
+    await this.inventoryService.deleteInventoryTransactions(
+      saleInvoiceId,
+      'SaleInvoice',
+      trx,
+    );
   }
 }

@@ -491,7 +491,9 @@ export class Bill extends TenantBaseModel {
     } = require('../../BillLandedCosts/models/BillLandedCost');
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
-    const { TaxRateModel } = require('../../TaxRates/models/TaxRate.model');
+    const {
+      TaxRateModel: _TaxRateModel,
+    } = require('../../TaxRates/models/TaxRate.model');
     const {
       TaxRateTransaction,
     } = require('../../TaxRates/models/TaxRateTransaction.model');

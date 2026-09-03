@@ -29,7 +29,7 @@ export class ValidateBulkDeleteBillsService {
         try {
           await this.deleteBillService.deleteBill(billId, trx);
           deletableIds.push(billId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(billId);
         }
       }

@@ -7,7 +7,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { INumberFormatQuery } from '../../types/Report.types';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { parseBoolean } from '@/utils/parse-boolean';
 

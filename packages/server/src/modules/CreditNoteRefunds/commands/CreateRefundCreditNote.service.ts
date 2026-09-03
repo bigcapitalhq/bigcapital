@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import {
-  ICreditNoteRefundDTO,
   IRefundCreditNoteCreatedPayload,
   IRefundCreditNoteCreatingPayload,
 } from '../types/CreditNoteRefunds.types';
@@ -95,7 +94,7 @@ export class CreateRefundCreditNoteService {
     trx: Knex.Transaction,
   ): Promise<{ creditNote: CreditNote }> {
     // Retrieve the withdrawal account or throw not found service error.
-    const fromAccount = await this.accountModel()
+    const _fromAccount = await this.accountModel()
       .query(trx)
       .findById(newCreditNoteDTO.fromAccountId)
       .throwIfNotFound();

@@ -6,7 +6,6 @@ import {
   IGeneralLedgerSheetAccount,
   IGeneralLedgerSheetAccountBalance,
   IGeneralLedgerSheetAccountTransaction,
-  IGeneralLedgerNumberFormat,
 } from './GeneralLedger.types';
 import { GeneralLedgerRepository } from './GeneralLedgerRepository';
 import { calculateRunningBalance } from './_utils';

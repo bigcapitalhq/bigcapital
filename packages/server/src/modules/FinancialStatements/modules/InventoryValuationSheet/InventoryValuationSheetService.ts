@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import {
@@ -7,8 +7,6 @@ import {
 } from './InventoryValuationSheet.types';
 import { InventoryValuationMetaInjectable } from './InventoryValuationSheetMeta';
 import { getInventoryValuationDefaultQuery } from './_constants';
-import { InventoryCostLotTracker } from '@/modules/InventoryCost/models/InventoryCostLotTracker';
-import { Item } from '@/modules/Items/models/Item';
 import { InventoryValuationSheetRepository } from './InventoryValuationSheetRepository';
 import { InventoryValuationSheet } from './InventoryValuationSheet';
 

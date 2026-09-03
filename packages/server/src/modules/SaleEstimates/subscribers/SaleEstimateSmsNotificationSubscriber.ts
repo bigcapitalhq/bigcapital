@@ -25,7 +25,7 @@ export class SaleEstimateSmsNotificationSubscriber {
         await this.saleEstimateSmsNotification.notifyDetailsBySmsAfterCreation(
           saleEstimateId,
         );
-      } catch (error) {}
+      } catch (_error) {}
     });
   }
 }

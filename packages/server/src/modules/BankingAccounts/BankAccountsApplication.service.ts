@@ -4,7 +4,6 @@ import { RefreshBankAccountService } from './commands/RefreshBankAccount.service
 import { ResumeBankAccountFeedsService } from './commands/ResumeBankAccountFeeds.service';
 import { PauseBankAccountFeeds } from './commands/PauseBankAccountFeeds.service';
 import { GetBankAccountsService } from './queries/GetBankAccounts';
-import { ICashflowAccountsFilter } from './types/BankAccounts.types';
 import { GetBankAccountSummary } from './queries/GetBankAccountSummary';
 import { BankAccountsQueryDto } from './dtos/BankAccountsQuery.dto';
 

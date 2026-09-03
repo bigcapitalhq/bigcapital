@@ -33,7 +33,7 @@ const mapValuesDeepReverse = (nodes, callback, config?) => {
   const nodesPaths = paths(nodes, config);
   const reversedPaths = _.reverse(nodesPaths);
 
-  reversedPaths.forEach((pathStack: string[], i) => {
+  reversedPaths.forEach((pathStack: string[], _i) => {
     const node = _.get(clonedNodes, pathStack);
     const pathString = pathToString(pathStack);
     const children = _.get(

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { omit } from 'lodash';
 import { BranchesSettingsService } from '../BranchesSettings';
 

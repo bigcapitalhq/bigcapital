@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import * as R from 'ramda';
-import * as composeAsync from 'async/compose';
+
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   IRefundVendorCreditCreatedPayload,

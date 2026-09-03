@@ -27,7 +27,7 @@ export class DeleteCustomerLinkedCreditSubscriber {
       await this.deleteCustomerLinkedCredit.validateCustomerHasNoCreditTransaction(
         customerId,
       );
-    } catch (error) {
+    } catch (_error) {
       throw new ServiceError(ERRORS.CUSTOMER_HAS_TRANSACTIONS);
     }
   }

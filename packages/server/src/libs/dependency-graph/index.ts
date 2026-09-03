@@ -321,7 +321,7 @@ DepGraph.prototype = {
     }
   },
 
-  mapNodes(mapper) {},
+  mapNodes(_mapper) {},
 };
 
 /**

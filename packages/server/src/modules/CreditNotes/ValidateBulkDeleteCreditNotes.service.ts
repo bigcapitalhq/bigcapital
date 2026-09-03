@@ -32,7 +32,7 @@ export class ValidateBulkDeleteCreditNotesService {
             trx,
           );
           deletableIds.push(creditNoteId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(creditNoteId);
         }
       }

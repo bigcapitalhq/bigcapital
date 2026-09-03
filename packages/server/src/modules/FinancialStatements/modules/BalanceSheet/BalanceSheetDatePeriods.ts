@@ -2,7 +2,6 @@
 import * as R from 'ramda';
 import { sumBy } from 'lodash';
 import {
-  IBalanceSheetQuery,
   IBalanceSheetAccountNode,
   IBalanceSheetTotalPeriod,
   IBalanceSheetCommonNode,

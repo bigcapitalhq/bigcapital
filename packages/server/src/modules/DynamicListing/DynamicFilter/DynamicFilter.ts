@@ -62,7 +62,7 @@ export class DynamicFilter<R extends {}> extends DynamicFilterAbstractor {
    */
   public buildQuery = () => {
     const buildersCallbacks = this.dynamicFiltersBuildQuery();
-    const tableColumns = this.dynamicFilterTableColumns();
+    const _tableColumns = this.dynamicFilterTableColumns();
 
     return (builder) => {
       buildersCallbacks.forEach((builderCallback) => {

@@ -3,7 +3,6 @@ import {
   IWarehouseTransferTransferingPayload,
   IWarehouseTransferTransferredPayload,
 } from '@/modules/Warehouses/Warehouse.types';
-import { CommandWarehouseTransfer } from './CommandWarehouseTransfer';
 import { ERRORS } from '../constants';
 import { Inject, Injectable } from '@nestjs/common';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
@@ -99,7 +98,7 @@ export class TransferredWarehouseTransfer {
       } as IWarehouseTransferTransferingPayload);
 
       // Updates warehouse transfer graph on the storage.
-      const warehouseTransferUpdated = await this.warehouseTransferModel()
+      const _warehouseTransferUpdated = await this.warehouseTransferModel()
         .query(trx)
         .findById(warehouseTransferId)
         .patch({

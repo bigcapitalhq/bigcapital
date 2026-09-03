@@ -1,5 +1,3 @@
-const { knexSnakeCaseMappers } = require('objection');
-
 exports.up = function (knex) {
   return knex.schema.createTable('payment_receives', (table) => {
     table.increments();

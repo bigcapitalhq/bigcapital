@@ -1,5 +1,5 @@
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import { DocumentModel } from './Document.model';
 
 export class DocumentLinkModel extends TenantBaseModel {

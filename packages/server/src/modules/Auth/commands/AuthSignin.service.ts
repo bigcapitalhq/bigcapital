@@ -42,7 +42,7 @@ export class AuthSigninService {
         .query()
         .findOne({ email })
         .throwIfNotFound();
-    } catch (err) {
+    } catch (_err) {
       throw new InvalidEmailPasswordException(email);
     }
     if (!(await user.checkPassword(password))) {
@@ -58,8 +58,6 @@ export class AuthSigninService {
    */
   async verifyPayload(payload: JwtPayload): Promise<any> {
     let user: SystemUser;
-    let tenant: TenantModel | undefined;
-
     try {
       user = await this.systemUserModel
         .query()
@@ -67,7 +65,7 @@ export class AuthSigninService {
         .throwIfNotFound();
 
       this.clsService.set('userId', user.id);
-    } catch (error) {
+    } catch (_error) {
       throw new UserNotFoundException(String(payload.sub));
     }
     return payload;

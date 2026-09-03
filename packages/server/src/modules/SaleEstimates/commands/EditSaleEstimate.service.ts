@@ -2,7 +2,6 @@ import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
-  ISaleEstimateDTO,
   ISaleEstimateEditedPayload,
   ISaleEstimateEditingPayload,
 } from '../types/SaleEstimates.types';

@@ -4,11 +4,10 @@ import {
   Get,
   Body,
   Req,
-  Res,
   Next,
   HttpCode,
 } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { Request, NextFunction } from 'express';
 import {
   ApiOperation,
   ApiTags,
@@ -105,7 +104,7 @@ export class SubscriptionsController {
     status: 200,
     description: 'Subscription canceled successfully',
   })
-  async cancelSubscription(@Req() req: Request, @Next() next: NextFunction) {
+  async cancelSubscription(@Req() req: Request, @Next() _next: NextFunction) {
     const tenantId = req.headers['organization-id'] as string;
     await this.subscriptionApp.cancelSubscription(tenantId);
 
@@ -122,7 +121,7 @@ export class SubscriptionsController {
     status: 200,
     description: 'Subscription resumed successfully',
   })
-  async resumeSubscription(@Req() req: Request, @Next() next: NextFunction) {
+  async resumeSubscription(@Req() req: Request, @Next() _next: NextFunction) {
     const tenantId = req.headers['organization-id'] as string;
     await this.subscriptionApp.resumeSubscription(tenantId);
 

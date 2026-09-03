@@ -9,7 +9,7 @@ export abstract class Importable {
    * @param {any} createDTO
    * @param {Knex.Transaction} trx
    */
-  public importable(createDTO: any, trx?: Knex.Transaction) {
+  public importable(_createDTO: any, _trx?: Knex.Transaction) {
     throw new Error(
       'The `importable` function is not defined in service importable.',
     );
@@ -21,7 +21,10 @@ export abstract class Importable {
    * @param {ImportableContext} context
    * @returns {Record<string, any>}
    */
-  public transform(createDTO: Record<string, any>, context: ImportableContext) {
+  public transform(
+    createDTO: Record<string, any>,
+    _context: ImportableContext,
+  ) {
     return createDTO;
   }
 
@@ -57,7 +60,7 @@ export abstract class Importable {
    * @param {Record<string, any>}
    * @returns {Promise<boolean>} - True means passed and false failed.
    */
-  public async validateParams(params: Record<string, any>): Promise<void> {}
+  public async validateParams(_params: Record<string, any>): Promise<void> {}
 
   /**
    * Transformes the import params before storing them.
