@@ -71,7 +71,7 @@ function VendorCreditDeleteAlertInner({
       onConfirm={handleConfirmCreditDelete}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'vendor-credit-delete-alert'}>
         {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'vendor_credits.note.once_delete_this_vendor_credit_note'}

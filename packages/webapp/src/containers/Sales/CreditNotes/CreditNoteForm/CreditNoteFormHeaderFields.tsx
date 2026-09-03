@@ -84,7 +84,10 @@ export function CreditNoteFormHeaderFields() {
 
       {/* ----------- Reference ----------- */}
       <FFormGroup name={'referenceNo'} label={intl.get('reference_no')} inline>
-        <FInputGroup name={'referenceNo'} />
+        <FInputGroup
+          name={'referenceNo'}
+          data-testId="credit-note-reference-input"
+        />
       </FFormGroup>
     </Stack>
   );
@@ -127,6 +130,7 @@ function CreditNoteCustomersSelect() {
           fastField={true}
           shouldUpdate={customerNameFieldShouldUpdate}
           shouldUpdateDeps={{ items: customers }}
+          buttonProps={{ 'data-testId': 'credit-note-customer-select' }}
         />
         {values.customerId && (
           <CustomerButtonLink customerId={values.customerId}>
