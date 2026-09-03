@@ -35,8 +35,11 @@ import { useApiFetcher } from '../../useRequest';
 import { settingsKeys } from './query-keys';
 import type {
   AllSettings,
+  EditSmsNotificationValues,
   SaveSettingsBody,
   SettingsGroup,
+  SmsNotificationSetting,
+  SmsNotificationSettingsListResponse,
 } from '@bigcapital/sdk-ts';
 
 export function useSaveSettings(
@@ -242,7 +245,10 @@ export function useSettingsCashflowTransactions(props?: GroupQueryOptions) {
 }
 
 export function useSettingSMSNotifications(
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<
+    UseQueryOptions<SmsNotificationSettingsListResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
@@ -255,7 +261,10 @@ export function useSettingSMSNotifications(
 
 export function useSettingSMSNotification(
   key: string,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<
+    UseQueryOptions<SmsNotificationSetting, Error>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
@@ -269,13 +278,13 @@ export function useSettingSMSNotification(
 
 export function useSettingEditSMSNotification(
   props?: UseMutationOptions<
-    unknown,
+    SmsNotificationSetting,
     Error,
-    { key: string; values: Record<string, unknown> }
+    { key: string; values: EditSmsNotificationValues }
   >,
 ) {
   const queryClient = useQueryClient();
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,
@@ -284,11 +293,14 @@ export function useSettingEditSMSNotification(
       values,
     }: {
       key: string;
-      values: Record<string, unknown>;
+      values: EditSmsNotificationValues;
     }) => editSettingSMSNotification(fetcher, key, values),
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: settingsKeys.smsNotifications(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: settingsKeys.smsNotification(variables.key),
       });
     },
   });
