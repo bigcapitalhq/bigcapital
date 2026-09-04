@@ -135,6 +135,10 @@ services:
 
   database_migration:
     container_name: bigcapital-database-migration
+    # One-shot job: runs the migrations once and exits. Declared explicitly so
+    # orchestrators that default to "always"/"unless-stopped" don't restart it
+    # in a loop. This matches Docker Compose's own default.
+    restart: "no"
     build:
       context: ./
       dockerfile: docker/migration/Dockerfile
