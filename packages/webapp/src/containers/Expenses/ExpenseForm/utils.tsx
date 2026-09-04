@@ -89,7 +89,7 @@ export const transformErrors = (
 export const transformToEditForm = (
   expense: Expense,
   defaultValues: ExpenseFormValues,
-  linesNumber = 4,
+  linesNumber = MIN_LINES_NUMBER,
 ): ExpenseFormValues => {
   const expenseEntry = defaultValues.categories[0];
   const initialEntries = [
