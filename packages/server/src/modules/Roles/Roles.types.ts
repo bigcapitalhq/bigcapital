@@ -63,7 +63,7 @@ export enum AbilitySubject {
   Cashflow = 'Cashflow',
   ManualJournal = 'ManualJournal',
   Preferences = 'Preferences',
-  CreditNote = 'CreditNode',
+  CreditNote = 'CreditNote',
   VendorCredit = 'VendorCredit',
   Project = 'Project',
   TaxRate = 'TaxRate',
