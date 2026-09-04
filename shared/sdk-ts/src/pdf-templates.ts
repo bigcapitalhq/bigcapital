@@ -21,6 +21,7 @@ export interface EditPdfTemplateBody {
 }
 
 export interface PdfTemplateResponse {
+  id: number;
   templateName: string;
   companyLogoUri?: string | null;
   attributes: Record<string, unknown>;
