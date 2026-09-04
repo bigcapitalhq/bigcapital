@@ -45,9 +45,6 @@ export function ExpenseDrawerHeader() {
               {defaultTo(expense?.referenceNo, '-')}
             </DetailItem>
 
-            <DetailItem label={intl.get('description')}>
-              {defaultTo(expense?.description, '—')}
-            </DetailItem>
             <ExchangeRateDetailItem
               exchangeRate={expense?.exchangeRate}
               toCurrency={expense?.currencyCode}

@@ -43,4 +43,12 @@ const SMSMessagePreviewBase = styled.div`
   position: relative;
   width: 265px;
   margin: 0 auto;
+
+  svg {
+    fill: #adadad;
+  }
+
+  .bp4-dark & svg {
+    fill: var(--color-gray1);
+  }
 `;

@@ -22,14 +22,15 @@ export function DialogFooterActions({ alignment = 'right', children }) {
  * Dialog footer.
  * @returns {React.JSX}
  */
-export function DialogFooter({ ...props }) {
-  return <DialogFooterRoot {...props} />;
+export function DialogFooter({ children }) {
+  return (
+    <DialogFooterRoot className={Classes.DIALOG_FOOTER}>
+      {children}
+    </DialogFooterRoot>
+  );
 }
 
-const DialogFooterRoot = styled.div`
-  flex: 0 0 auto;
-  margin: 0 20px;
-`;
+const DialogFooterRoot = styled.div``;
 
 const DialogFooterActionsRoot = styled.div`
   ${(props) =>
