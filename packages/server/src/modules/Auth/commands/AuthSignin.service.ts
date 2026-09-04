@@ -92,6 +92,15 @@ export class AuthSigninService {
         user.tenantId,
       );
       if (tenant) return tenant;
+      // Fix (#811): `users.tenant_id` is an authoritative workspace assignment.
+      // Invited users get `tenant_id` set on accept but never receive an explicit
+      // `USER_TENANTS` membership row, so the membership-only checks above resolve
+      // to null and login fails with ORGANIZATION.INACTIVE despite a valid password.
+      // Trust the direct assignment when the tenant itself is active.
+      const assignedTenant = await this.tenantModel
+        .query()
+        .findById(user.tenantId);
+      if (assignedTenant?.isActive) return assignedTenant;
     }
     const memberships = await this.userTenantModel
       .query()
