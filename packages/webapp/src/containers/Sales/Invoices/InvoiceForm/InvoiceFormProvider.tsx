@@ -200,7 +200,7 @@ function InvoiceFormProvider({
     branches: branches ?? [],
     warehouses: warehouses ?? [],
     taxRates: taxRates ?? [],
-    brandingTemplates: brandingTemplates?.templates ?? [],
+    brandingTemplates: brandingTemplates ?? [],
 
     isInvoiceLoading,
     isItemsLoading,
