@@ -34,6 +34,7 @@ export function PreferencesEstimatesForm({
         <FTextArea
           medium={true}
           name={'customerNotes'}
+          data-testId={'preferences-estimates-customer-notes'}
           fastField={true}
           fill={true}
         />
@@ -48,6 +49,7 @@ export function PreferencesEstimatesForm({
         <FTextArea
           medium={true}
           name={'termsConditions'}
+          data-testId={'preferences-estimates-terms-conditions'}
           fastField={true}
           fill={true}
         />
