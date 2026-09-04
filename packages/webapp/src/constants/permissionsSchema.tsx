@@ -621,7 +621,7 @@ export const getPermissionsSchema = (): PermissionModule[] => [
             key: ReportsAction.READ_AR_AGING_SUMMARY,
           },
           {
-            label: intl.get('permissions.a_r_aging_summary_report'),
+            label: intl.get('permissions.a_p_aging_summary_report'),
             key: ReportsAction.READ_AP_AGING_SUMMARY,
           },
           {
