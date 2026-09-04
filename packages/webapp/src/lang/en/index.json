@@ -81,6 +81,7 @@
   "workspaces.workspace_inactivated_successfully": "Workspace has been inactivated",
   "workspaces.workspace_activated_successfully": "Workspace has been reactivated",
   "workspaces.default_workspace_set_successfully": "Default workspace has been set successfully",
+  "workspaces.workspace_ready_to_switch": "Your workspace is ready to switch to.",
   "workspaces.cannot_inactivate_workspace": "Cannot inactivate workspace",
   "workspaces.cannot_activate_workspace": "Cannot activate workspace",
   "total_income": "Total Income",

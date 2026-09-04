@@ -2,9 +2,10 @@ import { Intent } from '@blueprintjs/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { AppToaster } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { AccountsQueryKeys } from '@/hooks/query/accounts';
 import { CashflowAccountsQueryKeys } from '@/hooks/query/cashflow-accounts';
+import { workspacesKeys } from '@/ee/workspaces/hooks/query';
 
 export function DashboardSockets() {
   const socket = useRef<any>();
@@ -34,7 +35,11 @@ export function DashboardSockets() {
       client.invalidateQueries({ queryKey: ['GetSubscriptions'] });
     });
     socket.current.on('WORKSPACES_CHANGED', () => {
-      client.invalidateQueries({ queryKey: ['workspaces'] });
+      client.invalidateQueries({ queryKey: workspacesKeys.all() });
+      AppToaster.show({
+        message: <T id={'workspaces.workspace_ready_to_switch'} />,
+        intent: Intent.SUCCESS,
+      });
     });
     return () => {
       socket.current.removeAllListeners();
