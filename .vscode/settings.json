@@ -19,12 +19,12 @@
     ],
     "eslint.alwaysShowStatus": true,
     "eslint.workingDirectories": [
-        "./client",
-        "./server"
+        "./packages/webapp",
+        "./packages/server"
     ],
     "editor.useTabStops": false,
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "git.ignoreLimitWarning": true,
-    "god.tsconfig": "./server/tsconfig.json",
+    "god.tsconfig": "./packages/server/tsconfig.json",
 }
