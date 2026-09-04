@@ -24,19 +24,19 @@ export function NotifyViaSMSFormFloatingActions({ onCancel }) {
     <DialogFooter>
       <DialogFooterActions alignment={'left'}>
         <Button
+          disabled={isSubmitting}
+          onClick={handleCancelBtnClick}
+          style={{ minWidth: '75px' }}
+        >
+          <T id={'cancel'} />
+        </Button>
+        <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
           style={{ minWidth: '110px' }}
           type="submit"
         >
           <T id={'send_sms'} />
-        </Button>
-        <Button
-          disabled={isSubmitting}
-          onClick={handleCancelBtnClick}
-          style={{ minWidth: '75px' }}
-        >
-          <T id={'cancel'} />
         </Button>
       </DialogFooterActions>
     </DialogFooter>
