@@ -2,14 +2,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClsService } from 'nestjs-cls';
+import { Knex } from 'knex';
 import {
   IAcceptInviteEventPayload,
   ICheckInviteEventPayload,
 } from '../Users.types';
 import { SystemUser } from '@/modules/System/models/SystemUser';
+import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { events } from '@/common/events/events';
 import { hashPassword } from '@/modules/Auth/Auth.utils';
 import { TenantModel } from '@/modules/System/models/TenantModel';
+import { SystemKnexConnection } from '@/modules/System/SystemDB/SystemDB.constants';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../Users.constants';
 import { UserInvite } from '../models/InviteUser.model';
@@ -30,10 +33,15 @@ export class AcceptInviteUserService {
     @Inject(TenantModel.name)
     private readonly tenantModel: typeof TenantModel,
 
+    @Inject(UserTenant.name)
+    private readonly userTenantModel: typeof UserTenant,
+
     @Inject(UserInvite.name)
     private readonly userInviteModel: typeof UserInvite,
     private readonly eventEmitter: EventEmitter2,
     private readonly cls: ClsService,
+    @Inject(SystemKnexConnection)
+    private readonly systemKnex: Knex,
   ) {}
 
   /**
@@ -47,33 +55,39 @@ export class AcceptInviteUserService {
     token: string,
     inviteUserDTO: InviteUserDto,
   ): Promise<void> {
-    // Retrieve the invite token or throw not found error.
-    const inviteToken = await this.getInviteTokenOrThrowError(token);
-
     // Hash the given password.
     const hashedPassword = await hashPassword(inviteUserDTO.password);
 
-    // Retrieve the system user.
-    const _user = await this.systemUserModel
-      .query()
-      .findOne('email', inviteToken.email);
+    // Accept the invite under a single system-database transaction.
+    const { systemUser, tenant, inviteToken } =
+      await this.systemKnex.transaction(async (trx) => {
+        // Retrieve the invite token or throw not found error.
+        const inviteToken = await this.getInviteTokenOrThrowError(token, trx);
 
-    // Sets the invited user details after invite accepting.
-    const systemUser = await this.systemUserModel
-      .query()
-      .updateAndFetchById(inviteToken.userId, {
-        ...inviteUserDTO,
-        inviteAcceptedAt: moment().format('YYYY-MM-DD'),
-        password: hashedPassword,
+        // Sets the invited user details after invite accepting.
+        const systemUser = await this.systemUserModel
+          .query(trx)
+          .updateAndFetchById(inviteToken.userId, {
+            ...inviteUserDTO,
+            inviteAcceptedAt: moment().format('YYYY-MM-DD'),
+            password: hashedPassword,
+          });
+        // Clear invite token by the given user id.
+        await this.clearInviteTokensByUserId(inviteToken.userId, trx);
+
+        // Retrieve the tenant to get the organizationId for CLS.
+        const tenant = await this.tenantModel
+          .query(trx)
+          .findById(inviteToken.tenantId);
+
+        // Link the invited user to the tenant as a member so they can sign in.
+        await this.userTenantModel.query(trx).insert({
+          userId: systemUser.id,
+          tenantId: inviteToken.tenantId,
+          role: 'member',
+        });
+        return { systemUser, tenant, inviteToken };
       });
-    // Clear invite token by the given user id.
-    await this.clearInviteTokensByUserId(inviteToken.userId);
-
-    // Retrieve the tenant to get the organizationId for CLS.
-    const tenant = await this.tenantModel
-      .query()
-      .findById(inviteToken.tenantId);
-
     // Set CLS values for tenant context before triggering sync events.
     this.cls.set('userId', systemUser.id);
     this.cls.set('organizationId', tenant.organizationId);
@@ -126,9 +140,10 @@ export class AcceptInviteUserService {
    */
   private getInviteTokenOrThrowError = async (
     token: string,
+    trx?: Knex.Transaction,
   ): Promise<ModelObject<UserInvite>> => {
     const inviteToken = await this.userInviteModel
-      .query()
+      .query(trx)
       .modify('notExpired')
       .findOne('token', token);
 
@@ -156,7 +171,10 @@ export class AcceptInviteUserService {
    * Clear invite tokens of the given user id.
    * @param {number} userId - User id.
    */
-  private clearInviteTokensByUserId = async (userId: number) => {
-    await this.userInviteModel.query().where('user_id', userId).delete();
+  private clearInviteTokensByUserId = async (
+    userId: number,
+    trx?: Knex.Transaction,
+  ) => {
+    await this.userInviteModel.query(trx).where('user_id', userId).delete();
   };
 }
