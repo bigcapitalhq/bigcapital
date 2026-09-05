@@ -8,9 +8,9 @@ import { PreferencesCreditNotesForm } from './PreferencesCreditNotesForm';
 import { PreferencesCreditNotesFormSchema } from './PreferencesCreditNotesForm.schema';
 import { usePreferencesCreditNotesFormContext } from './PreferencesCreditNotesFormBoot';
 import type { CreditNotesPreferencesFormValues } from './types';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { useSaveSettings } from '@/hooks/query';
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 

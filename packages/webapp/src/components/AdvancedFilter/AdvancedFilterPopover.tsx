@@ -1,8 +1,8 @@
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
-import type { IPopoverProps } from '@blueprintjs/core';
 import React from 'react';
 import { AdvancedFilterDropdown } from './AdvancedFilterDropdown';
 import type { IAdvancedFilterDropdown } from './interfaces';
+import type { IPopoverProps } from '@blueprintjs/core';
 
 interface AdvancedFilterPopoverProps {
   popoverProps?: IPopoverProps;

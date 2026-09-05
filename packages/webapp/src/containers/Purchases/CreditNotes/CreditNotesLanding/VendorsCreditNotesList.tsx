@@ -1,5 +1,4 @@
 import React from 'react';
-
 import '@/style/pages/VendorsCreditNote/List.scss';
 import { VendorsCreditNoteActionsBar } from './VendorsCreditNoteActionsBar';
 import { VendorsCreditNoteDataTable } from './VendorsCreditNoteDataTable';

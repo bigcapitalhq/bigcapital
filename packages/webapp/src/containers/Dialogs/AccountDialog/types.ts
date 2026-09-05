@@ -1,3 +1,4 @@
+import { Currency } from '@bigcapital/sdk-ts';
 import type {
   useCreateAccount,
   useEditAccount,
@@ -5,7 +6,6 @@ import type {
   useAccountsTypes,
   useAccount,
 } from '@/hooks/query';
-import { Currency } from '@bigcapital/sdk-ts';
 
 export interface AccountFormValues {
   accountType: string;

@@ -5,9 +5,7 @@ import { castArray, includes } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
 import '@/style/pages/NotifyConactViaSMS/NotifyConactViaSMSDialog.scss';
-
 import { CreateNotifyViaSMSFormSchema } from './NotifyViaSMSForm.schema';
 import { NotifyViaSMSFormFields } from './NotifyViaSMSFormFields';
 import { NotifyViaSMSFormFloatingActions } from './NotifyViaSMSFormFloatingActions';

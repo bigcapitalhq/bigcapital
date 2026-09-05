@@ -1,6 +1,8 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
 import type { VendorCreditTableRow } from './components';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
@@ -10,8 +12,6 @@ import {
   useSettingsVendorCredits,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
-import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface VendorsCreditNoteListProviderProps {
   query?: any;

@@ -8,8 +8,8 @@ import { ReconcileCreditNoteFormContent } from './ReconcileCreditNoteFormContent
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import { transformErrors } from './utils';
 import type { ReconcileCreditNoteFormValues } from './types';
-import type { ApplyCreditNoteToInvoicesBody } from '@bigcapital/sdk-ts';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ApplyCreditNoteToInvoicesBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';

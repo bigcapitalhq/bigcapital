@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
-
 import '@/services/yup';
 import App from '@/components/App';
 import * as serviceWorker from '@/serviceWorker';

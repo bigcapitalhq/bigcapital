@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import styles from './ImportFileUploadStep.module.scss';
+import type { ReactNode } from 'react';
 
 interface ImportFileContainerProps {
   children: ReactNode;

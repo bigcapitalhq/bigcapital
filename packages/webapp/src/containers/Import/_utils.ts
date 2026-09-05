@@ -9,14 +9,14 @@ import {
   assign,
 } from 'lodash';
 import { useMemo } from 'react';
-import type { ImportMappingBody } from '@bigcapital/sdk-ts';
-import type { ImportFileMetaMap, ImportFileMappingFormValues } from './_types';
 import { useImportFileMapBootContext } from './ImportFileMappingBoot';
 import {
   EntityColumn,
   SheetColumn,
   useImportFileContext,
 } from './ImportFileProvider';
+import type { ImportFileMetaMap, ImportFileMappingFormValues } from './_types';
+import type { ImportMappingBody } from '@bigcapital/sdk-ts';
 import { deepdash, transformToForm } from '@/utils';
 
 export const getFieldKey = (key: string, group = ''): string => {

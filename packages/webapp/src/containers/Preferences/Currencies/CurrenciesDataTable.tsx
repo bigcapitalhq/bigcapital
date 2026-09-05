@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import type { Currency } from '@bigcapital/sdk-ts';
 import { ActionMenuList, useCurrenciesTableColumns } from './components';
 import { useCurrenciesContext } from './CurrenciesProvider';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { Currency } from '@bigcapital/sdk-ts';
 import { DataTable, TableSkeletonRows } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 type CurrenciesDataTableInnerProps = Pick<

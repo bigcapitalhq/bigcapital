@@ -1,9 +1,9 @@
 import { Field } from 'formik';
-import type { FieldProps } from 'formik';
-import type { ImportFileUploadValues } from './_types';
 import { useAlertsManager } from './AlertsManager';
 import styles from './ImportDropzone.module.css';
 import { ImportDropzoneField } from './ImportDropzoneFile';
+import type { ImportFileUploadValues } from './_types';
+import type { FieldProps } from 'formik';
 import { Box, Group, Stack } from '@/components';
 
 export function ImportDropzone() {

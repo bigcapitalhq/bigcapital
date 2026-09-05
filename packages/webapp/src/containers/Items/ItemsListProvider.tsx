@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import { transformItemsTableState } from './utils';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import {
   useResourceViews,
@@ -12,7 +13,6 @@ import {
   getFieldsFromResourceMeta,
   transformTableQueryToParams,
 } from '@/utils';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 type UseItemsResult = ReturnType<typeof useItems>;
 type UseResourceViewsResult = ReturnType<typeof useResourceViews>;

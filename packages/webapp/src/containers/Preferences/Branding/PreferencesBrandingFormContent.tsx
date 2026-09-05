@@ -1,7 +1,7 @@
 import { Button, Classes, Intent, Text } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import type { PreferencesBrandingFormValues } from './_types';
 import styles from './PreferencesBranding.module.scss';
+import type { PreferencesBrandingFormValues } from './_types';
 import { FFormGroup, Group, Stack } from '@/components';
 import { FColorInput } from '@/components/Forms/FColorInput';
 import { CompanyLogoUpload } from '@/containers/ElementCustomize/components/CompanyLogoUpload';

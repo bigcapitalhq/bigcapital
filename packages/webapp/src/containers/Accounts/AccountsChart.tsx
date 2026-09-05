@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-
 import '@/style/pages/Accounts/List.scss';
 import { AccountsActionsBar } from './AccountsActionsBar';
 import { AccountsChartDialogs } from './AccountsChartDialogs';

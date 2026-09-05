@@ -1,6 +1,6 @@
 import { Intent, Button, Callout } from '@blueprintjs/core';
-import { Formik, Form, FormikHelpers } from 'formik';
 import { flatten, unflatten } from 'flat';
+import { Formik, Form, FormikHelpers } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';

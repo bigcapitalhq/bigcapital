@@ -1,7 +1,7 @@
+import { CustomersListResponse } from '@bigcapital/sdk-ts';
 import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useCustomers } from '@/hooks/query';
-import { CustomersListResponse } from '@bigcapital/sdk-ts';
 
 type CustomersBalanceSummaryGeneralContextValue = {
   isCustomersLoading: boolean;

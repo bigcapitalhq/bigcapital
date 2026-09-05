@@ -1,7 +1,4 @@
 import React, { useEffect } from 'react';
-import { DashboardPageContent } from '@/components';
-
-import '@/style/pages/Bills/List.scss';
 import { BillsActionsBar } from './BillsActionsBar';
 import { BillsListDialogs } from './BillsListDialogs';
 import { BillsListDrawers } from './BillsListDrawers';
@@ -10,6 +7,8 @@ import { BillsTable } from './BillsTable';
 import { withBills } from './withBills';
 import { withBillsActions } from './withBillsActions';
 import type { WithBillsProps } from './withBills';
+import { DashboardPageContent } from '@/components';
+import '@/style/pages/Bills/List.scss';
 import { transformTableStateToQuery, compose } from '@/utils';
 
 interface WithBillsActionsProps {

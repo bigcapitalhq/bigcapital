@@ -3,9 +3,7 @@ import { Formik, FormikHelpers } from 'formik';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-
 import '@/style/pages/CashFlow/CashflowTransactionForm.scss';
-
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 import { CreateMoneyOutSchema } from './MoneyOutForm.schema';
 import { MoneyOutFormContent } from './MoneyOutFormContent';

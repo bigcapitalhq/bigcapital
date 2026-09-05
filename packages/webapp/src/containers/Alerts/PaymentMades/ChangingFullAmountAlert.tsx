@@ -1,8 +1,8 @@
 import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { compose, saveInvoke } from '@/utils';
 

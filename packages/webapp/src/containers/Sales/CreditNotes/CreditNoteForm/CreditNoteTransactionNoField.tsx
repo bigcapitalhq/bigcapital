@@ -2,6 +2,7 @@ import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import type { CreditNoteFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
@@ -14,7 +15,6 @@ import {
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
 interface CreditNoteTransactionNoFieldProps
   extends Pick<WithDialogActionsProps, 'openDialog'> {}

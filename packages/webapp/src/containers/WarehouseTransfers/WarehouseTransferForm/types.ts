@@ -1,4 +1,3 @@
-import type React from 'react';
 import type {
   CreateWarehouseTransferBody,
   EditWarehouseTransferBody,
@@ -6,6 +5,7 @@ import type {
   Warehouse,
   WarehouseTransfer,
 } from '@bigcapital/sdk-ts';
+import type React from 'react';
 
 export interface WarehouseTransferEntry {
   index: number;

@@ -2,18 +2,16 @@ import { Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import type { Branch } from '@bigcapital/sdk-ts';
-
-import '@/style/pages/Preferences/branchesList.scss';
-
 import { useBranchesContext } from './BranchesProvider';
 import { useBranchesTableColumns, ActionsMenu } from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { Branch } from '@bigcapital/sdk-ts';
 import { DataTable, Card, AppToaster, TableSkeletonRows } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { useMarkBranchAsPrimary } from '@/hooks/query';
+import '@/style/pages/Preferences/branchesList.scss';
 import { compose } from '@/utils';
 
 type BranchesDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &

@@ -1,11 +1,11 @@
 import { useFormikContext } from 'formik';
-import intl from 'react-intl-universal';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { PaymentReceiveHeaderFields } from './PaymentReceiveHeaderFields';
 import type { PaymentReceiveFormValues } from './utils';
 import { Group, PageFormBigNumber } from '@/components';
-import { formattedAmount } from '@/utils';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
+import { formattedAmount } from '@/utils';
 
 export function PaymentReceiveFormHeader() {
   const isDarkMode = useIsDarkMode();

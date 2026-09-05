@@ -6,9 +6,9 @@ import {
   Popover,
   PopoverInteractionKind,
 } from '@blueprintjs/core';
-import type { ImportFileFormat } from './_types';
 import { useImportFileContext } from './ImportFileProvider';
 import styles from './ImportSampleDownload.module.scss';
+import type { ImportFileFormat } from './_types';
 import { AppToaster, Box, Group } from '@/components';
 import { useSampleSheetImport } from '@/hooks/query/import';
 

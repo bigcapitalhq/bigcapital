@@ -17,10 +17,6 @@ function TableRowContextMenu({ children, row }: TableRowContextMenuProps) {
     table,
   } = useContext(TableContext);
 
-  if (!ContextMenuContent) {
-    return <>{children}</>;
-  }
-
   const [
     bindMenu,
     bindMenuItem,
@@ -35,6 +31,10 @@ function TableRowContextMenu({ children, row }: TableRowContextMenuProps) {
   const handleClose = useCallback(() => {
     setVisible(false);
   }, [setVisible]);
+
+  if (!ContextMenuContent) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="tr-context" {...bindTrigger}>

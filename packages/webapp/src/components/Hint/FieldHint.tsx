@@ -1,10 +1,9 @@
 // @ts-nocheck
 import { Position, Tooltip } from '@blueprintjs/core';
+import { Tooltip2Props } from '@blueprintjs/popover2';
 import React from 'react';
 import { Icon } from '../Icon';
-
 import '@/style/components/Hint.scss';
-import { Tooltip2Props } from '@blueprintjs/popover2';
 
 interface HintProps {
   content?: string | React.ReactNode;

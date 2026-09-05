@@ -1,6 +1,5 @@
 import { useEffect, lazy } from 'react';
 import styled from 'styled-components';
-
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 import { withBankingActions } from '../withBankingActions';
 import { AccountTransactionsUncategorizeFilter } from './AccountTransactionsUncategorizeFilter';

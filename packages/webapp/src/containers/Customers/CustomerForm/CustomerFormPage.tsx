@@ -5,8 +5,8 @@ import {
   useCustomerFormContext,
 } from './CustomerFormProvider';
 import type { CustomerFormValues } from './utils';
-import { Box, DashboardInsider } from '@/components';
 import type { FormikHelpers } from 'formik';
+import { Box, DashboardInsider } from '@/components';
 
 type CustomerFormSubmitPayload = {
   noRedirect?: boolean;

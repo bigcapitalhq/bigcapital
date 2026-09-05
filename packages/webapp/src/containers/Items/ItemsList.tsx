@@ -1,8 +1,4 @@
 import React from 'react';
-import { compose } from '@/utils';
-
-import '@/style/pages/Items/List.scss';
-
 import { ItemsActionsBar } from './ItemsActionsBar';
 import { ItemsDataTable } from './ItemsDataTable';
 import { ItemsListDialogs } from './ItemsListDialogs';
@@ -13,6 +9,8 @@ import { withItemsActions } from './withItemsActions';
 import type { WithItemsProps } from './withItems';
 import type { WithItemsActionsProps } from './withItemsActions';
 import { DashboardPageContent } from '@/components';
+import '@/style/pages/Items/List.scss';
+import { compose } from '@/utils';
 
 interface ItemsListInnerProps
   extends Pick<WithItemsProps, 'itemsTableState' | 'itemsTableStateChanged'>,

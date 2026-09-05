@@ -5,10 +5,6 @@ import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import type {
-  CreateWarehouseTransferBody,
-  EditWarehouseTransferBody,
-} from '@bigcapital/sdk-ts';
 import { WarehouseTransferObserveItemsCost } from './components';
 import {
   defaultWarehouseTransfer,
@@ -27,6 +23,10 @@ import { WarehouseTransferFormFooter } from './WarehouseTransferFormFooter';
 import { WarehouseTransferFormHeader } from './WarehouseTransferFormHeader';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import type { WarehouseTransferFormValues } from './types';
+import type {
+  CreateWarehouseTransferBody,
+  EditWarehouseTransferBody,
+} from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';

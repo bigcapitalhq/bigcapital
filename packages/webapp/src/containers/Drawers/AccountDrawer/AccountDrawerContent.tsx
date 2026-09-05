@@ -1,9 +1,8 @@
 import React from 'react';
-import { DrawerBody } from '@/components';
-
-import '@/style/components/Drawers/AccountDrawer.scss';
 import { AccountDrawerDetails } from './AccountDrawerDetails';
 import { AccountDrawerProvider } from './AccountDrawerProvider';
+import { DrawerBody } from '@/components';
+import '@/style/components/Drawers/AccountDrawer.scss';
 
 interface AccountDrawerContentProps {
   accountId: number | undefined;

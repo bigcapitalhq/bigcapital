@@ -1,8 +1,8 @@
 import * as R from 'ramda';
 import React from 'react';
+import type { WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-import type { WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 interface StripeIntegrationEditDrawerRootProps {
   name: string;

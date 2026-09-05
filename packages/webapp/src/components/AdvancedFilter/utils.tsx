@@ -1,9 +1,4 @@
 import intl from 'react-intl-universal';
-import {
-  defaultFastFieldShouldUpdate,
-  uniqueMultiProps,
-  checkRequiredProperties,
-} from '@/utils';
 import type {
   IResourceFieldType,
   IResourceField,
@@ -11,6 +6,11 @@ import type {
   IConditionTypeOption,
   IConditionOption,
 } from './interfaces';
+import {
+  defaultFastFieldShouldUpdate,
+  uniqueMultiProps,
+  checkRequiredProperties,
+} from '@/utils';
 
 // Conditions options.
 export const getConditionalsOptions = (): IConditionOption[] => [

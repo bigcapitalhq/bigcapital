@@ -3,8 +3,8 @@ import { useFormikContext } from 'formik';
 import { isEqual } from 'lodash';
 import intl from 'react-intl-universal';
 import { useSetPrimaryBranchToForm } from './utils';
-import type { VendorOpeningBalanceFormValues } from './utils';
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
+import type { VendorOpeningBalanceFormValues } from './utils';
 import {
   If,
   Icon,

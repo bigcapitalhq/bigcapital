@@ -2,6 +2,7 @@ import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { useEstimateFormContext } from './EstimateFormProvider';
 import type { EstimateFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
@@ -13,7 +14,6 @@ import {
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import { useEstimateFormContext } from './EstimateFormProvider';
 
 type EstimateNumberFieldProps = {
   openDialog: WithDialogActionsProps['openDialog'];

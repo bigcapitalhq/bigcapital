@@ -1,7 +1,5 @@
 import React from 'react';
-
 import '@/style/components/Drawers/ItemDrawer.scss';
-
 import { ItemDetail as ItemContentDetails } from './ItemContentDetails';
 import { ItemDetailDrawerProvider } from './ItemDetailDrawerProvider';
 import { DrawerBody } from '@/components';

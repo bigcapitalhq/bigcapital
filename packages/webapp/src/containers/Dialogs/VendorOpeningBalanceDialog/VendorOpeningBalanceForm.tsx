@@ -7,9 +7,9 @@ import { CreateVendorOpeningBalanceFormSchema } from './VendorOpeningBalanceForm
 import { VendorOpeningBalanceFormContent } from './VendorOpeningBalanceFormContent';
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
 import type { VendorOpeningBalanceFormValues } from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 const defaultInitialValues: VendorOpeningBalanceFormValues = {

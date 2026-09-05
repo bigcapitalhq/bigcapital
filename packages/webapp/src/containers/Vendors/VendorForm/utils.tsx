@@ -2,12 +2,12 @@ import { useFormikContext } from 'formik';
 import { first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
+import { useVendorFormContext } from './VendorFormProvider';
 import type {
   CreateVendorBody,
   EditVendorBody,
   Vendor,
 } from '@bigcapital/sdk-ts';
-import { useVendorFormContext } from './VendorFormProvider';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,

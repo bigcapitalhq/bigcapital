@@ -2,11 +2,11 @@ import { Intent } from '@blueprintjs/core';
 import React, { useCallback } from 'react';
 import { ActionsMenu, useUsersListColumns } from './components';
 import { useUsersListContext } from './UsersProvider';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { useResendInvitation } from '@/hooks/query';
 import { compose } from '@/utils';
 

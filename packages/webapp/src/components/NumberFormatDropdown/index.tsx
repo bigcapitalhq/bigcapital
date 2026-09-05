@@ -1,9 +1,7 @@
 // @ts-nocheck
 import { Formik, Form } from 'formik';
 import React, { useCallback } from 'react';
-
 import '@/style/pages/FinancialStatements/NumberFormatDropdown.scss';
-
 import NumberFormatFields from './NumberFormatFields';
 import NumberFormatFooter from './NumberFormatFooter';
 

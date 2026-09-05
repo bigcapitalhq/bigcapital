@@ -1,6 +1,6 @@
 import intl from 'react-intl-universal';
-import type { CustomerDetails } from '@/containers/Drawers/CustomerDetailsDrawer/CustomerDetailsDrawerProvider';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { CustomerDetails } from '@/containers/Drawers/CustomerDetailsDrawer/CustomerDetailsDrawerProvider';
 import { AbilitySubject, CustomerAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';

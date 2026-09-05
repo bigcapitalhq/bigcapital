@@ -4,13 +4,6 @@ import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import {
-  CreateVendorFormSchema,
-  EditVendorFormSchema,
-} from './VendorForm.schema';
-import { VendorFormContent } from './VendorFormContent';
-import { useVendorFormContext } from './VendorFormProvider';
-import type { VendorFormSubmitPayload } from './VendorFormProvider';
-import {
   VendorFormValues,
   defaultInitialValues,
   transformFormToCreateRequest,
@@ -18,6 +11,13 @@ import {
   transformValuesToForm,
   transformVendorToForm,
 } from './utils';
+import {
+  CreateVendorFormSchema,
+  EditVendorFormSchema,
+} from './VendorForm.schema';
+import { VendorFormContent } from './VendorFormContent';
+import { useVendorFormContext } from './VendorFormProvider';
+import type { VendorFormSubmitPayload } from './VendorFormProvider';
 import { AppToaster } from '@/components';
 import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';

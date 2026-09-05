@@ -2,6 +2,7 @@ import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React, { useRef } from 'react';
 import intl from 'react-intl-universal';
+import { useEstimateFormContext } from './EstimateFormProvider';
 import { useEstimateIsForeignCustomer, useEstimateSubtotal } from './utils';
 import type { EstimateFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -17,7 +18,6 @@ import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { compose } from '@/utils';
 import { transactionNumber } from '@/utils';
-import { useEstimateFormContext } from './EstimateFormProvider';
 
 type EstimateExchangeRateInputFieldRootProps = Omit<
   React.ComponentProps<typeof ExchangeRateInputGroup>,

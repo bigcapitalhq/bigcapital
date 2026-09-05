@@ -1,8 +1,8 @@
 import { Button, Intent } from '@blueprintjs/core';
 import React, { useCallback } from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { Icon, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 type CurrenciesActionsInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;

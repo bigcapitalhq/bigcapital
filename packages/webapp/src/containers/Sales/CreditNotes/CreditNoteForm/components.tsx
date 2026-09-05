@@ -1,5 +1,6 @@
 import { useFormikContext } from 'formik';
 import React, { useEffect, useRef } from 'react';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import {
   useCreditNoteIsForeignCustomer,
   useCreditNoteSubtotal,
@@ -16,7 +17,6 @@ import {
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber, compose } from '@/utils';
-import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
 type CreditNoteExchangeRateInputFieldRootProps = React.ComponentProps<
   typeof ExchangeRateInputGroup

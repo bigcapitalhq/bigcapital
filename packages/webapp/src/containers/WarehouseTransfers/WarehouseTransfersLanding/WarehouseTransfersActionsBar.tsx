@@ -11,6 +11,7 @@ import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvide
 import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
 import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import {
   Icon,
   FormattedMessage as T,
@@ -21,7 +22,6 @@ import {
   DashboardActionsBar,
 } from '@/components';
 import { useSaveSettings } from '@/hooks/query';
-import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface WarehouseTransfersActionsBarInnerProps

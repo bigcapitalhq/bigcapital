@@ -5,13 +5,13 @@ import moment from 'moment';
 import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { Expense } from '@bigcapital/sdk-ts';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import type {
   ExpenseEntry,
   ExpenseErrorResponse,
   ExpenseFormValues,
 } from './types';
+import type { Expense } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import {
   transformAttachmentsToForm,

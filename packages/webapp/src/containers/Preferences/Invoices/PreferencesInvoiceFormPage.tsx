@@ -5,12 +5,12 @@ import { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
 import { PreferencesInvoiceFormSchema } from './PreferencesInvoiceForm.schema';
-import { PreferencesInvoicesForm } from './PreferencesInvoicesForm';
 import { usePreferencesInvoiceFormContext } from './PreferencesInvoiceFormBoot';
+import { PreferencesInvoicesForm } from './PreferencesInvoicesForm';
 import type { InvoicesPreferencesFormValues } from './types';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { useSaveSettings } from '@/hooks/query';
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 

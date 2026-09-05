@@ -1,6 +1,8 @@
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import { transformVendorsStateToQuery } from './utils';
+import type { TableQuery } from '@/store/store.types';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import {
   useResourceMeta,
@@ -9,8 +11,6 @@ import {
   useSettingsVendors,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
-import type { TableQuery } from '@/store/store.types';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 type UseVendorsResult = ReturnType<typeof useVendors>;
 type UseResourceViewsResult = ReturnType<typeof useResourceViews>;

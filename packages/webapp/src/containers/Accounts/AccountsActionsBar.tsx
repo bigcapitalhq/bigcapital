@@ -16,6 +16,7 @@ import { withAccounts } from './withAccounts';
 import { withAccountsTableActions } from './withAccountsTableActions';
 import type { WithAccountsProps } from './withAccounts';
 import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
@@ -32,10 +33,9 @@ import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { useSaveSettings } from '@/hooks/query';
-import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface AccountsActionsBarInnerProps {

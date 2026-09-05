@@ -1,7 +1,7 @@
+import { VendorsListResponse } from '@bigcapital/sdk-ts';
 import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useVendors } from '@/hooks/query';
-import { VendorsListResponse } from '@bigcapital/sdk-ts';
 
 interface VendorsTransactionsGeneralPanelContextValue {
   vendors: VendorsListResponse['data'] | undefined;

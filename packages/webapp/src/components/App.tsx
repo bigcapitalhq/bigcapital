@@ -3,9 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createBrowserHistory, History } from 'history';
 import { lazy, Suspense } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
-
 import '@/style/App.scss';
-
 import { SplashScreen, DashboardThemeProvider } from '../components';
 import { queryConfig } from '../hooks/query/base';
 import AppIntlLoader from './AppIntlLoader';

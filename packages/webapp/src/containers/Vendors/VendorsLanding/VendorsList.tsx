@@ -1,14 +1,12 @@
 import { useEffect } from 'react';
-
 import '@/style/pages/Vendors/List.scss';
-
 import { VendorActionsBar } from './VendorActionsBar';
 import { VendorsListDialogs } from './VendorsListDialogs';
 import { VendorsListProvider } from './VendorsListProvider';
 import { VendorsTable } from './VendorsTable';
 import { withVendors } from './withVendors';
-import type { WithVendorsProps } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
+import type { WithVendorsProps } from './withVendors';
 import type { WithVendorsActionsProps } from './withVendorsActions';
 import { DashboardPageContent } from '@/components';
 import { compose } from '@/utils';

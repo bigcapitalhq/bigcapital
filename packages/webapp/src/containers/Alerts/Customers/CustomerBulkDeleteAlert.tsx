@@ -1,11 +1,11 @@
 import { Intent, Alert } from '@blueprintjs/core';
 import { useCallback, useState } from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
 import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
 import { transformErrors } from '@/containers/Customers/utils';
 import { compose } from '@/utils';
 

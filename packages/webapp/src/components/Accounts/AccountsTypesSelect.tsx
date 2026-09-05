@@ -1,7 +1,7 @@
-import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import type { ItemRendererProps } from '@blueprintjs/select';
+import React from 'react';
 import type { AccountTypesList } from '@bigcapital/sdk-ts';
+import type { ItemRendererProps } from '@blueprintjs/select';
 import { FSelect } from '@/components/Forms';
 
 type FSelectProps = React.ComponentProps<typeof FSelect>;
