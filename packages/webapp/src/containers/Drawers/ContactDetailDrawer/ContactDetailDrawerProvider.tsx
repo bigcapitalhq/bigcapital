@@ -23,7 +23,7 @@ function ContactDetailDrawerProvider({ contactId, ...props }) {
     <DashboardInsider loading={isContactLoading}>
       <DrawerHeaderContent
         name="contact-detail-drawer"
-        title={contact?.display_name}
+        title={contact?.displayName}
       />
 
       <ContactDetailDrawerContext.Provider value={provider} {...props} />

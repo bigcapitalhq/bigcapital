@@ -106,7 +106,7 @@ export function useOrgBaseCurrencyMutateAbilities(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,

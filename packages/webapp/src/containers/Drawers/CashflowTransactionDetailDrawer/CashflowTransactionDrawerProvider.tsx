@@ -34,7 +34,7 @@ function CashflowTransactionDrawerProvider({ referenceId, ...props }) {
       <DrawerHeaderContent
         name={DRAWERS.CASHFLOW_TRNASACTION_DETAILS}
         title={intl.get('cash_flow.drawer.label_transaction', {
-          number: cashflowTransaction?.transaction_number,
+          number: cashflowTransaction?.transactionNumber,
         })}
       />
       <CashflowTransactionDrawerContext.Provider value={provider} {...props} />

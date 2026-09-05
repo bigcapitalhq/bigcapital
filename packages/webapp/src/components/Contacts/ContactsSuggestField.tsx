@@ -24,7 +24,7 @@ export function ContactsSuggestField({
     () =>
       contactsList.map((contact) => ({
         ...contact,
-        _id: `${contact.id}_${contact.contact_type}`,
+        _id: `${contact.id}_${contact.contactType}`,
       })),
     [contactsList],
   );
@@ -51,8 +51,8 @@ export function ContactsSuggestField({
     (contact, { handleClick }) => (
       <MenuItem
         key={contact.id}
-        text={contact.display_name}
-        label={contact.formatted_contact_service}
+        text={contact.displayName}
+        label={contact.formattedContactService}
         onClick={handleClick}
       />
     ),
@@ -69,18 +69,18 @@ export function ContactsSuggestField({
 
   const handleInputValueRenderer = (inputValue) => {
     if (inputValue) {
-      return inputValue.display_name.toString();
+      return inputValue.displayName.toString();
     }
   };
 
   const filterContacts = (query, contact, index, exactMatch) => {
-    const normalizedTitle = contact.display_name.toLowerCase();
+    const normalizedTitle = contact.displayName.toLowerCase();
     const normalizedQuery = query.toLowerCase();
     if (exactMatch) {
       return normalizedTitle === normalizedQuery;
     } else {
       return (
-        `${contact.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >=
+        `${contact.displayName} ${normalizedTitle}`.indexOf(normalizedQuery) >=
         0
       );
     }

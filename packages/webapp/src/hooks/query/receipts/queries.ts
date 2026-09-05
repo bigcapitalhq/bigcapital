@@ -170,7 +170,7 @@ export function useReceipts(
   query?: GetSaleReceiptsQuery,
   props?: UseQueryOptions<SaleReceiptsListResponse, Error>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: receiptsKeys.list(query),
@@ -282,7 +282,7 @@ export function useGetSaleReceiptHtml(
   receiptId: number,
   options?: UseQueryOptions<SaleReceiptHtmlContentResponse, Error>,
 ): UseQueryResult<SaleReceiptHtmlContentResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,

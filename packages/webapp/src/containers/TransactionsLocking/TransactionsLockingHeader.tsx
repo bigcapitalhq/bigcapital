@@ -34,7 +34,7 @@ export function TransactionsLockingHeader() {
       transactionsLocking.modules,
     );
     const modulesStrong = activeModules.map((module) => (
-      <strong>{module.formatted_module}</strong>
+      <strong>{module.formattedModule}</strong>
     ));
     if (activeModules.length > 0) {
       AppToaster.show({

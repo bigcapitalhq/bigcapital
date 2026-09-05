@@ -159,7 +159,7 @@ function VendorActionsBarInner({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: vendorsFilterConditions,
-            defaultFieldKey: 'display_name',
+            defaultFieldKey: 'displayName',
             fields: fields,
             onFilterChange: (filterConditions: IFilterRole[]) => {
               setVendorsTableState({ filterRoles: filterConditions });

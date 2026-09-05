@@ -170,7 +170,7 @@ export function useDueBills(
   vendorId: number | null | undefined,
   props?: Omit<UseQueryOptions<unknown[]>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: billsKeys.due(vendorId),

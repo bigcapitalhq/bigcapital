@@ -27,7 +27,7 @@ export function TaxRatesSuggestInputCell({
         items={taxRates}
         valueAccessor={'id'}
         labelAccessor={'code'}
-        textAccessor={'name_formatted'}
+        textAccessor={'nameFormatted'}
         popoverProps={{ minimal: true, boundary: 'window' }}
         inputProps={{ placeholder: '' }}
         fill={true}

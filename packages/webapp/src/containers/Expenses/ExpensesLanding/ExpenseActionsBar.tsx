@@ -153,7 +153,7 @@ function ExpensesActionsBar({
           popoverProps={{ minimal: true }}
           advancedFilterProps={{
             conditions: expensesFilterConditions,
-            defaultFieldKey: 'reference_no',
+            defaultFieldKey: 'referenceNo',
             fields: fields,
             onFilterChange: (filterConditions: IFilterRole[]) => {
               setExpensesTableState({ filterRoles: filterConditions });

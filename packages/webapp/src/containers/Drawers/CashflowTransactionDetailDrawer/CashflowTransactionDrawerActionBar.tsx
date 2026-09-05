@@ -38,7 +38,7 @@ function CashflowTransactionDrawerActionBarInner({
   const handleUncategorizeBtnClick = () => {
     openAlert('cashflow-tranaction-uncategorize', {
       uncategorizedTransactionId:
-        cashflowTransaction.uncategorized_transaction_id,
+        cashflowTransaction.uncategorizedTransactionId,
     });
   };
 
@@ -53,7 +53,7 @@ function CashflowTransactionDrawerActionBarInner({
             intent={Intent.DANGER}
             onClick={handleDeleteCashflowTransaction}
           />
-          <If condition={cashflowTransaction.uncategorized_transaction_id}>
+          <If condition={cashflowTransaction.uncategorizedTransactionId}>
             <NavbarDivider />
             <Button
               text={'Uncategorize'}

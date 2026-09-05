@@ -11,7 +11,7 @@ export function useResourceViews(
   resourceSlug: string | null | undefined,
   props?: Omit<UseQueryOptions<ResourceViewResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: viewsKeys.view(resourceSlug),
@@ -24,7 +24,7 @@ export function useResourceMeta(
   resourceSlug: string | null | undefined,
   props?: Omit<UseQueryOptions<ResourceMetaResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: viewsKeys.meta(resourceSlug),

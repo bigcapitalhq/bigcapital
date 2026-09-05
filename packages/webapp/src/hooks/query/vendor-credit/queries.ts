@@ -251,7 +251,7 @@ export function useRefundVendorCredit(
   props?: Omit<UseQueryOptions<VendorCreditRefund[]>, 'queryKey' | 'queryFn'>,
   _requestProps?: unknown,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -320,7 +320,7 @@ export function useReconcileVendorCredits(
   >,
   _requestProps?: unknown,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,
@@ -349,7 +349,7 @@ export function useRefundVendorCreditTransaction(
   props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
   _requestProps?: unknown,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...props,

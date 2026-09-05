@@ -1,25 +1,25 @@
 // @ts-nocheck
 export const validateMoveToPartialLocking = (all) => {
-  return all.is_enabled;
+  return all.isEnabled;
 };
 
 export const validateMoveToFullLocking = (modules) => {
-  return modules.filter((module) => module.is_enabled);
+  return modules.filter((module) => module.isEnabled);
 };
 
 export const transformItem = (item) => {
   return {
-    name: item.formatted_module,
+    name: item.formattedModule,
     module: item.module,
     description: item.description,
-    isEnabled: item.is_enabled,
-    isPartialUnlock: item.is_partial_unlock,
-    lockToDate: item.formatted_lock_to_date,
-    lockReason: item.lock_reason,
-    unlockFromDate: item.formatted_unlock_from_date,
-    unlockToDate: item.formatted_unlock_to_date,
-    unlockReason: item.unlock_reason,
-    partialUnlockReason: item.partial_unlock_reason,
+    isEnabled: item.isEnabled,
+    isPartialUnlock: item.isPartialUnlock,
+    lockToDate: item.formattedLockToDate,
+    lockReason: item.lockReason,
+    unlockFromDate: item.formattedUnlockFromDate,
+    unlockToDate: item.formattedUnlockToDate,
+    unlockReason: item.unlockReason,
+    partialUnlockReason: item.partialUnlockReason,
   };
 };
 

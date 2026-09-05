@@ -41,7 +41,7 @@ export function ActionsMenu({
           onClick={safeCallback(onEdit, receipt)}
         />
 
-        <If condition={!receipt.is_closed}>
+        <If condition={!receipt.isClosed}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
             text={intl.get('mark_as_closed')}
@@ -94,7 +94,7 @@ export function ActionsCell(props) {
 export function StatusAccessor(receipt) {
   return (
     <Choose>
-      <Choose.When condition={receipt.is_closed}>
+      <Choose.When condition={receipt.isClosed}>
         <Tag intent={Intent.SUCCESS} round minimal>
           <T id={'closed'} />
         </Tag>
@@ -118,7 +118,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'receipt_date',
         Header: intl.get('receipt_date'),
-        accessor: 'formatted_receipt_date',
+        accessor: 'formattedReceiptDate',
         width: 140,
         className: 'receipt_date',
         clickable: true,
@@ -127,7 +127,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'customer',
         Header: intl.get('customer_name'),
-        accessor: 'customer.display_name',
+        accessor: 'customer.displayName',
         width: 140,
         className: 'customer_id',
         clickable: true,
@@ -136,7 +136,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'receipt_number',
         Header: intl.get('receipt_number'),
-        accessor: 'receipt_number',
+        accessor: 'receiptNumber',
         width: 140,
         className: 'receipt_number',
         clickable: true,
@@ -145,7 +145,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'deposit_account',
         Header: intl.get('deposit_account'),
-        accessor: 'deposit_account.name',
+        accessor: 'depositAccount.name',
         width: 140,
         className: 'deposit_account',
         clickable: true,
@@ -154,7 +154,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'amount',
         Header: intl.get('amount'),
-        accessor: (r) => <Money amount={r.amount} currency={r.currency_code} />,
+        accessor: (r) => <Money amount={r.amount} currency={r.currencyCode} />,
         width: 140,
         align: 'right',
         clickable: true,
@@ -173,7 +173,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'reference_no',
         Header: intl.get('reference_no'),
-        accessor: 'reference_no',
+        accessor: 'referenceNo',
         width: 140,
         className: 'reference_no',
         clickable: true,

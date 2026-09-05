@@ -147,7 +147,7 @@ function PaymentsReceivedActionsBarInner({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: paymentFilterConditions,
-            defaultFieldKey: 'payment_receive_no',
+            defaultFieldKey: 'paymentReceiveNo',
             fields: fields,
             onFilterChange: (filterConditions: any) => {
               setPaymentReceivesTableState({ filterRoles: filterConditions });

@@ -99,7 +99,7 @@ function WarehouseTransfersActionsBarInner({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: warehouseTransferFilterRoles,
-            defaultFieldKey: 'created_at',
+            defaultFieldKey: 'createdAt',
             fields: fields,
             onFilterChange: (filterConditions: IFilterRole[]) => {
               setWarehouseTransferTableState({

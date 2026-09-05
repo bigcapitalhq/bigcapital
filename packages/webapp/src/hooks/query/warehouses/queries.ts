@@ -84,7 +84,7 @@ export function useWarehouses(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<WarehousesListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: warehousesKeys.list(query),
@@ -97,7 +97,7 @@ export function useWarehouse(
   props?: Omit<UseQueryOptions<Warehouse>, 'queryKey' | 'queryFn'>,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   const idStr = id != null ? String(id) : '';
   return useQuery({
     ...props,

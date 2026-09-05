@@ -34,7 +34,7 @@ export function usePendingTransactionsTableColumns() {
       {
         id: 'reference_number',
         Header: 'Ref.#',
-        accessor: 'reference_no',
+        accessor: 'referenceNo',
         width: 50,
         clickable: true,
         textOverview: true,

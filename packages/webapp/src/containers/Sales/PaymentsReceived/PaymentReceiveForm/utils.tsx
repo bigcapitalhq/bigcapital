@@ -127,13 +127,13 @@ export const defaultRequestPayment: PaymentReceiveRequestBody = {
 
 type InvoiceRow = {
   id: string | number;
-  due_amount: string | number;
-  invoice_date: string;
+  dueAmount: string | number;
+  invoiceDate: string;
   balance: string | number;
-  currency_code: string;
-  invoice_no: string;
-  branch_id: string | number;
-  payment_amount?: string | number;
+  currencyCode: string;
+  invoiceNo: string;
+  branchId: string | number;
+  paymentAmount?: string | number;
 };
 
 export type PaymentReceiveEditEntry = {
@@ -169,14 +169,14 @@ export const transformInvoicesNewPageEntries = (
       index: index + 1,
       invoiceId: invoice.id,
       entryType: 'invoice',
-      dueAmount: invoice.due_amount,
-      date: invoice.invoice_date,
+      dueAmount: invoice.dueAmount,
+      date: invoice.invoiceDate,
       amount: invoice.balance,
-      currencyCode: invoice.currency_code,
+      currencyCode: invoice.currencyCode,
       paymentAmount: '',
-      invoiceNo: invoice.invoice_no,
-      branchId: invoice.branch_id,
-      totalPaymentAmount: invoice.payment_amount,
+      invoiceNo: invoice.invoiceNo,
+      branchId: invoice.branchId,
+      totalPaymentAmount: invoice.paymentAmount,
     })),
   ] as PaymentReceiveEntry[];
 

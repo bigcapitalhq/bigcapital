@@ -238,7 +238,7 @@ export function useDueInvoices(
   customerId: number | string | null | undefined,
   props?: UseQueryOptions<unknown, Error>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: invoicesKeys.due(customerId),

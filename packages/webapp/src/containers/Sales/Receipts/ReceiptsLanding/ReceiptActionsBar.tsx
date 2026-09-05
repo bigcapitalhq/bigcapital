@@ -161,7 +161,7 @@ function ReceiptActionsBarInner({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: receiptsFilterConditions,
-            defaultFieldKey: 'reference_no',
+            defaultFieldKey: 'referenceNo',
             fields: fields,
             onFilterChange: (filterConditions) => {
               setReceiptsTableState({ filterRoles: filterConditions });
