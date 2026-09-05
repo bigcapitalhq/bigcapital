@@ -1,6 +1,7 @@
 // @ts-nocheck
 import {
   Button,
+  InputGroup,
   Popover,
   Menu,
   MenuItem,
@@ -8,6 +9,8 @@ import {
   Position,
 } from '@blueprintjs/core';
 import styled, { x } from '@xstyled/emotion';
+import { useMemo, useState } from 'react';
+import intl from 'react-intl-universal';
 import { Icon, FormattedMessage as T } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -25,11 +28,16 @@ const POPOVER_MODIFIERS = {
   offset: { offset: '28, 8' },
 };
 
+// Minimum number of workspaces required to show the search input.
+const WORKSPACES_SEARCH_MIN_COUNT = 4;
+
 const DashboardOrganizationMenu = styled(Menu)`
   padding: 10px;
   min-width: 280px;
   max-height: 500px;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   .org-workspace-item {
     padding: 8px 10px;
@@ -69,6 +77,32 @@ const DashboardOrganizationMenu = styled(Menu)`
   }
 `;
 
+const DashboardSearchInput = styled(InputGroup)`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+
+  .bp4-input {
+    background: transparent;
+    color: #fff;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+  }
+
+  .bp4-icon {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  &:focus-within,
+  &.bp4-active {
+    border-color: rgba(17, 131, 218, 0.55);
+    box-shadow: 0 0 0 1px rgba(17, 131, 218, 0.35);
+  }
+`;
+
 /**
  * Sidebar head.
  */
@@ -82,6 +116,18 @@ function SidebarHeadJSX({
   const currentOrganizationId = useAuthOrganizationId();
   const switchOrganization = useSwitchOrganization();
   const { setLogout } = useAuthActions();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredWorkspaces = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return workspaces || [];
+
+    return (workspaces || []).filter((workspace) =>
+      (workspace.metadata?.name || workspace.organizationId)
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [workspaces, searchQuery]);
 
   const handleSwitchWorkspace = (organizationId) => {
     if (organizationId === currentOrganizationId) {
@@ -148,8 +194,22 @@ function SidebarHeadJSX({
               />
               <MenuDivider />
 
-              <x.div maxHeight="240px" overflowY="auto">
-                {workspaces?.map((workspace) => {
+              {(workspaces?.length ?? 0) > WORKSPACES_SEARCH_MIN_COUNT && (
+                <x.div mb={'10px'} px={'2px'} flexShrink={0}>
+                  <DashboardSearchInput
+                    leftIcon="search"
+                    placeholder={intl.get(
+                      'workspaces.search_workspaces_short',
+                      { fallback: 'Search...' },
+                    )}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </x.div>
+              )}
+
+              <x.div flex="1" minHeight={0} overflowY="auto">
+                {filteredWorkspaces?.map((workspace) => {
                   const name =
                     workspace.metadata?.name || workspace.organizationId;
                   const initials = firstLettersArgs(...(name || '').split(' '));
@@ -221,6 +281,19 @@ function SidebarHeadJSX({
                     />
                   );
                 })}
+
+                {searchQuery && filteredWorkspaces.length === 0 && (
+                  <x.div
+                    py={'12px'}
+                    px={'10px'}
+                    fontSize={13}
+                    color="rgba(255, 255, 255, 0.5)"
+                  >
+                    {intl.get('workspaces.no_workspaces_found', {
+                      fallback: 'No workspaces found.',
+                    })}
+                  </x.div>
+                )}
               </x.div>
 
               <MenuDivider />

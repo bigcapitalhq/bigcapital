@@ -45,6 +45,7 @@
   "workspaces.organizations_list_count_title": "{count} Workspaces",
   "workspaces.set_default_workspace": "Set default workspace",
   "workspaces.search_workspaces_short": "Search...",
+  "workspaces.no_workspaces_found": "No workspaces found.",
   "workspaces.column_workspace": "Workspace",
   "workspaces.column_assets": "Assets",
   "workspaces.column_liabilities": "Liabilities",
