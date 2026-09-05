@@ -468,17 +468,25 @@ const ModulePermissionsRoot = styled(Card)`
 `;
 
 const ModulePermissionHead = styled.div`
-  border-bottom: 1px solid #d9d9d9;
+  border-bottom: 1px solid var(--color-role-module-header-border, #d9d9d9);
   height: 38px;
   padding: 0 15px;
   display: flex;
+
+  .bp4-dark & {
+    --color-role-module-header-border: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 const ModulePermissionTitle = styled.div`
   font-weight: 500;
   font-size: 16px;
   line-height: 38px;
-  color: #878787;
+  color: var(--color-role-module-title, #878787);
+
+  .bp4-dark & {
+    --color-role-module-title: rgba(255, 255, 255, 0.6);
+  }
 `;
 
 const ModulePermissionBodyRoot = styled.div``;
@@ -496,7 +504,7 @@ const ModulePermissionsTableRoot = styled.table`
         min-width: 70px;
       }
       &.full {
-        background-color: #fcfcfc;
+        background-color: var(--color-role-table-header-bg, #fcfcfc);
       }
     }
   }
@@ -504,8 +512,8 @@ const ModulePermissionsTableRoot = styled.table`
   tbody {
     tr td,
     tr th {
-      border-bottom: 1px solid #eee;
-      border-left: 1px solid #eee;
+      border-bottom: 1px solid var(--color-role-table-border, #eee);
+      border-left: 1px solid var(--color-role-table-border, #eee);
       padding: 10px;
 
       &:first-of-type {
@@ -534,7 +542,7 @@ const ModulePermissionsTableRoot = styled.table`
       }
 
       &.full-access-permission {
-        background-color: #fcfcfc;
+        background-color: var(--color-role-table-header-bg, #fcfcfc);
       }
 
       &.full-access-permission,
@@ -542,6 +550,11 @@ const ModulePermissionsTableRoot = styled.table`
         text-align: center;
       }
     }
+  }
+
+  .bp4-dark & {
+    --color-role-table-header-bg: rgba(255, 255, 255, 0.05);
+    --color-role-table-border: rgba(255, 255, 255, 0.1);
   }
 `;
 
@@ -564,12 +577,12 @@ const ModulePermissionsVerticalTable = styled.table`
     tr td {
       padding: 10px;
       vertical-align: top;
-      border-left: 1px solid #eee;
-      border-bottom: 1px solid #eee;
+      border-left: 1px solid var(--color-role-table-border, #eee);
+      border-bottom: 1px solid var(--color-role-table-border, #eee);
 
       &.service-label {
         min-width: 250px;
-        color: #333;
+        color: var(--color-role-service-label, #333);
       }
 
       &:first-of-type {
@@ -584,5 +597,10 @@ const ModulePermissionsVerticalTable = styled.table`
     tr:last-of-type td {
       border-bottom: 0;
     }
+  }
+
+  .bp4-dark & {
+    --color-role-table-border: rgba(255, 255, 255, 0.1);
+    --color-role-service-label: rgba(255, 255, 255, 0.85);
   }
 `;
