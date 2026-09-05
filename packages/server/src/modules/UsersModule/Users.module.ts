@@ -12,6 +12,7 @@ import { SyncTenantUserDeleteSubscriber } from './subscribers/SyncTenantUserDele
 import { SyncTenantUserMutateSubscriber } from './subscribers/SyncTenantUserSaved.subscriber';
 import { SyncSystemSendInviteSubscriber } from './subscribers/SyncSystemSendInvite.subscriber';
 import { SyncTenantAcceptInviteSubscriber } from './subscribers/SyncTenantAcceptInvite.subscriber';
+import { CreateUserTenantOnAcceptInviteSubscriber } from './subscribers/CreateUserTenantOnAcceptInvite.subscriber';
 import { UsersController } from './Users.controller';
 import { UserInvite } from './models/InviteUser.model';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
@@ -58,6 +59,7 @@ const models = [InjectSystemModel(UserInvite)];
     SyncTenantUserMutateSubscriber,
     SyncSystemSendInviteSubscriber,
     SyncTenantAcceptInviteSubscriber,
+    CreateUserTenantOnAcceptInviteSubscriber,
     InviteSendMainNotificationSubscribe,
     SendInviteUserMailProcessor,
     SendInviteUsersMailMessage,
