@@ -1,3 +1,6 @@
+import type { CustomerFormValues } from '@/containers/Customers/CustomerForm/utils';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { FormikHelpers } from 'formik';
 import { Card, DrawerLoading } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { CustomerFormFormik } from '@/containers/Customers/CustomerForm/CustomerFormFormik';
@@ -6,10 +9,7 @@ import {
   useCustomerFormContext,
 } from '@/containers/Customers/CustomerForm/CustomerFormProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useAddAutofillRef } from '@/hooks/state/autofill';
-import type { CustomerFormValues } from '@/containers/Customers/CustomerForm/utils';
-import type { FormikHelpers } from 'formik';
 import { compose } from '@/utils';
 
 type CustomerFormSubmitPayload = { noRedirect?: boolean };

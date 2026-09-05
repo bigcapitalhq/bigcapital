@@ -39,9 +39,9 @@ import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshPaymentReceive } from '@/hooks/query/payment-receives';
-import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithPaymentsReceivedActionsProps {

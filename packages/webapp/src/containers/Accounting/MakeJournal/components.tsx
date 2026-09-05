@@ -3,8 +3,8 @@ import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import {
   ExchangeRateInputGroup,
   Icon,

@@ -16,6 +16,7 @@ import { withItems } from './withItems';
 import { withItemsActions } from './withItemsActions';
 import type { WithItemsProps } from './withItems';
 import type { WithItemsActionsProps } from './withItemsActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   DashboardActionsBar,
@@ -33,10 +34,9 @@ import {
 import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshItems } from '@/hooks/query/items';
-import { useSaveSettings } from '@/hooks/query';
-import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface ItemsActionsBarInnerProps

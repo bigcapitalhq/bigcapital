@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
 import '@/style/pages/Preferences/Users.scss';
 import { Card } from '@/components';
 import PreferencesSubContent from '@/components/Preferences/PreferencesSubContent';

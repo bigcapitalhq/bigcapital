@@ -7,8 +7,8 @@ import intl from 'react-intl-universal';
 import { AccountantSchema } from './Accountant.schema';
 import { AccountantForm } from './AccountantForm';
 import { useAccountantFormContext } from './AccountantFormProvider';
-import type { AccountantFormValues } from './types';
 import { transferObjectOptionsToArray } from './utils';
+import type { AccountantFormValues } from './types';
 import { AppToaster } from '@/components';
 import {
   withDashboardActions,

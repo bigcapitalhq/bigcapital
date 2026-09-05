@@ -5,6 +5,9 @@ import { WarehouseTransfersEmptyStatus } from './WarehouseTransfersEmptyStatus';
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
 import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTable,
   TableSkeletonRows,
@@ -14,12 +17,9 @@ import {
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 

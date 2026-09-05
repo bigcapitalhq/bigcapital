@@ -1,13 +1,13 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithVendorsActionsProps } from '@/containers/Vendors/VendorsLanding/withVendorsActions';
 import { FormattedMessage as T, AppToaster } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withVendorsActions } from '@/containers/Vendors/VendorsLanding/withVendorsActions';
-import type { WithVendorsActionsProps } from '@/containers/Vendors/VendorsLanding/withVendorsActions';
 import { useBulkDeleteVendors } from '@/hooks/query/vendors';
 import { compose } from '@/utils';
 

@@ -1,11 +1,11 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import type { ReactNode } from 'react';
-import type { ImportFileUploadValues } from './_types';
 import { ImportAlert, ImportStepperStep } from './_types';
 import { useAlertsManager } from './AlertsManager';
 import { EntityColumn, useImportFileContext } from './ImportFileProvider';
+import type { ImportFileUploadValues } from './_types';
+import type { ReactNode } from 'react';
 import { AppToaster } from '@/components';
 import { useImportFileUpload } from '@/hooks/query/import';
 

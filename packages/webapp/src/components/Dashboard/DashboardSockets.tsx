@@ -3,9 +3,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { AppToaster, FormattedMessage as T } from '@/components';
+import { workspacesKeys } from '@/ee/workspaces/hooks/query';
 import { AccountsQueryKeys } from '@/hooks/query/accounts';
 import { CashflowAccountsQueryKeys } from '@/hooks/query/cashflow-accounts';
-import { workspacesKeys } from '@/ee/workspaces/hooks/query';
 
 export function DashboardSockets() {
   const socket = useRef<any>();

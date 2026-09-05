@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
 import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FeatureCan, FormattedMessage as T, Icon } from '@/components';
 import { Features } from '@/constants';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 type BranchesActionsInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;

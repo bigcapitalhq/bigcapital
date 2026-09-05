@@ -3,6 +3,7 @@ import { useFormikContext } from 'formik';
 import moment from 'moment';
 import React, { useLayoutEffect } from 'react';
 import intl from 'react-intl-universal';
+import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
   useEstimateIsForeignCustomer,
   type PaymentReceiveEntry,
@@ -11,7 +12,6 @@ import {
 import { Money, ExchangeRateInputGroup, MoneyFieldCell } from '@/components';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
-import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 
 type InvoiceDateCellProps = {
   value?: string | number | Date | null;

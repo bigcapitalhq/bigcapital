@@ -36,9 +36,9 @@ import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useSaveSettings } from '@/hooks/query';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithEstimatesActionsProps {

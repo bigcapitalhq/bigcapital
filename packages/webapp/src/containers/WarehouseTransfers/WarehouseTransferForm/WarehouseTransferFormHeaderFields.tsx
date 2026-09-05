@@ -6,6 +6,7 @@ import intl from 'react-intl-universal';
 import { useObserveTransferNoSettings } from './utils';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import type { WarehouseTransferFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   FFormGroup,
   FormattedMessage as T,
@@ -16,7 +17,6 @@ import {
 import { FieldRequiredHint, Icon, InputPrependButton } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { useDateInputFormatter } from '@/hooks';
 import { compose } from '@/utils';
 

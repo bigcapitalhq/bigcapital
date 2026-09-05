@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import type { ManualJournalTableRow } from './components';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 import type {
   ManualJournalsListQuery,
   SettingsGroup,
@@ -13,7 +14,6 @@ import {
   useSettingsManualJournals,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
-import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
 
 // FIXME: SDK schema declares the manual-journals list endpoint as returning
 // `ManualJournalResponseDto[]`, but the server actually returns a paginated

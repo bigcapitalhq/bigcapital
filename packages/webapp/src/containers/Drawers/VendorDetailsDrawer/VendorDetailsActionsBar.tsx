@@ -20,6 +20,9 @@ import {
 } from '../../../constants/abilityOption';
 import { VendorMoreMenuItem } from './utils';
 import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   Can,
   Icon,
@@ -28,11 +31,8 @@ import {
 } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { safeCallback, compose } from '@/utils';
 
 interface VendorDetailsActionsBarProps

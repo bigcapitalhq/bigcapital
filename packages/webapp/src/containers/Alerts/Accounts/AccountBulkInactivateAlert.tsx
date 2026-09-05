@@ -1,11 +1,11 @@
 import { Alert, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAccountsTableActionsProps } from '@/containers/Accounts/withAccountsTableActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTableActions';
-import type { WithAccountsTableActionsProps } from '@/containers/Accounts/withAccountsTableActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useBulkInactivateAccounts } from '@/hooks/query/accounts';
 import { compose } from '@/utils';

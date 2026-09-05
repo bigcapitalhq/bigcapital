@@ -1,8 +1,8 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { useVendorsListContext } from './VendorsListProvider';
 import { withVendors } from './withVendors';
-import type { WithVendorsProps } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
+import type { WithVendorsProps } from './withVendors';
 import type { WithVendorsActionsProps } from './withVendorsActions';
 import { DashboardViewsTabs } from '@/components';
 import { transfromViewsToTabs, compose } from '@/utils';

@@ -6,9 +6,9 @@ import {
   PreferencesBrandingFormContent,
   PreferencesBrandingFormFooter,
 } from './PreferencesBrandingFormContent';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { Stack } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 
 type PreferencesBrandingPageRootProps = Pick<
   WithDashboardActionsProps,

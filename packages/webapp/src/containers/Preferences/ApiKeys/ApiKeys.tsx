@@ -3,10 +3,10 @@ import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { ApiKeysDataTable } from './ApiKeysDataTable';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { compose } from '@/utils';
 
 type ApiKeysPreferencesProps = Pick<

@@ -5,6 +5,7 @@ import type {
   ResourceViewResponse,
   GetAccountsQuery,
 } from '@bigcapital/sdk-ts';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import {
   useResourceViews,
@@ -13,7 +14,6 @@ import {
   useSettingsAccounts,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 type AccountsChartContextValue = {
   accounts: AccountsList | undefined;

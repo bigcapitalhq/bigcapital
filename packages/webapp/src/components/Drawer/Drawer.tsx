@@ -1,9 +1,7 @@
 // @ts-nocheck
 import { Position, Drawer } from '@blueprintjs/core';
 import React from 'react';
-
 import '@/style/components/Drawer.scss';
-
 import { DrawerProvider } from './DrawerProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { compose } from '@/utils';

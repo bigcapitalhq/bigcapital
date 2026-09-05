@@ -1,6 +1,8 @@
 import { isEmpty } from 'lodash';
-import type { ReactNode } from 'react';
 import React from 'react';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
+import type { ReactNode } from 'react';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
@@ -10,8 +12,6 @@ import {
   useSettingsWarehouseTransfers,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
-import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface WarehouseTransfersListProviderProps {
   query: Record<string, unknown> | null;

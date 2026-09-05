@@ -1,5 +1,4 @@
 import React from 'react';
-
 import '@/style/pages/PaymentReceive/List.scss';
 import { PaymentsReceivedActionsBar } from './PaymentsReceivedActionsBar';
 import { PaymentsReceivedListDialogs } from './PaymentsReceivedListDialogs';

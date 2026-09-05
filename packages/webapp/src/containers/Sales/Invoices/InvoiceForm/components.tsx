@@ -2,6 +2,7 @@ import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { useRef } from 'react';
 import intl from 'react-intl-universal';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { useInvoiceIsForeignCustomer, useInvoiceTotal } from './utils';
 import type { InvoiceFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -17,7 +18,6 @@ import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
 import { compose } from '@/utils';
-import { useInvoiceFormContext } from './InvoiceFormProvider';
 
 type InvoiceExchangeRateInputFieldRootProps = React.ComponentProps<
   typeof ExchangeRateInputGroup

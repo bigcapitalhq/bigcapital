@@ -2,16 +2,14 @@ import { Intent } from '@blueprintjs/core';
 import { Formik, FormikHelpers } from 'formik';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
-
 import '@/style/pages/Preferences/GeneralForm.scss';
-
 import { PreferencesGeneralSchema } from './General.schema';
 import { PreferencesGeneralForm as GeneralForm } from './GeneralForm';
 import { useGeneralFormContext } from './GeneralFormProvider';
 import type { GeneralFormValues } from './types';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { compose, transformToForm } from '@/utils';
 
 const defaultValues: GeneralFormValues = {

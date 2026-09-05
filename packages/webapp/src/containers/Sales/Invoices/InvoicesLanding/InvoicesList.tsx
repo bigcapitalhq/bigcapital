@@ -1,5 +1,4 @@
 import React from 'react';
-
 import '@/style/pages/SaleInvoice/List.scss';
 import { InvoicesActionsBar } from './InvoicesActionsBar';
 import { InvoicesDataTable } from './InvoicesDataTable';

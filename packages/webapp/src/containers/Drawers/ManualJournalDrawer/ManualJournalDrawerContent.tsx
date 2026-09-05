@@ -1,7 +1,5 @@
 import React from 'react';
-
 import '@/style/components/Drawers/ManualJournalDrawer.scss';
-
 import { ManualJournalDrawerDetails } from './ManualJournalDrawerDetails';
 import { ManualJournalDrawerProvider } from './ManualJournalDrawerProvider';
 import { DrawerBody } from '@/components';

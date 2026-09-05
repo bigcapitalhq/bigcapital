@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-
 import '@/style/pages/Expense/List.scss';
 import { ExpenseActionsBar } from './ExpenseActionsBar';
 import { ExpenseDataTable } from './ExpenseDataTable';

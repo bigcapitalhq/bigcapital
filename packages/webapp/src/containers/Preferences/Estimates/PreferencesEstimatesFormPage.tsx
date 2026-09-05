@@ -8,9 +8,9 @@ import { PreferencesEstimatesForm } from './PreferencesEstimatesForm';
 import { PreferencesEstimatesFormSchema } from './PreferencesEstimatesForm.schema';
 import { usePreferencesEstimatesFormContext } from './PreferencesEstimatesFormBoot';
 import type { EstimatesPreferencesFormValues } from './types';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { useSaveSettings } from '@/hooks/query';
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 

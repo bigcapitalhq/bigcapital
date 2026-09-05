@@ -29,9 +29,9 @@ import {
 import { BillAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
 import { useRefreshBills } from '@/hooks/query/bills';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface WithBillsActionsProps {

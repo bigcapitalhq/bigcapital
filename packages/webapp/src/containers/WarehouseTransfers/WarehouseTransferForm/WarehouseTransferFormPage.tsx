@@ -1,6 +1,5 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-
 import '@/style/pages/WarehouseTransfers/PageForm.scss';
 import { WarehouseTransferForm } from './WarehouseTransferForm';
 import { WarehouseTransferFormProvider } from './WarehouseTransferFormProvider';

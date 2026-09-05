@@ -3,11 +3,11 @@ import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { ActionsMenu, useApiKeysTableColumns } from './components';
 import type { ApiKey } from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { useApiKeys, useRevokeApiKey } from '@/hooks/query';
 import { compose } from '@/utils';
 

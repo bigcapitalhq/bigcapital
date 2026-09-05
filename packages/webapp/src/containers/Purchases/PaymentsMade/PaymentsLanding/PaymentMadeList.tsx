@@ -1,7 +1,5 @@
 import React from 'react';
-
 import '@/style/pages/PaymentMade/List.scss';
-
 import { PaymentMadeActionsBar } from './PaymentMadeActionsBar';
 import { PaymentMadeListDialogs } from './PaymentMadeListDialogs';
 import { PaymentMadeListDrawers } from './PaymentMadeListDrawers';

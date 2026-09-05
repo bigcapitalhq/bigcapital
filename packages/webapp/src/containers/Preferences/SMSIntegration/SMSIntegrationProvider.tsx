@@ -1,12 +1,12 @@
 import classNames from 'classnames';
 import React from 'react';
+import type { AllSettings } from '@bigcapital/sdk-ts';
 import { CLASSES } from '@/constants/classes';
 import {
   useSaveSettings,
   useSettings,
   useSettingSMSNotifications,
 } from '@/hooks/query';
-import type { AllSettings } from '@bigcapital/sdk-ts';
 
 export interface SMSNotification {
   key: string;

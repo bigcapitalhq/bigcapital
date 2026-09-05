@@ -2,6 +2,7 @@ import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 import type { InvoiceFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
@@ -15,7 +16,6 @@ import {
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import { useInvoiceFormContext } from './InvoiceFormProvider';
 
 type InvoiceFormInvoiceNumberFieldProps = {
   openDialog: WithDialogActionsProps['openDialog'];

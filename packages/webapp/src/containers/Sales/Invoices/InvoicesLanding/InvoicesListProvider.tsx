@@ -1,6 +1,8 @@
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import type { InvoiceTableRow } from './components';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
+import { IResourceField } from '@/components/AdvancedFilter/interfaces';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
@@ -9,8 +11,6 @@ import {
   useSettingsInvoices,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
-import { IResourceField } from '@/components/AdvancedFilter/interfaces';
-import type { SettingsGroup } from '@bigcapital/sdk-ts';
 
 interface InvoicesListProviderProps {
   query?: any;

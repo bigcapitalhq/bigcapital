@@ -1,14 +1,14 @@
 import { Intent } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers } from 'formik';
-import type {
-  ImportFileMappingFormProps,
-  ImportFileMappingFormValues,
-} from './_types';
 import {
   transformValueToReq,
   useImportFileMappingInitialValues,
 } from './_utils';
 import { useImportFileContext } from './ImportFileProvider';
+import type {
+  ImportFileMappingFormProps,
+  ImportFileMappingFormValues,
+} from './_types';
 import { AppToaster } from '@/components';
 import { useImportFileMapping } from '@/hooks/query/import';
 

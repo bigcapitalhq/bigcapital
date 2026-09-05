@@ -1,5 +1,4 @@
 import React from 'react';
-
 import '@/style/pages/InventoryAdjustments/List.scss';
 import { InventoryAdjustmentListDrawers } from './InventoryAdjustmentListDrawers';
 import { InventoryAdjustmentsProvider } from './InventoryAdjustmentsProvider';

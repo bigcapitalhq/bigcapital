@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-
 import '@/style/pages/CashFlow/CashFlowAccounts/List.scss';
 import { CashFlowAccountsActionsBar } from './CashFlowAccountsActionsBar';
 import { CashflowAccountsGrid } from './CashflowAccountsGrid';

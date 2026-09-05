@@ -1,13 +1,16 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import type { Customer } from '@bigcapital/sdk-ts';
 import { ActionsMenu, useCustomersTableColumns } from './components';
 import { CustomersEmptyStatus } from './CustomersEmptyStatus';
 import { useCustomersListContext } from './CustomersListProvider';
 import { withCustomers } from './withCustomers';
-import type { WithCustomersProps } from './withCustomers';
 import { withCustomersActions } from './withCustomersActions';
+import type { WithCustomersProps } from './withCustomers';
 import type { WithCustomersActionsProps } from './withCustomersActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { Customer } from '@bigcapital/sdk-ts';
 import {
   DataTable,
   DashboardContentTable,
@@ -17,11 +20,8 @@ import {
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 

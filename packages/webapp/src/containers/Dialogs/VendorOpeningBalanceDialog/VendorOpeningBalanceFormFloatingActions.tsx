@@ -2,9 +2,9 @@ import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { useVendorOpeningBalanceContext } from './VendorOpeningBalanceFormProvider';
 import type { VendorOpeningBalanceFormValues } from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**

@@ -12,9 +12,11 @@ import { useHistory } from 'react-router-dom';
 import { useBulkDeleteVendorsDialog } from './hooks/use-bulk-delete-vendors-dialog';
 import { useVendorsListContext } from './VendorsListProvider';
 import { withVendors } from './withVendors';
-import type { WithVendorsProps } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
+import type { WithVendorsProps } from './withVendors';
 import type { WithVendorsActionsProps } from './withVendorsActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   Can,
   Icon,
@@ -25,14 +27,12 @@ import {
   DashboardRowsHeightButton,
   AdvancedFilterPopover,
 } from '@/components';
-import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshVendors } from '@/hooks/query/vendors';
-import { useSaveSettings } from '@/hooks/query';
 import { compose } from '@/utils';
 
 interface VendorActionsBarInnerProps

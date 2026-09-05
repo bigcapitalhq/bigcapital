@@ -7,11 +7,11 @@ import '@/style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
 import { CreateUnLockingPartialTransactionsFormSchema } from './UnlockingPartialTransactionsForm.schema';
 import { PartialUnlockingTransactionsFormContent as UnlockingPartialTransactionsFormContent } from './UnlockingPartialTransactionsFormContent';
 import { useUnlockingPartialTransactionsContext } from './UnlockingPartialTransactionsFormProvider';
+import type { UnlockingPartialTransactionsFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import type { UnlockingPartialTransactionsFormValues } from './types';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 
 const defaultInitialValues: UnlockingPartialTransactionsFormValues = {
   module: '',

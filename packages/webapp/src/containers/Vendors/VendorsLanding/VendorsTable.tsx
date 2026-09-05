@@ -1,13 +1,16 @@
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import type { Vendor } from '@bigcapital/sdk-ts';
 import { ActionsMenu, useVendorsTableColumns } from './components';
 import { VendorsEmptyStatus } from './VendorsEmptyStatus';
 import { useVendorsListContext } from './VendorsListProvider';
 import { withVendors } from './withVendors';
-import type { WithVendorsProps } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
+import type { WithVendorsProps } from './withVendors';
 import type { WithVendorsActionsProps } from './withVendorsActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { Vendor } from '@bigcapital/sdk-ts';
 import {
   DataTable,
   TableSkeletonRows,
@@ -17,11 +20,8 @@ import {
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 

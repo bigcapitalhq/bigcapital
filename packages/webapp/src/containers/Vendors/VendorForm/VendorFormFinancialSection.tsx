@@ -6,9 +6,9 @@ import {
   useIsVendorForeignCurrency,
   useSetPrimaryBranchToForm,
 } from './utils';
-import type { VendorFormValues } from './utils';
 import { useVendorFormContext } from './VendorFormProvider';
 import { VendorFormSectionTitle } from './VendorFormSectionTitle';
+import type { VendorFormValues } from './utils';
 import {
   FFormGroup,
   FormattedMessage as T,

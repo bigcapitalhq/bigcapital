@@ -1,6 +1,6 @@
 import React from 'react';
-import { useItem } from '@/hooks/query';
 import type { WarehouseTransferEntryWarehouse } from './types';
+import { useItem } from '@/hooks/query';
 
 interface IItemMeta {
   rowIndex: number;

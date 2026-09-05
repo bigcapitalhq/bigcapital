@@ -2,6 +2,7 @@ import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 import type { ReceiptFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
@@ -14,7 +15,6 @@ import {
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import { useReceiptFormContext } from './ReceiptFormProvider';
 
 type ReceiptFormReceiptNumberFieldProps = {
   openDialog: WithDialogActionsProps['openDialog'];

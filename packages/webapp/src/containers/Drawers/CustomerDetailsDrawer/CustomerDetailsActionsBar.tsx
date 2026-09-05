@@ -15,6 +15,9 @@ import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
 import { CustomerMoreMenuItem } from './utils';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   Can,
   Icon,
@@ -31,11 +34,8 @@ import {
 } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { compose } from '@/utils';
 
 interface CustomerDetailsActionsBarProps

@@ -2,9 +2,9 @@ import { useFormikContext } from 'formik';
 import * as R from 'ramda';
 import { FSelect } from '../Forms';
 import { createNewItemFromQuery, createNewItemRenderer } from './utils';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { useCreateAutofillListener } from '@/hooks/state/autofill';
 
 interface CustomerSelectRootProps extends WithDrawerActionsProps {

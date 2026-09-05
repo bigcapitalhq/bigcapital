@@ -6,8 +6,8 @@ import {
   useIsVendorForeignCurrency,
   useSetPrimaryBranchToForm,
 } from './utils';
-import type { VendorFormValues } from './utils';
 import { useVendorFormContext } from './VendorFormProvider';
+import type { VendorFormValues } from './utils';
 import {
   FFormGroup,
   InputPrependText,

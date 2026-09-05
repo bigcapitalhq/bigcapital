@@ -1,9 +1,9 @@
-import type { ComponentType } from 'react';
 import { BankRulesAlerts } from '../Banking/Rules/RulesList/BankRulesAlerts';
 import { BrandingTemplatesAlerts } from '../BrandingTemplates/alerts/BrandingTemplatesAlerts';
 import { CashflowAlerts } from '../CashFlow/CashflowAlerts';
 import { PaymentMethodsAlerts } from '../Preferences/PaymentMethods/alerts/PaymentMethodsAlerts';
 import { SubscriptionAlerts } from '../Subscriptions/alerts/alerts';
+import type { ComponentType } from 'react';
 import { ManualJournalsAlerts } from '@/containers/Accounting/JournalsLanding/ManualJournalsAlerts';
 import { AccountsAlerts } from '@/containers/Accounts/AccountsAlerts';
 import { AccountTransactionsAlerts } from '@/containers/CashFlow/AccountTransactions/AccountTransactionsAlerts';

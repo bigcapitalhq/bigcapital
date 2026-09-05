@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-
 import '@/style/components/Drawers/CashflowTransactionDrawer.scss';
-
 import { CashflowTransactionDrawerDetails } from './CashflowTransactionDrawerDetails';
 import { CashflowTransactionDrawerProvider } from './CashflowTransactionDrawerProvider';
 import { DrawerBody } from '@/components';

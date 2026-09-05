@@ -2,7 +2,6 @@ import { Button, Intent, Position } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { useFormikContext } from 'formik';
 import { useCallback, useMemo } from 'react';
-import type { ImportFileMappingFormValues } from './_types';
 import { ImportStepperStep } from './_types';
 import { getFieldKey } from './_utils';
 import { ImportFileContainer } from './ImportFileContainer';
@@ -10,6 +9,7 @@ import styles from './ImportFileMapping.module.scss';
 import { ImportFileMapBootProvider } from './ImportFileMappingBoot';
 import { ImportFileMappingForm } from './ImportFileMappingForm';
 import { EntityColumnField, useImportFileContext } from './ImportFileProvider';
+import type { ImportFileMappingFormValues } from './_types';
 import { Box, FSelect, Group, Hint } from '@/components';
 import { CLASSES } from '@/constants';
 

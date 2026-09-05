@@ -15,6 +15,7 @@ import { withExpenses } from './withExpenses';
 import { withExpensesActions } from './withExpensesActions';
 import type { WithExpensesProps } from './withExpenses';
 import type { WithExpensesActionsProps } from './withExpensesActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   If,
@@ -30,10 +31,9 @@ import {
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
 import { useRefreshExpenses } from '@/hooks/query/expenses';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { useSaveSettings } from '@/hooks/query';
-import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import { compose } from '@/utils';
 
 interface ExpensesActionsBarInnerProps

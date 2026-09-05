@@ -1,6 +1,5 @@
 import { Spinner } from '@blueprintjs/core';
 import React, { Suspense, lazy } from 'react';
-
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 import { withBanking } from '../withBanking';
 import { AccountTransactionsActionsBar } from './AccountTransactionsActionsBar';

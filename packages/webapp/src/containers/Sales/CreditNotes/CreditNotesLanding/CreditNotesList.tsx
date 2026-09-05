@@ -1,5 +1,4 @@
 import React from 'react';
-
 import '@/style/pages/CreditNote/List.scss';
 import { CreditNotesActionsBar } from './CreditNotesActionsBar';
 import { CreditNotesDataTable } from './CreditNotesDataTable';

@@ -2,8 +2,8 @@ import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import type { MakeJournalFormValues } from './utils';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
+import type { MakeJournalFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   FieldHint,

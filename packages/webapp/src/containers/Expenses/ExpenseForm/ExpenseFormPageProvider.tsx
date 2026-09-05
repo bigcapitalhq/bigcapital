@@ -1,5 +1,6 @@
 import { css } from '@emotion/css';
 import React, { createContext } from 'react';
+import type { ExpenseFormContext } from './types';
 import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
@@ -14,7 +15,6 @@ import {
   useSettingsExpenses,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import type { ExpenseFormContext } from './types';
 
 const ExpenseFormPageContext = createContext<ExpenseFormContext | undefined>(
   undefined,

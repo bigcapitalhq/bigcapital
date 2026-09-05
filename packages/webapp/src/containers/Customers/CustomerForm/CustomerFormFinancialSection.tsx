@@ -4,12 +4,12 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
-import type { CustomerFormValues } from './utils';
 import {
   openingBalanceFieldShouldUpdate,
   useIsCustomerForeignCurrency,
   useSetPrimaryBranchToForm,
 } from './utils';
+import type { CustomerFormValues } from './utils';
 import {
   FFormGroup,
   FormattedMessage as T,

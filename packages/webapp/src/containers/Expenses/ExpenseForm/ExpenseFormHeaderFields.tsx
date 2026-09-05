@@ -2,7 +2,6 @@ import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
-import type { Theme } from '@xstyled/emotion';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
 import React from 'react';
@@ -11,6 +10,7 @@ import { ExpensesExchangeRateInputField } from './components';
 import { SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from './constants';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
+import type { Theme } from '@xstyled/emotion';
 import {
   CustomersSelect,
   FInputGroup,

@@ -11,9 +11,7 @@ import {
   useAsyncDebounce,
 } from 'react-table';
 import { useSticky } from 'react-table-sticky';
-
 import '@/style/components/DataTable/DataTable.scss';
-
 import TableCell from './TableCell';
 import TableContext from './TableContext';
 import TableFooter from './TableFooter';

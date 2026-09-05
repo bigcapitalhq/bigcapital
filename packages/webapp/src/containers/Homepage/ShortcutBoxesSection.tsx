@@ -1,10 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { For } from '@/components';
-
-import '@/style/pages/FinancialStatements/FinancialSheets.scss';
 import { useFilterShortcutBoxesSection } from './components';
+import { For } from '@/components';
+import '@/style/pages/FinancialStatements/FinancialSheets.scss';
 
 function ShortcutBox({ title, link, description }) {
   return (

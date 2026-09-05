@@ -8,9 +8,9 @@ import { PreferencesReceiptsForm } from './PreferencesReceiptsForm';
 import { PreferencesReceiptsFormSchema } from './PreferencesReceiptsForm.schema';
 import { usePreferencesReceiptsFormContext } from './PreferencesReceiptsFormBoot';
 import type { ReceiptsPreferencesFormValues } from './types';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { useSaveSettings } from '@/hooks/query';
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
 

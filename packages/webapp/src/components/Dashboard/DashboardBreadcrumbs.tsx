@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom';
 import {
   CollapsibleList,
   MenuItem,
@@ -7,6 +6,7 @@ import {
 } from '@blueprintjs/core';
 import React from 'react';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
+import { useHistory } from 'react-router-dom';
 
 export interface DashboardBreadcrumbItem {
   breadcrumb: React.ReactNode;
