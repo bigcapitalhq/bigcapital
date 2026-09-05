@@ -1,16 +1,12 @@
-import classNames from 'classnames';
 import { useFormikContext } from 'formik';
+import intl from 'react-intl-universal';
 import React from 'react';
 import { PaymentReceiveHeaderFields } from './PaymentReceiveHeaderFields';
 import type { PaymentReceiveFormValues } from './utils';
-import { Group, Money } from '@/components';
-import { FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/constants/classes';
+import { Group, PageFormBigNumber } from '@/components';
+import { formattedAmount } from '@/utils';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
-/**
- * Payment receive form header.
- */
 export function PaymentReceiveFormHeader() {
   const isDarkMode = useIsDarkMode();
 
@@ -36,24 +32,14 @@ export function PaymentReceiveFormHeader() {
   );
 }
 
-/**
- * Big total amount of payment receive form.
- */
 function PaymentReceiveFormBigTotal() {
   const {
     values: { currencyCode, amount },
   } = useFormikContext<PaymentReceiveFormValues>();
 
+  const formatted = formattedAmount(amount, currencyCode);
+
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
-      <div className="big-amount">
-        <span className="big-amount__label">
-          <T id={'amount_received'} />
-        </span>
-        <h1 className="big-amount__number">
-          <Money amount={amount} currency={currencyCode} />
-        </h1>
-      </div>
-    </div>
+    <PageFormBigNumber label={intl.get('amount_received')} amount={formatted} />
   );
 }
