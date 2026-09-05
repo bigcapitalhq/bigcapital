@@ -199,17 +199,9 @@ export const CreditNoteEmailTemplate: React.FC<
  * @param {EstimatePaymentEmailProps} props
  * @returns {Promise<string>}
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const renderCreditNoteEmailTemplate = (props: CreditNoteEmailProps) => {
   return render(<CreditNoteEmailTemplate {...props} />);
-};
-
-const containerStyle: CSSProperties = {
-  backgroundColor: '#fff',
-  width: '100%',
-  maxWidth: '500px',
-  padding: '35px 25px',
-  color: '#000',
-  borderRadius: '5px',
 };
 
 const headerInfoStyle: CSSProperties = {
