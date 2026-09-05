@@ -19,6 +19,7 @@ import { UsersApplication } from './Users.application';
 import { GetUsersService } from './queries/GetUsers.service';
 import { AcceptInviteUserService } from './commands/AcceptInviteUser.service';
 import { InviteTenantUserService } from './commands/InviteUser.service';
+import { UserTenant } from '../System/models/UserTenant.model';
 import { UsersInviteController } from './UsersInvite.controller';
 import { UsersInvitePublicController } from './UsersInvitePublic.controller';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
@@ -29,7 +30,7 @@ import { SendInviteUsersMailMessage } from './commands/SendInviteUsersMailMessag
 import { SendBulkInvitesService } from './commands/SendBulkInvites.service';
 import { MailModule } from '../Mail/Mail.module';
 
-const models = [InjectSystemModel(UserInvite)];
+const models = [InjectSystemModel(UserInvite), InjectSystemModel(UserTenant)];
 
 @Module({
   imports: [
