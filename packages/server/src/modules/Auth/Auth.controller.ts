@@ -30,6 +30,7 @@ import { AuthMetaResponseDto } from './dtos/AuthMetaResponse.dto';
 import { LocalAuthGuard } from './guards/Local.guard';
 import { AuthSigninService } from './commands/AuthSignin.service';
 import { SystemUser } from '../System/models/SystemUser';
+import { ERRORS } from './Auth.constants';
 
 @Controller('/auth')
 @ApiTags('Auth')
@@ -63,6 +64,7 @@ export class AuthController {
       throw new UnauthorizedException({
         message:
           'No active workspace available. Please contact the administrator.',
+        code: ERRORS.NO_ACTIVE_WORKSPACE,
         errors: [{ type: 'ORGANIZATION.INACTIVE' }],
       });
     }

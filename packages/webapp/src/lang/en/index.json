@@ -7,6 +7,7 @@
   "reset_password": "Reset Password",
   "the_user_has_been_suspended_from_admin": "The user has been suspended from the administrator.",
   "email_and_password_entered_did_not_match": "The email and password you entered did not match our records.",
+  "no_active_workspace_available": "No active workspace available. Please contact the administrator.",
   "field_name_must_be_number": "field_name_must_be_number",
   "name": "Name",
   "quick_find": "Quick find",

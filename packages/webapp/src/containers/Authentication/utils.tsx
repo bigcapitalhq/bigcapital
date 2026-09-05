@@ -6,6 +6,7 @@ export const LOGIN_ERRORS = {
   INVALID_DETAILS: 'INVALID_DETAILS',
   USER_INACTIVE: 'USER_INACTIVE',
   LOGIN_TO_MANY_ATTEMPTS: 'LOGIN_TO_MANY_ATTEMPTS',
+  NO_ACTIVE_WORKSPACE: 'NO_ACTIVE_WORKSPACE',
 };
 
 const REGISTER_ERRORS = {
@@ -130,6 +131,11 @@ export const transformLoginErrorsToToasts = (
   } else if (error.code === LOGIN_ERRORS.USER_INACTIVE) {
     toastBuilders.push({
       message: intl.get('the_user_has_been_suspended_from_admin'),
+      intent: Intent.DANGER,
+    });
+  } else if (error.code === LOGIN_ERRORS.NO_ACTIVE_WORKSPACE) {
+    toastBuilders.push({
+      message: intl.get('no_active_workspace_available'),
       intent: Intent.DANGER,
     });
   }
