@@ -5,6 +5,7 @@ import { filterFalsyChildren } from './utils';
 
 export type GroupPosition = 'right' | 'center' | 'left' | 'apart';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const GROUP_POSITIONS = {
   left: 'flex-start',
   center: 'center',
