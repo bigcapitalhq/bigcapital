@@ -18,7 +18,7 @@ export enum VendorCreditAction {
   Refund = 'Refund',
 }
 
-export interface IVendorCreditEntryDTO extends IItemEntryDTO {}
+export type IVendorCreditEntryDTO = IItemEntryDTO;
 
 export interface IVendorCreditsQueryDTO extends IDynamicListFilter {
   page: number;
@@ -47,8 +47,8 @@ export interface IVendorCreditDTO {
   adjustment?: number;
 }
 
-export interface IVendorCreditCreateDTO extends IVendorCreditDTO {}
-export interface IVendorCreditEditDTO extends IVendorCreditDTO {}
+export type IVendorCreditCreateDTO = IVendorCreditDTO;
+export type IVendorCreditEditDTO = IVendorCreditDTO;
 export interface IVendorCreditCreatePayload {
   refundVendorCreditDTO: IRefundVendorCreditDTO;
 }
@@ -67,8 +67,6 @@ export interface IVendorCreditCreatedPayload {
   vendorCreditCreateDTO: CreateVendorCreditDto;
   trx: Knex.Transaction;
 }
-
-export interface IVendorCreditCreatedPayload {}
 
 // Delete Vendor Credit Events
 // ------------------------

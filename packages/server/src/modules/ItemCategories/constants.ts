@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 export const ERRORS = {
   ITEM_CATEGORIES_NOT_FOUND: 'ITEM_CATEGORIES_NOT_FOUND',
   CATEGORY_NAME_EXISTS: 'CATEGORY_NAME_EXISTS',

@@ -2,7 +2,7 @@ import { get } from 'lodash';
 import { IColumnMapperMeta, ITableRow } from '../types/Table.types';
 
 export function tableMapper(
-  data: Object[],
+  data: object[],
   columns: IColumnMapperMeta[],
   rowsMeta,
 ): ITableRow[] {
@@ -16,7 +16,7 @@ function getAccessor(object, accessor) {
 }
 
 export function tableRowMapper(
-  object: Object,
+  object: object,
   columns: IColumnMapperMeta[],
   rowMeta,
 ): ITableRow {

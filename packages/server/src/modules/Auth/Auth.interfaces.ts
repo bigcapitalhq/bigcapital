@@ -9,10 +9,6 @@ export interface JwtPayload {
   exp: number;
 }
 
-export interface IAuthSignedInEventPayload {}
-export interface IAuthSigningInEventPayload {}
-export interface IAuthSignInPOJO {}
-
 export interface IAuthSigningInEventPayload {
   email: string;
   password: string;

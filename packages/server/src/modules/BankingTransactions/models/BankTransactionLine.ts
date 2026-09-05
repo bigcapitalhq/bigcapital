@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 import { Model } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 

@@ -30,8 +30,8 @@ exports.up = function (knex) {
     table.string('billing_address_email').nullable();
     table.string('billing_address_postcode').nullable();
     table.string('billing_address_phone').nullable();
-    table.string('billing_address_state').nullable(),
-      table.string('shipping_address_1').nullable();
+    table.string('billing_address_state').nullable();
+    table.string('shipping_address_1').nullable();
     table.string('shipping_address_2').nullable();
     table.string('shipping_address_city').nullable();
     table.string('shipping_address_country').nullable();

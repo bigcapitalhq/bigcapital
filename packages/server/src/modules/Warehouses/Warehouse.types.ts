@@ -147,7 +147,7 @@ export interface IItemWarehouseQuantityChange {
   amount: number;
 }
 
-export interface IWarehousesActivatePayload {}
+export type IWarehousesActivatePayload = object;
 export interface IWarehousesActivatedPayload {
   primaryWarehouse: Warehouse;
 }

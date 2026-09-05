@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 import { castArray } from 'lodash';
 import { Model } from 'objection';
 import DependencyGraph from '@/libs/dependency-graph';

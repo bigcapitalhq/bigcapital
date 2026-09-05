@@ -49,7 +49,9 @@ export class GetBillsService {
         dynamicFilter.buildQuery()(builder);
 
         // Filter query.
-        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
+        if (_filterDto?.filterQuery) {
+          _filterDto?.filterQuery(builder);
+        }
       })
       .pagination(filter.page - 1, filter.pageSize);
 

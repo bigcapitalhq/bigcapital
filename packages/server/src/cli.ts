@@ -1,4 +1,4 @@
-/// <reference path="./common/types/Objection.d.ts" />
+import './common/types/Objection';
 import { CommandFactory } from 'nest-commander';
 import { CLIModule } from './modules/CLI/CLI.module';
 

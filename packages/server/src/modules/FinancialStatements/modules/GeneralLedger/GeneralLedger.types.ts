@@ -15,7 +15,7 @@ export interface IGeneralLedgerSheetQuery {
   branchesIds?: number[];
 }
 
-export interface IGeneralLedgerNumberFormat extends INumberFormatQuery {}
+export type IGeneralLedgerNumberFormat = INumberFormatQuery;
 
 export interface IGeneralLedgerSheetAccountTransaction {
   id: number;

@@ -92,4 +92,4 @@ export interface CreateAccountParams {
   ignoreAccountCode?: boolean;
 }
 
-export interface IGetAccountTransactionPOJO {}
+export type IGetAccountTransactionPOJO = object;

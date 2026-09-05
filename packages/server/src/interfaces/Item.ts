@@ -98,8 +98,8 @@ export class IItemDTO {
   categoryId: number;
 }
 
-export interface IItemCreateDTO extends IItemDTO {}
-export interface IItemEditDTO extends IItemDTO {}
+export type IItemCreateDTO = IItemDTO;
+export type IItemEditDTO = IItemDTO;
 
 // export interface IItemsService {
 //   getItem(tenantId: number, itemId: number): Promise<IItem>;

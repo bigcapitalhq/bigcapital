@@ -12,7 +12,7 @@ export interface IAPAgingSummaryVendor extends IAgingSummaryContact {
   vendorName: string;
 }
 
-export interface IAPAgingSummaryTotal extends IAgingSummaryTotal {}
+export type IAPAgingSummaryTotal = IAgingSummaryTotal;
 
 export interface IAPAgingSummaryData extends IAgingSummaryData {
   vendors: IAPAgingSummaryVendor[];

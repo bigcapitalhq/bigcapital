@@ -41,4 +41,4 @@ export interface IRefundVendorCreditCreatedPayload {
   trx: Knex.Transaction;
 }
 
-export interface IRefundVendorCreditPOJO {}
+export type IRefundVendorCreditPOJO = object;

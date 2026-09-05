@@ -13,8 +13,8 @@ export class MetableDBStore
   KEY_COLUMN: string;
   VALUE_COLUMN: string;
   TYPE_COLUMN: string;
-  extraQuery: Function;
-  loaded: Boolean;
+  extraQuery: (...args: any[]) => any;
+  loaded: boolean;
   config: MetableConfig;
   extraColumns: Array<string>;
 
