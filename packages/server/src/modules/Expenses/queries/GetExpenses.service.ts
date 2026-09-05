@@ -52,7 +52,9 @@ export class GetExpensesService {
         builder.withGraphFetched('categories.expenseAccount');
 
         dynamicList.buildQuery()(builder);
-        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
+        if (_filterDto?.filterQuery) {
+          _filterDto?.filterQuery(builder);
+        }
       })
       .pagination(filter.page - 1, filter.pageSize);
 

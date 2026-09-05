@@ -1,6 +1,6 @@
 import { BaseModel } from '@/models/Model';
 
-type GConstructor<T = {}> = new (...args: any[]) => T;
+type GConstructor<T = object> = new (...args: any[]) => T;
 
 export const ResourceableModelMixin = <T extends GConstructor<BaseModel>>(
   Model: T,

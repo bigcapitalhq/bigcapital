@@ -6,11 +6,10 @@ import {
   ITransactionsByContactsFilter,
 } from '../TransactionsByContact/TransactionsByContact.types';
 
-export interface ITransactionsByVendorsAmount
-  extends ITransactionsByContactsAmount {}
+export type ITransactionsByVendorsAmount = ITransactionsByContactsAmount;
 
-export interface ITransactionsByVendorsTransaction
-  extends ITransactionsByContactsTransaction {}
+export type ITransactionsByVendorsTransaction =
+  ITransactionsByContactsTransaction;
 
 export interface ITransactionsByVendorsVendor {
   vendorName: string;

@@ -32,7 +32,7 @@ export interface IModelMetaFieldCommon {
   name: string;
   column: string;
   columnable?: boolean;
-  customQuery?: Function;
+  customQuery?: (...args: any[]) => any;
   required?: boolean;
   importHint?: string;
   importable?: boolean;
@@ -40,8 +40,8 @@ export interface IModelMetaFieldCommon {
   order?: number;
   unique?: number;
   dataTransferObjectKey?: string;
-  filterCustomQuery?: Function;
-  sortCustomQuery?: Function;
+  filterCustomQuery?: (...args: any[]) => any;
+  sortCustomQuery?: (...args: any[]) => any;
 }
 
 export interface IModelMetaFieldText {

@@ -202,13 +202,12 @@ DepGraph.prototype = {
    * to the nodes, it will only be shallow copied.
    */
   clone: function () {
-    var source = this;
     var result = new DepGraph();
-    var keys = Object.keys(source.nodes);
-    keys.forEach(function (n) {
-      result.nodes[n] = source.nodes[n];
-      result.outgoingEdges[n] = source.outgoingEdges[n].slice(0);
-      result.incomingEdges[n] = source.incomingEdges[n].slice(0);
+    var keys = Object.keys(this.nodes);
+    keys.forEach((n) => {
+      result.nodes[n] = this.nodes[n];
+      result.outgoingEdges[n] = this.outgoingEdges[n].slice(0);
+      result.incomingEdges[n] = this.incomingEdges[n].slice(0);
     });
     return result;
   },
@@ -273,7 +272,6 @@ DepGraph.prototype = {
    * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned.
    */
   overallOrder: function (leavesOnly) {
-    var self = this;
     var result = [];
     var keys = Object.keys(this.nodes);
     if (keys.length === 0) {
@@ -297,8 +295,8 @@ DepGraph.prototype = {
       // Find all potential starting points (nodes with nothing depending on them) an
       // run a DFS starting at these points to get the order
       keys
-        .filter(function (node) {
-          return self.incomingEdges[node].length === 0;
+        .filter((node) => {
+          return this.incomingEdges[node].length === 0;
         })
         .forEach(function (n) {
           DFS(n);

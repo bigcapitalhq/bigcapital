@@ -67,7 +67,7 @@ export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {
   fromEstimateId: number;
 }
 
-export interface ISaleInvoiceEditDTO extends ISaleInvoiceDTO {}
+export type ISaleInvoiceEditDTO = ISaleInvoiceDTO;
 
 export interface ISalesInvoicesFilter extends IDynamicListFilter {
   page: number;

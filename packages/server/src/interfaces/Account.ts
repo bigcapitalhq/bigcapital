@@ -17,7 +17,7 @@ export interface IAccountCreateDTO extends IAccountDTO {
   plaidItemId?: string;
 }
 
-export interface IAccountEditDTO extends IAccountDTO {}
+export type IAccountEditDTO = IAccountDTO;
 
 export interface IAccount {
   id: number;
@@ -89,7 +89,7 @@ export interface IAccountTransaction {
   taxRateId?: number;
   taxRate?: number;
 }
-export interface IAccountResponse extends IAccount {}
+export type IAccountResponse = IAccount;
 
 export enum IAccountsStructureType {
   Tree = 'tree',

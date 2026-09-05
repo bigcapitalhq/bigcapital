@@ -46,9 +46,11 @@ export class ActivateAccount {
     // Activate account and associated transactions under unit-of-work environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Activate and inactivate the given accounts ids.
-      activate
-        ? await this.accountRepository.activateByIds(patchAccountsIds, trx)
-        : await this.accountRepository.inactivateByIds(patchAccountsIds, trx);
+      if (activate) {
+        await this.accountRepository.activateByIds(patchAccountsIds, trx);
+      } else {
+        await this.accountRepository.inactivateByIds(patchAccountsIds, trx);
+      }
 
       // Triggers `onAccountActivated` event.
       this.eventEmitter.emitAsync(events.accounts.onActivated, {

@@ -1,6 +1,6 @@
 import { TenantModel } from '@/modules/System/models/TenantModel';
 
-export interface FsMigrations {}
+export type FsMigrations = object;
 
 export interface ISeederConfig {
   tableName: string;

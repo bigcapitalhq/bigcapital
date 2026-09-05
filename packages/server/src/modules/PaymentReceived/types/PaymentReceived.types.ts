@@ -131,7 +131,7 @@ export enum PaymentReceiveAction {
 export interface PaymentReceiveMailOpts extends CommonMailOptions {
   attachPdf?: boolean;
 }
-export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}
+export type PaymentReceiveMailOptsDTO = CommonMailOptionsDTO;
 export interface PaymentReceiveMailPresendEvent {
   paymentReceivedId: number;
   messageOptions: PaymentReceiveMailOptsDTO;

@@ -120,7 +120,7 @@ export interface IAllocatedLandedCostCreatedPayload {
   trx: Knex.Transaction;
 }
 
-export interface IBillAssociatedLandedCostTransactions {}
+export type IBillAssociatedLandedCostTransactions = object;
 
 interface ICommonEntry {
   id?: number;

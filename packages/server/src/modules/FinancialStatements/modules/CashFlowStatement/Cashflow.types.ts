@@ -92,7 +92,7 @@ export type ICashFlowStatementSection =
   | ICashFlowStatementTotalSection
   | ICashFlowStatementCommonSection;
 
-export interface ICashFlowStatementColumn {}
+export type ICashFlowStatementColumn = object;
 export interface ICashFlowStatementMeta extends IFinancialSheetCommonMeta {
   formattedToDate: string;
   formattedFromDate: string;
@@ -193,27 +193,27 @@ export interface ICashFlowDate {
   date: Date;
 }
 
-export interface ICashFlowStatement {
+export type ICashFlowStatement = {
   /**
    * Constructor method.
    * @constructor
    */
-  constructor(
+  new (
     accounts: Account[],
     ledger: Ledger,
     cashLedger: Ledger,
     netIncomeLedger: Ledger,
     query: ICashFlowStatementQuery,
     baseCurrency: string,
-  ): void;
+  ): ICashFlowStatement;
 
   reportData(): ICashFlowStatementData;
-}
+};
 
-export interface ICashFlowTable {
-  constructor(reportStatement: ICashFlowStatement): void;
+export type ICashFlowTable = {
+  new (reportStatement: ICashFlowStatement): ICashFlowTable;
   tableRows(): ITableRow[];
-}
+};
 
 export interface IDateRange {
   fromDate: Date;
@@ -233,7 +233,7 @@ export interface ICashflowTransactionSchema {
   branchId?: number;
 }
 
-export interface ICashflowTransactionInput extends ICashflowTransactionSchema {}
+export type ICashflowTransactionInput = ICashflowTransactionSchema;
 
 export interface ICategorizeCashflowTransactioDTO {
   date: Date;

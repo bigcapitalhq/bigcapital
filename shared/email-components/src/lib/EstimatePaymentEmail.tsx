@@ -207,6 +207,7 @@ export const EstimatePaymentEmail: React.FC<
  * @param {EstimatePaymentEmailProps} props
  * @returns {Promise<string>}
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const renderEstimateEmailTemplate = (
   props: EstimatePaymentEmailProps
 ) => {

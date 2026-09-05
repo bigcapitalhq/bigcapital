@@ -36,7 +36,7 @@ export interface ICustomerBalanceSummaryData {
 
 export interface ICustomerBalanceSummaryStatement {
   data: ICustomerBalanceSummaryData;
-  columns: {};
+  columns: object;
   query: IContactBalanceSummaryQuery;
 }
 
