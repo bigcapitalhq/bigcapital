@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { InputGroupProps, SwitchProps } from '@blueprintjs/core';
+import { SwitchProps } from '@blueprintjs/core';
 import { FInputGroup, FSwitch, Group, Stack } from '@/components';
 import { CLASSES } from '@/constants';
 
@@ -25,7 +25,7 @@ export function ElementCustomizeContentItemFieldGroup({
   inputGroupProps,
   switchProps,
 }: {
-  inputGroupProps: InputGroupProps;
+  inputGroupProps: InputGroupProps & { label?: string };
   switchProps?: SwitchProps;
 }) {
   return (

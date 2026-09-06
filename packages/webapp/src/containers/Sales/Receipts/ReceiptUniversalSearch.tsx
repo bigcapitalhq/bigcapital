@@ -1,12 +1,19 @@
-// @ts-nocheck
 import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { Icon, Choose, T, TextStatus } from '@/components';
 import { AbilitySubject, SaleReceiptAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+
+interface ReceiptUniversalSearchSelectComponentProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+  onAction?: () => void;
+}
 
 /**
  * Receipt universal search item select action.
@@ -19,7 +26,7 @@ function ReceiptUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: ReceiptUniversalSearchSelectComponentProps) {
   if (resourceType === RESOURCES_TYPES.RECEIPT) {
     openDrawer(DRAWERS.RECEIPT_DETAILS, { receiptId: resourceId });
     onAction && onAction();
@@ -34,7 +41,7 @@ export const ReceiptUniversalSearchSelect = withDrawerActions(
 /**
  * Status accessor.
  */
-function ReceiptStatus({ receipt }) {
+function ReceiptStatus({ receipt }: { receipt: any }) {
   return (
     <Choose>
       <Choose.When condition={receipt.isClosed}>
@@ -52,12 +59,18 @@ function ReceiptStatus({ receipt }) {
   );
 }
 
+interface ReceiptUniversalSearchItemProps {
+  handleClick: () => void;
+  modifiers: any;
+  query: string;
+}
+
 /**
  * Receipt universal search item.
  */
 export function ReceiptUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
+  item: any,
+  { handleClick, modifiers }: ReceiptUniversalSearchItemProps,
 ) {
   return (
     <MenuItem
@@ -65,16 +78,16 @@ export function ReceiptUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {item.reference.receiptNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedReceiptDate}
           </span>
         </div>
       }
-      label={
+      labelElement={
         <>
-          <div class="amount">{item.reference.formattedAmount}</div>
+          <div className="amount">{item.reference.formattedAmount}</div>
           <ReceiptStatus receipt={item.reference} />
         </>
       }
@@ -87,7 +100,7 @@ export function ReceiptUniversalSearchItem(
 /**
  * Transformes receipt resource item to search item.
  */
-const transformReceiptsToSearch = (receipt) => ({
+const transformReceiptsToSearch = (receipt: any) => ({
   id: receipt.id,
   text: receipt.customer?.displayName ?? '',
   label: receipt.formattedAmount ?? '',

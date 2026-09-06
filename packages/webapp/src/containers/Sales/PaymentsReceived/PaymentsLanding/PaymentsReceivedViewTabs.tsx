@@ -1,30 +1,31 @@
-// @ts-nocheck
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { pick } from 'lodash';
 import React from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
-import { compose } from '@/utils';
+import { compose, transfromViewsToTabs } from '@/utils';
+
+interface PaymentsReceivedViewTabsProps {
+  setPaymentReceivesTableState: (state: Record<string, any>) => void;
+  paymentReceivesTableState: { customViewId?: number | null };
+}
 
 /**
  * Payment receive view tabs.
  */
 function PaymentsReceivedViewTabsInner({
   // #withPaymentsReceivedActions
-  addPaymentReceivesTableQueries,
+  setPaymentReceivesTableState,
 
   // #withPaymentsReceived
   paymentReceivesTableState,
-}) {
+}: PaymentsReceivedViewTabsProps) {
   const history = useHistory();
-  const { paymentReceivesViews, ...res } = usePaymentsReceivedListContext();
+  const { paymentReceivesViews } = usePaymentsReceivedListContext();
 
-  const tabs = paymentReceivesViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  const tabs = transfromViewsToTabs(paymentReceivesViews);
 
   // Handles click a new view tab.
   const handleClickNewView = () => {
@@ -32,8 +33,8 @@ function PaymentsReceivedViewTabsInner({
   };
 
   // Handles the active tab chaing.
-  const handleTabsChange = (customView) => {
-    addPaymentReceivesTableQueries({
+  const handleTabsChange = (customView: number | null) => {
+    setPaymentReceivesTableState({
       customViewId: customView || null,
     });
   };
@@ -42,7 +43,8 @@ function PaymentsReceivedViewTabsInner({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={paymentReceivesTableState.customViewId}
+          currentViewSlug={paymentReceivesTableState.customViewId}
+          resourceName={'payment-received'}
           tabs={tabs}
           defaultTabText={<T id={'all_payments'} />}
           onNewViewTabClick={handleClickNewView}

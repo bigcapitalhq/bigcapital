@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Form, Formik, FormikHelpers } from 'formik';
@@ -14,6 +13,7 @@ import { transformToForm } from '@/utils';
 const initialValues: ReceiptSendMailFormValues = {
   subject: '',
   message: '',
+  from: [],
   to: [],
   cc: [],
   bcc: [],

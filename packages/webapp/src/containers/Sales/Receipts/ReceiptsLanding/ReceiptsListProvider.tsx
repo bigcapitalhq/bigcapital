@@ -1,6 +1,12 @@
-// @ts-nocheck
+import { keepPreviousData } from '@tanstack/react-query';
 import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
+import type { ReceiptTableRow } from './components';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type {
+  SettingsGroup,
+  SaleReceiptsListResponse,
+} from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceMeta,
@@ -10,10 +16,37 @@ import {
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
-const ReceiptsListContext = createContext();
+interface ReceiptsListProviderProps {
+  query?: any;
+  tableStateChanged?: boolean;
+  children?: React.ReactNode;
+}
+
+export interface ReceiptsListContextValue {
+  receipts: SaleReceiptsListResponse['data'] | undefined;
+  pagination: { total?: number; [key: string]: any } | undefined;
+  resourceMeta: any;
+  fields: IResourceField[];
+  receiptsViews: any;
+  isResourceLoading: boolean;
+  isResourceFetching: boolean;
+  isReceiptsLoading: boolean;
+  isReceiptsFetching: boolean;
+  isViewsLoading: boolean;
+  isEmptyStatus: boolean;
+  receiptSettings: SettingsGroup | undefined;
+}
+
+const ReceiptsListContext = createContext<ReceiptsListContextValue>(
+  {} as ReceiptsListContextValue,
+);
 
 // Receipts list provider.
-function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
+function ReceiptsListProvider({
+  query,
+  tableStateChanged,
+  ...props
+}: ReceiptsListProviderProps) {
   // Fetch receipts resource views and fields.
   const { data: receiptsViews, isLoading: isViewsLoading } =
     useResourceViews('sale_receipt');
@@ -29,7 +62,7 @@ function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
     data: receiptsData,
     isLoading: isReceiptsLoading,
     isFetching: isReceiptsFetching,
-  } = useReceipts(query, { keepPreviousData: true });
+  } = useReceipts(query, { placeholderData: keepPreviousData });
 
   const { data: receiptSettings } = useSettingsReceipts();
 
@@ -37,7 +70,7 @@ function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
   const isEmptyStatus =
     isEmpty(receiptsData?.data) && !tableStateChanged && !isReceiptsLoading;
 
-  const provider = {
+  const provider: ReceiptsListContextValue = {
     receipts: receiptsData?.data,
     pagination: receiptsData?.pagination,
 

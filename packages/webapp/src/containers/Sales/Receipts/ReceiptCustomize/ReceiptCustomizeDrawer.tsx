@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as R from 'ramda';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
@@ -10,6 +9,12 @@ const ReceiptCustomizeDrawerBody = React.lazy(() =>
   })),
 );
 
+interface ReceiptCustomizeDrawerProps {
+  name: string;
+  isOpen?: boolean;
+  payload?: Record<string, any>;
+}
+
 /**
  * Receipt customize drawer.
  * @returns {React.ReactNode}
@@ -19,7 +24,7 @@ function ReceiptCustomizeDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: ReceiptCustomizeDrawerProps) {
   return (
     <Drawer
       isOpen={isOpen}

@@ -1,16 +1,39 @@
-// @ts-nocheck
 import { Spinner } from '@blueprintjs/core';
 import React, { createContext, useContext } from 'react';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import {
-  GetSaleReceiptMailStateResponse,
-  useSaleReceiptMailState,
-} from '@/hooks/query';
+import { useSaleReceiptMailState } from '@/hooks/query';
+
+interface ReceiptSendMailState {
+  from: string[];
+  to: string[];
+  cc?: string[];
+  bcc?: string[];
+  subject: string;
+  message: string;
+  formatArgs?: Record<string, string>;
+  toOptions: Array<{ label: string; mail: string; primary?: boolean }>;
+  fromOptions: Array<{ label: string; mail: string; primary?: boolean }>;
+  attachPdf?: boolean;
+  receiptNumber: string;
+  total: number;
+  totalFormatted: string;
+  subtotal: number;
+  subtotalFormatted: string;
+  discount: number;
+  discountAmountFormatted: string;
+  adjustment: number;
+  adjustmentFormatted: string;
+  companyName: string;
+  companyLogoUri: string | null;
+  primaryColor: string | null;
+  customerName: string;
+  entries: Array<{ name: string; quantity: number; totalFormatted: string }>;
+}
 
 interface ReceiptSendMailBootValues {
   receiptId: number;
 
-  receiptMailState: GetSaleReceiptMailStateResponse | null;
+  receiptMailState: ReceiptSendMailState | undefined;
   isReceiptMailState: boolean;
 }
 interface ReceiptSendMailBootProps {
@@ -26,8 +49,9 @@ export const ReceiptSendMailBoot = ({ children }: ReceiptSendMailBootProps) => {
   } = useDrawerContext();
 
   // Receipt mail options.
-  const { data: receiptMailState, isLoading: isReceiptMailState } =
+  const { data, isLoading: isReceiptMailState } =
     useSaleReceiptMailState(receiptId);
+  const receiptMailState = data as ReceiptSendMailState | undefined;
 
   const isLoading = isReceiptMailState;
 

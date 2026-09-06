@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
 import { fieldsGroups } from './constants';
 import { FInputGroup, FSwitch, Group, Stack } from '@/components';

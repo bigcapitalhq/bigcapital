@@ -1,12 +1,21 @@
-// @ts-nocheck
 import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { CreditNote } from '@bigcapital/sdk-ts';
+import type { ItemRendererProps } from '@blueprintjs/select';
 import { Icon, Choose, T, TextStatus } from '@/components';
 import { AbilitySubject, CreditNoteAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+
+interface CreditNoteUniversalSearchSelectComponentProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+  onAction?: () => void;
+}
 
 /**
  * Credit note universal search item select action.
@@ -19,7 +28,7 @@ function CreditNoteUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: CreditNoteUniversalSearchSelectComponentProps) {
   if (resourceType === RESOURCES_TYPES.CREDIT_NOTE) {
     openDrawer(DRAWERS.CREDIT_NOTE_DETAILS, { creditNoteId: resourceId });
     onAction && onAction();
@@ -34,7 +43,7 @@ export const CreditNoteUniversalSearchSelect = withDrawerActions(
 /**
  * Status accessor.
  */
-function CreditNoteUniversalSearchStatus({ receipt }) {
+function CreditNoteUniversalSearchStatus({ receipt }: { receipt: CreditNote }) {
   return (
     <Choose>
       <Choose.When condition={receipt.isClosed}>
@@ -61,9 +70,16 @@ function CreditNoteUniversalSearchStatus({ receipt }) {
 /**
  * Credit note universal search item.
  */
+interface CreditNoteUniversalSearchItemType {
+  id: number;
+  text: string;
+  label: string;
+  reference: CreditNote;
+}
+
 export function CreditNoteUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
+  item: CreditNoteUniversalSearchItemType,
+  { handleClick, modifiers }: ItemRendererProps,
 ) {
   return (
     <MenuItem
@@ -71,16 +87,16 @@ export function CreditNoteUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {item.reference.creditNoteNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formattedCreditNoteDate}
           </span>
         </div>
       }
-      label={
+      labelElement={
         <>
-          <div class="amount">{item.reference.formattedAmount}</div>
+          <div className="amount">{item.reference.formattedAmount}</div>
           <CreditNoteUniversalSearchStatus receipt={item.reference} />
         </>
       }
@@ -93,7 +109,9 @@ export function CreditNoteUniversalSearchItem(
 /**
  * Transformes receipt resource item to search item.
  */
-const transformReceiptsToSearch = (creditNote) => ({
+const transformReceiptsToSearch = (
+  creditNote: CreditNote,
+): CreditNoteUniversalSearchItemType => ({
   id: creditNote.id,
   text: creditNote.customer?.displayName ?? '',
   label: creditNote.formattedAmount ?? '',

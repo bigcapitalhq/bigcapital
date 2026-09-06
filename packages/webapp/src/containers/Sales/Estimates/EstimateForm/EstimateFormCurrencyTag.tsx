@@ -1,6 +1,6 @@
-// @ts-nocheck
-import React from 'react';
-import { useEstimateFormContext } from './EstimateFormProvider';
+import { useFormikContext } from 'formik';
+import { useEstimateIsForeignCustomer } from './utils';
+import type { EstimateFormValues } from './utils';
 import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 
 /**
@@ -8,14 +8,17 @@ import { BaseCurrency, BaseCurrencyRoot } from '@/components';
  * @returns
  */
 export function EstimateFromCurrencyTag() {
-  const { isForeignCustomer, selectCustomer } = useEstimateFormContext();
+  const isForeignCustomer = useEstimateIsForeignCustomer();
+  const {
+    values: { currencyCode },
+  } = useFormikContext<EstimateFormValues>();
 
   if (!isForeignCustomer) {
     return null;
   }
   return (
     <BaseCurrencyRoot>
-      <BaseCurrency currency={selectCustomer?.currency_code} />
+      <BaseCurrency currency={currencyCode} />
     </BaseCurrencyRoot>
   );
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as R from 'ramda';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';

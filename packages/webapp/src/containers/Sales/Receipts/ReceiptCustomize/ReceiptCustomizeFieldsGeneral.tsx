@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
 import { Overlay } from '../../Invoices/InvoiceCustomize/Overlay';
 import {

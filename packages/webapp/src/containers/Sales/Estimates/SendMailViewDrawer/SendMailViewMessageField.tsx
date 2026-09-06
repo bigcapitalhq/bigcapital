@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Icon, Position } from '@blueprintjs/core';
 import { FormGroupProps, TextAreaProps } from '@blueprintjs-formik/core';
 import { SelectOptionProps } from '@blueprintjs-formik/select';
@@ -80,7 +79,7 @@ export function SendMailViewMessageField({
             input={() => (
               <Button
                 minimal
-                rightIcon={<Icon icon={'caret-down-16'} color={'#8F99A8'} />}
+                rightIcon={<Icon icon={'caret-down'} color={'#8F99A8'} />}
               >
                 Insert Variable
               </Button>

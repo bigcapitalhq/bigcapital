@@ -168,7 +168,10 @@ export function useCloseReceipt(
 
 export function useReceipts(
   query?: GetSaleReceiptsQuery,
-  props?: UseQueryOptions<SaleReceiptsListResponse, Error>,
+  props?: Omit<
+    UseQueryOptions<SaleReceiptsListResponse, Error, SaleReceiptsListResponse>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({

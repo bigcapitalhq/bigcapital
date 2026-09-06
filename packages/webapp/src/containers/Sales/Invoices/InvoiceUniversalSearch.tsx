@@ -1,13 +1,21 @@
-// @ts-nocheck
 import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { SaleInvoice } from '@bigcapital/sdk-ts';
 import { T, Choose, Icon, TextStatus } from '@/components';
 import { AbilitySubject, SaleInvoiceAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 import { highlightText } from '@/utils';
+
+interface InvoiceUniversalSearchSelectProps extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+}
 
 /**
  * Universal search invoice item select action.
@@ -19,7 +27,7 @@ function InvoiceUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: InvoiceUniversalSearchSelectProps) {
   if (resourceType === RESOURCES_TYPES.INVOICE) {
     openDrawer(DRAWERS.INVOICE_DETAILS, { invoiceId: resourceId });
   }
@@ -33,7 +41,7 @@ export const InvoiceUniversalSearchSelect = withDrawerActions(
 /**
  * Invoice status.
  */
-function InvoiceStatus({ customer }) {
+function InvoiceStatus({ customer }: { customer: SaleInvoice }) {
   return (
     <Choose>
       <Choose.When condition={customer.isFullyPaid && customer.isDelivered}>
@@ -68,9 +76,22 @@ function InvoiceStatus({ customer }) {
 /**
  * Universal search invoice item.
  */
+interface InvoiceUniversalSearchItemData {
+  id: number;
+  text: string;
+  label: string;
+  reference: SaleInvoice;
+}
+
+interface InvoiceUniversalSearchItemActions {
+  handleClick: () => void;
+  modifiers: { active: boolean };
+  query: string;
+}
+
 export function InvoiceUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
+  item: InvoiceUniversalSearchItemData,
+  { handleClick, modifiers, query }: InvoiceUniversalSearchItemActions,
 ) {
   return (
     <MenuItem
@@ -78,16 +99,16 @@ export function InvoiceUniversalSearchItem(
       text={
         <div>
           <div>{highlightText(item.text, query)}</div>
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {highlightText(item.reference.invoiceNo, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.invoiceDateFormatted}
           </span>
         </div>
       }
-      label={
+      labelElement={
         <>
-          <div class="amount">{item.reference.totalFormatted}</div>
+          <div className="amount">{item.reference.totalFormatted}</div>
           <InvoiceStatus customer={item.reference} />
         </>
       }
@@ -101,7 +122,7 @@ export function InvoiceUniversalSearchItem(
  * @param {*} invoice
  * @returns
  */
-const transformInvoicesToSearch = (invoice) => ({
+const transformInvoicesToSearch = (invoice: SaleInvoice) => ({
   id: invoice.id,
   text: invoice.customer?.displayName ?? '',
   label: invoice.totalFormatted ?? '',
