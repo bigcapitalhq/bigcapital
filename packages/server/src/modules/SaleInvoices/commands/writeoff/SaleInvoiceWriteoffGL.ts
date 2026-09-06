@@ -77,7 +77,7 @@ export class SaleInvoiceWriteoffGL {
 
     return {
       ...commontEntry,
-      debit: this.saleInvoiceModel.writtenoffAmount,
+      debit: this.saleInvoiceModel.writtenoffAmountLocal,
       accountId: this.saleInvoiceModel.writtenoffExpenseAccountId,
       credit: 0,
       index: 2,

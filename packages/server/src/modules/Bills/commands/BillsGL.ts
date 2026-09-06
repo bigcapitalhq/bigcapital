@@ -142,7 +142,7 @@ export class BillGL {
 
     return {
       ...commonJournalMeta,
-      debit: entry.taxAmount,
+      debit: entry.taxAmount * (this.bill.exchangeRate || 1),
       index,
       indexGroup: 30,
       accountId: this.taxPayableAccountId,
