@@ -154,7 +154,7 @@ function ManualJournalActionsBarInner({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: manualJournalsFilterConditions,
-            defaultFieldKey: 'journalNumber',
+            defaultFieldKey: 'journal_number',
             fields,
             onFilterChange: (filterConditions: IFilterRole[]) => {
               setManualJournalsTableState({

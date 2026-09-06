@@ -145,7 +145,7 @@ function EstimateActionsBar({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: estimatesFilterRoles,
-            defaultFieldKey: 'estimateNumber',
+            defaultFieldKey: 'estimate_number',
             fields: fields,
             onFilterChange: (filterConditions: any) => {
               setEstimatesTableState({ filterRoles: filterConditions });

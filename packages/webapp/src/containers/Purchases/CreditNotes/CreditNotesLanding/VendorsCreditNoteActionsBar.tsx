@@ -151,7 +151,7 @@ function VendorsCreditNoteActionsBarInner({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: vendorCreditFilterRoles,
-            defaultFieldKey: 'createdAt',
+            defaultFieldKey: 'created_at',
             fields: fields,
             onFilterChange: (filterConditions: any) => {
               setVendorsCreditNoteTableState({ filterRoles: filterConditions });

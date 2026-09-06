@@ -130,7 +130,7 @@ function PaymentMadeActionsBarInner({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: paymentMadesFilterConditions,
-            defaultFieldKey: 'paymentNumber',
+            defaultFieldKey: 'payment_number',
             fields: fields,
             onFilterChange: (filterConditions: any) => {
               setPaymentMadesTableState({ filterRoles: filterConditions });

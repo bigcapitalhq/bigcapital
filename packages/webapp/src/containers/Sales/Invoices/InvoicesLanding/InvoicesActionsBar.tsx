@@ -148,7 +148,7 @@ function InvoiceActionsBar({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: invoicesFilterRoles,
-            defaultFieldKey: 'invoiceNo',
+            defaultFieldKey: 'invoice_no',
             fields: invoicesFields,
             onFilterChange: (filterConditions: any) => {
               setInvoicesTableState({ filterRoles: filterConditions });

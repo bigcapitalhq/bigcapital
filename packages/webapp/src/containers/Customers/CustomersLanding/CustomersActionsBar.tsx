@@ -171,7 +171,7 @@ function CustomerActionsBar({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: customersFilterConditions,
-            defaultFieldKey: 'displayName',
+            defaultFieldKey: 'display_name',
             fields: fields,
             onFilterChange: (filterConditions: IFilterRole[]) => {
               setCustomersTableState({ filterRoles: filterConditions });

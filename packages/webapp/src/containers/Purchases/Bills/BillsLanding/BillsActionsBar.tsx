@@ -132,7 +132,7 @@ function BillActionsBar({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: billsConditionsRoles,
-            defaultFieldKey: 'billNumber',
+            defaultFieldKey: 'bill_number',
             fields: fields,
             onFilterChange: (filterConditions: any) => {
               setBillsTableState({ filterRoles: filterConditions });

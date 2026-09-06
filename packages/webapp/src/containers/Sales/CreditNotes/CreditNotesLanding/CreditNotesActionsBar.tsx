@@ -143,7 +143,7 @@ function CreditNotesActionsBarInner({
         <AdvancedFilterPopover
           advancedFilterProps={{
             conditions: creditNoteFilterRoles,
-            defaultFieldKey: 'createdAt',
+            defaultFieldKey: 'created_at',
             fields: fields,
             onFilterChange: (filterConditions: any) => {
               setCreditNotesTableState({ filterRoles: filterConditions });
