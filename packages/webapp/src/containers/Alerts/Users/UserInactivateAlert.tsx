@@ -22,6 +22,10 @@ interface UserInactivateError {
   type: string;
 }
 
+interface UserInactivateErrorResponse {
+  data: { errors?: UserInactivateError[] };
+}
+
 /**
  * User inactivate alert.
  */
@@ -42,21 +46,15 @@ function UserInactivateAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({ data: { errors } }: { data: { errors: UserInactivateError[] } }) => {
-          if (
-            errors.find(
-              (e) => e.type === 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER',
-            )
-          ) {
-            AppToaster.show({
-              message:
-                'You could not activate/inactivate the same authorized user.',
-              intent: Intent.DANGER,
-            });
-          }
-        },
-      )
+      .catch((error: UserInactivateErrorResponse) => {
+        const errors = error?.data?.errors ?? [];
+        if (errors.find((e) => e.type === 'USER_SAME_THE_AUTHORIZED_USER')) {
+          AppToaster.show({
+            message: intl.get('cannot_toggle_authorized_user'),
+            intent: Intent.DANGER,
+          });
+        }
+      })
       .finally(() => {
         closeAlert(name);
       });

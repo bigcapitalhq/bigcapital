@@ -276,6 +276,8 @@
   "delete_user": "Ta bort användare",
   "full_name": "Fullständigt namn",
   "the_user_has_been_inactivated_successfully": "Användaren har inaktiverats framgångsrikt.",
+  "the_user_has_been_activated_successfully": "Användaren har aktiverats framgångsrikt.",
+  "cannot_toggle_authorized_user": "Du kan inte aktivera eller inaktivera ditt eget konto.",
   "the_user_has_been_deleted_successfully": "Användaren har tagits bort framgångsrikt.",
   "customize_report": "Anpassa rapporten",
   "print": "Tryck",
