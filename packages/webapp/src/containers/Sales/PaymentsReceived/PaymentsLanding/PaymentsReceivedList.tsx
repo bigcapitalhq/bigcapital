@@ -8,13 +8,9 @@ import { PaymentsReceivedTable as PaymentReceivesTable } from './PaymentsReceive
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
 import { DashboardPageContent } from '@/components';
 import { compose, transformTableStateToQuery } from '@/utils';
-
-interface WithPaymentsReceivedActionsProps {
-  resetPaymentReceivesTableState: () => void;
-  resetPaymentReceivesSelectedRows: () => void;
-}
 
 interface PaymentsReceivedListProps
   extends Pick<

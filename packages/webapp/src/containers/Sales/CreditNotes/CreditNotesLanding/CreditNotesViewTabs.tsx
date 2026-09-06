@@ -4,16 +4,12 @@ import { useCreditNoteListContext } from './CreditNotesListProvider';
 import { withCreditNotes } from './withCreditNotes';
 import { withCreditNotesActions } from './withCreditNotesActions';
 import type { WithCreditNotesProps } from './withCreditNotes';
+import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
 import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
 
-interface WithCreditNotesActionsProps {
-  setCreditNotesTableState: (state: Record<string, any>) => void;
-}
-
-interface CreditNotesViewTabsProps {
+interface CreditNotesViewTabsProps extends WithCreditNotesActionsProps {
   creditNoteCurrentView: string;
-  setCreditNotesTableState: WithCreditNotesActionsProps['setCreditNotesTableState'];
 }
 
 function CreditNotesViewTabsInner({

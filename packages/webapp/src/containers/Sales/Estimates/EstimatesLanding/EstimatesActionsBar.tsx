@@ -19,6 +19,7 @@ import { useBulkDeleteEstimatesDialog } from './hooks/use-bulk-delete-estimates-
 import { withEstimates } from './withEstimates';
 import { withEstimatesActions } from './withEstimatesActions';
 import type { WithEstimatesProps } from './withEstimates';
+import type { WithEstimatesActionsProps } from './withEstimatesActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
@@ -40,10 +41,6 @@ import { useSaveSettings } from '@/hooks/query';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { compose } from '@/utils';
-
-interface WithEstimatesActionsProps {
-  setEstimatesTableState: (state: Record<string, any>) => void;
-}
 
 interface EstimateActionsBarProps
   extends Pick<WithEstimatesProps, 'estimatesSelectedRows'>,

@@ -7,6 +7,7 @@ import { withCreditNotes } from './withCreditNotes';
 import { withCreditNotesActions } from './withCreditNotesActions';
 import type { CreditNoteTableRow } from './components';
 import type { WithCreditNotesProps } from './withCreditNotes';
+import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
@@ -24,11 +25,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithCreditNotesActionsProps {
-  setCreditNotesTableState: (state: Record<string, any>) => void;
-  setCreditNotesSelectedRows: (ids: number[]) => void;
-}
 
 interface CreditNotesDataTableProps
   extends Pick<

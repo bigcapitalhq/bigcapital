@@ -4,13 +4,14 @@ import { useHistory } from 'react-router-dom';
 import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
+import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
 import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
 
-interface PaymentsReceivedViewTabsProps {
-  setPaymentReceivesTableState: (state: Record<string, any>) => void;
-  paymentReceivesTableState: { customViewId?: number | null };
-}
+interface PaymentsReceivedViewTabsProps
+  extends WithPaymentsReceivedActionsProps,
+    Pick<WithPaymentsReceivedProps, 'paymentReceivesTableState'> {}
 
 /**
  * Payment receive view tabs.

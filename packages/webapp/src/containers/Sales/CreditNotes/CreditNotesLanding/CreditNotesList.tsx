@@ -8,13 +8,9 @@ import { CreditNotesListProvider } from './CreditNotesListProvider';
 import { withCreditNotes } from './withCreditNotes';
 import { withCreditNotesActions } from './withCreditNotesActions';
 import type { WithCreditNotesProps } from './withCreditNotes';
+import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
 import { DashboardPageContent } from '@/components';
 import { transformTableStateToQuery, compose } from '@/utils';
-
-interface WithCreditNotesActionsProps {
-  resetCreditNotesTableState: () => void;
-  resetCreditNotesSelectedRows: () => void;
-}
 
 interface CreditNotesListProps
   extends Pick<

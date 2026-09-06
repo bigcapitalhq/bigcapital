@@ -10,6 +10,7 @@ import { useReceiptsListContext } from './ReceiptsListProvider';
 import { withReceipts } from './withReceipts';
 import { withReceiptsActions } from './withReceiptsActions';
 import type { WithReceiptsProps } from './withReceipts';
+import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
@@ -27,11 +28,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithReceiptsActionsProps {
-  setReceiptsTableState: (state: Record<string, any>) => void;
-  setReceiptsSelectedRows: (ids: number[]) => void;
-}
 
 interface ReceiptsDataTableProps
   extends Pick<WithReceiptsProps, 'receiptTableState' | 'receiptSelectedRows'>,

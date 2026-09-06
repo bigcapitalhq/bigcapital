@@ -2,6 +2,7 @@ import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { SaleReceipt } from '@bigcapital/sdk-ts';
 import { Icon, Choose, T, TextStatus } from '@/components';
 import { AbilitySubject, SaleReceiptAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
@@ -41,7 +42,11 @@ export const ReceiptUniversalSearchSelect = withDrawerActions(
 /**
  * Status accessor.
  */
-function ReceiptStatus({ receipt }: { receipt: any }) {
+interface ReceiptStatusProps {
+  receipt: SaleReceipt;
+}
+
+function ReceiptStatus({ receipt }: ReceiptStatusProps) {
   return (
     <Choose>
       <Choose.When condition={receipt.isClosed}>

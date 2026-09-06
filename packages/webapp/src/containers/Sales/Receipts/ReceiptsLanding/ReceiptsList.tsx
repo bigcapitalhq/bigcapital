@@ -7,14 +7,10 @@ import { ReceiptsTable } from './ReceiptsTable';
 import { withReceipts } from './withReceipts';
 import { withReceiptsActions } from './withReceiptsActions';
 import type { WithReceiptsProps } from './withReceipts';
+import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import { DashboardPageContent } from '@/components';
 import '@/style/pages/SaleReceipt/List.scss';
 import { transformTableStateToQuery, compose } from '@/utils';
-
-interface WithReceiptsActionsProps {
-  resetReceiptsTableState: () => void;
-  resetReceiptsSelectedRows: () => void;
-}
 
 interface ReceiptsListProps
   extends Pick<

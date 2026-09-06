@@ -4,15 +4,11 @@ import { useReceiptsListContext } from './ReceiptsListProvider';
 import { withReceipts } from './withReceipts';
 import { withReceiptsActions } from './withReceiptsActions';
 import type { WithReceiptsProps } from './withReceipts';
+import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
 
-interface WithReceiptsActionsProps {
-  setReceiptsTableState: (state: Record<string, any>) => void;
-}
-
-interface ReceiptViewTabsProps {
-  setReceiptsTableState: WithReceiptsActionsProps['setReceiptsTableState'];
+interface ReceiptViewTabsProps extends WithReceiptsActionsProps {
   receiptsCurrentView: string;
 }
 

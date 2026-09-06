@@ -57,11 +57,11 @@ interface EstimateUniversalSearchItem {
 /**
  * Status accessor.
  */
-export const EstimateStatus = ({
-  estimate,
-}: {
+interface EstimateStatusProps {
   estimate: EstimateUniversalSearchReference;
-}) => (
+}
+
+export const EstimateStatus = ({ estimate }: EstimateStatusProps) => (
   <Choose>
     <Choose.When condition={estimate.isDelivered && estimate.isApproved}>
       <TextStatus intent={Intent.SUCCESS}>

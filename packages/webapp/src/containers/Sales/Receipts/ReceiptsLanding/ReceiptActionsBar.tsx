@@ -19,6 +19,7 @@ import { useReceiptsListContext } from './ReceiptsListProvider';
 import { withReceipts } from './withReceipts';
 import { withReceiptsActions } from './withReceiptsActions';
 import type { WithReceiptsProps } from './withReceipts';
+import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
@@ -43,10 +44,6 @@ import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshReceipts } from '@/hooks/query/receipts';
 import { compose } from '@/utils';
-
-interface WithReceiptsActionsProps {
-  setReceiptsTableState: (state: Record<string, any>) => void;
-}
 
 interface ReceiptActionsBarProps
   extends Pick<WithReceiptsProps, 'receiptSelectedRows'>,

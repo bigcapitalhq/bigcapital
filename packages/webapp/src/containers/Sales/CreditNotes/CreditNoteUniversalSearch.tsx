@@ -43,7 +43,13 @@ export const CreditNoteUniversalSearchSelect = withDrawerActions(
 /**
  * Status accessor.
  */
-function CreditNoteUniversalSearchStatus({ receipt }: { receipt: CreditNote }) {
+interface CreditNoteUniversalSearchStatusProps {
+  receipt: CreditNote;
+}
+
+function CreditNoteUniversalSearchStatus({
+  receipt,
+}: CreditNoteUniversalSearchStatusProps) {
   return (
     <Choose>
       <Choose.When condition={receipt.isClosed}>

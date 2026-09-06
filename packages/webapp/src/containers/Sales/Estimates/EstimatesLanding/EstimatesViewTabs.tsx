@@ -4,15 +4,11 @@ import { useEstimatesListContext } from './EstimatesListProvider';
 import { withEstimates } from './withEstimates';
 import { withEstimatesActions } from './withEstimatesActions';
 import type { WithEstimatesProps } from './withEstimates';
+import type { WithEstimatesActionsProps } from './withEstimatesActions';
 import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
 
-interface WithEstimatesActionsProps {
-  setEstimatesTableState: (state: Record<string, any>) => void;
-}
-
-interface EstimateViewTabsProps {
-  setEstimatesTableState: WithEstimatesActionsProps['setEstimatesTableState'];
+interface EstimateViewTabsProps extends WithEstimatesActionsProps {
   estimatesCurrentView: string;
 }
 

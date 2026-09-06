@@ -6,6 +6,7 @@ import { useInvoicesListContext } from './InvoicesListProvider';
 import { withInvoiceActions } from './withInvoiceActions';
 import { withInvoices } from './withInvoices';
 import type { InvoiceTableRow } from './components';
+import type { WithInvoiceActionsProps } from './withInvoiceActions';
 import type { WithInvoicesProps } from './withInvoices';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -24,11 +25,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithInvoiceActionsProps {
-  setInvoicesTableState: (state: Record<string, any>) => void;
-  setInvoicesSelectedRows: (ids: number[]) => void;
-}
 
 interface InvoicesDataTableProps
   extends Pick<

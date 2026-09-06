@@ -4,16 +4,12 @@ import { useHistory } from 'react-router-dom';
 import { useInvoicesListContext } from './InvoicesListProvider';
 import { withInvoiceActions } from './withInvoiceActions';
 import { withInvoices } from './withInvoices';
+import type { WithInvoiceActionsProps } from './withInvoiceActions';
 import type { WithInvoicesProps } from './withInvoices';
 import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
 
-interface WithInvoiceActionsProps {
-  setInvoicesTableState: (state: Record<string, any>) => void;
-}
-
-interface InvoiceViewTabsProps {
-  setInvoicesTableState: WithInvoiceActionsProps['setInvoicesTableState'];
+interface InvoiceViewTabsProps extends WithInvoiceActionsProps {
   invoicesCurrentView: string;
 }
 
