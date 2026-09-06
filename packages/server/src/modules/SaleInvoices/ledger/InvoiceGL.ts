@@ -134,7 +134,7 @@ export class InvoiceGL {
 
     return {
       ...commonEntry,
-      credit: entry.taxAmount,
+      credit: entry.taxAmount * this.saleInvoice.exchangeRate,
       accountId: this.taxPayableAccountId,
       index: index + 1,
       indexGroup: 30,
