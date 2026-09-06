@@ -1,10 +1,13 @@
-// @ts-nocheck
 import { Tooltip, Position, Spinner, Icon } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as R from 'ramda';
 import React, { useState } from 'react';
+import type { Workspace } from '@bigcapital/sdk-ts';
 import { DRAWERS } from '@/constants/drawers';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 import { WorkspaceSwitchingOverlay } from '@/ee/workspaces/components/WorkspaceSwitchingOverlay';
 import { useWorkspaces } from '@/ee/workspaces/hooks/query';
 import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
@@ -16,7 +19,15 @@ import '@/ee/workspaces/style/containers/Dashboard/WorkspacesSidebar.scss';
 /**
  * Single workspace icon button.
  */
-function WorkspaceIcon({ workspace, isActive, onClick }) {
+function WorkspaceIcon({
+  workspace,
+  isActive,
+  onClick,
+}: {
+  workspace: Workspace;
+  isActive: boolean;
+  onClick: (organizationId: string, workspaceName: string) => void;
+}) {
   const name = workspace.metadata?.name || workspace.organizationId;
   const initials = firstLettersArgs(...(name || '').split(' '));
   const isDisabled = !workspace.isReady || workspace.isBuildRunning;
@@ -56,7 +67,11 @@ function WorkspaceIcon({ workspace, isActive, onClick }) {
 /**
  * Organizations list button.
  */
-function OrganizationsListButton({ openDrawer }) {
+function OrganizationsListButton({
+  openDrawer,
+}: {
+  openDrawer: (name: string, payload?: Record<string, unknown>) => void;
+}) {
   return (
     <Tooltip
       content="View all organizations"
@@ -80,7 +95,11 @@ function OrganizationsListButton({ openDrawer }) {
 /**
  * Add workspace button.
  */
-function AddWorkspaceButton({ openDrawer }) {
+function AddWorkspaceButton({
+  openDrawer,
+}: {
+  openDrawer: (name: string, payload?: Record<string, unknown>) => void;
+}) {
   return (
     <Tooltip
       content="Create workspace"
@@ -104,13 +123,18 @@ function AddWorkspaceButton({ openDrawer }) {
 /**
  * Workspaces sidebar container.
  */
-function WorkspacesSidebarRoot({ openDrawer }) {
+function WorkspacesSidebarRoot({ openDrawer }: WithDrawerActionsProps) {
   const { data: workspaces, isLoading } = useWorkspaces();
   const activeOrganizationId = useAuthOrganizationId();
   const switchOrganization = useSwitchOrganization();
-  const [switchingWorkspaceName, setSwitchingWorkspaceName] = useState(null);
+  const [switchingWorkspaceName, setSwitchingWorkspaceName] = useState<
+    string | null
+  >(null);
 
-  const handleSwitchWorkspace = (organizationId, workspaceName) => {
+  const handleSwitchWorkspace = (
+    organizationId: string,
+    workspaceName: string,
+  ) => {
     if (organizationId === activeOrganizationId) {
       return;
     }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Intent,
@@ -15,6 +14,7 @@ import styled from '@xstyled/emotion';
 import React, { useState, useMemo, useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { OrganizationsListWorkspaceCell } from './OrganizationsListWorkspaceCell';
+import type { Workspace } from '@bigcapital/sdk-ts';
 import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
@@ -32,14 +32,21 @@ function OrganizationsListTable({
   isLoading,
   onClose,
   openDialog,
+}: {
+  workspaces: Workspace[];
+  isLoading: boolean;
+  onClose: () => void;
+  openDialog: (name: string, payload?: Record<string, unknown>) => void;
 }) {
   const activeOrganizationId = useAuthOrganizationId();
   const switchOrganization = useSwitchOrganization();
   const setDefaultWorkspace = useSetDefaultWorkspace();
-  const [switchingWorkspaceName, setSwitchingWorkspaceName] = useState(null);
+  const [switchingWorkspaceName, setSwitchingWorkspaceName] = useState<
+    string | null
+  >(null);
 
   const handleSwitchWorkspace = useCallback(
-    (organizationId, workspaceName) => {
+    (organizationId: string, workspaceName: string) => {
       if (organizationId === activeOrganizationId) {
         return;
       }
@@ -53,7 +60,7 @@ function OrganizationsListTable({
   );
 
   const handleSetDefault = useCallback(
-    (organizationId) => {
+    (organizationId: string) => {
       setDefaultWorkspace.mutateAsync({ organizationId }).then(() => {
         AppToaster.show({
           message: intl.get('workspaces.default_workspace_set_successfully', {
@@ -67,7 +74,7 @@ function OrganizationsListTable({
   );
 
   const handleDeleteWorkspace = useCallback(
-    (workspace) => {
+    (workspace: Workspace) => {
       openDialog(DialogsName.WorkspaceDelete, {
         organizationId: workspace.organizationId,
         workspaceName: workspace.metadata?.name || workspace.organizationId,
@@ -77,7 +84,7 @@ function OrganizationsListTable({
   );
 
   const handleInactivateWorkspace = useCallback(
-    (workspace) => {
+    (workspace: Workspace) => {
       openDialog(DialogsName.WorkspaceInactivate, {
         organizationId: workspace.organizationId,
         workspaceName: workspace.metadata?.name || workspace.organizationId,
@@ -95,7 +102,7 @@ function OrganizationsListTable({
         }),
         accessor: 'metadata.name',
         width: 320,
-        Cell: ({ row }) => (
+        Cell: ({ row }: { row: { original: Workspace } }) => (
           <OrganizationsListWorkspaceCell
             workspace={row.original}
             activeOrganizationId={activeOrganizationId}
@@ -106,7 +113,7 @@ function OrganizationsListTable({
         id: 'assets',
         Header: intl.get('workspaces.column_assets', { fallback: 'Assets' }),
         accessor: 'formattedTotalAssets',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }: { value?: string }) => value || '-',
         align: 'right',
         width: 100,
       },
@@ -116,7 +123,7 @@ function OrganizationsListTable({
           fallback: 'Liabilities',
         }),
         accessor: 'formattedTotalLiabilities',
-        Cell: ({ value }) => value || '-',
+        Cell: ({ value }: { value?: string }) => value || '-',
         align: 'right',
         width: 100,
       },
@@ -125,7 +132,7 @@ function OrganizationsListTable({
         accessor: 'actions',
         width: 120,
         disableSortBy: true,
-        Cell: ({ row }) => {
+        Cell: ({ row }: { row: { original: Workspace } }) => {
           const workspace = row.original;
           const workspaceName =
             workspace.metadata?.name || workspace.organizationId;
@@ -146,7 +153,7 @@ function OrganizationsListTable({
           const canSetDefaultInMenu = !workspace.isDefault && !defaultDisabled;
 
           const menuContent = isOwner ? (
-            <Menu minimal>
+            <Menu>
               {canSetDefaultInMenu && (
                 <MenuItem
                   text={intl.get('workspaces.set_as_default', {
@@ -183,7 +190,7 @@ function OrganizationsListTable({
                 onClick={() => !isDisabled && handleDeleteWorkspace(workspace)}
               />
             </Menu>
-          ) : null;
+          ) : undefined;
 
           return (
             <x.div

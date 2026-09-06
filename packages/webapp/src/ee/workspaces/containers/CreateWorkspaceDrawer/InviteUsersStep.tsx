@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent, InputGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { x } from '@xstyled/emotion';
@@ -34,7 +33,7 @@ export default function InviteUsersStep({
   onComplete,
 }: InviteUsersStepProps) {
   const isDarkMode = useIsDarkMode();
-  const { mutateAsync: bulkInviteMutate, isLoading: isSubmitting } =
+  const { mutateAsync: bulkInviteMutate, isPending: isSubmitting } =
     useBulkCreateInviteUsers();
   const { data: roles, isLoading: isRolesLoading } = useRoles();
 
@@ -103,7 +102,7 @@ export default function InviteUsersStep({
         try {
           emailValidationSchema.validateSync(invite.email);
         } catch (error) {
-          newErrors[invite.id] = error.message;
+          newErrors[invite.id] = (error as Error).message;
         }
 
         if (emails.includes(invite.email.toLowerCase())) {
@@ -201,7 +200,7 @@ export default function InviteUsersStep({
                   )}
                 </x.div>
 
-                <x.div width="180px">
+                <x.div w="180px">
                   <Select
                     items={roles || []}
                     itemRenderer={(role, { handleClick, modifiers }) => (

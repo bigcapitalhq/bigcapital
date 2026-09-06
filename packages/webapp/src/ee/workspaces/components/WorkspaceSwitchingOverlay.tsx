@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { firstLettersArgs } from '@/utils';
 import '@/ee/workspaces/style/components/WorkspaceSwitchingOverlay.scss';

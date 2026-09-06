@@ -1,11 +1,10 @@
-// @ts-nocheck
 import { Position } from '@blueprintjs/core';
 import styled from '@xstyled/emotion';
 import * as R from 'ramda';
 import React from 'react';
 import { CreateWorkspaceDrawerContent } from './CreateWorkspaceDrawerContent';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const CreateWorkspaceDrawerContainer = styled(Drawer)`
   &.bp4-drawer.bp4-dark,
@@ -22,7 +21,7 @@ function CreateWorkspaceDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: WithDrawersProps & { name: string }) {
   return (
     <CreateWorkspaceDrawerContainer
       isOpen={isOpen}

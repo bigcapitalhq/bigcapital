@@ -1,16 +1,20 @@
-// @ts-nocheck
 import { x } from '@xstyled/emotion';
 import * as R from 'ramda';
 import React from 'react';
 import { CreateWorkspaceStepper } from './CreateWorkspaceStepper';
 import { DrawerHeaderContent, FormattedMessage as T } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 
 /**
  * Create workspace drawer content.
  */
-function CreateWorkspaceDrawerContentRoot({ closeDrawer }) {
+function CreateWorkspaceDrawerContentRoot({
+  closeDrawer,
+}: WithDrawerActionsProps) {
   const handleClose = () => {
     closeDrawer(DRAWERS.CREATE_WORKSPACE);
   };
@@ -20,7 +24,7 @@ function CreateWorkspaceDrawerContentRoot({ closeDrawer }) {
       display="flex"
       flex={1}
       flexDirection="column"
-      height="100%"
+      h="100%"
       minHeight={0}
     >
       <DrawerHeaderContent

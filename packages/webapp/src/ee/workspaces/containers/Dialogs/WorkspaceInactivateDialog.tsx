@@ -1,16 +1,26 @@
-// @ts-nocheck
 import { Button, Classes, Dialog, Intent, Callout } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, AppToaster } from '@/components';
-import withDialogRedux from '@/components/DialogReduxConnect';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import withDialogRedux, {
+  DialogBaseProps,
+} from '@/components/DialogReduxConnect';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
 import {
   useInactivateWorkspace,
   useActivateWorkspace,
 } from '@/ee/workspaces/hooks/query';
 import { compose } from '@/utils';
+
+type WorkspaceInactivateDialogPayload = {
+  organizationId?: string;
+  workspaceName?: string;
+  isActive?: boolean;
+};
 
 function WorkspaceInactivateDialog({
   dialogName,
@@ -19,10 +29,12 @@ function WorkspaceInactivateDialog({
 
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: inactivateWorkspace, isLoading: isInactivating } =
+}: { dialogName: string } & Omit<DialogBaseProps, 'payload'> & {
+    payload?: WorkspaceInactivateDialogPayload;
+  } & WithDialogActionsProps) {
+  const { mutateAsync: inactivateWorkspace, isPending: isInactivating } =
     useInactivateWorkspace();
-  const { mutateAsync: activateWorkspace, isLoading: isActivating } =
+  const { mutateAsync: activateWorkspace, isPending: isActivating } =
     useActivateWorkspace();
 
   const isLoading = isInactivating || isActivating;
@@ -33,6 +45,9 @@ function WorkspaceInactivateDialog({
   };
 
   const handleConfirm = () => {
+    if (!organizationId) {
+      return;
+    }
     const action = isInactivateAction ? inactivateWorkspace : activateWorkspace;
     const successMessage = isInactivateAction
       ? intl.get('workspaces.workspace_inactivated_successfully', {

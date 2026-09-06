@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Classes,
@@ -13,20 +12,32 @@ import { x } from '@xstyled/emotion';
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, AppToaster } from '@/components';
-import withDialogRedux from '@/components/DialogReduxConnect';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import withDialogRedux, {
+  DialogBaseProps,
+} from '@/components/DialogReduxConnect';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
 import { useDeleteWorkspace } from '@/ee/workspaces/hooks/query';
 import { compose } from '@/utils';
+
+type WorkspaceDeleteDialogPayload = {
+  organizationId?: string;
+  workspaceName?: string;
+};
 
 function WorkspaceDeleteDialog({
   dialogName,
   isOpen,
   payload: { organizationId, workspaceName } = {},
-
   // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: deleteWorkspace, isLoading } = useDeleteWorkspace();
+}: { dialogName: string } & Omit<DialogBaseProps, 'payload'> & {
+    payload?: WorkspaceDeleteDialogPayload;
+  } & WithDialogActionsProps) {
+  const { mutateAsync: deleteWorkspace, isPending: isLoading } =
+    useDeleteWorkspace();
   const [confirmText, setConfirmText] = useState('');
   const confirmationPhrase = `Delete ${workspaceName || organizationId}`;
   const canDelete = confirmText === confirmationPhrase;
@@ -37,6 +48,9 @@ function WorkspaceDeleteDialog({
   };
 
   const handleConfirmDelete = () => {
+    if (!organizationId) {
+      return;
+    }
     deleteWorkspace(organizationId)
       .then(() => {
         AppToaster.show({
@@ -117,7 +131,7 @@ function WorkspaceDeleteDialog({
             </x.li>
           </x.ul>
 
-          <Callout intent={Intent.DANGER} icon="">
+          <Callout intent={Intent.DANGER}>
             {intl.get('workspaces.delete_workspace_irreversible', {
               fallback:
                 'This action is irreversible. Please make sure you have exported any important data before proceeding.',
