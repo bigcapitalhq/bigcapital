@@ -37,6 +37,10 @@ export class InventoryTransactionsService {
 
   /**
    * Records the inventory transactions.
+   * When `override` is true, existing transactions for the same document are
+   * deleted once (reversing quantity once) before inserting the new rows.
+   * Deleting per line item would reverse quantity multiple times and drift
+   * `items.quantity_on_hand` away from inventory transactions / valuation.
    * @param {InventoryTransaction[]} transactions - Inventory transactions.
    * @param {boolean} override - Override the existing transactions.
    * @param {Knex.Transaction} trx - Knex transaction.
@@ -47,13 +51,21 @@ export class InventoryTransactionsService {
     override: boolean = false,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    const bulkInsertOpers = [];
+    if (override && transactions.length > 0) {
+      const { transactionId, transactionType } = transactions[0];
 
-    transactions.forEach((transaction: InventoryTransaction) => {
-      const oper = this.recordInventoryTransaction(transaction, override, trx);
-      bulkInsertOpers.push(oper);
-    });
-    const inventoryTransactions = await Promise.all(bulkInsertOpers);
+      await this.deleteInventoryTransactions(
+        transactionId,
+        transactionType,
+        trx,
+      );
+    }
+
+    const inventoryTransactions = await Promise.all(
+      transactions.map((transaction: InventoryTransaction) =>
+        this.recordInventoryTransaction(transaction, false, trx),
+      ),
+    );
 
     // Triggers `onInventoryTransactionsCreated` event.
     await this.eventEmitter.emitAsync(

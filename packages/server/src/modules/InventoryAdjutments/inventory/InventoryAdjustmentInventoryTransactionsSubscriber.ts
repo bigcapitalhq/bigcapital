@@ -15,17 +15,25 @@ export class InventoryAdjustmentInventoryTransactionsSubscriber {
   ) {}
 
   /**
-   * Handles writing inventory transactions once the quick adjustment created.
+   * Handles writing inventory transactions once the adjustment is published
+   * (either created as published, or published later from draft).
    * @param {IInventoryAdjustmentEventPublishedPayload} payload
    * @param {IInventoryAdjustmentEventCreatedPayload} payload -
    */
   @OnEvent(events.inventoryAdjustment.onQuickCreated)
+  @OnEvent(events.inventoryAdjustment.onPublished)
   public async handleWriteInventoryTransactionsOncePublished({
     inventoryAdjustment,
     trx,
   }:
     | IInventoryAdjustmentEventPublishedPayload
     | IInventoryAdjustmentEventCreatedPayload) {
+    // Draft adjustments must not change on-hand quantity until published;
+    // otherwise deleting an unpublished draft skips revert and leaves qty wrong.
+    if (!inventoryAdjustment.isPublished) {
+      return;
+    }
+
     await this.inventoryTransactions.writeInventoryTransactions(
       inventoryAdjustment,
       false,
