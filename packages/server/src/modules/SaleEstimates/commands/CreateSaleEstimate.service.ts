@@ -46,6 +46,12 @@ export class CreateSaleEstimate {
       .findById(estimateDTO.customerId)
       .throwIfNotFound();
 
+    // Validate the expiration date is not before the estimate date.
+    this.validators.validateExpirationDate(
+      estimateDTO.estimateDate,
+      estimateDTO.expirationDate,
+    );
+
     // Transform DTO object to model object.
     const estimateObj = await this.transformerDTO.transformDTOToModel(
       estimateDTO,

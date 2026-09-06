@@ -50,6 +50,12 @@ export class EditSaleEstimate {
     // Validates the given estimate existance.
     this.validators.validateEstimateExistance(oldSaleEstimate);
 
+    // Validate the expiration date is not before the estimate date.
+    this.validators.validateExpirationDate(
+      estimateDTO.estimateDate,
+      estimateDTO.expirationDate,
+    );
+
     // Retrieve the given customer or throw not found service error.
     const customer = await this.customerModel()
       .query()

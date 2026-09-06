@@ -74,6 +74,7 @@ export function EstimateFormHeader() {
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
             fill: true,
+            inputClassName: 'estimate-date-input',
           }}
           fill
           fastField
@@ -94,6 +95,7 @@ export function EstimateFormHeader() {
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
             fill: true,
+            inputClassName: 'estimate-expiration-date-input',
           }}
           fill
           fastField

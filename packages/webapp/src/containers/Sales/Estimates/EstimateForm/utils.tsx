@@ -105,6 +105,8 @@ export const defaultEstimate: EstimateFormValues = {
 const ERRORS = {
   ESTIMATE_NUMBER_IS_NOT_UNQIUE: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE',
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
+  SALE_ESTIMATE_EXPIRATION_DATE_INVALID:
+    'SALE_ESTIMATE_EXPIRATION_DATE_INVALID',
 };
 
 /**
@@ -206,6 +208,18 @@ export const handleErrors = (
   ) {
     setErrors({
       estimateNumber: intl.get('estimate.field.error.estimate_number_required'),
+    });
+  }
+  if (
+    errors.some(
+      (error) => error.type === ERRORS.SALE_ESTIMATE_EXPIRATION_DATE_INVALID,
+    )
+  ) {
+    setErrors({
+      expirationDate: intl.get('estimate.validation.expiration_date', {
+        path: intl.get('expiration_date_'),
+        min: moment().format('YYYY/MM/DD'),
+      }),
     });
   }
 };
