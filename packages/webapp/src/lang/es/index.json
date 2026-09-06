@@ -282,6 +282,8 @@
   "delete_user": "Eliminar usuario",
   "full_name": "Nombre completo",
   "the_user_has_been_inactivated_successfully": "El usuario ha sido inactivado exitosamente.",
+  "the_user_has_been_activated_successfully": "El usuario ha sido activado exitosamente.",
+  "cannot_toggle_authorized_user": "No puedes activar o inactivar tu propia cuenta.",
   "the_user_has_been_deleted_successfully": "El usuario ha sido eliminado exitosamente.",
   "customize_report": "Personalizar informe",
   "print": "Imprimir",

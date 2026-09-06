@@ -357,6 +357,8 @@
   "delete_user": "Delete User",
   "full_name": "Full Name",
   "the_user_has_been_inactivated_successfully": "The user has been inactivated successfully.",
+  "the_user_has_been_activated_successfully": "The user has been activated successfully.",
+  "cannot_toggle_authorized_user": "You cannot activate or inactivate your own account.",
   "the_user_has_been_deleted_successfully": "The user has been deleted successfully.",
   "customize_report": "Customize Report",
   "print": "Print",

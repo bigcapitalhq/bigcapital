@@ -285,6 +285,8 @@
   "delete_user": "حذف المستخدم",
   "full_name": "الاسم بالكامل",
   "the_user_has_been_inactivated_successfully": "تم تعطيل المستخدم بنجاح.",
+  "the_user_has_been_activated_successfully": "تم تفعيل المستخدم بنجاح.",
+  "cannot_toggle_authorized_user": "لا يمكنك تفعيل أو تعطيل حسابك الخاص.",
   "the_user_has_been_deleted_successfully": "تم حذف المستخدم بنجاح.",
   "customize_report": "تخصيص التقرير",
   "print": "طباعة",
