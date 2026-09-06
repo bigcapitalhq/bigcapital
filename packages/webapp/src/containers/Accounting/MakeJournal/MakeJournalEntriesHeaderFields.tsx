@@ -1,4 +1,4 @@
-import { Position } from '@blueprintjs/core';
+import { Position, type InputGroupProps2 } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
 import { Theme } from '@xstyled/emotion';
@@ -66,9 +66,12 @@ export function MakeJournalEntriesHeader() {
             minimal: true,
             fill: true,
           }}
-          inputProps={{
-            leftIcon: <Icon icon={'date-range'} />,
-          }}
+          inputProps={
+            {
+              leftIcon: <Icon icon={'date-range'} />,
+              'data-testId': 'journal-date-input',
+            } as InputGroupProps2
+          }
           fill
           fastField
         />
@@ -91,7 +94,11 @@ export function MakeJournalEntriesHeader() {
         inline
         fastField
       >
-        <FInputGroup name={'reference'} fill />
+        <FInputGroup
+          name={'reference'}
+          data-testId={'journal-reference-input'}
+          fill
+        />
       </FFormGroup>
 
       {/*------------ Journal type  ----------- */}
@@ -101,7 +108,11 @@ export function MakeJournalEntriesHeader() {
         inline
         fastField
       >
-        <FInputGroup name={'journalType'} fill />
+        <FInputGroup
+          name={'journalType'}
+          data-testId={'journal-type-input'}
+          fill
+        />
       </FFormGroup>
 
       {/*------------ Currency  -----------*/}

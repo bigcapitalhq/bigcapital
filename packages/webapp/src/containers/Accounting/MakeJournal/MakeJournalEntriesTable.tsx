@@ -76,6 +76,9 @@ export function MakeJournalEntriesTable({
       data={entries}
       sticky={true}
       totalRow={true}
+      cellTestId={(row, cell) =>
+        cell.column.id === 'accountId' ? 'journal-account-cell' : undefined
+      }
       payload={{
         accounts,
         errors: error,

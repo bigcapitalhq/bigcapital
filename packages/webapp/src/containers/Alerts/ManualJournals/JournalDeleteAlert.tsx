@@ -74,7 +74,7 @@ function JournalDeleteAlertInner({
       onConfirm={handleConfirmManualJournalDelete}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'journal-delete-alert'}>
         <T id={'once_delete_this_journal_you_will_able_to_restore_it'} />
       </p>
     </Alert>

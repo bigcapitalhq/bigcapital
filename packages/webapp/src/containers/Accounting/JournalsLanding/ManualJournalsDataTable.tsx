@@ -142,6 +142,7 @@ function ManualJournalsDataTableInner({
         columns={columns}
         data={manualJournals ?? []}
         manualSortBy={true}
+        rowTestId={'manual-journal-row'}
         selectionColumn={true}
         sticky={true}
         loading={isManualJournalsLoading}

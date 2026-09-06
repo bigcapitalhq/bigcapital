@@ -130,6 +130,7 @@ export const useJournalTableEntriesColumns = () => {
         disableSortBy: true,
         width: 100,
         align: Align.Right,
+        moneyInputGroupProps: { 'data-testId': 'journal-debit-input' },
       },
       {
         Header: CreditHeaderCell,
@@ -138,6 +139,7 @@ export const useJournalTableEntriesColumns = () => {
         disableSortBy: true,
         width: 100,
         align: Align.Right,
+        moneyInputGroupProps: { 'data-testId': 'journal-credit-input' },
       },
       {
         Header: ContactHeaderCell,
