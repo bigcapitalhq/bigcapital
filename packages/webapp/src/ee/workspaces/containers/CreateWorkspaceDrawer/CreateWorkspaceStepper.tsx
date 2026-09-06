@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { css } from '@emotion/css';
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';

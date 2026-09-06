@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FormGroup, InputGroup, Button } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
@@ -9,7 +8,10 @@ import intl from 'react-intl-universal';
 import { OrganizationsListDrawerHeader } from './OrganizationsListDrawerHeader';
 import OrganizationsListTable from './OrganizationsListTable';
 import { DRAWERS } from '@/constants/drawers';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 import {
   useWorkspaces,
   useSetDefaultWorkspace,
@@ -62,7 +64,10 @@ const organizationsDrawerCreateBtnCss = css`
 /**
  * Organizations list drawer content.
  */
-function OrganizationsListDrawerContentRoot({ closeDrawer, openDrawer }) {
+function OrganizationsListDrawerContentRoot({
+  closeDrawer,
+  openDrawer,
+}: WithDrawerActionsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const activeOrganizationId = useAuthOrganizationId();
@@ -80,13 +85,13 @@ function OrganizationsListDrawerContentRoot({ closeDrawer, openDrawer }) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetSearch = useCallback(
-    debounce((value) => {
+    debounce((value: string) => {
       setDebouncedSearch(value);
     }, 200),
     [],
   );
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
     debouncedSetSearch(value);
@@ -112,7 +117,7 @@ function OrganizationsListDrawerContentRoot({ closeDrawer, openDrawer }) {
   };
 
   return (
-    <x.div display="flex" flexDirection="column" height="100%" minHeight={0}>
+    <x.div display="flex" flexDirection="column" h="100%" minHeight={0}>
       <OrganizationsListDrawerHeader
         isCurrentOrgDefault={isCurrentOrgDefault}
         activeOrganizationId={activeOrganizationId}
