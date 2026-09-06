@@ -36,7 +36,7 @@ interface PermissionModule {
 interface PermissionSchemaItem {
   subject: string;
   abilities?: PermissionItem[];
-  extra_abilities?: PermissionItem[];
+  extraAbilities?: PermissionItem[];
 }
 
 interface FormLike {
@@ -132,7 +132,7 @@ export const getDefaultValuesFromSchema = (
     .map((item) => {
       const abilities = [
         ...(item.abilities || []),
-        ...(item.extra_abilities || []),
+        ...(item.extraAbilities || []),
       ];
       return abilities
         .filter((ability) => ability.default)

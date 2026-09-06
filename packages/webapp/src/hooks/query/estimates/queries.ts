@@ -319,7 +319,7 @@ export const useGetSaleEstimateHtml = (
   estimateId: number,
   options?: UseQueryOptions<SaleEstimateHtmlContentResponse>,
 ): UseQueryResult<SaleEstimateHtmlContentResponse> => {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,

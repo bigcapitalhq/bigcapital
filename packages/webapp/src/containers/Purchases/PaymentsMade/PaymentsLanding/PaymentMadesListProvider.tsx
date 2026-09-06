@@ -62,7 +62,7 @@ function PaymentMadesListProvider({
     | {
         data?: PaymentMadeTableRow[];
         pagination?: { total?: number; [key: string]: any };
-        filter_meta?: any;
+        filterMeta?: any;
       }
     | undefined;
 
@@ -74,7 +74,7 @@ function PaymentMadesListProvider({
   const provider: PaymentMadesListContextValue = {
     paymentMades: listData?.data,
     pagination: listData?.pagination,
-    filterMeta: listData?.filter_meta,
+    filterMeta: listData?.filterMeta,
     paymentMadesViews,
 
     fields: resourceMeta?.fields

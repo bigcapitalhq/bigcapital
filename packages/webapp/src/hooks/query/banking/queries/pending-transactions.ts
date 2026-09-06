@@ -26,7 +26,7 @@ export type PendingBankAccountTransactionsResponse = Awaited<
 export function usePendingBankAccountTransactions(
   options?: UseQueryOptions<PendingBankAccountTransactionsResponse, Error>,
 ): UseQueryResult<PendingBankAccountTransactionsResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: bankingKeys.pendingTransactions(),
@@ -52,7 +52,7 @@ export function usePendingBankTransactionsInfinity(
     | 'getPreviousPageParam'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useInfiniteQuery<
     PendingBankTransactionsListPage,

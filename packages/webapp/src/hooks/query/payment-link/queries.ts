@@ -134,7 +134,7 @@ export const useGetPaymentLinkInvoicePdf = (
   invoiceId: string,
   options?: UseQueryOptions<Blob, Error>,
 ): UseQueryResult<Blob, Error> => {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery<Blob, Error>({
     queryKey: paymentLinkKeys.invoicePdf(invoiceId),

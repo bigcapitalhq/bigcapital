@@ -120,7 +120,7 @@ function VendorFormProvider({
     vendor,
     branches: branches ?? [],
     contactDuplicate: contactDuplicate
-      ? { ...omit(contactDuplicate, ['opening_balance_at']) }
+      ? { ...omit(contactDuplicate, ['openingBalanceAt']) }
       : {},
     submitPayload,
     isNewMode,

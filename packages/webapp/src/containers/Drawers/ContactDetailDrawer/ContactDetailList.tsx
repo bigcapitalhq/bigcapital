@@ -13,15 +13,12 @@ export function ContactDetailList({}) {
       <div className="details-menu--vertical">
         <DetailItem
           label={intl.get('display_name')}
-          children={contact.display_name}
+          children={contact.displayName}
         />
         <DetailItem
           label={intl.get('balance')}
           children={
-            <Money
-              amount={contact?.balance}
-              currency={contact?.currency_code}
-            />
+            <Money amount={contact?.balance} currency={contact?.currencyCode} />
           }
         />
       </div>
@@ -30,14 +27,14 @@ export function ContactDetailList({}) {
           label={intl.get('closing_balance')}
           children={
             <Money
-              amount={contact.closing_balance}
-              currency={contact?.currency_code}
+              amount={contact.closingBalance}
+              currency={contact?.currencyCode}
             />
           }
         />
         <DetailItem
           label={intl.get('contact_type')}
-          children={contact.contact_type}
+          children={contact.contactType}
         />
         <DetailItem
           label={intl.get('email')}

@@ -32,7 +32,7 @@ const commonInvalidateQueries = (
 export function useTaxRates(
   props?: Omit<UseQueryOptions<TaxRatesListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: taxRatesKeys.all(),
@@ -44,7 +44,7 @@ export function useTaxRate(
   taxRateId: number | null | undefined,
   props?: Omit<UseQueryOptions<TaxRate>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: taxRatesKeys.detail(taxRateId!),

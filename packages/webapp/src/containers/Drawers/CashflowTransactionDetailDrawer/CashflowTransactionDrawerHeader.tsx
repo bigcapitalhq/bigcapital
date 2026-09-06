@@ -23,7 +23,7 @@ export function CashflowTransactionDrawerHeader() {
       <CommercialDocHeader>
         <DetailsMenu>
           <DetailItem name={'total'} label={intl.get('total')}>
-            <h3 class="big-number">{cashflowTransaction.formatted_amount}</h3>
+            <h3 class="big-number">{cashflowTransaction.formattedAmount}</h3>
           </DetailItem>
         </DetailsMenu>
       </CommercialDocHeader>
@@ -35,22 +35,22 @@ export function CashflowTransactionDrawerHeader() {
               name={'transaction_type'}
               label={intl.get('cash_flow_drawer.label_transaction_type')}
             >
-              {cashflowTransaction.transaction_type_formatted}
+              {cashflowTransaction.transactionTypeFormatted}
             </DetailItem>
 
             <DetailItem
               name={'transaction_number'}
               label={intl.get('cash_flow.drawer.label_transaction_no')}
             >
-              {cashflowTransaction.transaction_number}
+              {cashflowTransaction.transactionNumber}
             </DetailItem>
 
             <DetailItem label={intl.get('date')}>
-              {cashflowTransaction.formatted_date}
+              {cashflowTransaction.formattedDate}
             </DetailItem>
 
             <DetailItem name={'reference-no'} label={intl.get('reference_no')}>
-              {defaultTo(cashflowTransaction.reference_no, '-')}
+              {defaultTo(cashflowTransaction.referenceNo, '-')}
             </DetailItem>
           </DetailsMenu>
         </Col>

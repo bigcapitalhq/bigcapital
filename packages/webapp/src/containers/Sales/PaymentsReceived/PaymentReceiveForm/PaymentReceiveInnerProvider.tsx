@@ -10,13 +10,13 @@ import { useDueInvoices } from '@/hooks/query';
 
 type DueInvoice = {
   id: string | number;
-  due_amount: string | number;
-  invoice_date: string;
+  dueAmount: string | number;
+  invoiceDate: string;
   balance: string | number;
-  currency_code: string;
-  invoice_no: string;
-  branch_id: string | number;
-  payment_amount?: string | number;
+  currencyCode: string;
+  invoiceNo: string;
+  branchId: string | number;
+  paymentAmount?: string | number;
 };
 
 interface PaymentReceiveInnerContextValue {

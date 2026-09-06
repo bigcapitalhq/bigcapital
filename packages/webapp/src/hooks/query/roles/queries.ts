@@ -75,7 +75,7 @@ export function usePermissionsSchema(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<RolePermissionsSchema>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: [...rolesKeys.permissionsSchema(), query],
@@ -88,7 +88,7 @@ export function useRolePermission(
   props?: Omit<UseQueryOptions<Role>, 'queryKey' | 'queryFn'>,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: rolesKeys.detail(role_id),
@@ -101,7 +101,7 @@ export function useRoles(
   query?: Record<string, unknown>,
   props?: Omit<UseQueryOptions<RolesListResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: [...rolesKeys.all(), query],

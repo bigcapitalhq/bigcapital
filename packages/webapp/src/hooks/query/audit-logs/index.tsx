@@ -39,7 +39,7 @@ export function useAuditLogsQuery(
   filters: Record<string, any>,
   props?: Record<string, any>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: [AUDIT_LOGS, filters],
@@ -51,7 +51,7 @@ export function useAuditLogsQuery(
 }
 
 export function useAuditLogFilterOptionsQuery(props?: Record<string, any>) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: [AUDIT_LOG_FILTER_OPTIONS],
@@ -79,7 +79,7 @@ export function useAuditLogsInfinityQuery(
     'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useInfiniteQuery<
     AuditLogsResponse,

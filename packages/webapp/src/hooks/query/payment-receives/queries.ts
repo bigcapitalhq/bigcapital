@@ -308,7 +308,7 @@ export function useGetPaymentReceiveHtml(
   paymentReceivedId: number,
   options?: UseQueryOptions<PaymentReceivedHtmlContentResponse, Error>,
 ): UseQueryResult<PaymentReceivedHtmlContentResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,

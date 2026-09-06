@@ -23,7 +23,7 @@ const commonInvalidateQueries = (
 export function useApiKeys(
   props?: Omit<UseQueryOptions<ApiKeysList>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: apiKeysKeys.list(),

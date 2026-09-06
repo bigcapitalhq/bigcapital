@@ -88,7 +88,7 @@ export function useDeleteBankRule(
 export function useBankRules(
   options?: UseQueryOptions<BankRulesListResponse, Error>,
 ): UseQueryResult<BankRulesListResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,
@@ -101,7 +101,7 @@ export function useBankRule(
   bankRuleId: number,
   options?: Omit<UseQueryOptions<BankRuleResponse, Error>, 'queryKey'>,
 ): UseQueryResult<BankRuleResponse, Error> {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     ...options,

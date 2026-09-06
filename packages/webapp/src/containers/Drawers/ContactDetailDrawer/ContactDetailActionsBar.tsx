@@ -28,7 +28,7 @@ function ContactDetailActionsBarInner({
   // Handle edit contact.
   const onEditContact = () => {
     return contactId
-      ? (history.push(`/${contact?.contact_service}s/${contactId}/edit`),
+      ? (history.push(`/${contact?.contactService}s/${contactId}/edit`),
         closeDrawer('contact-detail-drawer'))
       : null;
   };
@@ -36,7 +36,7 @@ function ContactDetailActionsBarInner({
   // Handle delete contact.
   const onDeleteContact = () => {
     return contactId
-      ? (openAlert(`${contact?.contact_service}-delete`, { contactId }),
+      ? (openAlert(`${contact?.contactService}-delete`, { contactId }),
         closeDrawer('contact-detail-drawer'))
       : null;
   };
@@ -47,7 +47,7 @@ function ContactDetailActionsBarInner({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
-          text={intl.get('edit_contact', { name: contact?.contact_service })}
+          text={intl.get('edit_contact', { name: contact?.contactService })}
           onClick={safeCallback(onEditContact)}
         />
         <NavbarDivider />

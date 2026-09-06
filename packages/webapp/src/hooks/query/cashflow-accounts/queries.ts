@@ -121,7 +121,7 @@ export function useCashflowTransaction(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery<
     BankingTransactionResponse,

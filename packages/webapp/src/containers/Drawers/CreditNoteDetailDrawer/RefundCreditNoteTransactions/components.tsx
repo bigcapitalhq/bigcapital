@@ -38,7 +38,7 @@ export function useRefundCreditTransactionsTableColumns() {
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'formatted_date',
+        accessor: 'formattedDate',
         Cell: FormatDateCell,
         width: 100,
         className: 'date',

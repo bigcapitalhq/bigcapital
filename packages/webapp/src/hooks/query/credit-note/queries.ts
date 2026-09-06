@@ -273,7 +273,7 @@ export function useRefundCreditNote(
   >,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: creditNotesKeys.refund(id),
@@ -346,7 +346,7 @@ export function useReconcileCreditNotes(
   >,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: creditNotesKeys.reconciles(id),
@@ -379,7 +379,7 @@ export function useRefundCreditTransaction(
   >,
   _requestProps?: Record<string, unknown>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
     ...props,
     queryKey: creditNotesKeys.refundTransaction(id),

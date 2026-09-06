@@ -23,16 +23,16 @@ import { safeInvoke } from '@/utils';
 export function TransactionsLockingItemModule({ module, ...rest }) {
   return (
     <TransactionLockingContent
-      name={module.formatted_module}
+      name={module.formattedModule}
       module={module.module}
       description={module.description}
-      isEnabled={module.is_enabled}
-      isPartialUnlock={module.is_partial_unlock}
-      lockToDate={module.formatted_lock_to_date}
-      lockReason={module.lock_reason}
-      unlockReason={module.unlock_reason}
-      unlockFromDate={module.formatted_unlock_from_date}
-      unlockToDate={module.formatted_unlock_to_date}
+      isEnabled={module.isEnabled}
+      isPartialUnlock={module.isPartialUnlock}
+      lockToDate={module.formattedLockToDate}
+      lockReason={module.lockReason}
+      unlockReason={module.unlockReason}
+      unlockFromDate={module.formattedUnlockFromDate}
+      unlockToDate={module.formattedUnlockToDate}
       {...rest}
     />
   );

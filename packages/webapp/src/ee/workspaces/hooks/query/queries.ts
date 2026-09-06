@@ -66,7 +66,7 @@ export function useCreateWorkspace(
   >,
 ) {
   const queryClient = useQueryClient();
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,

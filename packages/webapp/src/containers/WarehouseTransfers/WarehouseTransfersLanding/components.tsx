@@ -12,8 +12,8 @@ import { safeCallback } from '@/utils';
 
 interface WarehouseTransferRow {
   id: number;
-  is_transferred?: boolean;
-  is_initiated?: boolean;
+  isTransferred?: boolean;
+  isInitiated?: boolean;
 }
 
 interface ActionsMenuPayload {
@@ -47,18 +47,14 @@ export function ActionsMenu({
         onClick={safeCallback(onEdit, original)}
       />
 
-      <If
-        condition={Boolean(!original.is_transferred && !original.is_initiated)}
-      >
+      <If condition={Boolean(!original.isTransferred && !original.isInitiated)}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
           text={intl.get('warehouse_transfer.action.initiate_transfer')}
           onClick={safeCallback(onInitate, original)}
         />
       </If>
-      <If
-        condition={Boolean(original.is_initiated && !original.is_transferred)}
-      >
+      <If condition={Boolean(original.isInitiated && !original.isTransferred)}>
         <MenuItem
           icon={<Icon icon="send" iconSize={16} />}
           text={intl.get('warehouse_transfer.action.mark_as_transferred')}
@@ -84,14 +80,14 @@ export function StatusAccessor(warehouse: WarehouseTransferRow) {
   return (
     <Choose>
       <Choose.When
-        condition={Boolean(warehouse.is_initiated && !warehouse.is_transferred)}
+        condition={Boolean(warehouse.isInitiated && !warehouse.isTransferred)}
       >
         <Tag minimal={true} intent={Intent.WARNING} round={true}>
           <T id={'warehouse_transfer.label.transfer_initiated'} />
         </Tag>
       </Choose.When>
       <Choose.When
-        condition={Boolean(warehouse.is_initiated && warehouse.is_transferred)}
+        condition={Boolean(warehouse.isInitiated && warehouse.isTransferred)}
       >
         <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
           <T id={'warehouse_transfer.label.transferred'} />
@@ -116,7 +112,7 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'date',
         Header: intl.get('date'),
-        accessor: 'formatted_date',
+        accessor: 'formattedDate',
         Cell: FormatDateCell,
         width: 120,
         className: 'date',
@@ -126,7 +122,7 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'transaction_number',
         Header: intl.get('warehouse_transfer.column.transfer_no'),
-        accessor: 'transaction_number',
+        accessor: 'transactionNumber',
         width: 100,
         className: 'transaction_number',
         clickable: true,
@@ -135,7 +131,7 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'from_warehouse',
         Header: intl.get('warehouse_transfer.column.from_warehouse'),
-        accessor: 'from_warehouse.name',
+        accessor: 'fromWarehouse.name',
         width: 140,
         className: 'from_warehouse',
         clickable: true,
@@ -144,7 +140,7 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'to_warehouse',
         Header: intl.get('warehouse_transfer.column.to_warehouse'),
-        accessor: 'to_warehouse.name',
+        accessor: 'toWarehouse.name',
         width: 140,
         className: 'to_warehouse',
         clickable: true,

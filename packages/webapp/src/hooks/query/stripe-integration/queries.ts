@@ -91,7 +91,7 @@ export const useCreateStripeAccount = (
 export const useGetStripeAccountLink = (
   options?: UseQueryOptions<GetStripeConnectLinkResponse, Error>,
 ): UseQueryResult<GetStripeConnectLinkResponse, Error> => {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
     queryKey: stripeIntegrationKeys.accountLink(),

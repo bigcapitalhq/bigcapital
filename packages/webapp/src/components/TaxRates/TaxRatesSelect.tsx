@@ -49,7 +49,7 @@ function TaxRatesSelectRoot({
     <FSelect
       valueAccessor={'id'}
       labelAccessor={'code'}
-      textAccessor={'name_formatted'}
+      textAccessor={'nameFormatted'}
       popoverProps={{ minimal: true, usePortal: true, inline: false }}
       createNewItemRenderer={maybeCreateNewItemRenderer}
       createNewItemFromQuery={maybeCreateNewItemFromQuery}

@@ -28,7 +28,7 @@ export function useContact(
   id: number | string | undefined | null,
   props?: Omit<UseQueryOptions<ContactResponse>, 'queryKey' | 'queryFn'>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   const organizationId = useAuthOrganizationId();
   const contactId = id != null ? Number(id) : 0;
 
@@ -46,7 +46,7 @@ export function useAutoCompleteContacts(
     'queryKey' | 'queryFn'
   >,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   const organizationId = useAuthOrganizationId();
   return useQuery({
     ...props,

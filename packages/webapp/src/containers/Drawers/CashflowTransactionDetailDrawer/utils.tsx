@@ -18,7 +18,7 @@ export const useCashflowTransactionColumns = () =>
       },
       {
         Header: intl.get('contact'),
-        accessor: 'contact.display_name',
+        accessor: 'contact.displayName',
         width: 130,
         disableSortBy: true,
         className: 'contact',

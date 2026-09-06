@@ -16,13 +16,13 @@ const useAuditLogTableColumns = () => {
     () => [
       {
         Header: intl.get('audit_log.col_time'),
-        accessor: 'created_at_formatted',
+        accessor: 'createdAtFormatted',
         width: 180,
         textOverview: true,
       },
       {
         Header: intl.get('audit_log.col_user'),
-        accessor: 'user_name',
+        accessor: 'userName',
         width: 150,
         textOverview: true,
       },
