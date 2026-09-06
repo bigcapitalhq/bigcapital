@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { config } from '../../common/config';
+import { ENV_FILE_PATHS } from '../../common/config/env';
 import { CommandRunnerModule } from 'nest-commander';
 import { SystemMigrateLatestCommand } from './commands/SystemMigrateLatest.command';
 import { SystemMigrateRollbackCommand } from './commands/SystemMigrateRollback.command';
@@ -16,6 +17,7 @@ import { OpenApiExportCommand } from './commands/OpenApiExport.command';
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ENV_FILE_PATHS,
       load: config,
       isGlobal: true,
     }),

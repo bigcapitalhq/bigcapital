@@ -23,6 +23,7 @@ import { AppController } from './App.controller';
 import { AppService } from './App.service';
 import { ItemsModule } from '../Items/Items.module';
 import { config } from '../../common/config';
+import { ENV_FILE_PATHS } from '../../common/config/env';
 import { SystemDatabaseModule } from '../System/SystemDB/SystemDB.module';
 import { SystemModelsModule } from '../System/SystemModels/SystemModels.module';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
@@ -115,7 +116,7 @@ import { AppThrottleModule } from './AppThrottle.module';
       serveRoot: '/public',
     }),
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: ENV_FILE_PATHS,
       load: config,
       isGlobal: true,
     }),

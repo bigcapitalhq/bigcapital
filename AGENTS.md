@@ -53,7 +53,7 @@ Run from repo root unless noted.
 
 - **Build before migrate**: `pnpm run build:server` is required before running any migration CLI commands. The server CLI entry (`src/cli.ts`) is compiled separately via `nest-cli.json` projects config.
 - **Dual migration systems**: System DB (`packages/server/src/database/system/`) and tenant DB (`packages/server/src/database/tenant/`) have separate migration/seeds directories and separate CLI commands.
-- **Server env lives at `packages/server/.env.example`** but for local dev the root `.env` (copied from root `.env.example`) is the primary source. The server `.env.example` documents all available vars.
+- **Single root `.env`**: The root `.env` (copied from root `.env.example`) is the only env file. The server and its CLI resolve it from the repo root regardless of CWD (see `packages/server/src/common/config/env.ts`). If a `packages/server/.env` exists it takes precedence over the root `.env`.
 - **Webapp env prefixes**: Only `VITE_`, `REACT_APP_`, and `PUBLIC_URL` env vars are exposed to the client (see `vite.config.ts`).
 - **Server runs on `:3000`**, webapp dev server on `:4000`. The Vite config proxies `/api` and `/socket` to the server.
 - **Playwright selectors** use `data-testId` attributes (not `data-testid`). Global setup registers + onboards a test user via API, persists auth to `e2e/.auth/user.json`.
