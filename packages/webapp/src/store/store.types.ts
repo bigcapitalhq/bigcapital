@@ -5,6 +5,7 @@ export interface TableQuery {
   pageIndex: number;
   filterRoles: IFilterRole[];
   viewSlug?: string | null;
+  customViewId?: number | null;
   inactiveMode?: boolean;
   sortBy?: Array<{ id: string; desc: boolean }>;
 }

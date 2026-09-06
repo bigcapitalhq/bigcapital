@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
 import { InvoiceCustomizeContent } from './InvoiceCustomizeContent';
 import { Box } from '@/components';

@@ -1,12 +1,14 @@
 import { Intent } from '@blueprintjs/core';
 import { Field } from '@blueprintjs-formik/core';
-import { getIn, FieldConfig, FieldProps } from 'formik';
+import { getIn, FieldConfig, FieldProps, FastField } from 'formik';
 import React from 'react';
 import { ColorInput, ColorInputProps } from './ColorInput';
 
 interface ColorInputInputGroupProps
   extends Omit<FieldConfig, 'children' | 'component' | 'as' | 'value'>,
-    ColorInputProps {}
+    ColorInputProps {
+  fastField?: boolean;
+}
 
 export interface ColorInputToInputProps
   extends Omit<FieldProps, 'onChange'>,
@@ -58,7 +60,9 @@ function ColorInputToInputGroup({
  * @returns {JSX.Element}
  */
 export function FColorInput({
+  fastField,
   ...props
 }: ColorInputInputGroupProps): JSX.Element {
-  return <Field {...props} component={ColorInputToInputGroup} />;
+  const FieldComponent = fastField ? FastField : Field;
+  return <FieldComponent {...props} component={ColorInputToInputGroup} />;
 }

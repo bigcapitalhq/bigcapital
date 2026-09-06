@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as R from 'ramda';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
@@ -10,6 +9,12 @@ const EstimateCustomizeDrawerBody = React.lazy(() =>
   })),
 );
 
+interface EstimateCustomizeDrawerProps {
+  name: string;
+  isOpen?: boolean;
+  payload?: Record<string, any>;
+}
+
 /**
  * Estimate customize drawer.
  * @returns {React.ReactNode}
@@ -20,7 +25,7 @@ function EstimateCustomizeDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: EstimateCustomizeDrawerProps) {
   return (
     <Drawer
       isOpen={isOpen}

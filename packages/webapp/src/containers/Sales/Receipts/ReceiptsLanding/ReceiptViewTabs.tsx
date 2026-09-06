@@ -1,11 +1,16 @@
-// @ts-nocheck
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import React from 'react';
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { withReceipts } from './withReceipts';
-import { withReceiptActions } from './withReceiptsActions';
+import { withReceiptsActions } from './withReceiptsActions';
+import type { WithReceiptsProps } from './withReceipts';
+import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import { DashboardViewsTabs } from '@/components';
 import { compose, transfromViewsToTabs } from '@/utils';
+
+interface ReceiptViewTabsProps extends WithReceiptsActionsProps {
+  receiptsCurrentView: string;
+}
 
 /**
  * Receipts views tabs.
@@ -16,14 +21,14 @@ function ReceiptViewTabsInner({
 
   // #withReceipts
   receiptsCurrentView,
-}) {
+}: ReceiptViewTabsProps) {
   // Receipts list context.
   const { receiptsViews } = useReceiptsListContext();
 
   const tabs = transfromViewsToTabs(receiptsViews);
 
   // Handles the active tab chaning.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string | null) => {
     setReceiptsTableState({
       viewSlug: viewSlug || null,
     });
@@ -44,8 +49,8 @@ function ReceiptViewTabsInner({
 }
 
 export const ReceiptViewTabs = compose(
-  withReceiptActions,
-  withReceipts(({ receiptTableState }) => ({
+  withReceiptsActions,
+  withReceipts(({ receiptTableState }: WithReceiptsProps) => ({
     receiptsCurrentView: receiptTableState.viewSlug,
   })),
 )(ReceiptViewTabsInner);

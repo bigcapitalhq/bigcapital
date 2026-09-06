@@ -3,13 +3,20 @@ import { InputGroupProps, SwitchProps } from '@blueprintjs/core';
 import { FInputGroup, FSwitch, Group, Stack } from '@/components';
 import { CLASSES } from '@/constants';
 
+interface ElementCustomizeFieldsGroupProps {
+  label: string;
+  children: React.ReactNode;
+}
+
+interface ElementCustomizeContentItemFieldGroupProps {
+  inputGroupProps: InputGroupProps & { name?: string; label?: string };
+  switchProps?: SwitchProps;
+}
+
 export function ElementCustomizeFieldsGroup({
   label,
   children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+}: ElementCustomizeFieldsGroupProps) {
   return (
     <Stack spacing={20}>
       <h4 className={CLASSES.TEXT_MUTED} style={{ fontWeight: 600 }}>
@@ -24,10 +31,7 @@ export function ElementCustomizeFieldsGroup({
 export function ElementCustomizeContentItemFieldGroup({
   inputGroupProps,
   switchProps,
-}: {
-  inputGroupProps: InputGroupProps;
-  switchProps?: SwitchProps;
-}) {
+}: ElementCustomizeContentItemFieldGroupProps) {
   return (
     <Group spacing={14} position={'apart'}>
       <FSwitch {...inputGroupProps} fastField />

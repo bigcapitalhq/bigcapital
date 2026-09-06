@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Classes, Text } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { MANAGE_LINK_URL } from './constants';

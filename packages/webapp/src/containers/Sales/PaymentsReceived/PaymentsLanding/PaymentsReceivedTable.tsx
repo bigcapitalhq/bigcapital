@@ -7,6 +7,7 @@ import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 import type { PaymentReceiveTableRow } from './components';
 import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
@@ -23,11 +24,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithPaymentsReceivedActionsProps {
-  setPaymentReceivesTableState: (state: Record<string, any>) => void;
-  setPaymentReceivesSelectedRows: (ids: number[]) => void;
-}
 
 interface PaymentsReceivedDataTableProps
   extends Pick<

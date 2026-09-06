@@ -1,5 +1,5 @@
 import { SendMailViewFormValues } from '../SendMailViewDrawer/_types';
 
-export interface EstimateSendMailFormValues extends SendMailViewFormValues {
+export type EstimateSendMailFormValues = SendMailViewFormValues & {
   attachPdf?: boolean;
-}
+};

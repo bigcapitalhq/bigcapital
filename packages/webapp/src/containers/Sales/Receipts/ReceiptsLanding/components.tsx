@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Position,
   Menu,
@@ -12,11 +11,31 @@ import {
 import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { SaleReceiptsListResponse } from '@bigcapital/sdk-ts';
 import { FormattedMessage as T } from '@/components';
 import { FormatDateCell, Choose, Money, Icon, If, Can } from '@/components';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
+
+export type ReceiptTableRow = NonNullable<
+  SaleReceiptsListResponse['data']
+>[number];
+
+interface ReceiptActionsPayload {
+  onEdit: (receipt: ReceiptTableRow) => void;
+  onDelete: (receipt: ReceiptTableRow) => void;
+  onClose: (receipt: ReceiptTableRow) => void;
+  onSendMail: (receipt: ReceiptTableRow) => void;
+  onViewDetails: (receipt: ReceiptTableRow) => void;
+  onPrint: (receipt: ReceiptTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: ReceiptTableRow };
+  payload: ReceiptActionsPayload;
+}
 
 /**
  * Receipts table row actions menu.
@@ -25,7 +44,7 @@ import { safeCallback } from '@/utils';
 export function ActionsMenu({
   payload: { onEdit, onDelete, onClose, onSendMail, onViewDetails, onPrint },
   row: { original: receipt },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -77,7 +96,7 @@ export function ActionsMenu({
 /**
  * Actions cell.
  */
-export function ActionsCell(props) {
+export function ActionsCell(props: ActionsMenuProps) {
   return (
     <Popover
       content={<ActionsMenu {...props} />}
@@ -91,7 +110,7 @@ export function ActionsCell(props) {
 /**
  * Status accessor.
  */
-export function StatusAccessor(receipt) {
+export function StatusAccessor(receipt: ReceiptTableRow) {
   return (
     <Choose>
       <Choose.When condition={receipt.isClosed}>
@@ -112,74 +131,77 @@ export function StatusAccessor(receipt) {
 /**
  * Retrieve receipts table columns.
  */
-export function useReceiptsTableColumns() {
+export function useReceiptsTableColumns(): DataTableColumn<ReceiptTableRow>[] {
   return React.useMemo(
-    () => [
-      {
-        id: 'receipt_date',
-        Header: intl.get('receipt_date'),
-        accessor: 'formattedReceiptDate',
-        width: 140,
-        className: 'receipt_date',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'customer',
-        Header: intl.get('customer_name'),
-        accessor: 'customer.displayName',
-        width: 140,
-        className: 'customer_id',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'receipt_number',
-        Header: intl.get('receipt_number'),
-        accessor: 'receiptNumber',
-        width: 140,
-        className: 'receipt_number',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'deposit_account',
-        Header: intl.get('deposit_account'),
-        accessor: 'depositAccount.name',
-        width: 140,
-        className: 'deposit_account',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'amount',
-        Header: intl.get('amount'),
-        accessor: (r) => <Money amount={r.amount} currency={r.currencyCode} />,
-        width: 140,
-        align: 'right',
-        clickable: true,
-        textOverview: true,
-        money: true,
-        className: clsx(CLASSES.FONT_BOLD),
-      },
-      {
-        id: 'status',
-        Header: intl.get('status'),
-        accessor: StatusAccessor,
-        width: 140,
-        className: 'status',
-        clickable: true,
-      },
-      {
-        id: 'reference_no',
-        Header: intl.get('reference_no'),
-        accessor: 'referenceNo',
-        width: 140,
-        className: 'reference_no',
-        clickable: true,
-        textOverview: true,
-      },
-    ],
+    () =>
+      [
+        {
+          id: 'receipt_date',
+          Header: intl.get('receipt_date'),
+          accessor: 'formattedReceiptDate',
+          width: 140,
+          className: 'receipt_date',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'customer',
+          Header: intl.get('customer_name'),
+          accessor: 'customer.displayName',
+          width: 140,
+          className: 'customer_id',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'receipt_number',
+          Header: intl.get('receipt_number'),
+          accessor: 'receiptNumber',
+          width: 140,
+          className: 'receipt_number',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'deposit_account',
+          Header: intl.get('deposit_account'),
+          accessor: 'depositAccount.name',
+          width: 140,
+          className: 'deposit_account',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'amount',
+          Header: intl.get('amount'),
+          accessor: (r: ReceiptTableRow) => (
+            <Money amount={r.total} currency={r.currencyCode} />
+          ),
+          width: 140,
+          align: 'right',
+          clickable: true,
+          textOverview: true,
+          money: true,
+          className: clsx(CLASSES.FONT_BOLD),
+        },
+        {
+          id: 'status',
+          Header: intl.get('status'),
+          accessor: StatusAccessor,
+          width: 140,
+          className: 'status',
+          clickable: true,
+        },
+        {
+          id: 'reference_no',
+          Header: intl.get('reference_no'),
+          accessor: 'referenceNo',
+          width: 140,
+          className: 'reference_no',
+          clickable: true,
+          textOverview: true,
+        },
+      ] as DataTableColumn<ReceiptTableRow>[],
     [],
   );
 }

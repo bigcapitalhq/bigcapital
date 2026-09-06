@@ -18,6 +18,7 @@ import { useBulkDeleteCreditNotesDialog } from './hooks/use-bulk-delete-credit-n
 import { withCreditNotes } from './withCreditNotes';
 import { withCreditNotesActions } from './withCreditNotesActions';
 import type { WithCreditNotesProps } from './withCreditNotes';
+import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
@@ -38,10 +39,6 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { compose } from '@/utils';
-
-interface WithCreditNotesActionsProps {
-  setCreditNotesTableState: (state: Record<string, any>) => void;
-}
 
 interface CreditNotesActionsBarProps
   extends Pick<WithCreditNotesProps, 'creditNotesSelectedRows'>,

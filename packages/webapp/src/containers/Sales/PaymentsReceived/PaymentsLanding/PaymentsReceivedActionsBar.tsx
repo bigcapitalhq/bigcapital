@@ -19,6 +19,7 @@ import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
@@ -43,10 +44,6 @@ import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshPaymentReceive } from '@/hooks/query/payment-receives';
 import { compose } from '@/utils';
-
-interface WithPaymentsReceivedActionsProps {
-  setPaymentReceivesTableState: (state: Record<string, any>) => void;
-}
 
 interface PaymentsReceivedActionsBarProps
   extends Pick<WithPaymentsReceivedProps, 'paymentReceivesSelectedRows'>,

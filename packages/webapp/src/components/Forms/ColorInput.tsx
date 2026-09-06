@@ -1,4 +1,5 @@
 import {
+  HTMLInputProps,
   IInputGroupProps,
   InputGroup,
   IPopoverProps,
@@ -19,7 +20,7 @@ export interface ColorInputProps {
   initialValue?: string;
   onChange?: (value: string) => void;
   popoverProps?: Partial<IPopoverProps>;
-  inputProps?: Partial<IInputGroupProps>;
+  inputProps?: Partial<IInputGroupProps & HTMLInputProps>;
   pickerProps?: Partial<BoxProps>;
   pickerWrapProps?: Partial<BoxProps>;
 }

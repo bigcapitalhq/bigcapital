@@ -1,6 +1,6 @@
-// @ts-nocheck
 import * as R from 'ramda';
 import React from 'react';
+import type { WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
@@ -9,6 +9,13 @@ const CreditNoteCustomizeDrawerBody = React.lazy(() =>
     default: m.CreditNoteCustomizeDrawerBody,
   })),
 );
+
+interface CreditNoteCustomizeDrawerRootProps {
+  name: string;
+}
+
+type CreditNoteCustomizeDrawerRootConnectedProps =
+  CreditNoteCustomizeDrawerRootProps & WithDrawersProps;
 
 /**
  * Invoice customize drawer.
@@ -19,7 +26,7 @@ function CreditNoteCustomizeDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: CreditNoteCustomizeDrawerRootConnectedProps) {
   return (
     <Drawer
       isOpen={isOpen}

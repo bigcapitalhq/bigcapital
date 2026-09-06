@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, MenuItem } from '@blueprintjs/core';
 import { FormGroupProps } from '@blueprintjs-formik/core';
 import { SelectOptionProps } from '@blueprintjs-formik/select';

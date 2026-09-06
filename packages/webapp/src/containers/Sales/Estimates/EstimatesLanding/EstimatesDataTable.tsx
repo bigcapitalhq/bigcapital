@@ -7,6 +7,7 @@ import { withEstimates } from './withEstimates';
 import { withEstimatesActions } from './withEstimatesActions';
 import type { EstimateTableRow } from './components';
 import type { WithEstimatesProps } from './withEstimates';
+import type { WithEstimatesActionsProps } from './withEstimatesActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
@@ -23,11 +24,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
-
-interface WithEstimatesActionsProps {
-  setEstimatesTableState: (state: Record<string, any>) => void;
-  setEstimatesSelectedRows: (ids: number[]) => void;
-}
 
 interface EstimatesDataTableProps
   extends Pick<
