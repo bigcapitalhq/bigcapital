@@ -5,6 +5,9 @@ import {
   createEstimate,
   deleteEstimateViaRow,
   filterEstimatesByNumber,
+  selectCustomer,
+  selectEntryItem,
+  setEstimateExpirationDateBeforeEstimateDate,
   waitForEstimateForm,
   waitForEstimatesList,
 } from './_estimates';
@@ -78,6 +81,27 @@ test.describe('estimates', () => {
     await expect(
       page.getByText('Customer name is a required field'),
     ).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('should validate the expiration date is later than the estimate date.', async ({
+    page,
+  }) => {
+    await waitForEstimatesList(page);
+
+    const displayName = await seedCustomer();
+
+    await page.getByRole('button', { name: 'New Estimate' }).first().click();
+    await waitForEstimateForm(page, 'New Estimate');
+
+    await selectCustomer(page, displayName);
+    await selectEntryItem(page, ITEM_NAME);
+    await setEstimateExpirationDateBeforeEstimateDate(page);
+
+    await page.getByRole('button', { name: 'Save as Draft' }).click();
+
+    await expect(page.getByText(/field must be later than/)).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
   test('should create an estimate successfully.', async ({ page }) => {

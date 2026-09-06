@@ -1,5 +1,57 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+const MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+/**
+ * Formats the given date into the estimate date input's display format (read
+ * from the input placeholder), so the string parses back correctly regardless
+ * of the organization's configured date format.
+ */
+function formatDateToInputFormat(date: Date, format: string): string {
+  const DD = String(date.getDate()).padStart(2, '0');
+  const MM = String(date.getMonth() + 1).padStart(2, '0');
+  const YYYY = String(date.getFullYear());
+  const MMM = MONTHS[date.getMonth()];
+
+  return format
+    .replace('YYYY', YYYY)
+    .replace('MMM', MMM)
+    .replace('DD', DD)
+    .replace('MM', MM);
+}
+
+/**
+ * Sets the estimate expiration date to the day before the estimate date, so the
+ * form shows the "expiration date must be later than estimate date" error.
+ */
+export async function setEstimateExpirationDateBeforeEstimateDate(
+  page: Page,
+) {
+  const expirationInput = page.locator('input.estimate-expiration-date-input');
+  const format =
+    (await expirationInput.getAttribute('placeholder')) || 'DD MMM YYYY';
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  await expirationInput.click();
+  await expirationInput.fill(formatDateToInputFormat(yesterday, format));
+  await page.keyboard.press('Tab');
+}
+
 /**
  * Waits until the estimates list page is loaded.
  */

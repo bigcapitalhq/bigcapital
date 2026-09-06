@@ -8,7 +8,7 @@ let itemId;
 const makeEstimateRequest = ({ ...props } = {}) => ({
   customerId: customerId,
   estimateDate: '2022-02-02',
-  expirationDate: '2020-03-02',
+  expirationDate: '2022-03-02',
   delivered: false,
   estimateNumber: faker.string.uuid(),
   discount: 100,
@@ -64,6 +64,24 @@ describe('Sale Estimates (e2e)', () => {
       .set('organization-id', orgainzationId)
       .send(makeEstimateRequest())
       .expect(201);
+  });
+
+  it('/sale-estimates (POST) should reject expiration date before estimate date', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
+      .set('organization-id', orgainzationId)
+      .send(
+        makeEstimateRequest({
+          estimateDate: '2022-02-02',
+          expirationDate: '2022-01-01',
+        }),
+      )
+      .expect(400);
+
+    expect(response.body.errors[0].type).toBe(
+      'SALE_ESTIMATE_EXPIRATION_DATE_INVALID',
+    );
   });
 
   it('/sale-estimates (DELETE)', async () => {
