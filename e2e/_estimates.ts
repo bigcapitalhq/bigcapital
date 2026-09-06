@@ -49,7 +49,7 @@ export async function setEstimateExpirationDateBeforeEstimateDate(
 
   await expirationInput.click();
   await expirationInput.fill(formatDateToInputFormat(yesterday, format));
-  await page.keyboard.press('Tab');
+  await page.keyboard.press('Escape');
 }
 
 /**
