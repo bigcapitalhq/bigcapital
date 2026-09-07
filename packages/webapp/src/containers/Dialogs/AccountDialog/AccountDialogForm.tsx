@@ -1,3 +1,4 @@
+import { useCurrentOrganization } from '@/hooks/query';
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
 import React, { useCallback } from 'react';
@@ -5,8 +6,8 @@ import intl from 'react-intl-universal';
 import { AccountDialogFormContent } from './AccountDialogFormContent';
 import { useAccountDialogContext } from './AccountDialogProvider';
 import {
-  EditAccountFormSchema,
-  CreateAccountFormSchema,
+  getEditAccountFormSchema,
+  getCreateAccountFormSchema,
 } from './AccountForm.schema';
 import {
   transformApiErrors,
@@ -30,6 +31,10 @@ const defaultInitialValues: AccountFormValues = {
   description: '',
   currencyCode: '',
   subaccount: false,
+  bankCode: '',
+  agencyNumber: '',
+  accountNumber: '',
+  cbu: '',
 };
 
 interface AccountFormDialogContentProps extends WithDialogActionsProps {}
@@ -51,10 +56,14 @@ function AccountFormDialogContent({
     dialogName,
   } = useAccountDialogContext();
 
+  // Bank identification fields depend on where the organization is located.
+  const { data: currentOrganization } = useCurrentOrganization();
+  const organizationLocation = currentOrganization?.metadata?.location;
+
   // Form validation schema in create and edit mode.
   const validationSchema = isNewMode
-    ? CreateAccountFormSchema
-    : EditAccountFormSchema;
+    ? getCreateAccountFormSchema(organizationLocation)
+    : getEditAccountFormSchema(organizationLocation);
 
   // Callbacks handles form submit.
   const handleFormSubmit = (

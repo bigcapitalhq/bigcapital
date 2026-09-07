@@ -20,6 +20,12 @@ import {
 } from '@/components';
 import { FOREIGN_CURRENCY_ACCOUNTS } from '@/constants/accountTypes';
 import { useAutofocus } from '@/hooks';
+import { useCurrentOrganization } from '@/hooks/query';
+import {
+  isBankIdentificationAccountType,
+  isBankIdentificationCountry,
+  normalizeLocation,
+} from './bankIdentification';
 
 interface AccountFormDialogFieldsProps {
   onClose: () => void;
@@ -36,6 +42,17 @@ export function AccountDialogFormContent({
   const accountNameFieldRef = useAutofocus<HTMLInputElement>();
   const { fieldsDisabled, currencies, accounts, accountsTypes } =
     useAccountDialogContext();
+
+  // Organizations in Brazil and Argentina record local banking identifiers on
+  // their bank accounts. The fields differ by country, so both the country and
+  // the selected account type decide what is shown.
+  const { data: currentOrganization } = useCurrentOrganization();
+  const organizationLocation = normalizeLocation(
+    currentOrganization?.metadata?.location,
+  );
+  const showBankIdentification =
+    isBankIdentificationCountry(organizationLocation) &&
+    isBankIdentificationAccountType(values.accountType);
 
   return (
     <Form>
@@ -143,6 +160,56 @@ export function AccountDialogFormContent({
               fastField
               fill
             />
+          </FFormGroup>
+        </If>
+
+        {/*------------ Bank identification (Brazil) ----------- */}
+        <If condition={showBankIdentification && organizationLocation === 'BR'}>
+          <FFormGroup
+            label={intl.get('accounts.bank_code')}
+            name={'bankCode'}
+            labelInfo={<FieldRequiredHint />}
+            inline
+            fastField
+          >
+            <FInputGroup name={'bankCode'} maxLength={3} fastField />
+          </FFormGroup>
+
+          <FFormGroup
+            label={intl.get('accounts.agency_number')}
+            name={'agencyNumber'}
+            labelInfo={<FieldRequiredHint />}
+            inline
+            fastField
+          >
+            <FInputGroup name={'agencyNumber'} maxLength={5} fastField />
+          </FFormGroup>
+
+          <FFormGroup
+            label={intl.get('accounts.account_number')}
+            name={'accountNumber'}
+            labelInfo={<FieldRequiredHint />}
+            inline
+            fastField
+          >
+            <FInputGroup
+              name={'accountNumber'}
+              placeholder={'12345678-9'}
+              fastField
+            />
+          </FFormGroup>
+        </If>
+
+        {/*------------ Bank identification (Argentina) ----------- */}
+        <If condition={showBankIdentification && organizationLocation === 'AR'}>
+          <FFormGroup
+            label={intl.get('accounts.cbu')}
+            name={'cbu'}
+            labelInfo={<FieldRequiredHint />}
+            inline
+            fastField
+          >
+            <FInputGroup name={'cbu'} maxLength={22} fastField />
           </FFormGroup>
         </If>
 

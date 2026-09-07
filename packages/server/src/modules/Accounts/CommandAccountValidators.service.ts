@@ -3,6 +3,14 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 // import { IAccountDTO, IAccount, IAccountCreateDTO } from './Accounts.types';
 // import AccountTypesUtils from '@/lib/AccountTypes';
 import { ServiceError } from '../Items/ServiceError';
+import {
+  ACCOUNT_NUMBER_REGEX,
+  AGENCY_NUMBER_REGEX,
+  BANK_CODE_REGEX,
+  isBankIdentificationAccountType,
+  isBankIdentificationCountry,
+  isValidCbu,
+} from './utils/BankAccountIdentification';
 import { ERRORS, MAX_ACCOUNTS_CHART_DEPTH } from './constants';
 import { Account } from './models/Account.model';
 import { AccountRepository } from './repositories/Account.repository';
@@ -233,6 +241,74 @@ export class CommandAccountValidators {
 
     if (parentDependantsIds.length >= MAX_ACCOUNTS_CHART_DEPTH) {
       throw new ServiceError(ERRORS.PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL);
+    }
+  }
+
+  /**
+   * Validates the bank identification fields of the given account.
+   *
+   * Organizations located in Brazil and Argentina record local banking
+   * identifiers on their bank accounts. The fields differ by country because
+   * the underlying systems do:
+   *
+   * - Brazil uses a three digit COMPE bank code, a branch number of up to five
+   *   digits, and an account number carrying a trailing check digit. That check
+   *   digit is only validated for shape. Brazilian banks do not share a single
+   *   algorithm for it, so verifying it arithmetically would reject genuinely
+   *   valid accounts.
+   * - Argentina uses the CBU, a single 22 digit identifier whose two check
+   *   digits are defined by one national standard, so it is verified in full.
+   *
+   * Only applies to bank accounts; other account types do not describe a real
+   * bank account and are left alone.
+   *
+   * @param {CreateAccountDTO | EditAccountDTO} accountDTO
+   * @param {string} location - Organization country, ISO 3166-1 alpha-2.
+   */
+  public validateBankIdentificationOrThrow(
+    accountDTO: CreateAccountDTO | EditAccountDTO,
+    location: string,
+  ) {
+    if (
+      !isBankIdentificationCountry(location) ||
+      !isBankIdentificationAccountType(accountDTO.accountType)
+    ) {
+      return;
+    }
+    const country = location.toUpperCase();
+
+    if (country === 'AR') {
+      const cbu = accountDTO.cbu?.trim();
+
+      if (!cbu) {
+        throw new ServiceError(ERRORS.CBU_REQUIRED);
+      }
+      if (!isValidCbu(cbu)) {
+        throw new ServiceError(ERRORS.CBU_INVALID);
+      }
+      return;
+    }
+    const bankCode = accountDTO.bankCode?.trim();
+    const agencyNumber = accountDTO.agencyNumber?.trim();
+    const accountNumber = accountDTO.accountNumber?.trim();
+
+    if (!bankCode) {
+      throw new ServiceError(ERRORS.BANK_CODE_REQUIRED);
+    }
+    if (!BANK_CODE_REGEX.test(bankCode)) {
+      throw new ServiceError(ERRORS.BANK_CODE_INVALID);
+    }
+    if (!agencyNumber) {
+      throw new ServiceError(ERRORS.AGENCY_NUMBER_REQUIRED);
+    }
+    if (!AGENCY_NUMBER_REGEX.test(agencyNumber)) {
+      throw new ServiceError(ERRORS.AGENCY_NUMBER_INVALID);
+    }
+    if (!accountNumber) {
+      throw new ServiceError(ERRORS.ACCOUNT_NUMBER_REQUIRED);
+    }
+    if (!ACCOUNT_NUMBER_REGEX.test(accountNumber)) {
+      throw new ServiceError(ERRORS.ACCOUNT_NUMBER_INVALID);
     }
   }
 }
