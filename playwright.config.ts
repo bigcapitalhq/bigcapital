@@ -8,14 +8,14 @@ dotenv.config();
 const config: PlaywrightTestConfig = {
   // Timeout per test
   timeout: 60 * 1000,
-  workers: 1,
+  workers: process.env.CI ? 4 : 1,
   // Test directory
   testDir: path.join(__dirname, "e2e"),
   // Runs once before the suite: registers + onboards a user via API and
   // persists the authenticated session to `e2e/.auth/user.json`.
   globalSetup: path.join(__dirname, "e2e/global-setup.ts"),
-  // If a test fails, retry it additional 2 times
-  retries: 0,
+  // If a test fails, retry it once
+  retries: 1,
   // Artifacts folder where screenshots, videos, and traces are stored.
   outputDir: "test-results/",
   use: {
