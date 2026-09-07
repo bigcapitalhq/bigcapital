@@ -26,7 +26,7 @@ function PreferencesTopbar({ preferencesPageTitle }) {
       )}
     >
       <div class="preferences-topbar__title">
-        <h2>{preferencesPageTitle}</h2>
+        <h2 data-testId={'preferences-topbar-title'}>{preferencesPageTitle}</h2>
       </div>
       <div class="preferences-topbar__actions">
         <Route pathname="/preferences">
