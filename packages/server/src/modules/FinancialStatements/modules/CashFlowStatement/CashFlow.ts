@@ -380,10 +380,9 @@ export class CashFlowStatement extends R.pipe(
     relation: ICashFlowSchemaAccountRelation,
     account: ModelObject<Account>,
   ): ICashFlowStatementAccountMeta => {
-    const cashToDate = this.beginningCashFrom(this.query.fromDate);
-
+    // SQL already bounds cashLedger to [null, fromDate-1] via filterDateRange;
+    // whereToDate here was redundant and dropped undated aggregated rows.
     const closingBalance = this.cashLedger
-      .whereToDate(cashToDate)
       .whereAccountId(account.id)
       .getClosingBalance();
 
