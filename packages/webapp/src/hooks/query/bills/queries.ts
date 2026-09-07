@@ -162,7 +162,7 @@ export function useBill(
     ...props,
     queryKey: billsKeys.detail(id),
     queryFn: () => fetchBill(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -201,6 +201,6 @@ export function useBillPaymentTransactions(
     ...props,
     queryKey: billsKeys.paymentTransactions(id),
     queryFn: () => fetchBillPaymentTransactions(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }

@@ -210,7 +210,7 @@ export function useInvoice(
     ...props,
     queryKey: invoicesKeys.detail(invoiceId),
     queryFn: () => fetchSaleInvoice(fetcher, invoiceId as number),
-    enabled: invoiceId != null,
+    enabled: invoiceId != null && (props?.enabled ?? true),
   });
 }
 
@@ -328,7 +328,7 @@ export function useInvoiceSMSDetail(
     queryKey: [...invoicesKeys.smsDetail(invoiceId), notificationKey],
     queryFn: () =>
       fetchSaleInvoiceSmsDetails(fetcher, invoiceId!, notificationKey),
-    enabled: invoiceId != null,
+    enabled: invoiceId != null && (props?.enabled ?? true),
   });
 }
 
@@ -344,7 +344,7 @@ export function useInvoicePaymentTransactions(
     ...props,
     queryKey: invoicesKeys.paymentTransactions(invoiceId),
     queryFn: () => fetchInvoicePayments(fetcher, invoiceId!),
-    enabled: invoiceId != null,
+    enabled: invoiceId != null && (props?.enabled ?? true),
   });
 }
 

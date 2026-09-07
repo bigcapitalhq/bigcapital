@@ -143,8 +143,8 @@ export function useGetPdfTemplate(
   return useQuery({
     queryKey: pdfTemplatesKeys.detail(templateId),
     queryFn: () => fetchPdfTemplate(fetcher, templateId),
-    enabled: !!templateId,
     ...options,
+    enabled: !!templateId && (options?.enabled ?? true),
   });
 }
 

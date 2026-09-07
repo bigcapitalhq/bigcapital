@@ -141,7 +141,7 @@ export function useVendor(
     ...props,
     queryKey: vendorsKeys.detail(id),
     queryFn: () => fetchVendor(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

@@ -190,7 +190,7 @@ export function useReceipt(
     ...props,
     queryKey: receiptsKeys.detail(id),
     queryFn: () => fetchSaleReceipt(fetcher, id as number),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -238,7 +238,7 @@ export function useReceiptSMSDetail(
     ...props,
     queryKey: receiptsKeys.smsDetail(receiptId),
     queryFn: () => fetchSaleReceiptSmsDetails(fetcher, receiptId!),
-    enabled: receiptId != null,
+    enabled: receiptId != null && (props?.enabled ?? true),
   });
 }
 

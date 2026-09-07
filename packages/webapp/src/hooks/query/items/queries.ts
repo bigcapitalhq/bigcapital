@@ -199,7 +199,7 @@ export function useItem(
     ...props,
     queryKey: itemsKeys.detail(id),
     queryFn: () => fetchItem(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -215,7 +215,7 @@ export function useItemAssociatedInvoiceTransactions(
     ...props,
     queryKey: itemsKeys.associatedInvoices(id),
     queryFn: () => fetchItemInvoices(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -231,7 +231,7 @@ export function useItemAssociatedEstimateTransactions(
     ...props,
     queryKey: itemsKeys.associatedEstimates(id),
     queryFn: () => fetchItemEstimates(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -247,7 +247,7 @@ export function useItemAssociatedReceiptTransactions(
     ...props,
     queryKey: itemsKeys.associatedReceipts(id),
     queryFn: () => fetchItemReceipts(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -263,7 +263,7 @@ export function useItemAssociatedBillTransactions(
     ...props,
     queryKey: itemsKeys.associatedBills(id),
     queryFn: () => fetchItemBills(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -276,7 +276,7 @@ export function useItemWarehouseLocation(
     ...props,
     queryKey: itemsKeys.warehousesLocation(id),
     queryFn: () => fetchItemWarehouses(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

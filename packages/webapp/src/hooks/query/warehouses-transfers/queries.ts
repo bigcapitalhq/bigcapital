@@ -129,7 +129,7 @@ export function useWarehouseTransfer(
     ...props,
     queryKey: warehousesTransfersKeys.detail(id),
     queryFn: () => fetchWarehouseTransfer(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

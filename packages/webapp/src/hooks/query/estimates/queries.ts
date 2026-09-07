@@ -94,7 +94,7 @@ export function useEstimate(
     ...props,
     queryKey: estimatesKeys.detail(id),
     queryFn: () => fetchSaleEstimate(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -112,7 +112,7 @@ export function useEstimateDetail(
     ...props,
     queryKey: estimatesKeys.detail(id),
     queryFn: () => fetchSaleEstimate(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -269,7 +269,7 @@ export function useEstimateSMSDetail(
     ...props,
     queryKey: estimatesKeys.smsDetail(estimateId),
     queryFn: () => fetchSaleEstimateSmsDetails(fetcher, estimateId!),
-    enabled: estimateId != null,
+    enabled: estimateId != null && (props?.enabled ?? true),
     ...requestProps,
   });
 }

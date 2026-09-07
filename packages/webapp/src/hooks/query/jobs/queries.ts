@@ -19,6 +19,6 @@ export function useJob(
     ...props,
     queryKey: jobsKeys.detail(jobId),
     queryFn: () => fetchOrganizationBuildJob(fetcher, jobId as number),
-    enabled: jobId != null,
+    enabled: jobId != null && (props?.enabled ?? true),
   });
 }

@@ -103,7 +103,7 @@ export function useWarehouse(
     ...props,
     queryKey: warehousesKeys.detail(id),
     queryFn: () => fetchWarehouse(fetcher, idStr),
-    enabled: id != null && idStr !== '',
+    enabled: id != null && idStr !== '' && (props?.enabled ?? true),
   });
 }
 

@@ -140,7 +140,7 @@ export function usePaymentMadeEditPage(
     ...props,
     queryKey: paymentMadesKeys.editPage(id),
     queryFn: () => fetchBillPaymentEditPage(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -157,7 +157,7 @@ export function usePaymentMadeNewPageEntries(
     ...props,
     queryKey: paymentMadesKeys.newEntries(vendorId),
     queryFn: () => fetchBillPaymentNewPageEntries(fetcher, vendorId!),
-    enabled: vendorId != null,
+    enabled: vendorId != null && (props?.enabled ?? true),
     select: (data) => data ?? [],
   });
 }
@@ -179,6 +179,6 @@ export function usePaymentMade(
     ...props,
     queryKey: paymentMadesKeys.detail(id),
     queryFn: () => fetchBillPayment(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }

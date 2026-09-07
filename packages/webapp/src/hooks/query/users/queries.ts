@@ -134,7 +134,7 @@ export function useUser(
     ...props,
     queryKey: usersKeys.detail(id),
     queryFn: () => fetchUser(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

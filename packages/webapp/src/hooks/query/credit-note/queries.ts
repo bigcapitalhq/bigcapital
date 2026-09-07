@@ -220,7 +220,7 @@ export function useCreditNote(
     ...props,
     queryKey: creditNotesKeys.detail(id),
     queryFn: () => fetchCreditNote(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -278,7 +278,7 @@ export function useRefundCreditNote(
     ...props,
     queryKey: creditNotesKeys.refund(id),
     queryFn: () => fetchCreditNoteRefunds(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -313,7 +313,7 @@ export function useReconcileCreditNote(
     ...props,
     queryKey: creditNotesKeys.reconcile(id),
     queryFn: () => fetchCreditNoteAssociatedInvoicesToApply(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -351,7 +351,7 @@ export function useReconcileCreditNotes(
     ...props,
     queryKey: creditNotesKeys.reconciles(id),
     queryFn: () => fetchAppliedInvoices(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -384,7 +384,7 @@ export function useRefundCreditTransaction(
     ...props,
     queryKey: creditNotesKeys.refundTransaction(id),
     queryFn: () => fetchRefundCreditNoteTransaction(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

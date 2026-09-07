@@ -36,7 +36,7 @@ export function useContact(
     ...props,
     queryKey: [...contactsKeys.detail(contactId), organizationId],
     queryFn: () => fetchContact(fetcher, contactId),
-    enabled: contactId > 0,
+    enabled: contactId > 0 && (props?.enabled ?? true),
   });
 }
 

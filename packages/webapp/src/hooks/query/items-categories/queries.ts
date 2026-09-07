@@ -161,6 +161,6 @@ export function useItemCategory(
     ...props,
     queryKey: itemsCategoriesKeys.detail(id),
     queryFn: () => fetchItemCategory(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }

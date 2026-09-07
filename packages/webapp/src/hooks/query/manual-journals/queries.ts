@@ -181,7 +181,7 @@ export function useJournal(
     ...props,
     queryKey: manualJournalsKeys.detail(id),
     queryFn: () => fetchManualJournal(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

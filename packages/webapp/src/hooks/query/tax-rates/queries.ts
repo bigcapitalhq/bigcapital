@@ -49,7 +49,7 @@ export function useTaxRate(
     ...props,
     queryKey: taxRatesKeys.detail(taxRateId!),
     queryFn: () => fetchTaxRate(fetcher, taxRateId!),
-    enabled: !!taxRateId,
+    enabled: !!taxRateId && (props?.enabled ?? true),
   });
 }
 

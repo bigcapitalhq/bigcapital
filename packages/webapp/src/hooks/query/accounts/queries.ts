@@ -67,7 +67,7 @@ export function useAccount(
     ...props,
     queryKey: accountsKeys.detail(id),
     queryFn: () => fetchAccount(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -213,7 +213,7 @@ export function useAccountTransactions(
     ...props,
     queryKey: accountsKeys.transactions(id),
     queryFn: () => fetchAccountTransactions(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

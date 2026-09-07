@@ -34,7 +34,7 @@ export function useInviteMetaByToken(
     ...props,
     queryKey: inviteKeys.meta(token),
     queryFn: () => fetchInviteCheck(fetcher, token!),
-    enabled: !!token,
+    enabled: !!token && (props?.enabled ?? true),
   });
 }
 
