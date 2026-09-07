@@ -79,7 +79,6 @@ const LandedCostHeaderCell = () => {
   return (
     <>
       <T id={'landed'} />
-      {/* @ts-expect-error Hint.content is typed as string but renders ReactNode */}
       <Hint content={<T id={'item_entries.landed.hint'} />} />
     </>
   );

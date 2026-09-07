@@ -51,13 +51,11 @@ export function PaymentReceiveItemsTable({
 
   return (
     <CloudLoadingIndicator isLoading={isDueInvoicesFetching}>
-      {/* @ts-expect-error DataTableEditable is untyped and infers required actions/name props that are unused at runtime */}
       <DataTableEditable
         progressBarLoading={isDueInvoicesFetching}
         className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
         columns={columns}
         data={entries}
-        spinnerProps={false}
         payload={{
           errors:
             (errors as { entries?: unknown[] } | undefined)?.entries || [],

@@ -269,7 +269,7 @@ export function useEstimateSMSDetail(
     ...props,
     queryKey: estimatesKeys.smsDetail(estimateId),
     queryFn: () => fetchSaleEstimateSmsDetails(fetcher, estimateId!),
-    enabled: estimateId != null && (props?.enabled ?? true),
+    enabled: estimateId != null,
     ...requestProps,
   });
 }

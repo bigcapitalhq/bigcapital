@@ -132,7 +132,6 @@ function AccountFormDialogContent({
       onSubmit={handleFormSubmit}
     >
       <AccountDialogFormContent
-        dialogName={dialogName}
         action={payload?.action}
         onClose={handleClose}
       />

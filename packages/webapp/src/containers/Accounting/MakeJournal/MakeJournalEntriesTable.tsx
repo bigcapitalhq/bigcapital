@@ -70,7 +70,6 @@ export function MakeJournalEntriesTable({
   };
 
   return (
-    // @ts-expect-error DataTableEditable is untyped and infers required actions/name props that are unused at runtime
     <DataTableEditable
       columns={columns}
       data={entries}

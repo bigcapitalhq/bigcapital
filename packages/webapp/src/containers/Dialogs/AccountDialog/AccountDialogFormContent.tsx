@@ -109,7 +109,6 @@ export function AccountDialogFormContent({
         {values.subaccount && (
           <FFormGroup
             name={'parentAccountId'}
-            shouldUpdate={parentAccountShouldUpdate}
             label={intl.get('parent_account')}
             inline={true}
             fastField={true}

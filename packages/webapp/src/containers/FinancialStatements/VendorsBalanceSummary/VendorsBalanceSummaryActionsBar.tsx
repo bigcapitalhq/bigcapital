@@ -60,7 +60,7 @@ function VendorsBalanceSummaryActionsBarInner({
     useVendorsBalanceSummaryContext();
 
   const handleFilterToggleClick = () => {
-    toggleVendorSummaryFilterDrawer();
+    toggleVendorSummaryFilterDrawer(true);
   };
 
   // handle recalculate report button.

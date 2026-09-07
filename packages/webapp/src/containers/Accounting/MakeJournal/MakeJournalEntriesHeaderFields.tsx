@@ -83,7 +83,6 @@ export function MakeJournalEntriesHeader() {
         label={intl.get('reference')}
         labelInfo={
           <Hint
-            // @ts-expect-error Hint.content is typed as string but renders ReactNode via Tooltip
             content={<T id={'journal_reference_hint'} />}
             position={Position.RIGHT}
           />

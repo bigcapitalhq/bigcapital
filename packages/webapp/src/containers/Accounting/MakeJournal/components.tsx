@@ -37,7 +37,6 @@ export function ContactHeaderCell() {
     <>
       <T id={'contact'} />
       <Hint
-        // @ts-expect-error Hint.content is typed as string but renders ReactNode via Tooltip
         content={<T id={'contact_column_hint'} />}
         position={Position.LEFT_BOTTOM}
       />
