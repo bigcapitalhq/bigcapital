@@ -2,6 +2,34 @@ import { get } from 'lodash';
 import * as accounting from 'accounting';
 import * as Currencies from 'js-money/lib/currency';
 
+// Supplement missing ISO 4217 currencies (js-money@0.6.3 lacks LRD/SLE).
+const EXTRA_CURRENCY_SYMBOLS: Record<string, any> = {
+  LRD: {
+    symbol: 'L$',
+    name: 'Liberian Dollar',
+    symbol_native: 'L$',
+    decimal_digits: 2,
+    rounding: 0,
+    code: 'LRD',
+    name_plural: 'Liberian dollars',
+  },
+  SLE: {
+    symbol: 'Le',
+    name: 'Sierra Leonean Leone',
+    symbol_native: 'Le',
+    decimal_digits: 2,
+    rounding: 0,
+    code: 'SLE',
+    name_plural: 'Sierra Leonean leones',
+  },
+};
+
+Object.entries(EXTRA_CURRENCY_SYMBOLS).forEach(([code, meta]) => {
+  if (!(Currencies as Record<string, any>)[code]) {
+    (Currencies as Record<string, any>)[code] = meta;
+  }
+});
+
 const getNegativeFormat = (formatName) => {
   switch (formatName) {
     case 'parentheses':
