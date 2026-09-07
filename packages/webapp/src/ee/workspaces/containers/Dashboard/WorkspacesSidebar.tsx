@@ -1,6 +1,6 @@
 import { Tooltip, Position, Spinner, Icon } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React, { useState } from 'react';
 import type { Workspace } from '@bigcapital/sdk-ts';
 import { DRAWERS } from '@/constants/drawers';
@@ -178,6 +178,7 @@ function WorkspacesSidebarRoot({ openDrawer }: WithDrawerActionsProps) {
   );
 }
 
-export const WorkspacesSidebar = R.compose(withDrawerActions)(
+export const WorkspacesSidebar = FF.pipe(
   WorkspacesSidebarRoot,
+  withDrawerActions,
 );

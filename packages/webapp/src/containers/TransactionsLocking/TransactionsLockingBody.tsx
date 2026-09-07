@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import {
   TransactionsLockingList,
@@ -66,7 +66,8 @@ function TransactionsLockingBodyJsx({
   );
 }
 
-export const TransactionsLockingBody = R.compose(
-  withAlertActions,
+export const TransactionsLockingBody = FF.pipe(
+  TransactionsLockingBodyJsx,
   withDialogActions,
-)(TransactionsLockingBodyJsx);
+  withAlertActions,
+);

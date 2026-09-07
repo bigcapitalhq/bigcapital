@@ -1,6 +1,6 @@
 import { Intent } from '@blueprintjs/core';
-import * as R from 'ramda';
 import { useSubscriptionPlans } from './hooks';
+import type { ComponentType } from 'react';
 import { AppToaster, Group, GroupProps } from '@/components';
 import {
   SubscriptionPlan,
@@ -40,43 +40,50 @@ export function SubscriptionPlans({
   );
 }
 
-const SubscriptionPlanMapped = R.compose(
-  withSubscriptionPlanMapper,
-  withPlans(({ plansPeriod }) => ({ plansPeriod })),
-)(({
-  plansPeriod,
-  monthlyVariantId,
-  annuallyVariantId,
-  ...planProps
-}: SubscriptionPlanMappedProps) => {
-  const { mutateAsync: getLemonCheckout, isPending } =
-    useGetLemonSqueezyCheckout();
+const SubscriptionPlanMapped = withSubscriptionPlanMapper(
+  withPlans(({ plansPeriod }) => ({ plansPeriod }))(
+    ({
+      plansPeriod,
+      monthlyVariantId,
+      annuallyVariantId,
+      ...planProps
+    }: SubscriptionPlanMappedProps) => {
+      const { mutateAsync: getLemonCheckout, isPending } =
+        useGetLemonSqueezyCheckout();
 
-  const handleSubscribeBtnClick = () => {
-    const variantId =
-      SubscriptionPlansPeriod.Monthly === plansPeriod
-        ? monthlyVariantId
-        : annuallyVariantId;
+      const handleSubscribeBtnClick = () => {
+        const variantId =
+          SubscriptionPlansPeriod.Monthly === plansPeriod
+            ? monthlyVariantId
+            : annuallyVariantId;
 
-    getLemonCheckout({ variantId })
-      .then((res) => {
-        const checkoutUrl = res.data.data.attributes.url;
-        window.LemonSqueezy?.Url.Open(checkoutUrl);
-      })
-      .catch(() => {
-        AppToaster.show({
-          message: 'Something went wrong!',
-          intent: Intent.DANGER,
-        });
-      });
-  };
-  return (
-    <SubscriptionPlan
-      {...planProps}
-      onSubscribe={handleSubscribeBtnClick}
-      subscribeButtonProps={{
-        loading: isPending,
-      }}
-    />
-  );
-});
+        getLemonCheckout({ variantId })
+          .then((res) => {
+            const checkoutUrl = res.data.data.attributes.url;
+            window.LemonSqueezy?.Url.Open(checkoutUrl);
+          })
+          .catch(() => {
+            AppToaster.show({
+              message: 'Something went wrong!',
+              intent: Intent.DANGER,
+            });
+          });
+      };
+      return (
+        <SubscriptionPlan
+          {...planProps}
+          onSubscribe={handleSubscribeBtnClick}
+          subscribeButtonProps={{
+            loading: isPending,
+          }}
+        />
+      );
+    },
+  ) as unknown as ComponentType<
+    Omit<SubscriptionPricingProps, 'features'> & {
+      features: unknown[];
+      monthlyVariantId: string;
+      annuallyVariantId: string;
+    }
+  >,
+);

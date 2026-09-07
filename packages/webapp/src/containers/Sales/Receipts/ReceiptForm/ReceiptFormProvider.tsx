@@ -206,7 +206,8 @@ function ReceiptFormProvider({
     setSubmitPayload,
 
     // Branding templates
-    brandingTemplates: brandingTemplates?.templates ?? ([] as PdfTemplateResponse[]),
+    brandingTemplates:
+      brandingTemplates?.templates ?? ([] as PdfTemplateResponse[]),
     isBrandingTemplatesLoading,
 
     // State

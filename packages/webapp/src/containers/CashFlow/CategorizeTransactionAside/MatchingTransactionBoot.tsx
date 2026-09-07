@@ -1,6 +1,5 @@
 import { Spinner } from '@blueprintjs/core';
 import { defaultTo } from 'lodash';
-import * as R from 'ramda';
 import React, { createContext } from 'react';
 import { useGetBankTransactionsMatches } from '@/hooks/query/banking';
 
@@ -40,7 +39,7 @@ function MatchingTransactionBoot({
   const perfectMatches = defaultTo(matchingTransactions?.perfectMatches, []);
   const totalPending = defaultTo(matchingTransactions?.totalPending, 0);
 
-  const matches = R.concat(perfectMatches, possibleMatches);
+  const matches = [...perfectMatches, ...possibleMatches];
 
   const provider = {
     isMatchingTransactionsLoading,

@@ -1,5 +1,5 @@
 import { MenuItem } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FMultiSelect } from '../Forms';
@@ -124,10 +124,12 @@ function VendorsMultiSelectRoot({
   );
 }
 
-export const CustomersMultiSelect = R.compose(withDrawerActions)(
+export const CustomersMultiSelect = FF.pipe(
   CustomersMultiSelectRoot,
+  withDrawerActions,
 );
 
-export const VendorsMultiSelect = R.compose(withDrawerActions)(
+export const VendorsMultiSelect = FF.pipe(
   VendorsMultiSelectRoot,
+  withDrawerActions,
 );

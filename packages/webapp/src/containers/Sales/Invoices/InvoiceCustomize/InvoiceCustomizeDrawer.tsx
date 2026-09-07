@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
@@ -38,6 +38,7 @@ function InvoiceCustomizeDrawerRoot({
   );
 }
 
-export const InvoiceCustomizeDrawer = R.compose(withDrawers())(
+export const InvoiceCustomizeDrawer = FF.pipe(
   InvoiceCustomizeDrawerRoot,
+  withDrawers(),
 );

@@ -1,5 +1,5 @@
 import { Intent, Switch, Tag, Text } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { ChangeEvent } from 'react';
 import styles from './SetupSubscription.module.scss';
 import { Group } from '@/components';
@@ -42,6 +42,7 @@ function SubscriptionPlansPeriodSwitcherRoot({
   );
 }
 
-export const SubscriptionPlansPeriodSwitcher = R.compose(
+export const SubscriptionPlansPeriodSwitcher = FF.pipe(
+  SubscriptionPlansPeriodSwitcherRoot,
   withSubscriptionPlansActions,
-)(SubscriptionPlansPeriodSwitcherRoot);
+);

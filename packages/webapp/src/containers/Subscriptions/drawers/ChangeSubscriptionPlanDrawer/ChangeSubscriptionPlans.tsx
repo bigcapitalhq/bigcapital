@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Intent } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { SubscriptionPlan } from '../../component/SubscriptionPlan';
 import { withSubscriptionPlanMapper } from '../../component/withSubscriptionPlanMapper';
 import { withPlans } from '../../withPlans';
@@ -23,48 +23,49 @@ export function ChangeSubscriptionPlans() {
   );
 }
 
-export const SubscriptionPlanMapped = R.compose(
-  withSubscriptionPlanMapper,
-  withDrawerActions,
+export const SubscriptionPlanMapped = FF.pipe(
+  ({
+    openDrawer,
+    closeDrawer,
+    monthlyVariantId,
+    annuallyVariantId,
+    plansPeriod,
+    ...props
+  }) => {
+    const { mutateAsync: changeSubscriptionPlan, isLoading } =
+      useChangeSubscriptionPlan();
+
+    // Handles the subscribe button click.
+    const handleSubscribe = () => {
+      const variantId =
+        plansPeriod === SubscriptionPlansPeriod.Monthly
+          ? monthlyVariantId
+          : annuallyVariantId;
+
+      changeSubscriptionPlan({ variant_id: variantId })
+        .then(() => {
+          closeDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
+          AppToaster.show({
+            message: 'The subscription plan has been changed.',
+            intent: Intent.SUCCESS,
+          });
+        })
+        .catch((error) => {
+          AppToaster.show({
+            message: 'Something went wrong.',
+            intent: Intent.DANGER,
+          });
+        });
+    };
+    return (
+      <SubscriptionPlan
+        {...props}
+        onSubscribe={handleSubscribe}
+        subscribeButtonProps={{ loading: isLoading }}
+      />
+    );
+  },
   withPlans(({ plansPeriod }) => ({ plansPeriod })),
-)(({
-  openDrawer,
-  closeDrawer,
-  monthlyVariantId,
-  annuallyVariantId,
-  plansPeriod,
-  ...props
-}) => {
-  const { mutateAsync: changeSubscriptionPlan, isLoading } =
-    useChangeSubscriptionPlan();
-
-  // Handles the subscribe button click.
-  const handleSubscribe = () => {
-    const variantId =
-      plansPeriod === SubscriptionPlansPeriod.Monthly
-        ? monthlyVariantId
-        : annuallyVariantId;
-
-    changeSubscriptionPlan({ variant_id: variantId })
-      .then(() => {
-        closeDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
-        AppToaster.show({
-          message: 'The subscription plan has been changed.',
-          intent: Intent.SUCCESS,
-        });
-      })
-      .catch((error) => {
-        AppToaster.show({
-          message: 'Something went wrong.',
-          intent: Intent.DANGER,
-        });
-      });
-  };
-  return (
-    <SubscriptionPlan
-      {...props}
-      onSubscribe={handleSubscribe}
-      subscribeButtonProps={{ loading: isLoading }}
-    />
-  );
-});
+  withDrawerActions,
+  withSubscriptionPlanMapper,
+);

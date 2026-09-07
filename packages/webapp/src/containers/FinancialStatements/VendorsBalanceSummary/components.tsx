@@ -1,6 +1,8 @@
 import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as R from 'ramda';
+import * as FA from 'fp-ts/Array';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FinancialLoadingBar } from '../FinancialLoadingBar';
@@ -12,6 +14,7 @@ import {
   useVendorBalanceSummaryCsvExport,
   useVendorBalanceSummaryXlsxExport,
 } from '@/hooks/query';
+import { firstMatch, when } from '@/utils/fp';
 
 interface ColumnDef {
   key: string;
@@ -68,19 +71,29 @@ const totalColumnAccessor = () => ({
   money: true,
 });
 
-const isColumnKey = (key: VendorsBalanceColumnKey) => R.pathEq(['key'], key);
+const isColumnKey =
+  (key: VendorsBalanceColumnKey): FF.Predicate<ColumnDef> =>
+  (column) =>
+    column.key === key;
 
 /**
  * Composes the response columns to table component columns.
  */
 const dynamicColumns = (columns: ColumnDef[]) => {
-  return R.map(
-    R.compose(
-      R.when(isColumnKey('name'), vendorColumnAccessor),
-      R.when(isColumnKey('total'), totalColumnAccessor),
-      R.when(isColumnKey('percentage_of_column'), percentageColumnAccessor),
+  return FF.pipe(
+    columns,
+    FA.map((column) =>
+      FF.pipe(
+        column,
+        firstMatch<ColumnDef, unknown>([
+          when(isColumnKey('name'), vendorColumnAccessor),
+          when(isColumnKey('total'), totalColumnAccessor),
+          when(isColumnKey('percentage_of_column'), percentageColumnAccessor),
+        ]),
+        FO.match(() => column, FF.identity),
+      ),
     ),
-  )(columns);
+  );
 };
 
 /**

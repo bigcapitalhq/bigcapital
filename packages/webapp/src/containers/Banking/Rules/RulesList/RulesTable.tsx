@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { BankRulesTableActionsMenu } from './_components';
 import { BankRulesLandingEmptyState } from './BankRulesLandingEmptyState';
 import { useBankRulesTableColumns } from './hooks';
@@ -75,7 +75,8 @@ function RulesTable({
   );
 }
 
-export const BankRulesTable = R.compose(
-  withAlertActions,
+export const BankRulesTable = FF.pipe(
+  RulesTable,
   withDialogActions,
-)(RulesTable);
+  withAlertActions,
+);

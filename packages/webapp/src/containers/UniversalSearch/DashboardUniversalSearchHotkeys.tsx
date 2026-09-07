@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { withUniversalSearchActions } from './withUniversalSearchActions';
 
@@ -14,6 +14,7 @@ function DashboardUniversalSearchHotkey({ openGlobalSearch }) {
   return null;
 }
 
-export const DashboardUniversalSearchHotkeys = R.compose(
+export const DashboardUniversalSearchHotkeys = FF.pipe(
+  DashboardUniversalSearchHotkey,
   withUniversalSearchActions,
-)(DashboardUniversalSearchHotkey);
+);

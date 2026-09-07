@@ -1,7 +1,6 @@
 import { useFormikContext } from 'formik';
 import { first } from 'lodash';
 import moment from 'moment';
-import * as R from 'ramda';
 import React from 'react';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import type { CreateCreditNoteBody, CreditNote } from '@bigcapital/sdk-ts';
@@ -315,10 +314,7 @@ export const useCreditNoteTotal = () => {
   const discountAmount = useCreditNoteDiscountAmount();
   const adjustmentAmount = useCreditNoteAdjustmentAmount();
 
-  return R.compose(
-    R.subtract(R.__, discountAmount),
-    R.add(adjustmentAmount),
-  )(subtotal);
+  return subtotal + adjustmentAmount - discountAmount;
 };
 
 /**

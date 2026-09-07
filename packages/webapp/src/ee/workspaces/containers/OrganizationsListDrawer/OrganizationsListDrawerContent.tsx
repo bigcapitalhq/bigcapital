@@ -1,8 +1,8 @@
 import { FormGroup, InputGroup, Button } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
+import * as FF from 'fp-ts/function';
 import { debounce } from 'lodash';
-import * as R from 'ramda';
 import React, { useState, useMemo, useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { OrganizationsListDrawerHeader } from './OrganizationsListDrawerHeader';
@@ -191,6 +191,7 @@ function OrganizationsListDrawerContentRoot({
   );
 }
 
-export const OrganizationsListDrawerContent = R.compose(withDrawerActions)(
+export const OrganizationsListDrawerContent = FF.pipe(
   OrganizationsListDrawerContentRoot,
+  withDrawerActions,
 );

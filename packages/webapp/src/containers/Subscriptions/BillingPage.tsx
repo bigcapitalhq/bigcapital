@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withAlertActions } from '../Alert/withAlertActions';
@@ -34,7 +34,8 @@ function BillingPageRoot({
   );
 }
 
-export const BillingPage = R.compose(
-  withAlertActions,
+export const BillingPage = FF.pipe(
+  BillingPageRoot,
   withDashboardActions,
-)(BillingPageRoot);
+  withAlertActions,
+);

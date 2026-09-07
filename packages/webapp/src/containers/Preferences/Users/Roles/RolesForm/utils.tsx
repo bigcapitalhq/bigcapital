@@ -1,6 +1,5 @@
 import { DepGraph } from 'dependency-graph';
 import { chain, isEmpty, castArray, memoize } from 'lodash';
-import * as R from 'ramda';
 import type { RolesFormPermission } from './types';
 import {
   getPermissionsSchema,
@@ -244,13 +243,11 @@ export function isServiceFullUnchecked(
 /**
  * Handles permission checkbox change.
  */
-export const handleCheckboxPermissionChange = R.curry(
-  (
-    form: FormLike,
-    permission: PermissionItem,
-    service: PermissionService,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+export const handleCheckboxPermissionChange =
+  (form: FormLike) =>
+  (permission: PermissionItem) =>
+  (service: PermissionService) =>
+  (event: React.ChangeEvent<HTMLInputElement>) => {
     const { subject } = service;
     const isChecked = event.currentTarget.checked;
     const permKey = `${subject}/${permission.key}`;
@@ -281,8 +278,7 @@ export const handleCheckboxPermissionChange = R.curry(
     dependencies.forEach((depKey: string) => {
       form.setFieldValue(`permissions.${depKey}`, isChecked);
     });
-  },
-);
+  };
 
 /**
  * Detarmines the permission checkbox state.
@@ -312,12 +308,10 @@ export function getServiceAllPermissionsPaths(subject: string): string[] {
 /**
  * Handle full access service checkbox change.
  */
-export const handleCheckboxFullAccessChange = R.curry(
-  (
-    service: PermissionService,
-    form: FormLike,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+export const handleCheckboxFullAccessChange =
+  (service: PermissionService) =>
+  (form: FormLike) =>
+  (event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.currentTarget.checked;
     const permsPaths = getServiceAllPermissionsPaths(service.subject);
 
@@ -331,8 +325,7 @@ export const handleCheckboxFullAccessChange = R.curry(
           : FULL_ACCESS_CHECKBOX_STATE.OFF,
       );
     });
-  },
-);
+  };
 
 /**
  * Retrieves all flatten modules permissions.

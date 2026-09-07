@@ -1,6 +1,6 @@
 // @ts-nocheck
+import * as FF from 'fp-ts/function';
 import { get } from 'lodash';
-import * as R from 'ramda';
 import React from 'react';
 import { universalSearchBinds } from './DashboardUniversalSearchBinds';
 import { useAbilitiesFilter } from '@/hooks/utils';
@@ -33,7 +33,7 @@ export const useGetUniversalSearchTypeOptions = () => {
   const abilityFilter = useAbilitiesFilter();
 
   const momerizedBinds = React.useMemo(() => {
-    const filteredBinds = R.compose(abilityFilter, getUniversalSearchBinds)();
+    const filteredBinds = FF.pipe(getUniversalSearchBinds(), abilityFilter);
 
     return filteredBinds.map((bind) => ({
       key: bind.resourceType,

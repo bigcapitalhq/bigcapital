@@ -2,7 +2,6 @@ import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { keyBy, omit } from 'lodash';
 import moment from 'moment';
-import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
@@ -169,11 +168,9 @@ export const transformErrors = (
 /**
  * Mutates table cell.
  */
-export const mutateTableCell = R.curry(
+export const mutateTableCell =
+  (rowIndex: number, columnId: string, defaultEntry: WarehouseTransferEntry) =>
   (
-    rowIndex: number,
-    columnId: string,
-    defaultEntry: WarehouseTransferEntry,
     value: unknown,
     entries: WarehouseTransferEntry[],
   ): WarehouseTransferEntry[] => {
@@ -183,42 +180,34 @@ export const mutateTableCell = R.curry(
       // Update the row value of the given row index and column id.
       updateTableCell(rowIndex, columnId, value),
     )(entries);
-  },
-);
+  };
 
 /**
  * Compose table rows when insert a new row to table rows.
  */
-export const mutateTableRow = R.curry(
-  (
-    rowIndex: number,
-    newRow: WarehouseTransferEntry,
-    rows: WarehouseTransferEntry[],
-  ): WarehouseTransferEntry[] => {
-    return compose(
-      orderingLinesIndexes,
-      updateTableRow(rowIndex, newRow),
-    )(rows);
-  },
-);
+export const mutateTableRow = (
+  rowIndex: number,
+  newRow: WarehouseTransferEntry,
+  rows: WarehouseTransferEntry[],
+): WarehouseTransferEntry[] => {
+  return compose(orderingLinesIndexes, updateTableRow(rowIndex, newRow))(rows);
+};
 
 /**
  * Deletes the table row from the given rows.
  */
-export const deleteTableRow = R.curry(
-  (
-    rowIndex: number,
-    defaultEntry: WarehouseTransferEntry,
-    rows: WarehouseTransferEntry[],
-  ): WarehouseTransferEntry[] => {
-    return compose(
-      // Ensure minimum lines count.
-      updateMinEntriesLines(MIN_LINES_NUMBER, defaultEntry),
-      // Remove the line by the given index.
-      updateRemoveLineByIndex(rowIndex),
-    )(rows);
-  },
-);
+export const deleteTableRow = (
+  rowIndex: number,
+  defaultEntry: WarehouseTransferEntry,
+  rows: WarehouseTransferEntry[],
+): WarehouseTransferEntry[] => {
+  return compose(
+    // Ensure minimum lines count.
+    updateMinEntriesLines(MIN_LINES_NUMBER, defaultEntry),
+    // Remove the line by the given index.
+    updateRemoveLineByIndex(rowIndex),
+  )(rows);
+};
 
 interface InventoryItemCost {
   itemId: number;

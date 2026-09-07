@@ -1,5 +1,5 @@
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import {
   InvoicePaperTemplate,
   InvoicePaperTemplateProps,
@@ -32,6 +32,7 @@ const withInvoicePreviewTemplateProps = <P extends object>(
   };
 };
 
-export const InvoiceCustomizePdfPreview = R.compose(
+export const InvoiceCustomizePdfPreview = FF.pipe(
+  InvoicePaperTemplate,
   withInvoicePreviewTemplateProps,
-)(InvoicePaperTemplate);
+);

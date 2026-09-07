@@ -1,15 +1,49 @@
-import * as R from 'ramda';
+import * as FA from 'fp-ts/Array';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
 import React from 'react';
 import { useJournalSheetContext } from './JournalProvider';
 import type { JournalColumnKey } from '@bigcapital/sdk-ts';
 import { Align, CLASSES } from '@/constants';
 import { getColumnWidth } from '@/utils';
-
-const isColumnKey = (key: JournalColumnKey) => R.pathEq(['key'], key);
+import { firstMatch, when } from '@/utils/fp';
 
 interface DescriptionCellProps {
   cell: { value: string };
 }
+
+type AlignValue = (typeof Align)[keyof typeof Align];
+
+interface DynamicColumn {
+  key: string;
+  label: string;
+  cellIndex: number;
+  [key: string]: unknown;
+}
+
+type CommonTableColumn = {
+  key: string;
+  Header: string;
+  accessor: string;
+  className: string;
+  textOverview: boolean;
+  align: AlignValue;
+};
+
+type ColumnMapper = (
+  data: unknown[],
+) => (column: DynamicColumn) => CommonTableColumn;
+
+type ColumnDecorator = (column: Record<string, any>) => Record<string, any>;
+
+type ColumnMatcher = (
+  column: Record<string, any>,
+) => FO.Option<Record<string, any>>;
+
+const isColumnKey =
+  (key: JournalColumnKey): FF.Predicate<Record<string, any>> =>
+  (column) =>
+    column.key === key;
 
 /**
  * Description cell - wraps value in a div with muted text class.
@@ -37,17 +71,10 @@ const getReportColWidth = (
   );
 };
 
-interface DynamicColumn {
-  key: string;
-  label: string;
-  cellIndex: number;
-  [key: string]: unknown;
-}
-
 /**
  * Common column mapper.
  */
-const commonAccessor = R.curry((data: unknown[], column: DynamicColumn) => {
+const commonAccessor: ColumnMapper = (data) => (column) => {
   const accessor = getTableCellValueAccessor(column.cellIndex);
 
   return {
@@ -58,13 +85,14 @@ const commonAccessor = R.curry((data: unknown[], column: DynamicColumn) => {
     textOverview: true,
     align: Align.Left,
   };
-});
+};
 
 /**
  * Numeric columns accessor.
  */
-const numericColumnAccessor = R.curry(
-  (data: unknown[], column: DynamicColumn) => {
+const numericColumnAccessor =
+  (data: unknown[]): ColumnDecorator =>
+  (column) => {
     const accessor = getTableCellValueAccessor(column.cellIndex);
     const width = getReportColWidth(data, accessor, column.label);
 
@@ -74,13 +102,12 @@ const numericColumnAccessor = R.curry(
       money: true,
       width,
     };
-  },
-);
+  };
 
 /**
  * Date column accessor.
  */
-const dateColumnAccessor = (column: DynamicColumn) => {
+const dateColumnAccessor: ColumnDecorator = (column) => {
   return {
     ...column,
     width: 100,
@@ -92,7 +119,7 @@ const dateColumnAccessor = (column: DynamicColumn) => {
  */
 const transactionTypeColumnAccessor =
   (onViewDetail?: (referenceType: string, referenceId: number) => void) =>
-  (column: DynamicColumn) => {
+  (column: Record<string, any>): Record<string, any> => {
     return {
       ...column,
       width: 120,
@@ -133,7 +160,7 @@ const createTransactionLinkCell = (
  */
 const transactionNumberColumnAccessor =
   (onViewDetail?: (referenceType: string, referenceId: number) => void) =>
-  (column: DynamicColumn) => {
+  (column: Record<string, any>): Record<string, any> => {
     return {
       ...column,
       width: 70,
@@ -144,7 +171,7 @@ const transactionNumberColumnAccessor =
 /**
  * Account code column accessor.
  */
-const accountCodeColumnAccessor = (column: DynamicColumn) => {
+const accountCodeColumnAccessor: ColumnDecorator = (column) => {
   return {
     ...column,
     width: 70,
@@ -154,45 +181,47 @@ const accountCodeColumnAccessor = (column: DynamicColumn) => {
 /**
  * Description column accessor (muted text in wrapped cell).
  */
-const descriptionColumnAccessor = (column: DynamicColumn) => {
+const descriptionColumnAccessor: ColumnDecorator = (column) => {
   return {
     ...column,
     Cell: DescriptionCell,
   };
 };
 
+const dynamicColumnMatchers = (
+  onViewDetail: (referenceType: string, referenceId: number) => void,
+  data: unknown[],
+): ColumnMatcher[] => [
+  when(isColumnKey('date'), dateColumnAccessor),
+  when(
+    isColumnKey('transaction_type'),
+    transactionTypeColumnAccessor(onViewDetail),
+  ),
+  when(
+    isColumnKey('transaction_number'),
+    transactionNumberColumnAccessor(onViewDetail),
+  ),
+  when(isColumnKey('description'), descriptionColumnAccessor),
+  when(isColumnKey('account_code'), accountCodeColumnAccessor),
+  when(isColumnKey('credit'), numericColumnAccessor(data)),
+  when(isColumnKey('debit'), numericColumnAccessor(data)),
+];
+
 /**
  * Dynamic column mapper.
  */
-const dynamicColumnMapper = R.curry(
-  (
-    onViewDetail: (referenceType: string, referenceId: number) => void,
-    data: unknown[],
-    column: DynamicColumn,
-  ) => {
-    const _commonAccessor = commonAccessor(data);
-    const _numericColumnAccessor = numericColumnAccessor(data);
-    const _transactionNumberColumnAccessor =
-      transactionNumberColumnAccessor(onViewDetail);
+const dynamicColumnMapper =
+  (onViewDetail: (referenceType: string, referenceId: number) => void) =>
+  (data: unknown[]) =>
+  (column: DynamicColumn): Record<string, any> => {
+    const fallback = commonAccessor(data)(column);
 
-    return R.compose(
-      R.when(isColumnKey('date'), dateColumnAccessor),
-      R.when(
-        isColumnKey('transaction_type'),
-        transactionTypeColumnAccessor(onViewDetail),
-      ),
-      R.when(
-        isColumnKey('transaction_number'),
-        _transactionNumberColumnAccessor,
-      ),
-      R.when(isColumnKey('description'), descriptionColumnAccessor),
-      R.when(isColumnKey('account_code'), accountCodeColumnAccessor),
-      R.when(isColumnKey('credit'), _numericColumnAccessor),
-      R.when(isColumnKey('debit'), _numericColumnAccessor),
-      _commonAccessor,
-    )(column);
-  },
-);
+    return FF.pipe(
+      fallback,
+      firstMatch(dynamicColumnMatchers(onViewDetail, data)),
+      FO.match(() => fallback, FF.identity),
+    );
+  };
 
 /**
  * Composes the fetched dynamic columns from the server to the columns to pass it
@@ -203,7 +232,7 @@ export const dynamicColumns = (
   columns: DynamicColumn[],
   data: unknown[],
 ) => {
-  return R.map(dynamicColumnMapper(onViewDetail, data), columns);
+  return FF.pipe(columns, FA.map(dynamicColumnMapper(onViewDetail)(data)));
 };
 
 /**

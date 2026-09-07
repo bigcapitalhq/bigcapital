@@ -187,7 +187,8 @@ function EstimateFormProvider({
     createEstimateMutate,
     editEstimateMutate,
 
-    brandingTemplates: brandingTemplates?.templates ?? ([] as PdfTemplateResponse[]),
+    brandingTemplates:
+      brandingTemplates?.templates ?? ([] as PdfTemplateResponse[]),
     isBrandingTemplatesLoading,
 
     saleEstimateState,

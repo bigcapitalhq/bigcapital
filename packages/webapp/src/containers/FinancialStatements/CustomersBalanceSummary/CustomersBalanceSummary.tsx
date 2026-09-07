@@ -1,5 +1,5 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
-import * as R from 'ramda';
 import React, { useEffect } from 'react';
 import { CustomersBalanceLoadingBar } from './components';
 import { CustomerBalanceSummaryPdfDialog } from './CustomerBalancePdfDialog';
@@ -70,6 +70,7 @@ function CustomersBalanceSummaryInner({
   );
 }
 
-export const CustomersBalanceSummary = R.compose(
+export const CustomersBalanceSummary = FF.pipe(
+  CustomersBalanceSummaryInner,
   withCustomersBalanceSummaryActions,
-)(CustomersBalanceSummaryInner);
+);

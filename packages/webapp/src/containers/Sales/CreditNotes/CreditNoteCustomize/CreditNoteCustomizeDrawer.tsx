@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { Drawer, DrawerSuspense } from '@/components';
@@ -41,6 +41,7 @@ function CreditNoteCustomizeDrawerRoot({
   );
 }
 
-export const CreditNoteCustomizeDrawer = R.compose(withDrawers())(
+export const CreditNoteCustomizeDrawer = FF.pipe(
   CreditNoteCustomizeDrawerRoot,
+  withDrawers(),
 );

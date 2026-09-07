@@ -1,11 +1,13 @@
 import { Divider } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
 import React, { useMemo } from 'react';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { AccountUncategorizedDateFilter } from './UncategorizedTransactions/AccountUncategorizedDateFilter';
 import { Group } from '@/components';
 import { TagsControl } from '@/components/TagsControl';
 import { useAppQueryString } from '@/hooks';
+import { when } from '@/utils/fp';
 
 interface TagsControlOption {
   value: string;
@@ -27,38 +29,45 @@ export function AccountTransactionsUncategorizeFilter() {
     setLocationQuery({ uncategorizedFilter: value });
   };
 
-  const options = useMemo<TagsControlOption[]>(
-    () =>
-      R.when(
+  const options = useMemo<TagsControlOption[]>(() => {
+    const baseOptions: TagsControlOption[] = [
+      {
+        value: 'all',
+        label: (
+          <>
+            All <strong>({totalUncategorized})</strong>
+          </>
+        ),
+      },
+      {
+        value: 'recognized',
+        label: (
+          <>
+            Recognized <strong>({totalRecognized})</strong>
+          </>
+        ),
+      },
+    ];
+
+    return FF.pipe(
+      baseOptions,
+      when(
         () => totalPending > 0,
-        R.append({
-          value: 'pending',
-          label: (
-            <>
-              Pending <strong>({totalPending})</strong>
-            </>
-          ),
-        }),
-      )([
-        {
-          value: 'all',
-          label: (
-            <>
-              All <strong>({totalUncategorized})</strong>
-            </>
-          ),
-        },
-        {
-          value: 'recognized',
-          label: (
-            <>
-              Recognized <strong>({totalRecognized})</strong>
-            </>
-          ),
-        },
-      ]) as TagsControlOption[],
-    [totalPending, totalRecognized, totalUncategorized],
-  );
+        (tags: TagsControlOption[]) => [
+          ...tags,
+          {
+            value: 'pending',
+            label: (
+              <>
+                Pending <strong>({totalPending})</strong>
+              </>
+            ),
+          },
+        ],
+      ),
+      FO.match(() => baseOptions, FF.identity),
+    );
+  }, [totalPending, totalRecognized, totalUncategorized]);
 
   return (
     <Group position={'apart'} style={{ marginBottom: 14 }}>

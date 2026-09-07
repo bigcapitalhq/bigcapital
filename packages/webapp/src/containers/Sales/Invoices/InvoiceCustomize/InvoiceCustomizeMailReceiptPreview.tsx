@@ -1,5 +1,5 @@
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { InvoiceMailReceiptPreview } from './InvoiceMailReceiptPreview';
 import { InvoiceCustomizeFormValues } from './types';
 import { Box } from '@/components';
@@ -30,6 +30,7 @@ const withInvoiceMailReceiptPreviewConnected = <P extends Object>(
   };
 };
 
-export const InvoiceCustomizeMailReceiptPreview = R.compose(
+export const InvoiceCustomizeMailReceiptPreview = FF.pipe(
+  InvoiceMailReceiptPreview,
   withInvoiceMailReceiptPreviewConnected,
-)(InvoiceMailReceiptPreview);
+);

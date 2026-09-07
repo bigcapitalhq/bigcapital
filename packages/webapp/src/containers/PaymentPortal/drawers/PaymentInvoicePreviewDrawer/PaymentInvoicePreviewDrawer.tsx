@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Position } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { PaymentInvoicePreviewContent } from './PaymentInvoicePreviewContent';
 import { Drawer, DrawerSuspense } from '@/components';
@@ -32,6 +32,7 @@ function PaymentInvoicePreviewDrawerRoot({
   );
 }
 
-export const PaymentInvoicePreviewDrawer = R.compose(withDrawers())(
+export const PaymentInvoicePreviewDrawer = FF.pipe(
   PaymentInvoicePreviewDrawerRoot,
+  withDrawers(),
 );

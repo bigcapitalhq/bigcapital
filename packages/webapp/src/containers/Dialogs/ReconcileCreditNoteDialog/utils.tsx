@@ -1,6 +1,5 @@
 import { Callout, Intent, Classes } from '@blueprintjs/core';
 import clsx from 'classnames';
-import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { ReconcileCreditNoteFormEntry } from './types';
@@ -117,8 +116,9 @@ export const maxAmountCreditFromRemaining = (
 /**
  * Adjusts entries amount based on the given total.
  */
-export const maxCreditNoteAmountEntries = R.curry(
-  (total: number, entries: ReconcileCreditNoteFormEntry[]) => {
+export const maxCreditNoteAmountEntries =
+  (total: number) =>
+  (entries: ReconcileCreditNoteFormEntry[]): ReconcileCreditNoteFormEntry[] => {
     let balance = total;
 
     return entries.map((entry) => {
@@ -132,5 +132,4 @@ export const maxCreditNoteAmountEntries = R.curry(
           : '',
       };
     });
-  },
-);
+  };

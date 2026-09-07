@@ -1,6 +1,6 @@
 import { Position } from '@blueprintjs/core';
 import styled from '@xstyled/emotion';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { OrganizationsListDrawerContent } from './OrganizationsListDrawerContent';
 import { Drawer, DrawerSuspense } from '@/components';
@@ -37,6 +37,7 @@ function OrganizationsListDrawerRoot({
   );
 }
 
-export const OrganizationsListDrawer = R.compose(withDrawers())(
+export const OrganizationsListDrawer = FF.pipe(
   OrganizationsListDrawerRoot,
+  withDrawers(),
 );

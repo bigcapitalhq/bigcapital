@@ -1,6 +1,6 @@
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { round } from 'lodash';
-import * as R from 'ramda';
 import React from 'react';
 import { updateItemsEntriesTotal } from './utils';
 import type { ItemEntry } from '@/interfaces/ItemEntries';
@@ -53,8 +53,9 @@ const revertAndConvertExchangeRate = (
  * @params {number} newExchangeRate -
  * @params {ItemEntry} entries -
  */
-const assignRateRevertAndCovertExchangeRate = R.curry(
-  (oldExchangeRate: number, newExchangeRate: number, entries: ItemEntry[]) => {
+const assignRateRevertAndCovertExchangeRate =
+  (oldExchangeRate: number, newExchangeRate: number) =>
+  (entries: ItemEntry[]) => {
     return entries.map((entry) => ({
       ...entry,
       rate: revertAndConvertExchangeRate(
@@ -63,8 +64,7 @@ const assignRateRevertAndCovertExchangeRate = R.curry(
         newExchangeRate,
       ),
     }));
-  },
-);
+  };
 
 /**
  * Updates items entries on exchange rate change.
@@ -76,13 +76,14 @@ export const useUpdateEntriesOnExchangeRateChange = () => {
   } = useFormikContext<{ entries: ItemEntry[] }>();
 
   return React.useMemo(() => {
-    return R.curry((oldExchangeRate: number, newExchangeRate: number) => {
-      return R.compose(
-        // Updates entries total.
-        updateItemsEntriesTotal,
+    return (oldExchangeRate: number, newExchangeRate: number) => {
+      return FF.pipe(
+        entries,
         // Assign a new rate of the given new exchange rate from the old exchange rate.
         assignRateRevertAndCovertExchangeRate(oldExchangeRate, newExchangeRate),
-      )(entries);
-    });
+        // Updates entries total.
+        updateItemsEntriesTotal,
+      );
+    };
   }, [entries]);
 };

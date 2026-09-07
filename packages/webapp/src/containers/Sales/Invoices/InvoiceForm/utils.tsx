@@ -2,7 +2,6 @@ import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { omit, first, sumBy } from 'lodash';
 import moment from 'moment';
-import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
@@ -544,11 +543,8 @@ export const useInvoiceTotal = () => {
   const discountAmount = useInvoiceDiscountAmount();
   const adjustmentAmount = useInvoiceAdjustmentAmount();
 
-  return R.compose(
-    R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)),
-    R.subtract(R.__, discountAmount),
-    R.add(adjustmentAmount),
-  )(subtotal);
+  const total = subtotal + adjustmentAmount - discountAmount;
+  return isExclusiveTax ? total + totalTaxAmount : total;
 };
 
 /**
