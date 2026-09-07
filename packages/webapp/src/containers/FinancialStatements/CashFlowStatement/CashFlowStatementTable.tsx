@@ -30,7 +30,7 @@ export function CashFlowStatementTable({
       companyName={companyName}
       sheetType={intl.get('statement_of_cash_flow')}
       dateText={meta?.formattedDateRange}
-      basis={query.basis}
+      basis={query.basis as 'cash' | 'accrual' | undefined}
     >
       <CashflowStatementDataTable
         columns={columns}

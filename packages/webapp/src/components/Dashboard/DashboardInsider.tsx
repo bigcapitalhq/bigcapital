@@ -4,7 +4,7 @@ import { LoadingIndicator } from '../Indicator';
 
 interface DashboardInsiderProps {
   loading?: boolean;
-  children: ReactNode;
+  children?: ReactNode;
   name?: string;
   mount?: boolean;
   className?: string;

@@ -75,7 +75,10 @@ export function CustomersBalanceSummaryGeneralPanelContent() {
             name={'customersIds'}
             label={intl.get('specific_customers')}
           >
-            <CustomersMultiSelect name={'customersIds'} items={customers} />
+            <CustomersMultiSelect
+              name={'customersIds'}
+              items={customers ?? []}
+            />
           </FFormGroup>
         </Col>
       </Row>

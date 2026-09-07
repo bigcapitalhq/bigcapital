@@ -13,14 +13,23 @@ interface FormSetFieldValue {
 }
 
 /**
+ * The balance sheet form query — the SDK table query extended with the
+ * UI-only filter field.
+ */
+type BalanceSheetFormQuery = BalanceSheetTableQuery & {
+  filterByOption: string;
+};
+
+/**
  * Retrieves the default balance sheet query.
  * @returns {}
  */
-export const getDefaultBalanceSheetQuery = (): BalanceSheetTableQuery => ({
+export const getDefaultBalanceSheetQuery = (): BalanceSheetFormQuery => ({
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
   basis: 'cash',
   displayColumnsType: 'total',
+  displayColumnsBy: 'month',
   filterByOption: 'without-zero-balance',
 
   previousYear: false,
@@ -36,12 +45,14 @@ export const getDefaultBalanceSheetQuery = (): BalanceSheetTableQuery => ({
   percentageOfRow: false,
 
   branchesIds: [],
+  // Declared required by the API spec but unused by the server.
+  accountIds: [],
   numberFormat: {},
 });
 
 const parseBalanceSheetQuery = (
   locationQuery: Record<string, unknown>,
-): BalanceSheetTableQuery => {
+): BalanceSheetFormQuery => {
   const defaultQuery = getDefaultBalanceSheetQuery();
   const transformed = {
     ...defaultQuery,

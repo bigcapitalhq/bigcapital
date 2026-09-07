@@ -57,6 +57,7 @@ export const usePdfDocument = (fetchFn: () => Promise<PdfDocument>) => {
 
 export const useFetcherPdf = (fetchFn: () => Promise<Blob>) => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const [pdfUrl, setPdfUrl] = React.useState('');
 
   React.useEffect(() => {
@@ -64,8 +65,9 @@ export const useFetcherPdf = (fetchFn: () => Promise<Blob>) => {
     fetchFn().then((blob) => {
       setPdfUrl(URL.createObjectURL(blob));
       setIsLoading(false);
+      setIsLoaded(true);
     });
   }, []);
 
-  return { isLoading, pdfUrl };
+  return { isLoading, isLoaded, pdfUrl };
 };

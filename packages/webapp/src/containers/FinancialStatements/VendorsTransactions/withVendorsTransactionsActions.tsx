@@ -3,13 +3,13 @@ import { Dispatch } from 'redux';
 import { toggleVendorsTransactionsFilterDrawer } from '@/store/financial-statement/financial-statements.actions';
 
 export interface WithVendorsTransactionsActionsProps {
-  toggleVendorsTransactionsFilterDrawer: (toggle: boolean) => void;
+  toggleVendorsTransactionsFilterDrawer: (toggle?: boolean) => void;
 }
 
 export const mapActionsToProps = (
   dispatch: Dispatch,
 ): WithVendorsTransactionsActionsProps => ({
-  toggleVendorsTransactionsFilterDrawer: (toggle: boolean) =>
+  toggleVendorsTransactionsFilterDrawer: (toggle?: boolean) =>
     dispatch(toggleVendorsTransactionsFilterDrawer(toggle)),
 });
 

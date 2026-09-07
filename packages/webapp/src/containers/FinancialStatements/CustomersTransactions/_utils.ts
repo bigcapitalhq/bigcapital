@@ -25,9 +25,20 @@ export const getCustomersTransactionsDefaultQuery = () => ({
   numberFormat: {},
 });
 
+/**
+ * The customers transactions form query — the SDK table query extended with
+ * the UI-only filter fields (the OpenAPI spec does not declare them).
+ */
+type CustomersTransactionsFormQuery = TransactionsByCustomersTableQuery & {
+  fromDate: string;
+  toDate: string;
+  customersIds: number[];
+  filterByOption: string;
+};
+
 const parseCustomersTransactionsQuery = (
   query: Record<string, any>,
-): TransactionsByCustomersTableQuery => {
+): CustomersTransactionsFormQuery => {
   const defaultQuery = getCustomersTransactionsDefaultQuery();
 
   const transformedQuery = {
