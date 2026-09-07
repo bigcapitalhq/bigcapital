@@ -17,12 +17,18 @@ interface GlobalHotkeyRoute {
 
 // Toggle dark/light mode by toggling 'bp4-dark' class on body
 const handleToggleDarkMode = () => {
+  const html = document.documentElement;
   const body = document.body;
+  const isDarkMode = body.classList.contains('bp4-dark');
 
-  if (body.classList.contains('bp4-dark')) {
+  if (isDarkMode) {
+    html.classList.remove('bp4-dark');
     body.classList.remove('bp4-dark');
+    localStorage.setItem('theme', 'light');
   } else {
+    html.classList.add('bp4-dark');
     body.classList.add('bp4-dark');
+    localStorage.setItem('theme', 'dark');
   }
 };
 
