@@ -1,7 +1,19 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 
-export const transformErrors = (errors, { setErrors, setCalloutCode }) => {
+export interface NotifySMSResponseError {
+  type: string;
+}
+
+export const transformErrors = (
+  errors: NotifySMSResponseError[],
+  {
+    setErrors,
+    setCalloutCode,
+  }: {
+    setErrors: (errors: any) => void;
+    setCalloutCode: (codes: any) => void;
+  },
+) => {
   if (errors.some((e) => e.type === 'CUSTOMER_SMS_NOTIFY_PHONE_INVALID')) {
     setCalloutCode([200]);
     setErrors({
@@ -18,6 +30,6 @@ export const transformErrors = (errors, { setErrors, setCalloutCode }) => {
   }
 };
 
-export const getSMSUnits = (message, threshold = 140) => {
+export const getSMSUnits = (message: string, threshold = 140): number => {
   return Math.ceil(message.length / threshold);
 };

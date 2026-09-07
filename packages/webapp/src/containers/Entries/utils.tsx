@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { sumBy, isEmpty, last, keyBy, groupBy } from 'lodash';
 import * as R from 'ramda';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
 import { useItem } from '@/hooks/query';
 import {
@@ -22,6 +21,8 @@ export const ITEM_TYPE = {
   PURCHASABLE: 'PURCHASABLE',
 };
 
+type EntriesRow = any;
+
 /**
  * Retrieve item entry total from the given rate, quantity and discount.
  * @param {number} rate
@@ -29,7 +30,11 @@ export const ITEM_TYPE = {
  * @param {number} discount
  * @return {number}
  */
-export const calcItemEntryTotal = (discount, quantity, rate) => {
+export const calcItemEntryTotal = (
+  discount: number,
+  quantity: number,
+  rate: number,
+): number => {
   const _quantity = toSafeNumber(quantity);
   const _rate = toSafeNumber(rate);
   const _discount = toSafeNumber(discount);
@@ -40,7 +45,7 @@ export const calcItemEntryTotal = (discount, quantity, rate) => {
 /**
  * Updates the items entries total.
  */
-export function updateItemsEntriesTotal(rows) {
+export function updateItemsEntriesTotal(rows: EntriesRow[]): EntriesRow[] {
   return rows.map((row) => ({
     ...row,
     amount: calcItemEntryTotal(row.discount, row.quantity, row.rate),
@@ -50,7 +55,7 @@ export function updateItemsEntriesTotal(rows) {
 /**
  * Retrieve total of the given items entries.
  */
-export function getEntriesTotal(entries) {
+export function getEntriesTotal(entries: { amount?: any }[]): number {
   return sumBy(entries, 'amount');
 }
 
@@ -60,28 +65,50 @@ export function getEntriesTotal(entries) {
  * @param {Array} entries - Entries.
  * @return {Array}
  */
-export const ensureEntriesHaveEmptyLine = R.curry((defaultEntry, entries) => {
-  const lastEntry = last(entries);
+export const ensureEntriesHaveEmptyLine = R.curry(
+  (defaultEntry: EntriesRow, entries: EntriesRow[]) => {
+    const lastEntry = last(entries);
 
-  if (isEmpty(lastEntry.account_id) || isEmpty(lastEntry.amount)) {
-    return [...entries, defaultEntry];
-  }
-  return entries;
-});
+    if (
+      !lastEntry ||
+      isEmpty(lastEntry.account_id) ||
+      isEmpty(lastEntry.amount)
+    ) {
+      return [...entries, defaultEntry];
+    }
+    return entries;
+  },
+);
 
 /**
  * Disable landed cost checkbox once the item type is not service or non-inventorty.
  * @returns {boolean}
  */
-export const isLandedCostDisabled = (item) =>
-  ['service', 'non-inventory'].indexOf(item.type) === -1;
+export const isLandedCostDisabled = (item: any): boolean =>
+  ['service', 'non-inventory'].indexOf(item?.type || '') === -1;
+
+interface ItemRowRequest {
+  rowIndex: number;
+  columnId: string;
+  itemId: number;
+}
 
 /**
  * Handle fetch item row details and retrieves the new table row.
  */
-export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
-  const [itemRow, setItemRow] = React.useState(null);
-  const [cellsLoading, setCellsLoading] = React.useState(null);
+export function useFetchItemRow({
+  landedCost,
+  itemType,
+  notifyNewRow,
+}: {
+  landedCost?: boolean;
+  itemType?: string;
+  notifyNewRow: (newRow: EntriesRow, rowIndex: number) => void;
+}) {
+  const [itemRow, setItemRow] = React.useState<ItemRowRequest | null>(null);
+  const [cellsLoading, setCellsLoading] = React.useState<
+    [number, string][] | null
+  >(null);
 
   // Fetches the item details.
   const {
@@ -158,7 +185,13 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
  * Compose table rows when edit specific row index of table rows.
  */
 export const composeRowsOnEditCell = R.curry(
-  (rowIndex, columnId, value, defaultEntry, rows) => {
+  (
+    rowIndex: number,
+    columnId: string,
+    value: any,
+    defaultEntry: EntriesRow,
+    rows: EntriesRow[],
+  ): EntriesRow[] => {
     return compose()(rows);
   },
 );
@@ -170,7 +203,11 @@ export const useComposeRowsOnNewRow = () => {
   const { taxRates, isInclusiveTax } = useItemEntriesTableContext();
 
   return React.useMemo(() => {
-    return R.curry((rowIndex, newRow, rows) => {
+    return (
+      rowIndex: number,
+      newRow: EntriesRow,
+      rows: EntriesRow[],
+    ): EntriesRow[] => {
       return compose(
         assignEntriesTaxAmount(isInclusiveTax),
         assignEntriesTaxRate(taxRates),
@@ -178,25 +215,27 @@ export const useComposeRowsOnNewRow = () => {
         updateItemsEntriesTotal,
         updateTableRow(rowIndex, newRow),
       )(rows);
-    });
+    };
   }, [isInclusiveTax, taxRates]);
 };
 
 /**
  * Associate tax rate to entries.
  */
-export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
-  const taxRatesById = keyBy(taxRates, 'id');
+export const assignEntriesTaxRate = R.curry(
+  (taxRates: any[], entries: EntriesRow[]): EntriesRow[] => {
+    const taxRatesById = keyBy(taxRates, 'id');
 
-  return entries.map((entry) => {
-    const taxRate = taxRatesById[entry.taxRateId];
+    return entries.map((entry) => {
+      const taxRate = taxRatesById[entry.taxRateId];
 
-    return {
-      ...entry,
-      taxRate: taxRate?.rate || 0,
-    };
-  });
-});
+      return {
+        ...entry,
+        taxRate: taxRate?.rate || 0,
+      };
+    });
+  },
+);
 
 /**
  * Assign tax amount to entries.
@@ -205,7 +244,7 @@ export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
  * @returns
  */
 export const assignEntriesTaxAmount = R.curry(
-  (isInclusiveTax: boolean, entries) => {
+  (isInclusiveTax: boolean, entries: EntriesRow[]): EntriesRow[] => {
     return entries.map((entry) => {
       const taxAmount = isInclusiveTax
         ? getInclusiveTaxAmount(entry.amount, entry.taxRate)
@@ -248,7 +287,7 @@ export const useComposeRowsOnEditTableCell = () => {
     useItemEntriesTableContext();
 
   return useCallback(
-    (rowIndex, columnId, value) => {
+    (rowIndex: number, columnId: string, value: any): any => {
       return R.compose(
         assignEntriesTaxAmount(isInclusiveTax),
         assignEntriesTaxRate(taxRates),
@@ -271,7 +310,7 @@ export const useComposeRowsOnRemoveTableRow = () => {
     useItemEntriesTableContext();
 
   return useCallback(
-    (rowIndex) => {
+    (rowIndex: number) => {
       return compose(
         // Ensure minimum lines count.
         updateMinEntriesLines(minLinesNumber, defaultEntry),
@@ -283,6 +322,14 @@ export const useComposeRowsOnRemoveTableRow = () => {
   );
 };
 
+interface AggregatedTaxRate {
+  taxRateId: string;
+  taxRate: number;
+  label: string;
+  taxAmount: number;
+  taxAmountFormatted: string;
+}
+
 /**
  * Retrieves the aggregate tax rates from the given item entries.
  * @param {string} currencyCode -
@@ -290,7 +337,11 @@ export const useComposeRowsOnRemoveTableRow = () => {
  * @param {any} entries -
  */
 export const aggregateItemEntriesTaxRates = R.curry(
-  (currencyCode, taxRates, entries) => {
+  (
+    currencyCode: string,
+    taxRates: any[],
+    entries: EntriesRow[],
+  ): AggregatedTaxRate[] => {
     const taxRatesById = keyBy(taxRates, 'id');
 
     // Calculate the total tax amount of invoice entries.

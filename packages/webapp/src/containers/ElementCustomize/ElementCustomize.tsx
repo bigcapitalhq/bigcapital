@@ -1,5 +1,6 @@
 import { TabProps } from '@blueprintjs/core';
 import React from 'react';
+import type { FormikValues } from 'formik';
 import { useBrandingState } from '../BrandingTemplates/_utils';
 import { ElementPreviewState } from '../BrandingTemplates/types';
 import { ElementCustomizeFields } from './ElementCustomizeFields';
@@ -49,7 +50,10 @@ export function ElementCustomizeContent({
   );
 }
 
-export function ElementCustomize<T, Y extends ElementPreviewState>({
+export function ElementCustomize<
+  T extends FormikValues,
+  Y extends ElementPreviewState,
+>({
   initialValues,
   validationSchema,
   onSubmit,

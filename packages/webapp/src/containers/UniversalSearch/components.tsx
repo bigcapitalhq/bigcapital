@@ -1,13 +1,23 @@
-// @ts-nocheck
 import { MenuItem } from '@blueprintjs/core';
+import type { ItemRenderer } from '@blueprintjs/select';
 import React from 'react';
 import { getUniversalSearchBind } from './utils';
+import type { UniversalSearchProps } from '@/components';
 import { highlightText } from '@/utils';
+
+type UniversalSearchItem = UniversalSearchProps['items'][number];
+
+type UniversalSearchItemActions = Parameters<
+  ItemRenderer<UniversalSearchItem>
+>[1];
 
 /**
  * Default univesal search item component.
  */
-function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
+function UniversalSearchItemDetail(
+  item: UniversalSearchItem,
+  { handleClick, modifiers, query }: UniversalSearchItemActions,
+) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -17,13 +27,17 @@ function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
           <div>{highlightText(item.text, query)}</div>
 
           {item.subText && (
-            <span class="bp4-text-muted">
+            <span className="bp4-text-muted">
               {highlightText(item.subText, query)}
             </span>
           )}
         </div>
       }
-      label={item.label ? highlightText(item.label, query) : ''}
+      label={
+        item.label
+          ? (highlightText(item.label, query) as unknown as string)
+          : ''
+      }
       onClick={handleClick}
     />
   );
@@ -35,7 +49,10 @@ function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
  * @param {*} actions
  * @returns
  */
-export const DashboardUniversalSearchItem = (props, actions) => {
+export const DashboardUniversalSearchItem = (
+  props: UniversalSearchItem,
+  actions: UniversalSearchItemActions,
+) => {
   const itemRenderer = getUniversalSearchBind(props._type, 'itemRenderer');
 
   return typeof itemRenderer !== 'undefined'

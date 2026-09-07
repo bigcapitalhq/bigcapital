@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent, Text, Spinner } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { useState } from 'react';
@@ -16,17 +15,13 @@ import {
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { formatBytes } from '@/utils/format-bytes';
 
-interface AttachmentFileCommon {
+export interface AttachmentFile {
   originName: string;
   key: string;
   size: number;
   mimeType: string;
+  loading?: boolean;
 }
-interface AttachmentFileLoaded extends AttachmentFileCommon {}
-interface AttachmentFileLoading extends AttachmentFileCommon {
-  loading: boolean;
-}
-type AttachmentFile = AttachmentFileLoaded | AttachmentFileLoading;
 
 interface UploadAttachmentsPopoverContentProps {
   initialValue?: AttachmentFile[];
@@ -77,7 +72,7 @@ export function UploadAttachmentsPopoverContent({
     onSuccess: (data, formData) => {
       const newLocalFiles = stopLoadingAttachment(
         localFiles,
-        formData.get('internalKey'),
+        (formData as FormData).get('internalKey') as string,
         data.key,
       );
       handleFilesChange(newLocalFiles);
@@ -92,7 +87,10 @@ export function UploadAttachmentsPopoverContent({
   };
 
   // Handle change dropzone.
-  const handleChangeDropzone = (file: File) => {
+  const handleChangeDropzone = (file: File | null) => {
+    if (!file) {
+      return;
+    }
     const formData = new FormData();
     const key = Date.now().toString();
 
@@ -103,6 +101,7 @@ export function UploadAttachmentsPopoverContent({
       {
         originName: file.name,
         size: file.size,
+        mimeType: file.type,
         key,
         loading: true,
       },
@@ -143,7 +142,7 @@ export function UploadAttachmentsPopoverContent({
           <Stack spacing={0} className={styles.attachments}>
             {localFiles.map((localFile: AttachmentFile, index: number) => (
               <Group
-                position={'space-between'}
+                position={'apart'}
                 className={styles.attachmentItem}
                 key={index}
               >
@@ -206,7 +205,7 @@ const ViewButton = ({ fileKey }: { fileKey: string }) => {
     setLoading(true);
 
     getAttachmentPresignedUrl(key).then((data) => {
-      window.open(data.presigned_url);
+      window.open((data as { presigned_url: string }).presigned_url);
       setLoading(false);
     });
   };

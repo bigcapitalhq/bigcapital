@@ -411,7 +411,7 @@ export interface UniversalSearchProps {
   /** Controlled search resource type */
   searchResource?: ResourceType;
   /** Overlay props */
-  overlayProps?: OverlayProps;
+  overlayProps?: Partial<OverlayProps>;
   /** Whether the search overlay is open */
   isOpen: boolean;
   /** Whether the search is loading */

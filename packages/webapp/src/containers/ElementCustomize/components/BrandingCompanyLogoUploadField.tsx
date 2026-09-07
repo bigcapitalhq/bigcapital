@@ -1,10 +1,16 @@
-// @ts-nocheck
 import { useFormikContext } from 'formik';
 import { CompanyLogoUpload } from './CompanyLogoUpload';
 import { FFormGroup } from '@/components';
 
+interface BrandingCompanyLogoFormValues {
+  companyLogoUri?: string;
+  companyLogoKey?: string;
+  _companyLogoFile?: File | null;
+}
+
 export function BrandingCompanyLogoUploadField() {
-  const { setFieldValue, values } = useFormikContext();
+  const { setFieldValue, values } =
+    useFormikContext<BrandingCompanyLogoFormValues>();
 
   return (
     <FFormGroup name={'companyLogo'} label={''} fastField>

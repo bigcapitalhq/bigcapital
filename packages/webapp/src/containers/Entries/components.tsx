@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { MenuItem, Menu, Button, Position, Intent } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
@@ -26,7 +25,7 @@ export function ItemHeaderCell() {
       <T id={'product_and_service'} />
       <Hint
         content={<T id={'item_entries.products_services.hint'} />}
-        tooltipProps={{ boundary: 'window', position: Position.RIGHT }}
+        tooltipProps={{ position: Position.RIGHT }}
       />
     </>
   );
@@ -35,10 +34,15 @@ export function ItemHeaderCell() {
 /**
  * Actions cell renderer component.
  */
+interface ActionsCellProps {
+  row: { index: number };
+  payload: { removeRow: (index: number) => void };
+}
+
 export function ActionsCellRenderer({
   row: { index },
   payload: { removeRow },
-}) {
+}: ActionsCellProps) {
   const onRemoveRole = () => {
     removeRow(index);
   };
@@ -56,7 +60,6 @@ export function ActionsCellRenderer({
     <Popover2 content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
-        iconSize={14}
         className="m12"
         minimal={true}
       />
@@ -68,7 +71,13 @@ ActionsCellRenderer.cellType = CellType.Button;
 /**
  * Total accessor.
  */
-export function TotalCell({ payload: { currencyCode }, value }) {
+export function TotalCell({
+  payload: { currencyCode },
+  value,
+}: {
+  payload: { currencyCode?: string };
+  value: number;
+}) {
   return <span>{formattedAmount(value, currencyCode, { noZero: true })}</span>;
 }
 
