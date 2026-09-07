@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
@@ -11,6 +10,7 @@ import { useElementCustomizeTabsController } from './ElementCustomizeTabsControl
 import { Box, Group, Stack } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 
 export function ElementCustomizeFields() {
   return (
@@ -27,9 +27,9 @@ export function ElementCustomizeFieldsMain() {
 
   const CustomizeTabPanel = React.useMemo(
     () =>
-      React.Children.map(CustomizeTabs, (tab) => {
-        return tab.props.id === currentTabId ? tab : null;
-      }).filter(Boolean),
+      React.Children.toArray(CustomizeTabs).filter(
+        (tab) => React.isValidElement(tab) && tab.props.id === currentTabId,
+      ),
     [CustomizeTabs, currentTabId],
   );
 
@@ -47,7 +47,9 @@ export function ElementCustomizeFieldsMain() {
   );
 }
 
-function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
+function ElementCustomizeFooterActionsRoot({
+  closeDrawer,
+}: WithDrawerActionsProps) {
   const { name } = useDrawerContext();
   const { submitForm, isSubmitting } = useFormikContext();
 

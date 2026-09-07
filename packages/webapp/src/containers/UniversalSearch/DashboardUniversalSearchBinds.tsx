@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { universalSearchJournalBind } from '../Accounting/ManualJournalUniversalSearch';
 import { universalSearchAccountBind } from '../Accounts/AccountUniversalSearch';
 import { universalSearchCustomerBind } from '../Customers/CustomersUniversalSearch';

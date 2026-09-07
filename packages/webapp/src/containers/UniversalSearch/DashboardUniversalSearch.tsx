@@ -1,17 +1,29 @@
-// @ts-nocheck
-import { debounce } from 'lodash';
-import { isUndefined } from 'lodash';
+import { debounce, isUndefined } from 'lodash';
 import React from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { DashboardUniversalSearchItem } from './components';
 import { DashboardUniversalSearchHotkeys } from './DashboardUniversalSearchHotkeys';
 import { DashboardUniversalSearchItemActions } from './DashboardUniversalSearchItemActions';
 import { useGetUniversalSearchTypeOptions } from './utils';
 import { withUniversalSearch } from './withUniversalSearch';
+import type { WithUniversalSearchProps } from './withUniversalSearch';
 import { withUniversalSearchActions } from './withUniversalSearchActions';
+import type { WithUniversalSearchActionsProps } from './withUniversalSearchActions';
 import { UniversalSearch } from '@/components';
+import type { UniversalSearchProps } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { useUniversalSearch } from '@/hooks/query';
 import { compose } from '@/utils';
+
+type UniversalSearchItem = UniversalSearchProps['items'][number];
+type SearchTypeOption = UniversalSearchProps['searchTypeOptions'][number];
+
+interface DashboardUniversalSearchProps
+  extends WithUniversalSearchActionsProps,
+    Pick<
+      WithUniversalSearchProps,
+      'globalSearchShow' | 'defaultUniversalResourceType'
+    > {}
 
 /**
  * Dashboard universal search.
@@ -24,8 +36,9 @@ function DashboardUniversalSearchInner({
   globalSearchShow,
   closeGlobalSearch,
   defaultUniversalResourceType,
-}) {
+}: DashboardUniversalSearchProps) {
   const searchTypeOptions = useGetUniversalSearchTypeOptions();
+  const queryClient = useQueryClient();
 
   // Search keyword.
   const [searchKeyword, setSearchKeyword] = React.useState('');
@@ -51,7 +64,6 @@ function DashboardUniversalSearchInner({
   // Fetch accounts list according to the given custom view id.
   const {
     data,
-    remove,
     isFetching: isSearchFetching,
     isLoading: isSearchLoading,
     refetch,
@@ -61,12 +73,12 @@ function DashboardUniversalSearchInner({
   });
 
   // Handle query change.
-  const handleQueryChange = (query) => {
+  const handleQueryChange = (query: string) => {
     setSearchKeyword(query);
   };
   // Handle search type change.
-  const handleSearchTypeChange = (type) => {
-    remove();
+  const handleSearchTypeChange = (type: SearchTypeOption) => {
+    queryClient.removeQueries({ queryKey: ['UNIVERSAL_SEARCH'] });
     setSearchType(type.key);
   };
   // Handle overlay of universal search close.
@@ -74,7 +86,7 @@ function DashboardUniversalSearchInner({
     closeGlobalSearch();
   };
   // Handle universal search item select.
-  const handleItemSelect = (item) => {
+  const handleItemSelect = (item: UniversalSearchItem) => {
     setSelectedItemUniversalSearch(searchType, item.id);
     closeGlobalSearch();
     setSearchKeyword('');
@@ -101,11 +113,11 @@ function DashboardUniversalSearchInner({
   }
 
   return (
-    <div class="dashboard__universal-search">
+    <div className="dashboard__universal-search">
       <UniversalSearch
         isOpen={globalSearchShow}
         isLoading={isSearchFetching}
-        items={data}
+        items={data as UniversalSearchItem[]}
         overlayProps={{
           onClose: handleClose,
           onClosed: handleOverlayClosed,

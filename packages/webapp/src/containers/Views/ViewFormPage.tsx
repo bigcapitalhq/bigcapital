@@ -3,6 +3,7 @@ import { Intent, Alert } from '@blueprintjs/core';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAsync } from 'react-use';
+import intl from 'react-intl-universal';
 import {
   If,
   AppToaster,
@@ -12,12 +13,23 @@ import {
   FormattedHTMLMessage,
 } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { withResourcesActions } from '@/containers/Resources/withResourcesActions';
+import type { WithResourcesActionsProps } from '@/containers/Resources/withResourcesActions';
 import { ViewForm } from '@/containers/Views/ViewForm';
 import { withViewsActions } from '@/containers/Views/withViewsActions';
+import type { WithViewsActionsProps } from '@/containers/Views/withViewsActions';
 import { compose } from '@/utils';
 
-// @flow
+interface ViewFormPageProps
+  extends WithDashboardActionsProps,
+    WithViewsActionsProps,
+    WithResourcesActionsProps {}
+
+interface ViewItem {
+  id: number;
+}
+
 function ViewFormPageInner({
   // #withDashboardActions
   changePageTitle,
@@ -29,9 +41,12 @@ function ViewFormPageInner({
 
   requestFetchView,
   requestDeleteView,
-}) {
-  const { resource_slug: resourceSlug, view_id: viewId } = useParams();
-  const [stateDeleteView, setStateDeleteView] = useState(null);
+}: ViewFormPageProps) {
+  const { resource_slug: resourceSlug, view_id: viewId } = useParams<{
+    resource_slug?: string;
+    view_id?: string;
+  }>();
+  const [stateDeleteView, setStateDeleteView] = useState<ViewItem | null>(null);
 
   const fetchHook = useAsync(async () => {
     return Promise.all([
@@ -59,7 +74,7 @@ function ViewFormPageInner({
   }, [viewId, changePageTitle]);
 
   // Handle delete view button click.
-  const handleDeleteView = useCallback((view) => {
+  const handleDeleteView = useCallback((view: ViewItem) => {
     setStateDeleteView(view);
   }, []);
 
@@ -70,6 +85,9 @@ function ViewFormPageInner({
 
   // Handle confirm delete custom view.
   const handleConfirmDeleteView = useCallback(() => {
+    if (!stateDeleteView) {
+      return;
+    }
     requestDeleteView(stateDeleteView.id).then((response) => {
       setStateDeleteView(null);
       AppToaster.show({
@@ -98,7 +116,7 @@ function ViewFormPageInner({
             confirmButtonText={<T id={'delete'} />}
             icon="trash"
             intent={Intent.DANGER}
-            isOpen={stateDeleteView}
+            isOpen={stateDeleteView !== null}
             onCancel={handleCancelDeleteView}
             onConfirm={handleConfirmDeleteView}
           >

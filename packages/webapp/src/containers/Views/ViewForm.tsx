@@ -25,6 +25,54 @@ import ErrorMessage from '@/components/ErrorMessage';
 import { ViewFormContainer } from '@/containers/Views/ViewForm.container';
 import { transfromToSnakeCase } from '@/utils';
 
+interface ViewRole {
+  fieldKey: string;
+  comparator: string;
+  value: string;
+  index: number;
+}
+
+interface ViewFormValues {
+  resourceName: string;
+  name: string;
+  logicExpression: string;
+  roles: ViewRole[];
+  columns: { key: string; index: number }[];
+}
+
+interface ViewColumn {
+  id: number;
+  key: string;
+  label: string;
+}
+
+interface ViewField {
+  key: string;
+  label_name: string;
+}
+
+interface ViewMeta {
+  id?: number;
+  name?: string;
+  columns?: ViewColumn[];
+  roles_logic_expression?: string;
+  roles?: { field?: { key?: string } }[];
+  resource?: { name?: string };
+}
+
+interface ViewFormProps {
+  requestSubmitView: (payload: unknown) => Promise<unknown>;
+  requestEditView: (id: number, payload: unknown) => Promise<unknown>;
+  onDelete?: (view: ViewMeta) => void;
+  viewId?: string;
+  viewMeta?: ViewMeta;
+  resourceName?: string;
+  resourceColumns: ViewColumn[];
+  resourceFields: ViewField[];
+  resourceMetadata: { label: string; baseRoute: string };
+  changePageSubtitle: (subtitle: string) => void;
+}
+
 function ViewFormInner({
   requestSubmitView,
   requestEditView,
@@ -39,8 +87,7 @@ function ViewFormInner({
   resourceMetadata,
 
   changePageSubtitle,
-}) {
-  const intl = useIntl();
+}: ViewFormProps) {
   const history = useHistory();
 
   useEffect(() => {

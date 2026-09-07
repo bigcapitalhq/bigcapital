@@ -27,7 +27,7 @@ export interface ImportDropzoneFieldProps {
   initialValue?: File | null;
   value?: File | null;
   onChange?: (file: File | null) => void;
-  dropzoneProps?: DropzoneProps;
+  dropzoneProps?: Partial<DropzoneProps>;
   uploadIcon?: ReactNode;
   title?: string;
   subtitle?: string;

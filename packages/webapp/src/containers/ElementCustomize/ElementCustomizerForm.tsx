@@ -1,15 +1,15 @@
-// @ts-nocheck
-import { Formik, Form, FormikHelpers } from 'formik';
+import { Formik, Form } from 'formik';
+import type { FormikHelpers, FormikValues } from 'formik';
 import React from 'react';
 
-export interface ElementCustomizeFormProps<T, Y> {
+export interface ElementCustomizeFormProps<T, Y = T> {
   initialValues?: T;
   validationSchema?: any;
   onSubmit?: (values: T, formikHelpers: FormikHelpers<T>) => void;
   children?: React.ReactNode;
 }
 
-export function ElementCustomizeForm<T>({
+export function ElementCustomizeForm<T extends FormikValues>({
   initialValues,
   validationSchema,
   onSubmit,
@@ -17,7 +17,7 @@ export function ElementCustomizeForm<T>({
 }: ElementCustomizeFormProps<T>) {
   return (
     <Formik<T>
-      initialValues={{ ...initialValues }}
+      initialValues={{ ...initialValues } as T}
       validationSchema={validationSchema}
       onSubmit={(value, helpers) => onSubmit && onSubmit(value, helpers)}
     >
