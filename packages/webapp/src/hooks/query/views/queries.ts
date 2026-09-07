@@ -16,7 +16,7 @@ export function useResourceViews(
     ...props,
     queryKey: viewsKeys.view(resourceSlug),
     queryFn: () => fetchResourceView(fetcher, resourceSlug!),
-    enabled: !!resourceSlug,
+    enabled: !!resourceSlug && (props?.enabled ?? true),
   });
 }
 
@@ -29,6 +29,6 @@ export function useResourceMeta(
     ...props,
     queryKey: viewsKeys.meta(resourceSlug),
     queryFn: () => fetchResourceMeta(fetcher, resourceSlug!),
-    enabled: !!resourceSlug,
+    enabled: !!resourceSlug && (props?.enabled ?? true),
   });
 }

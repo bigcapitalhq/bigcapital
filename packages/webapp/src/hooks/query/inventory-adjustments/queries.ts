@@ -99,6 +99,6 @@ export function useInventoryAdjustment(
     ...props,
     queryKey: inventoryAdjustmentsKeys.detail(id),
     queryFn: () => fetchInventoryAdjustment(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }

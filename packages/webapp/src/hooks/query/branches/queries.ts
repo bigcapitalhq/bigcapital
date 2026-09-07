@@ -99,7 +99,7 @@ export function useBranch(
     ...props,
     queryKey: branchesKeys.detail(id),
     queryFn: () => fetchBranch(fetcher, String(id!)),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

@@ -117,7 +117,7 @@ export function useImportFilePreview(
     ...props,
     queryKey: importKeys.preview(importId),
     queryFn: () => fetchImportPreview(fetcher, importId),
-    enabled: !!importId,
+    enabled: !!importId && (props?.enabled ?? true),
   });
 }
 

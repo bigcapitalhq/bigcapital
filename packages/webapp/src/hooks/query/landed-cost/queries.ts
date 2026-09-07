@@ -95,6 +95,6 @@ export function useBillLocatedLandedCost(
     queryKey: landedCostKeys.transaction(id),
     queryFn: () => fetchBillLandedCostTransactions(fetcher, id!),
     select: (data) => data.data ?? [],
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }

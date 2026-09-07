@@ -185,7 +185,7 @@ export function usePaymentReceive(
     ...props,
     queryKey: paymentReceivesKeys.detail(id),
     queryFn: () => fetchPaymentReceived(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -201,7 +201,7 @@ export function usePaymentReceiveEditPage(
     ...props,
     queryKey: paymentReceivesKeys.editPage(id),
     queryFn: () => fetchPaymentReceiveEditPage(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -242,7 +242,7 @@ export function usePaymentReceiveSMSDetail(
     ...props,
     queryKey: paymentReceivesKeys.smsDetail(paymentReceiveId),
     queryFn: () => fetchPaymentReceiveSmsDetails(fetcher, paymentReceiveId!),
-    enabled: paymentReceiveId != null,
+    enabled: paymentReceiveId != null && (props?.enabled ?? true),
   });
 }
 

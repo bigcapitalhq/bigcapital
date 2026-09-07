@@ -131,7 +131,7 @@ export function useCashflowTransaction(
     ...props,
     queryKey: cashflowAccountsKeys.transaction(id),
     queryFn: () => fetchCashflowTransaction(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 
@@ -270,7 +270,7 @@ export function useUncategorizedTransaction(
     ...props,
     queryKey: cashflowAccountsKeys.uncategorizedTransaction(id),
     queryFn: () => fetchUncategorizedTransaction(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

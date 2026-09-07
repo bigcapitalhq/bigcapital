@@ -140,7 +140,7 @@ export function useCustomer(
     ...props,
     queryKey: customersKeys.detail(id),
     queryFn: () => fetchCustomer(fetcher, id!),
-    enabled: id != null,
+    enabled: id != null && (props?.enabled ?? true),
   });
 }
 

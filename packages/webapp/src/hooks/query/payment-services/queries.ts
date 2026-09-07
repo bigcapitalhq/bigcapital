@@ -123,8 +123,8 @@ export const useGetPaymentMethod = (
   return useQuery<GetPaymentServiceResponse, Error>({
     queryKey: paymentServicesKeys.detail(paymentMethodId),
     queryFn: () => fetchGetPaymentService(fetcher, paymentMethodId),
-    enabled: !!paymentMethodId,
     ...options,
+    enabled: !!paymentMethodId && (options?.enabled ?? true),
   });
 };
 

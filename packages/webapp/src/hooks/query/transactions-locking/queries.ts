@@ -105,6 +105,6 @@ export function useEditTransactionsLocking(
     ...props,
     queryKey: transactionsLockingKeys.detail(query),
     queryFn: () => fetchTransactionsLockingByModule(fetcher, query),
-    enabled: !!query,
+    enabled: !!query && (props?.enabled ?? true),
   });
 }

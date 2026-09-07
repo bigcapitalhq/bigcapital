@@ -272,7 +272,7 @@ export function useSettingSMSNotification(
     ...props,
     queryKey: settingsKeys.smsNotification(key),
     queryFn: () => fetchSettingSMSNotification(fetcher, key),
-    enabled: !!key,
+    enabled: !!key && (props?.enabled ?? true),
   });
 }
 
