@@ -28,6 +28,7 @@ export class Mail {
       html: this.html,
       attachments: this.attachments,
       replyTo: this.replyTo,
+      textEncoding: 'base64' as const,
     };
   }
 
