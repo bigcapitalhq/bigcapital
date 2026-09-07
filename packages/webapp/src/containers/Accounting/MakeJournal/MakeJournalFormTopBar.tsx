@@ -27,7 +27,6 @@ export function MakeJournalFormTopBar() {
   }
 
   return (
-    // @ts-expect-error FormTopbar is untyped and infers a required className prop that is unused at runtime
     <FormTopbar>
       <NavbarGroup align={Alignment.LEFT}>
         <MakeJournalFormSelectBranch />

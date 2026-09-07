@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import styles from './ElementCustomize.module.scss';
 import { ElementCustomizeHeader } from './ElementCustomizeHeader';
@@ -74,6 +74,7 @@ function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
   );
 }
 
-const ElementCustomizeFooterActions = R.compose(withDrawerActions)(
+const ElementCustomizeFooterActions = FF.pipe(
   ElementCustomizeFooterActionsRoot,
+  withDrawerActions,
 );

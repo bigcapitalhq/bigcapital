@@ -1,7 +1,7 @@
 // @ts-nocheck
+import * as FF from 'fp-ts/function';
 import { find } from 'lodash';
 import moment from 'moment';
-import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
 import rtlDetect from 'rtl-detect';
@@ -166,4 +166,4 @@ function AppIntlLoader({ children }) {
   );
 }
 
-export default R.compose(withDashboardActions)(AppIntlLoader);
+export default FF.pipe(AppIntlLoader, withDashboardActions);

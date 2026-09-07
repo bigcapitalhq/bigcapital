@@ -157,7 +157,7 @@ export function usePaymentMadeNewPageEntries(
     ...props,
     queryKey: paymentMadesKeys.newEntries(vendorId),
     queryFn: () => fetchBillPaymentNewPageEntries(fetcher, vendorId!),
-    enabled: vendorId != null && (props?.enabled ?? true),
+    enabled: vendorId != null,
     select: (data) => data ?? [],
   });
 }

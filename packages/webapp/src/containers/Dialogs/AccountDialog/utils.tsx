@@ -1,6 +1,5 @@
 import { Account } from '@bigcapital/sdk-ts';
 import { isUndefined } from 'lodash';
-import * as R from 'ramda';
 import intl from 'react-intl-universal';
 import type { AccountDialogPayload } from './types';
 import { defaultFastFieldShouldUpdate } from '@/utils';
@@ -71,14 +70,13 @@ function transformNewDefinedTypePayload(
 /**
  * Merged the fetched account with transformed payload.
  */
-const mergeWithAccount = R.curry(
-  (transformed: Record<string, unknown>, account: Account | undefined) => {
+const mergeWithAccount =
+  (transformed: Record<string, unknown>) => (account: Account | undefined) => {
     return {
       ...account,
       ...transformed,
     };
-  },
-);
+  };
 
 /**
  * Default account payload transformer.
@@ -112,21 +110,18 @@ function getConditions(): Array<[string, AccountTransformer?]> {
 export const transformAccountToForm = (
   account: Account | undefined,
   payload: AccountDialogPayload,
-) => {
-  const conditions = getConditions();
-  const results = conditions.map((condition) => {
-    const transformer: AccountTransformer = !isUndefined(condition[1])
-      ? (condition[1] as AccountTransformer)
-      : defaultPayloadTransform;
+): Record<string, unknown> | undefined => {
+  const condition = getConditions().find(
+    ([action]) => action === payload.action,
+  );
+  if (isUndefined(condition)) {
+    return undefined;
+  }
+  const transformer: AccountTransformer = !isUndefined(condition[1])
+    ? (condition[1] as AccountTransformer)
+    : defaultPayloadTransform;
 
-    return [
-      condition[0] === payload.action ? R.T : R.F,
-      mergeWithAccount(transformer(account, payload)),
-    ];
-  });
-  // ramda's `cond` overload is finicky with our heterogeneous pairs.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (R.cond as any)(results)(account);
+  return mergeWithAccount(transformer(account, payload))(account);
 };
 
 /**
@@ -164,14 +159,6 @@ export const parentAccountShouldUpdate = (
  * Transformes the form values to the request.
  */
 export const transformFormToReq = (form: Record<string, unknown>) => {
-  return R.compose(
-    R.omit(['subaccount']),
-    R.when(
-      R.propSatisfies(R.equals(R.__, false), 'subaccount'),
-      // FIXME: latent bug — `R.assoc` expects a string key, not an array.
-      // Preserved from original; runtime coerces array to string.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      R.assoc(['parentAccountId'] as any, '') as any,
-    ),
-  )(form);
+  const { subaccount, ...rest } = form;
+  return subaccount === false ? { ...rest, parentAccountId: '' } : rest;
 };

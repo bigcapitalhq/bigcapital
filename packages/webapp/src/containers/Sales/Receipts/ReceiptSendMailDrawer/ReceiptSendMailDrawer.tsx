@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
@@ -36,6 +36,7 @@ function ReceiptSendMailDrawerRoot({
   );
 }
 
-export const ReceiptSendMailDrawer = R.compose(withDrawers())(
+export const ReceiptSendMailDrawer = FF.pipe(
   ReceiptSendMailDrawerRoot,
+  withDrawers(),
 );

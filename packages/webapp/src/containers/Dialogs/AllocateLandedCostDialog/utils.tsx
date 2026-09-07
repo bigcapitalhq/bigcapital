@@ -1,5 +1,6 @@
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
 import { sumBy, round } from 'lodash';
-import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type {
@@ -9,6 +10,7 @@ import type {
 } from './types';
 import { MoneyFieldCell } from '@/components';
 import { defaultFastFieldShouldUpdate } from '@/utils';
+import { when } from '@/utils/fp';
 
 export const defaultInitialItem: AllocateLandedCostItem = {
   entryId: '',
@@ -63,16 +65,21 @@ export function allocateCostToEntries(
   allocateType: string,
   entries: AllocateLandedCostFormEntry[],
 ): AllocateLandedCostFormEntry[] {
-  return R.compose(
-    R.when(
-      R.always(allocateType === 'value'),
-      R.curry(allocateCostByValue)(total),
+  return FF.pipe(
+    entries,
+    when(FF.constant(allocateType === 'quantity'), (ents) =>
+      allocateCostByQuantity(total, ents),
     ),
-    R.when(
-      R.always(allocateType === 'quantity'),
-      R.curry(allocateCostByQuantity)(total),
-    ),
-  )(entries) as AllocateLandedCostFormEntry[];
+    FO.match(() => entries, FF.identity),
+    (allocated) =>
+      FF.pipe(
+        allocated,
+        when(FF.constant(allocateType === 'value'), (ents) =>
+          allocateCostByValue(total, ents),
+        ),
+        FO.match(() => allocated, FF.identity),
+      ),
+  ) as AllocateLandedCostFormEntry[];
 }
 
 /**

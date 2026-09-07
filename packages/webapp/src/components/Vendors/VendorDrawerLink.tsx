@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { ButtonLink } from '../Button';
 import { DRAWERS } from '@/constants/drawers';
@@ -35,6 +35,7 @@ function VendorDrawerLinkComponent({
   );
 }
 
-export const VendorDrawerLink = R.compose(withDrawerActions)(
+export const VendorDrawerLink = FF.pipe(
   VendorDrawerLinkComponent,
+  withDrawerActions,
 );

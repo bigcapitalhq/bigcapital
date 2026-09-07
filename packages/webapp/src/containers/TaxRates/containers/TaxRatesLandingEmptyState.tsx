@@ -1,5 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
@@ -42,6 +42,7 @@ function TaxRatesLandingEmptyStateRoot({
   );
 }
 
-export const TaxRatesLandingEmptyState = R.compose(withDialogActions)(
+export const TaxRatesLandingEmptyState = FF.pipe(
   TaxRatesLandingEmptyStateRoot,
+  withDialogActions,
 );

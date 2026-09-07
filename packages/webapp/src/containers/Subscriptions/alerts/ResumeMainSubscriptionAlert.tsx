@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Intent, Alert } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
@@ -66,7 +66,8 @@ function ResumeMainSubscriptionAlertInner({
   );
 }
 
-export const ResumeMainSubscriptionAlert = R.compose(
-  withAlertStoreConnect(),
+export const ResumeMainSubscriptionAlert = FF.pipe(
+  ResumeMainSubscriptionAlertInner,
   withAlertActions,
-)(ResumeMainSubscriptionAlertInner);
+  withAlertStoreConnect(),
+);

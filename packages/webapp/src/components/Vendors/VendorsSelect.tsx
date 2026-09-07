@@ -1,5 +1,5 @@
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { FSelect } from '../Forms';
 import { createNewItemFromQuery, createNewItemRenderer } from './utils';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
@@ -70,4 +70,4 @@ function VendorsSelectRoot({
   );
 }
 
-export const VendorsSelect = R.compose(withDrawerActions)(VendorsSelectRoot);
+export const VendorsSelect = FF.pipe(VendorsSelectRoot, withDrawerActions);

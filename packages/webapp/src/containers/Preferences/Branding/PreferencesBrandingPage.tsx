@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import { PreferencesBrandingBoot } from './PreferencesBrandingBoot';
 import { PreferencesBrandingForm } from './PreferencesBrandingForm';
@@ -36,6 +36,7 @@ function PreferencesBrandingPageRoot({
   );
 }
 
-export const PreferencesBrandingPage = R.compose(withDashboardActions)(
+export const PreferencesBrandingPage = FF.pipe(
   PreferencesBrandingPageRoot,
+  withDashboardActions,
 );

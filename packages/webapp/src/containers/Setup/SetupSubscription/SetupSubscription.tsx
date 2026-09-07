@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import {
   withSubscriptionPlansActions,
@@ -35,6 +35,7 @@ function SetupSubscriptionInner({
   );
 }
 
-export const SetupSubscription = R.compose(withSubscriptionPlansActions)(
+export const SetupSubscription = FF.pipe(
   SetupSubscriptionInner,
+  withSubscriptionPlansActions,
 );

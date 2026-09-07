@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { ActionsMenu } from './_components';
 import { useBrandingTemplatesColumns } from './_hooks';
 import { getCustomizeDrawerNameFromResource } from './_utils';
@@ -67,7 +67,8 @@ function BrandingTemplateTableRoot({
   );
 }
 
-export const BrandingTemplatesTable = R.compose(
-  withAlertActions,
+export const BrandingTemplatesTable = FF.pipe(
+  BrandingTemplateTableRoot,
   withDrawerActions,
-)(BrandingTemplateTableRoot);
+  withAlertActions,
+);

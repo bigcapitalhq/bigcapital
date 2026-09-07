@@ -2,7 +2,6 @@ import { Intent } from '@blueprintjs/core';
 import { useFormikContext, type FormikErrors } from 'formik';
 import { first, chain } from 'lodash';
 import moment from 'moment';
-import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useBillFormContext } from './BillFormProvider';
@@ -159,11 +158,13 @@ export const transformToEditForm = (bill: Bill): BillFormValues => {
 export const transformEntriesToSubmit = (
   entries: BillFormEntry[],
 ): Record<string, unknown>[] => {
-  const transformBillEntry = compose(
-    R.omit(['amount']),
-    R.curry(transformToForm)(R.__, defaultBillEntry),
-  );
-  return compose(orderingLinesIndexes, R.map(transformBillEntry))(entries);
+  const transformBillEntry = (entry: BillFormEntry) => {
+    const { amount, ...rest } = transformToForm(entry, defaultBillEntry);
+    return rest;
+  };
+  return compose(orderingLinesIndexes, (ents: BillFormEntry[]) =>
+    ents.map(transformBillEntry),
+  )(entries);
 };
 
 /**

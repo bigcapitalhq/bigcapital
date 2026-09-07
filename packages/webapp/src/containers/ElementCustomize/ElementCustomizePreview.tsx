@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { ElementCustomizeHeader } from './ElementCustomizeHeader';
 import { ElementCustomizePreviewContent } from './ElementCustomizePreviewContent';
 import { Stack } from '@/components';
@@ -31,6 +31,7 @@ function ElementCustomizePreviewRoot({ closeDrawer }) {
   );
 }
 
-export const ElementCustomizePreview = R.compose(withDrawerActions)(
+export const ElementCustomizePreview = FF.pipe(
   ElementCustomizePreviewRoot,
+  withDrawerActions,
 );

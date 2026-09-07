@@ -8,7 +8,6 @@ import Currency from 'js-money/lib/currency';
 import _ from 'lodash';
 import { isEqual, castArray, isEmpty, includes, pickBy } from 'lodash';
 import moment from 'moment';
-import * as R from 'ramda';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { deepMapKeys } from './map-key-deep';
 import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
@@ -761,14 +760,13 @@ export const defaultFastFieldShouldUpdate = (props, prevProps) => {
   );
 };
 
-export const ensureEntriesHasEmptyLine = R.curry(
-  (minLinesNumber, defaultEntry, entries) => {
+export const ensureEntriesHasEmptyLine =
+  (minLinesNumber, defaultEntry) => (entries) => {
     if (entries.length >= minLinesNumber) {
       return [...entries, defaultEntry];
     }
     return entries;
-  },
-);
+  };
 
 export const transfromViewsToTabs = (views) => {
   return views.map((view) => ({ ..._.pick(view, ['slug', 'name']) }));

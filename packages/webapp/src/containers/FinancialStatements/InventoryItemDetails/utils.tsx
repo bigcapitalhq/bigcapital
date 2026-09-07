@@ -1,13 +1,9 @@
-import * as R from 'ramda';
 import type { InventoryItemDetailsColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 
-const isColumnKey = (key: InventoryItemDetailsColumnKey) =>
-  R.pathEq(['key'], key);
-
-const itemNameOrDateColumn = R.curry(
-  (data: unknown[], index: number, column: Record<string, any>) => ({
+const itemNameOrDateColumn =
+  (data: unknown[], index: number) => (column: Record<string, any>) => ({
     id: column.key,
     key: column.key,
     Header: column.label,
@@ -18,11 +14,10 @@ const itemNameOrDateColumn = R.curry(
       magicSpacing: 10,
     }),
     disableSortBy: true,
-  }),
-);
+  });
 
-const numericColumn = R.curry(
-  (data: unknown[], index: number, column: Record<string, any>) => ({
+const numericColumn =
+  (data: unknown[], index: number) => (column: Record<string, any>) => ({
     id: column.key,
     key: column.key,
     Header: column.label,
@@ -35,11 +30,10 @@ const numericColumn = R.curry(
     disableSortBy: true,
     align: Align.Right,
     money: true,
-  }),
-);
+  });
 
-const columnsMapper = R.curry(
-  (data: unknown[], index: number, column: Record<string, any>) => ({
+const columnsMapper =
+  (data: unknown[], index: number) => (column: Record<string, any>) => ({
     id: column.key,
     key: column.key,
     Header: column.label,
@@ -51,8 +45,7 @@ const columnsMapper = R.curry(
     }),
     disableSortBy: true,
     textOverview: true,
-  }),
-);
+  });
 
 /**
  * Inventory item details columns.
@@ -62,19 +55,20 @@ export const dynamicColumns = (
   data: unknown[],
 ) => {
   const mapper = (column: Record<string, any>, index: number) => {
-    return R.compose(
-      R.cond([
-        [isColumnKey('date'), itemNameOrDateColumn(data, index)],
-        [isColumnKey('running_quantity'), numericColumn(data, index)],
-        [isColumnKey('profit_margin'), numericColumn(data, index)],
-        [isColumnKey('running_value'), numericColumn(data, index)],
-        [isColumnKey('quantity'), numericColumn(data, index)],
-        [isColumnKey('rate'), numericColumn(data, index)],
-        [isColumnKey('total'), numericColumn(data, index)],
-        [isColumnKey('value'), numericColumn(data, index)],
-        [R.T, columnsMapper(data, index)],
-      ]),
-    )(column);
+    switch (column.key as InventoryItemDetailsColumnKey) {
+      case 'date':
+        return itemNameOrDateColumn(data, index)(column);
+      case 'running_quantity':
+      case 'profit_margin':
+      case 'running_value':
+      case 'quantity':
+      case 'rate':
+      case 'total':
+      case 'value':
+        return numericColumn(data, index)(column);
+      default:
+        return columnsMapper(data, index)(column);
+    }
   };
   return columns.map(mapper);
 };

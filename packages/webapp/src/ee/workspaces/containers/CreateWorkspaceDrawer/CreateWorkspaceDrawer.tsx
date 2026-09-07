@@ -1,6 +1,6 @@
 import { Position } from '@blueprintjs/core';
 import styled from '@xstyled/emotion';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { CreateWorkspaceDrawerContent } from './CreateWorkspaceDrawerContent';
 import { Drawer, DrawerSuspense } from '@/components';
@@ -37,6 +37,7 @@ function CreateWorkspaceDrawerRoot({
   );
 }
 
-export const CreateWorkspaceDrawer = R.compose(withDrawers())(
+export const CreateWorkspaceDrawer = FF.pipe(
   CreateWorkspaceDrawerRoot,
+  withDrawers(),
 );

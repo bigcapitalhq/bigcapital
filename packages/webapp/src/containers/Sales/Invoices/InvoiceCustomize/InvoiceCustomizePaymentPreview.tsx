@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { InvoiceCustomizeFormValues } from './types';
 import { Box } from '@/components';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
@@ -47,6 +47,7 @@ const withInvoicePaymentPreviewPageProps = <P extends Object>(
   };
 };
 
-export const InvoiceCustomizePaymentPreview = R.compose(
+export const InvoiceCustomizePaymentPreview = FF.pipe(
+  InvoicePaymentPagePreview,
   withInvoicePaymentPreviewPageProps,
-)(InvoicePaymentPagePreview);
+);

@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { Drawer, DrawerSuspense } from '@/components';
@@ -36,6 +36,7 @@ const StripeIntegrationEditContent = React.lazy(() =>
   })),
 );
 
-export const StripeIntegrationEditDrawer = R.compose(withDrawers())(
+export const StripeIntegrationEditDrawer = FF.pipe(
   StripeIntegrationEditDrawerRoot,
+  withDrawers(),
 );

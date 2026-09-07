@@ -7,7 +7,9 @@ import {
   Text,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import * as R from 'ramda';
+import * as FA from 'fp-ts/Array';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FinancialLoadingBar } from '../FinancialLoadingBar';
@@ -23,6 +25,12 @@ import {
   useCustomerBalanceSummaryCsvExport,
   useCustomerBalanceSummaryXlsxExport,
 } from '@/hooks/query';
+import { firstMatch, when } from '@/utils/fp';
+
+interface ColumnDef {
+  key: string;
+  [prop: string]: unknown;
+}
 
 /**
  * Retrieve customers balance summary columns.
@@ -69,16 +77,26 @@ const percentageColumnAccessor = () => ({
   align: Align.Right,
 });
 
-const isColumnKey = (key: CustomersBalanceColumnKey) => R.pathEq(['key'], key);
+const isColumnKey =
+  (key: CustomersBalanceColumnKey): FF.Predicate<ColumnDef> =>
+  (column) =>
+    column.key === key;
 
-const dynamicColumns = (columns) => {
-  return R.map(
-    R.compose(
-      R.when(isColumnKey('name'), accountNameColumnAccessor),
-      R.when(isColumnKey('total'), totalColumnAccessor),
-      R.when(isColumnKey('percentage_of_column'), percentageColumnAccessor),
+const dynamicColumns = (columns: ColumnDef[]) => {
+  return FF.pipe(
+    columns,
+    FA.map((column) =>
+      FF.pipe(
+        column,
+        firstMatch<ColumnDef, unknown>([
+          when(isColumnKey('name'), accountNameColumnAccessor),
+          when(isColumnKey('total'), totalColumnAccessor),
+          when(isColumnKey('percentage_of_column'), percentageColumnAccessor),
+        ]),
+        FO.match(() => column, FF.identity),
+      ),
     ),
-  )(columns);
+  );
 };
 
 /**

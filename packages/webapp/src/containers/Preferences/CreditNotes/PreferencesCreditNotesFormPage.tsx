@@ -1,6 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, FormikHelpers } from 'formik';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
@@ -49,10 +49,11 @@ function PreferencesCreditNotesFormPageRoot({
     values: CreditNotesPreferencesFormValues,
     { setSubmitting }: FormikHelpers<CreditNotesPreferencesFormValues>,
   ) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
+    const options = FF.pipe(
+      { creditNote: { ...values } },
       transfromToSnakeCase,
-    )({ creditNote: { ...values } });
+      transferObjectOptionsToArray,
+    );
 
     // Handle request success.
     const onSuccess = () => {

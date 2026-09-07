@@ -200,7 +200,8 @@ function InvoiceFormProvider({
     branches: branches ?? [],
     warehouses: warehouses ?? [],
     taxRates: taxRates ?? [],
-    brandingTemplates: brandingTemplates ?? [],
+    brandingTemplates:
+      brandingTemplates?.templates ?? ([] as PdfTemplateResponse[]),
 
     isInvoiceLoading,
     isItemsLoading,

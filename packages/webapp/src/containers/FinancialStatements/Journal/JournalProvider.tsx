@@ -14,7 +14,7 @@ type JournalSheetContextValue = {
 };
 
 interface JournalSheetProviderProps {
-  query: JournalTableQuery;
+  query: Record<string, unknown>;
   children?: React.ReactNode;
 }
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import styles from './BankRulesLandingEmptyState.module.scss';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { AbilitySubject, BankRuleAction } from '@/constants/abilityOption';
@@ -46,6 +46,7 @@ function BankRulesLandingEmptyStateRoot({
   );
 }
 
-export const BankRulesLandingEmptyState = R.compose(withDialogActions)(
+export const BankRulesLandingEmptyState = FF.pipe(
   BankRulesLandingEmptyStateRoot,
+  withDialogActions,
 );

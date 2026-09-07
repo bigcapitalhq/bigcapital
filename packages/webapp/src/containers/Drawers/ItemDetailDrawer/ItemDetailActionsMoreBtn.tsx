@@ -6,7 +6,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -61,6 +61,7 @@ const ItemDetailActionsMoreBtnInner = ({
   );
 };
 
-export const ItemDetailActionsMoreBtn = R.compose(withDialogActions)(
+export const ItemDetailActionsMoreBtn = FF.pipe(
   ItemDetailActionsMoreBtnInner,
+  withDialogActions,
 );

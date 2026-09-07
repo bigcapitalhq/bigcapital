@@ -1,9 +1,10 @@
-import * as R from 'ramda';
+import * as FA from 'fp-ts/Array';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
 import type { AgingSummaryColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
-
-const isColumnKey = (key: AgingSummaryColumnKey) => R.pathEq(['key'], key);
+import { firstMatch, when } from '@/utils/fp';
 
 interface AgingSummaryColumn {
   key: string;
@@ -11,36 +12,60 @@ interface AgingSummaryColumn {
   cellIndex?: number;
 }
 
+interface AgingSummaryTableColumn {
+  key?: string;
+  Header?: string;
+  id?: string;
+  accessor?: string;
+  className?: string;
+  width?: number;
+  sticky?: AlignValue;
+  textOverview?: boolean;
+  align?: AlignValue;
+  money?: boolean;
+}
+
+type AlignValue = (typeof Align)[keyof typeof Align];
+
+type ColumnMapper = (
+  data: unknown[],
+) => (column: AgingSummaryColumn) => AgingSummaryTableColumn;
+
+type ColumnMatcher = (
+  column: AgingSummaryColumn,
+) => FO.Option<AgingSummaryTableColumn>;
+
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
-const contactNameAccessor = R.curry(
-  (data: unknown[], column: AgingSummaryColumn) => ({
+const isColumnKey =
+  (key: AgingSummaryColumnKey): FF.Predicate<AgingSummaryColumn> =>
+  (column) =>
+    column.key === key;
+
+const contactNameAccessor: ColumnMapper = (data) => (column) => ({
+  key: column.key,
+  Header: column.label,
+  accessor: getTableCellValueAccessor(column.cellIndex!),
+  sticky: 'left',
+  width: 240,
+  textOverview: true,
+});
+
+const currentAccessor: ColumnMapper = (data) => (column) => {
+  const accessor = getTableCellValueAccessor(column.cellIndex!);
+
+  return {
     key: column.key,
     Header: column.label,
-    accessor: getTableCellValueAccessor(column.cellIndex!),
-    sticky: 'left',
-    width: 240,
-    textOverview: true,
-  }),
-);
+    accessor,
+    className: column.key,
+    width: getColumnWidth(data, accessor, { minWidth: 120 }),
+    align: Align.Right,
+    money: true,
+  };
+};
 
-const currentAccessor = R.curry(
-  (data: unknown[], column: AgingSummaryColumn) => {
-    const accessor = getTableCellValueAccessor(column.cellIndex!);
-
-    return {
-      key: column.key,
-      Header: column.label,
-      accessor,
-      className: column.key,
-      width: getColumnWidth(data, accessor, { minWidth: 120 }),
-      align: Align.Right,
-      money: true,
-    };
-  },
-);
-
-const totalAccessor = R.curry((data: unknown[], column: AgingSummaryColumn) => {
+const totalAccessor: ColumnMapper = (data) => (column) => {
   const accessor = getTableCellValueAccessor(column.cellIndex!);
 
   return {
@@ -52,44 +77,42 @@ const totalAccessor = R.curry((data: unknown[], column: AgingSummaryColumn) => {
     align: Align.Right,
     money: true,
   };
-});
+};
 
-const agingPeriodAccessor = R.curry(
-  (data: unknown[], column: AgingSummaryColumn) => {
-    const accessor = getTableCellValueAccessor(column.cellIndex!);
+const agingPeriodAccessor: ColumnMapper = (data) => (column) => {
+  const accessor = getTableCellValueAccessor(column.cellIndex!);
 
-    return {
-      Header: column.label,
-      id: `${column.key}-${column.cellIndex}`,
-      accessor,
-      className: column.key,
-      width: getColumnWidth(data, accessor, { minWidth: 120 }),
-      align: Align.Right,
-      money: true,
-    };
-  },
-);
+  return {
+    Header: column.label,
+    id: `${column.key}-${column.cellIndex}`,
+    accessor,
+    className: column.key,
+    width: getColumnWidth(data, accessor, { minWidth: 120 }),
+    align: Align.Right,
+    money: true,
+  };
+};
 
-const dynamicColumnMapper = R.curry(
-  (data: unknown[], column: AgingSummaryColumn) => {
-    const totalAccessorColumn = totalAccessor(data);
-    const currentAccessorColumn = currentAccessor(data);
-    const customerNameAccessorColumn = contactNameAccessor(data);
-    const agingPeriodAccessorColumn = agingPeriodAccessor(data);
+const dynamicColumnMatchers = (data: unknown[]): ColumnMatcher[] => [
+  when(isColumnKey('total'), totalAccessor(data)),
+  when(isColumnKey('current'), currentAccessor(data)),
+  when(isColumnKey('customer_name'), contactNameAccessor(data)),
+  when(isColumnKey('vendor_name'), contactNameAccessor(data)),
+  when(isColumnKey('aging_period'), agingPeriodAccessor(data)),
+];
 
-    return R.compose(
-      R.when(isColumnKey('total'), totalAccessorColumn),
-      R.when(isColumnKey('current'), currentAccessorColumn),
-      R.when(isColumnKey('customer_name'), customerNameAccessorColumn),
-      R.when(isColumnKey('vendor_name'), customerNameAccessorColumn),
-      R.when(isColumnKey('aging_period'), agingPeriodAccessorColumn),
-    )(column);
-  },
-);
+const dynamicColumnMapper =
+  (data: unknown[]) =>
+  (column: AgingSummaryColumn): AgingSummaryTableColumn =>
+    FF.pipe(
+      column,
+      firstMatch(dynamicColumnMatchers(data)),
+      FO.match((): AgingSummaryTableColumn => column, FF.identity),
+    );
 
 export const agingSummaryDynamicColumns = (
   columns: AgingSummaryColumn[],
   data: unknown[],
 ) => {
-  return R.map(dynamicColumnMapper(data), columns);
+  return FF.pipe(columns, FA.map(dynamicColumnMapper(data)));
 };

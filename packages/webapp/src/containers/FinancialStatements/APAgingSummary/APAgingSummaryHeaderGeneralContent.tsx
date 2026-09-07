@@ -76,7 +76,7 @@ export function APAgingSummaryHeaderGeneralContent() {
       <Row>
         <Col xs={5}>
           <FFormGroup label={intl.get('specific_vendors')} name={'vendorsIds'}>
-            <VendorsMultiSelect name={'vendorsIds'} items={vendors} />
+            <VendorsMultiSelect name={'vendorsIds'} items={vendors ?? []} />
           </FFormGroup>
         </Col>
       </Row>

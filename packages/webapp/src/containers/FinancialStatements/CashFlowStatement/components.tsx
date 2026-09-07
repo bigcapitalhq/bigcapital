@@ -74,7 +74,7 @@ export function CashFlowStatementAlerts() {
     return null;
   }
   // Can't continue if the cost compute is not running.
-  if (!cashFlowStatement.meta.isCostComputeRunning) {
+  if (!cashFlowStatement?.meta?.isCostComputeRunning) {
     return null;
   }
   return (

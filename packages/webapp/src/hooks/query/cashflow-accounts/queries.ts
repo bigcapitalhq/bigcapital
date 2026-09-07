@@ -188,6 +188,7 @@ export function useAccountTransactionsInfinity(
     queryFn: ({ pageParam }) =>
       fetchAccountTransactionsInfinity(fetcher, accountId, {
         ...query,
+        accountId,
         page: pageParam,
       }),
     initialPageParam: 1,

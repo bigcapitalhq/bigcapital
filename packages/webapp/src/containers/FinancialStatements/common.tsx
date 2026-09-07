@@ -1,20 +1,23 @@
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
 import { displayColumnsByOptions } from './constants';
 import { transfromToSnakeCase } from '@/utils';
+import { when } from '@/utils/fp';
 
 export const transformDisplayColumnsType = (form: Record<string, any>) => {
-  const columnType = R.find(
-    R.propEq('key', form.displayColumnsType),
-    displayColumnsByOptions,
+  const columnType = displayColumnsByOptions.find(
+    (option) => option.key === form.displayColumnsType,
   );
-  return R.pipe(
-    R.mergeRight(form),
-    R.when(
-      () => R.pathOr(false, ['by'], columnType),
-      R.assoc('displayColumnsBy', (columnType as any)?.by),
+  const base = { ...form };
+  return FF.pipe(
+    base,
+    when(
+      () => Boolean(columnType?.by),
+      (obj) => ({ ...obj, displayColumnsBy: (columnType as any)?.by }),
     ),
-    R.assoc('displayColumnsType', R.propOr('total', 'type', columnType)),
-  )({});
+    FO.match(() => base, FF.identity),
+    (obj) => ({ ...obj, displayColumnsType: columnType?.type ?? 'total' }),
+  );
 };
 
 const setNoneZeroTransactions = (form: Record<string, any>) => {
@@ -27,13 +30,18 @@ const setNoneZeroTransactions = (form: Record<string, any>) => {
 };
 
 export const transformAccountsFilter = (form: Record<string, any>) => {
-  return R.compose(R.omit(['filterByOption']), setNoneZeroTransactions)(form);
+  return FF.pipe(
+    form,
+    setNoneZeroTransactions,
+    ({ filterByOption, ...rest }: Record<string, any>) => rest,
+  );
 };
 
 export const transformFilterFormToQuery = (form: Record<string, unknown>) => {
-  return R.compose(
-    transfromToSnakeCase,
-    transformAccountsFilter,
+  return FF.pipe(
+    form,
     transformDisplayColumnsType,
-  )(form);
+    transformAccountsFilter,
+    transfromToSnakeCase,
+  );
 };

@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { get } from 'lodash';
-import * as R from 'ramda';
 import { useCallback, useMemo } from 'react';
 import {
   Fields,
@@ -163,8 +163,9 @@ function RuleFormContentFormRoot({
   );
 }
 
-export const RuleFormContentForm = R.compose(withDialogActions)(
+export const RuleFormContentForm = FF.pipe(
   RuleFormContentFormRoot,
+  withDialogActions,
 );
 
 /**
@@ -182,12 +183,12 @@ function RuleFormConditions() {
     setFieldValue('conditions', _conditions);
   };
 
-  const handleConditionFieldChange = R.curry((index, item) => {
+  const handleConditionFieldChange = (index) => (item) => {
     const defaultComparator = getDefaultFieldConditionByFieldKey(item.value);
 
     setFieldValue(`conditions[${index}].field`, item.value);
     setFieldValue(`conditions[${index}].comparator`, defaultComparator);
-  });
+  };
 
   return (
     <Box style={{ marginBottom: 15 }}>
@@ -293,7 +294,7 @@ function RuleFormActionsRoot({
   );
 }
 
-const RuleFormActions = R.compose(withDialogActions)(RuleFormActionsRoot);
+const RuleFormActions = FF.pipe(RuleFormActionsRoot, withDialogActions);
 
 function RuleApplyIfTransactionTypeField() {
   const { setFieldValue } = useFormikContext<RuleFormValues>();

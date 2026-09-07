@@ -1,5 +1,5 @@
+import * as FF from 'fp-ts/function';
 import { defaultTo } from 'lodash';
-import * as R from 'ramda';
 import React from 'react';
 import styled from 'styled-components';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
@@ -10,6 +10,7 @@ import {
 import type { ReconcileVendorCreditFormEntry } from './types';
 // FIXME: cross-dialog coupling — this util lives in the credit-note sibling.
 // Should be extracted to a shared module; left as-is for the TS slice.
+import type { ReconcileCreditNoteFormEntry } from '@/containers/Dialogs/ReconcileCreditNoteDialog/types';
 import { DataTableEditable } from '@/components';
 import { maxCreditNoteAmountEntries } from '@/containers/Dialogs/ReconcileCreditNoteDialog/utils';
 import { useDeepCompareEffect } from '@/hooks/utils';
@@ -49,10 +50,11 @@ export function ReconcileVendorCreditEntriesTable({
 
   // Watches deeply entries to compose a new entries.
   useDeepCompareEffect(() => {
-    const newEntries = R.compose(
-      maxCreditNoteAmountEntries(defaultTo(creditsRemaining, 0)),
-      maxAmountCreditFromRemaining,
-    )(entries) as unknown as ReconcileVendorCreditFormEntry[];
+    const newEntries = FF.pipe(entries, maxAmountCreditFromRemaining, (rows) =>
+      maxCreditNoteAmountEntries(defaultTo(creditsRemaining, 0))(
+        rows as unknown as ReconcileCreditNoteFormEntry[],
+      ),
+    ) as unknown as ReconcileVendorCreditFormEntry[];
 
     onUpdateData(newEntries);
   }, [entries]);

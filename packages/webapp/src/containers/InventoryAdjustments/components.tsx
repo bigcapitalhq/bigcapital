@@ -173,7 +173,8 @@ export const useInventoryAdjustmentsColumns = () => {
       {
         id: 'date',
         Header: intl.get('date'),
-        accessor: (r) => moment(r.date).format('YYYY MMM DD'),
+        accessor: (r: InventoryAdjustment) =>
+          moment(r.date).format('YYYY MMM DD'),
         width: 115,
         className: 'date',
         clickable: true,
@@ -213,7 +214,8 @@ export const useInventoryAdjustmentsColumns = () => {
       {
         id: 'created_at',
         Header: intl.get('created_at'),
-        accessor: (r) => moment(r.createdAt).format('YYYY MMM DD'),
+        accessor: (r: InventoryAdjustment) =>
+          moment(r.createdAt).format('YYYY MMM DD'),
         width: 125,
         className: 'created_at',
         clickable: true,

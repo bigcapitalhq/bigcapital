@@ -1,6 +1,6 @@
 // @ts-nocheck
+import * as FF from 'fp-ts/function';
 import { sumBy, isEmpty, last, keyBy, groupBy } from 'lodash';
-import * as R from 'ramda';
 import React, { useCallback, useMemo } from 'react';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
 import { useItem } from '@/hooks/query';
@@ -60,14 +60,14 @@ export function getEntriesTotal(entries) {
  * @param {Array} entries - Entries.
  * @return {Array}
  */
-export const ensureEntriesHaveEmptyLine = R.curry((defaultEntry, entries) => {
+export const ensureEntriesHaveEmptyLine = (defaultEntry) => (entries) => {
   const lastEntry = last(entries);
 
   if (isEmpty(lastEntry.account_id) || isEmpty(lastEntry.amount)) {
     return [...entries, defaultEntry];
   }
   return entries;
-});
+};
 
 /**
  * Disable landed cost checkbox once the item type is not service or non-inventorty.
@@ -157,11 +157,15 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
 /**
  * Compose table rows when edit specific row index of table rows.
  */
-export const composeRowsOnEditCell = R.curry(
-  (rowIndex, columnId, value, defaultEntry, rows) => {
-    return compose()(rows);
-  },
-);
+export const composeRowsOnEditCell = (
+  rowIndex,
+  columnId,
+  value,
+  defaultEntry,
+  rows,
+) => {
+  return compose()(rows);
+};
 
 /**
  * Compose table rows when insert a new row to table rows.
@@ -170,7 +174,7 @@ export const useComposeRowsOnNewRow = () => {
   const { taxRates, isInclusiveTax } = useItemEntriesTableContext();
 
   return React.useMemo(() => {
-    return R.curry((rowIndex, newRow, rows) => {
+    return (rowIndex, newRow, rows) => {
       return compose(
         assignEntriesTaxAmount(isInclusiveTax),
         assignEntriesTaxRate(taxRates),
@@ -178,14 +182,14 @@ export const useComposeRowsOnNewRow = () => {
         updateItemsEntriesTotal,
         updateTableRow(rowIndex, newRow),
       )(rows);
-    });
+    };
   }, [isInclusiveTax, taxRates]);
 };
 
 /**
  * Associate tax rate to entries.
  */
-export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
+export const assignEntriesTaxRate = (taxRates) => (entries) => {
   const taxRatesById = keyBy(taxRates, 'id');
 
   return entries.map((entry) => {
@@ -196,7 +200,7 @@ export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
       taxRate: taxRate?.rate || 0,
     };
   });
-});
+};
 
 /**
  * Assign tax amount to entries.
@@ -204,9 +208,9 @@ export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
  * @param entries
  * @returns
  */
-export const assignEntriesTaxAmount = R.curry(
-  (isInclusiveTax: boolean, entries) => {
-    return entries.map((entry) => {
+export const assignEntriesTaxAmount = (isInclusiveTax: boolean, entries?) => {
+  const assignToEntries = (list) =>
+    list.map((entry) => {
       const taxAmount = isInclusiveTax
         ? getInclusiveTaxAmount(entry.amount, entry.taxRate)
         : getExlusiveTaxAmount(entry.amount, entry.taxRate);
@@ -216,8 +220,8 @@ export const assignEntriesTaxAmount = R.curry(
         taxAmount,
       };
     });
-  },
-);
+  return entries === undefined ? assignToEntries : assignToEntries(entries);
+};
 
 /**
  * Get inclusive tax amount.
@@ -249,14 +253,15 @@ export const useComposeRowsOnEditTableCell = () => {
 
   return useCallback(
     (rowIndex, columnId, value) => {
-      return R.compose(
-        assignEntriesTaxAmount(isInclusiveTax),
-        assignEntriesTaxRate(taxRates),
-        orderingLinesIndexes,
-        updateAutoAddNewLine(defaultEntry, ['itemId']),
-        updateItemsEntriesTotal,
+      return FF.pipe(
+        localValue,
         updateTableCell(rowIndex, columnId, value),
-      )(localValue);
+        updateItemsEntriesTotal,
+        updateAutoAddNewLine(defaultEntry, ['itemId']),
+        orderingLinesIndexes,
+        assignEntriesTaxRate(taxRates),
+        assignEntriesTaxAmount(isInclusiveTax),
+      );
     },
     [taxRates, isInclusiveTax, localValue, defaultEntry],
   );
@@ -289,8 +294,8 @@ export const useComposeRowsOnRemoveTableRow = () => {
  * @param {any} taxRates -
  * @param {any} entries -
  */
-export const aggregateItemEntriesTaxRates = R.curry(
-  (currencyCode, taxRates, entries) => {
+export const aggregateItemEntriesTaxRates =
+  (currencyCode, taxRates) => (entries) => {
     const taxRatesById = keyBy(taxRates, 'id');
 
     // Calculate the total tax amount of invoice entries.
@@ -311,5 +316,4 @@ export const aggregateItemEntriesTaxRates = R.curry(
         taxAmountFormatted,
       };
     });
-  },
-);
+  };

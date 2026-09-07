@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { getUniversalSearchItemsActions } from './utils';
 import { withUniversalSearch } from './withUniversalSearch';
@@ -31,12 +31,13 @@ function DashboardUniversalSearchItemActionsInner({
   ));
 }
 
-export const DashboardUniversalSearchItemActions = R.compose(
+export const DashboardUniversalSearchItemActions = FF.pipe(
+  DashboardUniversalSearchItemActionsInner,
+  withUniversalSearchActions,
   withUniversalSearch(
     ({ searchSelectedResourceType, searchSelectedResourceId }) => ({
       searchSelectedResourceType,
       searchSelectedResourceId,
     }),
   ),
-  withUniversalSearchActions,
-)(DashboardUniversalSearchItemActionsInner);
+);

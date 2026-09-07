@@ -1,6 +1,6 @@
 // @ts-nocheck
 import classNames from 'classnames';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import DashboardErrorBoundary from '@/components/Dashboard/DashboardErrorBoundary';
@@ -43,4 +43,4 @@ function PreferencesPage({ toggleSidebarExpand }) {
   );
 }
 
-export default R.compose(withDashboardActions)(PreferencesPage);
+export default FF.pipe(PreferencesPage, withDashboardActions);

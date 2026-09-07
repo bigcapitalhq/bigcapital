@@ -1,8 +1,8 @@
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { first, sumBy } from 'lodash';
 import moment from 'moment';
-import * as R from 'ramda';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
@@ -101,9 +101,10 @@ export const transformToEditForm = (
       Math.max(linesNumber - expense.categories.length, 0),
     ),
   ];
-  const categories = R.compose(
+  const categories = FF.pipe(
+    initialEntries,
     ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry),
-  )(initialEntries) as unknown as ExpenseEntry[];
+  ) as unknown as ExpenseEntry[];
 
   const attachments = transformAttachmentsToForm(expense);
 
@@ -152,7 +153,7 @@ export const transformFormValuesToRequest = (values: ExpenseFormValues) => {
 
   return {
     ...values,
-    categories: R.compose(orderingLinesIndexes)(categories),
+    categories: FF.pipe(categories, orderingLinesIndexes),
     attachments,
   };
 };
