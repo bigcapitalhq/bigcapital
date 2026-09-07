@@ -65,7 +65,7 @@ function JournalPublishAlertInner({
       onConfirm={handleConfirm}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'journal-publish-alert'}>
         <T id={'are_sure_to_publish_this_manual_journal'} />
       </p>
     </Alert>

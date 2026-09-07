@@ -11,7 +11,7 @@ import { CommercialDocBox } from '@/components';
  */
 export function ManualJournalDrawerDetails() {
   return (
-    <ManualJournalDetailsRoot>
+    <ManualJournalDetailsRoot data-testId={'journal-details-drawer'}>
       <ManualJournalDrawerActionBar />
 
       <CommercialDocBox>

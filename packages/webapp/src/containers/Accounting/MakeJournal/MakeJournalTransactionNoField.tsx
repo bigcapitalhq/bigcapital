@@ -68,6 +68,7 @@ export const MakeJournalTransactionNoField = compose(withDialogActions)(({
       <ControlGroup fill={true}>
         <FInputGroup
           name={'journalNumber'}
+          data-testId={'journal-number-input'}
           fill={true}
           asyncControl={true}
           onBlur={handleJournalNoBlur}

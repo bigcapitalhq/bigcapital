@@ -11,12 +11,14 @@ export function MakeJournalFormFooterLeft() {
         label={intl.get('description')}
         name={'description'}
       >
-        <FEditableText
-          name={'description'}
-          placeholder={intl.get('make_jorunal.decscrption.placeholder')}
-          multiline
-          fastField
-        />
+        <div data-testId={'journal-description-input'}>
+          <FEditableText
+            name={'description'}
+            placeholder={intl.get('make_jorunal.decscrption.placeholder')}
+            multiline
+            fastField
+          />
+        </div>
       </DescriptionFormGroup>
     </React.Fragment>
   );
