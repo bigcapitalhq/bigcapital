@@ -34,6 +34,7 @@ interface InvoiceActionsPayload {
   onViewDetails: (invoice: InvoiceTableRow) => void;
   onPrint: (invoice: InvoiceTableRow) => void;
   onSendMail: (invoice: InvoiceTableRow) => void;
+  onDuplicate: (invoice: InvoiceTableRow) => void;
 }
 
 interface ActionsMenuProps {
@@ -142,6 +143,7 @@ export function ActionsMenu({
     onViewDetails,
     onPrint,
     onSendMail,
+    onDuplicate,
   },
   row: { original },
 }: ActionsMenuProps) {
@@ -158,6 +160,11 @@ export function ActionsMenu({
           icon={<Icon icon="pen-18" />}
           text={intl.get('edit_invoice')}
           onClick={safeCallback(onEdit, original)}
+        />
+        <MenuItem
+          icon={<Icon icon="duplicate" />}
+          text={intl.get('duplicate')}
+          onClick={safeCallback(onDuplicate, original)}
         />
         <MenuItem
           icon={<Icon icon="convert_to" />}
