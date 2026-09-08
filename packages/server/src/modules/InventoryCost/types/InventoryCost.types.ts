@@ -1,5 +1,28 @@
 import { Knex } from 'knex';
 import { InventoryTransaction } from '../models/InventoryTransaction';
+import { IItemEntryTransactionType } from '../../TransactionItemEntry/ItemEntry.types';
+
+export interface IInventoryTransactionItemEntry {
+  id?: number;
+  itemId: number;
+  quantity: number;
+  rate: number;
+  costAccountId?: number;
+  warehouseId?: number;
+  description?: string;
+}
+
+export interface IInventoryTransactionFromItemsEntries {
+  transactionId: number;
+  transactionType: IItemEntryTransactionType;
+  transactionNumber?: string;
+  exchangeRate: number;
+  date: Date | string;
+  direction: TInventoryTransactionDirection;
+  entries: IInventoryTransactionItemEntry[];
+  createdAt: Date;
+  warehouseId?: number;
+}
 
 export const ComputeItemCostQueue = 'ComputeItemCostQueue';
 export const ComputeItemCostQueueJob = 'ComputeItemCostQueueJob';
@@ -29,6 +52,36 @@ export interface IInventoryTransactionMeta {
   id?: number;
   transactionNumber: string;
   description: string;
+}
+
+export interface IInventoryTransaction {
+  itemId: number;
+  quantity: number | null;
+  rate: number;
+  transactionType: IItemEntryTransactionType;
+  transactionId: number;
+  direction: TInventoryTransactionDirection;
+  date: Date | string;
+  entryId: number;
+  costAccountId?: number;
+  createdAt: Date;
+  warehouseId?: number | null;
+  meta: IInventoryTransactionMeta;
+}
+
+export interface IInventoryTransactionRecord {
+  date?: Date | string;
+  direction?: TInventoryTransactionDirection;
+  itemId?: number;
+  quantity?: number | null;
+  rate?: number;
+  transactionType?: string;
+  transactionId?: number;
+  costAccountId?: number;
+  entryId?: number;
+  createdAt?: Date;
+  warehouseId?: number;
+  meta?: IInventoryTransactionMeta;
 }
 
 export interface IInventoryCostLotAggregated {

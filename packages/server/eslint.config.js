@@ -29,10 +29,16 @@ module.exports = [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      // `@ts-ignore`/`@ts-nocheck` are intentionally used across the codebase to
-      // work around legacy typing gaps. Keep them lint-clean without rewriting
-      // the affected logic.
-      '@typescript-eslint/ban-ts-comment': 'off',
+      // `@ts-nocheck` suppresses entire-file type checking and is banned;
+      // prefer precise types or a scoped `@ts-expect-error`/`@ts-ignore` note.
+      '@typescript-eslint/ban-ts-comment': [
+        'error',
+        {
+          'ts-nocheck': true,
+          'ts-ignore': false,
+          'ts-expect-error': false,
+        },
+      ],
       // `require()` is intentionally used for lazy/circular dependency loading
       // in Objection.js models and `import = require()` in e2e specs.
       '@typescript-eslint/no-require-imports': 'off',

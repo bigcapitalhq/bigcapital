@@ -1,9 +1,9 @@
-// @ts-nocheck
 import { Injectable } from '@nestjs/common';
 import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { CreditNote } from '../models/CreditNote';
 import { Knex } from 'knex';
+import { IInventoryTransactionFromItemsEntries } from '@/modules/InventoryCost/types/InventoryCost.types';
 @Injectable()
 export class CreditNoteInventoryTransactions {
   constructor(
@@ -24,7 +24,7 @@ export class CreditNoteInventoryTransactions {
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(creditNote.entries);
 
-    const transaction = {
+    const transaction: IInventoryTransactionFromItemsEntries = {
       transactionId: creditNote.id,
       transactionType: 'CreditNote',
       transactionNumber: creditNote.creditNoteNumber,

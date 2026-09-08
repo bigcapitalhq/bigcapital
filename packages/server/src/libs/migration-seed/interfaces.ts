@@ -1,6 +1,8 @@
+import type { FsMigrations } from './FsMigrations';
+
 import { TenantModel } from '@/modules/System/models/TenantModel';
 
-export type FsMigrations = object;
+export type { FsMigrations };
 
 export interface ISeederConfig {
   tableName: string;

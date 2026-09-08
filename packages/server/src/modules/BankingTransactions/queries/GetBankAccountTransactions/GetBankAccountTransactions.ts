@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as R from 'ramda';
 
 import { first, isEmpty } from 'lodash';
@@ -178,7 +177,7 @@ export class GetBankAccountTransactions extends FinancialSheet {
    * @returns {ICashflowAccountTransaction}
    */
   private transactionTransformer = (
-    transaction,
+    transaction: ICashflowAccountTransaction,
   ): ICashflowAccountTransaction => {
     return R.compose(
       this.transactionBalance,
@@ -192,7 +191,9 @@ export class GetBankAccountTransactions extends FinancialSheet {
    * @param {} transactions
    * @returns {ICashflowAccountTransaction[]}
    */
-  private transactionsNode = (transactions): ICashflowAccountTransaction[] => {
+  private transactionsNode = (
+    transactions: ICashflowAccountTransaction[],
+  ): ICashflowAccountTransaction[] => {
     return R.map(this.transactionTransformer)(transactions);
   };
 

@@ -45,7 +45,7 @@ export class CreditNote extends TenantBaseModel {
   public branch!: Branch;
   public warehouse!: Warehouse;
 
-  public createdAt!: Date | string;
+  public createdAt!: Date;
   public updatedAt!: Date | string;
 
   /**

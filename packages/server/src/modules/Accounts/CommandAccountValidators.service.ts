@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Inject, Injectable, Scope } from '@nestjs/common';
 // import { IAccountDTO, IAccount, IAccountCreateDTO } from './Accounts.types';
 // import AccountTypesUtils from '@/lib/AccountTypes';
@@ -150,7 +149,7 @@ export class CommandAccountValidators {
    * @param {CreateAccountDTO | EditAccountDTO} accountDTO -
    */
   public validateAccountTypeSupportCurrency = (
-    accountDTO: CreateAccountDTO | EditAccountDTO,
+    accountDTO: CreateAccountDTO,
     baseCurrency: string,
   ) => {
     // Can't continue to validate the type has multi-currency feature
@@ -175,7 +174,7 @@ export class CommandAccountValidators {
    * @throws {ServiceError(ERRORS.ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT)}
    */
   public validateCurrentSameParentAccount = (
-    accountDTO: CreateAccountDTO | EditAccountDTO,
+    accountDTO: CreateAccountDTO,
     parentAccount: Account,
     baseCurrency: string,
   ) => {
@@ -201,7 +200,7 @@ export class CommandAccountValidators {
    * @param {IAccount} parentAccount
    */
   public throwErrorIfParentHasDiffType(
-    accountDTO: CreateAccountDTO | EditAccountDTO,
+    accountDTO: CreateAccountDTO,
     parentAccount: Account,
   ) {
     if (accountDTO.accountType !== parentAccount.accountType) {

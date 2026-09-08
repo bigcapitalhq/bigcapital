@@ -1,4 +1,9 @@
-export type IItemEntryTransactionType = 'SaleInvoice' | 'Bill' | 'SaleReceipt';
+export type IItemEntryTransactionType =
+  | 'SaleInvoice'
+  | 'Bill'
+  | 'SaleReceipt'
+  | 'CreditNote'
+  | 'VendorCredit';
 
 export interface IItemEntryDTO {
   id?: number;
