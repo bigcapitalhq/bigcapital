@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { IBalanceSheetDOO, IBalanceSheetQuery } from './BalanceSheet.types';
 import { BalanceSheetRepository } from './BalanceSheetRepository';
 import { BalanceSheetMetaInjectable } from './BalanceSheetMeta';
@@ -32,7 +31,7 @@ export class BalanceSheetInjectable {
       ...getBalanceSheetDefaultQuery(),
       ...query,
     };
-    const tenantMetadata = await this.tenancyContext.getTenantMetadata(true);
+    const tenantMetadata = await this.tenancyContext.getTenantMetadata();
 
     // Loads all resources.
     await this.balanceSheetRepository.asyncInitialize(filter);

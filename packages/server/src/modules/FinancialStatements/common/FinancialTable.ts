@@ -1,6 +1,7 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { isEmpty, clone, cloneDeep, omit } from 'lodash';
 import { increment } from '@/utils/increment';
+import { assoc } from '@/common/fp';
 import { ITableRow, ITableColumn } from '../types/Table.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheetStructure } from './FinancialSheetStructure';
@@ -14,7 +15,7 @@ enum IROW_TYPE {
 export const FinancialTable = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialSheetStructure)(Base) {
+  class extends flow(FinancialSheetStructure)(Base) {
     public readonly i18n: I18nService;
 
     /**
@@ -29,7 +30,7 @@ export const FinancialTable = <T extends GConstructor<FinancialSheet>>(
 
       return this.mapNodesDeep(columns, (column) => {
         return isEmpty(column.children)
-          ? R.assoc('cellIndex', cellIndex(), column)
+          ? assoc('cellIndex', cellIndex(), column)
           : column;
       });
     };

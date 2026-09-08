@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { sumBy } from 'lodash';
 import {
   IFinancialCommonHorizDatePeriodNode,
@@ -6,13 +6,14 @@ import {
   IFinancialNodeWithPreviousYear,
 } from '../types/Report.types';
 import { GConstructor } from '@/common/types/Constructor';
+import { assoc } from '@/common/fp';
 import { FinancialSheet } from './FinancialSheet';
 import { FinancialDatePeriods } from './FinancialDatePeriods';
 
 export const FinancialPreviousYear = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.compose(FinancialDatePeriods)(Base) {
+  class extends flow(FinancialDatePeriods)(Base) {
     // ---------------------------
     // # Common Node
     // ---------------------------
@@ -28,7 +29,7 @@ export const FinancialPreviousYear = <T extends GConstructor<FinancialSheet>>(
         node.total.amount,
         node.previousYear.amount,
       );
-      return R.assoc('previousYearChange', this.getAmountMeta(change), node);
+      return assoc('previousYearChange', this.getAmountMeta(change), node);
     };
 
     /**
@@ -45,7 +46,7 @@ export const FinancialPreviousYear = <T extends GConstructor<FinancialSheet>>(
         node.previousYear.amount,
         node.previousYearChange.amount,
       );
-      return R.assoc(
+      return assoc(
         'previousYearPercentage',
         this.getPercentageAmountMeta(percentage),
         node,
@@ -64,11 +65,7 @@ export const FinancialPreviousYear = <T extends GConstructor<FinancialSheet>>(
         node.total.amount,
         node.previousYear.amount,
       );
-      return R.assoc(
-        'previousYearChange',
-        this.getTotalAmountMeta(change),
-        node,
-      );
+      return assoc('previousYearChange', this.getTotalAmountMeta(change), node);
     };
 
     /**
@@ -83,7 +80,7 @@ export const FinancialPreviousYear = <T extends GConstructor<FinancialSheet>>(
         node.previousYear.amount,
         node.previousYearChange.amount,
       );
-      return R.assoc(
+      return assoc(
         'previousYearPercentage',
         this.getPercentageTotalAmountMeta(percentage),
         node,
@@ -101,10 +98,11 @@ export const FinancialPreviousYear = <T extends GConstructor<FinancialSheet>>(
       const PYFromDate = this.getPreviousYearDate(horizNode.fromDate.date);
       const PYToDate = this.getPreviousYearDate(horizNode.toDate.date);
 
-      return R.compose(
-        R.assoc('previousYearToDate', this.getDateMeta(PYToDate)),
-        R.assoc('previousYearFromDate', this.getDateMeta(PYFromDate)),
-      )(horizNode);
+      return assoc(
+        'previousYearToDate',
+        this.getDateMeta(PYToDate),
+        assoc('previousYearFromDate', this.getDateMeta(PYFromDate), horizNode),
+      );
     };
 
     /**

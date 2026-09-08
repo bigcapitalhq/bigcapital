@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-import * as R from 'ramda';
 import { ITransactionsByContactsContact } from './TransactionsByContact.types';
 import { ITableRow } from '../../types/Table.types';
 import { tableMapper, tableRowMapper } from '../../utils/Table.utils';
@@ -55,7 +54,7 @@ export class TransactionsByContactsTableRows {
         key: 'openingBalanceLabel',
         value: this.i18n.t('transactions_by_contact.opening_balance') as string,
       },
-      ...R.repeat({ key: 'empty', value: '' }, 5),
+      ...Array(5).fill({ key: 'empty', value: '' }),
       {
         key: 'openingBalanceValue',
         accessor: 'openingBalance.formattedAmount',
@@ -79,7 +78,7 @@ export class TransactionsByContactsTableRows {
         key: 'closingBalanceLabel',
         value: this.i18n.t('transactions_by_contact.closing_balance') as string,
       },
-      ...R.repeat({ key: 'empty', value: '' }, 5),
+      ...Array(5).fill({ key: 'empty', value: '' }),
       {
         key: 'closingBalanceValue',
         accessor: 'closingBalance.formattedAmount',

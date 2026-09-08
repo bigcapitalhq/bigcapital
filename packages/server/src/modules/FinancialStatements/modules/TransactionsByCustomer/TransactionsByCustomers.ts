@@ -1,5 +1,6 @@
-import * as R from 'ramda';
 import { isEmpty } from 'lodash';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { I18nService } from 'nestjs-i18n';
 import { ModelObject } from 'objection';
 import {
@@ -10,6 +11,7 @@ import {
 } from './TransactionsByCustomer.types';
 import { TransactionsByContact } from '../TransactionsByContact/TransactionsByContact';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { INumberFormatQuery } from '../../types/Report.types';
 import { TransactionsByCustomersRepository } from './TransactionsByCustomersRepository';
 import {
@@ -65,10 +67,16 @@ export class TransactionsByCustomers extends TransactionsByContact {
 
     const ledgerEntries = ledger.getEntries();
 
-    return R.compose(
-      R.curry(this.contactTransactionRunningBalance)(openingBalance, 'debit'),
-      R.map(this.contactTransactionMapper.bind(this)),
-    ).bind(this)(ledgerEntries);
+    return flow(
+      (entries: ILedgerEntry[]) =>
+        entries.map((entry) => this.contactTransactionMapper(entry)),
+      (transactions) =>
+        this.contactTransactionRunningBalance(
+          openingBalance,
+          'debit',
+          transactions,
+        ),
+    )(ledgerEntries);
   }
 
   /**
@@ -128,10 +136,11 @@ export class TransactionsByCustomers extends TransactionsByContact {
   private customersMapper(
     customers: ModelObject<Customer>[],
   ): ITransactionsByCustomersCustomer[] {
-    return R.compose(
-      R.when(this.isCustomersPostFilter, this.contactsFilter),
-      R.map(this.customerMapper.bind(this)),
-    ).bind(this)(customers);
+    return flow(
+      (nodes: ModelObject<Customer>[]) =>
+        nodes.map((customer) => this.customerMapper(customer)),
+      when(this.isCustomersPostFilter, this.contactsFilter),
+    )(customers) as ITransactionsByCustomersCustomer[];
   }
 
   /**

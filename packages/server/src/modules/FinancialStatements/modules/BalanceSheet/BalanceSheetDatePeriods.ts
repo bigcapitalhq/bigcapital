@@ -1,6 +1,7 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { assoc } from '@/common/fp';
 import { sumBy } from 'lodash';
+import * as moment from 'moment';
 import {
   IBalanceSheetAccountNode,
   IBalanceSheetTotalPeriod,
@@ -11,6 +12,7 @@ import { IDateRange, IFormatNumberSettings } from '../../types/Report.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { BalanceSheetRepository } from './BalanceSheetRepository';
 
 /**
  * Balance sheet date periods.
@@ -18,11 +20,13 @@ import { BalanceSheetQuery } from './BalanceSheetQuery';
 export const BalanceSheetDatePeriods = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class BalanceSheetDatePeriods extends R.pipe(FinancialDatePeriods)(Base) {
+  class BalanceSheetDatePeriods extends flow(FinancialDatePeriods)(Base) {
     /**
      * @param {IBalanceSheetQuery}
      */
     public readonly query: BalanceSheetQuery;
+
+    public repository: BalanceSheetRepository;
 
     /**
      * Retrieves the date periods based on the report query.
@@ -52,9 +56,9 @@ export const BalanceSheetDatePeriods = <T extends GConstructor<FinancialSheet>>(
       ) => any,
     ) => {
       return this.getNodeDatePeriods(
-        this.query.fromDate,
-        this.query.toDate,
-        this.query.displayColumnsBy,
+        this.query.fromDate as Date,
+        this.query.toDate as Date,
+        this.query.displayColumnsBy as moment.unitOfTime.StartOf,
         node,
         callback,
       );
@@ -144,7 +148,7 @@ export const BalanceSheetDatePeriods = <T extends GConstructor<FinancialSheet>>(
     ): IBalanceSheetAccountNode => {
       const datePeriods = this.getAccountsNodeDatePeriods(node);
 
-      return R.assoc('horizontalTotals', datePeriods, node);
+      return assoc('horizontalTotals', datePeriods, node);
     };
 
     // --------------------------------
@@ -198,7 +202,7 @@ export const BalanceSheetDatePeriods = <T extends GConstructor<FinancialSheet>>(
     public assocAggregateNodeDatePeriods = (node) => {
       const datePeriods = this.getAggregateNodeDatePeriods(node);
 
-      return R.assoc('horizontalTotals', datePeriods, node);
+      return assoc('horizontalTotals', datePeriods, node);
     };
 
     /**

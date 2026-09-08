@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import { set, sumBy } from 'lodash';
 import {
   mapValuesDeepReverse,
@@ -46,9 +45,9 @@ export const FinancialSheetStructure = <T extends GConstructor<FinancialSheet>>(
         pathFormat: 'array',
       });
     };
-    public filterNodesDeep2 = R.curry((predicate, nodes) => {
+    public filterNodesDeep2 = (predicate, nodes) => {
       return filterNodesDeep(predicate, nodes);
-    });
+    };
     /**
      *
      * @param

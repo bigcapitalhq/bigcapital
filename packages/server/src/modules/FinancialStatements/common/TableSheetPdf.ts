@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import { ITableColumn, ITableData, ITableRow } from '../types/Table.types';
 import { FinancialTableStructure } from './FinancialTableStructure';
 import { tableClassNames } from '../utils';
@@ -74,13 +73,10 @@ export class TableSheetPdf {
    * @returns {ITableRow[]} - The converted table rows.
    */
   private tablePdfRows = (rows: ITableRow[]): ITableRow[] => {
-    const curriedFlatNestedTree = R.curry(
-      FinancialTableStructure.flatNestedTree,
-    );
-    const flatNestedTree = curriedFlatNestedTree(R.__, {
-      nestedPrefix: '<span style="padding-left: 15px;"></span>',
-    });
-    // @ts-ignore
-    return R.compose(tableClassNames, flatNestedTree)(rows);
+    const flatNestedTreeRows = (rows: ITableRow[]): ITableRow[] =>
+      FinancialTableStructure.flatNestedTree(rows, {
+        nestedPrefix: '<span style="padding-left: 15px;"></span>',
+      });
+    return tableClassNames(flatNestedTreeRows(rows));
   };
 }

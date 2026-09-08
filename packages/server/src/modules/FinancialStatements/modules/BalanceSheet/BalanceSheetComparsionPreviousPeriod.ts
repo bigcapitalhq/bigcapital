@@ -1,6 +1,7 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import * as A from 'fp-ts/Array';
 import { sumBy } from 'lodash';
+import { assoc, when } from '@/common/fp';
 import {
   IBalanceSheetAccountNode,
   IBalanceSheetDataNode,
@@ -10,6 +11,7 @@ import {
 } from './BalanceSheet.types';
 import { FinancialPreviousPeriod } from '../../common/FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../../common/FinancialHorizTotals';
+import { IFinancialDatePeriodsUnit } from '../../types/Report.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
@@ -20,7 +22,7 @@ export const BalanceSheetComparsionPreviousPeriod = <
 >(
   Base: T,
 ) =>
-  class BalanceSheetComparsionPreviousPeriod extends R.pipe(
+  class BalanceSheetComparsionPreviousPeriod extends flow(
     FinancialHorizTotals,
     FinancialPreviousPeriod,
   )(Base) {
@@ -39,14 +41,14 @@ export const BalanceSheetComparsionPreviousPeriod = <
       node: IBalanceSheetDataNode,
     ): IBalanceSheetDataNode => {
       const accountIds = this.repository.getAccountsIdsIncludingChildren(
-        node.id,
+        node.id as number,
       );
       const total =
         this.repository.PPTotalAccountsLedger.whereAccountsIds(
           accountIds,
         ).getClosingBalance();
 
-      return R.assoc('previousPeriod', this.getAmountMeta(total), node);
+      return assoc('previousPeriod', this.getAmountMeta(total), node);
     };
 
     /**
@@ -57,24 +59,21 @@ export const BalanceSheetComparsionPreviousPeriod = <
     public previousPeriodAccountNodeComposer = (
       node: IBalanceSheetAccountNode,
     ): IBalanceSheetAccountNode => {
-      return R.compose(
-        R.when(
-          this.isNodeHasHorizTotals,
-          this.assocPreivousPeriodAccountHorizNodeComposer,
-        ),
-        R.when(
-          this.query.isPreviousPeriodPercentageActive,
-          this.assocPreviousPeriodPercentageNode,
-        ),
-        R.when(
+      return flow(
+        this.assocPreviousPeriodAccountNode,
+        when(
           this.query.isPreviousPeriodChangeActive,
           this.assocPreviousPeriodChangeNode,
         ),
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.assocPreviousPeriodAccountNode,
+        when(
+          this.query.isPreviousPeriodPercentageActive,
+          this.assocPreviousPeriodPercentageNode,
         ),
-      )(node);
+        when(
+          this.isNodeHasHorizTotals,
+          this.assocPreivousPeriodAccountHorizNodeComposer,
+        ),
+      )(node) as IBalanceSheetAccountNode;
     };
 
     // ------------------------------
@@ -86,11 +85,11 @@ export const BalanceSheetComparsionPreviousPeriod = <
      * @returns {IBalanceSheetAggregateNode}
      */
     public assocPreviousPeriodAggregateNode = (
-      node: IBalanceSheetAggregateNode,
+      node: any,
     ): IBalanceSheetAggregateNode => {
       const total = sumBy(node.children, 'previousPeriod.amount');
 
-      return R.assoc('previousPeriod', this.getTotalAmountMeta(total), node);
+      return assoc('previousPeriod', this.getTotalAmountMeta(total), node);
     };
 
     /**
@@ -101,24 +100,21 @@ export const BalanceSheetComparsionPreviousPeriod = <
     public previousPeriodAggregateNodeComposer = (
       node: IBalanceSheetAccountNode,
     ): IBalanceSheetAccountNode => {
-      return R.compose(
-        R.when(
-          this.isNodeHasHorizTotals,
-          this.assocPreviousPeriodAggregateHorizNode,
-        ),
-        R.when(
-          this.query.isPreviousPeriodPercentageActive,
-          this.assocPreviousPeriodTotalPercentageNode,
-        ),
-        R.when(
+      return flow(
+        this.assocPreviousPeriodAggregateNode,
+        when(
           this.query.isPreviousPeriodChangeActive,
           this.assocPreviousPeriodTotalChangeNode,
         ),
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.assocPreviousPeriodAggregateNode,
+        when(
+          this.query.isPreviousPeriodPercentageActive,
+          this.assocPreviousPeriodTotalPercentageNode,
         ),
-      )(node);
+        when(
+          this.isNodeHasHorizTotals,
+          this.assocPreviousPeriodAggregateHorizNode,
+        ),
+      )(node) as IBalanceSheetAccountNode;
     };
 
     // ------------------------------
@@ -131,39 +127,41 @@ export const BalanceSheetComparsionPreviousPeriod = <
      * @param {Date} toDate - To date.
      * @returns {number}
      */
-    private getAccountPPDatePeriodTotal = R.curry(
-      (accountId: number, fromDate: Date, toDate: Date): number => {
-        const accountIds =
-          this.repository.getAccountsIdsIncludingChildren(accountId);
-        const PPPeriodsTotal =
-          this.repository.PPPeriodsAccountsLedger.whereAccountsIds(accountIds)
-            .whereToDate(toDate)
-            .getClosingBalance();
+    private getAccountPPDatePeriodTotal = (
+      accountId: number,
+      fromDate: Date,
+      toDate: Date,
+    ): number => {
+      const accountIds =
+        this.repository.getAccountsIdsIncludingChildren(accountId);
+      const PPPeriodsTotal =
+        this.repository.PPPeriodsAccountsLedger.whereAccountsIds(accountIds)
+          .whereToDate(toDate)
+          .getClosingBalance();
 
-        const PPPeriodsOpeningTotal =
-          this.repository.PPPeriodsOpeningAccountLedger.whereAccountsIds(
-            accountIds,
-          ).getClosingBalance();
+      const PPPeriodsOpeningTotal =
+        this.repository.PPPeriodsOpeningAccountLedger.whereAccountsIds(
+          accountIds,
+        ).getClosingBalance();
 
-        return PPPeriodsOpeningTotal + PPPeriodsTotal;
-      },
-    );
+      return PPPeriodsOpeningTotal + PPPeriodsTotal;
+    };
 
     /**
      * Assoc preivous period to account horizontal total node.
      * @param   {IBalanceSheetAccountNode} node
      * @returns {}
      */
-    private assocPreviousPeriodAccountHorizTotal = R.curry(
-      (node: IBalanceSheetAccountNode, totalNode) => {
+    private assocPreviousPeriodAccountHorizTotal =
+      (node: IBalanceSheetAccountNode) =>
+      (totalNode: any): IBalanceSheetTotal => {
         const total = this.getAccountPPDatePeriodTotal(
           node.id,
           totalNode.previousPeriodFromDate.date,
           totalNode.previousPeriodToDate.date,
         );
-        return R.assoc('previousPeriod', this.getAmountMeta(total), totalNode);
-      },
-    );
+        return assoc('previousPeriod', this.getAmountMeta(total), totalNode);
+      };
 
     /**
      * Previous year account horizontal node composer.
@@ -171,33 +169,30 @@ export const BalanceSheetComparsionPreviousPeriod = <
      * @param {IBalanceSheetTotal}
      * @returns {IBalanceSheetTotal}
      */
-    private previousPeriodAccountHorizNodeCompose = R.curry(
-      (
-        node: IBalanceSheetAccountNode,
-        horizontalTotalNode: IBalanceSheetTotal,
-      ): IBalanceSheetTotal => {
-        return R.compose(
-          R.when(
-            this.query.isPreviousPeriodPercentageActive,
-            this.assocPreviousPeriodPercentageNode,
+    private previousPeriodAccountHorizNodeCompose =
+      (node: IBalanceSheetAccountNode) =>
+      (horizontalTotalNode): IBalanceSheetTotal => {
+        return flow(
+          when(
+            this.query.isPreviousPeriodActive,
+            this.assocPreviousPeriodHorizNodeFromToDates(
+              this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
+            ),
           ),
-          R.when(
-            this.query.isPreviousPeriodChangeActive,
-            this.assocPreviousPeriodChangeNode,
-          ),
-          R.when(
+          when(
             this.query.isPreviousPeriodActive,
             this.assocPreviousPeriodAccountHorizTotal(node),
           ),
-          R.when(
-            this.query.isPreviousPeriodActive,
-            this.assocPreviousPeriodHorizNodeFromToDates(
-              this.query.displayColumnsBy,
-            ),
+          when(
+            this.query.isPreviousPeriodChangeActive,
+            this.assocPreviousPeriodChangeNode,
           ),
-        )(horizontalTotalNode);
-      },
-    );
+          when(
+            this.query.isPreviousPeriodPercentageActive,
+            this.assocPreviousPeriodPercentageNode,
+          ),
+        )(horizontalTotalNode) as IBalanceSheetTotal;
+      };
 
     /**
      *
@@ -206,12 +201,11 @@ export const BalanceSheetComparsionPreviousPeriod = <
      */
     private assocPreivousPeriodAccountHorizNodeComposer = (
       node: IBalanceSheetAccountNode,
-    ) => {
-      const horizontalTotals = R.map(
-        this.previousPeriodAccountHorizNodeCompose(node),
-        node.horizontalTotals,
-      );
-      return R.assoc('horizontalTotals', horizontalTotals, node);
+    ): IBalanceSheetAccountNode => {
+      const horizontalTotals = A.map((totalNode: IBalanceSheetTotal) =>
+        this.previousPeriodAccountHorizNodeCompose(node)(totalNode),
+      )(node.horizontalTotals);
+      return assoc('horizontalTotals', horizontalTotals, node);
     };
 
     // ------------------------------
@@ -222,51 +216,47 @@ export const BalanceSheetComparsionPreviousPeriod = <
      * @param node
      * @returns
      */
-    private assocPreviousPeriodAggregateHorizTotalNode = R.curry(
-      (node, index: number, totalNode) => {
+    private assocPreviousPeriodAggregateHorizTotalNode =
+      (node, index: number) =>
+      (totalNode: IBalanceSheetTotal): IBalanceSheetTotal => {
         const total = this.getPPHorizNodesTotalSumation(index, node);
 
-        return R.assoc(
+        return assoc(
           'previousPeriod',
           this.getTotalAmountMeta(total),
           totalNode,
         );
-      },
-    );
+      };
 
     /**
      * Compose previous period to aggregate horizontal nodes.
      * @param   {IBalanceSheetTotal} node
      * @returns {IBalanceSheetTotal}
      */
-    private previousPeriodAggregateHorizNodeComposer = R.curry(
-      (
-        node: IBalanceSheetCommonNode,
-        horiontalTotalNode: IBalanceSheetTotal,
-        index: number,
-      ): IBalanceSheetTotal => {
-        return R.compose(
-          R.when(
-            this.query.isPreviousPeriodPercentageActive,
-            this.assocPreviousPeriodTotalPercentageNode,
+    private previousPeriodAggregateHorizNodeComposer =
+      (node: IBalanceSheetCommonNode) =>
+      (horiontalTotalNode, index: number): IBalanceSheetTotal => {
+        return flow(
+          when(
+            this.query.isPreviousPeriodActive,
+            this.assocPreviousPeriodHorizNodeFromToDates(
+              this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
+            ),
           ),
-          R.when(
-            this.query.isPreviousPeriodChangeActive,
-            this.assocPreviousPeriodTotalChangeNode,
-          ),
-          R.when(
+          when(
             this.query.isPreviousPeriodActive,
             this.assocPreviousPeriodAggregateHorizTotalNode(node, index),
           ),
-          R.when(
-            this.query.isPreviousPeriodActive,
-            this.assocPreviousPeriodHorizNodeFromToDates(
-              this.query.displayColumnsBy,
-            ),
+          when(
+            this.query.isPreviousPeriodChangeActive,
+            this.assocPreviousPeriodTotalChangeNode,
           ),
-        )(horiontalTotalNode);
-      },
-    );
+          when(
+            this.query.isPreviousPeriodPercentageActive,
+            this.assocPreviousPeriodTotalPercentageNode,
+          ),
+        )(horiontalTotalNode) as IBalanceSheetTotal;
+      };
 
     /**
      * Assoc
@@ -275,11 +265,12 @@ export const BalanceSheetComparsionPreviousPeriod = <
      */
     private assocPreviousPeriodAggregateHorizNode = (
       node: IBalanceSheetCommonNode,
-    ) => {
-      const horizontalTotals = R.addIndex(R.map)(
-        this.previousPeriodAggregateHorizNodeComposer(node),
-        node.horizontalTotals,
-      );
-      return R.assoc('horizontalTotals', horizontalTotals, node);
+    ): IBalanceSheetCommonNode => {
+      const horizontalTotals = A.mapWithIndex(
+        (index: number, totalNode: IBalanceSheetTotal) =>
+          this.previousPeriodAggregateHorizNodeComposer(node)(totalNode, index),
+      )(node.horizontalTotals) as IBalanceSheetTotal[];
+
+      return assoc('horizontalTotals', horizontalTotals, node);
     };
   };

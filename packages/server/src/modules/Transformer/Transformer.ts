@@ -1,5 +1,6 @@
 import * as moment from 'moment';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { includes, isFunction, isObject, isUndefined, omit } from 'lodash';
 // import { EXPORT_DTE_FORMAT } from '@/services/Export/constants';
 import { formatNumber } from '@/utils/format-number';
@@ -85,11 +86,10 @@ export class Transformer<T = object, ExtraContext = object> {
   protected getTransformation = (item) => {
     const normlizedItem = this.normalizeModelItem(item);
 
-    return R.compose(
-      // sortObjectKeysAlphabetically,
-      this.transform,
-      R.when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
+    return flow(
       this.includeAttributesTransformed,
+      when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
+      this.transform,
     )(normlizedItem);
   };
 

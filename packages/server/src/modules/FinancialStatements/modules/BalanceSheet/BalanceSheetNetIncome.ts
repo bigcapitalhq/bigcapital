@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { assoc, when } from '@/common/fp';
 import { I18nService } from 'nestjs-i18n';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
@@ -23,7 +23,7 @@ import { GConstructor } from '@/common/types/Constructor';
 export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(
+  class extends flow(
     BalanceSheetNetIncomePP,
     BalanceSheetNetIncomePY,
     BalanceSheetComparsionPreviousYear,
@@ -34,6 +34,10 @@ export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
     public repository: BalanceSheetRepository;
     public query: BalanceSheetQuery;
     public i18n: I18nService;
+
+    protected mapNodesDeep: (nodes, callback) => any;
+    protected getReportNodeDatePeriods: (node, callback) => any;
+    protected isSchemaNodeType: (type: string) => (node) => boolean;
 
     /**
      * Retrieves the closing balance of income accounts.
@@ -71,7 +75,7 @@ export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
      */
     public schemaNetIncomeNodeMapper = (
       node: IBalanceSheetSchemaNetIncomeNode,
-    ): IBalanceSheetNetIncomeNode => {
+    ): any => {
       const total = this.getNetIncomeTotal();
 
       return {
@@ -88,22 +92,22 @@ export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
      * @returns {IBalanceSheetNetIncomeNode}
      */
     public schemaNetIncomeNodeCompose = (
-      node: IBalanceSheetSchemaNetIncomeNode,
+      node: any,
     ): IBalanceSheetNetIncomeNode => {
-      return R.compose(
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearNetIncomeNodeCompose,
-        ),
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.previousPeriodNetIncomeNodeCompose,
-        ),
-        R.when(
+      return flow(
+        this.schemaNetIncomeNodeMapper,
+        when(
           this.query.isDatePeriodsColumnsType,
           this.assocNetIncomeDatePeriodsNode,
         ),
-        this.schemaNetIncomeNodeMapper,
+        when(
+          this.query.isPreviousPeriodActive,
+          this.previousPeriodNetIncomeNodeCompose,
+        ),
+        when(
+          this.query.isPreviousYearActive,
+          this.previousYearNetIncomeNodeCompose,
+        ),
       )(node);
     };
 
@@ -198,7 +202,7 @@ export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
     ): IBalanceSheetNetIncomeNode => {
       const datePeriods = this.getNetIncomeDatePeriodsNode(node);
 
-      return R.assoc('horizontalTotals', datePeriods, node);
+      return assoc('horizontalTotals', datePeriods, node);
     };
 
     // -----------------------------
@@ -212,8 +216,8 @@ export const BalanceSheetNetIncome = <T extends GConstructor<FinancialSheet>>(
     public reportNetIncomeNodeSchemaParser = (
       schemaNode: IBalanceSheetSchemaNode,
     ): IBalanceSheetDataNode => {
-      return R.compose(
-        R.when(
+      return flow(
+        when(
           this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME),
           this.schemaNetIncomeNodeCompose,
         ),

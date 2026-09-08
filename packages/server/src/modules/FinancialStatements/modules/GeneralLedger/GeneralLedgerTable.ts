@@ -1,4 +1,6 @@
-import * as R from 'ramda';
+import { flow, constant } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { assoc, when } from '@/common/fp';
 import {
   IGeneralLedgerMeta,
   IGeneralLedgerSheetAccount,
@@ -19,9 +21,9 @@ import {
 import { tableRowMapper } from '../../utils/Table.utils';
 import { GENERAL_LEDGER_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class GeneralLedgerTable extends R.compose(
-  FinancialTable,
+export class GeneralLedgerTable extends flow(
   FinancialSheetStructure,
+  FinancialTable,
 )(FinancialSheet) {
   private data: IGeneralLedgerSheetData;
   private query: IGeneralLedgerSheetQuery;
@@ -218,11 +220,9 @@ export class GeneralLedgerTable extends R.compose(
    * @param {IGeneralLedgerSheetAccountTransaction} transaction - Transaction.
    * @returns {ITableRow}
    */
-  private transactionMapper = R.curry(
-    (
-      account: IGeneralLedgerSheetAccount,
-      transaction: IGeneralLedgerSheetAccountTransaction,
-    ): ITableRow => {
+  private transactionMapper =
+    (account: IGeneralLedgerSheetAccount) =>
+    (transaction: IGeneralLedgerSheetAccountTransaction): ITableRow => {
       const columns = this.transactionColumnAccessors();
       const data = { ...transaction, account };
       const meta = {
@@ -233,8 +233,7 @@ export class GeneralLedgerTable extends R.compose(
         },
       };
       return tableRowMapper(data, columns, meta);
-    },
-  );
+    };
 
   /**
    * Maps the given transactions nodes to table rows.
@@ -246,8 +245,7 @@ export class GeneralLedgerTable extends R.compose(
   ): ITableRow[] => {
     const transactionMapper = this.transactionMapper(account);
 
-    // @ts-ignore
-    return R.map(transactionMapper)(account.transactions);
+    return account.transactions.map(transactionMapper);
   };
 
   /**
@@ -305,10 +303,10 @@ export class GeneralLedgerTable extends R.compose(
     const transactions = this.transactionsMapper(account);
     const closingBalance = this.closingBalanceMapper(account);
 
-    return R.when(
-      R.always(R.not(R.isEmpty(transactions))),
-      R.prepend(openingBalance),
-    )([...transactions, closingBalance]) as ITableRow[];
+    return when(constant(!isEmpty(transactions)), (rows: ITableRow[]) => [
+      openingBalance,
+      ...rows,
+    ])([...transactions, closingBalance]);
   };
 
   /**
@@ -331,20 +329,19 @@ export class GeneralLedgerTable extends R.compose(
     const isAppendClosingSubaccounts = () =>
       account.children?.length > 0 && !!account.closingBalanceSubaccounts;
 
-    // @ts-ignore
-    const children = R.compose(
-      R.when(
-        isAppendClosingSubaccounts,
-        R.append(closingBalanceWithSubaccounts),
-      ),
-      R.concat(R.defaultTo([], transactions)),
-      R.when(
-        () => account?.children?.length > 0,
-        R.concat(R.defaultTo([], account.children)),
-      ),
+    const children = flow(
+      (rows: ITableRow[]) => [
+        ...(account?.children ?? ([] as unknown as ITableRow[])),
+        ...rows,
+      ],
+      (rows: ITableRow[]) => [...(transactions ?? []), ...rows],
+      when(isAppendClosingSubaccounts, (rows: ITableRow[]) => [
+        ...rows,
+        closingBalanceWithSubaccounts,
+      ]),
     )([]);
 
-    return R.assoc('children', children)(row);
+    return assoc('children', children, row);
   };
 
   /**
@@ -363,7 +360,7 @@ export class GeneralLedgerTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableRows(): ITableRow[] {
-    return R.compose(this.accountsMapper)(this.data);
+    return this.accountsMapper(this.data);
   }
 
   /**
@@ -372,6 +369,6 @@ export class GeneralLedgerTable extends R.compose(
    */
   public tableColumns(): ITableColumn[] {
     const columns = this.commonColumns();
-    return R.compose(this.tableColumnsCellIndexing)(columns);
+    return this.tableColumnsCellIndexing(columns);
   }
 }

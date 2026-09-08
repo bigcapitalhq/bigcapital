@@ -10,6 +10,7 @@ export interface IDynamicFilter {
   onInitialize(): void;
   buildQuery(): void;
   getResponseMeta();
+  relationFields: string[];
 }
 export interface IFilterRole {
   fieldKey: string;

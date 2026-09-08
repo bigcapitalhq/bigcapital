@@ -1,5 +1,3 @@
-// @ts-nocheck
-import * as R from 'ramda';
 import { TOTAL_NODE_TYPES } from './constants';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { GConstructor } from '@/common/types/Constructor';
@@ -8,29 +6,31 @@ export const ProfitLossSheetBase = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
   class extends Base {
+    protected findNodeDeep: (nodes, callback) => any;
+
     /**
      *
      * @param type
      * @param node
      * @returns
      */
-    public isNodeType = R.curry((type: string, node) => {
+    public isNodeType = (type: string) => (node) => {
       return node.nodeType === type;
-    });
+    };
 
     /**
      *
      */
-    protected isNodeTypeIn = R.curry((types: string[], node) => {
+    protected isNodeTypeIn = (types: string[], node) => {
       return types.indexOf(node.nodeType) !== -1;
-    });
+    };
 
     /**
      *
      */
-    protected findNodeById = R.curry((id, nodes) => {
+    protected findNodeById = (id, nodes) => {
       return this.findNodeDeep(nodes, (node) => node.id === id);
-    });
+    };
 
     /**
      *

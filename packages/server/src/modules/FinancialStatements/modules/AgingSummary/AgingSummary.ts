@@ -12,8 +12,8 @@ import { Customer } from '@/modules/Customers/models/Customer';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
-import { IFormatNumberSettings } from '@/utils/format-number';
 import { IARAgingSummaryCustomer } from '../ARAgingSummary/ARAgingSummary.types';
+import { IFormatNumberSettings } from '../../types/Report.types';
 
 export abstract class AgingSummaryReport extends AgingReport {
   readonly contacts: ModelObject<Customer | Vendor>[];
@@ -103,7 +103,6 @@ export abstract class AgingSummaryReport extends AgingReport {
   ): IAgingAmount {
     return {
       amount,
-      // @ts-ignore
       formattedAmount: this.formatNumber(amount, settings),
       currencyCode: this.baseCurrency,
     };

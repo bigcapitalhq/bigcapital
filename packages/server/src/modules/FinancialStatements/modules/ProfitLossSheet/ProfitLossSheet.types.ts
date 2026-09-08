@@ -41,8 +41,8 @@ export interface IFinancialNodeWithPreviousPeriod {
 }
 
 export interface IFinancialNodeWithPreviousYear {
-  previousYearFromDate: FinancialDateMeta;
-  previousYearToDate: FinancialDateMeta;
+  previousYearFromDate?: FinancialDateMeta;
+  previousYearToDate?: FinancialDateMeta;
 
   previousYear?: IProfitLossSheetTotal;
   previousYearChange?: IProfitLossSheetTotal;
@@ -114,7 +114,7 @@ export interface IProfitLossHorizontalDatePeriodNode
 export interface IProfitLossSheetCommonNode
   extends IFinancialNodeWithPreviousYear,
     IFinancialNodeWithPreviousPeriod {
-  id: ProfitLossAggregateNodeId;
+  id: ProfitLossAggregateNodeId | number;
   name: string;
 
   children?: IProfitLossSheetNode[];

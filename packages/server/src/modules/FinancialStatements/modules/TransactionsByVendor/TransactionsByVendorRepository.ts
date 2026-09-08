@@ -1,5 +1,5 @@
-import * as R from 'ramda';
 import * as moment from 'moment';
+import { assoc } from '@/common/fp';
 import { isEmpty, map } from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
@@ -143,11 +143,11 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
       customersIds,
     );
 
-    // @ts-ignore
-    return R.compose(
-      R.map(R.assoc('date', openingDate)),
-      R.map(R.assoc('accountNormal', 'credit')),
-    )(openingTransactions);
+    return openingTransactions
+      .map((trans) => assoc('accountNormal', 'credit', trans))
+      .map((trans) =>
+        assoc('date', openingDate, trans),
+      ) as unknown as ILedgerEntry[];
   }
 
   /**
@@ -163,16 +163,12 @@ export class TransactionsByVendorRepository extends TransactionsByContactReposit
       fromDate,
       toDate,
     );
-    // @ts-ignore
-    return R.compose(
-      R.map(R.assoc('accountNormal', 'credit')),
-      R.map((trans) => ({
-        // @ts-ignore
+    return transactions
+      .map((trans) => assoc('accountNormal', 'credit', trans))
+      .map((trans) => ({
         ...trans,
-        // @ts-ignore
         referenceTypeFormatted: trans.referenceTypeFormatted,
-      })),
-    )(transactions);
+      })) as unknown as ILedgerEntry[];
   }
 
   /**

@@ -1,4 +1,6 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { unless } from '@/common/fp';
 import {
   SalesTaxLiabilitySummaryQuery,
   SalesTaxLiabilitySummaryRate,
@@ -14,7 +16,7 @@ import { ITableColumn } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { SALES_TAX_LIABILITY_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class SalesTaxLiabilitySummaryTable extends R.pipe(
+export class SalesTaxLiabilitySummaryTable extends flow(
   FinancialTable,
   FinancialSheetStructure,
 )(AgingReport) {
@@ -140,9 +142,9 @@ export class SalesTaxLiabilitySummaryTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   public tableRows(): ITableRow[] {
-    return R.compose(
-      R.unless(R.isEmpty, R.append(this.taxRateTotalRow)),
-      R.concat(this.taxRatesRows),
+    return flow(
+      (rows: ITableRow[]) => [...this.taxRatesRows, ...rows],
+      unless(isEmpty, (rows: ITableRow[]) => [...rows, this.taxRateTotalRow]),
     )([]);
   }
 
@@ -151,7 +153,7 @@ export class SalesTaxLiabilitySummaryTable extends R.pipe(
    * @returns {ITableColumn[]}
    */
   public tableColumns(): ITableColumn[] {
-    return R.compose(this.tableColumnsCellIndexing)([
+    return this.tableColumnsCellIndexing([
       {
         label: 'Tax Name',
         key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAX_NAME,

@@ -1,6 +1,7 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { sumBy } from 'lodash';
+import * as moment from 'moment';
+import { assoc } from '@/common/fp';
 import {
   IProfitLossHorizontalDatePeriodNode,
   IProfitLossSheetAccountNode,
@@ -12,6 +13,7 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
 import { IDateRange } from '../../types/Report.types';
+import { IProfitLossSchemaNode } from './ProfitLossSheet.types';
 import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 
@@ -20,9 +22,15 @@ export const ProfitLossSheetDatePeriods = <
 >(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialDatePeriods)(Base) {
+  class extends flow(FinancialDatePeriods)(Base) {
     query: ProfitLossSheetQuery;
     repository: ProfitLossSheetRepository;
+
+    protected getNodesTableForEvaluating: (path?: string, nodes?) => any;
+    protected evaluateEquation: (
+      equation: string,
+      scope: { [key: string | number]: number },
+    ) => number;
 
     /**
      * Retrieves the date periods based on the report query.
@@ -30,9 +38,9 @@ export const ProfitLossSheetDatePeriods = <
      */
     get datePeriods(): IDateRange[] {
       return this.getDateRanges(
-        this.query.fromDate,
-        this.query.toDate,
-        this.query.displayColumnsBy,
+        this.query.fromDate as Date,
+        this.query.toDate as Date,
+        this.query.displayColumnsBy as moment.unitOfTime.StartOf,
       );
     }
 
@@ -52,9 +60,9 @@ export const ProfitLossSheetDatePeriods = <
       ) => any,
     ) => {
       return this.getNodeDatePeriods(
-        this.query.fromDate,
-        this.query.toDate,
-        this.query.displayColumnsBy,
+        this.query.fromDate as Date,
+        this.query.toDate as Date,
+        this.query.displayColumnsBy as moment.unitOfTime.StartOf,
         node,
         callback,
       );
@@ -109,7 +117,7 @@ export const ProfitLossSheetDatePeriods = <
     ): IProfitLossSheetAccountNode => {
       const datePeriods = this.getAccountNodeDatePeriod(node);
 
-      return R.assoc('horizontalTotals', datePeriods, node);
+      return assoc('horizontalTotals', datePeriods, node);
     };
 
     // --------------------------
@@ -136,18 +144,15 @@ export const ProfitLossSheetDatePeriods = <
      * @param {number} index
      * @returns  {IProfitLossSheetAccount}
      */
-    private getAggregateNodeDatePeriodTotal = R.curry(
-      (
-        node: IProfitLossSheetAccountsNode,
-        fromDate: Date,
-        toDate: Date,
-        index: number,
-      ): IProfitLossHorizontalDatePeriodNode => {
-        const periodTotal = this.getAggregateDatePeriodIndexTotal(node, index);
-
-        return this.getDatePeriodTotalMeta(periodTotal, fromDate, toDate);
-      },
-    );
+    private getAggregateNodeDatePeriodTotal = (
+      node: IProfitLossSheetAccountsNode,
+      fromDate: Date,
+      toDate: Date,
+      index: number,
+    ) => {
+      const periodTotal = this.getAggregateDatePeriodIndexTotal(node, index);
+      return this.getDatePeriodTotalMeta(periodTotal, fromDate, toDate);
+    };
 
     /**
      * Retrieves aggregate horizontal date periods.
@@ -173,7 +178,7 @@ export const ProfitLossSheetDatePeriods = <
     ): IProfitLossSheetAccountsNode => {
       const datePeriods = this.getAggregateNodeDatePeriod(node);
 
-      return R.assoc('horizontalTotals', datePeriods, node);
+      return assoc('horizontalTotals', datePeriods, node);
     };
 
     // --------------------------
@@ -188,15 +193,17 @@ export const ProfitLossSheetDatePeriods = <
      * @param {number} index
      * @returns {IProfitLossHorizontalDatePeriodNode}
      */
-    private getEquationNodeDatePeriod = R.curry(
+    private getEquationNodeDatePeriod =
       (
-        accNodes: IProfitLossSheetNode[],
+        accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[],
         equation: string,
+      ) =>
+      (
         node: IProfitLossSheetNode,
         fromDate: Date,
         toDate: Date,
         index: number,
-      ): IProfitLossHorizontalDatePeriodNode => {
+      ) => {
         const tableNodes = this.getNodesTableForEvaluating(
           `horizontalTotals[${index}].total.amount`,
           accNodes,
@@ -205,8 +212,7 @@ export const ProfitLossSheetDatePeriods = <
         const total = this.evaluateEquation(equation, tableNodes);
 
         return this.getDatePeriodTotalMeta(total, fromDate, toDate);
-      },
-    );
+      };
 
     /**
      * Retrieves the equation node date periods.
@@ -215,18 +221,16 @@ export const ProfitLossSheetDatePeriods = <
      * @param {IProfitLossSheetNode} node
      * @returns {IProfitLossHorizontalDatePeriodNode[]}
      */
-    private getEquationNodeDatePeriods = R.curry(
-      (
-        accNodes: IProfitLossSheetNode[],
-        equation: string,
-        node: IProfitLossSheetNode,
-      ): IProfitLossHorizontalDatePeriodNode[] => {
-        return this.getReportNodeDatePeriods(
-          node,
-          this.getEquationNodeDatePeriod(accNodes, equation),
-        );
-      },
-    );
+    private getEquationNodeDatePeriods = (
+      accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[],
+      equation: string,
+      node: IProfitLossSheetNode,
+    ): IProfitLossHorizontalDatePeriodNode[] => {
+      return this.getReportNodeDatePeriods(
+        node,
+        this.getEquationNodeDatePeriod(accNodes, equation),
+      );
+    };
 
     /**
      * Assoc equation node date period.
@@ -234,18 +238,17 @@ export const ProfitLossSheetDatePeriods = <
      * @param {IProfitLossSheetNode} node
      * @returns {IProfitLossSheetNode}
      */
-    protected assocEquationNodeDatePeriod = R.curry(
+    protected assocEquationNodeDatePeriod =
       (
-        accNodes: IProfitLossSheetNode[],
+        accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[],
         equation: string,
-        node: IProfitLossSheetNode,
-      ): IProfitLossSheetNode => {
+      ) =>
+      (node: IProfitLossSheetNode): IProfitLossSheetNode => {
         const periods = this.getEquationNodeDatePeriods(
           accNodes,
           equation,
           node,
         );
-        return R.assoc('horizontalTotals', periods, node);
-      },
-    );
+        return assoc('horizontalTotals', periods, node);
+      };
   };

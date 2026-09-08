@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as moment from 'moment';
 import { ITableColumn, ITableColumnAccessor } from '../types/Table.types';
 import { IDateRange } from '../types/Report.types';
@@ -14,6 +13,7 @@ export const FinancialTablePreviousPeriod = <
 ) =>
   class extends Base {
     public readonly i18n: I18nService;
+    public query: any;
 
     getTotalPreviousPeriod = () => {
       return this.query.PPToDate;

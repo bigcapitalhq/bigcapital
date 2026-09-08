@@ -1,5 +1,6 @@
 import { isEmpty } from 'lodash';
-import * as R from 'ramda';
+import { constant, flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import {
   ICustomerBalanceSummaryCustomer,
   ICustomerBalanceSummaryQuery,
@@ -91,15 +92,14 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
   private getCustomersSection = (
     customers: ModelObject<Customer>[],
   ): ICustomerBalanceSummaryCustomer[] => {
-    // @ts-ignore
-    return R.compose(
-      R.when(this.isCustomersPostFilter, this.contactsFilter),
-      R.when(
-        R.always(this.filter.percentageColumn),
+    return flow(
+      this.customersMapper,
+      when(
+        constant(this.filter.percentageColumn),
         this.contactCamparsionPercentageOfColumn,
       ),
-      this.customersMapper,
-    )(customers);
+      when(this.isCustomersPostFilter, this.contactsFilter),
+    )(customers) as ICustomerBalanceSummaryCustomer[];
   };
 
   /**

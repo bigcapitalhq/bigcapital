@@ -1,4 +1,6 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { unless } from '@/common/fp';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { FinancialTable } from '../../common/FinancialTable';
 import {
@@ -18,9 +20,9 @@ import { tableRowMapper } from '../../utils/Table.utils';
 import { IROW_TYPE } from './_constants';
 import { TRIAL_BALANCE_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class TrialBalanceSheetTable extends R.compose(
-  FinancialTable,
+export class TrialBalanceSheetTable extends flow(
   FinancialSheetStructure,
+  FinancialTable,
 )(FinancialSheet) {
   /**
    * Trial balance sheet data.
@@ -128,10 +130,10 @@ export class TrialBalanceSheetTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.compose(
-      R.unless(R.isEmpty, R.append(this.totalTableRow())),
-      R.concat(this.accountsTableRows()),
-    )([]);
+    return unless(
+      (rows: ITableRow[]) => isEmpty(rows),
+      (rows: ITableRow[]) => [...rows, this.totalTableRow()],
+    )([...this.accountsTableRows()]);
   };
 
   /**
@@ -139,9 +141,8 @@ export class TrialBalanceSheetTable extends R.compose(
    * @returns {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
-    return R.compose(
-      this.tableColumnsCellIndexing,
-      R.concat([
+    return flow(
+      (columns: ITableColumn[]) => [
         {
           key: TRIAL_BALANCE_COLUMN_KEYS.ACCOUNT,
           label: this.i18n.t('trial_balance_sheet.account'),
@@ -158,7 +159,9 @@ export class TrialBalanceSheetTable extends R.compose(
           key: TRIAL_BALANCE_COLUMN_KEYS.TOTAL,
           label: this.i18n.t('trial_balance_sheet.total'),
         },
-      ]),
+        ...columns,
+      ],
+      this.tableColumnsCellIndexing,
     )([]);
   };
 }

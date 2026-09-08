@@ -1,5 +1,6 @@
-import * as R from 'ramda';
 import { isEmpty } from 'lodash';
+import { constant, flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { ModelObject } from 'objection';
 import {
   IVendorBalanceSummaryVendor,
@@ -90,13 +91,13 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
   private getVendorsSection(
     vendors: ModelObject<Vendor>[],
   ): IVendorBalanceSummaryVendor[] {
-    return R.compose(
-      R.when(this.isVendorsPostFilter, this.contactsFilter),
-      R.when(
-        R.always(this.filter.percentageColumn),
+    return flow(
+      this.vendorsMapper,
+      when(
+        constant(this.filter.percentageColumn),
         this.contactCamparsionPercentageOfColumn,
       ),
-      this.vendorsMapper,
+      when(this.isVendorsPostFilter, this.contactsFilter),
     )(vendors) as IVendorBalanceSummaryVendor[];
   }
 

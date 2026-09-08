@@ -1,5 +1,6 @@
 import { sum, isEmpty } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import {
   IAPAgingSummaryData,
   IAPAgingSummaryVendor,
@@ -155,9 +156,9 @@ export class APAgingSummarySheet extends AgingSummaryReport {
   private vendorsSection = (
     vendors: ModelObject<Vendor>[],
   ): IAPAgingSummaryVendor[] => {
-    return R.compose(
-      R.when(this.isVendorNodesFilter, this.vendorsFilter),
+    return flow(
       this.vendorsMapper,
+      when(this.isVendorNodesFilter, this.vendorsFilter),
     )(vendors);
   };
 

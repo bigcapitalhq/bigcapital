@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import { isEmpty, map } from 'lodash';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { Ledger } from '@/modules/Ledger/Ledger';
@@ -159,6 +158,9 @@ export class VendorBalanceSummaryRepository {
     const transactions = await this.getVendorsTransactions(date);
     const commonProps = { accountNormal: 'credit' };
 
-    return R.map(R.mergeRight(commonProps))(transactions) as ILedgerEntry[];
+    return transactions.map((trans) => ({
+      ...commonProps,
+      ...trans,
+    })) as unknown as ILedgerEntry[];
   }
 }

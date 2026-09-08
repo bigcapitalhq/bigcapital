@@ -1,7 +1,5 @@
-// @ts-nocheck
 import { Inject, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
-import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import { ModelObject } from 'objection';
 import { ICashFlowStatementQuery } from './Cashflow.types';
@@ -168,7 +166,7 @@ export class CashFlowRepository {
    */
   private commonFilterBranchesQuery = (
     query: ICashFlowStatementQuery,
-    knexQuery: Knex.QueryBuilder,
+    knexQuery,
   ) => {
     if (!isEmpty(query.branchesIds)) {
       knexQuery.modify('filterByBranches', query.branchesIds);

@@ -1,5 +1,6 @@
 import { get, isEmpty, sumBy } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import {
   IPurchasesByItemsItem,
@@ -156,9 +157,9 @@ export class PurchasesByItems extends FinancialSheet {
    * @returns {IPurchasesByItemsItem[]}
    */
   private itemsSection = (): IPurchasesByItemsItem[] => {
-    return R.compose(
-      R.when(this.isItemsPostFilter, this.itemsFilter),
+    return flow(
       this.itemsMapper,
+      when(this.isItemsPostFilter, this.itemsFilter),
     )(this.items);
   };
 

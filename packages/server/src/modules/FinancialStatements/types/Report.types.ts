@@ -111,8 +111,8 @@ export interface IFinancialNodeWithPreviousPeriod {
   previousPeriodPercentage?: IFinancialSheetPercentage;
 }
 export interface IFinancialNodeWithPreviousYear {
-  previousYearFromDate: FinancialDateMeta;
-  previousYearToDate: FinancialDateMeta;
+  previousYearFromDate?: FinancialDateMeta;
+  previousYearToDate?: FinancialDateMeta;
 
   previousYear?: IFinancialSheetTotal;
   previousYearChange?: IFinancialSheetTotal;

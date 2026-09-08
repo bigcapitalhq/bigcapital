@@ -1,5 +1,5 @@
-import * as R from 'ramda';
 import * as moment from 'moment';
+import { constant, flow } from 'fp-ts/function';
 import { defaultTo, sumBy, get } from 'lodash';
 import { I18nService } from 'nestjs-i18n';
 import {
@@ -25,7 +25,13 @@ import { InventoryItemDetailsRepository } from './InventoryItemDetailsRepository
 import { TInventoryTransactionDirection } from '@/modules/InventoryCost/types/InventoryCost.types';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { filterDeep } from '@/utils/deepdash';
+import { ifElse, when } from '@/common/fp';
 import { INodeTypes, MAP_CONFIG } from './constant';
+
+type TInventoryDetailsNodeChildren =
+  | IInventoryDetailsItemTransaction
+  | IInventoryDetailsOpening
+  | IInventoryDetailsClosing;
 
 export class InventoryDetails extends FinancialSheet {
   readonly repository: InventoryItemDetailsRepository;
@@ -105,11 +111,11 @@ export class InventoryDetails extends FinancialSheet {
    * @param {TInventoryTransactionDirection} direction - The transaction direction.
    * @returns {number}
    */
-  public adjustAmountMovement = R.curry(
-    (direction: TInventoryTransactionDirection, amount: number): number => {
+  public adjustAmountMovement =
+    (direction: TInventoryTransactionDirection) =>
+    (amount: number): number => {
       return direction === 'OUT' ? amount * -1 : amount;
-    },
-  );
+    };
 
   /**
    * Accumulate and mapping running quantity on transactions.
@@ -121,18 +127,20 @@ export class InventoryDetails extends FinancialSheet {
   ): IInventoryDetailsItemTransaction[] => {
     const initial = this.getNumberMeta(0);
 
-    const mapAccumAppender = (a, b) => {
-      const total = a.runningQuantity.number + b.quantityMovement.number;
-      const totalMeta = this.getNumberMeta(total, { excerptZero: false });
-      const accum = { ...b, runningQuantity: totalMeta };
+    return transactions.reduce<
+      [
+        { runningQuantity: IInventoryDetailsNumber },
+        IInventoryDetailsItemTransaction[],
+      ]
+    >(
+      ([a, mapped], b) => {
+        const total = a.runningQuantity.number + b.quantityMovement.number;
+        const totalMeta = this.getNumberMeta(total, { excerptZero: false });
+        const accum = { ...b, runningQuantity: totalMeta };
 
-      return [accum, accum];
-    };
-    return R.mapAccum(
-      // @ts-ignore
-      mapAccumAppender,
-      { runningQuantity: initial },
-      transactions,
+        return [accum, [...mapped, accum]];
+      },
+      [{ runningQuantity: initial }, []],
     )[1];
   };
 
@@ -146,19 +154,21 @@ export class InventoryDetails extends FinancialSheet {
   ): IInventoryDetailsItemTransaction[] => {
     const initial = this.getNumberMeta(0);
 
-    const mapAccumAppender = (a, b) => {
-      const adjustment = b.direction === 'OUT' ? -1 : 1;
-      const total = a.runningValuation.number + b.cost.number * adjustment;
-      const totalMeta = this.getNumberMeta(total, { excerptZero: false });
-      const accum = { ...b, runningValuation: totalMeta };
+    return transactions.reduce<
+      [
+        { runningValuation: IInventoryDetailsNumber },
+        IInventoryDetailsItemTransaction[],
+      ]
+    >(
+      ([a, mapped], b) => {
+        const adjustment = b.direction === 'OUT' ? -1 : 1;
+        const total = a.runningValuation.number + b.cost.number * adjustment;
+        const totalMeta = this.getNumberMeta(total, { excerptZero: false });
+        const accum = { ...b, runningValuation: totalMeta };
 
-      return [accum, accum];
-    };
-    return R.mapAccum(
-      // @ts-ignore
-      mapAccumAppender,
-      { runningValuation: initial },
-      transactions,
+        return [accum, [...mapped, accum]];
+      },
+      [{ runningValuation: initial }, []],
     )[1];
   };
 
@@ -249,8 +259,9 @@ export class InventoryDetails extends FinancialSheet {
   ): IInventoryDetailsItemTransaction[] {
     const transactions = this.getInventoryTransactionsByItemId(item.id);
 
-    return R.pipe(
-      R.map(this.itemTransactionMapper),
+    return flow(
+      (transactionsList: ModelObject<InventoryTransaction>[]) =>
+        transactionsList.map(this.itemTransactionMapper),
       this.mapAccumTransactionsRunningValuation,
       this.mapAccumTransactionsRunningQuantity,
     )(transactions);
@@ -282,10 +293,16 @@ export class InventoryDetails extends FinancialSheet {
     const hasTransactions = transactions.length > 0;
     const isItemHasOpeningBalance = this.isItemHasOpeningBalance(item.id);
 
-    return R.pipe(
-      R.concat(transactions),
-      R.when(R.always(isItemHasOpeningBalance), R.prepend(openingValuation)),
-      R.when(R.always(hasTransactions), R.append(closingValuation)),
+    return flow(
+      (rows: TInventoryDetailsNodeChildren[]) => [...transactions, ...rows],
+      when(
+        constant(isItemHasOpeningBalance),
+        (rows: TInventoryDetailsNodeChildren[]) => [openingValuation, ...rows],
+      ),
+      when(
+        constant(hasTransactions),
+        (rows: TInventoryDetailsNodeChildren[]) => [...rows, closingValuation],
+      ),
     )([]) as Array<
       | IInventoryDetailsItemTransaction
       | IInventoryDetailsOpening
@@ -394,12 +411,11 @@ export class InventoryDetails extends FinancialSheet {
    * @return {boolean}
    */
   public isFilterNode(item: IInventoryDetailsItem): boolean {
-    // @ts-ignore
-    return R.ifElse(
-      // @ts-ignore
-      R.curry(this.isNodeTypeEquals)(INodeTypes.ITEM),
-      this.isItemNodeHasTransactions.bind(this),
-      R.always(true),
+    return ifElse(
+      (node: IInventoryDetailsItem) =>
+        this.isNodeTypeEquals(INodeTypes.ITEM, node),
+      (node: IInventoryDetailsItem) => this.isItemNodeHasTransactions(node),
+      constant(true),
     )(item);
   }
 
@@ -423,10 +439,10 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsItem[]}
    */
   public itemsNodes(items: ModelObject<Item>[]): IInventoryDetailsItem[] {
-    // @ts-ignore
-    return R.compose(
-      this.filterItemsNodes.bind(this),
-      R.map(this.itemsNodeMapper.bind(this)),
+    return flow(
+      (nodes: ModelObject<Item>[]) =>
+        nodes.map(this.itemsNodeMapper.bind(this)),
+      (nodes: IInventoryDetailsItem[]) => this.filterItemsNodes(nodes),
     )(items);
   }
 
