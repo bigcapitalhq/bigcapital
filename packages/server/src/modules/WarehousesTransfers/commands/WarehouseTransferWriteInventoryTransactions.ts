@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
 import { InventoryTransactionsService } from '../../InventoryCost/commands/InventoryTransactions.service';
 import { ModelObject } from 'objection';
+import { IInventoryTransactionRecord } from '@/modules/InventoryCost/types/InventoryCost.types';
 import { WarehouseTransfer } from '../models/WarehouseTransfer';
 import { WarehouseTransferEntry } from '../models/WarehouseTransferEntry';
 
@@ -99,7 +100,7 @@ export class WarehouseTransferInventoryTransactions {
    */
   private getWarehouseFromTransferInventoryTransactions = (
     warehouseTransfer: ModelObject<WarehouseTransfer>,
-  ) => {
+  ): IInventoryTransactionRecord[] => {
     const commonEntry = {
       date: warehouseTransfer.date,
       transactionType: 'WarehouseTransfer',
@@ -125,7 +126,7 @@ export class WarehouseTransferInventoryTransactions {
    */
   private getWarehouseToTransferInventoryTransactions = (
     warehouseTransfer: ModelObject<WarehouseTransfer>,
-  ) => {
+  ): IInventoryTransactionRecord[] => {
     const commonEntry = {
       date: warehouseTransfer.date,
       transactionType: 'WarehouseTransfer',

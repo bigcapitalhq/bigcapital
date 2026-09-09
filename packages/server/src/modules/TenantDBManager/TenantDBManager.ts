@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Knex } from 'knex';
 import { TenantDBAlreadyExists } from './exceptions/TenantDBAlreadyExists';
 import { sanitizeDatabaseName } from '@/utils/sanitize-database-name';
@@ -96,17 +95,6 @@ export class TenantDBManager {
    */
   public async migrate(): Promise<void> {
     await this.tenantKnex().migrate.latest();
-  }
-
-  /**
-   * Seeds initial data to the tenant database.
-   * @return {Promise<void>}
-   */
-  public async seed(): Promise<void> {
-    await this.tenantKnex().migrate.latest({
-      ...tenantSeedConfig(tenant),
-      disableMigrationsListValidation: true,
-    });
   }
 
   /**

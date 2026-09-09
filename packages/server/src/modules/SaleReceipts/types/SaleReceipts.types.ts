@@ -137,11 +137,19 @@ export interface ISaleReceiptBrandingTemplateAttributes {
   showReceiptNumber: boolean;
   receiptNumberLabel: string;
   receiptNumebr: string;
+  receiptNumber: string;
 
   // Receipt Date
   receiptDate: string;
   showReceiptDate: boolean;
   receiptDateLabel: string;
+
+  // Discount
+  discount?: string;
+  discountLabel?: string;
+
+  // Adjustment
+  adjustment?: string;
 }
 
 export interface ISaleReceiptState {

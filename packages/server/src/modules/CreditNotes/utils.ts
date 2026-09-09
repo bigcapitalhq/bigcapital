@@ -1,9 +1,9 @@
-// @ts-nocheck
-import { CreditNotePdfTemplateAttributes, ICreditNote } from '@/interfaces';
+import { CreditNotePdfTemplateAttributes } from './types/CreditNotes.types';
+import { CreditNoteResponseDto } from './dtos/CreditNoteResponse.dto';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const transformCreditNoteToPdfTemplate = (
-  creditNote: ICreditNote,
+  creditNote: CreditNoteResponseDto,
 ): Partial<CreditNotePdfTemplateAttributes> => {
   return {
     creditNoteDate: creditNote.formattedCreditNoteDate,

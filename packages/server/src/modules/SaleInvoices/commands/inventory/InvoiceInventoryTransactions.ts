@@ -1,9 +1,9 @@
-// @ts-nocheck
 import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { SaleInvoice } from '../../models/SaleInvoice';
+import { IInventoryTransactionFromItemsEntries } from '@/modules/InventoryCost/types/InventoryCost.types';
 
 @Injectable()
 export class InvoiceInventoryTransactions {
@@ -31,7 +31,7 @@ export class InvoiceInventoryTransactions {
         saleInvoice.entries,
         trx,
       );
-    const transaction = {
+    const transaction: IInventoryTransactionFromItemsEntries = {
       transactionId: saleInvoice.id,
       transactionType: 'SaleInvoice',
       transactionNumber: saleInvoice.invoiceNo,

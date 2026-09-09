@@ -1,6 +1,6 @@
-// @ts-nocheck
 import { pickBy } from 'lodash';
-import { InvoicePdfTemplateAttributes, ISaleInvoice } from '@/interfaces';
+import { InvoicePdfTemplateAttributes } from './SaleInvoice.types';
+import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const mergePdfTemplateWithDefaultAttributes = (
@@ -18,7 +18,7 @@ export const mergePdfTemplateWithDefaultAttributes = (
 };
 
 export const transformInvoiceToPdfTemplate = (
-  invoice: ISaleInvoice,
+  invoice: SaleInvoiceResponseDto,
 ): Partial<InvoicePdfTemplateAttributes> => {
   return {
     dueDate: invoice.dueDateFormatted,

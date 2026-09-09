@@ -1,7 +1,25 @@
-// @ts-nocheck
 /**
  * A simple dependency graph
  */
+
+export interface DepGraphOptions {
+  /**
+   * Allows circular dependencies (defaults to `false`).
+   */
+  circular?: boolean;
+}
+
+export interface DepGraphFromArrayOptions {
+  /**
+   * The key of the item id.
+   */
+  itemId: string;
+  /**
+   * The key of the item parent id.
+   */
+  parentItemId: string;
+}
+
 /**
  * Helper for creating a Topological Sort using Depth-First-Search on a set of edges.
  *
@@ -13,20 +31,25 @@
  * @param result An array in which the results will be populated
  * @param circular A boolean to allow circular dependencies
  */
-function createDFS(edges, leavesOnly, result, circular) {
-  var visited = {};
-  return function (start) {
+function createDFS<K extends string | number>(
+  edges: { [key: string]: K[] },
+  leavesOnly: boolean,
+  result: K[],
+  circular: boolean,
+) {
+  const visited: { [key: string]: boolean } = {};
+  return function (start: K) {
     if (visited[start]) {
       return;
     }
-    var inCurrentPath = {};
-    var currentPath = [];
-    var todo = []; // used as a stack
+    const inCurrentPath: { [key: string]: boolean } = {};
+    const currentPath: K[] = [];
+    const todo: Array<{ node: K; processed: boolean }> = []; // used as a stack
     todo.push({ node: start, processed: false });
     while (todo.length > 0) {
-      var current = todo[todo.length - 1]; // peek at the todo stack
-      var processed = current.processed;
-      var node = current.node;
+      const current = todo[todo.length - 1]; // peek at the todo stack
+      const processed = current.processed;
+      const node = current.node;
       if (!processed) {
         // Haven't visited edges yet (visiting phase)
         if (visited[node]) {
@@ -40,14 +63,14 @@ function createDFS(edges, leavesOnly, result, circular) {
             continue;
           }
           currentPath.push(node);
-          throw new DepGraphCycleError(currentPath);
+          throw new DepGraphCycleError(currentPath as string[]);
         }
 
         inCurrentPath[node] = true;
         currentPath.push(node);
-        var nodeEdges = edges[node];
+        const nodeEdges = edges[node];
         // (push edges onto the todo stack in reverse order to be order-compatible with the old DFS implementation)
-        for (var i = nodeEdges.length - 1; i >= 0; i--) {
+        for (let i = nodeEdges.length - 1; i >= 0; i--) {
           todo.push({ node: nodeEdges[i], processed: false });
         }
         current.processed = true;
@@ -68,102 +91,124 @@ function createDFS(edges, leavesOnly, result, circular) {
 /**
  * Simple Dependency Graph
  */
-var DepGraph = (DepGraph = function DepGraph(opts) {
-  this.nodes = {}; // Node -> Node/Data (treated like a Set)
-  this.outgoingEdges = {}; // Node -> [Dependency Node]
-  this.incomingEdges = {}; // Node -> [Dependant Node]
-  this.circular = opts && !!opts.circular; // Allows circular deps
-});
+export class DepGraph<T = any, K extends string | number = string | number> {
+  private nodes: { [key: string]: T }; // Node -> Node/Data (treated like a Set)
+  private outgoingEdges: { [key: string]: K[] }; // Node -> [Dependency Node]
+  private incomingEdges: { [key: string]: K[] }; // Node -> [Dependant Node]
+  private circular: boolean; // Allows circular deps
 
-DepGraph.fromArray = (
-  items,
-  options = { itemId: 'id', parentItemId: 'parent_id' },
-) => {
-  const depGraph = new DepGraph();
+  constructor(opts?: DepGraphOptions) {
+    this.nodes = {};
+    this.outgoingEdges = {};
+    this.incomingEdges = {};
+    this.circular = opts && !!opts.circular;
+  }
 
-  items.forEach((item) => {
-    depGraph.addNode(item[options.itemId], item);
-  });
-  items.forEach((item) => {
-    if (item[options.parentItemId]) {
-      depGraph.addDependency(item[options.parentItemId], item[options.itemId]);
-    }
-  });
-  return depGraph;
-};
+  /**
+   * Builds a dependency graph from the given flat items list.
+   * @param items
+   * @param options
+   * @returns {DepGraph<T>}
+   */
+  static fromArray<T extends Record<string, any>>(
+    items: T[],
+    options: DepGraphFromArrayOptions = {
+      itemId: 'id',
+      parentItemId: 'parent_id',
+    },
+  ): DepGraph<T, any> {
+    const depGraph = new DepGraph<T, any>();
 
-DepGraph.prototype = {
+    items.forEach((item) => {
+      depGraph.addNode(item[options.itemId], item);
+    });
+    items.forEach((item) => {
+      if (item[options.parentItemId]) {
+        depGraph.addDependency(
+          item[options.parentItemId],
+          item[options.itemId],
+        );
+      }
+    });
+    return depGraph;
+  }
+
   /**
    * The number of nodes in the graph.
    */
-  size: function () {
+  size(): number {
     return Object.keys(this.nodes).length;
-  },
+  }
+
   /**
    * Add a node to the dependency graph. If a node already exists, this method will do nothing.
    */
-  addNode: function (node, data) {
+  addNode(node: K, data?: T): void {
     if (!this.hasNode(node)) {
       // Checking the arguments length allows the user to add a node with undefined data
       if (arguments.length === 2) {
         this.nodes[node] = data;
       } else {
-        this.nodes[node] = node;
+        this.nodes[node] = node as unknown as T;
       }
       this.outgoingEdges[node] = [];
       this.incomingEdges[node] = [];
     }
-  },
+  }
+
   /**
-   * Remove a node from the dependency graph. If a node does not exist, this method will do nothing.
+   * Remove a node from the dependency graph. If a node already exists, this method will do nothing.
    */
-  removeNode: function (node) {
+  removeNode(node: K): void {
     if (this.hasNode(node)) {
       delete this.nodes[node];
       delete this.outgoingEdges[node];
       delete this.incomingEdges[node];
-      [this.incomingEdges, this.outgoingEdges].forEach(function (edgeList) {
-        Object.keys(edgeList).forEach(function (key) {
-          var idx = edgeList[key].indexOf(node);
+      [this.incomingEdges, this.outgoingEdges].forEach((edgeList) => {
+        Object.keys(edgeList).forEach((key) => {
+          const idx = edgeList[key].indexOf(node);
           if (idx >= 0) {
             edgeList[key].splice(idx, 1);
           }
-        }, this);
+        });
       });
     }
-  },
+  }
+
   /**
    * Check if a node exists in the graph
    */
-  hasNode: function (node) {
+  hasNode(node: K): boolean {
     return this.nodes.hasOwnProperty(node);
-  },
+  }
+
   /**
    * Get the data associated with a node name
    */
-  getNodeData: function (node) {
+  getNodeData(node: K): T {
     if (this.hasNode(node)) {
       return this.nodes[node];
     } else {
       throw new Error('Node does not exist: ' + node);
     }
-  },
+  }
 
   /**
    * Set the associated data for a given node name. If the node does not exist, this method will throw an error
    */
-  setNodeData: function (node, data) {
+  setNodeData(node: K, data: T): void {
     if (this.hasNode(node)) {
       this.nodes[node] = data;
     } else {
       throw new Error('Node does not exist: ' + node);
     }
-  },
+  }
+
   /**
    * Add a dependency between two nodes. If either of the nodes does not exist,
    * an Error will be thrown.
    */
-  addDependency: function (from, to) {
+  addDependency(from: K, to: K): boolean {
     if (!this.hasNode(from)) {
       throw new Error('Node does not exist: ' + from);
     }
@@ -177,12 +222,13 @@ DepGraph.prototype = {
       this.incomingEdges[to].push(from);
     }
     return true;
-  },
+  }
+
   /**
    * Remove a dependency between two nodes.
    */
-  removeDependency: function (from, to) {
-    var idx;
+  removeDependency(from: K, to: K): void {
+    let idx: number;
     if (this.hasNode(from)) {
       idx = this.outgoingEdges[from].indexOf(to);
       if (idx >= 0) {
@@ -196,21 +242,23 @@ DepGraph.prototype = {
         this.incomingEdges[to].splice(idx, 1);
       }
     }
-  },
+  }
+
   /**
    * Return a clone of the dependency graph. If any custom data is attached
    * to the nodes, it will only be shallow copied.
    */
-  clone: function () {
-    var result = new DepGraph();
-    var keys = Object.keys(this.nodes);
+  clone(): DepGraph<T, K> {
+    const result = new DepGraph<T, K>();
+    const keys = Object.keys(this.nodes);
     keys.forEach((n) => {
       result.nodes[n] = this.nodes[n];
       result.outgoingEdges[n] = this.outgoingEdges[n].slice(0);
       result.incomingEdges[n] = this.incomingEdges[n].slice(0);
     });
     return result;
-  },
+  }
+
   /**
    * Get an array containing the nodes that the specified node depends on (transitively).
    *
@@ -219,17 +267,17 @@ DepGraph.prototype = {
    * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned
    * in the array.
    */
-  dependenciesOf: function (node, leavesOnly) {
+  dependenciesOf(node: K, leavesOnly?: boolean): K[] {
     if (this.hasNode(node)) {
-      var result = [];
-      var DFS = createDFS(
+      const result: K[] = [];
+      const DFS = createDFS(
         this.outgoingEdges,
         leavesOnly,
         result,
         this.circular,
       );
       DFS(node);
-      var idx = result.indexOf(node);
+      const idx = result.indexOf(node);
       if (idx >= 0) {
         result.splice(idx, 1);
       }
@@ -237,7 +285,8 @@ DepGraph.prototype = {
     } else {
       throw new Error('Node does not exist: ' + node);
     }
-  },
+  }
+
   /**
    * get an array containing the nodes that depend on the specified node (transitively).
    *
@@ -245,17 +294,17 @@ DepGraph.prototype = {
    *
    * If `leavesOnly` is true, only nodes that do not have any dependants will be returned in the array.
    */
-  dependantsOf: function (node, leavesOnly) {
+  dependantsOf(node: K, leavesOnly?: boolean): K[] {
     if (this.hasNode(node)) {
-      var result = [];
-      var DFS = createDFS(
+      const result: K[] = [];
+      const DFS = createDFS(
         this.incomingEdges,
         leavesOnly,
         result,
         this.circular,
       );
       DFS(node);
-      var idx = result.indexOf(node);
+      const idx = result.indexOf(node);
       if (idx >= 0) {
         result.splice(idx, 1);
       }
@@ -263,7 +312,8 @@ DepGraph.prototype = {
     } else {
       throw new Error('Node does not exist: ' + node);
     }
-  },
+  }
+
   /**
    * Construct the overall processing order for the dependency graph.
    *
@@ -271,22 +321,28 @@ DepGraph.prototype = {
    *
    * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned.
    */
-  overallOrder: function (leavesOnly) {
-    var result = [];
-    var keys = Object.keys(this.nodes);
+  overallOrder(leavesOnly?: boolean): K[] {
+    const result: K[] = [];
+    // Node keys are stored as object keys, therefore stringified.
+    const keys = Object.keys(this.nodes) as unknown as K[];
     if (keys.length === 0) {
       return result; // Empty graph
     } else {
       if (!this.circular) {
         // Look for cycles - we run the DFS starting at all the nodes in case there
         // are several disconnected subgraphs inside this dependency graph.
-        var CycleDFS = createDFS(this.outgoingEdges, false, [], this.circular);
-        keys.forEach(function (n) {
+        const CycleDFS = createDFS(
+          this.outgoingEdges,
+          false,
+          [],
+          this.circular,
+        );
+        keys.forEach((n) => {
           CycleDFS(n);
         });
       }
 
-      var DFS = createDFS(
+      const DFS = createDFS(
         this.outgoingEdges,
         leavesOnly,
         result,
@@ -298,7 +354,7 @@ DepGraph.prototype = {
         .filter((node) => {
           return this.incomingEdges[node].length === 0;
         })
-        .forEach(function (n) {
+        .forEach((n) => {
           DFS(n);
         });
 
@@ -307,34 +363,44 @@ DepGraph.prototype = {
       // subgraph that does not have a clear starting point)
       if (this.circular) {
         keys
-          .filter(function (node) {
+          .filter((node) => {
             return result.indexOf(node) === -1;
           })
-          .forEach(function (n) {
+          .forEach((n) => {
             DFS(n);
           });
       }
 
       return result;
     }
-  },
+  }
 
-  mapNodes(_mapper) {},
-};
+  mapNodes(_mapper) {}
+}
 
 /**
  * Cycle error, including the path of the cycle.
  */
-var DepGraphCycleError = (exports.DepGraphCycleError = function (cyclePath) {
-  var message = 'Dependency Cycle Found: ' + cyclePath.join(' -> ');
-  var instance = new Error(message);
+export interface IDepGraphCycleError extends Error {
+  cyclePath: string[];
+}
+
+export const DepGraphCycleError = function (
+  this: any,
+  cyclePath: string[],
+): IDepGraphCycleError {
+  const message = 'Dependency Cycle Found: ' + cyclePath.join(' -> ');
+  const instance = new Error(message) as IDepGraphCycleError;
   instance.cyclePath = cyclePath;
   Object.setPrototypeOf(instance, Object.getPrototypeOf(this));
   if (Error.captureStackTrace) {
     Error.captureStackTrace(instance, DepGraphCycleError);
   }
   return instance;
-});
+} as unknown as {
+  new (cyclePath: string[]): IDepGraphCycleError;
+  prototype: IDepGraphCycleError;
+};
 DepGraphCycleError.prototype = Object.create(Error.prototype, {
   constructor: {
     value: Error,

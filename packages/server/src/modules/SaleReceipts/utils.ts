@@ -1,12 +1,9 @@
-// @ts-nocheck
-import {
-  ISaleReceipt,
-  ISaleReceiptBrandingTemplateAttributes,
-} from '@/interfaces';
+import { ISaleReceiptBrandingTemplateAttributes } from './types/SaleReceipts.types';
+import { SaleReceiptResponseDto } from './dtos/SaleReceiptResponse.dto';
 import { contactAddressTextFormat } from '@/utils/address-text-format';
 
 export const transformReceiptToBrandingTemplateAttributes = (
-  saleReceipt: ISaleReceipt,
+  saleReceipt: SaleReceiptResponseDto,
 ): Partial<ISaleReceiptBrandingTemplateAttributes> => {
   return {
     total: saleReceipt.totalFormatted,
@@ -29,7 +26,9 @@ export const transformReceiptToBrandingTemplateAttributes = (
   };
 };
 
-export const transformReceiptToMailDataArgs = (saleReceipt: any) => {
+export const transformReceiptToMailDataArgs = (
+  saleReceipt: SaleReceiptResponseDto,
+) => {
   return {
     'Customer Name': saleReceipt.customer.displayName,
     'Receipt Number': saleReceipt.receiptNumber,

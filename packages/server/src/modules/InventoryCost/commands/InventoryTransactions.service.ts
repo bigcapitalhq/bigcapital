@@ -1,18 +1,17 @@
-// @ts-nocheck
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   IInventoryTransactionsDeletedPayload,
-  TInventoryTransactionDirection,
+  IInventoryTransactionFromItemsEntries,
+  IInventoryTransactionRecord,
 } from '../types/InventoryCost.types';
 import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 import { events } from '@/common/events/events';
 import { IInventoryTransactionsCreatedPayload } from '../types/InventoryCost.types';
 import { transformItemEntriesToInventory } from '../utils';
-import { IItemEntryTransactionType } from '../../TransactionItemEntry/ItemEntry.types';
-import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
+import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class InventoryTransactionsService {
@@ -43,13 +42,13 @@ export class InventoryTransactionsService {
    * @return {Promise<void>}
    */
   async recordInventoryTransactions(
-    transactions: ModelObject<InventoryTransaction>[],
+    transactions: IInventoryTransactionRecord[],
     override: boolean = false,
     trx?: Knex.Transaction,
   ): Promise<void> {
     const bulkInsertOpers = [];
 
-    transactions.forEach((transaction: InventoryTransaction) => {
+    transactions.forEach((transaction: IInventoryTransactionRecord) => {
       const oper = this.recordInventoryTransaction(transaction, override, trx);
       bulkInsertOpers.push(oper);
     });
@@ -74,7 +73,7 @@ export class InventoryTransactionsService {
    * @return {Promise<InventoryTransaction>}
    */
   async recordInventoryTransaction(
-    inventoryEntry: InventoryTransaction,
+    inventoryEntry: IInventoryTransactionRecord,
     deleteOld: boolean = false,
     trx: Knex.Transaction,
   ): Promise<InventoryTransaction> {
@@ -101,18 +100,7 @@ export class InventoryTransactionsService {
    * @param {boolean} override
    */
   async recordInventoryTransactionsFromItemsEntries(
-    transaction: {
-      transactionId: number;
-      transactionType: IItemEntryTransactionType;
-      exchangeRate: number;
-
-      date: Date | string;
-      direction: TInventoryTransactionDirection;
-      entries: ItemEntry[];
-      createdAt: Date | string;
-
-      warehouseId?: number;
-    },
+    transaction: IInventoryTransactionFromItemsEntries,
     override: boolean = false,
     trx?: Knex.Transaction,
   ): Promise<void> {
@@ -175,8 +163,10 @@ export class InventoryTransactionsService {
   async recordInventoryCostLotTransaction(
     inventoryLotEntry: Partial<InventoryCostLotTracker>,
   ): Promise<InventoryCostLotTracker> {
-    return this.inventoryCostLotTracker.query().insert({
-      ...inventoryLotEntry,
-    });
+    return this.inventoryCostLotTracker()
+      .query()
+      .insert({
+        ...inventoryLotEntry,
+      });
   }
 }

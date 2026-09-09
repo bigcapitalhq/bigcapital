@@ -1,5 +1,4 @@
 import * as sanitizeHtml from 'sanitize-html';
-import { Contact } from '@/modules/Contacts/models/Contact';
 
 interface OrganizationAddressFormatArgs {
   organizationName?: string;
@@ -69,6 +68,18 @@ export const organizationAddressTextFormat = (
   return formatText(message, replacements);
 };
 
+interface ContactBillingAddressArgs {
+  displayName?: string;
+  billingAddress1?: string;
+  billingAddress2?: string;
+  billingAddressState?: string;
+  billingAddressCity?: string;
+  billingAddressCountry?: string;
+  billingAddressPostcode?: string;
+  billingAddressPhone?: string;
+  email?: string;
+}
+
 interface ContactAddressTextFormatArgs {
   displayName?: string;
   state?: string;
@@ -90,7 +101,7 @@ export const defaultContactAddressFormat = `{CONTACT_NAME}
 `;
 
 export const contactAddressTextFormat = (
-  contact: Contact,
+  contact: ContactBillingAddressArgs,
   message: string = defaultContactAddressFormat,
 ) => {
   const args = {

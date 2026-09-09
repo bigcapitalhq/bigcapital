@@ -4,6 +4,7 @@ import { IBillLandedCostTransaction } from '../types/BillLandedCosts.types';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { mergeLocatedWithBillEntries } from '../utils';
 import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
+import { IInventoryTransactionRecord } from '@/modules/InventoryCost/types/InventoryCost.types';
 
 @Injectable()
 export class LandedCostInventoryTransactions {
@@ -28,16 +29,17 @@ export class LandedCostInventoryTransactions {
       bill.entries,
     );
     // Mappes the allocate cost entries to inventory transactions.
-    const inventoryTransactions = allocateEntries.map((allocateEntry) => ({
-      date: bill.billDate,
-      itemId: allocateEntry.entry.itemId,
-      direction: 'IN',
-      quantity: null,
-      rate: allocateEntry.cost,
-      transactionType: 'LandedCost',
-      transactionId: billLandedCost.id,
-      entryId: allocateEntry.entryId,
-    }));
+    const inventoryTransactions: IInventoryTransactionRecord[] =
+      allocateEntries.map((allocateEntry) => ({
+        date: bill.billDate,
+        itemId: allocateEntry.entry.itemId,
+        direction: 'IN',
+        quantity: null,
+        rate: allocateEntry.cost,
+        transactionType: 'LandedCost',
+        transactionId: billLandedCost.id,
+        entryId: allocateEntry.entryId,
+      }));
     // Writes inventory transactions.
     return this.inventoryTransactionsService.recordInventoryTransactions(
       inventoryTransactions,

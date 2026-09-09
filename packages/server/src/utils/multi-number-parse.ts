@@ -1,4 +1,3 @@
-// @ts-nocheck
 const validGrouping = (integerPart, sep) =>
   integerPart.split(sep).reduce((acc, group, idx) => {
     if (idx > 0) {
@@ -37,22 +36,22 @@ export const multiNumberParse = (
     .slice(negative ? 1 : 0);
 
   // analyze separators
-  const separators = (stripped.match(/[^\d]/g) || []).reduce(
-    (acc, sep, idx) => {
-      const sepChr = `str_${sep.codePointAt(0)}`;
-      const cnt = ((acc[sepChr] || {}).cnt || 0) + 1;
+  const separatorMatches: string[] = stripped.match(/[^\d]/g) || [];
+  const separators = separatorMatches.reduce<
+    Record<string, { sep: string; cnt: number; lastIdx: number }>
+  >((acc, sep, idx) => {
+    const sepChr = `str_${sep.codePointAt(0)}`;
+    const cnt = ((acc[sepChr] || {}).cnt || 0) + 1;
 
-      return {
-        ...acc,
-        [sepChr]: {
-          sep,
-          cnt,
-          lastIdx: idx,
-        },
-      };
-    },
-    {},
-  );
+    return {
+      ...acc,
+      [sepChr]: {
+        sep,
+        cnt,
+        lastIdx: idx,
+      },
+    };
+  }, {});
 
   // check correctness of separators
   const sepKeys = Object.keys(separators);

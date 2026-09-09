@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { camelCase, upperFirst } from 'lodash';
 import { Exportable } from './Exportable';
 
