@@ -244,9 +244,7 @@ export function isServiceFullUnchecked(
  * Handles permission checkbox change.
  */
 export const handleCheckboxPermissionChange =
-  (form: FormLike) =>
-  (permission: PermissionItem) =>
-  (service: PermissionService) =>
+  (form: FormLike, permission: PermissionItem, service: PermissionService) =>
   (event: React.ChangeEvent<HTMLInputElement>) => {
     const { subject } = service;
     const isChecked = event.currentTarget.checked;
@@ -309,8 +307,7 @@ export function getServiceAllPermissionsPaths(subject: string): string[] {
  * Handle full access service checkbox change.
  */
 export const handleCheckboxFullAccessChange =
-  (service: PermissionService) =>
-  (form: FormLike) =>
+  (service: PermissionService, form: FormLike) =>
   (event: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.currentTarget.checked;
     const permsPaths = getServiceAllPermissionsPaths(service.subject);
