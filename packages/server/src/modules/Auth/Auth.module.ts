@@ -23,6 +23,8 @@ import { BullModule } from '@nestjs/bullmq';
 import {
   SendResetPasswordMailQueue,
   SendSignupVerificationMailQueue,
+  JWT_ISSUER,
+  JWT_AUDIENCE,
 } from './Auth.constants';
 import { SendResetPasswordMailProcessor } from './processors/SendResetPasswordMail.processor';
 import { SendSignupVerificationMailProcessor } from './processors/SendSignupVerificationMail.processor';
@@ -57,11 +59,28 @@ const models = [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get('jwt.secret'),
-        signOptions: { expiresIn: '1d', algorithm: 'HS384' },
-        verifyOptions: { algorithms: ['HS384'] },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const secret = configService.get<string>('jwt.secret');
+        if (!secret) {
+          throw new Error(
+            'APP_JWT_SECRET is not configured. The server refuses to sign or verify tokens with a default secret. Generate a strong secret (e.g. `openssl rand -base64 48`) and set it as APP_JWT_SECRET in your environment or .env file.',
+          );
+        }
+        return {
+          secret,
+          signOptions: {
+            expiresIn: '1d',
+            algorithm: 'HS384',
+            issuer: JWT_ISSUER,
+            audience: JWT_AUDIENCE,
+          },
+          verifyOptions: {
+            algorithms: ['HS384'],
+            issuer: JWT_ISSUER,
+            audience: JWT_AUDIENCE,
+          },
+        };
+      },
     }),
     TenantDBManagerModule,
     TenancyModule,

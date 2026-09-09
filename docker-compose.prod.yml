@@ -73,7 +73,7 @@ services:
       - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
 
       # Authentication
-      - JWT_SECRET=${JWT_SECRET}
+      - 'APP_JWT_SECRET=${APP_JWT_SECRET:?APP_JWT_SECRET is required in .env - generate one with openssl rand -base64 48}'
 
       # Application
       - BASE_URL=${BASE_URL}
