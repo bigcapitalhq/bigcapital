@@ -1,6 +1,7 @@
 import { ModelObject } from 'objection';
 import { sumBy, get, isEmpty } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import {
   IInventoryValuationReportQuery,
   IInventoryValuationItem,
@@ -237,9 +238,9 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @returns {IInventoryValuationItem[]}
    */
   private itemsSection(): IInventoryValuationItem[] {
-    return R.compose(
-      R.when(this.isItemsPostFilter, this.itemsFilter),
+    return flow(
       this.itemsMapper,
+      when(this.isItemsPostFilter, this.itemsFilter),
     )(this.repository.inventoryItems);
   }
 

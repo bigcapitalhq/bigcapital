@@ -1,5 +1,6 @@
-import * as R from 'ramda';
 import { I18nService } from 'nestjs-i18n';
+import { constant, flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { ITransactionsByVendorsVendor } from './TransactionsByVendor.types';
 import { TransactionsByContactsTableRows } from '../TransactionsByContact/TransactionsByContactTableRows';
 import { tableRowMapper } from '../../utils/Table.utils';
@@ -40,7 +41,7 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
   private vendorDetails = (vendor: ITransactionsByVendorsVendor) => {
     const columns = [
       { key: 'vendorName', accessor: 'vendorName' },
-      ...R.repeat({ key: 'empty', value: '' }, 5),
+      ...Array(5).fill({ key: 'empty', value: '' }),
       {
         key: 'closingBalanceValue',
         accessor: 'closingBalance.formattedAmount',
@@ -48,15 +49,13 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
     ];
     return {
       ...tableRowMapper(vendor, columns, { rowTypes: [ROW_TYPE.VENDOR] }),
-      children: R.pipe(
-        R.when(
-          R.always(vendor.transactions.length > 0),
-          R.pipe(
-            R.concat(this.contactTransactions(vendor)),
-            R.prepend(this.contactOpeningBalance(vendor)),
-          ),
-        ),
-        R.append(this.contactClosingBalance(vendor)),
+      children: flow(
+        when(constant(vendor.transactions.length > 0), (rows: ITableRow[]) => [
+          this.contactOpeningBalance(vendor),
+          ...this.contactTransactions(vendor),
+          ...rows,
+        ]),
+        (rows: ITableRow[]) => [...rows, this.contactClosingBalance(vendor)],
       )([]),
     };
   };
@@ -67,7 +66,7 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
    * @returns {ITableRow[]}
    */
   private vendorRowsMapper = (vendor: ITransactionsByVendorsVendor) => {
-    return R.pipe(this.vendorDetails)(vendor);
+    return this.vendorDetails(vendor);
   };
 
   /**
@@ -76,7 +75,7 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.map(this.vendorRowsMapper)(this.vendorsTransactions);
+    return this.vendorsTransactions.map(this.vendorRowsMapper);
   };
 
   /**

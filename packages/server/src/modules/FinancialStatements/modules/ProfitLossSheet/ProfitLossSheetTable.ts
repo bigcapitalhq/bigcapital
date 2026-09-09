@@ -1,5 +1,6 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { ifElse, unless, when } from '@/common/fp';
+import { isEmpty } from 'lodash';
 import {
   IProfitLossSheetQuery,
   IProfitLossSheetAccountsNode,
@@ -25,8 +26,10 @@ import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialTable } from '../../common/FinancialTable';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { PROFIT_LOSS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from '../../common/FinancialSheet';
 
-export class ProfitLossSheetTable extends R.pipe(
+export class ProfitLossSheetTable extends flow(
   ProfitLossTablePreviousPeriod,
   ProfitLossTablePreviousYear,
   ProfitLossSheetTablePercentage,
@@ -34,9 +37,11 @@ export class ProfitLossSheetTable extends R.pipe(
   ProfitLossSheetBase,
   FinancialSheetStructure,
   FinancialTable,
-)(class {}) {
+)(class {} as GConstructor<FinancialSheet>) {
   readonly query: ProfitLossSheetQuery;
   readonly i18n: I18nService;
+
+  public reportData: IProfitLossSheetNode[];
 
   /**
    * Constructor method.
@@ -59,22 +64,32 @@ export class ProfitLossSheetTable extends R.pipe(
    * @return {ITableColumnAccessor[]}
    */
   private totalColumnAccessor = (): ITableColumnAccessor[] => {
-    return R.pipe(
-      R.when(
+    return flow(
+      when(
         this.query.isPreviousPeriodActive,
-        R.concat(this.previousPeriodColumnAccessor()),
+        (accessors: ITableColumnAccessor[]) => [
+          ...this.previousPeriodColumnAccessor(),
+          ...accessors,
+        ],
       ),
-      R.when(
+      when(
         this.query.isPreviousYearActive,
-        R.concat(this.previousYearColumnAccessor()),
+        (accessors: ITableColumnAccessor[]) => [
+          ...this.previousYearColumnAccessor(),
+          ...accessors,
+        ],
       ),
-      R.concat(this.percentageColumnsAccessor()),
-      R.concat([
+      (accessors: ITableColumnAccessor[]) => [
+        ...this.percentageColumnsAccessor(),
+        ...accessors,
+      ],
+      (accessors: ITableColumnAccessor[]) => [
         {
           key: PROFIT_LOSS_COLUMN_KEYS.TOTAL,
           accessor: 'total.formattedAmount',
         },
-      ]),
+        ...accessors,
+      ],
     )([]);
   };
 
@@ -83,13 +98,22 @@ export class ProfitLossSheetTable extends R.pipe(
    * @returns {ITableColumnAccessor}
    */
   private commonColumnsAccessors = (): ITableColumnAccessor[] => {
-    return R.compose(
-      R.concat([{ key: PROFIT_LOSS_COLUMN_KEYS.NAME, accessor: 'name' }]),
-      R.ifElse(
+    return flow(
+      ifElse(
         this.query.isDatePeriodsColumnsType,
-        R.concat(this.datePeriodsColumnsAccessors()),
-        R.concat(this.totalColumnAccessor()),
+        (accessors: ITableColumnAccessor[]) => [
+          ...this.datePeriodsColumnsAccessors(),
+          ...accessors,
+        ],
+        (accessors: ITableColumnAccessor[]) => [
+          ...this.totalColumnAccessor(),
+          ...accessors,
+        ],
       ),
+      (accessors: ITableColumnAccessor[]) => [
+        { key: PROFIT_LOSS_COLUMN_KEYS.NAME, accessor: 'name' },
+        ...accessors,
+      ],
     )([]);
   };
 
@@ -148,17 +172,16 @@ export class ProfitLossSheetTable extends R.pipe(
    * @returns {ITableRow}
    */
   private nodeToTableRowCompose = (node: IProfitLossSheetNode): ITableRow => {
-    return R.cond([
-      [
-        this.isNodeType(ProfitLossNodeType.ACCOUNTS),
-        this.accountsNodeToTableRow,
-      ],
-      [
-        this.isNodeType(ProfitLossNodeType.EQUATION),
-        this.equationNodeToTableRow,
-      ],
-      [this.isNodeType(ProfitLossNodeType.ACCOUNT), this.accountNodeToTableRow],
-    ])(node);
+    if (this.isNodeType(ProfitLossNodeType.ACCOUNTS)(node)) {
+      return this.accountsNodeToTableRow(node as IProfitLossSheetAccountsNode);
+    }
+    if (this.isNodeType(ProfitLossNodeType.EQUATION)(node)) {
+      return this.equationNodeToTableRow(node as IProfitLossSheetEquationNode);
+    }
+    if (this.isNodeType(ProfitLossNodeType.ACCOUNT)(node)) {
+      return this.accountNodeToTableRow(node as IProfitLossSheetAccountNode);
+    }
+    return undefined;
   };
 
   /**
@@ -177,9 +200,9 @@ export class ProfitLossSheetTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.compose(
-      this.addTotalRows,
+    return flow(
       this.nodesToTableRowsCompose,
+      this.addTotalRows,
     )(this.reportData);
   };
 
@@ -191,25 +214,23 @@ export class ProfitLossSheetTable extends R.pipe(
    * @returns {ITableColumn[]}
    */
   private tableColumnChildren = (): ITableColumn[] => {
-    return R.compose(
-      R.unless(
-        R.isEmpty,
-        R.concat([
-          {
-            key: PROFIT_LOSS_COLUMN_KEYS.TOTAL,
-            label: this.i18n.t('profit_loss_sheet.total'),
-          },
-        ]),
-      ),
-      R.concat(this.percentageColumns()),
-      R.when(
-        this.query.isPreviousYearActive,
-        R.concat(this.getPreviousYearColumns()),
-      ),
-      R.when(
-        this.query.isPreviousPeriodActive,
-        R.concat(this.getPreviousPeriodColumns()),
-      ),
+    return flow(
+      when(this.query.isPreviousPeriodActive, (columns: ITableColumn[]) => [
+        ...this.getPreviousPeriodColumns(),
+        ...columns,
+      ]),
+      when(this.query.isPreviousYearActive, (columns: ITableColumn[]) => [
+        ...this.getPreviousYearColumns(),
+        ...columns,
+      ]),
+      (columns: ITableColumn[]) => [...this.percentageColumns(), ...columns],
+      unless(isEmpty, (columns: ITableColumn[]) => [
+        {
+          key: PROFIT_LOSS_COLUMN_KEYS.TOTAL,
+          label: this.i18n.t('profit_loss_sheet.total'),
+        },
+        ...columns,
+      ]),
     )([]);
   };
 
@@ -232,19 +253,20 @@ export class ProfitLossSheetTable extends R.pipe(
    * @returns {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
-    return R.compose(
-      this.tableColumnsCellIndexing,
-      R.concat([
+    return flow(
+      ifElse(
+        this.query.isDatePeriodsColumnsType,
+        (columns: ITableColumn[]) => [...this.datePeriodsColumns(), ...columns],
+        (columns: ITableColumn[]) => [...this.totalColumn(), ...columns],
+      ),
+      (columns: ITableColumn[]) => [
         {
           key: PROFIT_LOSS_COLUMN_KEYS.NAME,
           label: this.i18n.t('profit_loss_sheet.account_name'),
         },
-      ]),
-      R.ifElse(
-        this.query.isDatePeriodsColumnsType,
-        R.concat(this.datePeriodsColumns()),
-        R.concat(this.totalColumn()),
-      ),
+        ...columns,
+      ],
+      this.tableColumnsCellIndexing,
     )([]);
   };
 }

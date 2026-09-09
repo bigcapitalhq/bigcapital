@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import {
   ICustomerBalanceSummaryQuery,
   ICustomerBalanceSummaryStatement,
@@ -35,8 +34,10 @@ export class CustomerBalanceSummaryService {
       await this.reportRepository.getCustomersTransactions(asDate);
     const commonProps = { accountNormal: 'debit', date: asDate };
 
-    // @ts-ignore
-    return R.map(R.mergeRight(commonProps))(transactions);
+    return transactions.map((trans) => ({
+      ...commonProps,
+      ...trans,
+    })) as unknown as ILedgerEntry[];
   }
 
   /**

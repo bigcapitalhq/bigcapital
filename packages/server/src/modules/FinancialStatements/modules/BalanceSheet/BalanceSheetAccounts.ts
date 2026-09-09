@@ -1,5 +1,6 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import * as A from 'fp-ts/Array';
+import { when } from '@/common/fp';
 import { defaultTo, toArray } from 'lodash';
 import { I18nService } from 'nestjs-i18n';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
@@ -8,7 +9,6 @@ import {
   IBalanceSheetAccountNode,
   IBalanceSheetAccountsNode,
   IBalanceSheetDataNode,
-  IBalanceSheetSchemaAccountNode,
   IBalanceSheetSchemaNode,
 } from './BalanceSheet.types';
 import { BalanceSheetNetIncome } from './BalanceSheetNetIncome';
@@ -30,7 +30,7 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(
+  class extends flow(
     BalanceSheetNetIncome,
     BalanceSheetFiltering,
     BalanceSheetDatePeriods,
@@ -77,10 +77,11 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
     private getAccountsByAccountTypes = (
       accountsTypes: string[],
     ): Account[] => {
-      const mapAccountsByTypes = R.map((accountType) =>
-        defaultTo(this.repository.accountsByType.get(accountType), []),
-      );
-      return R.compose(R.flatten, mapAccountsByTypes)(accountsTypes);
+      const mapAccountsByTypes = (accountTypes: string[]) =>
+        A.map((accountType: string) =>
+          defaultTo(this.repository.accountsByType.get(accountType), []),
+        )(accountTypes);
+      return A.flatten(mapAccountsByTypes(accountsTypes));
     };
 
     /**
@@ -116,20 +117,20 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
     private reportSchemaAccountNodeComposer = (
       account: Account,
     ): IBalanceSheetAccountNode => {
-      return R.compose(
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearAccountNodeComposer,
-        ),
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.previousPeriodAccountNodeComposer,
-        ),
-        R.when(
+      return flow(
+        this.reportSchemaAccountNodeMapper,
+        when(
           this.query.isDatePeriodsColumnsType,
           this.assocAccountNodeDatePeriods,
         ),
-        this.reportSchemaAccountNodeMapper,
+        when(
+          this.query.isPreviousPeriodActive,
+          this.previousPeriodAccountNodeComposer,
+        ),
+        when(
+          this.query.isPreviousYearActive,
+          this.previousYearAccountNodeComposer,
+        ),
       )(account);
     };
 
@@ -165,7 +166,7 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
      * @returns {IBalanceSheetAccountNode}
      */
     private reportSchemaAccountsNodeMapper = (
-      node: IBalanceSheetSchemaAccountNode,
+      node: any,
     ): IBalanceSheetAccountsNode => {
       const accounts = this.getAccountsNodesByAccountTypes(node.accountsTypes);
       const children = toArray(node?.children);
@@ -177,7 +178,7 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
         type: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS,
         children: [...accounts, ...children],
         total: this.getTotalAmountMeta(0),
-      };
+      } as IBalanceSheetAccountsNode;
     };
 
     /**
@@ -188,8 +189,8 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
     private reportAccountSchemaParser = (
       node: IBalanceSheetSchemaNode | IBalanceSheetDataNode,
     ): IBalanceSheetSchemaNode | IBalanceSheetDataNode => {
-      return R.compose(
-        R.when(
+      return flow(
+        when(
           this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS),
           this.reportSchemaAccountsNodeMapper,
         ),

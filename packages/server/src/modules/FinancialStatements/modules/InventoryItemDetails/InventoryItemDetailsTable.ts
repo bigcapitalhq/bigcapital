@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import {
   IInventoryDetailsItem,
   IInventoryDetailsItemTransaction,
@@ -15,6 +15,7 @@ import {
   ITableRow,
 } from '../../types/Table.types';
 import { mapValuesDeep } from '@/utils/deepdash';
+import { when } from '@/common/fp';
 import { INVENTORY_ITEM_DETAILS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 enum IROW_TYPE {
@@ -25,6 +26,12 @@ enum IROW_TYPE {
 }
 
 const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
+
+type TTableNode =
+  | IInventoryDetailsNode
+  | IInventoryDetailsOpening
+  | IInventoryDetailsClosing
+  | ITableRow;
 
 export class InventoryItemDetailsTable {
   i18n: I18nService;
@@ -197,24 +204,31 @@ export class InventoryItemDetailsTable {
   private itemMapper = (node: IInventoryDetailsNode): ITableRow => {
     console.log(node, 'node');
 
-    // @ts-ignore
-    return R.compose(
-      R.when(
-        // @ts-ignore
-        R.curry(this.isNodeTypeEquals)('OPENING_ENTRY'),
-        this.openingNodeMapper,
+    return flow(
+      when(
+        (n: TTableNode) =>
+          this.isNodeTypeEquals('transaction', n as IInventoryDetailsNode),
+        (n: TTableNode) =>
+          this.itemTransactionNodeMapper(n as IInventoryDetailsItemTransaction),
       ),
-      R.when(
-        // @ts-ignore
-        R.curry(this.isNodeTypeEquals)('CLOSING_ENTRY'),
-        this.closingNodeMapper,
+      when(
+        (n: TTableNode) =>
+          this.isNodeTypeEquals('item', n as IInventoryDetailsNode),
+        (n: TTableNode) => this.itemNodeMapper(n as IInventoryDetailsItem),
       ),
-      R.when(R.curry(this.isNodeTypeEquals)('item'), this.itemNodeMapper),
-      R.when(
-        R.curry(this.isNodeTypeEquals)('transaction'),
-        this.itemTransactionNodeMapper,
+      when(
+        (n: TTableNode) =>
+          this.isNodeTypeEquals('CLOSING_ENTRY', n as IInventoryDetailsNode),
+        (n: TTableNode) =>
+          this.closingNodeMapper(n as IInventoryDetailsClosing),
       ),
-    )(node);
+      when(
+        (n: TTableNode) =>
+          this.isNodeTypeEquals('OPENING_ENTRY', n as IInventoryDetailsNode),
+        (n: TTableNode) =>
+          this.openingNodeMapper(n as IInventoryDetailsOpening),
+      ),
+    )(node) as ITableRow;
   };
 
   /**
@@ -223,8 +237,7 @@ export class InventoryItemDetailsTable {
    * @returns {ITableRow[]}
    */
   private itemsMapper = (items: IInventoryDetailsItem[]): ITableRow[] => {
-    // @ts-ignore
-    return mapValuesDeep(items, this.itemMapper, MAP_CONFIG);
+    return mapValuesDeep(items, this.itemMapper, MAP_CONFIG) as ITableRow[];
   };
 
   /**

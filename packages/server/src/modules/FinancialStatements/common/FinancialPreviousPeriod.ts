@@ -3,8 +3,9 @@ import {
   IFinancialDatePeriodsUnit,
   IFinancialNodeWithPreviousPeriod,
 } from '../types/Report.types';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { GConstructor } from '@/common/types/Constructor';
+import { assoc } from '@/common/fp';
 import { FinancialSheet } from './FinancialSheet';
 import { FinancialDatePeriods } from './FinancialDatePeriods';
 import { IProfitLossSheetAccountNode } from '../modules/ProfitLossSheet/ProfitLossSheet.types';
@@ -12,7 +13,7 @@ import { IProfitLossSheetAccountNode } from '../modules/ProfitLossSheet/ProfitLo
 export const FinancialPreviousPeriod = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialDatePeriods)(Base) {
+  class extends flow(FinancialDatePeriods)(Base) {
     // ---------------------------
     // # Common Node.
     // ---------------------------
@@ -28,7 +29,7 @@ export const FinancialPreviousPeriod = <T extends GConstructor<FinancialSheet>>(
         accountNode.previousPeriod.amount,
         accountNode.previousPeriodChange.amount,
       );
-      return R.assoc(
+      return assoc(
         'previousPeriodPercentage',
         this.getPercentageAmountMeta(percentage),
         accountNode,
@@ -47,7 +48,7 @@ export const FinancialPreviousPeriod = <T extends GConstructor<FinancialSheet>>(
         accountNode.total.amount,
         accountNode.previousPeriod.amount,
       );
-      return R.assoc(
+      return assoc(
         'previousPeriodChange',
         this.getAmountMeta(change),
         accountNode,
@@ -69,7 +70,7 @@ export const FinancialPreviousPeriod = <T extends GConstructor<FinancialSheet>>(
         accountNode.previousPeriod.amount,
         accountNode.previousPeriodChange.amount,
       );
-      return R.assoc(
+      return assoc(
         'previousPeriodPercentage',
         this.getPercentageTotalAmountMeta(percentage),
         accountNode,
@@ -88,7 +89,7 @@ export const FinancialPreviousPeriod = <T extends GConstructor<FinancialSheet>>(
         accountNode.total.amount,
         accountNode.previousPeriod.amount,
       );
-      return R.assoc(
+      return assoc(
         'previousPeriodChange',
         this.getTotalAmountMeta(change),
         accountNode,
@@ -100,23 +101,25 @@ export const FinancialPreviousPeriod = <T extends GConstructor<FinancialSheet>>(
      * @param horizNode
      * @returns {IFinancialNodeWithPreviousPeriod}
      */
-    public assocPreviousPeriodHorizNodeFromToDates = R.curry(
-      (
-        periodUnit: IFinancialDatePeriodsUnit,
-        horizNode: any,
-      ): IFinancialNodeWithPreviousPeriod => {
+    public assocPreviousPeriodHorizNodeFromToDates =
+      (periodUnit: IFinancialDatePeriodsUnit) =>
+      (horizNode: any): IFinancialNodeWithPreviousPeriod => {
         const { fromDate: PPFromDate, toDate: PPToDate } =
           this.getPreviousPeriodDateRange(
             horizNode.fromDate.date,
             horizNode.toDate.date,
             periodUnit,
           );
-        return R.compose(
-          R.assoc('previousPeriodToDate', this.getDateMeta(PPToDate)),
-          R.assoc('previousPeriodFromDate', this.getDateMeta(PPFromDate)),
-        )(horizNode);
-      },
-    );
+        return assoc(
+          'previousPeriodToDate',
+          this.getDateMeta(PPToDate),
+          assoc(
+            'previousPeriodFromDate',
+            this.getDateMeta(PPFromDate),
+            horizNode,
+          ),
+        );
+      };
 
     /**
      * Retrieves PP total sumation of the given horiz index node.

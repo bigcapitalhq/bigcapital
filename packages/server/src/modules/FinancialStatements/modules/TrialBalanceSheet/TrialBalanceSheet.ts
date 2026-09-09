@@ -1,5 +1,5 @@
 import { sumBy } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import {
   ITrialBalanceSheetQuery,
   ITrialBalanceAccount,
@@ -248,10 +248,10 @@ export class TrialBalanceSheet extends FinancialSheet {
    * @returns {ITrialBalanceAccount[]}
    */
   private accountsSection(accounts: ModelObject<Account>[]) {
-    return R.compose(
-      this.accountsFilter,
-      this.nestedAccountsNode,
+    return flow(
       this.accountsMapper,
+      this.nestedAccountsNode,
+      this.accountsFilter,
     )(accounts);
   }
 

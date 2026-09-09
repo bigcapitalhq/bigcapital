@@ -1,13 +1,18 @@
-// @ts-nocheck
+import { flow } from 'fp-ts/function';
+import * as moment from 'moment';
 import { merge } from 'lodash';
-import * as R from 'ramda';
 import { IProfitLossSheetQuery } from './ProfitLossSheet.types';
-import { FinancialDateRanges } from '../../common/FinancialDateRanges';
-import { IFinancialDatePeriodsUnit } from '../../types/Report.types';
+import {
+  IFinancialDatePeriodsUnit,
+  INumberFormatQuery,
+} from '../../types/Report.types';
 import { DISPLAY_COLUMNS_BY } from './constants';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from '../../common/FinancialSheet';
+import { FinancialDateRanges } from '../../common/FinancialDateRanges';
 
-export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
-  class {},
+export class ProfitLossSheetQuery extends flow(FinancialDateRanges)(
+  class {} as GConstructor<FinancialSheet>,
 ) {
   /**
    * P&L query.
@@ -35,6 +40,26 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
    * @param {Date}
    */
   public readonly PPFromDate: Date;
+
+  public basis: string;
+  public fromDate: moment.MomentInput;
+  public toDate: moment.MomentInput;
+  public numberFormat: INumberFormatQuery;
+  public noneZero: boolean;
+  public noneTransactions: boolean;
+  public accountsIds: number[];
+  public displayColumnsType: 'total' | 'date_periods';
+  public displayColumnsBy: string;
+  public percentageColumn: boolean;
+  public percentageRow: boolean;
+  public percentageIncome: boolean;
+  public percentageExpense: boolean;
+  public previousPeriod: boolean;
+  public previousPeriodAmountChange: boolean;
+  public previousPeriodPercentageChange: boolean;
+  public previousYear: boolean;
+  public previousYearAmountChange: boolean;
+  public previousYearPercentageChange: boolean;
 
   /**
    * Constructor method.

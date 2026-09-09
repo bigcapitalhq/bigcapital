@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ModelObject } from 'objection';
-import * as R from 'ramda';
+import { flow, constant } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { I18nService } from 'nestjs-i18n';
 import {
   ICashFlowStatementQuery,
@@ -36,21 +37,23 @@ export class CashFlowStatementService {
   private async cashAtBeginningTransactions(
     filter: ICashFlowStatementQuery,
   ): Promise<ModelObject<AccountTransaction>[]> {
-    const appendPeriodsOperToChain = (trans) =>
-      R.append(
-        this.cashFlowRepo.cashAtBeginningPeriodTransactions(filter),
-        trans,
-      );
+    const appendPeriodsOperToChain = (trans) => [
+      ...trans,
+      this.cashFlowRepo.cashAtBeginningPeriodTransactions(filter),
+    ];
 
-    const promisesChain = R.pipe(
-      R.append(this.cashFlowRepo.cashAtBeginningTotalTransactions(filter)),
-      R.when(
-        R.always(R.equals(filter.displayColumnsType, 'date_periods')),
+    const promisesChain = flow(
+      (chain: any[]) => [
+        ...chain,
+        this.cashFlowRepo.cashAtBeginningTotalTransactions(filter),
+      ],
+      when(
+        constant(filter.displayColumnsType === 'date_periods'),
         appendPeriodsOperToChain,
       ),
     )([]);
     const promisesResults = await Promise.all(promisesChain);
-    const transactions = R.flatten(promisesResults);
+    const transactions = promisesResults.flat();
 
     return transactions;
   }

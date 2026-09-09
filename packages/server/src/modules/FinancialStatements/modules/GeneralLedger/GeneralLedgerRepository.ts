@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-import * as R from 'ramda';
 import { IGeneralLedgerSheetQuery } from './GeneralLedger.types';
 import { flatten, isEmpty, uniq } from 'lodash';
 import { ModelObject } from 'objection';
@@ -85,8 +84,9 @@ export class GeneralLedgerRepository {
    * Initialize the accounts.
    */
   public async initAccounts() {
-    // @ts-ignore
-    this.accounts = await this.accountRepository.all().orderBy('name', 'ASC');
+    this.accounts = (await this.accountRepository
+      .all()
+      .orderBy('name', 'ASC')) as Account[];
   }
 
   /**
@@ -167,7 +167,7 @@ export class GeneralLedgerRepository {
         return this.accountsGraph.dependenciesOf(accountId);
       },
     );
-    const nodeIds = R.concat(this.filter.accountsIds, childrenNodeIds);
+    const nodeIds = [...this.filter.accountsIds, ...childrenNodeIds];
 
     this.accountNodesIncludeTransactions = uniq(flatten(nodeIds));
   }
@@ -185,13 +185,10 @@ export class GeneralLedgerRepository {
       const childrenIds = this.accountsGraph.dependenciesOf(accountId);
       const parentIds = this.accountsGraph.dependantsOf(accountId);
 
-      return R.concat(childrenIds, parentIds);
+      return [...childrenIds, ...parentIds];
     });
-    // @ts-ignore\
-    this.accountNodeInclude = R.compose(
-      R.uniq,
-      R.flatten,
-      R.concat(this.filter.accountsIds),
-    )(nodeIds);
+    this.accountNodeInclude = uniq(
+      flatten([...this.filter.accountsIds, ...nodeIds]),
+    );
   }
 }

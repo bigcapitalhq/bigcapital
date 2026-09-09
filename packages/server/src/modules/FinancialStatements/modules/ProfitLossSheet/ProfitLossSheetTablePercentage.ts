@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 import { I18nService } from 'nestjs-i18n';
 import { GConstructor } from '@/common/types/Constructor';
@@ -28,35 +28,35 @@ export const ProfitLossSheetTablePercentage = <
      * @returns {ITableColumn[]}
      */
     protected percentageColumns = (): ITableColumn[] => {
-      return R.pipe(
-        R.when(
-          this.query.isIncomePercentage,
-          R.append({
+      return flow(
+        when(this.query.isIncomePercentage, (columns: ITableColumn[]) => [
+          ...columns,
+          {
             key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_INCOME,
             label: this.i18n.t('profit_loss_sheet.percentage_of_income'),
-          }),
-        ),
-        R.when(
-          this.query.isExpensesPercentage,
-          R.append({
+          },
+        ]),
+        when(this.query.isExpensesPercentage, (columns: ITableColumn[]) => [
+          ...columns,
+          {
             key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_EXPENSES,
             label: this.i18n.t('profit_loss_sheet.percentage_of_expenses'),
-          }),
-        ),
-        R.when(
-          this.query.isColumnPercentage,
-          R.append({
+          },
+        ]),
+        when(this.query.isColumnPercentage, (columns: ITableColumn[]) => [
+          ...columns,
+          {
             key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
             label: this.i18n.t('profit_loss_sheet.percentage_of_column'),
-          }),
-        ),
-        R.when(
-          this.query.isRowPercentage,
-          R.append({
+          },
+        ]),
+        when(this.query.isRowPercentage, (columns: ITableColumn[]) => [
+          ...columns,
+          {
             key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_ROW,
             label: this.i18n.t('profit_loss_sheet.percentage_of_row'),
-          }),
-        ),
+          },
+        ]),
       )([]);
     };
 
@@ -68,34 +68,46 @@ export const ProfitLossSheetTablePercentage = <
      * @returns {ITableColumnAccessor[]}
      */
     protected percentageColumnsAccessor = (): ITableColumnAccessor[] => {
-      return R.pipe(
-        R.when(
+      return flow(
+        when(
           this.query.isIncomePercentage,
-          R.append({
-            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_INCOME,
-            accessor: 'percentageIncome.formattedAmount',
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_INCOME,
+              accessor: 'percentageIncome.formattedAmount',
+            },
+          ],
         ),
-        R.when(
+        when(
           this.query.isExpensesPercentage,
-          R.append({
-            key: 'percentage_expense',
-            accessor: 'percentageExpense.formattedAmount',
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: 'percentage_expense',
+              accessor: 'percentageExpense.formattedAmount',
+            },
+          ],
         ),
-        R.when(
+        when(
           this.query.isColumnPercentage,
-          R.append({
-            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
-            accessor: 'percentageColumn.formattedAmount',
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
+              accessor: 'percentageColumn.formattedAmount',
+            },
+          ],
         ),
-        R.when(
+        when(
           this.query.isRowPercentage,
-          R.append({
-            key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_ROW,
-            accessor: 'percentageRow.formattedAmount',
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: PROFIT_LOSS_COLUMN_KEYS.PERCENTAGE_OF_ROW,
+              accessor: 'percentageRow.formattedAmount',
+            },
+          ],
         ),
       )([]);
     };
@@ -108,34 +120,46 @@ export const ProfitLossSheetTablePercentage = <
     protected percetangeHorizontalColumnsAccessor = (
       index: number,
     ): ITableColumnAccessor[] => {
-      return R.pipe(
-        R.when(
+      return flow(
+        when(
           this.query.isIncomePercentage,
-          R.append({
-            key: `percentage_income-${index}`,
-            accessor: `horizontalTotals[${index}].percentageIncome.formattedAmount`,
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: `percentage_income-${index}`,
+              accessor: `horizontalTotals[${index}].percentageIncome.formattedAmount`,
+            },
+          ],
         ),
-        R.when(
+        when(
           this.query.isExpensesPercentage,
-          R.append({
-            key: `percentage_expense-${index}`,
-            accessor: `horizontalTotals[${index}].percentageExpense.formattedAmount`,
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: `percentage_expense-${index}`,
+              accessor: `horizontalTotals[${index}].percentageExpense.formattedAmount`,
+            },
+          ],
         ),
-        R.when(
+        when(
           this.query.isColumnPercentage,
-          R.append({
-            key: `percentage_of_column-${index}`,
-            accessor: `horizontalTotals[${index}].percentageColumn.formattedAmount`,
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: `percentage_of_column-${index}`,
+              accessor: `horizontalTotals[${index}].percentageColumn.formattedAmount`,
+            },
+          ],
         ),
-        R.when(
+        when(
           this.query.isRowPercentage,
-          R.append({
-            key: `percentage_of_row-${index}`,
-            accessor: `horizontalTotals[${index}].percentageRow.formattedAmount`,
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: `percentage_of_row-${index}`,
+              accessor: `horizontalTotals[${index}].percentageRow.formattedAmount`,
+            },
+          ],
         ),
       )([]);
     };

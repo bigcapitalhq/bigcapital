@@ -1,4 +1,6 @@
-import * as R from 'ramda';
+import { constant, flow } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { when } from '@/common/fp';
 import { ROW_TYPE } from './_types';
 import {
   IPurchasesByItemsItem,
@@ -16,9 +18,9 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { PURCHASES_BY_ITEMS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class PurchasesByItemsTable extends R.compose(
-  FinancialTable,
+export class PurchasesByItemsTable extends flow(
   FinancialSheetStructure,
+  FinancialTable,
 )(FinancialSheet) {
   private data: IPurchasesByItemsSheetData;
 
@@ -94,7 +96,7 @@ export class PurchasesByItemsTable extends R.compose(
    * @returns {ITableRow[]}
    */
   private itemsMap = (items: IPurchasesByItemsItem[]): ITableRow[] => {
-    return R.map(this.itemMap)(items);
+    return items.map(this.itemMap);
   };
 
   /**
@@ -116,7 +118,7 @@ export class PurchasesByItemsTable extends R.compose(
    */
   public tableColumns(): ITableColumn[] {
     const columns = this.commonTableColumns();
-    return R.compose(this.tableColumnsCellIndexing)(columns);
+    return this.tableColumnsCellIndexing(columns);
   }
 
   /**
@@ -127,8 +129,9 @@ export class PurchasesByItemsTable extends R.compose(
     const itemsRows = this.itemsMap(this.data.items);
     const totalRow = this.totalNodeMap(this.data.total);
 
-    return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow)),
-    )(itemsRows) as ITableRow[];
+    return when(constant(!isEmpty(itemsRows)), (rows: ITableRow[]) => [
+      ...rows,
+      totalRow,
+    ])(itemsRows);
   }
 }

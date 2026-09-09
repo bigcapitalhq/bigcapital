@@ -1,7 +1,7 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { I18nService } from 'nestjs-i18n';
-import { ITableColumn } from '../../types/Table.types';
+import { ITableColumn, ITableColumnAccessor } from '../../types/Table.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialSheet } from '../../common/FinancialSheet';
@@ -24,21 +24,24 @@ export const BalanceSheetTablePercentage = <
      * @returns {ITableColumn[]}
      */
     public percentageColumns = (): ITableColumn[] => {
-      return R.pipe(
-        R.when(
+      return flow(
+        when(
           this.query.isColumnsPercentageActive,
-          R.append({
-            key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
-            label: this.i18n.t('balance_sheet.percentage_of_column'),
-          }),
+          (columns: ITableColumn[]) => [
+            ...columns,
+            {
+              key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
+              label: this.i18n.t('balance_sheet.percentage_of_column'),
+            },
+          ],
         ),
-        R.when(
-          this.query.isRowsPercentageActive,
-          R.append({
+        when(this.query.isRowsPercentageActive, (columns: ITableColumn[]) => [
+          ...columns,
+          {
             key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_ROW,
             label: this.i18n.t('balance_sheet.percentage_of_row'),
-          }),
-        ),
+          },
+        ]),
       )([]);
     };
 
@@ -49,21 +52,27 @@ export const BalanceSheetTablePercentage = <
      * Retrieves percentage of column/row accessors.
      * @returns {ITableColumn[]}
      */
-    public percentageColumnsAccessor = (): ITableColumn[] => {
-      return R.pipe(
-        R.when(
+    public percentageColumnsAccessor = (): ITableColumnAccessor[] => {
+      return flow(
+        when(
           this.query.isColumnsPercentageActive,
-          R.append({
-            key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
-            accessor: 'percentageColumn.formattedAmount',
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
+              accessor: 'percentageColumn.formattedAmount',
+            },
+          ],
         ),
-        R.when(
+        when(
           this.query.isRowsPercentageActive,
-          R.append({
-            key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_ROW,
-            accessor: 'percentageRow.formattedAmount',
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: BALANCE_SHEET_COLUMN_KEYS.PERCENTAGE_OF_ROW,
+              accessor: 'percentageRow.formattedAmount',
+            },
+          ],
         ),
       )([]);
     };
@@ -75,21 +84,27 @@ export const BalanceSheetTablePercentage = <
      */
     public percetangeDatePeriodColumnsAccessor = (
       index: number,
-    ): ITableColumn[] => {
-      return R.pipe(
-        R.when(
+    ): ITableColumnAccessor[] => {
+      return flow(
+        when(
           this.query.isColumnsPercentageActive,
-          R.append({
-            key: `percentage_of_column-${index}`,
-            accessor: `horizontalTotals[${index}].percentageColumn.formattedAmount`,
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: `percentage_of_column-${index}`,
+              accessor: `horizontalTotals[${index}].percentageColumn.formattedAmount`,
+            },
+          ],
         ),
-        R.when(
+        when(
           this.query.isRowsPercentageActive,
-          R.append({
-            key: `percentage_of_row-${index}`,
-            accessor: `horizontalTotals[${index}].percentageRow.formattedAmount`,
-          }),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            {
+              key: `percentage_of_row-${index}`,
+              accessor: `horizontalTotals[${index}].percentageRow.formattedAmount`,
+            },
+          ],
         ),
       )([]);
     };

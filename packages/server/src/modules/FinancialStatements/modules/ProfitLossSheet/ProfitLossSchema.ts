@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import {
   ProfitLossAggregateNodeId,
   ProfitLossNodeType,
@@ -12,7 +12,7 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 export const ProfitLossShema = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialSchema)(Base) {
+  class extends flow(FinancialSchema)(Base) {
     /**
      * Retrieves the report schema.
      * @returns {IProfitLossSchemaNode[]}

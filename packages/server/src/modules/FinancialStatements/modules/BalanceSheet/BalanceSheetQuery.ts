@@ -1,21 +1,43 @@
-// @ts-nocheck
+import { flow } from 'fp-ts/function';
+import * as moment from 'moment';
 import { merge } from 'lodash';
-import * as R from 'ramda';
 import {
   IBalanceSheetQuery,
   IFinancialDatePeriodsUnit,
 } from './BalanceSheet.types';
 import { FinancialDateRanges } from '../../common/FinancialDateRanges';
 import { DISPLAY_COLUMNS_BY } from './constants';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from '../../common/FinancialSheet';
+import { INumberFormatQuery } from '../../types/Report.types';
 
-export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
-  class {},
+export class BalanceSheetQuery extends flow(FinancialDateRanges)(
+  class {} as GConstructor<FinancialSheet>,
 ) {
   /**
    * Balance sheet query.
    * @param {IBalanceSheetQuery}
    */
   public readonly query: IBalanceSheetQuery;
+
+  public basis: 'cash' | 'accrual';
+  public fromDate: moment.MomentInput;
+  public toDate: moment.MomentInput;
+  public numberFormat: INumberFormatQuery;
+  public noneZero: boolean;
+  public noneTransactions: boolean;
+  public accountIds: number[];
+  public branchesIds: number[];
+  public displayColumnsType: 'total' | 'date_periods';
+  public displayColumnsBy: string;
+  public percentageOfColumn: boolean;
+  public percentageOfRow: boolean;
+  public previousPeriod: boolean;
+  public previousPeriodAmountChange: boolean;
+  public previousPeriodPercentageChange: boolean;
+  public previousYear: boolean;
+  public previousYearAmountChange: boolean;
+  public previousYearPercentageChange: boolean;
 
   /**
    * Previous year to date.

@@ -1,12 +1,11 @@
-// @ts-nocheck
 import * as moment from 'moment';
-import * as R from 'ramda';
 import { IFilterRole, IDynamicFilter } from './DynamicFilter.types';
 import { Parser } from '@/libs/logic-evaluation/Parser';
 import { Lexer } from '@/libs/logic-evaluation/Lexer';
 import { DynamicFilterQueryParser } from './DynamicFilterQueryParser';
 import { COMPARATOR_TYPE, FIELD_TYPE } from './constants';
 import { BaseModel } from '@/models/Model';
+import { IModelMetaRelationField } from '@/interfaces/Model';
 import { MetableModel } from '../types/DynamicList.types';
 import { Knex } from 'knex';
 
@@ -72,10 +71,7 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
    * @return {string}
    */
   private parseLogicExpression(logicExpression: string): string {
-    return R.compose(
-      R.replace(/or|OR/g, '||'),
-      R.replace(/and|AND/g, '&&'),
-    )(logicExpression);
+    return logicExpression.replace(/or|OR/g, '||').replace(/and|AND/g, '&&');
   }
 
   /**
@@ -368,7 +364,7 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
       field &&
       field.fieldType === FIELD_TYPE.RELATION
     ) {
-      this.relationFields.push(field.relationKey);
+      this.relationFields.push((field as IModelMetaRelationField).relationKey);
     }
   };
 

@@ -1,5 +1,5 @@
 import { get, sumBy } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import {
   ISalesByItemsReportQuery,
   ISalesByItemsItem,
@@ -145,7 +145,7 @@ export class SalesByItemsReport extends FinancialSheet {
    * @returns {ISalesByItemsItem[]}
    */
   private itemsSection(): ISalesByItemsItem[] {
-    return R.compose(this.itemsFilters, this.itemsMapper)(this.items);
+    return flow(this.itemsMapper, this.itemsFilters)(this.items);
   }
 
   /**

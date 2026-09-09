@@ -1,11 +1,15 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import * as A from 'fp-ts/Array';
+import { unless } from '@/common/fp';
+import { isEmpty } from 'lodash';
 import * as moment from 'moment';
+import { I18nService } from 'nestjs-i18n';
 import { ITableColumn, ITableColumnAccessor } from '../../types/Table.types';
 import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
-import { IDateRange } from '../CashFlow/Cashflow.types';
+import { IDateRange } from '../CashFlowStatement/Cashflow.types';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BALANCE_SHEET_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 export const BalanceSheetTableDatePeriods = <
@@ -13,8 +17,26 @@ export const BalanceSheetTableDatePeriods = <
 >(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialDatePeriods)(Base) {
+  class extends flow(FinancialDatePeriods)(Base) {
     public i18n: I18nService;
+    public query: BalanceSheetQuery;
+
+    protected previousPeriodHorizColumnAccessors: (
+      index: number,
+    ) => ITableColumnAccessor[];
+    protected previousYearHorizontalColumnAccessors: (
+      index: number,
+    ) => ITableColumnAccessor[];
+    public percetangeDatePeriodColumnsAccessor: (
+      index: number,
+    ) => ITableColumnAccessor[];
+    protected previousPeriodHorizontalColumns: (
+      dateRange: IDateRange,
+    ) => ITableColumn[];
+    protected getPreviousYearHorizontalColumns: (
+      dateRange: IDateRange,
+    ) => ITableColumn[];
+    public percentageColumns: () => ITableColumn[];
 
     /**
      * Retrieves the date periods based on the report query.
@@ -33,26 +55,24 @@ export const BalanceSheetTableDatePeriods = <
      * @param {ICashFlowDateRange} dateRange -
      * @return {string}
      */
-    public formatColumnLabel = (dateRange: ICashFlowDateRange) => {
+    public formatColumnLabel = (dateRange: IDateRange): string => {
       const monthFormat = (range) => moment(range.toDate).format('YYYY-MM');
       const yearFormat = (range) => moment(range.toDate).format('YYYY');
       const dayFormat = (range) => moment(range.toDate).format('YYYY-MM-DD');
 
-      const conditions = [
+      const conditions: [string, (range) => string][] = [
         ['month', monthFormat],
         ['year', yearFormat],
         ['day', dayFormat],
         ['quarter', monthFormat],
         ['week', dayFormat],
       ];
-      const conditionsPairs = R.map(
-        ([type, formatFn]) => [
-          R.always(this.query.isDisplayColumnsBy(type)),
-          formatFn,
-        ],
-        conditions,
-      );
-      return R.compose(R.cond(conditionsPairs))(dateRange);
+      for (const [type, formatFn] of conditions) {
+        if (this.query.isDisplayColumnsBy(type)) {
+          return formatFn(dateRange);
+        }
+      }
+      return undefined;
     };
 
     // -------------------------
@@ -63,31 +83,43 @@ export const BalanceSheetTableDatePeriods = <
      * @param {IDateRange} dateRange -
      * @param {number} index -
      */
-    public datePeriodColumnsAccessor = R.curry(
-      (dateRange: IDateRange, index: number) => {
-        return R.pipe(
-          R.concat(this.previousPeriodHorizColumnAccessors(index)),
-          R.concat(this.previousYearHorizontalColumnAccessors(index)),
-          R.concat(this.percetangeDatePeriodColumnsAccessor(index)),
-          R.concat([
-            {
-              key: `date-range-${index}`,
-              accessor: `horizontalTotals[${index}].total.formattedAmount`,
-            },
-          ]),
-        )([]);
-      },
-    );
+    public datePeriodColumnsAccessor = (
+      dateRange: IDateRange,
+      index: number,
+    ): ITableColumnAccessor[] => {
+      return flow(
+        (accessors: ITableColumnAccessor[]) => [
+          ...this.previousPeriodHorizColumnAccessors(index),
+          ...accessors,
+        ],
+        (accessors: ITableColumnAccessor[]) => [
+          ...this.previousYearHorizontalColumnAccessors(index),
+          ...accessors,
+        ],
+        (accessors: ITableColumnAccessor[]) => [
+          ...this.percetangeDatePeriodColumnsAccessor(index),
+          ...accessors,
+        ],
+        (accessors: ITableColumnAccessor[]) => [
+          {
+            key: `date-range-${index}`,
+            accessor: `horizontalTotals[${index}].total.formattedAmount`,
+          },
+          ...accessors,
+        ],
+      )([]);
+    };
 
     /**
      * Retrieve the date periods columns accessors.
      * @returns {ITableColumnAccessor[]}
      */
     public datePeriodsColumnsAccessors = (): ITableColumnAccessor[] => {
-      return R.compose(
-        R.flatten,
-        R.addIndex(R.map)(this.datePeriodColumnsAccessor),
-      )(this.datePeriods);
+      return A.flatten(
+        A.mapWithIndex((index: number, dateRange: IDateRange) =>
+          this.datePeriodColumnsAccessor(dateRange, index),
+        )(this.datePeriods),
+      );
     };
 
     // -------------------------
@@ -102,20 +134,24 @@ export const BalanceSheetTableDatePeriods = <
     public datePeriodChildrenColumns = (
       index: number,
       dateRange: IDateRange,
-    ) => {
-      return R.compose(
-        R.unless(
-          R.isEmpty,
-          R.concat([
-            {
-              key: BALANCE_SHEET_COLUMN_KEYS.TOTAL,
-              label: this.i18n.t('balance_sheet.total'),
-            },
-          ]),
-        ),
-        R.concat(this.percentageColumns()),
-        R.concat(this.getPreviousYearHorizontalColumns(dateRange)),
-        R.concat(this.previousPeriodHorizontalColumns(dateRange)),
+    ): ITableColumn[] => {
+      return flow(
+        (columns: ITableColumn[]) => [
+          ...this.previousPeriodHorizontalColumns(dateRange),
+          ...columns,
+        ],
+        (columns: ITableColumn[]) => [
+          ...this.getPreviousYearHorizontalColumns(dateRange),
+          ...columns,
+        ],
+        (columns: ITableColumn[]) => [...this.percentageColumns(), ...columns],
+        unless(isEmpty, (columns: ITableColumn[]) => [
+          {
+            key: BALANCE_SHEET_COLUMN_KEYS.TOTAL,
+            label: this.i18n.t('balance_sheet.total'),
+          },
+          ...columns,
+        ]),
       )([]);
     };
 

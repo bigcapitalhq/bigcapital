@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { first } from 'lodash';
 import { I18nService } from 'nestjs-i18n';
 import {
@@ -21,7 +21,7 @@ import { tableRowMapper } from '../../utils/Table.utils';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { JOURNAL_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class JournalSheetTable extends R.pipe(
+export class JournalSheetTable extends flow(
   FinancialTable,
   FinancialSheetStructure,
 )(FinancialSheet) {
@@ -190,12 +190,12 @@ export class JournalSheetTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   private entriesMapper = (group: IJournalReportEntriesGroup): ITableRow[] => {
-    const entries = R.remove(0, 1, group.entries);
+    const entries = group.entries.slice(1);
     const reference = {
       referenceType: group.transactionType,
       referenceId: group.referenceId,
     };
-    return R.map((entry) => this.entryMapper(entry, reference), entries);
+    return entries.map((entry) => this.entryMapper(entry, reference));
   };
 
   /**
@@ -243,7 +243,7 @@ export class JournalSheetTable extends R.pipe(
   private groupsMapper = (
     entries: IJournalReportEntriesGroup[],
   ): ITableRow[] => {
-    return R.compose(R.flatten, R.map(this.groupMapper))(entries);
+    return entries.map((group) => this.groupMapper(group)).flat();
   };
 
   /**
@@ -251,7 +251,7 @@ export class JournalSheetTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   public tableData(): ITableRow[] {
-    return R.compose(this.groupsMapper)(this.data);
+    return this.groupsMapper(this.data);
   }
 
   /**
@@ -261,6 +261,6 @@ export class JournalSheetTable extends R.pipe(
   public tableColumns(): ITableColumn[] {
     const columns = this.commonColumns();
 
-    return R.compose(this.tableColumnsCellIndexing)(columns);
+    return this.tableColumnsCellIndexing(columns);
   }
 }

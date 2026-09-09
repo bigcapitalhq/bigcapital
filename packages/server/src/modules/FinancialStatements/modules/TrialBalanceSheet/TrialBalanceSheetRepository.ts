@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import { ModelObject } from 'objection';
 import { Account } from '@/modules/Accounts/models/Account.model';
@@ -97,7 +96,6 @@ export class TrialBalanceSheetRepository {
         query.modify('filterDateRange', null, openingDate);
         query.withGraphFetched('account');
 
-        // @ts-ignore
         this.commonFilterBranchesQuery(query);
       });
   };
@@ -106,9 +104,8 @@ export class TrialBalanceSheetRepository {
    * Common branches filter query.
    * @param {Knex.QueryBuilder} query
    */
-  private commonFilterBranchesQuery = (query: Knex.QueryBuilder) => {
+  private commonFilterBranchesQuery = (query) => {
     if (!isEmpty(this.query.branchesIds)) {
-      // @ts-ignore
       query.modify('filterByBranches', this.query.branchesIds);
     }
   };

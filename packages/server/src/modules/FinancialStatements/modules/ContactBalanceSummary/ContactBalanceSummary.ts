@@ -1,5 +1,6 @@
 import { sumBy, isEmpty } from 'lodash';
-import * as R from 'ramda';
+import { constant } from 'fp-ts/function';
+import { assoc, when } from '@/common/fp';
 import {
   IContactBalanceSummaryContact,
   IContactBalanceSummaryTotal,
@@ -51,7 +52,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
   protected assocTotalPercentageOfColumn = (
     node: IContactBalanceSummaryTotal,
   ): IContactBalanceSummaryTotal => {
-    return R.assoc('percentageOfColumn', this.getPercentageMeta(1), node);
+    return assoc('percentageOfColumn', this.getPercentageMeta(1), node);
   };
 
   /**
@@ -66,12 +67,9 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
     const node = {
       total: this.getTotalFormat(customersTotal),
     };
-    // @ts-ignore
-    return R.compose(
-      R.when(
-        R.always(this.filter.percentageColumn),
-        this.assocTotalPercentageOfColumn,
-      ),
+    return when(
+      constant(this.filter.percentageColumn),
+      this.assocTotalPercentageOfColumn,
     )(node);
   };
 
@@ -104,12 +102,10 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
     contacts: IContactBalanceSummaryContact[],
   ): IContactBalanceSummaryContact[] => {
     const customersTotal = this.getContactsTotal(contacts);
-    const camparsionPercentageOfColummn = R.curry(
-      this.contactCamparsionPercentageOfColumnMapper,
-    )(customersTotal);
 
-    // @ts-ignore
-    return contacts.map(camparsionPercentageOfColummn);
+    return contacts.map((contact) =>
+      this.contactCamparsionPercentageOfColumnMapper(customersTotal, contact),
+    );
   };
 
   /**

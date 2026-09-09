@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { memoize } from 'lodash';
 import {
   IAccountTransactionsGroupBy,
@@ -14,7 +14,7 @@ import { IFinancialSheetTotalPeriod } from '../modules/BalanceSheet/BalanceSheet
 export const FinancialDatePeriods = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialDateRanges)(Base) {
+  class extends flow(FinancialDateRanges)(Base) {
     /**
      * Retrieves the date ranges from the given from date to the given to date.
      * @param {Date} fromDate -
@@ -72,27 +72,25 @@ export const FinancialDatePeriods = <T extends GConstructor<FinancialSheet>>(
      * @param  {(fromDate: Date, toDate: Date, index: number) => any}
      * @return {}
      */
-    public getNodeDatePeriods = R.curry(
-      (
-        fromDate: Date,
-        toDate: Date,
-        periodsUnit: moment.unitOfTime.StartOf,
-        node: any,
-        callback: (
-          node: any,
-          fromDate: Date,
-          toDate: Date,
-          index: number,
-        ) => any,
-      ) => {
-        const curriedCallback = R.curry(callback)(node);
-        // Retrieves memorized date ranges.
-        const dateRanges = this.getDateRanges(fromDate, toDate, periodsUnit);
-        return dateRanges.map((dateRange, index) => {
-          return curriedCallback(dateRange.fromDate, dateRange.toDate, index);
-        });
-      },
-    );
+    public getNodeDatePeriods = (
+      fromDate: Date,
+      toDate: Date,
+      periodsUnit: moment.unitOfTime.StartOf,
+      node: any,
+      callback: (node: any, fromDate: Date, toDate: Date, index: number) => any,
+    ) => {
+      const boundCallback = (
+        boundFromDate: Date,
+        boundToDate: Date,
+        index: number,
+      ) => callback(node, boundFromDate, boundToDate, index);
+      // Retrieves memorized date ranges.
+      const dateRanges = this.getDateRanges(fromDate, toDate, periodsUnit);
+      return dateRanges.map((dateRange, index) => {
+        return boundCallback(dateRange.fromDate, dateRange.toDate, index);
+      });
+    };
+
     /**
      * Retrieve the accounts transactions group type from display columns by.
      * @param   {IAccountTransactionsGroupBy} columnsBy

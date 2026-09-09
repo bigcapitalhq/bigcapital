@@ -1,5 +1,5 @@
 import * as mathjs from 'mathjs';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { omit, get, mapValues } from 'lodash';
 import { FinancialSheetStructure } from './FinancialSheetStructure';
 import { GConstructor } from '@/common/types/Constructor';
@@ -10,9 +10,7 @@ export const FinancialEvaluateEquation = <
 >(
   Base: T,
 ) =>
-  class FinancialEvaluateEquation extends R.pipe(FinancialSheetStructure)(
-    Base,
-  ) {
+  class FinancialEvaluateEquation extends flow(FinancialSheetStructure)(Base) {
     /**
      * Evauluate equaation string with the given scope table.
      * @param {string} equation -
@@ -48,21 +46,17 @@ export const FinancialEvaluateEquation = <
      * @param nodesById
      * @returns
      */
-    public mapNodesToTotal = R.curry(
-      (path: string, nodesById: { [key: number]: any }) => {
-        return mapValues(nodesById, (node) => get(node, path, 0));
-      },
-    );
+    public mapNodesToTotal = (
+      path: string,
+      nodesById: { [key: number]: any },
+    ) => {
+      return mapValues(nodesById, (node) => get(node, path, 0));
+    };
 
     /**
      *
      */
-    public getNodesTableForEvaluating = R.curry(
-      (path = 'total.amount', nodes) => {
-        return R.compose(
-          this.mapNodesToTotal(path),
-          this.transformNodesToMap,
-        )(nodes);
-      },
-    );
+    public getNodesTableForEvaluating = (path = 'total.amount', nodes) => {
+      return this.mapNodesToTotal(path, this.transformNodesToMap(nodes));
+    };
   };

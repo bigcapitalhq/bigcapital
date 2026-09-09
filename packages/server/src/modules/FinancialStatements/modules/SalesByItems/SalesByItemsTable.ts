@@ -1,4 +1,6 @@
-import * as R from 'ramda';
+import { constant, flow } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { when } from '@/common/fp';
 import {
   ISalesByItemsItem,
   ISalesByItemsSheetData,
@@ -12,7 +14,7 @@ import { ITableColumn, ITableRow } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { SALES_BY_ITEMS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class SalesByItemsTable extends R.pipe(
+export class SalesByItemsTable extends flow(
   FinancialTable,
   FinancialSheetStructure,
 )(FinancialSheet) {
@@ -68,7 +70,7 @@ export class SalesByItemsTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   private itemsMap = (items: ISalesByItemsItem[]): ITableRow[] => {
-    return R.map(this.itemMap, items);
+    return items.map(this.itemMap);
   };
 
   /**
@@ -92,9 +94,10 @@ export class SalesByItemsTable extends R.pipe(
     const itemsRows = this.itemsMap(this.data.items);
     const totalRow = this.totalMap(this.data.total);
 
-    return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow)),
-    )([...itemsRows]) as ITableRow[];
+    return when(constant(!isEmpty(itemsRows)), (rows: ITableRow[]) => [
+      ...rows,
+      totalRow,
+    ])([...itemsRows]);
   }
 
   /**
@@ -108,6 +111,6 @@ export class SalesByItemsTable extends R.pipe(
       { key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_AMOUNT, label: 'Sold amount' },
       { key: SALES_BY_ITEMS_COLUMN_KEYS.AVERAGE_PRICE, label: 'Average price' },
     ];
-    return R.compose(this.tableColumnsCellIndexing)(columns);
+    return this.tableColumnsCellIndexing(columns);
   }
 }

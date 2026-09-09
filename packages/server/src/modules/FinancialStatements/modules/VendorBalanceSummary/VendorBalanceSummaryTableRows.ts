@@ -1,5 +1,6 @@
-import * as R from 'ramda';
 import { I18nService } from 'nestjs-i18n';
+import { constant, flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import {
   IVendorBalanceSummaryData,
   IVendorBalanceSummaryVendor,
@@ -65,12 +66,15 @@ export class VendorBalanceSummaryTable {
         accessor: 'total.formattedAmount',
       },
     ];
-    return R.compose(
-      R.concat(columns),
-      R.when(
-        R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor()),
+    return flow(
+      when(
+        constant(this.query.percentageColumn),
+        (cols: IColumnMapperMeta[]) => [
+          ...this.getPercentageColumnsAccessor(),
+          ...cols,
+        ],
       ),
+      (cols: IColumnMapperMeta[]): IColumnMapperMeta[] => [...columns, ...cols],
     )([]);
   };
 
@@ -104,13 +108,16 @@ export class VendorBalanceSummaryTable {
         accessor: 'total.formattedAmount',
       },
     ];
-    return R.compose(
-      R.concat(columns),
-      R.when(
-        R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor()),
+    return flow(
+      when(
+        constant(this.query.percentageColumn),
+        (cols: IColumnMapperMeta[]) => [
+          ...this.getPercentageColumnsAccessor(),
+          ...cols,
+        ],
       ),
-    )([]) as IColumnMapperMeta[];
+      (cols: IColumnMapperMeta[]): IColumnMapperMeta[] => [...columns, ...cols],
+    )([]);
   };
 
   /**
@@ -153,15 +160,15 @@ export class VendorBalanceSummaryTable {
         label: this.i18n.t('contact_summary_balance.total'),
       },
     ];
-    return R.compose(
-      R.when(
-        () => this.query.percentageColumn,
-        R.append({
+    return when(
+      constant(this.query.percentageColumn),
+      (cols: ITableColumn[]) => [
+        ...cols,
+        {
           key: CONTACT_BALANCE_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
           label: this.i18n.t('contact_summary_balance.percentage_column'),
-        } as ITableColumn),
-      ),
-      R.concat(columns),
-    )([]) as ITableColumn[];
+        } as ITableColumn,
+      ],
+    )(columns);
   };
 }

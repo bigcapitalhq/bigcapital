@@ -1,7 +1,7 @@
-// @ts-nocheck
 import { Inject, Injectable, Scope } from '@nestjs/common';
-import * as R from 'ramda';
-import { Knex } from 'knex';
+import { flow } from 'fp-ts/function';
+import * as A from 'fp-ts/Array';
+import { eqNumber } from 'fp-ts/Eq';
 import { isEmpty } from 'lodash';
 import {
   IAccountTransactionsGroupBy,
@@ -9,6 +9,7 @@ import {
 } from './BalanceSheet.types';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
+import { IFinancialDatePeriodsUnit } from '../../types/Report.types';
 import { BalanceSheetRepositoryNetIncome } from './BalanceSheetRepositoryNetIncome';
 import { ILedger } from '@/modules/Ledger/types/Ledger.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
@@ -16,12 +17,14 @@ import { transformToMapBy } from '@/utils/transform-to-map-by';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from '../../common/FinancialSheet';
 
 @Injectable({ scope: Scope.TRANSIENT })
-export class BalanceSheetRepository extends R.compose(
-  BalanceSheetRepositoryNetIncome,
+export class BalanceSheetRepository extends flow(
   FinancialDatePeriods,
-)(class {}) {
+  BalanceSheetRepositoryNetIncome,
+)(class {} as GConstructor<FinancialSheet>) {
   /**
    * Account model.
    */
@@ -58,6 +61,11 @@ export class BalanceSheetRepository extends R.compose(
   public accountsByType: any;
 
   /**
+   *
+   */
+  public accountsByParentType: any;
+
+  /**
    * Retrieves the given account id with its children account ids.
    * @param {number} accountId
    * @returns {number[]}
@@ -65,7 +73,7 @@ export class BalanceSheetRepository extends R.compose(
   public getAccountsIdsIncludingChildren = (accountId: number): number[] => {
     const childrenAccountIds = this.accountsGraph.dependenciesOf(accountId);
 
-    return R.uniq(R.append(accountId, childrenAccountIds));
+    return A.uniq(eqNumber)([...childrenAccountIds, accountId] as number[]);
   };
 
   /**
@@ -172,7 +180,7 @@ export class BalanceSheetRepository extends R.compose(
     this.query = new BalanceSheetQuery(query);
 
     this.transactionsGroupType = this.getGroupByFromDisplayColumnsBy(
-      this.query.displayColumnsBy,
+      this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
     );
   }
 
@@ -242,7 +250,9 @@ export class BalanceSheetRepository extends R.compose(
    * @returns {Promise<void>}
    */
   public initAccountsTotalLedger = async (): Promise<void> => {
-    const totalByAccount = await this.closingAccountsTotal(this.query.toDate);
+    const totalByAccount = await this.closingAccountsTotal(
+      this.query.toDate as Date,
+    );
 
     // Inject to the repository.
     this.totalAccountsLedger = Ledger.fromTransactions(totalByAccount);
@@ -258,13 +268,13 @@ export class BalanceSheetRepository extends R.compose(
   public initTotalDatePeriods = async (): Promise<void> => {
     // Retrieves grouped transactions by given date group.
     const periodsByAccount = await this.accountsDatePeriods(
-      this.query.fromDate,
-      this.query.toDate,
+      this.query.fromDate as Date,
+      this.query.toDate as Date,
       this.transactionsGroupType,
     );
     // Retrieves opening balance of grouped transactions.
     const periodsOpeningByAccount = await this.closingAccountsTotal(
-      this.query.fromDate,
+      this.query.fromDate as Date,
     );
     // Inject to the repository.
     this.periodsAccountsLedger = Ledger.fromTransactions(periodsByAccount);
@@ -408,7 +418,7 @@ export class BalanceSheetRepository extends R.compose(
    * Common branches filter query.
    * @param {Knex.QueryBuilder} query
    */
-  public commonFilterBranchesQuery = (query: Knex.QueryBuilder) => {
+  public commonFilterBranchesQuery = (query: any) => {
     if (!isEmpty(this.query.branchesIds)) {
       query.modify('filterByBranches', this.query.branchesIds);
     }
