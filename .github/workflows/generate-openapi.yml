@@ -32,7 +32,6 @@ env:
   QUEUE_PORT: 6379
   # App configuration
   APP_JWT_SECRET: test-jwt-secret-for-openapi-generation
-  JWT_SECRET: test-jwt-secret-for-openapi-generation
   BASE_URL: http://localhost:3000
   # Feature flags
   SIGNUP_DISABLED: 'false'

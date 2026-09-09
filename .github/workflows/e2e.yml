@@ -96,7 +96,6 @@ jobs:
 
           # Application
           BASE_URL=http://localhost:3000
-          JWT_SECRET=test-jwt-secret-for-e2e-testing
           APP_JWT_SECRET=test-app-jwt-secret
 
           # Sign-up
