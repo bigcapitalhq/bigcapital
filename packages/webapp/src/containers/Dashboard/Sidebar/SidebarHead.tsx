@@ -1,6 +1,7 @@
 // @ts-nocheck
 import {
   Button,
+  Classes,
   InputGroup,
   Popover,
   Menu,
@@ -144,6 +145,15 @@ function SidebarHeadJSX({
     <div className="sidebar__head">
       <div className="sidebar__head-organization">
         <Popover
+          // This menu belongs to the sidebar, which is always dark
+          // (--color-sidebar-background) whatever the app theme is, and its
+          // contents are styled to match with white text. Popovers render in a
+          // portal on document.body, so before light mode existed this picked
+          // up bp4-dark from the body and looked right by accident. With the
+          // body no longer forced dark it rendered white on white. Pinning the
+          // dark class keeps the menu tied to the sidebar's own palette rather
+          // than to the app theme.
+          popoverClassName={Classes.DARK}
           modifiers={POPOVER_MODIFIERS}
           boundary={'window'}
           content={
