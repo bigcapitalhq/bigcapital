@@ -99,7 +99,7 @@ function UserFormContentInner({
             loading={isSubmitting}
             style={{ minWidth: '85px' }}
           >
-            <T id={'edit'} />
+            <T id={'save'} />
           </Button>
         </div>
       </div>
