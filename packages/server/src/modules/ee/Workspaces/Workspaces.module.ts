@@ -24,6 +24,8 @@ import { TenantRepository } from '@/modules/System/repositories/Tenant.repositor
 import { SocketModule } from '@/modules/Socket/Socket.module';
 import { S3Module } from '@/modules/S3/S3.module';
 import { WorkspaceDeletedSubscriber } from './subscribers/WorkspaceDeleted.subscriber';
+import { WorkspacesFinancialsService } from './queries/WorkspacesFinancials.service';
+import { AnalyticsCoreModule } from '@/modules/Analytics/AnalyticsCore.module';
 
 @Module({
   imports: [
@@ -35,6 +37,7 @@ import { WorkspaceDeletedSubscriber } from './subscribers/WorkspaceDeleted.subsc
     OrganizationModule,
     SocketModule,
     S3Module,
+    AnalyticsCoreModule,
   ],
   controllers: [WorkspacesController],
   providers: [
@@ -49,6 +52,7 @@ import { WorkspaceDeletedSubscriber } from './subscribers/WorkspaceDeleted.subsc
     SetDefaultWorkspaceService,
     GetWorkspacesService,
     GetWorkspaceBuildJobService,
+    WorkspacesFinancialsService,
     CreateUserTenantOnSignupSubscriber,
     WorkspaceCreatedSubscriber,
     WorkspaceDeletedSubscriber,
