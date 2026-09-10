@@ -133,6 +133,12 @@ services:
       - STRIPE_PAYMENT_WEBHOOKS_SECRET=${STRIPE_PAYMENT_WEBHOOKS_SECRET}
       - STRIPE_PAYMENT_REDIRECT_URL=${STRIPE_PAYMENT_REDIRECT_URL}
 
+      # API rate limiting (see .env.example)
+      - THROTTLE_GLOBAL_TTL=${THROTTLE_GLOBAL_TTL}
+      - THROTTLE_GLOBAL_LIMIT=${THROTTLE_GLOBAL_LIMIT}
+      - THROTTLE_AUTH_TTL=${THROTTLE_AUTH_TTL}
+      - THROTTLE_AUTH_LIMIT=${THROTTLE_AUTH_LIMIT}
+
   database_migration:
     container_name: bigcapital-database-migration
     build:
