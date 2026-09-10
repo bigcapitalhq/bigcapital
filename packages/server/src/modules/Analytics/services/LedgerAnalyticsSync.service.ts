@@ -196,14 +196,37 @@ export class LedgerAnalyticsSyncService {
    * Rebuilds the whole organization data in ClickHouse from the tenant
    * database (used by the reconcile job, the repair command and the backfill).
    * @param {string} organizationId
-   * @param {Knex} [tenantKnex] - Optional existing tenant knex instance.
+   * @param {Knex} [tenantKnex] - Optional existing tenant knex instance,
+   *   defaults to a throwaway connection that is destroyed after the rebuild.
    */
   public async rebuildOrganization(
     organizationId: string,
     tenantKnex?: Knex,
   ): Promise<void> {
     const knex =
-      tenantKnex ?? this.tenantConnectionFactory.getTenantKnex(organizationId);
+      tenantKnex ??
+      this.tenantConnectionFactory.createTenantKnex(organizationId);
+    const isThrowawayKnex = !tenantKnex;
+
+    try {
+      await this.rebuildOrganizationWithKnex(organizationId, knex);
+    } finally {
+      if (isThrowawayKnex) {
+        await knex.destroy();
+      }
+    }
+  }
+
+  /**
+   * Rebuilds the whole organization data in ClickHouse using the given
+   * tenant database connection.
+   * @param {string} organizationId
+   * @param {Knex} knex
+   */
+  private async rebuildOrganizationWithKnex(
+    organizationId: string,
+    knex: Knex,
+  ): Promise<void> {
     const orgFilter = `'${organizationId.replace(/'/g, "\\'")}'`;
 
     // Drop the existing organization rows.

@@ -45,8 +45,15 @@ services:
   clickhouse:
     image: clickhouse/clickhouse-server:24.8
     environment:
+      # With an empty password, the image entrypoint restricts the
+      # `default` user to localhost connections only, which would reject
+      # connections through the published port. Setting the entrypoint's
+      # CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT input routes to the
+      # unrestricted user setup instead. Set a non-empty
+      # CLICKHOUSE_PASSWORD in .env to protect the user in production.
       - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:-}
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=${CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT:-1}
       - CLICKHOUSE_DB=${CLICKHOUSE_DATABASE:-bigcapital_analytics}
     expose:
       - '8123'

@@ -59,10 +59,23 @@ export class AnalyticsBackfillCommand extends BaseCommand {
 
       this.log(`Backfilling ${tenants.length} organizations...`);
 
+      let failures = 0;
       for (const tenant of tenants) {
         this.log(`Rebuilding the organization ${tenant.organizationId}...`);
-        await this.ledgerAnalyticsSync.rebuildOrganization(
-          tenant.organizationId,
+        try {
+          await this.ledgerAnalyticsSync.rebuildOrganization(
+            tenant.organizationId,
+          );
+        } catch (error) {
+          failures += 1;
+          this.log(
+            `Failed to rebuild the organization ${tenant.organizationId}: ${error.message}`,
+          );
+        }
+      }
+      if (failures > 0) {
+        this.exit(
+          `${failures} of ${tenants.length} organizations have failed to backfill.`,
         );
       }
       this.success(
