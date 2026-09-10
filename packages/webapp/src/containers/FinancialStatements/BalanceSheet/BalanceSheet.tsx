@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { BalanceSheetActionsBar } from './BalanceSheetActionsBar';
 import { BalanceSheetBody } from './BalanceSheetBody';
 import { BalanceSheetDialogs } from './BalanceSheetDialogs';
@@ -38,6 +39,7 @@ function BalanceSheetInner({
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
+    writeReportingPeriod(newFilter);
     setLocationQuery({ ...newFilter });
   };
   // Handle number format submit.

@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, { useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { useCustomersTransactionsQuery } from './_utils';
 import { CustomersTransactionsLoadingBar } from './components';
 import { CustomersTransactionsActionsBar } from './CustomersTransactionsActionsBar';
@@ -33,6 +34,7 @@ function CustomersTransactionsInner({
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
+    writeReportingPeriod(_filter);
     setFilter({ ..._filter });
   };
 

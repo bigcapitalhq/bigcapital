@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, { useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { SalesTaxLiabilitySummaryLoadingBar } from './components';
 import { SalesTaxLiabiltiyPdfDialog } from './SalesTaxLiabilityPdfDialog';
 import { SalesTaxLiabilitySummaryActionsBar } from './SalesTaxLiabilitySummaryActionsBar';
@@ -33,6 +34,7 @@ function SalesTaxLiabilitySummaryInner({
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate).format('YYYY-MM-DD'),
     };
+    writeReportingPeriod(newFilter);
     setQuery({ ...newFilter });
   };
   // Handle number format submit.

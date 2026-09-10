@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { useEffect, useCallback } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { PurchasesByItemsLoadingBar } from './components';
 import { PurchasesByItemsActionsBar } from './PurchasesByItemsActionsBar';
 import { PurchasesByItemsBody } from './PurchasesByItemsBody';
@@ -35,6 +36,7 @@ function PurchasesByItemsInner({
         fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
       };
+      writeReportingPeriod(parsedFilter);
       setLocationQuery(parsedFilter);
     },
     [setLocationQuery],

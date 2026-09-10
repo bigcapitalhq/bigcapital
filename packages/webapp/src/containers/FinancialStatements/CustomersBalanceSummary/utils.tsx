@@ -2,6 +2,7 @@ import { castArray } from 'lodash';
 import moment from 'moment';
 import { useMemo } from 'react';
 import * as Yup from 'yup';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -34,7 +35,7 @@ const parseCustomersBalanceSummaryQuery = (
   const defaultQuery = getDefaultCustomersBalanceQuery();
 
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {

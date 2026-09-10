@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { useCallback, useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { ARAgingSummaryActionsBar } from './ARAgingSummaryActionsBar';
 import { ARAgingSummaryBody } from './ARAgingSummaryBody';
 import { ARAgingSummaryHeader } from './ARAgingSummaryHeader';
@@ -31,6 +32,7 @@ function ARAgingSummaryInner({
         ...filter,
         asDate: moment(filter.asDate as string).format('YYYY-MM-DD'),
       };
+      writeReportingPeriod({ toDate: _filter.asDate });
       setLocationQuery(_filter);
     },
     [setLocationQuery],

@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, { useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { useVendorsTransactionsQuery } from './_utils';
 import { VendorsTransactionsLoadingBar } from './components';
 import { VendorsTransactionsActionsBar } from './VendorsTransactionsActionsBar';
@@ -34,6 +35,7 @@ function VendorsTransactionsInner({
       fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
     };
+    writeReportingPeriod(_filter);
     setFilter({ ..._filter });
   };
   // Handle number format submit.

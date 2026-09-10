@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React, { useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { CashflowSheetDialogs } from './CashflowSheetDialogs';
 import { CashFlowStatementActionsBar } from './CashFlowStatementActionsBar';
 import { CashFlowStatementBody } from './CashFlowStatementBody';
@@ -33,6 +34,7 @@ function CashFlowStatementInner({
       fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
       toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
     };
+    writeReportingPeriod(newFilter);
     setLocationQuery({ ...newFilter });
   };
 
