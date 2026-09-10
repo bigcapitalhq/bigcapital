@@ -1,6 +1,8 @@
 import { Transformer } from '@/modules/Transformer/Transformer';
 import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { WorkspaceDto } from '../dtos/WorkspaceResponse.dto';
+import { IOrgFinancialTotals } from '@/modules/Analytics/Analytics.constants';
+import { formatNumber } from '@/utils/format-number';
 
 /**
  * Transforms UserTenant (workspace membership) to WorkspaceDto.
@@ -27,6 +29,20 @@ export class WorkspaceTransformer extends Transformer<UserTenant> {
       'formattedTotalLiabilities',
     ];
   };
+
+  /**
+   * Retrieve the financial totals of the membership organization.
+   * @param {UserTenant} membership
+   * @returns {IOrgFinancialTotals | undefined}
+   */
+  private getOrgFinancialTotals(
+    membership: UserTenant,
+  ): IOrgFinancialTotals | undefined {
+    const organizationId = membership.tenant?.organizationId;
+    if (!organizationId) return undefined;
+
+    return this.options?.financialTotals?.get?.(organizationId);
+  }
 
   /**
    * Extract organizationId from tenant relation.
@@ -120,29 +136,37 @@ export class WorkspaceTransformer extends Transformer<UserTenant> {
   /**
    * Get total assets from financial data.
    */
-  protected totalAssets = (): undefined => {
-    return undefined;
+  protected totalAssets = (membership: UserTenant): number | undefined => {
+    return this.getOrgFinancialTotals(membership)?.totalAssets;
   };
 
   /**
    * Get total liabilities from financial data.
    */
-  protected totalLiabilities = (): undefined => {
-    return undefined;
+  protected totalLiabilities = (membership: UserTenant): number | undefined => {
+    return this.getOrgFinancialTotals(membership)?.totalLiabilities;
   };
 
   /**
    * Get formatted total assets.
    */
-  protected formattedTotalAssets = (): string => {
-    return '-';
+  protected formattedTotalAssets = (membership: UserTenant): string => {
+    const totals = this.getOrgFinancialTotals(membership);
+    if (!totals) return '-';
+
+    const currencyCode = membership.tenant?.metadata?.baseCurrency;
+    return formatNumber(totals.totalAssets, { currencyCode });
   };
 
   /**
    * Get formatted total liabilities.
    */
-  protected formattedTotalLiabilities = (): string => {
-    return '-';
+  protected formattedTotalLiabilities = (membership: UserTenant): string => {
+    const totals = this.getOrgFinancialTotals(membership);
+    if (!totals) return '-';
+
+    const currencyCode = membership.tenant?.metadata?.baseCurrency;
+    return formatNumber(totals.totalLiabilities, { currencyCode });
   };
 
   /**
@@ -161,10 +185,10 @@ export class WorkspaceTransformer extends Transformer<UserTenant> {
       metadata: this.metadata(membership),
       totalIncome: this.totalIncome(),
       totalExpenses: this.totalExpenses(),
-      totalAssets: this.totalAssets(),
-      totalLiabilities: this.totalLiabilities(),
-      formattedTotalAssets: this.formattedTotalAssets(),
-      formattedTotalLiabilities: this.formattedTotalLiabilities(),
+      totalAssets: this.totalAssets(membership),
+      totalLiabilities: this.totalLiabilities(membership),
+      formattedTotalAssets: this.formattedTotalAssets(membership),
+      formattedTotalLiabilities: this.formattedTotalLiabilities(membership),
     };
   };
 

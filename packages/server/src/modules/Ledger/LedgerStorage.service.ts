@@ -7,6 +7,7 @@ import { LedgerEntriesStorageService } from './LedgerEntriesStorage.service';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { Ledger } from './Ledger';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { LedgerClickHouseSink } from '../Analytics/services/LedgerClickHouseSink.service';
 
 @Injectable()
 export class LedgerStorageService {
@@ -24,6 +25,8 @@ export class LedgerStorageService {
     private accountTransactionModel: TenantModelProxy<
       typeof AccountTransaction
     >,
+
+    private ledgerClickHouseSink: LedgerClickHouseSink,
   ) {}
 
   /**
@@ -46,6 +49,9 @@ export class LedgerStorageService {
       this.ledgerContactsBalance.saveContactsBalance(ledger, trx),
     ];
     await Promise.all(tasks);
+
+    // Queues the ledger deltas to the ClickHouse analytics store.
+    this.ledgerClickHouseSink.onLedgerCommitted(ledger);
   };
 
   /**
@@ -56,6 +62,21 @@ export class LedgerStorageService {
    * @returns {Promise<void>}
    */
   public delete = async (ledger: ILedger, trx?: Knex.Transaction) => {
+    // Retrieves the deleted rows before the deletion to sync them to
+    // the ClickHouse analytics store.
+    const deletedEntryIds = ledger
+      .getEntries()
+      .filter((entry) => Boolean(entry.entryId))
+      .map((entry) => entry.entryId);
+
+    const deletedRows =
+      deletedEntryIds.length > 0
+        ? await this.accountTransactionModel()
+            .query(trx)
+            .whereIn('id', deletedEntryIds)
+            .select('accountId', 'credit', 'debit')
+        : [];
+
     const tasks = [
       // Deletes the ledger entries.
       this.ledgerEntriesService.deleteEntries(ledger, trx),
@@ -67,6 +88,9 @@ export class LedgerStorageService {
       this.ledgerContactsBalance.saveContactsBalance(ledger, trx),
     ];
     await Promise.all(tasks);
+
+    // Queues the negated ledger deltas to the ClickHouse analytics store.
+    this.ledgerClickHouseSink.onLedgerDeleted(deletedRows);
   };
 
   /**

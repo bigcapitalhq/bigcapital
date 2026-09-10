@@ -13,6 +13,8 @@ import { TenantsListCommand } from './commands/TenantsList.command';
 import { SystemSeedLatestCommand } from './commands/SystemSeedLatest.command';
 import { TenantsSeedLatestCommand } from './commands/TenantsSeedLatest.command';
 import { OpenApiExportCommand } from './commands/OpenApiExport.command';
+import { AnalyticsBackfillCommand } from './commands/AnalyticsBackfill.command';
+import { AnalyticsCoreModule } from '../Analytics/AnalyticsCore.module';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { OpenApiExportCommand } from './commands/OpenApiExport.command';
       isGlobal: true,
     }),
     CommandRunnerModule,
+    AnalyticsCoreModule,
   ],
   providers: [
     SystemMigrateLatestCommand,
@@ -34,6 +37,7 @@ import { OpenApiExportCommand } from './commands/OpenApiExport.command';
     SystemSeedLatestCommand,
     TenantsSeedLatestCommand,
     OpenApiExportCommand,
+    AnalyticsBackfillCommand,
   ],
 })
 export class CLIModule {}

@@ -8,6 +8,8 @@ import { WorkspaceDto } from '../dtos/WorkspaceResponse.dto';
 import { WorkspaceTransformer } from '../transformers/WorkspaceTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { S3_CLIENT } from '@/modules/S3/S3.module';
+import { WorkspacesFinancialsService } from './WorkspacesFinancials.service';
+import { OrgFinancialTotalsMap } from '@/modules/Analytics/Analytics.constants';
 
 @Injectable()
 export class GetWorkspacesService {
@@ -24,6 +26,8 @@ export class GetWorkspacesService {
     private readonly s3Client: S3Client,
 
     private readonly configService: ConfigService,
+
+    private readonly workspacesFinancials: WorkspacesFinancialsService,
   ) {}
 
   /**
@@ -80,11 +84,41 @@ export class GetWorkspacesService {
 
     await Promise.all(logoPromises);
 
+    // Compute the financial totals (assets/liabilities) of the ready organizations.
+    const financialTotals = await this.getFinancialTotals(memberships);
+
     return this.transformer.transform(memberships, new WorkspaceTransformer(), {
       defaultTenantId,
       includeInactive,
       currentOrganizationId,
       logoUris,
+      financialTotals,
     });
+  }
+
+  /**
+   * Computes the financial totals of the ready organizations.
+   * @param {UserTenant[]} memberships
+   * @returns {Promise<OrgFinancialTotalsMap>}
+   */
+  private async getFinancialTotals(
+    memberships: UserTenant[],
+  ): Promise<OrgFinancialTotalsMap> {
+    const organizationIds = memberships
+      .map((membership) => membership.tenant)
+      .filter(
+        (tenant) =>
+          tenant &&
+          tenant.isReady &&
+          !tenant.isBuildRunning &&
+          !tenant.isDeleting &&
+          tenant.isActive,
+      )
+      .map((tenant) => tenant.organizationId);
+
+    if (organizationIds.length === 0) {
+      return new Map();
+    }
+    return this.workspacesFinancials.getTotals(organizationIds);
   }
 }

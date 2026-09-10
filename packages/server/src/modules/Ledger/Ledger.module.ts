@@ -6,9 +6,10 @@ import { LedgerContactsBalanceStorage } from './LedgerContactStorage.service';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { LedegrAccountsStorage } from './LedgetAccountStorage.service';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { AnalyticsModule } from '../Analytics/Analytics.module';
 
 @Module({
-  imports: [TenancyModule, AccountsModule],
+  imports: [TenancyModule, AccountsModule, AnalyticsModule],
   providers: [
     LedgerStorageService,
     LedgerEntriesStorageService,
