@@ -90,6 +90,27 @@ export class LedgerAnalyticsSyncService {
   }
 
   /**
+   * Builds the tenant account balance rows query (fallback path).
+   * Exposed for testing the generated SQL against the tenant database
+   * identifier casing.
+   * @param {Knex} tenantKnex
+   * @returns {Knex.QueryBuilder}
+   */
+  public buildTenantBalanceRowsQuery(tenantKnex: Knex) {
+    // Use the knex aggregates instead of raw expressions: the knex
+    // snake-case/upper-case mappers normalize the identifiers, while raw
+    // expressions would bypass the mappers and break against the
+    // case-sensitive table aliases.
+    return tenantKnex('accounts_transactions as t')
+      .join('accounts as a', 'a.id', 't.accountId')
+      .where('a.active', 1)
+      .groupBy('t.accountId', 'a.accountType')
+      .select('a.accountType as accountType')
+      .sum('credit as credit')
+      .sum('debit as debit');
+  }
+
+  /**
    * Computes the total assets and liabilities of the given organization
    * from its tenant database (fallback path).
    * @param {string} organizationId
@@ -100,15 +121,7 @@ export class LedgerAnalyticsSyncService {
   ): Promise<IAccountBalanceRow[]> {
     const knex = this.tenantConnectionFactory.getTenantKnex(organizationId);
 
-    const rows = await knex('accounts_transactions as t')
-      .join('accounts as a', 'a.id', 't.accountId')
-      .where('a.active', 1)
-      .groupBy('t.accountId', 'a.accountType')
-      .select(
-        'a.accountType as accountType',
-        knex.raw('SUM(t.credit) as credit'),
-        knex.raw('SUM(t.debit) as debit'),
-      );
+    const rows = await this.buildTenantBalanceRowsQuery(knex);
 
     return rows.map((row) => {
       const accountNormal =
