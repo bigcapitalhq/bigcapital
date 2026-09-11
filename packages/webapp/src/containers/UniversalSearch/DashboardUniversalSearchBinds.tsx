@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { universalSearchJournalBind } from '../Accounting/ManualJournalUniversalSearch';
 import { universalSearchAccountBind } from '../Accounts/AccountUniversalSearch';
 import { universalSearchCustomerBind } from '../Customers/CustomersUniversalSearch';
@@ -12,8 +11,11 @@ import { universalSearchInvoiceBind } from '../Sales/Invoices/InvoiceUniversalSe
 import { universalSearchPaymentReceiveBind } from '../Sales/PaymentsReceived/PaymentReceiveUniversalSearch';
 import { universalSearchReceiptBind } from '../Sales/Receipts/ReceiptUniversalSearch';
 import { universalSearchVendorBind } from '../Vendors/VendorsUniversalSearch';
+import type { UniversalSearchBind } from './types';
 
-// Universal search binds.
+// Universal search binds. Each bind is authored next to its resource module
+// with resource-specific item/renderer types, so the aggregation boundary
+// widens to the common consumer contract.
 export const universalSearchBinds = [
   universalSearchItemBind,
   universalSearchAccountBind,
@@ -28,4 +30,4 @@ export const universalSearchBinds = [
   universalSearchJournalBind,
   universalSearchCreditNoteBind,
   universalSearchVendorCreditBind,
-];
+] as unknown as Array<() => UniversalSearchBind>;

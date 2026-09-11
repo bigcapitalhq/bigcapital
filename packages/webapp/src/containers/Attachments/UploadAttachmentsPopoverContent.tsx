@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent, Text, Spinner } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { useState } from 'react';
@@ -16,17 +15,16 @@ import {
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { formatBytes } from '@/utils/format-bytes';
 
-interface AttachmentFileCommon {
+export interface AttachmentFile {
   originName: string;
   key: string;
   size: number;
   mimeType: string;
+  loading?: boolean;
 }
-interface AttachmentFileLoaded extends AttachmentFileCommon {}
-interface AttachmentFileLoading extends AttachmentFileCommon {
-  loading: boolean;
-}
-type AttachmentFile = AttachmentFileLoaded | AttachmentFileLoading;
+export type AttachmentFileCommon = AttachmentFile;
+export type AttachmentFileLoaded = AttachmentFile;
+export type AttachmentFileLoading = AttachmentFile & { loading: boolean };
 
 interface UploadAttachmentsPopoverContentProps {
   initialValue?: AttachmentFile[];
@@ -57,11 +55,11 @@ export function UploadAttachmentsPopoverContent({
   // Stops loading of the given attachment key and updates it to new key,
   // that came from the server-side after uploading is done.
   const stopLoadingAttachment = (
-    localFiles: AttachmentFile[],
+    files: AttachmentFile[],
     internalKey: string,
     newKey: string,
   ) => {
-    return localFiles.map((localFile) => {
+    return files.map((localFile) => {
       if (localFile.key === internalKey) {
         return {
           ...localFile,
@@ -74,25 +72,32 @@ export function UploadAttachmentsPopoverContent({
   };
   // Uploads the attachments.
   const { mutateAsync: uploadAttachments } = useUploadAttachments({
-    onSuccess: (data, formData) => {
+    onSuccess: (data, variables) => {
+      const internalKey =
+        variables instanceof FormData
+          ? String(variables.get('internalKey') ?? '')
+          : '';
       const newLocalFiles = stopLoadingAttachment(
         localFiles,
-        formData.get('internalKey'),
+        internalKey,
         data.key,
       );
       handleFilesChange(newLocalFiles);
-      onUploadedChange && onUploadedChange(newLocalFiles);
+      onUploadedChange?.(newLocalFiles);
     },
   });
   // Deletes the attachment of the given file key.
   const handleClick = (key: string) => () => {
-    const updatedFiles = localFiles.filter((file, i) => file.key !== key);
+    const updatedFiles = localFiles.filter((file) => file.key !== key);
     handleFilesChange(updatedFiles);
-    onUploadedChange && onUploadedChange(updatedFiles);
+    onUploadedChange?.(updatedFiles);
   };
 
   // Handle change dropzone.
-  const handleChangeDropzone = (file: File) => {
+  const handleChangeDropzone = (file: File | null) => {
+    if (!file) {
+      return;
+    }
     const formData = new FormData();
     const key = Date.now().toString();
 
@@ -103,6 +108,7 @@ export function UploadAttachmentsPopoverContent({
       {
         originName: file.name,
         size: file.size,
+        mimeType: file.type,
         key,
         loading: true,
       },
@@ -143,7 +149,7 @@ export function UploadAttachmentsPopoverContent({
           <Stack spacing={0} className={styles.attachments}>
             {localFiles.map((localFile: AttachmentFile, index: number) => (
               <Group
-                position={'space-between'}
+                position={'apart'}
                 className={styles.attachmentItem}
                 key={index}
               >
@@ -206,7 +212,7 @@ const ViewButton = ({ fileKey }: { fileKey: string }) => {
     setLoading(true);
 
     getAttachmentPresignedUrl(key).then((data) => {
-      window.open(data.presigned_url);
+      window.open(data.presignedUrl);
       setLoading(false);
     });
   };

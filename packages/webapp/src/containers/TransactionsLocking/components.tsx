@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Position,
@@ -13,14 +12,48 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
+import type { TransactionsLockingMeta } from '@bigcapital/sdk-ts';
 import { Hint, Icon, If, FormattedMessage as T } from '@/components';
-import { safeInvoke } from '@/utils';
+
+export interface TransactionLockingHandlers {
+  onLock?: (module: string, event: React.MouseEvent) => void;
+  onEditLock?: (
+    module: string,
+    isEnabled: boolean,
+    event: React.MouseEvent,
+  ) => void;
+  onCancelLock?: (module: string, event: React.MouseEvent) => void;
+  onUnlockPartial?: (module: string, event: React.MouseEvent) => void;
+  onCancelUnlockPartial?: (module: string, event: React.MouseEvent) => void;
+}
+
+export interface TransactionsLockingItemModuleProps
+  extends TransactionLockingHandlers {
+  module: TransactionsLockingMeta;
+}
+
+export interface TransactionLockingContentProps
+  extends TransactionLockingHandlers {
+  name: string;
+  module: string;
+  description: string;
+  isEnabled: boolean;
+  isPartialUnlock: boolean;
+  lockToDate: string;
+  lockReason: string;
+  unlockReason: string;
+  unlockFromDate: string;
+  unlockToDate: string;
+}
 
 /**
  * Transaction locking module item.
  * @returns {React.JSX}
  */
-export function TransactionsLockingItemModule({ module, ...rest }) {
+export function TransactionsLockingItemModule({
+  module,
+  ...rest
+}: TransactionsLockingItemModuleProps) {
   return (
     <TransactionLockingContent
       name={module.formattedModule}
@@ -42,26 +75,40 @@ export function TransactionsLockingItemModule({ module, ...rest }) {
  * Transactions locking items modules list.
  * @returns {React.JSX}
  */
-export function TransactionsLockingList({ ...rest }) {
-  const {
-    transactionsLocking: { modules },
-  } = useTransactionsLockingContext();
+export function TransactionsLockingList({
+  ...rest
+}: Omit<TransactionsLockingItemModuleProps, 'module'>) {
+  const { transactionsLocking } = useTransactionsLockingContext();
+  const modules = transactionsLocking?.modules ?? [];
 
-  return modules.map((module) => (
-    <TransactionsLockingItemModule module={module} {...rest} />
-  ));
+  return (
+    <>
+      {modules.map((module) => (
+        <TransactionsLockingItemModule
+          key={module.module}
+          module={module}
+          {...rest}
+        />
+      ))}
+    </>
+  );
 }
 
 /**
  * Transactions locking full module item.
  * @returns {React.JSX}
  */
-export function TransactionsLockingFull({ ...rest }) {
-  const {
-    transactionsLocking: { all },
-  } = useTransactionsLockingContext();
+export function TransactionsLockingFull({
+  ...rest
+}: Omit<TransactionsLockingItemModuleProps, 'module'>) {
+  const { transactionsLocking } = useTransactionsLockingContext();
 
-  return <TransactionsLockingItemModule module={all} {...rest} />;
+  if (!transactionsLocking) {
+    return null;
+  }
+  return (
+    <TransactionsLockingItemModule module={transactionsLocking.all} {...rest} />
+  );
 }
 
 /**
@@ -82,9 +129,9 @@ export function TransactionLockingSkeletonList() {
  * Transactions locking skeleton item.
  * @returns {React.JSX}
  */
-export const TransactionLockingItemSkeleton = ({}) => {
+export const TransactionLockingItemSkeleton = () => {
   return (
-    <TransactionLockingWrapp>
+    <TransactionLockingWrapp isEnabled={false}>
       <TransLockingInner>
         <TransLockingIcon>
           <Icon icon="lock" iconSize={24} />
@@ -104,37 +151,30 @@ export const TransactionLockingItemSkeleton = ({}) => {
   );
 };
 
-const TransactionsLockingItemContext = React.createContext();
+const TransactionsLockingItemContext = React.createContext<
+  TransactionLockingContentProps | undefined
+>(undefined);
 
-const useTransactionsLockingItemContext = () =>
-  React.useContext(TransactionsLockingItemContext);
+const useTransactionsLockingItemContext =
+  (): TransactionLockingContentProps => {
+    const context = React.useContext(TransactionsLockingItemContext);
+
+    if (!context) {
+      throw new Error(
+        'useTransactionsLockingItemContext must be used within a TransactionLockingContent',
+      );
+    }
+    return context;
+  };
 
 /**
  * Transactions locking item.
  * @returns {React.JSX}
  */
-export const TransactionLockingContent = (props) => {
-  const {
-    name,
-    description,
-    module,
-
-    isEnabled,
-    lockToDate,
-    lockReason,
-
-    // Unlock props.
-    isPartialUnlock,
-    unlockToDate,
-    unlockFromDate,
-    unlockReason,
-
-    onLock,
-    onCancelLock,
-    onEditLock,
-    onUnlockPartial,
-    onCancelUnlockPartial,
-  } = props;
+export const TransactionLockingContent = (
+  props: TransactionLockingContentProps,
+) => {
+  const { isEnabled } = props;
 
   return (
     <TransactionsLockingItemContext.Provider value={props}>
@@ -195,7 +235,7 @@ function TransactionsLockingItemContent() {
             )}
           </TransLockingItemDesc>
 
-          <If condition={lockReason}>
+          <If condition={!!lockReason}>
             <TransLockingReason>
               {intl.formatHTMLMessage(
                 { id: 'transactions_locking.lock_reason' },
@@ -218,7 +258,7 @@ function TransactionsLockingItemContent() {
             )}
           </TransLockingItemDesc>
 
-          <If condition={unlockReason}>
+          <If condition={!!unlockReason}>
             <TransLockingReason>
               {intl.formatHTMLMessage(
                 { id: 'transactions_locking.unlock_reason' },
@@ -250,21 +290,21 @@ function TransactionsLockingItemActions() {
     onCancelUnlockPartial,
   } = useTransactionsLockingItemContext();
 
-  const handleLockClick = (event) => {
-    safeInvoke(onLock, module, event);
+  const handleLockClick = (event: React.MouseEvent) => {
+    onLock?.(module, event);
   };
-  const handleEditBtn = (event) => {
-    safeInvoke(onEditLock, module, isEnabled, event);
+  const handleEditBtn = (event: React.MouseEvent) => {
+    onEditLock?.(module, isEnabled, event);
   };
-  const handleUnlockPartial = (event) => {
-    safeInvoke(onUnlockPartial, module, event);
+  const handleUnlockPartial = (event: React.MouseEvent) => {
+    onUnlockPartial?.(module, event);
   };
 
-  const handleUnlockFull = (event) => {
-    safeInvoke(onCancelLock, module, event);
+  const handleUnlockFull = (event: React.MouseEvent) => {
+    onCancelLock?.(module, event);
   };
-  const handleCancelPartialUnlock = (event) => {
-    safeInvoke(onCancelUnlockPartial, module, event);
+  const handleCancelPartialUnlock = (event: React.MouseEvent) => {
+    onCancelUnlockPartial?.(module, event);
   };
 
   return (
@@ -324,7 +364,7 @@ function TransactionsLockingItemActions() {
   );
 }
 
-const TransactionLockingWrapp = styled.div`
+const TransactionLockingWrapp = styled.div<{ isEnabled: boolean }>`
   display: flex;
   align-items: center;
   border-radius: 6px;

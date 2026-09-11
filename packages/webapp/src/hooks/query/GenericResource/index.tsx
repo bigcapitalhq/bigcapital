@@ -18,6 +18,7 @@ import { defaultTo } from 'lodash';
 import { useRef } from 'react';
 import { useApiFetcher } from '../../useRequest';
 import type { ApiFetcher } from '@bigcapital/sdk-ts';
+import type { UseQueryResult } from '@tanstack/react-query';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 
 interface ResourceData {
@@ -65,7 +66,7 @@ export function useResourceData(
     select: transformResourceData(type),
     placeholderData: defaultDataProp ?? { items: [] },
     ...(restProps as object),
-  } as any);
+  } as any) as UseQueryResult<ResourceData, Error>;
   const defaultData = useRef(defaultDataProp ?? { items: [] });
 
   return {

@@ -1,10 +1,14 @@
-// @ts-nocheck
 import { get } from 'lodash';
-import React from 'react';
+import type { ReactNode } from 'react';
 
-const hasErrorMessage = ({}) => {};
+interface ErrorMessageProps {
+  touched?: unknown;
+  errors?: unknown;
+  name: string;
+  children?: ReactNode;
+}
 
-export function ErrorMessage({ touched, errors, name, children }) {
+export function ErrorMessage({ touched, errors, name }: ErrorMessageProps) {
   const error = get(errors, name);
   const touch = get(touched, name);
 

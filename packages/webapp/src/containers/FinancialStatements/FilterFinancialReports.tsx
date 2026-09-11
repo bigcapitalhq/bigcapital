@@ -3,9 +3,11 @@ import type { ReactNode } from 'react';
 import { useAbilityContext } from '@/hooks';
 
 export interface FinancialReport {
+  title: ReactNode;
+  desc: ReactNode;
+  link: string;
   ability: string;
   subject: string;
-  [key: string]: unknown;
 }
 
 export interface FinancialSection {

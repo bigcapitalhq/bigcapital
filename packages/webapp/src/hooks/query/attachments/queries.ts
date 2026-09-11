@@ -5,6 +5,7 @@ import {
 } from '@bigcapital/sdk-ts';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
+import type { AttachmentPresignedUrlResponse } from '@bigcapital/sdk-ts';
 
 type UploadAttachmentResponse = Awaited<ReturnType<typeof uploadAttachment>>;
 
@@ -45,9 +46,9 @@ export function useDeleteAttachment(
 }
 
 export function useGetPresignedUrlAttachment(
-  props?: UseMutationOptions<unknown, Error, string>,
+  props?: UseMutationOptions<AttachmentPresignedUrlResponse, Error, string>,
 ) {
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useMutation({
     ...props,
     mutationFn: (key: string) => fetchAttachmentPresignedUrl(fetcher, key),

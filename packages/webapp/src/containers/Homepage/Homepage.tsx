@@ -1,9 +1,11 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { HomepageContent } from './HomepageContent';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { DashboardInsider } from '@/components/Dashboard';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useCurrentOrganizationName } from '@/hooks/query';
+
+type DashboardHomepageProps = WithDashboardActionsProps;
 
 /**
  * Dashboard homepage.
@@ -11,7 +13,7 @@ import { useCurrentOrganizationName } from '@/hooks/query';
 function DashboardHomepage({
   // #withDashboardActions
   changePageTitle,
-}) {
+}: DashboardHomepageProps) {
   const organizationName = useCurrentOrganizationName();
 
   useEffect(() => {

@@ -13,12 +13,12 @@ import {
 } from '@/store/custom-views/custom-views.actions';
 
 export interface WithViewsActionsProps {
-  requestFetchView: (id: string | number) => unknown;
-  requestSubmitView: (form: unknown) => unknown;
-  requestEditView: (id: string | number, form: unknown) => unknown;
-  requestDeleteView: (id: string | number) => unknown;
-  requestFetchResourceViews: (resourceSlug: string) => unknown;
-  requestFetchViewResource: (id: string | number) => unknown;
+  requestFetchView: (id: string | number) => Promise<unknown>;
+  requestSubmitView: (form: unknown) => Promise<unknown>;
+  requestEditView: (id: string | number, form: unknown) => Promise<unknown>;
+  requestDeleteView: (id: string | number) => Promise<unknown>;
+  requestFetchResourceViews: (resourceSlug: string) => Promise<unknown>;
+  requestFetchViewResource: (id: string | number) => Promise<unknown>;
 }
 
 export const mapDispatchToProps = (

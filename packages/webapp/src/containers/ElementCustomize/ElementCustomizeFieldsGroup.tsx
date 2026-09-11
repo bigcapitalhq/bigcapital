@@ -1,16 +1,15 @@
-// @ts-nocheck
-import { InputGroupProps, SwitchProps } from '@blueprintjs/core';
+import type { ComponentProps, ReactNode } from 'react';
 import { FInputGroup, FSwitch, Group, Stack } from '@/components';
 import { CLASSES } from '@/constants';
 
 interface ElementCustomizeFieldsGroupProps {
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 interface ElementCustomizeContentItemFieldGroupProps {
-  inputGroupProps: InputGroupProps & { name?: string; label?: string };
-  switchProps?: SwitchProps;
+  inputGroupProps: ComponentProps<typeof FSwitch>;
+  switchProps?: Partial<ComponentProps<typeof FInputGroup>>;
 }
 
 export function ElementCustomizeFieldsGroup({
@@ -37,7 +36,11 @@ export function ElementCustomizeContentItemFieldGroup({
       <FSwitch {...inputGroupProps} fastField />
 
       {switchProps?.name && (
-        <FInputGroup {...switchProps} style={{ maxWidth: 150 }} fastField />
+        <FInputGroup
+          {...(switchProps as ComponentProps<typeof FInputGroup>)}
+          style={{ maxWidth: 150 }}
+          fastField
+        />
       )}
     </Group>
   );

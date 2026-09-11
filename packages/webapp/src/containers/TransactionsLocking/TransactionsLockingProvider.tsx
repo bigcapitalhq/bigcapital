@@ -1,15 +1,36 @@
-// @ts-nocheck
 import React from 'react';
+import type {
+  TransactionsLockingListResponse,
+  TransactionsLockingType,
+} from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import { useTransactionsLocking } from '@/hooks/query';
 import { useWatchImmediate } from '@/hooks/utils/useWatch';
 
-const TransactionsLockingContext = React.createContext();
+export interface TransactionsLockingContextValue {
+  transactionsLocking: TransactionsLockingListResponse | undefined;
+  isTransactionLockingFetching: boolean;
+  isTransactionLockingLoading: boolean;
+  transactionLockingType: TransactionsLockingType;
+  setTransactionLockingType: React.Dispatch<
+    React.SetStateAction<TransactionsLockingType>
+  >;
+}
+
+const TransactionsLockingContext = React.createContext<
+  TransactionsLockingContextValue | undefined
+>(undefined);
+
+interface TransactionsLockingProviderProps {
+  children?: React.ReactNode;
+}
 
 /**
  * Transactions locking data provider.
  */
-function TransactionsLockingProvider({ ...props }) {
+function TransactionsLockingProvider({
+  children,
+}: TransactionsLockingProviderProps) {
   // Fetch transaction locking modules list.
   const {
     data: transactionsLocking,
@@ -19,7 +40,7 @@ function TransactionsLockingProvider({ ...props }) {
 
   // Transactions locking type.
   const [transactionLockingType, setTransactionLockingType] =
-    React.useState('partial');
+    React.useState<TransactionsLockingType>('partial');
 
   // Locking type controlled from response.
   useWatchImmediate(() => {
@@ -29,7 +50,7 @@ function TransactionsLockingProvider({ ...props }) {
   }, transactionsLocking?.lockingType);
 
   // Provider
-  const provider = {
+  const provider: TransactionsLockingContextValue = {
     transactionsLocking,
     isTransactionLockingFetching,
     isTransactionLockingLoading,
@@ -40,12 +61,22 @@ function TransactionsLockingProvider({ ...props }) {
 
   return (
     <DashboardInsider>
-      <TransactionsLockingContext.Provider value={provider} {...props} />
+      <TransactionsLockingContext.Provider value={provider}>
+        {children}
+      </TransactionsLockingContext.Provider>
     </DashboardInsider>
   );
 }
 
-const useTransactionsLockingContext = () =>
-  React.useContext(TransactionsLockingContext);
+const useTransactionsLockingContext = (): TransactionsLockingContextValue => {
+  const context = React.useContext(TransactionsLockingContext);
+
+  if (!context) {
+    throw new Error(
+      'useTransactionsLockingContext must be used within a TransactionsLockingProvider',
+    );
+  }
+  return context;
+};
 
 export { TransactionsLockingProvider, useTransactionsLockingContext };

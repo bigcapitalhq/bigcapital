@@ -91,8 +91,12 @@ export function useTransactionsLocking(
     ...props,
     queryKey: transactionsLockingKeys.list(query),
     queryFn: () => fetchTransactionsLocking(fetcher),
-    select: (data) =>
-      Array.isArray(data) ? data : ((data as { data?: unknown })?.data ?? data),
+    select: (data) => {
+      const wrapped = data as TransactionsLockingListResponse & {
+        data?: TransactionsLockingListResponse;
+      };
+      return wrapped.data ?? data;
+    },
   });
 }
 

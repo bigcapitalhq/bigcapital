@@ -7,8 +7,8 @@ import { financialReportMenus } from '@/constants/financialReportsMenu';
 import '@/style/pages/FinancialStatements/FinancialSheets.scss';
 
 interface FinancialReportsItemProps {
-  title: string;
-  desc: string;
+  title: React.ReactNode;
+  desc: React.ReactNode;
   link: string;
 }
 
@@ -28,7 +28,7 @@ function FinancialReportsItem({
 }
 
 interface FinancialReportsSectionProps {
-  sectionTitle: string;
+  sectionTitle: React.ReactNode;
   reports: FinancialReportsItemProps[];
 }
 

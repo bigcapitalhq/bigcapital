@@ -12,7 +12,7 @@ export interface MailNotificationFormValues {
   from: string[];
   to: string[];
   subject: string;
-  body: string;
+  message: string;
 }
 
 export const transformMailFormToRequest = (

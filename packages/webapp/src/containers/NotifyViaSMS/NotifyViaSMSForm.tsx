@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Callout, Classes, Intent } from '@blueprintjs/core';
 import { Formik, Form, useFormikContext } from 'formik';
 import { castArray, includes } from 'lodash';
@@ -10,10 +9,38 @@ import { CreateNotifyViaSMSFormSchema } from './NotifyViaSMSForm.schema';
 import { NotifyViaSMSFormFields } from './NotifyViaSMSFormFields';
 import { NotifyViaSMSFormFloatingActions } from './NotifyViaSMSFormFloatingActions';
 import { getSMSUnits } from './utils';
+import type { FormikHelpers } from 'formik';
 import { FormObserver, SMSMessagePreview } from '@/components';
-import { transformToForm, safeInvoke } from '@/utils';
+import { transformToForm } from '@/utils';
 
-const defaultInitialValues = {
+export interface NotifyViaSMSFormValues {
+  notificationKey: string;
+  customerName: string;
+  customerPhoneNumber: string;
+  smsMessage: string;
+}
+
+export interface NotifyViaSMSNotificationType {
+  key: string;
+  label: string;
+}
+
+export interface NotifyViaSMSFormProps {
+  initialValues?: Partial<NotifyViaSMSFormValues>;
+  notificationTypes?:
+    | NotifyViaSMSNotificationType
+    | NotifyViaSMSNotificationType[];
+  onSubmit?: (
+    values: NotifyViaSMSFormValues,
+    helpers: FormikHelpers<NotifyViaSMSFormValues>,
+  ) => void;
+  onCancel?: () => void;
+  onValuesChange?: (values: NotifyViaSMSFormValues) => void;
+  calloutCodes?: number[];
+  formikProps?: Record<string, unknown>;
+}
+
+const defaultInitialValues: NotifyViaSMSFormValues = {
   notificationKey: '',
   customerName: '',
   customerPhoneNumber: '',
@@ -26,7 +53,7 @@ const defaultInitialValues = {
 function SMSMessagePreviewSection() {
   const {
     values: { smsMessage },
-  } = useFormikContext();
+  } = useFormikContext<NotifyViaSMSFormValues>();
 
   // Calculates the SMS units of message.
   const messagesUnits = getSMSUnits(smsMessage);
@@ -56,10 +83,9 @@ export function NotifyViaSMSForm({
   onCancel,
   onValuesChange,
   calloutCodes,
-  formikProps,
-}) {
+}: NotifyViaSMSFormProps) {
   // Initial form values
-  const initialValues = {
+  const initialValues: NotifyViaSMSFormValues = {
     ...defaultInitialValues,
     ...transformToForm(initialValuesComponent, defaultInitialValues),
   };
@@ -74,7 +100,7 @@ export function NotifyViaSMSForm({
       enableReinitialize={true}
       validationSchema={CreateNotifyViaSMSFormSchema}
       initialValues={initialValues}
-      onSubmit={onSubmit}
+      onSubmit={(values, helpers) => onSubmit?.(values, helpers)}
     >
       <Form>
         <div className={Classes.DIALOG_BODY}>
@@ -97,35 +123,49 @@ export function NotifyViaSMSForm({
   );
 }
 
+interface NotifyObserveValuesChangeProps {
+  onChange?: (values: NotifyViaSMSFormValues) => void;
+}
+
 /**
  * Observes the values change of notify form.
  */
-function NotifyObserveValuesChange({ onChange }) {
-  const { values } = useFormikContext();
+function NotifyObserveValuesChange({
+  onChange,
+}: NotifyObserveValuesChangeProps) {
+  const { values } = useFormikContext<NotifyViaSMSFormValues>();
 
   // Handle the form change observe.
   const handleChange = () => {
-    safeInvoke(onChange, values);
+    onChange?.(values);
   };
   return <FormObserver values={values} onChange={handleChange} />;
+}
+
+interface NotifyViaSMSAlertsProps {
+  calloutCodes?: number[];
 }
 
 /**
  * Notify via SMS form alerts.
  */
-function NotifyViaSMSAlerts({ calloutCodes }) {
-  return [
-    includes(calloutCodes, 100) && (
-      <Callout icon={null} intent={Intent.DANGER}>
-        {intl.get('notify_Via_sms.dialog.customer_phone_number_does_not_eixst')}
-      </Callout>
-    ),
-    includes(calloutCodes, 200) && (
-      <Callout icon={null} intent={Intent.DANGER}>
-        {intl.get('notify_Via_sms.dialog.customer_phone_number_invalid')}
-      </Callout>
-    ),
-  ];
+function NotifyViaSMSAlerts({ calloutCodes }: NotifyViaSMSAlertsProps) {
+  return (
+    <>
+      {includes(calloutCodes, 100) && (
+        <Callout icon={null} intent={Intent.DANGER}>
+          {intl.get(
+            'notify_Via_sms.dialog.customer_phone_number_does_not_eixst',
+          )}
+        </Callout>
+      )}
+      {includes(calloutCodes, 200) && (
+        <Callout icon={null} intent={Intent.DANGER}>
+          {intl.get('notify_Via_sms.dialog.customer_phone_number_invalid')}
+        </Callout>
+      )}
+    </>
+  );
 }
 const NotifyContent = styled.div`
   display: flex;
