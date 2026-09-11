@@ -24,3 +24,12 @@ export const transformCreditNoteToPdfTemplate = (
     customerAddress: contactAddressTextFormat(creditNote.customer),
   };
 };
+
+export const transformCreditNoteToMailDataArgs = (creditNote: any) => {
+  return {
+    'Customer Name': creditNote.customer?.displayName,
+    'Credit Note Number': creditNote.creditNoteNumber,
+    'Credit Note Date': creditNote.formattedCreditNoteDate,
+    'Credit Note Amount': creditNote.formattedAmount,
+  };
+};

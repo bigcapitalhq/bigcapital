@@ -36,13 +36,20 @@ import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
-import { CreditNoteAction } from './types/CreditNotes.types';
+import {
+  CreditNoteAction,
+  CreditNoteMailOptionsDTO,
+} from './types/CreditNotes.types';
+import { CreditNoteMailStateResponseDto } from './dtos/CreditNoteMailStateResponse.dto';
+import { CreditNoteHtmlContentResponseDto } from './dtos/CreditNoteHtmlResponse.dto';
 
 @Controller('credit-notes')
 @ApiTags('Credit Notes')
 @ApiExtraModels(CreditNoteResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
+@ApiExtraModels(CreditNoteMailStateResponseDto)
+@ApiExtraModels(CreditNoteHtmlContentResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class CreditNotesController {
@@ -72,6 +79,53 @@ export class CreditNotesController {
     return this.creditNoteApplication.getCreditNoteState();
   }
 
+  /**
+   * Sends the given credit note by mail.
+   */
+  @Post(':id/mail')
+  @RequirePermission(CreditNoteAction.Edit, AbilitySubject.CreditNote)
+  @ApiOperation({ summary: 'Send the given credit note by mail.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The credit note id',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The credit note mail has been queued successfully.',
+  })
+  public sendCreditNoteMail(
+    @Param('id') creditNoteId: number,
+    @Body() mailOptions: CreditNoteMailOptionsDTO,
+  ) {
+    return this.creditNoteApplication.sendCreditNoteMail(
+      creditNoteId,
+      mailOptions,
+    );
+  }
+
+  /**
+   * Retrieves the credit note mail state.
+   */
+  @Get(':id/mail')
+  @RequirePermission(CreditNoteAction.View, AbilitySubject.CreditNote)
+  @ApiOperation({ summary: 'Retrieves the credit note mail state.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The credit note id',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieves the credit note mail state.',
+    schema: { $ref: getSchemaPath(CreditNoteMailStateResponseDto) },
+  })
+  public getCreditNoteMail(@Param('id') creditNoteId: number) {
+    return this.creditNoteApplication.getCreditNoteMailState(creditNoteId);
+  }
+
   @Get(':id')
   @RequirePermission(CreditNoteAction.View, AbilitySubject.CreditNote)
   @ApiOperation({ summary: 'Get a specific credit note by ID' })
@@ -79,8 +133,17 @@ export class CreditNotesController {
   @ApiResponse({
     status: 200,
     description: 'Returns the credit note',
-    schema: {
-      $ref: getSchemaPath(CreditNoteResponseDto),
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(CreditNoteResponseDto),
+        },
+      },
+      'application/json+html': {
+        schema: {
+          $ref: getSchemaPath(CreditNoteHtmlContentResponseDto),
+        },
+      },
     },
   })
   @ApiResponse({ status: 404, description: 'Credit note not found' })
@@ -89,7 +152,9 @@ export class CreditNotesController {
     @Headers('accept') acceptHeader: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    if (acceptHeader.includes(AcceptType.ApplicationPdf)) {
+    const accept = acceptHeader ?? '';
+
+    if (accept.includes(AcceptType.ApplicationPdf)) {
       const [pdfContent, filename] =
         await this.creditNoteApplication.getCreditNotePdf(creditNoteId);
 
@@ -99,6 +164,10 @@ export class CreditNotesController {
         'Content-Disposition': `attachment; filename="${filename}"`,
       });
       res.status(200).send(pdfContent);
+    } else if (accept.includes(AcceptType.ApplicationTextHtml)) {
+      const htmlContent =
+        await this.creditNoteApplication.getCreditNoteHtml(creditNoteId);
+      return { htmlContent };
     } else {
       const creditNote =
         await this.creditNoteApplication.getCreditNote(creditNoteId);

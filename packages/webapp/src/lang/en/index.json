@@ -1625,6 +1625,7 @@
   "credit_note.action.reconcile_with_invoices": "Reconcile with Invoices",
   "credit_note.action.make_as_open": "Mark as Open",
   "credit_note.action.delete_credit_note": "Delete Credit Note",
+  "credit_note.action.send_mail": "Send Mail",
   "credit_note.column.credit_note_no": "Credit Note #",
   "credit_note.column.credit_date": "Credit Date",
   "credit_note.empty_status.title": "Reduce customers balance by create credit note",

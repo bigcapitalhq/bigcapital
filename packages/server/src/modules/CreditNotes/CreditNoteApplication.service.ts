@@ -11,6 +11,9 @@ import { GetCreditNoteState } from './queries/GetCreditNoteState.service';
 import { GetCreditNoteService } from './queries/GetCreditNote.service';
 import { BulkDeleteCreditNotesService } from './BulkDeleteCreditNotes.service';
 import { ValidateBulkDeleteCreditNotesService } from './ValidateBulkDeleteCreditNotes.service';
+import { SendCreditNoteMail } from './commands/SendCreditNoteMail';
+import { GetCreditNoteMailStateService } from './queries/GetCreditNoteMailState.service';
+import { CreditNoteMailOptionsDTO } from './types/CreditNotes.types';
 
 @Injectable()
 export class CreditNoteApplication {
@@ -25,6 +28,8 @@ export class CreditNoteApplication {
     private readonly getCreditNoteService: GetCreditNoteService,
     private readonly bulkDeleteCreditNotesService: BulkDeleteCreditNotesService,
     private readonly validateBulkDeleteCreditNotesService: ValidateBulkDeleteCreditNotesService,
+    private readonly sendCreditNoteMailService: SendCreditNoteMail,
+    private readonly getCreditNoteMailStateService: GetCreditNoteMailStateService,
   ) {}
 
   /**
@@ -77,6 +82,15 @@ export class CreditNoteApplication {
   }
 
   /**
+   * Retrieve the HTML content of the given credit note.
+   * @param {number} creditNoteId
+   * @returns {Promise<string>}
+   */
+  getCreditNoteHtml(creditNoteId: number) {
+    return this.getCreditNotePdfService.getCreditNoteHtml(creditNoteId);
+  }
+
+  /**
    * Retrieves the credit notes list.
    * @param {GetCreditNotesQueryDto} creditNotesQuery
    * @returns {Promise<GetCreditNotesResponse>}
@@ -125,6 +139,33 @@ export class CreditNoteApplication {
   validateBulkDeleteCreditNotes(creditNoteIds: number[]) {
     return this.validateBulkDeleteCreditNotesService.validateBulkDeleteCreditNotes(
       creditNoteIds,
+    );
+  }
+
+  /**
+   * Triggers the mail of the given credit note.
+   * @param {number} creditNoteId
+   * @param {CreditNoteMailOptionsDTO} mailOptions
+   * @returns {Promise<void>}
+   */
+  sendCreditNoteMail(
+    creditNoteId: number,
+    mailOptions: CreditNoteMailOptionsDTO,
+  ) {
+    return this.sendCreditNoteMailService.triggerMail(
+      creditNoteId,
+      mailOptions,
+    );
+  }
+
+  /**
+   * Retrieves the credit note mail state.
+   * @param {number} creditNoteId
+   * @returns {Promise<CreditNoteMailState>}
+   */
+  getCreditNoteMailState(creditNoteId: number) {
+    return this.getCreditNoteMailStateService.getCreditNoteMailState(
+      creditNoteId,
     );
   }
 }

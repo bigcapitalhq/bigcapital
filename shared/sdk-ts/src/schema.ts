@@ -2818,6 +2818,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/credit-notes/{id}/mail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the credit note mail state. */
+        get: operations["CreditNotesController_getCreditNoteMail"];
+        put?: never;
+        /** Send the given credit note by mail. */
+        post: operations["CreditNotesController_sendCreditNoteMail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/credit-notes/{id}": {
         parameters: {
             query?: never;
@@ -11764,6 +11782,52 @@ export interface components {
             entries: components["schemas"]["ManualJournalEntryDto"][];
             /** @description Attachments */
             attachments?: components["schemas"]["AttachmentDto"][];
+        };
+        CreditNoteHtmlContentResponseDto: {
+            /**
+             * @description The HTML content of the credit note
+             * @example <html>...</html>
+             */
+            htmlContent: string;
+        };
+        CreditNoteEntryMailDto: {
+            name: string;
+            quantity: number;
+            unitPrice: number;
+            unitPriceFormatted: string;
+            total: number;
+            totalFormatted: string;
+        };
+        CreditNoteMailStateResponseDto: {
+            from: string[];
+            to: string[];
+            cc?: string[];
+            bcc?: string[];
+            subject: string;
+            message: string;
+            formatArgs?: Record<string, never>;
+            toOptions: components["schemas"]["AddressItemDto"][];
+            fromOptions: components["schemas"]["AddressItemDto"][];
+            attachPdf?: boolean;
+            creditNoteDate: string;
+            creditNoteDateFormatted: string;
+            total: number;
+            totalFormatted: string;
+            subtotal: number;
+            subtotalFormatted: string;
+            discountAmount: number;
+            discountAmountFormatted: string;
+            discountPercentage: number;
+            discountPercentageFormatted: string;
+            discountLabel: string;
+            adjustment: number;
+            adjustmentFormatted: string;
+            creditNoteNumber: string;
+            entries: components["schemas"]["CreditNoteEntryMailDto"][];
+            companyName: string;
+            companyLogoUri: string;
+            primaryColor: string;
+            customerName: string;
         };
         CreditNoteResponseDto: {
             /**
@@ -23750,6 +23814,60 @@ export interface operations {
             };
         };
     };
+    CreditNotesController_getCreditNoteMail: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The credit note id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Retrieves the credit note mail state. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreditNoteMailStateResponseDto"];
+                };
+            };
+        };
+    };
+    CreditNotesController_sendCreditNoteMail: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The credit note id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The credit note mail has been queued successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     CreditNotesController_getCreditNote: {
         parameters: {
             query?: never;
@@ -23775,6 +23893,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreditNoteResponseDto"];
+                    "application/json+html": components["schemas"]["CreditNoteHtmlContentResponseDto"];
                 };
             };
             /** @description Credit note not found */

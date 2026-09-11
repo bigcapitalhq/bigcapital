@@ -125,6 +125,10 @@ function CreditNotesDataTableInner({
     openDialog('reconcile-credit-note', { creditNoteId: id });
   };
 
+  const handleSendMailCreditNote = ({ id }: CreditNoteTableRow) => {
+    openDrawer(DRAWERS.CREDIT_NOTE_SEND_MAIL, { creditNoteId: id });
+  };
+
   return (
     <DashboardContentTable>
       <DataTable
@@ -158,6 +162,7 @@ function CreditNotesDataTableInner({
           onRefund: handleRefundCreditNote,
           onOpen: handleOpenCreditNote,
           onReconcile: handleReconcileCreditNote,
+          onSendMail: handleSendMailCreditNote,
         }}
       />
     </DashboardContentTable>

@@ -20,6 +20,7 @@ interface CreditNoteActionsPayload {
   onOpen: (creditNote: CreditNoteTableRow) => void;
   onReconcile: (creditNote: CreditNoteTableRow) => void;
   onViewDetails: (creditNote: CreditNoteTableRow) => void;
+  onSendMail: (creditNote: CreditNoteTableRow) => void;
 }
 
 interface ActionsMenuProps {
@@ -28,7 +29,15 @@ interface ActionsMenuProps {
 }
 
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onRefund, onOpen, onReconcile, onViewDetails },
+  payload: {
+    onEdit,
+    onDelete,
+    onRefund,
+    onOpen,
+    onReconcile,
+    onViewDetails,
+    onSendMail,
+  },
   row: { original },
 }: ActionsMenuProps) {
   return (
@@ -69,6 +78,11 @@ export function ActionsMenu({
             text={intl.get('credit_note.action.reconcile_with_invoices')}
             icon={<Icon icon="receipt-24" iconSize={16} />}
             onClick={safeCallback(onReconcile, original)}
+          />
+          <MenuItem
+            icon={<Icon icon={'envelope'} iconSize={16} />}
+            text={intl.get('credit_note.action.send_mail')}
+            onClick={safeCallback(onSendMail, original)}
           />
         </If>
       </Can>

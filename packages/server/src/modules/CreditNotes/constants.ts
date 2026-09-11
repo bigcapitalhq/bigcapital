@@ -13,6 +13,19 @@ export const ERRORS = {
   CUSTOMER_HAS_LINKED_CREDIT_NOTES: 'CUSTOMER_HAS_LINKED_CREDIT_NOTES',
 };
 
+export const DEFAULT_CREDIT_NOTE_MAIL_SUBJECT =
+  'Credit note {Credit Note Number} from {Company Name}';
+export const DEFAULT_CREDIT_NOTE_MAIL_CONTENT = `Hi {Customer Name},
+
+Please find your credit note # {Credit Note Number} for {Credit Note Amount} attached to this email.
+
+The credit has been applied to your account and can be used toward your future invoices.
+
+If you have any questions, please let us know.
+
+Thanks,
+{Company Name}`;
+
 export const DEFAULT_VIEW_COLUMNS = [];
 export const CreditNoteDefaultViews = [
   {
