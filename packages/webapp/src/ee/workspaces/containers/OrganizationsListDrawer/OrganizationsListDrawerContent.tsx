@@ -127,65 +127,59 @@ function OrganizationsListDrawerContentRoot({
         onClose={handleClose}
       />
 
-      <x.div
-        flex={1}
-        overflow="auto"
-        minHeight={0}
-        w={'100%'}
-        maxWidth={'1000px'}
-        mx="auto"
-        pt={10}
-      >
-        <x.div
-          display="flex"
-          flexWrap="wrap"
-          alignItems="center"
-          justifyContent="space-between"
-          gap="16px"
-          mb="16px"
-        >
-          <x.h2
-            m={0}
-            fontSize="20px"
-            fontWeight={400}
-            color="#fff"
-            letterSpacing="-0.02em"
-          >
-            {intl.get('workspaces.organizations_list_count_title', {
-              count: filteredWorkspaces.length,
-            })}
-          </x.h2>
+      <x.div flex={1} overflow="auto" minHeight={0}>
+        <x.div w={'100%'} maxWidth={'1000px'} mx="auto" pt={10} pb={20}>
           <x.div
             display="flex"
             flexWrap="wrap"
             alignItems="center"
-            gap="10px"
-            flex={1}
-            justifyContent="flex-end"
-            minWidth={0}
+            justifyContent="space-between"
+            gap="16px"
+            mb="16px"
           >
-            <FormGroup
-              label={null}
-              className={organizationsDrawerSearchFormGroupCss}
+            <x.h2
+              m={0}
+              fontSize="20px"
+              fontWeight={400}
+              color="#fff"
+              letterSpacing="-0.02em"
             >
-              <InputGroup
-                leftIcon="search"
-                placeholder={intl.get('workspaces.search_workspaces_short', {
-                  fallback: 'Search...',
-                })}
-                value={searchQuery}
-                onChange={handleSearchChange}
-                className={organizationsDrawerInputSearchCss}
-              />
-            </FormGroup>
+              {intl.get('workspaces.organizations_list_count_title', {
+                count: filteredWorkspaces.length,
+              })}
+            </x.h2>
+            <x.div
+              display="flex"
+              flexWrap="wrap"
+              alignItems="center"
+              gap="10px"
+              flex={1}
+              justifyContent="flex-end"
+              minWidth={0}
+            >
+              <FormGroup
+                label={null}
+                className={organizationsDrawerSearchFormGroupCss}
+              >
+                <InputGroup
+                  leftIcon="search"
+                  placeholder={intl.get('workspaces.search_workspaces_short', {
+                    fallback: 'Search...',
+                  })}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className={organizationsDrawerInputSearchCss}
+                />
+              </FormGroup>
+            </x.div>
           </x.div>
-        </x.div>
 
-        <OrganizationsListTable
-          workspaces={filteredWorkspaces}
-          isLoading={isLoading}
-          onClose={handleClose}
-        />
+          <OrganizationsListTable
+            workspaces={filteredWorkspaces}
+            isLoading={isLoading}
+            onClose={handleClose}
+          />
+        </x.div>
       </x.div>
     </x.div>
   );
