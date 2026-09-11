@@ -2,6 +2,8 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { PaymentMadeForm } from './PaymentMadeForm';
 import { PaymentMadeFormProvider } from './PaymentMadeFormProvider';
+import { DRAWERS } from '@/constants/drawers';
+import { index as BillDrawer } from '@/containers/Drawers/BillDrawer';
 
 import '@/style/pages/PaymentMade/PageForm.scss';
 
@@ -15,6 +17,7 @@ export function PaymentMadeFormPage() {
   return (
     <PaymentMadeFormProvider paymentMadeId={paymentMadeId}>
       <PaymentMadeForm />
+      <BillDrawer name={DRAWERS.BILL_DETAILS} />
     </PaymentMadeFormProvider>
   );
 }

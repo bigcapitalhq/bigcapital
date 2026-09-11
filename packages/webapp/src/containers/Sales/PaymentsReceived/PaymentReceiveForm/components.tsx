@@ -10,19 +10,56 @@ import {
   type PaymentReceiveFormValues,
 } from './utils';
 import { Money, ExchangeRateInputGroup, MoneyFieldCell } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
 
+type OnViewInvoiceDetail = (invoiceId: number) => void;
+
+/**
+ * Creates a click handler that opens the invoice detail drawer of the
+ * given invoice.
+ */
+const createInvoiceClickHandler =
+  (invoiceId: number, onViewInvoiceDetail?: OnViewInvoiceDetail) =>
+  (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onViewInvoiceDetail?.(invoiceId);
+  };
+
 type InvoiceDateCellProps = {
+  row: { original: PaymentReceiveEntry };
   value?: string | number | Date | null;
 };
 
 /**
- * Invoice date cell.
+ * Invoice date cell - renders the date as a link that opens the invoice
+ * detail drawer when the row references an existing invoice.
  */
-function InvoiceDateCell({ value }: InvoiceDateCellProps) {
-  return <span>{moment(value).format('YYYY MMM DD')}</span>;
-}
+const createInvoiceDateCell = (onViewInvoiceDetail?: OnViewInvoiceDetail) => {
+  return function InvoiceDateCell({
+    row: { original },
+    value,
+  }: InvoiceDateCellProps) {
+    const formattedDate = moment(value).format('YYYY MMM DD');
+
+    if (!original?.invoiceId) {
+      return <span>{formattedDate}</span>;
+    }
+    return (
+      <a
+        className={CLASSES.TEXT_LINK}
+        onClick={createInvoiceClickHandler(
+          original.invoiceId as number,
+          onViewInvoiceDetail,
+        )}
+      >
+        {formattedDate}
+      </a>
+    );
+  };
+};
 
 /**
  * Invoice number table cell accessor.
@@ -30,6 +67,37 @@ function InvoiceDateCell({ value }: InvoiceDateCellProps) {
 function InvNumberCellAccessor(row: PaymentReceiveEntry): string {
   return row?.invoiceNo ? `#${row?.invoiceNo || ''}` : '-';
 }
+
+type InvoiceNumberCellProps = {
+  row: { original: PaymentReceiveEntry };
+  value: string;
+};
+
+/**
+ * Invoice number cell - renders the invoice number as a link that opens
+ * the invoice detail drawer when the row references an existing invoice.
+ */
+const createInvoiceNumberCell = (onViewInvoiceDetail?: OnViewInvoiceDetail) => {
+  return function InvoiceNumberCell({
+    row: { original },
+    value,
+  }: InvoiceNumberCellProps) {
+    if (!original?.invoiceId) {
+      return <span>{value}</span>;
+    }
+    return (
+      <a
+        className={CLASSES.TEXT_LINK}
+        onClick={createInvoiceClickHandler(
+          original.invoiceId as number,
+          onViewInvoiceDetail,
+        )}
+      >
+        {value}
+      </a>
+    );
+  };
+};
 
 type MoneyTableCellProps = {
   row: { original: PaymentReceiveEntry };
@@ -46,14 +114,16 @@ function MoneyTableCell({ row: { original }, value }: MoneyTableCellProps) {
 /**
  * Retrieve payment receive form entries columns.
  */
-export const usePaymentReceiveEntriesColumns = () => {
+export const usePaymentReceiveEntriesColumns = (
+  onViewInvoiceDetail?: OnViewInvoiceDetail,
+) => {
   return React.useMemo(
     () => [
       {
         Header: 'Invoice date',
         id: 'invoiceDate',
         accessor: 'invoiceDate',
-        Cell: InvoiceDateCell,
+        Cell: createInvoiceDateCell(onViewInvoiceDetail),
         disableSortBy: true,
         disableResizing: true,
         width: 250,
@@ -62,6 +132,7 @@ export const usePaymentReceiveEntriesColumns = () => {
       {
         Header: intl.get('invocie_number'),
         accessor: InvNumberCellAccessor,
+        Cell: createInvoiceNumberCell(onViewInvoiceDetail),
         disableSortBy: true,
         className: 'invoice_number',
       },
@@ -90,7 +161,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         className: 'payment_amount',
       },
     ],
-    [],
+    [onViewInvoiceDetail],
   );
 };
 
