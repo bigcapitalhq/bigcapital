@@ -1,25 +1,42 @@
-// @ts-nocheck
 import * as FF from 'fp-ts/function';
 import { connect } from 'react-redux';
+import type { ApplicationState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withResourceDetail } from '@/containers/Resources/withResourceDetails';
-import { withViewsDetails } from '@/containers/Views/withViewDetails';
+import { withResourceDetails } from '@/containers/Resources/withResourceDetails';
+import { withViewDetails } from '@/containers/Views/withViewDetails';
 import { withViewsActions } from '@/containers/Views/withViewsActions';
 
-const mapStateToProps = (state, ownProps) => {
+interface ViewFormOwnProps {
+  viewId?: string | number;
+  viewMeta?: { resource?: { name?: string } } | null;
+  resourceName?: string;
+}
+
+const mapStateToProps = (
+  _state: ApplicationState,
+  ownProps: ViewFormOwnProps,
+) => {
   return {
     resourceName: ownProps.viewId
-      ? ownProps.viewMeta.resource?.name
+      ? ownProps.viewMeta?.resource?.name
       : ownProps.resourceName,
   };
 };
 
-const viewFormConnect = connect(mapStateToProps);
+function withViewFormResourceName<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<P> {
+  const Connected = connect(mapStateToProps)(
+    WrappedComponent as ComponentType<any>,
+  );
+  return Connected as unknown as ComponentType<P>;
+}
 
 export const ViewFormContainer = FF.flow(
-  withResourceDetail(),
-  viewFormConnect,
-  withViewsDetails,
+  withResourceDetails(),
+  withViewFormResourceName,
+  withViewDetails(),
   withViewsActions,
   withDashboardActions,
 );

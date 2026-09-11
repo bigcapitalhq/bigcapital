@@ -1,23 +1,26 @@
-// @ts-nocheck
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
+import type { NotifyViaSMSFormValues } from './NotifyViaSMSForm';
 import {
   DialogFooter,
   DialogFooterActions,
   FormattedMessage as T,
 } from '@/components';
 
-/**
- *
- */
-export function NotifyViaSMSFormFloatingActions({ onCancel }) {
+interface NotifyViaSMSFormFloatingActionsProps {
+  onCancel?: (event: React.MouseEvent<HTMLElement>) => void;
+}
+
+export function NotifyViaSMSFormFloatingActions({
+  onCancel,
+}: NotifyViaSMSFormFloatingActionsProps) {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<NotifyViaSMSFormValues>();
 
   // Handle close button click.
-  const handleCancelBtnClick = (event) => {
-    onCancel && onCancel(event);
+  const handleCancelBtnClick = (event: React.MouseEvent<HTMLElement>) => {
+    onCancel?.(event);
   };
 
   return (

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { usePaymentPortalBoot } from '../../PaymentPortalBoot';
 import { Box, DrawerBody, DrawerHeaderContent } from '@/components';
 import { InvoicePaperTemplate } from '@/containers/Sales/Invoices/InvoiceCustomize/InvoicePaperTemplate';
@@ -22,7 +21,7 @@ export function PaymentInvoicePreviewContent() {
             paymentMade={sharableLinkMeta?.paymentAmountFormatted}
             termsConditions={sharableLinkMeta?.termsConditions}
             statement={sharableLinkMeta?.invoiceMessage}
-            companyName={sharableLinkMeta?.companyName}
+            companyName={sharableLinkMeta?.organization?.name}
             primaryColor={sharableLinkMeta?.brandingTemplate?.primaryColor}
             secondaryColor={sharableLinkMeta?.brandingTemplate?.secondaryColor}
             lines={sharableLinkMeta?.entries?.map((entry) => ({

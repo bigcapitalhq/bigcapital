@@ -27,13 +27,13 @@ import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 type ResourceType = string;
 
 // Search type option item
-interface SearchTypeOption {
+export interface SearchTypeOption {
   key: ResourceType;
   label: string;
 }
 
 // Universal search item
-interface UniversalSearchItem {
+export interface UniversalSearchItem {
   id: number | string;
   _type: ResourceType;
   text: string;
@@ -411,7 +411,7 @@ export interface UniversalSearchProps {
   /** Controlled search resource type */
   searchResource?: ResourceType;
   /** Overlay props */
-  overlayProps?: OverlayProps;
+  overlayProps?: Partial<OverlayProps>;
   /** Whether the search overlay is open */
   isOpen: boolean;
   /** Whether the search is loading */

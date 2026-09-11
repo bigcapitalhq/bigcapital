@@ -1,12 +1,18 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { useRef, useState } from 'react';
 import styles from './CompanyLogoUpload.module.scss';
+import type { ComponentType, PropsWithChildren, ReactNode } from 'react';
 import { Icon, Stack } from '@/components';
 import { Dropzone, DropzoneProps } from '@/components/Dropzone';
 import { MIME_TYPES } from '@/components/Dropzone/mine-types';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
+
+const DropzoneWithChildren = Dropzone as unknown as ComponentType<
+  PropsWithChildren<DropzoneProps> & {
+    classNames?: { root?: string; content?: string };
+  }
+>;
 
 export interface CompanyLogoUploadProps {
   /** Initial preview uri. */
@@ -19,13 +25,13 @@ export interface CompanyLogoUploadProps {
   value?: File;
 
   /** Function called when the file is changed */
-  onChange?: (file: File) => void;
+  onChange?: (file: File | null) => void;
 
   /** Props for the Dropzone component */
-  dropzoneProps?: DropzoneProps;
+  dropzoneProps?: Partial<DropzoneProps>;
 
   /** Icon element for the upload button */
-  uploadIcon?: JSX.Element;
+  uploadIcon?: ReactNode;
 
   /** Title displayed in the component */
   title?: string;
@@ -64,7 +70,7 @@ export function CompanyLogoUpload({
     : initialLocalPreview || '';
 
   return (
-    <Dropzone
+    <DropzoneWithChildren
       onDrop={(files) => handleChange(files[0])}
       onReject={(files) => console.log('rejected files', files)}
       maxSize={5 * 1024 ** 2}
@@ -103,6 +109,6 @@ export function CompanyLogoUpload({
           </Button>
         </Stack>
       )}
-    </Dropzone>
+    </DropzoneWithChildren>
   );
 }

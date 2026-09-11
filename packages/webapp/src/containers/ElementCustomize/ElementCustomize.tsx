@@ -10,11 +10,12 @@ import {
   ElementCustomizeFormProps,
 } from './ElementCustomizerForm';
 import { ElementCustomizeTabsControllerProvider } from './ElementCustomizeTabsController';
+import type { FormikValues } from 'formik';
 import { Group } from '@/components';
 import { extractChildren } from '@/utils/extract-children';
 
-export interface ElementCustomizeProps<T, Y>
-  extends ElementCustomizeFormProps<T, Y> {
+export interface ElementCustomizeProps<T extends FormikValues, Y>
+  extends ElementCustomizeFormProps<T> {
   brandingState?: Y;
   children?: React.ReactNode;
 }
@@ -49,7 +50,10 @@ export function ElementCustomizeContent({
   );
 }
 
-export function ElementCustomize<T, Y extends ElementPreviewState>({
+export function ElementCustomize<
+  T extends FormikValues,
+  Y extends ElementPreviewState,
+>({
   initialValues,
   validationSchema,
   onSubmit,

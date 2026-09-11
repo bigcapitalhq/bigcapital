@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   InputGroup,
   FormGroup,
@@ -21,16 +20,84 @@ import { ReactSortable } from 'react-sortablejs';
 import * as Yup from 'yup';
 import { FormattedMessage as T } from '@/components';
 import { If, Icon, AppToaster } from '@/components';
-import ErrorMessage from '@/components/ErrorMessage';
+import { ErrorMessage } from '@/components/ErrorMessage';
 import { ViewFormContainer } from '@/containers/Views/ViewForm.container';
 import { transfromToSnakeCase } from '@/utils';
+
+export interface ViewRole {
+  fieldKey: string;
+  comparator: string;
+  value: string;
+  index: number;
+}
+
+export interface ViewRoleMeta extends ViewRole {
+  field?: { key: string };
+}
+
+export interface ViewColumnItem {
+  id: string | number;
+  key: string;
+  label: string;
+}
+
+export interface ViewMeta {
+  id?: string | number;
+  name?: string;
+  columns?: ViewColumnItem[];
+  roles?: ViewRoleMeta[];
+  roles_logic_expression?: string;
+  logicExpression?: string;
+  resource?: { name?: string };
+}
+
+export interface ResourceField {
+  key: string;
+  label_name: string;
+}
+
+export interface ResourceMetadata {
+  label: string;
+  baseRoute: string;
+}
+
+export interface ViewFormValues {
+  resourceName: string;
+  name: string;
+  logicExpression: string;
+  roles: ViewRole[];
+  columns: Array<{ key: string; index: number }>;
+}
+
+const Sortable = ReactSortable as unknown as React.ComponentType<
+  React.PropsWithChildren<{
+    list: ViewColumnItem[];
+    setList: React.Dispatch<React.SetStateAction<ViewColumnItem[]>>;
+    group: string;
+  }>
+>;
+
+interface ViewFormInnerProps {
+  requestSubmitView: (form: unknown) => Promise<unknown>;
+  requestEditView: (id: string | number, form: unknown) => Promise<unknown>;
+  onDelete?: (view: ViewMeta | null) => void;
+
+  viewId?: string | number;
+  viewMeta?: ViewMeta | null;
+
+  resourceName?: string;
+  resourceColumns: ViewColumnItem[];
+  resourceFields: ResourceField[];
+  resourceMetadata: ResourceMetadata;
+
+  changePageSubtitle: (subtitle: string) => void;
+}
 
 function ViewFormInner({
   requestSubmitView,
   requestEditView,
   onDelete,
 
-  viewId,
   viewMeta,
 
   resourceName,
@@ -39,8 +106,7 @@ function ViewFormInner({
   resourceMetadata,
 
   changePageSubtitle,
-}) {
-  const intl = useIntl();
+}: ViewFormInnerProps) {
   const history = useHistory();
 
   useEffect(() => {
@@ -50,7 +116,7 @@ function ViewFormInner({
     };
   }, [changePageSubtitle, resourceMetadata.label]);
 
-  const [draggedColumns, setDraggedColumn] = useState([
+  const [draggedColumns, setDraggedColumn] = useState<ViewColumnItem[]>([
     ...(viewMeta && viewMeta.columns ? viewMeta.columns : []),
   ]);
 
@@ -59,7 +125,7 @@ function ViewFormInner({
     [draggedColumns],
   );
 
-  const [availableColumns, setAvailableColumns] = useState([
+  const [availableColumns, setAvailableColumns] = useState<ViewColumnItem[]>([
     ...(viewMeta && viewMeta.columns
       ? resourceColumns.filter(
           (column) => draggedColumnsIds.indexOf(column.id) === -1,
@@ -107,23 +173,21 @@ function ViewFormInner({
       name: '',
       logicExpression: '',
       roles: [defaultViewRole],
-      columns: [],
+      columns: [] as Array<{ key: string; index: number }>,
     }),
     [defaultViewRole, resourceName],
   );
 
-  const initialForm = useMemo(
-    () => ({
+  const initialForm = useMemo((): ViewFormValues & {
+    roles_logic_expression?: string;
+  } => {
+    const meta = (viewMeta ?? {}) as ViewMeta;
+    return {
       ...initialEmptyForm,
-      ...(viewMeta
-        ? {
-            ...viewMeta,
-            resourceName: viewMeta.resource?.name || resourceName,
-          }
-        : {}),
-    }),
-    [initialEmptyForm, viewMeta, resourceName],
-  );
+      ...meta,
+      resourceName: meta.resource?.name || resourceName || '',
+    } as ViewFormValues & { roles_logic_expression?: string };
+  }, [initialEmptyForm, viewMeta, resourceName]);
 
   const {
     values,
@@ -133,19 +197,22 @@ function ViewFormInner({
     getFieldProps,
     handleSubmit,
     isSubmitting,
-  } = useFormik({
+  } = useFormik<ViewFormValues>({
     enableReinitialize: true,
     validationSchema: validationSchema,
     initialValues: {
-      roles: [],
-      ...pick(initialForm, Object.keys(initialEmptyForm)),
+      ...initialEmptyForm,
+      ...(pick(
+        initialForm,
+        Object.keys(initialEmptyForm),
+      ) as Partial<ViewFormValues>),
       // The view API returns `roles_logic_expression` in snake_case.
       logicExpression: initialForm.roles_logic_expression || '',
       roles: [
-        ...initialForm.roles.map((role) => {
+        ...(initialForm.roles ?? []).map((role): ViewRole => {
           return {
-            ...pick(role, Object.keys(defaultViewRole)),
-            fieldKey: role.field ? role.field.key : '',
+            ...(pick(role, Object.keys(defaultViewRole)) as ViewRole),
+            fieldKey: (role as ViewRoleMeta).field?.key ?? '',
           };
         }),
       ],
@@ -155,7 +222,7 @@ function ViewFormInner({
       const payload = transfromToSnakeCase(values);
 
       if (viewMeta && viewMeta.id) {
-        requestEditView(viewMeta.id, payload).then((response) => {
+        requestEditView(viewMeta.id, payload).then(() => {
           AppToaster.show({
             message: 'the_view_has_been_edited',
             intent: Intent.SUCCESS,
@@ -166,13 +233,13 @@ function ViewFormInner({
           setSubmitting(false);
         });
       } else {
-        requestSubmitView(payload).then((response) => {
+        requestSubmitView(payload).then(() => {
           AppToaster.show({
             message: 'the_view_has_been_submit',
             intent: Intent.SUCCESS,
           });
           history.push(
-            `${resourceMetadata.baseRoute}/${viewMeta.id}/custom_view`,
+            `${resourceMetadata.baseRoute}/${viewMeta?.id}/custom_view`,
           );
           setSubmitting(false);
         });
@@ -227,10 +294,6 @@ function ViewFormInner({
     [resourceFields],
   );
 
-  // Account item of select accounts field.
-  const selectItem = (item, { handleClick, modifiers, query }) => {
-    return <MenuItem text={item.label} key={item.key} onClick={handleClick} />;
-  };
   // Handle click new condition button.
   const onClickNewRole = useCallback(() => {
     setFieldValue('roles', [
@@ -244,8 +307,8 @@ function ViewFormInner({
 
   // Handle click remove view role button.
   const onClickRemoveRole = useCallback(
-    (viewRole, index) => {
-      let viewRoles = [...values.roles];
+    (_viewRole: ViewRole, index: number) => {
+      const viewRoles = [...values.roles];
 
       // Can't continue if view roles equals or less than 1.
       if (viewRoles.length > 1) {
@@ -263,33 +326,40 @@ function ViewFormInner({
   );
 
   const onClickDeleteView = useCallback(() => {
-    onDelete && onDelete(viewMeta);
+    onDelete?.(viewMeta ?? null);
   }, [onDelete, viewMeta]);
 
-  const hasError = (path) => get(errors, path) && get(touched, path);
+  const hasError = (path: string) => get(errors, path) && get(touched, path);
+
+  const getSelectFieldProps = (name: string) => {
+    const { value, onChange, onBlur } = getFieldProps(name);
+
+    return { value, onChange, onBlur };
+  };
 
   const handleClickCancelBtn = () => {
     history.goBack();
   };
 
   return (
-    <div class="view-form">
+    <div className="view-form">
       <form onSubmit={handleSubmit}>
-        <div class="view-form--name-section">
+        <div className="view-form--name-section">
           <Row>
             <Col sm={8}>
               <FormGroup
                 label={intl.get('view_name')}
                 className={'form-group--name'}
-                intent={errors.name && touched.name && Intent.DANGER}
+                intent={errors.name && touched.name ? Intent.DANGER : undefined}
                 helperText={
                   <ErrorMessage {...{ errors, touched }} name={'name'} />
                 }
                 inline={true}
-                fill={true}
               >
                 <InputGroup
-                  intent={errors.name && touched.name && Intent.DANGER}
+                  intent={
+                    errors.name && touched.name ? Intent.DANGER : undefined
+                  }
                   fill={true}
                   {...getFieldProps('name')}
                 />
@@ -301,9 +371,9 @@ function ViewFormInner({
         <H5 className="mb2">Define the conditionals</H5>
 
         {values.roles.map((role, index) => (
-          <Row class="view-form__role-conditional">
-            <Col sm={2} class="flex">
-              <div class="mr2 pt1 condition-number">{index + 1}</div>
+          <Row key={index} className="view-form__role-conditional">
+            <Col sm={2} className="flex">
+              <div className="mr2 pt1 condition-number">{index + 1}</div>
               {index === 0 ? (
                 <HTMLSelect
                   options={whenConditionalsItems}
@@ -319,33 +389,41 @@ function ViewFormInner({
 
             <Col sm={2}>
               <FormGroup
-                intent={hasError(`roles[${index}].fieldKey`) && Intent.DANGER}
+                intent={
+                  hasError(`roles[${index}].fieldKey`)
+                    ? Intent.DANGER
+                    : undefined
+                }
               >
                 <HTMLSelect
                   options={resourceFieldsOptions}
-                  value={role.fieldKey}
                   className={Classes.FILL}
-                  {...getFieldProps(`roles[${index}].fieldKey`)}
+                  {...getSelectFieldProps(`roles[${index}].fieldKey`)}
                 />
               </FormGroup>
             </Col>
 
             <Col sm={2}>
               <FormGroup
-                intent={hasError(`roles[${index}].comparator`) && Intent.DANGER}
+                intent={
+                  hasError(`roles[${index}].comparator`)
+                    ? Intent.DANGER
+                    : undefined
+                }
               >
                 <HTMLSelect
                   options={compatatorsItems}
-                  value={role.comparator}
                   className={Classes.FILL}
-                  {...getFieldProps(`roles[${index}].comparator`)}
+                  {...getSelectFieldProps(`roles[${index}].comparator`)}
                 />
               </FormGroup>
             </Col>
 
-            <Col sm={5} class="flex">
+            <Col sm={5} className="flex">
               <FormGroup
-                intent={hasError(`roles[${index}].value`) && Intent.DANGER}
+                intent={
+                  hasError(`roles[${index}].value`) ? Intent.DANGER : undefined
+                }
               >
                 <InputGroup
                   placeholder={intl.get('value')}
@@ -355,7 +433,6 @@ function ViewFormInner({
 
               <Button
                 icon={<Icon icon="times-circle" iconSize={14} />}
-                iconSize={14}
                 className="ml2"
                 minimal={true}
                 intent={Intent.DANGER}
@@ -375,16 +452,16 @@ function ViewFormInner({
           </Button>
         </div>
 
-        <div class="view-form--logic-expression-section">
+        <div className="view-form--logic-expression-section">
           <Row>
             <Col sm={8}>
               <FormGroup
                 label={intl.get('Logic Expression')}
                 className={'form-group--logic-expression'}
                 intent={
-                  errors.logicExpression &&
-                  touched.logicExpression &&
-                  Intent.DANGER
+                  errors.logicExpression && touched.logicExpression
+                    ? Intent.DANGER
+                    : undefined
                 }
                 helperText={
                   <ErrorMessage
@@ -393,13 +470,12 @@ function ViewFormInner({
                   />
                 }
                 inline={true}
-                fill={true}
               >
                 <InputGroup
                   intent={
-                    errors.logicExpression &&
-                    touched.logicExpression &&
-                    Intent.DANGER
+                    errors.logicExpression && touched.logicExpression
+                      ? Intent.DANGER
+                      : undefined
                   }
                   fill={true}
                   {...getFieldProps('logicExpression')}
@@ -411,16 +487,16 @@ function ViewFormInner({
 
         <H5 className={'mb2'}>Columns Preferences</H5>
 
-        <div class="dragable-columns">
+        <div className="dragable-columns">
           <Row gutterWidth={14}>
             <Col sm={4} className="dragable-columns__column">
               <H6 className="dragable-columns__title">Available Columns</H6>
 
               <InputGroup placeholder={intl.get('search')} leftIcon="search" />
 
-              <div class="dragable-columns__items">
+              <div className="dragable-columns__items">
                 <Menu>
-                  <ReactSortable
+                  <Sortable
                     list={availableColumns}
                     setList={setAvailableColumns}
                     group="shared-group-name"
@@ -428,13 +504,13 @@ function ViewFormInner({
                     {availableColumns.map((field) => (
                       <MenuItem key={field.id} text={field.label} />
                     ))}
-                  </ReactSortable>
+                  </Sortable>
                 </Menu>
               </div>
             </Col>
 
             <Col sm={1}>
-              <div class="dragable-columns__arrows">
+              <div className="dragable-columns__arrows">
                 <div>
                   <Icon
                     icon="arrow-circle-left"
@@ -442,7 +518,7 @@ function ViewFormInner({
                     color="#cecece"
                   />
                 </div>
-                <div class="mt2">
+                <div className="mt2">
                   <Icon
                     icon="arrow-circle-right"
                     iconSize={30}
@@ -456,9 +532,9 @@ function ViewFormInner({
               <H6 className="dragable-columns__title">Selected Columns</H6>
               <InputGroup placeholder={intl.get('search')} leftIcon="search" />
 
-              <div class="dragable-columns__items">
+              <div className="dragable-columns__items">
                 <Menu>
-                  <ReactSortable
+                  <Sortable
                     list={draggedColumns}
                     setList={setDraggedColumn}
                     group="shared-group-name"
@@ -466,14 +542,14 @@ function ViewFormInner({
                     {draggedColumns.map((field) => (
                       <MenuItem key={field.id} text={field.label} />
                     ))}
-                  </ReactSortable>
+                  </Sortable>
                 </Menu>
               </div>
             </Col>
           </Row>
         </div>
 
-        <div class="form__floating-footer">
+        <div className="form__floating-footer">
           <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
             <T id={'submit'} />
           </Button>
@@ -486,7 +562,7 @@ function ViewFormInner({
             <T id={'cancel'} />
           </Button>
 
-          <If condition={viewMeta && viewMeta.id}>
+          <If condition={!!(viewMeta && viewMeta.id)}>
             <Button
               intent={Intent.DANGER}
               onClick={onClickDeleteView}

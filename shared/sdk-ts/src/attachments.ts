@@ -45,11 +45,15 @@ export async function deleteAttachment(fetcher: ApiFetcher, id: string): Promise
   await del({ id });
 }
 
+export interface AttachmentPresignedUrlResponse {
+  presignedUrl: string;
+}
+
 export async function fetchAttachmentPresignedUrl(
   fetcher: ApiFetcher,
   id: string
-): Promise<unknown> {
+): Promise<AttachmentPresignedUrlResponse> {
   const get = fetcher.path(ATTACHMENTS_ROUTES.PRESIGNED_URL).method('get').create();
   const { data } = await get({ id });
-  return data;
+  return data as unknown as AttachmentPresignedUrlResponse;
 }
