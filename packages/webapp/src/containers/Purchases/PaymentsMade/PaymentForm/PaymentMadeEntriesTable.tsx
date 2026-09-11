@@ -4,15 +4,18 @@ import React, { useCallback } from 'react';
 import { usePaymentMadeEntriesTableColumns } from './components';
 import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
 import type { PaymentMadeEntry, PaymentMadeFormValues } from './utils';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTableEditable,
   CloudLoadingIndicator,
   FormattedMessage as T,
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
+import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { compose, updateTableCell } from '@/utils';
 
-type PaymentMadeEntriesTableProps = {
+type PaymentMadeEntriesTableProps = WithDrawerActionsProps & {
   onUpdateData: (entries: PaymentMadeEntry[]) => void;
   entries: PaymentMadeEntry[];
   currencyCode: string;
@@ -21,16 +24,24 @@ type PaymentMadeEntriesTableProps = {
 /**
  * Payment made items table.
  */
-export function PaymentMadeEntriesTable({
+function PaymentMadeEntriesTableInner({
   onUpdateData,
   entries,
   currencyCode,
+
+  // #withDrawerActions
+  openDrawer,
 }: PaymentMadeEntriesTableProps) {
   // Payment made inner context.
   const { isNewEntriesFetching } = usePaymentMadeInnerContext();
 
+  // Opens the bill detail drawer of the given bill.
+  const handleViewBillDetail = (billId: number) => {
+    openDrawer(DRAWERS.BILL_DETAILS, { billId });
+  };
+
   // Payment entries table columns.
-  const columns = usePaymentMadeEntriesTableColumns();
+  const columns = usePaymentMadeEntriesTableColumns(handleViewBillDetail);
 
   // Formik context.
   const {
@@ -77,3 +88,7 @@ export function PaymentMadeEntriesTable({
     </CloudLoadingIndicator>
   );
 }
+
+export const PaymentMadeEntriesTable = compose(withDrawerActions)(
+  PaymentMadeEntriesTableInner,
+);

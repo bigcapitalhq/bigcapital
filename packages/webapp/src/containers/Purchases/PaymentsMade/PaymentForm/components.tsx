@@ -8,20 +8,96 @@ import {
 } from './utils';
 import { Money, ExchangeRateInputGroup } from '@/components';
 import { MoneyFieldCell } from '@/components/DataTableCells';
+import { CLASSES } from '@/constants/classes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 type Row = {
+  billId?: string | number;
   billNo?: string;
   currencyCode?: string;
 };
+
+type OnViewBillDetail = (billId: number) => void;
+
+/**
+ * Creates a click handler that opens the bill detail drawer of the
+ * given bill.
+ */
+const createBillClickHandler =
+  (billId: number, onViewBillDetail?: OnViewBillDetail) =>
+  (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onViewBillDetail?.(billId);
+  };
 
 function BillNumberAccessor(row: Row): string {
   return row?.billNo ? row?.billNo : '-';
 }
 
-function BillDateCell({ value }: { value: string }) {
-  return <span>{moment(value).format('YYYY MMM DD')}</span>;
-}
+type BillDateCellProps = {
+  row: { original: Row };
+  value: string;
+};
+
+/**
+ * Bill date cell - renders the date as a link that opens the bill detail
+ * drawer when the row references an existing bill.
+ */
+const createBillDateCell = (onViewBillDetail?: OnViewBillDetail) => {
+  return function BillDateCell({
+    row: { original },
+    value,
+  }: BillDateCellProps) {
+    const formattedDate = moment(value).format('YYYY MMM DD');
+
+    if (!original?.billId) {
+      return <span>{formattedDate}</span>;
+    }
+    return (
+      <a
+        className={CLASSES.TEXT_LINK}
+        onClick={createBillClickHandler(
+          original.billId as number,
+          onViewBillDetail,
+        )}
+      >
+        {formattedDate}
+      </a>
+    );
+  };
+};
+
+type BillNumberCellProps = {
+  row: { original: Row };
+  value: string;
+};
+
+/**
+ * Bill number cell - renders the bill number as a link that opens the
+ * bill detail drawer when the row references an existing bill.
+ */
+const createBillNumberCell = (onViewBillDetail?: OnViewBillDetail) => {
+  return function BillNumberCell({
+    row: { original },
+    value,
+  }: BillNumberCellProps) {
+    if (!original?.billId) {
+      return <span>{value}</span>;
+    }
+    return (
+      <a
+        className={CLASSES.TEXT_LINK}
+        onClick={createBillClickHandler(
+          original.billId as number,
+          onViewBillDetail,
+        )}
+      >
+        {value}
+      </a>
+    );
+  };
+};
 
 /**
  * Money table cell.
@@ -39,20 +115,23 @@ function MoneyTableCell({
 /**
  * Payment made entries table columns
  */
-export function usePaymentMadeEntriesTableColumns() {
+export function usePaymentMadeEntriesTableColumns(
+  onViewBillDetail?: OnViewBillDetail,
+) {
   return React.useMemo(
     () => [
       {
         Header: 'Bill date',
         id: 'billDate',
         accessor: 'billDate',
-        Cell: BillDateCell,
+        Cell: createBillDateCell(onViewBillDetail),
         disableSortBy: true,
         width: 120,
       },
       {
         Header: intl.get('bill_number'),
         accessor: BillNumberAccessor,
+        Cell: createBillNumberCell(onViewBillDetail),
         disableSortBy: true,
         width: 120,
       },
@@ -78,7 +157,7 @@ export function usePaymentMadeEntriesTableColumns() {
         width: 150,
       },
     ],
-    [],
+    [onViewBillDetail],
   );
 }
 

@@ -7,6 +7,8 @@ import {
   usePaymentReceiveFormContext,
 } from './PaymentReceiveFormProvider';
 import { DashboardInsider } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { index as InvoiceDetailDrawer } from '@/containers/Drawers/InvoiceDetailDrawer';
 
 /**
  * Payment received form page.
@@ -34,6 +36,7 @@ function PaymentReceivedFormPageContent() {
       `}
     >
       <PaymentReceivedForm />
+      <InvoiceDetailDrawer name={DRAWERS.INVOICE_DETAILS} />
     </DashboardInsider>
   );
 }
