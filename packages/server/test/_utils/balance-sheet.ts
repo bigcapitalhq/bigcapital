@@ -58,6 +58,7 @@ export interface BSQuery {
   previousYearAmountChange?: boolean;
   previousYearPercentageChange?: boolean;
   previousPeriodAmountChange?: boolean;
+  previousPeriodPercentageChange?: boolean;
   percentageOfColumn?: boolean;
   percentageOfRow?: boolean;
 }
