@@ -504,6 +504,84 @@ describe('Balance Sheet (e2e)', () => {
     });
   });
 
+  describe('Date periods with previous period/year comparison', () => {
+    it('attaches previous period totals to the net income period columns', async () => {
+      const { data } = await fetchBalanceSheet({
+        ...YEARS_2022_2023,
+        displayColumnsType: 'date_periods',
+        displayColumnsBy: 'year',
+        previousPeriod: true,
+        previousPeriodAmountChange: true,
+        previousPeriodPercentageChange: true,
+      });
+
+      const netIncome = findNode(data, 'NET_INCOME');
+
+      for (const totalNode of netIncome.horizontal_totals) {
+        expect(totalNode.previous_period).toBeDefined();
+        expect(totalNode.previous_period_change).toBeDefined();
+        expect(totalNode.previous_period_percentage).toBeDefined();
+        expect(totalNode.previous_period_from_date).toBeDefined();
+        expect(totalNode.previous_period_to_date).toBeDefined();
+        expect(totalNode.previous_period_change.amount).toBeCloseTo(
+          totalNode.total.amount - totalNode.previous_period.amount,
+          2,
+        );
+      }
+
+      // The previous period of the 2023 column is the 2022 net income.
+      expect(netIncome.horizontal_totals[1].previous_period.amount).toBeCloseTo(
+        netIncome.horizontal_totals[0].total.amount,
+        2,
+      );
+    });
+
+    it('attaches previous period totals to account period columns', async () => {
+      const { data } = await fetchBalanceSheet({
+        ...YEARS_2022_2023,
+        displayColumnsType: 'date_periods',
+        displayColumnsBy: 'year',
+        previousPeriod: true,
+      });
+
+      const bank = findNode(data, bankId);
+      expect(bank.horizontal_totals[1].previous_period.amount).toBeCloseTo(
+        bank.horizontal_totals[0].total.amount,
+        2,
+      );
+    });
+
+    it('attaches previous year totals to the net income period columns', async () => {
+      const { data } = await fetchBalanceSheet({
+        ...YEARS_2022_2023,
+        displayColumnsType: 'date_periods',
+        displayColumnsBy: 'year',
+        previousYear: true,
+        previousYearAmountChange: true,
+        previousYearPercentageChange: true,
+      });
+
+      const netIncome = findNode(data, 'NET_INCOME');
+
+      for (const totalNode of netIncome.horizontal_totals) {
+        expect(totalNode.previous_year).toBeDefined();
+        expect(totalNode.previous_year_change).toBeDefined();
+        expect(totalNode.previous_year_percentage).toBeDefined();
+        expect(totalNode.previous_year_from_date).toBeDefined();
+        expect(totalNode.previous_year_to_date).toBeDefined();
+        expect(totalNode.previous_year_change.amount).toBeCloseTo(
+          totalNode.total.amount - totalNode.previous_year.amount,
+          2,
+        );
+      }
+
+      expect(netIncome.horizontal_totals[1].previous_year.amount).toBeCloseTo(
+        netIncome.horizontal_totals[0].total.amount,
+        2,
+      );
+    });
+  });
+
   describe('Previous year comparison', () => {
     let data: BSNode[];
     let beforePY: Record<string | number, number>;

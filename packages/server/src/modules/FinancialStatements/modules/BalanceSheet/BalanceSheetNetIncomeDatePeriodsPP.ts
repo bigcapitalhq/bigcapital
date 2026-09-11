@@ -98,24 +98,24 @@ export const BalanceSheetNetIncomeDatePeriodsPP = <
       (horiontalTotalNode): IBalanceSheetTotal => {
         return flow(
           when(
-            this.query.isPreviousPeriodPercentageActive,
-            this.assocPreviousPeriodTotalPercentageNode,
-          ),
-          when(
-            this.query.isPreviousPeriodChangeActive,
-            this.assocPreviousPeriodTotalChangeNode,
+            this.query.isPreviousPeriodActive,
+            this.assocPreviousPeriodHorizNodeFromToDates(
+              this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
+            ),
           ),
           when(
             this.query.isPreviousPeriodActive,
             this.assocPreviousPeriodNetIncomeHorizTotal(node),
           ),
           when(
-            this.query.isPreviousPeriodActive,
-            this.assocPreviousPeriodHorizNodeFromToDates(
-              this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
-            ),
+            this.query.isPreviousPeriodChangeActive,
+            this.assocPreviousPeriodTotalChangeNode,
           ),
-        )(horiontalTotalNode);
+          when(
+            this.query.isPreviousPeriodPercentageActive,
+            this.assocPreviousPeriodTotalPercentageNode,
+          ),
+        )(horiontalTotalNode) as IBalanceSheetTotal;
       };
 
     /**
