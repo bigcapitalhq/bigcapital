@@ -1,4 +1,12 @@
-import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import {
+  Intent,
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Button,
+  Popover,
+  Position,
+} from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Icon } from '@/components';
@@ -37,6 +45,21 @@ export function ActionsMenu({
 }
 
 /**
+ * Actions cell — renders the row's contextual menu behind a "more" button,
+ * mirroring the users table so roles are actionable without a right-click.
+ */
+function ActionsCell(props: ActionsMenuProps) {
+  return (
+    <Popover
+      content={<ActionsMenu {...props} />}
+      position={Position.RIGHT_BOTTOM}
+    >
+      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+    </Popover>
+  );
+}
+
+/**
  * Retrieve Roles table columns.
  * @returns
  */
@@ -58,6 +81,14 @@ export function useRolesTableColumns() {
         className: 'description',
         width: '180',
         textOverview: true,
+      },
+      {
+        id: 'actions',
+        Header: '',
+        Cell: ActionsCell,
+        className: 'actions',
+        width: 50,
+        disableResizing: true,
       },
     ],
     [],
