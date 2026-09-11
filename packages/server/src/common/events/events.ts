@@ -435,16 +435,6 @@ export const events = {
     onPublished: 'onInventoryAdjustmentPublished',
   },
 
-  /**
-   * Bill landed cost.
-   */
-  billLandedCost: {
-    onCreate: 'onBillLandedCostCreate',
-    onCreated: 'onBillLandedCostCreated',
-    onDelete: 'onBillLandedCostDelete',
-    onDeleted: 'onBillLandedCostDeleted',
-  },
-
   cashflow: {
     onOwnerContributionCreate: 'onCashflowOwnerContributionCreate',
     onOwnerContributionCreated: 'onCashflowOwnerContributionCreated',

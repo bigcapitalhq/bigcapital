@@ -103,7 +103,6 @@ import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
-import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 import { SocketModule } from '../Socket/Socket.module';
 import { EEModule } from '../EE/EE.module';
 import { AnalyticsModule } from '../Analytics/Analytics.module';
@@ -214,7 +213,6 @@ import { AppThrottleModule } from './AppThrottle.module';
     SaleEstimatesModule,
     SaleReceiptsModule,
     BillsModule,
-    BillLandedCostsModule,
     ManualJournalsModule,
     CreditNotesModule,
     VendorCreditsModule,

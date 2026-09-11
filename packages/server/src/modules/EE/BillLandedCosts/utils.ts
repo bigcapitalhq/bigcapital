@@ -1,7 +1,7 @@
 import { ModelObject } from 'objection';
 import { transformToMap } from '@/utils/transform-to-key';
 import { IBillLandedCostTransactionEntry } from './types/BillLandedCosts.types';
-import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
+import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
 
 export const ERRORS = {
   COST_TYPE_UNDEFINED: 'COST_TYPE_UNDEFINED',
@@ -16,6 +16,9 @@ export const ERRORS = {
     'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT',
   ALLOCATE_COST_SHOULD_NOT_BE_BILL: 'ALLOCATE_COST_SHOULD_NOT_BE_BILL',
   LANDED_COST_FEATURE_NOT_ENABLED: 'LANDED_COST_FEATURE_NOT_ENABLED',
+  BILL_HAS_ASSOCIATED_LANDED_COSTS: 'BILL_HAS_ASSOCIATED_LANDED_COSTS',
+  LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS:
+    'LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS',
 };
 
 /**

@@ -22,8 +22,6 @@ import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { BillPayment } from '@/modules/BillPayments/models/BillPayment';
 import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
-import { BillLandedCostEntry } from '@/modules/BillLandedCosts/models/BillLandedCostEntry';
-import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
 import { PaymentIntegration } from '@/modules/StripePayment/models/PaymentIntegration.model';
@@ -63,8 +61,6 @@ const models = [
   Bill,
   BillPayment,
   BillPaymentEntry,
-  BillLandedCost,
-  BillLandedCostEntry,
   VendorCreditAppliedBill,
   SaleInvoice,
   CreditNoteAppliedInvoice,

@@ -71,13 +71,13 @@ export class BillLandedCost extends BaseModel {
    */
   static get relationMappings() {
     const { BillLandedCostEntry } = require('./BillLandedCostEntry');
-    const { Bill } = require('../../Bills/models/Bill');
+    const { Bill } = require('../../../Bills/models/Bill');
     const {
       ItemEntry,
-    } = require('../../TransactionItemEntry/models/ItemEntry');
+    } = require('../../../TransactionItemEntry/models/ItemEntry');
     const {
       ExpenseCategory,
-    } = require('../../Expenses/models/ExpenseCategory.model');
+    } = require('../../../Expenses/models/ExpenseCategory.model');
 
     return {
       bill: {

@@ -3,7 +3,7 @@ import {
   IAllocatedLandedCostCreatedPayload,
   IAllocatedLandedCostDeletedPayload,
 } from '../types/BillLandedCosts.types';
-import { events } from '@/common/events/events';
+import { billLandedCostEvents } from '../BillLandedCosts.events';
 import { LandedCostSyncCostTransactions } from './LandedCostSyncCostTransactions.service';
 import { OnEvent } from '@nestjs/event-emitter';
 
@@ -17,7 +17,7 @@ export class LandedCostSyncCostTransactionsSubscriber {
    * Increment cost transactions once the landed cost allocated.
    * @param {IAllocatedLandedCostCreatedPayload} payload -
    */
-  @OnEvent(events.billLandedCost.onCreated)
+  @OnEvent(billLandedCostEvents.onCreated)
   async incrementCostTransactionsOnceCreated({
     billLandedCost,
     trx,
@@ -36,7 +36,7 @@ export class LandedCostSyncCostTransactionsSubscriber {
    * Decrement cost transactions once the allocated landed cost reverted.
    * @param {IAllocatedLandedCostDeletedPayload} payload -
    */
-  @OnEvent(events.billLandedCost.onDeleted)
+  @OnEvent(billLandedCostEvents.onDeleted)
   async decrementCostTransactionsOnceDeleted({
     oldBillLandedCost,
     trx,
