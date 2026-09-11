@@ -1,4 +1,5 @@
 import { Spinner } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React, { Suspense, lazy } from 'react';
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 import { withBanking } from '../withBanking';
@@ -15,7 +16,6 @@ import type { WithBankingProps } from '../withBanking';
 import { DashboardPageContent } from '@/components';
 import { AppContentShell } from '@/components/AppShell';
 import { CashFlowDrawers } from '@/containers/CashFlow/CashFlowDrawers';
-import { compose } from '@/utils';
 
 interface AccountTransactionsListRootProps
   extends Pick<WithBankingProps, 'openMatchingTransactionAside'> {}
@@ -61,14 +61,15 @@ function AccountTransactionsMain() {
   );
 }
 
-export const AccountTransactionsList = compose(
+export const AccountTransactionsList = FF.pipe(
+  AccountTransactionsListRoot,
   withBanking(
     ({ selectedUncategorizedTransactionId, openMatchingTransactionAside }) => ({
       selectedUncategorizedTransactionId,
       openMatchingTransactionAside,
     }),
   ),
-)(AccountTransactionsListRoot);
+);
 
 const AccountsTransactionsAll = lazy(() =>
   import('./AccountsTransactionsAll').then((m) => ({

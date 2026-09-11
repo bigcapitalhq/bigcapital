@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { BranchFormDialogPayload } from './types';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const BranchFormDialogContent = lazy(() =>
   import('./BranchFormDialogContent').then((m) => ({
@@ -45,4 +45,4 @@ function BranchFormDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(BranchFormDialog);
+export const index = FF.pipe(BranchFormDialog, withDialogRedux());

@@ -1,12 +1,12 @@
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useRefundVendorCreditContext } from './RefundVendorCreditFormProvider';
 import type { RefundVendorCreditFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface RefundVendorCreditFloatingActionsProps
   extends WithDialogActionsProps {}
@@ -46,6 +46,7 @@ function RefundVendorCreditFloatingActionsInner({
   );
 }
 
-export const RefundVendorCreditFloatingActions = compose(withDialogActions)(
+export const RefundVendorCreditFloatingActions = FF.pipe(
   RefundVendorCreditFloatingActionsInner,
+  withDialogActions,
 );

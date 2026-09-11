@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux, {
   DialogBaseProps,
 } from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const UserFormDialogContent = lazy(() =>
   import('./InviteUserDialogContent').then((m) => ({
@@ -47,4 +47,4 @@ function UserFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(UserFormDialog);
+export const index = FF.pipe(UserFormDialog, withDialogRedux());

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { ButtonLink } from '../Button';
 import { DRAWERS } from '@/constants/drawers';
@@ -5,11 +6,10 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface CustomerDrawerLinkComponentProps extends WithDrawerActionsProps {
   children?: React.ReactNode;
-  customerId?: number;
+  customerId?: number | string;
   className?: string;
 }
 
@@ -35,6 +35,7 @@ function CustomerDrawerLinkComponent({
   );
 }
 
-export const CustomerDrawerLink = compose(withDrawerActions)(
+export const CustomerDrawerLink = FF.pipe(
   CustomerDrawerLinkComponent,
+  withDrawerActions,
 );

@@ -5,6 +5,7 @@ import {
   Classes,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import { useBulkDeleteItemCategoriesDialog } from './hooks/use-bulk-delete-item-categories-dialog';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
@@ -26,7 +27,6 @@ import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useSaveSettings } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface ItemsCategoryActionsBarInnerProps
   extends WithItemCategoriesActionsProps,
@@ -151,14 +151,15 @@ function ItemsCategoryActionsBarInner({
   );
 }
 
-export const ItemsCategoryActionsBar = compose(
-  withDialogActions,
+export const ItemsCategoryActionsBar = FF.pipe(
+  ItemsCategoryActionsBarInner,
+  withItemCategoriesActions,
+  withAlertActions,
   withItemCategories(
     ({ itemsCategoriesTableState, itemsCategoriesSelectedRows }) => ({
       itemsCategoriesSelectedRows,
       categoriesFilterConditions: itemsCategoriesTableState.filterRoles,
     }),
   ),
-  withAlertActions,
-  withItemCategoriesActions,
-)(ItemsCategoryActionsBarInner);
+  withDialogActions,
+);

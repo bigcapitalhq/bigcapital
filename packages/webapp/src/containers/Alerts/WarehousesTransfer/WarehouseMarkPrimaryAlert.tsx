@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useMarkWarehouseAsPrimary } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface WarehouseMarkPrimaryAlertProps extends WithAlertActionsProps {
   name: string;
@@ -58,7 +58,8 @@ function WarehouseMarkPrimaryAlertInner({
   );
 }
 
-export const WarehouseMarkPrimaryAlert = compose(
-  withAlertStoreConnect(),
+export const WarehouseMarkPrimaryAlert = FF.pipe(
+  WarehouseMarkPrimaryAlertInner,
   withAlertActions,
-)(WarehouseMarkPrimaryAlertInner);
+  withAlertStoreConnect(),
+);

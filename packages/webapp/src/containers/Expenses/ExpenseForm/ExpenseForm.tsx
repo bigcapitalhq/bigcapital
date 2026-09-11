@@ -1,6 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { defaultTo, sumBy, isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
@@ -27,7 +28,6 @@ import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { compose } from '@/utils';
 
 /**
  * Expense form.
@@ -165,4 +165,4 @@ function ExpenseFormInner() {
   );
 }
 
-export const ExpenseForm = compose(withDashboardActions)(ExpenseFormInner);
+export const ExpenseForm = FF.pipe(ExpenseFormInner, withDashboardActions);

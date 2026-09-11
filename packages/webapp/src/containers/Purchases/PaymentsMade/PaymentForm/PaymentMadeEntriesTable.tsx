@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { usePaymentMadeEntriesTableColumns } from './components';
 import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
@@ -13,7 +14,7 @@ import {
 import { CLASSES } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
 
 type PaymentMadeEntriesTableProps = WithDrawerActionsProps & {
   onUpdateData: (entries: PaymentMadeEntry[]) => void;
@@ -52,8 +53,9 @@ function PaymentMadeEntriesTableInner({
   // Handle update data.
   const handleUpdateData = useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+      const newRows = FF.pipe(
         entries,
+        updateTableCell(rowIndex, columnId, value),
       );
       onUpdateData(newRows);
     },
@@ -89,6 +91,7 @@ function PaymentMadeEntriesTableInner({
   );
 }
 
-export const PaymentMadeEntriesTable = compose(withDrawerActions)(
+export const PaymentMadeEntriesTable = FF.pipe(
   PaymentMadeEntriesTableInner,
+  withDrawerActions,
 );

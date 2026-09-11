@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import {
@@ -12,7 +13,7 @@ import type { CurrencyFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 const defaultInitialValues: CurrencyFormValues = {
   currencyName: '',
@@ -110,4 +111,4 @@ function CurrencyFormInner({
   );
 }
 
-export const CurrencyForm = compose(withDialogActions)(CurrencyFormInner);
+export const CurrencyForm = FF.pipe(CurrencyFormInner, withDialogActions);

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import '@/style/pages/ItemsCategories/List.scss';
 import { ItemCategoriesTable } from './ItemCategoriesTable';
@@ -9,7 +10,6 @@ import { withItemCategoriesActions } from './withItemCategoriesActions';
 import type { WithItemCategoriesProps } from './withItemCategories';
 import type { WithItemCategoriesActionsProps } from './withItemCategoriesActions';
 import { DashboardContentTable, DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 interface ItemCategoryListProps
   extends Pick<WithItemCategoriesProps, 'itemsCategoriesTableState'>,
@@ -47,12 +47,10 @@ function ItemCategoryList({
   );
 }
 
-// Note: original used `R.compose` from ramda, but ramda's stricter typing
-// rejects the inner props shape. Switched to the codebase's untyped `compose`
-// — runtime behavior is identical.
-export const ItemCategoriesList = compose(
-  withItemCategoriesActions,
+export const ItemCategoriesList = FF.pipe(
+  ItemCategoryList,
   withItemCategories(({ itemsCategoriesTableState }) => ({
     itemsCategoriesTableState,
   })),
-)(ItemCategoryList);
+  withItemCategoriesActions,
+);

@@ -1,9 +1,9 @@
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 const PdfPreviewDialogContent = React.lazy(() =>
   import('./CreditNotePdfPreviewDialogContent').then((m) => ({
@@ -37,7 +37,6 @@ function CreditNotePdfPreviewDialog({
     >
       <DialogSuspense>
         <PdfPreviewDialogContent
-          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           dialogName={dialogName}
           subscriptionForm={payload}
         />
@@ -45,4 +44,4 @@ function CreditNotePdfPreviewDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(CreditNotePdfPreviewDialog);
+export const index = FF.pipe(CreditNotePdfPreviewDialog, withDialogRedux());

@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T, EmptyStatus } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 type BranchesEmptyStatusInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;
 
@@ -38,6 +38,7 @@ function BranchesEmptyStatusInner({
     />
   );
 }
-export const BranchesEmptyStatus = compose(withDialogActions)(
+export const BranchesEmptyStatus = FF.pipe(
   BranchesEmptyStatusInner,
+  withDialogActions,
 );

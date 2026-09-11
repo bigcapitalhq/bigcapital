@@ -1,5 +1,6 @@
 import { MapStateToProps, connect } from 'react-redux';
 import type { MapState } from '@/containers/hoc.types';
+import type { ComponentType } from 'react';
 import {
   getPlansPeriodSelector,
   getPlansSelector,
@@ -11,9 +12,10 @@ export interface WithPlansProps {
   plansPeriod: ReturnType<ReturnType<typeof getPlansPeriodSelector>>;
 }
 
-export function withPlans<Props = unknown>(
-  mapState?: MapState<WithPlansProps, Props>,
-) {
+export function withPlans<
+  Props = unknown,
+  Mapped extends object = WithPlansProps,
+>(mapState?: MapState<WithPlansProps, Props, Mapped>) {
   const mapStateToProps: MapStateToProps<
     WithPlansProps,
     Props,
@@ -30,5 +32,12 @@ export function withPlans<Props = unknown>(
       ? (mapState(mapped, state, props) as WithPlansProps)
       : mapped;
   };
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
 }

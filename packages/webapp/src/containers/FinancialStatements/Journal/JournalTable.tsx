@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -14,11 +15,7 @@ import {
 import { TableStyle } from '@/constants';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { handleViewTransactionDetail } from '@/containers/FinancialStatements/utils/transactionDrawer';
-import {
-  compose,
-  defaultExpanderReducer,
-  tableRowTypesToClassnames,
-} from '@/utils';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 interface JournalTableProps extends WithDrawerActionsProps {
   companyName: string;
@@ -80,7 +77,7 @@ function JournalTableInner({
   );
 }
 
-export const JournalTable = compose(withDrawerActions)(JournalTableInner);
+export const JournalTable = FF.pipe(JournalTableInner, withDrawerActions);
 
 const JournalDataTable = styled(ReportDataTable)`
   --color-table-text-color: var(--color-light-gray1);

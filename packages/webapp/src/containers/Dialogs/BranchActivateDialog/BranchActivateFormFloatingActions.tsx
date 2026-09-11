@@ -1,11 +1,11 @@
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useBranchActivateContext } from './BranchActivateFormProvider';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface BranchActivateFormFloatingActionsProps
   extends WithDialogActionsProps {}
@@ -46,6 +46,7 @@ function BranchActivateFormFloatingActionsInner({
   );
 }
 
-export const BranchActivateFormFloatingActions = compose(withDialogActions)(
+export const BranchActivateFormFloatingActions = FF.pipe(
   BranchActivateFormFloatingActionsInner,
+  withDialogActions,
 );

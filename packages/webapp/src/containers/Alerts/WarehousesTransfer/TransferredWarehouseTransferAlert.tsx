@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useTransferredWarehouseTransfer } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface TransferredWarehouseTransferAlertProps extends WithAlertActionsProps {
   name: string;
@@ -58,7 +58,8 @@ function TransferredWarehouseTransferAlertInner({
   );
 }
 
-export const TransferredWarehouseTransferAlert = compose(
-  withAlertStoreConnect(),
+export const TransferredWarehouseTransferAlert = FF.pipe(
+  TransferredWarehouseTransferAlertInner,
   withAlertActions,
-)(TransferredWarehouseTransferAlertInner);
+  withAlertStoreConnect(),
+);

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import '@/style/pages/PaymentReceive/List.scss';
 import { PaymentsReceivedActionsBar } from './PaymentsReceivedActionsBar';
@@ -10,7 +11,7 @@ import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
 import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
 import { DashboardPageContent } from '@/components';
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface PaymentsReceivedListProps
   extends Pick<
@@ -49,12 +50,13 @@ function PaymentsReceivedListInner({
   );
 }
 
-export const PaymentsReceivedList = compose(
+export const PaymentsReceivedList = FF.pipe(
+  PaymentsReceivedListInner,
+  withPaymentsReceivedActions,
   withPaymentsReceived(
     ({ paymentReceivesTableState, paymentsTableStateChanged }) => ({
       paymentReceivesTableState,
       paymentsTableStateChanged,
     }),
   ),
-  withPaymentsReceivedActions,
-)(PaymentsReceivedListInner);
+);

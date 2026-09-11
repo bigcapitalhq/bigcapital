@@ -1,5 +1,6 @@
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import styled from 'styled-components';
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
@@ -11,7 +12,6 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface AllocateLandedCostFloatingActionsProps
   extends Pick<WithDialogActionsProps, 'closeDialog'> {}
@@ -64,8 +64,9 @@ function AllocateLandedCostFloatingActionsInner({
   );
 }
 
-export const AllocateLandedCostFloatingActions = compose(withDialogActions)(
+export const AllocateLandedCostFloatingActions = FF.pipe(
   AllocateLandedCostFloatingActionsInner,
+  withDialogActions,
 );
 
 const AllocateDialogFooter = styled(DialogFooter)`

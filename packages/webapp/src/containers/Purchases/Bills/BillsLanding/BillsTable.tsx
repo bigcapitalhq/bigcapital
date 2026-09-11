@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BillsEmptyStatus } from './BillsEmptyStatus';
@@ -22,7 +23,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface WithBillsActionsProps {
   setBillsTableState: (state: Record<string, any>) => void;
@@ -161,10 +161,11 @@ function BillsDataTable({
   );
 }
 
-export const BillsTable = compose(
-  withBills(({ billsTableState }) => ({ billsTableState })),
-  withBillsActions,
-  withAlertActions,
-  withDrawerActions,
+export const BillsTable = FF.pipe(
+  BillsDataTable,
   withDialogActions,
-)(BillsDataTable);
+  withDrawerActions,
+  withAlertActions,
+  withBillsActions,
+  withBills(({ billsTableState }) => ({ billsTableState })),
+);

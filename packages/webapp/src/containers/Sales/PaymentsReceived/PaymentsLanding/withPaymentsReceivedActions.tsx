@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import type { TableQuery } from '@/store/store.types';
+import type { ComponentType } from 'react';
 import {
   setPaymentReceivesTableState,
   resetPaymentReceivesTableState,
@@ -31,4 +32,14 @@ export const mapDispatchToProps = (
     dispatch(resetPaymentReceivesSelectedRows()),
 });
 
-export const withPaymentsReceivedActions = connect(null, mapDispatchToProps);
+export function withPaymentsReceivedActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithPaymentsReceivedActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithPaymentsReceivedActionsProps>
+  >;
+}

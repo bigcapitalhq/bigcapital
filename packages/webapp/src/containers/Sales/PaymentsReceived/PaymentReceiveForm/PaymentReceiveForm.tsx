@@ -1,6 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Formik, Form, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { isEmpty, defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -38,7 +39,7 @@ import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { transactionNumber, compose } from '@/utils';
+import { transactionNumber } from '@/utils';
 
 type WithDialogActionsProps = {
   openDialog: (name: string, payload?: Record<string, unknown>) => void;
@@ -219,6 +220,7 @@ function PaymentReceiveFormRoot({ openDialog }: PaymentReceiveFormRootProps) {
   );
 }
 
-export const PaymentReceivedForm = compose(withDialogActions)(
+export const PaymentReceivedForm = FF.pipe(
   PaymentReceiveFormRoot,
+  withDialogActions,
 );

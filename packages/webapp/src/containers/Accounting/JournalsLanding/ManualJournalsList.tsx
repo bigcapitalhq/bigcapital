@@ -1,5 +1,6 @@
 import '@/style/pages/ManualJournal/List.scss';
 
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import { ManualJournalActionsBar as ManualJournalsActionsBar } from './ManualJournalActionsBar';
 import { ManualJournalsDataTable } from './ManualJournalsDataTable';
@@ -10,7 +11,7 @@ import { withManualJournals } from './withManualJournals';
 import { withManualJournalsActions } from './withManualJournalsActions';
 import type { WithManualJournalsProps } from './withManualJournals';
 import { DashboardPageContent } from '@/components';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 // The withManualJournals mapper below renames `manualJournalsTableState` →
 // `journalsTableState` and `manualJournalTableStateChanged` →
@@ -57,12 +58,13 @@ function ManualJournalsTable({
   );
 }
 
-export const ManualJournalsList = compose(
-  withManualJournalsActions,
+export const ManualJournalsList = FF.pipe(
+  ManualJournalsTable,
   withManualJournals(
     ({ manualJournalsTableState, manualJournalTableStateChanged }) => ({
       journalsTableState: manualJournalsTableState,
       journalsTableStateChanged: manualJournalTableStateChanged,
     }),
   ),
-)(ManualJournalsTable);
+  withManualJournalsActions,
+);

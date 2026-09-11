@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { withRealizedGainOrLoss } from './withRealizedGainOrLoss';
 import {
@@ -16,7 +17,7 @@ import {
 } from './withRealizedGainOrLossActions';
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface RealizedGainOrLossActionsBarOwnProps {
   numberFormat?: Record<string, unknown>;
@@ -109,9 +110,10 @@ function RealizedGainOrLossActionsBarInner({
   );
 }
 
-export const RealizedGainOrLossActionsBar = compose(
+export const RealizedGainOrLossActionsBar = FF.pipe(
+  RealizedGainOrLossActionsBarInner,
+  withRealizedGainOrLossActions,
   withRealizedGainOrLoss(({ realizedGainOrLossDrawerFilter }) => ({
     isFilterDrawerOpen: realizedGainOrLossDrawerFilter,
   })),
-  withRealizedGainOrLossActions,
-)(RealizedGainOrLossActionsBarInner);
+);

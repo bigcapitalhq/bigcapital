@@ -1,4 +1,5 @@
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { useCallback, useState } from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -7,7 +8,6 @@ import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { transformErrors } from '@/containers/Customers/utils';
-import { compose } from '@/utils';
 
 interface CustomerBulkDeleteAlertPayload {
   customersIds?: number[];
@@ -84,7 +84,8 @@ function CustomerBulkDeleteAlertInner({
   );
 }
 
-export const CustomerBulkDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const CustomerBulkDeleteAlert = FF.pipe(
+  CustomerBulkDeleteAlertInner,
   withAlertActions,
-)(CustomerBulkDeleteAlertInner);
+  withAlertStoreConnect(),
+);

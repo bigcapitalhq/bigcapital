@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { defaultTo } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
@@ -10,7 +11,7 @@ import {
 import type { ReconcileCreditNoteFormEntry } from './types';
 import { DataTableEditable } from '@/components';
 import { useDeepCompareEffect } from '@/hooks/utils';
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
 
 interface ReconcileCreditNoteEntriesTableProps {
   onUpdateData: (entries: ReconcileCreditNoteFormEntry[]) => void;
@@ -36,8 +37,9 @@ export function ReconcileCreditNoteEntriesTable({
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+      const newRows = FF.pipe(
         entries,
+        updateTableCell(rowIndex, columnId, value),
       ) as ReconcileCreditNoteFormEntry[];
       onUpdateData(newRows);
     },
@@ -45,10 +47,11 @@ export function ReconcileCreditNoteEntriesTable({
   );
   // Deep compare entries to modify new entries.
   useDeepCompareEffect(() => {
-    const newRows = compose(
-      maxCreditNoteAmountEntries(defaultTo(creditsRemaining, 0)),
+    const newRows = FF.pipe(
+      entries,
       maxAmountCreditFromRemaining,
-    )(entries) as ReconcileCreditNoteFormEntry[];
+      maxCreditNoteAmountEntries(defaultTo(creditsRemaining, 0)),
+    ) as ReconcileCreditNoteFormEntry[];
 
     onUpdateData(newRows);
   }, [entries]);

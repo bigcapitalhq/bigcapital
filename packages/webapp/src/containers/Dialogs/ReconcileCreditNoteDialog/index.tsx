@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { ReconcileCreditNoteDialogPayload } from './types';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ReconcileCreditNoteDialogContent = React.lazy(() =>
   import('./ReconcileCreditNoteDialogContent').then((m) => ({
@@ -42,4 +42,4 @@ function ReconcileCreditNoteDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(ReconcileCreditNoteDialog);
+export const index = FF.pipe(ReconcileCreditNoteDialog, withDialogRedux());

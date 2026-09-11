@@ -1,4 +1,5 @@
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { first } from 'lodash';
 import moment from 'moment';
 import React from 'react';
@@ -22,7 +23,6 @@ import {
   formattedAmount,
   orderingLinesIndexes,
   toSafeNumber,
-  compose,
 } from '@/utils';
 
 export const MIN_LINES_NUMBER = 1;
@@ -110,10 +110,11 @@ export function transformToEditForm(
       Math.max(MIN_LINES_NUMBER - creditNote.entries.length, 0),
     ),
   ];
-  const entries = compose(
-    ensureEntriesHaveEmptyLine(defaultCreditNoteEntry),
+  const entries = FF.pipe(
+    initialEntries,
     updateItemsEntriesTotal,
-  )(initialEntries);
+    ensureEntriesHaveEmptyLine(defaultCreditNoteEntry),
+  );
 
   return {
     ...defaultCreditNote,

@@ -11,6 +11,7 @@ import {
   Popover,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import {
   AbilitySubject,
@@ -33,7 +34,7 @@ import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { safeCallback, compose } from '@/utils';
+import { safeCallback } from '@/utils';
 
 interface VendorDetailsActionsBarProps
   extends WithDialogActionsProps,
@@ -142,8 +143,9 @@ function VendorDetailsActionsBarInner({
   );
 }
 
-export const VendorDetailsActionsBar = compose(
-  withDrawerActions,
-  withAlertActions,
+export const VendorDetailsActionsBar = FF.pipe(
+  VendorDetailsActionsBarInner,
   withDialogActions,
-)(VendorDetailsActionsBarInner);
+  withAlertActions,
+  withDrawerActions,
+);

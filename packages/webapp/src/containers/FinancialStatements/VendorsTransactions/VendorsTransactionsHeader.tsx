@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
@@ -14,7 +15,7 @@ import {
   WithVendorsTransactionsActionsProps,
 } from './withVendorsTransactionsActions';
 import { FormattedMessage as T } from '@/components';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 interface VendorsTransactionsHeaderOwnProps {
   onSubmitFilter: (values: Record<string, unknown>) => void;
@@ -108,9 +109,10 @@ function VendorsTransactionsHeaderInner({
     </FinancialStatementHeader>
   );
 }
-export const VendorsTransactionsHeader = compose(
-  withVendorsTransactionsActions,
+export const VendorsTransactionsHeader = FF.pipe(
+  VendorsTransactionsHeaderInner,
   withVendorsTransaction(({ vendorsTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: vendorsTransactionsDrawerFilter,
   })),
-)(VendorsTransactionsHeaderInner);
+  withVendorsTransactionsActions,
+);

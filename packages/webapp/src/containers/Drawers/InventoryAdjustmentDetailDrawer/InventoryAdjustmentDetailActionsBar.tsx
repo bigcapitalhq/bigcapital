@@ -1,4 +1,5 @@
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 import {
@@ -15,7 +16,6 @@ import {
   withAlertActions,
   WithAlertActionsProps,
 } from '@/containers/Alert/withAlertActions';
-import { compose } from '@/utils';
 
 interface InventoryAdjustmentDetailActionsBarInnerProps
   extends Pick<WithAlertActionsProps, 'openAlert'> {}
@@ -52,6 +52,7 @@ function InventoryAdjustmentDetailActionsBarInner({
   );
 }
 
-export const InventoryAdjustmentDetailActionsBar = compose(withAlertActions)(
+export const InventoryAdjustmentDetailActionsBar = FF.pipe(
   InventoryAdjustmentDetailActionsBarInner,
+  withAlertActions,
 );

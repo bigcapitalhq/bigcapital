@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { SalesByItemsSheetExportMenu } from './components';
 import { useSalesByItemsContext } from './SalesByItemProvider';
@@ -23,7 +24,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface SalesByItemsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -138,10 +139,11 @@ function SalesByItemsActionsBarInner({
   );
 }
 
-export const SalesByItemsActionsBar = compose(
+export const SalesByItemsActionsBar = FF.pipe(
+  SalesByItemsActionsBarInner,
+  withDialogActions,
+  withSalesByItemsActions,
   withSalesByItems(({ salesByItemsDrawerFilter }) => ({
     salesByItemsDrawerFilter,
   })),
-  withSalesByItemsActions,
-  withDialogActions,
-)(SalesByItemsActionsBarInner);
+);

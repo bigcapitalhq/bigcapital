@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { useAccountsChartContext } from './AccountsChartProvider';
@@ -7,7 +8,7 @@ import { withAccountsTableActions } from './withAccountsTableActions';
 import type { WithAccountsProps } from './withAccounts';
 import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface AccountsViewsTabsInnerProps extends WithAccountsTableActionsProps {
   accountsCurrentView: WithAccountsProps['accountsTableState']['viewSlug'];
@@ -56,9 +57,10 @@ function AccountsViewsTabsInner({
   );
 }
 
-export const AccountsViewsTabs = compose(
-  withAccountsTableActions,
+export const AccountsViewsTabs = FF.pipe(
+  AccountsViewsTabsInner,
   withAccounts(({ accountsTableState }) => ({
     accountsCurrentView: accountsTableState.viewSlug,
   })),
-)(AccountsViewsTabsInner);
+  withAccountsTableActions,
+);

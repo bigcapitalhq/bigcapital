@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import type { TableQuery } from '@/store/store.types';
+import type { ComponentType } from 'react';
 import {
   setManualJournalsTableState,
   setManualJournalsSelectedRows,
@@ -24,4 +25,14 @@ export const mapDispatchToProps = (
     dispatch(resetManualJournalsSelectedRows()),
 });
 
-export const withManualJournalsActions = connect(null, mapDispatchToProps);
+export function withManualJournalsActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithManualJournalsActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithManualJournalsActionsProps>
+  >;
+}

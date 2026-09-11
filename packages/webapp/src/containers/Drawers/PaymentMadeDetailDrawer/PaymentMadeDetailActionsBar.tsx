@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
@@ -28,7 +29,6 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface PaymentMadeDetailActionsBarInnerProps
   extends WithDialogActionsProps,
@@ -87,8 +87,9 @@ function PaymentMadeDetailActionsBarInner({
   );
 }
 
-export const PaymentMadeDetailActionsBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const PaymentMadeDetailActionsBar = FF.pipe(
+  PaymentMadeDetailActionsBarInner,
   withAlertActions,
-)(PaymentMadeDetailActionsBarInner);
+  withDrawerActions,
+  withDialogActions,
+);

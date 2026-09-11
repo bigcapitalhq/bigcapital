@@ -9,6 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
+import * as FF from 'fp-ts/function';
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, AppToaster } from '@/components';
@@ -20,7 +21,6 @@ import {
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { useDeleteWorkspace } from '@/ee/workspaces/hooks/query';
-import { compose } from '@/utils';
 
 type WorkspaceDeleteDialogPayload = {
   organizationId?: string;
@@ -190,7 +190,8 @@ function WorkspaceDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
+export default FF.pipe(
+  WorkspaceDeleteDialog,
   withDialogActions,
-)(WorkspaceDeleteDialog);
+  withDialogRedux(),
+);

@@ -9,6 +9,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import styled, { x } from '@xstyled/emotion';
+import * as FF from 'fp-ts/function';
 import { useMemo, useState } from 'react';
 import intl from 'react-intl-universal';
 import { Icon, FormattedMessage as T } from '@/components';
@@ -21,7 +22,7 @@ import {
   useCurrentOrganizationMetadata,
 } from '@/hooks/query';
 import { useAuthOrganizationId, useAuthActions } from '@/hooks/state';
-import { compose, firstLettersArgs } from '@/utils';
+import { firstLettersArgs } from '@/utils';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {
@@ -337,4 +338,4 @@ function SidebarHeadJSX({
   );
 }
 
-export const SidebarHead = compose(withDrawerActions)(SidebarHeadJSX);
+export const SidebarHead = FF.pipe(SidebarHeadJSX, withDrawerActions);

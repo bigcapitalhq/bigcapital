@@ -1,7 +1,7 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const ManualJournalDrawerContent = lazy(() =>
   import('./ManualJournalDrawerContent').then((m) => ({
@@ -39,4 +39,4 @@ function ManualJournalDrawer({
   );
 }
 
-export const index = compose(withDrawers())(ManualJournalDrawer);
+export const index = FF.pipe(ManualJournalDrawer, withDrawers());

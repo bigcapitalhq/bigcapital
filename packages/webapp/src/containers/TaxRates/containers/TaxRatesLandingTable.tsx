@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { TaxRatesTableActionsMenu } from './_components';
 import { useTaxRatesTableColumns } from './_utils';
 import { TaxRatesLandingEmptyState } from './TaxRatesLandingEmptyState';
@@ -30,7 +31,6 @@ import {
   useActivateTaxRate,
   useInactivateTaxRate,
 } from '@/hooks/query/tax-rates';
-import { compose } from '@/utils';
 
 interface TaxRatesDataTableProps
   extends Pick<WithAlertActionsProps, 'openAlert'>,
@@ -144,9 +144,10 @@ function TaxRatesDataTable({
   );
 }
 
-export const TaxRatesLandingTable = compose(
-  withDashboardActions,
-  withAlertActions,
-  withDrawerActions,
+export const TaxRatesLandingTable = FF.pipe(
+  TaxRatesDataTable,
   withDialogActions,
-)(TaxRatesDataTable);
+  withDrawerActions,
+  withAlertActions,
+  withDashboardActions,
+);

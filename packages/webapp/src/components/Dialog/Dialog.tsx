@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { Dialog } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { DialogProvider } from './DialogProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import '@/style/components/Dialog/Dialog.scss';
-import { compose } from '@/utils';
 
 function DialogComponent(props) {
   const { name, children, closeDialog, onClose } = props;
@@ -20,6 +20,6 @@ function DialogComponent(props) {
   );
 }
 
-const DialogRoot = compose(withDialogActions)(DialogComponent);
+const DialogRoot = FF.pipe(DialogComponent, withDialogActions);
 
 export { DialogRoot as Dialog };

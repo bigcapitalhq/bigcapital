@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { usePublishExpense } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface ExpensePublishAlertPayload {
   expenseId: number;
@@ -71,7 +71,8 @@ function ExpensePublishAlertInner({
   );
 }
 
-export const ExpensePublishAlert = compose(
-  withAlertStoreConnect(),
+export const ExpensePublishAlert = FF.pipe(
+  ExpensePublishAlertInner,
   withAlertActions,
-)(ExpensePublishAlertInner);
+  withAlertStoreConnect(),
+);

@@ -1,6 +1,7 @@
 import { connect, MapStateToProps } from 'react-redux';
 import type { MapState } from '@/containers/hoc.types';
 import type { ApplicationState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 import {
   getBillsTableStateFactory,
   billsTableStateChangedFactory,
@@ -15,9 +16,10 @@ export interface WithBillsProps {
   billsSelectedRows: ReturnType<ReturnType<typeof getBillsSelectedRowsFactory>>;
 }
 
-export function withBills<Props = unknown>(
-  mapState?: MapState<WithBillsProps, Props>,
-) {
+export function withBills<
+  Props = unknown,
+  Mapped extends object = WithBillsProps,
+>(mapState?: MapState<WithBillsProps, Props, Mapped>) {
   const getBillsTableState = getBillsTableStateFactory();
   const billsTableStateChanged = billsTableStateChangedFactory();
   const getBillsSelectedRows = getBillsSelectedRowsFactory();
@@ -36,5 +38,12 @@ export function withBills<Props = unknown>(
       ? (mapState(mapped, state, props) as WithBillsProps)
       : mapped;
   };
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
 }

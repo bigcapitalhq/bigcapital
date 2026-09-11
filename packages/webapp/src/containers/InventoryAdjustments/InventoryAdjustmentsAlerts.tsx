@@ -14,7 +14,7 @@ const InventoryAdjustmentPublishAlert = React.lazy(() =>
 
 interface AlertItem {
   name: string;
-  component: LazyExoticComponent<ComponentType<unknown>>;
+  component: LazyExoticComponent<ComponentType<any>>;
 }
 
 export const InventoryAdjustmentsAlerts: AlertItem[] = [

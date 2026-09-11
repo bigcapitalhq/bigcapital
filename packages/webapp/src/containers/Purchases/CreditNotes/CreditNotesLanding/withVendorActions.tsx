@@ -3,6 +3,7 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import type { RootState } from '@/store/reducers';
 import type { TableQuery } from '@/store/store.types';
+import type { ComponentType } from 'react';
 import {
   setVendorCreditTableState,
   resetVendorCreditTableState,
@@ -21,4 +22,14 @@ export const mapDispatchToProps = (
   resetVendorCreditsTableState: () => dispatch(resetVendorCreditTableState()),
 });
 
-export const withVendorActions = connect(null, mapDispatchToProps);
+export function withVendorActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithVendorActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithVendorActionsProps>
+  >;
+}

@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
 import { withGlobalErrors } from './withGlobalErrors';
 import { withGlobalErrorsActions } from './withGlobalErrorsActions';
 import { AppToaster } from '@/components';
-import { compose } from '@/utils';
 
 let toastKeySessionExpired;
 let toastKeySomethingWrong;
@@ -99,7 +99,8 @@ function GlobalErrorsInner({
   return null;
 }
 
-export const GlobalErrors = compose(
-  withGlobalErrors,
+export const GlobalErrors = FF.pipe(
+  GlobalErrorsInner,
   withGlobalErrorsActions,
-)(GlobalErrorsInner);
+  withGlobalErrors,
+);

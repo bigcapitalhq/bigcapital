@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useAccountsChartContext } from './AccountsChartProvider';
 import { ActionsMenu } from './components';
@@ -25,7 +26,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface AccountsDataTableProps
   extends WithAlertActionsProps,
@@ -174,10 +174,11 @@ function AccountsDataTableInner({
   );
 }
 
-export const AccountsDataTable = compose(
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
-  withAccountsTableActions,
+export const AccountsDataTable = FF.pipe(
+  AccountsDataTableInner,
   withAccounts(({ accountsSelectedRows }) => ({ accountsSelectedRows })),
-)(AccountsDataTableInner);
+  withAccountsTableActions,
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+);

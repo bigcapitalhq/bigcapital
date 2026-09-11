@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { VendorTransactionsExportMenu } from './components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
@@ -26,7 +27,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface VendorsTransactionsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -149,10 +150,11 @@ function VendorsTransactionsActionsBarInner({
     </DashboardActionsBar>
   );
 }
-export const VendorsTransactionsActionsBar = compose(
+export const VendorsTransactionsActionsBar = FF.pipe(
+  VendorsTransactionsActionsBarInner,
+  withDialogActions,
+  withVendorsTransactionsActions,
   withVendorsTransaction(({ vendorsTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: vendorsTransactionsDrawerFilter,
   })),
-  withVendorsTransactionsActions,
-  withDialogActions,
-)(VendorsTransactionsActionsBarInner);
+);

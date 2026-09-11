@@ -11,6 +11,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -39,7 +40,6 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshInvoices } from '@/hooks/query/invoices';
-import { compose } from '@/utils';
 
 interface InvoiceActionsBarProps
   extends Pick<WithInvoicesProps, 'invoicesSelectedRows'>,
@@ -211,12 +211,13 @@ function InvoiceActionsBar({
   );
 }
 
-export const InvoicesActionsBar = compose(
-  withInvoiceActions,
+export const InvoicesActionsBar = FF.pipe(
+  InvoiceActionsBar,
+  withDrawerActions,
+  withDialogActions,
   withInvoices(({ invoicesTableState, invoicesSelectedRows }) => ({
     invoicesFilterRoles: invoicesTableState.filterRoles,
     invoicesSelectedRows,
   })),
-  withDialogActions,
-  withDrawerActions,
-)(InvoiceActionsBar);
+  withInvoiceActions,
+);

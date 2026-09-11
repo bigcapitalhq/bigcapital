@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import { useCallback, useEffect } from 'react';
 import { ARAgingSummaryActionsBar } from './ARAgingSummaryActionsBar';
@@ -13,7 +14,6 @@ import {
 } from './withARAgingSummaryActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
 
 type ReceivableAgingSummarySheetProps = Pick<
   WithARAgingSummaryActionsProps,
@@ -70,6 +70,7 @@ function ARAgingSummaryInner({
   );
 }
 
-export const ARAgingSummary = compose(withARAgingSummaryActions)(
+export const ARAgingSummary = FF.pipe(
   ARAgingSummaryInner,
+  withARAgingSummaryActions,
 );

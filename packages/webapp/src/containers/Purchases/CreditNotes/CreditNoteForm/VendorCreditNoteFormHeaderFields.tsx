@@ -2,6 +2,7 @@ import { Position, ControlGroup } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -27,7 +28,6 @@ import {
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useDateInputFormatter } from '@/hooks';
-import { compose } from '@/utils';
 
 const getFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
@@ -212,8 +212,9 @@ function VendorCreditFormVendorSelect() {
   );
 }
 
-export const VendorCreditNoteFormHeaderFields = compose(withDialogActions)(
+export const VendorCreditNoteFormHeaderFields = FF.pipe(
   VendorCreditNoteFormHeaderFieldsInner,
+  withDialogActions,
 );
 
 const VendorButtonLink = styled(VendorDrawerLink)`

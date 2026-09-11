@@ -28,4 +28,14 @@ const mapDispatchToProps = (
   resetExpensesSelectedRows: () => dispatch(resetExpensesSelectedRows()),
 });
 
-export const withExpensesActions = connect(null, mapDispatchToProps);
+export function withExpensesActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithExpensesActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithExpensesActionsProps>
+  >;
+}

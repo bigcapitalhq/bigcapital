@@ -1,4 +1,5 @@
 // @ts-nocheck
+import * as FF from 'fp-ts/function';
 import { debounce } from 'lodash';
 import { isUndefined } from 'lodash';
 import React from 'react';
@@ -11,7 +12,6 @@ import { withUniversalSearchActions } from './withUniversalSearchActions';
 import { UniversalSearch } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { useUniversalSearch } from '@/hooks/query';
-import { compose } from '@/utils';
 
 /**
  * Dashboard universal search.
@@ -124,10 +124,11 @@ function DashboardUniversalSearchInner({
   );
 }
 
-export const DashboardUniversalSearch = compose(
-  withUniversalSearchActions,
+export const DashboardUniversalSearch = FF.pipe(
+  DashboardUniversalSearchInner,
   withUniversalSearch(({ globalSearchShow, defaultUniversalResourceType }) => ({
     globalSearchShow,
     defaultUniversalResourceType,
   })),
-)(DashboardUniversalSearchInner);
+  withUniversalSearchActions,
+);

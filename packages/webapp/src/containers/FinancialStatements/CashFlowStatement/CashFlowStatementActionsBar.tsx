@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 import { CashflowSheetExportMenu } from './components';
@@ -26,7 +27,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface CashFlowStatementActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -135,10 +136,11 @@ function CashFlowStatementActionsBarInner({
   );
 }
 
-export const CashFlowStatementActionsBar = compose(
+export const CashFlowStatementActionsBar = FF.pipe(
+  CashFlowStatementActionsBarInner,
+  withDialogActions,
+  withCashFlowStatementActions,
   withCashFlowStatement(({ cashFlowStatementDrawerFilter }) => ({
     isFilterDrawerOpen: cashFlowStatementDrawerFilter,
   })),
-  withCashFlowStatementActions,
-  withDialogActions,
-)(CashFlowStatementActionsBarInner);
+);

@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { VendorCreditNumberDilaogProvider } from './VendorCreditNumberDilaogProvider';
@@ -11,7 +12,6 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSaveSettings, useSettingsVendorCredits } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface VendorCreditNumberDialogContentProps extends WithDialogActionsProps {
   initialValues?: Partial<ReferenceNumberFormValues>;
@@ -102,6 +102,7 @@ function VendorCreditNumberDialogContentInner({
   );
 }
 
-export const VendorCreditNumberDialogContent = compose(withDialogActions)(
+export const VendorCreditNumberDialogContent = FF.pipe(
   VendorCreditNumberDialogContentInner,
+  withDialogActions,
 );

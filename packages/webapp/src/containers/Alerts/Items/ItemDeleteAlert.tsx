@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -16,7 +17,6 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { handleDeleteErrors } from '@/containers/Items/utils';
 import { withItemsActions } from '@/containers/Items/withItemsActions';
 import { useDeleteItem } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface ItemDeleteAlertProps
   extends WithAlertActionsProps,
@@ -81,9 +81,10 @@ function ItemDeleteAlertInner({
   );
 }
 
-export const ItemDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withItemsActions,
+export const ItemDeleteAlert = FF.pipe(
+  ItemDeleteAlertInner,
   withDrawerActions,
-)(ItemDeleteAlertInner);
+  withItemsActions,
+  withAlertActions,
+  withAlertStoreConnect(),
+);

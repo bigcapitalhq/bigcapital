@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
@@ -21,7 +22,6 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface WarehouseTransferRow {
   id: number;
@@ -161,10 +161,11 @@ function WarehouseTransfersDataTableInner({
     </DashboardContentTable>
   );
 }
-export const WarehouseTransfersDataTable = compose(
-  withDashboardActions,
-  withWarehouseTransfersActions,
-  withAlertActions,
-  withDrawerActions,
+export const WarehouseTransfersDataTable = FF.pipe(
+  WarehouseTransfersDataTableInner,
   withDialogActions,
-)(WarehouseTransfersDataTableInner);
+  withDrawerActions,
+  withAlertActions,
+  withWarehouseTransfersActions,
+  withDashboardActions,
+);

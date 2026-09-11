@@ -1,10 +1,11 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface JournalDeleteEntriesAlertPayload {
   // Empty payload — this alert is a generic clear-lines confirmation that doesn't read any payload field.
@@ -55,7 +56,8 @@ function JournalDeleteEntriesAlertInner({
   );
 }
 
-export const JournalDeleteEntriesAlert = compose(
-  withAlertStoreConnect(),
+export const JournalDeleteEntriesAlert = FF.pipe(
+  JournalDeleteEntriesAlertInner,
   withAlertActions,
-)(JournalDeleteEntriesAlertInner);
+  withAlertStoreConnect(),
+);

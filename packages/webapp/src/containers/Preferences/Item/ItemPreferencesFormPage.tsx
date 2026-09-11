@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import '@/style/pages/Preferences/Accounting.scss';
@@ -13,7 +14,6 @@ import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashb
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import {
-  compose,
   optionsMapToArray,
   transformToForm,
   transfromToSnakeCase,
@@ -80,6 +80,7 @@ function ItemPreferencesFormPageInner({
   );
 }
 
-export const ItemPreferencesFormPage = compose(withDashboardActions)(
+export const ItemPreferencesFormPage = FF.pipe(
   ItemPreferencesFormPageInner,
+  withDashboardActions,
 );

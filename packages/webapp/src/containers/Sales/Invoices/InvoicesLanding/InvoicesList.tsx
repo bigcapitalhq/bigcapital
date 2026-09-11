@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import '@/style/pages/SaleInvoice/List.scss';
 import { InvoicesActionsBar } from './InvoicesActionsBar';
@@ -11,7 +12,7 @@ import type { WithInvoiceActionsProps } from './withInvoiceActions';
 import type { WithInvoicesProps } from './withInvoices';
 import { DashboardPageContent } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface InvoicesListProps
   extends Pick<
@@ -50,11 +51,12 @@ function InvoicesListInner({
   );
 }
 
-export const InvoicesList = compose(
+export const InvoicesList = FF.pipe(
+  InvoicesListInner,
+  withAlertActions,
+  withInvoiceActions,
   withInvoices(({ invoicesTableState, invoicesTableStateChanged }) => ({
     invoicesTableState,
     invoicesTableStateChanged,
   })),
-  withInvoiceActions,
-  withAlertActions,
-)(InvoicesListInner);
+);

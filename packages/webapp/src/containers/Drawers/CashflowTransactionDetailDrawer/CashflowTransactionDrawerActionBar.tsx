@@ -6,6 +6,7 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import {
@@ -17,7 +18,6 @@ import {
 } from '@/components';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { compose } from '@/utils';
 
 /**
  * Cashflow transaction drawer action bar.
@@ -67,6 +67,7 @@ function CashflowTransactionDrawerActionBarInner({
   );
 }
 
-export const CashflowTransactionDrawerActionBar = compose(withAlertActions)(
+export const CashflowTransactionDrawerActionBar = FF.pipe(
   CashflowTransactionDrawerActionBarInner,
+  withAlertActions,
 );

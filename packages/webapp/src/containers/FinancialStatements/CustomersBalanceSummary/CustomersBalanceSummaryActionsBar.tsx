@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import { CustomerBalanceSummaryExportMenu } from './components';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { withCustomersBalanceSummary } from './withCustomersBalanceSummary';
@@ -22,7 +23,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface CustomersBalanceSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -132,10 +133,11 @@ function CustomersBalanceSummaryActionsBarInner({
   );
 }
 
-export const CustomersBalanceSummaryActionsBar = compose(
+export const CustomersBalanceSummaryActionsBar = FF.pipe(
+  CustomersBalanceSummaryActionsBarInner,
+  withDialogActions,
+  withCustomersBalanceSummaryActions,
   withCustomersBalanceSummary(({ customersBalanceDrawerFilter }) => ({
     isFilterDrawerOpen: customersBalanceDrawerFilter,
   })),
-  withCustomersBalanceSummaryActions,
-  withDialogActions,
-)(CustomersBalanceSummaryActionsBarInner);
+);

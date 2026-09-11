@@ -10,6 +10,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 import {
@@ -30,7 +31,7 @@ import {
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
-import { compose, safeCallback } from '@/utils';
+import { safeCallback } from '@/utils';
 
 interface AccountDrawerActionBarInnerProps
   extends WithDialogActionsProps,
@@ -150,7 +151,8 @@ function AccountDrawerActionBarInner({
     </DrawerActionsBar>
   );
 }
-export const AccountDrawerActionBar = compose(
-  withDialogActions,
+export const AccountDrawerActionBar = FF.pipe(
+  AccountDrawerActionBarInner,
   withAlertActions,
-)(AccountDrawerActionBarInner);
+  withDialogActions,
+);

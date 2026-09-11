@@ -1,5 +1,6 @@
 import { connect, MapStateToProps } from 'react-redux';
 import type { MapState } from '@/containers/hoc.types';
+import type { ComponentType } from 'react';
 import {
   getManualJournalsSelectedRowsFactory,
   getManualJournalsTableStateFactory,
@@ -19,8 +20,11 @@ export interface WithManualJournalsProps {
   >;
 }
 
-export const withManualJournals = <Props = unknown,>(
-  mapState?: MapState<WithManualJournalsProps, Props>,
+export const withManualJournals = <
+  Props = unknown,
+  Mapped extends object = WithManualJournalsProps,
+>(
+  mapState?: MapState<WithManualJournalsProps, Props, Mapped>,
 ) => {
   const getJournalsTableQuery = getManualJournalsTableStateFactory();
   const manualJournalTableStateChanged =
@@ -41,5 +45,12 @@ export const withManualJournals = <Props = unknown,>(
       ? (mapState(mapped, state, props) as WithManualJournalsProps)
       : mapped;
   };
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
 };

@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { withEstimates } from './withEstimates';
@@ -6,7 +7,7 @@ import { withEstimatesActions } from './withEstimatesActions';
 import type { WithEstimatesProps } from './withEstimates';
 import type { WithEstimatesActionsProps } from './withEstimatesActions';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface EstimateViewTabsProps extends WithEstimatesActionsProps {
   estimatesCurrentView: string;
@@ -38,9 +39,10 @@ function EstimateViewTabs({
   );
 }
 
-export const EstimatesViewTabs = compose(
-  withEstimatesActions,
+export const EstimatesViewTabs = FF.pipe(
+  EstimateViewTabs,
   withEstimates(({ estimatesTableState }: WithEstimatesProps) => ({
     estimatesCurrentView: estimatesTableState.viewSlug,
   })),
-)(EstimateViewTabs);
+  withEstimatesActions,
+);

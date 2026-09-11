@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { BalanceSheetExportMenu } from './components';
 import { withBalanceSheet, WithBalanceSheetProps } from './withBalanceSheet';
@@ -22,7 +23,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface BalanceSheetActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -141,10 +142,11 @@ function BalanceSheetActionsBarInner({
   );
 }
 
-export const BalanceSheetActionsBar = compose(
+export const BalanceSheetActionsBar = FF.pipe(
+  BalanceSheetActionsBarInner,
+  withDialogActions,
+  withBalanceSheetActions,
   withBalanceSheet(({ balanceSheetDrawerFilter }) => ({
     balanceSheetDrawerFilter,
   })),
-  withBalanceSheetActions,
-  withDialogActions,
-)(BalanceSheetActionsBarInner);
+);

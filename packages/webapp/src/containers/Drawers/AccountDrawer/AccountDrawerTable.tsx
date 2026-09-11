@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
@@ -13,7 +14,6 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 /**
  * account drawer table.
@@ -65,8 +65,9 @@ function AccountDrawerDataTable() {
   );
 }
 
-export const AccountDrawerTable = compose(withDrawerActions)(
+export const AccountDrawerTable = FF.pipe(
   AccountDrawerTableInner,
+  withDrawerActions,
 );
 
 const TableFooter = styled.div`

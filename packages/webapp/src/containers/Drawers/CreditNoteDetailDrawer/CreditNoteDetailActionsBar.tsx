@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
@@ -30,7 +31,6 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface CreditNoteDetailActionsBarInnerProps
   extends WithDialogActionsProps,
@@ -153,8 +153,9 @@ function CreditNoteDetailActionsBarInner({
   );
 }
 
-export const CreditNoteDetailActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
+export const CreditNoteDetailActionsBar = FF.pipe(
+  CreditNoteDetailActionsBarInner,
   withDrawerActions,
-)(CreditNoteDetailActionsBarInner);
+  withAlertActions,
+  withDialogActions,
+);

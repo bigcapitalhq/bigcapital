@@ -14,7 +14,7 @@ import {
   withDashboardActions,
   type WithDashboardActionsProps,
 } from '@/containers/Dashboard/withDashboardActions';
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 
 import '@/style/pages/Preferences/Accounting.scss';
 
@@ -85,6 +85,7 @@ function AccountantFormPageInner({
   );
 }
 
-export const AccountantFormPage = compose(withDashboardActions)(
+export const AccountantFormPage = FF.pipe(
   AccountantFormPageInner,
+  withDashboardActions,
 );

@@ -5,7 +5,6 @@ import { RealizedGainOrLossHeader } from './RealizedGainOrLossHeader';
 import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
 import { WithRealizedGainOrLossActionsProps } from './withRealizedGainOrLossActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 type RealizedGainOrLossProps = {
   organizationName: string;

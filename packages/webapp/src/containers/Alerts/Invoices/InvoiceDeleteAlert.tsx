@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -10,7 +11,6 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { handleDeleteErrors } from '@/containers/Sales/Invoices/InvoicesLanding/components';
 import { useDeleteInvoice } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface InvoiceDeleteAlertPayload {
   invoiceId: number;
@@ -81,8 +81,9 @@ function InvoiceDeleteAlertInner({
   );
 }
 
-export const InvoiceDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const InvoiceDeleteAlert = FF.pipe(
+  InvoiceDeleteAlertInner,
   withDrawerActions,
-)(InvoiceDeleteAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

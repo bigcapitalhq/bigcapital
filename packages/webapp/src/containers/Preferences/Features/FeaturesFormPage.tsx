@@ -16,7 +16,7 @@ import {
   type WithDashboardActionsProps,
 } from '@/containers/Dashboard/withDashboardActions';
 import { usersKeys } from '@/hooks/query/users/query-keys';
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 
 const defaultFormValues = flatten({
   features: {
@@ -82,6 +82,7 @@ function FeaturesFormPageInner({
   );
 }
 
-export const FeaturesFormPage = compose(withDashboardActions)(
+export const FeaturesFormPage = FF.pipe(
   FeaturesFormPageInner,
+  withDashboardActions,
 );

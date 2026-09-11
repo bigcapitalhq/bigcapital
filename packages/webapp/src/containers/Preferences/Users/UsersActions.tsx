@@ -1,4 +1,5 @@
 import { Button, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Icon, FormattedMessage as T } from '@/components';
@@ -6,7 +7,6 @@ import {
   withDialogActions,
   type WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 function UsersActionsInner({ openDialog }: WithDialogActionsProps) {
   const history = useHistory();
@@ -37,4 +37,4 @@ function UsersActionsInner({ openDialog }: WithDialogActionsProps) {
   );
 }
 
-export const UsersActions = compose(withDialogActions)(UsersActionsInner);
+export const UsersActions = FF.pipe(UsersActionsInner, withDialogActions);

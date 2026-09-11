@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { EstimatesActionsBar } from './EstimatesActionsBar';
 import { EstimatesDataTable } from './EstimatesDataTable';
@@ -10,7 +11,7 @@ import type { WithEstimatesProps } from './withEstimates';
 import type { WithEstimatesActionsProps } from './withEstimatesActions';
 import { DashboardPageContent } from '@/components';
 import '@/style/pages/SaleEstimate/List.scss';
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface EstimatesListProps
   extends Pick<
@@ -49,10 +50,11 @@ function EstimatesListInner({
   );
 }
 
-export const EstimatesList = compose(
+export const EstimatesList = FF.pipe(
+  EstimatesListInner,
+  withEstimatesActions,
   withEstimates(({ estimatesTableState, estimatesTableStateChanged }) => ({
     estimatesTableState,
     estimatesTableStateChanged,
   })),
-  withEstimatesActions,
-)(EstimatesListInner);
+);

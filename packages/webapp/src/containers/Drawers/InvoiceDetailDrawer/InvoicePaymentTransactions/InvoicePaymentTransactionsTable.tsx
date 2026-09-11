@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import { useInvoiceDetailDrawerContext } from '../InvoiceDetailDrawerProvider';
 import {
@@ -17,7 +18,6 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { useInvoicePaymentTransactions } from '@/hooks/query';
-import { compose } from '@/utils';
 
 type InvoicePaymentTransaction = InvoicePaymentTransactionsResponse[number];
 
@@ -88,7 +88,8 @@ function InvoicePaymentTransactionsTableInner({
   );
 }
 
-export const InvoicePaymentTransactionsTable = compose(
-  withAlertActions,
+export const InvoicePaymentTransactionsTable = FF.pipe(
+  InvoicePaymentTransactionsTableInner,
   withDrawerActions,
-)(InvoicePaymentTransactionsTableInner);
+  withAlertActions,
+);

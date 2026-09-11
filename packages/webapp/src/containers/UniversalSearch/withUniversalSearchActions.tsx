@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import type { ComponentType } from 'react';
 import {
   universalSearchResetResourceType,
   universalSearchSetResourceType,
@@ -41,4 +42,14 @@ export const mapDispatchToProps = (
     dispatch(universalSearchResetSelectedItem()),
 });
 
-export const withUniversalSearchActions = connect(null, mapDispatchToProps);
+export function withUniversalSearchActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithUniversalSearchActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithUniversalSearchActionsProps>
+  >;
+}

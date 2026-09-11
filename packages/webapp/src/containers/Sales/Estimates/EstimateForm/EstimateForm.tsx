@@ -30,7 +30,7 @@ import type { EstimateFormValues } from './utils';
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { compose, transactionNumber, orderingLinesIndexes } from '@/utils';
+import { transactionNumber, orderingLinesIndexes } from '@/utils';
 
 type EstimateFormRootProps = Record<string, never>;
 

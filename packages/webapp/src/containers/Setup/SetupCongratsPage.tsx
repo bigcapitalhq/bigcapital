@@ -1,6 +1,7 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
+import * as FF from 'fp-ts/function';
 import { useState } from 'react';
 import { WorkflowIcon } from './WorkflowIcon';
 import { FormattedMessage as T } from '@/components';
@@ -9,7 +10,6 @@ import {
   WithOrganizationActionsProps,
 } from '@/containers/Organization/withOrganizationActions';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import { compose } from '@/utils';
 
 /**
  * Setup congrats page.
@@ -73,6 +73,7 @@ function SetupCongratsPageInner({
   );
 }
 
-export const SetupCongratsPage = compose(withOrganizationActions)(
+export const SetupCongratsPage = FF.pipe(
   SetupCongratsPageInner,
+  withOrganizationActions,
 );

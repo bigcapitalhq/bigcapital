@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import type { ComponentType } from 'react';
 import { toggleVendorsBalanceSummaryFilterDrawer } from '@/store/financial-statement/financial-statements.actions';
 
 export interface WithVendorsBalanceSummaryActionsProps {
@@ -13,7 +14,14 @@ export const mapActionsToProps = (
     dispatch(toggleVendorsBalanceSummaryFilterDrawer(toggle)),
 });
 
-export const withVendorsBalanceSummaryActions = connect(
-  null,
-  mapActionsToProps,
-);
+export function withVendorsBalanceSummaryActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithVendorsBalanceSummaryActionsProps>> {
+  const Connected = connect(
+    null,
+    mapActionsToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithVendorsBalanceSummaryActionsProps>
+  >;
+}

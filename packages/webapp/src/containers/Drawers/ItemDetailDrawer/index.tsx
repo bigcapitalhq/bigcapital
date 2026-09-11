@@ -1,10 +1,10 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import {
   withDrawers,
   type WithDrawersProps,
 } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const ItemDetailDrawerContent = React.lazy(() =>
   import('./ItemDetailDrawerContent').then((m) => ({
@@ -35,4 +35,4 @@ function ItemDetailDrawer({ name, isOpen, payload }: ItemDetailDrawerProps) {
     </Drawer>
   );
 }
-export const index = compose(withDrawers())(ItemDetailDrawer);
+export const index = FF.pipe(ItemDetailDrawer, withDrawers());

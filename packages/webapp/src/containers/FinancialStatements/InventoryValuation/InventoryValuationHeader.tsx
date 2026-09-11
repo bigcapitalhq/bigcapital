@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -22,7 +23,7 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useFeatureCan } from '@/hooks/state';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 type InventoryValuationFormValues = Omit<
   ReturnType<typeof getInventoryValuationQuery>,
@@ -134,12 +135,13 @@ function InventoryValuationHeaderInner({
   );
 }
 
-export const InventoryValuationHeader = compose(
+export const InventoryValuationHeader = FF.pipe(
+  InventoryValuationHeaderInner,
+  withInventoryValuationActions,
   withInventoryValuation(({ inventoryValuationDrawerFilter }) => ({
     inventoryValuationDrawerFilter,
   })),
-  withInventoryValuationActions,
-)(InventoryValuationHeaderInner);
+);
 
 const InventoryValuationDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

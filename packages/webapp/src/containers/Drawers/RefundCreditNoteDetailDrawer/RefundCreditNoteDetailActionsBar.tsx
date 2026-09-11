@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
 import {
@@ -10,7 +11,6 @@ import {
 } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { compose } from '@/utils';
 
 /**
  * Refund credit note actions bar.
@@ -43,6 +43,7 @@ function RefundCreditNoteDetailActionsBarInner({
   );
 }
 
-export const RefundCreditNoteDetailActionsBar = compose(withAlertActions)(
+export const RefundCreditNoteDetailActionsBar = FF.pipe(
   RefundCreditNoteDetailActionsBarInner,
+  withAlertActions,
 );

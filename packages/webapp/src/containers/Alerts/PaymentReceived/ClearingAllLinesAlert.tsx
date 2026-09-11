@@ -1,11 +1,12 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface ClearingAllLinesAlertPayload {
   // Empty payload — alert reads no payload field.
@@ -54,7 +55,8 @@ function ClearningAllLinesAlert({
   );
 }
 
-export const ClearingAllLinesAlert = compose(
-  withAlertStoreConnect(),
+export const ClearingAllLinesAlert = FF.pipe(
+  ClearningAllLinesAlert,
   withAlertActions,
-)(ClearningAllLinesAlert);
+  withAlertStoreConnect(),
+);

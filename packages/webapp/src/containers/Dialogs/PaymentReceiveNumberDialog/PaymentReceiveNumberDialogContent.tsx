@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -11,7 +12,7 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSaveSettings, useSettingsPaymentReceives } from '@/hooks/query';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface PaymentReceiveNumberDialogContentProps
   extends WithDialogActionsProps {
@@ -106,6 +107,7 @@ function PaymentNumberDialogContent({
   );
 }
 
-export const PaymentReceiveNumberDialogContent = compose(withDialogActions)(
+export const PaymentReceiveNumberDialogContent = FF.pipe(
   PaymentNumberDialogContent,
+  withDialogActions,
 );

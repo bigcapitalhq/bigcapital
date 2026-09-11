@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { defaultTo } from 'lodash';
 import moment from 'moment';
 import intl from 'react-intl-universal';
@@ -10,7 +11,6 @@ import type { CustomerOpeningBalanceFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 const defaultInitialValues: CustomerOpeningBalanceFormValues = {
   openingBalance: '0',
@@ -86,6 +86,7 @@ function CustomerOpeningBalanceFormInner({
   );
 }
 
-export const CustomerOpeningBalanceForm = compose(withDialogActions)(
+export const CustomerOpeningBalanceForm = FF.pipe(
   CustomerOpeningBalanceFormInner,
+  withDialogActions,
 );

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import '@/style/pages/CashFlow/CashFlowAccounts/List.scss';
 import { CashFlowAccountsActionsBar } from './CashFlowAccountsActionsBar';
@@ -11,7 +12,6 @@ import { DashboardPageContent } from '@/components';
 import { withCashflowAccounts } from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
 import { withCashflowAccountsTableActions } from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
 import { CashFlowDrawers } from '@/containers/CashFlow/CashFlowDrawers';
-import { compose } from '@/utils';
 
 interface CashFlowAccountsListInnerProps
   extends Pick<WithCashflowAccountsProps, 'cashflowAccountsTableState'>,
@@ -53,9 +53,10 @@ function CashFlowAccountsListInner({
   );
 }
 
-export const CashFlowAccountsList = compose(
+export const CashFlowAccountsList = FF.pipe(
+  CashFlowAccountsListInner,
+  withCashflowAccountsTableActions,
   withCashflowAccounts(({ cashflowAccountsTableState }) => ({
     cashflowAccountsTableState,
   })),
-  withCashflowAccountsTableActions,
-)(CashFlowAccountsListInner);
+);

@@ -1,10 +1,10 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { StripePreSetupDialogContent } from './StripePreSetupDialogContent';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux, {
   type DialogBaseProps,
 } from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 interface StripePreSetupDialogRootProps {
   dialogName: string;
@@ -38,8 +38,9 @@ function StripePreSetupDialogRoot({
   );
 }
 
-export const StripePreSetupDialog = compose(withDialogRedux())(
+export const StripePreSetupDialog = FF.pipe(
   StripePreSetupDialogRoot,
+  withDialogRedux(),
 );
 
 StripePreSetupDialogRoot.displayName = 'StripePreSetupDialog';

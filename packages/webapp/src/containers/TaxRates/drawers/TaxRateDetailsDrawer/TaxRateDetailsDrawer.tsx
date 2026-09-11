@@ -1,7 +1,7 @@
+import * as FF from 'fp-ts/function';
 import { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const TaxRateDetailsDrawerContent = lazy(() =>
   import('./TaxRateDetailsContent').then((m) => ({
@@ -36,6 +36,7 @@ function TaxRateDetailsDrawerInner({
   );
 }
 
-export const TaxRateDetailsDrawer = compose(withDrawers())(
+export const TaxRateDetailsDrawer = FF.pipe(
   TaxRateDetailsDrawerInner,
+  withDrawers(),
 );

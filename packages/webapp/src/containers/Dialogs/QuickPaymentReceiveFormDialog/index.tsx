@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { QuickPaymentReceiveDialogPayload } from './types';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const QuickPaymentReceiveFormDialogContent = lazy(() =>
   import('./QuickPaymentReceiveFormDialogContent').then((m) => ({
@@ -44,4 +44,4 @@ function QuickPaymentReceiveFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(QuickPaymentReceiveFormDialog);
+export const index = FF.pipe(QuickPaymentReceiveFormDialog, withDialogRedux());

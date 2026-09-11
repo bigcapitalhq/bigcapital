@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import '@/style/pages/Preferences/GeneralForm.scss';
@@ -10,7 +11,7 @@ import type { GeneralFormValues } from './types';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 const defaultValues: GeneralFormValues = {
   name: '',
@@ -90,5 +91,7 @@ function GeneralFormPageInner({
   );
 }
 
-export const GeneralFormPage =
-  compose(withDashboardActions)(GeneralFormPageInner);
+export const GeneralFormPage = FF.pipe(
+  GeneralFormPageInner,
+  withDashboardActions,
+);

@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const DisconnectBankAccountDialogContent = React.lazy(() =>
   import('./DisconnectBankAccountDialogContent').then((m) => ({
@@ -46,8 +46,9 @@ function DisconnectBankAccountDialogRoot({
   );
 }
 
-export const DisconnectBankAccountDialog = compose(withDialogRedux())(
+export const DisconnectBankAccountDialog = FF.pipe(
   DisconnectBankAccountDialogRoot,
+  withDialogRedux(),
 );
 
 DisconnectBankAccountDialog.displayName = 'DisconnectBankAccountDialog';

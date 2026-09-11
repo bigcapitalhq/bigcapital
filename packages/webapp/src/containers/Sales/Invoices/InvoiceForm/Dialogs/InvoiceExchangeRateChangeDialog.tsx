@@ -1,8 +1,8 @@
 import { Button, Classes, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 type InvoiceExchangeRateChangeDialogInnerProps = {
   dialogName: string;
@@ -55,7 +55,8 @@ function InvoiceExchangeRateChangeDialogInner({
   );
 }
 
-export const InvoiceExchangeRateChangeDialog = compose(
-  withDialogRedux(),
+export const InvoiceExchangeRateChangeDialog = FF.pipe(
+  InvoiceExchangeRateChangeDialogInner,
   withDialogActions,
-)(InvoiceExchangeRateChangeDialogInner);
+  withDialogRedux(),
+);

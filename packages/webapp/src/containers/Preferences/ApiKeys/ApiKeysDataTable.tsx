@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { ActionsMenu, useApiKeysTableColumns } from './components';
@@ -9,7 +10,6 @@ import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useApiKeys, useRevokeApiKey } from '@/hooks/query';
-import { compose } from '@/utils';
 
 type ApiKeysDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
   Pick<WithAlertActionsProps, 'openAlert'>;
@@ -73,7 +73,8 @@ function ApiKeysDataTableInner({
   );
 }
 
-export const ApiKeysDataTable = compose(
-  withDialogActions,
+export const ApiKeysDataTable = FF.pipe(
+  ApiKeysDataTableInner,
   withAlertActions,
-)(ApiKeysDataTableInner);
+  withDialogActions,
+);

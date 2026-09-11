@@ -1,5 +1,6 @@
 import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 import { ContextMenu2 } from '@blueprintjs/popover2';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
@@ -27,7 +28,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { safeCallback } from '@/utils';
-import { compose } from '@/utils';
 
 const CASHFLOW_SKELETON_N = 4;
 
@@ -161,11 +161,12 @@ function CashflowBankAccount({
   );
 }
 
-const CashflowBankAccountEnhanced = compose(
-  withAlertActions,
-  withDrawerActions,
+const CashflowBankAccountEnhanced = FF.pipe(
+  CashflowBankAccount,
   withDialogActions,
-)(CashflowBankAccount);
+  withDrawerActions,
+  withAlertActions,
+);
 
 /**
  * Cashflow accounts grid items.

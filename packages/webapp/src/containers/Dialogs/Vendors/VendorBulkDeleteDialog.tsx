@@ -1,4 +1,5 @@
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -9,7 +10,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withVendorsActions } from '@/containers/Vendors/VendorsLanding/withVendorsActions';
 import { useBulkDeleteVendors } from '@/hooks/query/vendors';
-import { compose } from '@/utils';
 
 interface VendorBulkDeleteDialogPayload {
   ids?: number[];
@@ -112,8 +112,9 @@ function VendorBulkDeleteDialogInner({
   );
 }
 
-export const VendorBulkDeleteDialog = compose(
-  withDialogRedux(),
-  withDialogActions,
+export const VendorBulkDeleteDialog = FF.pipe(
+  VendorBulkDeleteDialogInner,
   withVendorsActions,
-)(VendorBulkDeleteDialogInner);
+  withDialogActions,
+  withDialogRedux(),
+);

@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -19,7 +20,7 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useFeatureCan } from '@/hooks/state';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 type ARAgingSummaryFormValues = ReturnType<
   typeof getDefaultARAgingSummaryQuery
@@ -112,12 +113,13 @@ function ARAgingSummaryHeaderInner({
   );
 }
 
-export const ARAgingSummaryHeader = compose(
-  withARAgingSummaryActions,
+export const ARAgingSummaryHeader = FF.pipe(
+  ARAgingSummaryHeaderInner,
   withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
   })),
-)(ARAgingSummaryHeaderInner);
+  withARAgingSummaryActions,
+);
 
 const ARAgingDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

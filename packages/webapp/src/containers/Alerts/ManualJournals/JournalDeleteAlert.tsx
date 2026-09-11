@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { handleDeleteErrors } from './_utils';
@@ -10,7 +11,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteJournal } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface JournalDeleteAlertPayload {
   manualJournalId: number;
@@ -81,8 +81,9 @@ function JournalDeleteAlertInner({
   );
 }
 
-export const JournalDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const JournalDeleteAlert = FF.pipe(
+  JournalDeleteAlertInner,
   withDrawerActions,
-)(JournalDeleteAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

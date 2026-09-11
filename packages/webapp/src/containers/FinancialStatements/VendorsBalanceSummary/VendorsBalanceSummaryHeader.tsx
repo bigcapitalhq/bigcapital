@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -15,7 +16,7 @@ import {
   WithVendorsBalanceSummaryActionsProps,
 } from './withVendorsBalanceSummaryActions';
 import { FormattedMessage as T } from '@/components';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 interface VendorsBalanceSummaryHeaderOwnProps {
   pageFilter: Record<string, unknown>;
@@ -113,12 +114,13 @@ function VendorsBalanceSummaryHeaderInner({
   );
 }
 
-export const VendorsBalanceSummaryHeader = compose(
+export const VendorsBalanceSummaryHeader = FF.pipe(
+  VendorsBalanceSummaryHeaderInner,
+  withVendorsBalanceSummaryActions,
   withVendorsBalanceSummary(({ VendorsSummaryFilterDrawer }) => ({
     VendorsSummaryFilterDrawer,
   })),
-  withVendorsBalanceSummaryActions,
-)(VendorsBalanceSummaryHeaderInner);
+);
 
 const VendorBalanceDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

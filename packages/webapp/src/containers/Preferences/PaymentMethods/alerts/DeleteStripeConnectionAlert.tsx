@@ -1,4 +1,5 @@
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useDeletePaymentMethod } from '@/hooks/query/payment-services';
-import { compose } from '@/utils';
 
 interface DeleteStripeConnectionAlertProps {
   name: string;
@@ -75,7 +75,8 @@ function DeleteStripeAccountAlert({
   );
 }
 
-export const DeleteStripeConnectionAlert = compose(
-  withAlertStoreConnect(),
+export const DeleteStripeConnectionAlert = FF.pipe(
+  DeleteStripeAccountAlert,
   withAlertActions,
-)(DeleteStripeAccountAlert);
+  withAlertStoreConnect(),
+);

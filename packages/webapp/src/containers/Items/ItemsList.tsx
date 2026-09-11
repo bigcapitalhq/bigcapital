@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { ItemsActionsBar } from './ItemsActionsBar';
 import { ItemsDataTable } from './ItemsDataTable';
@@ -10,7 +11,6 @@ import type { WithItemsProps } from './withItems';
 import type { WithItemsActionsProps } from './withItemsActions';
 import { DashboardPageContent } from '@/components';
 import '@/style/pages/Items/List.scss';
-import { compose } from '@/utils';
 
 interface ItemsListInnerProps
   extends Pick<WithItemsProps, 'itemsTableState' | 'itemsTableStateChanged'>,
@@ -53,10 +53,11 @@ function ItemsListInner({
   );
 }
 
-export const ItemsList = compose(
-  withItemsActions,
+export const ItemsList = FF.pipe(
+  ItemsListInner,
   withItems(({ itemsTableState, itemsTableStateChanged }) => ({
     itemsTableState,
     itemsTableStateChanged,
   })),
-)(ItemsListInner);
+  withItemsActions,
+);

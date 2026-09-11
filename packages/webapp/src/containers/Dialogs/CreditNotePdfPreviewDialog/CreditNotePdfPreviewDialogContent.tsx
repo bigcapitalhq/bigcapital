@@ -1,10 +1,10 @@
 import { AnchorButton } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfCreditNote } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface CreditNotePdfPreviewDialogContentProps
   extends WithDialogActionsProps {
@@ -52,6 +52,7 @@ function CreditNotePdfPreviewDialogContentInner({
   );
 }
 
-export const CreditNotePdfPreviewDialogContent = compose(withDialogActions)(
+export const CreditNotePdfPreviewDialogContent = FF.pipe(
   CreditNotePdfPreviewDialogContentInner,
+  withDialogActions,
 );

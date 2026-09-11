@@ -15,16 +15,24 @@ export interface WithExchangeRateItemEntriesPriceRecalcProps {
  * Re-calculate the item entries prices based on the old exchange rate.
  */
 export function withExchangeRateItemEntriesPriceRecalc<P>(
-  Component: ComponentType<P & WithExchangeRateItemEntriesPriceRecalcProps>,
-): ComponentType<P> {
-  return (props: P) => {
+  Component: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithExchangeRateItemEntriesPriceRecalcProps>> {
+  const AnyComponent = Component as ComponentType<any>;
+
+  return (props) => {
     const { setFieldValue } = useFormikContext<{ entries: unknown[] }>();
     const updateChangeExRate = useUpdateEntriesOnExchangeRateChange();
 
     return (
-      <Component
-        {...(props as P & WithExchangeRateItemEntriesPriceRecalcProps)}
-        onRecalcConfirm={({ exchangeRate, oldExchangeRate }) => {
+      <AnyComponent
+        {...props}
+        onRecalcConfirm={({
+          exchangeRate,
+          oldExchangeRate,
+        }: {
+          exchangeRate: number;
+          oldExchangeRate: number;
+        }) => {
           setFieldValue(
             'entries',
             updateChangeExRate(oldExchangeRate, exchangeRate),
@@ -44,14 +52,16 @@ export interface WithExchangeRateFetchingLoadingProps {
  * Injects the loading props to the exchange rate field.
  */
 export function withExchangeRateFetchingLoading<P>(
-  Component: ComponentType<P & WithExchangeRateFetchingLoadingProps>,
-): ComponentType<P> {
-  return (_props: P) => {
+  Component: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithExchangeRateFetchingLoadingProps>> {
+  const AnyComponent = Component as ComponentType<any>;
+
+  return (props) => {
     const { isAutoExchangeRateLoading } = useAutoExRateContext();
 
     return (
-      <Component
-        {...(_props as P & WithExchangeRateFetchingLoadingProps)}
+      <AnyComponent
+        {...props}
         isLoading={isAutoExchangeRateLoading}
         inputGroupProps={{
           disabled: isAutoExchangeRateLoading,

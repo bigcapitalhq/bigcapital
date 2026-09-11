@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
 import styled from 'styled-components';
 import { APAgingSummaryHeaderDimensions } from './APAgingSummaryHeaderDimensions';
 import { APAgingSummaryHeaderGeneral } from './APAgingSummaryHeaderGeneral';
@@ -17,7 +18,7 @@ import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
 import { useFeatureCan } from '@/hooks/state';
-import { transformToForm, compose } from '@/utils';
+import { transformToForm } from '@/utils';
 
 type APAgingSummaryFormValues = ReturnType<
   typeof getDefaultAPAgingSummaryQuery
@@ -102,12 +103,13 @@ function APAgingSummaryHeaderInner({
   );
 }
 
-export const APAgingSummaryHeader = compose(
-  withAPAgingSummaryActions,
+export const APAgingSummaryHeader = FF.pipe(
+  APAgingSummaryHeaderInner,
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
-)(APAgingSummaryHeaderInner);
+  withAPAgingSummaryActions,
+);
 
 const APAgingDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

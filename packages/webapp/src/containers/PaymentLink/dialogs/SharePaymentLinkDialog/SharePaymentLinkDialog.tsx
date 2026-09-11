@@ -1,8 +1,8 @@
 // @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const SharePaymentLinkContent = React.lazy(() =>
   import('./SharePaymentLinkContent').then((module) => ({
@@ -31,8 +31,9 @@ function SharePaymentLinkDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const SharePaymentLinkDialog = compose(withDialogRedux())(
+export const SharePaymentLinkDialog = FF.pipe(
   SharePaymentLinkDialogRoot,
+  withDialogRedux(),
 );
 
 SharePaymentLinkDialog.displayName = 'SharePaymentLinkDialog';

@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { InventoryItemDetailsExportMenu } from './components';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
@@ -26,7 +27,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface InventoryItemDetailsActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -146,10 +147,11 @@ function InventoryItemDetailsActionsBarInner({
   );
 }
 
-export const InventoryItemDetailsActionsBar = compose(
+export const InventoryItemDetailsActionsBar = FF.pipe(
+  InventoryItemDetailsActionsBarInner,
+  withDialogActions,
+  withInventoryItemDetailsActions,
   withInventoryItemDetails(({ inventoryItemDetailDrawerFilter }) => ({
     isFilterDrawerOpen: inventoryItemDetailDrawerFilter,
   })),
-  withInventoryItemDetailsActions,
-  withDialogActions,
-)(InventoryItemDetailsActionsBarInner);
+);

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import type { RootState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 import {
   isDialogOpenFactory,
   getDialogPayloadFactory,
@@ -27,7 +28,14 @@ function withDialogRedux<TMapped extends object = DialogBaseProps>(
     return (mapState ? mapState(mapped) : mapped) as TMapped;
   };
 
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof TMapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof TMapped>>;
+  };
 }
 
 export default withDialogRedux;

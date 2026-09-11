@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { APAgingSummaryExportMenu } from './components';
@@ -26,7 +27,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface APAgingSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -132,10 +133,11 @@ function APAgingSummaryActionsBarInner({
   );
 }
 
-export const APAgingSummaryActionsBar = compose(
-  withAPAgingSummaryActions,
+export const APAgingSummaryActionsBar = FF.pipe(
+  APAgingSummaryActionsBarInner,
+  withDialogActions,
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
-  withDialogActions,
-)(APAgingSummaryActionsBarInner);
+  withAPAgingSummaryActions,
+);

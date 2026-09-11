@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { SalesTaxLiabilitySummaryLoadingBar } from './components';
@@ -13,7 +14,6 @@ import {
 } from './withSalesTaxLiabilitySummaryActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
 
 interface SalesTaxLiabilitySummaryProps
   extends WithSalesTaxLiabilitySummaryActionsProps {}
@@ -53,7 +53,7 @@ function SalesTaxLiabilitySummaryInner({
   return (
     <SalesTaxLiabilitySummaryBoot filter={query}>
       <SalesTaxLiabilitySummaryActionsBar
-        numberFormat={query.numberFormat}
+        numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <SalesTaxLiabilitySummaryLoadingBar />
@@ -75,6 +75,7 @@ function SalesTaxLiabilitySummaryInner({
   );
 }
 
-export const SalesTaxLiabilitySummary = compose(
+export const SalesTaxLiabilitySummary = FF.pipe(
+  SalesTaxLiabilitySummaryInner,
   withSalesTaxLiabilitySummaryActions,
-)(SalesTaxLiabilitySummaryInner);
+);

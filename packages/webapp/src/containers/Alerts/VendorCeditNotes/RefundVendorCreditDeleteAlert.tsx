@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -9,7 +10,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteRefundVendorCredit } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface RefundVendorCreditDeleteAlertPayload {
   vendorCreditId: number;
@@ -83,8 +83,9 @@ function RefundVendorCreditDeleteAlertInner({
   );
 }
 
-export const RefundVendorCreditDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const RefundVendorCreditDeleteAlert = FF.pipe(
+  RefundVendorCreditDeleteAlertInner,
   withDrawerActions,
-)(RefundVendorCreditDeleteAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { CreateBranchFormSchema } from './BranchForm.schema';
@@ -11,7 +12,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { CreateBranchBody, EditBranchBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 const defaultInitialValues: BranchFormValues = {
   name: '',
@@ -91,4 +92,4 @@ function BranchFormInner({ closeDialog }: BranchFormProps): React.ReactElement {
     />
   );
 }
-export const BranchForm = compose(withDialogActions)(BranchFormInner);
+export const BranchForm = FF.pipe(BranchFormInner, withDialogActions);

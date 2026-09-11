@@ -1,4 +1,5 @@
 import { Intent, Text } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { withBankingActions } from '../../withBankingActions';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
@@ -20,7 +21,6 @@ import {
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/banking';
-import { compose } from '@/utils';
 
 interface RecognizedTransactionsTableProps
   extends Pick<
@@ -115,8 +115,9 @@ function RecognizedTransactionsTableRoot({
   );
 }
 
-export const RecognizedTransactionsTable = compose(withBankingActions)(
+export const RecognizedTransactionsTable = FF.pipe(
   RecognizedTransactionsTableRoot,
+  withBankingActions,
 );
 
 function RecognizedTransactionsTableNoResults() {

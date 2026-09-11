@@ -1,9 +1,9 @@
 import { Button, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface KeyboardShortcutsFooterProps extends WithDialogActionsProps {}
 
@@ -23,6 +23,7 @@ function KeyboardShortcutsFooterInner({
   );
 }
 
-export const KeyboardShortcutsFooter = compose(withDialogActions)(
+export const KeyboardShortcutsFooter = FF.pipe(
   KeyboardShortcutsFooterInner,
+  withDialogActions,
 );

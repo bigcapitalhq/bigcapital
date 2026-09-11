@@ -1,6 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { sumBy, isEmpty } from 'lodash';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
@@ -31,7 +32,7 @@ import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
+import { orderingLinesIndexes, transactionNumber } from '@/utils';
 
 type ReceiptFormRootProps = Record<string, never>;
 
@@ -192,4 +193,4 @@ function ReceiptFormRoot({}: ReceiptFormRootProps) {
   );
 }
 
-export const ReceiptForm = compose(withDashboardActions)(ReceiptFormRoot);
+export const ReceiptForm = FF.pipe(ReceiptFormRoot, withDashboardActions);

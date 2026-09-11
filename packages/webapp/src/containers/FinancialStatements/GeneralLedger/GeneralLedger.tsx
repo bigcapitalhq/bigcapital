@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
 import { useGeneralLedgerQuery } from './common';
@@ -15,7 +16,6 @@ import type { WithGeneralLedgerActionsProps } from './withGeneralLedgerActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { TransactionDetailDrawers } from '@/containers/FinancialStatements/TransactionDetailDrawers';
-import { compose } from '@/utils';
 
 interface GeneralLedgerFilterValues {
   fromDate: Date | string;
@@ -77,6 +77,7 @@ function GeneralLedgerInner({
   );
 }
 
-export const GeneralLedger = compose(withGeneralLedgerActions)(
+export const GeneralLedger = FF.pipe(
   GeneralLedgerInner,
+  withGeneralLedgerActions,
 );

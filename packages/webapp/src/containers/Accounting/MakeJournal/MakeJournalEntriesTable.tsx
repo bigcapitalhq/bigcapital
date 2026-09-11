@@ -1,10 +1,10 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useJournalTableEntriesColumns } from './components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { updateAdjustEntries, type MakeJournalEntry } from './utils';
 import { DataTableEditable } from '@/components';
 import {
-  compose,
   saveInvoke,
   updateMinEntriesLines,
   updateRemoveLineByIndex,
@@ -45,26 +45,23 @@ export function MakeJournalEntriesTable({
     columnId: string,
     value: string | number,
   ) => {
-    const newRows: MakeJournalEntry[] = compose(
-      // Auto-adding new lines.
+    const newRows: MakeJournalEntry[] = FF.pipe(
+      entries, // Update entry of the given row index and column id.
+      updateTableCell(rowIndex, columnId, value), // Update journal entries total.
+      updateAdjustEntries(rowIndex, columnId, value), // Auto-adding new lines.
       updateAutoAddNewLine(defaultEntry, ['accountId', 'credit', 'debit']),
-      // Update journal entries total.
-      updateAdjustEntries(rowIndex, columnId, value),
-      // Update entry of the given row index and column id.
-      updateTableCell(rowIndex, columnId, value),
-    )(entries);
+    );
 
     saveInvoke(onChange, newRows);
   };
 
   // Handle remove datatable row.
   const handleRemoveRow = (rowIndex: number) => {
-    const newRows: MakeJournalEntry[] = compose(
-      // Ensure minimum lines count.
+    const newRows: MakeJournalEntry[] = FF.pipe(
+      entries, // Remove the line by the given index.
+      updateRemoveLineByIndex(rowIndex), // Ensure minimum lines count.
       updateMinEntriesLines(minLinesNumber, defaultEntry),
-      // Remove the line by the given index.
-      updateRemoveLineByIndex(rowIndex),
-    )(entries);
+    );
 
     saveInvoke(onChange, newRows);
   };

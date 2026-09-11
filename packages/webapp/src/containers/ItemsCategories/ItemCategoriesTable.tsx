@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemsCategoriesTableColumns, ActionMenuList } from './components';
@@ -12,7 +13,6 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { DataTable, TableSkeletonRows } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface ItemsCategoryTableProps
   extends WithAlertActionsProps,
@@ -107,11 +107,12 @@ function ItemsCategoryTable({
   );
 }
 
-export const ItemCategoriesTable = compose(
-  withDialogActions,
-  withAlertActions,
-  withItemCategoriesActions,
+export const ItemCategoriesTable = FF.pipe(
+  ItemsCategoryTable,
   withItemCategories(({ itemsCategoriesSelectedRows }) => ({
     itemsCategoriesSelectedRows,
   })),
-)(ItemsCategoryTable);
+  withItemCategoriesActions,
+  withAlertActions,
+  withDialogActions,
+);

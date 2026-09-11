@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext, type FormikErrors } from 'formik';
+import * as FF from 'fp-ts/function';
 import { first, chain } from 'lodash';
 import moment from 'moment';
 import React from 'react';
@@ -24,7 +25,6 @@ import {
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { TaxType } from '@/interfaces/TaxRates';
 import {
-  compose,
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
@@ -134,10 +134,11 @@ export const transformToEditForm = (bill: Bill): BillFormValues => {
       Math.max(MIN_LINES_NUMBER - bill.entries.length, 0),
     ),
   ];
-  const entries = compose(
-    ensureEntriesHaveEmptyLine(defaultBillEntry),
+  const entries = FF.pipe(
+    initialEntries,
     updateItemsEntriesTotal,
-  )(initialEntries);
+    ensureEntriesHaveEmptyLine(defaultBillEntry),
+  );
 
   const attachments = transformAttachmentsToForm(bill);
 
@@ -162,9 +163,11 @@ export const transformEntriesToSubmit = (
     const { amount, ...rest } = transformToForm(entry, defaultBillEntry);
     return rest;
   };
-  return compose(orderingLinesIndexes, (ents: BillFormEntry[]) =>
-    ents.map(transformBillEntry),
-  )(entries);
+  return FF.pipe(
+    entries,
+    (ents: BillFormEntry[]) => ents.map(transformBillEntry),
+    orderingLinesIndexes,
+  );
 };
 
 /**

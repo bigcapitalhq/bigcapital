@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const KeyboardShortcutsContent = lazy(() =>
   import('./KeyboardShortcutsDialogContent').then((m) => ({
@@ -38,4 +38,4 @@ function KeyboardShortcutsDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(KeyboardShortcutsDialog);
+export const index = FF.pipe(KeyboardShortcutsDialog, withDialogRedux());

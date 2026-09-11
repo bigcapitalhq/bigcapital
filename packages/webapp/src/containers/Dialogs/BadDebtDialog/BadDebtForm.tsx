@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { omit } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -12,7 +13,6 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { compose } from '@/utils';
 
 const defaultInitialValues: BadDebtFormValues = {
   expenseAccountId: '',
@@ -79,4 +79,4 @@ function BadDebtFormInner({
   );
 }
 
-export const BadDebtForm = compose(withDialogActions)(BadDebtFormInner);
+export const BadDebtForm = FF.pipe(BadDebtFormInner, withDialogActions);

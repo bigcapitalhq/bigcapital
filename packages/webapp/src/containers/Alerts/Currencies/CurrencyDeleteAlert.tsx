@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useDeleteCurrency } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface CurrencyDeleteAlertPayload {
   currency_code: string;
@@ -79,7 +79,8 @@ function CurrencyDeleteAlertInner({
   );
 }
 
-export const CurrencyDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const CurrencyDeleteAlert = FF.pipe(
+  CurrencyDeleteAlertInner,
   withAlertActions,
-)(CurrencyDeleteAlertInner);
+  withAlertStoreConnect(),
+);

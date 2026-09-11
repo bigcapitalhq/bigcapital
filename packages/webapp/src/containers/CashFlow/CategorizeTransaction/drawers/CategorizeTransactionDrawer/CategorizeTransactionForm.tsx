@@ -2,6 +2,7 @@ import { categorizeTransactionsBulk } from '@bigcapital/sdk-ts';
 import { Intent } from '@blueprintjs/core';
 import { useMutation } from '@tanstack/react-query';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -18,7 +19,6 @@ import { AppToaster } from '@/components';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 import { useApiFetcher } from '@/hooks/useRequest';
-import { compose } from '@/utils';
 
 interface CategorizeTransactionFormRootProps
   extends Pick<WithBankingActionsProps, 'closeMatchingTransactionAside'> {}
@@ -102,8 +102,9 @@ function CategorizeTransactionFormRoot({
   );
 }
 
-export const CategorizeTransactionForm = compose(withBankingActions)(
+export const CategorizeTransactionForm = FF.pipe(
   CategorizeTransactionFormRoot,
+  withBankingActions,
 );
 
 const FormRoot = styled(Form)`

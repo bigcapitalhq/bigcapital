@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useVendorsCreditNoteTableColumns, ActionsMenu } from './components';
@@ -23,7 +24,6 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface WithVendorsCreditNotesActionsProps {
   setVendorsCreditNoteTableState: (state: Record<string, any>) => void;
@@ -162,13 +162,14 @@ function VendorsCreditNoteDataTableInner({
   );
 }
 
-export const VendorsCreditNoteDataTable = compose(
-  withDashboardActions,
-  withVendorsCreditNotesActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const VendorsCreditNoteDataTable = FF.pipe(
+  VendorsCreditNoteDataTableInner,
   withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
     vendorsCreditNoteTableState,
   })),
-)(VendorsCreditNoteDataTableInner);
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withVendorsCreditNotesActions,
+  withDashboardActions,
+);

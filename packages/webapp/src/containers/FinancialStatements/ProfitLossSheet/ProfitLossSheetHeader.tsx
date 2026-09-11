@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import styled from 'styled-components';
 import { FinancialStatementHeader } from '../FinancialStatementHeader';
@@ -19,7 +20,6 @@ import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
-import { compose } from '@/utils';
 
 type ProfitLossFormValues = ReturnType<typeof getDefaultProfitLossQuery>;
 
@@ -111,12 +111,13 @@ function ProfitLossSheetHeaderInner({
   );
 }
 
-export const ProfitLossSheetHeader = compose(
+export const ProfitLossSheetHeader = FF.pipe(
+  ProfitLossSheetHeaderInner,
+  withProfitLossActions,
   withProfitLoss(({ profitLossDrawerFilter }) => ({
     profitLossDrawerFilter,
   })),
-  withProfitLossActions,
-)(ProfitLossSheetHeaderInner);
+);
 
 const ProfitLossSheetHeaderStyled = styled(FinancialStatementHeader)`
   .bp4-drawer {

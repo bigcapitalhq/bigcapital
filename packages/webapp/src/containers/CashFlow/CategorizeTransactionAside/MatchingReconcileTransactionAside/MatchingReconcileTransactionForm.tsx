@@ -1,5 +1,6 @@
 import { Button, Intent, Position, Tag } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { round } from 'lodash';
 import moment from 'moment';
 import React from 'react';
@@ -34,7 +35,6 @@ import { ContentTabs } from '@/components/ContentTabs';
 import { Features } from '@/constants';
 import { useDateInputFormatter } from '@/hooks';
 import { useCreateCashflowTransaction } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface ReconcileSubmitSuccessPayload {
   id: number;
@@ -149,12 +149,13 @@ function MatchingReconcileTransactionFormRoot({
   );
 }
 
-export const MatchingReconcileTransactionForm = compose(
-  withBankingActions,
+export const MatchingReconcileTransactionForm = FF.pipe(
+  MatchingReconcileTransactionFormRoot,
   withBanking(({ reconcileMatchingTransactionPendingAmount }) => ({
     reconcileMatchingTransactionPendingAmount,
   })),
-)(MatchingReconcileTransactionFormRoot);
+  withBankingActions,
+);
 
 function ReconcileMatchingType() {
   const { setFieldValue, values } =

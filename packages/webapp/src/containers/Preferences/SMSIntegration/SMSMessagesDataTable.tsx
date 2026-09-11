@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -11,7 +12,6 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { DataTable, AppToaster, TableSkeletonRows } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useSettingEditSMSNotification } from '@/hooks/query';
-import { compose } from '@/utils';
 
 type SMSMessagesDataTableInnerProps = Pick<
   WithDialogActionsProps,
@@ -92,8 +92,9 @@ function SMSMessagesDataTableInner({
   );
 }
 
-export const SMSMessagesDataTable = compose(withDialogActions)(
+export const SMSMessagesDataTable = FF.pipe(
   SMSMessagesDataTableInner,
+  withDialogActions,
 );
 
 const SMSNotificationsTable = styled(DataTable)`

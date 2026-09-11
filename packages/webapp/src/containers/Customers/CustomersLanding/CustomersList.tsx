@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import '@/style/pages/Customers/List.scss';
 import { CustomersActionsBar } from './CustomersActionsBar';
@@ -9,7 +10,6 @@ import { withCustomersActions } from './withCustomersActions';
 import type { WithCustomersProps } from './withCustomers';
 import type { WithCustomersActionsProps } from './withCustomersActions';
 import { DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 interface CustomersListInnerProps
   extends Pick<
@@ -54,10 +54,11 @@ function CustomersListInner({
   );
 }
 
-export const CustomersList = compose(
+export const CustomersList = FF.pipe(
+  CustomersListInner,
+  withCustomersActions,
   withCustomers(({ customersTableState, customersTableStateChanged }) => ({
     customersTableState,
     customersTableStateChanged,
   })),
-  withCustomersActions,
-)(CustomersListInner);
+);

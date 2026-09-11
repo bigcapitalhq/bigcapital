@@ -1,5 +1,6 @@
 import { connect, MapStateToProps } from 'react-redux';
 import type { MapState } from '@/containers/hoc.types';
+import type { ComponentType } from 'react';
 import { ApplicationState } from '@/store/reducers';
 
 export interface WithBankingProps {
@@ -15,9 +16,10 @@ export interface WithBankingProps {
   uncategorizedTransactionsFilter: ApplicationState['plaid']['uncategorizedFilter'];
 }
 
-export function withBanking<Props = unknown>(
-  mapState?: MapState<WithBankingProps, Props>,
-) {
+export function withBanking<
+  Props = unknown,
+  Mapped extends object = WithBankingProps,
+>(mapState?: MapState<WithBankingProps, Props, Mapped>) {
   const mapStateToProps: MapStateToProps<
     WithBankingProps,
     Props,
@@ -45,5 +47,12 @@ export function withBanking<Props = unknown>(
       ? (mapState(mapped, state, props) as WithBankingProps)
       : mapped;
   };
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
 }

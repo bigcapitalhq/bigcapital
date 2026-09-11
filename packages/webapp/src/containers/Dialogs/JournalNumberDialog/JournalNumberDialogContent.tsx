@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -11,8 +12,7 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSaveSettings, useSettingsManualJournals } from '@/hooks/query';
-import { saveInvoke, compose } from '@/utils';
-
+import { saveInvoke } from '@/utils';
 import '@/style/pages/ManualJournal/JournalNumberDialog.scss';
 
 interface JournalNumberDialogContentProps extends WithDialogActionsProps {
@@ -105,6 +105,7 @@ function JournalNumberDialogContentInner({
   );
 }
 
-export const JournalNumberDialogContent = compose(withDialogActions)(
+export const JournalNumberDialogContent = FF.pipe(
   JournalNumberDialogContentInner,
+  withDialogActions,
 );

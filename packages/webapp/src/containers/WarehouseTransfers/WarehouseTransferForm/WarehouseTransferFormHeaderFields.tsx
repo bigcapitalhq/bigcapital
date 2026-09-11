@@ -1,6 +1,7 @@
 import { Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useObserveTransferNoSettings } from './utils';
@@ -18,7 +19,6 @@ import { FieldRequiredHint, Icon, InputPrependButton } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useDateInputFormatter } from '@/hooks';
-import { compose } from '@/utils';
 
 /** Blueprint FormGroup/InputGroup support `fastField`/`asyncControl`; package typings omit them. */
 interface FFormGroupFieldProps {
@@ -189,6 +189,7 @@ function WarehouseTransferFormHeaderFieldsInner({
   );
 }
 
-export const WarehouseTransferFormHeaderFields = compose(withDialogActions)(
+export const WarehouseTransferFormHeaderFields = FF.pipe(
   WarehouseTransferFormHeaderFieldsInner,
+  withDialogActions,
 );

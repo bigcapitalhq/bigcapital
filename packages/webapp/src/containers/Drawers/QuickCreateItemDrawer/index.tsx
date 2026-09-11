@@ -1,7 +1,7 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const QuickCretaeItemDrawerContent = lazy(() =>
   import('./QuickCreateItemDrawerContent').then((m) => ({
@@ -38,4 +38,4 @@ function QuickCreateItemDrawer({
   );
 }
 
-export const index = compose(withDrawers())(QuickCreateItemDrawer);
+export const index = FF.pipe(QuickCreateItemDrawer, withDrawers());

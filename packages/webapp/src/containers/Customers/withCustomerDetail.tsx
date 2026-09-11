@@ -1,5 +1,6 @@
 import { connect, MapStateToProps } from 'react-redux';
 import type { ApplicationState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 
 interface OwnProps {
   customerId: number | string;
@@ -17,4 +18,13 @@ const mapStateToProps: MapStateToProps<
   customer: undefined,
 });
 
-export const withCustomerDetail = connect(mapStateToProps);
+export function withCustomerDetail<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithCustomerDetailProps>> {
+  const Connected = connect(mapStateToProps)(
+    WrappedComponent as ComponentType<any>,
+  );
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithCustomerDetailProps>
+  >;
+}

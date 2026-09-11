@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { SalesTaxLiabilityExportMenu } from './components';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
@@ -26,7 +27,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface SalesTaxLiabilitySummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -151,10 +152,11 @@ function SalesTaxLiabilitySummaryActionsBarInner({
   );
 }
 
-export const SalesTaxLiabilitySummaryActionsBar = compose(
+export const SalesTaxLiabilitySummaryActionsBar = FF.pipe(
+  SalesTaxLiabilitySummaryActionsBarInner,
+  withDialogActions,
+  withSalesTaxLiabilitySummaryActions,
   withSalesTaxLiabilitySummary(({ salesTaxLiabilitySummaryFilter }) => ({
     salesTaxLiabilitySummaryFilter,
   })),
-  withSalesTaxLiabilitySummaryActions,
-  withDialogActions,
-)(SalesTaxLiabilitySummaryActionsBarInner);
+);

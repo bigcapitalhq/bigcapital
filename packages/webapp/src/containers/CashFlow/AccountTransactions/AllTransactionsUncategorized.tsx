@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { useEffect, lazy } from 'react';
 import styled from 'styled-components';
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
@@ -6,7 +7,6 @@ import { AccountTransactionsUncategorizeFilter } from './AccountTransactionsUnca
 import type { WithBankingActionsProps } from '../withBankingActions';
 import type { ComponentType } from 'react';
 import { useAppQueryString } from '@/hooks';
-import { compose } from '@/utils';
 
 const Box = styled.div`
   margin: 30px 15px;
@@ -82,6 +82,7 @@ function AccountTransactionsSwitcher() {
   }
 }
 
-export const AllTransactionsUncategorized = compose(withBankingActions)(
+export const AllTransactionsUncategorized = FF.pipe(
   AllTransactionsUncategorizedRoot,
+  withBankingActions,
 );

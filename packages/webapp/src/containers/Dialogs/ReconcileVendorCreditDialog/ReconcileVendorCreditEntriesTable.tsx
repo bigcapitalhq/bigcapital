@@ -14,7 +14,7 @@ import type { ReconcileCreditNoteFormEntry } from '@/containers/Dialogs/Reconcil
 import { DataTableEditable } from '@/components';
 import { maxCreditNoteAmountEntries } from '@/containers/Dialogs/ReconcileCreditNoteDialog/utils';
 import { useDeepCompareEffect } from '@/hooks/utils';
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
 
 interface ReconcileVendorCreditEntriesTableProps {
   onUpdateData: (entries: ReconcileVendorCreditFormEntry[]) => void;
@@ -40,8 +40,9 @@ export function ReconcileVendorCreditEntriesTable({
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+      const newRows = FF.pipe(
         entries,
+        updateTableCell(rowIndex, columnId, value),
       ) as ReconcileVendorCreditFormEntry[];
       onUpdateData(newRows);
     },

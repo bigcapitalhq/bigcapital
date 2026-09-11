@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { SMSMessageDialogPayload } from './types';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const SMSMessageDialogContent = React.lazy(() =>
   import('./SMSMessageDialogContent').then((m) => ({
@@ -46,4 +46,4 @@ function SMSMessageDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(SMSMessageDialog);
+export const index = FF.pipe(SMSMessageDialog, withDialogRedux());

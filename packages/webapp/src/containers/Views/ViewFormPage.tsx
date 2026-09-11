@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAsync } from 'react-use';
@@ -15,7 +16,6 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withResourcesActions } from '@/containers/Resources/withResourcesActions';
 import { ViewForm } from '@/containers/Views/ViewForm';
 import { withViewsActions } from '@/containers/Views/withViewsActions';
-import { compose } from '@/utils';
 
 // @flow
 function ViewFormPageInner({
@@ -120,8 +120,9 @@ function ViewFormPageInner({
   );
 }
 
-export const ViewFormPage = compose(
-  withDashboardActions,
-  withViewsActions,
+export const ViewFormPage = FF.pipe(
+  ViewFormPageInner,
   withResourcesActions,
-)(ViewFormPageInner);
+  withViewsActions,
+  withDashboardActions,
+);

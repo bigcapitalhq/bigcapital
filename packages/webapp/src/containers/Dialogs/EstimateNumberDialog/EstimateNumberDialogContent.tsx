@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -11,7 +12,7 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSaveSettings, useSettingsEstimates } from '@/hooks/query';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface EstimateNumberDialogContentProps extends WithDialogActionsProps {
   initialValues?: Partial<ReferenceNumberFormValues>;
@@ -103,6 +104,7 @@ function EstimateNumberDialogContentInner({
   );
 }
 
-export const EstimateNumberDialogContent = compose(withDialogActions)(
+export const EstimateNumberDialogContent = FF.pipe(
   EstimateNumberDialogContentInner,
+  withDialogActions,
 );

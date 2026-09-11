@@ -8,6 +8,7 @@ import {
   PopoverInteractionKind,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { ProfitLossSheetExportMenu } from './components';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
@@ -23,7 +24,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface ProfitLossActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -131,8 +132,9 @@ function ProfitLossActionsBarInner({
   );
 }
 
-export const ProfitLossActionsBar = compose(
-  withProfitLoss(({ profitLossDrawerFilter }) => ({ profitLossDrawerFilter })),
-  withProfitLossActions,
+export const ProfitLossActionsBar = FF.pipe(
+  ProfitLossActionsBarInner,
   withDialogActions,
-)(ProfitLossActionsBarInner);
+  withProfitLossActions,
+  withProfitLoss(({ profitLossDrawerFilter }) => ({ profitLossDrawerFilter })),
+);

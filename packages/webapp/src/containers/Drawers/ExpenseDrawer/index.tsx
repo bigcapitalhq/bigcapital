@@ -1,7 +1,7 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const ExpenseDrawerContent = lazy(() =>
   import('./ExpenseDrawerContent').then((m) => ({
@@ -33,4 +33,4 @@ function ExpenseDrawer({ name, isOpen, payload }: ExpenseDrawerProps) {
   );
 }
 
-export const index = compose(withDrawers())(ExpenseDrawer);
+export const index = FF.pipe(ExpenseDrawer, withDrawers());

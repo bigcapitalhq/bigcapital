@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { ItemDetailActionsMoreBtn } from './ItemDetailActionsMoreBtn';
@@ -21,7 +22,6 @@ import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface ItemDetailActionsBarInnerProps
   extends Pick<WithAlertActionsProps, 'openAlert'>,
@@ -77,7 +77,8 @@ function ItemDetailActionsBarInner({
   );
 }
 
-export const ItemDetailActionsBar = compose(
-  withDrawerActions,
+export const ItemDetailActionsBar = FF.pipe(
+  ItemDetailActionsBarInner,
   withAlertActions,
-)(ItemDetailActionsBarInner);
+  withDrawerActions,
+);

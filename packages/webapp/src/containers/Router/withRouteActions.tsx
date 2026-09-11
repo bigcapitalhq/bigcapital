@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import type { ComponentType } from 'react';
 
 interface RouteActionsOwnProps {
   location: { pathname: string; search: string };
@@ -40,4 +41,14 @@ export const mapDispatchToProps = (
   };
 };
 
-export const withRouteActions = connect(null, mapDispatchToProps);
+export function withRouteActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithRouteActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithRouteActionsProps>
+  >;
+}

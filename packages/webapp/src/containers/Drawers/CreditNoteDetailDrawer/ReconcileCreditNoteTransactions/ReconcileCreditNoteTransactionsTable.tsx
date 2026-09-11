@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
 import {
@@ -10,7 +11,6 @@ import {
   withAlertActions,
   WithAlertActionsProps,
 } from '@/containers/Alert/withAlertActions';
-import { compose } from '@/utils';
 
 interface ReconcileCreditNoteTransactionsTableInnerProps
   extends WithAlertActionsProps {}
@@ -49,6 +49,7 @@ function ReconcileCreditNoteTransactionsTableInner({
   );
 }
 
-export const ReconcileCreditNoteTransactionsTable = compose(withAlertActions)(
+export const ReconcileCreditNoteTransactionsTable = FF.pipe(
   ReconcileCreditNoteTransactionsTableInner,
+  withAlertActions,
 );

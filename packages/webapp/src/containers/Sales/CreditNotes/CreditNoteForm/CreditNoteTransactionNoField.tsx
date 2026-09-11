@@ -1,5 +1,6 @@
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
@@ -14,7 +15,6 @@ import {
   FInputGroup,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface CreditNoteTransactionNoFieldProps
   extends Pick<WithDialogActionsProps, 'openDialog'> {}
@@ -89,8 +89,9 @@ const CreditNoteTransactionNoFieldInner = ({
   );
 };
 
-export const CreditNoteTransactionNoField = compose(withDialogActions)(
+export const CreditNoteTransactionNoField = FF.pipe(
   CreditNoteTransactionNoFieldInner,
+  withDialogActions,
 );
 
 CreditNoteTransactionNoField.displayName = 'CreditNoteTransactionNoField';

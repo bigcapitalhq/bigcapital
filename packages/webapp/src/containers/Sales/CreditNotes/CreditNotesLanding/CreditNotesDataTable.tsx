@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCreditNoteTableColumns, ActionsMenu } from './components';
@@ -24,7 +25,6 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface CreditNotesDataTableProps
   extends Pick<
@@ -169,14 +169,15 @@ function CreditNotesDataTableInner({
   );
 }
 
-export const CreditNotesDataTable = compose(
-  withDashboardActions,
-  withCreditNotesActions,
-  withDrawerActions,
-  withAlertActions,
-  withDialogActions,
+export const CreditNotesDataTable = FF.pipe(
+  CreditNotesDataTableInner,
   withCreditNotes(({ creditNoteTableState, creditNotesSelectedRows }) => ({
     creditNoteTableState,
     creditNotesSelectedRows,
   })),
-)(CreditNotesDataTableInner);
+  withDialogActions,
+  withAlertActions,
+  withDrawerActions,
+  withCreditNotesActions,
+  withDashboardActions,
+);

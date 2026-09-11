@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -13,7 +14,7 @@ import type { CreateCashflowTransactionBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { compose, transactionNumber } from '@/utils';
+import { transactionNumber } from '@/utils';
 
 interface MoneyInFormInnerProps
   extends Pick<WithDialogActionsProps, 'closeDialog'> {}
@@ -128,4 +129,4 @@ function MoneyInFormInner({
   );
 }
 
-export const MoneyInForm = compose(withDialogActions)(MoneyInFormInner);
+export const MoneyInForm = FF.pipe(MoneyInFormInner, withDialogActions);

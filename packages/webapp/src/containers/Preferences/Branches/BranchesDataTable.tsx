@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -12,7 +13,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useMarkBranchAsPrimary } from '@/hooks/query';
 import '@/style/pages/Preferences/branchesList.scss';
-import { compose } from '@/utils';
 
 type BranchesDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
   Pick<WithAlertActionsProps, 'openAlert'>;
@@ -75,10 +75,11 @@ function BranchesDataTableInner({
   );
 }
 
-export const BranchesDataTable = compose(
-  withDialogActions,
+export const BranchesDataTable = FF.pipe(
+  BranchesDataTableInner,
   withAlertActions,
-)(BranchesDataTableInner);
+  withDialogActions,
+);
 
 const BranchesTableCard = styled(Card)`
   padding: 0;

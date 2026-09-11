@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FeatureCan, FormattedMessage as T, Icon } from '@/components';
 import { Features } from '@/constants';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 type BranchesActionsInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;
 
@@ -31,4 +31,4 @@ function BranchesActionsInner({
   );
 }
 
-export const BranchesActions = compose(withDialogActions)(BranchesActionsInner);
+export const BranchesActions = FF.pipe(BranchesActionsInner, withDialogActions);

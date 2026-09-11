@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { ActionMenuList, useCurrenciesTableColumns } from './components';
@@ -8,7 +9,6 @@ import type { Currency } from '@bigcapital/sdk-ts';
 import { DataTable, TableSkeletonRows } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 type CurrenciesDataTableInnerProps = Pick<
   WithDialogActionsProps,
@@ -71,10 +71,11 @@ function CurrenciesDataTableInner({
   );
 }
 
-export const CurrenciesDataTable = compose(
-  withDialogActions,
+export const CurrenciesDataTable = FF.pipe(
+  CurrenciesDataTableInner,
   withAlertActions,
-)(CurrenciesDataTableInner);
+  withDialogActions,
+);
 
 const CurrencieDataTable = styled(DataTable)`
   .table .th,

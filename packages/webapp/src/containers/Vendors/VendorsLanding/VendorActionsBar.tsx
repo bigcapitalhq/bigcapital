@@ -7,13 +7,13 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { useBulkDeleteVendorsDialog } from './hooks/use-bulk-delete-vendors-dialog';
 import { useVendorsListContext } from './VendorsListProvider';
 import { withVendors } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
-import type { WithVendorsProps } from './withVendors';
 import type { WithVendorsActionsProps } from './withVendorsActions';
 import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -33,11 +33,9 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshVendors } from '@/hooks/query/vendors';
-import { compose } from '@/utils';
 
 interface VendorActionsBarInnerProps
-  extends Pick<WithVendorsProps, 'vendorsTableState'>,
-    WithVendorsActionsProps,
+  extends WithVendorsActionsProps,
     WithDialogActionsProps {
   vendorsSelectedRows: unknown[];
   vendorsFilterConditions: IFilterRole[];
@@ -215,12 +213,13 @@ function VendorActionsBarInner({
   );
 }
 
-export const VendorActionsBar = compose(
-  withVendorsActions,
+export const VendorActionsBar = FF.pipe(
+  VendorActionsBarInner,
+  withDialogActions,
   withVendors(({ vendorsTableState, vendorsSelectedRows }) => ({
     vendorsSelectedRows,
     vendorsInactiveMode: vendorsTableState.inactiveMode,
     vendorsFilterConditions: vendorsTableState.filterRoles,
   })),
-  withDialogActions,
-)(VendorActionsBarInner);
+  withVendorsActions,
+);

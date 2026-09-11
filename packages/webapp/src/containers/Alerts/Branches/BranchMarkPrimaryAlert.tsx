@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useMarkBranchAsPrimary } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface BranchMarkPrimaryAlertPayload {
   branchId: number | string;
@@ -69,7 +69,8 @@ function BranchMarkPrimaryAlertInner({
   );
 }
 
-export const BranchMarkPrimaryAlert = compose(
-  withAlertStoreConnect(),
+export const BranchMarkPrimaryAlert = FF.pipe(
+  BranchMarkPrimaryAlertInner,
   withAlertActions,
-)(BranchMarkPrimaryAlertInner);
+  withAlertStoreConnect(),
+);

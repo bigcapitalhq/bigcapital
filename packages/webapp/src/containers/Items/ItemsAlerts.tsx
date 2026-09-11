@@ -30,7 +30,7 @@ void cancelUnlockingPartialAlert;
 
 interface AlertItem {
   name: string;
-  component: LazyExoticComponent<ComponentType<unknown>>;
+  component: LazyExoticComponent<ComponentType<any>>;
 }
 
 /**

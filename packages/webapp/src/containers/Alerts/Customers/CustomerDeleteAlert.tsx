@@ -1,4 +1,5 @@
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -11,7 +12,6 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { transformErrors } from '@/containers/Customers/utils';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteCustomer } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface CustomerDeleteAlertPayload {
   contactId?: number;
@@ -91,8 +91,9 @@ function CustomerDeleteAlertInner({
   );
 }
 
-export const CustomerDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const CustomerDeleteAlert = FF.pipe(
+  CustomerDeleteAlertInner,
   withDrawerActions,
-)(CustomerDeleteAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

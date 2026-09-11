@@ -1,5 +1,6 @@
 import { Intent, Button } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useInviteUserFormContext } from './InviteUserFormProvider';
@@ -14,7 +15,6 @@ import {
 } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface InviteUserFormContentProps extends WithDialogActionsProps {}
 
@@ -79,6 +79,7 @@ function InviteUserFormContentInner({
   );
 }
 
-export const InviteUserFormContent = compose(withDialogActions)(
+export const InviteUserFormContent = FF.pipe(
   InviteUserFormContentInner,
+  withDialogActions,
 );

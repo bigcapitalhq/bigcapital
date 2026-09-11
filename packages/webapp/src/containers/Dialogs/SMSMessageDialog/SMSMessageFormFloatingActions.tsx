@@ -1,5 +1,6 @@
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import type { SMSMessageFormValues } from './types';
@@ -10,7 +11,6 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface SMSMessageFormFloatingActionsProps extends WithDialogActionsProps {}
 
@@ -50,6 +50,7 @@ function SMSMessageFormFloatingActionsInner({
   );
 }
 
-export const SMSMessageFormFloatingActions = compose(withDialogActions)(
+export const SMSMessageFormFloatingActions = FF.pipe(
   SMSMessageFormFloatingActionsInner,
+  withDialogActions,
 );

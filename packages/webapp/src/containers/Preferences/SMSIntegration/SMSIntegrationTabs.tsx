@@ -1,5 +1,6 @@
 import { Tabs, Tab } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -10,7 +11,6 @@ import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useAppQueryString } from '@/hooks';
-import { compose } from '@/utils';
 
 import '@/style/pages/Preferences/SMSIntegration.scss';
 
@@ -65,8 +65,9 @@ function SMSIntegrationTabsInner({
   );
 }
 
-export const SMSIntegrationTabs = compose(withDashboardActions)(
+export const SMSIntegrationTabs = FF.pipe(
   SMSIntegrationTabsInner,
+  withDashboardActions,
 );
 
 const SMSIntegrationCard = styled(Card)`

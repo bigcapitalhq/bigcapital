@@ -6,6 +6,7 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -32,7 +33,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useRefreshBills } from '@/hooks/query/bills';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { compose } from '@/utils';
 
 interface WithBillsActionsProps {
   setBillsTableState: (state: Record<string, any>) => void;
@@ -189,11 +189,12 @@ function BillActionsBar({
   );
 }
 
-export const BillsActionsBar = compose(
-  withBillsActions,
+export const BillsActionsBar = FF.pipe(
+  BillActionsBar,
+  withDialogActions,
   withBills(({ billsTableState, billsSelectedRows }) => ({
     billsConditionsRoles: billsTableState.filterRoles,
     billsSelectedRows,
   })),
-  withDialogActions,
-)(BillActionsBar);
+  withBillsActions,
+);

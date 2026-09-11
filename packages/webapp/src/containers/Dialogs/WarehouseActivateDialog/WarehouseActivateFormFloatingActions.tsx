@@ -1,11 +1,11 @@
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useWarehouseActivateContext } from './WarehouseActivateFormProvider';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface WarehouseActivateFormFloatingActionsProps
   extends WithDialogActionsProps {}
@@ -38,6 +38,7 @@ function WarehouseActivateFormFloatingActionsInner({
     </div>
   );
 }
-export const WarehouseActivateFormFloatingActions = compose(withDialogActions)(
+export const WarehouseActivateFormFloatingActions = FF.pipe(
   WarehouseActivateFormFloatingActionsInner,
+  withDialogActions,
 );

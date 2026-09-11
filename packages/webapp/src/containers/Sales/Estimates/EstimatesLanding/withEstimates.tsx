@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import type { MapState } from '@/containers/hoc.types';
+import type { ComponentType } from 'react';
 import {
   getEstimatesTableStateFactory,
   isEstimatesTableStateChangedFactory,
@@ -19,8 +20,11 @@ export interface WithEstimatesProps {
   >;
 }
 
-export const withEstimates = <Props extends { location?: { search: string } }>(
-  mapState?: MapState<WithEstimatesProps, Props>,
+export const withEstimates = <
+  Props extends { location?: { search: string } },
+  Mapped extends object = WithEstimatesProps,
+>(
+  mapState?: MapState<WithEstimatesProps, Props, Mapped>,
 ) => {
   const getEstimatesTableState = getEstimatesTableStateFactory();
   const getSelectedRows = getEstimatesSelectedRowsFactory();
@@ -34,5 +38,12 @@ export const withEstimates = <Props extends { location?: { search: string } }>(
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
 };

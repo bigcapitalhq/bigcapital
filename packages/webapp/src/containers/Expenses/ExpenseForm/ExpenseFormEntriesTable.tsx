@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useExpenseFormTableColumns } from './components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
@@ -5,7 +6,6 @@ import type { ExpenseEntry } from './types';
 import { DataTableEditable } from '@/components';
 import {
   saveInvoke,
-  compose,
   updateTableCell,
   updateMinEntriesLines,
   updateAutoAddNewLine,
@@ -40,10 +40,11 @@ export function ExpenseFormEntriesTable({
 
   const handleUpdateData = useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
-      const newRows = compose(
-        updateAutoAddNewLine(defaultEntry, ['expenseAccountId']),
+      const newRows = FF.pipe(
+        entries,
         updateTableCell(rowIndex, columnId, value),
-      )(entries);
+        updateAutoAddNewLine(defaultEntry, ['expenseAccountId']),
+      );
 
       saveInvoke(onChange, newRows);
     },
@@ -52,10 +53,11 @@ export function ExpenseFormEntriesTable({
 
   const handleRemoveRow = useCallback(
     (rowIndex: number) => {
-      const newRows = compose(
-        updateMinEntriesLines(minLines, defaultEntry),
+      const newRows = FF.pipe(
+        entries,
         updateRemoveLineByIndex(rowIndex),
-      )(entries);
+        updateMinEntriesLines(minLines, defaultEntry),
+      );
 
       saveInvoke(onChange, newRows);
     },

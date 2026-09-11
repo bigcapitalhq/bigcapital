@@ -1,4 +1,5 @@
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -10,7 +11,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useUncategorizeTransaction } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface UncategorizeTransactionAlertProps
   extends Pick<WithAlertActionsProps, 'closeAlert'>,
@@ -80,8 +80,9 @@ function UncategorizeTransactionAlertInner({
   );
 }
 
-export const UncategorizeTransactionAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const UncategorizeTransactionAlert = FF.pipe(
+  UncategorizeTransactionAlertInner,
   withDrawerActions,
-)(UncategorizeTransactionAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

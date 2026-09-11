@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -12,7 +13,6 @@ import type { InventoryAdjustmentFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 const defaultInitialValues: InventoryAdjustmentFormValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
@@ -82,6 +82,7 @@ function InventoryAdjustmentFormInner({
   );
 }
 
-export const InventoryAdjustmentForm = compose(withDialogActions)(
+export const InventoryAdjustmentForm = FF.pipe(
   InventoryAdjustmentFormInner,
+  withDialogActions,
 );

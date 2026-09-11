@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { LockingTransactionsDialogPayload } from './types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const LockingTransactionsDialogContent = React.lazy(() =>
   import('./LockingTransactionsDialogContent').then((m) => ({
@@ -44,4 +44,4 @@ function LockingTransactionsDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(LockingTransactionsDialog);
+export const index = FF.pipe(LockingTransactionsDialog, withDialogRedux());

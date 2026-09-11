@@ -7,6 +7,7 @@ import {
   PopoverInteractionKind,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { GeneralLedgerSheetExportMenu } from './components';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
@@ -18,7 +19,6 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 type GeneralLedgerActionsBarProps = {
   isFilterDrawerOpen: boolean;
@@ -104,10 +104,11 @@ function GeneralLedgerActionsBarInner({
   );
 }
 
-export const GeneralLedgerActionsBar = compose(
+export const GeneralLedgerActionsBar = FF.pipe(
+  GeneralLedgerActionsBarInner,
+  withDialogActions,
+  withGeneralLedgerActions,
   withGeneralLedger(({ generalLedgerFilterDrawer }) => ({
     isFilterDrawerOpen: generalLedgerFilterDrawer,
   })),
-  withGeneralLedgerActions,
-  withDialogActions,
-)(GeneralLedgerActionsBarInner);
+);

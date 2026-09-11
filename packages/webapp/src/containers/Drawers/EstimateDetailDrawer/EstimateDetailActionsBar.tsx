@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import { EstimateMoreMenuItems } from './components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
@@ -33,7 +34,6 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface EstimateDetailActionsBarInnerProps
   extends WithDialogActionsProps,
@@ -157,8 +157,9 @@ function EstimateDetailActionsBarInner({
   );
 }
 
-export const EstimateDetailActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
+export const EstimateDetailActionsBar = FF.pipe(
+  EstimateDetailActionsBarInner,
   withDrawerActions,
-)(EstimateDetailActionsBarInner);
+  withAlertActions,
+  withDialogActions,
+);

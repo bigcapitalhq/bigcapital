@@ -1,5 +1,5 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { compose } from 'redux';
 import type { BadDebtDialogPayload } from './types';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
@@ -39,4 +39,4 @@ function BadDebtDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(BadDebtDialog);
+export const index = FF.pipe(BadDebtDialog, withDialogRedux());

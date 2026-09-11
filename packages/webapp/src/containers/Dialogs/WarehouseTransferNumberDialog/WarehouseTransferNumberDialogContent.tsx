@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { WarehouseTransferNumberDialogProvider } from './WarehouseTransferNumberDialogProvider';
@@ -11,7 +12,6 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSaveSettings, useSettingsWarehouseTransfers } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface WarehouseTransferNumberDialogContentProps
   extends WithDialogActionsProps {
@@ -96,6 +96,7 @@ function WarehouseTransferNumberDialogContentInner({
     </WarehouseTransferNumberDialogProvider>
   );
 }
-export const WarehouseTransferNumberDialogContent = compose(withDialogActions)(
+export const WarehouseTransferNumberDialogContent = FF.pipe(
   WarehouseTransferNumberDialogContentInner,
+  withDialogActions,
 );

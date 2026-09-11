@@ -1,4 +1,5 @@
 import { NavbarGroup, NavbarDivider, Button, Classes } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import {
   DashboardActionsBar,
@@ -12,7 +13,6 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 /**
  * Tax rates actions bar.
@@ -65,5 +65,7 @@ function TaxRatesActionsBar({
   );
 }
 
-export const TaxRatesLandingActionsBar =
-  compose(withDialogActions)(TaxRatesActionsBar);
+export const TaxRatesLandingActionsBar = FF.pipe(
+  TaxRatesActionsBar,
+  withDialogActions,
+);

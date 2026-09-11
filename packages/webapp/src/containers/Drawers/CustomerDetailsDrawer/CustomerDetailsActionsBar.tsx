@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
@@ -36,7 +37,6 @@ import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface CustomerDetailsActionsBarProps
   extends WithDialogActionsProps,
@@ -170,8 +170,9 @@ function CustomerDetailsActionsBarInner({
   );
 }
 
-export const CustomerDetailsActionsBar = compose(
-  withDrawerActions,
-  withAlertActions,
+export const CustomerDetailsActionsBar = FF.pipe(
+  CustomerDetailsActionsBarInner,
   withDialogActions,
-)(CustomerDetailsActionsBarInner);
+  withAlertActions,
+  withDrawerActions,
+);

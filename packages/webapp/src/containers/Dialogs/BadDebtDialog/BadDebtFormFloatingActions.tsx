@@ -1,11 +1,11 @@
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { useBadDebtContext } from './BadDebtFormProvider';
 import type { BadDebtFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 /**
  * Bad bebt form floating actions.
@@ -45,6 +45,7 @@ function BadDebtFormFloatingActionsInner({
   );
 }
 
-export const BadDebtFormFloatingActions = compose(withDialogActions)(
+export const BadDebtFormFloatingActions = FF.pipe(
   BadDebtFormFloatingActionsInner,
+  withDialogActions,
 );

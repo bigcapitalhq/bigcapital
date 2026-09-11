@@ -6,6 +6,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
@@ -13,7 +14,7 @@ import { useContactDetailDrawerContext } from './ContactDetailDrawerProvider';
 import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { safeCallback, compose } from '@/utils';
+import { safeCallback } from '@/utils';
 
 function ContactDetailActionsBarInner({
   // #withAlertActions
@@ -63,7 +64,8 @@ function ContactDetailActionsBarInner({
   );
 }
 
-export const ContactDetailActionsBar = compose(
-  withDrawerActions,
+export const ContactDetailActionsBar = FF.pipe(
+  ContactDetailActionsBarInner,
   withAlertActions,
-)(ContactDetailActionsBarInner);
+  withDrawerActions,
+);

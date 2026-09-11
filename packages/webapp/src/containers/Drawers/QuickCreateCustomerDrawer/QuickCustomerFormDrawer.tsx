@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import type { CustomerFormValues } from '@/containers/Customers/CustomerForm/utils';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import type { FormikHelpers } from 'formik';
@@ -10,7 +11,6 @@ import {
 } from '@/containers/Customers/CustomerForm/CustomerFormProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useAddAutofillRef } from '@/hooks/state/autofill';
-import { compose } from '@/utils';
 
 type CustomerFormSubmitPayload = { noRedirect?: boolean };
 
@@ -83,6 +83,7 @@ function QuickCustomerFormDrawerInner({
   );
 }
 
-export const QuickCustomerFormDrawer = compose(withDrawerActions)(
+export const QuickCustomerFormDrawer = FF.pipe(
   QuickCustomerFormDrawerInner,
+  withDrawerActions,
 );

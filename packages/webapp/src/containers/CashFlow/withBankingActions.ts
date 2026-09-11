@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import type { RootState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 import {
   closeMatchingTransactionAside,
   setUncategorizedTransactionIdForMatching,
@@ -122,4 +123,14 @@ const mapDipatchToProps = (
     dispatch(resetUncategorizedTranasctionsFilter()),
 });
 
-export const withBankingActions = connect(null, mapDipatchToProps);
+export function withBankingActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithBankingActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDipatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithBankingActionsProps>
+  >;
+}

@@ -9,12 +9,12 @@ import type { ReferenceNumberFormValues } from './types';
 import { FormattedMessage as T, FormObserver } from '@/components';
 import { saveInvoke, transformToForm } from '@/utils';
 
-const initialFormValues: ReferenceNumberFormValues = {
+const initialFormValues = {
   incrementMode: 'auto',
   numberPrefix: '',
   nextNumber: '',
   onceManualNumber: '',
-};
+} as ReferenceNumberFormValues;
 
 // Validation schema.
 const validationSchema = Yup.object().shape({

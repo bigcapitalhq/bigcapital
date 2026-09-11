@@ -1,12 +1,12 @@
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useLockingTransactionsContext } from './LockingTransactionsFormProvider';
 import type { LockingTransactionsFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface LockingTransactionsFormFloatingActionsProps
   extends WithDialogActionsProps {}
@@ -46,6 +46,7 @@ function LockingTransactionsFormFloatingActionsInner({
   );
 }
 
-export const LockingTransactionsFormFloatingActions = compose(
+export const LockingTransactionsFormFloatingActions = FF.pipe(
+  LockingTransactionsFormFloatingActionsInner,
   withDialogActions,
-)(LockingTransactionsFormFloatingActionsInner);
+);

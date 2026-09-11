@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -15,7 +16,7 @@ import type { QuickPaymentReceiveFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transactionNumber } from '@/utils';
+import { transactionNumber } from '@/utils';
 
 /**
  * Quick payment receive form.
@@ -128,6 +129,7 @@ function QuickPaymentReceiveFormInner({
   );
 }
 
-export const QuickPaymentReceiveForm = compose(withDialogActions)(
+export const QuickPaymentReceiveForm = FF.pipe(
   QuickPaymentReceiveFormInner,
+  withDialogActions,
 );

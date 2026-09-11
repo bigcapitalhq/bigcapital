@@ -1,11 +1,11 @@
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import type { QuickPaymentMadeFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface QuickPaymentMadeFloatingActionsProps extends WithDialogActionsProps {}
 
@@ -41,6 +41,7 @@ function QuickPaymentMadeFloatingActionsInner({
   );
 }
 
-export const QuickPaymentMadeFloatingActions = compose(withDialogActions)(
+export const QuickPaymentMadeFloatingActions = FF.pipe(
   QuickPaymentMadeFloatingActionsInner,
+  withDialogActions,
 );

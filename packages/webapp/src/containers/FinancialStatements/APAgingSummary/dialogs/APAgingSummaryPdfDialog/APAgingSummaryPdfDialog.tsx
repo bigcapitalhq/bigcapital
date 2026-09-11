@@ -1,9 +1,9 @@
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 const APAgingSummaryPdfDialogContent = lazy(() =>
   import('./APAgingSummaryPdfDialogContent').then((m) => ({
@@ -38,6 +38,7 @@ function APAgingSummaryPdfDialogRoot({
   );
 }
 
-export const APAgingSummaryPdfDialog = compose(withDialogRedux())(
+export const APAgingSummaryPdfDialog = FF.pipe(
   APAgingSummaryPdfDialogRoot,
+  withDialogRedux(),
 );

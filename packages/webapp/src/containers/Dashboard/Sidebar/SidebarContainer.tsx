@@ -1,10 +1,10 @@
 // @ts-nocheck
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 import { useObserveSidebarExpendedBodyclass } from './hooks';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
-import { compose } from '@/utils';
 
 /**
  * Sidebar container/
@@ -61,8 +61,9 @@ function SidebarContainerJSX({
   );
 }
 
-export const SidebarContainer = compose(
+export const SidebarContainer = FF.pipe(
+  SidebarContainerJSX,
   withDashboard(({ sidebarExpended }) => ({
     sidebarExpended,
   })),
-)(SidebarContainerJSX);
+);

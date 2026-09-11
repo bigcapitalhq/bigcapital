@@ -11,6 +11,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -40,7 +41,6 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { compose } from '@/utils';
 
 interface EstimateActionsBarProps
   extends Pick<WithEstimatesProps, 'estimatesSelectedRows'>,
@@ -210,12 +210,13 @@ function EstimateActionsBar({
   );
 }
 
-export const EstimatesActionsBar = compose(
-  withEstimatesActions,
+export const EstimatesActionsBar = FF.pipe(
+  EstimateActionsBar,
+  withDrawerActions,
+  withDialogActions,
   withEstimates(({ estimatesTableState, estimatesSelectedRows }) => ({
     estimatesFilterRoles: estimatesTableState.filterRoles,
     estimatesSelectedRows: estimatesSelectedRows || [],
   })),
-  withDialogActions,
-  withDrawerActions,
-)(EstimateActionsBar);
+  withEstimatesActions,
+);

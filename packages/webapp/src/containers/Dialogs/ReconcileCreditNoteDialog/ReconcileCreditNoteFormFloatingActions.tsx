@@ -1,12 +1,12 @@
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import type { ReconcileCreditNoteFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface ReconcileCreditNoteFormFloatingActionsProps
   extends WithDialogActionsProps {}
@@ -45,6 +45,7 @@ function ReconcileCreditNoteFormFloatingActionsInner({
     </div>
   );
 }
-export const ReconcileCreditNoteFormFloatingActions = compose(
+export const ReconcileCreditNoteFormFloatingActions = FF.pipe(
+  ReconcileCreditNoteFormFloatingActionsInner,
   withDialogActions,
-)(ReconcileCreditNoteFormFloatingActionsInner);
+);

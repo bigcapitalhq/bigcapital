@@ -5,6 +5,7 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
@@ -24,7 +25,6 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface ManualJournalDrawerActionBarInnerProps
   extends WithAlertActionsProps,
@@ -80,7 +80,8 @@ function ManualJournalDrawerActionBarInner({
   );
 }
 
-export const ManualJournalDrawerActionBar = compose(
-  withAlertActions,
+export const ManualJournalDrawerActionBar = FF.pipe(
+  ManualJournalDrawerActionBarInner,
   withDrawerActions,
-)(ManualJournalDrawerActionBarInner);
+  withAlertActions,
+);

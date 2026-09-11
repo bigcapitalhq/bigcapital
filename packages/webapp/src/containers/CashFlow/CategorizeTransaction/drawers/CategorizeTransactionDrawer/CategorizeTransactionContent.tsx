@@ -1,11 +1,11 @@
 import { Spinner } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { Suspense } from 'react';
 import styled from 'styled-components';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
 import type { WithBankingProps } from '@/containers/CashFlow/withBanking';
 import { withBanking } from '@/containers/CashFlow/withBanking';
-import { compose } from '@/utils';
 
 interface CategorizeTransactionContentRootProps
   extends Pick<WithBankingProps, 'transactionsToCategorizeIdsSelected'> {}
@@ -28,11 +28,12 @@ function CategorizeTransactionContentRoot({
   );
 }
 
-export const CategorizeTransactionContent = compose(
+export const CategorizeTransactionContent = FF.pipe(
+  CategorizeTransactionContentRoot,
   withBanking(({ transactionsToCategorizeIdsSelected }) => ({
     transactionsToCategorizeIdsSelected,
   })),
-)(CategorizeTransactionContentRoot);
+);
 
 const CategorizeTransactionDrawerBody = styled.div`
   display: flex;

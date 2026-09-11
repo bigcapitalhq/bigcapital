@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import '@/style/pages/CreditNote/List.scss';
 import { CreditNotesActionsBar } from './CreditNotesActionsBar';
@@ -10,7 +11,7 @@ import { withCreditNotesActions } from './withCreditNotesActions';
 import type { WithCreditNotesProps } from './withCreditNotes';
 import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
 import { DashboardPageContent } from '@/components';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface CreditNotesListProps
   extends Pick<
@@ -49,10 +50,11 @@ function CreditNotesListInner({
   );
 }
 
-export const CreditNotesList = compose(
-  withCreditNotesActions,
+export const CreditNotesList = FF.pipe(
+  CreditNotesListInner,
   withCreditNotes(({ creditNoteTableState, creditNoteTableStateChanged }) => ({
     creditNoteTableState,
     creditNoteTableStateChanged,
   })),
-)(CreditNotesListInner);
+  withCreditNotesActions,
+);

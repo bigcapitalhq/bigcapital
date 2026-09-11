@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
@@ -23,7 +24,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface EstimatesDataTableProps
   extends Pick<
@@ -175,13 +175,14 @@ function EstimatesDataTableInner({
   );
 }
 
-export const EstimatesDataTable = compose(
-  withEstimatesActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const EstimatesDataTable = FF.pipe(
+  EstimatesDataTableInner,
   withEstimates(({ estimatesTableState, estimatesSelectedRows }) => ({
     estimatesTableState,
     estimatesSelectedRows,
   })),
-)(EstimatesDataTableInner);
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withEstimatesActions,
+);

@@ -1,11 +1,11 @@
 import { Spinner } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React, { useEffect, Suspense } from 'react';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import type { WithUniversalSearchActionsProps } from '@/containers/UniversalSearch/withUniversalSearchActions';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
-import { compose } from '@/utils';
 
 interface DashboardPageOwnProps {
   pageTitle?: string;
@@ -112,7 +112,8 @@ function DashboardPage({
   );
 }
 
-export default compose(
-  withDashboardActions,
+export default FF.pipe(
+  DashboardPage,
   withUniversalSearchActions,
-)(DashboardPage);
+  withDashboardActions,
+);

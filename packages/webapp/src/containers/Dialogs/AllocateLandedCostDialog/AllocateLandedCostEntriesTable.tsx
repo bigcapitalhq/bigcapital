@@ -1,9 +1,10 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import styled from 'styled-components';
 import { useAllocateLandedCostEntriesTableColumns } from './utils';
 import type { AllocateLandedCostFormEntry } from './types';
 import { DataTableEditable } from '@/components';
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
 
 interface AllocateLandedCostEntriesTableProps {
   entries: AllocateLandedCostFormEntry[];
@@ -24,7 +25,7 @@ export function AllocateLandedCostEntriesTable({
   const handleUpdateData = React.useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
       const newRows = (
-        compose(updateTableCell(rowIndex, columnId, value)) as (
+        FF.flow(updateTableCell(rowIndex, columnId, value)) as (
           old: AllocateLandedCostFormEntry[],
         ) => AllocateLandedCostFormEntry[]
       )(entries);

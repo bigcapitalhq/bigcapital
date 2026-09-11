@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import {
@@ -10,7 +11,6 @@ import {
   withAlertActions,
   WithAlertActionsProps,
 } from '@/containers/Alert/withAlertActions';
-import { compose } from '@/utils';
 
 interface ReconcileVendorCreditTransactionsTableInnerProps
   extends WithAlertActionsProps {}
@@ -45,6 +45,7 @@ function ReconcileVendorCreditTransactionsTableInner({
   );
 }
 
-export const ReconcileVendorCreditTransactionsTable = compose(withAlertActions)(
+export const ReconcileVendorCreditTransactionsTable = FF.pipe(
   ReconcileVendorCreditTransactionsTableInner,
+  withAlertActions,
 );

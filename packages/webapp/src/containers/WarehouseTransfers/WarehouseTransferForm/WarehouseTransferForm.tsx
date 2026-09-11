@@ -1,6 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { Formik, Form, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -30,7 +31,7 @@ import type {
 import { AppToaster } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
+import { orderingLinesIndexes, transactionNumber } from '@/utils';
 
 interface WarehouseTransferFormInnerProps {}
 
@@ -174,6 +175,7 @@ function WarehouseTransferFormInner({}: WarehouseTransferFormInnerProps) {
   );
 }
 
-export const WarehouseTransferForm = compose(withDashboardActions)(
+export const WarehouseTransferForm = FF.pipe(
   WarehouseTransferFormInner,
+  withDashboardActions,
 );

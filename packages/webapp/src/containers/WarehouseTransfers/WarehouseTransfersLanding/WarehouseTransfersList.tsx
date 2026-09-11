@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { WarehouseTransfersActionsBar } from './WarehouseTransfersActionsBar';
 import { WarehouseTransfersDataTable } from './WarehouseTransfersDataTable';
@@ -7,7 +8,7 @@ import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
 import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
 import { DashboardPageContent } from '@/components';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface WarehouseTransfersListInnerProps
   extends Pick<
@@ -51,12 +52,13 @@ function WarehouseTransfersListInner({
   );
 }
 
-export const WarehouseTransfersList = compose(
-  withWarehouseTransfersActions,
+export const WarehouseTransfersList = FF.pipe(
+  WarehouseTransfersListInner,
   withWarehouseTransfers(
     ({ warehouseTransferTableState, warehouseTransferTableStateChanged }) => ({
       warehouseTransferTableState,
       warehouseTransferTableStateChanged,
     }),
   ),
-)(WarehouseTransfersListInner);
+  withWarehouseTransfersActions,
+);

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import '@/style/pages/PaymentMade/List.scss';
 import { PaymentMadeActionsBar } from './PaymentMadeActionsBar';
@@ -9,7 +10,7 @@ import { withPaymentMade } from './withPaymentMade';
 import { withPaymentMadeActions } from './withPaymentMadeActions';
 import type { WithPaymentMadeProps } from './withPaymentMade';
 import { DashboardPageContent } from '@/components';
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface WithPaymentMadeActionsProps {
   resetPaymentMadesTableState: () => void;
@@ -50,10 +51,11 @@ function PaymentMadeListInner({
   );
 }
 
-export const PaymentMadeList = compose(
+export const PaymentMadeList = FF.pipe(
+  PaymentMadeListInner,
+  withPaymentMadeActions,
   withPaymentMade(({ paymentMadesTableState, paymentsTableStateChanged }) => ({
     paymentMadesTableState,
     paymentsTableStateChanged,
   })),
-  withPaymentMadeActions,
-)(PaymentMadeListInner);
+);

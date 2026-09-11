@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useBillDrawerContext } from './BillDrawerProvider';
@@ -36,7 +37,7 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { useFeatureCan } from '@/hooks/state';
-import { safeCallback, compose } from '@/utils';
+import { safeCallback } from '@/utils';
 
 interface BillDetailActionsBarInnerProps
   extends WithDialogActionsProps,
@@ -137,8 +138,9 @@ function BillDetailActionsBarInner({
   );
 }
 
-export const BillDetailActionsBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const BillDetailActionsBar = FF.pipe(
+  BillDetailActionsBarInner,
   withAlertActions,
-)(BillDetailActionsBarInner);
+  withDrawerActions,
+  withDialogActions,
+);
