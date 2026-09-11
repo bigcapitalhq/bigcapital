@@ -17,6 +17,9 @@ import {
   applyCreditNoteToInvoices,
   deleteApplyCreditNoteToInvoices,
   fetchCreditNotePdf,
+  fetchCreditNoteMail,
+  sendCreditNoteMail,
+  fetchCreditNoteHtmlContent,
 } from '@bigcapital/sdk-ts';
 import {
   useQueryClient,
@@ -45,6 +48,8 @@ import type {
   CreateRefundCreditNoteBody,
   ApplyCreditNoteToInvoicesBody,
   ValidateBulkDeleteCreditNotesResponse,
+  CreditNoteMailStateResponse,
+  CreditNoteHtmlContentResponse,
 } from '@bigcapital/sdk-ts';
 
 const commonInvalidateQueries = (
@@ -411,3 +416,46 @@ export function useGetCreditNoteState(
       fetchCreditNoteState(fetcher) as Promise<CreditNoteStateResponse>,
   });
 }
+
+export function useSendCreditNoteMail(
+  props?: UseMutationOptions<void, Error, [number, Record<string, unknown>]>,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: ([id, values]: [number, Record<string, unknown>]) =>
+      sendCreditNoteMail(fetcher, id, values),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+export function useCreditNoteMailState(
+  creditNoteId: number,
+  props?: UseQueryOptions<CreditNoteMailStateResponse, Error>,
+): UseQueryResult<CreditNoteMailStateResponse, Error> {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useQuery({
+    ...props,
+    queryKey: creditNotesKeys.mailOptions(creditNoteId),
+    queryFn: () => fetchCreditNoteMail(fetcher, creditNoteId),
+  });
+}
+
+/**
+ * Retrieves the credit note html content.
+ */
+export const useGetCreditNoteHtml = (
+  creditNoteId: number,
+  options?: UseQueryOptions<CreditNoteHtmlContentResponse>,
+): UseQueryResult<CreditNoteHtmlContentResponse> => {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useQuery({
+    ...options,
+    queryKey: creditNotesKeys.html(creditNoteId),
+    queryFn: () => fetchCreditNoteHtmlContent(fetcher, creditNoteId),
+  });
+};

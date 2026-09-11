@@ -49,6 +49,7 @@ function CreditNoteDetailActionsBarInner({
 
   // #withDrawerActions
   closeDrawer,
+  openDrawer,
 }: CreditNoteDetailActionsBarInnerProps) {
   const { creditNoteId, creditNote } = useCreditNoteDetailDrawerContext();
 
@@ -82,6 +83,11 @@ function CreditNoteDetailActionsBarInner({
     openDialog('credit-note-pdf-preview', { creditNoteId });
   };
 
+  // Handle send mail of credit note.
+  const handleSendMailCreditNote = () => {
+    openDrawer(DRAWERS.CREDIT_NOTE_SEND_MAIL, { creditNoteId });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -112,6 +118,16 @@ function CreditNoteDetailActionsBarInner({
             text={<T id={'print'} />}
             onClick={handlePrintCreditNote}
           />
+          <If condition={!!creditNote.isPublished && !creditNote.isClosed}>
+            <Can I={CreditNoteAction.Edit} a={AbilitySubject.CreditNote}>
+              <Button
+                className={Classes.MINIMAL}
+                icon={<Icon icon={'envelope'} iconSize={16} />}
+                text={<T id={'credit_note.action.send_mail'} />}
+                onClick={handleSendMailCreditNote}
+              />
+            </Can>
+          </If>
         </Can>
         <Can I={CreditNoteAction.Delete} a={AbilitySubject.CreditNote}>
           <Button

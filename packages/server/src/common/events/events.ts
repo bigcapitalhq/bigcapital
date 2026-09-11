@@ -523,6 +523,10 @@ export const events = {
     onApplyToInvoicesCreated: 'onCreditNoteApplyToInvoiceCreated',
     onApplyToInvoicesCreate: 'onCreditNoteApplyToInvoiceCreate',
     onApplyToInvoicesDeleted: 'onCreditNoteApplyToInvoiceDeleted',
+
+    onPreMailSend: 'onCreditNotePreMailSend',
+    onMailSend: 'onCreditNoteMailSend',
+    onMailSent: 'onCreditNoteMailSent',
   },
 
   /**

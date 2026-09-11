@@ -4,6 +4,14 @@ import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { IDynamicListFilter } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { CreateCreditNoteDto, EditCreditNoteDto } from '../dtos/CreditNote.dto';
+import { TenantJobPayload } from '@/interfaces/Tenant';
+import {
+  CommonMailOptions,
+  CommonMailOptionsDTO,
+} from '@/modules/MailNotification/MailNotification.types';
+
+export const SendCreditNoteMailQueue = 'SendCreditNoteMailQueue';
+export const SendCreditNoteMailJob = 'SendCreditNoteMailProcess';
 
 export enum CreditNoteAction {
   Create = 'Create',
@@ -156,4 +164,28 @@ export interface CreditNotePdfTemplateAttributes {
 
 export interface ICreditNoteState {
   defaultTemplateId: number;
+}
+
+export interface CreditNoteMailOptions extends CommonMailOptions {
+  attachPdf?: boolean;
+}
+
+export interface CreditNoteMailOptionsDTO extends CommonMailOptionsDTO {
+  attachPdf?: boolean;
+}
+
+export interface ICreditNoteMailPresendEvent {
+  creditNoteId: number;
+  messageOptions: CreditNoteMailOptionsDTO;
+}
+
+export interface ICreditNoteMailSentEvent {
+  creditNoteId: number;
+  messageOptions: CreditNoteMailOptionsDTO;
+  formattedOptions: CreditNoteMailOptions;
+}
+
+export interface SendCreditNoteMailJobPayload extends TenantJobPayload {
+  creditNoteId: number;
+  messageOptions: CreditNoteMailOptionsDTO;
 }

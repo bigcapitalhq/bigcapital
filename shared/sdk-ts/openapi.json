@@ -11250,6 +11250,99 @@
         ]
       }
     },
+    "/api/credit-notes/{id}/mail": {
+      "post": {
+        "operationId": "CreditNotesController_sendCreditNoteMail",
+        "summary": "Send the given credit note by mail.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The credit note id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The credit note mail has been queued successfully."
+          }
+        },
+        "tags": [
+          "Credit Notes"
+        ]
+      },
+      "get": {
+        "operationId": "CreditNotesController_getCreditNoteMail",
+        "summary": "Retrieves the credit note mail state.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The credit note id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieves the credit note mail state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditNoteMailStateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Credit Notes"
+        ]
+      }
+    },
     "/api/credit-notes/{id}": {
       "get": {
         "operationId": "CreditNotesController_getCreditNote",
@@ -11299,6 +11392,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreditNoteResponseDto"
+                }
+              },
+              "application/json+html": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditNoteHtmlContentResponseDto"
                 }
               }
             }
@@ -34498,6 +34596,190 @@
         "required": [
           "date",
           "entries"
+        ]
+      },
+      "CreditNoteHtmlContentResponseDto": {
+        "type": "object",
+        "properties": {
+          "htmlContent": {
+            "type": "string",
+            "description": "The HTML content of the credit note",
+            "example": "<html>...</html>"
+          }
+        },
+        "required": [
+          "htmlContent"
+        ]
+      },
+      "CreditNoteEntryMailDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unitPrice": {
+            "type": "number"
+          },
+          "unitPriceFormatted": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number"
+          },
+          "totalFormatted": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "quantity",
+          "unitPrice",
+          "unitPriceFormatted",
+          "total",
+          "totalFormatted"
+        ]
+      },
+      "CreditNoteMailStateResponseDto": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "to": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cc": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "bcc": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subject": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "formatArgs": {
+            "type": "object"
+          },
+          "toOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressItemDto"
+            }
+          },
+          "fromOptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddressItemDto"
+            }
+          },
+          "attachPdf": {
+            "type": "boolean"
+          },
+          "creditNoteDate": {
+            "type": "string"
+          },
+          "creditNoteDateFormatted": {
+            "type": "string"
+          },
+          "total": {
+            "type": "number"
+          },
+          "totalFormatted": {
+            "type": "string"
+          },
+          "subtotal": {
+            "type": "number"
+          },
+          "subtotalFormatted": {
+            "type": "string"
+          },
+          "discountAmount": {
+            "type": "number"
+          },
+          "discountAmountFormatted": {
+            "type": "string"
+          },
+          "discountPercentage": {
+            "type": "number"
+          },
+          "discountPercentageFormatted": {
+            "type": "string"
+          },
+          "discountLabel": {
+            "type": "string"
+          },
+          "adjustment": {
+            "type": "number"
+          },
+          "adjustmentFormatted": {
+            "type": "string"
+          },
+          "creditNoteNumber": {
+            "type": "string"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditNoteEntryMailDto"
+            }
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "companyLogoUri": {
+            "type": "string"
+          },
+          "primaryColor": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "subject",
+          "message",
+          "toOptions",
+          "fromOptions",
+          "creditNoteDate",
+          "creditNoteDateFormatted",
+          "total",
+          "totalFormatted",
+          "subtotal",
+          "subtotalFormatted",
+          "discountAmount",
+          "discountAmountFormatted",
+          "discountPercentage",
+          "discountPercentageFormatted",
+          "discountLabel",
+          "adjustment",
+          "adjustmentFormatted",
+          "creditNoteNumber",
+          "entries",
+          "companyName",
+          "companyLogoUri",
+          "primaryColor",
+          "customerName"
         ]
       },
       "CreditNoteResponseDto": {

@@ -5,6 +5,7 @@ export const REFUND_CREDIT_NOTE = 'REFUND_CREDIT_NOTE';
 export const REFUND_CREDIT_NOTE_TRANSACTION = 'REFUND_CREDIT_NOTE_TRANSACTION';
 export const RECONCILE_CREDIT_NOTE = 'RECONCILE_CREDIT_NOTE';
 export const RECONCILE_CREDIT_NOTES = 'RECONCILE_CREDIT_NOTES';
+export const CREDIT_NOTE_HTML = 'CREDIT_NOTE_HTML';
 
 // Query key factory
 export const creditNotesKeys = {
@@ -19,6 +20,9 @@ export const creditNotesKeys = {
   reconciles: (id: number | null | undefined) =>
     [RECONCILE_CREDIT_NOTES, id] as const,
   state: () => ['CREDIT_NOTE_STATE'] as const,
+  mailOptions: (id: number | null | undefined) =>
+    ['CREDIT_NOTE_MAIL_OPTIONS', id] as const,
+  html: (id: number | null | undefined) => [CREDIT_NOTE_HTML, id] as const,
 };
 
 // Grouped object for use in components/hooks
