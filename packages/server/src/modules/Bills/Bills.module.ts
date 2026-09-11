@@ -16,7 +16,7 @@ import { WarehousesSettings } from '../Warehouses/WarehousesSettings';
 import { ItemEntriesTaxTransactions } from '../TaxRates/ItemEntriesTaxTransactions.service';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { BillsController } from './Bills.controller';
-import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
+import { BillLandedCostsIntegrationModule } from './integrations/BillLandedCostsIntegration.module';
 import { BillGLEntriesSubscriber } from './subscribers/BillGLEntriesSubscriber';
 import { BillGLEntries } from './commands/BillsGLEntries';
 import { LedgerModule } from '../Ledger/Ledger.module';
@@ -35,7 +35,7 @@ import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.servic
 @Module({
   imports: [
     TenancyModule,
-    BillLandedCostsModule,
+    BillLandedCostsIntegrationModule,
     LedgerModule,
     AccountsModule,
     DynamicListModule,

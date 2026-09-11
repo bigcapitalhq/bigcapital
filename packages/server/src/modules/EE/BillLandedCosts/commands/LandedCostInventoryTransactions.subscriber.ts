@@ -4,7 +4,7 @@ import {
   IAllocatedLandedCostCreatedPayload,
   IAllocatedLandedCostDeletedPayload,
 } from '../types/BillLandedCosts.types';
-import { events } from '@/common/events/events';
+import { billLandedCostEvents } from '../BillLandedCosts.events';
 import { LandedCostInventoryTransactions } from './LandedCostInventoryTransactions.service';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class LandedCostInventoryTransactionsSubscriber {
    * Writes inventory transactions of the landed cost transaction once created.
    * @param {IAllocatedLandedCostCreatedPayload} payload -
    */
-  @OnEvent(events.billLandedCost.onCreated)
+  @OnEvent(billLandedCostEvents.onCreated)
   async writeInventoryTransactionsOnceCreated({
     billLandedCost,
     trx,
@@ -35,7 +35,7 @@ export class LandedCostInventoryTransactionsSubscriber {
    * Reverts inventory transactions of the landed cost transaction once deleted.
    * @param {IAllocatedLandedCostDeletedPayload} payload -
    */
-  @OnEvent(events.billLandedCost.onDeleted)
+  @OnEvent(billLandedCostEvents.onDeleted)
   async revertInventoryTransactionsOnceDeleted({
     oldBillLandedCost,
     trx,

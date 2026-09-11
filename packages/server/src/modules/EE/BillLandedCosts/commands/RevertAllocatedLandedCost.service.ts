@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BaseLandedCostService } from '../BaseLandedCost.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
-import { events } from '@/common/events/events';
+import { billLandedCostEvents } from '../BillLandedCosts.events';
 import { IAllocatedLandedCostDeletedPayload } from '../types/BillLandedCosts.types';
 import { BillLandedCostEntry } from '../models/BillLandedCostEntry';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -46,7 +46,7 @@ export class RevertAllocatedLandedCost extends BaseLandedCostService {
       await this.deleteLandedCost(landedCostId, trx);
 
       // Triggers the event `onBillLandedCostCreated`.
-      await this.eventPublisher.emitAsync(events.billLandedCost.onDeleted, {
+      await this.eventPublisher.emitAsync(billLandedCostEvents.onDeleted, {
         oldBillLandedCost: oldBillLandedCost,
         billId: oldBillLandedCost.billId,
         trx,

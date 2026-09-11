@@ -4,7 +4,7 @@ import {
 } from '../types/BillLandedCosts.types';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
-import { events } from '@/common/events/events';
+import { billLandedCostEvents } from '../BillLandedCosts.events';
 import { LandedCostGLEntriesService } from './LandedCostGLEntries.service';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class LandedCostGLEntriesSubscriber {
    * Writes GL entries once landed cost transaction created.
    * @param {IAllocatedLandedCostCreatedPayload} payload -
    */
-  @OnEvent(events.billLandedCost.onCreated)
+  @OnEvent(billLandedCostEvents.onCreated)
   async writeGLEntriesOnceLandedCostCreated({
     billLandedCost,
     trx,
@@ -32,7 +32,7 @@ export class LandedCostGLEntriesSubscriber {
    * Reverts GL entries associated to landed cost transaction once deleted.
    * @param {IAllocatedLandedCostDeletedPayload} payload -
    */
-  @OnEvent(events.billLandedCost.onDeleted)
+  @OnEvent(billLandedCostEvents.onDeleted)
   async revertGLEntriesOnceLandedCostDeleted({
     oldBillLandedCost,
     trx,

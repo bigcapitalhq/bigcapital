@@ -5,6 +5,7 @@ import { Bill } from '../models/Bill';
 import { Inject, Injectable } from '@nestjs/common';
 import { BillGL } from './BillsGL';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { BillLandedCostsBridge } from '../integrations/BillLandedCostsBridge';
 
 @Injectable()
 export class BillGLEntries {
@@ -16,6 +17,7 @@ export class BillGLEntries {
   constructor(
     private readonly ledgerStorage: LedgerStorageService,
     private readonly accountRepository: AccountRepository,
+    private readonly landedCostsBridge: BillLandedCostsBridge,
 
     @Inject(Bill.name)
     private readonly billModel: TenantModelProxy<typeof Bill>,
@@ -30,13 +32,19 @@ export class BillGLEntries {
     billId: number,
     trx?: Knex.Transaction,
   ) => {
-    // Retrieves bill with associated entries and landed costs.
+    // Retrieves bill with associated entries.
     const bill = await this.billModel()
       .query(trx)
       .findById(billId)
-      .withGraphFetched('entries.item')
-      .withGraphFetched('entries.allocatedCostEntries')
-      .withGraphFetched('locatedLandedCosts.allocateEntries');
+      .withGraphFetched('entries.item');
+
+    // Retrieves the allocated landed costs of the bill entries.
+    const itemAllocatedCosts =
+      await this.landedCostsBridge.getItemAllocatedCosts(billId, trx);
+
+    // Retrieves the landed costs ledger contribution.
+    const landedCostLedgerEntries =
+      await this.landedCostsBridge.getLandedCostLedgerEntries(billId, trx);
 
     // Finds or create a A/P account based on the given currency.
     const APAccount = await this.accountRepository.findOrCreateAccountsPayable(
@@ -57,7 +65,11 @@ export class BillGLEntries {
       await this.accountRepository.findOrCreatePurchaseDiscountAccount({}, trx);
 
     // Retrieves the bill ledger.
-    const billLedger = new BillGL(bill)
+    const billLedger = new BillGL(
+      bill,
+      itemAllocatedCosts,
+      landedCostLedgerEntries,
+    )
       .setPayableAccountId(APAccount.id)
       .setTaxPayableAccountId(taxPayableAccount.id)
       .setPurchaseDiscountAccountId(purchaseDiscountAccount.id)

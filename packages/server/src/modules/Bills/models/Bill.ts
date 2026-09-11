@@ -3,7 +3,6 @@ import type { Knex } from 'knex';
 import { Model, raw } from 'objection';
 import { castArray, difference, defaultTo } from 'lodash';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
-import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { DiscountType } from '@/common/types/Discount';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
@@ -54,7 +53,6 @@ export class Bill extends TenantBaseModel {
 
   public entries?: ItemEntry[];
   public attachments!: Document[];
-  public locatedLandedCosts?: BillLandedCost[];
   public taxes!: Array<TaxRateTransaction>;
 
   /**
@@ -484,9 +482,6 @@ export class Bill extends TenantBaseModel {
     const {
       ItemEntry,
     } = require('../../TransactionItemEntry/models/ItemEntry');
-    const {
-      BillLandedCost,
-    } = require('../../BillLandedCosts/models/BillLandedCost');
     const { Branch } = require('../../Branches/models/Branch.model');
     const { Warehouse } = require('../../Warehouses/models/Warehouse.model');
     const {
@@ -523,15 +518,6 @@ export class Bill extends TenantBaseModel {
         filter(builder) {
           builder.where('reference_type', 'Bill');
           builder.orderBy('index', 'ASC');
-        },
-      },
-
-      locatedLandedCosts: {
-        relation: Model.HasManyRelation,
-        modelClass: BillLandedCost,
-        join: {
-          from: 'bills.id',
-          to: 'bill_located_costs.billId',
         },
       },
 

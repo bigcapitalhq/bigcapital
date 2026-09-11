@@ -1,6 +1,5 @@
 import { DiscountType } from '@/common/types/Discount';
 import { BaseModel } from '@/models/Model';
-import { BillLandedCostEntry } from '@/modules/BillLandedCosts/models/BillLandedCostEntry';
 import { Item } from '@/modules/Items/models/Item';
 import {
   getExlusiveTaxAmount,
@@ -38,7 +37,6 @@ export class ItemEntry extends BaseModel {
   public warehouseId: number;
 
   item: Item;
-  allocatedCostEntries: BillLandedCostEntry[];
 
   /**
    * Table name.
@@ -183,9 +181,6 @@ export class ItemEntry extends BaseModel {
   static get relationMappings() {
     const { Item } = require('../../Items/models/Item');
     const { SaleInvoice } = require('../../SaleInvoices/models/SaleInvoice');
-    const {
-      BillLandedCostEntry,
-    } = require('../../BillLandedCosts/models/BillLandedCostEntry');
     const { Bill } = require('../../Bills/models/Bill');
     const { SaleReceipt } = require('../../SaleReceipts/models/SaleReceipt');
     const { SaleEstimate } = require('../../SaleEstimates/models/SaleEstimate');
@@ -200,14 +195,6 @@ export class ItemEntry extends BaseModel {
         join: {
           from: 'items_entries.itemId',
           to: 'items.id',
-        },
-      },
-      allocatedCostEntries: {
-        relation: Model.HasManyRelation,
-        modelClass: BillLandedCostEntry,
-        join: {
-          from: 'items_entries.referenceId',
-          to: 'bill_located_cost_entries.entryId',
         },
       },
 

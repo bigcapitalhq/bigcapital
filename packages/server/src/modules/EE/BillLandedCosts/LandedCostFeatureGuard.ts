@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Features } from '@/common/types/Features';
-import { FeaturesManager } from '../Features/FeaturesManager';
+import { FeaturesManager } from '../../Features/FeaturesManager';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from './utils';
 

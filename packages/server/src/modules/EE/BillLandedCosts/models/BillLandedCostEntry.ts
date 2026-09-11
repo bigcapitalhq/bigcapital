@@ -26,7 +26,7 @@ export class BillLandedCostEntry extends BaseModel {
   static get relationMappings() {
     const {
       ItemEntry,
-    } = require('../../TransactionItemEntry/models/ItemEntry');
+    } = require('../../../TransactionItemEntry/models/ItemEntry');
 
     return {
       itemEntry: {

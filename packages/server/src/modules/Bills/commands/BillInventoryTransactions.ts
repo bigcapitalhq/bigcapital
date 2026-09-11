@@ -26,12 +26,11 @@ export class BillInventoryTransactions {
     override?: boolean,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    // Retireve bill with assocaited entries and allocated cost entries.
-
+    // Retireve bill with assocaited entries.
     const bill = await this.bill()
       .query(trx)
       .findById(billId)
-      .withGraphFetched('entries.allocatedCostEntries');
+      .withGraphFetched('entries');
 
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =

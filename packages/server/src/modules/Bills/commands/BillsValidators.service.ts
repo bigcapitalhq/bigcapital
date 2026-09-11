@@ -3,13 +3,11 @@ import { Knex } from 'knex';
 import { ERRORS } from '../Bills.constants';
 import { Bill } from '../models/Bill';
 import { ServiceError } from '@/modules/Items/ServiceError';
-import { Item } from '@/modules/Items/models/Item';
 import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
-import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
-import { transformToMap } from '@/utils/transform-to-key';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { BillEntryDto } from '../dtos/Bill.dto';
+import { BillLandedCostsBridge } from '../integrations/BillLandedCostsBridge';
 
 @Injectable()
 export class BillsValidators {
@@ -19,15 +17,12 @@ export class BillsValidators {
     @Inject(BillPaymentEntry.name)
     private billPaymentEntryModel: TenantModelProxy<typeof BillPaymentEntry>,
 
-    @Inject(BillLandedCost.name)
-    private billLandedCostModel: TenantModelProxy<typeof BillLandedCost>,
-
     @Inject(VendorCreditAppliedBill.name)
     private vendorCreditAppliedBillModel: TenantModelProxy<
       typeof VendorCreditAppliedBill
     >,
 
-    @Inject(Item.name) private itemModel: TenantModelProxy<typeof Item>,
+    private readonly landedCostsBridge: BillLandedCostsBridge,
   ) {}
 
   /**
@@ -117,13 +112,7 @@ export class BillsValidators {
     billId: number,
     trx?: Knex.Transaction,
   ) {
-    const billLandedCosts = await this.billLandedCostModel()
-      .query(trx)
-      .where('billId', billId);
-
-    if (billLandedCosts.length > 0) {
-      throw new ServiceError(ERRORS.BILL_HAS_ASSOCIATED_LANDED_COSTS);
-    }
+    await this.landedCostsBridge.validateBillHasNoLandedCosts(billId, trx);
   }
 
   /**
@@ -134,24 +123,7 @@ export class BillsValidators {
   public async validateCostEntriesShouldBeInventoryItems(
     newEntriesDTO: BillEntryDto[],
   ) {
-    const entriesItemsIds = newEntriesDTO.map((e) => e.itemId);
-    const entriesItems = await this.itemModel()
-      .query()
-      .whereIn('id', entriesItemsIds);
-
-    const entriesItemsById = transformToMap(entriesItems, 'id');
-
-    // Filter the landed cost entries that not associated with inventory item.
-    const nonInventoryHasCost = newEntriesDTO.filter((entry) => {
-      const item = entriesItemsById.get(entry.itemId);
-
-      return entry.landedCost && item.type !== 'inventory';
-    });
-    if (nonInventoryHasCost.length > 0) {
-      throw new ServiceError(
-        ERRORS.LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS,
-      );
-    }
+    await this.landedCostsBridge.validateBillEntries(newEntriesDTO);
   }
 
   /**

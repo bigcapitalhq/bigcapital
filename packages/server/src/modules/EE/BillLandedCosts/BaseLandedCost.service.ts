@@ -6,12 +6,12 @@ import {
   LandedCostTransactionModel,
   LandedCostTransactionType,
 } from './types/BillLandedCosts.types';
-import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 import { BillLandedCost } from './models/BillLandedCost';
-import { ServiceError } from '../Items/ServiceError';
+import { ServiceError } from '../../Items/ServiceError';
 import { CONFIG, ERRORS } from './utils';
-import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
-import { Bill } from '../Bills/models/Bill';
+import { ItemEntry } from '../../TransactionItemEntry/models/ItemEntry';
+import { Bill } from '../../Bills/models/Bill';
 import { TransactionLandedCost } from './commands/TransctionLandedCost.service';
 import {
   AllocateBillLandedCostDto,

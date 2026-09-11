@@ -7,7 +7,7 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { BillLandedCost } from '../models/BillLandedCost';
 import { BaseLandedCostService } from '../BaseLandedCost.service';
-import { events } from '@/common/events/events';
+import { billLandedCostEvents } from '../BillLandedCosts.events';
 import { AllocateBillLandedCostDto } from '../dtos/AllocateBillLandedCost.dto';
 
 @Injectable()
@@ -93,7 +93,7 @@ export class AllocateLandedCostService extends BaseLandedCostService {
         .query(trx)
         .insertGraph(billLandedCostObj);
       // Triggers `onBillLandedCostCreated` event.
-      await this.eventPublisher.emitAsync(events.billLandedCost.onCreated, {
+      await this.eventPublisher.emitAsync(billLandedCostEvents.onCreated, {
         bill,
         billLandedCostId: billLandedCost.id,
         billLandedCost,

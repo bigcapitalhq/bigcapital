@@ -9,7 +9,7 @@ import { Bill } from '../models/Bill';
 import { events } from '@/common/events/events';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Knex } from 'knex';
-import { TransactionLandedCostEntriesService } from '@/modules/BillLandedCosts/TransactionLandedCostEntries.service';
+import { BillLandedCostsBridge } from '../integrations/BillLandedCostsBridge';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditBillDto } from '../dtos/Bill.dto';
 
@@ -20,7 +20,7 @@ export class EditBillService {
     private itemsEntriesService: ItemsEntriesService,
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
-    private transactionLandedCostEntries: TransactionLandedCostEntriesService,
+    private landedCostsBridge: BillLandedCostsBridge,
     private transformerDTO: BillDTOTransformer,
 
     @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
@@ -128,13 +128,8 @@ export class EditBillService {
       vendor,
       oldBill,
     );
-    // Validate landed cost entries that have allocated cost could not be deleted.
-    await this.transactionLandedCostEntries.validateLandedCostEntriesNotDeleted(
-      oldBill.entries,
-      billObj.entries,
-    );
-    // Validate new landed cost entries should be bigger than new entries.
-    await this.transactionLandedCostEntries.validateLocatedCostEntriesSmallerThanNewEntries(
+    // Validate landed cost entries against the bill edit operation.
+    this.landedCostsBridge.validateBillEditEntries(
       oldBill.entries,
       billObj.entries,
     );

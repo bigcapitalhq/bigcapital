@@ -40,19 +40,6 @@ export class BillDTOTransformer {
   }
 
   /**
-   * Retrieve the bill landed cost amount.
-   * @param {CreateBillDto} billDTO
-   * @returns {number}
-   */
-  private getBillLandedCostAmount(billDTO: CreateBillDto): number {
-    const _costEntries = billDTO.entries.filter((entry) => entry.landedCost);
-
-    // return this.getBillEntriesTotal(costEntries);
-
-    return 0;
-  }
-
-  /**
    * Converts create bill DTO to model.
    * @param {IBillDTO} billDTO
    * @param {IBill} oldBill
@@ -66,8 +53,6 @@ export class BillDTOTransformer {
     const amount = sumBy(billDTO.entries, (e) =>
       this.itemEntryModel().calcAmount(e),
     );
-    // Retrieve the landed cost amount from landed cost entries.
-    const landedCostAmount = this.getBillLandedCostAmount(billDTO);
 
     // Retrieve the authorized user.
     const authorizedUser = await this.tenancyContext.getSystemUser();
@@ -102,7 +87,7 @@ export class BillDTOTransformer {
         'dueDate',
       ]),
       amount,
-      landedCostAmount,
+      landedCostAmount: 0,
       currencyCode: vendor.currencyCode,
       exchangeRate: billDTO.exchangeRate || 1,
       billNumber,

@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ServiceError } from '../Items/ServiceError';
+import { ServiceError } from '../../Items/ServiceError';
 import { transformToMap } from '@/utils/transform-to-key';
-import {
-  ICommonLandedCostEntry,
-  ICommonLandedCostEntryDTO,
-} from './types/BillLandedCosts.types';
+import { IBillLandedCostEntryLike } from '@/modules/Bills/integrations/BillLandedCostsBridge';
 
 const ERRORS = {
   ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED:
@@ -21,9 +18,9 @@ export class TransactionLandedCostEntriesService {
    * @param {ICommonLandedCostEntryDTO[]} newBillEntries -
    */
   public getLandedCostEntriesDeleted(
-    oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
-  ): ICommonLandedCostEntry[] {
+    oldCommonEntries: IBillLandedCostEntryLike[],
+    newCommonEntriesDTO: IBillLandedCostEntryLike[],
+  ): IBillLandedCostEntryLike[] {
     const newBillEntriesById = transformToMap(newCommonEntriesDTO, 'id');
 
     return oldCommonEntries.filter((entry) => {
@@ -42,8 +39,8 @@ export class TransactionLandedCostEntriesService {
    * @param {ICommonLandedCostEntryDTO[]} newBillEntries - New DTO bill entries.
    */
   public validateLandedCostEntriesNotDeleted(
-    oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
+    oldCommonEntries: IBillLandedCostEntryLike[],
+    newCommonEntriesDTO: IBillLandedCostEntryLike[],
   ): void {
     const entriesDeleted = this.getLandedCostEntriesDeleted(
       oldCommonEntries,
@@ -60,8 +57,8 @@ export class TransactionLandedCostEntriesService {
    * @param {ICommonLandedCostEntryDTO[]} newBillEntries - New DTO bill entries.
    */
   public validateLocatedCostEntriesSmallerThanNewEntries(
-    oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
+    oldCommonEntries: IBillLandedCostEntryLike[],
+    newCommonEntriesDTO: IBillLandedCostEntryLike[],
   ): void {
     const oldBillEntriesById = transformToMap(oldCommonEntries, 'id');
 
