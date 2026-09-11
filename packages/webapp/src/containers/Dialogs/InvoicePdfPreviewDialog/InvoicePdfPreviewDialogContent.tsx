@@ -1,10 +1,10 @@
 import { AnchorButton } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfInvoice } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface InvoicePdfPreviewDialogContentProps extends WithDialogActionsProps {
   subscriptionForm: { invoiceId: number | null };
@@ -51,6 +51,7 @@ function InvoicePdfPreviewDialogContentInner({
   );
 }
 
-export const InvoicePdfPreviewDialogContent = compose(withDialogActions)(
+export const InvoicePdfPreviewDialogContent = FF.pipe(
   InvoicePdfPreviewDialogContentInner,
+  withDialogActions,
 );

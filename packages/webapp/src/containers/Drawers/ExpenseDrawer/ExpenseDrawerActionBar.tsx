@@ -5,6 +5,7 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
@@ -24,7 +25,6 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface ExpenseDrawerActionBarInnerProps
   extends WithAlertActionsProps,
@@ -79,7 +79,8 @@ function ExpenseDrawerActionBarInner({
   );
 }
 
-export const ExpenseDrawerActionBar = compose(
-  withAlertActions,
+export const ExpenseDrawerActionBar = FF.pipe(
+  ExpenseDrawerActionBarInner,
   withDrawerActions,
-)(ExpenseDrawerActionBarInner);
+  withAlertActions,
+);

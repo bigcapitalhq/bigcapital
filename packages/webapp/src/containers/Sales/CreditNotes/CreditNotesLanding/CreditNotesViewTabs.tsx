@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 import { withCreditNotes } from './withCreditNotes';
@@ -6,7 +7,7 @@ import { withCreditNotesActions } from './withCreditNotesActions';
 import type { WithCreditNotesProps } from './withCreditNotes';
 import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface CreditNotesViewTabsProps extends WithCreditNotesActionsProps {
   creditNoteCurrentView: string;
@@ -38,9 +39,10 @@ function CreditNotesViewTabsInner({
   );
 }
 
-export const CreditNotesViewTabs = compose(
-  withCreditNotesActions,
+export const CreditNotesViewTabs = FF.pipe(
+  CreditNotesViewTabsInner,
   withCreditNotes(({ creditNoteTableState }: WithCreditNotesProps) => ({
     creditNoteCurrentView: creditNoteTableState.viewSlug,
   })),
-)(CreditNotesViewTabsInner);
+  withCreditNotesActions,
+);

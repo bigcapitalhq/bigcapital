@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { Classes, Icon, H4, Button } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import styled from 'styled-components';
 import { useDrawerContext } from './DrawerProvider';
 import { FormattedMessage as T } from '@/components';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 /**
  * Drawer header content.
@@ -45,8 +45,9 @@ function DrawerHeaderContentRoot(props) {
   );
 }
 
-export const DrawerHeaderContent = compose(withDrawerActions)(
+export const DrawerHeaderContent = FF.pipe(
   DrawerHeaderContentRoot,
+  withDrawerActions,
 );
 
 /**

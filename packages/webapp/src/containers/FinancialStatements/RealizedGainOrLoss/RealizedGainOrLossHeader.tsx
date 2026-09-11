@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -13,7 +14,7 @@ import {
 } from './withRealizedGainOrLossActions';
 import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 interface RealizedGainOrLossHeaderOwnProps {
   onSubmitFilter: (values: Record<string, unknown>) => void;
@@ -103,9 +104,10 @@ function RealizedGainOrLossHeaderInner({
   );
 }
 
-export const RealizedGainOrLossHeader = compose(
+export const RealizedGainOrLossHeader = FF.pipe(
+  RealizedGainOrLossHeaderInner,
+  withRealizedGainOrLossActions,
   withRealizedGainOrLoss(({ realizedGainOrLossDrawerFilter }) => ({
     isFilterDrawerOpen: realizedGainOrLossDrawerFilter,
   })),
-  withRealizedGainOrLossActions,
-)(RealizedGainOrLossHeaderInner);
+);

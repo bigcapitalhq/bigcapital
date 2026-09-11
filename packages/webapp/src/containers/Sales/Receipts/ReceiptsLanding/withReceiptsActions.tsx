@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import type { TableQuery } from '@/store/store.types';
+import type { ComponentType } from 'react';
 import {
   setReceiptsTableState,
   resetReceiptsTableState,
@@ -26,4 +27,14 @@ export const mapDispatchToProps = (
   resetReceiptsSelectedRows: () => dispatch(resetReceiptsSelectedRows()),
 });
 
-export const withReceiptsActions = connect(null, mapDispatchToProps);
+export function withReceiptsActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithReceiptsActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithReceiptsActionsProps>
+  >;
+}

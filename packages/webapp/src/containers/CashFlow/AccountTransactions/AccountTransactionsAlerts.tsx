@@ -1,6 +1,6 @@
 import React, { ComponentType, LazyExoticComponent } from 'react';
 
-const AccountDeleteTransactionAlert: LazyExoticComponent<ComponentType> =
+const AccountDeleteTransactionAlert: LazyExoticComponent<ComponentType<any>> =
   React.lazy(() =>
     import('@/containers/Alerts/CashFlow/AccountDeleteTransactionAlert').then(
       (m) => ({ default: m.AccountDeleteTransactionAlert }),
@@ -9,7 +9,7 @@ const AccountDeleteTransactionAlert: LazyExoticComponent<ComponentType> =
 
 interface AccountTransactionAlertEntry {
   name: string;
-  component: LazyExoticComponent<ComponentType>;
+  component: LazyExoticComponent<ComponentType<any>>;
 }
 
 /**

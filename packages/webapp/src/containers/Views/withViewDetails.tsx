@@ -1,4 +1,5 @@
 import { connect, MapStateToProps } from 'react-redux';
+import type { ComponentType } from 'react';
 import {
   getViewItemFactory,
   getViewMetaFactory,
@@ -28,5 +29,14 @@ export const withViewDetails = <
     viewMeta: getViewMeta(state, props),
     viewItem: getViewItem(state, props),
   });
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof WithViewDetailsProps>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<
+      Omit<P, keyof WithViewDetailsProps>
+    >;
+  };
 };

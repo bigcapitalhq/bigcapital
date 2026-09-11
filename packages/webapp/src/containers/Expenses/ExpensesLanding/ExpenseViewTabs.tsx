@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useExpensesListContext } from './ExpensesListProvider';
 import { withExpenses } from './withExpenses';
@@ -6,7 +7,7 @@ import { withExpensesActions } from './withExpensesActions';
 import type { WithExpensesProps } from './withExpenses';
 import type { WithExpensesActionsProps } from './withExpensesActions';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface ExpenseViewTabsInnerProps extends WithExpensesActionsProps {
   expensesCurrentView: WithExpensesProps['expensesTableState']['viewSlug'];
@@ -53,9 +54,10 @@ function ExpenseViewTabsInner({
   );
 }
 
-export const ExpenseViewTabs = compose(
-  withExpensesActions,
+export const ExpenseViewTabs = FF.pipe(
+  ExpenseViewTabsInner,
   withExpenses(({ expensesTableState }) => ({
     expensesCurrentView: expensesTableState.viewSlug,
   })),
-)(ExpenseViewTabsInner);
+  withExpensesActions,
+);

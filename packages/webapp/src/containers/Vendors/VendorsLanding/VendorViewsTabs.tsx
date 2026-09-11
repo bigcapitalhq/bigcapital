@@ -1,11 +1,12 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { useVendorsListContext } from './VendorsListProvider';
 import { withVendors } from './withVendors';
 import { withVendorsActions } from './withVendorsActions';
 import type { WithVendorsProps } from './withVendors';
 import type { WithVendorsActionsProps } from './withVendorsActions';
 import { DashboardViewsTabs } from '@/components';
-import { transfromViewsToTabs, compose } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface VendorViewsTabsInnerProps
   extends Pick<WithVendorsProps, 'vendorsTableState'>,
@@ -47,9 +48,10 @@ function VendorViewsTabsInner({
   );
 }
 
-export const VendorViewsTabs = compose(
-  withVendorsActions,
+export const VendorViewsTabs = FF.pipe(
+  VendorViewsTabsInner,
   withVendors(({ vendorsTableState }) => ({
     vendorsCurrentView: vendorsTableState.viewSlug,
   })),
-)(VendorViewsTabsInner);
+  withVendorsActions,
+);

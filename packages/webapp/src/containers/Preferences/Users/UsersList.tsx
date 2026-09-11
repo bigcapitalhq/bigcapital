@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { UsersDataTable } from './UsersDataTable';
@@ -6,7 +7,6 @@ import {
   withDashboardActions,
   type WithDashboardActionsProps,
 } from '@/containers/Dashboard/withDashboardActions';
-import { compose } from '@/utils';
 
 function UsersListPreferences({
   changePreferencesPageTitle,
@@ -22,4 +22,4 @@ function UsersListPreferences({
   );
 }
 
-export const UsersList = compose(withDashboardActions)(UsersListPreferences);
+export const UsersList = FF.pipe(UsersListPreferences, withDashboardActions);

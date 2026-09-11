@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { CreditNoteNumberDialogProvider } from './CreditNoteNumberDialogProvider';
@@ -11,7 +12,6 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSaveSettings, useSettingsCreditNotes } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface CreditNoteNumberDialogContentProps extends WithDialogActionsProps {
   initialValues?: Partial<ReferenceNumberFormValues>;
@@ -101,6 +101,7 @@ function CreditNoteNumberDialogContentInner({
   );
 }
 
-export const CreditNoteNumberDialogContent = compose(withDialogActions)(
+export const CreditNoteNumberDialogContent = FF.pipe(
   CreditNoteNumberDialogContentInner,
+  withDialogActions,
 );

@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import {
@@ -16,7 +17,7 @@ import type {
 } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 const defaultInitialValues: ItemCategoryFormValues = {
   name: '',
@@ -152,6 +153,7 @@ function ItemCategoryFormInner({
   );
 }
 
-export const ItemCategoryForm = compose(withDialogActions)(
+export const ItemCategoryForm = FF.pipe(
   ItemCategoryFormInner,
+  withDialogActions,
 );

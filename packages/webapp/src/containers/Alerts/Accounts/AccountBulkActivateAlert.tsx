@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAccountsTableActionsProps } from '@/containers/Accounts/withAccountsTableActions';
@@ -8,7 +9,6 @@ import { withAccountsTableActions } from '@/containers/Accounts/withAccountsTabl
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useBulkActivateAccounts } from '@/hooks/query/accounts';
-import { compose } from '@/utils';
 
 interface AccountBulkActivateAlertPayload {
   accountsIds: number[];
@@ -75,8 +75,9 @@ function AccountBulkActivateAlertInner({
   );
 }
 
-export const AccountBulkActivateAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const AccountBulkActivateAlert = FF.pipe(
+  AccountBulkActivateAlertInner,
   withAccountsTableActions,
-)(AccountBulkActivateAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

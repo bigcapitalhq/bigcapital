@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { BranchActivateFormContent } from './BranchActivateFormContent';
@@ -8,7 +9,6 @@ import type { BranchActivateFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface BranchActivateFormProps extends WithDialogActionsProps {}
 
@@ -56,6 +56,7 @@ function BranchActivateFormInner({
   );
 }
 
-export const BranchActivateForm = compose(withDialogActions)(
+export const BranchActivateForm = FF.pipe(
   BranchActivateFormInner,
+  withDialogActions,
 );

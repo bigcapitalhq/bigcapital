@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { withBanking } from '../withBanking';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
@@ -6,7 +7,6 @@ import type { UncategorizedTransactionResponse } from '@bigcapital/sdk-ts';
 import { IntersectionObserver } from '@/components';
 import { useAccountUncategorizedTransactionsInfinity } from '@/hooks/query';
 import { useFlattenInfinityPages } from '@/hooks/utils';
-import { compose } from '@/utils';
 
 export interface AccountUncategorizedTransactionsContextValue {
   uncategorizedTransactions: UncategorizedTransactionResponse[];
@@ -84,11 +84,12 @@ function AccountUncategorizedTransactionsBootRoot({
   );
 }
 
-const AccountUncategorizedTransactionsBoot = compose(
+const AccountUncategorizedTransactionsBoot = FF.pipe(
+  AccountUncategorizedTransactionsBootRoot,
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),
-)(AccountUncategorizedTransactionsBootRoot);
+);
 
 const useAccountUncategorizedTransactionsContext = () =>
   React.useContext(AccountUncategorizedTransactionsContext);

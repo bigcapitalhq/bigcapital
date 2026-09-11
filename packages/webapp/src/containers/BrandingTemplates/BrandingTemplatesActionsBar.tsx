@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Button, NavbarGroup, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React, { useMemo } from 'react';
 import {
   getButtonLabelFromResource,
@@ -8,7 +9,6 @@ import {
 import { DrawerActionsBar, Icon } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 /**
  * Account drawer action bar.
@@ -40,6 +40,7 @@ function BrandingTemplateActionsBarRoot({ openDrawer }) {
     </DrawerActionsBar>
   );
 }
-export const BrandingTemplateActionsBar = compose(withDrawerActions)(
+export const BrandingTemplateActionsBar = FF.pipe(
   BrandingTemplateActionsBarRoot,
+  withDrawerActions,
 );

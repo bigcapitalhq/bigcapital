@@ -28,7 +28,7 @@ const AccountBulkInactivateAlert = React.lazy(() =>
 
 interface AlertItem {
   name: string;
-  component: LazyExoticComponent<ComponentType<unknown>>;
+  component: LazyExoticComponent<ComponentType<any>>;
 }
 
 export const AccountsAlerts: AlertItem[] = [

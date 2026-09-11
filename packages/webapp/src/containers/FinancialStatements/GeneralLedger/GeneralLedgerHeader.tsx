@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -18,7 +19,7 @@ import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 type GeneralLedgerFormValues = Omit<
   ReturnType<typeof getDefaultGeneralLedgerQuery>,
@@ -131,12 +132,13 @@ function GeneralLedgerHeaderInner({
   );
 }
 
-export const GeneralLedgerHeader = compose(
+export const GeneralLedgerHeader = FF.pipe(
+  GeneralLedgerHeaderInner,
+  withGeneralLedgerActions,
   withGeneralLedger(({ generalLedgerFilterDrawer }) => ({
     generalLedgerFilterDrawer,
   })),
-  withGeneralLedgerActions,
-)(GeneralLedgerHeaderInner);
+);
 
 const GeneralLedgerDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

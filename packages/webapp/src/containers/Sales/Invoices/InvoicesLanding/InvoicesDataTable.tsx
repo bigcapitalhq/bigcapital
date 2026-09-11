@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useInvoicesTableColumns, ActionsMenu } from './components';
@@ -24,7 +25,6 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface InvoicesDataTableProps
   extends Pick<
@@ -174,14 +174,15 @@ function InvoicesDataTableInner({
   );
 }
 
-export const InvoicesDataTable = compose(
-  withDashboardActions,
-  withInvoiceActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const InvoicesDataTable = FF.pipe(
+  InvoicesDataTableInner,
   withInvoices(({ invoicesTableState, invoicesSelectedRows }) => ({
     invoicesTableState,
     invoicesSelectedRows,
   })),
-)(InvoicesDataTableInner);
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withInvoiceActions,
+  withDashboardActions,
+);

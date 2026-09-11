@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { useItemsListContext } from './ItemsListProvider';
@@ -6,8 +7,9 @@ import { withItems } from './withItems';
 import { withItemsActions } from './withItemsActions';
 import type { WithItemsProps } from './withItems';
 import type { WithItemsActionsProps } from './withItemsActions';
+import type { ComponentType } from 'react';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface ItemsViewsTabsInnerProps extends WithItemsActionsProps {
   itemsCurrentView: WithItemsProps['itemsTableState']['viewSlug'];
@@ -47,10 +49,11 @@ function ItemsViewsTabsInner({
   );
 }
 
-export const ItemsViewsTabs = compose(
-  withRouter,
+export const ItemsViewsTabs = FF.pipe(
+  ItemsViewsTabsInner,
+  withItemsActions,
   withItems(({ itemsTableState }) => ({
     itemsCurrentView: itemsTableState?.viewSlug,
   })),
-  withItemsActions,
-)(ItemsViewsTabsInner);
+  withRouter as (Component: ComponentType<any>) => ComponentType<any>,
+);

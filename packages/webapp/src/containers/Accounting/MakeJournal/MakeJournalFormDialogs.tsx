@@ -5,7 +5,7 @@ import { index as JournalNumberDialog } from '@/containers/Dialogs/JournalNumber
 
 type JournalNumberDialogSettings = {
   transactionNumber?: string;
-  incrementMode?: 'auto' | 'manual-transaction';
+  incrementMode?: string;
 };
 
 /**

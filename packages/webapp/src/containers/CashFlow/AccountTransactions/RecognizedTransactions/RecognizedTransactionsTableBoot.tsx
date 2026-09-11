@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { withBanking } from '../../withBanking';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
@@ -7,7 +8,6 @@ import type { BankTransactionsListPage } from '@bigcapital/sdk-ts';
 import { IntersectionObserver } from '@/components';
 import { useRecognizedBankTransactionsInfinity } from '@/hooks/query/banking';
 import { useFlattenInfinityPages } from '@/hooks/utils';
-import { compose } from '@/utils';
 
 export interface RecognizedTransactionsContextValue {
   recognizedTransactions: RecognizedTransactionRow[];
@@ -86,11 +86,12 @@ function RecognizedTransactionsTableBootRoot({
   );
 }
 
-const RecognizedTransactionsTableBoot = compose(
+const RecognizedTransactionsTableBoot = FF.pipe(
+  RecognizedTransactionsTableBootRoot,
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),
-)(RecognizedTransactionsTableBootRoot);
+);
 
 const useRecognizedTransactionsBoot = () =>
   React.useContext(RecognizedTransactionsContext);

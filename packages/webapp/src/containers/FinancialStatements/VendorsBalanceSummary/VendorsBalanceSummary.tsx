@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { VendorsSummarySheetLoadingBar } from './components';
@@ -12,7 +13,6 @@ import {
   WithVendorsBalanceSummaryActionsProps,
 } from './withVendorsBalanceSummaryActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 interface VendorsBalanceSummaryProps {
   toggleVendorSummaryFilterDrawer: WithVendorsBalanceSummaryActionsProps['toggleVendorSummaryFilterDrawer'];
@@ -72,6 +72,7 @@ function VendorsBalanceSummaryInner({
   );
 }
 
-export const VendorsBalanceSummary = compose(withVendorsBalanceSummaryActions)(
+export const VendorsBalanceSummary = FF.pipe(
   VendorsBalanceSummaryInner,
+  withVendorsBalanceSummaryActions,
 );

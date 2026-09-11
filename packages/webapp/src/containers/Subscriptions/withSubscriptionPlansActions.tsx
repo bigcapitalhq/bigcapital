@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { Dispatch, AnyAction } from 'redux';
+import type { ComponentType } from 'react';
 import {
   SubscriptionPlansPeriod,
   changePlansPeriod,
@@ -22,4 +23,14 @@ export const mapDispatchToProps = (
   },
 });
 
-export const withSubscriptionPlansActions = connect(null, mapDispatchToProps);
+export function withSubscriptionPlansActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithSubscriptionPlansActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithSubscriptionPlansActionsProps>
+  >;
+}

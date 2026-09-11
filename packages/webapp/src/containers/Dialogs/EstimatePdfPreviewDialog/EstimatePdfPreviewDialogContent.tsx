@@ -1,10 +1,10 @@
 import { AnchorButton } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfEstimate } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface EstimatePdfPreviewDialogContentProps extends WithDialogActionsProps {
   subscriptionForm: { estimateId: number | null };
@@ -51,6 +51,7 @@ function EstimatePdfPreviewDialogContentInner({
   );
 }
 
-export const EstimatePdfPreviewDialogContent = compose(withDialogActions)(
+export const EstimatePdfPreviewDialogContent = FF.pipe(
   EstimatePdfPreviewDialogContentInner,
+  withDialogActions,
 );

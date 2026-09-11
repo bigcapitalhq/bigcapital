@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useCustomersTableColumns } from './components';
@@ -23,7 +24,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface CustomersTableInnerProps
   extends Pick<
@@ -195,13 +195,14 @@ function CustomersTableInner({
   );
 }
 
-export const CustomersTable = compose(
-  withAlertActions,
-  withDialogActions,
-  withCustomersActions,
-  withDrawerActions,
+export const CustomersTable = FF.pipe(
+  CustomersTableInner,
   withCustomers(({ customersTableState, customersSelectedRows }) => ({
     customersTableState,
     customersSelectedRows,
   })),
-)(CustomersTableInner);
+  withDrawerActions,
+  withCustomersActions,
+  withDialogActions,
+  withAlertActions,
+);

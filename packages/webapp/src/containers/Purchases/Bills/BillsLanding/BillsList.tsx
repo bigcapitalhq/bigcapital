@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import { BillsActionsBar } from './BillsActionsBar';
 import { BillsListDialogs } from './BillsListDialogs';
@@ -9,7 +10,7 @@ import { withBillsActions } from './withBillsActions';
 import type { WithBillsProps } from './withBills';
 import { DashboardPageContent } from '@/components';
 import '@/style/pages/Bills/List.scss';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface WithBillsActionsProps {
   resetBillsTableState: () => void;
@@ -50,10 +51,11 @@ function BillsListInner({
   );
 }
 
-export const BillsList = compose(
+export const BillsList = FF.pipe(
+  BillsListInner,
+  withBillsActions,
   withBills(({ billsTableState, billsTableStateChanged }) => ({
     billsTableState,
     billsTableStateChanged,
   })),
-  withBillsActions,
-)(BillsListInner);
+);

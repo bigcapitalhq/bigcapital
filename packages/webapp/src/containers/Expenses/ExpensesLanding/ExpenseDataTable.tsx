@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useExpensesTableColumns } from './components';
@@ -22,7 +23,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface ExpensesDataTableProps
   extends WithExpensesActionsProps,
@@ -171,10 +171,11 @@ function ExpensesDataTable({
   );
 }
 
-export const ExpenseDataTable = compose(
-  withDashboardActions,
-  withAlertActions,
-  withDrawerActions,
-  withExpensesActions,
+export const ExpenseDataTable = FF.pipe(
+  ExpensesDataTable,
   withExpenses(({ expensesTableState }) => ({ expensesTableState })),
-)(ExpensesDataTable);
+  withExpensesActions,
+  withDrawerActions,
+  withAlertActions,
+  withDashboardActions,
+);

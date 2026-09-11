@@ -1,8 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 const WarehouseTransferNumberDialogContent = lazy(() =>
   import('./WarehouseTransferNumberDialogContent').then((m) => ({
@@ -36,7 +37,6 @@ function WarehouseTransferNumberDilaog({
     >
       <DialogSuspense>
         <WarehouseTransferNumberDialogContent
-          // @ts-expect-error — compose()-wrapped component loses generic prop inference.
           initialValues={{ ...initialFormValues }}
           onConfirm={handleConfirm}
         />
@@ -44,4 +44,4 @@ function WarehouseTransferNumberDilaog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(WarehouseTransferNumberDilaog);
+export const index = FF.pipe(WarehouseTransferNumberDilaog, withDialogRedux());

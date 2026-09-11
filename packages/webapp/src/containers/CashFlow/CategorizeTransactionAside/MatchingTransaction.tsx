@@ -6,6 +6,7 @@ import {
   FormikHelpers,
   useFormikContext,
 } from 'formik';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { withBanking } from '../withBanking';
@@ -30,7 +31,6 @@ import type { WithBankingActionsProps } from '../withBankingActions';
 import { AppToaster, Box, FormatNumber, Group, Stack } from '@/components';
 import { useMatchUncategorizedTransaction } from '@/hooks/query/banking';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-import { compose } from '@/utils';
 
 const initialValues: MatchingTransactionFormValues = {
   matched: {},
@@ -117,12 +117,13 @@ function MatchingBankTransactionRoot({
   );
 }
 
-export const MatchingBankTransaction = compose(
-  withBankingActions,
+export const MatchingBankTransaction = FF.pipe(
+  MatchingBankTransactionRoot,
   withBanking(({ transactionsToCategorizeIdsSelected }) => ({
     transactionsToCategorizeIdsSelected,
   })),
-)(MatchingBankTransactionRoot);
+  withBankingActions,
+);
 
 interface MatchingBankTransactionFormContentProps
   extends Pick<WithBankingProps, 'openReconcileMatchingTransaction'> {}
@@ -130,68 +131,70 @@ interface MatchingBankTransactionFormContentProps
 /**
  * Matching bank transaction form content.
  */
-const MatchingBankTransactionFormContent = compose(
+const MatchingBankTransactionFormContent = FF.pipe(
+  ({
+    // #withBanking — boolean state for whether the reconcile aside is open
+    openReconcileMatchingTransaction,
+  }: MatchingBankTransactionFormContentProps) => {
+    const {
+      isMatchingTransactionsFetching,
+      isMatchingTransactionsSuccess,
+      matches,
+    } = useMatchingTransactionBoot();
+    const [pending, setPending] = useState<ReconcileSubmitPayload | null>(null);
+
+    const { setFieldValue } = useFormikContext<MatchingTransactionFormValues>();
+
+    // This effect is responsible for automatically marking a transaction as matched
+    // when the matching process is successful and not currently fetching.
+    useEffect(() => {
+      if (
+        pending &&
+        isMatchingTransactionsSuccess &&
+        !isMatchingTransactionsFetching
+      ) {
+        const foundMatch = matches?.find(
+          (m: { referenceType: string; referenceId: number }) =>
+            m.referenceType === pending?.refType &&
+            m.referenceId === pending?.refId,
+        );
+        if (foundMatch) {
+          setFieldValue(`matched.${pending.refType}-${pending.refId}`, true);
+        }
+        setPending(null);
+      }
+    }, [
+      isMatchingTransactionsFetching,
+      isMatchingTransactionsSuccess,
+      matches,
+      pending,
+      setFieldValue,
+    ]);
+
+    const handleReconcileFormSubmitSuccess = (payload: {
+      id: number;
+      type: string;
+    }) => {
+      setPending({ refId: payload.id, refType: payload.type });
+    };
+
+    return (
+      <>
+        <MatchingBankTransactionContent />
+
+        {openReconcileMatchingTransaction && (
+          <MatchingReconcileTransactionForm
+            onSubmitSuccess={handleReconcileFormSubmitSuccess}
+          />
+        )}
+        {!openReconcileMatchingTransaction && <MatchTransactionFooter />}
+      </>
+    );
+  },
   withBanking(({ openReconcileMatchingTransaction }) => ({
     openReconcileMatchingTransaction,
   })),
-)(({
-  // #withBanking — boolean state for whether the reconcile aside is open
-  openReconcileMatchingTransaction,
-}: MatchingBankTransactionFormContentProps) => {
-  const {
-    isMatchingTransactionsFetching,
-    isMatchingTransactionsSuccess,
-    matches,
-  } = useMatchingTransactionBoot();
-  const [pending, setPending] = useState<ReconcileSubmitPayload | null>(null);
-
-  const { setFieldValue } = useFormikContext<MatchingTransactionFormValues>();
-
-  // This effect is responsible for automatically marking a transaction as matched
-  // when the matching process is successful and not currently fetching.
-  useEffect(() => {
-    if (
-      pending &&
-      isMatchingTransactionsSuccess &&
-      !isMatchingTransactionsFetching
-    ) {
-      const foundMatch = matches?.find(
-        (m: { referenceType: string; referenceId: number }) =>
-          m.referenceType === pending?.refType &&
-          m.referenceId === pending?.refId,
-      );
-      if (foundMatch) {
-        setFieldValue(`matched.${pending.refType}-${pending.refId}`, true);
-      }
-      setPending(null);
-    }
-  }, [
-    isMatchingTransactionsFetching,
-    isMatchingTransactionsSuccess,
-    matches,
-    pending,
-    setFieldValue,
-  ]);
-
-  const handleReconcileFormSubmitSuccess = (
-    payload: ReconcileSubmitPayload,
-  ) => {
-    setPending({ refId: payload.refId, refType: payload.refType });
-  };
-
-  return (
-    <>
-      <MatchingBankTransactionContent />
-
-      {openReconcileMatchingTransaction && (
-        <MatchingReconcileTransactionForm
-          onSubmitSuccess={handleReconcileFormSubmitSuccess}
-        />
-      )}
-      {!openReconcileMatchingTransaction && <MatchTransactionFooter />}
-    </>
-  );
-});
+);
 
 function MatchingBankTransactionContent() {
   return (
@@ -324,76 +327,79 @@ interface MatchTransctionFooterProps
 /**
  * Renders the match transactions footer.
  */
-const MatchTransactionFooter = compose(withBankingActions)(({
-  closeMatchingTransactionAside,
-  openReconcileMatchingTransaction,
-}: MatchTransctionFooterProps) => {
-  const { submitForm, isSubmitting } =
-    useFormikContext<MatchingTransactionFormValues>();
-  const totalPending = useGetPendingAmountMatched();
-  const showReconcileLink = useIsShowReconcileTransactionLink();
-  const submitDisabled = totalPending !== 0;
-  const isDarkMode = useIsDarkMode();
+const MatchTransactionFooter = FF.pipe(
+  ({
+    closeMatchingTransactionAside,
+    openReconcileMatchingTransaction,
+  }: MatchTransctionFooterProps) => {
+    const { submitForm, isSubmitting } =
+      useFormikContext<MatchingTransactionFormValues>();
+    const totalPending = useGetPendingAmountMatched();
+    const showReconcileLink = useIsShowReconcileTransactionLink();
+    const submitDisabled = totalPending !== 0;
+    const isDarkMode = useIsDarkMode();
 
-  const handleCancelBtnClick = () => {
-    closeMatchingTransactionAside();
-  };
-  const handleSubmitBtnClick = () => {
-    submitForm();
-  };
-  const handleReconcileTransaction = () => {
-    openReconcileMatchingTransaction(totalPending);
-  };
+    const handleCancelBtnClick = () => {
+      closeMatchingTransactionAside();
+    };
+    const handleSubmitBtnClick = () => {
+      submitForm();
+    };
+    const handleReconcileTransaction = () => {
+      openReconcileMatchingTransaction(totalPending);
+    };
 
-  return (
-    <Box className={styles.footer}>
-      <Box className={styles.footerTotal}>
-        <Group position={'apart'}>
-          {showReconcileLink && (
-            <AnchorButton
-              small
-              minimal
-              intent={Intent.PRIMARY}
-              onClick={handleReconcileTransaction}
+    return (
+      <Box className={styles.footer}>
+        <Box className={styles.footerTotal}>
+          <Group position={'apart'}>
+            {showReconcileLink && (
+              <AnchorButton
+                small
+                minimal
+                intent={Intent.PRIMARY}
+                onClick={handleReconcileTransaction}
+              >
+                Add Reconcile Transaction +
+              </AnchorButton>
+            )}
+            <Text
+              style={{
+                fontSize: 14,
+                marginLeft: 'auto',
+                color: isDarkMode ? 'var(--color-light-gray1)' : '#404854',
+              }}
+              tagName="span"
             >
-              Add Reconcile Transaction +
-            </AnchorButton>
-          )}
-          <Text
-            style={{
-              fontSize: 14,
-              marginLeft: 'auto',
-              color: isDarkMode ? 'var(--color-light-gray1)' : '#404854',
-            }}
-            tagName="span"
-          >
-            Pending{' '}
-            <FormatNumber
-              value={totalPending}
-              currency={'USD'}
-              noZero={false}
-            />
-          </Text>
-        </Group>
-      </Box>
+              Pending{' '}
+              <FormatNumber
+                value={totalPending}
+                currency={'USD'}
+                noZero={false}
+              />
+            </Text>
+          </Group>
+        </Box>
 
-      <Box className={styles.footerActions}>
-        <Group spacing={10}>
-          <Button
-            intent={Intent.PRIMARY}
-            style={{ minWidth: 85 }}
-            onClick={handleSubmitBtnClick}
-            loading={isSubmitting}
-            disabled={submitDisabled}
-          >
-            Match
-          </Button>
+        <Box className={styles.footerActions}>
+          <Group spacing={10}>
+            <Button
+              intent={Intent.PRIMARY}
+              style={{ minWidth: 85 }}
+              onClick={handleSubmitBtnClick}
+              loading={isSubmitting}
+              disabled={submitDisabled}
+            >
+              Match
+            </Button>
 
-          <Button onClick={handleCancelBtnClick}>Cancel</Button>
-        </Group>
+            <Button onClick={handleCancelBtnClick}>Cancel</Button>
+          </Group>
+        </Box>
       </Box>
-    </Box>
-  );
-});
+    );
+  },
+  withBankingActions,
+);
 
 MatchTransactionFooter.displayName = 'MatchTransactionFooter';

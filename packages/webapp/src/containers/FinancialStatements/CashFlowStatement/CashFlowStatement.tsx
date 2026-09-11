@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { CashflowSheetDialogs } from './CashflowSheetDialogs';
@@ -15,7 +16,6 @@ import {
   WithCashFlowStatementActionsProps,
 } from './withCashFlowStatementActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 type CashFlowStatementProps = Pick<
   WithCashFlowStatementActionsProps,
@@ -74,6 +74,7 @@ function CashFlowStatementInner({
   );
 }
 
-export const CashFlowStatement = compose(withCashFlowStatementActions)(
+export const CashFlowStatement = FF.pipe(
   CashFlowStatementInner,
+  withCashFlowStatementActions,
 );

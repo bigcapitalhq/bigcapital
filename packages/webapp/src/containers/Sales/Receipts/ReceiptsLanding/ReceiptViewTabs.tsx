@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { withReceipts } from './withReceipts';
@@ -6,7 +7,7 @@ import { withReceiptsActions } from './withReceiptsActions';
 import type { WithReceiptsProps } from './withReceipts';
 import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface ReceiptViewTabsProps extends WithReceiptsActionsProps {
   receiptsCurrentView: string;
@@ -48,9 +49,10 @@ function ReceiptViewTabsInner({
   );
 }
 
-export const ReceiptViewTabs = compose(
-  withReceiptsActions,
+export const ReceiptViewTabs = FF.pipe(
+  ReceiptViewTabsInner,
   withReceipts(({ receiptTableState }: WithReceiptsProps) => ({
     receiptsCurrentView: receiptTableState.viewSlug,
   })),
-)(ReceiptViewTabsInner);
+  withReceiptsActions,
+);

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import { useCallback, useEffect } from 'react';
 import { APAgingSummaryActionsBar } from './APAgingSummaryActionsBar';
@@ -13,7 +14,6 @@ import {
 } from './withAPAgingSummaryActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
 
 type APAgingSummaryProps = Pick<
   WithAPAgingSummaryActionsProps,
@@ -71,6 +71,7 @@ function APAgingSummaryInner({
   );
 }
 
-export const APAgingSummary = compose(withAPAgingSummaryActions)(
+export const APAgingSummary = FF.pipe(
   APAgingSummaryInner,
+  withAPAgingSummaryActions,
 );

@@ -1,5 +1,6 @@
 import { connect, MapStateToProps } from 'react-redux';
 import type { MapState } from '@/containers/hoc.types';
+import type { ComponentType } from 'react';
 import { ApplicationState } from '@/store/reducers';
 
 export interface WithDashboardProps {
@@ -14,9 +15,10 @@ export interface WithDashboardProps {
   splashScreenCompleted: boolean;
 }
 
-export function withDashboard<Props = unknown>(
-  mapState?: MapState<WithDashboardProps, Props>,
-) {
+export function withDashboard<
+  Props = unknown,
+  Mapped extends object = WithDashboardProps,
+>(mapState?: MapState<WithDashboardProps, Props, Mapped>) {
   const mapStateToProps: MapStateToProps<
     WithDashboardProps,
     Props,
@@ -39,5 +41,12 @@ export function withDashboard<Props = unknown>(
       ? (mapState(mapped, state, props) as WithDashboardProps)
       : mapped;
   };
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
 }

@@ -1,11 +1,11 @@
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface MoneyInFloatingActionsInnerProps
   extends Pick<WithDialogActionsProps, 'closeDialog'> {}
@@ -60,6 +60,7 @@ function MoneyInFloatingActionsInner({
   );
 }
 
-export const MoneyInFloatingActions = compose(withDialogActions)(
+export const MoneyInFloatingActions = FF.pipe(
   MoneyInFloatingActionsInner,
+  withDialogActions,
 );

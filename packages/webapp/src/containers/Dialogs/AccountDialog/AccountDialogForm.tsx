@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { AccountDialogFormContent } from './AccountDialogFormContent';
@@ -18,7 +19,7 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { CreateAccountBody, EditAccountBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 import '@/style/pages/Accounts/AccountFormDialog.scss';
 
 // Default initial form values.
@@ -139,6 +140,7 @@ function AccountFormDialogContent({
   );
 }
 
-export const AccountDialogForm = compose(withDialogActions)(
+export const AccountDialogForm = FF.pipe(
   AccountFormDialogContent,
+  withDialogActions,
 );

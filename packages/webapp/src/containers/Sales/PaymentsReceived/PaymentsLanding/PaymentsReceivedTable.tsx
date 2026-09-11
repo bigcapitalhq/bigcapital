@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
@@ -23,7 +24,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface PaymentsReceivedDataTableProps
   extends Pick<
@@ -155,15 +155,16 @@ function PaymentsReceivedDataTable({
   );
 }
 
-export const PaymentsReceivedTable = compose(
-  withPaymentsReceivedActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const PaymentsReceivedTable = FF.pipe(
+  PaymentsReceivedDataTable,
   withPaymentsReceived(
     ({ paymentReceivesTableState, paymentReceivesSelectedRows }) => ({
       paymentReceivesTableState,
       paymentReceivesSelectedRows,
     }),
   ),
-)(PaymentsReceivedDataTable);
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withPaymentsReceivedActions,
+);

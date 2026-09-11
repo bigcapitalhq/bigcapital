@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const CategorizeTransactionContent = lazy(() =>
   import('./CategorizeTransactionContent').then((m) => ({
@@ -40,6 +40,7 @@ function CategorizeTransactionDrawerInner({
   );
 }
 
-export const CategorizeTransactionDrawer = compose(withDrawers())(
+export const CategorizeTransactionDrawer = FF.pipe(
   CategorizeTransactionDrawerInner,
+  withDrawers(),
 );

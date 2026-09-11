@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { InventoryAdjustmentDialogPayload } from './types';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const InventoryAdjustmentFormDialogContent = lazy(() =>
   import('./InventoryAdjustmentFormDialogContent').then((m) => ({
@@ -40,4 +40,4 @@ function InventoryAdjustmentFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(InventoryAdjustmentFormDialog);
+export const index = FF.pipe(InventoryAdjustmentFormDialog, withDialogRedux());

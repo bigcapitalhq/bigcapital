@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { usePaymentMadesTableColumns, ActionsMenu } from './components';
@@ -21,7 +22,6 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface PaymentMadesTableProps
   extends Pick<
@@ -142,12 +142,13 @@ function PaymentMadesTableInner({
   );
 }
 
-export const PaymentMadesTable = compose(
-  withPaymentMadeActions,
+export const PaymentMadesTable = FF.pipe(
+  PaymentMadesTableInner,
+  withDrawerActions,
+  withAlertActions,
   withPaymentMade(({ paymentMadesTableState, paymentMadesSelectedRows }) => ({
     paymentMadesTableState,
     paymentMadesSelectedRows,
   })),
-  withAlertActions,
-  withDrawerActions,
-)(PaymentMadesTableInner);
+  withPaymentMadeActions,
+);

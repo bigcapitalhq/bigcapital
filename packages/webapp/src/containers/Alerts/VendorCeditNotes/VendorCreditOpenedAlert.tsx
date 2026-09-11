@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useOpenVendorCredit } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface VendorCreditOpenedAlertPayload {
   vendorCreditId: number;
@@ -71,7 +71,8 @@ function VendorCreditOpenedAlertInner({
   );
 }
 
-export const VendorCreditOpenedAlert = compose(
-  withAlertStoreConnect(),
+export const VendorCreditOpenedAlert = FF.pipe(
+  VendorCreditOpenedAlertInner,
   withAlertActions,
-)(VendorCreditOpenedAlertInner);
+  withAlertStoreConnect(),
+);

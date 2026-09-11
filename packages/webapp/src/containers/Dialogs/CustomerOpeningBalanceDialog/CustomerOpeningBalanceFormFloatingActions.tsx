@@ -1,11 +1,11 @@
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormProvider';
 import type { CustomerOpeningBalanceFormValues } from './utils';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 /**
  * Customer Opening balance floating actions.
@@ -42,6 +42,7 @@ function CustomerOpeningBalanceFormFloatingActionsInner({
     </div>
   );
 }
-export const CustomerOpeningBalanceFormFloatingActions = compose(
+export const CustomerOpeningBalanceFormFloatingActions = FF.pipe(
+  CustomerOpeningBalanceFormFloatingActionsInner,
   withDialogActions,
-)(CustomerOpeningBalanceFormFloatingActionsInner);
+);

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useItemsTableColumns, ItemsActionMenuList } from './components';
@@ -25,7 +26,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface ItemsDataTableProps
   extends WithItemsActionsProps,
@@ -223,13 +223,14 @@ function ItemsDataTableInner({
   );
 }
 
-export const ItemsDataTable = compose(
-  withItemsActions,
-  withAlertActions,
-  withDrawerActions,
-  withDialogActions,
+export const ItemsDataTable = FF.pipe(
+  ItemsDataTableInner,
   withItems(({ itemsTableState, itemsSelectedRows }) => ({
     itemsTableState,
     itemsSelectedRows,
   })),
-)(ItemsDataTableInner);
+  withDialogActions,
+  withDrawerActions,
+  withAlertActions,
+  withItemsActions,
+);

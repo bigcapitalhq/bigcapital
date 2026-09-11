@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { Position, Drawer } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import '@/style/components/Drawer.scss';
 import { DrawerProvider } from './DrawerProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 /**
  * Drawer component.
@@ -32,5 +32,5 @@ function DrawerComponent(props) {
   );
 }
 
-const DrawerRoot = compose(withDrawerActions)(DrawerComponent);
+const DrawerRoot = FF.pipe(DrawerComponent, withDrawerActions);
 export { DrawerRoot as Drawer };

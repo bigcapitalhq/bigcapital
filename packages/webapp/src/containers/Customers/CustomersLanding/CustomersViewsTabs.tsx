@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { useCustomersListContext } from './CustomersListProvider';
 import { withCustomers } from './withCustomers';
 import { withCustomersActions } from './withCustomersActions';
@@ -7,7 +8,7 @@ import type { WithCustomersActionsProps } from './withCustomersActions';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { DashboardViewsTabs } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface CustomersViewsTabsInnerProps
   extends Pick<WithCustomersProps, 'customersTableState'>,
@@ -51,10 +52,11 @@ function CustomersViewsTabsInner({
   );
 }
 
-export const CustomersViewsTabs = compose(
-  withDashboardActions,
-  withCustomersActions,
+export const CustomersViewsTabs = FF.pipe(
+  CustomersViewsTabsInner,
   withCustomers(({ customersTableState }) => ({
     customersCurrentView: customersTableState.viewSlug,
   })),
-)(CustomersViewsTabsInner);
+  withCustomersActions,
+  withDashboardActions,
+);

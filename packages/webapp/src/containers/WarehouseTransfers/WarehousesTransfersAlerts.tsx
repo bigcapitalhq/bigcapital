@@ -18,7 +18,7 @@ const TransferredWarehouseTransferAlert = React.lazy(() =>
 
 interface AlertRegistration {
   name: string;
-  component: React.LazyExoticComponent<React.ComponentType<unknown>>;
+  component: React.LazyExoticComponent<React.ComponentType<any>>;
 }
 
 /**

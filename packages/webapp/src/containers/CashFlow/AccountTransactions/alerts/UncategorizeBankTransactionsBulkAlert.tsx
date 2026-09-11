@@ -1,4 +1,5 @@
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { withBankingActions } from '../../withBankingActions';
@@ -9,7 +10,6 @@ import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useUncategorizeTransactionsBulkAction } from '@/hooks/query/banking';
-import { compose } from '@/utils';
 
 interface UncategorizeBankTransactionsBulkAlertProps
   extends Pick<WithAlertActionsProps, 'closeAlert'>,
@@ -84,8 +84,9 @@ function UncategorizeBankTransactionsBulkAlertInner({
   );
 }
 
-export const UncategorizeBankTransactionsBulkAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const UncategorizeBankTransactionsBulkAlert = FF.pipe(
+  UncategorizeBankTransactionsBulkAlertInner,
   withBankingActions,
-)(UncategorizeBankTransactionsBulkAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

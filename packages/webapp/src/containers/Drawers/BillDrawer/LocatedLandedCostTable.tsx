@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useBillDrawerContext } from './BillDrawerProvider';
 import { useLocatedLandedCostColumns, ActionsMenu } from './components';
@@ -13,7 +14,6 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface LocatedLandedCostTableInnerProps
   extends WithAlertActionsProps,
@@ -80,7 +80,8 @@ function LocatedLandedCostTableInner({
   );
 }
 
-export const LocatedLandedCostTable = compose(
-  withAlertActions,
+export const LocatedLandedCostTable = FF.pipe(
+  LocatedLandedCostTableInner,
   withDrawerActions,
-)(LocatedLandedCostTableInner);
+  withAlertActions,
+);

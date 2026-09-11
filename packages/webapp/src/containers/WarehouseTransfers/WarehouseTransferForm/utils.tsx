@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { keyBy, omit } from 'lodash';
 import moment from 'moment';
 import React from 'react';
@@ -16,7 +17,6 @@ import {
 } from '@/containers/Entries/utils';
 import { useWatch } from '@/hooks/utils';
 import {
-  compose,
   transformToForm,
   repeatValue,
   transactionNumber,
@@ -78,10 +78,11 @@ export function transformToEditForm(
       Math.max(MIN_LINES_NUMBER - warehouseEntries.length, 0),
     ),
   ];
-  const entries = compose(
-    ensureEntriesHaveEmptyLine(defaultWarehouseTransferEntry),
+  const entries = FF.pipe(
+    initialEntries,
     updateItemsEntriesTotal,
-  )(initialEntries);
+    ensureEntriesHaveEmptyLine(defaultWarehouseTransferEntry),
+  );
 
   return {
     ...transformToForm(warehouse, defaultWarehouseTransfer),
@@ -174,12 +175,11 @@ export const mutateTableCell =
     value: unknown,
     entries: WarehouseTransferEntry[],
   ): WarehouseTransferEntry[] => {
-    return compose(
-      // Update auto-adding new line.
+    return FF.pipe(
+      entries, // Update the row value of the given row index and column id.
+      updateTableCell(rowIndex, columnId, value), // Update auto-adding new line.
       updateAutoAddNewLine(defaultEntry, ['itemId']),
-      // Update the row value of the given row index and column id.
-      updateTableCell(rowIndex, columnId, value),
-    )(entries);
+    );
   };
 
 /**
@@ -190,7 +190,7 @@ export const mutateTableRow = (
   newRow: WarehouseTransferEntry,
   rows: WarehouseTransferEntry[],
 ): WarehouseTransferEntry[] => {
-  return compose(orderingLinesIndexes, updateTableRow(rowIndex, newRow))(rows);
+  return FF.pipe(rows, updateTableRow(rowIndex, newRow), orderingLinesIndexes);
 };
 
 /**
@@ -201,12 +201,11 @@ export const deleteTableRow = (
   defaultEntry: WarehouseTransferEntry,
   rows: WarehouseTransferEntry[],
 ): WarehouseTransferEntry[] => {
-  return compose(
-    // Ensure minimum lines count.
+  return FF.pipe(
+    rows, // Remove the line by the given index.
+    updateRemoveLineByIndex(rowIndex), // Ensure minimum lines count.
     updateMinEntriesLines(MIN_LINES_NUMBER, defaultEntry),
-    // Remove the line by the given index.
-    updateRemoveLineByIndex(rowIndex),
-  )(rows);
+  );
 };
 
 interface InventoryItemCost {

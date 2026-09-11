@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { ReceiptActionsBar } from './ReceiptActionsBar';
 import { ReceiptsListDialogs } from './ReceiptsListDialogs';
@@ -10,7 +11,7 @@ import type { WithReceiptsProps } from './withReceipts';
 import type { WithReceiptsActionsProps } from './withReceiptsActions';
 import { DashboardPageContent } from '@/components';
 import '@/style/pages/SaleReceipt/List.scss';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface ReceiptsListProps
   extends Pick<
@@ -59,10 +60,11 @@ function ReceiptsListInner({
   );
 }
 
-export const ReceiptsList = compose(
+export const ReceiptsList = FF.pipe(
+  ReceiptsListInner,
+  withReceiptsActions,
   withReceipts(({ receiptTableState, receiptsTableStateChanged }) => ({
     receiptTableState,
     receiptsTableStateChanged,
   })),
-  withReceiptsActions,
-)(ReceiptsListInner);
+);

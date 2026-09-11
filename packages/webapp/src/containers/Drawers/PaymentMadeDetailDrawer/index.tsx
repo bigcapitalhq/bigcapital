@@ -1,7 +1,7 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const PaymentMadeDetailContent = React.lazy(() =>
   import('./PaymentMadeDetailContent').then((m) => ({
@@ -38,4 +38,4 @@ function PaymentMadeDetailDrawer({
   );
 }
 
-export const index = compose(withDrawers())(PaymentMadeDetailDrawer);
+export const index = FF.pipe(PaymentMadeDetailDrawer, withDrawers());

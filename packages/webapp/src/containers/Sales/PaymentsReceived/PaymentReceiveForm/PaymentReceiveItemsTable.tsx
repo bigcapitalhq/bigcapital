@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { usePaymentReceiveEntriesColumns } from './components';
 import { usePaymentReceiveInnerContext } from './PaymentReceiveInnerProvider';
@@ -10,7 +11,7 @@ import { DataTableEditable } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose, updateTableCell } from '@/utils';
+import { updateTableCell } from '@/utils';
 
 type PaymentReceiveItemsTableProps = WithDrawerActionsProps & {
   entries: PaymentReceiveEntry[];
@@ -51,8 +52,9 @@ function PaymentReceiveItemsTableInner({
 
   const handleUpdateData = useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+      const newRows = FF.pipe(
         entries,
+        updateTableCell(rowIndex, columnId, value),
       ) as PaymentReceiveEntry[];
 
       onUpdateData(newRows);
@@ -79,6 +81,7 @@ function PaymentReceiveItemsTableInner({
   );
 }
 
-export const PaymentReceiveItemsTable = compose(withDrawerActions)(
+export const PaymentReceiveItemsTable = FF.pipe(
   PaymentReceiveItemsTableInner,
+  withDrawerActions,
 );

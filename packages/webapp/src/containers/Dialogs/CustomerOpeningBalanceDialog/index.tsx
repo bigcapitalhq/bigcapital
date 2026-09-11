@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import { lazy } from 'react';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const CustomerOpeningBalanceDialogContent = lazy(() =>
   import('./CustomerOpeningBalanceDialogContent').then((m) => ({
@@ -43,4 +43,4 @@ function CustomerOpeningBalanceDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(CustomerOpeningBalanceDialog);
+export const index = FF.pipe(CustomerOpeningBalanceDialog, withDialogRedux());

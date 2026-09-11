@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu } from './components';
@@ -22,7 +23,6 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface ManualJournalsDataTableProps
   extends Pick<WithManualJournalsProps, 'manualJournalsTableState'>,
@@ -172,11 +172,12 @@ function ManualJournalsDataTableInner({
   );
 }
 
-export const ManualJournalsDataTable = compose(
-  withManualJournalsActions,
+export const ManualJournalsDataTable = FF.pipe(
+  ManualJournalsDataTableInner,
+  withDrawerActions,
+  withAlertActions,
   withManualJournals(({ manualJournalsTableState }) => ({
     manualJournalsTableState,
   })),
-  withAlertActions,
-  withDrawerActions,
-)(ManualJournalsDataTableInner);
+  withManualJournalsActions,
+);

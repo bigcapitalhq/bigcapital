@@ -1,8 +1,8 @@
 // @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const RefundCreditNoteDrawerContent = React.lazy(() =>
   import('./RefundCreditNoteDrawerContent').then((m) => ({
@@ -35,4 +35,4 @@ function RefundCreditNoteDetailDrawer({
     </Drawer>
   );
 }
-export const index = compose(withDrawers())(RefundCreditNoteDetailDrawer);
+export const index = FF.pipe(RefundCreditNoteDetailDrawer, withDrawers());

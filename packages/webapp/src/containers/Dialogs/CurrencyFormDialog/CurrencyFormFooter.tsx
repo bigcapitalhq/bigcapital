@@ -1,12 +1,12 @@
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useCurrencyFormContext } from './CurrencyFormProvider';
 import type { CurrencyFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface CurrencyFormFooterProps extends WithDialogActionsProps {}
 
@@ -38,6 +38,7 @@ function CurrencyFormFooterInner({
   );
 }
 
-export const CurrencyFormFooter = compose(withDialogActions)(
+export const CurrencyFormFooter = FF.pipe(
   CurrencyFormFooterInner,
+  withDialogActions,
 );

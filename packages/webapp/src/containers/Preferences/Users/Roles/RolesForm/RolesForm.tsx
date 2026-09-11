@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -18,7 +19,7 @@ import type { RolesFormValues } from './types';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 const defaultValues: RolesFormValues = {
   roleName: '',
@@ -123,4 +124,4 @@ function RolesFormInner({
   );
 }
 
-export const RolesForm = compose(withDashboardActions)(RolesFormInner);
+export const RolesForm = FF.pipe(RolesFormInner, withDashboardActions);

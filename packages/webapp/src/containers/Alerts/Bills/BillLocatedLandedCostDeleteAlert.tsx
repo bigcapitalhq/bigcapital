@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useDeleteLandedCost } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface BillLocatedLandedCostDeleteAlertPayload {
   // Capital-B `BillId` is intentional — caller `LocatedLandedCostTable.tsx:40` opens this alert with the same field name.
@@ -73,7 +73,8 @@ function BillTransactionDeleteAlert({
   );
 }
 
-export const BillLocatedLandedCostDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const BillLocatedLandedCostDeleteAlert = FF.pipe(
+  BillTransactionDeleteAlert,
   withAlertActions,
-)(BillTransactionDeleteAlert);
+  withAlertStoreConnect(),
+);

@@ -1,7 +1,7 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const NotifyPaymentReceiveViaSMSDialogContent = React.lazy(() =>
   import('./NotifyPaymentReceiveViaSMSContent').then((m) => ({
@@ -40,6 +40,7 @@ function NotifyPaymentReciveViaSMSDialog({
     </Dialog>
   );
 }
-export const index = compose(withDialogRedux())(
+export const index = FF.pipe(
   NotifyPaymentReciveViaSMSDialog,
+  withDialogRedux(),
 );

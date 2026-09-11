@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { VendorCreditMenuItem } from './utils';
@@ -30,7 +31,6 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface VendorCreditDetailActionsBarInnerProps
   extends WithDialogActionsProps,
@@ -123,8 +123,9 @@ function VendorCreditDetailActionsBarInner({
   );
 }
 
-export const VendorCreditDetailActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
+export const VendorCreditDetailActionsBar = FF.pipe(
+  VendorCreditDetailActionsBarInner,
   withDrawerActions,
-)(VendorCreditDetailActionsBarInner);
+  withAlertActions,
+  withDialogActions,
+);

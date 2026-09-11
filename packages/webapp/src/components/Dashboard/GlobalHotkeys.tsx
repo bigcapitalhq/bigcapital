@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useHistory } from 'react-router-dom';
@@ -8,7 +9,6 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
 import { getDashboardRoutes } from '@/routes/dashboard';
-import { compose } from '@/utils';
 
 interface GlobalHotkeyRoute {
   path: string;
@@ -86,8 +86,9 @@ function GlobalHotkeys({
   return <div></div>;
 }
 
-export default compose(
-  withDashboardActions,
-  withDialogActions,
+export default FF.pipe(
+  GlobalHotkeys,
   withUniversalSearchActions,
-)(GlobalHotkeys);
+  withDialogActions,
+  withDashboardActions,
+);

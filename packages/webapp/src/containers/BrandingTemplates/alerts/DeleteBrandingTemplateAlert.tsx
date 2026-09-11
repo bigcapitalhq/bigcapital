@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useDeletePdfTemplate } from '@/hooks/query/pdf-templates';
-import { compose } from '@/utils';
 
 /**
  * Delete branding template alert.
@@ -71,7 +71,8 @@ function DeleteBrandingTemplateAlertInner({
   );
 }
 
-export const DeleteBrandingTemplateAlert = compose(
-  withAlertStoreConnect(),
+export const DeleteBrandingTemplateAlert = FF.pipe(
+  DeleteBrandingTemplateAlertInner,
   withAlertActions,
-)(DeleteBrandingTemplateAlertInner);
+  withAlertStoreConnect(),
+);

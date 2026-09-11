@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useRefundVendorCreditNoteDrawerContext } from './RefundVendorCreditDrawerProvider';
 import {
@@ -10,7 +11,6 @@ import {
 } from '@/components';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { compose } from '@/utils';
 
 /**
  * Refund vendor credit actions bar.
@@ -43,6 +43,7 @@ function RefundVendorCreditDetailActionsBarInner({
   );
 }
 
-export const RefundVendorCreditDetailActionsBar = compose(withAlertActions)(
+export const RefundVendorCreditDetailActionsBar = FF.pipe(
   RefundVendorCreditDetailActionsBarInner,
+  withAlertActions,
 );

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -14,11 +15,7 @@ import {
 import { TableStyle } from '@/constants';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { handleViewTransactionDetail } from '@/containers/FinancialStatements/utils/transactionDrawer';
-import {
-  compose,
-  defaultExpanderReducer,
-  tableRowTypesToClassnames,
-} from '@/utils';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
 interface GeneralLedgerTableProps extends WithDrawerActionsProps {
   companyName: string;
@@ -86,8 +83,9 @@ function GeneralLedgerTableInner({
   );
 }
 
-export const GeneralLedgerTable = compose(withDrawerActions)(
+export const GeneralLedgerTable = FF.pipe(
   GeneralLedgerTableInner,
+  withDrawerActions,
 );
 
 const GeneralLedgerDataTable = styled(ReportDataTable)`

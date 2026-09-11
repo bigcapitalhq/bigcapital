@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import '@/style/pages/ReconcileVendorCredit/ReconcileVendorCreditForm.scss';
@@ -10,7 +11,7 @@ import type { ReconcileVendorCreditFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 // Default form initial values.
 const defaultInitialValues = {
@@ -108,6 +109,7 @@ function ReconcileVendorCreditFormInner({
     />
   );
 }
-export const ReconcileVendorCreditForm = compose(withDialogActions)(
+export const ReconcileVendorCreditForm = FF.pipe(
   ReconcileVendorCreditFormInner,
+  withDialogActions,
 );

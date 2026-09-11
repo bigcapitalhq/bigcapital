@@ -6,13 +6,14 @@ import {
   Popover,
   Position,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useAuthenticatedAccount } from '@/hooks/query';
 import { useAuthActions, useAuthOrganizationId } from '@/hooks/state';
-import { firstLettersArgs, compose } from '@/utils';
+import { firstLettersArgs } from '@/utils';
 
 /**
  * Dashboard topbar user.
@@ -76,4 +77,4 @@ function DashboardTopbarUser({
     </Popover>
   );
 }
-export default compose(withDialogActions)(DashboardTopbarUser);
+export default FF.pipe(DashboardTopbarUser, withDialogActions);

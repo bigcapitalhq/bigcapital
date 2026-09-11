@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useCloseReceipt } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface ReceiptCloseAlertPayload {
   receiptId: number;
@@ -71,7 +71,8 @@ function ReceiptCloseAlertInner({
   );
 }
 
-export const ReceiptCloseAlert = compose(
-  withAlertStoreConnect(),
+export const ReceiptCloseAlert = FF.pipe(
+  ReceiptCloseAlertInner,
   withAlertActions,
-)(ReceiptCloseAlertInner);
+  withAlertStoreConnect(),
+);

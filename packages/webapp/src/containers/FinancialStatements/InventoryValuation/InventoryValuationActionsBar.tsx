@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { InventoryValuationExportMenu } from './components';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
@@ -23,7 +24,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface InventoryValuationActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -142,10 +143,11 @@ function InventoryValuationActionsBarInner({
   );
 }
 
-export const InventoryValuationActionsBar = compose(
+export const InventoryValuationActionsBar = FF.pipe(
+  InventoryValuationActionsBarInner,
+  withDialogActions,
+  withInventoryValuationActions,
   withInventoryValuation(({ inventoryValuationDrawerFilter }) => ({
     isFilterDrawerOpen: inventoryValuationDrawerFilter,
   })),
-  withInventoryValuationActions,
-  withDialogActions,
-)(InventoryValuationActionsBarInner);
+);

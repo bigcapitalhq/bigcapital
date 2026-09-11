@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import { ProfitLossSheetAlerts, ProfitLossSheetLoadingBar } from './components';
@@ -13,7 +14,6 @@ import {
 } from './withProfitLossActions';
 import { DashboardPageContent } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose } from '@/utils';
 
 type ProfitLossSheetProps = Pick<
   WithProfitLossActionsProps,
@@ -70,7 +70,8 @@ function ProfitLossSheetInner({
   );
 }
 
-export const ProfitLossSheet = compose(
-  withDashboardActions,
+export const ProfitLossSheet = FF.pipe(
+  ProfitLossSheetInner,
   withProfitLossActions,
-)(ProfitLossSheetInner);
+  withDashboardActions,
+);

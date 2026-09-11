@@ -30,12 +30,7 @@ import {
 import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import {
-  compose,
-  orderingLinesIndexes,
-  transactionNumber,
-  safeSumBy,
-} from '@/utils';
+import { orderingLinesIndexes, transactionNumber, safeSumBy } from '@/utils';
 
 type CreditNoteFormInnerProps = Record<string, never>;
 

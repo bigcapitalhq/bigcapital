@@ -1,5 +1,6 @@
 import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useRef } from 'react';
 import intl from 'react-intl-universal';
 import { useReceiptFormContext } from './ReceiptFormProvider';
@@ -17,10 +18,10 @@ import {
 import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { transactionNumber } from '@/utils';
-import { compose } from '@/utils';
 
-type ReceiptExchangeRateInputFieldRootProps = React.ComponentProps<
-  typeof ExchangeRateInputGroup
+type ReceiptExchangeRateInputFieldRootProps = Omit<
+  React.ComponentProps<typeof ExchangeRateInputGroup>,
+  'name' | 'fromCurrency' | 'toCurrency'
 >;
 
 /**
@@ -50,10 +51,11 @@ const ReceiptExchangeRateInputFieldRoot = ({
   );
 };
 
-export const ReceiptExchangeRateInputField = compose(
-  withExchangeRateFetchingLoading,
+export const ReceiptExchangeRateInputField = FF.pipe(
+  ReceiptExchangeRateInputFieldRoot,
   withExchangeRateItemEntriesPriceRecalc,
-)(ReceiptExchangeRateInputFieldRoot);
+  withExchangeRateFetchingLoading,
+);
 
 type ReceiptSyncIncrementSettingsToFormProps = Record<string, never>;
 
@@ -100,22 +102,25 @@ type ReceiptSyncAutoExRateToFormProps = {
  * as an indication the entries rates have been changed.
  * @returns {React.ReactNode}
  */
-export const ReceiptSyncAutoExRateToForm = compose(withDialogActions)(({
-  openDialog,
-}: ReceiptSyncAutoExRateToFormProps) => {
-  const total = useReceiptTotal();
-  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+export const ReceiptSyncAutoExRateToForm = FF.pipe(
+  ({ openDialog }: ReceiptSyncAutoExRateToFormProps) => {
+    const total = useReceiptTotal();
+    const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+      undefined,
+    );
 
-  useSyncExRateToForm({
-    onSynced: () => {
-      // If the total bigger then zero show alert to the user after adjusting entries.
-      if (total > 0) {
-        if (timeout.current) clearTimeout(timeout.current);
-        timeout.current = setTimeout(() => {
-          openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
-        }, 500);
-      }
-    },
-  });
-  return null;
-});
+    useSyncExRateToForm({
+      onSynced: () => {
+        // If the total bigger then zero show alert to the user after adjusting entries.
+        if (total > 0) {
+          if (timeout.current) clearTimeout(timeout.current);
+          timeout.current = setTimeout(() => {
+            openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
+          }, 500);
+        }
+      },
+    });
+    return null;
+  },
+  withDialogActions,
+);

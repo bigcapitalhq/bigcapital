@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { useInventoryAdjustmentsColumns, ActionsMenu } from './components';
@@ -15,7 +16,6 @@ import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface InventoryAdjustmentDataTableProps
   extends Pick<WithInventoryAdjustmentsProps, 'inventoryAdjustmentTableState'>,
@@ -131,11 +131,12 @@ function InventoryAdjustmentDataTable({
   );
 }
 
-export const InventoryAdjustmentTable = compose(
-  withAlertActions,
-  withInventoryAdjustmentActions,
-  withDrawerActions,
+export const InventoryAdjustmentTable = FF.pipe(
+  InventoryAdjustmentDataTable,
   withInventoryAdjustments(({ inventoryAdjustmentTableState }) => ({
     inventoryAdjustmentTableState,
   })),
-)(InventoryAdjustmentDataTable);
+  withDrawerActions,
+  withInventoryAdjustmentActions,
+  withAlertActions,
+);

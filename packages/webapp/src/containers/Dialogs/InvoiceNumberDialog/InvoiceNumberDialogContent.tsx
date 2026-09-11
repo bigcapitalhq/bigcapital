@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { InvoiceNumberDialogProvider } from './InvoiceNumberDialogProvider';
@@ -12,7 +13,6 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSaveSettings, useSettingsInvoices } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface InvoiceNumberDialogContentProps extends WithDialogActionsProps {
   initialValues?: Partial<ReferenceNumberFormValues>;
@@ -100,6 +100,7 @@ function InvoiceNumberDialogContentInner({
   );
 }
 
-export const InvoiceNumberDialogContent = compose(withDialogActions)(
+export const InvoiceNumberDialogContent = FF.pipe(
   InvoiceNumberDialogContentInner,
+  withDialogActions,
 );

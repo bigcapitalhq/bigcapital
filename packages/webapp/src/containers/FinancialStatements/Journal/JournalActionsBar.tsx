@@ -7,6 +7,7 @@ import {
   PopoverInteractionKind,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { JournalSheetExportMenu } from './components';
 import { useJournalSheetContext } from './JournalProvider';
@@ -17,7 +18,6 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 type JournalActionsBarProps = {
   isFilterDrawerOpen: boolean;
@@ -103,10 +103,11 @@ function JournalActionsBarInner({
   );
 }
 
-export const JournalActionsBar = compose(
+export const JournalActionsBar = FF.pipe(
+  JournalActionsBarInner,
+  withDialogActions,
+  withJournalActions,
   withJournal(({ journalSheetDrawerFilter }) => ({
     isFilterDrawerOpen: journalSheetDrawerFilter,
   })),
-  withJournalActions,
-  withDialogActions,
-)(JournalActionsBarInner);
+);

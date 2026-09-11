@@ -1,4 +1,5 @@
 import { Classes, Popover, Position } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import { useState } from 'react';
 import { withBanking } from '../../withBanking';
@@ -11,7 +12,6 @@ import type { UncategorizedTransactionsFilter } from '../../withBankingActions';
 import type { AccountTransactionsDateFilterFormValues } from '../AccountTransactionsDateFilter';
 import type { FormikConfig, FormikHelpers } from 'formik';
 import { Box, Icon } from '@/components';
-import { compose } from '@/utils';
 
 interface AccountUncategorizedDateFilterRootProps
   extends Pick<WithBankingProps, 'uncategorizedTransactionsFilter'> {}
@@ -69,11 +69,12 @@ function AccountUncategorizedDateFilterRoot({
   );
 }
 
-export const AccountUncategorizedDateFilter = compose(
+export const AccountUncategorizedDateFilter = FF.pipe(
+  AccountUncategorizedDateFilterRoot,
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),
-)(AccountUncategorizedDateFilterRoot);
+);
 
 interface UncategorizedTransactionsDateFilterProps
   extends Pick<WithBankingActionsProps, 'setUncategorizedTransactionsFilter'>,
@@ -88,44 +89,45 @@ const toDateFilterString = (value: string | Date | null): string | undefined =>
       ? value
       : value.toISOString();
 
-export const UncategorizedTransactionsDateFilter = compose(
-  withBankingActions,
+export const UncategorizedTransactionsDateFilter = FF.pipe(
+  ({
+    // #withBankingActions
+    setUncategorizedTransactionsFilter,
+
+    // #withBanking
+    uncategorizedTransactionsFilter,
+
+    // #ownProps
+    onSubmit,
+  }: UncategorizedTransactionsDateFilterProps) => {
+    const initialValues: AccountTransactionsDateFilterFormValues = {
+      period: 'all_dates',
+      fromDate: uncategorizedTransactionsFilter?.fromDate ?? '',
+      toDate: uncategorizedTransactionsFilter?.toDate ?? '',
+    };
+
+    const handleSubmit: FormikConfig<AccountTransactionsDateFilterFormValues>['onSubmit'] =
+      (
+        values: AccountTransactionsDateFilterFormValues,
+        _helpers: FormikHelpers<AccountTransactionsDateFilterFormValues>,
+      ) => {
+        const filter: UncategorizedTransactionsFilter = {
+          fromDate: toDateFilterString(values.fromDate),
+          toDate: toDateFilterString(values.toDate),
+        };
+        setUncategorizedTransactionsFilter(filter);
+        onSubmit?.(filter);
+      };
+
+    return (
+      <AccountTransactionsDateFilterForm
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+      />
+    );
+  },
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),
-)(({
-  // #withBankingActions
-  setUncategorizedTransactionsFilter,
-
-  // #withBanking
-  uncategorizedTransactionsFilter,
-
-  // #ownProps
-  onSubmit,
-}: UncategorizedTransactionsDateFilterProps) => {
-  const initialValues: AccountTransactionsDateFilterFormValues = {
-    period: 'all_dates',
-    fromDate: uncategorizedTransactionsFilter?.fromDate ?? '',
-    toDate: uncategorizedTransactionsFilter?.toDate ?? '',
-  };
-
-  const handleSubmit: FormikConfig<AccountTransactionsDateFilterFormValues>['onSubmit'] =
-    (
-      values: AccountTransactionsDateFilterFormValues,
-      _helpers: FormikHelpers<AccountTransactionsDateFilterFormValues>,
-    ) => {
-      const filter: UncategorizedTransactionsFilter = {
-        fromDate: toDateFilterString(values.fromDate),
-        toDate: toDateFilterString(values.toDate),
-      };
-      setUncategorizedTransactionsFilter(filter);
-      onSubmit?.(filter);
-    };
-
-  return (
-    <AccountTransactionsDateFilterForm
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-    />
-  );
-});
+  withBankingActions,
+);

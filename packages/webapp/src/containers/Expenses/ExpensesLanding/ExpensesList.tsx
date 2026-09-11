@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import '@/style/pages/Expense/List.scss';
 import { ExpenseActionsBar } from './ExpenseActionsBar';
@@ -10,7 +11,7 @@ import { withExpensesActions } from './withExpensesActions';
 import type { WithExpensesProps } from './withExpenses';
 import type { WithExpensesActionsProps } from './withExpensesActions';
 import { DashboardPageContent } from '@/components';
-import { compose, transformTableStateToQuery } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface ExpensesListInnerProps
   extends Pick<
@@ -59,10 +60,11 @@ function ExpensesListInner({
   );
 }
 
-export const ExpensesList = compose(
+export const ExpensesList = FF.pipe(
+  ExpensesListInner,
+  withExpensesActions,
   withExpenses(({ expensesTableState, expensesTableStateChanged }) => ({
     expensesTableState,
     expensesTableStateChanged,
   })),
-  withExpensesActions,
-)(ExpensesListInner);
+);

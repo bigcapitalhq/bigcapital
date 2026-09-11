@@ -11,6 +11,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -39,7 +40,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { compose } from '@/utils';
 
 interface WithVendorsCreditNotesActionsProps {
   setVendorsCreditNoteTableState: (state: Record<string, any>) => void;
@@ -217,15 +217,16 @@ function VendorsCreditNoteActionsBarInner({
   );
 }
 
-export const VendorsCreditNoteActionsBar = compose(
-  withVendorsCreditNotesActions,
-  withVendorActions,
+export const VendorsCreditNoteActionsBar = FF.pipe(
+  VendorsCreditNoteActionsBarInner,
+  withDrawerActions,
+  withDialogActions,
   withVendorsCreditNotes(
     ({ vendorsCreditNoteTableState, vendorsCreditNoteSelectedRows }) => ({
       vendorCreditFilterRoles: vendorsCreditNoteTableState.filterRoles,
       vendorsCreditNoteSelectedRows,
     }),
   ),
-  withDialogActions,
-  withDrawerActions,
-)(VendorsCreditNoteActionsBarInner);
+  withVendorActions,
+  withVendorsCreditNotesActions,
+);

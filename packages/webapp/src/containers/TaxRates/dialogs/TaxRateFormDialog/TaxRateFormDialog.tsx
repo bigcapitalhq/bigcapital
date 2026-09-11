@@ -1,10 +1,10 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux, {
   DialogBaseProps,
 } from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const TaxRateFormDialogContent = lazy(() =>
   import('./TaxRateFormDialogContent').then((m) => ({
@@ -44,6 +44,7 @@ const TaxRateDialog = styled(Dialog)`
   max-width: 450px;
 `;
 
-export const TaxRateFormDialog = compose(withDialogRedux())(
+export const TaxRateFormDialog = FF.pipe(
   TaxRateFormDialogInner,
+  withDialogRedux(),
 );

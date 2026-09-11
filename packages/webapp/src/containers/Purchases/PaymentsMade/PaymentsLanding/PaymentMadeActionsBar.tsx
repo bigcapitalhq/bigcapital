@@ -6,6 +6,7 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { useBulkDeletePaymentMadesDialog } from './hooks/use-bulk-delete-payment-mades-dialog';
@@ -30,7 +31,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshPaymentMades } from '@/hooks/query/payment-mades';
-import { compose } from '@/utils';
 
 interface WithPaymentMadeActionsProps {
   setPaymentMadesTableState: (state: Record<string, any>) => void;
@@ -179,11 +179,12 @@ function PaymentMadeActionsBarInner({
   );
 }
 
-export const PaymentMadeActionsBar = compose(
-  withPaymentMadeActions,
+export const PaymentMadeActionsBar = FF.pipe(
+  PaymentMadeActionsBarInner,
+  withDialogActions,
   withPaymentMade(({ paymentMadesTableState, paymentMadesSelectedRows }) => ({
     paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
     paymentMadesSelectedRows,
   })),
-  withDialogActions,
-)(PaymentMadeActionsBarInner);
+  withPaymentMadeActions,
+);

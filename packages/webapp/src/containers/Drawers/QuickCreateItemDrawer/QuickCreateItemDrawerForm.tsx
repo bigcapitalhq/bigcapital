@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import styled from 'styled-components';
 import { ItemFormFormik } from '../../Items/ItemFormFormik';
@@ -12,7 +13,6 @@ import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { DRAWERS } from '@/constants/drawers';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface QuickCreateItemDrawerFormProps
   extends WithDrawerActionsProps,
@@ -75,10 +75,11 @@ function DrawerItemFormLoading({
   return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
 }
 
-export const QuickCreateItemDrawerForm = compose(
-  withDrawerActions,
+export const QuickCreateItemDrawerForm = FF.pipe(
+  QuickCreateItemDrawerFormInner,
   withDashboardActions,
-)(QuickCreateItemDrawerFormInner);
+  withDrawerActions,
+);
 
 const ItemFormCard = styled(Card)`
   margin: 15px;

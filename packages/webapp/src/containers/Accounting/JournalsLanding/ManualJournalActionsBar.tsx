@@ -6,6 +6,7 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -34,7 +35,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { useRefreshJournals } from '@/hooks/query/manual-journals';
-import { compose } from '@/utils';
 
 interface ManualJournalActionsBarInnerProps
   extends Pick<WithManualJournalsProps, 'manualJournalsSelectedRows'>,
@@ -215,13 +215,14 @@ function ManualJournalActionsBarInner({
   );
 }
 
-export const ManualJournalActionsBar = compose(
-  withDialogActions,
-  withManualJournalsActions,
+export const ManualJournalActionsBar = FF.pipe(
+  ManualJournalActionsBarInner,
   withManualJournals(
     ({ manualJournalsTableState, manualJournalsSelectedRows }) => ({
       manualJournalsFilterConditions: manualJournalsTableState.filterRoles,
       manualJournalsSelectedRows,
     }),
   ),
-)(ManualJournalActionsBarInner);
+  withManualJournalsActions,
+  withDialogActions,
+);

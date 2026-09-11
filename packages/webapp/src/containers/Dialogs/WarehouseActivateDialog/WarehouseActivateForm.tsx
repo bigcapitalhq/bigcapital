@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { WarehouseActivateFormContent } from './WarehouseActivateFormContent';
@@ -7,7 +8,6 @@ import { useWarehouseActivateContext } from './WarehouseActivateFormProvider';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface WarehouseActivateFormProps extends WithDialogActionsProps {}
 
@@ -47,6 +47,7 @@ function WarehouseActivateFormInner({
     />
   );
 }
-export const WarehouseActivateForm = compose(withDialogActions)(
+export const WarehouseActivateForm = FF.pipe(
   WarehouseActivateFormInner,
+  withDialogActions,
 );

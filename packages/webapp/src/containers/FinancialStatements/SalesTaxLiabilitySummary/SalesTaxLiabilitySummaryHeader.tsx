@@ -1,5 +1,6 @@
 import { Button, Intent, Tab, Tabs } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -19,7 +20,7 @@ import {
 } from './withSalesTaxLiabilitySummaryActions';
 import { FormattedMessage as T } from '@/components';
 import { useFeatureCan } from '@/hooks/state';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 interface SalesTaxLiabilitySummaryFormValues {
   fromDate: Date;
@@ -128,12 +129,13 @@ function SalesTaxLiabilitySummaryHeaderInner({
   );
 }
 
-export const SalesTaxLiabilitySummaryHeader = compose(
+export const SalesTaxLiabilitySummaryHeader = FF.pipe(
+  SalesTaxLiabilitySummaryHeaderInner,
+  withSalesTaxLiabilitySummaryActions,
   withSalesTaxLiabilitySummary(({ salesTaxLiabilitySummaryFilter }) => ({
     salesTaxLiabilitySummaryFilter,
   })),
-  withSalesTaxLiabilitySummaryActions,
-)(SalesTaxLiabilitySummaryHeaderInner);
+);
 
 const SalesTaxSummaryFinancialHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

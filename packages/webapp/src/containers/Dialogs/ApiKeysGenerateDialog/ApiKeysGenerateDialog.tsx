@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ApiKeysGenerateDialogContent = lazy(() =>
   import('./ApiKeysGenerateDialogContent').then((m) => ({
@@ -38,6 +38,7 @@ function ApiKeysGenerateDialogRoot({
   );
 }
 
-export const ApiKeysGenerateDialog = compose(withDialogRedux())(
+export const ApiKeysGenerateDialog = FF.pipe(
   ApiKeysGenerateDialogRoot,
+  withDialogRedux(),
 );

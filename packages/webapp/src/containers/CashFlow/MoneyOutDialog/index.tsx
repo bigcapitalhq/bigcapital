@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const MoneyOutDialogContent = React.lazy(() =>
   import('./MoneyOutDialogContent').then((m) => ({
@@ -52,4 +52,4 @@ function MoneyOutDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(MoneyOutDialog);
+export const index = FF.pipe(MoneyOutDialog, withDialogRedux());

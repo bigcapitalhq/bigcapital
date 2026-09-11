@@ -1,5 +1,6 @@
 import { Button, Intent, Classes } from '@blueprintjs/core';
 import { Formik, Form, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
@@ -15,7 +16,6 @@ import {
 } from '@/components';
 import { ContactsOptions } from '@/constants/contactsOptions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 // Widened BP4 wrapper type — `popoverProps` minimal not exposed publicly.
 type FFormGroupProps = React.PropsWithChildren<{
@@ -115,6 +115,7 @@ function ContactDuplicateFormInner({
   );
 }
 
-export const ContactDuplicateForm = compose(withDialogActions)(
+export const ContactDuplicateForm = FF.pipe(
   ContactDuplicateFormInner,
+  withDialogActions,
 );

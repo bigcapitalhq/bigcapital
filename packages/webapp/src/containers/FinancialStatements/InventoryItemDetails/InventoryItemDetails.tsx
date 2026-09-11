@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import {
@@ -15,7 +16,6 @@ import {
   WithInventoryItemDetailsActionsProps,
 } from './withInventoryItemDetailsActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 interface InventoryItemDetailsProps {
   toggleInventoryItemDetailsFilterDrawer: WithInventoryItemDetailsActionsProps['toggleInventoryItemDetailsFilterDrawer'];
@@ -73,6 +73,7 @@ function InventoryItemDetailsInner({
   );
 }
 
-export const InventoryItemDetails = compose(withInventoryItemDetailsActions)(
+export const InventoryItemDetails = FF.pipe(
   InventoryItemDetailsInner,
+  withInventoryItemDetailsActions,
 );

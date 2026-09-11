@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import '@/style/pages/Vendors/List.scss';
 import { VendorActionsBar } from './VendorActionsBar';
@@ -9,7 +10,6 @@ import { withVendorsActions } from './withVendorsActions';
 import type { WithVendorsProps } from './withVendors';
 import type { WithVendorsActionsProps } from './withVendorsActions';
 import { DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 interface VendorsListInnerProps
   extends Pick<
@@ -54,10 +54,11 @@ function VendorsListInner({
   );
 }
 
-export const VendorsList = compose(
+export const VendorsList = FF.pipe(
+  VendorsListInner,
+  withVendorsActions,
   withVendors(({ vendorsTableState, vendorsTableStateChanged }) => ({
     vendorsTableState,
     vendorsTableStateChanged,
   })),
-  withVendorsActions,
-)(VendorsListInner);
+);

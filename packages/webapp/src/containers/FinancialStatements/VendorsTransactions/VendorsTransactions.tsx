@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { useVendorsTransactionsQuery } from './_utils';
@@ -12,7 +13,6 @@ import {
   WithVendorsTransactionsActionsProps,
 } from './withVendorsTransactionsActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 interface VendorsTransactionsProps {
   toggleVendorsTransactionsFilterDrawer: WithVendorsTransactionsActionsProps['toggleVendorsTransactionsFilterDrawer'];
@@ -54,7 +54,7 @@ function VendorsTransactionsInner({
   return (
     <VendorsTransactionsProvider filter={filter}>
       <VendorsTransactionsActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={filter.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <VendorsTransactionsLoadingBar />
@@ -72,6 +72,7 @@ function VendorsTransactionsInner({
     </VendorsTransactionsProvider>
   );
 }
-export const VendorsTransactions = compose(withVendorsTransactionsActions)(
+export const VendorsTransactions = FF.pipe(
   VendorsTransactionsInner,
+  withVendorsTransactionsActions,
 );

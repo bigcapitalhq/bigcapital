@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
@@ -10,7 +11,7 @@ import {
   type WithBillsActionsProps,
 } from '@/containers/Purchases/Bills/BillsLanding/withBillsActions';
 import { useSaveSettings, useSettingsBills } from '@/hooks/query';
-import { compose, optionsMapToArray } from '@/utils';
+import { optionsMapToArray } from '@/utils';
 
 interface BillNumberDialogContentProps
   extends WithDialogActionsProps,
@@ -72,7 +73,8 @@ function BillNumberDialogContentInner({
   );
 }
 
-export const BillNumberDialogContent = compose(
-  withDialogActions,
+export const BillNumberDialogContent = FF.pipe(
+  BillNumberDialogContentInner,
   withBillsActions,
-)(BillNumberDialogContentInner);
+  withDialogActions,
+);

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import '@/style/pages/Accounts/List.scss';
 import { AccountsActionsBar } from './AccountsActionsBar';
@@ -11,7 +12,6 @@ import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
 import type { WithAccountsProps } from '@/containers/Accounts/withAccounts';
 import { DashboardPageContent, DashboardContentTable } from '@/components';
 import { withAccounts } from '@/containers/Accounts/withAccounts';
-import { compose } from '@/utils';
 
 interface AccountsChartInnerProps {
   accountsTableState: WithAccountsProps['accountsTableState'];
@@ -57,10 +57,11 @@ function AccountsChartInner({
   );
 }
 
-export const AccountsChart = compose(
+export const AccountsChart = FF.pipe(
+  AccountsChartInner,
+  withAccountsTableActions,
   withAccounts(({ accountsTableState, accountsTableStateChanged }) => ({
     accountsTableState,
     accountsTableStateChanged,
   })),
-  withAccountsTableActions,
-)(AccountsChartInner);
+);

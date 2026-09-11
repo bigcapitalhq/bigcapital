@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { VendorSummarySheetExportMenu } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
@@ -23,7 +24,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface VendorsBalanceSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -145,10 +146,11 @@ function VendorsBalanceSummaryActionsBarInner({
     </DashboardActionsBar>
   );
 }
-export const VendorsBalanceSummaryActionsBar = compose(
-  withVendorsBalanceSummaryActions,
+export const VendorsBalanceSummaryActionsBar = FF.pipe(
+  VendorsBalanceSummaryActionsBarInner,
+  withDialogActions,
   withVendorsBalanceSummary(({ VendorsSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: VendorsSummaryFilterDrawer,
   })),
-  withDialogActions,
-)(VendorsBalanceSummaryActionsBarInner);
+  withVendorsBalanceSummaryActions,
+);

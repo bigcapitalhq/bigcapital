@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -11,7 +12,7 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSettingsReceipts, useSaveSettings } from '@/hooks/query';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface ReceiptNumberDialogContentProps extends WithDialogActionsProps {
   receiptId?: number;
@@ -99,6 +100,7 @@ function ReceiptNumberDialogContentInner({
   );
 }
 
-export const ReceiptNumberDialogContent = compose(withDialogActions)(
+export const ReceiptNumberDialogContent = FF.pipe(
   ReceiptNumberDialogContentInner,
+  withDialogActions,
 );

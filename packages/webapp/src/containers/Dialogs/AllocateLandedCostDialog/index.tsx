@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { AllocateLandedCostDialogPayload } from './types';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const AllocateLandedCostDialogContent = lazy(() =>
   import('./AllocateLandedCostDialogContent').then((m) => ({
@@ -42,4 +42,4 @@ function AllocateLandedCostDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(AllocateLandedCostDialog);
+export const index = FF.pipe(AllocateLandedCostDialog, withDialogRedux());

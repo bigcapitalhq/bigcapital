@@ -1,9 +1,9 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { ItemCategoryDialogPayload } from './types';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ItemCategoryFormDialogContent = lazy(() =>
   import('./ItemCategoryFormDialogContent').then((m) => ({
@@ -47,4 +47,4 @@ function ItemCategoryFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(ItemCategoryFormDialog);
+export const index = FF.pipe(ItemCategoryFormDialog, withDialogRedux());

@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ExportDialogContent = lazy(() =>
   import('./ExportDialogContent').then((m) => ({
@@ -47,4 +47,4 @@ function ExportDialogRoot({
   );
 }
 
-export const ExportDialog = compose(withDialogRedux())(ExportDialogRoot);
+export const ExportDialog = FF.pipe(ExportDialogRoot, withDialogRedux());

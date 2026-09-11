@@ -1,4 +1,5 @@
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
@@ -6,7 +7,6 @@ import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useInactivateContact } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface VendorInactivateAlertPayload {
   vendorId?: number;
@@ -73,7 +73,8 @@ function VendorInactivateAlertInner({
   );
 }
 
-export const VendorInactivateAlert = compose(
-  withAlertStoreConnect(),
+export const VendorInactivateAlert = FF.pipe(
+  VendorInactivateAlertInner,
   withAlertActions,
-)(VendorInactivateAlertInner);
+  withAlertStoreConnect(),
+);

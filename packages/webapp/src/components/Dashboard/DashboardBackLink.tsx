@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 import { useHistory } from 'react-router-dom';
@@ -5,7 +6,6 @@ import type { DashboardBreadcrumbItem } from './DashboardBreadcrumbs';
 import { If, Icon } from '@/components';
 import { FormattedMessage as T } from '@/components';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
-import { compose } from '@/utils';
 
 interface DashboardBackLinkProps {
   dashboardBackLink: boolean | string;
@@ -41,9 +41,12 @@ function DashboardBackLink({
   );
 }
 
-export default compose(
-  withBreadcrumbs([]),
+export default FF.pipe(
+  DashboardBackLink,
   withDashboard(({ dashboardBackLink }) => ({
     dashboardBackLink,
   })),
-)(DashboardBackLink);
+  withBreadcrumbs([]) as (
+    Component: React.ComponentType<any>,
+  ) => React.ComponentType<any>,
+);

@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useNotifyReceiptViaSMSContext } from './NotifyReceiptViaSMSFormProvider';
@@ -7,7 +8,6 @@ import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { NotifyViaSMSForm as NotifyViaSMSFormBase } from '@/containers/NotifyViaSMS/NotifyViaSMSForm';
 import { transformErrors } from '@/containers/NotifyViaSMS/utils';
-import { compose } from '@/utils';
 
 // `NotifyViaSMSForm` is `@ts-nocheck` with required destructured props; widen
 // locally so this dialog can pass only the props it actually uses.
@@ -108,6 +108,7 @@ function NotifyReceiptViaSMSFormInner({
   );
 }
 
-export const NotifyReceiptViaSMSForm = compose(withDialogActions)(
+export const NotifyReceiptViaSMSForm = FF.pipe(
   NotifyReceiptViaSMSFormInner,
+  withDialogActions,
 );

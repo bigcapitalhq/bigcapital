@@ -1,11 +1,12 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
 import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
 import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface WarehouseTransfersViewTabsInnerProps
   extends Pick<
@@ -52,9 +53,10 @@ function WarehouseTransfersViewTabsInner({
   );
 }
 
-export const WarehouseTransfersViewTabs = compose(
-  withWarehouseTransfersActions,
+export const WarehouseTransfersViewTabs = FF.pipe(
+  WarehouseTransfersViewTabsInner,
   withWarehouseTransfers(({ warehouseTransferTableState }) => ({
     warehouseTransferCurrentView: warehouseTransferTableState?.viewSlug,
   })),
-)(WarehouseTransfersViewTabsInner);
+  withWarehouseTransfersActions,
+);

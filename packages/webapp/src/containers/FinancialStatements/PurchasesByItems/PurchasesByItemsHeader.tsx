@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -15,7 +16,7 @@ import {
 } from './withPurchasesByItemsActions';
 import { FormattedMessage as T } from '@/components';
 import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 interface PurchasesByItemsFormValues {
   fromDate: Date;
@@ -114,12 +115,13 @@ function PurchasesByItemsHeaderInner({
   );
 }
 
-export const PurchasesByItemsHeader = compose(
+export const PurchasesByItemsHeader = FF.pipe(
+  PurchasesByItemsHeaderInner,
+  withPurchasesByItemsActions,
   withPurchasesByItems(({ purchasesByItemsDrawerFilter }) => ({
     purchasesByItemsDrawerFilter,
   })),
-  withPurchasesByItemsActions,
-)(PurchasesByItemsHeaderInner);
+);
 
 const PurchasesByItemsDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

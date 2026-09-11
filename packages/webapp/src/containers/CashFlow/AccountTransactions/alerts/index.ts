@@ -1,30 +1,31 @@
 import { lazy } from 'react';
 import type { ComponentType, LazyExoticComponent } from 'react';
 
-const ResumeFeedsBankAccountAlert: LazyExoticComponent<ComponentType> = lazy(
-  () =>
+const ResumeFeedsBankAccountAlert: LazyExoticComponent<ComponentType<any>> =
+  lazy(() =>
     import('./ResumeFeedsBankAccount').then((m) => ({
       default: m.ResumeFeedsBankAccount,
     })),
-);
+  );
 
-const PauseFeedsBankAccountAlert: LazyExoticComponent<ComponentType> = lazy(
-  () =>
+const PauseFeedsBankAccountAlert: LazyExoticComponent<ComponentType<any>> =
+  lazy(() =>
     import('./PauseFeedsBankAccount').then((m) => ({
       default: m.PauseFeedsBankAccount,
     })),
-);
-
-const UncategorizeTransactionsBulkAlert: LazyExoticComponent<ComponentType> =
-  lazy(() =>
-    import('./UncategorizeBankTransactionsBulkAlert').then((m) => ({
-      default: m.UncategorizeBankTransactionsBulkAlert,
-    })),
   );
+
+const UncategorizeTransactionsBulkAlert: LazyExoticComponent<
+  ComponentType<any>
+> = lazy(() =>
+  import('./UncategorizeBankTransactionsBulkAlert').then((m) => ({
+    default: m.UncategorizeBankTransactionsBulkAlert,
+  })),
+);
 
 interface BankAccountAlertEntry {
   name: string;
-  component: LazyExoticComponent<ComponentType>;
+  component: LazyExoticComponent<ComponentType<any>>;
 }
 
 /**

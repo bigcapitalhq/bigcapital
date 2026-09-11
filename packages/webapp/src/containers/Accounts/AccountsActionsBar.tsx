@@ -7,6 +7,7 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -36,7 +37,6 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useSaveSettings } from '@/hooks/query';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { compose } from '@/utils';
 
 interface AccountsActionsBarInnerProps {
   openDialog: WithDialogActionsProps['openDialog'];
@@ -236,13 +236,14 @@ function AccountsActionsBarInner({
   );
 }
 
-export const AccountsActionsBar = compose(
-  withDialogActions,
-  withAlertActions,
+export const AccountsActionsBar = FF.pipe(
+  AccountsActionsBarInner,
+  withAccountsTableActions,
   withAccounts(({ accountsSelectedRows, accountsTableState }) => ({
     accountsSelectedRows,
     accountsInactiveMode: accountsTableState.inactiveMode,
     accountsFilterConditions: accountsTableState.filterRoles,
   })),
-  withAccountsTableActions,
-)(AccountsActionsBarInner);
+  withAlertActions,
+  withDialogActions,
+);

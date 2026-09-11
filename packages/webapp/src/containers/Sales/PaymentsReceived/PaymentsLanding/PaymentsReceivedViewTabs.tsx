@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
@@ -7,7 +8,7 @@ import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
 import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
 import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
 import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface PaymentsReceivedViewTabsProps
   extends WithPaymentsReceivedActionsProps,
@@ -56,9 +57,10 @@ function PaymentsReceivedViewTabsInner({
   );
 }
 
-export const PaymentsReceivedViewTabs = compose(
-  withPaymentsReceivedActions,
+export const PaymentsReceivedViewTabs = FF.pipe(
+  PaymentsReceivedViewTabsInner,
   withPaymentsReceived(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),
-)(PaymentsReceivedViewTabsInner);
+  withPaymentsReceivedActions,
+);

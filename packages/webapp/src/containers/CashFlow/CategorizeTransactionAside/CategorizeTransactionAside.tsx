@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import { useEffect } from 'react';
 import { withBanking } from '../withBanking';
@@ -7,7 +8,6 @@ import { CategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
 import type { WithBankingProps } from '../withBanking';
 import type { WithBankingActionsProps } from '../withBankingActions';
 import { Aside } from '@/components/Aside/Aside';
-import { compose } from '@/utils';
 
 interface CategorizeTransactionAsideProps
   extends Pick<
@@ -69,9 +69,10 @@ function CategorizeTransactionAsideRoot({
   );
 }
 
-export const CategorizeTransactionAside = compose(
-  withBankingActions,
+export const CategorizeTransactionAside = FF.pipe(
+  CategorizeTransactionAsideRoot,
   withBanking(({ transactionsToCategorizeIdsSelected }) => ({
     transactionsToCategorizeIdsSelected,
   })),
-)(CategorizeTransactionAsideRoot);
+  withBankingActions,
+);

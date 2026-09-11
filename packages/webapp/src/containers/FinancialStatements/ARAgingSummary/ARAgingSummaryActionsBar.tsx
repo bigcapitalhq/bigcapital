@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { ARAgingSummaryExportMenu } from './components';
@@ -23,7 +24,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, safeInvoke } from '@/utils';
+import { safeInvoke } from '@/utils';
 
 interface ARAgingSummaryActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -128,10 +129,11 @@ function ARAgingSummaryActionsBarInner({
   );
 }
 
-export const ARAgingSummaryActionsBar = compose(
-  withARAgingSummaryActions,
+export const ARAgingSummaryActionsBar = FF.pipe(
+  ARAgingSummaryActionsBarInner,
+  withDialogActions,
   withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
   })),
-  withDialogActions,
-)(ARAgingSummaryActionsBarInner);
+  withARAgingSummaryActions,
+);

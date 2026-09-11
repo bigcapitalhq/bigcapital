@@ -1,11 +1,11 @@
 import { Classes, Button, Intent } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface ApiKeyFormValues {
   name: string;
@@ -61,6 +61,7 @@ function ApiKeysGenerateFormContentInner({
   );
 }
 
-export const ApiKeysGenerateFormContent = compose(withDialogActions)(
+export const ApiKeysGenerateFormContent = FF.pipe(
   ApiKeysGenerateFormContentInner,
+  withDialogActions,
 );

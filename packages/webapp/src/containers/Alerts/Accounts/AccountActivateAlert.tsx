@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useActivateAccount } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface AccountActivateAlertPayload {
   accountId: number;
@@ -70,7 +70,8 @@ function AccountActivateAlertInner({
   );
 }
 
-export const AccountActivateAlert = compose(
-  withAlertStoreConnect(),
+export const AccountActivateAlert = FF.pipe(
+  AccountActivateAlertInner,
   withAlertActions,
-)(AccountActivateAlertInner);
+  withAlertStoreConnect(),
+);

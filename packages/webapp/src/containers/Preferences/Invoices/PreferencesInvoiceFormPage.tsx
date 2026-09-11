@@ -12,7 +12,7 @@ import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashb
 import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useSaveSettings } from '@/hooks/query';
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 
 const defaultValues: InvoicesPreferencesFormValues = {
   termsConditions: '',
@@ -80,6 +80,7 @@ function PreferencesInvoiceFormPageInner({
   );
 }
 
-export const PreferencesInvoiceFormPage = compose(withDashboardActions)(
+export const PreferencesInvoiceFormPage = FF.pipe(
   PreferencesInvoiceFormPageInner,
+  withDashboardActions,
 );

@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import { useBillDrawerContext } from '../BillDrawerProvider';
 import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
@@ -14,7 +15,6 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { useBillPaymentTransactions } from '@/hooks/query';
-import { compose } from '@/utils';
 
 type BillPaymentTransaction = BillPaymentTransactionsResponse[number];
 
@@ -82,7 +82,8 @@ function BillPaymentTransactionTableInner({
   );
 }
 
-export const BillPaymentTransactionTable = compose(
-  withAlertActions,
+export const BillPaymentTransactionTable = FF.pipe(
+  BillPaymentTransactionTableInner,
   withDrawerActions,
-)(BillPaymentTransactionTableInner);
+  withAlertActions,
+);

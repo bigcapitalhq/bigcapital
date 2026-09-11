@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { AccountDialogPayload } from './types';
 import { FormattedMessage as T } from '@/components';
@@ -5,7 +6,6 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux, {
   DialogBaseProps,
 } from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const AccountDialogContent = lazy(() =>
   import('./AccountDialogContent').then((m) => ({
@@ -45,4 +45,4 @@ function AccountFormDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(AccountFormDialog);
+export const index = FF.pipe(AccountFormDialog, withDialogRedux());

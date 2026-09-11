@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { UserFormSchema } from './UserForm.schema';
@@ -10,7 +11,7 @@ import type { UserFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 const initialValues: UserFormValues = {
   firstName: '',
@@ -81,4 +82,4 @@ function UserFormInner({ closeDialog }: UserFormProps): React.ReactElement {
     </Formik>
   );
 }
-export const UserForm = compose(withDialogActions)(UserFormInner);
+export const UserForm = FF.pipe(UserFormInner, withDialogActions);

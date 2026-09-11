@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import styled from 'styled-components';
 import { withBankingActions } from '../withBankingActions';
@@ -25,7 +26,6 @@ import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useUncategorizeTransaction } from '@/hooks/query';
 import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/banking';
-import { compose } from '@/utils';
 
 interface AccountTransactionsDataTableProps
   extends Pick<WithAlertActionsProps, 'openAlert'>,
@@ -162,11 +162,12 @@ function AccountTransactionsDataTableInner({
   );
 }
 
-export const AccountTransactionsDataTable = compose(
-  withAlertActions,
-  withDrawerActions,
+export const AccountTransactionsDataTable = FF.pipe(
+  AccountTransactionsDataTableInner,
   withBankingActions,
-)(AccountTransactionsDataTableInner);
+  withDrawerActions,
+  withAlertActions,
+);
 
 const DashboardConstrantTable = styled(DataTable)`
   .table {

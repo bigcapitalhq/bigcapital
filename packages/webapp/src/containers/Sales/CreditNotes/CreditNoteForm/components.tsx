@@ -1,4 +1,5 @@
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useEffect, useRef } from 'react';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import {
@@ -16,10 +17,11 @@ import {
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { transactionNumber, compose } from '@/utils';
+import { transactionNumber } from '@/utils';
 
-type CreditNoteExchangeRateInputFieldRootProps = React.ComponentProps<
-  typeof ExchangeRateInputGroup
+type CreditNoteExchangeRateInputFieldRootProps = Omit<
+  React.ComponentProps<typeof ExchangeRateInputGroup>,
+  'name' | 'fromCurrency' | 'toCurrency'
 >;
 
 /**
@@ -48,10 +50,11 @@ const CreditNoteExchangeRateInputFieldRoot = ({
   );
 };
 
-export const CreditNoteExchangeRateInputField = compose(
-  withExchangeRateFetchingLoading,
+export const CreditNoteExchangeRateInputField = FF.pipe(
+  CreditNoteExchangeRateInputFieldRoot,
   withExchangeRateItemEntriesPriceRecalc,
-)(CreditNoteExchangeRateInputFieldRoot);
+  withExchangeRateFetchingLoading,
+);
 
 type CreditNoteSyncIncrementSettingsProps = Record<string, never>;
 
@@ -98,22 +101,25 @@ type CreditNoteExchangeRateSyncProps = {
  * Syncs the realtime exchange rate to the credit note form and shows up popup to the user
  * as an indication the entries rates have been re-calculated.
  */
-export const CreditNoteExchangeRateSync = compose(withDialogActions)(({
-  openDialog,
-}: CreditNoteExchangeRateSyncProps) => {
-  const subtotal = useCreditNoteSubtotal();
-  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+export const CreditNoteExchangeRateSync = FF.pipe(
+  ({ openDialog }: CreditNoteExchangeRateSyncProps) => {
+    const subtotal = useCreditNoteSubtotal();
+    const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+      undefined,
+    );
 
-  useSyncExRateToForm({
-    onSynced: () => {
-      // If the total bigger then zero show alert to the user after adjusting entries.
-      if (subtotal > 0) {
-        if (timeout.current) clearTimeout(timeout.current);
-        timeout.current = setTimeout(() => {
-          openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
-        }, 500);
-      }
-    },
-  });
-  return null;
-});
+    useSyncExRateToForm({
+      onSynced: () => {
+        // If the total bigger then zero show alert to the user after adjusting entries.
+        if (subtotal > 0) {
+          if (timeout.current) clearTimeout(timeout.current);
+          timeout.current = setTimeout(() => {
+            openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
+          }, 500);
+        }
+      },
+    });
+    return null;
+  },
+  withDialogActions,
+);

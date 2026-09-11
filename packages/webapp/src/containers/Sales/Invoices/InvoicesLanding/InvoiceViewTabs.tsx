@@ -1,4 +1,5 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useInvoicesListContext } from './InvoicesListProvider';
@@ -7,7 +8,7 @@ import { withInvoices } from './withInvoices';
 import type { WithInvoiceActionsProps } from './withInvoiceActions';
 import type { WithInvoicesProps } from './withInvoices';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface InvoiceViewTabsProps extends WithInvoiceActionsProps {
   invoicesCurrentView: string;
@@ -45,9 +46,10 @@ function InvoiceViewTabsInner({
   );
 }
 
-export const InvoiceViewTabs = compose(
-  withInvoiceActions,
+export const InvoiceViewTabs = FF.pipe(
+  InvoiceViewTabsInner,
   withInvoices(({ invoicesTableState }: WithInvoicesProps) => ({
     invoicesCurrentView: invoicesTableState.viewSlug,
   })),
-)(InvoiceViewTabsInner);
+  withInvoiceActions,
+);

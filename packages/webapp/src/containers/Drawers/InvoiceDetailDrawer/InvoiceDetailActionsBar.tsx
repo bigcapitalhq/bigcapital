@@ -7,6 +7,7 @@ import {
   Tooltip,
   Position,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
@@ -38,7 +39,6 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { ArrowBottomLeft } from '@/icons/ArrowBottomLeft';
-import { compose } from '@/utils';
 
 interface InvoiceDetailActionsBarInnerProps
   extends WithDialogActionsProps,
@@ -201,8 +201,9 @@ function InvoiceDetailActionsBarInner({
   );
 }
 
-export const InvoiceDetailActionsBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const InvoiceDetailActionsBar = FF.pipe(
+  InvoiceDetailActionsBarInner,
   withAlertActions,
-)(InvoiceDetailActionsBarInner);
+  withDrawerActions,
+  withDialogActions,
+);

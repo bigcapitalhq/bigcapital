@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
@@ -27,7 +28,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface ReceiptsDataTableProps
   extends Pick<WithReceiptsProps, 'receiptTableState' | 'receiptSelectedRows'>,
@@ -185,13 +185,14 @@ function ReceiptsDataTable({
   );
 }
 
-export const ReceiptsTable = compose(
-  withAlertActions,
-  withReceiptsActions,
-  withDrawerActions,
-  withDialogActions,
+export const ReceiptsTable = FF.pipe(
+  ReceiptsDataTable,
   withReceipts(({ receiptTableState, receiptSelectedRows }) => ({
     receiptTableState,
     receiptSelectedRows,
   })),
-)(ReceiptsDataTable);
+  withDialogActions,
+  withDrawerActions,
+  withReceiptsActions,
+  withAlertActions,
+);

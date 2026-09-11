@@ -1,11 +1,11 @@
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import styled from 'styled-components';
 import type { WithBankingActionsProps } from '@/containers/CashFlow/withBankingActions';
 import { Group } from '@/components';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
-import { compose } from '@/utils';
 
 interface CategorizeTransactionFormFooterRootProps
   extends Pick<WithBankingActionsProps, 'closeMatchingTransactionAside'> {}
@@ -44,8 +44,9 @@ function CategorizeTransactionFormFooterRoot({
   );
 }
 
-export const CategorizeTransactionFormFooter = compose(withBankingActions)(
+export const CategorizeTransactionFormFooter = FF.pipe(
   CategorizeTransactionFormFooterRoot,
+  withBankingActions,
 );
 
 const Root = styled.div`

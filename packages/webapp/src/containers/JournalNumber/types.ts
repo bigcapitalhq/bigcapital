@@ -5,7 +5,10 @@ export interface ReferenceNumberFormValues {
   numberPrefix: string;
   nextNumber: string;
   onceManualNumber: string;
-  [key: string]: unknown;
+  transactionNumber: string;
+  incrementNumber: string;
+  manually: any;
+  [key: string]: any;
 }
 
 export interface SettingsForm {

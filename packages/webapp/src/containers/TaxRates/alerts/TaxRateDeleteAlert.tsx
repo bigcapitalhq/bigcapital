@@ -1,4 +1,5 @@
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
@@ -15,7 +16,6 @@ import {
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteTaxRate } from '@/hooks/query/tax-rates';
-import { compose } from '@/utils';
 
 interface TaxRateDeleteAlertInnerProps
   extends Pick<WithAlertStoreConnectProps, 'isOpen'>,
@@ -86,8 +86,9 @@ function TaxRateDeleteAlertInner({
   );
 }
 
-export const TaxRateDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const TaxRateDeleteAlert = FF.pipe(
+  TaxRateDeleteAlertInner,
   withDrawerActions,
-)(TaxRateDeleteAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

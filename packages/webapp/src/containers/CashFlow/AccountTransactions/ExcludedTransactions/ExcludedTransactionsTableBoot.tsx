@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { withBanking } from '../../withBanking';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
@@ -7,7 +8,6 @@ import type { ExcludedBankTransactionsListPage } from '@bigcapital/sdk-ts';
 import { IntersectionObserver } from '@/components';
 import { useExcludedBankTransactionsInfinity } from '@/hooks/query/banking';
 import { useFlattenInfinityPages } from '@/hooks/utils';
-import { compose } from '@/utils';
 
 export interface ExcludedBankTransactionsContextValue {
   excludedBankTransactions: ExcludedTransactionRow[];
@@ -84,11 +84,12 @@ function ExcludedBankTransactionsTableBootRoot({
   );
 }
 
-const ExcludedBankTransactionsTableBoot = compose(
+const ExcludedBankTransactionsTableBoot = FF.pipe(
+  ExcludedBankTransactionsTableBootRoot,
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),
-)(ExcludedBankTransactionsTableBootRoot);
+);
 
 const useExcludedTransactionsBoot = () =>
   React.useContext(ExcludedTransactionsContext);

@@ -1,10 +1,10 @@
 import { AnchorButton } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfReceipt } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface ReceiptPdfPreviewDialogContentProps extends WithDialogActionsProps {
   subscriptionForm: { receiptId: number | null };
@@ -51,6 +51,7 @@ function ReceiptPdfPreviewDialogContentInner({
   );
 }
 
-export const ReceiptPdfPreviewDialogContent = compose(withDialogActions)(
+export const ReceiptPdfPreviewDialogContent = FF.pipe(
   ReceiptPdfPreviewDialogContentInner,
+  withDialogActions,
 );

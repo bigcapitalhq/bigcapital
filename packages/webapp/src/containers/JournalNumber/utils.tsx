@@ -11,12 +11,12 @@ import {
   transactionNumber,
 } from '@/utils';
 
-export const defaultInvoiceNoSettings: ReferenceNumberFormValues = {
+export const defaultInvoiceNoSettings = {
   incrementMode: 'auto',
   nextNumber: '',
   numberPrefix: '',
   onceManualNumber: '',
-};
+} as ReferenceNumberFormValues;
 const defaultReqNoSettings = omit(defaultInvoiceNoSettings, [
   'incrementMode',
   'onceManualNumber',

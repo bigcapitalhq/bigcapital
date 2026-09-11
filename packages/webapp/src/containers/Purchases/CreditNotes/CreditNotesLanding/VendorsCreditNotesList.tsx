@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import '@/style/pages/VendorsCreditNote/List.scss';
 import { VendorsCreditNoteActionsBar } from './VendorsCreditNoteActionsBar';
@@ -9,7 +10,7 @@ import { withVendorsCreditNotes } from './withVendorsCreditNotes';
 import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
 import type { WithVendorsCreditNotesProps } from './withVendorsCreditNotes';
 import { DashboardPageContent } from '@/components';
-import { transformTableStateToQuery, compose } from '@/utils';
+import { transformTableStateToQuery } from '@/utils';
 
 interface WithVendorsCreditNotesActionsProps {
   resetVendorsCreditNoteTableState: () => void;
@@ -53,12 +54,13 @@ function VendorsCreditNotesListInner({
   );
 }
 
-export const VendorsCreditNotesList = compose(
-  withVendorsCreditNotesActions,
+export const VendorsCreditNotesList = FF.pipe(
+  VendorsCreditNotesListInner,
   withVendorsCreditNotes(
     ({ vendorsCreditNoteTableState, vendorsCreditNoteTableStateChanged }) => ({
       vendorsCreditNoteTableState,
       vendorsCreditNoteTableStateChanged,
     }),
   ),
-)(VendorsCreditNotesListInner);
+  withVendorsCreditNotesActions,
+);

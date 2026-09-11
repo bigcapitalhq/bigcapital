@@ -7,7 +7,6 @@ import { useItem } from '@/hooks/query';
 import {
   toSafeNumber,
   saveInvoke,
-  compose,
   updateTableCell,
   updateAutoAddNewLine,
   updateMinEntriesLines,
@@ -164,7 +163,7 @@ export const composeRowsOnEditCell = (
   defaultEntry,
   rows,
 ) => {
-  return compose()(rows);
+  return FF.pipe(rows);
 };
 
 /**
@@ -175,13 +174,14 @@ export const useComposeRowsOnNewRow = () => {
 
   return React.useMemo(() => {
     return (rowIndex, newRow, rows) => {
-      return compose(
-        assignEntriesTaxAmount(isInclusiveTax),
-        assignEntriesTaxRate(taxRates),
-        orderingLinesIndexes,
-        updateItemsEntriesTotal,
+      return FF.pipe(
+        rows,
         updateTableRow(rowIndex, newRow),
-      )(rows);
+        updateItemsEntriesTotal,
+        orderingLinesIndexes,
+        assignEntriesTaxRate(taxRates),
+        assignEntriesTaxAmount(isInclusiveTax),
+      );
     };
   }, [isInclusiveTax, taxRates]);
 };
@@ -277,12 +277,11 @@ export const useComposeRowsOnRemoveTableRow = () => {
 
   return useCallback(
     (rowIndex) => {
-      return compose(
-        // Ensure minimum lines count.
+      return FF.pipe(
+        localValue, // Remove the line by the given index.
+        updateRemoveLineByIndex(rowIndex), // Ensure minimum lines count.
         updateMinEntriesLines(minLinesNumber, defaultEntry),
-        // Remove the line by the given index.
-        updateRemoveLineByIndex(rowIndex),
-      )(localValue);
+      );
     },
     [minLinesNumber, defaultEntry, localValue],
   );

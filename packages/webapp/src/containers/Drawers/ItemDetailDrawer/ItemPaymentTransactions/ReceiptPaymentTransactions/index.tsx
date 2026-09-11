@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
@@ -14,7 +15,6 @@ import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useItemAssociatedReceiptTransactions } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface ReceiptPaymentTransactionsInnerProps
   extends Pick<WithAlertActionsProps, 'openAlert'>,
@@ -72,7 +72,8 @@ function ReceiptPaymentTransactions({
   );
 }
 
-export const index = compose(
-  withAlertActions,
+export const index = FF.pipe(
+  ReceiptPaymentTransactions,
   withDrawerActions,
-)(ReceiptPaymentTransactions);
+  withAlertActions,
+);

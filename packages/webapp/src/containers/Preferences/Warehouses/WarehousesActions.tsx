@@ -1,10 +1,10 @@
 import { Button, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FeatureCan, FormattedMessage as T, Icon } from '@/components';
 import { Features } from '@/constants';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 interface WarehousesActionsProps extends WithDialogActionsProps {}
 
@@ -30,6 +30,7 @@ function WarehousesActionsInner({
   );
 }
 
-export const WarehousesActions = compose(withDialogActions)(
+export const WarehousesActions = FF.pipe(
   WarehousesActionsInner,
+  withDialogActions,
 );

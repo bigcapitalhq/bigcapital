@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -19,7 +20,7 @@ import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 type BalanceSheetFormValues = Omit<
   ReturnType<typeof getDefaultBalanceSheetQuery>,
@@ -127,12 +128,13 @@ function BalanceSheetHeaderInner({
   );
 }
 
-export const BalanceSheetHeader = compose(
+export const BalanceSheetHeader = FF.pipe(
+  BalanceSheetHeaderInner,
+  withBalanceSheetActions,
   withBalanceSheet(({ balanceSheetDrawerFilter }) => ({
     balanceSheetDrawerFilter,
   })),
-  withBalanceSheetActions,
-)(BalanceSheetHeaderInner);
+);
 
 const BalanceSheetFinancialHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

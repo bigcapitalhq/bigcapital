@@ -1,11 +1,11 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { compose } from '@/utils';
 
 interface ClearTransactionAlertPayload {
   // Empty payload — alert reads no payload field.
@@ -54,7 +54,8 @@ function ClearPaymentTransactionAlert({
   );
 }
 
-export const ClearTransactionAlert = compose(
-  withAlertStoreConnect(),
+export const ClearTransactionAlert = FF.pipe(
+  ClearPaymentTransactionAlert,
   withAlertActions,
-)(ClearPaymentTransactionAlert);
+  withAlertStoreConnect(),
+);

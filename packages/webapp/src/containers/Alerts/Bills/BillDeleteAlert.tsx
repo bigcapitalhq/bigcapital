@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -10,7 +11,6 @@ import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect'
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { handleDeleteErrors } from '@/containers/Purchases/Bills/BillForm/utils';
 import { useDeleteBill } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface BillDeleteAlertPayload {
   billId: number;
@@ -78,8 +78,9 @@ function BillDeleteAlertInner({
   );
 }
 
-export const BillDeleteAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const BillDeleteAlert = FF.pipe(
+  BillDeleteAlertInner,
   withDrawerActions,
-)(BillDeleteAlertInner);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

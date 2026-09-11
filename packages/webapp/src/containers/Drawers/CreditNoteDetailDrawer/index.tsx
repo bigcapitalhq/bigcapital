@@ -1,7 +1,7 @@
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
-import { compose } from '@/utils';
 
 const CreditNoteDetailDrawerContent = React.lazy(() =>
   import('./CreditNoteDetailDrawerContent').then((m) => ({
@@ -38,4 +38,4 @@ function CreditNoteDetailDrawer({
   );
 }
 
-export const index = compose(withDrawers())(CreditNoteDetailDrawer);
+export const index = FF.pipe(CreditNoteDetailDrawer, withDrawers());

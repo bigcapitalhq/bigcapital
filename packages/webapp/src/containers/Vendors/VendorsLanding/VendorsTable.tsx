@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useVendorsTableColumns } from './components';
@@ -23,7 +24,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { compose } from '@/utils';
 
 interface VendorsTableInnerProps
   extends Pick<WithVendorsProps, 'vendorsTableState' | 'vendorsSelectedRows'>,
@@ -195,13 +195,14 @@ function VendorsTableInner({
   );
 }
 
-export const VendorsTable = compose(
-  withVendorsActions,
-  withAlertActions,
-  withDialogActions,
-  withDrawerActions,
+export const VendorsTable = FF.pipe(
+  VendorsTableInner,
   withVendors(({ vendorsTableState, vendorsSelectedRows }) => ({
     vendorsTableState,
     vendorsSelectedRows,
   })),
-)(VendorsTableInner);
+  withDrawerActions,
+  withDialogActions,
+  withAlertActions,
+  withVendorsActions,
+);

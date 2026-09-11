@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
 import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
@@ -12,7 +13,6 @@ import type { WithJournalActionsProps } from './withJournalActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { TransactionDetailDrawers } from '@/containers/FinancialStatements/TransactionDetailDrawers';
-import { compose } from '@/utils';
 
 type JournalProps = WithJournalActionsProps;
 
@@ -68,7 +68,8 @@ function JournalInner({
   );
 }
 
-export const Journal = compose(
-  withDashboardActions,
+export const Journal = FF.pipe(
+  JournalInner,
   withJournalActions,
-)(JournalInner);
+  withDashboardActions,
+);

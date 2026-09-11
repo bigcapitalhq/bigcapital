@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   NavbarGroup,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
@@ -14,7 +15,6 @@ import { DrawerActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { compose } from '@/utils';
 
 interface WarehouseTransferDetailActionsBarProps
   extends WithAlertActionsProps,
@@ -59,7 +59,8 @@ function WarehouseTransferDetailActionsBarInner({
   );
 }
 
-export const WarehouseTransferDetailActionsBar = compose(
-  withDrawerActions,
+export const WarehouseTransferDetailActionsBar = FF.pipe(
+  WarehouseTransferDetailActionsBarInner,
   withAlertActions,
-)(WarehouseTransferDetailActionsBarInner);
+  withDrawerActions,
+);

@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -20,7 +21,7 @@ import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 type CashFlowSheetFormValues = ReturnType<typeof getDefaultCashFlowSheetQuery>;
 
@@ -119,9 +120,10 @@ function CashFlowStatementHeaderInner({
   );
 }
 
-export const CashFlowStatementHeader = compose(
+export const CashFlowStatementHeader = FF.pipe(
+  CashFlowStatementHeaderInner,
+  withCashFlowStatementActions,
   withCashFlowStatement(({ cashFlowStatementDrawerFilter }) => ({
     cashFlowStatementDrawerFilter,
   })),
-  withCashFlowStatementActions,
-)(CashFlowStatementHeaderInner);
+);

@@ -8,6 +8,7 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { TrialBalanceSheetExportMenu } from './components';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
@@ -23,7 +24,7 @@ import {
   withDialogActions,
   WithDialogActionsProps,
 } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface TrialBalanceActionsBarOwnProps {
   numberFormat: Record<string, unknown>;
@@ -139,10 +140,11 @@ function TrialBalanceActionsBarInner({
   );
 }
 
-export const TrialBalanceActionsBar = compose(
+export const TrialBalanceActionsBar = FF.pipe(
+  TrialBalanceActionsBarInner,
+  withDialogActions,
+  withTrialBalanceActions,
   withTrialBalance(({ trialBalanceDrawerFilter }) => ({
     trialBalanceDrawerFilter,
   })),
-  withTrialBalanceActions,
-  withDialogActions,
-)(TrialBalanceActionsBarInner);
+);

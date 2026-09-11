@@ -1,4 +1,5 @@
 import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { TransactionNumberDialogProvider } from './TransactionNumberDialogProvider';
@@ -11,7 +12,6 @@ import {
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
 import { useSaveSettings, useSettingCashFlow } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface TransactionNumberDialogContentProps extends WithDialogActionsProps {
   initialValues?: Partial<ReferenceNumberFormValues>;
@@ -103,6 +103,7 @@ function TransactionNumberDialogContentInner({
   );
 }
 
-export const TransactionNumberDialogContent = compose(withDialogActions)(
+export const TransactionNumberDialogContent = FF.pipe(
   TransactionNumberDialogContentInner,
+  withDialogActions,
 );

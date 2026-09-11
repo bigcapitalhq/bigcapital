@@ -1,4 +1,5 @@
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { omit, first } from 'lodash';
 import moment from 'moment';
 import React, { useMemo } from 'react';
@@ -17,7 +18,6 @@ import {
 } from '@/containers/Entries/utils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
-  compose,
   defaultFastFieldShouldUpdate,
   repeatValue,
   transformToForm,
@@ -123,10 +123,11 @@ export function transformToEditForm(
       Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
     ),
   ];
-  const entries = compose(
-    ensureEntriesHaveEmptyLine(defaultEstimateEntry),
+  const entries = FF.pipe(
+    initialEntries,
     updateItemsEntriesTotal,
-  )(initialEntries);
+    ensureEntriesHaveEmptyLine(defaultEstimateEntry),
+  );
 
   const attachments = transformAttachmentsToForm(estimate);
 

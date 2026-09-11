@@ -1,6 +1,7 @@
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Formik, Form, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { defaultTo } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
@@ -35,7 +36,7 @@ import { AppToaster, Box } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { compose, orderingLinesIndexes } from '@/utils';
+import { orderingLinesIndexes } from '@/utils';
 
 type WithDialogActionsProps = {
   openDialog: (name: string, payload?: Record<string, unknown>) => void;
@@ -200,4 +201,4 @@ function PaymentMadeFormInner({ openDialog }: PaymentMadeFormRootProps) {
   );
 }
 
-export const PaymentMadeForm = compose(withDialogActions)(PaymentMadeFormInner);
+export const PaymentMadeForm = FF.pipe(PaymentMadeFormInner, withDialogActions);

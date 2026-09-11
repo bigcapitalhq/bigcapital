@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import { pick } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -12,7 +13,6 @@ import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActio
 import type { InviteUserBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 const initialValues: InviteUserFormValues = {
   email: '',
@@ -83,4 +83,4 @@ function InviteUserFormInner({
     </Formik>
   );
 }
-export const InviteUserForm = compose(withDialogActions)(InviteUserFormInner);
+export const InviteUserForm = FF.pipe(InviteUserFormInner, withDialogActions);

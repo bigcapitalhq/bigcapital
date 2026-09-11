@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import { AppToaster } from '@/components';
@@ -7,7 +8,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteBankRule } from '@/hooks/query/banking';
-import { compose } from '@/utils';
 
 /**
  * Project delete alert.
@@ -67,8 +67,9 @@ function BankRuleDeleteAlert({
   );
 }
 
-export const DeleteBankRuleAlert = compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const DeleteBankRuleAlert = FF.pipe(
+  BankRuleDeleteAlert,
   withDrawerActions,
-)(BankRuleDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

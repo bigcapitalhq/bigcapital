@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const WarehouseActivateDialogContent = lazy(() =>
   import('./WarehouseActivateDialogContent').then((m) => ({
@@ -35,4 +35,4 @@ function WarehouseActivateDialog({
   );
 }
 
-export const index = compose(withDialogRedux())(WarehouseActivateDialog);
+export const index = FF.pipe(WarehouseActivateDialog, withDialogRedux());

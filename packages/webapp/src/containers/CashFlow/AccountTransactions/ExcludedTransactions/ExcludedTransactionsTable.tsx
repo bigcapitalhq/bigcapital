@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { withBankingActions } from '../../withBankingActions';
 import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
@@ -18,7 +19,6 @@ import {
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/banking';
-import { compose } from '@/utils';
 
 interface ExcludeTransactionsTableProps
   extends Pick<WithBankingActionsProps, 'setExcludedTransactionsSelected'> {}
@@ -118,6 +118,7 @@ function ExcludedTransactionsTableRoot({
   );
 }
 
-export const ExcludedTransactionsTable = compose(withBankingActions)(
+export const ExcludedTransactionsTable = FF.pipe(
   ExcludedTransactionsTableRoot,
+  withBankingActions,
 );

@@ -1,4 +1,5 @@
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
@@ -10,7 +11,6 @@ import {
   withAlertActions,
   type WithAlertActionsProps,
 } from '@/containers/Alert/withAlertActions';
-import { compose } from '@/utils';
 
 /**
  * Roles data table.
@@ -81,4 +81,4 @@ const RolesTable = styled(DataTable)`
   }
 `;
 
-export const RolesDataTable = compose(withAlertActions)(RolesDataTableInner);
+export const RolesDataTable = FF.pipe(RolesDataTableInner, withAlertActions);

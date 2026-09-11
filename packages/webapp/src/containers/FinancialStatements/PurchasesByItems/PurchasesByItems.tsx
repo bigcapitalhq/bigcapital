@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import { useEffect, useCallback } from 'react';
 import { PurchasesByItemsLoadingBar } from './components';
@@ -12,7 +13,6 @@ import {
   WithPurchasesByItemsActionsProps,
 } from './withPurchasesByItemsActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
-import { compose } from '@/utils';
 
 interface PurchasesByItemsProps {
   togglePurchasesByItemsFilterDrawer: WithPurchasesByItemsActionsProps['togglePurchasesByItemsFilterDrawer'];
@@ -57,7 +57,7 @@ function PurchasesByItemsInner({
   return (
     <PurchasesByItemsProvider query={query}>
       <PurchasesByItemsActionsBar
-        numberFormat={query.numberFormat}
+        numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <PurchasesByItemsLoadingBar />
@@ -77,6 +77,7 @@ function PurchasesByItemsInner({
   );
 }
 
-export const PurchasesByItems = compose(withPurchasesByItemsActions)(
+export const PurchasesByItems = FF.pipe(
   PurchasesByItemsInner,
+  withPurchasesByItemsActions,
 );

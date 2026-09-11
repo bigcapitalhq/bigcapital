@@ -5,6 +5,7 @@ import {
   NavbarGroup,
   Alignment,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
@@ -22,7 +23,6 @@ import {
   DashboardActionsBar,
 } from '@/components';
 import { useSaveSettings } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface WarehouseTransfersActionsBarInnerProps
   extends Pick<
@@ -146,10 +146,11 @@ function WarehouseTransfersActionsBarInner({
   );
 }
 
-export const WarehouseTransfersActionsBar = compose(
-  withWarehouseTransfersActions,
+export const WarehouseTransfersActionsBar = FF.pipe(
+  WarehouseTransfersActionsBarInner,
   withWarehouseTransfers(({ warehouseTransferTableState }) => ({
     warehouseTransferFilterRoles:
       warehouseTransferTableState?.filterRoles ?? [],
   })),
-)(WarehouseTransfersActionsBarInner);
+  withWarehouseTransfersActions,
+);

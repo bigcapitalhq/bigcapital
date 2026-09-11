@@ -1,3 +1,4 @@
+import * as FF from 'fp-ts/function';
 import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import type { VendorFormValues } from '@/containers/Vendors/VendorForm/utils';
@@ -13,7 +14,6 @@ import {
   useVendorFormContext,
 } from '@/containers/Vendors/VendorForm/VendorFormProvider';
 import { useAddAutofillRef } from '@/hooks/state/autofill';
-import { compose } from '@/utils';
 
 type VendorFormSubmitPayload = { noRedirect?: boolean };
 
@@ -90,7 +90,8 @@ function QuickVendorFormDrawerInner({
   );
 }
 
-export const QuickVendorFormDrawer = compose(
-  withDrawerActions,
+export const QuickVendorFormDrawer = FF.pipe(
+  QuickVendorFormDrawerInner,
   withDashboardActions,
-)(QuickVendorFormDrawerInner);
+  withDrawerActions,
+);

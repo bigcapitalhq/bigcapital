@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useAssignPdfTemplateAsDefault } from '@/hooks/query/pdf-templates';
-import { compose } from '@/utils';
 
 /**
  * Mark default branding template alert.
@@ -65,7 +65,8 @@ function MarkDefaultBrandingTemplateAlertInner({
   );
 }
 
-export const MarkDefaultBrandingTemplateAlert = compose(
-  withAlertStoreConnect(),
+export const MarkDefaultBrandingTemplateAlert = FF.pipe(
+  MarkDefaultBrandingTemplateAlertInner,
   withAlertActions,
-)(MarkDefaultBrandingTemplateAlertInner);
+  withAlertStoreConnect(),
+);

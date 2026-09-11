@@ -4,6 +4,7 @@ import { useTheme } from '@emotion/react';
 import { Theme } from '@xstyled/emotion';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -23,7 +24,6 @@ import {
 import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useDateInputFormatter } from '@/hooks';
-import { compose } from '@/utils';
 
 const getBillFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -166,7 +166,7 @@ function BillFormVendorField() {
   );
 }
 
-export const BillFormHeaderFields = compose(withDialogActions)(BillFormHeader);
+export const BillFormHeaderFields = FF.pipe(BillFormHeader, withDialogActions);
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;

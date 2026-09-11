@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { ReceiptMoreMenuItems } from './components';
@@ -29,7 +30,7 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
-import { safeCallback, compose } from '@/utils';
+import { safeCallback } from '@/utils';
 
 interface ReceiptDetailActionBarInnerProps
   extends WithDialogActionsProps,
@@ -124,8 +125,9 @@ function ReceiptDetailActionBarInner({
   );
 }
 
-export const ReceiptDetailActionBar = compose(
-  withDialogActions,
-  withDrawerActions,
+export const ReceiptDetailActionBar = FF.pipe(
+  ReceiptDetailActionBarInner,
   withAlertActions,
-)(ReceiptDetailActionBarInner);
+  withDrawerActions,
+  withDialogActions,
+);

@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -7,7 +8,6 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { handleDeleteErrors } from '@/containers/Preferences/Users/Roles/utils';
 import { useDeleteRole } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface RoleDeleteAlertPayload {
   roleId: number;
@@ -75,7 +75,8 @@ function RoleDeleteAlertInner({
   );
 }
 
-export const RoleDeleteAlert = compose(
-  withAlertStoreConnect(),
+export const RoleDeleteAlert = FF.pipe(
+  RoleDeleteAlertInner,
   withAlertActions,
-)(RoleDeleteAlertInner);
+  withAlertStoreConnect(),
+);

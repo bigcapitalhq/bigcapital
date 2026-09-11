@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -7,7 +8,6 @@ import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashb
 import { Card } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose } from '@/utils';
 
 type ApiKeysPreferencesProps = Pick<
   WithDashboardActionsProps,
@@ -43,4 +43,4 @@ const ApiKeysPreferencesCard = styled(Card)`
   padding: 0;
 `;
 
-export const ApiKeys = compose(withDashboardActions)(ApiKeysPreferences);
+export const ApiKeys = FF.pipe(ApiKeysPreferences, withDashboardActions);

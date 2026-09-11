@@ -1,11 +1,12 @@
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useBillsListContext } from './BillsListProvider';
 import { withBills } from './withBills';
 import { withBillsActions } from './withBillsActions';
 import type { WithBillsProps } from './withBills';
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { transfromViewsToTabs } from '@/utils';
 
 interface WithBillsActionsProps {
   setBillsTableState: (state: Record<string, any>) => void;
@@ -44,9 +45,10 @@ function BillViewTabs({
   );
 }
 
-export const BillsViewsTabs = compose(
-  withBillsActions,
+export const BillsViewsTabs = FF.pipe(
+  BillViewTabs,
   withBills(({ billsTableState }: WithBillsProps) => ({
     billsCurrentView: billsTableState.viewSlug,
   })),
-)(BillViewTabs);
+  withBillsActions,
+);

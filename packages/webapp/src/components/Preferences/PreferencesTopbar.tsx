@@ -1,5 +1,6 @@
 // @ts-nocheck
 import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
@@ -10,8 +11,6 @@ import { BranchesActions } from '@/containers/Preferences/Branches/BranchesActio
 import { CurrenciesActions } from '@/containers/Preferences/Currencies/CurrenciesActions';
 import { UsersActions } from '@/containers/Preferences/Users/UsersActions';
 import { WarehousesActions } from '@/containers/Preferences/Warehouses/WarehousesActions';
-import { compose } from '@/utils';
-
 import '@/style/pages/Preferences/Topbar.scss';
 
 /**
@@ -63,6 +62,7 @@ function PreferencesTopbar({ preferencesPageTitle }) {
   );
 }
 
-export default compose(
+export default FF.pipe(
+  PreferencesTopbar,
   withDashboard(({ preferencesPageTitle }) => ({ preferencesPageTitle })),
-)(PreferencesTopbar);
+);

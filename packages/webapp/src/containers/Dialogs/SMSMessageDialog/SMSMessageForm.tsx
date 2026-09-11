@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
@@ -10,7 +11,7 @@ import type { SMSMessageFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 const defaultInitialValues: SMSMessageFormValues = {
   notificationKey: '',
@@ -84,4 +85,4 @@ function SMSMessageFormInner({
   );
 }
 
-export const SMSMessageForm = compose(withDialogActions)(SMSMessageFormInner);
+export const SMSMessageForm = FF.pipe(SMSMessageFormInner, withDialogActions);

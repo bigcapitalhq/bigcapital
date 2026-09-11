@@ -1,5 +1,6 @@
 import { connect, MapStateToProps } from 'react-redux';
 import type { MapState } from '@/containers/hoc.types';
+import type { ComponentType } from 'react';
 import {
   getAccountsTableStateFactory,
   accountsTableStateChangedFactory,
@@ -16,9 +17,10 @@ export interface WithAccountsProps {
   accountsSelectedRows: number[];
 }
 
-export function withAccounts<Props = unknown>(
-  mapState?: MapState<WithAccountsProps, Props>,
-) {
+export function withAccounts<
+  Props = unknown,
+  Mapped extends object = WithAccountsProps,
+>(mapState?: MapState<WithAccountsProps, Props, Mapped>) {
   const getAccountsTableState = getAccountsTableStateFactory();
   const accountsTableStateChanged = accountsTableStateChangedFactory();
 
@@ -36,5 +38,12 @@ export function withAccounts<Props = unknown>(
       ? (mapState(mapped, state, props) as WithAccountsProps)
       : mapped;
   };
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
 }

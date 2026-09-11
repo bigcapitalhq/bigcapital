@@ -1,4 +1,5 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
@@ -6,7 +7,6 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useInactivateContact } from '@/hooks/query';
-import { compose } from '@/utils';
 
 interface ContactInactivateAlertPayload {
   contactId: number;
@@ -74,7 +74,8 @@ function ContactInactivateAlertInner({
   );
 }
 
-export const ContactInactivateAlert = compose(
-  withAlertStoreConnect(),
+export const ContactInactivateAlert = FF.pipe(
+  ContactInactivateAlertInner,
   withAlertActions,
-)(ContactInactivateAlertInner);
+  withAlertStoreConnect(),
+);

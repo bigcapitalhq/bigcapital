@@ -11,6 +11,7 @@ import {
   MenuDivider,
 } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
 import {
   DashboardHamburgerButton,
@@ -34,7 +35,6 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { QuickNewDropdown } from '@/containers/QuickNewDropdown/QuickNewDropdown';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
-import { compose } from '@/utils';
 
 type DashboardTopbarProps = Pick<
   WithDashboardProps,
@@ -172,14 +172,15 @@ function DashboardTopbar({
   );
 }
 
-export default compose(
-  withUniversalSearchActions,
+export default FF.pipe(
+  DashboardTopbar,
+  withDialogActions,
+  withDashboardActions,
   withDashboard(({ pageTitle, pageHint, editViewId, sidebarExpended }) => ({
     pageTitle,
     editViewId,
     sidebarExpended,
     pageHint,
   })),
-  withDashboardActions,
-  withDialogActions,
-)(DashboardTopbar);
+  withUniversalSearchActions,
+);

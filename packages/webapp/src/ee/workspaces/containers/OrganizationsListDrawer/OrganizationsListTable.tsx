@@ -11,6 +11,7 @@ import {
 } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
 import styled from '@xstyled/emotion';
+import * as FF from 'fp-ts/function';
 import React, { useState, useMemo, useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { OrganizationsListWorkspaceCell } from './OrganizationsListWorkspaceCell';
@@ -22,7 +23,6 @@ import { WorkspaceSwitchingOverlay } from '@/ee/workspaces/components/WorkspaceS
 import { useSetDefaultWorkspace } from '@/ee/workspaces/hooks/query';
 import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
 import { useAuthOrganizationId } from '@/hooks/state';
-import { compose } from '@/utils';
 
 /**
  * Organizations list table component.
@@ -268,4 +268,4 @@ function OrganizationsListTable({
   );
 }
 
-export default compose(withDialogActions)(OrganizationsListTable);
+export default FF.pipe(OrganizationsListTable, withDialogActions);

@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -15,7 +16,7 @@ import {
   WithCustomersTransactionsActionsProps,
 } from './withCustomersTransactionsActions';
 import { FormattedMessage as T } from '@/components';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 interface CustomersTransactionsHeaderFormValues {
   fromDate: Date;
@@ -116,12 +117,13 @@ function CustomersTransactionsHeaderInner({
   );
 }
 
-export const CustomersTransactionsHeader = compose(
+export const CustomersTransactionsHeader = FF.pipe(
+  CustomersTransactionsHeaderInner,
+  withCustomersTransactionsActions,
   withCustomersTransactions(({ customersTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: customersTransactionsDrawerFilter,
   })),
-  withCustomersTransactionsActions,
-)(CustomersTransactionsHeaderInner);
+);
 
 const CustomerTransactionsDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

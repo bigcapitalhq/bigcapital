@@ -1,5 +1,6 @@
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { omit, first, sumBy } from 'lodash';
 import moment from 'moment';
 import React from 'react';
@@ -25,7 +26,6 @@ import {
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { TaxType } from '@/interfaces/TaxRates';
 import {
-  compose,
   transformToForm,
   repeatValue,
   defaultFastFieldShouldUpdate,
@@ -153,10 +153,11 @@ export function transformToEditForm(
       Math.max(MIN_LINES_NUMBER - invoice.entries.length, 0),
     ),
   ];
-  const entries = compose(
-    ensureEntriesHaveEmptyLine(defaultInvoiceEntry),
+  const entries = FF.pipe(
+    initialEntries,
     updateItemsEntriesTotal,
-  )(initialEntries);
+    ensureEntriesHaveEmptyLine(defaultInvoiceEntry),
+  );
 
   return {
     ...defaultInvoice,

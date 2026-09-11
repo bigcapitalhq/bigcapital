@@ -1,5 +1,6 @@
 import { Button, Classes, Dialog, Intent, Callout } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, AppToaster } from '@/components';
@@ -14,7 +15,6 @@ import {
   useInactivateWorkspace,
   useActivateWorkspace,
 } from '@/ee/workspaces/hooks/query';
-import { compose } from '@/utils';
 
 type WorkspaceInactivateDialogPayload = {
   organizationId?: string;
@@ -172,7 +172,8 @@ function WorkspaceInactivateDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
+export default FF.pipe(
+  WorkspaceInactivateDialog,
   withDialogActions,
-)(WorkspaceInactivateDialog);
+  withDialogRedux(),
+);

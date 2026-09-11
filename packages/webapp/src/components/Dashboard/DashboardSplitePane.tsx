@@ -1,8 +1,8 @@
+import * as FF from 'fp-ts/function';
 import { debounce } from 'lodash';
 import React, { useState, useRef } from 'react';
 import SplitPane from 'react-split-pane';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
-import { compose } from '@/utils';
 
 interface DashboardSplitPaneProps {
   sidebarExpended: boolean;
@@ -58,6 +58,7 @@ function DashboardSplitPane({
   );
 }
 
-export default compose(
+export default FF.pipe(
+  DashboardSplitPane,
   withDashboard(({ sidebarExpended }) => ({ sidebarExpended })),
-)(DashboardSplitPane);
+);

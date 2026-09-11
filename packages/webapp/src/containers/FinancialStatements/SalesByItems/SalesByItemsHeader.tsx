@@ -1,5 +1,6 @@
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
@@ -15,7 +16,7 @@ import {
   WithSalesByItemsActionsProps,
 } from './withSalesByItemsActions';
 import { FormattedMessage as T } from '@/components';
-import { compose, transformToForm } from '@/utils';
+import { transformToForm } from '@/utils';
 
 interface SalesByItemsFormValues {
   fromDate: Date;
@@ -117,12 +118,13 @@ function SalesByItemsHeaderInner({
   );
 }
 
-export const SalesByItemsHeader = compose(
+export const SalesByItemsHeader = FF.pipe(
+  SalesByItemsHeaderInner,
+  withSalesByItemsActions,
   withSalesByItems(({ salesByItemsDrawerFilter }) => ({
     salesByItemsDrawerFilter,
   })),
-  withSalesByItemsActions,
-)(SalesByItemsHeaderInner);
+);
 
 const SalesByItemsDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

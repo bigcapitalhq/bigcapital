@@ -1,10 +1,11 @@
 import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
 interface ChangingFullAmountAlertPayload {
   // Empty payload — alert reads no payload field.
@@ -54,7 +55,8 @@ function ChangingFullAmountAlertInner({
   );
 }
 
-export const ChangingFullAmountAlert = compose(
-  withAlertStoreConnect(),
+export const ChangingFullAmountAlert = FF.pipe(
+  ChangingFullAmountAlertInner,
   withAlertActions,
-)(ChangingFullAmountAlertInner);
+  withAlertStoreConnect(),
+);
