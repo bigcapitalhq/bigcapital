@@ -300,5 +300,8 @@ export const SettingsOptions = {
     sms_notifications: {
       type: 'boolean',
     },
+    sales_tax: {
+      type: 'boolean',
+    },
   },
 };

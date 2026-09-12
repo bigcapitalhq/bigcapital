@@ -285,6 +285,8 @@
   "features.label": "Features",
   "features.landed_cost": "Landed cost",
   "features.landed_cost.helper_text": "Turn on Landed Cost to add extra purchase costs — such as shipping, freight, customs duties, and handling fees — to your bills and expenses. These costs are then allocated across the line items of each transaction, so you get the true landed cost of your inventory.",
+  "features.sales_tax": "Sales Tax",
+  "features.sales_tax.helper_text": "Turn on Sales Tax to track tax rates on your items, apply sales tax to invoices, and report your sales tax liability.",
   "features.saved_success_message": "The features preferences have been saved.",
   "features.sms_notifications": "SMS Notifications",
   "features.sms_notifications.helper_text": "Turn on SMS Notifications to send text messages to your customers for invoices, estimates, receipts, and payments via Twilio.",

@@ -429,6 +429,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
                 text: 'Tax Rates',
                 href: '/tax-rates',
                 type: ISidebarMenuItemType.Link,
+                feature: Features.SalesTax,
                 permission: {
                   subject: AbilitySubject.TaxRate,
                   ability: TaxRateAction.View,
@@ -726,6 +727,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
             text: 'Sales Tax Liability Summary',
             href: '/financial-reports/sales-tax-liability-summary',
             type: ISidebarMenuItemType.Link,
+            feature: Features.SalesTax,
             permission: {
               subject: AbilitySubject.Report,
               ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,

@@ -38,6 +38,20 @@ export function FeaturesForm() {
         />
       </FFormGroup>
 
+      {/* ----------- Sales Tax ----------- */}
+      <FFormGroup
+        name={'features.salesTax'}
+        type={'switch'}
+        inline={true}
+        helperText={<T id={'features.sales_tax.helper_text'} />}
+      >
+        <FSwitch
+          name={'features.salesTax'}
+          label={<T id={'features.sales_tax'} />}
+          large={true}
+        />
+      </FFormGroup>
+
       {/* ----------- SMS Notifications ----------- */}
       <FFormGroup
         name={'features.smsNotifications'}

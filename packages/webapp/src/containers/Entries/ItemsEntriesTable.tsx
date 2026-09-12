@@ -13,7 +13,9 @@ import {
   useComposeRowsOnNewRow,
 } from './utils';
 import { DataTableEditable } from '@/components';
+import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
+import { useFeatureCan } from '@/hooks/state';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { ItemEntry } from '@/interfaces/ItemEntries';
 
@@ -39,14 +41,25 @@ interface ItemsEntriesTableProps {
 export function ItemsEntriesTable(props: ItemsEntriesTableProps) {
   const { value, initialValue, onChange } = props;
 
+  const { featureCan } = useFeatureCan();
+  const isSalesTaxFeatureCan = featureCan(Features.SalesTax);
+
   const [localValue, handleChange] = useUncontrolled({
     value,
     initialValue,
     finalValue: [],
     onChange,
   });
+
   return (
-    <ItemEntriesTableProvider value={{ ...props, localValue, handleChange }}>
+    <ItemEntriesTableProvider
+      value={{
+        ...props,
+        enableTaxRates: props.enableTaxRates !== false && isSalesTaxFeatureCan,
+        localValue,
+        handleChange,
+      }}
+    >
       <ItemEntriesTableRoot />
     </ItemEntriesTableProvider>
   );

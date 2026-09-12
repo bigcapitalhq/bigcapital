@@ -9,9 +9,11 @@ import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.mo
 import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
 import { SalesTaxLiabilitySummaryMeta } from './SalesTaxLiabilitySummaryMeta';
 import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
+import { FeaturesModule } from '@/modules/Features/Features.module';
+import { SalesTaxFeatureGuard } from '@/modules/TaxRates/SalesTaxFeatureGuard';
 
 @Module({
-  imports: [FinancialSheetCommonModule, TenancyModule],
+  imports: [FinancialSheetCommonModule, TenancyModule, FeaturesModule],
   providers: [
     SalesTaxLiabiltiySummaryPdf,
     SalesTaxLiabilitySummaryTableInjectable,
@@ -20,6 +22,7 @@ import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
     SalesTaxLiabilitySummaryRepository,
     SalesTaxLiabilitySummaryMeta,
     SalesTaxLiabilitySummaryApplication,
+    SalesTaxFeatureGuard,
   ],
   controllers: [SalesTaxLiabilitySummaryController],
 })

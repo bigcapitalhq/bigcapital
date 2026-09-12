@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
+import { Features } from '@/constants/features';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 
 const SUBSCRIPTION_TYPE = {
@@ -501,6 +502,7 @@ export const getDashboardRoutes = () => [
     pageTitle: 'Sales Tax Liability Summary',
     backLink: true,
     sidebarExpand: false,
+    feature: Features.SalesTax,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
@@ -1288,6 +1290,7 @@ export const getDashboardRoutes = () => [
       })),
     ),
     pageTitle: 'Tax Rates',
+    feature: Features.SalesTax,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
@@ -1298,6 +1301,7 @@ export const getDashboardRoutes = () => [
       })),
     ),
     pageTitle: 'Tax Rates',
+    feature: Features.SalesTax,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   // Bank Rules

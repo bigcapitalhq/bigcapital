@@ -20,12 +20,17 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
+import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 import { TaxType } from '@/interfaces/TaxRates';
 
 export function InvoiceFormFooterRight() {
   const {
     values: { inclusiveExclusiveTax, currencyCode },
   } = useFormikContext<InvoiceFormValues>();
+
+  const { featureCan } = useFeatureCan();
+  const isSalesTaxFeatureCan = featureCan(Features.SalesTax);
 
   const taxEntries = useInvoiceAggregatedTaxRates();
   const adjustmentAmount = useInvoiceAdjustmentAmountFormatted();
@@ -40,7 +45,7 @@ export function InvoiceFormFooterRight() {
       <TotalLine
         title={
           <>
-            {inclusiveExclusiveTax === TaxType.Inclusive
+            {isSalesTaxFeatureCan && inclusiveExclusiveTax === TaxType.Inclusive
               ? 'Subtotal (Tax Inclusive)'
               : 'Subtotal'}
           </>
@@ -53,14 +58,15 @@ export function InvoiceFormFooterRight() {
       />
       <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
 
-      {taxEntries.map((tax, index) => (
-        <TotalLine
-          key={index}
-          title={tax.label}
-          value={tax.taxAmountFormatted}
-          borderStyle={TotalLineBorderStyle.None}
-        />
-      ))}
+      {isSalesTaxFeatureCan &&
+        taxEntries.map((tax, index) => (
+          <TotalLine
+            key={index}
+            title={tax.label}
+            value={tax.taxAmountFormatted}
+            borderStyle={TotalLineBorderStyle.None}
+          />
+        ))}
       <TotalLine
         title={`Total (${currencyCode})`}
         value={totalFormatted}

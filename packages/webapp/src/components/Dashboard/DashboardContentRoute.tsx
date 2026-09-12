@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import DashboardPage from './DashboardPage';
+import { useFeatureCan } from '@/hooks/state';
 import { getDashboardRoutes } from '@/routes/dashboard';
 
 export interface DashboardRoute {
@@ -13,6 +14,7 @@ export interface DashboardRoute {
   sidebarExpand?: boolean;
   defaultSearchResource?: string;
   exact?: boolean;
+  feature?: string;
 }
 
 /**
@@ -36,7 +38,10 @@ function DashboardContentRouteContent({ route }: { route: DashboardRoute }) {
  * Dashboard content route.
  */
 export default function DashboardContentRoute() {
-  const routes = getDashboardRoutes() as DashboardRoute[];
+  const { featureCan } = useFeatureCan();
+  const routes = (getDashboardRoutes() as DashboardRoute[]).filter(
+    (route) => !route.feature || featureCan(route.feature),
+  );
 
   return (
     <Route path="/">

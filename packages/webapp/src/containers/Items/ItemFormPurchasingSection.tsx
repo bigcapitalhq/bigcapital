@@ -23,13 +23,18 @@ import {
 } from '@/components';
 import { FormattedMessage as T } from '@/components';
 import { TaxRatesSelect } from '@/components/TaxRates/TaxRatesSelect';
+import { Features } from '@/constants';
 import { ACCOUNT_PARENT_TYPE } from '@/constants/accountTypes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
 export function ItemFormPurchasingSection() {
   const { accounts, taxRates } = useItemFormContext();
   const { values } = useFormikContext<ItemFormValues>();
   const baseCurrency = useCurrentOrganizationBaseCurrency();
+
+  const { featureCan } = useFeatureCan();
+  const isSalesTaxFeatureCan = featureCan(Features.SalesTax);
 
   return (
     <Box data-section-id="purchasing">
@@ -92,16 +97,18 @@ export function ItemFormPurchasingSection() {
       </FFormGroup>
 
       {/*------------- Purchase Tax Rate ------------- */}
-      <FFormGroup name={'purchaseTaxRateId'} label={'Tax Rate'} inline={true}>
-        <TaxRatesSelect
-          name={'purchaseTaxRateId'}
-          items={taxRates}
-          allowCreate={true}
-          fastField={true}
-          shouldUpdateDeps={{ taxRates }}
-          shouldUpdate={taxRateFieldShouldUpdate}
-        />
-      </FFormGroup>
+      {isSalesTaxFeatureCan && (
+        <FFormGroup name={'purchaseTaxRateId'} label={'Tax Rate'} inline={true}>
+          <TaxRatesSelect
+            name={'purchaseTaxRateId'}
+            items={taxRates}
+            allowCreate={true}
+            fastField={true}
+            shouldUpdateDeps={{ taxRates }}
+            shouldUpdate={taxRateFieldShouldUpdate}
+          />
+        </FFormGroup>
+      )}
 
       <FFormGroup
         name={'purchaseDescription'}

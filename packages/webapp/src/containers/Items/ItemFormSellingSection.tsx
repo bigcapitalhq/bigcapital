@@ -22,13 +22,18 @@ import {
 } from '@/components';
 import { FormattedMessage as T } from '@/components';
 import { TaxRatesSelect } from '@/components/TaxRates/TaxRatesSelect';
+import { Features } from '@/constants';
 import { ACCOUNT_PARENT_TYPE } from '@/constants/accountTypes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
 export function ItemFormSellingSection() {
   const { accounts, taxRates } = useItemFormContext();
   const baseCurrency = useCurrentOrganizationBaseCurrency();
   const { values } = useFormikContext<ItemFormValues>();
+
+  const { featureCan } = useFeatureCan();
+  const isSalesTaxFeatureCan = featureCan(Features.SalesTax);
 
   return (
     <Box data-section-id="selling">
@@ -91,9 +96,11 @@ export function ItemFormSellingSection() {
       </FFormGroup>
 
       {/*------------- Sell Tax Rate ------------- */}
-      <FFormGroup name={'sellTaxRateId'} label={'Tax Rate'} inline={true}>
-        <TaxRatesSelect name={'sellTaxRateId'} items={taxRates} allowCreate />
-      </FFormGroup>
+      {isSalesTaxFeatureCan && (
+        <FFormGroup name={'sellTaxRateId'} label={'Tax Rate'} inline={true}>
+          <TaxRatesSelect name={'sellTaxRateId'} items={taxRates} allowCreate />
+        </FFormGroup>
+      )}
 
       <FFormGroup
         name={'sellDescription'}

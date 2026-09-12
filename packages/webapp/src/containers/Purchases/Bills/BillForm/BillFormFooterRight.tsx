@@ -16,14 +16,19 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
+import { Features } from '@/constants';
 import { AdjustmentTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/AdjustmentTotalLine';
 import { DiscountTotalLine } from '@/containers/Sales/Invoices/InvoiceForm/DiscountTotalLine';
+import { useFeatureCan } from '@/hooks/state';
 import { TaxType } from '@/interfaces/TaxRates';
 
 export function BillFormFooterRight() {
   const {
     values: { inclusiveExclusiveTax, currencyCode },
   } = useFormikContext<BillFormValues>();
+
+  const { featureCan } = useFeatureCan();
+  const isSalesTaxFeatureCan = featureCan(Features.SalesTax);
 
   const dueAmountFormatted = useBillDueAmountFormatted();
   const paidAmountFormatted = useBillPaidAmountFormatted();
@@ -38,7 +43,7 @@ export function BillFormFooterRight() {
       <TotalLine
         title={
           <>
-            {inclusiveExclusiveTax === TaxType.Inclusive
+            {isSalesTaxFeatureCan && inclusiveExclusiveTax === TaxType.Inclusive
               ? 'Subtotal (Tax Inclusive)'
               : 'Subtotal'}
           </>
@@ -50,16 +55,20 @@ export function BillFormFooterRight() {
         discountAmount={discountAmount}
       />
       <AdjustmentTotalLine adjustmentAmount={adjustmentAmount} />
-      {taxEntries.map(
-        (tax: { label: string; taxAmountFormatted: string }, index: number) => (
-          <TotalLine
-            key={index}
-            title={tax.label}
-            value={tax.taxAmountFormatted}
-            borderStyle={TotalLineBorderStyle.None}
-          />
-        ),
-      )}
+      {isSalesTaxFeatureCan &&
+        taxEntries.map(
+          (
+            tax: { label: string; taxAmountFormatted: string },
+            index: number,
+          ) => (
+            <TotalLine
+              key={index}
+              title={tax.label}
+              value={tax.taxAmountFormatted}
+              borderStyle={TotalLineBorderStyle.None}
+            />
+          ),
+        )}
       <TotalLine
         title={`TOTAL (${currencyCode})`}
         value={totalFormatted}

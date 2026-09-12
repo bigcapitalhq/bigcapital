@@ -22,6 +22,7 @@ const defaultFormValues = flatten({
   features: {
     landedCost: false,
     smsNotifications: false,
+    salesTax: true,
   },
 }) as FeaturesFormValues;
 
