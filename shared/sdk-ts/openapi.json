@@ -1314,6 +1314,64 @@
         "tags": [
           "Inventory Adjustments"
         ]
+      },
+      "put": {
+        "operationId": "InventoryAdjustmentsController_editQuickInventoryAdjustment",
+        "summary": "Edit the given inventory adjustment.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditQuickInventoryAdjustmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The inventory adjustment has been successfully edited.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventoryAdjustmentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Inventory Adjustments"
+        ]
       }
     },
     "/api/inventory-adjustments": {
@@ -10333,198 +10391,6 @@
         },
         "tags": [
           "Bills"
-        ]
-      }
-    },
-    "/api/landed-cost/transactions": {
-      "get": {
-        "operationId": "BillAllocateLandedCostController_getLandedCostTransactions",
-        "summary": "Get landed cost transactions",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of landed cost transactions."
-          }
-        },
-        "tags": [
-          "Landed Cost"
-        ]
-      }
-    },
-    "/api/landed-cost/bills/{billId}/allocate": {
-      "post": {
-        "operationId": "BillAllocateLandedCostController_calculateLandedCost",
-        "summary": "Allocate landed cost to bill items",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "billId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AllocateBillLandedCostDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Landed cost allocated successfully."
-          }
-        },
-        "tags": [
-          "Landed Cost"
-        ]
-      }
-    },
-    "/api/landed-cost/{allocatedLandedCostId}": {
-      "delete": {
-        "operationId": "BillAllocateLandedCostController_deleteAllocatedLandedCost",
-        "summary": "Delete allocated landed cost",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "allocatedLandedCostId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Allocated landed cost deleted successfully."
-          }
-        },
-        "tags": [
-          "Landed Cost"
-        ]
-      }
-    },
-    "/api/landed-cost/bills/{billId}/transactions": {
-      "get": {
-        "operationId": "BillAllocateLandedCostController_getBillLandedCostTransactions",
-        "summary": "Get bill landed cost transactions",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "billId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of bill landed cost transactions.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "billId": {
-                      "type": "number"
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/BillLandedCostTransactionDto"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Landed Cost"
         ]
       }
     },
@@ -24758,6 +24624,198 @@
         ]
       }
     },
+    "/api/landed-cost/transactions": {
+      "get": {
+        "operationId": "BillAllocateLandedCostController_getLandedCostTransactions",
+        "summary": "Get landed cost transactions",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of landed cost transactions."
+          }
+        },
+        "tags": [
+          "Landed Cost"
+        ]
+      }
+    },
+    "/api/landed-cost/bills/{billId}/allocate": {
+      "post": {
+        "operationId": "BillAllocateLandedCostController_calculateLandedCost",
+        "summary": "Allocate landed cost to bill items",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "billId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AllocateBillLandedCostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Landed cost allocated successfully."
+          }
+        },
+        "tags": [
+          "Landed Cost"
+        ]
+      }
+    },
+    "/api/landed-cost/{allocatedLandedCostId}": {
+      "delete": {
+        "operationId": "BillAllocateLandedCostController_deleteAllocatedLandedCost",
+        "summary": "Delete allocated landed cost",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "allocatedLandedCostId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Allocated landed cost deleted successfully."
+          }
+        },
+        "tags": [
+          "Landed Cost"
+        ]
+      }
+    },
+    "/api/landed-cost/bills/{billId}/transactions": {
+      "get": {
+        "operationId": "BillAllocateLandedCostController_getBillLandedCostTransactions",
+        "summary": "Get bill landed cost transactions",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "billId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of bill landed cost transactions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "billId": {
+                      "type": "number"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BillLandedCostTransactionDto"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Landed Cost"
+        ]
+      }
+    },
     "/api/exchange-rates/latest": {
       "get": {
         "operationId": "ExchangeRatesController_getLatestExchangeRate",
@@ -26287,6 +26345,76 @@
         ]
       },
       "CreateQuickInventoryAdjustmentDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date of the inventory adjustment"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of adjustment",
+            "enum": [
+              "increment",
+              "decrement"
+            ]
+          },
+          "adjustmentAccountId": {
+            "type": "number",
+            "description": "ID of the adjustment account"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason for the adjustment"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the adjustment"
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "Reference number"
+          },
+          "itemId": {
+            "type": "number",
+            "description": "ID of the item being adjusted"
+          },
+          "quantity": {
+            "type": "number",
+            "description": "Quantity to adjust"
+          },
+          "cost": {
+            "type": "number",
+            "description": "Cost of the item"
+          },
+          "publish": {
+            "type": "boolean",
+            "description": "Whether to publish the adjustment immediately"
+          },
+          "warehouseId": {
+            "type": "number",
+            "description": "ID of the warehouse (optional)"
+          },
+          "branchId": {
+            "type": "number",
+            "description": "ID of the branch (optional)"
+          }
+        },
+        "required": [
+          "date",
+          "type",
+          "adjustmentAccountId",
+          "reason",
+          "description",
+          "referenceNo",
+          "itemId",
+          "quantity",
+          "cost",
+          "publish"
+        ]
+      },
+      "EditQuickInventoryAdjustmentDto": {
         "type": "object",
         "properties": {
           "date": {
@@ -34158,98 +34286,6 @@
           "vendorId",
           "entries"
         ]
-      },
-      "BillLandedCostTransactionDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "number",
-            "description": "The unique identifier of the landed cost transaction",
-            "example": 1
-          },
-          "billId": {
-            "type": "number",
-            "description": "The bill id the landed cost is allocated to",
-            "example": 10
-          },
-          "fromTransactionId": {
-            "type": "number",
-            "description": "The id of the source transaction the cost was allocated from",
-            "example": 5
-          },
-          "fromTransactionType": {
-            "type": "string",
-            "description": "The type of the source transaction (Bill or Expense)",
-            "example": "Expense"
-          },
-          "fromTransactionEntryId": {
-            "type": "number",
-            "description": "The entry id of the source transaction",
-            "example": 2
-          },
-          "allocationMethod": {
-            "type": "string",
-            "description": "The allocation method used to distribute the cost",
-            "example": "quantity"
-          },
-          "allocationMethodFormatted": {
-            "type": "string",
-            "description": "The translated label of the allocation method",
-            "example": "Quantity"
-          },
-          "costAccountId": {
-            "type": "number",
-            "description": "The cost account id the landed cost is posted to",
-            "example": 1020
-          },
-          "description": {
-            "type": "string",
-            "description": "The description of the landed cost transaction",
-            "example": "Freight charges"
-          },
-          "amount": {
-            "type": "number",
-            "description": "The allocated landed cost amount",
-            "example": 150
-          },
-          "localAmount": {
-            "type": "number",
-            "description": "The allocated landed cost amount in the base currency",
-            "example": 150
-          },
-          "currencyCode": {
-            "type": "string",
-            "description": "The currency code of the landed cost transaction",
-            "example": "USD"
-          },
-          "exchangeRate": {
-            "type": "number",
-            "description": "The exchange rate applied to the amount",
-            "example": 1
-          },
-          "name": {
-            "type": "string",
-            "description": "The resolved name of the source item or expense account",
-            "example": "Widget A"
-          },
-          "formattedAmount": {
-            "type": "string",
-            "description": "Formatted allocated amount",
-            "example": "$150.00"
-          },
-          "formattedLocalAmount": {
-            "type": "string",
-            "description": "Formatted allocated amount in the base currency",
-            "example": "$150.00"
-          }
-        },
-        "required": [
-          "id"
-        ]
-      },
-      "AllocateBillLandedCostDto": {
-        "type": "object",
-        "properties": {}
       },
       "ManualJournalEntryResponseDto": {
         "type": "object",
@@ -45955,6 +45991,98 @@
           "data",
           "pagination"
         ]
+      },
+      "BillLandedCostTransactionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the landed cost transaction",
+            "example": 1
+          },
+          "billId": {
+            "type": "number",
+            "description": "The bill id the landed cost is allocated to",
+            "example": 10
+          },
+          "fromTransactionId": {
+            "type": "number",
+            "description": "The id of the source transaction the cost was allocated from",
+            "example": 5
+          },
+          "fromTransactionType": {
+            "type": "string",
+            "description": "The type of the source transaction (Bill or Expense)",
+            "example": "Expense"
+          },
+          "fromTransactionEntryId": {
+            "type": "number",
+            "description": "The entry id of the source transaction",
+            "example": 2
+          },
+          "allocationMethod": {
+            "type": "string",
+            "description": "The allocation method used to distribute the cost",
+            "example": "quantity"
+          },
+          "allocationMethodFormatted": {
+            "type": "string",
+            "description": "The translated label of the allocation method",
+            "example": "Quantity"
+          },
+          "costAccountId": {
+            "type": "number",
+            "description": "The cost account id the landed cost is posted to",
+            "example": 1020
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the landed cost transaction",
+            "example": "Freight charges"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The allocated landed cost amount",
+            "example": 150
+          },
+          "localAmount": {
+            "type": "number",
+            "description": "The allocated landed cost amount in the base currency",
+            "example": 150
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "The currency code of the landed cost transaction",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "The exchange rate applied to the amount",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "The resolved name of the source item or expense account",
+            "example": "Widget A"
+          },
+          "formattedAmount": {
+            "type": "string",
+            "description": "Formatted allocated amount",
+            "example": "$150.00"
+          },
+          "formattedLocalAmount": {
+            "type": "string",
+            "description": "Formatted allocated amount in the base currency",
+            "example": "$150.00"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "AllocateBillLandedCostDto": {
+        "type": "object",
+        "properties": {}
       },
       "ExchangeRateLatestResponseDto": {
         "type": "object",

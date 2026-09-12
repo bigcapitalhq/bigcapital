@@ -18,13 +18,15 @@ interface InventoryAdjustmentFormDialogProps extends DialogBaseProps {
 
 function InventoryAdjustmentFormDialog({
   dialogName,
-  payload = { action: '', itemId: null },
+  payload = { action: '', itemId: null, inventoryId: null },
   isOpen,
 }: InventoryAdjustmentFormDialogProps): React.ReactElement {
+  const isEditMode = payload.action === 'edit' && !!payload.inventoryId;
+
   return (
     <Dialog
       name={dialogName}
-      title={<T id={'make_adjustment'} />}
+      title={<T id={isEditMode ? 'edit_adjustment' : 'make_adjustment'} />}
       isOpen={isOpen}
       canEscapeKeyClose={true}
       autoFocus={true}
@@ -34,6 +36,7 @@ function InventoryAdjustmentFormDialog({
         <InventoryAdjustmentFormDialogContent
           dialogName={dialogName}
           itemId={payload.itemId}
+          inventoryId={payload.inventoryId}
         />
       </DialogSuspense>
     </Dialog>

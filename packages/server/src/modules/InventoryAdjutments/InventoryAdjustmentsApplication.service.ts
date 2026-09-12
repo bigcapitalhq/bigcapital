@@ -2,16 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { DeleteInventoryAdjustmentService } from './commands/DeleteInventoryAdjustment.service';
 import { PublishInventoryAdjustmentService } from './commands/PublishInventoryAdjustment.service';
 import { CreateQuickInventoryAdjustmentService } from './commands/CreateQuickInventoryAdjustment.service';
+import { EditQuickInventoryAdjustmentService } from './commands/EditQuickInventoryAdjustment.service';
 import { IInventoryAdjustmentsFilter } from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { GetInventoryAdjustmentService } from './queries/GetInventoryAdjustment.service';
 import { GetInventoryAdjustmentsService } from './queries/GetInventoryAdjustments.service';
 import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
+import { EditQuickInventoryAdjustmentDto } from './dtos/EditQuickInventoryAdjustment.dto';
 
 @Injectable()
 export class InventoryAdjustmentsApplicationService {
   constructor(
     private readonly createQuickInventoryAdjustmentService: CreateQuickInventoryAdjustmentService,
+    private readonly editQuickInventoryAdjustmentService: EditQuickInventoryAdjustmentService,
     private readonly deleteInventoryAdjustmentService: DeleteInventoryAdjustmentService,
     private readonly publishInventoryAdjustmentService: PublishInventoryAdjustmentService,
     private readonly getInventoryAdjustmentService: GetInventoryAdjustmentService,
@@ -39,6 +42,21 @@ export class InventoryAdjustmentsApplicationService {
     quickAdjustmentDTO: CreateQuickInventoryAdjustmentDto,
   ): Promise<InventoryAdjustment> {
     return this.createQuickInventoryAdjustmentService.createQuickAdjustment(
+      quickAdjustmentDTO,
+    );
+  }
+
+  /**
+   * Edits the quick inventory adjustment transaction.
+   * @param {number} inventoryAdjustmentId - Inventory adjustment id.
+   * @param {EditQuickInventoryAdjustmentDto} quickAdjustmentDTO - Quick inventory adjustment DTO.
+   */
+  public async editQuickInventoryAdjustment(
+    inventoryAdjustmentId: number,
+    quickAdjustmentDTO: EditQuickInventoryAdjustmentDto,
+  ): Promise<InventoryAdjustment> {
+    return this.editQuickInventoryAdjustmentService.editQuickAdjustment(
+      inventoryAdjustmentId,
       quickAdjustmentDTO,
     );
   }

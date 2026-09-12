@@ -94,6 +94,44 @@ describe('Inventory Adjustments (e2e)', () => {
       .expect(200);
   });
 
+  it('/inventory-adjustments/:id (PUT)', async () => {
+    const itemResponse = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(makeItemRequest())
+      .expect(201);
+
+    const itemId = itemResponse.body.id;
+    const inventoryAdjustmentResponse = await request(app.getHttpServer())
+      .post('/inventory-adjustments/quick')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...createInventoryAdjustment({ itemId }),
+        publish: false,
+      })
+      .expect(201);
+
+    const inventoryAdjustmentId = inventoryAdjustmentResponse.body.id;
+
+    const editResponse = await request(app.getHttpServer())
+      .put(`/inventory-adjustments/${inventoryAdjustmentId}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...createInventoryAdjustment({ itemId }),
+        quantity: 5,
+        cost: 100,
+        publish: true,
+      })
+      .expect(200);
+
+    expect(editResponse.body.quantity).toBeUndefined();
+    expect(editResponse.body.entries[0].quantity).toBe(5);
+    expect(editResponse.body.entries[0].cost).toBe(100);
+  });
+
   it('/inventory-adjustments/:id/publish (POST)', async () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')

@@ -8,12 +8,15 @@ import { withInventoryAdjustments } from './withInventoryAdjustments';
 import type { WithInventoryAdjustmentActionsProps } from './withInventoryAdjustmentActions';
 import type { WithInventoryAdjustmentsProps } from './withInventoryAdjustments';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import type { InventoryAdjustment } from '@bigcapital/sdk-ts';
 import { DataTable } from '@/components';
+import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
@@ -21,6 +24,7 @@ interface InventoryAdjustmentDataTableProps
   extends Pick<WithInventoryAdjustmentsProps, 'inventoryAdjustmentTableState'>,
     WithInventoryAdjustmentActionsProps,
     WithAlertActionsProps,
+    WithDialogActionsProps,
     WithDrawerActionsProps {
   tableProps?: Record<string, unknown>;
 }
@@ -37,6 +41,9 @@ function InventoryAdjustmentDataTable({
 
   // #withAlertActions
   openAlert,
+
+  // #withDialogActions
+  openDialog,
 
   // #withDrawerActions
   openDrawer,
@@ -55,6 +62,14 @@ function InventoryAdjustmentDataTable({
   // Handle delete inventory adjustment transaction.
   const handleDeleteAdjustment = ({ id }: InventoryAdjustment) => {
     openAlert('inventory-adjustment-delete', { inventoryId: id });
+  };
+
+  // Handle edit inventory adjustment transaction.
+  const handleEditAdjustment = ({ id }: InventoryAdjustment) => {
+    openDialog(DialogsName.InventoryAdjustmentForm, {
+      action: 'edit',
+      inventoryId: id,
+    });
   };
 
   // Handle the inventory adjustment publish action.
@@ -121,6 +136,7 @@ function InventoryAdjustmentDataTable({
       onColumnResizing={handleColumnResizing}
       payload={{
         onDelete: handleDeleteAdjustment,
+        onEdit: handleEditAdjustment,
         onPublish: handlePublishInventoryAdjustment,
         onViewDetails: handleViewDetailInventoryAdjustment,
       }}
@@ -137,6 +153,7 @@ export const InventoryAdjustmentTable = FF.pipe(
     inventoryAdjustmentTableState,
   })),
   withDrawerActions,
+  withDialogActions,
   withInventoryAdjustmentActions,
   withAlertActions,
 );
