@@ -5,7 +5,9 @@ import { InclusiveButtonOptions } from './constants';
 import { composeEntriesOnEditInclusiveTax } from './utils';
 import type { InvoiceFormValues } from './utils';
 import { FFormGroup, FSelect } from '@/components';
+import { Features } from '@/constants';
 import { EntriesActionsBar } from '@/containers/Entries/EntriesActionBar';
+import { useFeatureCan } from '@/hooks/state';
 import { TaxType } from '@/interfaces/TaxRates';
 
 /**
@@ -13,6 +15,11 @@ import { TaxType } from '@/interfaces/TaxRates';
  * @returns {React.ReactNode}
  */
 export function InvoiceFormActions() {
+  const { featureCan } = useFeatureCan();
+
+  if (!featureCan(Features.SalesTax)) {
+    return null;
+  }
   return (
     <EntriesActionsBar>
       <InvoiceExclusiveInclusiveSelect />

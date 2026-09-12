@@ -8,6 +8,8 @@ import { Injectable } from '@nestjs/common';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
+import { FeaturesManager } from '@/modules/Features/FeaturesManager';
+import { Features } from '@/common/types/Features';
 
 @Injectable()
 export class CommandTaxRatesValidators {
@@ -17,6 +19,8 @@ export class CommandTaxRatesValidators {
   constructor(
     @Inject(TaxRateModel.name)
     private readonly taxRateModel: TenantModelProxy<typeof TaxRateModel>,
+
+    private readonly featuresManager: FeaturesManager,
   ) {}
 
   /**
@@ -71,6 +75,11 @@ export class CommandTaxRatesValidators {
    * @throws {ServiceError}
    */
   public async validateItemEntriesTaxCode(itemEntriesDTO: ItemEntryDto[]) {
+    const isSalesTaxEnabled = await this.featuresManager.accessible(
+      Features.SALES_TAX,
+    );
+    if (!isSalesTaxEnabled) return;
+
     const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxCode);
     const taxCodes = filteredTaxEntries.map((e) => e.taxCode);
 
@@ -95,6 +104,11 @@ export class CommandTaxRatesValidators {
    * @throws {ServiceError}
    */
   public async validateItemEntriesTaxCodeId(itemEntriesDTO: ItemEntryDto[]) {
+    const isSalesTaxEnabled = await this.featuresManager.accessible(
+      Features.SALES_TAX,
+    );
+    if (!isSalesTaxEnabled) return;
+
     const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxRateId);
     const taxRatesIds = filteredTaxEntries.map((e) => e.taxRateId);
 

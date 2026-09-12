@@ -30,6 +30,7 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { ReportsAction } from '../../types/Report.types';
+import { SalesTaxFeatureGuard } from '@/modules/TaxRates/SalesTaxFeatureGuard';
 
 @Controller('/reports/sales-tax-liability-summary')
 @ApiTags('Reports')
@@ -40,7 +41,7 @@ import { ReportsAction } from '../../types/Report.types';
   NumberFormatQueryDto,
 )
 // Restrict this financial report to authenticated users granted the sales-tax-liability read permission.
-@UseGuards(AuthorizationGuard, PermissionGuard)
+@UseGuards(AuthorizationGuard, PermissionGuard, SalesTaxFeatureGuard)
 export class SalesTaxLiabilitySummaryController {
   constructor(
     private readonly salesTaxLiabilitySummaryApp: SalesTaxLiabilitySummaryApplication,

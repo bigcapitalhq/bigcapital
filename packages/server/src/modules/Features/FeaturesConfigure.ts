@@ -34,6 +34,10 @@ export class FeaturesConfigure {
         name: Features.SMS_NOTIFICATIONS,
         defaultValue: false,
       },
+      {
+        name: Features.SALES_TAX,
+        defaultValue: true,
+      },
     ];
   }
 }

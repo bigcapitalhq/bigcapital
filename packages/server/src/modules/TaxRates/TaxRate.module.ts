@@ -22,11 +22,13 @@ import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { TaxRateTransaction } from './models/TaxRateTransaction.model';
 import { TaxRatesExportable } from './TaxRatesExportable';
 import { TaxRatesImportable } from './TaxRatesImportable';
+import { FeaturesModule } from '../Features/Features.module';
+import { SalesTaxFeatureGuard } from './SalesTaxFeatureGuard';
 
 const models = [RegisterTenancyModel(TaxRateTransaction)];
 
 @Module({
-  imports: [TenancyModule, ...models],
+  imports: [TenancyModule, FeaturesModule, ...models],
   controllers: [TaxRatesController],
   providers: [
     CreateTaxRate,
@@ -48,6 +50,7 @@ const models = [RegisterTenancyModel(TaxRateTransaction)];
     SyncItemTaxRateOnEditTaxRate,
     TaxRatesExportable,
     TaxRatesImportable,
+    SalesTaxFeatureGuard,
   ],
   exports: [ItemEntriesTaxTransactions, ...models],
 })

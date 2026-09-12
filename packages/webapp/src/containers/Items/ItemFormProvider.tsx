@@ -9,6 +9,7 @@ import type {
   EditItemBody,
   ItemCategoriesListResponse,
 } from '@bigcapital/sdk-ts';
+import { Features } from '@/constants';
 import {
   useItem,
   useSettingsItems,
@@ -18,6 +19,7 @@ import {
   useAccounts,
 } from '@/hooks/query';
 import { useTaxRates } from '@/hooks/query/tax-rates';
+import { useFeatureCan } from '@/hooks/state';
 
 type ItemFormSubmitPayload = {
   redirect?: boolean;
@@ -59,6 +61,9 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
   const { state } = useLocation<{ action?: number | string }>();
   const duplicateId = state?.action;
 
+  // Feature flags.
+  const { featureCan } = useFeatureCan();
+
   // Fetches the accounts list.
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
@@ -66,7 +71,9 @@ function ItemFormProvider({ itemId, ...props }: ItemFormProviderProps) {
   const { isLoading: isItemsCategoriesLoading, data: itemsCategories } =
     useItemsCategories();
 
-  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
+  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates({
+    enabled: featureCan(Features.SalesTax),
+  });
 
   // Fetches the given item details.
   const itemQuery = useItem(itemId || (duplicateId as number | undefined), {

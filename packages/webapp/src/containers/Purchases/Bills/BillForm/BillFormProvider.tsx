@@ -94,6 +94,7 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isSalesTaxFeatureCan = featureCan(Features.SalesTax);
   // Handle fetch accounts.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -126,7 +127,9 @@ function BillFormProvider({ billId, ...props }: BillFormProviderProps) {
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Fetch tax rates.
-  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
+  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates({
+    enabled: isSalesTaxFeatureCan,
+  });
 
   // Handle fetching bill settings.
   const { isFetching: isSettingLoading } = useSettings();

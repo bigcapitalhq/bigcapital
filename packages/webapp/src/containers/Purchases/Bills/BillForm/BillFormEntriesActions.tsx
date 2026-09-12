@@ -2,10 +2,17 @@ import { useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { composeEntriesOnEditInclusiveTax, type BillFormValues } from './utils';
 import { FFormGroup, FSelect } from '@/components';
+import { Features } from '@/constants';
 import { InclusiveTaxOptions } from '@/constants/InclusiveTaxOptions';
 import { EntriesActionsBar } from '@/containers/Entries/EntriesActionBar';
+import { useFeatureCan } from '@/hooks/state';
 
 export function BillFormEntriesActions() {
+  const { featureCan } = useFeatureCan();
+
+  if (!featureCan(Features.SalesTax)) {
+    return null;
+  }
   return (
     <EntriesActionsBar>
       <BillExclusiveInclusiveSelect />

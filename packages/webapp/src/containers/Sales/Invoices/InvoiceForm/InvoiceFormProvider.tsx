@@ -106,12 +106,15 @@ function InvoiceFormProvider({
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isSalesTaxFeatureCan = featureCan(Features.SalesTax);
 
   // Fetch invoice data.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId);
 
   // Fetch tax rates.
-  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
+  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates({
+    enabled: isSalesTaxFeatureCan,
+  });
 
   // Fetches the estimate by the given id.
   const { data: estimate, isLoading: isEstimateLoading } = useEstimate(
