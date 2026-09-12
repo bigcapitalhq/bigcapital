@@ -31,11 +31,12 @@ interface PrimarySelectable {
 }
 
 export const useSetPrimaryWarehouseToForm = () => {
-  const { setFieldValue } = useFormikContext<InventoryAdjustmentFormValues>();
+  const { setFieldValue, values } =
+    useFormikContext<InventoryAdjustmentFormValues>();
   const { warehouses, isWarehousesSuccess } = useInventoryAdjContext();
 
   React.useEffect(() => {
-    if (isWarehousesSuccess) {
+    if (isWarehousesSuccess && !values.warehouseId) {
       const primaryWarehouse =
         warehouses.find((w) => w.primary) || first(warehouses);
 
@@ -43,22 +44,23 @@ export const useSetPrimaryWarehouseToForm = () => {
         setFieldValue('warehouseId', primaryWarehouse.id);
       }
     }
-  }, [isWarehousesSuccess, setFieldValue, warehouses]);
+  }, [isWarehousesSuccess, setFieldValue, warehouses, values.warehouseId]);
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext<InventoryAdjustmentFormValues>();
+  const { setFieldValue, values } =
+    useFormikContext<InventoryAdjustmentFormValues>();
   const { branches, isBranchesSuccess } = useInventoryAdjContext();
 
   React.useEffect(() => {
-    if (isBranchesSuccess) {
+    if (isBranchesSuccess && !values.branchId) {
       const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
         setFieldValue('branchId', primaryBranch.id);
       }
     }
-  }, [isBranchesSuccess, setFieldValue, branches]);
+  }, [isBranchesSuccess, setFieldValue, branches, values.branchId]);
 };
 
 export const getAdjustmentTypeOptions = () => [
@@ -78,6 +80,16 @@ type InventoryAdjustmentSubmitValues = Omit<
 const toNumber = (v: string | number): number =>
   typeof v === 'number' ? v : Number(v) || 0;
 
+// Omits empty (or zero) optional branch/warehouse ids so the server-side
+// optional validators are skipped.
+const toOptionalNumber = (v: string | number): number | undefined => {
+  if (v === '' || v === null || v === undefined) {
+    return undefined;
+  }
+  const value = toNumber(v);
+  return value > 0 ? value : undefined;
+};
+
 // Coerce form-friendly string|number fields to the strict SDK body shape.
 export const transformFormToRequest = (
   values: InventoryAdjustmentSubmitValues,
@@ -94,6 +106,6 @@ export const transformFormToRequest = (
   quantity: toNumber(values.quantity),
   referenceNo: values.referenceNo,
   publish: values.publish,
-  branchId: toNumber(values.branchId),
-  warehouseId: toNumber(values.warehouseId),
+  branchId: toOptionalNumber(values.branchId),
+  warehouseId: toOptionalNumber(values.warehouseId),
 });

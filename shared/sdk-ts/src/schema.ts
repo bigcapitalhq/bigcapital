@@ -406,7 +406,8 @@ export interface paths {
         };
         /** Retrieves the inventory adjustment details. */
         get: operations["InventoryAdjustmentsController_getInventoryAdjustment"];
-        put?: never;
+        /** Edit the given inventory adjustment. */
+        put: operations["InventoryAdjustmentsController_editQuickInventoryAdjustment"];
         post?: never;
         /** Delete the given inventory adjustment. */
         delete: operations["InventoryAdjustmentsController_deleteInventoryAdjustment"];
@@ -2619,74 +2620,6 @@ export interface paths {
         };
         /** Retrieves the due bills. */
         get: operations["BillsController_getDueBills"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/landed-cost/transactions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get landed cost transactions */
-        get: operations["BillAllocateLandedCostController_getLandedCostTransactions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/landed-cost/bills/{billId}/allocate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Allocate landed cost to bill items */
-        post: operations["BillAllocateLandedCostController_calculateLandedCost"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/landed-cost/{allocatedLandedCostId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete allocated landed cost */
-        delete: operations["BillAllocateLandedCostController_deleteAllocatedLandedCost"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/landed-cost/bills/{billId}/transactions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get bill landed cost transactions */
-        get: operations["BillAllocateLandedCostController_getBillLandedCostTransactions"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5093,6 +5026,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/landed-cost/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get landed cost transactions */
+        get: operations["BillAllocateLandedCostController_getLandedCostTransactions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/landed-cost/bills/{billId}/allocate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Allocate landed cost to bill items */
+        post: operations["BillAllocateLandedCostController_calculateLandedCost"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/landed-cost/{allocatedLandedCostId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete allocated landed cost */
+        delete: operations["BillAllocateLandedCostController_deleteAllocatedLandedCost"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/landed-cost/bills/{billId}/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get bill landed cost transactions */
+        get: operations["BillAllocateLandedCostController_getBillLandedCostTransactions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/exchange-rates/latest": {
         parameters: {
             query?: never;
@@ -6133,6 +6134,38 @@ export interface components {
             pagination: components["schemas"]["InventoryAdjustmentsPaginationDto"];
         };
         CreateQuickInventoryAdjustmentDto: {
+            /**
+             * Format: date-time
+             * @description Date of the inventory adjustment
+             */
+            date: string;
+            /**
+             * @description Type of adjustment
+             * @enum {string}
+             */
+            type: "increment" | "decrement";
+            /** @description ID of the adjustment account */
+            adjustmentAccountId: number;
+            /** @description Reason for the adjustment */
+            reason: string;
+            /** @description Description of the adjustment */
+            description: string;
+            /** @description Reference number */
+            referenceNo: string;
+            /** @description ID of the item being adjusted */
+            itemId: number;
+            /** @description Quantity to adjust */
+            quantity: number;
+            /** @description Cost of the item */
+            cost: number;
+            /** @description Whether to publish the adjustment immediately */
+            publish: boolean;
+            /** @description ID of the warehouse (optional) */
+            warehouseId?: number;
+            /** @description ID of the branch (optional) */
+            branchId?: number;
+        };
+        EditQuickInventoryAdjustmentDto: {
             /**
              * Format: date-time
              * @description Date of the inventory adjustment
@@ -11480,89 +11513,6 @@ export interface components {
              */
             adjustment?: number;
         };
-        BillLandedCostTransactionDto: {
-            /**
-             * @description The unique identifier of the landed cost transaction
-             * @example 1
-             */
-            id: number;
-            /**
-             * @description The bill id the landed cost is allocated to
-             * @example 10
-             */
-            billId?: number;
-            /**
-             * @description The id of the source transaction the cost was allocated from
-             * @example 5
-             */
-            fromTransactionId?: number;
-            /**
-             * @description The type of the source transaction (Bill or Expense)
-             * @example Expense
-             */
-            fromTransactionType?: string;
-            /**
-             * @description The entry id of the source transaction
-             * @example 2
-             */
-            fromTransactionEntryId?: number;
-            /**
-             * @description The allocation method used to distribute the cost
-             * @example quantity
-             */
-            allocationMethod?: string;
-            /**
-             * @description The translated label of the allocation method
-             * @example Quantity
-             */
-            allocationMethodFormatted?: string;
-            /**
-             * @description The cost account id the landed cost is posted to
-             * @example 1020
-             */
-            costAccountId?: number;
-            /**
-             * @description The description of the landed cost transaction
-             * @example Freight charges
-             */
-            description?: string;
-            /**
-             * @description The allocated landed cost amount
-             * @example 150
-             */
-            amount?: number;
-            /**
-             * @description The allocated landed cost amount in the base currency
-             * @example 150
-             */
-            localAmount?: number;
-            /**
-             * @description The currency code of the landed cost transaction
-             * @example USD
-             */
-            currencyCode?: string;
-            /**
-             * @description The exchange rate applied to the amount
-             * @example 1
-             */
-            exchangeRate?: number;
-            /**
-             * @description The resolved name of the source item or expense account
-             * @example Widget A
-             */
-            name?: string;
-            /**
-             * @description Formatted allocated amount
-             * @example $150.00
-             */
-            formattedAmount?: string;
-            /**
-             * @description Formatted allocated amount in the base currency
-             * @example $150.00
-             */
-            formattedLocalAmount?: string;
-        };
-        AllocateBillLandedCostDto: Record<string, never>;
         ManualJournalEntryResponseDto: {
             /**
              * @description Entry index
@@ -17396,6 +17346,89 @@ export interface components {
             data: components["schemas"]["AuditLogListItemDto"][];
             pagination: components["schemas"]["PaginationMetaDto"];
         };
+        BillLandedCostTransactionDto: {
+            /**
+             * @description The unique identifier of the landed cost transaction
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description The bill id the landed cost is allocated to
+             * @example 10
+             */
+            billId?: number;
+            /**
+             * @description The id of the source transaction the cost was allocated from
+             * @example 5
+             */
+            fromTransactionId?: number;
+            /**
+             * @description The type of the source transaction (Bill or Expense)
+             * @example Expense
+             */
+            fromTransactionType?: string;
+            /**
+             * @description The entry id of the source transaction
+             * @example 2
+             */
+            fromTransactionEntryId?: number;
+            /**
+             * @description The allocation method used to distribute the cost
+             * @example quantity
+             */
+            allocationMethod?: string;
+            /**
+             * @description The translated label of the allocation method
+             * @example Quantity
+             */
+            allocationMethodFormatted?: string;
+            /**
+             * @description The cost account id the landed cost is posted to
+             * @example 1020
+             */
+            costAccountId?: number;
+            /**
+             * @description The description of the landed cost transaction
+             * @example Freight charges
+             */
+            description?: string;
+            /**
+             * @description The allocated landed cost amount
+             * @example 150
+             */
+            amount?: number;
+            /**
+             * @description The allocated landed cost amount in the base currency
+             * @example 150
+             */
+            localAmount?: number;
+            /**
+             * @description The currency code of the landed cost transaction
+             * @example USD
+             */
+            currencyCode?: string;
+            /**
+             * @description The exchange rate applied to the amount
+             * @example 1
+             */
+            exchangeRate?: number;
+            /**
+             * @description The resolved name of the source item or expense account
+             * @example Widget A
+             */
+            name?: string;
+            /**
+             * @description Formatted allocated amount
+             * @example $150.00
+             */
+            formattedAmount?: string;
+            /**
+             * @description Formatted allocated amount in the base currency
+             * @example $150.00
+             */
+            formattedLocalAmount?: string;
+        };
+        AllocateBillLandedCostDto: Record<string, never>;
         ExchangeRateLatestResponseDto: {
             /**
              * @description The base currency code
@@ -18215,6 +18248,37 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description The inventory adjustment details have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InventoryAdjustmentResponseDto"];
+                };
+            };
+        };
+    };
+    InventoryAdjustmentsController_editQuickInventoryAdjustment: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditQuickInventoryAdjustmentDto"];
+            };
+        };
+        responses: {
+            /** @description The inventory adjustment has been successfully edited. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -23321,113 +23385,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-        };
-    };
-    BillAllocateLandedCostController_getLandedCostTransactions: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
-                Authorization: string;
-                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
-                "organization-id": string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of landed cost transactions. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    BillAllocateLandedCostController_calculateLandedCost: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
-                Authorization: string;
-                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
-                "organization-id": string;
-            };
-            path: {
-                billId: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AllocateBillLandedCostDto"];
-            };
-        };
-        responses: {
-            /** @description Landed cost allocated successfully. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    BillAllocateLandedCostController_deleteAllocatedLandedCost: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
-                Authorization: string;
-                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
-                "organization-id": string;
-            };
-            path: {
-                allocatedLandedCostId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Allocated landed cost deleted successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    BillAllocateLandedCostController_getBillLandedCostTransactions: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
-                Authorization: string;
-                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
-                "organization-id": string;
-            };
-            path: {
-                billId: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of bill landed cost transactions. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        billId?: number;
-                        data?: components["schemas"]["BillLandedCostTransactionDto"][];
-                    };
-                };
             };
         };
     };
@@ -32973,6 +32930,113 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GetAuditLogsResponseDto"];
+                };
+            };
+        };
+    };
+    BillAllocateLandedCostController_getLandedCostTransactions: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of landed cost transactions. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BillAllocateLandedCostController_calculateLandedCost: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                billId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AllocateBillLandedCostDto"];
+            };
+        };
+        responses: {
+            /** @description Landed cost allocated successfully. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BillAllocateLandedCostController_deleteAllocatedLandedCost: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                allocatedLandedCostId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Allocated landed cost deleted successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BillAllocateLandedCostController_getBillLandedCostTransactions: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                billId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of bill landed cost transactions. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        billId?: number;
+                        data?: components["schemas"]["BillLandedCostTransactionDto"][];
+                    };
                 };
             };
         };

@@ -3,6 +3,7 @@ import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { InventoryAdjustmentEntry } from './models/InventoryAdjustmentEntry';
 import { CreateQuickInventoryAdjustmentService } from './commands/CreateQuickInventoryAdjustment.service';
+import { EditQuickInventoryAdjustmentService } from './commands/EditQuickInventoryAdjustment.service';
 import { PublishInventoryAdjustmentService } from './commands/PublishInventoryAdjustment.service';
 import { GetInventoryAdjustmentService } from './queries/GetInventoryAdjustment.service';
 import { GetInventoryAdjustmentsService } from './queries/GetInventoryAdjustments.service';
@@ -37,6 +38,7 @@ const models = [
   controllers: [InventoryAdjustmentsController],
   providers: [
     CreateQuickInventoryAdjustmentService,
+    EditQuickInventoryAdjustmentService,
     PublishInventoryAdjustmentService,
     GetInventoryAdjustmentsService,
     GetInventoryAdjustmentService,

@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
 import { CreateQuickInventoryAdjustmentDto } from '../dtos/CreateQuickInventoryAdjustment.dto';
+import { EditQuickInventoryAdjustmentDto } from '../dtos/EditQuickInventoryAdjustment.dto';
 
 type IAdjustmentTypes = 'increment' | 'decrement';
 
@@ -31,6 +32,20 @@ export interface IInventoryAdjustmentEventCreatedPayload {
 }
 export interface IInventoryAdjustmentCreatingPayload {
   quickAdjustmentDTO: CreateQuickInventoryAdjustmentDto;
+  trx: Knex.Transaction;
+}
+
+export interface IInventoryAdjustmentEditingPayload {
+  quickAdjustmentDTO: EditQuickInventoryAdjustmentDto;
+  oldInventoryAdjustment: InventoryAdjustment;
+  trx: Knex.Transaction;
+}
+
+export interface IInventoryAdjustmentEditedPayload {
+  inventoryAdjustment: InventoryAdjustment;
+  inventoryAdjustmentId: number;
+  oldInventoryAdjustment: InventoryAdjustment;
+  quickAdjustmentDTO: EditQuickInventoryAdjustmentDto;
   trx: Knex.Transaction;
 }
 

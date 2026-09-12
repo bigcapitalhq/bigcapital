@@ -1,5 +1,14 @@
-import type { Account, Branch, Item, Warehouse } from '@bigcapital/sdk-ts';
-import type { CreateQuickInventoryAdjustmentBody } from '@bigcapital/sdk-ts';
+import type {
+  Account,
+  Branch,
+  InventoryAdjustment,
+  Item,
+  Warehouse,
+} from '@bigcapital/sdk-ts';
+import type {
+  CreateQuickInventoryAdjustmentBody,
+  EditQuickInventoryAdjustmentBody,
+} from '@bigcapital/sdk-ts';
 
 export interface InventoryAdjustmentFormValues {
   date: string;
@@ -20,6 +29,7 @@ export interface InventoryAdjustmentFormValues {
 export type InventoryAdjustmentDialogPayload = {
   action?: string;
   itemId?: number | null;
+  inventoryId?: number | null;
 };
 
 export type SubmitPayload = {
@@ -29,6 +39,9 @@ export type SubmitPayload = {
 export type InventoryAdjustmentContextValue = {
   item: Item | undefined;
   itemId: number | null | undefined;
+  inventoryId: number | null | undefined;
+  inventoryAdjustment: InventoryAdjustment | undefined;
+  isEditMode: boolean;
   branches: Branch[];
   warehouses: Warehouse[];
   accounts: Account[];
@@ -43,6 +56,9 @@ export type InventoryAdjustmentContextValue = {
   isBranchesLoading: boolean;
   createInventoryAdjMutate: (
     values: CreateQuickInventoryAdjustmentBody,
+  ) => Promise<unknown>;
+  editInventoryAdjMutate: (
+    args: [number, EditQuickInventoryAdjustmentBody],
   ) => Promise<unknown>;
   setSubmitPayload: (payload: SubmitPayload) => void;
 };

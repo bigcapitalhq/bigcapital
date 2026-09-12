@@ -428,6 +428,9 @@ export const events = {
 
     onCreated: 'onInventoryAdjustmentCreated',
 
+    onEditing: 'onInventoryAdjustmentEditing',
+    onEdited: 'onInventoryAdjustmentEdited',
+
     onDeleting: 'onInventoryAdjustmentDeleting',
     onDeleted: 'onInventoryAdjustmentDeleted',
 

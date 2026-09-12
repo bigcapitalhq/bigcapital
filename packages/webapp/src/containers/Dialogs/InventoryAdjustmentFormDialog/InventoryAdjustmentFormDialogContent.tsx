@@ -6,14 +6,20 @@ import { InventoryAdjustmentFormProvider } from './InventoryAdjustmentFormProvid
 interface InventoryAdjustmentFormDialogContentProps {
   dialogName: string;
   itemId?: number | null;
+  inventoryId?: number | null;
 }
 
 export function InventoryAdjustmentFormDialogContent({
   dialogName,
   itemId,
+  inventoryId,
 }: InventoryAdjustmentFormDialogContentProps): React.ReactElement {
   return (
-    <InventoryAdjustmentFormProvider itemId={itemId} dialogName={dialogName}>
+    <InventoryAdjustmentFormProvider
+      itemId={itemId}
+      inventoryId={inventoryId}
+      dialogName={dialogName}
+    >
       <InventoryAdjustmentForm />
     </InventoryAdjustmentFormProvider>
   );

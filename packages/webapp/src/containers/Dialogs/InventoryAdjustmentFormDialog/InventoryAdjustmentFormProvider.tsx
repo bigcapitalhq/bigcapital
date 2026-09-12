@@ -8,6 +8,8 @@ import {
   useBranches,
   useWarehouses,
   useCreateInventoryAdjustment,
+  useEditInventoryAdjustment,
+  useInventoryAdjustment,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 
@@ -18,12 +20,14 @@ const InventoryAdjustmentContext =
 
 interface InventoryAdjustmentFormProviderProps {
   itemId?: number | null;
+  inventoryId?: number | null;
   dialogName: string;
   children?: React.ReactNode;
 }
 
 function InventoryAdjustmentFormProvider({
   itemId,
+  inventoryId,
   dialogName,
   ...props
 }: InventoryAdjustmentFormProviderProps) {
@@ -31,10 +35,21 @@ function InventoryAdjustmentFormProvider({
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
   const isBranchFeatureCan = featureCan(Features.Branches);
 
+  const isEditMode = !!inventoryId;
+
   const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
 
+  // Retrieves the inventory adjustment details once editing.
+  const {
+    data: inventoryAdjustment,
+    isFetching: isInventoryAdjustmentLoading,
+  } = useInventoryAdjustment(inventoryId, { enabled: isEditMode });
+
+  // The item id in edit mode comes from the adjusted entry.
+  const formItemId = itemId ?? inventoryAdjustment?.entries?.[0]?.itemId;
+
   const { isFetching: isItemLoading, data: item } = useItem(
-    itemId ?? undefined,
+    formItemId ?? undefined,
   );
 
   const {
@@ -52,13 +67,18 @@ function InventoryAdjustmentFormProvider({
   const { mutateAsync: createInventoryAdjMutate } =
     useCreateInventoryAdjustment();
 
+  const { mutateAsync: editInventoryAdjMutate } = useEditInventoryAdjustment();
+
   const [submitPayload, setSubmitPayload] = useState<SubmitPayload>({});
 
   const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
 
   const provider: InventoryAdjustmentContextValue = {
     item,
-    itemId,
+    itemId: formItemId,
+    inventoryId,
+    inventoryAdjustment,
+    isEditMode,
     branches: branches ?? [],
     warehouses: warehouses ?? [],
     accounts: accounts ?? [],
@@ -75,11 +95,16 @@ function InventoryAdjustmentFormProvider({
     isBranchesLoading,
 
     createInventoryAdjMutate,
+    editInventoryAdjMutate,
     setSubmitPayload,
   };
 
   return (
-    <DialogContent isLoading={isAccountsLoading || isItemLoading}>
+    <DialogContent
+      isLoading={
+        isAccountsLoading || isItemLoading || isInventoryAdjustmentLoading
+      }
+    >
       <InventoryAdjustmentContext.Provider value={provider} {...props} />
     </DialogContent>
   );

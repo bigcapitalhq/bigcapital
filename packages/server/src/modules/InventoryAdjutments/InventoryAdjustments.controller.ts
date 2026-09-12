@@ -20,6 +20,7 @@ import { InventoryAdjustmentsApplicationService } from './InventoryAdjustmentsAp
 import { IInventoryAdjustmentsFilter } from './types/InventoryAdjustments.types';
 import { InventoryAdjustment } from './models/InventoryAdjustment';
 import { CreateQuickInventoryAdjustmentDto } from './dtos/CreateQuickInventoryAdjustment.dto';
+import { EditQuickInventoryAdjustmentDto } from './dtos/EditQuickInventoryAdjustment.dto';
 import { InventoryAdjustmentsFilterDto } from './dtos/InventoryAdjustmentsFilter.dto';
 import { InventoryAdjustmentsListResponseDto } from './dtos/InventoryAdjustmentsListResponse.dto';
 import { InventoryAdjustmentResponseDto } from './dtos/InventoryAdjustmentResponse.dto';
@@ -135,6 +136,27 @@ export class InventoryAdjustmentsController {
   ): Promise<void> {
     return this.inventoryAdjustmentsApplicationService.publishInventoryAdjustment(
       inventoryAdjustmentId,
+    );
+  }
+
+  @Put(':id')
+  @RequirePermission(
+    InventoryAdjustmentAction.EDIT,
+    AbilitySubject.InventoryAdjustment,
+  )
+  @ApiOperation({ summary: 'Edit the given inventory adjustment.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The inventory adjustment has been successfully edited.',
+    schema: { $ref: getSchemaPath(InventoryAdjustmentResponseDto) },
+  })
+  public async editQuickInventoryAdjustment(
+    @Param('id') inventoryAdjustmentId: number,
+    @Body() quickAdjustmentDTO: EditQuickInventoryAdjustmentDto,
+  ): Promise<InventoryAdjustment> {
+    return this.inventoryAdjustmentsApplicationService.editQuickInventoryAdjustment(
+      inventoryAdjustmentId,
+      quickAdjustmentDTO,
     );
   }
 }

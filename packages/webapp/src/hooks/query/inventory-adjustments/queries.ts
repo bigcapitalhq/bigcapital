@@ -1,6 +1,7 @@
 import {
   createQuickInventoryAdjustment,
   deleteInventoryAdjustment,
+  editQuickInventoryAdjustment,
   publishInventoryAdjustment,
   fetchInventoryAdjustments,
   fetchInventoryAdjustment,
@@ -18,6 +19,7 @@ import type {
   InventoryAdjustment,
   InventoryAdjustmentsListResponse,
   CreateQuickInventoryAdjustmentBody,
+  EditQuickInventoryAdjustmentBody,
   GetInventoryAdjustmentsQuery,
 } from '@bigcapital/sdk-ts';
 
@@ -37,6 +39,28 @@ export function useCreateInventoryAdjustment(
     mutationFn: (values: CreateQuickInventoryAdjustmentBody) =>
       createQuickInventoryAdjustment(fetcher, values),
     onSuccess: () => {
+      commonInvalidateQueries(queryClient);
+    },
+  });
+}
+
+export function useEditInventoryAdjustment(
+  props?: UseMutationOptions<
+    void,
+    Error,
+    [number, EditQuickInventoryAdjustmentBody]
+  >,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+  return useMutation({
+    ...props,
+    mutationFn: ([id, values]: [number, EditQuickInventoryAdjustmentBody]) =>
+      editQuickInventoryAdjustment(fetcher, id, values),
+    onSuccess: (_res, [id]) => {
+      queryClient.invalidateQueries({
+        queryKey: inventoryAdjustmentsKeys.detail(id),
+      });
       commonInvalidateQueries(queryClient);
     },
   });

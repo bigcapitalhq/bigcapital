@@ -22,6 +22,7 @@ import { isBlank, safeCallback } from '@/utils';
 
 interface ActionsMenuPayload {
   onDelete: (row: InventoryAdjustment) => void;
+  onEdit: (row: InventoryAdjustment) => void;
   onPublish: (row: InventoryAdjustment) => void;
   onViewDetails: (row: InventoryAdjustment) => void;
 }
@@ -111,7 +112,7 @@ export const ItemTypeAccessor = (row: InventoryAdjustment) => {
 
 export const ActionsMenu = ({
   row: { original },
-  payload: { onDelete, onPublish, onViewDetails },
+  payload: { onDelete, onEdit, onPublish, onViewDetails },
 }: ActionsMenuProps) => {
   return (
     <Menu>
@@ -120,6 +121,17 @@ export const ActionsMenu = ({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
       />
+
+      <Can
+        I={InventoryAdjustmentAction.Edit}
+        a={AbilitySubject.InventoryAdjustment}
+      >
+        <MenuItem
+          icon={<Icon icon="pen-18" />}
+          text={intl.get('edit_adjustment')}
+          onClick={safeCallback(onEdit, original)}
+        />
+      </Can>
 
       <Can
         I={InventoryAdjustmentAction.Create}
