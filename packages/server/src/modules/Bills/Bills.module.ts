@@ -14,6 +14,7 @@ import { BranchesSettingsService } from '../Branches/BranchesSettings';
 import { WarehouseTransactionDTOTransform } from '../Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { WarehousesSettings } from '../Warehouses/WarehousesSettings';
 import { ItemEntriesTaxTransactions } from '../TaxRates/ItemEntriesTaxTransactions.service';
+import { FeaturesModule } from '../Features/Features.module';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { BillsController } from './Bills.controller';
 import { BillLandedCostsIntegrationModule } from './integrations/BillLandedCostsIntegration.module';
@@ -35,6 +36,7 @@ import { ValidateBulkDeleteBillsService } from './ValidateBulkDeleteBills.servic
 @Module({
   imports: [
     TenancyModule,
+    FeaturesModule,
     BillLandedCostsIntegrationModule,
     LedgerModule,
     AccountsModule,
