@@ -72,6 +72,14 @@ services:
       # Tenants databases
       - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
 
+      # ClickHouse analytics store
+      - CLICKHOUSE_ENABLED=${CLICKHOUSE_ENABLED:-false}
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD is required in .env - generate one with openssl rand -base64 32}
+      - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE:-bigcapital_analytics}
+
       # Authentication
       - 'APP_JWT_SECRET=${APP_JWT_SECRET:?APP_JWT_SECRET is required in .env - generate one with openssl rand -base64 48}'
 
@@ -212,9 +220,24 @@ services:
     networks:
       - bigcapital_network
 
+  clickhouse:
+    container_name: bigcapital-clickhouse
+    image: clickhouse/clickhouse-server:24.8
+    restart: on-failure
+    environment:
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD is required in .env - generate one with openssl rand -base64 32}
+      - CLICKHOUSE_DB=${CLICKHOUSE_DATABASE:-bigcapital_analytics}
+    expose:
+      - '8123'
+    volumes:
+      - clickhouse:/var/lib/clickhouse
+    networks:
+      - bigcapital_network
+
   # Auto-updates the containers labelled "com.centurylinklabs.watchtower.enable=true"
   # (webapp and server) by polling the registry for newer :latest images.
-  # Everything else (mysql, redis, gotenberg, proxy) is untouched.
+  # Everything else (mysql, redis, gotenberg, garage, clickhouse, proxy) is untouched.
   auto-update:
     container_name: bigcapital-auto-update
     image: containrrr/watchtower:1.7.1
@@ -237,6 +260,10 @@ volumes:
 
   garage:
     name: bigcapital_prod_garage
+    driver: local
+
+  clickhouse:
+    name: bigcapital_prod_clickhouse
     driver: local
 
 # Networks
