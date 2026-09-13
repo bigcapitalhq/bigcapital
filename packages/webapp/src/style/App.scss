@@ -49,8 +49,16 @@ body {
 }
 // App
 .App {
-  min-width: 1100px;
   min-height: 100vh;
+
+  // Only floor the width on viewports that already have the room for it.
+  // Applying this unconditionally forced every viewport - phones included -
+  // to render at 1100px and rely on the browser to shrink/scroll it back
+  // down, which is what makes the whole app pinch-zoom-and-pan on mobile
+  // instead of laying out at its actual width.
+  @media (min-width: 1100px) {
+    min-width: 1100px;
+  }
 }
 // =======
 
