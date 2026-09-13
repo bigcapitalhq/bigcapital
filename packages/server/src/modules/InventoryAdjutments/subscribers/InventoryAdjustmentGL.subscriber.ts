@@ -4,7 +4,6 @@ import { InventoryAdjustmentsGLEntries } from '../commands/ledger/InventoryAdjus
 import {
   IInventoryAdjustmentDeletingPayload,
   IInventoryAdjustmentEditedPayload,
-  IInventoryAdjustmentEventPublishedPayload,
 } from '../types/InventoryAdjustments.types';
 import { IInventoryAdjustmentEventCreatedPayload } from '../types/InventoryAdjustments.types';
 import { events } from '@/common/events/events';
@@ -87,24 +86,6 @@ export class InventoryAdjustmentsGLSubscriber {
     }
     await this.inventoryAdjustmentGL.revertAdjustmentGLEntries(
       inventoryAdjustment.id,
-      trx,
-    );
-  }
-
-  /**
-   * Handles writing inventory transactions once the quick adjustment created.
-   * @param {IInventoryAdjustmentEventPublishedPayload} payload
-   * @param {IInventoryAdjustmentEventCreatedPayload} payload -
-   */
-  @OnEvent(events.inventoryAdjustment.onPublished)
-  async handleWriteInventoryTransactionsOncePublished({
-    inventoryAdjustmentId,
-    trx,
-  }:
-    | IInventoryAdjustmentEventPublishedPayload
-    | IInventoryAdjustmentEventCreatedPayload) {
-    await this.inventoryAdjustmentGL.writeAdjustmentGLEntries(
-      inventoryAdjustmentId,
       trx,
     );
   }
