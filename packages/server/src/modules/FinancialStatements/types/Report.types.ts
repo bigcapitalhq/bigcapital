@@ -69,6 +69,7 @@ export const DEFAULT_REPORT_META: Omit<IFinancialReportMeta, 'baseCurrency'> = {
 
 export enum IFinancialDatePeriodsUnit {
   Day = 'day',
+  Week = 'week',
   Month = 'month',
   Year = 'year',
 }

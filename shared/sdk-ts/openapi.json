@@ -15577,9 +15577,10 @@
               "default": "year",
               "enum": [
                 "day",
+                "week",
                 "month",
-                "year",
-                "quarter"
+                "quarter",
+                "year"
               ],
               "type": "string"
             }
@@ -21373,6 +21374,13 @@
             "in": "query",
             "description": "How to display columns",
             "schema": {
+              "enum": [
+                "day",
+                "week",
+                "month",
+                "quarter",
+                "year"
+              ],
               "type": "string"
             }
           },
@@ -21811,9 +21819,10 @@
               "default": "year",
               "enum": [
                 "day",
+                "week",
                 "month",
-                "year",
-                "quarter"
+                "quarter",
+                "year"
               ],
               "type": "string"
             }

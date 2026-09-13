@@ -207,6 +207,7 @@ export interface IFinancialSheetTotalPeriod {
 
 export enum IFinancialDatePeriodsUnit {
   Day = 'day',
+  Week = 'week',
   Month = 'month',
   Year = 'year',
 }
