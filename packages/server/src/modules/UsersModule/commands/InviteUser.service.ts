@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as uniqid from 'uniqid';
+import * as crypto from 'crypto';
 import * as moment from 'moment';
 import {
   IUserInvitedEventPayload,
@@ -45,7 +45,7 @@ export class InviteTenantUserService {
     await this.validateUserEmailNotExists(sendInviteDTO.email);
 
     // Generates a new invite token.
-    const inviteToken = uniqid();
+    const inviteToken = crypto.randomBytes(32).toString('hex');
 
     // Creates and fetches a tenant user.
     const user = await this.tenantUserModel().query().insertAndFetch({
@@ -90,7 +90,7 @@ export class InviteTenantUserService {
     this.validateInviteUserNotAccept(user);
 
     // Generates a new invite token.
-    const inviteToken = uniqid();
+    const inviteToken = crypto.randomBytes(32).toString('hex');
 
     // Triggers `onUserSendInvite` event.
     await this.eventEmitter.emitAsync(events.inviteUser.resendInvite, {
