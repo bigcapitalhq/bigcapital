@@ -85,10 +85,12 @@ export class WarehousesItemsQuantitySync {
         warehouseItemQuantity.amount,
       );
     } else {
-      await ItemWarehouseQuantity.query(trx).insert({
-        ...omit(warehouseItemQuantity, ['amount']),
-        quantityOnHand: warehouseItemQuantity.amount,
-      });
+      await this.itemWarehouseQuantityModel()
+        .query(trx)
+        .insert({
+          ...omit(warehouseItemQuantity, ['amount']),
+          quantityOnHand: warehouseItemQuantity.amount,
+        });
     }
   };
 
