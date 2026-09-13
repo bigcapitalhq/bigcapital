@@ -31,7 +31,7 @@ export class TransactionsLockingGuard {
     const inUnlockDate =
       unlockFromDate && unlockToDate
         ? moment(transactionDate).isSameOrAfter(unlockFromDate) &&
-          moment(transactionDate).isSameOrBefore(unlockFromDate)
+          moment(transactionDate).isSameOrBefore(unlockToDate)
         : false;
 
     // Retruns true in case the transaction date between locking date
