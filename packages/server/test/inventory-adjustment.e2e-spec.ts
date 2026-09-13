@@ -1,6 +1,7 @@
 import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
+import { expectBalanced, fetchLegs, sumCredits, sumDebits } from './_utils/gl';
 
 export const createInventoryAdjustment = ({ itemId }) => ({
   date: '2020-01-01',
@@ -132,7 +133,7 @@ describe('Inventory Adjustments (e2e)', () => {
     expect(editResponse.body.entries[0].cost).toBe(100);
   });
 
-  it('/inventory-adjustments/:id/publish (POST)', async () => {
+  it('/inventory-adjustments/:id/publish (PUT)', async () => {
     const itemResponse = await request(app.getHttpServer())
       .post('/items')
       .set('organization-id', orgainzationId)
@@ -147,16 +148,30 @@ describe('Inventory Adjustments (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send({
         ...createInventoryAdjustment({ itemId }),
+        quantity: 10,
+        cost: 50,
         publish: false,
       })
       .expect(201);
 
     const inventoryAdjustmentId = inventoryAdjustmentResponse.body.id;
 
-    return request(app.getHttpServer())
+    await request(app.getHttpServer())
       .put(`/inventory-adjustments/${inventoryAdjustmentId}/publish`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+
+    // Publishing a draft increment adjustment should write the GL entries
+    // once: debit inventory (1007) and credit adjustment (1001) by 500.
+    const legs = await fetchLegs('InventoryAdjustment', inventoryAdjustmentId);
+    const nonZeroLegs = legs.filter(
+      (leg) => leg.debit.amount !== 0 || leg.credit.amount !== 0,
+    );
+
+    expect(nonZeroLegs).toHaveLength(2);
+    expectBalanced(legs);
+    expect(sumDebits(legs)).toBeCloseTo(500, 2);
+    expect(sumCredits(legs)).toBeCloseTo(500, 2);
   });
 });
