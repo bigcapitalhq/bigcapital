@@ -53,7 +53,7 @@ export class DeleteBill {
         .delete();
 
       // Delete the bill transaction.
-      await Bill.query(trx).findById(billId).delete();
+      await this.billModel().query(trx).findById(billId).delete();
 
       // Triggers `onBillDeleted` event.
       await this.eventPublisher.emitAsync(events.bill.onDeleted, {
