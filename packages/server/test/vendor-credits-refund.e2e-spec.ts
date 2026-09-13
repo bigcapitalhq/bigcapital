@@ -5,6 +5,7 @@ import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 let vendorId;
 let itemId;
 let vendorCreditId;
+let depositAccountId;
 
 const createVendorCreditRequest = () => ({
   vendorId,
@@ -23,6 +24,19 @@ const createVendorCreditRequest = () => ({
   branchId: 1,
   warehouseId: 1,
 });
+
+const findDepositAccount = (accounts) => {
+  for (const account of accounts) {
+    if (account.account_type === 'bank' || account.account_type === 'cash') {
+      return account;
+    }
+    if (account.children) {
+      const foundAccount = findDepositAccount(account.children);
+      if (foundAccount) return foundAccount;
+    }
+  }
+  return null;
+};
 
 describe('Vendor Credits Refund (e2e)', () => {
   beforeAll(async () => {
@@ -55,6 +69,15 @@ describe('Vendor Credits Refund (e2e)', () => {
       });
     itemId = parseInt(item.body.id, 10);
 
+    const accounts = await request(app.getHttpServer())
+      .get('/accounts')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    const depositAccount = findDepositAccount(accounts.body.accounts);
+    depositAccountId = depositAccount.id;
+
     const vendorCredit = await request(app.getHttpServer())
       .post('/vendor-credits')
       .set('organization-id', orgainzationId)
@@ -70,5 +93,53 @@ describe('Vendor Credits Refund (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+  });
+
+  it('increments the vendor credit refunded amount once the refund is created', async () => {
+    await request(app.getHttpServer())
+      .post(`/vendor-credits/${vendorCreditId}/refund`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        amount: 400,
+        depositAccountId,
+        description: 'Refund partial amount',
+        date: '2025-01-01',
+      })
+      .expect(201);
+
+    const vendorCredit = await request(app.getHttpServer())
+      .get(`/vendor-credits/${vendorCreditId}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(Number(vendorCredit.body.refunded_amount)).toBe(400);
+    expect(Number(vendorCredit.body.credits_remaining)).toBe(600);
+  });
+
+  it('decrements the vendor credit refunded amount once the refund is deleted', async () => {
+    const refunds = await request(app.getHttpServer())
+      .get(`/vendor-credits/${vendorCreditId}/refund`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    const refundCreditId = refunds.body[0].id;
+
+    await request(app.getHttpServer())
+      .delete(`/vendor-credits/refunds/${refundCreditId}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    const vendorCredit = await request(app.getHttpServer())
+      .get(`/vendor-credits/${vendorCreditId}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(Number(vendorCredit.body.refunded_amount)).toBe(0);
+    expect(Number(vendorCredit.body.credits_remaining)).toBe(1000);
   });
 });
