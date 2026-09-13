@@ -26281,7 +26281,7 @@ export interface operations {
                 /** @description Type of columns to display in the balance sheet */
                 displayColumnsType: "total" | "date_periods";
                 /** @description Time period for column display */
-                displayColumnsBy: "day" | "month" | "year" | "quarter";
+                displayColumnsBy: "day" | "week" | "month" | "quarter" | "year";
                 /** @description Start date for the balance sheet period */
                 fromDate?: string;
                 /** @description End date for the balance sheet period */
@@ -30748,7 +30748,7 @@ export interface operations {
                 /** @description Type of columns to display */
                 displayColumnsType: "total" | "date_periods";
                 /** @description How to display columns */
-                displayColumnsBy: string;
+                displayColumnsBy: "day" | "week" | "month" | "quarter" | "year";
                 /** @description Whether to show percentage column */
                 percentageColumn?: boolean;
                 /** @description Whether to show percentage row */
@@ -31048,7 +31048,7 @@ export interface operations {
                 /** @description End date for the cash flow statement period */
                 toDate?: string;
                 /** @description Display columns by time period */
-                displayColumnsBy?: "day" | "month" | "year" | "quarter";
+                displayColumnsBy?: "day" | "week" | "month" | "quarter" | "year";
                 /** @description Type of column display */
                 displayColumnsType?: "total" | "date_periods";
                 /** @description Filter out zero values */

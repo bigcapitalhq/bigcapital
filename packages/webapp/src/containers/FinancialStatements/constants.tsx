@@ -18,7 +18,7 @@ export const displayColumnsByOptions = [
     key: 'week',
     name: intl.get('date_week'),
     type: 'date_periods',
-    by: 'month',
+    by: 'week',
   },
   {
     key: 'day',

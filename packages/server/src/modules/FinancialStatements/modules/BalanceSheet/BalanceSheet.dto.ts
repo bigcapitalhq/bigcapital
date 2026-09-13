@@ -24,14 +24,14 @@ export class BalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   displayColumnsType: 'total' | 'date_periods' = 'total';
 
   @ApiProperty({
-    enum: ['day', 'month', 'year', 'quarter'],
+    enum: ['day', 'week', 'month', 'quarter', 'year'],
     default: 'year',
     description: 'Time period for column display',
   })
   @IsString()
   @IsOptional()
-  @IsEnum(['day', 'month', 'year', 'quarter'])
-  displayColumnsBy: 'day' | 'month' | 'year' | 'quarter' = 'year';
+  @IsEnum(['day', 'week', 'month', 'quarter', 'year'])
+  displayColumnsBy: 'day' | 'week' | 'month' | 'quarter' | 'year' = 'year';
 
   @ApiProperty({
     description: 'Start date for the balance sheet period',

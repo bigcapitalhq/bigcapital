@@ -23,6 +23,7 @@ import {
 
 const FY2023 = { fromDate: '2023-01-01', toDate: '2023-12-31' };
 const YEARS_2022_2023 = { fromDate: '2022-01-01', toDate: '2023-12-31' };
+const JANUARY_2023 = { fromDate: '2023-01-01', toDate: '2023-01-31' };
 
 /**
  * Fixture journals posted on top of the baseline (deltas expected in the
@@ -119,6 +120,7 @@ describe('Balance Sheet (e2e)', () => {
   let baselinePP: { data: BSNode[] };
   let baselinePeriods: { data: BSNode[] };
   let baselineExtended: { data: BSNode[] };
+  let baselineWeekly: { data: BSNode[] };
 
   beforeAll(async () => {
     await cancelTransactionsLock();
@@ -139,6 +141,11 @@ describe('Balance Sheet (e2e)', () => {
     baselineExtended = await fetchBalanceSheet({
       fromDate: '2023-01-01',
       toDate: '2024-12-31',
+    });
+    baselineWeekly = await fetchBalanceSheet({
+      ...JANUARY_2023,
+      displayColumnsType: 'date_periods',
+      displayColumnsBy: 'week',
     });
 
     for (const journal of FIXTURE_JOURNALS(customerId, vendorId)) {
@@ -501,6 +508,64 @@ describe('Balance Sheet (e2e)', () => {
         netIncome.total.amount,
         2,
       );
+    });
+  });
+
+  describe('Week date period columns', () => {
+    let data: BSNode[];
+
+    beforeAll(async () => {
+      ({ data } = await fetchBalanceSheet({
+        ...JANUARY_2023,
+        displayColumnsType: 'date_periods',
+        displayColumnsBy: 'week',
+      }));
+    });
+
+    it('emits one period column per week instead of per month', () => {
+      const bank = findNode(data, bankId);
+
+      expect(bank.horizontal_totals).toHaveLength(5);
+      for (const total of bank.horizontal_totals) {
+        expect(total.from_date).toBeDefined();
+        expect(total.to_date).toBeDefined();
+      }
+    });
+
+    it('accumulates the fixture activity in the week it was posted', () => {
+      const bank = findNode(data, bankId);
+      const beforeBank = findNode(
+        baselineWeekly.data,
+        bankId,
+      ).horizontal_totals;
+
+      // The 2022 owner capital (10000) is part of every weekly closing
+      // balance; the Jan 15 cash sale (3000) lands in the third week.
+      bank.horizontal_totals.forEach((total, index) => {
+        expectDelta(
+          total.total.amount,
+          beforeBank[index].total.amount,
+          10000 + (index >= 2 ? 3000 : 0),
+        );
+      });
+    });
+
+    it('accumulates net income from the week of the cash sale onwards', () => {
+      const netIncome = findNode(data, 'NET_INCOME');
+      const beforeNetIncome = findNode(
+        baselineWeekly.data,
+        'NET_INCOME',
+      ).horizontal_totals;
+
+      // The 2022 credit sale (500) opens net income; the Jan 15 cash sale
+      // (3000) is picked up from the third week onwards.
+      netIncome.horizontal_totals.forEach((total, index) => {
+        expectDelta(
+          total.total.amount,
+          beforeNetIncome[index].total.amount,
+          500 + (index >= 2 ? 3000 : 0),
+        );
+      });
     });
   });
 
