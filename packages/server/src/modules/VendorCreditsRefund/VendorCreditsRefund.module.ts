@@ -9,6 +9,8 @@ import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { RefundVendorCreditGLEntries } from './commands/RefundVendorCreditGLEntries';
 import { RefundVendorCreditGLEntriesSubscriber } from './subscribers/RefundVendorCreditGLEntriesSubscriber';
+import { RefundSyncCreditRefundedAmount } from './commands/RefundSyncCreditRefundedAmount.service';
+import { RefundSyncVendorCreditBalanceSubscriber } from './subscribers/RefundSyncVendorCreditBalanceSubscriber';
 import { LedgerModule } from '../Ledger/Ledger.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 
@@ -22,6 +24,8 @@ import { AccountsModule } from '../Accounts/Accounts.module';
     VendorCreditsRefundApplication,
     RefundVendorCreditGLEntries,
     RefundVendorCreditGLEntriesSubscriber,
+    RefundSyncCreditRefundedAmount,
+    RefundSyncVendorCreditBalanceSubscriber,
   ],
   controllers: [VendorCreditsRefundController],
 })

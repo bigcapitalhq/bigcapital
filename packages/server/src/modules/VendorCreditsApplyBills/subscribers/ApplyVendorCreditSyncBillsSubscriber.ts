@@ -1,61 +1,47 @@
-// import { Injectable } from '@nestjs/common';
-// import { InjectModel } from '@nestjs/objection';
-// import events from '@/subscribers/events';
-// import {
-//   IVendorCreditApplyToBillDeletedPayload,
-//   IVendorCreditApplyToBillsCreatedPayload,
-// } from '@/interfaces';
-// import { ApplyVendorCreditSyncBillsService } from '../command/ApplyVendorCreditSyncBills.service';
-// import { VendorCreditApplyToBill } from '../models/VendorCreditApplyToBill';
+import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import {
+  IVendorCreditApplyToBillsCreatedPayload,
+  IVendorCreditApplyToBillDeletedPayload,
+} from '../types/VendorCreditApplyBills.types';
+import { ApplyVendorCreditSyncBillsService } from '../command/ApplyVendorCreditSyncBills.service';
 
-// @Injectable()
-// export default class ApplyVendorCreditSyncBillsSubscriber {
-//   constructor(
-//     private readonly syncBillsWithVendorCredit: ApplyVendorCreditSyncBillsService,
-//     @InjectModel(VendorCreditApplyToBill)
-//     private readonly vendorCreditApplyToBillModel: typeof VendorCreditApplyToBill,
-//   ) {}
+@Injectable()
+export class ApplyVendorCreditSyncBillsSubscriber {
+  constructor(
+    private readonly syncBillsWithVendorCredit: ApplyVendorCreditSyncBillsService,
+  ) {}
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   attach(bus) {
-//     bus.subscribe(
-//       events.vendorCredit.onApplyToInvoicesCreated,
-//       this.incrementAppliedBillsOnceCreditCreated
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onApplyToInvoicesDeleted,
-//       this.decrementAppliedBillsOnceCreditDeleted
-//     );
-//   }
+  /**
+   * Increments the credited amount of applied bills once the vendor credit
+   * apply transaction is created.
+   * @param {IVendorCreditApplyToBillsCreatedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onApplyToInvoicesCreated)
+  async incrementAppliedBillsOnceCreditCreated({
+    vendorCreditAppliedBills,
+    trx,
+  }: IVendorCreditApplyToBillsCreatedPayload) {
+    await this.syncBillsWithVendorCredit.incrementBillsCreditedAmount(
+      vendorCreditAppliedBills,
+      trx,
+    );
+  }
 
-//   /**
-//    * Increment credited amount of applied bills once the vendor credit transaction created.
-//    * @param {IVendorCreditApplyToBillsCreatedPayload}  paylaod -
-//    */
-//   private incrementAppliedBillsOnceCreditCreated = async ({
-//     vendorCreditAppliedBills,
-//     trx,
-//   }: IVendorCreditApplyToBillsCreatedPayload) => {
-//     await this.syncBillsWithVendorCredit.incrementBillsCreditedAmount(
-//       vendorCreditAppliedBills,
-//       trx
-//     );
-//   };
-
-//   /**
-//    * Decrement credited amount of applied bills once the vendor credit
-//    * transaction delted.
-//    * @param {IVendorCreditApplyToBillDeletedPayload} payload
-//    */
-//   private decrementAppliedBillsOnceCreditDeleted = async ({
-//     oldCreditAppliedToBill,
-//     trx,
-//   }: IVendorCreditApplyToBillDeletedPayload) => {
-//     await this.syncBillsWithVendorCredit.decrementBillCreditedAmount(
-//       oldCreditAppliedToBill,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Decrements the credited amount of the applied bill once the vendor credit
+   * apply transaction is deleted.
+   * @param {IVendorCreditApplyToBillDeletedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onApplyToInvoicesDeleted)
+  async decrementAppliedBillsOnceCreditDeleted({
+    oldCreditAppliedToBill,
+    trx,
+  }: IVendorCreditApplyToBillDeletedPayload) {
+    await this.syncBillsWithVendorCredit.decrementBillCreditedAmount(
+      oldCreditAppliedToBill,
+      trx,
+    );
+  }
+}

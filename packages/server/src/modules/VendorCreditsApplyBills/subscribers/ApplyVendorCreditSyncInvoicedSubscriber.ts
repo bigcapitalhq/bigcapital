@@ -1,70 +1,53 @@
-// import { Service, Inject } from 'typedi';
-// import { sumBy } from 'lodash';
-// import HasTenancyService from '@/services/Tenancy/TenancyService';
-// import ApplyVendorCreditSyncInvoiced from '../command/ApplyVendorCreditSyncInvoiced.service';
-// import events from '@/subscribers/events';
-// import {
-//   IVendorCreditApplyToBillDeletedPayload,
-//   IVendorCreditApplyToBillsCreatedPayload,
-// } from '../types/VendorCreditApplyBills.types';
+import { Injectable } from '@nestjs/common';
+import { sumBy } from 'lodash';
+import { OnEvent } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import {
+  IVendorCreditApplyToBillsCreatedPayload,
+  IVendorCreditApplyToBillDeletedPayload,
+} from '../types/VendorCreditApplyBills.types';
+import { ApplyVendorCreditSyncInvoicedService } from '../command/ApplyVendorCreditSyncInvoiced.service';
 
-// @Service()
-// export default class ApplyVendorCreditSyncInvoicedSubscriber {
-//   @Inject()
-//   tenancy: HasTenancyService;
+@Injectable()
+export class ApplyVendorCreditSyncInvoicedSubscriber {
+  constructor(
+    private readonly syncCreditWithInvoiced: ApplyVendorCreditSyncInvoicedService,
+  ) {}
 
-//   @Inject()
-//   syncCreditWithInvoiced: ApplyVendorCreditSyncInvoiced;
+  /**
+   * Increments the vendor credit invoiced amount once the apply transaction
+   * is created.
+   * @param {IVendorCreditApplyToBillsCreatedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onApplyToInvoicesCreated)
+  async incrementInvoicedAmountOnceCreditApplied({
+    vendorCredit,
+    vendorCreditAppliedBills,
+    trx,
+  }: IVendorCreditApplyToBillsCreatedPayload) {
+    const amount = sumBy(vendorCreditAppliedBills, 'amount');
 
-//   /**
-//    * Attaches events with handlers.
-//    */
-//   attach(bus) {
-//     bus.subscribe(
-//       events.vendorCredit.onApplyToInvoicesCreated,
-//       this.incrementBillInvoicedOnceCreditApplied
-//     );
-//     bus.subscribe(
-//       events.vendorCredit.onApplyToInvoicesDeleted,
-//       this.decrementBillInvoicedOnceCreditApplyDeleted
-//     );
-//   }
+    await this.syncCreditWithInvoiced.incrementVendorCreditInvoicedAmount(
+      vendorCredit.id,
+      amount,
+      trx,
+    );
+  }
 
-//   /**
-//    * Increment vendor credit invoiced amount once the apply transaction created.
-//    * @param {IVendorCreditApplyToBillsCreatedPayload} payload -
-//    */
-//   private incrementBillInvoicedOnceCreditApplied = async ({
-//     vendorCredit,
-//     tenantId,
-//     vendorCreditAppliedBills,
-//     trx,
-//   }: IVendorCreditApplyToBillsCreatedPayload) => {
-//     const amount = sumBy(vendorCreditAppliedBills, 'amount');
-
-//     await this.syncCreditWithInvoiced.incrementVendorCreditInvoicedAmount(
-//       tenantId,
-//       vendorCredit.id,
-//       amount,
-//       trx
-//     );
-//   };
-
-//   /**
-//    * Decrement vendor credit invoiced amount once the apply transaction deleted.
-//    * @param {IVendorCreditApplyToBillDeletedPayload} payload -
-//    */
-//   private decrementBillInvoicedOnceCreditApplyDeleted = async ({
-//     tenantId,
-//     vendorCredit,
-//     oldCreditAppliedToBill,
-//     trx,
-//   }: IVendorCreditApplyToBillDeletedPayload) => {
-//     await this.syncCreditWithInvoiced.decrementVendorCreditInvoicedAmount(
-//       tenantId,
-//       oldCreditAppliedToBill.vendorCreditId,
-//       oldCreditAppliedToBill.amount,
-//       trx
-//     );
-//   };
-// }
+  /**
+   * Decrements the vendor credit invoiced amount once the apply transaction
+   * is deleted.
+   * @param {IVendorCreditApplyToBillDeletedPayload} payload -
+   */
+  @OnEvent(events.vendorCredit.onApplyToInvoicesDeleted)
+  async decrementInvoicedAmountOnceCreditApplyDeleted({
+    oldCreditAppliedToBill,
+    trx,
+  }: IVendorCreditApplyToBillDeletedPayload) {
+    await this.syncCreditWithInvoiced.decrementVendorCreditInvoicedAmount(
+      oldCreditAppliedToBill.vendorCreditId,
+      oldCreditAppliedToBill.amount,
+      trx,
+    );
+  }
+}

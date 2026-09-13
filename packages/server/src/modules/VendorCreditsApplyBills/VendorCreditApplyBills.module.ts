@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ApplyVendorCreditSyncBillsService } from './command/ApplyVendorCreditSyncBills.service';
 import { ApplyVendorCreditSyncInvoicedService } from './command/ApplyVendorCreditSyncInvoiced.service';
+import { ApplyVendorCreditSyncBillsSubscriber } from './subscribers/ApplyVendorCreditSyncBillsSubscriber';
+import { ApplyVendorCreditSyncInvoicedSubscriber } from './subscribers/ApplyVendorCreditSyncInvoicedSubscriber';
 import { DeleteApplyVendorCreditToBillService } from './command/DeleteApplyVendorCreditToBill.service';
 import { ApplyVendorCreditToBillsService } from './command/ApplyVendorCreditToBills.service';
 import { GetAppliedBillsToVendorCreditService } from './queries/GetAppliedBillsToVendorCredit.service';
@@ -31,6 +33,8 @@ import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
     GetAppliedBillsToVendorCreditService,
     GetVendorCreditToApplyBills,
     VendorCreditApplyBillsApplicationService,
+    ApplyVendorCreditSyncBillsSubscriber,
+    ApplyVendorCreditSyncInvoicedSubscriber,
   ],
   controllers: [VendorCreditApplyBillsController],
 })
