@@ -4,6 +4,7 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { withRememberedPeriod } from '../reportingPeriod';
 import type { FormikContextType } from 'formik';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
@@ -55,7 +56,7 @@ const parseBalanceSheetQuery = (
 ): BalanceSheetFormQuery => {
   const defaultQuery = getDefaultBalanceSheetQuery();
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {

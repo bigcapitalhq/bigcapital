@@ -3,6 +3,7 @@ import moment from 'moment';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { salesTaxLiabilitySummaryDynamicColumns } from './dynamicColumns';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
 import { useAppQueryString } from '@/hooks';
@@ -27,7 +28,7 @@ const parseSalesTaxLiabilitySummaryQuery = (
   const defaultQuery = getDefaultSalesTaxLiablitySummaryQuery();
 
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {
