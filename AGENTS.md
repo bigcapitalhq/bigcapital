@@ -20,7 +20,7 @@ Bigcapital is a multi-tenant accounting SaaS. pnpm + Lerna monorepo (independent
 3. `pnpm install`
 4. `pnpm run build:server` — **must run before migrations** (server CLI depends on built output)
 5. `pnpm run system:migrate:latest` — system DB
-6. `pnpm run server:start` — NestJS on `:3000` (watch mode)
+6. `pnpm run dev:server` — NestJS on `:3000` (watch mode)
 7. `pnpm run dev:webapp` — Vite on `:4000`, proxies `/api` and `/socket` to `:3000`
 
 ## Common commands
@@ -30,7 +30,7 @@ Run from repo root unless noted.
 | What | Command |
 |---|---|
 | Install deps | `pnpm install` |
-| Start server (watch) | `pnpm run server:start` |
+| Start server (watch) | `pnpm run dev:server` |
 | Start webapp (Vite, port 4000) | `pnpm run dev:webapp` |
 | Build server + shared deps | `pnpm run build:server` |
 | Build all shared packages | `pnpm run build:shared` |

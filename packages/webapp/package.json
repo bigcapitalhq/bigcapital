@@ -141,14 +141,13 @@
   "scripts": {
     "dev": "cross-env PORT=4000 vite",
     "build": "vite build",
-    "preview": "cross-env PORT=4173 vite preview",
+    "start": "cross-env PORT=4173 vite preview",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
     "lint:check": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
-    "test": "node scripts/test.js",
-    "storybook": "start-storybook -p 6006"
+    "test:e2e": "playwright test --config ../../playwright.config.ts"
   },
   "eslintConfig": {
     "extends": [

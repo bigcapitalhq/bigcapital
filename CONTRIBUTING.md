@@ -87,7 +87,7 @@ Batch 1 run: 6 migrations
 - Next, start the server.
 
 ```
-pnpm run server:start
+pnpm run dev:server
 ```
 
 **[`^top^`](#)**
