@@ -46,4 +46,44 @@ export class EditAccountDTO {
     example: 1,
   })
   parentAccountId?: number;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description:
+      'Bank code. Three digits. Required for bank accounts when the organization is located in Brazil.',
+    example: '341',
+    required: false,
+  })
+  bankCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description:
+      'Bank branch (agency) number, up to five digits. Required for bank accounts when the organization is located in Brazil.',
+    example: '1234',
+    required: false,
+  })
+  agencyNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description:
+      'Account number including its trailing check digit. Required for bank accounts when the organization is located in Brazil.',
+    example: '12345678-9',
+    required: false,
+  })
+  accountNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description:
+      'CBU, 22 digits. Required for bank accounts when the organization is located in Argentina.',
+    example: '2850590940090418135201',
+    required: false,
+  })
+  cbu?: string;
 }

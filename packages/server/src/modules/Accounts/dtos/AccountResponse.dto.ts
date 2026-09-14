@@ -168,4 +168,40 @@ export class AccountResponseDto {
     example: '2024-03-20T10:30:00Z',
   })
   updatedAt: Date;
+
+  @ApiProperty({
+    description:
+      'Bank code (three digits). Present for bank accounts in organizations located in Brazil.',
+    example: '341',
+    required: false,
+    nullable: true,
+  })
+  bankCode?: string | null;
+
+  @ApiProperty({
+    description:
+      'Bank branch (agency) number, up to five digits. Present for bank accounts in organizations located in Brazil.',
+    example: '1234',
+    required: false,
+    nullable: true,
+  })
+  agencyNumber?: string | null;
+
+  @ApiProperty({
+    description:
+      'Account number including its trailing check digit. Present for bank accounts in organizations located in Brazil.',
+    example: '12345678-9',
+    required: false,
+    nullable: true,
+  })
+  accountNumber?: string | null;
+
+  @ApiProperty({
+    description:
+      'CBU (22 digits). Present for bank accounts in organizations located in Argentina.',
+    example: '2850590940090418135201',
+    required: false,
+    nullable: true,
+  })
+  cbu?: string | null;
 }
