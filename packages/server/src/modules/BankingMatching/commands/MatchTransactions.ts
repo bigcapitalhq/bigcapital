@@ -150,7 +150,7 @@ export class MatchBankTransactions {
       } as IBankTransactionMatchingEventPayload);
 
       // Matches the given transactions under promise pool concurrency controlling.
-      await PromisePool.withConcurrency(10)
+      const matchingResult = await PromisePool.withConcurrency(10)
         .for(matchedTransactions)
         .process(async (matchedTransaction: MatchTransactionEntryDto) => {
           const getMatchedTransactionsService =
@@ -163,6 +163,11 @@ export class MatchBankTransactions {
             trx,
           );
         });
+      // Throws the first error to rollback the transaction and prevent
+      // emitting the matched event on partial failures.
+      if (matchingResult.errors?.length > 0) {
+        throw matchingResult.errors[0].raw;
+      }
       // Triggers the event `onBankTransactionMatched`.
       await this.eventPublisher.emitAsync(events.bankMatch.onMatched, {
         uncategorizedTransactionIds,

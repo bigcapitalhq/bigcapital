@@ -54,7 +54,7 @@ export abstract class GetMatchedTransactionsByType {
     matchTransactionDTO: IMatchTransactionDTO,
     trx?: Knex.Transaction,
   ) {
-    await PromisePool.withConcurrency(2)
+    const creationResult = await PromisePool.withConcurrency(2)
       .for(uncategorizedTransactionIds)
       .process(async (uncategorizedTransactionId) => {
         await this.matchedBankTransactionModel().query(trx).insert({
@@ -63,5 +63,9 @@ export abstract class GetMatchedTransactionsByType {
           referenceId: matchTransactionDTO.referenceId,
         });
       });
+    // Throws the first error to prevent partial matched transactions.
+    if (creationResult.errors?.length > 0) {
+      throw creationResult.errors[0].raw;
+    }
   }
 }
