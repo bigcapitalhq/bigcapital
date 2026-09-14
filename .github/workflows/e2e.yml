@@ -136,7 +136,7 @@ jobs:
 
       - name: Start server in background
         run: |
-          cd packages/server && pnpm start:prod &
+          cd packages/server && pnpm start &
           sleep 10
         env:
           NODE_ENV: production

@@ -2,7 +2,7 @@ import path from "path";
 import { PlaywrightTestConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 // Reference: https://playwright.dev/docs/test-configuration
 const config: PlaywrightTestConfig = {
