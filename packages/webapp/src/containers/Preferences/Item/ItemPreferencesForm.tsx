@@ -53,6 +53,9 @@ export function ItemForm(): React.ReactElement {
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
+          buttonProps={{
+            'data-testId': 'preferences-item-sell-account-select',
+          }}
         />
       </ItemFormGroup>
 
@@ -78,6 +81,9 @@ export function ItemForm(): React.ReactElement {
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.EXPENSE]}
+          buttonProps={{
+            'data-testId': 'preferences-item-cost-account-select',
+          }}
         />
       </ItemFormGroup>
 
@@ -103,6 +109,9 @@ export function ItemForm(): React.ReactElement {
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
+          buttonProps={{
+            'data-testId': 'preferences-item-inventory-account-select',
+          }}
         />
       </ItemFormGroup>
 

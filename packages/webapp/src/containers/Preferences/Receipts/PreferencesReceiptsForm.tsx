@@ -34,6 +34,7 @@ export function PreferencesReceiptsForm({
         <FTextArea
           medium={true}
           name={'receiptMessage'}
+          data-testId={'preferences-receipts-message'}
           fastField={true}
           fill={true}
         />
@@ -48,6 +49,7 @@ export function PreferencesReceiptsForm({
         <FTextArea
           medium={true}
           name={'termsConditions'}
+          data-testId={'preferences-receipts-terms-conditions'}
           fastField={true}
           fill={true}
         />
