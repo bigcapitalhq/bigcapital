@@ -54,12 +54,17 @@ export const handleDeleteErrors = (errors: DeleteError[]) => {
   }
 };
 
-export const AccountCodeAccessor = (row: AccountTableRow) =>
-  !isBlank(row.code) ? (
+export function AccountCodeCell({
+  cell: { value },
+}: {
+  cell: { value?: string };
+}) {
+  return !isBlank(value) ? (
     <Tag minimal round intent={Intent.NONE}>
-      {row.code}
+      {value}
     </Tag>
   ) : null;
+}
 
 /**
  * Accounts table columns.
@@ -81,7 +86,8 @@ export const useAccountsTableColumns =
           {
             id: 'code',
             Header: intl.get('code'),
-            accessor: AccountCodeAccessor,
+            accessor: 'code',
+            Cell: AccountCodeCell,
             className: 'code',
             width: 80,
             clickable: true,
