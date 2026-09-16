@@ -172,4 +172,44 @@ describe('Financial Statements (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
+
+  describe('comparison percentage change', () => {
+    it('/reports/balance-sheet (GET) enables amount change and previous periods', () => {
+      return request(app.getHttpServer())
+        .get('/reports/balance-sheet')
+        .query({
+          ...baseQuery,
+          previousPeriodPercentageChange: true,
+          previousYearPercentageChange: true,
+        })
+        .set('organization-id', orgainzationId)
+        .set('Authorization', AuthorizationHeader)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.query.previous_period_amount_change).toBe(true);
+          expect(res.body.query.previous_period).toBe(true);
+          expect(res.body.query.previous_year_amount_change).toBe(true);
+          expect(res.body.query.previous_year).toBe(true);
+        });
+    });
+
+    it('/reports/profit-loss-sheet (GET) enables amount change and previous periods', () => {
+      return request(app.getHttpServer())
+        .get('/reports/profit-loss-sheet')
+        .query({
+          ...baseQuery,
+          previousPeriodPercentageChange: true,
+          previousYearPercentageChange: true,
+        })
+        .set('organization-id', orgainzationId)
+        .set('Authorization', AuthorizationHeader)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.query.previous_period_amount_change).toBe(true);
+          expect(res.body.query.previous_period).toBe(true);
+          expect(res.body.query.previous_year_amount_change).toBe(true);
+          expect(res.body.query.previous_year).toBe(true);
+        });
+    });
+  });
 });
