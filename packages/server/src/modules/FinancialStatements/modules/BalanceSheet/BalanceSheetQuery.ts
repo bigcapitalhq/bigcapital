@@ -69,6 +69,21 @@ export class BalanceSheetQuery extends flow(FinancialDateRanges)(
    */
   constructor(query: IBalanceSheetQuery) {
     super();
+
+    // Enabling the percentage change requires the amount change and the
+    // previous period/year to be enabled as well.
+    if (query.previousPeriodPercentageChange) {
+      query.previousPeriodAmountChange = true;
+    }
+    if (query.previousPeriodAmountChange) {
+      query.previousPeriod = true;
+    }
+    if (query.previousYearPercentageChange) {
+      query.previousYearAmountChange = true;
+    }
+    if (query.previousYearAmountChange) {
+      query.previousYear = true;
+    }
     this.query = query;
 
     // Pervious Year (PY) Dates.
