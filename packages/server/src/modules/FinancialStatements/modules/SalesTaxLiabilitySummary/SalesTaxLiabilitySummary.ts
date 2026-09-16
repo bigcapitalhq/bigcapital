@@ -1,7 +1,6 @@
 import { flow } from 'fp-ts/function';
 import * as A from 'fp-ts/Array';
 import { isEmpty, sumBy } from 'lodash';
-import { unless } from '@/common/fp';
 import {
   SalesTaxLiabilitySummaryQuery,
   SalesTaxLiabilitySummaryRate,
@@ -61,10 +60,10 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
     const salesTaxAmount = salesTax ? salesTax.credit - salesTax.debit : 0;
 
     // Calculates the tax percentage.
-    const taxPercentage = unless(
-      (amount: number) => amount === 0,
-      (amount: number) => amount / salesTaxAmount,
-    )(payableTaxAmount);
+    const taxPercentage = this.getPercentageBasis(
+      salesTaxAmount,
+      payableTaxAmount,
+    );
 
     // Calculates the payable tax amount.
     const collectedTaxAmount = payableTax ? payableTax.debit : 0;
