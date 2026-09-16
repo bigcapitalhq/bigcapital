@@ -1,6 +1,7 @@
 import { ACCOUNT_TYPE } from '@/constants/accounts';
 import {
   SalesTaxLiabilitySummaryPayableById,
+  SalesTaxLiabilitySummaryQuery,
   SalesTaxLiabilitySummarySalesById,
 } from './SalesTaxLiability.types';
 import { Inject, Injectable, Scope } from '@nestjs/common';
@@ -40,9 +41,17 @@ export class SalesTaxLiabilitySummaryRepository {
   taxRates: Array<ModelObject<TaxRateModel>>;
 
   /**
-   * Load data.
+   * @param {SalesTaxLiabilitySummaryQuery}
    */
-  async load() {
+  filter: SalesTaxLiabilitySummaryQuery;
+
+  /**
+   * Load data.
+   * @param {SalesTaxLiabilitySummaryQuery} filter
+   */
+  async load(filter: SalesTaxLiabilitySummaryQuery) {
+    this.filter = filter;
+
     await this.initTaxRates();
     await this.initTaxesPayableByTaxRateId();
     await this.initAccountTransactionsByTaxRateId();
@@ -99,6 +108,7 @@ export class SalesTaxLiabilitySummaryRepository {
       .query()
       .whereIn('account_id', payableAccountsIds)
       .whereNot('tax_rate_id', null)
+      .modify('filterDateRange', this.filter.fromDate, this.filter.toDate)
       .groupBy('tax_rate_id')
       .select(['tax_rate_id'])
       .sum('credit as credit')
@@ -125,6 +135,7 @@ export class SalesTaxLiabilitySummaryRepository {
         .query()
         .whereIn('account_id', incomeAccountsIds)
         .whereNot('tax_rate_id', null)
+        .modify('filterDateRange', this.filter.fromDate, this.filter.toDate)
         .groupBy('tax_rate_id')
         .select(['tax_rate_id'])
         .sum('credit as credit')
