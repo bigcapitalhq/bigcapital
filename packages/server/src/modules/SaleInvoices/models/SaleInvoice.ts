@@ -262,6 +262,14 @@ export class SaleInvoice extends TenantBaseModel {
   }
 
   /**
+   * Retrieve the invoice due amount in base currency.
+   * @return {number}
+   */
+  get dueAmountLocal() {
+    return this.dueAmount * defaultTo(1, this.exchangeRate);
+  }
+
+  /**
    * Detarmine whether the invoice paid partially.
    * @return {boolean}
    */

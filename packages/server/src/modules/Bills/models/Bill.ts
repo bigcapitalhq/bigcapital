@@ -245,6 +245,14 @@ export class Bill extends TenantBaseModel {
   }
 
   /**
+   * Retrieve the bill due amount in base currency.
+   * @return {number}
+   */
+  get dueAmountLocal(): number {
+    return this.dueAmount * defaultTo(this.exchangeRate, 1);
+  }
+
+  /**
    * Detarmine whether the bill is open.
    * @return {boolean}
    */
