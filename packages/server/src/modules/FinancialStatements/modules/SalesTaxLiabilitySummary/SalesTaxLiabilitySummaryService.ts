@@ -4,6 +4,7 @@ import { SalesTaxLiabilitySummaryMeta } from './SalesTaxLiabilitySummaryMeta';
 import { Injectable } from '@nestjs/common';
 import { SalesTaxLiabilitySummaryQuery } from './SalesTaxLiability.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { mergeSalesTaxLiabilityQueryWithDefaults } from './utils';
 
 @Injectable()
 export class SalesTaxLiabilitySummaryService {
@@ -19,16 +20,18 @@ export class SalesTaxLiabilitySummaryService {
    * @returns
    */
   public async salesTaxLiability(query: SalesTaxLiabilitySummaryQuery) {
-    await this.repository.load();
+    const filter = mergeSalesTaxLiabilityQueryWithDefaults(query);
+
+    await this.repository.load(filter);
 
     // Retrieve the meta first to get date format.
-    const meta = await this.salesTaxLiabilityMeta.meta(query);
+    const meta = await this.salesTaxLiabilityMeta.meta(filter);
 
     // Get tenant metadata for baseCurrency
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
 
     const taxLiabilitySummary = new SalesTaxLiabilitySummary(
-      query,
+      filter,
       this.repository,
       {
         baseCurrency: tenantMetadata.baseCurrency,
@@ -38,7 +41,7 @@ export class SalesTaxLiabilitySummaryService {
 
     return {
       data: taxLiabilitySummary.reportData(),
-      query,
+      query: filter,
       meta,
     };
   }
