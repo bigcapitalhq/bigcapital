@@ -53,7 +53,7 @@ export abstract class AgingSummaryReport extends AgingReport {
       (agingPeriods: IAgingPeriodTotal[], unpaidInvoice) => {
         const newAgingPeriods = this.getContactAgingDueAmount(
           agingPeriods,
-          unpaidInvoice.dueAmount,
+          unpaidInvoice.dueAmountLocal,
           unpaidInvoice.overdueDays,
         );
         return newAgingPeriods;
@@ -65,7 +65,7 @@ export abstract class AgingSummaryReport extends AgingReport {
   /**
    * Sets the contact aging due amount to the table.
    * @param {IAgingPeriodTotal} agingPeriods - Aging periods.
-   * @param {number} dueAmount - Due amount.
+   * @param {number} dueAmount - Due amount in base currency.
    * @param {number} overdueDays - Overdue days.
    * @return {IAgingPeriodTotal[]}
    */
@@ -199,7 +199,7 @@ export abstract class AgingSummaryReport extends AgingReport {
    */
   protected getContactCurrentTotal(contactId: number): number {
     const currentInvoices = this.getCurrentInvoicesByContactId(contactId);
-    return sumBy(currentInvoices, (invoice) => invoice.dueAmount);
+    return sumBy(currentInvoices, (invoice) => invoice.dueAmountLocal);
   }
 
   /**
