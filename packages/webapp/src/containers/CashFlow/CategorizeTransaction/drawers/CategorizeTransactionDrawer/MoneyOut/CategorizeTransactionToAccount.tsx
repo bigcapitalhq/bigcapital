@@ -11,6 +11,7 @@ import {
   Icon,
 } from '@/components';
 import { useDateInputFormatter } from '@/hooks';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 
 export function CategorizeTransactionToAccount() {
   const { accounts } = useCategorizeTransactionBoot();
@@ -55,7 +56,11 @@ export function CategorizeTransactionToAccount() {
         <AccountsSelect
           name={'creditAccountId'}
           items={accounts}
-          filterByRootTypes={['asset']}
+          filterByTypes={[
+            ACCOUNT_TYPE.CASH,
+            ACCOUNT_TYPE.BANK,
+            ACCOUNT_TYPE.CREDIT_CARD,
+          ]}
           fastField
           fill
           allowCreate
