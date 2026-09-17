@@ -28,7 +28,7 @@ import type { QueryClient } from '@tanstack/react-query';
 const commonInvalidateQueries = (queryClient: QueryClient) => {
   queryClient.invalidateQueries({ queryKey: bankingKeys.rules() });
   queryClient.invalidateQueries({
-    queryKey: bankingKeys.recognizedTransactionsInfinity(),
+    queryKey: bankingKeys.recognizedTransactionsInfinity().slice(0, 1),
   });
 };
 
@@ -79,7 +79,7 @@ export function useDeleteBankRule(
     onSuccess: () => {
       commonInvalidateQueries(queryClient);
       queryClient.invalidateQueries({
-        queryKey: bankingKeys.recognizedTransactionsInfinity(),
+        queryKey: bankingKeys.recognizedTransactionsInfinity().slice(0, 1),
       });
     },
   });
