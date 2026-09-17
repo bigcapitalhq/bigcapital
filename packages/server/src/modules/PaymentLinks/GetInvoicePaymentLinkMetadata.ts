@@ -1,11 +1,10 @@
-import * as moment from 'moment';
 import { ClsService } from 'nestjs-cls';
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { PaymentLink } from './models/PaymentLink';
-import { ServiceError } from '../Items/ServiceError';
+import { assertPaymentLinkIsShared } from './payment-link.utils';
 import { GetInvoicePaymentLinkMetaTransformer } from '../SaleInvoices/queries/GetInvoicePaymentLink.transformer';
 import { TenantModel } from '../System/models/TenantModel';
 
@@ -36,15 +35,7 @@ export class GetInvoicePaymentLinkMetadata {
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
 
-    // Validate the expiry at date.
-    if (paymentLink.expiryAt) {
-      const currentDate = moment();
-      const expiryDate = moment(paymentLink.expiryAt);
-
-      if (expiryDate.isBefore(currentDate)) {
-        throw new ServiceError('PAYMENT_LINK_EXPIRED');
-      }
-    }
+    assertPaymentLinkIsShared(paymentLink);
     const tenant = await this.systemTenantModel
       .query()
       .findById(paymentLink.tenantId);

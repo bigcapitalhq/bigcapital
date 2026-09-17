@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
 import { PaymentLink } from './models/PaymentLink';
+import { assertPaymentLinkIsShared } from './payment-link.utils';
 import { StripeInvoiceCheckoutSessionPOJO } from '../StripePayment/StripePayment.types';
 import { ModelObject } from 'objection';
 import { ConfigService } from '@nestjs/config';
@@ -36,6 +37,8 @@ export class CreateInvoiceCheckoutSession {
       .findOne('linkId', publicPaymentLinkId)
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
+
+    assertPaymentLinkIsShared(paymentLink);
 
     // Retrieves the invoice from associated payment link.
     const invoice = await this.saleInvoiceModel()
