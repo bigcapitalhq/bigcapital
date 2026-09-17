@@ -117,6 +117,135 @@ describe('AgingSummary', () => {
     });
   });
 
+  describe('aging period boundaries', () => {
+    const currentMoment = moment('2026-06-15T12:00:00');
+
+    beforeAll(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(currentMoment.toDate());
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    const invoiceAt = (overdueDays: number, balance = 100) =>
+      saleInvoice({
+        balance,
+        exchangeRate: 1,
+        dueDate: currentMoment.clone().subtract(overdueDays, 'days').toDate(),
+      });
+
+    const buildRepository = (invoices: ReturnType<typeof saleInvoice>[]) =>
+      ({
+        customers: [{ id: 1, displayName: 'Customer A' }],
+        overdueInvoicesByContactId: { 1: invoices },
+        currentInvoicesByContactId: {},
+      }) as unknown as ARAgingSummaryRepository;
+
+    const reportFor = (invoices: ReturnType<typeof saleInvoice>[]) =>
+      new ARAgingSummarySheet(
+        { ...baseQuery, customersIds: [] } as unknown as ARAgingSummaryQueryDto,
+        buildRepository(invoices),
+        baseMeta,
+      ).reportData();
+
+    it('defines inclusive day buckets of 0-30, 31-60 and 61 and over', () => {
+      const sheet = new ARAgingSummarySheet(
+        { ...baseQuery, customersIds: [] } as unknown as ARAgingSummaryQueryDto,
+        buildRepository([]),
+        baseMeta,
+      );
+      expect(
+        sheet.agingPeriods.map((period) => [period.beforeDays, period.toDays]),
+      ).toEqual([
+        [0, 30],
+        [31, 60],
+        [61, null],
+      ]);
+    });
+
+    it('assigns an invoice exactly 30 days overdue to the first bucket', () => {
+      const { customers, total } = reportFor([invoiceAt(30)]);
+
+      expect(customers[0].aging[0].total.amount).toBe(100);
+      expect(customers[0].aging[1].total.amount).toBe(0);
+      expect(customers[0].aging[2].total.amount).toBe(0);
+      expect(customers[0].total.amount).toBe(100);
+      expect(total.total.amount).toBe(100);
+    });
+
+    it('assigns an invoice exactly 31 days overdue to the second bucket', () => {
+      const { customers } = reportFor([invoiceAt(31)]);
+
+      expect(customers[0].aging[0].total.amount).toBe(0);
+      expect(customers[0].aging[1].total.amount).toBe(100);
+    });
+
+    it('assigns an invoice exactly 60 days overdue to the second bucket', () => {
+      const { customers } = reportFor([invoiceAt(60)]);
+
+      expect(customers[0].aging[1].total.amount).toBe(100);
+      expect(customers[0].aging[2].total.amount).toBe(0);
+    });
+
+    it('assigns an invoice exactly 61 days overdue to the last bucket', () => {
+      const { customers } = reportFor([invoiceAt(61)]);
+
+      expect(customers[0].aging[2].total.amount).toBe(100);
+    });
+
+    it('assigns an invoice exactly 90 days overdue to the last bucket', () => {
+      const { customers } = reportFor([invoiceAt(90)]);
+
+      expect(customers[0].aging[2].total.amount).toBe(100);
+    });
+
+    it('keeps the customer and report totals equal to the sum of the buckets', () => {
+      const { customers, total } = reportFor([
+        invoiceAt(30),
+        invoiceAt(60),
+        invoiceAt(90),
+      ]);
+      const bucketsTotal = customers[0].aging.reduce(
+        (acc, period) => acc + period.total.amount,
+        0,
+      );
+
+      expect(bucketsTotal).toBe(300);
+      expect(customers[0].total.amount).toBe(300);
+      expect(total.aging.map((period) => period.total.amount)).toEqual([
+        100, 100, 100,
+      ]);
+      expect(total.total.amount).toBe(300);
+    });
+
+    it('assigns A/P bills on the same inclusive boundaries', () => {
+      const repository = {
+        vendors: [{ id: 1, displayName: 'Vendor A' }],
+        overdueBillsByVendorId: {
+          1: [
+            bill({
+              amount: 100,
+              exchangeRate: 1,
+              dueDate: currentMoment.clone().subtract(60, 'days').toDate(),
+            }),
+          ],
+        },
+        dueBillsByVendorId: {},
+      } as unknown as APAgingSummaryRepository;
+      const { vendors, total } = new APAgingSummarySheet(
+        { ...baseQuery, vendorsIds: [] } as unknown as APAgingSummaryQueryDto,
+        repository,
+        baseMeta,
+      ).reportData();
+
+      expect(vendors[0].aging[1].total.amount).toBe(100);
+      expect(vendors[0].total.amount).toBe(100);
+      expect(total.total.amount).toBe(100);
+    });
+  });
+
   describe('A/P aging summary', () => {
     const repository = {
       vendors: [{ id: 1, displayName: 'Vendor A' }],
