@@ -49,6 +49,15 @@ function SalesTaxLiabilitySummaryTableRoot() {
 }
 
 const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
+  --color-table-total-border-top: #bbb;
+  --color-table-total-border-bottom: #333;
+  --color-table-tax-rate-text-color: #444;
+
+  .bp4-dark & {
+    --color-table-total-border-top: var(--color-dark-gray5);
+    --color-table-total-border-bottom: var(--color-dark-gray5);
+    --color-table-tax-rate-text-color: var(--color-light-gray2);
+  }
   .table {
     .tbody .tr {
       .td {
@@ -69,8 +78,8 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
           font-weight: 500;
 
           .td {
-            border-top: 1px solid #bbb;
-            border-bottom: 3px double #333;
+            border-top: 1px solid var(--color-table-total-border-top);
+            border-bottom: 3px double var(--color-table-total-border-bottom);
           }
         }
         &.row_type--TaxRate {
@@ -79,7 +88,7 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
             &.td-taxableAmount,
             &.td-collectedTax,
             &.td-taxRate {
-              color: #444;
+              color: var(--color-table-tax-rate-text-color);
             }
           }
         }
