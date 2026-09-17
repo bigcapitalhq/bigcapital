@@ -15,11 +15,12 @@ import '@/style/pages/Preferences/Page.scss';
 /**
  * Preferences page.
  */
-function PreferencesPage({ toggleSidebarExpand }) {
-  // Shrink the dashboard sidebar once open application preferences page.
+function PreferencesPage({ setSidebarExpandDefault }) {
+  // Shrink the dashboard sidebar once open application preferences page,
+  // unless the user has expressed a sidebar preference of their own.
   React.useEffect(() => {
-    toggleSidebarExpand(false);
-  }, [toggleSidebarExpand]);
+    setSidebarExpandDefault(false);
+  }, [setSidebarExpandDefault]);
 
   return (
     <ErrorBoundary FallbackComponent={DashboardErrorBoundary}>
