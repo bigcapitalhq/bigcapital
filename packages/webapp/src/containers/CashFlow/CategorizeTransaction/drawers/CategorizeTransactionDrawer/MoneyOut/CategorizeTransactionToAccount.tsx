@@ -10,8 +10,8 @@ import {
   FTextArea,
   Icon,
 } from '@/components';
-import { useDateInputFormatter } from '@/hooks';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { useDateInputFormatter } from '@/hooks';
 
 export function CategorizeTransactionToAccount() {
   const { accounts } = useCategorizeTransactionBoot();
