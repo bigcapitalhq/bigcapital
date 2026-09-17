@@ -189,12 +189,11 @@ const periodOptions: DatePeriodOption[] = [
   { text: 'Today', value: 'today' },
   { text: 'Yesterday', value: 'yesterday' },
   { text: 'This week', value: 'this_week' },
-  { text: 'This year', value: 'this_year' },
   { text: 'This month', value: 'this_month' },
-  { text: 'last week', value: 'last_week' },
+  { text: 'This year', value: 'this_year' },
+  { text: 'Last week', value: 'last_week' },
+  { text: 'Last month', value: 'last_month' },
   { text: 'Last year', value: 'last_year' },
-  { text: 'Last month', value: 'last_month' },
-  { text: 'Last month', value: 'last_month' },
 ];
 
 const getDateRangePeriod = (

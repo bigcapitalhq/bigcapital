@@ -38,7 +38,7 @@ export const getFiscalYear = (): Array<{ name: string; key: string }> => [
     key: 'september',
   },
   {
-    name: `${intl.get('october')} - ${intl.get('november')}`,
+    name: `${intl.get('october')} - ${intl.get('september')}`,
     key: 'october',
   },
   {
