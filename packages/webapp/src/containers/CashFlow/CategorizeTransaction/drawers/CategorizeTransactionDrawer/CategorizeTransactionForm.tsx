@@ -1,7 +1,7 @@
 import { categorizeTransactionsBulk } from '@bigcapital/sdk-ts';
 import { Intent } from '@blueprintjs/core';
 import { useMutation } from '@tanstack/react-query';
-import { Formik, Form, FormikHelpers } from 'formik';
+import { Formik, Form, FormikErrors, FormikHelpers } from 'formik';
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import styled from 'styled-components';
@@ -75,7 +75,7 @@ function CategorizeTransactionFormRoot({
             )
           ) {
             setErrors({
-              ...({} as CategorizeTransactionFormValues),
+              ...({} as FormikErrors<CategorizeTransactionFormValues>),
               branchId: 'The branch is required.',
             });
           } else {
