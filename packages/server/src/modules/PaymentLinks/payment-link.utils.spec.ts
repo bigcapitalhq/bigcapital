@@ -1,55 +1,91 @@
 import * as moment from 'moment';
-import { ServiceError } from '../Items/ServiceError';
 import {
   ERROR_PAYMENT_LINK_EXPIRED,
   ERROR_PAYMENT_LINK_NOT_SHARED,
-  assertPaymentLinkIsShared,
+  assertPaymentLinkAccessible,
 } from './payment-link.utils';
 
-describe('assertPaymentLinkIsShared', () => {
-  it('resolves a shared link without an expiry date', () => {
+const OWNER = 'org-that-owns-the-link';
+const OTHER = 'some-other-org';
+const later = moment().add(1, 'day').toDate();
+const earlier = moment().subtract(1, 'day').toDate();
+
+describe('assertPaymentLinkAccessible', () => {
+  it('lets the owning organization read its own link', () => {
     expect(() =>
-      assertPaymentLinkIsShared({ publicity: 'public', expiryAt: null as any }),
+      assertPaymentLinkAccessible(
+        { publicity: 'private', expiryAt: null as any },
+        OWNER,
+        OWNER,
+      ),
     ).not.toThrow();
   });
 
-  it('resolves a shared link that has not expired yet', () => {
+  it('lets anyone read a shared link', () => {
     expect(() =>
-      assertPaymentLinkIsShared({
-        publicity: 'public',
-        expiryAt: moment().add(1, 'day').toDate(),
-      }),
+      assertPaymentLinkAccessible(
+        { publicity: 'public', expiryAt: null as any },
+        OWNER,
+        OTHER,
+      ),
     ).not.toThrow();
   });
 
-  it('refuses a link that was never shared', () => {
+  it('refuses another organization on a link that was not shared', () => {
     expect(() =>
-      assertPaymentLinkIsShared({
-        publicity: 'private',
-        expiryAt: null as any,
-      }),
+      assertPaymentLinkAccessible(
+        { publicity: 'private', expiryAt: null as any },
+        OWNER,
+        OTHER,
+      ),
     ).toThrow(
       expect.objectContaining({ errorType: ERROR_PAYMENT_LINK_NOT_SHARED }),
     );
   });
 
-  it('refuses a link with an unknown publicity value', () => {
+  it('refuses a caller without an organization on a link that was not shared', () => {
     expect(() =>
-      assertPaymentLinkIsShared({
-        publicity: '' as any,
-        expiryAt: null as any,
-      }),
-    ).toThrow(ServiceError);
+      assertPaymentLinkAccessible(
+        { publicity: 'private', expiryAt: null as any },
+        OWNER,
+        undefined,
+      ),
+    ).toThrow(
+      expect.objectContaining({ errorType: ERROR_PAYMENT_LINK_NOT_SHARED }),
+    );
   });
 
-  it('refuses a shared link that has expired', () => {
+  it('refuses an expired shared link', () => {
     expect(() =>
-      assertPaymentLinkIsShared({
-        publicity: 'public',
-        expiryAt: moment().subtract(1, 'day').toDate(),
-      }),
+      assertPaymentLinkAccessible(
+        { publicity: 'public', expiryAt: earlier },
+        OWNER,
+        OTHER,
+      ),
     ).toThrow(
       expect.objectContaining({ errorType: ERROR_PAYMENT_LINK_EXPIRED }),
     );
+  });
+
+  it('refuses an expired link even for the owning organization', () => {
+    expect(() =>
+      assertPaymentLinkAccessible(
+        { publicity: 'private', expiryAt: earlier },
+        OWNER,
+        OWNER,
+      ),
+    ).toThrow(
+      expect.objectContaining({ errorType: ERROR_PAYMENT_LINK_EXPIRED }),
+    );
+  });
+
+  it('keeps a shared link that has not expired readable', () => {
+    expect(() =>
+      assertPaymentLinkAccessible(
+        { publicity: 'public', expiryAt: later },
+        OWNER,
+        OTHER,
+      ),
+    ).not.toThrow();
   });
 });

@@ -3,7 +3,7 @@ import { SaleInvoicePdf } from '../SaleInvoices/queries/SaleInvoicePdf.service';
 import { PaymentLink } from './models/PaymentLink';
 import { ClsService } from 'nestjs-cls';
 import { TenantModel } from '../System/models/TenantModel';
-import { assertPaymentLinkIsShared } from './payment-link.utils';
+import { assertPaymentLinkAccessible } from './payment-link.utils';
 
 @Injectable()
 export class GetPaymentLinkInvoicePdf {
@@ -32,13 +32,17 @@ export class GetPaymentLinkInvoicePdf {
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
 
-    assertPaymentLinkIsShared(paymentLink);
-
     const saleInvoiceId = paymentLink.resourceId;
+    const callerOrganizationId = this.clsService.get<string>('organizationId');
     const tenant = await this.systemTenantModel
       .query()
       .findById(paymentLink.tenantId);
 
+    assertPaymentLinkAccessible(
+      paymentLink,
+      tenant.organizationId,
+      callerOrganizationId,
+    );
     this.clsService.set('organizationId', tenant.organizationId);
 
     return this.getSaleInvoicePdfService.getSaleInvoicePdf(saleInvoiceId);

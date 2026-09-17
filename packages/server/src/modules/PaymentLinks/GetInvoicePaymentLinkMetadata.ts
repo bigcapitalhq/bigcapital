@@ -4,7 +4,7 @@ import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { PaymentLink } from './models/PaymentLink';
-import { assertPaymentLinkIsShared } from './payment-link.utils';
+import { assertPaymentLinkAccessible } from './payment-link.utils';
 import { GetInvoicePaymentLinkMetaTransformer } from '../SaleInvoices/queries/GetInvoicePaymentLink.transformer';
 import { TenantModel } from '../System/models/TenantModel';
 
@@ -35,11 +35,17 @@ export class GetInvoicePaymentLinkMetadata {
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
 
-    assertPaymentLinkIsShared(paymentLink);
+    const callerOrganizationId = this.clsService.get<string>('organizationId');
+
     const tenant = await this.systemTenantModel
       .query()
       .findById(paymentLink.tenantId);
 
+    assertPaymentLinkAccessible(
+      paymentLink,
+      tenant.organizationId,
+      callerOrganizationId,
+    );
     this.clsService.set('organizationId', tenant.organizationId);
     // this.clsService.set('userId', paymentLink.userId);
 

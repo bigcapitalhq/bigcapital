@@ -6,18 +6,24 @@ export const ERROR_PAYMENT_LINK_NOT_SHARED = 'PAYMENT_LINK_NOT_SHARED';
 export const ERROR_PAYMENT_LINK_EXPIRED = 'PAYMENT_LINK_EXPIRED';
 
 /**
- * Payment links are resolved across tenants by their link id alone, so the link
- * itself is the only credential. It may only be resolved while it is shared and
- * unexpired. `publicity` defaults to `private`, which means a link that was
- * generated but never shared must not resolve.
+ * Payment links are looked up across tenants by their link id, and the request
+ * is then switched to the tenant that owns the link. Decide here whether the
+ * caller may follow that switch: a link that was shared is readable by anyone,
+ * any other link only by the organization it belongs to.
  */
-export function assertPaymentLinkIsShared(
+export function assertPaymentLinkAccessible(
   paymentLink: Pick<PaymentLink, 'publicity' | 'expiryAt'>,
+  linkOrganizationId: string,
+  callerOrganizationId: string | undefined,
 ): void {
-  if (paymentLink.publicity !== 'public') {
-    throw new ServiceError(ERROR_PAYMENT_LINK_NOT_SHARED);
-  }
   if (paymentLink.expiryAt && moment(paymentLink.expiryAt).isBefore(moment())) {
     throw new ServiceError(ERROR_PAYMENT_LINK_EXPIRED);
   }
+  if (paymentLink.publicity === 'public') {
+    return;
+  }
+  if (callerOrganizationId && callerOrganizationId === linkOrganizationId) {
+    return;
+  }
+  throw new ServiceError(ERROR_PAYMENT_LINK_NOT_SHARED);
 }
