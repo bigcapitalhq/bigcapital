@@ -77,7 +77,7 @@ export abstract class AgingSummaryReport extends AgingReport {
     const newAgingPeriods = agingPeriods.map((agingPeriod) => {
       const isInAgingPeriod =
         agingPeriod.beforeDays <= overdueDays &&
-        (agingPeriod.toDays > overdueDays || !agingPeriod.toDays);
+        (!agingPeriod.toDays || overdueDays <= agingPeriod.toDays);
 
       const total: number = isInAgingPeriod
         ? agingPeriod.total.amount + dueAmount
