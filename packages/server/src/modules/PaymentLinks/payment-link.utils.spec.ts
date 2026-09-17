@@ -24,7 +24,10 @@ describe('assertPaymentLinkIsShared', () => {
 
   it('refuses a link that was never shared', () => {
     expect(() =>
-      assertPaymentLinkIsShared({ publicity: 'private', expiryAt: null as any }),
+      assertPaymentLinkIsShared({
+        publicity: 'private',
+        expiryAt: null as any,
+      }),
     ).toThrow(
       expect.objectContaining({ errorType: ERROR_PAYMENT_LINK_NOT_SHARED }),
     );
@@ -32,7 +35,10 @@ describe('assertPaymentLinkIsShared', () => {
 
   it('refuses a link with an unknown publicity value', () => {
     expect(() =>
-      assertPaymentLinkIsShared({ publicity: '' as any, expiryAt: null as any }),
+      assertPaymentLinkIsShared({
+        publicity: '' as any,
+        expiryAt: null as any,
+      }),
     ).toThrow(ServiceError);
   });
 
