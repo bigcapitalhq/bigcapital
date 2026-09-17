@@ -287,8 +287,8 @@ export class CashFlowStatement extends flow(
             constant(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
             this.assocPeriodsToAggregateNode,
           ),
-        ),
-      )(node);
+        )(node),
+      );
     };
 
   private transformSectionsToMap = (
