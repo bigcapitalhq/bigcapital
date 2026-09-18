@@ -4,6 +4,7 @@ import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
 import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 import {
   AccountsSelect,
+  CustomersSelect,
   FDateInput,
   FFormGroup,
   FInputGroup,
@@ -13,7 +14,7 @@ import {
 import { useDateInputFormatter } from '@/hooks';
 
 export function CategorizeTransactionOtherIncome() {
-  const { accounts } = useCategorizeTransactionBoot();
+  const { accounts, customers } = useCategorizeTransactionBoot();
   const dateInputFormatter = useDateInputFormatter();
 
   return (
@@ -56,6 +57,16 @@ export function CategorizeTransactionOtherIncome() {
           fastField
           fill
           allowCreate
+        />
+      </FFormGroup>
+
+      <FFormGroup name={'contactId'} label={'Received From'} inline>
+        <CustomersSelect
+          name={'contactId'}
+          items={customers}
+          placeholder={'Select or create a customer'}
+          allowCreate
+          fill
         />
       </FFormGroup>
 

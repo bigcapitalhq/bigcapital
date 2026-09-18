@@ -33,6 +33,7 @@ export interface ICategorizeCashflowTransactioDTO {
   exchangeRate: number;
   currencyCode: string;
   description: string;
+  contactId?: number;
   branchId: number;
 }
 
