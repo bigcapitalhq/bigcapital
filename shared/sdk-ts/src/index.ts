@@ -5,6 +5,7 @@
 export type * from './schema';
 export * from './fetch-utils';
 export * from './accounts';
+export * from './accounts-templates';
 export * from './credit-notes';
 export * from './api-keys';
 export * from './sale-invoices';
