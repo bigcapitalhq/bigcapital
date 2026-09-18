@@ -114,6 +114,17 @@ export class CreateBankTransactionDto {
   publish: boolean = true;
 
   @ApiPropertyOptional({
+    description:
+      'ID of the contact (customer or vendor) this transaction was paid to or received from.',
+    type: Number,
+    example: 3001,
+  })
+  @IsOptional()
+  @ToNumber()
+  @IsInt()
+  contactId?: number;
+
+  @ApiPropertyOptional({
     description: 'ID of the branch where the transaction occurred',
     type: Number,
     example: 101,
