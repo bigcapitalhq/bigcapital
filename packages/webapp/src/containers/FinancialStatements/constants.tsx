@@ -40,6 +40,9 @@ export const dateRangeOptions = [
   { value: 'this_month', label: intl.get('this_month') },
   { value: 'this_quarter', label: intl.get('this_quarter') },
   { value: 'this_year', label: intl.get('this_year') },
+  { value: 'last_month', label: intl.get('last_month') },
+  { value: 'last_quarter', label: intl.get('last_quarter') },
+  { value: 'last_year', label: intl.get('last_year') },
   { value: 'custom', label: intl.get('custom_range') },
 ];
 

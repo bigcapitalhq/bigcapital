@@ -8,6 +8,10 @@ const day = (value) => moment(value, 'YYYY-MM-DD').toDate();
 const startOf = (range) => moment().startOf(range).toDate();
 const endOf = (range) => moment().endOf(range).toDate();
 
+const startOfLast = (range) =>
+  moment().subtract(1, range).startOf(range).toDate();
+const endOfLast = (range) => moment().subtract(1, range).endOf(range).toDate();
+
 describe('inferDateRange', () => {
   it('should infer today', () => {
     expect(inferDateRange(startOf('day'), endOf('day'))).toBe('today');
@@ -31,6 +35,24 @@ describe('inferDateRange', () => {
     expect(inferDateRange(startOf('year'), endOf('year'))).toBe('this_year');
   });
 
+  it('should infer last_month', () => {
+    expect(inferDateRange(startOfLast('month'), endOfLast('month'))).toBe(
+      'last_month',
+    );
+  });
+
+  it('should infer last_quarter', () => {
+    expect(inferDateRange(startOfLast('quarter'), endOfLast('quarter'))).toBe(
+      'last_quarter',
+    );
+  });
+
+  it('should infer last_year', () => {
+    expect(inferDateRange(startOfLast('year'), endOfLast('year'))).toBe(
+      'last_year',
+    );
+  });
+
   it('should still infer a preset after a YYYY-MM-DD round-trip', () => {
     // The query string flattens `endOf()`'s 23:59:59.999 to midnight.
     expect(
@@ -39,7 +61,9 @@ describe('inferDateRange', () => {
   });
 
   it('should return custom for a range matching no preset', () => {
-    expect(inferDateRange(day('2025-01-01'), day('2025-12-31'))).toBe('custom');
+    // Deliberately not a whole calendar unit: a full year would match the
+    // `last_year` preset whenever the suite runs the year after it.
+    expect(inferDateRange(day('2025-02-03'), day('2025-11-17'))).toBe('custom');
   });
 
   it('should return custom when either date is missing', () => {
@@ -60,7 +84,7 @@ describe('resolveDateRange', () => {
 
   it('should prefer the dates over a stale stored preset', () => {
     expect(
-      resolveDateRange('this_year', day('2025-01-01'), day('2025-12-31')),
+      resolveDateRange('this_year', day('2025-02-03'), day('2025-11-17')),
     ).toBe('custom');
   });
 
@@ -69,7 +93,7 @@ describe('resolveDateRange', () => {
       'this_year',
     );
     expect(
-      resolveDateRange(undefined, day('2025-01-01'), day('2025-12-31')),
+      resolveDateRange(undefined, day('2025-02-03'), day('2025-11-17')),
     ).toBe('custom');
   });
 
