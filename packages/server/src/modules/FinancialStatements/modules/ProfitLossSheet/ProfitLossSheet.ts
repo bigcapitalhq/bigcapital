@@ -28,6 +28,7 @@ import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
+import { sortAccountsByCode } from '@/utils/sort-accounts-by-code';
 import {
   IFinancialReportMeta,
   DEFAULT_REPORT_META,
@@ -156,7 +157,9 @@ export default class ProfitLossSheet extends ProfitLossSheetPreviousYear(
   private getAccountsNodesByTypes = (
     types: string[],
   ): IProfitLossSheetAccountNode[] => {
-    const accounts = this.repository.getAccountsByType(types);
+    const accounts = sortAccountsByCode(
+      this.repository.getAccountsByType(types) as ModelObject<Account>[],
+    );
     const accountsTree = flatToNestedArray(accounts, {
       id: 'id',
       parentId: 'parentAccountId',
