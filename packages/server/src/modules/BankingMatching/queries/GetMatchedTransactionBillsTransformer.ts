@@ -89,6 +89,15 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
   }
 
   /**
+   * Retrieve the bill transaction number.
+   * @param {Object} bill - The bill object.
+   * @returns {string}
+   */
+  protected transactionNo(bill) {
+    return bill.billNumber;
+  }
+
+  /**
    * Retrieve the manual journal transaction type.
    * @returns {string}
    */
