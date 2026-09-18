@@ -2,6 +2,7 @@ import knex from 'knex';
 import * as LRUCache from 'lru-cache';
 import { Global, Module } from '@nestjs/common';
 import { knexSnakeCaseMappers } from 'objection';
+import { TenantMigrationSource } from './TenantMigrationSource';
 import { ClsModule, ClsService } from 'nestjs-cls';
 import { ConfigService } from '@nestjs/config';
 import { TENANCY_DB_CONNECTION } from './TenancyDB.constants';
@@ -33,8 +34,9 @@ export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
         charset: 'utf8',
       },
       migrations: {
-        directory: configService.get('tenantDatabase.migrationsDir'),
-        loadExtensions: ['.js'],
+        migrationSource: new TenantMigrationSource(
+          configService.get('tenantDatabase.migrationsDir'),
+        ),
       },
       seeds: {
         directory: configService.get('tenantDatabase.seedsDir'),
