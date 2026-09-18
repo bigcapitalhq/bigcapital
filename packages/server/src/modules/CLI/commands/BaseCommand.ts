@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
 import { DATE_ONLY_COLUMNS_OPTIONS } from '@/common/constants/database.constants';
+import { TenantMigrationSource } from '@/modules/Tenancy/TenancyDB/TenantMigrationSource';
 
 @Injectable()
 export abstract class BaseCommand extends CommandRunner {
@@ -48,10 +49,10 @@ export abstract class BaseCommand extends CommandRunner {
         ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       migrations: {
-        directory:
+        migrationSource: new TenantMigrationSource(
           this.configService.get('tenantDatabase.migrationsDir') ||
-          './src/database/migrations',
-        loadExtensions: ['.js'],
+            './src/database/migrations',
+        ),
       },
       seeds: {
         directory:

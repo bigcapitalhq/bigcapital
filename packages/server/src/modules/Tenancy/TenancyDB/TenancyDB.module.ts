@@ -2,6 +2,7 @@ import knex from 'knex';
 import * as LRUCache from 'lru-cache';
 import { Global, Module } from '@nestjs/common';
 import { knexSnakeCaseMappers } from 'objection';
+import { TenantMigrationSource } from './TenantMigrationSource';
 import { ClsModule, ClsService } from 'nestjs-cls';
 import { ConfigService } from '@nestjs/config';
 import { DATE_ONLY_COLUMNS_OPTIONS } from '@/common/constants/database.constants';
@@ -35,8 +36,9 @@ export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
         ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       migrations: {
-        directory: configService.get('tenantDatabase.migrationsDir'),
-        loadExtensions: ['.js'],
+        migrationSource: new TenantMigrationSource(
+          configService.get('tenantDatabase.migrationsDir'),
+        ),
       },
       seeds: {
         directory: configService.get('tenantDatabase.seedsDir'),
