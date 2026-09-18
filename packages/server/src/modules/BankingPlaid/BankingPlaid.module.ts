@@ -16,6 +16,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { BankingTransactionsModule } from '../BankingTransactions/BankingTransactions.module';
 import { PlaidItemService } from './command/PlaidItem';
+import { LinkPlaidAccountsService } from './command/LinkPlaidAccounts.service';
 import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
 import { SystemPlaidItem } from './models/SystemPlaidItem';
@@ -55,6 +56,7 @@ const models = [RegisterTenancyModel(PlaidItem)];
   providers: [
     InjectSystemModel(SystemPlaidItem),
     PlaidItemService,
+    LinkPlaidAccountsService,
     PlaidUpdateTransactions,
     PlaidSyncDb,
     PlaidWebooks,
