@@ -30,6 +30,7 @@ import { CASH_FLOW_SCHEMA } from './schema';
 import { ACCOUNT_ROOT_TYPE } from '@/constants/accounts';
 import { CashFlowStatementDatePeriods } from './CashFlowDatePeriods';
 import { DISPLAY_COLUMNS_BY } from './constants';
+import { sortAccountsByCode } from '@/utils/sort-accounts-by-code';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ILedger } from '@/modules/Ledger/types/Ledger.types';
@@ -83,7 +84,11 @@ export class CashFlowStatement extends flow(
     this.ledger = ledger;
     this.cashLedger = cashLedger;
     this.netIncomeLedger = netIncomeLedger;
-    this.accountByTypeMap = transformToMapBy(accounts, 'accountType');
+    // Each section lists its accounts in chart order.
+    this.accountByTypeMap = transformToMapBy(
+      sortAccountsByCode(accounts),
+      'accountType',
+    );
     this.accountsByRootType = transformToMapBy(accounts, 'accountRootType');
     this.query = query;
     this.numberFormat = this.query.numberFormat;
