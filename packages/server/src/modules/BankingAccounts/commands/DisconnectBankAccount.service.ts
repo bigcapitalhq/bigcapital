@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { uniq } from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import { PlaidApi } from 'plaid';
 import {
@@ -55,22 +56,45 @@ export class DisconnectBankAccountService {
         bankAccountId,
       } as IBankAccountDisconnectingEventPayload);
 
-      // Remove the Plaid item from the system.
-      await this.plaidItemModel()
+      // Other accounts fed by the same Plaid item keep it connected.
+      const otherItemAccounts = await this.accountModel()
         .query(trx)
-        .findOne('plaidItemId', account.plaidItemId)
-        .delete();
+        .where('plaidItemId', account.plaidItemId)
+        .whereNot('id', bankAccountId)
+        .whereNotNull('plaidAccountId');
+      const isItemShared = otherItemAccounts.length > 0;
 
+      if (isItemShared) {
+        // Stop syncing this account only, so the item sync neither feeds it
+        // nor creates it again.
+        await this.plaidItemModel()
+          .query(trx)
+          .findOne('plaidItemId', account.plaidItemId)
+          .patch({
+            disconnectedPlaidAccountIds: uniq([
+              ...(oldPlaidItem.disconnectedPlaidAccountIds ?? []),
+              ...(account.plaidAccountId ? [account.plaidAccountId] : []),
+            ]),
+          });
+      } else {
+        // Remove the Plaid item from the system.
+        await this.plaidItemModel()
+          .query(trx)
+          .findOne('plaidItemId', account.plaidItemId)
+          .delete();
+      }
       // Remove the plaid item association to the bank account.
       await this.accountModel().query(trx).findById(bankAccountId).patch({
         plaidAccountId: null,
         plaidItemId: null,
         isFeedsActive: false,
       });
-      // Remove the Plaid item.
-      await this.plaidClient.itemRemove({
-        access_token: oldPlaidItem.plaidAccessToken,
-      });
+      // Remove the Plaid item once no account is fed by it.
+      if (!isItemShared) {
+        await this.plaidClient.itemRemove({
+          access_token: oldPlaidItem.plaidAccessToken,
+        });
+      }
       // Triggers `onBankAccountDisconnected` event.
       await this.eventPublisher.emitAsync(events.bankAccount.onDisconnected, {
         bankAccountId,
