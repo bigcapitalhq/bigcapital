@@ -7,6 +7,7 @@ export * from './misc';
 export * from './attachments';
 export * from './import';
 export * from './accounts';
+export * from './accounts-templates';
 export * from './items';
 export * from './items-categories';
 export * from './inventory-adjustments';
