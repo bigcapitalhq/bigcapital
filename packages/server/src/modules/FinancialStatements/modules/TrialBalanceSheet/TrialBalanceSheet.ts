@@ -12,6 +12,7 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { ModelObject } from 'objection';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
+import { sortAccountsByCode } from '@/utils/sort-accounts-by-code';
 import {
   IFinancialReportMeta,
   DEFAULT_REPORT_META,
@@ -249,6 +250,7 @@ export class TrialBalanceSheet extends FinancialSheet {
    */
   private accountsSection(accounts: ModelObject<Account>[]) {
     return flow(
+      sortAccountsByCode,
       this.accountsMapper,
       this.nestedAccountsNode,
       this.accountsFilter,
