@@ -21,8 +21,10 @@ export const bankingKeys = {
   rule: (id: number) => [BANK_RULES, id] as const,
   summaryMeta: (bankAccountId?: number) =>
     [BANK_ACCOUNT_SUMMARY_META, bankAccountId] as const,
-  transactionMatches: (uncategorizedTransactionIds: number[]) =>
-    [BANK_TRANSACTION_MATCHES, uncategorizedTransactionIds] as const,
+  transactionMatches: (
+    uncategorizedTransactionIds: number[],
+    query?: Record<string, unknown>,
+  ) => [BANK_TRANSACTION_MATCHES, uncategorizedTransactionIds, query] as const,
   recognizedTransaction: (uncategorizedTransactionId: number) =>
     [RECOGNIZED_BANK_TRANSACTION, uncategorizedTransactionId] as const,
   recognizedTransactionsInfinity: (query?: Record<string, unknown>) =>
