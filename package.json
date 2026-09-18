@@ -1,6 +1,7 @@
 {
   "name": "bigcapital-monorepo",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "lerna run dev",
     "build": "lerna run build",
