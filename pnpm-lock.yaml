@@ -249,6 +249,9 @@ importers:
       multer-s3:
         specifier: ^3.0.1
         version: 3.0.1(@aws-sdk/client-s3@3.583.0)
+      mustache:
+        specifier: ^3.0.3
+        version: 3.2.1
       mysql:
         specifier: ^2.18.1
         version: 2.18.1
@@ -400,9 +403,6 @@ importers:
       jest:
         specifier: ^29.5.0
         version: 29.7.0(@types/node@20.5.1)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.6.3))
-      mustache:
-        specifier: ^3.0.3
-        version: 3.2.1
       prettier:
         specifier: ^3.0.0
         version: 3.3.3
