@@ -6,8 +6,8 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "assets": [
-      { "include": "i18n/**/*", "watchAssets": true },
-      { "include": "database/**/*", "exclude": "**/*.ts", "watchAssets": true }
+      { "include": "i18n/**/*" },
+      { "include": "database/**/*", "exclude": "**/*.ts" }
     ]
   },
   "projects": {
