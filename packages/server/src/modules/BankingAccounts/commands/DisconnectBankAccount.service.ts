@@ -40,7 +40,11 @@ export class DisconnectBankAccountService {
     const account = await this.accountModel()
       .query()
       .findById(bankAccountId)
-      .whereIn('account_type', [ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK])
+      .whereIn('account_type', [
+        ACCOUNT_TYPE.CASH,
+        ACCOUNT_TYPE.BANK,
+        ACCOUNT_TYPE.CREDIT_CARD,
+      ])
       .withGraphFetched('plaidItem')
       .throwIfNotFound();
 
