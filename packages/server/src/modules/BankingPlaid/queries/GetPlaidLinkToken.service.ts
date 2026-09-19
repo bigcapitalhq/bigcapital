@@ -26,7 +26,7 @@ export class PlaidLinkTokenService {
         // This should correspond to a unique id for the current user.
         client_user_id: 'uniqueId' + 1,
       },
-      client_name: 'Pattern',
+      client_name: this.configService.get('plaid.clientName'),
       products: [Products.Transactions],
       country_codes: [CountryCode.Us],
       language: 'en',
