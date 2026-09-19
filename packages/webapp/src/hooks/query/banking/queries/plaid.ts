@@ -8,6 +8,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../../useRequest';
+import { AccountsQueryKeys, accountsKeys } from '../../accounts/query-keys';
 import { cashflowAccountsKeys } from '../../cashflow-accounts/query-keys';
 import type {
   PlaidExchangeTokenBody,
@@ -43,6 +44,11 @@ export function usePlaidExchangeToken(
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: cashflowAccountsKeys.all(),
+      });
+      // Existing accounts linked to the bank connection change feeds state.
+      queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
+      queryClient.invalidateQueries({
+        queryKey: [AccountsQueryKeys.ACCOUNT],
       });
     },
   });
