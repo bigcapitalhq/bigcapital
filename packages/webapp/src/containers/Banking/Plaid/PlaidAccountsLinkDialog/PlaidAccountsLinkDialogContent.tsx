@@ -26,12 +26,14 @@ interface PlaidAccountsLinkFormValues {
   links: Array<{ plaidAccountId: string; accountId: number }>;
 }
 
-// Selecting it keeps the default behaviour of creating a new account.
+// Selecting it keeps the default behaviour of creating a new account. The
+// accounts menu indents each item by its `accountLevel`, so it needs one.
 const CREATE_NEW_ACCOUNT_ID = 0;
 const CREATE_NEW_ACCOUNT: AccountSelectModel = {
   id: CREATE_NEW_ACCOUNT_ID,
   name: 'Create a new account',
   code: '',
+  accountLevel: 1,
 };
 
 /**
