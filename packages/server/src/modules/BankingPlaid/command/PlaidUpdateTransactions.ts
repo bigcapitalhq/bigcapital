@@ -109,6 +109,8 @@ export class PlaidUpdateTransactions {
     await this.plaidSync.updateLastFeedsUpdatedAt(plaidAccountsIds, trx);
     // Turn on the accounts feeds flag.
     await this.plaidSync.updateAccountsFeedsActive(plaidAccountsIds, true, trx);
+    // Refresh the bank balance of the updated accounts.
+    await this.plaidSync.updateAccountsBankBalance(accounts, trx);
 
     return {
       addedCount: added.length,
