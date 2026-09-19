@@ -25,50 +25,78 @@ describe('Organization (e2e)', () => {
       });
   });
 
-  it('/organization (POST)', async () => {
-    return request(app.getHttpServer())
+  const authHeaders = () => ({
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${signinResponse.body.access_token}`,
+    'organization-id': signupResponse.body.organization_id,
+  });
+
+  // The webapp / `@bigcapital/sdk-ts` serialize request bodies to snake_case,
+  // so the e2e payloads below intentionally use snake_case keys.
+  it('/organization/build (POST) persists the snake_case setup payload', async () => {
+    await request(app.getHttpServer())
       .post('/organization/build')
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .set('Authorization', `Bearer ${signinResponse.body.access_token}`)
-      .set('organization-id', signupResponse.body.organization_id)
+      .set(authHeaders())
       .send({
         name: 'BIGCAPITAL, INC',
-        baseCurrency: 'USD',
+        base_currency: 'USD',
         location: 'US',
         language: 'en',
-        fiscalYear: 'march',
+        fiscal_year: 'march',
         timezone: 'US/Central',
       })
       .expect(200);
+
+    const { body } = await request(app.getHttpServer())
+      .get('/organization/current')
+      .set(authHeaders())
+      .expect(200);
+
+    expect(body.metadata).toMatchObject({
+      name: 'BIGCAPITAL, INC',
+      base_currency: 'USD',
+      fiscal_year: 'march',
+      timezone: 'US/Central',
+    });
   });
 
-  it('/organization (GET)', () => {
+  it('/organization/current (GET)', () => {
     return request(app.getHttpServer())
       .get('/organization/current')
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .set('Authorization', `Bearer ${signinResponse.body.access_token}`)
-      .set('organization-id', signupResponse.body.organization_id)
+      .set(authHeaders())
       .send()
       .expect(200);
   });
 
-  it('/organization (PUT)', () => {
-    return request(app.getHttpServer())
+  it('/organization (PUT) persists snake_case branding + general fields', async () => {
+    await request(app.getHttpServer())
       .put('/organization')
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .set('Authorization', `Bearer ${signinResponse.body.access_token}`)
-      .set('organization-id', signupResponse.body.organization_id)
+      .set(authHeaders())
       .send({
-        name: 'BIGCAPITAL, INC',
-        baseCurrency: 'USD',
-        location: 'US',
-        language: 'en',
-        fiscalYear: 'march',
-        timezone: 'US/Central',
+        name: 'BIGCAPITAL RENAMED, INC',
+        fiscal_year: 'january',
+        primary_color: '#c2b942',
+        tax_number: '92-1234567',
+        address: { city: 'Homer', state_province: 'AK', postal_code: '99603' },
       })
       .expect(200);
+
+    const { body } = await request(app.getHttpServer())
+      .get('/organization/current')
+      .set(authHeaders())
+      .expect(200);
+
+    expect(body.metadata).toMatchObject({
+      name: 'BIGCAPITAL RENAMED, INC',
+      fiscal_year: 'january',
+      primary_color: '#c2b942',
+      tax_number: '92-1234567',
+    });
+    expect(body.metadata.address).toMatchObject({
+      city: 'Homer',
+      state_province: 'AK',
+      postal_code: '99603',
+    });
   });
 });
