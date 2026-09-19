@@ -3,6 +3,7 @@ import { castArray } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import * as Yup from 'yup';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -35,7 +36,7 @@ const parseInventoryValuationQuery = (
 ): InventoryValuationTableQuery => {
   const defaultQuery = getInventoryValuationQuery();
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {

@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import {
   TrialBalanceSheetAlerts,
   TrialBalanceSheetLoadingBar,
@@ -39,6 +40,7 @@ function TrialBalanceSheetInner({
         fromDate: moment(filter.fromDate as Date).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate as Date).format('YYYY-MM-DD'),
       };
+      writeReportingPeriod(parsedFilter);
       setLocationQuery(parsedFilter);
     },
     [setLocationQuery],
