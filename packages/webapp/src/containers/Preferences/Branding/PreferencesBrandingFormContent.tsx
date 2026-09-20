@@ -73,7 +73,9 @@ function BrandingCompanyLogoDesc() {
   return (
     <Stack spacing={10} style={{ fontSize: 12, paddingTop: 12, flex: 1 }}>
       <Text className={Classes.TEXT_MUTED}>
-        This logo will be displayed in transaction PDFs and email notifications.
+        This logo identifies the organization in the app. Transaction PDFs and
+        mail templates use the logo uploaded on each template from its customize
+        screen.
       </Text>
       <Text className={Classes.TEXT_MUTED}>
         Preferred Image Dimensions: 240 × 240 pixels @ 72 DPI Maximum File Size:
