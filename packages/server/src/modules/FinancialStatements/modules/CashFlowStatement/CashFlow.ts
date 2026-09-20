@@ -379,8 +379,11 @@ export class CashFlowStatement extends flow(
   ): ICashFlowStatementAccountMeta => {
     const cashToDate = this.beginningCashFrom(this.query.fromDate);
 
+    // The opening rows of the beginning-cash ledger carry no date, and on
+    // date periods the ledger also holds one dated aggregate per period, so
+    // the bound has to keep the undated rows and drop the in-range ones.
     const closingBalance = this.cashLedger
-      .whereToDate(cashToDate)
+      .whereToDateOrUndated(cashToDate)
       .whereAccountId(account.id)
       .getClosingBalance();
 

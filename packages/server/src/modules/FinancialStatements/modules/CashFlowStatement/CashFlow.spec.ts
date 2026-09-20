@@ -113,6 +113,49 @@ const buildReport = (overrides: Partial<ICashFlowStatementQuery> = {}) => {
   ).reportData();
 };
 
+const buildReportWithBeginningCash = (
+  cashEntries: ILedgerEntry[],
+  overrides: Partial<ICashFlowStatementQuery> = {},
+) => {
+  const ledger = new Ledger(fixtureEntries());
+  const i18n = { t: (key: string) => key } as unknown as I18nService;
+
+  return new CashFlowStatement(
+    [incomeAccount, expenseAccount, bankAccount] as any,
+    ledger,
+    new Ledger(cashEntries),
+    ledger,
+    { ...query, ...overrides },
+    i18n,
+    { baseCurrency: 'USD', dateFormat: 'YYYY MMM DD' },
+  ).reportData();
+};
+
+/**
+ * `CashFlowRepository.cashAtBeginningTotalTransactions` sums credit and debit
+ * grouped by account and selects no date column, so the opening rows of the
+ * beginning-cash ledger carry no date at all (issue #1118).
+ */
+const beginningCashEntries = (): ILedgerEntry[] => [
+  {
+    ...entry({ id: 10, debit: 10000, accountId: bankAccount.id }),
+    date: undefined as unknown as string,
+  },
+];
+
+/**
+ * On date periods the service appends `cashAtBeginningPeriodTransactions` to
+ * the same ledger: one aggregate per period, dated by `DATE_FORMAT` — '2023'
+ * by year, '2023-02' by month. A period therefore opens on the undated rows
+ * plus every period aggregate that closed before it, and the report's own
+ * opening column must not count any of them.
+ */
+const beginningCashEntriesByYear = (): ILedgerEntry[] => [
+  ...beginningCashEntries(),
+  entry({ id: 11, debit: 500, accountId: bankAccount.id, date: '2022' }),
+  entry({ id: 12, debit: 3000, accountId: bankAccount.id, date: '2023' }),
+];
+
 describe('CashFlowStatement', () => {
   it('associates the operating activities total from its children', () => {
     const report = buildReport();
@@ -146,6 +189,35 @@ describe('CashFlowStatement', () => {
       netCashIncrease.total.amount + cashBeginning.total.amount,
       2,
     );
+  });
+
+  it('carries the undated beginning-cash balance into the report', () => {
+    const report = buildReportWithBeginningCash(beginningCashEntries());
+    const cashBeginning = findNode(report, 'CASH_BEGINNING_PERIOD');
+    const netCashIncrease = findNode(report, 'NET_CASH_INCREASE');
+    const cashEnd = findNode(report, 'CASH_END_PERIOD');
+
+    expect(cashBeginning.total.amount).toBeCloseTo(10000, 2);
+    expect(netCashIncrease.total.amount).toBeCloseTo(2550, 2);
+    expect(cashEnd.total.amount).toBeCloseTo(12550, 2);
+  });
+
+  it('opens each date period on the periods that closed before it', () => {
+    const report = buildReportWithBeginningCash(beginningCashEntriesByYear(), {
+      fromDate: '2022-01-01',
+      toDate: '2023-12-31',
+      displayColumnsType: 'date_periods',
+      displayColumnsBy: 'year',
+    });
+    const cashBeginning = findNode(report, 'CASH_BEGINNING_PERIOD');
+
+    // The report opens on the undated rows alone — the 2022 and 2023
+    // aggregates are movement inside the report, not opening balance.
+    expect(cashBeginning.total.amount).toBeCloseTo(10000, 2);
+
+    expect(cashBeginning.periods).toHaveLength(2);
+    expect(cashBeginning.periods[0].total.amount).toBeCloseTo(10000, 2);
+    expect(cashBeginning.periods[1].total.amount).toBeCloseTo(10500, 2);
   });
 
   it('keeps the operating activities total on date periods mode', () => {

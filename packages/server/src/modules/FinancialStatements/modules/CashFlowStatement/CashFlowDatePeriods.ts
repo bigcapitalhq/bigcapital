@@ -360,8 +360,11 @@ export const CashFlowStatementDatePeriods = <
     ) => {
       const cashToDate = this.beginningCashFrom(fromDate);
 
+      // The ledger holds the undated opening rows and one dated aggregate per
+      // period, so a period opens on the opening rows plus every period that
+      // closed before it.
       return this.cashLedger
-        .whereToDate(cashToDate)
+        .whereToDateOrUndated(cashToDate)
         .whereAccountId(node.id)
         .getClosingBalance();
     };

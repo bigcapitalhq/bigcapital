@@ -13,6 +13,7 @@ export interface ILedger {
   whereContactId(contactId: number): ILedger;
   whereFromDate(fromDate: Date | string): ILedger;
   whereToDate(toDate: Date | string): ILedger;
+  whereToDateOrUndated(toDate: Date | string): ILedger;
   whereCurrencyCode(currencyCode: string): ILedger;
   whereBranch(branchId: number): ILedger;
   whereItem(itemId: number): ILedger;

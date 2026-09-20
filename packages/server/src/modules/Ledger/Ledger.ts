@@ -91,6 +91,28 @@ export class Ledger implements ILedger {
   }
 
   /**
+   * Filters the ledger entries down to the given date, keeping the entries
+   * that carry no date at all.
+   *
+   * Entries aggregated in SQL (`SUM` / `GROUP BY` with no date column) have no
+   * date, and an opening balance built that way is bounded by the query that
+   * produced it rather than by the entry. `whereToDate` drops those entries,
+   * because comparing a moment against `undefined` compares it against now.
+   * @param   {Date|string} toDate
+   * @returns {ILedger}
+   */
+  public whereToDateOrUndated(toDate: Date | string): ILedger {
+    const toDateParsed = moment(toDate);
+
+    return this.filter(
+      (entry) =>
+        entry.date == null ||
+        toDateParsed.isAfter(entry.date) ||
+        toDateParsed.isSame(entry.date),
+    );
+  }
+
+  /**
    * Filters the ledget entries by the given currency code.
    * @param   {string} currencyCode -
    * @returns {ILedger}
