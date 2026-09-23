@@ -98,14 +98,17 @@ const findNode = (nodes, id: string) => {
   return undefined;
 };
 
-const buildReport = (overrides: Partial<ICashFlowStatementQuery> = {}) => {
+const buildReport = (
+  overrides: Partial<ICashFlowStatementQuery> = {},
+  cashLedger: Ledger = new Ledger([]),
+) => {
   const ledger = new Ledger(fixtureEntries());
   const i18n = { t: (key: string) => key } as unknown as I18nService;
 
   return new CashFlowStatement(
     [incomeAccount, expenseAccount, bankAccount] as any,
     ledger,
-    new Ledger([]),
+    cashLedger,
     ledger,
     { ...query, ...overrides },
     i18n,
@@ -161,5 +164,71 @@ describe('CashFlowStatement', () => {
     expect(operating.total.amount).toBeCloseTo(2550, 2);
     expect(operating.periods).toHaveLength(2);
     expect(operating.periods[1].total.amount).toBeCloseTo(2550, 2);
+  });
+
+  it('reports the cash at beginning of period from the beginning cash ledger', () => {
+    const cashLedger = new Ledger([
+      entry({
+        id: 10,
+        debit: 1000,
+        accountId: bankAccount.id,
+        date: '2022-12-15',
+      }),
+    ]);
+    const report = buildReport({}, cashLedger);
+    const cashBeginning = findNode(report, 'CASH_BEGINNING_PERIOD');
+    const netCashIncrease = findNode(report, 'NET_CASH_INCREASE');
+    const cashEnd = findNode(report, 'CASH_END_PERIOD');
+
+    expect(cashBeginning.total.amount).toBeCloseTo(1000, 2);
+    expect(netCashIncrease.total.amount).toBeCloseTo(2550, 2);
+    expect(cashEnd.total.amount).toBeCloseTo(3550, 2);
+    expect(cashEnd.total.amount).toBeCloseTo(
+      netCashIncrease.total.amount + cashBeginning.total.amount,
+      2,
+    );
+  });
+
+  it('accumulates the cash at beginning per date period', () => {
+    const cashLedger = new Ledger([
+      entry({
+        id: 10,
+        debit: 1000,
+        accountId: bankAccount.id,
+        date: '2021-12-15',
+      }),
+      entry({
+        id: 11,
+        debit: 200,
+        accountId: bankAccount.id,
+        date: '2022-06',
+      }),
+      entry({
+        id: 12,
+        debit: 3000,
+        accountId: bankAccount.id,
+        date: '2023-02',
+      }),
+      entry({
+        id: 13,
+        credit: 450,
+        accountId: bankAccount.id,
+        date: '2023-02',
+      }),
+    ]);
+    const report = buildReport(
+      {
+        fromDate: '2022-01-01',
+        toDate: '2023-12-31',
+        displayColumnsType: 'date_periods',
+        displayColumnsBy: 'year',
+      },
+      cashLedger,
+    );
+    const cashBeginning = findNode(report, 'CASH_BEGINNING_PERIOD');
+
+    expect(cashBeginning.periods).toHaveLength(2);
+    expect(cashBeginning.periods[0].total.amount).toBeCloseTo(1000, 2);
+    expect(cashBeginning.periods[1].total.amount).toBeCloseTo(1200, 2);
   });
 });

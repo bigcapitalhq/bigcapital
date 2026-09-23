@@ -66,6 +66,7 @@ export class CashFlowRepository {
         query.modify('creditDebitSummation');
 
         query.select('accountId');
+        query.max('date as date');
         query.groupBy('accountId');
 
         query.withGraphFetched('account');
