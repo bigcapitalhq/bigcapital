@@ -1,6 +1,44 @@
 import type { ApiFetcher } from './fetch-utils';
-import { paths } from './schema';
+import { paths, components } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
+
+/**
+ * Error types returned by the users and invitations API endpoints.
+ * Derived from the server OpenAPI schema.
+ */
+export type UsersErrorType =
+  components['schemas']['UsersApiErrorResponseDto']['errors'][number]['type'];
+
+/**
+ * Users and invitations API error response shape.
+ */
+export type UsersApiErrorResponse =
+  components['schemas']['UsersApiErrorResponseDto'];
+
+/**
+ * Users and invitations API error type constants.
+ * Typed against the generated OpenAPI schema so a server-side change that is
+ * not reflected here fails the SDK typecheck.
+ */
+export const USERS_ERROR_TYPES = {
+  CannotDeleteLastUser: 'CANNOT_DELETE_LAST_USER',
+  UserAlreadyActive: 'USER_ALREADY_ACTIVE',
+  UserAlreadyInactive: 'USER_ALREADY_INACTIVE',
+  EmailAlreadyExists: 'EMAIL_ALREADY_EXISTS',
+  PhoneNumberAlreadyExist: 'PHONE_NUMBER_ALREADY_EXIST',
+  UserNotFound: 'USER_NOT_FOUND',
+  UserSameTheAuthorizedUser: 'USER_SAME_THE_AUTHORIZED_USER',
+  CannotAuthorizedUserMutateRole: 'CANNOT_AUTHORIZED_USER_MUTATE_ROLE',
+  EmailAlreadyInvited: 'EMAIL_ALREADY_INVITED',
+  InviteTokenInvalid: 'INVITE_TOKEN_INVALID',
+  PhoneNumberExists: 'PHONE_NUMBER_EXISTS',
+  EmailExists: 'EMAIL_EXISTS',
+  EmailNotExists: 'EMAIL_NOT_EXISTS',
+  UserRecentlyInvited: 'USER_RECENTLY_INVITED',
+  CannotGrantRole: 'CANNOT_GRANT_ROLE',
+  CannotRemoveLastAdmin: 'CANNOT_REMOVE_LAST_ADMIN',
+  RoleNotFound: 'ROLE_NOT_FOUND',
+} as const satisfies Record<string, UsersErrorType>;
 
 export const USERS_ROUTES = {
   LIST: '/api/users',

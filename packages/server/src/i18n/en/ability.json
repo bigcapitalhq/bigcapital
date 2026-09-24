@@ -17,10 +17,13 @@
   "mutate_system_preferences": "Mutate the system preferences.",
 
   "items": "Items",
+  "users": "Users",
   "view": "View",
   "create": "Create",
   "edit": "Edit",
   "delete": "Delete",
+  "invite": "Invite",
+  "activate": "Activate",
   "transactions_locking": "Ability to transactions locking.",
 
   "balance_sheet_report": "Balance sheet.",

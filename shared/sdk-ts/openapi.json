@@ -23871,6 +23871,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Validation error. Possible error types: CANNOT_AUTHORIZED_USER_MUTATE_ROLE, CANNOT_GRANT_ROLE, CANNOT_REMOVE_LAST_ADMIN, ROLE_NOT_FOUND, EMAIL_ALREADY_EXISTS, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersApiErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -23919,6 +23929,16 @@
                     "id": 1,
                     "message": "The user has been deleted successfully."
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error. Possible error types: CANNOT_DELETE_LAST_USER, CANNOT_REMOVE_LAST_ADMIN, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersApiErrorResponseDto"
                 }
               }
             }
@@ -24084,6 +24104,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Validation error. Possible error types: USER_SAME_THE_AUTHORIZED_USER, USER_ALREADY_ACTIVE, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersApiErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -24137,6 +24167,16 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Validation error. Possible error types: USER_SAME_THE_AUTHORIZED_USER, USER_ALREADY_INACTIVE, CANNOT_REMOVE_LAST_ADMIN, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersApiErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -24148,7 +24188,27 @@
       "patch": {
         "operationId": "UsersInviteController_sendInvite",
         "summary": "Send an invitation to a new user.",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -24161,7 +24221,17 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "The invitation has been sent successfully."
+          },
+          "400": {
+            "description": "Validation error. Possible error types: EMAIL_EXISTS, EMAIL_ALREADY_INVITED, CANNOT_GRANT_ROLE, ROLE_NOT_FOUND, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersApiErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -24175,6 +24245,25 @@
         "summary": "Resend an invitation to an existing user.",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "id",
             "required": true,
             "in": "path",
@@ -24184,8 +24273,18 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "The invitation has been resent successfully."
+          },
+          "400": {
+            "description": "Validation error. Possible error types: USER_NOT_FOUND, USER_RECENTLY_INVITED, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersApiErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -24197,7 +24296,27 @@
       "post": {
         "operationId": "UsersInviteController_sendBulkInvites",
         "summary": "Send invitations to multiple users.",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -24209,8 +24328,18 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "description": "Bulk invitations processed."
+          },
+          "400": {
+            "description": "Validation error. Possible error types: EMAIL_EXISTS, CANNOT_GRANT_ROLE, ROLE_NOT_FOUND, etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersApiErrorResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -45653,6 +45782,69 @@
         "required": [
           "label",
           "key"
+        ]
+      },
+      "UsersErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "description": "HTTP status code",
+            "example": 400
+          },
+          "type": {
+            "type": "string",
+            "description": "Error type identifier",
+            "enum": [
+              "CANNOT_DELETE_LAST_USER",
+              "USER_ALREADY_ACTIVE",
+              "USER_ALREADY_INACTIVE",
+              "EMAIL_ALREADY_EXISTS",
+              "PHONE_NUMBER_ALREADY_EXIST",
+              "USER_NOT_FOUND",
+              "USER_SAME_THE_AUTHORIZED_USER",
+              "CANNOT_AUTHORIZED_USER_MUTATE_ROLE",
+              "EMAIL_ALREADY_INVITED",
+              "INVITE_TOKEN_INVALID",
+              "PHONE_NUMBER_EXISTS",
+              "EMAIL_EXISTS",
+              "EMAIL_NOT_EXISTS",
+              "USER_RECENTLY_INVITED",
+              "CANNOT_GRANT_ROLE",
+              "CANNOT_REMOVE_LAST_ADMIN",
+              "ROLE_NOT_FOUND"
+            ],
+            "example": "CANNOT_GRANT_ROLE"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message",
+            "nullable": true
+          },
+          "payload": {
+            "type": "object",
+            "description": "Additional error payload data",
+            "nullable": true
+          }
+        },
+        "required": [
+          "statusCode",
+          "type"
+        ]
+      },
+      "UsersApiErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "description": "Array of error details",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UsersErrorResponseDto"
+            }
+          }
+        },
+        "required": [
+          "errors"
         ]
       },
       "UserDto": {
