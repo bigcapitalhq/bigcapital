@@ -1,7 +1,5 @@
-export const jwtConstants = {
-  secret:
-    'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
-};
+export const JWT_ISSUER = 'bigcapital';
+export const JWT_AUDIENCE = 'bigcapital:api';
 
 export const ERRORS = {
   INVALID_DETAILS: 'INVALID_DETAILS',

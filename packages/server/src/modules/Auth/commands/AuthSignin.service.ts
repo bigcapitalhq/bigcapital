@@ -1,9 +1,10 @@
 import { ClsService } from 'nestjs-cls';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SystemUser } from '@/modules/System/models/SystemUser';
 import { ModelObject } from 'objection';
 import { JwtPayload } from '../Auth.interfaces';
+import { JWT_ISSUER, JWT_AUDIENCE } from '../Auth.constants';
 import { InvalidEmailPasswordException } from '../exceptions/InvalidEmailPassword.exception';
 import { UserNotFoundException } from '../exceptions/UserNotFound.exception';
 
@@ -48,12 +49,15 @@ export class AuthSigninService {
    * @returns {Promise<any>}
    */
   async verifyPayload(payload: JwtPayload): Promise<any> {
+    if (payload.iss !== JWT_ISSUER || payload.aud !== JWT_AUDIENCE) {
+      throw new UnauthorizedException('Invalid token claims.');
+    }
     let user: SystemUser;
 
     try {
       user = await this.systemUserModel
         .query()
-        .findOne({ email: payload.sub })
+        .findOne({ id: Number(payload.sub) })
         .throwIfNotFound();
 
       this.clsService.set('tenantId', user.tenantId);
@@ -71,8 +75,12 @@ export class AuthSigninService {
    */
   signToken(user: SystemUser): string {
     const payload = {
-      sub: user.email,
+      sub: String(user.id),
     };
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, {
+      expiresIn: '1d',
+      issuer: JWT_ISSUER,
+      audience: JWT_AUDIENCE,
+    });
   }
 }
