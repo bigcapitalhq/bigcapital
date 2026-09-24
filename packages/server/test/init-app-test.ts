@@ -1,6 +1,8 @@
 import request = require('supertest');
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DiscoveryService } from '@nestjs/core';
+import { WorkerHost } from '@nestjs/bullmq';
 import { AppModule } from '../src/modules/App/App.module';
 
 let app: INestApplication;
@@ -32,6 +34,20 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // Nest runs no lifecycle hooks on request-scoped providers, so app.close()
+  // leaves the workers of request-scoped processors, such as the organization
+  // build, running. A job queued by a later test file could then be taken by
+  // a worker whose file is gone, and fail. Close every worker first.
+  await Promise.all(
+    app
+      .get(DiscoveryService)
+      .getProviders()
+      .map((wrapper) => wrapper.instance)
+      .filter(
+        (instance): instance is WorkerHost => instance instanceof WorkerHost,
+      )
+      .map((host) => host.onApplicationShutdown()),
+  );
   await app.close();
 });
 jest.retryTimes(3, { logErrorsBeforeRetry: true });

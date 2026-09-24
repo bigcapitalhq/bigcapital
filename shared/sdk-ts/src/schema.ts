@@ -1823,6 +1823,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/accounts-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the chart of accounts templates. */
+        get: operations["AccountsTemplatesController_getTemplates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/accounts-templates/{templateKey}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Previews the changes applying the template would make to the chart of accounts. Writes nothing. */
+        get: operations["AccountsTemplatesController_previewTemplate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/accounts-templates/{templateKey}/apply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Applies the template to the chart of accounts in one transaction and returns the changes made. */
+        post: operations["AccountsTemplatesController_applyTemplate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/expenses/validate-bulk-delete": {
         parameters: {
             query?: never;
@@ -8896,6 +8947,80 @@ export interface components {
              * @default false
              */
             skipUndeletable: boolean;
+        };
+        AccountsTemplateVariantDto: {
+            /** @example corporation */
+            key: string;
+            /** @example Corporation (S corporation or C corporation) */
+            name: string;
+            description?: string;
+        };
+        AccountsTemplateDto: {
+            /** @example united-states */
+            key: string;
+            /** @example United States */
+            name: string;
+            description: string;
+            /**
+             * @description ISO 3166-1 alpha-2 country code
+             * @example US
+             */
+            country?: string;
+            variants: components["schemas"]["AccountsTemplateVariantDto"][];
+        };
+        AccountsTemplateChangeSideDto: {
+            /** @example 1010 */
+            code: string | null;
+            /** @example Business Checking */
+            name: string;
+            description: string | null;
+            parentName: string | null;
+        };
+        AccountsTemplateChangeDto: {
+            /** @enum {string} */
+            action: "update" | "create" | "remove" | "unchanged";
+            /** @description Null for an account the template would create */
+            accountId: number | null;
+            /** @example bank */
+            accountType: string;
+            templateCode: string | null;
+            parentTemplateCode: string | null;
+            before: components["schemas"]["AccountsTemplateChangeSideDto"] | null;
+            after: components["schemas"]["AccountsTemplateChangeSideDto"] | null;
+        };
+        AccountsTemplateIssueDto: {
+            /** @enum {string} */
+            type: "ACCOUNT_NOT_FOUND" | "ACCOUNT_TYPE_MISMATCH" | "CODE_TAKEN_BY_OTHER_TYPE" | "NAME_TAKEN_BY_OTHER_TYPE" | "ACCOUNT_REFERENCED" | "ACCOUNT_CUSTOMIZED" | "PARENT_NOT_RESOLVED" | "DUPLICATE_CODE" | "DUPLICATE_NAME" | "INVALID_ACCOUNT_TYPE" | "INVALID_CODE" | "PARENT_TYPE_MISMATCH" | "PROTECTED_ACCOUNT_REMOVAL";
+            message: string;
+            code?: string | null;
+            name?: string;
+            accountId?: number;
+        };
+        AccountsTemplatePlanSummaryDto: {
+            update: number;
+            create: number;
+            remove: number;
+            unchanged: number;
+            skipped: number;
+        };
+        AccountsTemplatePlanDto: {
+            /** @example united-states */
+            templateKey: string;
+            /** @example corporation */
+            variantKey: string | null;
+            changes: components["schemas"]["AccountsTemplateChangeDto"][];
+            /** @description Entries skipped; the rest of the template still applies */
+            warnings: components["schemas"]["AccountsTemplateIssueDto"][];
+            /** @description Conflicts that block applying the template */
+            errors: components["schemas"]["AccountsTemplateIssueDto"][];
+            summary: components["schemas"]["AccountsTemplatePlanSummaryDto"];
+        };
+        ApplyAccountsTemplateDto: {
+            /**
+             * @description Variant of the template, e.g. the legal structure. Defaults to the first variant.
+             * @example corporation
+             */
+            variant?: string;
         };
         ExpenseCategoryResponseDto: {
             /**
@@ -21457,6 +21582,103 @@ export interface operations {
         responses: {
             /** @description The item categories have been successfully deleted. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AccountsTemplatesController_getTemplates: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountsTemplateDto"][];
+                };
+            };
+        };
+    };
+    AccountsTemplatesController_previewTemplate: {
+        parameters: {
+            query?: {
+                /** @description Variant of the template, e.g. the legal structure. Defaults to the first variant. */
+                variant?: string;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                templateKey: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountsTemplatePlanDto"];
+                };
+            };
+        };
+    };
+    AccountsTemplatesController_applyTemplate: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                templateKey: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApplyAccountsTemplateDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountsTemplatePlanDto"];
+                };
+            };
+            /** @description ACCOUNTS_TEMPLATE_CANNOT_BE_APPLIED, with the blocking conflicts in the error payload. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Requires editing preferences and creating, editing and deleting accounts. */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

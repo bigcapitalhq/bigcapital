@@ -140,6 +140,15 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/chart-of-accounts`,
+    component: lazy(() =>
+      import('@/containers/Preferences/ChartOfAccounts').then((m) => ({
+        default: m.ChartOfAccountsPreferences,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/items`,
     component: lazy(() =>
       import('@/containers/Preferences/Item').then((m) => ({
