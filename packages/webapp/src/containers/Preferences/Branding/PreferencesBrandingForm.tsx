@@ -15,10 +15,18 @@ import {
   transfromToSnakeCase,
 } from '@/utils';
 
+// The same default the invoice, estimate, receipt, credit note and payment
+// customize screens fall back to.
+const DEFAULT_PRIMARY_COLOR = '#2c3dd8';
+
 const initialValues = {
   logoKey: '',
   logoUri: '',
-  primaryColor: '',
+  // The color input shows a swatch even when the value is empty, so an
+  // organization that never picked a color has to start from the default one
+  // the customize screens use; otherwise the required validation fails on a
+  // field that looks filled.
+  primaryColor: DEFAULT_PRIMARY_COLOR,
 };
 
 const validationSchema = Yup.object({
