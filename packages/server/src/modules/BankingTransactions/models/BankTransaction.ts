@@ -7,6 +7,7 @@ import {
 import { CASHFLOW_DIRECTION, CASHFLOW_TRANSACTION_TYPE } from '../constants';
 import { BankTransactionLine } from './BankTransactionLine';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import { Contact } from '@/modules/Contacts/models/Contact';
 
 export class BankTransaction extends BaseModel {
   transactionType: string;
@@ -22,6 +23,7 @@ export class BankTransaction extends BaseModel {
 
   cashflowAccountId: number;
   creditAccountId: number;
+  contactId: number;
 
   categorizeRefType: string;
   categorizeRefId: number;
@@ -35,6 +37,7 @@ export class BankTransaction extends BaseModel {
   entries: BankTransactionLine[];
   cashflowAccount: Account;
   creditAccount: Account;
+  contact: Contact;
 
   uncategorizedTransactionId: number;
 
@@ -163,6 +166,7 @@ export class BankTransaction extends BaseModel {
     const {
       MatchedBankTransaction,
     } = require('../../BankingMatching/models/MatchedBankTransaction');
+    const { Contact } = require('../../Contacts/models/Contact');
 
     return {
       /**
@@ -216,6 +220,18 @@ export class BankTransaction extends BaseModel {
         join: {
           from: 'cashflow_transactions.creditAccountId',
           to: 'accounts.id',
+        },
+      },
+
+      /**
+       * Cashflow transaction may have an associated contact as payee.
+       */
+      contact: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Contact,
+        join: {
+          from: 'cashflow_transactions.contactId',
+          to: 'contacts.id',
         },
       },
 
