@@ -6,6 +6,7 @@ import { ITenantUserDeletedPayload } from '../Users.types';
 import { events } from '@/common/events/events';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ERRORS } from '../Users.constants';
+import { RolesPolicy } from '@/modules/Roles/RolesPolicy.service';
 
 @Injectable()
 export class DeleteUserService {
@@ -13,6 +14,7 @@ export class DeleteUserService {
     @Inject(TenantUser.name)
     private readonly tenantUserModel: TenantModelProxy<typeof TenantUser>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly rolesPolicy: RolesPolicy,
   ) {}
 
   /**
@@ -27,6 +29,9 @@ export class DeleteUserService {
     if (tenantUser.isInviteAccepted) {
       await this.validateNotLastUserDelete();
     }
+    // Validate the delete user should not be the last active admin.
+    await this.rolesPolicy.validateNotLastAdmin(userId);
+
     // Delete user from the storage.
     await this.tenantUserModel().query().findById(userId).delete();
 

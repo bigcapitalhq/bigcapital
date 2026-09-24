@@ -11,22 +11,20 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenantUser } from '@/modules/Tenancy/TenancyModels/models/TenantUser.model';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
-import { Role } from '@/modules/Roles/models/Role.model';
 import { ModelObject } from 'objection';
 import { SendInviteUserDto } from '../dtos/InviteUser.dto';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { RolesPolicy } from '@/modules/Roles/RolesPolicy.service';
 
 @Injectable()
 export class InviteTenantUserService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
+    private readonly rolesPolicy: RolesPolicy,
 
     @Inject(TenantUser.name)
     private readonly tenantUserModel: TenantModelProxy<typeof TenantUser>,
-
-    @Inject(Role.name)
-    private readonly roleModel: TenantModelProxy<typeof Role>,
   ) {}
 
   /**
@@ -38,8 +36,9 @@ export class InviteTenantUserService {
   public async sendInvite(sendInviteDTO: SendInviteUserDto): Promise<{
     invitedUser: TenantUser;
   }> {
-    // Get the given role or throw not found service error.
-    const _role = await this.roleModel().query().findById(sendInviteDTO.roleId);
+    // Get the given role or throw not found service error, and validate
+    // the authorized user is allowed to grant it.
+    await this.rolesPolicy.validateRoleAssignment(sendInviteDTO.roleId);
 
     // Validates the given email not exists on the storage.
     await this.validateUserEmailNotExists(sendInviteDTO.email);

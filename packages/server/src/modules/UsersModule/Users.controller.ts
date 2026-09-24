@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiExtraModels,
@@ -19,11 +20,16 @@ import { UsersApplication } from './Users.application';
 import { EditUserDto } from './dtos/EditUser.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { UserDto } from './dtos/UserResponse.dto';
+import { AuthorizationGuard } from '../Roles/Authorization.guard';
+import { PermissionGuard } from '../Roles/Permission.guard';
+import { RequirePermission } from '../Roles/RequirePermission.decorator';
+import { AbilitySubject, UserAction } from '../Roles/Roles.types';
 
 @Controller('users')
 @ApiTags('Users')
 @ApiExtraModels(UserDto)
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class UsersController {
   constructor(private readonly usersApplication: UsersApplication) {}
 
@@ -31,6 +37,7 @@ export class UsersController {
    * Edit details of the given user.
    */
   @Put(':id')
+  @RequirePermission(UserAction.Edit, AbilitySubject.User)
   @ApiOperation({ summary: 'Edit details of the given user.' })
   @ApiResponse({
     status: 200,
@@ -55,6 +62,7 @@ export class UsersController {
    * Soft deleting the given user.
    */
   @Delete(':id')
+  @RequirePermission(UserAction.Delete, AbilitySubject.User)
   @ApiOperation({ summary: 'Soft deleting the given user.' })
   @ApiResponse({
     status: 200,
@@ -76,6 +84,7 @@ export class UsersController {
    * Retrieve user details of the given user id.
    */
   @Get(':id')
+  @RequirePermission(UserAction.View, AbilitySubject.User)
   @ApiOperation({ summary: 'Retrieve user details of the given user id.' })
   @ApiResponse({
     status: 200,
@@ -90,6 +99,7 @@ export class UsersController {
    * Retrieve the list of users.
    */
   @Get()
+  @RequirePermission(UserAction.View, AbilitySubject.User)
   @ApiOperation({ summary: 'Retrieve the list of users.' })
   @ApiResponse({
     status: 200,
@@ -110,6 +120,7 @@ export class UsersController {
    * Activate the given user.
    */
   @Put(':id/activate')
+  @RequirePermission(UserAction.Activate, AbilitySubject.User)
   @ApiOperation({ summary: 'Activate the given user.' })
   @ApiResponse({
     status: 200,
@@ -131,6 +142,7 @@ export class UsersController {
    * Inactivate the given user.
    */
   @Put(':id/inactivate')
+  @RequirePermission(UserAction.Activate, AbilitySubject.User)
   @ApiOperation({ summary: 'Inactivate the given user.' })
   @ApiResponse({
     status: 200,
