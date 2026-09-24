@@ -7,8 +7,9 @@ data_dir = "/var/lib/garage/data"
 db_engine = "sqlite"
 block_size = 1048576
 
-# Zero-replication: the node holds a single copy of the data.
-replication_mode = "none"
+# Single copy of the data; "replication_mode" was renamed in Garage 1.0 and
+# the old name now logs a deprecation warning on every start.
+replication_factor = 1
 
 # RPC bind address used for inter-node layout management.
 rpc_bind_addr = "[::]:3901"
