@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
+import { TenantMigrationSource } from '@/modules/Tenancy/TenancyDB/TenantMigrationSource';
 
 @Injectable()
 export abstract class BaseCommand extends CommandRunner {
@@ -45,10 +46,10 @@ export abstract class BaseCommand extends CommandRunner {
         charset: 'utf8',
       },
       migrations: {
-        directory:
+        migrationSource: new TenantMigrationSource(
           this.configService.get('tenantDatabase.migrationsDir') ||
-          './src/database/migrations',
-        loadExtensions: ['.js'],
+            './src/database/migrations',
+        ),
       },
       seeds: {
         directory:
