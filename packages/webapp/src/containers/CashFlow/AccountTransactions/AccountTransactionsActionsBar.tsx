@@ -100,6 +100,9 @@ function AccountTransactionsActionsBarInner({
   const isFeedsActive = !!currentAccount?.isFeedsActive;
   const isFeedsPaused = !!currentAccount?.isFeedsPaused;
   const isSyncingOwner = !!currentAccount?.isSyncingOwner;
+  // Linked to a Plaid item, even when its feed is not active (e.g. the first
+  // sync failed), so it can still be updated or disconnected.
+  const isPlaidLinked = isSyncingOwner && !!currentAccount?.plaidItemId;
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size: unknown) => {
@@ -410,7 +413,7 @@ function AccountTransactionsActionsBarInner({
           }}
           content={
             <Menu>
-              <If condition={isSyncingOwner && isFeedsActive}>
+              <If condition={isPlaidLinked}>
                 <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
                 <MenuDivider />
               </If>
@@ -433,7 +436,7 @@ function AccountTransactionsActionsBarInner({
 
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
               <MenuDivider />
-              <If condition={isSyncingOwner && isFeedsActive}>
+              <If condition={isPlaidLinked}>
                 <MenuItem
                   intent={Intent.DANGER}
                   onClick={handleDisconnectClick}
