@@ -4,7 +4,7 @@ FROM node:18.16.0-alpine AS builder
 WORKDIR /app
 
 # Install pnpm
-RUN npm install -g pnpm@9.0.5
+RUN npm install -g pnpm@9.15.9
 
 # Install build dependencies
 RUN apk add --no-cache python3 build-base chromium
@@ -31,8 +31,9 @@ FROM node:18.16.0-alpine AS production
 
 WORKDIR /app
 
-# Install pnpm for production
-RUN npm install -g pnpm@9.0.5
+# Install pnpm for production. husky is global so the root `prepare` script
+# resolves without installing it into the workspace — see the install step.
+RUN npm install -g pnpm@9.15.9 husky@8
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
@@ -52,11 +53,15 @@ COPY --chown=nodejs:nodejs shared ./shared
 # Copy .husky directory (needed for husky install command)
 COPY --chown=nodejs:nodejs .husky ./.husky
 
-# Install only production dependencies
-# Install husky temporarily so prepare script can run, then remove it
-RUN pnpm add -D -w husky && \
-    pnpm install --prod --frozen-lockfile && \
-    pnpm remove -w husky && \
+# Install only production dependencies.
+#
+# Do NOT wrap this in `pnpm add -D -w husky` / `pnpm remove -w husky`. Under
+# pnpm 9.15.9 the `add -w` scopes the following install to the root project and
+# leaves packages/server/node_modules empty, so the image builds green and then
+# dies at runtime with MODULE_NOT_FOUND on nest-commander. pnpm 9.0.5 did not
+# do this. husky is installed globally above instead, which is all the root
+# `prepare` script needs; with no .git present it skips and exits 0.
+RUN pnpm install --prod --frozen-lockfile && \
     # Remove build dependencies to reduce image size
     apk del python3 build-base
 
