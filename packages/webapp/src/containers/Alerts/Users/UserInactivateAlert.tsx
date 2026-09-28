@@ -1,3 +1,4 @@
+import { USERS_ERROR_TYPES } from '@bigcapital/sdk-ts';
 import { Alert, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
@@ -48,10 +49,30 @@ function UserInactivateAlertInner({
       })
       .catch((error: UserInactivateErrorResponse) => {
         const errors = error?.data?.errors ?? [];
-        if (errors.find((e) => e.type === 'USER_SAME_THE_AUTHORIZED_USER')) {
+        if (
+          errors.find(
+            (e) => e.type === USERS_ERROR_TYPES.UserSameTheAuthorizedUser,
+          )
+        ) {
           AppToaster.show({
             message: intl.get('cannot_toggle_authorized_user'),
             intent: Intent.DANGER,
+          });
+        }
+        if (
+          errors.find((e) => e.type === USERS_ERROR_TYPES.CannotRemoveLastAdmin)
+        ) {
+          AppToaster.show({
+            message: intl.get('roles.error.you_cannot_remove_the_last_admin'),
+            intent: Intent.DANGER,
+          });
+        }
+        if (
+          errors.find((e) => e.type === USERS_ERROR_TYPES.UserAlreadyInactive)
+        ) {
+          AppToaster.show({
+            message: intl.get('user_is_already_inactive'),
+            intent: Intent.WARNING,
           });
         }
       })

@@ -29,12 +29,14 @@ import { SendInviteUserMailProcessor } from './processors/SendInviteUserMail.pro
 import { SendInviteUsersMailMessage } from './commands/SendInviteUsersMailMessage.service';
 import { SendBulkInvitesService } from './commands/SendBulkInvites.service';
 import { MailModule } from '../Mail/Mail.module';
+import { RolesModule } from '../Roles/Roles.module';
 
 const models = [InjectSystemModel(UserInvite), InjectSystemModel(UserTenant)];
 
 @Module({
   imports: [
     TenancyModule,
+    RolesModule,
     MailModule,
     BullModule.registerQueue({ name: SendInviteUserMailQueue }),
     BullBoardModule.forFeature({

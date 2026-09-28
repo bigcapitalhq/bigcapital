@@ -10,6 +10,7 @@ import { ERRORS } from '../Users.constants';
 import { ModelObject } from 'objection';
 import { SystemUser } from '@/modules/System/models/SystemUser';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { RolesPolicy } from '@/modules/Roles/RolesPolicy.service';
 
 @Injectable()
 export class EditUserService {
@@ -18,6 +19,7 @@ export class EditUserService {
     private readonly tenantUserModel: TenantModelProxy<typeof TenantUser>,
     private readonly eventEmitter: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
+    private readonly rolesPolicy: RolesPolicy,
   ) {}
 
   /**
@@ -37,6 +39,7 @@ export class EditUserService {
     const oldTenantUser = await this.tenantUserModel()
       .query()
       .findById(userId)
+      .withGraphFetched('role')
       .throwIfNotFound();
 
     // Validate cannot mutate the authorized user.
@@ -45,6 +48,12 @@ export class EditUserService {
       editUserDTO,
       authorizedUser,
     );
+    // Validate the authorized user is allowed to grant the assigned role
+    // and the change is not removing the last admin.
+    if (editUserDTO.roleId !== oldTenantUser.roleId) {
+      await this.rolesPolicy.validateRoleAssignment(editUserDTO.roleId);
+      await this.rolesPolicy.validateNotLastAdmin(userId);
+    }
     // Validate user email should be unique.
     await this.validateUserEmailUniquiness(email, userId);
 
