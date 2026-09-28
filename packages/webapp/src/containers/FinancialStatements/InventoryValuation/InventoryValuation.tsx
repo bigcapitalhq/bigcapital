@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect, useCallback } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { InventoryValuationLoadingBar } from './components';
 import { InventoryValuationActionsBar } from './InventoryValuationActionsBar';
 import { InventoryValuationBody } from './InventoryValuationBody';
@@ -39,6 +40,7 @@ function InventoryValuationInner({
         ...filter,
         asDate: moment(filter.asDate as string).format('YYYY-MM-DD'),
       };
+      writeReportingPeriod({ toDate: newFilter.asDate });
       setLocationQuery(newFilter);
     },
     [setLocationQuery],

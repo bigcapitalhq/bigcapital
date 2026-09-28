@@ -3,6 +3,7 @@ import { castArray } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { transformFilterFormToQuery } from '../common';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -30,7 +31,7 @@ const parseTrialBalanceSheetQuery = (
 ): TrialBalanceQuery => {
   const defaultQuery = getDefaultTrialBalanceQuery();
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {
