@@ -16,8 +16,8 @@ export function ReceiptSendMailPreviewHeader() {
       companyName={receiptMailState?.companyName || ''}
       customerName={receiptMailState?.customerName || ''}
       subject={subject}
-      from={to}
-      to={from}
+      from={from}
+      to={to}
     />
   );
 }

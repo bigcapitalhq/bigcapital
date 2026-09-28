@@ -16,9 +16,11 @@ export class MailTenancy {
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
     const from = this.config.get('mail.from');
 
+    const fromAddress = typeof from === 'string' ? from : from?.address;
+
     return [
       {
-        mail: from,
+        mail: fromAddress,
         label: tenantMetadata.name,
         primary: true,
       },
