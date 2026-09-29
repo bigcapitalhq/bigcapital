@@ -213,11 +213,36 @@ services:
       - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
     volumes:
       - ./docker/garage/garage.toml:/etc/garage.toml
-      - ./docker/garage/setup.sh:/garage-setup/setup.sh
       - garage:/var/lib/garage
     expose:
       - '3900'
       - '3903'
+    networks:
+      - bigcapital_network
+
+  # Applies the cluster layout and creates the bucket and access key on first
+  # start. Exits once Garage is ready and is safe to re-run.
+  garage-init:
+    container_name: bigcapital-garage-init
+    image: curlimages/curl:8.11.1
+    depends_on:
+      - garage
+    restart: 'no'
+    entrypoint:
+      [
+        'sh',
+        '-c',
+        '[ -f /init.sh ] && [ -s /init.sh ] || { echo "garage-init: /init.sh is missing, empty, or mounted as a directory; check the volume path" >&2; exit 1; }; exec sh /init.sh',
+      ]
+    environment:
+      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+      - S3_BUCKET=${S3_BUCKET}
+      - GARAGE_LOCAL_ZONE=${GARAGE_LOCAL_ZONE:-dc1}
+      - GARAGE_CAPACITY=${GARAGE_CAPACITY:-10000000000}
+    volumes:
+      - ./docker/garage/init.sh:/init.sh:ro
     networks:
       - bigcapital_network
 
