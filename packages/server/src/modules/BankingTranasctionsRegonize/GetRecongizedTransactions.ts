@@ -41,6 +41,9 @@ export class GetRecognizedTransactionsService {
           // Exclude the pending transactions.
           q.modify('notPending');
 
+          // Exclude the already categorized transactions.
+          q.modify('notCategorized');
+
           if (_query.accountId) {
             q.where('accountId', _query.accountId);
           }
