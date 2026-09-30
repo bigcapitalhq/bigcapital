@@ -17,6 +17,11 @@ export const IS_TENANT_AGNOSTIC = 'IS_TENANT_AGNOSTIC';
 
 export const TenantAgnosticRoute = () => SetMetadata(IS_TENANT_AGNOSTIC, true);
 
+export const ALLOW_INACTIVE_TENANT = 'ALLOW_INACTIVE_TENANT';
+
+export const AllowInactiveTenant = () =>
+  SetMetadata(ALLOW_INACTIVE_TENANT, true);
+
 @Injectable()
 export class TenancyGlobalGuard implements CanActivate {
   constructor(
@@ -48,6 +53,10 @@ export class TenancyGlobalGuard implements CanActivate {
       IS_TENANT_AGNOSTIC,
       [context.getHandler(), context.getClass()],
     );
+    const allowInactiveTenant = this.reflector.getAllAndOverride<boolean>(
+      ALLOW_INACTIVE_TENANT,
+      [context.getHandler(), context.getClass()],
+    );
 
     if (isPublic || isTenantAgnostic || isAuthApiKey) {
       return true;
@@ -61,6 +70,13 @@ export class TenancyGlobalGuard implements CanActivate {
     const tenant = await this.tenantModel.query().findOne({ organizationId });
     if (!tenant) {
       throw new UnauthorizedException('Organization not found.');
+    }
+
+    // Reject requests targeting a deactivated/deleting workspace, even with a
+    // still-valid JWT. Owner-only workspace mutation routes opt out via
+    // @AllowInactiveTenant() so deactivation stays reversible.
+    if (!tenant.isActive && !allowInactiveTenant) {
+      throw new UnauthorizedException('This workspace is inactive.');
     }
 
     const membership = await this.userTenantModel
