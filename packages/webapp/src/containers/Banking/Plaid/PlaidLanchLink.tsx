@@ -10,8 +10,9 @@ import {
   PlaidLinkStableEvent,
 } from 'react-plaid-link';
 import { logEvent, logExit, logSuccess } from './_utils';
-import { usePlaidExchangeToken } from '@/hooks/query';
+import { DialogsName } from '@/constants/dialogs';
 import { useResetBankingPlaidToken } from '@/hooks/state/banking';
+import { useDialogActions } from '@/hooks/state/dashboard';
 
 interface PlaidLaunchLinkProps {
   token: string;
@@ -31,7 +32,7 @@ interface PlaidLaunchLinkProps {
  */
 export function LaunchLink(props: PlaidLaunchLinkProps) {
   const resetPlaidToken = useResetBankingPlaidToken();
-  const { mutateAsync: exchangeAccessToken } = usePlaidExchangeToken();
+  const { openDialog } = useDialogActions();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
   const onSuccess = async (
@@ -47,9 +48,13 @@ export function LaunchLink(props: PlaidLaunchLinkProps) {
       // getItemById(props.itemId, true);
       // regular link mode: exchange public token for access token
     } else {
-      await exchangeAccessToken({
-        public_token: publicToken,
-        institution_id: metadata.institution.institution_id,
+      // Let the selected accounts be linked to existing accounts before the
+      // public token is exchanged.
+      openDialog(DialogsName.PlaidAccountsLink, {
+        publicToken,
+        institutionId: metadata.institution.institution_id,
+        institutionName: metadata.institution.name,
+        plaidAccounts: metadata.accounts,
       });
     }
     // resetError();

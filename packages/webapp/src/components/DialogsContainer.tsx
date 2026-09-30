@@ -1,6 +1,7 @@
 import { FeatureCan } from '@/components';
 import { Features } from '@/constants';
 import { DialogsName } from '@/constants/dialogs';
+import { PlaidAccountsLinkDialog } from '@/containers/Banking/Plaid/PlaidAccountsLinkDialog/PlaidAccountsLinkDialog';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
 import { index as MoneyInDialog } from '@/containers/CashFlow/MoneyInDialog';
@@ -120,6 +121,7 @@ export default function DialogsContainer() {
       <DisconnectBankAccountDialog
         dialogName={DialogsName.DisconnectBankAccountConfirmation}
       />
+      <PlaidAccountsLinkDialog dialogName={DialogsName.PlaidAccountsLink} />
       <SharePaymentLinkDialog dialogName={DialogsName.SharePaymentLink} />
       <SelectPaymentMethodsDialog
         dialogName={DialogsName.SelectPaymentMethod}

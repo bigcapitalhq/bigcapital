@@ -11,9 +11,15 @@ export interface PlaidLinkTokenResponse {
   [key: string]: unknown;
 }
 
+export interface PlaidAccountLink {
+  plaidAccountId: string;
+  accountId: number;
+}
+
 export interface PlaidExchangeTokenBody {
   publicToken: string;
   institutionId?: string;
+  accounts?: PlaidAccountLink[];
   [key: string]: unknown;
 }
 
