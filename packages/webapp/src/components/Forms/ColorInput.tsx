@@ -61,6 +61,7 @@ export function ColorInput({
     >
       <InputGroup
         value={_value}
+        placeholder={'#000000'}
         leftElement={
           <Box
             {...pickerWrapProps}
