@@ -7,7 +7,17 @@ import { FColorInput } from '@/components/Forms/FColorInput';
 import { CompanyLogoUpload } from '@/containers/ElementCustomize/components/CompanyLogoUpload';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
+const PRIMARY_COLOR_HELPER_TEXT =
+  'Note: These preferences will be applied across PDF and mail templates, including the customer payment page.';
+
 export function PreferencesBrandingFormContent() {
+  const { errors, touched } = useFormikContext<PreferencesBrandingFormValues>();
+
+  // The form group renders the validation message as its helper text, so
+  // passing a helper text of our own would hide it and leave a failed submit
+  // without any reason shown.
+  const primaryColorError = touched.primaryColor ? errors.primaryColor : null;
+
   return (
     <Stack style={{ flex: '1' }} spacing={10}>
       <FFormGroup name={'companyLogo'} label={'Company Logo'}>
@@ -20,9 +30,7 @@ export function PreferencesBrandingFormContent() {
       <FFormGroup
         name={'primaryColor'}
         label={'Primary Color'}
-        helperText={
-          'Note: These preferences will be applied across PDF and mail templates, including the customer payment page.'
-        }
+        helperText={primaryColorError || PRIMARY_COLOR_HELPER_TEXT}
       >
         <FColorInput name={'primaryColor'} />
       </FFormGroup>
