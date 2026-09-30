@@ -1,11 +1,15 @@
 // @ts-nocheck
+import { Position, Tooltip } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { FormattedMessage as T } from '@/components';
+import { DashboardHamburgerButton } from '@/components/Dashboard/DashboardTopbar/_components';
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
 import { CLASSES } from '@/constants/classes';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { ApiKeysActions } from '@/containers/Preferences/ApiKeys/ApiKeysActions';
 import { BranchesActions } from '@/containers/Preferences/Branches/BranchesActions';
 import { CurrenciesActions } from '@/containers/Preferences/Currencies/CurrenciesActions';
@@ -16,7 +20,18 @@ import '@/style/pages/Preferences/Topbar.scss';
 /**
  * Preferences topbar.
  */
-function PreferencesTopbar({ preferencesPageTitle }) {
+function PreferencesTopbar({
+  // #withDashboard
+  preferencesPageTitle,
+  sidebarExpended,
+
+  // #withDashboardActions
+  toggleSidebarExpand,
+}) {
+  const handleSidebarToggleBtn = () => {
+    toggleSidebarExpand();
+  };
+
   return (
     <div
       className={classNames(
@@ -24,6 +39,21 @@ function PreferencesTopbar({ preferencesPageTitle }) {
         CLASSES.PREFERENCES_TOPBAR,
       )}
     >
+      <div className="preferences-topbar__sidebar-toggle">
+        <Tooltip
+          content={
+            !sidebarExpended ? (
+              <T id={'open_sidebar'} />
+            ) : (
+              <T id={'close_sidebar'} />
+            )
+          }
+          position={Position.RIGHT}
+        >
+          <DashboardHamburgerButton onClick={handleSidebarToggleBtn} />
+        </Tooltip>
+      </div>
+
       <div class="preferences-topbar__title">
         <h2>{preferencesPageTitle}</h2>
       </div>
@@ -64,5 +94,9 @@ function PreferencesTopbar({ preferencesPageTitle }) {
 
 export default FF.pipe(
   PreferencesTopbar,
-  withDashboard(({ preferencesPageTitle }) => ({ preferencesPageTitle })),
+  withDashboardActions,
+  withDashboard(({ preferencesPageTitle, sidebarExpended }) => ({
+    preferencesPageTitle,
+    sidebarExpended,
+  })),
 );

@@ -2,6 +2,7 @@ import { ComponentType } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import {
+  setDefaultExpendSidebar,
   toggleExpendSidebar,
   splashStartLoading,
   splashStopLoading,
@@ -25,6 +26,7 @@ export interface WithDashboardActionsProps {
   setDashboardRequestLoading: () => void;
   setDashboardRequestCompleted: () => void;
   toggleSidebarExpand: (toggle?: boolean) => void;
+  setSidebarExpandDefault: (toggle: boolean) => void;
   changePreferencesPageTitle: (pageTitle: string) => void;
   setDashboardBackLink: (backLink: unknown) => void;
   splashStartLoading: () => void;
@@ -48,6 +50,9 @@ const mapActionsToProps = (dispatch: Dispatch): WithDashboardActionsProps => ({
     dispatch({ type: SET_DASHBOARD_REQUEST_COMPLETED }),
 
   toggleSidebarExpand: (toggle) => dispatch(toggleExpendSidebar(toggle)),
+
+  setSidebarExpandDefault: (toggle) =>
+    dispatch(setDefaultExpendSidebar(toggle)),
 
   setDashboardBackLink: (backLink) =>
     dispatch({ type: SET_DASHBOARD_BACK_LINK, payload: { backLink } }),

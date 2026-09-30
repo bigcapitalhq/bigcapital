@@ -38,7 +38,7 @@ function DashboardPage({
   changePageTitle,
   setDashboardBackLink,
   changePageHint,
-  toggleSidebarExpand,
+  setSidebarExpandDefault,
 
   // #withUniversalSearch
   setResourceTypeUniversalSearch,
@@ -81,8 +81,8 @@ function DashboardPage({
   }, [name]);
 
   useEffect(() => {
-    toggleSidebarExpand(sidebarExpand);
-  }, [toggleSidebarExpand, sidebarExpand]);
+    setSidebarExpandDefault(sidebarExpand);
+  }, [setSidebarExpandDefault, sidebarExpand]);
 
   useEffect(() => {
     if (defaultSearchResource) {

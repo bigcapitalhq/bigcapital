@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { isUndefined, isNumber, omit } from 'lodash';
+import { isUndefined, isNumber, isNull, omit } from 'lodash';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {
@@ -21,6 +21,7 @@ import {
   SET_DASHBOARD_BACK_LINK,
   SET_FEATURE_DASHBOARD_META,
   SET_TOPBAR_EDIT_VIEW,
+  SIDEBAR_EXPEND_SET_DEFAULT,
   SIDEBAR_EXPEND_TOGGLE,
   SIDEBAR_SUBMENU_CLOSE,
   SIDEBAR_SUBMENU_OPEN,
@@ -39,6 +40,8 @@ export interface DashboardState {
   pageHint: string;
   preferencesPageTitle: string;
   sidebarExpended: boolean;
+  // `null` until the user toggles the sidebar themselves.
+  sidebarExpendedUserPref: boolean | null;
   dialogs: Record<string, OverlayEntry>;
   alerts: Record<string, OverlayEntry>;
   drawers: Record<string, OverlayEntry>;
@@ -59,6 +62,7 @@ const initialState: DashboardState = {
   pageHint: '',
   preferencesPageTitle: '',
   sidebarExpended: true,
+  sidebarExpendedUserPref: null,
   dialogs: {},
   alerts: {},
   drawers: {},
@@ -74,7 +78,11 @@ const initialState: DashboardState = {
 };
 
 const STORAGE_KEY = 'bigcapital:dashboard';
-const CONFIG = { key: STORAGE_KEY, whitelist: [], storage };
+const CONFIG = {
+  key: STORAGE_KEY,
+  whitelist: ['sidebarExpended', 'sidebarExpendedUserPref'],
+  storage,
+};
 
 type DashboardAction = {
   type: string;
@@ -152,6 +160,20 @@ const reducerInstance = createReducer(initialState, {
     state.sidebarExpended = isUndefined(toggle)
       ? !state.sidebarExpended
       : !!toggle;
+    // An explicit toggle becomes the user's preference and from then on wins
+    // over the per-route default.
+    state.sidebarExpendedUserPref = state.sidebarExpended;
+  },
+  [SIDEBAR_EXPEND_SET_DEFAULT]: (
+    state: DashboardState,
+    action: DashboardAction,
+  ) => {
+    // The route-level default only applies while the user has no preference.
+    if (!isNull(state.sidebarExpendedUserPref)) {
+      return;
+    }
+    const { toggle } = (action.payload || {}) as { toggle?: boolean };
+    state.sidebarExpended = !!toggle;
   },
   [SET_DASHBOARD_BACK_LINK]: (
     state: DashboardState,
