@@ -84,8 +84,20 @@ export class PlaidUpdateTransactions {
 
     const request = { access_token: accessToken };
     const {
-      data: { accounts, item },
+      data: { accounts: itemAccounts, item },
     } = await this.plaidClient.accountsGet(request);
+
+    // Leave out the Plaid accounts disconnected from the item on their own,
+    // so they are neither created again nor fed.
+    const disconnectedIds = plaidItem.disconnectedPlaidAccountIds ?? [];
+    const accounts = itemAccounts.filter(
+      (account) => !disconnectedIds.includes(account.account_id),
+    );
+    const transactions = added
+      .concat(modified)
+      .filter(
+        (transaction) => !disconnectedIds.includes(transaction.account_id),
+      );
 
     const plaidAccountsIds = accounts.map((a) => a.account_id);
     const {
@@ -102,7 +114,7 @@ export class PlaidUpdateTransactions {
       trx,
     );
     // Sync bank account transactions.
-    await this.plaidSync.syncAccountsTransactions(added.concat(modified), trx);
+    await this.plaidSync.syncAccountsTransactions(transactions, trx);
     // Sync transactions cursor.
     await this.plaidSync.syncTransactionsCursor(plaidItemId, cursor, trx);
     // Update the last feeds updated at of the updated accounts.

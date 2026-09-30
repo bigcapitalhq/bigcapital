@@ -22,6 +22,7 @@ import { SystemPlaidItem } from './models/SystemPlaidItem';
 import { BankingPlaidController } from './BankingPlaid.controller';
 import { BankingPlaidWebhooksController } from './BankingPlaidWebhooks.controller';
 import { SetupPlaidItemTenantService } from './command/SetupPlaidItemTenant.service';
+import { UnlinkPlaidAccountService } from './command/UnlinkPlaidAccount.service';
 import { UpdateBankingPlaidTransitionsQueueJob } from './types/BankingPlaid.types';
 import { PlaidFetchTransactionsProcessor } from './jobs/PlaidFetchTransactionsJob';
 import { PlaidWebhookVerificationService } from './PlaidWebhookVerification.service';
@@ -61,12 +62,13 @@ const models = [RegisterTenancyModel(PlaidItem)];
     PlaidLinkTokenService,
     PlaidApplication,
     SetupPlaidItemTenantService,
+    UnlinkPlaidAccountService,
     PlaidWebhookVerificationService,
     PlaidFetchTransactionsProcessor,
     PlaidUpdateTransactionsOnItemCreatedSubscriber,
     RecognizeSyncedBankTranasctionsSubscriber,
   ],
-  exports: [...models],
+  exports: [...models, UnlinkPlaidAccountService],
   controllers: [BankingPlaidController, BankingPlaidWebhooksController],
 })
 export class BankingPlaidModule {}
