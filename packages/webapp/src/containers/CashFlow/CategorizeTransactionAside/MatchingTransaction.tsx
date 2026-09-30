@@ -211,7 +211,16 @@ interface MatchItem {
   dateFormatted: string;
   referenceType: string;
   referenceId: number;
+  transactionNo?: string;
+  referenceNo?: string;
 }
+
+/**
+ * Retrieves the transaction or reference number of the given match, so
+ * candidates that share a type and an amount can be told apart.
+ */
+const getMatchReference = (match: MatchItem): string | null =>
+  match.transactionNo || match.referenceNo || null;
 
 /**
  * Renders the perfect match transactions.
@@ -240,6 +249,7 @@ function PerfectMatchingTransactions() {
             key={index}
             label={`${match.transsactionTypeFormatted} for ${match.amountFormatted}`}
             date={match.dateFormatted}
+            reference={getMatchReference(match)}
             transactionId={match.referenceId}
             transactionType={match.referenceType}
           />
@@ -278,6 +288,7 @@ function PossibleMatchingTransactions() {
               </>
             }
             date={match.dateFormatted}
+            reference={getMatchReference(match)}
             transactionId={match.referenceId}
             transactionType={match.referenceType}
           />
