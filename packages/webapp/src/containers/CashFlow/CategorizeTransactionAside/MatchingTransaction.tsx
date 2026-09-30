@@ -1,4 +1,12 @@
-import { AnchorButton, Button, Intent, Tag, Text } from '@blueprintjs/core';
+import {
+  AnchorButton,
+  Button,
+  HTMLSelect,
+  Intent,
+  Spinner,
+  Tag,
+  Text,
+} from '@blueprintjs/core';
 import {
   FastField,
   FastFieldProps,
@@ -20,6 +28,7 @@ import {
 } from './MatchingTransactionBoot';
 import { MatchTransactionCheckbox } from './MatchTransactionCheckbox';
 import {
+  MATCH_DATE_WINDOW_OPTIONS,
   transformToReq,
   useGetPendingAmountMatched,
   useIsShowReconcileTransactionLink,
@@ -199,8 +208,51 @@ const MatchingBankTransactionFormContent = FF.pipe(
 function MatchingBankTransactionContent() {
   return (
     <Box className={styles.root}>
+      <MatchingTransactionsDateWindow />
       <PerfectMatchingTransactions />
       <PossibleMatchingTransactions />
+    </Box>
+  );
+}
+
+/**
+ * Renders the date window control of the matching candidates.
+ * Deliberately outside the match sections, which unmount when they have no
+ * results - the control has to stay reachable to widen the window again.
+ */
+function MatchingTransactionsDateWindow() {
+  const {
+    matches,
+    dateWindowDays,
+    setDateWindowDays,
+    isMatchingTransactionsFetching,
+  } = useMatchingTransactionBoot();
+  const { setFieldValue } = useFormikContext<MatchingTransactionFormValues>();
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    // A selection that falls outside the new window stays in the form state
+    // and would be submitted while invisible, so it goes with the window.
+    setFieldValue('matched', {});
+    setDateWindowDays(Number(event.currentTarget.value));
+  };
+
+  return (
+    <Box className={styles.matchBar}>
+      <Group position="apart" spacing={10}>
+        <Group spacing={8}>
+          <span className={styles.matchBarMeta}>
+            {matches.length} candidate{matches.length === 1 ? '' : 's'}
+          </span>
+          {isMatchingTransactionsFetching && <Spinner size={12} />}
+        </Group>
+
+        <HTMLSelect
+          minimal
+          value={dateWindowDays}
+          options={MATCH_DATE_WINDOW_OPTIONS}
+          onChange={handleChange}
+        />
+      </Group>
     </Box>
   );
 }

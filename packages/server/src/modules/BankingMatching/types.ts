@@ -42,6 +42,7 @@ export interface GetMatchedTransactionsFilter {
   minAmount: number;
   maxAmount: number;
   transactionType: string;
+  dateWindowDays?: number;
 }
 
 export interface MatchedTransactionPOJO {

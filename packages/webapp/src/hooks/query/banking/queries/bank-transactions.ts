@@ -13,6 +13,7 @@ import {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
+  keepPreviousData,
   useMutation,
   useQuery,
   useQueryClient,
@@ -21,23 +22,47 @@ import { useApiFetcher } from '../../../useRequest';
 import { bankingKeys } from '../query-keys';
 import type {
   ExcludeBankTransactionsBulkBody,
+  GetMatchedTransactionsQuery,
   MatchTransactionBody,
   MatchedTransactionsResponse,
   UnmatchMatchedTransactionParams,
 } from '@bigcapital/sdk-ts';
 import type { QueryClient } from '@tanstack/react-query';
 
+/**
+ * `dateWindowDays` bounds the candidate search to N days either side of the
+ * bank transaction date; zero searches the whole ledger. It isn't in the
+ * generated SDK query type yet, hence the local extension.
+ */
+export type BankTransactionsMatchesQuery = Omit<
+  GetMatchedTransactionsQuery,
+  'uncategorizedTransactionIds'
+> & {
+  dateWindowDays?: number;
+};
+
 export function useGetBankTransactionsMatches(
   uncategorizedTransactionIds: number[],
+  query?: BankTransactionsMatchesQuery,
   options?: UseQueryOptions<MatchedTransactionsResponse, Error>,
 ): UseQueryResult<MatchedTransactionsResponse, Error> {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery({
+    // Keeps the current list on screen while a new window is fetched, so the
+    // filter control doesn't unmount underneath the user.
+    placeholderData: keepPreviousData,
     ...options,
-    queryKey: bankingKeys.transactionMatches(uncategorizedTransactionIds),
+    queryKey: bankingKeys.transactionMatches(
+      uncategorizedTransactionIds,
+      query,
+    ),
     queryFn: () =>
-      fetchMatchedTransactions(fetcher, uncategorizedTransactionIds),
+      fetchMatchedTransactions(
+        fetcher,
+        uncategorizedTransactionIds,
+        query as GetMatchedTransactionsQuery,
+      ),
   });
 }
 

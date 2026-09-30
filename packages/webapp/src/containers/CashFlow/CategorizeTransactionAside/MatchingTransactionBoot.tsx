@@ -1,6 +1,7 @@
 import { Spinner } from '@blueprintjs/core';
 import { defaultTo } from 'lodash';
 import React, { createContext } from 'react';
+import { DEFAULT_MATCH_DATE_WINDOW_DAYS } from './utils';
 import { useGetBankTransactionsMatches } from '@/hooks/query/banking';
 
 interface MatchingTransactionBootValues {
@@ -12,6 +13,8 @@ interface MatchingTransactionBootValues {
   perfectMatches: Array<any>;
   totalPending: number;
   matches: Array<any>;
+  dateWindowDays: number;
+  setDateWindowDays: (dateWindowDays: number) => void;
 }
 
 const RuleFormBootContext = createContext<MatchingTransactionBootValues>(
@@ -27,12 +30,19 @@ function MatchingTransactionBoot({
   uncategorizedTransactionsIds,
   ...props
 }: RuleFormBootProps) {
+  // Bounds the candidate search to a date window around the bank transaction,
+  // otherwise every unmatched transaction in the ledger is fetched.
+  const [dateWindowDays, setDateWindowDays] = React.useState<number>(
+    DEFAULT_MATCH_DATE_WINDOW_DAYS,
+  );
   const {
     data: matchingTransactions,
     isLoading: isMatchingTransactionsLoading,
     isFetching: isMatchingTransactionsFetching,
     isSuccess: isMatchingTransactionsSuccess,
-  } = useGetBankTransactionsMatches(uncategorizedTransactionsIds);
+  } = useGetBankTransactionsMatches(uncategorizedTransactionsIds, {
+    dateWindowDays,
+  });
 
   const possibleMatches = defaultTo(matchingTransactions?.possibleMatches, []);
   const perfectMatchesCount = matchingTransactions?.perfectMatches?.length || 0;
@@ -50,6 +60,8 @@ function MatchingTransactionBoot({
     perfectMatches,
     totalPending,
     matches,
+    dateWindowDays,
+    setDateWindowDays,
   } as MatchingTransactionBootValues;
 
   const isLoading = isMatchingTransactionsLoading;
