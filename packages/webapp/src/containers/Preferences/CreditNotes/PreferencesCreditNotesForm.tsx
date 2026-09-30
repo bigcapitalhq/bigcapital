@@ -34,6 +34,7 @@ export function PreferencesCreditNotesForm({
         <FTextArea
           medium={true}
           name={'customerNotes'}
+          data-testId={'preferences-credit-notes-customer-notes'}
           fastField={true}
           fill={true}
         />
@@ -48,6 +49,7 @@ export function PreferencesCreditNotesForm({
         <FTextArea
           medium={true}
           name={'termsConditions'}
+          data-testId={'preferences-credit-notes-terms-conditions'}
           fastField={true}
           fill={true}
         />

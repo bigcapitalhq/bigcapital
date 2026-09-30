@@ -34,6 +34,7 @@ export function PreferencesInvoicesForm({
         <FTextArea
           medium={true}
           name={'customerNotes'}
+          data-testId={'preferences-invoices-customer-notes'}
           fastField={true}
           fill={true}
         />
@@ -48,6 +49,7 @@ export function PreferencesInvoicesForm({
         <FTextArea
           medium={true}
           name={'termsConditions'}
+          data-testId={'preferences-invoices-terms-conditions'}
           fastField={true}
           fill={true}
         />
