@@ -18,6 +18,7 @@ import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ModelObject } from 'objection';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
+import { sortAccountsByCode } from '@/utils/sort-accounts-by-code';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
 import {
   IFinancialReportMeta,
@@ -378,6 +379,7 @@ export class GeneralLedgerSheet extends flow(FinancialSheetStructure)(
     accounts: ModelObject<Account>[],
   ): IGeneralLedgerSheetAccount[] {
     return flow(
+      sortAccountsByCode,
       this.nestedAccountsNode,
       this.filterAccountNodesByAccountsFilter,
       (nodes: ModelObject<Account>[]) => defaultTo(nodes, []),
