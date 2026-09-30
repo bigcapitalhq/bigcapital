@@ -6845,6 +6845,179 @@
         ]
       }
     },
+    "/api/accounts-templates": {
+      "get": {
+        "operationId": "AccountsTemplatesController_getTemplates",
+        "summary": "Retrieves the chart of accounts templates.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccountsTemplateDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Accounts Templates"
+        ]
+      }
+    },
+    "/api/accounts-templates/{templateKey}/preview": {
+      "get": {
+        "operationId": "AccountsTemplatesController_previewTemplate",
+        "summary": "Previews the changes applying the template would make to the chart of accounts. Writes nothing.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "templateKey",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "united-states",
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant",
+            "required": false,
+            "in": "query",
+            "description": "Variant of the template, e.g. the legal structure. Defaults to the first variant.",
+            "schema": {
+              "example": "corporation",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountsTemplatePlanDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Accounts Templates"
+        ]
+      }
+    },
+    "/api/accounts-templates/{templateKey}/apply": {
+      "post": {
+        "operationId": "AccountsTemplatesController_applyTemplate",
+        "summary": "Applies the template to the chart of accounts in one transaction and returns the changes made.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "templateKey",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "united-states",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyAccountsTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountsTemplatePlanDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ACCOUNTS_TEMPLATE_CANNOT_BE_APPLIED, with the blocking conflicts in the error payload."
+          },
+          "403": {
+            "description": "Requires editing preferences and creating, editing and deleting accounts."
+          }
+        },
+        "tags": [
+          "Accounts Templates"
+        ]
+      }
+    },
     "/api/expenses/validate-bulk-delete": {
       "post": {
         "operationId": "ExpensesController_validateBulkDeleteExpenses",
@@ -30508,6 +30681,265 @@
         "required": [
           "ids"
         ]
+      },
+      "AccountsTemplateVariantDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "corporation"
+          },
+          "name": {
+            "type": "string",
+            "example": "Corporation (S corporation or C corporation)"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "name"
+        ]
+      },
+      "AccountsTemplateDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "united-states"
+          },
+          "name": {
+            "type": "string",
+            "example": "United States"
+          },
+          "description": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "description": "ISO 3166-1 alpha-2 country code",
+            "example": "US"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountsTemplateVariantDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "name",
+          "description",
+          "variants"
+        ]
+      },
+      "AccountsTemplateChangeSideDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "example": "1010"
+          },
+          "name": {
+            "type": "string",
+            "example": "Business Checking"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "description",
+          "parentName"
+        ]
+      },
+      "AccountsTemplateChangeDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "update",
+              "create",
+              "remove",
+              "unchanged"
+            ]
+          },
+          "accountId": {
+            "type": "number",
+            "nullable": true,
+            "description": "Null for an account the template would create"
+          },
+          "accountType": {
+            "type": "string",
+            "example": "bank"
+          },
+          "templateCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "parentTemplateCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "before": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountsTemplateChangeSideDto"
+              }
+            ]
+          },
+          "after": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AccountsTemplateChangeSideDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "action",
+          "accountId",
+          "accountType",
+          "templateCode",
+          "parentTemplateCode",
+          "before",
+          "after"
+        ]
+      },
+      "AccountsTemplateIssueDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "ACCOUNT_NOT_FOUND",
+              "ACCOUNT_TYPE_MISMATCH",
+              "CODE_TAKEN_BY_OTHER_TYPE",
+              "NAME_TAKEN_BY_OTHER_TYPE",
+              "ACCOUNT_REFERENCED",
+              "ACCOUNT_CUSTOMIZED",
+              "PARENT_NOT_RESOLVED",
+              "DUPLICATE_CODE",
+              "DUPLICATE_NAME",
+              "INVALID_ACCOUNT_TYPE",
+              "INVALID_CODE",
+              "PARENT_TYPE_MISMATCH",
+              "PROTECTED_ACCOUNT_REMOVAL"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "message"
+        ]
+      },
+      "AccountsTemplatePlanSummaryDto": {
+        "type": "object",
+        "properties": {
+          "update": {
+            "type": "number"
+          },
+          "create": {
+            "type": "number"
+          },
+          "remove": {
+            "type": "number"
+          },
+          "unchanged": {
+            "type": "number"
+          },
+          "skipped": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "update",
+          "create",
+          "remove",
+          "unchanged",
+          "skipped"
+        ]
+      },
+      "AccountsTemplatePlanDto": {
+        "type": "object",
+        "properties": {
+          "templateKey": {
+            "type": "string",
+            "example": "united-states"
+          },
+          "variantKey": {
+            "type": "string",
+            "nullable": true,
+            "example": "corporation"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountsTemplateChangeDto"
+            }
+          },
+          "warnings": {
+            "description": "Entries skipped; the rest of the template still applies",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountsTemplateIssueDto"
+            }
+          },
+          "errors": {
+            "description": "Conflicts that block applying the template",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountsTemplateIssueDto"
+            }
+          },
+          "summary": {
+            "$ref": "#/components/schemas/AccountsTemplatePlanSummaryDto"
+          }
+        },
+        "required": [
+          "templateKey",
+          "variantKey",
+          "changes",
+          "warnings",
+          "errors",
+          "summary"
+        ]
+      },
+      "ApplyAccountsTemplateDto": {
+        "type": "object",
+        "properties": {
+          "variant": {
+            "type": "string",
+            "description": "Variant of the template, e.g. the legal structure. Defaults to the first variant.",
+            "example": "corporation"
+          }
+        }
       },
       "ExpenseCategoryResponseDto": {
         "type": "object",
