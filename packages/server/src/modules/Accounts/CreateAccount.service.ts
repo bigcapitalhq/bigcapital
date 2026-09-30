@@ -43,6 +43,7 @@ export class CreateAccountService {
   private authorize = async (
     accountDTO: CreateAccountDTO,
     baseCurrency: string,
+    location: string,
     params?: CreateAccountParams,
   ) => {
     const { accountCodeRequired, accountCodeUnique } =
@@ -86,6 +87,10 @@ export class CreateAccountService {
     }
     // Validates the given account type supports the multi-currency.
     this.validator.validateAccountTypeSupportCurrency(accountDTO, baseCurrency);
+
+    // Validates the local bank identification fields, which are required for
+    // bank accounts in organizations located in Brazil or Argentina.
+    this.validator.validateBankIdentificationOrThrow(accountDTO, location);
   };
 
   /**
@@ -122,7 +127,12 @@ export class CreateAccountService {
     const tenant = await this.tenancyContext.getTenant(true);
 
     // Authorize the account creation.
-    await this.authorize(accountDTO, tenant.metadata.baseCurrency, params);
+    await this.authorize(
+      accountDTO,
+      tenant.metadata.baseCurrency,
+      tenant.metadata.location,
+      params,
+    );
 
     // Transformes the DTO to model.
     const accountInputModel = this.transformDTOToModel(

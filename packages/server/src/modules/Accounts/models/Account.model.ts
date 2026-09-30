@@ -31,6 +31,10 @@ export class Account extends TenantBaseModel {
   public currencyCode!: string;
   public active!: boolean;
   public bankBalance!: number;
+  public bankCode!: string | null;
+  public agencyNumber!: string | null;
+  public accountNumber!: string | null;
+  public cbu!: string | null;
   public lastFeedsUpdatedAt!: string | Date | null;
   public amount!: number;
   public plaidItemId!: string;

@@ -8,6 +8,7 @@ import { events } from '@/common/events/events';
 import { EditAccountDTO } from './EditAccount.dto';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { AccountsSettingsService } from './AccountsSettings.service';
+import { TenancyContext } from '../Tenancy/TenancyContext.service';
 
 @Injectable()
 export class EditAccount {
@@ -19,6 +20,7 @@ export class EditAccount {
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
     private readonly accountsSettings: AccountsSettingsService,
+    private readonly tenancyContext: TenancyContext,
   ) {}
 
   /**
@@ -31,6 +33,7 @@ export class EditAccount {
     accountId: number,
     accountDTO: EditAccountDTO,
     oldAccount: Account,
+    location: string,
   ) => {
     const { accountCodeRequired, accountCodeUnique } =
       await this.accountsSettings.getAccountsSettings();
@@ -68,6 +71,9 @@ export class EditAccount {
       );
       this.validator.throwErrorIfParentHasDiffType(accountDTO, parentAccount);
     }
+    // Validates the local bank identification fields, which are required for
+    // bank accounts in organizations located in Brazil or Argentina.
+    this.validator.validateBankIdentificationOrThrow(accountDTO, location);
   };
 
   /**
@@ -85,8 +91,16 @@ export class EditAccount {
       .findById(accountId)
       .throwIfNotFound();
 
+    // Retrieves the given tenant metadata.
+    const tenant = await this.tenancyContext.getTenant(true);
+
     // Authorize the account editing.
-    await this.authorize(accountId, accountDTO, oldAccount);
+    await this.authorize(
+      accountId,
+      accountDTO,
+      oldAccount,
+      tenant.metadata.location,
+    );
 
     // Edits account and associated transactions under unit-of-work environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
