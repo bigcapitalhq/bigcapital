@@ -18,6 +18,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../../useRequest';
+import { invalidateBankingQueries } from '../invalidate-banking';
 import { bankingKeys } from '../query-keys';
 import type {
   ExcludeBankTransactionsBulkBody,
@@ -44,15 +45,7 @@ export function useGetBankTransactionsMatches(
 const onValidateExcludeUncategorizedTransaction = (
   queryClient: QueryClient,
 ) => {
-  queryClient.invalidateQueries({
-    queryKey: bankingKeys.excludedTransactionsInfinity(),
-  });
-  queryClient.invalidateQueries({
-    queryKey: bankingKeys.summaryMeta(),
-  });
-  queryClient.invalidateQueries({
-    queryKey: bankingKeys.recognizedTransactionsInfinity(),
-  });
+  invalidateBankingQueries(queryClient);
 };
 
 export function useExcludeUncategorizedTransaction(
@@ -122,9 +115,7 @@ export function useMatchUncategorizedTransaction(
     mutationFn: (value: MatchTransactionBody) =>
       matchTransaction(fetcher, value),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: bankingKeys.summaryMeta(),
-      });
+      invalidateBankingQueries(queryClient);
     },
   });
 }
@@ -149,9 +140,7 @@ export function useUnmatchMatchedUncategorizedTransaction(
     mutationFn: ({ id }: UnmatchUncategorizedTransactionValues) =>
       unmatchMatchedTransaction(fetcher, id),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: bankingKeys.summaryMeta(),
-      });
+      invalidateBankingQueries(queryClient);
     },
   });
 }
@@ -171,12 +160,7 @@ export function useUncategorizeTransactionsBulkAction(
     mutationFn: (values: UncategorizeTransactionsBulkValues) =>
       uncategorizeTransactionsBulk(fetcher, values.ids),
     onSuccess: (_res, _values) => {
-      queryClient.invalidateQueries({
-        queryKey: bankingKeys.summaryMeta(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: bankingKeys.recognizedTransactionsInfinity(),
-      });
+      invalidateBankingQueries(queryClient);
     },
     ...options,
   });

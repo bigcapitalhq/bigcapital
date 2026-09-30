@@ -22,8 +22,8 @@ import {
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
 import { accountsKeys } from '../accounts/query-keys';
+import { invalidateBankingQueries } from '../banking/invalidate-banking';
 import { customersKeys } from '../customers/query-keys';
-import { financialReportsKeys } from '../FinancialReports/query-keys';
 import { vendorsKeys } from '../vendors/query-keys';
 import { cashflowAccountsKeys } from './query-keys';
 import type {
@@ -40,28 +40,14 @@ import type {
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
 ) => {
-  // Invalidate cashflow accounts.
-  queryClient.invalidateQueries({ queryKey: cashflowAccountsKeys.all() });
+  // Invalidate cashflow accounts, their transaction lists, the banking tabs
+  // and the ledger side - all by key prefix.
+  invalidateBankingQueries(queryClient);
 
-  // Invalidate cashflow transactions.
-  queryClient.invalidateQueries({
-    queryKey: cashflowAccountsKeys.transactions(),
-  });
-  queryClient.invalidateQueries({
-    queryKey: cashflowAccountsKeys.transactionsInfinity(),
-  });
-  queryClient.invalidateQueries({
-    queryKey: cashflowAccountsKeys.uncategorizedInfinity(),
-  });
-
-  // Invalidate accounts.
-  queryClient.invalidateQueries({ queryKey: accountsKeys.all() });
+  // Invalidate accounts transactions.
   queryClient.invalidateQueries({
     queryKey: accountsKeys.transactions(null).slice(0, 1),
   });
-
-  // Invalidate financial reports.
-  queryClient.invalidateQueries({ queryKey: financialReportsKeys.all() });
 
   // Invalidate customers.
   queryClient.invalidateQueries({ queryKey: customersKeys.all() });
