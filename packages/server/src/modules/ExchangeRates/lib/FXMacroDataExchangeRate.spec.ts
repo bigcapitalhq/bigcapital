@@ -64,9 +64,7 @@ describe('FXMacroDataExchangeRate', () => {
   });
 
   it('maps an invalid api key', async () => {
-    mockedGet.mockRejectedValue(
-      httpError(401, { code: 'invalid_api_key' }),
-    );
+    mockedGet.mockRejectedValue(httpError(401, { code: 'invalid_api_key' }));
     const service = new FXMacroDataExchangeRate('test-key');
 
     await expect(service.latest('USD', 'EUR')).rejects.toMatchObject({
