@@ -1,4 +1,5 @@
 import { Transformer } from '@/modules/Transformer/Transformer';
+import { getCashflowTransactionFormattedType } from '../../BankingTransactions/utils';
 
 export class GetRecognizedTransactionTransformer extends Transformer {
   /**
@@ -170,11 +171,19 @@ export class GetRecognizedTransactionTransformer extends Transformer {
   }
 
   /**
-   *
+   * Get the assigned formatted category of the transaction.
+   * @param {object} transaction
    * @returns {string}
    */
-  public assignedCategoryFormatted() {
-    return 'Other Income';
+  public assignedCategoryFormatted(transaction: any): string {
+    const assignedCategory =
+      transaction.recognizedTransaction?.assignedCategory;
+    const translationKey =
+      getCashflowTransactionFormattedType(assignedCategory);
+
+    return translationKey
+      ? this.context.i18n.t(translationKey)
+      : assignedCategory;
   }
 
   /**
