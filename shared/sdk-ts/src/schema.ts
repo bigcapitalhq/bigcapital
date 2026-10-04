@@ -938,6 +938,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/sale-invoices/{id}/duplicate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Duplicate the given sale invoice.
+         * @description Creates a draft copy of the sale invoice with the same customer, line items, message, terms and conditions, discount, adjustment and payment options, dated today, due 7 days later and numbered with the next unused invoice number. Payments and attachments are not copied.
+         */
+        post: operations["SaleInvoicesController_duplicateSaleInvoice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/sale-invoices/{id}/writeoff": {
         parameters: {
             query?: never;
@@ -19627,6 +19647,39 @@ export interface operations {
         responses: {
             /** @description The sale invoice has been successfully marked asdelivered. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The sale invoice not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SaleInvoicesController_duplicateSaleInvoice: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The id of the sale invoice to duplicate */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The sale invoice has been successfully duplicated. */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };

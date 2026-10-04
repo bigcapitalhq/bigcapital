@@ -15,6 +15,7 @@ export const SALE_INVOICES_ROUTES = {
   RECEIVABLE: "/api/sale-invoices/receivable",
   MAIL: "/api/sale-invoices/{id}/mail",
   DELIVER: "/api/sale-invoices/{id}/deliver",
+  DUPLICATE: "/api/sale-invoices/{id}/duplicate",
   WRITEOFF: "/api/sale-invoices/{id}/writeoff",
   CANCEL_WRITEOFF: "/api/sale-invoices/{id}/cancel-writeoff",
   PAYMENTS: "/api/sale-invoices/{id}/payments",
@@ -148,6 +149,22 @@ export async function deliverSaleInvoice(
 ): Promise<void> {
   const put = fetcher.path(SALE_INVOICES_ROUTES.DELIVER).method("put").create();
   await put({ id });
+}
+
+/**
+ * Duplicates the given sale invoice as a new draft invoice and resolves to
+ * the id of the duplicate.
+ */
+export async function duplicateSaleInvoice(
+  fetcher: ApiFetcher,
+  id: number,
+): Promise<{ id: number }> {
+  const post = fetcher
+    .path(SALE_INVOICES_ROUTES.DUPLICATE)
+    .method("post")
+    .create();
+  const { data } = await post({ id });
+  return { id: (data as { id: number }).id };
 }
 
 export async function writeOffSaleInvoice(

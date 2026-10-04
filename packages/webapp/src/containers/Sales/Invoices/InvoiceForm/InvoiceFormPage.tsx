@@ -17,7 +17,9 @@ export function InvoiceFormPage() {
   const invoiceId = id ? parseInt(id, 10) : undefined;
 
   return (
-    <InvoiceFormProvider invoiceId={invoiceId}>
+    // Keyed by the invoice id so navigating between two invoices' edit pages
+    // (e.g. to a just-created duplicate) remounts the form with fresh values.
+    <InvoiceFormProvider key={invoiceId ?? 'new'} invoiceId={invoiceId}>
       <AutoExchangeRateProvider>
         <InvoiceFormPageContent />
       </AutoExchangeRateProvider>

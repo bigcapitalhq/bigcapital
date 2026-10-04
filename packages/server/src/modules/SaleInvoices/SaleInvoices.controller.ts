@@ -300,6 +300,28 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.deliverSaleInvoice(id);
   }
 
+  @Post(':id/duplicate')
+  @RequirePermission(SaleInvoiceAction.Create, AbilitySubject.SaleInvoice)
+  @ApiOperation({
+    summary: 'Duplicate the given sale invoice.',
+    description:
+      'Creates a draft copy of the sale invoice with the same customer, line items, message, terms and conditions, discount, adjustment and payment options, dated today, due 7 days later and numbered with the next unused invoice number. Payments and attachments are not copied.',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The sale invoice has been successfully duplicated.',
+  })
+  @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The id of the sale invoice to duplicate',
+  })
+  duplicateSaleInvoice(@Param('id', ParseIntPipe) id: number) {
+    return this.saleInvoiceApplication.duplicateSaleInvoice(id);
+  }
+
   @Post(':id/writeoff')
   @RequirePermission(SaleInvoiceAction.Writeoff, AbilitySubject.SaleInvoice)
   @ApiOperation({ summary: 'Write off the given sale invoice.' })
