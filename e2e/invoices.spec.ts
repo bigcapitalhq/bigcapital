@@ -42,6 +42,26 @@ async function openEditInvoiceForm(page: Page, invoiceNumber: string) {
   await waitForInvoiceForm(page, 'Edit Invoice');
 }
 
+/**
+ * Asserts the invoice form opened in edit mode on a duplicate of the given
+ * invoice: a different invoice, for the same customer.
+ */
+async function expectDuplicateOpened(
+  page: Page,
+  sourceInvoiceNumber: string,
+  customerName: string,
+) {
+  await page.waitForURL(/\/invoices\/\d+\/edit$/, { timeout: 30_000 });
+  await waitForInvoiceForm(page, 'Edit Invoice');
+  await expect(page.getByTestId('invoice-customer-select')).toContainText(
+    customerName,
+    { timeout: 30_000 },
+  );
+  await expect(page.getByTestId('invoice-number-input')).not.toHaveValue(
+    sourceInvoiceNumber,
+  );
+}
+
 test.describe('invoices', () => {
   test.beforeAll(async () => {
     const auth = readApiAuth();
@@ -133,5 +153,74 @@ test.describe('invoices', () => {
     await expect(page.getByTestId('invoice-row')).toHaveCount(0, {
       timeout: 15_000,
     });
+  });
+
+  test('should duplicate an invoice from the selected row.', async ({
+    page,
+  }) => {
+    await waitForInvoicesList(page);
+
+    const displayName = await seedCustomer();
+    const invoiceNumber = await createInvoice(page, {
+      customerName: displayName,
+      itemName: ITEM_NAME,
+    });
+
+    const row = await filterInvoicesByNumber(page, invoiceNumber);
+    await row.locator('input[type="checkbox"]').check({ force: true });
+    await page.getByRole('button', { name: 'Duplicate' }).click();
+
+    await expectDuplicateOpened(page, invoiceNumber, displayName);
+  });
+
+  test('should duplicate an invoice from the invoice details drawer.', async ({
+    page,
+  }) => {
+    await waitForInvoicesList(page);
+
+    const displayName = await seedCustomer();
+    const invoiceNumber = await createInvoice(page, {
+      customerName: displayName,
+      itemName: ITEM_NAME,
+    });
+
+    const row = await filterInvoicesByNumber(page, invoiceNumber);
+    await row.click();
+    await page
+      .locator('.bp4-drawer')
+      .getByRole('button', { name: 'Duplicate' })
+      .click();
+
+    await expectDuplicateOpened(page, invoiceNumber, displayName);
+    await expect(page.locator('.bp4-drawer')).toHaveCount(0);
+  });
+
+  test('should duplicate a saved invoice from its edit form.', async ({
+    page,
+  }) => {
+    await waitForInvoicesList(page);
+
+    const displayName = await seedCustomer();
+    const invoiceNumber = await createInvoice(page, {
+      customerName: displayName,
+      itemName: ITEM_NAME,
+    });
+
+    await openEditInvoiceForm(page, invoiceNumber);
+    const sourceUrl = page.url();
+    const duplicateButton = page.getByRole('button', { name: 'Duplicate' });
+
+    // The duplicate is made from the saved invoice, so unsaved changes
+    // disable the action until they are saved or reset.
+    await expect(duplicateButton).toBeEnabled({ timeout: 30_000 });
+    await page.getByTestId('invoice-reference-input').fill('UNSAVED-CHANGE');
+    await expect(duplicateButton).toBeDisabled();
+    await page.getByRole('button', { name: 'Reset' }).click();
+    await expect(duplicateButton).toBeEnabled();
+
+    await duplicateButton.click();
+
+    await expectDuplicateOpened(page, invoiceNumber, displayName);
+    expect(page.url()).not.toEqual(sourceUrl);
   });
 });
