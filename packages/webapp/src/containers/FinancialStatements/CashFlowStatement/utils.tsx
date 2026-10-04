@@ -1,6 +1,7 @@
 import { castArray } from 'lodash';
 import moment from 'moment';
 import React from 'react';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -20,7 +21,7 @@ const parseCashflowQuery = (query: Record<string, unknown>) => {
   const defaultQuery = getDefaultCashFlowSheetQuery();
 
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(query, defaultQuery),
   };
   return {

@@ -4,6 +4,7 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -39,7 +40,7 @@ const parsePurchasesByItemsQuery = (
 ): PurchasesByItemsTableQuery => {
   const defaultQuery = getDefaultPurchasesByItemsQuery();
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {
