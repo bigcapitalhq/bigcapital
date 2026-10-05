@@ -37,18 +37,29 @@ export class SyncSystemSendInviteSubscriber {
     user,
     invitingUser,
   }: IUserInvitedEventPayload) {
-    const authorizedUser = await this.tenancyContext.getSystemUser();
-    const tenantId = authorizedUser.tenantId;
+    const tenant = await this.tenancyContext.getTenant();
+    const tenantId = tenant.id;
 
-    // Creates a new system user.
-    const systemUser = await this.systemUserModel.query().insert({
-      email: user.email,
-      active: user.active,
-      tenantId,
+    // Reuse an existing system user with the same email when the invitee
+    // already belongs to another workspace instead of inserting a duplicate.
+    let systemUser = await this.systemUserModel
+      .query()
+      .findOne({ email: user.email });
 
-      // Email should be verified since the user got the invite token through email.
-      verified: true,
-    });
+    if (!systemUser) {
+      // Creates a new system user under the invited workspace.
+      systemUser = await this.systemUserModel.query().insert({
+        email: user.email,
+        active: user.active,
+        tenantId,
+
+        // Email should be verified since the user got the invite token through email.
+        verified: true,
+      });
+    }
+    // Clear previous invite tokens of the system user to keep only the latest.
+    await this.clearInviteTokensByUserId(tenantId, systemUser.id);
+
     // Creates a invite user token.
     const invite = await this.inviteModel.query().insert({
       email: user.email,
@@ -56,7 +67,7 @@ export class SyncSystemSendInviteSubscriber {
       userId: systemUser.id,
       token: inviteToken,
     });
-    // Links the tenant user with created system user.
+    // Links the tenant user with the system user.
     await this.tenantUserModel().query().findById(user.id).patch({
       systemUserId: systemUser.id,
     });
@@ -80,8 +91,8 @@ export class SyncSystemSendInviteSubscriber {
     inviteToken,
     user,
   }: IUserInviteResendEventPayload) {
-    const authorizedUser = await this.tenancyContext.getSystemUser();
-    const tenantId = authorizedUser.tenantId;
+    const tenant = await this.tenancyContext.getTenant();
+    const tenantId = tenant.id;
 
     // Clear all invite tokens of the given user id.
     await this.clearInviteTokensByUserId(tenantId, user.systemUserId);
