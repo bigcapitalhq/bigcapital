@@ -32,7 +32,11 @@ describe('FXMacroDataExchangeRate', () => {
     await expect(service.latest('USD', 'EUR')).resolves.toBe(0.8512);
     expect(mockedGet).toHaveBeenCalledWith(
       'https://api.fxmacrodata.com/v1/forex/USD/EUR',
-      { headers: { 'X-API-Key': 'test-key' }, params: { limit: 5 } },
+      {
+        headers: { 'X-API-Key': 'test-key' },
+        params: { limit: 5 },
+        maxRedirects: 0,
+      },
     );
   });
 
@@ -61,6 +65,21 @@ describe('FXMacroDataExchangeRate', () => {
     await expect(service.latest('USD', 'EUR')).rejects.toMatchObject({
       errorType: EchangeRateErrors.EX_RATE_SERVICE_NOT_ALLOWED,
     });
+  });
+
+  it('throws a service error for a 200 error body or wrong shape', async () => {
+    const service = new FXMacroDataExchangeRate('test-key');
+    for (const data of [
+      { detail: 'Invalid API key' },
+      { data: { val: 1 } },
+      [],
+      'not json',
+    ]) {
+      mockedGet.mockResolvedValueOnce({ data });
+      await expect(service.latest('USD', 'EUR')).rejects.toMatchObject({
+        errorType: EchangeRateErrors.EX_RATE_SERVICE_NOT_ALLOWED,
+      });
+    }
   });
 
   it('maps an invalid api key', async () => {

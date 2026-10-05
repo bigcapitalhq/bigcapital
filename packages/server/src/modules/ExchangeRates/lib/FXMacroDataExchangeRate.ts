@@ -35,10 +35,13 @@ export class FXMacroDataExchangeRate implements IExchangeRateService {
         {
           headers: { 'X-API-Key': this.apiKey },
           params: { limit: 5 },
+          // Never replay the api key header to a redirect target.
+          maxRedirects: 0,
         },
       );
       // Rows are ordered newest first, a row may carry a null value.
-      const row = (result.data?.data || []).find((row) => row.val != null);
+      const rows = Array.isArray(result.data?.data) ? result.data.data : [];
+      const row = rows.find((row) => typeof row?.val === 'number');
 
       if (!row) {
         throw new ServiceError(
