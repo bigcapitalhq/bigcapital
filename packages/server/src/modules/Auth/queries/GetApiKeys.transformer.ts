@@ -2,14 +2,14 @@ import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetApiKeysTransformer extends Transformer {
   public includeAttributes = (): string[] => {
-    return ['token'];
+    return ['id', 'name', 'token', 'createdAt', 'expiresAt', 'revoked'];
   };
 
   public excludeAttributes = (): string[] => {
-    return ['tenantId'];
+    return ['*'];
   };
 
   public token(apiKey) {
-    return apiKey.key ? `${apiKey.key.substring(0, 8)}...` : '';
+    return apiKey.keyPrefix ? `${apiKey.keyPrefix}...` : '';
   }
 }

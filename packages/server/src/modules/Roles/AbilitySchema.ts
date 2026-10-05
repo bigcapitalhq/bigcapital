@@ -20,6 +20,7 @@ import {
   AbilitySubject,
   ISubjectAbilitiesSchema,
   ISubjectAbilitySchema,
+  ApiKeyAction,
   RoleAction,
 } from './Roles.types';
 import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.types';
@@ -350,6 +351,15 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: RoleAction.Create, label: 'ability.create', default: false },
       { key: RoleAction.Edit, label: 'ability.edit', default: false },
       { key: RoleAction.Delete, label: 'ability.delete', default: false },
+    ],
+  },
+  {
+    subject: AbilitySubject.ApiKey,
+    subjectLabel: 'ability.api_keys',
+    abilities: [
+      { key: ApiKeyAction.View, label: 'ability.view', default: false },
+      { key: ApiKeyAction.Create, label: 'ability.create', default: false },
+      { key: ApiKeyAction.Revoke, label: 'ability.revoke', default: false },
     ],
   },
   {

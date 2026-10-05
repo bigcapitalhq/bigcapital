@@ -32,6 +32,12 @@ export enum RoleAction {
   Delete = 'Delete',
 }
 
+export enum ApiKeyAction {
+  View = 'View',
+  Create = 'Create',
+  Revoke = 'Revoke',
+}
+
 export interface ISubjectAbilitySchema {
   key: string;
   label: string;
@@ -69,6 +75,7 @@ export enum AbilitySubject {
   TaxRate = 'TaxRate',
   AuditLog = 'AuditLog',
   Role = 'Role',
+  ApiKey = 'ApiKey',
   Warehouse = 'Warehouse',
   Branch = 'Branch',
   Attachment = 'Attachment',
