@@ -116,7 +116,7 @@ export class GetCreditNoteMailStateTransformer extends CreditNoteTransformer {
    */
   protected discountLabel(creditNote) {
     return creditNote.discountType === 'percentage'
-      ? `Discount [${creditNote.discountPercentageFormatted}]`
+      ? `Discount [${this.discountPercentageFormatted(creditNote)}]`
       : 'Discount';
   }
 
