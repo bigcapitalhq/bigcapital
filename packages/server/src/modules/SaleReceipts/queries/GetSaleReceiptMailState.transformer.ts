@@ -135,13 +135,22 @@ export class GetSaleReceiptMailStateTransformer extends Transformer {
   };
 
   /**
+   * Retrieves formatted discount percentage.
+   * @param receipt
+   * @returns {string}
+   */
+  protected discountPercentageFormatted = (receipt): string => {
+    return receipt.discountPercentage ? `${receipt.discountPercentage}%` : '';
+  };
+
+  /**
    * Retrieves the discount label of the estimate.
    * @param estimate
    * @returns {string}
    */
   protected discountLabel(receipt) {
     return receipt.discountType === DiscountType.Percentage
-      ? `Discount [${receipt.discountPercentageFormatted}]`
+      ? `Discount [${this.discountPercentageFormatted(receipt)}]`
       : 'Discount';
   }
 
