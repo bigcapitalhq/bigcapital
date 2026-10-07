@@ -174,7 +174,7 @@ export class GetRecognizedTransactionTransformer extends Transformer {
    * @returns {string}
    */
   public assignedCategoryFormatted() {
-    return 'Other Income';
+    return this.context.i18n.t('banking.assigned_category.other_income');
   }
 
   /**

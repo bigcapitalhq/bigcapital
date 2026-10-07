@@ -44,11 +44,25 @@ export class GetBankRulesTransformer extends Transformer {
   protected conditionsFormatted(bankRule: any) {
     return bankRule.conditions
       .map((condition) => {
-        const field =
+        const defaultField =
           condition.field.charAt(0).toUpperCase() + condition.field.slice(1);
+        const field = this.context.i18n.t(
+          `bank_rule.conditions.field.${condition.field}`,
+          { defaultValue: defaultField },
+        );
+        const comparator = this.context.i18n.t(
+          `bank_rule.conditions.comparator.${condition.comparator}`,
+          { defaultValue: condition.comparator },
+        );
 
-        return `${field} ${condition.comparator} ${condition.value}`;
+        return `${field} ${comparator} ${condition.value}`;
       })
-      .join(bankRule.conditionsType === 'and' ? ' and ' : ' or ');
+      .join(
+        this.context.i18n.t(
+          bankRule.conditionsType === 'and'
+            ? 'bank_rule.conditions.and'
+            : 'bank_rule.conditions.or',
+        ),
+      );
   }
 }

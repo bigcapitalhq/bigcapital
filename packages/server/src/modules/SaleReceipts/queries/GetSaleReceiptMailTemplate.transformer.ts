@@ -81,7 +81,9 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * @returns {string}
    */
   public receiptNumberLabel(): string {
-    return 'Receipt # {receiptNumber}';
+    return this.context.i18n.t('receipt.mail.receipt_number', {
+      args: { receiptNumber: this.receiptNumber() },
+    });
   }
 
   /**
@@ -97,7 +99,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * @returns {string}
    */
   public dateLabel(): string {
-    return 'Date';
+    return this.context.i18n.t('receipt.mail.date');
   }
 
   /**
@@ -112,7 +114,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * @returns {string}
    */
   public totalLabel(): string {
-    return 'Total';
+    return this.context.i18n.t('receipt.mail.total');
   }
 
   /**
@@ -128,7 +130,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * @returns {string}
    */
   public discountLabel(): string {
-    return 'Discount';
+    return this.context.i18n.t('receipt.mail.discount');
   }
 
   /**
@@ -144,7 +146,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * @returns {string}
    */
   public adjustmentLabel(): string {
-    return 'Adjustment';
+    return this.context.i18n.t('receipt.mail.adjustment');
   }
 
   /**
@@ -160,7 +162,7 @@ export class GetSaleReceiptMailTemplateAttributesTransformer extends Transformer
    * @returns {string}
    */
   public subtotalLabel(): string {
-    return 'Subtotal';
+    return this.context.i18n.t('receipt.mail.subtotal');
   }
 
   /**

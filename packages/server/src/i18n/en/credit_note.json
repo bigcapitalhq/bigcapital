@@ -24,6 +24,15 @@
   "field.status.published": "Published",
   "field.status.open": "Open",
   "field.status.closed": "Closed",
-  "field.created_at": "Created At"
+  "field.created_at": "Created At",
+
+  "mail.total": "Total",
+  "mail.subtotal": "Subtotal",
+  "mail.discount": "Discount",
+  "mail.discount_with_percentage": "Discount [{percentage}]",
+  "mail.adjustment": "Adjustment",
+  "mail.credit_note_number": "Credit Note # {creditNoteNumber}",
+  "mail.view_credit_note": "View Credit Note",
+  "mail.preview": "Credit note {creditNoteNumber} from {organizationName}"
 }
 

@@ -101,7 +101,7 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    * @returns {string}
    */
   protected transsactionTypeFormatted() {
-    return 'Bill';
+    return this.context.i18n.t('transaction_type.bill');
   }
 
   /**

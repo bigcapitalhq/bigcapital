@@ -109,7 +109,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @returns {string}
    */
   protected transsactionTypeFormatted(_invoice) {
-    return 'Sale invoice';
+    return this.context.i18n.t('transaction_type.sale_invoice');
   }
 
   /**

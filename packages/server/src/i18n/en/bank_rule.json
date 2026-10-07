@@ -1,0 +1,17 @@
+{
+  "conditions.and": " and ",
+  "conditions.or": " or ",
+
+  "conditions.field.amount": "Amount",
+  "conditions.field.description": "Description",
+  "conditions.field.payee": "Payee",
+
+  "conditions.comparator.contains": "contains",
+  "conditions.comparator.equals": "equals",
+  "conditions.comparator.equal": "equal",
+  "conditions.comparator.not_contains": "does not contain",
+  "conditions.comparator.bigger": "bigger than",
+  "conditions.comparator.bigger_or_equal": "bigger than or equal",
+  "conditions.comparator.smaller": "smaller than",
+  "conditions.comparator.smaller_or_equal": "smaller than or equal"
+}

@@ -76,13 +76,15 @@ export class GetSubscriptionsTransformer extends Transformer {
    */
   public statusFormatted = (subscription) => {
     const pairs = {
-      canceled: 'Canceled',
-      active: 'Active',
-      inactive: 'Inactive',
-      expired: 'Expired',
-      on_trial: 'On Trial',
+      canceled: 'subscription.status.canceled',
+      active: 'subscription.status.active',
+      inactive: 'subscription.status.inactive',
+      expired: 'subscription.status.expired',
+      on_trial: 'subscription.status.on_trial',
     };
-    return pairs[subscription.status] || '';
+    const translationKey = pairs[subscription.status];
+
+    return translationKey ? this.context.i18n.t(translationKey) : '';
   };
 
   /**
