@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as moment from 'moment';
+import { I18nService } from 'nestjs-i18n';
 import {
   IInventoryDetailsQuery,
   IInventoryItemDetailMeta,
@@ -8,7 +9,10 @@ import { FinancialSheetMeta } from '../../common/FinancialSheetMeta';
 
 @Injectable()
 export class InventoryDetailsMetaInjectable {
-  constructor(private readonly financialSheetMeta: FinancialSheetMeta) {}
+  constructor(
+    private readonly financialSheetMeta: FinancialSheetMeta,
+    private readonly i18n: I18nService,
+  ) {}
 
   /**
    * Retrieve the inventoy details meta.
@@ -23,9 +27,11 @@ export class InventoryDetailsMetaInjectable {
       commonMeta.dateFormat,
     );
     const formattedToDay = moment(query.toDate).format(commonMeta.dateFormat);
-    const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDay}`;
+    const fromLabel = this.i18n.t('financial_sheet.from_date');
+    const toLabel = this.i18n.t('financial_sheet.to_date');
+    const formattedDateRange = `${fromLabel} ${formattedFromDate} | ${toLabel} ${formattedToDay}`;
 
-    const sheetName = 'Inventory Item Details';
+    const sheetName = this.i18n.t('inventory_item_details.sheet_name');
 
     return {
       ...commonMeta,

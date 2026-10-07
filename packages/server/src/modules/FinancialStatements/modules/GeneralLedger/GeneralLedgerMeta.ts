@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import {
   IGeneralLedgerMeta,
   IGeneralLedgerSheetQuery,
@@ -8,7 +9,10 @@ import { FinancialSheetMeta } from '../../common/FinancialSheetMeta';
 
 @Injectable()
 export class GeneralLedgerMeta {
-  constructor(private readonly financialSheetMeta: FinancialSheetMeta) {}
+  constructor(
+    private readonly financialSheetMeta: FinancialSheetMeta,
+    private readonly i18n: I18nService,
+  ) {}
 
   /**
    * Retrieve the general ledger meta.
@@ -23,11 +27,13 @@ export class GeneralLedgerMeta {
     const formattedFromDate = moment(query.fromDate).format(
       commonMeta.dateFormat,
     );
-    const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDate}`;
+    const fromLabel = this.i18n.t('financial_sheet.from_date');
+    const toLabel = this.i18n.t('financial_sheet.to_date');
+    const formattedDateRange = `${fromLabel} ${formattedFromDate} | ${toLabel} ${formattedToDate}`;
 
     return {
       ...commonMeta,
-      sheetName: 'Balance Sheet',
+      sheetName: this.i18n.t('general_ledger.sheet_name'),
       formattedFromDate,
       formattedToDate,
       formattedDateRange,

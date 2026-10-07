@@ -1,0 +1,7 @@
+{
+  "sheet_name": "Sales By Items",
+  "item_name": "Item name",
+  "sold_quantity": "Sold quantity",
+  "sold_amount": "Sold amount",
+  "average_price": "Average price"
+}

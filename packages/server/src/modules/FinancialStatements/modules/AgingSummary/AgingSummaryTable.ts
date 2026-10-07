@@ -203,7 +203,7 @@ export abstract class AgingSummaryTable extends flow(
     return this.agingPeriods.map((agingPeriod) => {
       return {
         label: `${agingPeriod.beforeDays} - ${
-          agingPeriod.toDays || 'And Over'
+          agingPeriod.toDays || this.i18n.t('aging_summary.and_over')
         }`,
         key: AGING_SUMMARY_COLUMN_KEYS.AGING_PERIOD,
       };
@@ -215,7 +215,10 @@ export abstract class AgingSummaryTable extends flow(
    * @returns {ITableColumn}
    */
   protected contactNameTableColumn = (): ITableColumn => {
-    return { label: 'Customer name', key: 'customer_name' };
+    return {
+      label: this.i18n.t('aging_summary.customer_name'),
+      key: 'customer_name',
+    };
   };
 
   /**
@@ -225,9 +228,9 @@ export abstract class AgingSummaryTable extends flow(
   public tableColumns = (): ITableColumn[] => {
     return this.tableColumnsCellIndexing([
       this.contactNameTableColumn(),
-      { label: 'Current', key: 'current' },
+      { label: this.i18n.t('aging_summary.current'), key: 'current' },
       ...this.agingTableColumns(),
-      { label: 'Total', key: 'total' },
+      { label: this.i18n.t('aging_summary.total'), key: 'total' },
     ]);
   };
 }

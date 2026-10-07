@@ -1,5 +1,6 @@
 import { constant, flow } from 'fp-ts/function';
 import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
 import { when } from '@/common/fp';
 import {
   ISalesByItemsItem,
@@ -19,14 +20,17 @@ export class SalesByItemsTable extends flow(
   FinancialSheetStructure,
 )(FinancialSheet) {
   private readonly data: ISalesByItemsSheetData;
+  readonly i18n: I18nService;
 
   /**
    * Constructor method.
    * @param {ISalesByItemsSheetStatement} data
+   * @param {I18nService} i18n
    */
-  constructor(data: ISalesByItemsSheetData) {
+  constructor(data: ISalesByItemsSheetData, i18n: I18nService) {
     super();
     this.data = data;
+    this.i18n = i18n;
   }
 
   /**
@@ -106,10 +110,22 @@ export class SalesByItemsTable extends flow(
    */
   public tableColumns(): ITableColumn[] {
     const columns = [
-      { key: SALES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME, label: 'Item name' },
-      { key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_QUANTITY, label: 'Sold quantity' },
-      { key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_AMOUNT, label: 'Sold amount' },
-      { key: SALES_BY_ITEMS_COLUMN_KEYS.AVERAGE_PRICE, label: 'Average price' },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME,
+        label: this.i18n.t('sales_by_items.item_name'),
+      },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_QUANTITY,
+        label: this.i18n.t('sales_by_items.sold_quantity'),
+      },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_AMOUNT,
+        label: this.i18n.t('sales_by_items.sold_amount'),
+      },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.AVERAGE_PRICE,
+        label: this.i18n.t('sales_by_items.average_price'),
+      },
     ];
     return this.tableColumnsCellIndexing(columns);
   }
