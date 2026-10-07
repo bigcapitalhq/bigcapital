@@ -92,8 +92,10 @@ export class GetSaleInvoiceMailStateTransformer extends SaleInvoiceTransformer {
    */
   protected discountLabel(invoice) {
     return invoice.discountType === 'percentage'
-      ? `Discount [${this.discountPercentageFormatted(invoice)}]`
-      : 'Discount';
+      ? this.context.i18n.t('invoice.mail.discount_with_percentage', {
+          args: { percentage: this.discountPercentageFormatted(invoice) },
+        })
+      : this.context.i18n.t('invoice.mail.discount');
   }
 
   /**

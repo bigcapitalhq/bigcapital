@@ -116,8 +116,10 @@ export class GetCreditNoteMailStateTransformer extends CreditNoteTransformer {
    */
   protected discountLabel(creditNote) {
     return creditNote.discountType === 'percentage'
-      ? `Discount [${this.discountPercentageFormatted(creditNote)}]`
-      : 'Discount';
+      ? this.context.i18n.t('credit_note.mail.discount_with_percentage', {
+          args: { percentage: this.discountPercentageFormatted(creditNote) },
+        })
+      : this.context.i18n.t('credit_note.mail.discount');
   }
 
   /**
@@ -126,7 +128,7 @@ export class GetCreditNoteMailStateTransformer extends CreditNoteTransformer {
    * @returns {string}
    */
   protected adjustmentLabel() {
-    return 'Adjustment';
+    return this.context.i18n.t('credit_note.mail.adjustment');
   }
 
   /**

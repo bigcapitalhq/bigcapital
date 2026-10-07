@@ -86,7 +86,9 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public estimateNumberLabel(): string {
-    return 'Estimate No: {estimateNumber}';
+    return this.context.i18n.t('estimate.mail.estimate_number', {
+      args: { estimateNumber: this.estimateNumber() },
+    });
   }
 
   /**
@@ -102,7 +104,9 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public expirationDateLabel(): string {
-    return 'Expiration Date: {expirationDate}';
+    return this.context.i18n.t('estimate.mail.expiration_date', {
+      args: { expirationDate: this.expirationDate() },
+    });
   }
 
   /**
@@ -117,7 +121,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public totalLabel(): string {
-    return 'Total';
+    return this.context.i18n.t('estimate.mail.total');
   }
 
   /**
@@ -133,7 +137,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public discountLabel(): string {
-    return 'Discount';
+    return this.context.i18n.t('estimate.mail.discount');
   }
 
   /**
@@ -149,7 +153,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public adjustmentLabel(): string {
-    return 'Adjustment';
+    return this.context.i18n.t('estimate.mail.adjustment');
   }
 
   /**
@@ -164,7 +168,7 @@ export class GetEstimateMailTemplateAttributesTransformer extends Transformer {
    * @returns {string}
    */
   public subtotalLabel(): string {
-    return 'Subtotal';
+    return this.context.i18n.t('estimate.mail.subtotal');
   }
 
   /**

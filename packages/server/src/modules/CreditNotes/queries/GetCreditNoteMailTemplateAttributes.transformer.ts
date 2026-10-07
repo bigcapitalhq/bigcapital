@@ -81,7 +81,9 @@ export class GetCreditNoteMailTemplateAttributesTransformer extends Transformer 
    * @returns {string}
    */
   public creditNoteNumberLabel(): string {
-    return 'Credit Note # {creditNoteNumber}';
+    return this.context.i18n.t('credit_note.mail.credit_note_number', {
+      args: { creditNoteNumber: this.creditNoteNumber() },
+    });
   }
 
   /**
@@ -89,7 +91,12 @@ export class GetCreditNoteMailTemplateAttributesTransformer extends Transformer 
    * @returns {string}
    */
   public preview(): string {
-    return `Credit note ${this.options.creditNote.creditNoteNumber} from ${this.context.organization.name}`;
+    return this.context.i18n.t('credit_note.mail.preview', {
+      args: {
+        creditNoteNumber: this.options.creditNote.creditNoteNumber,
+        organizationName: this.context.organization.name,
+      },
+    });
   }
 
   /**
@@ -105,7 +112,7 @@ export class GetCreditNoteMailTemplateAttributesTransformer extends Transformer 
    * @returns {string}
    */
   public totalLabel(): string {
-    return 'Total';
+    return this.context.i18n.t('credit_note.mail.total');
   }
 
   /**
@@ -121,7 +128,7 @@ export class GetCreditNoteMailTemplateAttributesTransformer extends Transformer 
    * @returns {string}
    */
   public discountLabel(): string {
-    return 'Discount';
+    return this.context.i18n.t('credit_note.mail.discount');
   }
 
   /**
@@ -137,7 +144,7 @@ export class GetCreditNoteMailTemplateAttributesTransformer extends Transformer 
    * @returns {string}
    */
   public adjustmentLabel(): string {
-    return 'Adjustment';
+    return this.context.i18n.t('credit_note.mail.adjustment');
   }
 
   /**
@@ -153,7 +160,7 @@ export class GetCreditNoteMailTemplateAttributesTransformer extends Transformer 
    * @returns {string}
    */
   public subtotalLabel(): string {
-    return 'Subtotal';
+    return this.context.i18n.t('credit_note.mail.subtotal');
   }
 
   /**
@@ -161,7 +168,7 @@ export class GetCreditNoteMailTemplateAttributesTransformer extends Transformer 
    * @returns {string}
    */
   public viewButtonLabel(): string {
-    return 'View Credit Note';
+    return this.context.i18n.t('credit_note.mail.view_credit_note');
   }
 
   /**

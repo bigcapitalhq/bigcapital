@@ -117,7 +117,7 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
    * @returns {string}
    */
   protected transsactionTypeFormatted() {
-    return 'Manual Journal';
+    return this.context.i18n.t('transaction_type.manual_journal');
   }
 
   /**

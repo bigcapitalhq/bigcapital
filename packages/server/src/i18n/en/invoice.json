@@ -41,5 +41,15 @@
   "field.currency": "Currency",
   "field.entries": "Entries",
   "field.branch": "Branch",
-  "field.warehouse": "Warehouse"
+  "field.warehouse": "Warehouse",
+
+  "mail.total": "Total",
+  "mail.subtotal": "Subtotal",
+  "mail.discount": "Discount",
+  "mail.discount_with_percentage": "Discount [{percentage}]",
+  "mail.adjustment": "Adjustment",
+  "mail.due_amount": "Due Amount",
+  "mail.due_date": "Due {dueDate}",
+  "mail.invoice_number": "Invoice # {invoiceNumber}",
+  "mail.view_invoice": "View Invoice"
 }
