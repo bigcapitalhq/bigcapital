@@ -1,5 +1,6 @@
 import { flow, constant } from 'fp-ts/function';
 import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
 import { assoc, when } from '@/common/fp';
 import {
   IGeneralLedgerMeta,
@@ -28,22 +29,27 @@ export class GeneralLedgerTable extends flow(
   private data: IGeneralLedgerSheetData;
   private query: IGeneralLedgerSheetQuery;
   private meta: IGeneralLedgerMeta;
+  readonly i18n: I18nService;
 
   /**
    * Creates an instance of `GeneralLedgerTable`.
    * @param {IGeneralLedgerSheetData} data
    * @param {IGeneralLedgerSheetQuery} query
+   * @param {IGeneralLedgerMeta} meta
+   * @param {I18nService} i18n
    */
   constructor(
     data: IGeneralLedgerSheetData,
     query: IGeneralLedgerSheetQuery,
     meta: IGeneralLedgerMeta,
+    i18n: I18nService,
   ) {
     super();
 
     this.data = data;
     this.query = query;
     this.meta = meta;
+    this.i18n = i18n;
   }
 
   /**
@@ -106,7 +112,10 @@ export class GeneralLedgerTable extends flow(
    */
   private openingBalanceColumnsAccessors(): IColumnMapperMeta[] {
     return [
-      { key: GENERAL_LEDGER_COLUMN_KEYS.DATE, value: 'Opening Balance' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.DATE,
+        value: this.i18n.t('general_ledger.opening_balance'),
+      },
       { key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME, value: '' },
       { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE, accessor: '_empty_' },
       { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_NUMBER, accessor: '_empty_' },
@@ -135,7 +144,9 @@ export class GeneralLedgerTable extends flow(
     return [
       {
         key: GENERAL_LEDGER_COLUMN_KEYS.DATE,
-        value: `Closing balance for ${account.name}`,
+        value: this.i18n.t('general_ledger.closing_balance_for', {
+          args: { accountName: account.name },
+        }),
       },
       { key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME, value: `` },
       { key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE, accessor: '_empty_' },
@@ -193,23 +204,41 @@ export class GeneralLedgerTable extends flow(
    */
   private commonColumns(): ITableColumn[] {
     return [
-      { key: GENERAL_LEDGER_COLUMN_KEYS.DATE, label: 'Date' },
-      { key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME, label: 'Account Name' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.DATE,
+        label: this.i18n.t('general_ledger.date'),
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.ACCOUNT_NAME,
+        label: this.i18n.t('general_ledger.account_name'),
+      },
       {
         key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_TYPE,
-        label: 'Transaction Type',
+        label: this.i18n.t('general_ledger.transaction_type'),
       },
       {
         key: GENERAL_LEDGER_COLUMN_KEYS.REFERENCE_NUMBER,
-        label: 'Transaction #',
+        label: this.i18n.t('general_ledger.transaction_number'),
       },
-      { key: GENERAL_LEDGER_COLUMN_KEYS.DESCRIPTION, label: 'Description' },
-      { key: GENERAL_LEDGER_COLUMN_KEYS.CREDIT, label: 'Credit' },
-      { key: GENERAL_LEDGER_COLUMN_KEYS.DEBIT, label: 'Debit' },
-      { key: GENERAL_LEDGER_COLUMN_KEYS.AMOUNT, label: 'Amount' },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.DESCRIPTION,
+        label: this.i18n.t('general_ledger.description'),
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.CREDIT,
+        label: this.i18n.t('general_ledger.credit'),
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.DEBIT,
+        label: this.i18n.t('general_ledger.debit'),
+      },
+      {
+        key: GENERAL_LEDGER_COLUMN_KEYS.AMOUNT,
+        label: this.i18n.t('general_ledger.amount'),
+      },
       {
         key: GENERAL_LEDGER_COLUMN_KEYS.RUNNING_BALANCE,
-        label: 'Running Balance',
+        label: this.i18n.t('general_ledger.running_balance'),
       },
     ];
   }

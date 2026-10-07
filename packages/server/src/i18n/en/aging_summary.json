@@ -1,0 +1,9 @@
+{
+  "ar_sheet_name": "A/R Aging Summary",
+  "ap_sheet_name": "A/P Aging Summary",
+  "customer_name": "Customer name",
+  "vendor_name": "Vendor name",
+  "current": "Current",
+  "total": "Total",
+  "and_over": "And Over"
+}

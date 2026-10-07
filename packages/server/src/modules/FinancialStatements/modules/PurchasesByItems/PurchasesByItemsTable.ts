@@ -1,5 +1,6 @@
 import { constant, flow } from 'fp-ts/function';
 import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
 import { when } from '@/common/fp';
 import { ROW_TYPE } from './_types';
 import {
@@ -23,14 +24,17 @@ export class PurchasesByItemsTable extends flow(
   FinancialTable,
 )(FinancialSheet) {
   private data: IPurchasesByItemsSheetData;
+  readonly i18n: I18nService;
 
   /**
    * Constructor method.
    * @param data
+   * @param {I18nService} i18n
    */
-  constructor(data: IPurchasesByItemsSheetData) {
+  constructor(data: IPurchasesByItemsSheetData, i18n: I18nService) {
     super();
     this.data = data;
+    this.i18n = i18n;
   }
 
   /**
@@ -61,17 +65,20 @@ export class PurchasesByItemsTable extends flow(
    */
   private commonTableColumns(): ITableColumn[] {
     return [
-      { label: 'Item name', key: PURCHASES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME },
       {
-        label: 'Quantity Purchased',
+        label: this.i18n.t('purchases_by_items.item_name'),
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME,
+      },
+      {
+        label: this.i18n.t('purchases_by_items.quantity_purchased'),
         key: PURCHASES_BY_ITEMS_COLUMN_KEYS.QUANTITY_PURCHASES,
       },
       {
-        label: 'Purchase Amount',
+        label: this.i18n.t('purchases_by_items.purchase_amount'),
         key: PURCHASES_BY_ITEMS_COLUMN_KEYS.PURCHASE_AMOUNT,
       },
       {
-        label: 'Average Price',
+        label: this.i18n.t('purchases_by_items.average_price'),
         key: PURCHASES_BY_ITEMS_COLUMN_KEYS.AVERAGE_COST,
       },
     ];

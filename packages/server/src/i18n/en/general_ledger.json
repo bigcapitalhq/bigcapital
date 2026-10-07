@@ -1,0 +1,14 @@
+{
+  "sheet_name": "General Ledger",
+  "date": "Date",
+  "account_name": "Account Name",
+  "transaction_type": "Transaction Type",
+  "transaction_number": "Transaction #",
+  "description": "Description",
+  "credit": "Credit",
+  "debit": "Debit",
+  "amount": "Amount",
+  "running_balance": "Running Balance",
+  "opening_balance": "Opening Balance",
+  "closing_balance_for": "Closing balance for {accountName}"
+}

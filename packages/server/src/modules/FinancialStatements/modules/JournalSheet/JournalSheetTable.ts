@@ -130,14 +130,38 @@ export class JournalSheetTable extends flow(
    */
   private commonColumns(): ITableColumn[] {
     return [
-      { key: JOURNAL_COLUMN_KEYS.DATE, label: 'Date' },
-      { key: JOURNAL_COLUMN_KEYS.TRANSACTION_TYPE, label: 'Transaction Type' },
-      { key: JOURNAL_COLUMN_KEYS.TRANSACTION_NUMBER, label: 'Num.' },
-      { key: JOURNAL_COLUMN_KEYS.DESCRIPTION, label: 'Description' },
-      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_CODE, label: 'Acc. Code' },
-      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_NAME, label: 'Account' },
-      { key: JOURNAL_COLUMN_KEYS.DEBIT, label: 'Debit' },
-      { key: JOURNAL_COLUMN_KEYS.CREDIT, label: 'Credit' },
+      {
+        key: JOURNAL_COLUMN_KEYS.DATE,
+        label: this.i18n.t('journal_sheet.date'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.TRANSACTION_TYPE,
+        label: this.i18n.t('journal_sheet.transaction_type'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.TRANSACTION_NUMBER,
+        label: this.i18n.t('journal_sheet.transaction_number'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.DESCRIPTION,
+        label: this.i18n.t('journal_sheet.description'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.ACCOUNT_CODE,
+        label: this.i18n.t('journal_sheet.account_code'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.ACCOUNT_NAME,
+        label: this.i18n.t('journal_sheet.account_name'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.DEBIT,
+        label: this.i18n.t('journal_sheet.debit'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.CREDIT,
+        label: this.i18n.t('journal_sheet.credit'),
+      },
     ];
   }
 

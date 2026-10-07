@@ -1,5 +1,6 @@
 import { flow } from 'fp-ts/function';
 import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
 import { unless } from '@/common/fp';
 import {
   SalesTaxLiabilitySummaryQuery,
@@ -22,20 +23,24 @@ export class SalesTaxLiabilitySummaryTable extends flow(
 )(AgingReport) {
   private data: SalesTaxLiabilitySummaryReportData;
   private query: SalesTaxLiabilitySummaryQuery;
+  readonly i18n: I18nService;
 
   /**
    * Sales tax liability summary table constructor.
    * @param {SalesTaxLiabilitySummaryReportData} data
    * @param {SalesTaxLiabilitySummaryQuery} query
+   * @param {I18nService} i18n
    */
   constructor(
     data: SalesTaxLiabilitySummaryReportData,
     query: SalesTaxLiabilitySummaryQuery,
+    i18n: I18nService,
   ) {
     super();
 
     this.data = data;
     this.query = query;
+    this.i18n = i18n;
   }
 
   /**
@@ -67,7 +72,10 @@ export class SalesTaxLiabilitySummaryTable extends flow(
    */
   private get taxRateTotalRowAccessors() {
     return [
-      { key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAX_NAME, value: 'Total' },
+      {
+        key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAX_NAME,
+        value: this.i18n.t('sales_tax_liability_summary.total'),
+      },
       { key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAX_PERCENTAGE, value: '' },
       {
         key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAXABLE_AMOUNT,
@@ -155,23 +163,23 @@ export class SalesTaxLiabilitySummaryTable extends flow(
   public tableColumns(): ITableColumn[] {
     return this.tableColumnsCellIndexing([
       {
-        label: 'Tax Name',
+        label: this.i18n.t('sales_tax_liability_summary.tax_name'),
         key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAX_NAME,
       },
       {
-        label: 'Tax Percentage',
+        label: this.i18n.t('sales_tax_liability_summary.tax_percentage'),
         key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAX_PERCENTAGE,
       },
       {
-        label: 'Taxable Amount',
+        label: this.i18n.t('sales_tax_liability_summary.taxable_amount'),
         key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAXABLE_AMOUNT,
       },
       {
-        label: 'Collected Tax',
+        label: this.i18n.t('sales_tax_liability_summary.collected_tax'),
         key: SALES_TAX_LIABILITY_COLUMN_KEYS.COLLECTED_TAX,
       },
       {
-        label: 'Tax Amount',
+        label: this.i18n.t('sales_tax_liability_summary.tax_amount'),
         key: SALES_TAX_LIABILITY_COLUMN_KEYS.TAX_RATE,
       },
     ]);

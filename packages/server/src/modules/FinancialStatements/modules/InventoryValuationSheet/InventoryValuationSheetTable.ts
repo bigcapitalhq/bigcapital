@@ -1,5 +1,6 @@
 import { constant, flow } from 'fp-ts/function';
 import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
 import { when } from '@/common/fp';
 import {
   IInventoryValuationItem,
@@ -23,14 +24,17 @@ export class InventoryValuationSheetTable extends flow(
   FinancialSheetStructure,
 )(FinancialSheet) {
   private readonly data: IInventoryValuationSheetData;
+  readonly i18n: I18nService;
 
   /**
    * Constructor method.
    * @param {IInventoryValuationSheetData} data
+   * @param {I18nService} i18n
    */
-  constructor(data: IInventoryValuationSheetData) {
+  constructor(data: IInventoryValuationSheetData, i18n: I18nService) {
     super();
     this.data = data;
+    this.i18n = i18n;
   }
 
   /**
@@ -110,10 +114,22 @@ export class InventoryValuationSheetTable extends flow(
    */
   public tableColumns(): ITableColumn[] {
     const columns = [
-      { key: INVENTORY_VALUATION_COLUMN_KEYS.ITEM_NAME, label: 'Item Name' },
-      { key: INVENTORY_VALUATION_COLUMN_KEYS.QUANTITY, label: 'Quantity' },
-      { key: INVENTORY_VALUATION_COLUMN_KEYS.VALUATION, label: 'Valuation' },
-      { key: INVENTORY_VALUATION_COLUMN_KEYS.AVERAGE, label: 'Average' },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.ITEM_NAME,
+        label: this.i18n.t('inventory_valuation.item_name'),
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.QUANTITY,
+        label: this.i18n.t('inventory_valuation.quantity'),
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.VALUATION,
+        label: this.i18n.t('inventory_valuation.valuation'),
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.AVERAGE,
+        label: this.i18n.t('inventory_valuation.average'),
+      },
     ];
     return this.tableColumnsCellIndexing(columns);
   }

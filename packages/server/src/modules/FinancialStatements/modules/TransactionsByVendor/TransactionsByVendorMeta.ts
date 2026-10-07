@@ -4,11 +4,15 @@ import {
   ITransactionsByVendorsFilter,
 } from './TransactionsByVendor.types';
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import { FinancialSheetMeta } from '../../common/FinancialSheetMeta';
 
 @Injectable()
 export class TransactionsByVendorMeta {
-  constructor(private readonly financialSheetMeta: FinancialSheetMeta) {}
+  constructor(
+    private readonly financialSheetMeta: FinancialSheetMeta,
+    private readonly i18n: I18nService,
+  ) {}
 
   /**
    * Retrieves the transactions by vendor meta.
@@ -23,9 +27,11 @@ export class TransactionsByVendorMeta {
     const formattedFromDate = moment(query.fromDate).format(
       commonMeta.dateFormat,
     );
-    const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDate}`;
+    const fromLabel = this.i18n.t('financial_sheet.from_date');
+    const toLabel = this.i18n.t('financial_sheet.to_date');
+    const formattedDateRange = `${fromLabel} ${formattedFromDate} | ${toLabel} ${formattedToDate}`;
 
-    const sheetName = 'Transactions By Vendor';
+    const sheetName = this.i18n.t('transactions_by_contact.vendors_sheet_name');
 
     return {
       ...commonMeta,

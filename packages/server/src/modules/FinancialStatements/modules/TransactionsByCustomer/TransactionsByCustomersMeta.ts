@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import { FinancialSheetMeta } from '../../common/FinancialSheetMeta';
 import {
   ITransactionsByCustomersFilter,
@@ -8,7 +9,10 @@ import {
 
 @Injectable()
 export class TransactionsByCustomersMeta {
-  constructor(private readonly financialSheetMeta: FinancialSheetMeta) {}
+  constructor(
+    private readonly financialSheetMeta: FinancialSheetMeta,
+    private readonly i18n: I18nService,
+  ) {}
 
   /**
    * Retrieves the transactions by customers meta.
@@ -24,11 +28,13 @@ export class TransactionsByCustomersMeta {
     const formattedFromDate = moment(query.fromDate).format(
       commonMeta.dateFormat,
     );
-    const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDate}`;
+    const fromLabel = this.i18n.t('financial_sheet.from_date');
+    const toLabel = this.i18n.t('financial_sheet.to_date');
+    const formattedDateRange = `${fromLabel} ${formattedFromDate} | ${toLabel} ${formattedToDate}`;
 
     return {
       ...commonMeta,
-      sheetName: 'Transactions By Customers',
+      sheetName: this.i18n.t('transactions_by_contact.customers_sheet_name'),
       formattedFromDate,
       formattedToDate,
       formattedDateRange,

@@ -5,11 +5,13 @@ import {
 import { PurchasesByItemsService } from './PurchasesByItems.service';
 import { PurchasesByItemsTable } from './PurchasesByItemsTable';
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class PurchasesByItemsTableInjectable {
   constructor(
     private readonly purchasesByItemsSheet: PurchasesByItemsService,
+    private readonly i18n: I18nService,
   ) {}
 
   /**
@@ -23,7 +25,7 @@ export class PurchasesByItemsTableInjectable {
     const { data, query, meta } =
       await this.purchasesByItemsSheet.purchasesByItems(filter);
 
-    const table = new PurchasesByItemsTable(data);
+    const table = new PurchasesByItemsTable(data, this.i18n);
 
     return {
       table: {
