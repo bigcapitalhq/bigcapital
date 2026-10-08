@@ -1,11 +1,14 @@
 import { StripePaymentService } from '../StripePayment/StripePaymentService';
 import { Inject, Injectable } from '@nestjs/common';
+import { ClsService } from 'nestjs-cls';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
 import { PaymentLink } from './models/PaymentLink';
+import { TenantModel } from '../System/models/TenantModel';
 import { StripeInvoiceCheckoutSessionPOJO } from '../StripePayment/StripePayment.types';
 import { ModelObject } from 'objection';
 import { ConfigService } from '@nestjs/config';
+import { assertPaymentLinkAccessible } from './payment-link.utils';
 
 const origin = 'http://localhost';
 
@@ -14,12 +17,16 @@ export class CreateInvoiceCheckoutSession {
   constructor(
     private readonly stripePaymentService: StripePaymentService,
     private readonly configService: ConfigService,
+    private readonly clsService: ClsService,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
 
     @Inject(PaymentLink.name)
     private readonly paymentLinkModel: typeof PaymentLink,
+
+    @Inject(TenantModel.name)
+    private readonly systemTenantModel: typeof TenantModel,
   ) {}
 
   /**
@@ -36,6 +43,22 @@ export class CreateInvoiceCheckoutSession {
       .findOne('linkId', publicPaymentLinkId)
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
+
+    const callerOrganizationId = this.clsService.get<string>('organizationId');
+
+    const tenant = await this.systemTenantModel
+      .query()
+      .findById(paymentLink.tenantId)
+      .throwIfNotFound();
+
+    assertPaymentLinkAccessible(
+      paymentLink,
+      tenant.organizationId,
+      callerOrganizationId,
+    );
+
+    // Resolves the tenant database of the payment link owner.
+    this.clsService.set('organizationId', tenant.organizationId);
 
     // Retrieves the invoice from associated payment link.
     const invoice = await this.saleInvoiceModel()

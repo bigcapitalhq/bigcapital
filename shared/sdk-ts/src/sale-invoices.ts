@@ -255,17 +255,25 @@ export async function fetchSaleInvoicePdf(
   return toPdfDocument(response);
 }
 
+export type GenerateSaleInvoiceSharableLinkBody = {
+  publicity?: "public" | "private";
+  expiryTime?: string;
+};
+
 export async function generateSaleInvoiceSharableLink(
   fetcher: ApiFetcher,
   id: number,
+  body?: GenerateSaleInvoiceSharableLinkBody,
 ): Promise<{ link: string }> {
   const post = fetcher
     .path(SALE_INVOICES_ROUTES.GENERATE_LINK)
     .method("post")
     .create();
   const { data } = await (
-    post as (params: { id: number }) => Promise<{ data: { link: string } }>
-  )({ id });
+    post as (
+      params: { id: number } & GenerateSaleInvoiceSharableLinkBody,
+    ) => Promise<{ data: { link: string } }>
+  )({ id, ...(body ?? {}) });
   return data as { link: string };
 }
 

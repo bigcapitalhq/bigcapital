@@ -4036,6 +4036,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateSaleInvoiceSharableLinkDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "The link has been generated successfully.",
@@ -28631,6 +28641,25 @@
               "reminder"
             ],
             "deprecated": true
+          }
+        }
+      },
+      "GenerateSaleInvoiceSharableLinkDto": {
+        "type": "object",
+        "properties": {
+          "publicity": {
+            "type": "string",
+            "description": "Determines whether the link is accessible by anyone.",
+            "enum": [
+              "public",
+              "private"
+            ],
+            "default": "private"
+          },
+          "expiryTime": {
+            "type": "string",
+            "description": "The date the shared link expires at the end of the day.",
+            "example": "2026-11-07"
           }
         }
       },

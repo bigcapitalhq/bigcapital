@@ -7743,6 +7743,19 @@ export interface components {
              */
             notification_key?: "details" | "reminder";
         };
+        GenerateSaleInvoiceSharableLinkDto: {
+            /**
+             * @description Determines whether the link is accessible by anyone.
+             * @default private
+             * @enum {string}
+             */
+            publicity: "public" | "private";
+            /**
+             * @description The date the shared link expires at the end of the day.
+             * @example 2026-11-07
+             */
+            expiryTime?: string;
+        };
         CreatePdfTemplateDto: Record<string, never>;
         EditPdfTemplateDto: Record<string, never>;
         UploadAttachmentDto: {
@@ -19854,7 +19867,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["GenerateSaleInvoiceSharableLinkDto"];
+            };
+        };
         responses: {
             /** @description The link has been generated successfully. */
             201: {

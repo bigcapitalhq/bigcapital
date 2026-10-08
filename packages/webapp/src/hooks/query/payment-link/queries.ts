@@ -51,10 +51,10 @@ export function useCreatePaymentLink(
   return useMutation<CreatePaymentLinkResponse, Error, CreatePaymentLinkValues>(
     {
       mutationFn: (values) =>
-        generateSaleInvoiceSharableLink(
-          fetcher,
-          Number(values.transactionId),
-        ).then((data) => ({ link: data.link })),
+        generateSaleInvoiceSharableLink(fetcher, Number(values.transactionId), {
+          publicity: values.publicity as 'public' | 'private',
+          expiryTime: values.expiryDate,
+        }).then((data) => ({ link: data.link })),
       ...options,
     },
   );

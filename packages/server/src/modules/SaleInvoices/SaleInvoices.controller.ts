@@ -40,6 +40,7 @@ import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleInvoiceStateResponseDto } from './dtos/SaleInvoiceState.dto';
 import { GenerateSaleInvoiceSharableLinkResponseDto } from './dtos/GenerateSaleInvoiceSharableLinkResponse.dto';
+import { GenerateSaleInvoiceSharableLinkDto } from './dtos/GenerateSaleInvoiceSharableLink.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
@@ -469,6 +470,10 @@ export class SaleInvoicesController {
   @ApiOperation({
     summary: 'Generate sharable sale invoice link (private or public)',
   })
+  @ApiBody({
+    type: GenerateSaleInvoiceSharableLinkDto,
+    required: false,
+  })
   @ApiResponse({
     status: 201,
     description: 'The link has been generated successfully.',
@@ -482,7 +487,14 @@ export class SaleInvoicesController {
     type: Number,
     description: 'The sale invoice id',
   })
-  generateSaleInvoiceSharableLink(@Param('id', ParseIntPipe) id: number) {
-    return this.saleInvoiceApplication.generateSaleInvoiceSharableLink(id);
+  generateSaleInvoiceSharableLink(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: GenerateSaleInvoiceSharableLinkDto,
+  ) {
+    return this.saleInvoiceApplication.generateSaleInvoiceSharableLink(
+      id,
+      dto?.publicity,
+      dto?.expiryTime,
+    );
   }
 }
