@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import * as crypto from 'crypto';
 import { ApiKeyModel } from '../models/ApiKey.model';
 import { ClsService } from 'nestjs-cls';
 import { TenantModel } from '@/modules/System/models/TenantModel';
@@ -19,9 +20,9 @@ export class AuthApiKeyAuthorizeService {
    * Authenticate using the given api key.
    */
   async authorize(apiKey: string): Promise<boolean> {
-    const apiKeyRecord = await this.apikeyModel
-      .query()
-      .findOne({ key: apiKey });
+    // Keys are stored as SHA-256 hashes; hash the presented key to look it up.
+    const keyHash = crypto.createHash('sha256').update(apiKey).digest('hex');
+    const apiKeyRecord = await this.apikeyModel.query().findOne({ keyHash });
 
     if (!apiKeyRecord) {
       return false;

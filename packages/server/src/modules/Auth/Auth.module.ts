@@ -45,6 +45,8 @@ import { AuthApiKeysController } from './AuthApiKeys.controllers';
 import { AuthApiKeyAuthorizeService } from './commands/AuthApiKeyAuthorization.service';
 import { GenerateApiKey } from './commands/GenerateApiKey.service';
 import { GetApiKeysService } from './queries/GetApiKeys.service';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 
 const models = [
   InjectSystemModel(PasswordReset),
@@ -117,6 +119,8 @@ const models = [
     AuthApiKeyAuthorizeService,
     GenerateApiKey,
     GetApiKeysService,
+    AuthorizationGuard,
+    PermissionGuard,
     JwtAuthGuard,
     {
       provide: APP_GUARD,
