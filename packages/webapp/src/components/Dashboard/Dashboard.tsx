@@ -5,6 +5,7 @@ import DashboardProvider from './DashboardProvider';
 import { DashboardSockets } from './DashboardSockets';
 import GlobalHotkeys from './GlobalHotkeys';
 import DashboardContent from '@/components/Dashboard/DashboardContent';
+import DashboardDocumentTitle from '@/components/Dashboard/DashboardDocumentTitle';
 import DashboardSplitPane from '@/components/Dashboard/DashboardSplitePane';
 import DialogsContainer from '@/components/DialogsContainer';
 import DrawersContainer from '@/components/DrawersContainer';
@@ -51,6 +52,8 @@ function DashboardAnyPage() {
 export default function Dashboard() {
   return (
     <DashboardProvider>
+      <DashboardDocumentTitle />
+
       <Switch>
         <Route path="/preferences" component={DashboardPreferences} />
         <Route path="/" component={DashboardAnyPage} />
