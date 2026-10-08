@@ -5,10 +5,12 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { GetInvoicePaymentLinkResponseWrapperDto } from './dtos/GetInvoicePaymentLinkResponse.dto';
 import { CreateStripeCheckoutSessionResponseDto } from './dtos/CreateStripeCheckoutSessionResponse.dto';
+import { PublicRoute } from '../Auth/guards/jwt.guard';
 
 @Controller('payment-links')
 @ApiTags('Payment Links')
 @ApiCommonHeaders()
+@PublicRoute()
 export class PaymentLinksController {
   constructor(private readonly paymentLinkApp: PaymentLinksApplication) {}
 
