@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import { useCashflowTransactionColumns } from './utils';
@@ -10,14 +9,12 @@ import { TableStyle } from '@/constants';
  */
 export function CashflowTransactionDrawerTable() {
   const columns = useCashflowTransactionColumns();
-  const {
-    cashflowTransaction: { transactions },
-  } = useCashflowTransactionDrawerContext();
+  const { cashflowTransaction } = useCashflowTransactionDrawerContext();
 
   return (
     <CommercialDocEntriesTable
       columns={columns}
-      data={transactions}
+      data={cashflowTransaction?.transactions ?? []}
       styleName={TableStyle.Constrant}
     />
   );

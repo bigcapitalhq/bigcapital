@@ -1,16 +1,31 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { RefundCreditNoteTransaction } from '@bigcapital/sdk-ts';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { useRefundCreditTransaction } from '@/hooks/query';
 
-const RefundCreditNoteDrawerContext = React.createContext();
+export interface RefundCreditNoteDrawerContextValue {
+  refundTransactionId: number | undefined;
+  refundCreditTransaction: RefundCreditNoteTransaction | undefined;
+}
+
+const RefundCreditNoteDrawerContext = React.createContext<
+  RefundCreditNoteDrawerContextValue | undefined
+>(undefined);
+
+interface RefundCreditNoteDrawerProviderProps {
+  refundTransactionId?: number | null;
+  children?: React.ReactNode;
+}
 
 /**
  * Refund credit note drawer provider.
  */
-function RefundCreditNoteDrawerProvider({ refundTransactionId, ...props }) {
+function RefundCreditNoteDrawerProvider({
+  refundTransactionId,
+  ...props
+}: RefundCreditNoteDrawerProviderProps) {
   // Handle fetch refund credit note transaction.
   const {
     data: refundCreditTransaction,
@@ -20,8 +35,8 @@ function RefundCreditNoteDrawerProvider({ refundTransactionId, ...props }) {
   });
 
   // provider
-  const provider = {
-    refundTransactionId,
+  const provider: RefundCreditNoteDrawerContextValue = {
+    refundTransactionId: refundTransactionId ?? undefined,
     refundCreditTransaction,
   };
 
@@ -36,7 +51,15 @@ function RefundCreditNoteDrawerProvider({ refundTransactionId, ...props }) {
   );
 }
 
-const useRefundCreditNoteDrawerContext = () =>
-  React.useContext(RefundCreditNoteDrawerContext);
+const useRefundCreditNoteDrawerContext =
+  (): RefundCreditNoteDrawerContextValue => {
+    const ctx = React.useContext(RefundCreditNoteDrawerContext);
+    if (ctx === undefined) {
+      throw new Error(
+        'useRefundCreditNoteDrawerContext must be used within a RefundCreditNoteDrawerProvider',
+      );
+    }
+    return ctx;
+  };
 
 export { RefundCreditNoteDrawerProvider, useRefundCreditNoteDrawerContext };

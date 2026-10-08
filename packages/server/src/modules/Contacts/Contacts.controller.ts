@@ -17,6 +17,7 @@ import {
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { GetContactsAutoCompleteQuery } from './dtos/GetContactsAutoCompleteQuery.dto';
 import { ContactAutoCompleteItemDto } from './dtos/ContactAutoCompleteItem.dto';
+import { ContactResponseDto } from './dtos/ContactResponse.dto';
 import { GetAutoCompleteContactsService } from './queries/GetAutoCompleteContacts.service';
 import { GetContactService } from './queries/GetContact.service';
 import { ActivateContactService } from './commands/ActivateContact.service';
@@ -24,7 +25,7 @@ import { InactivateContactService } from './commands/InactivateContact.service';
 
 @Controller('contacts')
 @ApiTags('Contacts')
-@ApiExtraModels(ContactAutoCompleteItemDto)
+@ApiExtraModels(ContactAutoCompleteItemDto, ContactResponseDto)
 @ApiCommonHeaders()
 export class ContactsController {
   constructor(
@@ -55,6 +56,9 @@ export class ContactsController {
     status: 200,
     description:
       'Contact details (under "customer" key for form/duplicate use)',
+    schema: {
+      $ref: getSchemaPath(ContactResponseDto),
+    },
   })
   getContact(@Param('id', ParseIntPipe) contactId: number) {
     return this.getContactService.getContact(contactId);

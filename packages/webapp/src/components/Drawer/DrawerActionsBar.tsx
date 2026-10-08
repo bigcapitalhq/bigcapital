@@ -1,8 +1,18 @@
-// @ts-nocheck
-import { Navbar } from '@blueprintjs/core';
+import { Navbar, NavbarProps } from '@blueprintjs/core';
+import classNames from 'classnames';
 import React from 'react';
 import styles from './DrawerActionBar.module.scss';
 
-export function DrawerActionsBar({ children, ...props }) {
-  return <Navbar className={styles.root}>{children}</Navbar>;
+export interface DrawerActionsBarProps extends NavbarProps {}
+
+export function DrawerActionsBar({
+  children,
+  className,
+  ...props
+}: DrawerActionsBarProps) {
+  return (
+    <Navbar {...props} className={classNames(styles.root, className)}>
+      {children}
+    </Navbar>
+  );
 }

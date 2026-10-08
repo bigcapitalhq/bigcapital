@@ -1,16 +1,33 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { BankingTransactionDetailResponse } from '@bigcapital/sdk-ts';
 import { DrawerLoading, DrawerHeaderContent } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { useCashflowTransaction } from '@/hooks/query';
 
-const CashflowTransactionDrawerContext = React.createContext();
+export interface CashflowTransactionDrawerContextValue {
+  referenceId: number | undefined;
+  cashflowTransaction: BankingTransactionDetailResponse | undefined;
+  isCashflowTransactionFetching: boolean;
+  isCashflowTransactionLoading: boolean;
+}
+
+const CashflowTransactionDrawerContext = React.createContext<
+  CashflowTransactionDrawerContextValue | undefined
+>(undefined);
+
+interface CashflowTransactionDrawerProviderProps {
+  referenceId?: number | null;
+  children?: React.ReactNode;
+}
 
 /**
  * Cashflow transaction drawer provider.
  */
-function CashflowTransactionDrawerProvider({ referenceId, ...props }) {
+function CashflowTransactionDrawerProvider({
+  referenceId,
+  ...props
+}: CashflowTransactionDrawerProviderProps) {
   // Fetch the specific cashflow transaction details.
   const {
     data: cashflowTransaction,
@@ -21,8 +38,8 @@ function CashflowTransactionDrawerProvider({ referenceId, ...props }) {
   });
 
   // Provider.
-  const provider = {
-    referenceId,
+  const provider: CashflowTransactionDrawerContextValue = {
+    referenceId: referenceId ?? undefined,
     cashflowTransaction,
 
     isCashflowTransactionFetching,
@@ -42,8 +59,16 @@ function CashflowTransactionDrawerProvider({ referenceId, ...props }) {
   );
 }
 
-const useCashflowTransactionDrawerContext = () =>
-  React.useContext(CashflowTransactionDrawerContext);
+const useCashflowTransactionDrawerContext =
+  (): CashflowTransactionDrawerContextValue => {
+    const ctx = React.useContext(CashflowTransactionDrawerContext);
+    if (ctx === undefined) {
+      throw new Error(
+        'useCashflowTransactionDrawerContext must be used within a CashflowTransactionDrawerProvider',
+      );
+    }
+    return ctx;
+  };
 
 export {
   CashflowTransactionDrawerProvider,

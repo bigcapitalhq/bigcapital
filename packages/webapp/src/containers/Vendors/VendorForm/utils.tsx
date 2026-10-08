@@ -4,6 +4,7 @@ import moment from 'moment';
 import React from 'react';
 import { useVendorFormContext } from './VendorFormProvider';
 import type {
+  ContactResponse,
   CreateVendorBody,
   EditVendorBody,
   Vendor,
@@ -106,7 +107,7 @@ const toNumber = (value: string | number): number | undefined => {
  * Drops `openingBalanceAt` from contact-duplicate sources to avoid prefilling stale dates.
  */
 export const transformVendorToForm = (
-  vendor: Partial<Vendor> | null | undefined,
+  vendor: Partial<Vendor | ContactResponse> | null | undefined,
   defaults: VendorFormValues,
 ): VendorFormValues =>
   ({

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -19,26 +18,26 @@ export function RefundCreditNoteDetailHeader() {
         <DetailItem
           label={intl.get('date')}
           children={
-            <FormatDate value={refundCreditTransaction.formattedDate} />
+            <FormatDate value={refundCreditTransaction?.formattedDate} />
           }
         />
         <DetailItem label={intl.get('refund_credit.drawer.label.amount')}>
-          <strong>{refundCreditTransaction.formattedAmount}</strong>
+          <strong>{refundCreditTransaction?.formattedAmount}</strong>
         </DetailItem>
         <DetailItem
           label={intl.get('refund_credit.drawer.label.credit_note_no')}
-          children={refundCreditTransaction.creditNote?.creditNoteNumber}
+          children={refundCreditTransaction?.creditNote?.creditNoteNumber}
         />
 
         <DetailItem
           label={intl.get('refund_credit.drawer.label.withdrawal_account')}
-          children={refundCreditTransaction.fromAccount.name}
+          children={refundCreditTransaction?.fromAccount?.name}
         />
         <DetailItem label={intl.get('refund_credit.drawer.label.reference_no')}>
-          {defaultTo(refundCreditTransaction.referenceNo, '—')}
+          {defaultTo(refundCreditTransaction?.referenceNo, '—')}
         </DetailItem>
         <DetailItem label={intl.get('refund_credit.drawer.label.description')}>
-          {defaultTo(refundCreditTransaction.description, '—')}
+          {defaultTo(refundCreditTransaction?.description, '—')}
         </DetailItem>
       </DetailsMenu>
     </CommercialDocHeader>

@@ -30,6 +30,9 @@ export type VendorCredit = OpResponseBody<
 export type VendorCreditRefund = OpResponseBody<
   OpForPath<typeof VENDOR_CREDITS_ROUTES.REFUND, 'get'>
 >[number];
+export type RefundVendorCreditTransaction = OpResponseBody<
+  OpForPath<typeof VENDOR_CREDITS_ROUTES.REFUND_BY_ID, 'get'>
+>;
 export type VendorCreditAppliedBill = OpResponseBody<
   OpForPath<typeof VENDOR_CREDITS_ROUTES.APPLIED_BILLS, 'get'>
 >[number];
@@ -158,7 +161,7 @@ export async function createRefundVendorCredit(
 export async function fetchRefundVendorCreditTransaction(
   fetcher: ApiFetcher,
   refundCreditId: number
-): Promise<unknown> {
+): Promise<RefundVendorCreditTransaction> {
   const get = fetcher
     .path(VENDOR_CREDITS_ROUTES.REFUND_BY_ID)
     .method('get')

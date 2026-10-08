@@ -20,8 +20,13 @@ export type GetBankingAccountsQuery = OpQueryParams<
   OpForPath<typeof BANKING_ACCOUNTS_ROUTES.LIST, 'get'>
 >;
 
+/** List row for GET /api/banking/transactions. */
+export type BankingTransactionResponse = NonNullable<
+  OpResponseBody<OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTIONS, 'get'>>['data']
+>[number];
+
 /** Response for GET /api/banking/transactions/{id}. */
-export type BankingTransactionResponse = OpResponseBody<
+export type BankingTransactionDetailResponse = OpResponseBody<
   OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTION_BY_ID, 'get'>
 >;
 
@@ -92,7 +97,7 @@ export async function fetchBankingTransactions(
 export async function getBankingTransaction(
   fetcher: ApiFetcher,
   id: string | number
-): Promise<BankingTransactionResponse> {
+): Promise<BankingTransactionDetailResponse> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.TRANSACTION_BY_ID).method('get').create();
   const { data } = await get({ id: String(id) });
   return data;

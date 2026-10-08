@@ -346,7 +346,12 @@ export function useDeleteReconcileVendorCredit(
 
 export function useRefundVendorCreditTransaction(
   id: number | null | undefined,
-  props?: Omit<UseQueryOptions<unknown>, 'queryKey' | 'queryFn'>,
+  props?: Omit<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof fetchRefundVendorCreditTransaction>>
+    >,
+    'queryKey' | 'queryFn'
+  >,
   _requestProps?: unknown,
 ) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });

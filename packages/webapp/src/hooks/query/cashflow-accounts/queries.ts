@@ -28,7 +28,7 @@ import { vendorsKeys } from '../vendors/query-keys';
 import { cashflowAccountsKeys } from './query-keys';
 import type {
   BankingAccountsListResponse,
-  BankingTransactionResponse,
+  BankingTransactionDetailResponse,
   CreateCashflowTransactionBody,
   CashflowAccountTransactionsQuery,
   CashflowAccountUncategorizedTransactionsQuery,
@@ -114,9 +114,9 @@ export function useCashflowTransaction(
   id: number | null | undefined,
   props?: Omit<
     UseQueryOptions<
-      BankingTransactionResponse,
+      BankingTransactionDetailResponse,
       Error,
-      BankingTransactionResponse
+      BankingTransactionDetailResponse
     >,
     'queryKey' | 'queryFn'
   >,
@@ -124,9 +124,9 @@ export function useCashflowTransaction(
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useQuery<
-    BankingTransactionResponse,
+    BankingTransactionDetailResponse,
     Error,
-    BankingTransactionResponse
+    BankingTransactionDetailResponse
   >({
     ...props,
     queryKey: cashflowAccountsKeys.transaction(id),

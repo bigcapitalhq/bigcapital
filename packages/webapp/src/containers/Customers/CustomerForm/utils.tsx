@@ -4,6 +4,7 @@ import moment from 'moment';
 import React from 'react';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import type {
+  ContactResponse,
   CreateCustomerBody,
   Customer,
   EditCustomerBody,
@@ -107,7 +108,7 @@ const toNumber = (value: string | number): number | undefined => {
  * Transforms a customer (API response) to form initial values.
  */
 export const transformCustomerToForm = (
-  customer: Partial<Customer> | null | undefined,
+  customer: Partial<Customer | ContactResponse> | null | undefined,
   defaults: CustomerFormValues,
 ): CustomerFormValues =>
   ({

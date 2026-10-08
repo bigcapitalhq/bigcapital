@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Tab } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -9,7 +8,6 @@ import { DrawerMainTabs } from '@/components';
 
 /**
  * Refund credit note detail.
- * @returns {React.JSX}
  */
 export function RefundCreditNoteDetail() {
   return (
@@ -22,7 +20,6 @@ export function RefundCreditNoteDetail() {
 
 /**
  * Refund credit note detail tabs.
- * @returns {React.JSX}
  */
 function RefundCreditNoteDetailTabs() {
   return (

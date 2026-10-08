@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
@@ -10,7 +9,12 @@ import {
   Can,
 } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+
+type RefundCreditNoteDetailActionsBarInnerProps = WithAlertActionsProps;
 
 /**
  * Refund credit note actions bar.
@@ -18,7 +22,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 function RefundCreditNoteDetailActionsBarInner({
   // #withAlertActions
   openAlert,
-}) {
+}: RefundCreditNoteDetailActionsBarInnerProps) {
   const { refundTransactionId } = useRefundCreditNoteDrawerContext();
 
   // Handle delete refund credit.

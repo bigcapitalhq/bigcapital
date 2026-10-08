@@ -45,6 +45,14 @@ export class VendorCreditsRefundController {
   @ApiOperation({
     summary: 'Retrieve a refund vendor credit transaction by id.',
   })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The refund vendor credit transaction has been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(RefundVendorCreditResponseDto),
+    },
+  })
   public getRefundVendorCreditTransaction(
     @Param('refundCreditId') refundCreditId: string,
   ) {
