@@ -190,7 +190,7 @@ export const useComposeRowsOnNewRow = () => {
  * Associate tax rate to entries.
  */
 export const assignEntriesTaxRate = (taxRates) => (entries) => {
-  const taxRatesById = keyBy(taxRates, 'id');
+  const taxRatesById = keyBy(taxRates ?? [], 'id');
 
   return entries.map((entry) => {
     const taxRate = taxRatesById[entry.taxRateId];
@@ -309,8 +309,10 @@ export const aggregateItemEntriesTaxRates =
 
       return {
         taxRateId,
-        taxRate: taxRate.rate,
-        label: `${taxRate.name} [${taxRate.rate}%]`,
+        taxRate: taxRate?.rate ?? 0,
+        label: taxRate
+          ? `${taxRate.name} [${taxRate.rate}%]`
+          : `Tax #${taxRateId} [0%]`,
         taxAmount: totalTaxAmount,
         taxAmountFormatted,
       };
