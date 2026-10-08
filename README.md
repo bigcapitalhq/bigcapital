@@ -30,7 +30,7 @@
   </p>
 
   <p align="center">
-    <a href="https://my.bigcapital.app">Bigcapital Cloud</a>
+    <a href="https://bigcapital.app">Bigcapital Cloud</a>
   </p>
 </p>
 
