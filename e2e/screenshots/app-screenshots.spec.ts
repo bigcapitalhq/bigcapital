@@ -240,12 +240,11 @@ async function openPage(page: Page, route: string, title?: string) {
     );
   }
   // The webapp hardcodes `bp4-dark` on <body> and only toggles the class when
-  // the user switches themes. Force the light theme so captures match the
-  // README screenshots.
+  // the user switches themes. Force the dark theme so captures are consistent.
   await page.evaluate(() => {
-    localStorage.setItem('theme', 'light');
-    document.documentElement.classList.remove('bp4-dark');
-    document.body.classList.remove('bp4-dark');
+    localStorage.setItem('theme', 'dark');
+    document.documentElement.classList.add('bp4-dark');
+    document.body.classList.add('bp4-dark');
   });
   await page.addStyleTag({
     content:

@@ -27,7 +27,7 @@ const config: PlaywrightTestConfig = {
         ...devices["Desktop Chrome"],
         viewport: { width: 1540, height: 839 },
         deviceScaleFactor: 1,
-        colorScheme: "light",
+        colorScheme: "dark",
         contextOptions: { reducedMotion: "reduce" },
       },
     },
