@@ -16,6 +16,7 @@ import {
   findVendorIdByName,
   readApiAuth,
 } from '../_api';
+import { selectCustomer, selectEntryItem } from '../_invoices';
 
 const API_BASE = process.env.PLAYWRIGHT_TEST_API_URL || 'http://localhost:3000';
 const OUTPUT_DIR = path.resolve(__dirname, '../../screenshots');
@@ -261,9 +262,13 @@ async function capture(
     rowSelector?: string;
     rowTestId?: string | RegExp;
     settleMs?: number;
+    prepare?: (page: Page) => Promise<void>;
   } = {},
 ) {
   await openPage(page, route, options.title);
+  if (options.prepare) {
+    await options.prepare(page);
+  }
   if (options.rowTestId) {
     await expect(page.getByTestId(options.rowTestId).first()).toBeVisible({
       timeout: 30_000,
@@ -293,6 +298,30 @@ test.describe('app screenshots', () => {
   test('captures the dashboard', async ({ page }) => {
     await capture(page, '/', 'dashboard.png', {
       rowSelector: '.financial-reports__item',
+    });
+  });
+
+  test('captures the accounts chart', async ({ page }) => {
+    await capture(page, '/accounts', 'accounts-chart.png', {
+      title: 'Accounts Chart',
+      rowSelector: '.tbody .tr',
+      prepare: async (currentPage) => {
+        const header = currentPage
+          .locator('.thead')
+          .getByText('Account Name', { exact: true });
+        const firstRow = currentPage.locator('.tbody .tr').first();
+
+        for (let attempt = 0; attempt < 3; attempt++) {
+          if ((await firstRow.innerText()).includes('Accounts Payable')) {
+            break;
+          }
+          await header.click();
+          await currentPage.waitForTimeout(500);
+        }
+        await expect(firstRow).toContainText('Accounts Payable', {
+          timeout: 5_000,
+        });
+      },
     });
   });
 
@@ -354,6 +383,17 @@ test.describe('app screenshots', () => {
     await capture(page, '/financial-reports/balance-sheet', 'balance-sheet.png', {
       title: 'Balance Sheet',
       rowTestId: /^balance-sheet-row--/,
+    });
+  });
+
+  test('captures the new invoice form', async ({ page }) => {
+    await capture(page, '/invoices/new', 'new-invoice.png', {
+      title: 'New Invoice',
+      settleMs: 1_500,
+      prepare: async (currentPage) => {
+        await selectCustomer(currentPage, CUSTOMERS[0]);
+        await selectEntryItem(currentPage, ITEMS[0].name);
+      },
     });
   });
 });
