@@ -94,4 +94,48 @@ describe('Payment Links (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
+
+  it('/payment-links/:paymentLinkId/stripe_checkout_session (POST) rejects a private link owned by another organization', async () => {
+    // Create a sale invoice under the seeded organization.
+    const invoiceResponse = await request(app.getHttpServer())
+      .post('/sale-invoices')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(requestSaleInvoiceBody())
+      .expect(201);
+
+    // Generate a private payment link (the default publicity).
+    const paymentLinkResponse = await request(app.getHttpServer())
+      .post(`/sale-invoices/${invoiceResponse.body.id}/generate-link`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(201);
+
+    const paymentLinkId = paymentLinkResponse.body.link.split('/payment/')[1];
+
+    // Sign up a user of a different organization.
+    const signupBody = {
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      email: faker.internet.email(),
+      password: '1231231230',
+    };
+    const signupResponse = await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send(signupBody);
+
+    const signinResponse = await request(app.getHttpServer())
+      .post('/auth/signin')
+      .send({ email: signupBody.email, password: signupBody.password });
+
+    // The other organization must not be able to create a checkout session
+    // for the private link owned by the seeded organization.
+    const response = await request(app.getHttpServer())
+      .post(`/payment-links/${paymentLinkId}/stripe_checkout_session`)
+      .set('organization-id', signupResponse.body.organization_id)
+      .set('Authorization', `Bearer ${signinResponse.body.access_token}`)
+      .expect(400);
+
+    expect(response.body.errors[0].type).toBe('PAYMENT_LINK_NOT_SHARED');
+  });
 });
