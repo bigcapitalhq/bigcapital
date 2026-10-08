@@ -13120,7 +13120,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "The refund vendor credit transaction has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefundVendorCreditResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -13974,7 +13981,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BankTransactionResponseDto"
+                  "$ref": "#/components/schemas/BankTransactionDetailResponseDto"
                 }
               }
             }
@@ -24387,7 +24394,14 @@
         ],
         "responses": {
           "200": {
-            "description": "Contact details (under \"customer\" key for form/duplicate use)"
+            "description": "Contact details (under \"customer\" key for form/duplicate use)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -35422,7 +35436,7 @@
             "type": "number",
             "example": 250
           },
-          "formttedAmount": {
+          "formattedAmount": {
             "type": "string",
             "example": "$250.00"
           },
@@ -35448,7 +35462,7 @@
           "date",
           "formattedDate",
           "amount",
-          "formttedAmount",
+          "formattedAmount",
           "fromAccount",
           "creditNote"
         ]
@@ -36807,6 +36821,23 @@
           "attachments"
         ]
       },
+      "RefundVendorCreditSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1001
+          },
+          "vendorCreditNumber": {
+            "type": "string",
+            "example": "VC-0001"
+          }
+        },
+        "required": [
+          "id",
+          "vendorCreditNumber"
+        ]
+      },
       "RefundVendorCreditResponseDto": {
         "type": "object",
         "properties": {
@@ -36869,6 +36900,14 @@
               }
             ]
           },
+          "vendorCredit": {
+            "description": "The vendor credit being refunded",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RefundVendorCreditSummaryDto"
+              }
+            ]
+          },
           "formattedAmount": {
             "type": "string",
             "description": "Formatted refund amount",
@@ -36901,6 +36940,7 @@
           "referenceNo",
           "depositAccountId",
           "date",
+          "vendorCredit",
           "createdAt"
         ]
       },
@@ -37347,6 +37387,163 @@
           "status",
           "formattedStatus",
           "uncategorizedTransactionId"
+        ]
+      },
+      "BankTransactionDetailContactDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "displayName": {
+            "type": "string",
+            "example": "John Doe"
+          }
+        },
+        "required": [
+          "id",
+          "displayName"
+        ]
+      },
+      "BankTransactionDetailEntryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "credit": {
+            "type": "number",
+            "example": 100
+          },
+          "debit": {
+            "type": "number",
+            "example": 0
+          },
+          "account": {
+            "$ref": "#/components/schemas/AccountResponseDto"
+          },
+          "contact": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BankTransactionDetailContactDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "credit",
+          "debit",
+          "account"
+        ]
+      },
+      "BankTransactionDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "transactionType": {
+            "type": "string",
+            "example": "deposit"
+          },
+          "transactionTypeFormatted": {
+            "type": "string",
+            "example": "Deposit"
+          },
+          "amount": {
+            "type": "number",
+            "example": 1000
+          },
+          "formattedAmount": {
+            "type": "string",
+            "example": "$1,000.00"
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "example": 1
+          },
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-15T00:00:00Z"
+          },
+          "formattedDate": {
+            "type": "string",
+            "example": "2024-01-15"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-15T00:00:00Z"
+          },
+          "formattedCreatedAt": {
+            "type": "string",
+            "example": "2024-01-15"
+          },
+          "transactionNumber": {
+            "type": "string",
+            "example": "TRX-2024-001"
+          },
+          "referenceNo": {
+            "type": "string",
+            "example": "REF-001",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "example": "Transaction statement",
+            "nullable": true
+          },
+          "uncategorizedTransactionId": {
+            "type": "number",
+            "example": 12,
+            "nullable": true
+          },
+          "cashflowAccountId": {
+            "type": "number",
+            "example": 5
+          },
+          "creditAccountId": {
+            "type": "number",
+            "example": 6
+          },
+          "branchId": {
+            "type": "number",
+            "example": 1,
+            "nullable": true
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankTransactionDetailEntryDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "transactionType",
+          "transactionTypeFormatted",
+          "amount",
+          "formattedAmount",
+          "currencyCode",
+          "exchangeRate",
+          "date",
+          "formattedDate",
+          "createdAt",
+          "formattedCreatedAt",
+          "transactionNumber",
+          "cashflowAccountId",
+          "creditAccountId",
+          "transactions"
         ]
       },
       "NumberFormatQueryDto": {
@@ -45881,6 +46078,211 @@
           "id",
           "displayName",
           "contactService"
+        ]
+      },
+      "ContactResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "contactService": {
+            "type": "string",
+            "example": "customer",
+            "enum": [
+              "customer",
+              "vendor"
+            ]
+          },
+          "contactType": {
+            "type": "string",
+            "example": "customer",
+            "enum": [
+              "customer",
+              "vendor"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "balance": {
+            "type": "number",
+            "example": 250.5
+          },
+          "currencyCode": {
+            "type": "string",
+            "example": "USD"
+          },
+          "openingBalance": {
+            "type": "number",
+            "example": 250.5,
+            "nullable": true
+          },
+          "openingBalanceAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-15T00:00:00Z",
+            "nullable": true
+          },
+          "salutation": {
+            "type": "string",
+            "example": "Mr.",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe",
+            "nullable": true
+          },
+          "companyName": {
+            "type": "string",
+            "example": "Acme Inc.",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "example": "john@acme.com",
+            "nullable": true
+          },
+          "workPhone": {
+            "type": "string",
+            "example": "+1 555 0100",
+            "nullable": true
+          },
+          "personalPhone": {
+            "type": "string",
+            "example": "+1 555 0101",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "example": "https://acme.com",
+            "nullable": true
+          },
+          "billingAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddressCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddressCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddressEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddressPostcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddressPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddressState": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingAddressCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingAddressCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingAddressEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingAddressPostcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingAddressPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "shippingAddressState": {
+            "type": "string",
+            "nullable": true
+          },
+          "note": {
+            "type": "string",
+            "example": "Internal note",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "formattedContactService": {
+            "type": "string",
+            "example": "Customer"
+          },
+          "contactNormal": {
+            "type": "string",
+            "example": "debit",
+            "nullable": true
+          },
+          "closingBalance": {
+            "type": "number",
+            "example": 250.5
+          },
+          "formattedBalance": {
+            "type": "string",
+            "example": "$250.50"
+          },
+          "formattedOpeningBalance": {
+            "type": "string",
+            "example": "$250.50"
+          },
+          "formattedOpeningBalanceAt": {
+            "type": "string",
+            "example": "2024-01-15"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-15T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-15T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "contactService",
+          "contactType",
+          "displayName",
+          "balance",
+          "currencyCode",
+          "active"
         ]
       },
       "AuditLogFilterOptionDto": {

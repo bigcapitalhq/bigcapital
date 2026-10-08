@@ -1,8 +1,7 @@
-// @ts-nocheck
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const BrandingTemplatesContent = React.lazy(() =>
   import('./BrandingTemplatesContent').then((m) => ({
@@ -10,16 +9,19 @@ const BrandingTemplatesContent = React.lazy(() =>
   })),
 );
 
+interface BrandingTemplatesDrawerProps extends WithDrawersProps {
+  name: string;
+}
+
 /**
  * Invoice customize drawer.
- * @returns {React.ReactNode}
  */
 function BrandingTemplatesDrawerRoot({
   name,
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: BrandingTemplatesDrawerProps) {
   return (
     <Drawer isOpen={isOpen} name={name} payload={payload}>
       <DrawerSuspense>

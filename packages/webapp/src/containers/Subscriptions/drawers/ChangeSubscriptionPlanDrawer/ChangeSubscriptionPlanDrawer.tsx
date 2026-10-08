@@ -1,16 +1,19 @@
-// @ts-nocheck
 import { Position } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const ChangeSubscriptionPlanContent = lazy(() =>
   import('./ChangeSubscriptionPlanContent').then((m) => ({
     default: m.ChangeSubscriptionPlanContent,
   })),
 );
+
+interface ChangeSubscriptionPlanDrawerProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  * Account drawer.
@@ -19,7 +22,7 @@ function ChangeSubscriptionPlanDrawerInner({
   name,
   // #withDrawer
   isOpen,
-}) {
+}: ChangeSubscriptionPlanDrawerProps) {
   return (
     <Drawer
       isOpen={isOpen}

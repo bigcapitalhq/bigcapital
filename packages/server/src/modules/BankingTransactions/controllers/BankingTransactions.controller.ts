@@ -21,6 +21,7 @@ import { BankingTransactionsApplication } from '../BankingTransactionsApplicatio
 import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
 import { GetBankTransactionsQueryDto } from '../dtos/GetBankTranasctionsQuery.dto';
 import { BankTransactionResponseDto } from '../dtos/BankTransactionResponse.dto';
+import { BankTransactionDetailResponseDto } from '../dtos/BankTransactionDetailResponse.dto';
 import { NumberFormatQueryDto } from '../dtos/NumberFormatQuery.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
@@ -29,6 +30,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @ApiTags('Banking Transactions')
 @ApiExtraModels(
   BankTransactionResponseDto,
+  BankTransactionDetailResponseDto,
   PaginatedResponseDto,
   NumberFormatQueryDto,
 )
@@ -131,7 +133,7 @@ export class BankingTransactionsController {
     status: 200,
     description: 'Returns the bank transaction details',
     schema: {
-      $ref: getSchemaPath(BankTransactionResponseDto),
+      $ref: getSchemaPath(BankTransactionDetailResponseDto),
     },
   })
   @ApiResponse({

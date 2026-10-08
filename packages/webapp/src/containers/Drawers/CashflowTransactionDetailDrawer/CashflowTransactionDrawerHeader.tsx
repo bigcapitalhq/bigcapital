@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -6,7 +5,6 @@ import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawer
 import {
   DetailsMenu,
   DetailItem,
-  FormatDate,
   Row,
   Col,
   CommercialDocHeader,
@@ -20,13 +18,11 @@ export function CashflowTransactionDrawerHeader() {
 
   return (
     <CommercialDocHeader>
-      <CommercialDocHeader>
-        <DetailsMenu>
-          <DetailItem name={'total'} label={intl.get('total')}>
-            <h3 class="big-number">{cashflowTransaction.formattedAmount}</h3>
-          </DetailItem>
-        </DetailsMenu>
-      </CommercialDocHeader>
+      <DetailsMenu>
+        <DetailItem name={'total'} label={intl.get('total')}>
+          <h3 className="big-number">{cashflowTransaction?.formattedAmount}</h3>
+        </DetailItem>
+      </DetailsMenu>
 
       <Row>
         <Col xs={6}>
@@ -35,22 +31,22 @@ export function CashflowTransactionDrawerHeader() {
               name={'transaction_type'}
               label={intl.get('cash_flow_drawer.label_transaction_type')}
             >
-              {cashflowTransaction.transactionTypeFormatted}
+              {cashflowTransaction?.transactionTypeFormatted}
             </DetailItem>
 
             <DetailItem
               name={'transaction_number'}
               label={intl.get('cash_flow.drawer.label_transaction_no')}
             >
-              {cashflowTransaction.transactionNumber}
+              {cashflowTransaction?.transactionNumber}
             </DetailItem>
 
             <DetailItem label={intl.get('date')}>
-              {cashflowTransaction.formattedDate}
+              {cashflowTransaction?.formattedDate}
             </DetailItem>
 
             <DetailItem name={'reference-no'} label={intl.get('reference_no')}>
-              {defaultTo(cashflowTransaction.referenceNo, '-')}
+              {defaultTo(cashflowTransaction?.referenceNo, '-')}
             </DetailItem>
           </DetailsMenu>
         </Col>

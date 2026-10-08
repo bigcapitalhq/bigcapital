@@ -1,14 +1,17 @@
-// @ts-nocheck
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const CashFlowTransactionDrawerContent = React.lazy(() =>
   import('./CashflowTransactionDrawerContent').then((m) => ({
     default: m.CashflowTransactionDrawerContent,
   })),
 );
+
+interface CashflowTransactionDetailDrawerProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  * Cash flow transaction drawer
@@ -17,8 +20,10 @@ function CashflowTransactionDetailDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { referenceId },
-}) {
+  payload,
+}: CashflowTransactionDetailDrawerProps) {
+  const referenceId = payload?.referenceId as number | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}

@@ -29,6 +29,7 @@ export class GetBankTransactionService {
       .withGraphFetched('entries.cashflowAccount')
       .withGraphFetched('entries.creditAccount')
       .withGraphFetched('transactions.account')
+      .withGraphFetched('transactions.contact')
       .orderBy('date', 'DESC')
       .throwIfNotFound();
 

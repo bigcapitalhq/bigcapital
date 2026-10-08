@@ -12217,7 +12217,7 @@ export interface components {
             /** @example 250 */
             amount: number;
             /** @example $250.00 */
-            formttedAmount: string;
+            formattedAmount: string;
             /** @example REF-001 */
             referenceNo?: string | null;
             /** @example Refund issued to customer */
@@ -13178,6 +13178,12 @@ export interface components {
              */
             attachments: string[];
         };
+        RefundVendorCreditSummaryDto: {
+            /** @example 1001 */
+            id: number;
+            /** @example VC-0001 */
+            vendorCreditNumber: string;
+        };
         RefundVendorCreditResponseDto: {
             /**
              * @description The unique identifier of the refund transaction
@@ -13232,6 +13238,8 @@ export interface components {
             date: string;
             /** @description The deposit account the refund was paid into */
             depositAccount?: components["schemas"]["AccountResponseDto"];
+            /** @description The vendor credit being refunded */
+            vendorCredit: components["schemas"]["RefundVendorCreditSummaryDto"];
             /**
              * @description Formatted refund amount
              * @example $500.00
@@ -13606,6 +13614,67 @@ export interface components {
              * @example 67890
              */
             uncategorizedTransactionId: number;
+        };
+        BankTransactionDetailContactDto: {
+            /** @example 1 */
+            id: number;
+            /** @example John Doe */
+            displayName: string;
+        };
+        BankTransactionDetailEntryDto: {
+            /** @example 1 */
+            id: number;
+            /** @example 100 */
+            credit: number;
+            /** @example 0 */
+            debit: number;
+            account: components["schemas"]["AccountResponseDto"];
+            contact?: components["schemas"]["BankTransactionDetailContactDto"] | null;
+        };
+        BankTransactionDetailResponseDto: {
+            /** @example 1 */
+            id: number;
+            /** @example deposit */
+            transactionType: string;
+            /** @example Deposit */
+            transactionTypeFormatted: string;
+            /** @example 1000 */
+            amount: number;
+            /** @example $1,000.00 */
+            formattedAmount: string;
+            /** @example USD */
+            currencyCode: string;
+            /** @example 1 */
+            exchangeRate: number;
+            /**
+             * Format: date-time
+             * @example 2024-01-15T00:00:00Z
+             */
+            date: string;
+            /** @example 2024-01-15 */
+            formattedDate: string;
+            /**
+             * Format: date-time
+             * @example 2024-01-15T00:00:00Z
+             */
+            createdAt: string;
+            /** @example 2024-01-15 */
+            formattedCreatedAt: string;
+            /** @example TRX-2024-001 */
+            transactionNumber: string;
+            /** @example REF-001 */
+            referenceNo?: string | null;
+            /** @example Transaction statement */
+            description?: string | null;
+            /** @example 12 */
+            uncategorizedTransactionId?: number | null;
+            /** @example 5 */
+            cashflowAccountId: number;
+            /** @example 6 */
+            creditAccountId: number;
+            /** @example 1 */
+            branchId?: number | null;
+            transactions: components["schemas"]["BankTransactionDetailEntryDto"][];
         };
         NumberFormatQueryDto: {
             /**
@@ -17306,6 +17375,91 @@ export interface components {
              * @enum {string}
              */
             contactService: "customer" | "vendor";
+        };
+        ContactResponseDto: {
+            /** @example 1 */
+            id: number;
+            /**
+             * @example customer
+             * @enum {string}
+             */
+            contactService: "customer" | "vendor";
+            /**
+             * @example customer
+             * @enum {string}
+             */
+            contactType: "customer" | "vendor";
+            /** @example John Doe */
+            displayName: string;
+            /** @example 250.5 */
+            balance: number;
+            /** @example USD */
+            currencyCode: string;
+            /** @example 250.5 */
+            openingBalance?: number | null;
+            /**
+             * Format: date-time
+             * @example 2024-01-15T00:00:00Z
+             */
+            openingBalanceAt?: string | null;
+            /** @example Mr. */
+            salutation?: string | null;
+            /** @example John */
+            firstName?: string | null;
+            /** @example Doe */
+            lastName?: string | null;
+            /** @example Acme Inc. */
+            companyName?: string | null;
+            /** @example john@acme.com */
+            email?: string | null;
+            /** @example +1 555 0100 */
+            workPhone?: string | null;
+            /** @example +1 555 0101 */
+            personalPhone?: string | null;
+            /** @example https://acme.com */
+            website?: string | null;
+            billingAddress1?: string | null;
+            billingAddress2?: string | null;
+            billingAddressCity?: string | null;
+            billingAddressCountry?: string | null;
+            billingAddressEmail?: string | null;
+            billingAddressPostcode?: string | null;
+            billingAddressPhone?: string | null;
+            billingAddressState?: string | null;
+            shippingAddress1?: string | null;
+            shippingAddress2?: string | null;
+            shippingAddressCity?: string | null;
+            shippingAddressCountry?: string | null;
+            shippingAddressEmail?: string | null;
+            shippingAddressPostcode?: string | null;
+            shippingAddressPhone?: string | null;
+            shippingAddressState?: string | null;
+            /** @example Internal note */
+            note?: string | null;
+            /** @example true */
+            active: boolean;
+            /** @example Customer */
+            formattedContactService?: string;
+            /** @example debit */
+            contactNormal?: string | null;
+            /** @example 250.5 */
+            closingBalance?: number;
+            /** @example $250.50 */
+            formattedBalance?: string;
+            /** @example $250.50 */
+            formattedOpeningBalance?: string;
+            /** @example 2024-01-15 */
+            formattedOpeningBalanceAt?: string;
+            /**
+             * Format: date-time
+             * @example 2024-01-15T00:00:00Z
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @example 2024-01-15T00:00:00Z
+             */
+            updatedAt?: string;
         };
         AuditLogFilterOptionDto: {
             /** @example SaleInvoice */
@@ -24928,11 +25082,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description The refund vendor credit transaction has been successfully retrieved. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["RefundVendorCreditResponseDto"];
+                };
             };
         };
     };
@@ -25416,7 +25573,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BankTransactionResponseDto"];
+                    "application/json": components["schemas"]["BankTransactionDetailResponseDto"];
                 };
             };
             /** @description Bank transaction not found */
@@ -32838,7 +32995,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ContactResponseDto"];
+                };
             };
         };
     };

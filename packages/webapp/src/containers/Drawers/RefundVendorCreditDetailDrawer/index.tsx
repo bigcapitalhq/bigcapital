@@ -1,8 +1,7 @@
-// @ts-nocheck
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const RefundVendorCreditDrawerContent = React.lazy(() =>
   import('./RefundVendorCreditDrawerContent').then((m) => ({
@@ -10,16 +9,23 @@ const RefundVendorCreditDrawerContent = React.lazy(() =>
   })),
 );
 
+interface RefundVendorCreditDetailDrawerProps extends WithDrawersProps {
+  name: string;
+}
+
 /**
- * Refund credit note detail.
- * @returns
+ * Refund vendor credit detail.
  */
-function RefundCreditNoteDetailDrawer({
+function RefundVendorCreditDetailDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { refundTransactionId },
-}) {
+  payload,
+}: RefundVendorCreditDetailDrawerProps) {
+  const refundTransactionId = payload?.refundTransactionId as
+    | number
+    | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -36,4 +42,4 @@ function RefundCreditNoteDetailDrawer({
   );
 }
 
-export const index = FF.pipe(RefundCreditNoteDetailDrawer, withDrawers());
+export const index = FF.pipe(RefundVendorCreditDetailDrawer, withDrawers());

@@ -1,15 +1,21 @@
-// @ts-nocheck
-import { Tabs } from '@blueprintjs/core';
+import { Tabs, TabsProps, TabId } from '@blueprintjs/core';
 import React from 'react';
 import styled from 'styled-components';
+
+export interface DrawerMainTabsProps extends Omit<TabsProps, 'id'> {
+  id?: TabId;
+}
 
 /**
  * Drawer main tabs.
  */
-export function DrawerMainTabs({ children, ...restProps }) {
+export function DrawerMainTabs({
+  children,
+  ...restProps
+}: DrawerMainTabsProps) {
   return (
     <DrawerMainTabsRoot>
-      <Tabs animate={true} large={true} {...restProps}>
+      <Tabs animate={true} large={true} {...(restProps as TabsProps)}>
         {children}
       </Tabs>
     </DrawerMainTabsRoot>

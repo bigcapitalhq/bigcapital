@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Classes,
@@ -17,7 +16,12 @@ import {
   If,
 } from '@/components';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+
+type CashflowTransactionDrawerActionBarInnerProps = WithAlertActionsProps;
 
 /**
  * Cashflow transaction drawer action bar.
@@ -25,7 +29,7 @@ import { withAlertActions } from '@/containers/Alert/withAlertActions';
 function CashflowTransactionDrawerActionBarInner({
   // #withAlertsDialog
   openAlert,
-}) {
+}: CashflowTransactionDrawerActionBarInnerProps) {
   const { referenceId, cashflowTransaction } =
     useCashflowTransactionDrawerContext();
 
@@ -38,7 +42,7 @@ function CashflowTransactionDrawerActionBarInner({
   const handleUncategorizeBtnClick = () => {
     openAlert('cashflow-tranaction-uncategorize', {
       uncategorizedTransactionId:
-        cashflowTransaction.uncategorizedTransactionId,
+        cashflowTransaction?.uncategorizedTransactionId,
     });
   };
 
@@ -53,7 +57,7 @@ function CashflowTransactionDrawerActionBarInner({
             intent={Intent.DANGER}
             onClick={handleDeleteCashflowTransaction}
           />
-          <If condition={cashflowTransaction.uncategorizedTransactionId}>
+          <If condition={!!cashflowTransaction?.uncategorizedTransactionId}>
             <NavbarDivider />
             <Button
               text={'Uncategorize'}

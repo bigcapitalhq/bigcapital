@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Callout, Classes } from '@blueprintjs/core';
 import { ChangeSubscriptionPlans } from './ChangeSubscriptionPlans';
 import { Box } from '@/components';
