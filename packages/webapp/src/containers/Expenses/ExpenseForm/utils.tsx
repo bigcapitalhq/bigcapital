@@ -44,7 +44,7 @@ export const defaultExpenseEntry: ExpenseEntry = {
 
 export const defaultExpense: ExpenseFormValues = {
   paymentAccountId: '',
-  beneficiary: '',
+  payeeId: null,
   paymentDate: moment(new Date()).format('YYYY-MM-DD'),
   description: '',
   referenceNo: '',
