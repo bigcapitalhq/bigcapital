@@ -16,7 +16,7 @@ export type ExpenseEntry = {
 
 export type ExpenseFormValues = {
   paymentAccountId: string | number;
-  beneficiary: string;
+  payeeId: string | number | null;
   paymentDate: string;
   description: string;
   referenceNo: string;

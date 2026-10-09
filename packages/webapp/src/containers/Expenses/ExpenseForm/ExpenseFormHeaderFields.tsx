@@ -163,13 +163,13 @@ function ExpenseFormCustomerSelect({
       labelInfo={<Hint />}
       inline={true}
       // @ts-expect-error FormGroup does not declare `name` / `fastField` / `shouldUpdateDeps` / `shouldUpdate`
-      name={'customerId'}
+      name={'payeeId'}
       fastField={true}
       shouldUpdateDeps={{ items: customers }}
       shouldUpdate={customersFieldShouldUpdate}
     >
       <CustomersSelect
-        name={'customerId'}
+        name={'payeeId'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
         allowCreate={true}
