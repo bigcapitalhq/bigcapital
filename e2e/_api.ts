@@ -14,6 +14,7 @@ export interface ExpenseSeedInput {
   paymentDate?: string;
   paymentAccountName?: string;
   expenseAccountName?: string;
+  description?: string;
 }
 
 export interface AccountSeed {
@@ -41,6 +42,7 @@ export interface InvoiceSeedInput {
   rate: number;
   quantity?: number;
   date?: string;
+  dueDate?: string;
   taxRateId?: number;
 }
 
@@ -50,6 +52,9 @@ export interface BillSeedInput {
   rate: number;
   quantity?: number;
   date?: string;
+  billNumber?: string;
+  referenceNo?: string;
+  description?: string;
 }
 
 export interface InventoryAdjustmentSeedInput {
@@ -167,7 +172,8 @@ export async function createExpenseViaApi(
       referenceNo: input.referenceNo,
       paymentDate: input.paymentDate ?? new Date().toISOString().slice(0, 10),
       paymentAccountId: paymentAccount.id,
-      description: `e2e balance sheet seed (${input.referenceNo})`,
+      description:
+        input.description ?? `e2e balance sheet seed (${input.referenceNo})`,
       publish: true,
       categories: [
         {
@@ -198,6 +204,46 @@ async function resolveAccount(
     );
   }
   return account;
+}
+
+export interface ManualJournalEntrySeedInput {
+  accountId: number;
+  debit?: number;
+  credit?: number;
+  note?: string;
+}
+
+export interface ManualJournalSeedInput {
+  date?: string;
+  journalNumber?: string;
+  referenceNo?: string;
+  description?: string;
+  entries: ManualJournalEntrySeedInput[];
+}
+
+/**
+ * Creates and publishes a manual journal. Publishing the journal writes the
+ * GL entries, which seeds opening balances for the accounts.
+ */
+export async function createManualJournalViaApi(
+  apiBase: string,
+  auth: ApiAuth,
+  input: ManualJournalSeedInput,
+): Promise<any> {
+  return send(apiBase, auth, `${API_PREFIX}/manual-journals`, {
+    method: 'POST',
+    body: JSON.stringify({
+      date: input.date ?? today(),
+      journalNumber: input.journalNumber ?? `MJ-${Date.now()}`,
+      reference: input.referenceNo,
+      description: input.description,
+      publish: true,
+      entries: input.entries.map((entry, index) => ({
+        index: index + 1,
+        ...entry,
+      })),
+    }),
+  });
 }
 
 /**
@@ -310,7 +356,7 @@ export async function createDeliveredInvoiceViaApi(
     body: JSON.stringify({
       customerId: input.customerId,
       invoiceDate: input.date ?? today(),
-      dueDate: input.date ?? today(),
+      dueDate: input.dueDate ?? input.date ?? today(),
       delivered: true,
       entries: [
         {
@@ -344,8 +390,8 @@ export async function createOpenedBillViaApi(
       vendorId: input.vendorId,
       billDate: input.date ?? today(),
       dueDate: input.date ?? today(),
-      billNumber: `E2E-BILL-${Date.now()}`,
-      referenceNo: `E2E-BILL-REF-${Date.now()}`,
+      billNumber: input.billNumber ?? `E2E-BILL-${Date.now()}`,
+      referenceNo: input.referenceNo ?? `E2E-BILL-REF-${Date.now()}`,
       exchangeRate: 1,
       open: true,
       entries: [
@@ -354,7 +400,7 @@ export async function createOpenedBillViaApi(
           itemId: input.itemId,
           rate: input.rate,
           quantity: input.quantity ?? 1,
-          description: 'e2e report seed',
+          description: input.description ?? 'e2e report seed',
         },
       ],
     }),

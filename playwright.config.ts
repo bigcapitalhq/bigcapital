@@ -11,6 +11,8 @@ const config: PlaywrightTestConfig = {
   workers: 1,
   // Test directory
   testDir: path.join(__dirname, "e2e"),
+  // Screenshot captures have a dedicated config: `playwright.screenshots.config.ts`.
+  testIgnore: "**/screenshots/**",
   // Runs once before the suite: registers + onboards a user via API and
   // persists the authenticated session to `e2e/.auth/user.json`.
   globalSetup: path.join(__dirname, "e2e/global-setup.ts"),

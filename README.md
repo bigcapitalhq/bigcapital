@@ -39,9 +39,9 @@
 Bigcapital is a smart and open-source accounting and inventory software, Bigcapital keeps all business finances in right place and automates accounting processes to give the business powerful and intelligent financial statements and reports to help in making decisions.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/abouolia/blog/main/public/screenshot-2.png" width="270">
-  <img src="https://raw.githubusercontent.com/abouolia/blog/main/public/screenshot-1.png" width="270">
-  <img src="https://raw.githubusercontent.com/abouolia/blog/main/public/screenshot-3.png" width="270">
+  <img src="screenshots/accounts-chart.png" width="270" alt="Accounts Chart">
+  <img src="screenshots/balance-sheet.png" width="270" alt="Balance Sheet">
+  <img src="screenshots/new-invoice.png" width="270" alt="New Invoice">
 </p>
 
 # Getting Started
