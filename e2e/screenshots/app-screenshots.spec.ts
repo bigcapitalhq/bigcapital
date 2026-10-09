@@ -118,6 +118,22 @@ function daysAgo(days: number): string {
     .slice(0, 10);
 }
 
+function isoDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+/**
+ * The full previous calendar month, used as the balance sheet report period.
+ */
+function previousMonthRange(): { fromDate: string; toDate: string } {
+  const now = new Date();
+  const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const to = new Date(now.getFullYear(), now.getMonth(), 0);
+  return { fromDate: isoDate(from), toDate: isoDate(to) };
+}
+
 async function seedDemoData() {
   const auth = readApiAuth();
 
@@ -138,7 +154,7 @@ async function seedDemoData() {
     return account.id;
   };
   await createManualJournalViaApi(API_BASE, auth, {
-    date: daysAgo(150),
+    date: daysAgo(400),
     journalNumber: 'MJ-1001',
     referenceNo: 'OB-1001',
     description: 'Opening balances',
@@ -229,6 +245,33 @@ async function seedDemoData() {
   }
 }
 
+/**
+ * Waits until the inventory cost-compute background job finishes, otherwise
+ * report pages render the "calculating your cost transactions" alert.
+ */
+async function waitForCostCompute(auth: ReturnType<typeof readApiAuth>) {
+  const deadline = Date.now() + 60_000;
+  const { fromDate, toDate } = previousMonthRange();
+
+  while (Date.now() < deadline) {
+    const response = await fetch(
+      `${API_BASE}/api/reports/balance-sheet?fromDate=${fromDate}&toDate=${toDate}`,
+      {
+        headers: {
+          authorization: `Bearer ${auth.accessToken}`,
+          'organization-id': auth.organizationId,
+          accept: 'application/json',
+        },
+      },
+    );
+    const body = await response.json();
+    if (!body?.meta?.is_cost_compute_running) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2_000));
+  }
+}
+
 async function openPage(page: Page, route: string, title?: string) {
   await page.goto(route, { waitUntil: 'domcontentloaded' });
   await expect(page.getByTestId('dashboard-topbar')).toBeVisible({
@@ -262,12 +305,18 @@ async function capture(
     rowSelector?: string;
     rowTestId?: string | RegExp;
     settleMs?: number;
+    zoom?: number;
     prepare?: (page: Page) => Promise<void>;
   } = {},
 ) {
   await openPage(page, route, options.title);
   if (options.prepare) {
     await options.prepare(page);
+  }
+  if (options.zoom) {
+    await page.evaluate((zoom) => {
+      document.body.style.setProperty('zoom', String(zoom));
+    }, options.zoom);
   }
   if (options.rowTestId) {
     await expect(page.getByTestId(options.rowTestId).first()).toBeVisible({
@@ -293,6 +342,7 @@ test.describe('app screenshots', () => {
     test.setTimeout(15 * 60_000);
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
     await seedDemoData();
+    await waitForCostCompute(readApiAuth());
   });
 
   test('captures the dashboard', async ({ page }) => {
@@ -380,10 +430,33 @@ test.describe('app screenshots', () => {
   });
 
   test('captures the balance sheet', async ({ page }) => {
-    await capture(page, '/financial-reports/balance-sheet', 'balance-sheet.png', {
-      title: 'Balance Sheet',
-      rowTestId: /^balance-sheet-row--/,
+    const { fromDate, toDate } = previousMonthRange();
+    const query = new URLSearchParams({
+      fromDate,
+      toDate,
+      basis: 'cash',
+      filterByOption: 'without-zero-balance',
+      displayColumnsType: 'month',
+      previousYear: 'true',
+      previousYearAmountChange: 'true',
+      previousYearPercentageChange: 'true',
+      previousPeriod: 'true',
+      previousPeriodAmountChange: 'true',
+      previousPeriodPercentageChange: 'true',
+      percentageOfColumn: 'true',
+      percentageOfRow: 'true',
     });
+    await capture(
+      page,
+      `/financial-reports/balance-sheet?${query.toString()}`,
+      'balance-sheet.png',
+      {
+        title: 'Balance Sheet',
+        rowTestId: /^balance-sheet-row--/,
+        settleMs: 1_500,
+        zoom: 0.87,
+      },
+    );
   });
 
   test('captures the new invoice form', async ({ page }) => {
