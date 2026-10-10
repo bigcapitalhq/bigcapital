@@ -8,6 +8,7 @@ import {
   createServiceItem,
   createTaxRate,
   expectBalanced,
+  expectLeg,
   expectLegs,
   fetchLegs,
   getBaseCurrency,
@@ -187,6 +188,125 @@ describe('GL entries — Sales transactions (e2e)', () => {
         ],
         'SaleInvoice',
       );
+    });
+
+    it('posts a balanced journal for an invoice with a percentage line discount', async () => {
+      const invoiceId = await createInvoice({
+        discount: 0,
+        entries: [
+          {
+            index: 1,
+            itemId,
+            quantity: 2,
+            rate: 1000,
+            discount: 10,
+            discountType: 'percentage',
+            description: 'Item description...',
+          },
+        ],
+      });
+
+      const legs = await fetchLegs('SaleInvoice', invoiceId);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '10007', contactId: customerId, debit: 1800 },
+          { accountCode: '50002', credit: 1800 },
+        ],
+        'SaleInvoice',
+      );
+    });
+
+    it('posts a balanced journal for an invoice with an amount line discount', async () => {
+      const invoiceId = await createInvoice({
+        discount: 0,
+        entries: [
+          {
+            index: 1,
+            itemId,
+            quantity: 1,
+            rate: 1000,
+            discount: 150,
+            discountType: 'amount',
+            description: 'Item description...',
+          },
+        ],
+      });
+
+      const legs = await fetchLegs('SaleInvoice', invoiceId);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '10007', contactId: customerId, debit: 850 },
+          { accountCode: '50002', credit: 850 },
+        ],
+        'SaleInvoice',
+      );
+    });
+
+    it('applies the invoice discount on top of line discounts', async () => {
+      const invoiceId = await createInvoice({
+        entries: [
+          {
+            index: 1,
+            itemId,
+            quantity: 2,
+            rate: 1000,
+            discount: 10,
+            discountType: 'percentage',
+            description: 'Item description...',
+          },
+        ],
+      });
+
+      const legs = await fetchLegs('SaleInvoice', invoiceId);
+
+      // Subtotal 1800 after the line discount, less the 10% invoice discount.
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '10007', contactId: customerId, debit: 1620 },
+          { accountCode: '50002', credit: 1800 },
+          { accountCode: '40008', debit: 180 },
+        ],
+        'SaleInvoice',
+      );
+
+      const invoice = await request(app.getHttpServer())
+        .get(`/sale-invoices/${invoiceId}`)
+        .set(authHeaders())
+        .expect(200);
+
+      expect(invoice.body.subtotal).toBe(1800);
+      expect(invoice.body.total).toBe(1620);
+    });
+
+    it('posts a balanced journal for a tax-exclusive invoice with a line discount', async () => {
+      const invoiceId = await createInvoice({
+        discount: 0,
+        entries: [
+          {
+            index: 1,
+            itemId,
+            quantity: 1,
+            rate: 1000,
+            discount: 10,
+            discountType: 'percentage',
+            taxRateId: taxRate10,
+            description: 'Item description...',
+          },
+        ],
+      });
+
+      const legs = await fetchLegs('SaleInvoice', invoiceId);
+
+      expectBalanced(legs);
+      expectLeg(legs, { accountCode: '50002', credit: 900 }, 'SaleInvoice');
     });
   });
 
