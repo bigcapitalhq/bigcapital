@@ -231,6 +231,46 @@ describe('GL entries — Sales transactions (e2e)', () => {
         'SaleReceipt',
       );
     });
+
+    it('posts a balanced journal for a closed sale receipt with an amount-type line discount', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/sale-receipts')
+        .set(authHeaders())
+        .send({
+          customerId,
+          depositAccountId: 1000,
+          receiptDate: '2022-02-02',
+          receiptNumber: faker.string.uuid(),
+          referenceNo: '123',
+          closed: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 2,
+              rate: 1000,
+              discount: 100,
+              discountType: 'amount',
+              description: 'Item description...',
+            },
+          ],
+        })
+        .expect(201);
+
+      const legs = await fetchLegs('SaleReceipt', res.body.id);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '10001', debit: 1900 },
+          { accountCode: '50002', credit: 1900 },
+        ],
+        'SaleReceipt',
+      );
+    });
   });
 
   describe('Payment Received', () => {
@@ -325,6 +365,43 @@ describe('GL entries — Sales transactions (e2e)', () => {
           { accountCode: '10007', contactId: customerId, credit: 900 },
           { accountCode: '50002', debit: 1000 },
           { accountCode: '40008', credit: 100 },
+        ],
+        'CreditNote',
+      );
+    });
+
+    it('posts a balanced journal for an opened credit note with an amount-type line discount', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/credit-notes')
+        .set(authHeaders())
+        .send({
+          customerId,
+          creditNoteDate: '2020-02-02',
+          open: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 2,
+              rate: 1000,
+              discount: 100,
+              discountType: 'amount',
+              description: "It's description here.",
+            },
+          ],
+        })
+        .expect(201);
+
+      const legs = await fetchLegs('CreditNote', res.body.id);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '10007', contactId: customerId, credit: 1900 },
+          { accountCode: '50002', debit: 1900 },
         ],
         'CreditNote',
       );

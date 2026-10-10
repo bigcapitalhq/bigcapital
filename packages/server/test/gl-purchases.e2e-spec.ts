@@ -79,6 +79,46 @@ describe('GL entries — Purchases transactions (e2e)', () => {
       );
     });
 
+    it('posts a balanced journal for a bill with an amount-type line discount', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/bills')
+        .set(authHeaders())
+        .send({
+          vendorId,
+          billDate: '2023-01-01',
+          dueDate: '2023-02-01',
+          billNumber: faker.string.alphanumeric(10),
+          referenceNo: 'REF-000201',
+          open: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 2,
+              rate: 1000,
+              discount: 100,
+              discountType: 'amount',
+              description: 'Item description...',
+            },
+          ],
+        })
+        .expect(201);
+
+      const legs = await fetchLegs('Bill', res.body.id);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '20001', contactId: vendorId, credit: 1900 },
+          { accountCode: '40002', debit: 1900 },
+        ],
+        'Bill',
+      );
+    });
+
     it('posts a balanced journal for a tax-exclusive bill', async () => {
       const billId = await createBill({
         entries: [
@@ -279,6 +319,45 @@ describe('GL entries — Purchases transactions (e2e)', () => {
           { accountCode: '20001', contactId: vendorId, debit: 900 },
           { accountCode: '40002', credit: 1000 },
           { accountCode: '40009', debit: 100 },
+        ],
+        'VendorCredit',
+      );
+    });
+
+    it('posts a balanced journal for an opened vendor credit with an amount-type line discount', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/vendor-credits')
+        .set(authHeaders())
+        .send({
+          vendorId,
+          exchangeRate: 1,
+          vendorCreditNumber: faker.string.uuid(),
+          vendorCreditDate: '2025-01-01',
+          open: true,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 2,
+              rate: 1000,
+              discount: 100,
+              discountType: 'amount',
+              description: "It's description here.",
+            },
+          ],
+          branchId: 1,
+          warehouseId: 1,
+        })
+        .expect(201);
+
+      const legs = await fetchLegs('VendorCredit', res.body.id);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '20001', contactId: vendorId, debit: 1900 },
+          { accountCode: '40002', credit: 1900 },
         ],
         'VendorCredit',
       );
