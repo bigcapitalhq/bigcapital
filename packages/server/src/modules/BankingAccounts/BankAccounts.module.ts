@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bullmq';
 import { BankAccountsApplication } from './BankAccountsApplication.service';
 import { DisconnectBankAccountService } from './commands/DisconnectBankAccount.service';
 import { RefreshBankAccountService } from './commands/RefreshBankAccount.service';
@@ -17,6 +18,7 @@ import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { GetBankAccountSummary } from './queries/GetBankAccountSummary';
 import { MutateBaseCurrencyAccountsSubscriber } from '../Accounts/susbcribers/MutateBaseCurrencyAccounts.subscriber';
 import { MutateBaseCurrencyAccounts } from '../Accounts/MutateBaseCurrencyAccounts';
+import { UpdateBankingPlaidTransitionsQueueJob } from '../BankingPlaid/types/BankingPlaid.types';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { MutateBaseCurrencyAccounts } from '../Accounts/MutateBaseCurrencyAccoun
     BankingTransactionsRegonizeModule,
     BankingTransactionsModule,
     DynamicListModule,
+    BullModule.registerQueue({ name: UpdateBankingPlaidTransitionsQueueJob }),
   ],
   providers: [
     DisconnectBankAccountService,
