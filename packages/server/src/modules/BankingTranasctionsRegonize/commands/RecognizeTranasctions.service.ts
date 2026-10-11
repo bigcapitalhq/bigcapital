@@ -3,14 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { castArray, isEmpty } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { bankRulesMatchTransaction } from '../_utils';
+import { bankRulesMatchTransaction, getApplicableBankRules } from '../_utils';
 import { RecognizeTransactionsCriteria } from '../_types';
 import { IBankTransactionRecognizedEventPayload } from '../_types';
 import { events } from '@/common/events/events';
 import { BankRule } from '@/modules/BankRules/models/BankRule';
 import { RecognizedBankTransaction } from '../models/RecognizedBankTransaction';
 import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
-import { transformToMapBy } from '@/utils/transform-to-map-by';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
@@ -106,22 +105,18 @@ export class RecognizeTranasctionsService {
         q.orderBy('order', 'asc');
       });
 
-    const bankRulesByAccountId = transformToMapBy(
-      bankRules,
-      'applyIfAccountId',
-    );
     // Try to recognize the transaction.
     const recognizedTransactionIds: Array<number> = [];
-    const regonizeTransaction = async (
+    const recognizeTransaction = async (
       transaction: UncategorizedBankTransaction,
     ) => {
-      const _allAccountsBankRules = bankRulesByAccountId.get(`null`);
-      const accountBankRules = bankRulesByAccountId.get(
-        `${transaction.accountId}`,
+      const applicableBankRules = getApplicableBankRules(
+        bankRules,
+        transaction.accountId,
       );
       const recognizedBankRule = bankRulesMatchTransaction(
         transaction,
-        accountBankRules,
+        applicableBankRules,
       );
       if (recognizedBankRule) {
         const recognizedId = await this.markBankRuleAsRecognized(
@@ -132,10 +127,10 @@ export class RecognizeTranasctionsService {
         recognizedTransactionIds.push(recognizedId);
       }
     };
-    const _result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
+    const result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
       .for(uncategorizedTranasctions)
-      .process((transaction: UncategorizedBankTransaction, _index, _pool) => {
-        return regonizeTransaction(transaction);
+      .process((transaction: UncategorizedBankTransaction) => {
+        return recognizeTransaction(transaction);
       });
 
     // Triggers `onBankTransactionsRecognized` event.
@@ -146,6 +141,11 @@ export class RecognizeTranasctionsService {
         recognizedCount: recognizedTransactionIds.length,
         trx,
       } as IBankTransactionRecognizedEventPayload);
+    }
+    // Surface the first error instead of silently swallowing the failures
+    // collected by the promise pool.
+    if (result.errors.length > 0) {
+      throw result.errors[0].raw ?? result.errors[0];
     }
   }
 

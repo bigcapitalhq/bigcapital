@@ -52,12 +52,15 @@ async function selectOption(
  */
 async function createBankRule(
   page: Page,
-  { name }: { name: string },
+  {
+    name,
+    applyAccount = /Petty Cash/,
+  }: { name: string; applyAccount?: RegExp },
 ): Promise<Locator> {
   const dialog = await openNewBankRuleDialog(page);
 
   await dialog.getByTestId("rule-name-input").fill(name);
-  await selectOption(page, dialog, "rule-apply-account-select", /Petty Cash/);
+  await selectOption(page, dialog, "rule-apply-account-select", applyAccount);
   await selectOption(page, dialog, "rule-apply-type-select", /Deposit/);
   await dialog
     .getByTestId("rule-condition-value-input")
@@ -153,6 +156,29 @@ test.describe("bank rules", () => {
 
     const name = ruleName();
     await createBankRule(page, { name });
+  });
+
+  test("should create an all-accounts bank rule successfully.", async ({
+    page,
+  }) => {
+    await waitForBankRulesPage(page);
+
+    const name = ruleName();
+    const row = await createBankRule(page, {
+      name,
+      applyAccount: /All accounts/,
+    });
+
+    // Reopening the rule should keep the "All accounts" option selected.
+    await row.click({ button: "right" });
+    await page.getByRole("menuitem", { name: "Edit Rule" }).click();
+
+    const dialog = page.getByTestId("rule-form-dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByTestId("rule-apply-account-select")).toContainText(
+      "All accounts",
+      { timeout: 30_000 },
+    );
   });
 
   test("should edit a bank rule successfully.", async ({ page }) => {

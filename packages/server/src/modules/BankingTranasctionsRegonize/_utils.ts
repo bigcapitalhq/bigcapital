@@ -96,9 +96,38 @@ const matchTransactionType = (
   );
 };
 
+/**
+ * Retrieves the bank rules that apply to the given transaction account.
+ * Bank rules without `applyIfAccountId` apply to all accounts.
+ *
+ * The `order` field determines the priority across both scopes (lower
+ * values first) and account-specific rules win the tie on equal orders.
+ * @param {BankRule[]} bankRules - All the bank rules.
+ * @param {number} accountId - The transaction account id.
+ * @returns {BankRule[]}
+ */
+export const getApplicableBankRules = (
+  bankRules: BankRule[],
+  accountId: number,
+): BankRule[] => {
+  const accountBankRules = bankRules.filter(
+    (rule) =>
+      rule.applyIfAccountId != null &&
+      Number(rule.applyIfAccountId) === Number(accountId),
+  );
+  const allAccountsBankRules = bankRules.filter(
+    (rule) => rule.applyIfAccountId == null,
+  );
+  // `Array#sort` is stable, so placing the account-specific rules first
+  // keeps them ahead of the all-accounts rules on equal order values.
+  return [...accountBankRules, ...allAccountsBankRules].sort(
+    (a, b) => (a.order ?? 0) - (b.order ?? 0),
+  );
+};
+
 export const bankRulesMatchTransaction = (
   transaction: UncategorizedBankTransaction,
-  bankRules: BankRule[],
+  bankRules: BankRule[] = [],
 ) => {
   return bankRules.find((rule) => {
     return (

@@ -21,7 +21,7 @@ export const initialValues = {
 export interface RuleFormValues {
   name: string;
   order: number;
-  applyIfAccountId: string;
+  applyIfAccountId: string | number | null;
   applyIfTransactionType: string;
   conditionsType: string;
   conditions: Array<{
