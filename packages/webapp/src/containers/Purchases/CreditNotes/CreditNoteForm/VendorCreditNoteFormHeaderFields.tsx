@@ -136,6 +136,7 @@ function VendorCreditNoteFormHeaderFieldsInner({
         <ControlGroup fill={true}>
           <FInputGroup
             name={'vendorCreditNumber'}
+            data-testId="vendor-credit-number-input"
             asyncControl={true}
             onBlur={handleVendorCreditNoBlur}
           />
@@ -162,7 +163,10 @@ function VendorCreditNoteFormHeaderFieldsInner({
         inline={true}
         fastField
       >
-        <FInputGroup name={'referenceNo'} />
+        <FInputGroup
+          name={'referenceNo'}
+          data-testId="vendor-credit-reference-input"
+        />
       </FFormGroup>
     </Stack>
   );
@@ -201,6 +205,7 @@ function VendorCreditFormVendorSelect() {
           fastField={true}
           shouldUpdate={vendorsFieldShouldUpdate}
           shouldUpdateDeps={{ items: vendors }}
+          buttonProps={{ 'data-testId': 'vendor-credit-vendor-select' }}
         />
         {values.vendorId && (
           <VendorButtonLink vendorId={Number(values.vendorId)}>

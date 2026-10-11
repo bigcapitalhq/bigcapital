@@ -67,6 +67,7 @@ const CreditNoteTransactionNoFieldInner = ({
       <ControlGroup fill={true}>
         <FInputGroup
           name={'creditNoteNumber'}
+          data-testId="credit-note-number-input"
           asyncControl={true}
           onBlur={handleCreditNoBlur}
           onChange={() => {}}
