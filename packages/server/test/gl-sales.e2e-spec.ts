@@ -79,6 +79,74 @@ describe('GL entries — Sales transactions (e2e)', () => {
       );
     });
 
+    it('posts a balanced journal for an invoice with line-level discount', async () => {
+      const invoiceId = await createInvoice({
+        discount: 0,
+        entries: [
+          {
+            index: 1,
+            itemId,
+            quantity: 2,
+            rate: 1000,
+            discount: 10,
+            discountType: 'percentage',
+            description: 'Item description...',
+          },
+        ],
+      });
+
+      const legs = await fetchLegs('SaleInvoice', invoiceId);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '10007', contactId: customerId, debit: 1800 },
+          { accountCode: '50002', credit: 1800 },
+        ],
+        'SaleInvoice',
+      );
+
+      // The invoice total must reflect the line-level discount.
+      const invoiceRes = await request(app.getHttpServer())
+        .get(`/sale-invoices/${invoiceId}`)
+        .set(authHeaders())
+        .expect(200);
+
+      expect(invoiceRes.body.subtotal).toBeCloseTo(1800, 2);
+      expect(invoiceRes.body.total).toBeCloseTo(1800, 2);
+    });
+
+    it('posts a balanced journal for an invoice with line and invoice-level discounts', async () => {
+      const invoiceId = await createInvoice({
+        discount: 10,
+        entries: [
+          {
+            index: 1,
+            itemId,
+            quantity: 2,
+            rate: 1000,
+            discount: 10,
+            discountType: 'percentage',
+            description: 'Item description...',
+          },
+        ],
+      });
+
+      const legs = await fetchLegs('SaleInvoice', invoiceId);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '10007', contactId: customerId, debit: 1620 },
+          { accountCode: '50002', credit: 1800 },
+          { accountCode: '40008', debit: 180 },
+        ],
+        'SaleInvoice',
+      );
+    });
+
     it('posts a balanced journal for a tax-exclusive invoice', async () => {
       const invoiceId = await createInvoice({
         entries: [
