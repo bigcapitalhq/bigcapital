@@ -14,7 +14,8 @@ export class GenerateApiKey {
 
   /**
    * Generates a new secure API key for the current tenant and system user.
-   * The key is saved in the database and returned (only the key and id for security).
+   * Only a SHA-256 hash of the key is stored; the raw key is returned once
+   * to the caller and can never be retrieved again.
    * @param {string} name - Optional name for the API key.
    * @returns {Promise<{ key: string; id: number }>} The generated API key and its database id.
    */
@@ -22,19 +23,24 @@ export class GenerateApiKey {
     const tenant = await this.tenancyContext.getTenant();
     const user = await this.tenancyContext.getSystemUser();
 
-    // Generate a secure random API key
+    // Generate a secure random API key.
     const key = `${AuthApiKeyPrefix}${crypto.randomBytes(48).toString('hex')}`;
-    // Save the API key to the database
+
+    // Store only the SHA-256 hash of the key and a short displayable prefix.
+    const keyHash = crypto.createHash('sha256').update(key).digest('hex');
+
+    // Save the API key to the database.
     const apiKeyRecord = await this.apiKeyModel.query().insert({
-      key,
+      keyHash,
+      keyPrefix: key.substring(0, 8),
       name,
       tenantId: tenant.id,
       userId: user.id,
       createdAt: new Date(),
       revokedAt: null,
     });
-    // Return the created API key (not the full record for security)
-    return { key: apiKeyRecord.key, id: apiKeyRecord.id };
+    // Return the created API key (not the full record for security).
+    return { key, id: apiKeyRecord.id };
   }
 
   /**

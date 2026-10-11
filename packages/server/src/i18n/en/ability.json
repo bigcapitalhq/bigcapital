@@ -21,6 +21,8 @@
   "create": "Create",
   "edit": "Edit",
   "delete": "Delete",
+  "revoke": "Revoke",
+  "api_keys": "API keys",
   "transactions_locking": "Ability to transactions locking.",
 
   "balance_sheet_report": "Balance sheet.",
