@@ -26,3 +26,8 @@ export const SendSignupVerificationMailQueue =
 export const SendSignupVerificationMailJob = 'SendSignupVerificationMailJob';
 
 export const AuthApiKeyPrefix = 'bc_';
+
+/**
+ * Length of the displayable API key prefix stored with the hashed key.
+ */
+export const AuthApiKeyPrefixLength = 8;

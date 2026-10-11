@@ -3,6 +3,7 @@ import * as crypto from 'crypto';
 import { ApiKeyModel } from '../models/ApiKey.model';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { AuthApiKeyPrefix } from '../Auth.constants';
+import { getApiKeyPrefix, hashApiKey } from '../Auth.utils';
 
 @Injectable()
 export class GenerateApiKey {
@@ -24,17 +25,18 @@ export class GenerateApiKey {
 
     // Generate a secure random API key
     const key = `${AuthApiKeyPrefix}${crypto.randomBytes(48).toString('hex')}`;
-    // Save the API key to the database
+    // Save the hashed API key and its displayable prefix to the database.
     const apiKeyRecord = await this.apiKeyModel.query().insert({
-      key,
+      keyHash: hashApiKey(key),
+      keyPrefix: getApiKeyPrefix(key),
       name,
       tenantId: tenant.id,
       userId: user.id,
       createdAt: new Date(),
       revokedAt: null,
     });
-    // Return the created API key (not the full record for security)
-    return { key: apiKeyRecord.key, id: apiKeyRecord.id };
+    // Return the plain API key only once, it's never retrievable again.
+    return { key, id: apiKeyRecord.id };
   }
 
   /**
