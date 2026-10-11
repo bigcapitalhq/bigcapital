@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiExtraModels,
@@ -19,11 +20,17 @@ import { UsersApplication } from './Users.application';
 import { EditUserDto } from './dtos/EditUser.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { UserDto } from './dtos/UserResponse.dto';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { PreferencesAction } from '@/modules/Settings/Settings.types';
 
 @Controller('users')
 @ApiTags('Users')
 @ApiExtraModels(UserDto)
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class UsersController {
   constructor(private readonly usersApplication: UsersApplication) {}
 
@@ -31,6 +38,7 @@ export class UsersController {
    * Edit details of the given user.
    */
   @Put(':id')
+  @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   @ApiOperation({ summary: 'Edit details of the given user.' })
   @ApiResponse({
     status: 200,
@@ -55,6 +63,7 @@ export class UsersController {
    * Soft deleting the given user.
    */
   @Delete(':id')
+  @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   @ApiOperation({ summary: 'Soft deleting the given user.' })
   @ApiResponse({
     status: 200,
@@ -110,6 +119,7 @@ export class UsersController {
    * Activate the given user.
    */
   @Put(':id/activate')
+  @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   @ApiOperation({ summary: 'Activate the given user.' })
   @ApiResponse({
     status: 200,
@@ -131,6 +141,7 @@ export class UsersController {
    * Inactivate the given user.
    */
   @Put(':id/inactivate')
+  @RequirePermission(PreferencesAction.Mutate, AbilitySubject.Preferences)
   @ApiOperation({ summary: 'Inactivate the given user.' })
   @ApiResponse({
     status: 200,
