@@ -4,7 +4,6 @@ import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 import { isBlank } from '@/utils';
 
 const Schema = Yup.object().shape({
-  beneficiary: Yup.string().label(intl.get('beneficiary')),
   paymentAccountId: Yup.number().required().label(intl.get('payment_account_')),
   paymentDate: Yup.date().required().label(intl.get('payment_date_')),
   referenceNo: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
