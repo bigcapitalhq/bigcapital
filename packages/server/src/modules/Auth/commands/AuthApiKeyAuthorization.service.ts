@@ -40,6 +40,7 @@ export class AuthApiKeyAuthorizeService {
       .findById(apiKeyRecord.tenantId);
 
     if (!tenant) return false;
+    if (!tenant.isActive) return false;
 
     this.clsService.set('organizationId', tenant.organizationId);
     this.clsService.set('userId', apiKeyRecord.userId);
