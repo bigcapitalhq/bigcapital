@@ -65,7 +65,12 @@ export function PreferencesGeneralForm({
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
         fastField={true}
       >
-        <FInputGroup medium={true} name={'name'} fastField={true} />
+        <FInputGroup
+          medium={true}
+          name={'name'}
+          data-testId={'preferences-general-name-input'}
+          fastField={true}
+        />
       </FFormGroup>
 
       {/* ---------- Organization Tax Number ----------  */}
@@ -76,7 +81,12 @@ export function PreferencesGeneralForm({
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
         fastField={true}
       >
-        <FInputGroup medium={true} name={'taxNumber'} fastField={true} />
+        <FInputGroup
+          medium={true}
+          name={'taxNumber'}
+          data-testId={'preferences-general-tax-number-input'}
+          fastField={true}
+        />
       </FFormGroup>
 
       {/* ---------- Industry ----------  */}
@@ -86,7 +96,12 @@ export function PreferencesGeneralForm({
         inline={true}
         fastField={true}
       >
-        <FInputGroup name={'industry'} medium={true} fastField={true} />
+        <FInputGroup
+          name={'industry'}
+          medium={true}
+          data-testId={'preferences-general-industry-input'}
+          fastField={true}
+        />
       </FFormGroup>
 
       {/* ---------- Location ---------- */}
@@ -104,6 +119,7 @@ export function PreferencesGeneralForm({
           textAccessor={'name'}
           placeholder={<T id={'select_business_location'} />}
           popoverProps={{ minimal: true }}
+          buttonProps={{ 'data-testId': 'preferences-general-location-select' }}
           fastField={true}
         />
       </FFormGroup>
@@ -172,6 +188,9 @@ export function PreferencesGeneralForm({
           labelAccessor={'key'}
           placeholder={<T id={'select_base_currency'} />}
           popoverProps={{ minimal: true }}
+          buttonProps={{
+            'data-testId': 'preferences-general-base-currency-select',
+          }}
           disabled={baseCurrencyDisabled}
           fastField={true}
           shouldUpdate={shouldBaseCurrencyUpdate}
@@ -195,6 +214,9 @@ export function PreferencesGeneralForm({
           textAccessor={'name'}
           placeholder={<T id={'select_fiscal_year'} />}
           popoverProps={{ minimal: true }}
+          buttonProps={{
+            'data-testId': 'preferences-general-fiscal-year-select',
+          }}
           fastField={true}
         />
       </FFormGroup>
@@ -214,6 +236,7 @@ export function PreferencesGeneralForm({
           textAccessor={'name'}
           placeholder={<T id={'select_language'} />}
           popoverProps={{ minimal: true }}
+          buttonProps={{ 'data-testId': 'preferences-general-language-select' }}
           fastField={true}
         />
       </FormGroup>
@@ -237,6 +260,9 @@ export function PreferencesGeneralForm({
           textAccessor={'label'}
           placeholder={<T id={'select_date_format'} />}
           popoverProps={{ minimal: true }}
+          buttonProps={{
+            'data-testId': 'preferences-general-date-format-select',
+          }}
           fastField={true}
         />
       </FFormGroup>
