@@ -4,6 +4,7 @@ import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import * as FF from 'fp-ts/function';
 import { get } from 'lodash';
 import { useCallback, useMemo } from 'react';
+import intl from 'react-intl-universal';
 import {
   Fields,
   RuleFormValues,
@@ -31,6 +32,8 @@ import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { useCreateBankRule, useEditBankRule } from '@/hooks/query/banking';
 import {
+  filterAccountsByQuery,
+  nestedArrayToflatten,
   transformToCamelCase,
   transformToForm,
   transfromToSnakeCase,
@@ -49,11 +52,30 @@ function RuleFormContentFormRoot({
   const { mutateAsync: createBankRule } = useCreateBankRule();
   const { mutateAsync: editBankRule } = useEditBankRule();
 
+  // A rule applies to cash/bank accounts only, plus an "All accounts" option
+  // whose `null` id tells the API the rule applies to every account. The
+  // option is prepended after filtering so it is always kept in the list.
+  const applyIfAccountItems = useMemo(
+    () => [
+      { id: null, name: intl.get('all_accounts'), code: '', accountLevel: 1 },
+      ...filterAccountsByQuery(nestedArrayToflatten(accounts ?? []), {
+        filterByTypes: ['cash', 'bank'],
+      }),
+    ],
+    [accounts],
+  );
+
   const validationSchema = CreateRuleFormSchema;
 
   const _initialValues = {
     ...initialValues,
     ...transformToForm(transformToCamelCase(bankRule), initialValues),
+    // A null `applyIfAccountId` means the rule applies to all accounts. The
+    // `transformToForm` helper drops null values, so restore it explicitly to
+    // keep the "All accounts" option selected while editing.
+    ...(isEditMode && bankRule?.applyIfAccountId == null
+      ? { applyIfAccountId: null }
+      : {}),
   };
   // Handles the form submitting.
   const handleSubmit = (
@@ -117,8 +139,7 @@ function RuleFormContentFormRoot({
         >
           <AccountsSelect
             name={'applyIfAccountId'}
-            items={accounts}
-            filterByTypes={['cash', 'bank']}
+            items={applyIfAccountItems}
             fastField
             buttonProps={{ 'data-testId': 'rule-apply-account-select' }}
           />
