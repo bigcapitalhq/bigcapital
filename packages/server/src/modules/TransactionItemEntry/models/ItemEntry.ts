@@ -169,10 +169,14 @@ export class ItemEntry extends BaseModel {
   }
 
   static calcAmount(itemEntry) {
-    const { discount, quantity, rate } = itemEntry;
+    const { discount, discountType, quantity, rate } = itemEntry;
     const total = quantity * rate;
 
-    return discount ? total - total * discount * 0.01 : total;
+    if (!discount) return total;
+
+    return discountType === DiscountType.Amount
+      ? total - discount
+      : total - total * discount * 0.01;
   }
 
   /**

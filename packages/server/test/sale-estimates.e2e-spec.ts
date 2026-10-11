@@ -66,6 +66,41 @@ describe('Sale Estimates (e2e)', () => {
       .expect(201);
   });
 
+  it('/sale-estimates (POST) applies amount-type line discounts to totals', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
+      .set('organization-id', orgainzationId)
+      .send(
+        makeEstimateRequest({
+          discount: 0,
+          entries: [
+            {
+              index: 1,
+              itemId: itemId,
+              quantity: 2,
+              rate: 1000,
+              discount: 100,
+              discountType: 'amount',
+              description: 'Item description...',
+            },
+          ],
+        }),
+      )
+      .expect(201);
+
+    const estimateId = response.body.id;
+
+    const estimate = await request(app.getHttpServer())
+      .get(`/sale-estimates/${estimateId}`)
+      .set('Authorization', AuthorizationHeader)
+      .set('organization-id', orgainzationId)
+      .expect(200);
+
+    expect(Number(estimate.body.subtotal)).toBe(1900);
+    expect(Number(estimate.body.total)).toBe(1900);
+  });
+
   it('/sale-estimates (POST) should reject expiration date before estimate date', async () => {
     const response = await request(app.getHttpServer())
       .post('/sale-estimates')
