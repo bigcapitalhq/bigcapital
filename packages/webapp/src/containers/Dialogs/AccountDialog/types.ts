@@ -15,6 +15,10 @@ export interface AccountFormValues {
   description: string;
   currencyCode: string;
   subaccount: boolean;
+  bankCode: string;
+  agencyNumber: string;
+  accountNumber: string;
+  cbu: string;
   [key: string]: unknown;
 }
 
