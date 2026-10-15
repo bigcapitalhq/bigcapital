@@ -1,4 +1,3 @@
-// @ts-nocheck
 import classNames from 'classnames';
 import React, { useCallback } from 'react';
 import { useEditableItemsEntriesColumns } from './components';
@@ -12,27 +11,29 @@ import {
   useComposeRowsOnRemoveTableRow,
   useComposeRowsOnNewRow,
 } from './utils';
+import type { ItemEntry } from '@/interfaces/ItemEntries';
+import type { Item, TaxRate } from '@bigcapital/sdk-ts';
 import { DataTableEditable } from '@/components';
 import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
 import { useFeatureCan } from '@/hooks/state';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
-import { ItemEntry } from '@/interfaces/ItemEntries';
 
 interface ItemsEntriesTableProps {
-  initialValue?: ItemEntry;
+  initialValue?: ItemEntry[];
   value?: ItemEntry[];
   onChange?: (entries: ItemEntry[]) => void;
-  taxRates?: any[];
+  taxRates?: TaxRate[];
   minLinesNumber?: number;
   enableTaxRates?: boolean;
-  items?: unknown[];
+  items?: Item[];
   itemType?: string;
   errors?: unknown;
   linesNumber?: number;
   currencyCode?: string;
   isInclusiveTax?: boolean;
   landedCost?: boolean;
+  defaultEntry?: ItemEntry;
 }
 
 /**
@@ -44,7 +45,7 @@ export function ItemsEntriesTable(props: ItemsEntriesTableProps) {
   const { featureCan } = useFeatureCan();
   const isSalesTaxFeatureCan = featureCan(Features.SalesTax);
 
-  const [localValue, handleChange] = useUncontrolled({
+  const [localValue, handleChange] = useUncontrolled<ItemEntry[]>({
     value,
     initialValue,
     finalValue: [],
@@ -101,9 +102,9 @@ function ItemEntriesTableRoot() {
   });
   // Handles the editor data update.
   const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
+    (rowIndex: number, columnId: string, value: unknown) => {
       if (columnId === 'itemId') {
-        setItemRow({ rowIndex, columnId, itemId: value });
+        setItemRow({ rowIndex, columnId, itemId: value as number });
       }
       const newRows = composeRowsOnEditCell(rowIndex, columnId, value);
       handleChange(newRows);
@@ -112,7 +113,7 @@ function ItemEntriesTableRoot() {
   );
 
   // Handle table rows removing by index.
-  const handleRemoveRow = (rowIndex) => {
+  const handleRemoveRow = (rowIndex: number) => {
     const newRows = composeRowsOnDeleteRow(rowIndex);
     handleChange(newRows);
   };
@@ -125,7 +126,7 @@ function ItemEntriesTableRoot() {
       sticky={true}
       progressBarLoading={isItemFetching}
       cellsLoading={isItemFetching}
-      cellsLoadingCoords={cellsLoading}
+      cellsLoadingCoords={cellsLoading ?? undefined}
       payload={{
         items,
         taxRates,
