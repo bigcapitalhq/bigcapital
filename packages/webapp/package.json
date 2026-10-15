@@ -131,6 +131,7 @@
   },
   "devDependencies": {
     "@types/flat": "^5.0.5",
+    "@types/jest": "^29.5.14",
     "@vitejs/plugin-legacy": "^5.4.2",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint-config-react-app": "^7.0.1",

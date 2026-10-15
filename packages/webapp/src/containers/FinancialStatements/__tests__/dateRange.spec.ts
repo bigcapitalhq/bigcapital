@@ -1,16 +1,18 @@
-// @ts-nocheck
 import moment from 'moment';
 import { inferDateRange, resolveDateRange } from '../dateRange';
 
-const asDay = (date) => moment(date).format('YYYY-MM-DD');
-const day = (value) => moment(value, 'YYYY-MM-DD').toDate();
+const asDay = (date: Date): string => moment(date).format('YYYY-MM-DD');
+const day = (value: string): Date => moment(value, 'YYYY-MM-DD').toDate();
 
-const startOf = (range) => moment().startOf(range).toDate();
-const endOf = (range) => moment().endOf(range).toDate();
+const startOf = (range: moment.unitOfTime.StartOf): Date =>
+  moment().startOf(range).toDate();
+const endOf = (range: moment.unitOfTime.StartOf): Date =>
+  moment().endOf(range).toDate();
 
-const startOfLast = (range) =>
+const startOfLast = (range: moment.unitOfTime.DurationConstructor): Date =>
   moment().subtract(1, range).startOf(range).toDate();
-const endOfLast = (range) => moment().subtract(1, range).endOf(range).toDate();
+const endOfLast = (range: moment.unitOfTime.DurationConstructor): Date =>
+  moment().subtract(1, range).endOf(range).toDate();
 
 describe('inferDateRange', () => {
   it('should infer today', () => {
