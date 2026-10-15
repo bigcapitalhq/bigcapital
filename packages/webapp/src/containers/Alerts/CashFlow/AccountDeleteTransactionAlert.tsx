@@ -99,7 +99,6 @@ function AccountDeleteTransactionAlertInner({
       loading={isLoading}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={
             'cash_flow_transaction_once_delete_this_transaction_you_will_able_to_restore_it'

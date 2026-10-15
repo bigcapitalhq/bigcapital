@@ -4,10 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { AbilitySubject, ExpenseAction } from '@/constants/abilityOption';
 
-// Note: the export name `InvoicesEmptyStatus` is a copy-paste artifact from the
-// @ts-nocheck original — preserved to avoid breaking the re-export in
-// `ExpenseDataTable.tsx` (`InvoicesEmptyStatus as ExpensesEmptyStatus`).
-export function InvoicesEmptyStatus() {
+export function ExpensesEmptyStatus() {
   const history = useHistory();
 
   return (

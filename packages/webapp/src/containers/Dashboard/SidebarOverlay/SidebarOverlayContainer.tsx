@@ -1,9 +1,8 @@
-// @ts-nocheck
 import React from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 
 export interface ISidebarOverlayContainerProps {
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
 }
 
 /**

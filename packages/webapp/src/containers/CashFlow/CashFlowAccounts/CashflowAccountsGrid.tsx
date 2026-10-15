@@ -297,12 +297,7 @@ function CashflowAccountContextMenu({
           <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />
         </MenuItem>
       </Can>
-      <Can
-        // @ts-expect-error latent bug — CashflowAction.Edit is not defined in
-        // the constants file; runtime receives `undefined`.
-        I={CashflowAction.Edit}
-        a={AbilitySubject.Cashflow}
-      >
+      <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
         <MenuDivider />
 
         <MenuItem

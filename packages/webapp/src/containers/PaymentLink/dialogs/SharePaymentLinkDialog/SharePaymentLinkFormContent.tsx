@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Classes,
@@ -57,7 +56,17 @@ export function SharePaymentLinkFormContent() {
                 { value: 'private', text: 'Private' },
                 { value: 'public', text: 'Public' },
               ]}
-              input={({ activeItem, text, label, value }) => (
+              input={({
+                activeItem,
+                text,
+                label,
+                value,
+              }: {
+                activeItem?: unknown;
+                text?: string;
+                label?: string;
+                value?: unknown;
+              }) => (
                 <Button
                   text={text || 'Select an item ...'}
                   rightIcon={<Icon icon={'caret-down-16'} iconSize={16} />}
@@ -97,7 +106,9 @@ export function SharePaymentLinkFormContent() {
           </FFormGroup>
 
           {url && (
-            <FormGroup name={'link'} label={'Payment Link'}>
+            // `name` is not part of Blueprint's `IFormGroupProps` and was
+            // silently ignored; dropped here to satisfy the typings.
+            <FormGroup label={'Payment Link'}>
               <InputGroup
                 name={'link'}
                 value={url}

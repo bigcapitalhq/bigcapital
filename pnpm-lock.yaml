@@ -809,6 +809,9 @@ importers:
       '@types/flat':
         specifier: ^5.0.5
         version: 5.0.5
+      '@types/jest':
+        specifier: ^29.5.14
+        version: 29.5.14
       '@vitejs/plugin-legacy':
         specifier: ^5.4.2
         version: 5.4.3(terser@5.31.0)(vite@5.4.10(@types/node@20.19.25)(less@4.2.0)(sass@1.77.2)(terser@5.31.0))

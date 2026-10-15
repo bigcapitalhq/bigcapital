@@ -48,8 +48,7 @@ function ItemDeleteAlertInner({
           message: intl.get('the_item_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        // @ts-expect-error — latent bug: `page` is not a TableQuery key (should be `pageIndex`). Preserved from @ts-nocheck original.
-        setItemsTableState({ page: 1 });
+        setItemsTableState({ pageIndex: 0 });
         closeDrawer(DRAWERS.ITEM_DETAILS);
       })
       .catch(({ data: { errors } }) => {
@@ -72,7 +71,6 @@ function ItemDeleteAlertInner({
       loading={isPending}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library issue, fixed in source module pending) */}
         <FormattedHTMLMessage
           id={'once_delete_this_item_you_will_able_to_restore_it'}
         />

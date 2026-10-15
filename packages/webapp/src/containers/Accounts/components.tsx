@@ -136,9 +136,7 @@ export function BalanceCell({ cell }: CellProps) {
   return account.amount !== null ? (
     <span>{account.formattedAmount}</span>
   ) : (
-    // `class` should be `className` — preserved from @ts-nocheck.
-    // @ts-expect-error latent bug
-    <span class="placeholder">—</span>
+    <span className="placeholder">—</span>
   );
 }
 
@@ -151,8 +149,6 @@ export function BankBalanceCell({ cell }: CellProps) {
   return account.amount !== null ? (
     <span>{account.bankBalanceFormatted}</span>
   ) : (
-    // `class` should be `className` — preserved from @ts-nocheck.
-    // @ts-expect-error latent bug
-    <span class="placeholder">—</span>
+    <span className="placeholder">—</span>
   );
 }

@@ -108,14 +108,14 @@ export function useWarehouse(
 }
 
 export function useActivateWarehouses(
-  props?: UseMutationOptions<void, Error, number>,
+  props?: UseMutationOptions<void, Error, void>,
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();
 
   return useMutation({
     ...props,
-    mutationFn: (_id: number) => activateWarehouses(fetcher),
+    mutationFn: () => activateWarehouses(fetcher),
     onSuccess: () => commonInvalidateQueries(queryClient),
   });
 }

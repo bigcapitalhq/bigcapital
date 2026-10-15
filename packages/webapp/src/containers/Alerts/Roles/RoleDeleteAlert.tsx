@@ -64,7 +64,6 @@ function RoleDeleteAlertInner({
       loading={isLoading}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={
             'roles.permission_schema.once_delete_this_role_you_will_able_to_restore_it'

@@ -72,7 +72,6 @@ function CreditNoteDeleteAlertInner({
       loading={isLoading}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage id={'credit_note.once_delete_this_credit_note'} />
       </p>
     </Alert>

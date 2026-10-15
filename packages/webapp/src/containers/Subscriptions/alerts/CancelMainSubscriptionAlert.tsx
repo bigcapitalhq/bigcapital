@@ -1,11 +1,23 @@
-// @ts-nocheck
 import { Intent, Alert } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
-import { AppToaster, FormattedMessage as T } from '@/components';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useCancelMainSubscription } from '@/hooks/query/subscription';
+
+/** Error shape rejected by the SDK fetcher on failed requests. */
+interface SubscriptionAlertError {
+  data: { errors: Array<{ type: string }> };
+}
+
+interface CancelMainSubscriptionAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { module?: string };
+}
 
 /**
  * Cancel Unlocking partial transactions alerts.
@@ -19,8 +31,8 @@ function CancelMainSubscriptionAlertInner({
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: cancelSubscription, isLoading } =
+}: CancelMainSubscriptionAlertProps): React.ReactElement {
+  const { mutateAsync: cancelSubscription, isPending: isLoading } =
     useCancelMainSubscription();
 
   // Handle cancel.
@@ -39,7 +51,7 @@ function CancelMainSubscriptionAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(({ data: { errors } }) => {})
+      .catch(({ data: { errors } }: SubscriptionAlertError) => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -47,7 +59,7 @@ function CancelMainSubscriptionAlertInner({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Cancel Subscription'}
       intent={Intent.DANGER}
       isOpen={isOpen}

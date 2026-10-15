@@ -3,7 +3,7 @@ import { DialogContent } from '@/components';
 import { useActivateBranches } from '@/hooks/query';
 
 interface BranchActivateContextValue {
-  activateBranches: (id: number | string) => Promise<unknown>;
+  activateBranches: () => Promise<unknown>;
   dialogName: string;
 }
 

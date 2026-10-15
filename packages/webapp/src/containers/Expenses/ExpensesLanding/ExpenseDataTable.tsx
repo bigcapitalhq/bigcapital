@@ -2,7 +2,7 @@ import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ActionsMenu, useExpensesTableColumns } from './components';
-import { InvoicesEmptyStatus as ExpensesEmptyStatus } from './ExpensesEmptyStatus';
+import { ExpensesEmptyStatus } from './ExpensesEmptyStatus';
 import { useExpensesListContext } from './ExpensesListProvider';
 import { withExpenses } from './withExpenses';
 import { withExpensesActions } from './withExpensesActions';

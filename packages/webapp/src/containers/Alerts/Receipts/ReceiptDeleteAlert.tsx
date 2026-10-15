@@ -50,7 +50,7 @@ function NameDeleteAlert({
         closeDrawer(DRAWERS.RECEIPT_DETAILS);
       })
       .catch((error: Error) => {
-        // Bugfix: original @ts-nocheck had an empty `.catch(() => {})` that silently swallowed failures.
+        // Bugfix: the original had an empty `.catch(() => {})` that silently swallowed failures.
         AppToaster.show({
           message: error.message,
           intent: Intent.DANGER,
@@ -73,7 +73,6 @@ function NameDeleteAlert({
       loading={isLoading}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_receipt_you_will_able_to_restore_it'}
         />

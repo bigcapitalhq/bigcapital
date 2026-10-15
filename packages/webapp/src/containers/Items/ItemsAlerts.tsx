@@ -18,7 +18,7 @@ const ItemActivateAlert = React.lazy(() =>
   })),
 );
 
-// Note: lowercase default export name preserved from @ts-nocheck original.
+// Note: lowercase name mirrors the module's export name.
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const cancelUnlockingPartialAlert = React.lazy(() =>
   import(

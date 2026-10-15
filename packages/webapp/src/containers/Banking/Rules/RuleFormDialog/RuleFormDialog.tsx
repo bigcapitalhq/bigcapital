@@ -1,6 +1,6 @@
-// @ts-nocheck
 import * as FF from 'fp-ts/function';
 import React from 'react';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
@@ -8,14 +8,24 @@ const RuleFormContent = React.lazy(() =>
   import('./RuleFormContent').then((m) => ({ default: m.RuleFormContent })),
 );
 
+interface RuleFormDialogPayload {
+  bankRuleId?: number | null;
+}
+
+interface RuleFormDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
+
 /**
  * Payment mail dialog.
  */
 function RuleFormDialogRoot({
   dialogName,
-  payload: { bankRuleId = null },
+  payload,
   isOpen,
-}) {
+}: RuleFormDialogProps) {
+  const { bankRuleId = null }: RuleFormDialogPayload = payload ?? {};
+
   return (
     <Dialog
       name={dialogName}
@@ -26,7 +36,10 @@ function RuleFormDialogRoot({
       style={{ width: 600 }}
     >
       <DialogSuspense testId={'rule-form-dialog'}>
-        <RuleFormContent dialogName={dialogName} bankRuleId={bankRuleId} />
+        <RuleFormContent
+          dialogName={dialogName}
+          bankRuleId={bankRuleId ?? undefined}
+        />
       </DialogSuspense>
     </Dialog>
   );

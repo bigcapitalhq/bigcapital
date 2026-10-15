@@ -1,9 +1,9 @@
-// @ts-nocheck
 import { MenuItem, Menu, Button, Position, Intent } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
+import type { Tooltip2Props } from '@blueprintjs/popover2';
 import { Hint, Icon, FormattedMessage as T } from '@/components';
 import {
   InputGroupCell,
@@ -26,10 +26,20 @@ export function ItemHeaderCell() {
       <T id={'product_and_service'} />
       <Hint
         content={<T id={'item_entries.products_services.hint'} />}
-        tooltipProps={{ boundary: 'window', position: Position.RIGHT }}
+        tooltipProps={{
+          // The `boundary: 'window'` value predates the popper v2 boundary
+          // renames; the cast keeps the same runtime value.
+          boundary: 'window' as unknown as Tooltip2Props['boundary'],
+          position: Position.RIGHT,
+        }}
       />
     </>
   );
+}
+
+interface ActionsCellRendererProps {
+  row: { index: number };
+  payload: { removeRow: (rowIndex: number) => void };
 }
 
 /**
@@ -38,7 +48,7 @@ export function ItemHeaderCell() {
 export function ActionsCellRenderer({
   row: { index },
   payload: { removeRow },
-}) {
+}: ActionsCellRendererProps) {
   const onRemoveRole = () => {
     removeRow(index);
   };
@@ -52,23 +62,35 @@ export function ActionsCellRenderer({
     </Menu>
   );
 
+  // The `iconSize` prop is not exposed by the Blueprint v4 `Button` props but
+  // it is kept on the element to preserve the current rendering behavior.
+  const buttonProps = {
+    icon: <Icon icon={'more-13'} iconSize={13} />,
+    iconSize: 14,
+    className: 'm12',
+    minimal: true,
+  } as React.ComponentProps<typeof Button>;
+
   return (
     <Popover2 content={exampleMenu} placement="left-start">
-      <Button
-        icon={<Icon icon={'more-13'} iconSize={13} />}
-        iconSize={14}
-        className="m12"
-        minimal={true}
-      />
+      <Button {...buttonProps} />
     </Popover2>
   );
 }
 ActionsCellRenderer.cellType = CellType.Button;
 
+interface TotalCellProps {
+  payload: { currencyCode?: string };
+  value: string | number;
+}
+
 /**
  * Total accessor.
  */
-export function TotalCell({ payload: { currencyCode }, value }) {
+export function TotalCell({
+  payload: { currencyCode },
+  value,
+}: TotalCellProps) {
   return <span>{formattedAmount(value, currencyCode, { noZero: true })}</span>;
 }
 

@@ -2,24 +2,23 @@ import React from 'react';
 import '@/style/pages/Currency/CurrencyFormDialog.scss';
 import { CurrencyForm } from './CurrencyForm';
 import { CurrencyFormProvider } from './CurrencyFormProvider';
+import type { Currency } from '@bigcapital/sdk-ts';
 
 interface CurrencyFormDialogContentInnerProps {
   action?: string;
-  currencyCode?: string;
+  currency?: Currency;
   dialogName: string;
 }
 
 function CurrencyFormDialogContentInner({
   action,
-  currencyCode,
+  currency,
   dialogName,
 }: CurrencyFormDialogContentInnerProps): React.ReactElement {
   return (
     <CurrencyFormProvider
-      // FIXME: `isEditMode` receives the action string, not a boolean —
-      // consumers truthy-check it, so behavior is preserved.
-      isEditMode={action ?? false}
-      currency={currencyCode}
+      isEditMode={action === 'edit'}
+      currency={currency}
       dialogName={dialogName}
     >
       <CurrencyForm />

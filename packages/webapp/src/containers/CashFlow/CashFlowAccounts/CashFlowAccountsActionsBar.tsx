@@ -98,18 +98,11 @@ function CashFlowAccountsActionsBarInner({
           <NavbarDivider />
         </Can>
         <NavbarDivider />
-        <Can
-          // @ts-expect-error latent bug — CashflowAction.Edit is not defined in
-          // the constants file; runtime receives `undefined`.
-          I={CashflowAction.Edit}
-          a={AbilitySubject.Cashflow}
-        >
-          <Switch
-            labelElement={<T id={'inactive'} />}
-            defaultChecked={false}
-            onChange={handleInactiveSwitchChange}
-          />
-        </Can>
+        <Switch
+          labelElement={<T id={'inactive'} />}
+          defaultChecked={false}
+          onChange={handleInactiveSwitchChange}
+        />
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>

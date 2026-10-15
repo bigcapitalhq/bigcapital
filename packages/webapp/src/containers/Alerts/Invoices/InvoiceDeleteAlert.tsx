@@ -72,7 +72,6 @@ function InvoiceDeleteAlertInner({
       loading={isLoading}
     >
       <p data-testId={'invoice-delete-alert'}>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_invoice_you_will_able_to_restore_it'}
         />

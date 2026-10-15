@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Card, Classes, Intent, Text } from '@blueprintjs/core';
 import clsx from 'classnames';
 import * as FF from 'fp-ts/function';
@@ -9,12 +8,23 @@ import { getSubscriptionStatusText } from './_utils';
 import { useBillingPageBoot } from './BillingPageBoot';
 import styles from './BillingSubscription.module.scss';
 import { SubscriptionsDrawers } from './SubscriptionsDrawers';
+import type { WithAlertActionsProps } from '../Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '../Drawer/withDrawerActions';
+import type { SubscriptionsListResponse } from '@bigcapital/sdk-ts';
 import { Box, Group, Stack } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { useLemonSubscription } from '@/hooks/query/subscription';
 
-function SubscriptionRoot({ openAlert, openDrawer }) {
-  const { mainSubscription } = useBillingPageBoot();
+type MainSubscription = SubscriptionsListResponse['subscriptions'][number];
+
+interface SubscriptionRootProps
+  extends WithDrawerActionsProps,
+    WithAlertActionsProps {}
+
+function SubscriptionRoot({ openAlert, openDrawer }: SubscriptionRootProps) {
+  const { mainSubscription } = useBillingPageBoot() as {
+    mainSubscription?: MainSubscription;
+  };
   const lemonSubscription = useLemonSubscription('main');
 
   // Can't continue if the main subscription is not loaded.
@@ -28,7 +38,9 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
     openAlert('resume-main-subscription');
   };
   const handleUpdatePaymentMethod = () => {
-    window.LemonSqueezy.Url.Open(lemonSubscription?.urls?.updatePaymentMethod);
+    window.LemonSqueezy!.Url.Open(
+      lemonSubscription?.urls?.updatePaymentMethod as string | undefined,
+    );
   };
   // Handle upgrade button click.
   const handleUpgradeBtnClick = () => {
@@ -71,7 +83,6 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
         <Button
           minimal
           small
-          inline
           intent={Intent.PRIMARY}
           onClick={handleUpgradeBtnClick}
         >
@@ -82,7 +93,6 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
           <Button
             minimal
             small
-            inline
             intent={Intent.PRIMARY}
             onClick={handleResumeSubBtnClick}
           >
@@ -93,7 +103,6 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
           <Button
             minimal
             small
-            inline
             intent={Intent.PRIMARY}
             onClick={handleCancelSubBtnClick}
           >
@@ -103,7 +112,6 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
         <Button
           minimal
           small
-          inline
           intent={Intent.PRIMARY}
           onClick={handleUpdatePaymentMethod}
         >
@@ -150,7 +158,11 @@ export const Subscription = FF.pipe(
   withAlertActions,
 );
 
-function SubscriptionStatusText({ subscription }) {
+function SubscriptionStatusText({
+  subscription,
+}: {
+  subscription: MainSubscription;
+}) {
   const text = getSubscriptionStatusText(subscription);
 
   if (!text) return null;

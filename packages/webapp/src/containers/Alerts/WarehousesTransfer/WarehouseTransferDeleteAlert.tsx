@@ -64,7 +64,6 @@ function WarehouseTransferDeleteAlertInner({
       loading={isPending}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch */}
         <FormattedHTMLMessage
           id={'warehouse_transfer.once_delete_this_warehouse_transfer'}
         />

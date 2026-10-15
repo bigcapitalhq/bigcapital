@@ -1,9 +1,11 @@
-// @ts-nocheck
 import * as FF from 'fp-ts/function';
 import { BankRulesTableActionsMenu } from './_components';
 import { BankRulesLandingEmptyState } from './BankRulesLandingEmptyState';
 import { useBankRulesTableColumns } from './hooks';
 import { useRulesListBoot } from './RulesListBoot';
+import type { BankRuleTableRow } from './hooks';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   DataTable,
   DashboardContentTable,
@@ -13,6 +15,10 @@ import {
 import { DialogsName } from '@/constants/dialogs';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+
+interface RulesTableProps
+  extends WithAlertActionsProps,
+    WithDialogActionsProps {}
 
 /**
  * Retrieves the rules table.
@@ -24,18 +30,18 @@ function RulesTable({
 
   // #withDialogAction
   openDialog,
-}) {
+}: RulesTableProps) {
   // Invoices table columns.
   const columns = useBankRulesTableColumns();
   const { bankRules, isEmptyState } = useRulesListBoot();
 
   // Handle edit bank rule.
-  const handleDeleteBankRule = ({ id }) => {
+  const handleDeleteBankRule = ({ id }: BankRuleTableRow) => {
     openAlert('bank-rule-delete', { id });
   };
 
   // Handle delete bank rule.
-  const handleEditBankRule = ({ id }) => {
+  const handleEditBankRule = ({ id }: BankRuleTableRow) => {
     openDialog(DialogsName.BankRuleForm, { bankRuleId: id });
   };
 

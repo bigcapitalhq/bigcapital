@@ -1,4 +1,4 @@
-// @ts-nocheck
+import { keepPreviousData } from '@tanstack/react-query';
 import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
@@ -6,16 +6,23 @@ import { withAlertActions } from '../Alert/withAlertActions';
 import { withDashboardActions } from '../Dashboard/withDashboardActions';
 import { BillingPageBoot } from './BillingPageBoot';
 import { BillingPageContent } from './BillingPageContent';
+import type { WithAlertActionsProps } from '../Alert/withAlertActions';
+import type { WithDashboardActionsProps } from '../Dashboard/withDashboardActions';
 import { useDashboardMeta } from '@/hooks/query';
 
-function BillingPageRoot({
-  openAlert,
+interface BillingPageRootProps
+  extends WithDashboardActionsProps,
+    WithAlertActionsProps {}
 
+function BillingPageRoot({
   // #withAlertActions
+  openAlert: _openAlert,
+
+  // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: BillingPageRootProps) {
   const { data: dashboardMeta } = useDashboardMeta({
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
   useEffect(() => {
@@ -23,7 +30,7 @@ function BillingPageRoot({
   }, [changePreferencesPageTitle]);
 
   // In case the edition is not Bigcapital Cloud, redirect to the homepage.
-  if (!dashboardMeta.isBigcapitalCloud) {
+  if (!dashboardMeta!.isBigcapitalCloud) {
     return <Redirect to={{ pathname: '/' }} />;
   }
 

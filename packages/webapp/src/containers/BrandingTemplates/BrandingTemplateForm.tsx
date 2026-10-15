@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
 import { FormikHelpers } from 'formik';
 import { useState } from 'react';
@@ -81,12 +80,15 @@ export function BrandingTemplateForm<
       onError && onError();
     };
     // Start upload the company logo file if it is presented.
-    if (values._companyLogoFile) {
+    const companyLogoFile = (values as T & { _companyLogoFile?: File | null })
+      ._companyLogoFile;
+
+    if (companyLogoFile) {
       setIsLoading(true);
       const formData = new FormData();
       const key = Date.now().toString();
 
-      formData.append('file', values._companyLogoFile);
+      formData.append('file', companyLogoFile);
       formData.append('internalKey', key);
 
       try {
@@ -104,13 +106,13 @@ export function BrandingTemplateForm<
     // Exclude all the private props that starts with _.
     const excludedPrivateValues = excludePrivateProps(_values);
 
-    // Transform the the form values to request based on the mode (new or edit mode).
-    const reqValues = templateId
-      ? transformToEditRequest(excludedPrivateValues, initialValues)
-      : transformToNewRequest(excludedPrivateValues, initialValues, resource);
-
     // Template id is presented means edit mode.
     if (templateId) {
+      // Transform the the form values to request in edit mode.
+      const reqValues = transformToEditRequest(
+        excludedPrivateValues as T,
+        initialValues,
+      );
       setSubmitting(true);
 
       try {
@@ -120,6 +122,12 @@ export function BrandingTemplateForm<
         handleError('An error occurred while updating the PDF template.');
       }
     } else {
+      // Transform the the form values to request in new mode.
+      const reqValues = transformToNewRequest(
+        excludedPrivateValues as T,
+        initialValues,
+        resource,
+      );
       setSubmitting(true);
 
       try {

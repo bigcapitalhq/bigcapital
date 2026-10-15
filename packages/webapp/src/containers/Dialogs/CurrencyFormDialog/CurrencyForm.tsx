@@ -42,8 +42,8 @@ function CurrencyFormInner({
     ? EditCurrencyFormSchema
     : CreateCurrencyFormSchema;
 
-  // FIXME: deps array is empty — initial values won't refresh when the async
-  // `currency` resolves. Preserved from the @ts-nocheck original.
+  // FIXME: empty deps array — the dialog remounts per open and `currency`
+  // arrives with the payload, so the values are correct on first render.
   const initialValues = useMemo<CurrencyFormValues>(
     () => ({
       ...defaultInitialValues,
@@ -90,10 +90,7 @@ function CurrencyFormInner({
       }
       setSubmitting(false);
     };
-    if (isEditMode) {
-      // FIXME: `currency` is a code string from the dialog payload (not an
-      // object with `.id`); edit-mode currency update is broken at runtime.
-      // @ts-expect-error — latent bug preserved: `currency.id` undefined access.
+    if (isEditMode && currency) {
       editCurrencyMutate([currency.id, values]).then(onSuccess).catch(onError);
     } else {
       createCurrencyMutate(values).then(onSuccess).catch(onError);

@@ -1,4 +1,5 @@
-// @ts-nocheck
+import type { MouseEvent, ReactNode } from 'react';
+
 export enum ISidebarMenuItemType {
   Label = 'label',
   Link = 'link',
@@ -8,49 +9,66 @@ export enum ISidebarMenuItemType {
   Drawer = 'drawer',
 }
 
+export interface ISidebarMenuItemCommon {
+  ability?: ISidebarMenuItemPermission | ISidebarMenuItemPermission[];
+  permission?: ISidebarMenuItemPermission;
+  feature?: string;
+  disabled?: boolean;
+  children?: ISidebarMenuItem[];
+  onlySubscriptionExpired?: boolean;
+  subscription?: ISidebarSubscriptionAbility[];
+  overlayId?: ISidebarMenuOverlayIds;
+  dialogName?: string;
+  dialogPayload?: any;
+  drawerName?: string;
+  drawerPayload?: any;
+  divider?: boolean;
+  matchExact?: boolean;
+  dropdownType?: string;
+  hasChildren?: boolean;
+  onClick?: (event: MouseEvent) => void;
+}
+
 export interface ISidebarMenuItemOverlay extends ISidebarMenuItemCommon {
   type: ISidebarMenuItemType.Overlay;
+  text: ReactNode;
+  overlayId: ISidebarMenuOverlayIds;
 }
 
 export interface ISidebarMenuItemLink extends ISidebarMenuItemCommon {
-  text: string | JSX.Element;
+  text: ReactNode;
   href: string;
   type: ISidebarMenuItemType.Link;
-  matchExact?: boolean;
 }
 
 export interface ISidebarMenuItemDialog extends ISidebarMenuItemCommon {
   type: ISidebarMenuItemType.Dialog;
+  text: ReactNode;
+  href: string;
   dialogName: string;
-  dialogPayload: any;
+  dialogPayload?: any;
 }
 
 export interface ISidebarMenuItemDrawer extends ISidebarMenuItemCommon {
   type: ISidebarMenuItemType.Drawer;
+  text?: ReactNode;
   drawerName: string;
-  drawerPayload: any;
+  drawerPayload?: any;
 }
 
 export interface ISidebarMenuItemLabel extends ISidebarMenuItemCommon {
-  text?: string;
+  text?: ReactNode;
   type: ISidebarMenuItemType.Label;
 }
 
 export interface ISidebarMenuItemGroup extends ISidebarMenuItemCommon {
   type: ISidebarMenuItemType.Group;
+  text: ReactNode;
 }
 
 export interface ISidebarMenuItemPermission {
   subject: string;
   ability: string;
-}
-
-export interface ISidebarMenuItemCommon {
-  ability?: ISidebarMenuItemPermission | ISidebarMenuItemPermission[];
-  feature?: string;
-  disabled?: boolean;
-  children?: ISidebarMenuItem[];
-  onlySubscriptionExpired?: boolean;
 }
 
 export type ISidebarMenuItem =

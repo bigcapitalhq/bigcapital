@@ -25,10 +25,9 @@ function BranchActivateFormInner({
 
   // Handles the form submit.
   const handleFormSubmit = (
-    values: BranchActivateFormValues,
+    _values: BranchActivateFormValues,
     { setSubmitting }: FormikHelpers<BranchActivateFormValues>,
   ) => {
-    const form = { ...values };
     setSubmitting(true);
     // Handle request response success.
     const onSuccess = () => {
@@ -43,8 +42,7 @@ function BranchActivateFormInner({
     const onError = () => {
       setSubmitting(false);
     };
-    // @ts-expect-error — latent bug preserved: hook expects a number|string id, original code passed an object.
-    activateBranches(form).then(onSuccess).catch(onError);
+    activateBranches().then(onSuccess).catch(onError);
   };
 
   return (

@@ -21,8 +21,7 @@ export function CustomerDetailsHeader() {
           name={'outstanding-receivable'}
           label={intl.get('customer.drawer.label.outstanding_receivable')}
         >
-          {/* @ts-expect-error — latent bug preserved: original used `class` instead of `className`, so React ignores it; the CSS class never applied. */}
-          <h3 class="big-number">{customer?.formattedBalance}</h3>
+          <h3 className="big-number">{customer?.formattedBalance}</h3>
         </DetailItem>
 
         <DetailItem

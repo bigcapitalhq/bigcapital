@@ -1,7 +1,7 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import styles from './BankRulesLandingEmptyState.module.scss';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { AbilitySubject, BankRuleAction } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
@@ -10,7 +10,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 function BankRulesLandingEmptyStateRoot({
   // #withDialogAction
   openDialog,
-}) {
+}: WithDialogActionsProps) {
   const handleNewBtnClick = () => {
     openDialog(DialogsName.BankRuleForm);
   };

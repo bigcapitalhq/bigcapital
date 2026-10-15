@@ -48,7 +48,7 @@ function ReconcileCreditNoteDeleteAlertInner({
         });
       })
       .catch((error: Error) => {
-        // Bugfix: original @ts-nocheck had a commented-out `handleDeleteErrors(errors)` and empty catch — failures were silently swallowed.
+        // Bugfix: the original had a commented-out `handleDeleteErrors(errors)` and empty catch — failures were silently swallowed.
         AppToaster.show({
           message: error.message,
           intent: Intent.DANGER,
@@ -71,7 +71,6 @@ function ReconcileCreditNoteDeleteAlertInner({
       loading={isLoading}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={
             'reconcile_credit_note.once_you_delete_this_reconcile_credit_note'

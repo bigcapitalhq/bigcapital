@@ -19,10 +19,9 @@ function WarehouseActivateFormInner({
   const initialValues: Record<string, never> = {};
 
   const handleFormSubmit = (
-    values: Record<string, never>,
+    _values: Record<string, never>,
     { setSubmitting }: FormikHelpers<Record<string, never>>,
   ) => {
-    const form = { ...values };
     setSubmitting(true);
     const onSuccess = () => {
       AppToaster.show({
@@ -35,8 +34,7 @@ function WarehouseActivateFormInner({
     const onError = () => {
       setSubmitting(false);
     };
-    // @ts-expect-error — latent bug preserved: hook expects a number id, original code passed an object.
-    activateWarehouses(form).then(onSuccess).catch(onError);
+    activateWarehouses().then(onSuccess).catch(onError);
   };
 
   return (

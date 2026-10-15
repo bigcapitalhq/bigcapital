@@ -13,7 +13,8 @@ import { FormattedMessage as T, Icon, Alert as AlertBase } from '@/components';
 import { AppToaster } from '@/components';
 import { useClipboard } from '@/hooks/utils/useClipboard';
 
-// Alert component is `@ts-nocheck`; widen to accept the props used here.
+// `Alert` (components/Alert) is not typed yet; widen to accept the props used
+// here.
 const Alert = AlertBase as unknown as React.FC<{
   intent?: string;
   title?: React.ReactNode;

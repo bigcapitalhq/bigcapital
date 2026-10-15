@@ -50,7 +50,7 @@ function ReconcileVendorCreditDeleteAlertInner({
         });
       })
       .catch((error: Error) => {
-        // Bugfix: original @ts-nocheck had an empty `.catch(({ data: { errors } }) => {})` that silently swallowed failures.
+        // Bugfix: the original had an empty `.catch(({ data: { errors } }) => {})` that silently swallowed failures.
         AppToaster.show({
           message: error.message,
           intent: Intent.DANGER,
@@ -73,7 +73,6 @@ function ReconcileVendorCreditDeleteAlertInner({
       loading={isLoading}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={
             'reconcile_vendor_credit.alert.once_you_delete_this_reconcile_vendor_credit'

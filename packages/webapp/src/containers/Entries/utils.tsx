@@ -1,8 +1,9 @@
-// @ts-nocheck
 import * as FF from 'fp-ts/function';
 import { sumBy, isEmpty, last, keyBy, groupBy } from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
+import type { ItemEntry } from '@/interfaces/ItemEntries';
+import type { TaxRate } from '@bigcapital/sdk-ts';
 import { useItem } from '@/hooks/query';
 import {
   toSafeNumber,
@@ -22,13 +23,33 @@ export const ITEM_TYPE = {
 };
 
 /**
+ * Minimal items entry shape the entries table utilities operate on.
+ */
+interface ItemsEntryRow {
+  index?: number;
+  itemId?: string | number;
+  description?: string;
+  quantity?: string | number;
+  rate?: string | number;
+  discount?: string | number;
+  amount?: string | number;
+  taxRateId?: string | number;
+  taxRate?: string | number;
+  taxAmount?: string | number;
+}
+
+/**
  * Retrieve item entry total from the given rate, quantity and discount.
  * @param {number} rate
  * @param {number} quantity
  * @param {number} discount
  * @return {number}
  */
-export const calcItemEntryTotal = (discount, quantity, rate) => {
+export const calcItemEntryTotal = (
+  discount?: string | number,
+  quantity?: string | number,
+  rate?: string | number,
+): number => {
   const _quantity = toSafeNumber(quantity);
   const _rate = toSafeNumber(rate);
   const _discount = toSafeNumber(discount);
@@ -39,7 +60,9 @@ export const calcItemEntryTotal = (discount, quantity, rate) => {
 /**
  * Updates the items entries total.
  */
-export function updateItemsEntriesTotal(rows) {
+export function updateItemsEntriesTotal<T extends ItemsEntryRow>(
+  rows: T[],
+): Array<T & { amount: number }> {
   return rows.map((row) => ({
     ...row,
     amount: calcItemEntryTotal(row.discount, row.quantity, row.rate),
@@ -49,7 +72,9 @@ export function updateItemsEntriesTotal(rows) {
 /**
  * Retrieve total of the given items entries.
  */
-export function getEntriesTotal(entries) {
+export function getEntriesTotal<T extends { amount?: string | number }>(
+  entries: T[],
+): number {
   return sumBy(entries, 'amount');
 }
 
@@ -59,28 +84,64 @@ export function getEntriesTotal(entries) {
  * @param {Array} entries - Entries.
  * @return {Array}
  */
-export const ensureEntriesHaveEmptyLine = (defaultEntry) => (entries) => {
-  const lastEntry = last(entries);
+export const ensureEntriesHaveEmptyLine =
+  <T,>(defaultEntry: T) =>
+  (entries: T[]): T[] => {
+    // The entries are heterogenous between the different document types and
+    // only the account and amount attributes are read by the empty line check.
+    const lastEntry = last(entries) as
+      | (T & { account_id?: unknown; amount?: unknown })
+      | undefined;
 
-  if (isEmpty(lastEntry.account_id) || isEmpty(lastEntry.amount)) {
-    return [...entries, defaultEntry];
-  }
-  return entries;
-};
+    if (isEmpty(lastEntry!.account_id) || isEmpty(lastEntry!.amount)) {
+      return [...entries, defaultEntry];
+    }
+    return entries;
+  };
 
 /**
  * Disable landed cost checkbox once the item type is not service or non-inventorty.
  * @returns {boolean}
  */
-export const isLandedCostDisabled = (item) =>
-  ['service', 'non-inventory'].indexOf(item.type) === -1;
+export const isLandedCostDisabled = (item: unknown) =>
+  ['service', 'non-inventory'].indexOf(
+    (item as { type?: string }).type as string,
+  ) === -1;
+
+interface FetchedItemRow {
+  rate: number | undefined;
+  description: string | undefined;
+  quantity: number;
+  taxRateId: number | undefined;
+  landedCost?: boolean;
+  landedCostDisabled?: boolean;
+}
+
+interface ItemRowMeta {
+  rowIndex: number;
+  columnId: string;
+  itemId: number;
+}
+
+type CellLoadingCoords = Array<[number, string]>;
+
+interface UseFetchItemRowProps {
+  landedCost?: boolean;
+  itemType?: string;
+  notifyNewRow: (newRow: FetchedItemRow, rowIndex: number) => void;
+}
 
 /**
  * Handle fetch item row details and retrieves the new table row.
  */
-export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
-  const [itemRow, setItemRow] = React.useState(null);
-  const [cellsLoading, setCellsLoading] = React.useState(null);
+export function useFetchItemRow({
+  landedCost,
+  itemType,
+  notifyNewRow,
+}: UseFetchItemRowProps) {
+  const [itemRow, setItemRow] = React.useState<ItemRowMeta | null>(null);
+  const [cellsLoading, setCellsLoading] =
+    React.useState<CellLoadingCoords | null>(null);
 
   // Fetches the item details.
   const {
@@ -157,11 +218,11 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
  * Compose table rows when edit specific row index of table rows.
  */
 export const composeRowsOnEditCell = (
-  rowIndex,
-  columnId,
-  value,
-  defaultEntry,
-  rows,
+  rowIndex: number,
+  columnId: string,
+  value: unknown,
+  defaultEntry: unknown,
+  rows: unknown[],
 ) => {
   return FF.pipe(rows);
 };
@@ -173,7 +234,11 @@ export const useComposeRowsOnNewRow = () => {
   const { taxRates, isInclusiveTax } = useItemEntriesTableContext();
 
   return React.useMemo(() => {
-    return (rowIndex, newRow, rows) => {
+    return (
+      rowIndex: number,
+      newRow: FetchedItemRow,
+      rows: ItemEntry[],
+    ): ItemEntry[] => {
       return FF.pipe(
         rows,
         updateTableRow(rowIndex, newRow),
@@ -181,7 +246,7 @@ export const useComposeRowsOnNewRow = () => {
         orderingLinesIndexes,
         assignEntriesTaxRate(taxRates),
         assignEntriesTaxAmount(isInclusiveTax),
-      );
+      ) as ItemEntry[];
     };
   }, [isInclusiveTax, taxRates]);
 };
@@ -189,18 +254,25 @@ export const useComposeRowsOnNewRow = () => {
 /**
  * Associate tax rate to entries.
  */
-export const assignEntriesTaxRate = (taxRates) => (entries) => {
-  const taxRatesById = keyBy(taxRates, 'id');
+export const assignEntriesTaxRate =
+  (taxRates?: TaxRate[]) =>
+  (entries: Array<{ taxRateId?: string | number }>) => {
+    const taxRatesById = keyBy(taxRates, 'id');
 
-  return entries.map((entry) => {
-    const taxRate = taxRatesById[entry.taxRateId];
+    return entries.map((entry) => {
+      const taxRate = taxRatesById[entry.taxRateId as string];
 
-    return {
-      ...entry,
-      taxRate: taxRate?.rate || 0,
-    };
-  });
-};
+      return {
+        ...entry,
+        taxRate: taxRate?.rate || 0,
+      };
+    });
+  };
+
+interface TaxableEntry {
+  amount?: string | number;
+  taxRate?: string | number;
+}
 
 /**
  * Assign tax amount to entries.
@@ -208,12 +280,24 @@ export const assignEntriesTaxRate = (taxRates) => (entries) => {
  * @param entries
  * @returns
  */
-export const assignEntriesTaxAmount = (isInclusiveTax: boolean, entries?) => {
-  const assignToEntries = (list) =>
+export function assignEntriesTaxAmount<T extends TaxableEntry>(
+  isInclusiveTax: boolean | undefined,
+  entries: T[],
+): Array<T & { taxAmount: number }>;
+export function assignEntriesTaxAmount<T extends TaxableEntry>(
+  isInclusiveTax: boolean | undefined,
+): (entries: T[]) => Array<T & { taxAmount: number }>;
+export function assignEntriesTaxAmount<T extends TaxableEntry>(
+  isInclusiveTax: boolean | undefined,
+  entries?: T[],
+) {
+  const assignToEntries = (list: T[]) =>
     list.map((entry) => {
+      const amount = entry.amount as number;
+      const taxRate = entry.taxRate as number;
       const taxAmount = isInclusiveTax
-        ? getInclusiveTaxAmount(entry.amount, entry.taxRate)
-        : getExlusiveTaxAmount(entry.amount, entry.taxRate);
+        ? getInclusiveTaxAmount(amount, taxRate)
+        : getExlusiveTaxAmount(amount, taxRate);
 
       return {
         ...entry,
@@ -221,7 +305,7 @@ export const assignEntriesTaxAmount = (isInclusiveTax: boolean, entries?) => {
       };
     });
   return entries === undefined ? assignToEntries : assignToEntries(entries);
-};
+}
 
 /**
  * Get inclusive tax amount.
@@ -252,7 +336,7 @@ export const useComposeRowsOnEditTableCell = () => {
     useItemEntriesTableContext();
 
   return useCallback(
-    (rowIndex, columnId, value) => {
+    (rowIndex: number, columnId: string, value: unknown): ItemEntry[] => {
       return FF.pipe(
         localValue,
         updateTableCell(rowIndex, columnId, value),
@@ -261,7 +345,7 @@ export const useComposeRowsOnEditTableCell = () => {
         orderingLinesIndexes,
         assignEntriesTaxRate(taxRates),
         assignEntriesTaxAmount(isInclusiveTax),
-      );
+      ) as ItemEntry[];
     },
     [taxRates, isInclusiveTax, localValue, defaultEntry],
   );
@@ -276,7 +360,7 @@ export const useComposeRowsOnRemoveTableRow = () => {
     useItemEntriesTableContext();
 
   return useCallback(
-    (rowIndex) => {
+    (rowIndex: number): ItemEntry[] => {
       return FF.pipe(
         localValue, // Remove the line by the given index.
         updateRemoveLineByIndex(rowIndex), // Ensure minimum lines count.
@@ -287,6 +371,14 @@ export const useComposeRowsOnRemoveTableRow = () => {
   );
 };
 
+export interface AggregatedItemEntryTaxRate {
+  taxRateId: string;
+  taxRate: number;
+  label: string;
+  taxAmount: number;
+  taxAmountFormatted: string;
+}
+
 /**
  * Retrieves the aggregate tax rates from the given item entries.
  * @param {string} currencyCode -
@@ -294,7 +386,10 @@ export const useComposeRowsOnRemoveTableRow = () => {
  * @param {any} entries -
  */
 export const aggregateItemEntriesTaxRates =
-  (currencyCode, taxRates) => (entries) => {
+  (currencyCode: string, taxRates?: TaxRate[]) =>
+  (
+    entries: Array<{ taxRateId?: string | number }>,
+  ): AggregatedItemEntryTaxRate[] => {
     const taxRatesById = keyBy(taxRates, 'id');
 
     // Calculate the total tax amount of invoice entries.
@@ -303,8 +398,8 @@ export const aggregateItemEntriesTaxRates =
 
     return Object.keys(groupedTaxRates).map((taxRateId) => {
       const taxRate = taxRatesById[taxRateId];
-      const taxRates = groupedTaxRates[taxRateId];
-      const totalTaxAmount = sumBy(taxRates, 'taxAmount');
+      const groupedEntries = groupedTaxRates[taxRateId];
+      const totalTaxAmount = sumBy(groupedEntries, 'taxAmount');
       const taxAmountFormatted = formattedAmount(totalTaxAmount, currencyCode);
 
       return {

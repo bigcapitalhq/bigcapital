@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import * as FF from 'fp-ts/function';
@@ -16,6 +15,9 @@ import {
 } from './_utils';
 import { useRuleFormDialogBoot } from './RuleFormBoot';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
+import type { AccountSelectModel } from '@/components';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { BankRuleResponse } from '@bigcapital/sdk-ts';
 import {
   AccountsSelect,
   AppToaster,
@@ -43,12 +45,30 @@ import {
 const MoneyInOptions = getAddMoneyInOptions();
 const MoneyOutOptions = getAddMoneyOutOptions();
 
+/**
+ * The rule-form boot context's public type omits `accounts`/`bankRule` (they
+ * are only present on the runtime provider value), so re-declare the fields
+ * this form consumes and narrow the context at this boundary.
+ */
+interface RuleFormBootData
+  extends Omit<
+    ReturnType<typeof useRuleFormDialogBoot>,
+    'accounts' | 'bankRule' | 'bankRuleId'
+  > {
+  accounts?: AccountSelectModel[];
+  bankRule?: BankRuleResponse | null;
+  bankRuleId?: number;
+}
+
+const useRuleFormDialogBootData = () =>
+  useRuleFormDialogBoot() as RuleFormBootData;
+
 function RuleFormContentFormRoot({
   // #withDialogActions
   closeDialog,
-}) {
+}: WithDialogActionsProps) {
   const { accounts, bankRule, isEditMode, bankRuleId } =
-    useRuleFormDialogBoot();
+    useRuleFormDialogBootData();
   const { mutateAsync: createBankRule } = useCreateBankRule();
   const { mutateAsync: editBankRule } = useEditBankRule();
 
@@ -93,7 +113,7 @@ function RuleFormContentFormRoot({
         message: 'The bank rule has been created successfully.',
       });
     };
-    const handleError = (error) => {
+    const handleError = (error: unknown) => {
       setSubmitting(false);
       AppToaster.show({
         intent: Intent.DANGER,
@@ -101,7 +121,7 @@ function RuleFormContentFormRoot({
       });
     };
     if (isEditMode) {
-      editBankRule({ id: bankRuleId, value: _values })
+      editBankRule({ id: bankRuleId as number, value: _values })
         .then(handleSuccess)
         .catch(handleError);
     } else {
@@ -204,12 +224,13 @@ function RuleFormConditions() {
     setFieldValue('conditions', _conditions);
   };
 
-  const handleConditionFieldChange = (index) => (item) => {
-    const defaultComparator = getDefaultFieldConditionByFieldKey(item.value);
+  const handleConditionFieldChange =
+    (index: number) => (item: { value: string }) => {
+      const defaultComparator = getDefaultFieldConditionByFieldKey(item.value);
 
-    setFieldValue(`conditions[${index}].field`, item.value);
-    setFieldValue(`conditions[${index}].comparator`, defaultComparator);
-  };
+      setFieldValue(`conditions[${index}].field`, item.value);
+      setFieldValue(`conditions[${index}].comparator`, defaultComparator);
+    };
 
   return (
     <Box style={{ marginBottom: 15 }}>
@@ -287,7 +308,7 @@ function RuleFormConditions() {
 function RuleFormActionsRoot({
   // #withDialogActions
   closeDialog,
-}) {
+}: WithDialogActionsProps) {
   const { isSubmitting, submitForm } = useFormikContext<RuleFormValues>();
 
   const handleSaveBtnClick = () => {
@@ -321,7 +342,7 @@ function RuleApplyIfTransactionTypeField() {
   const { setFieldValue } = useFormikContext<RuleFormValues>();
 
   const handleItemChange = useCallback(
-    (item: any) => {
+    (item: { value: string }) => {
       setFieldValue('applyIfTransactionType', item.value);
       setFieldValue('assignCategory', '');
       setFieldValue('assignAccountId', '');
@@ -362,7 +383,7 @@ function RuleAssignCategoryField() {
 
   // Handles the select item change.
   const handleItemChange = useCallback(
-    (item: any) => {
+    (item: { value: string }) => {
       setFieldValue('assignCategory', item.value);
       setFieldValue('assignAccountId', '');
     },
@@ -393,7 +414,7 @@ function RuleAssignCategoryField() {
 
 function RuleAssignCategoryAccountField() {
   const { values } = useFormikContext<RuleFormValues>();
-  const { accounts } = useRuleFormDialogBoot();
+  const { accounts } = useRuleFormDialogBootData();
 
   const accountRoot = useMemo(
     () => getAccountRootFromMoneyCategory(values.assignCategory),
@@ -407,11 +428,12 @@ function RuleAssignCategoryAccountField() {
       labelInfo={<Tag minimal>Required</Tag>}
       style={{ maxWidth: 300 }}
       fastField
+      // @ts-expect-error shouldUpdateDeps is forwarded to FastField at runtime; FormGroupProps type doesn't expose it
       shouldUpdateDeps={{ accountRoot }}
     >
       <AccountsSelect
         name={'assignAccountId'}
-        items={accounts}
+        items={accounts as AccountSelectModel[]}
         filterByRootTypes={accountRoot}
         shouldUpdateDeps={{ accountRoot }}
         fastField

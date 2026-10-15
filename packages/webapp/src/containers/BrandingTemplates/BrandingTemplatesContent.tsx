@@ -1,9 +1,9 @@
-// @ts-nocheck
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import { BrandingTemplateActionsBar } from './BrandingTemplatesActionsBar';
 import { BrandingTemplatesBoot } from './BrandingTemplatesBoot';
 import { BrandingTemplatesTable } from './BrandingTemplatesTable';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { Box, Card, DrawerHeaderContent, Group } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
@@ -28,17 +28,20 @@ export function BrandingTemplateContent() {
   );
 }
 
-const BrandingTemplateHeader = FF.pipe(({ openDrawer }) => {
-  const handleCreateBtnClick = () => {
-    openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
-  };
-  return (
-    <Group>
-      <Button intent={Intent.PRIMARY} onClick={handleCreateBtnClick}>
-        Create Invoice Branding
-      </Button>
-    </Group>
-  );
-}, withDrawerActions);
+const BrandingTemplateHeader = FF.pipe(
+  ({ openDrawer }: WithDrawerActionsProps) => {
+    const handleCreateBtnClick = () => {
+      openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
+    };
+    return (
+      <Group>
+        <Button intent={Intent.PRIMARY} onClick={handleCreateBtnClick}>
+          Create Invoice Branding
+        </Button>
+      </Group>
+    );
+  },
+  withDrawerActions,
+);
 
 BrandingTemplateHeader.displayName = 'BrandingTemplateHeader';
