@@ -115,8 +115,8 @@ export class EditVendorCreditService {
     await this.itemsEntriesService.validateItemsIdsExistance(
       vendorCreditDTO.entries,
     );
-    // Validate non-sellable entries items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
+    // Validate non-purchasable entries items.
+    await this.itemsEntriesService.validateNonPurchasableEntriesItems(
       vendorCreditDTO.entries,
     );
     // Validate the items entries existance.
