@@ -158,9 +158,13 @@ interface ModulePermissionsTableColumnsProps {
 function ModulePermissionsTableColumns({
   columns,
 }: ModulePermissionsTableColumnsProps) {
-  return columns.map((column, idx) => (
-    <PermissionBodyColumn key={column.key ?? idx} column={column} />
-  ));
+  return (
+    <>
+      {columns.map((column, idx) => (
+        <PermissionBodyColumn key={column.key ?? idx} column={column} />
+      ))}
+    </>
+  );
 }
 
 /**
