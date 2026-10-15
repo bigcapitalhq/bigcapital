@@ -1,13 +1,22 @@
-// @ts-nocheck
 import { MenuItem } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { BillPayment } from '@bigcapital/sdk-ts';
 import { Icon } from '@/components';
 import { AbilitySubject, PaymentMadeAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 import { highlightText } from '@/utils';
+
+interface PaymentsMadeUniversalSearchSelectProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+}
 
 /**
  * Universal search bill item select action.
@@ -19,7 +28,7 @@ function PaymentsMadeUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: PaymentsMadeUniversalSearchSelectProps) {
   if (resourceType === RESOURCES_TYPES.PAYMENT_MADE) {
     openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, { paymentMadeId: resourceId });
   }
@@ -33,9 +42,22 @@ export const PaymentsMadeUniversalSearchSelect = withDrawerActions(
 /**
  * Payment made universal search item.
  */
+interface PaymentsMadeUniversalSearchItemData {
+  id: number;
+  text: string;
+  label: string;
+  reference: BillPayment;
+}
+
+interface PaymentsMadeUniversalSearchItemActions {
+  handleClick: () => void;
+  modifiers: { active: boolean };
+  query: string;
+}
+
 export function PaymentsMadeUniversalSearchItem(
-  { text, label, reference },
-  { handleClick, modifiers, query },
+  { text, label, reference }: PaymentsMadeUniversalSearchItemData,
+  { handleClick, modifiers, query }: PaymentsMadeUniversalSearchItemActions,
 ) {
   return (
     <MenuItem
@@ -44,7 +66,7 @@ export function PaymentsMadeUniversalSearchItem(
         <div>
           <div>{highlightText(text, query)}</div>
 
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {reference.paymentNumber && (
               <>
                 {highlightText(reference.paymentNumber, query)}
@@ -55,7 +77,7 @@ export function PaymentsMadeUniversalSearchItem(
           </span>
         </div>
       }
-      label={<div class="amount">{label}</div>}
+      labelElement={<div className="amount">{label}</div>}
       onClick={handleClick}
       className={'universal-search__item--payment-made'}
     />
@@ -65,7 +87,7 @@ export function PaymentsMadeUniversalSearchItem(
 /**
  * Payment made resource item to search item.
  */
-const paymentMadeToSearch = (payment) => ({
+const paymentMadeToSearch = (payment: BillPayment) => ({
   id: payment.id,
   text: payment.vendor?.displayName ?? '',
   label: payment.formattedAmount ?? '',
