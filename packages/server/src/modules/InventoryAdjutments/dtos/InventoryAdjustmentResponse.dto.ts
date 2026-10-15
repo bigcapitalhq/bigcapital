@@ -81,7 +81,7 @@ export class InventoryAdjustmentResponseDto {
 
   @ApiProperty({
     description: 'The date when the adjustment was published',
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
     required: false,
   })
   publishedAt?: string;

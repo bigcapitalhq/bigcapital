@@ -123,11 +123,21 @@ describe('Sale Invoices (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send(requestSaleInvoiceBody());
 
-    return request(app.getHttpServer())
+    const getResponse = await request(app.getHttpServer())
       .get(`/sale-invoices/${response.body.id}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+
+    // `DATE` columns are served as `YYYY-MM-DD` calendar dates, while
+    // timestamp columns keep their full ISO datetime.
+    expect(getResponse.body.invoice_date).toBe('2023-01-01');
+    expect(getResponse.body.due_date).toBe('2023-02-01');
+    expect(getResponse.body.created_at).toMatch(
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
+    );
+
+    return getResponse;
   });
 
   it('/sale-invoices/state (GET)', async () => {

@@ -17,7 +17,7 @@ export class SaleReceiptResponseDto {
 
   @ApiProperty({
     description: 'The date of the sale receipt',
-    example: '2024-01-01T00:00:00Z',
+    example: '2024-01-01',
   })
   receiptDate: Date;
 
@@ -94,7 +94,7 @@ export class SaleReceiptResponseDto {
 
   @ApiProperty({
     description: 'The date when the receipt was closed',
-    example: '2024-01-02T00:00:00Z',
+    example: '2024-01-02',
     required: false,
   })
   closedAt?: Date | string;

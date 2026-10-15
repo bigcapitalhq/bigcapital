@@ -76,7 +76,7 @@ export class ManualJournalResponseDto {
 
   @ApiPropertyOptional({
     description: 'Published date',
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
   })
   publishedAt?: Date;
 

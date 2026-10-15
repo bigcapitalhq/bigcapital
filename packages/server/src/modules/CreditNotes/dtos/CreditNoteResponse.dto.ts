@@ -15,7 +15,7 @@ export class CreditNoteResponseDto {
 
   @ApiProperty({
     description: 'The date of the credit note',
-    example: '2023-01-01T00:00:00Z',
+    example: '2023-01-01',
   })
   creditNoteDate: Date;
 

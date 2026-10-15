@@ -14,7 +14,7 @@ export class VendorResponseDto {
   @ApiProperty({ example: 1000.0 })
   openingBalance: number;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00Z' })
+  @ApiProperty({ example: '2024-01-01' })
   @Type(() => Date)
   openingBalanceAt: Date;
 

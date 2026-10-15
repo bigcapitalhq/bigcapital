@@ -22,13 +22,13 @@ export class BillResponseDto {
 
   @ApiProperty({
     description: 'The date the bill was issued',
-    example: '2024-03-15T00:00:00Z',
+    example: '2024-03-15',
   })
   billDate: Date;
 
   @ApiProperty({
     description: 'The due date of the bill',
-    example: '2024-04-15T00:00:00Z',
+    example: '2024-04-15',
   })
   dueDate: Date;
 

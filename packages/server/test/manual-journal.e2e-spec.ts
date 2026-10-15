@@ -59,12 +59,21 @@ describe('Manual Journals (e2e)', () => {
 
     const journalId = response.body.id;
 
-    return request(app.getHttpServer())
+    const getResponse = await request(app.getHttpServer())
       .get(`/manual-journals/${journalId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send()
       .expect(200);
+
+    // `DATE` columns are served as `YYYY-MM-DD` calendar dates, while
+    // timestamp columns keep their full ISO datetime.
+    expect(getResponse.body.date).toBe('2022-06-01');
+    expect(getResponse.body.created_at).toMatch(
+      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
+    );
+
+    return getResponse;
   });
 
   it('/manual-journals/:id (PUT)', async () => {

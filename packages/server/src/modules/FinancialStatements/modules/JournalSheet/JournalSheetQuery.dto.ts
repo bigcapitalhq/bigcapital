@@ -14,7 +14,7 @@ import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberF
 export class JournalSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiPropertyOptional({
     description: 'Start date for the journal sheet',
-    example: '2024-01-01T00:00:00.000Z',
+    example: '2024-01-01',
   })
   @IsDateString()
   @IsOptional()
@@ -22,7 +22,7 @@ export class JournalSheetQueryDto extends FinancialSheetBranchesQueryDto {
 
   @ApiPropertyOptional({
     description: 'End date for the journal sheet',
-    example: '2024-01-31T23:59:59.000Z',
+    example: '2024-01-31',
   })
   @IsDateString()
   @IsOptional()

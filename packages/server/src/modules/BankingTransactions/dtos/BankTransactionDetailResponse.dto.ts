@@ -52,7 +52,7 @@ export class BankTransactionDetailResponseDto {
   @ApiProperty({ example: 1 })
   exchangeRate: number;
 
-  @ApiProperty({ example: '2024-01-15T00:00:00Z' })
+  @ApiProperty({ example: '2024-01-15' })
   date: Date;
 
   @ApiProperty({ example: '2024-01-15' })

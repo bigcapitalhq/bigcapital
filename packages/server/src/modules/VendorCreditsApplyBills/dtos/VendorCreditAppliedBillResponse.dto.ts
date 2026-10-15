@@ -35,7 +35,7 @@ export class VendorCreditAppliedBillResponseDto {
 
   @ApiProperty({
     description: 'The vendor credit date',
-    example: '2024-03-15T00:00:00Z',
+    example: '2024-03-15',
     required: false,
   })
   vendorCreditDate?: Date;
