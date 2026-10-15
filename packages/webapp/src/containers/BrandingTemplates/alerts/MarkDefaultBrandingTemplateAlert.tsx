@@ -1,12 +1,18 @@
-// @ts-nocheck
 import { Alert, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useAssignPdfTemplateAsDefault } from '@/hooks/query/pdf-templates';
+
+interface MarkDefaultBrandingTemplateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { templateId: number };
+}
 
 /**
  * Mark default branding template alert.
@@ -21,7 +27,7 @@ function MarkDefaultBrandingTemplateAlertInner({
 
   // #withAlertActions
   closeAlert,
-}) {
+}: MarkDefaultBrandingTemplateAlertProps): React.ReactElement {
   const { mutateAsync: assignPdfTemplateAsDefault } =
     useAssignPdfTemplateAsDefault();
 
@@ -35,7 +41,7 @@ function MarkDefaultBrandingTemplateAlertInner({
         });
         closeAlert(name);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         AppToaster.show({
           message: 'Something went wrong.',
           intent: Intent.DANGER,

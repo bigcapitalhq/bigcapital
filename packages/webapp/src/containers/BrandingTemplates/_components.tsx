@@ -1,6 +1,23 @@
-// @ts-nocheck
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import type { PdfTemplateResponse } from '@bigcapital/sdk-ts';
 import { safeCallback } from '@/utils';
+
+/** PDF template row as returned by the templates list endpoint. */
+export interface BrandingTemplateRow extends PdfTemplateResponse {
+  resource: string;
+  createdAtFormatted?: string;
+}
+
+export interface BrandingTemplateActionsMenuPayload {
+  onDeleteTemplate: (template: BrandingTemplateRow) => void;
+  onEditTemplate: (template: BrandingTemplateRow) => void;
+  onMarkDefaultTemplate: (template: BrandingTemplateRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: BrandingTemplateRow };
+  payload: BrandingTemplateActionsMenuPayload;
+}
 
 /**
  * Templates table actions menu.
@@ -8,7 +25,7 @@ import { safeCallback } from '@/utils';
 export function ActionsMenu({
   row: { original },
   payload: { onDeleteTemplate, onEditTemplate, onMarkDefaultTemplate },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       {!original.default && (

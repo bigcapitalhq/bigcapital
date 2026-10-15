@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { ButtonProps } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import { PricingPlan } from '@/components/PricingPlan/PricingPlan';
@@ -26,7 +25,7 @@ export interface SubscriptionPricingProps {
   annuallyPrice: string;
   annuallyPriceLabel: string;
   onSubscribe?: (variantId: number) => void;
-  subscribeButtonProps?: Optional<ButtonProps>;
+  subscribeButtonProps?: Partial<ButtonProps>;
 }
 
 interface SubscriptionPricingCombinedProps
@@ -49,7 +48,8 @@ function SubscriptionPlanRoot({
   plansPeriod,
 }: SubscriptionPricingCombinedProps) {
   const handleClick = () => {
-    onSubscribe && onSubscribe();
+    // The callback is invoked without a variant id (the same call shape as before).
+    onSubscribe && onSubscribe(undefined as unknown as number);
   };
 
   return (

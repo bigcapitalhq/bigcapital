@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Spinner, Text } from '@blueprintjs/core';
 import { useBillingPageBoot } from './BillingPageBoot';
 import styles from './BillingPageContent.module.scss';

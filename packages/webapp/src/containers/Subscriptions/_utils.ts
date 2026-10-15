@@ -1,5 +1,10 @@
-// @ts-nocheck
-export const getSubscriptionStatusText = (subscription) => {
+import type { SubscriptionsListResponse } from '@bigcapital/sdk-ts';
+
+type SubscriptionDetails = SubscriptionsListResponse['subscriptions'][number];
+
+export const getSubscriptionStatusText = (
+  subscription: SubscriptionDetails,
+): string => {
   if (subscription.status === 'on_trial') {
     return subscription.onTrial
       ? `Trials ends in ${subscription.trialEndsAtFormatted}`
