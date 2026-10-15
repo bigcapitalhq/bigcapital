@@ -50,7 +50,7 @@ export class BudgetVsActualQueryDto extends FinancialSheetBranchesQueryDto {
 
   @IsArray()
   @IsOptional()
-  @ToNumber()
+  @Type(() => Number)
   @ApiPropertyOptional({ description: 'Array of account IDs to include' })
   accountsIds: number[];
 }

@@ -10898,6 +10898,357 @@
         ]
       }
     },
+    "/api/budgets": {
+      "post": {
+        "operationId": "BudgetsController_createBudget",
+        "summary": "Create a new budget.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBudgetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The budget has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Budgets"
+        ]
+      },
+      "get": {
+        "operationId": "BudgetsController_getBudgets",
+        "summary": "Retrieves the budgets paginated list.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The budgets have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/BudgetResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Budgets"
+        ]
+      }
+    },
+    "/api/budgets/{id}": {
+      "put": {
+        "operationId": "BudgetsController_editBudget",
+        "summary": "Edit the given budget.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The budget id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditBudgetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The budget has been successfully edited.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The budget not found."
+          }
+        },
+        "tags": [
+          "Budgets"
+        ]
+      },
+      "delete": {
+        "operationId": "BudgetsController_deleteBudget",
+        "summary": "Delete the given budget.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The budget id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The budget has been successfully deleted."
+          },
+          "404": {
+            "description": "The budget not found."
+          }
+        },
+        "tags": [
+          "Budgets"
+        ]
+      },
+      "get": {
+        "operationId": "BudgetsController_getBudget",
+        "summary": "Retrieves the given budget details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The budget id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The budget details have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The budget not found."
+          }
+        },
+        "tags": [
+          "Budgets"
+        ]
+      }
+    },
     "/api/credit-notes": {
       "post": {
         "operationId": "CreditNotesController_createCreditNote",
@@ -22324,6 +22675,213 @@
         ]
       }
     },
+    "/api/reports/budget-vs-actual": {
+      "get": {
+        "operationId": "BudgetVsActualController_budgetVsActual",
+        "summary": "Get budget vs actual report",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchesIds",
+            "required": false,
+            "in": "query",
+            "description": "Filter out branches (if multiple branches feature is enabled)",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "budgetId",
+            "required": true,
+            "in": "query",
+            "description": "The budget id",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Start date of the report (defaults to the budget start date)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "End date of the report (defaults to the budget end date)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "displayColumnsBy",
+            "required": false,
+            "in": "query",
+            "description": "How to display the report columns",
+            "schema": {
+              "enum": [
+                "month",
+                "quarter",
+                "year"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountsIds",
+            "required": false,
+            "in": "query",
+            "description": "Array of account IDs to include",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "accept",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numberFormat",
+            "required": false,
+            "in": "query",
+            "description": "Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)",
+            "schema": {
+              "$ref": "#/components/schemas/NumberFormatQueryDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Budget vs actual report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetVsActualResponseDto"
+                },
+                "example": {
+                  "data": {
+                    "periods": [
+                      {
+                        "key": "2024-01",
+                        "label": "Jan 2024",
+                        "fromDate": "2024-01-01",
+                        "toDate": "2024-01-31"
+                      },
+                      {
+                        "key": "2024-02",
+                        "label": "Feb 2024",
+                        "fromDate": "2024-02-01",
+                        "toDate": "2024-02-29"
+                      }
+                    ],
+                    "accounts": [
+                      {
+                        "accountId": 1,
+                        "accountCode": "4000",
+                        "accountName": "Sales",
+                        "accountType": "income",
+                        "cells": [
+                          {
+                            "budget": 150000,
+                            "formattedBudget": "$150,000.00",
+                            "actual": 159000,
+                            "formattedActual": "$159,000.00",
+                            "variance": 9000,
+                            "formattedVariance": "$9,000.00",
+                            "percentage": 0.06,
+                            "formattedPercentage": "%6.00"
+                          }
+                        ],
+                        "total": {
+                          "budget": 150000,
+                          "formattedBudget": "$150,000.00",
+                          "actual": 159000,
+                          "formattedActual": "$159,000.00",
+                          "variance": 9000,
+                          "formattedVariance": "$9,000.00",
+                          "percentage": 0.06,
+                          "formattedPercentage": "%6.00"
+                        }
+                      }
+                    ],
+                    "totals": {
+                      "periods": [],
+                      "total": {
+                        "budget": 150000,
+                        "formattedBudget": "$150,000.00",
+                        "actual": 159000,
+                        "formattedActual": "$159,000.00",
+                        "variance": 9000,
+                        "formattedVariance": "$9,000.00",
+                        "percentage": 0.06,
+                        "formattedPercentage": "%6.00"
+                      }
+                    }
+                  },
+                  "query": {
+                    "budgetId": 1,
+                    "fromDate": "2024-01-01",
+                    "toDate": "2024-12-31",
+                    "displayColumnsBy": "month"
+                  },
+                  "meta": {
+                    "organizationName": "Bigcapital, Inc.",
+                    "baseCurrency": "USD",
+                    "dateFormat": "YYYY MMM DD",
+                    "sheetName": "Budget vs actual",
+                    "budgetId": 1,
+                    "budgetName": "Annual budget 2024",
+                    "formattedFromDate": "2024 Jan 01",
+                    "formattedToDate": "2024 Dec 31",
+                    "formattedDateRange": "From 2024 Jan 01 | To 2024 Dec 31"
+                  }
+                }
+              },
+              "application/json+table": {
+                "schema": {
+                  "$ref": "#/components/schemas/BudgetVsActualTableResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/api/dashboard/boot": {
       "get": {
         "operationId": "DashboardController_getBootMeta",
@@ -25102,7 +25660,7 @@
           "key": {
             "type": "string",
             "example": "bc_1234567890abcdef",
-            "description": "The API key string"
+            "description": "The API key string. Returned only once when the key is created."
           }
         },
         "required": [
@@ -25145,7 +25703,7 @@
           "token": {
             "type": "string",
             "example": "bc_1234...",
-            "description": "First 8 characters of the API key token"
+            "description": "Masked API key prefix"
           },
           "createdAt": {
             "format": "date-time",
@@ -34683,6 +35241,222 @@
         },
         "required": [
           "date",
+          "entries"
+        ]
+      },
+      "BudgetEntryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Budget entry ID",
+            "example": 1
+          },
+          "budgetId": {
+            "type": "number",
+            "description": "Budget ID",
+            "example": 1
+          },
+          "accountId": {
+            "type": "number",
+            "description": "Account ID",
+            "example": 1
+          },
+          "accountName": {
+            "type": "string",
+            "description": "Account name",
+            "example": "Sales"
+          },
+          "accountCode": {
+            "type": "string",
+            "description": "Account code",
+            "example": "4000"
+          },
+          "date": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Budget entry month date",
+            "example": "2024-01-01"
+          },
+          "formattedDate": {
+            "type": "string",
+            "description": "Formatted budget entry date",
+            "example": "Jan 2024"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Budgeted amount",
+            "example": 1000
+          },
+          "formattedAmount": {
+            "type": "string",
+            "description": "Formatted budgeted amount",
+            "example": "$1,000.00"
+          }
+        },
+        "required": [
+          "id",
+          "budgetId",
+          "accountId",
+          "accountName",
+          "accountCode",
+          "date",
+          "formattedDate",
+          "amount",
+          "formattedAmount"
+        ]
+      },
+      "BudgetResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Budget ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Budget name",
+            "example": "Annual budget 2024"
+          },
+          "description": {
+            "type": "string",
+            "description": "Budget description",
+            "example": "The annual budget of the organization"
+          },
+          "fromDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Budget start date",
+            "example": "2024-01-01"
+          },
+          "toDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Budget end date",
+            "example": "2024-12-31"
+          },
+          "formattedFromDate": {
+            "type": "string",
+            "description": "Formatted budget start date",
+            "example": "Jan 1, 2024"
+          },
+          "formattedToDate": {
+            "type": "string",
+            "description": "Formatted budget end date",
+            "example": "Dec 31, 2024"
+          },
+          "formattedCreatedAt": {
+            "type": "string",
+            "description": "Formatted created date",
+            "example": "Mar 20, 2024"
+          },
+          "entries": {
+            "description": "Budget entries",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BudgetEntryResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "fromDate",
+          "toDate",
+          "formattedFromDate",
+          "formattedToDate",
+          "formattedCreatedAt",
+          "entries"
+        ]
+      },
+      "BudgetEntryDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "number",
+            "description": "Account ID"
+          },
+          "date": {
+            "type": "object",
+            "description": "Budget entry month date (the first day of the month)"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Budgeted amount"
+          }
+        },
+        "required": [
+          "accountId",
+          "date",
+          "amount"
+        ]
+      },
+      "CreateBudgetDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Budget name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Budget description"
+          },
+          "fromDate": {
+            "type": "object",
+            "description": "Budget start date"
+          },
+          "toDate": {
+            "type": "object",
+            "description": "Budget end date"
+          },
+          "entries": {
+            "description": "Budget entries",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BudgetEntryDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "fromDate",
+          "toDate",
+          "entries"
+        ]
+      },
+      "EditBudgetDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Budget name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Budget description"
+          },
+          "fromDate": {
+            "type": "object",
+            "description": "Budget start date"
+          },
+          "toDate": {
+            "type": "object",
+            "description": "Budget end date"
+          },
+          "entries": {
+            "description": "Budget entries",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BudgetEntryDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "fromDate",
+          "toDate",
           "entries"
         ]
       },
@@ -44353,6 +45127,213 @@
           "table",
           "query",
           "meta"
+        ]
+      },
+      "BudgetVsActualPeriodDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Period key",
+            "example": "2024-01"
+          },
+          "label": {
+            "type": "string",
+            "description": "Period label",
+            "example": "Jan 2024"
+          },
+          "fromDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Period from date",
+            "example": "2024-01-01"
+          },
+          "toDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Period to date",
+            "example": "2024-01-31"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "fromDate",
+          "toDate"
+        ]
+      },
+      "BudgetVsActualCellDto": {
+        "type": "object",
+        "properties": {
+          "budget": {
+            "type": "number",
+            "description": "Budgeted amount",
+            "example": 1000
+          },
+          "formattedBudget": {
+            "type": "string",
+            "description": "Formatted budgeted amount",
+            "example": "$1,000.00"
+          },
+          "actual": {
+            "type": "number",
+            "description": "Actual amount",
+            "example": 800
+          },
+          "formattedActual": {
+            "type": "string",
+            "description": "Formatted actual amount",
+            "example": "$800.00"
+          },
+          "variance": {
+            "type": "number",
+            "description": "Variance amount (actual - budget)",
+            "example": 9000
+          },
+          "formattedVariance": {
+            "type": "string",
+            "description": "Formatted variance amount",
+            "example": "$9,000.00"
+          },
+          "percentage": {
+            "type": "number",
+            "description": "Variance percentage of the budget",
+            "example": 0.06
+          },
+          "formattedPercentage": {
+            "type": "string",
+            "description": "Formatted variance percentage",
+            "example": "%6.00"
+          }
+        },
+        "required": [
+          "budget",
+          "formattedBudget",
+          "actual",
+          "formattedActual",
+          "variance",
+          "formattedVariance",
+          "percentage",
+          "formattedPercentage"
+        ]
+      },
+      "BudgetVsActualAccountRowDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "number",
+            "description": "Account ID",
+            "example": 1
+          },
+          "accountCode": {
+            "type": "string",
+            "description": "Account code",
+            "example": "4000"
+          },
+          "accountName": {
+            "type": "string",
+            "description": "Account name",
+            "example": "Sales"
+          },
+          "accountType": {
+            "type": "string",
+            "description": "Account type",
+            "example": "income"
+          },
+          "cells": {
+            "description": "Period cells",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BudgetVsActualCellDto"
+            }
+          },
+          "total": {
+            "description": "Total cell",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BudgetVsActualCellDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accountId",
+          "accountCode",
+          "accountName",
+          "accountType",
+          "cells",
+          "total"
+        ]
+      },
+      "BudgetVsActualReportDataDto": {
+        "type": "object",
+        "properties": {
+          "periods": {
+            "description": "The report date periods",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BudgetVsActualPeriodDto"
+            }
+          },
+          "accounts": {
+            "description": "The report accounts",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BudgetVsActualAccountRowDto"
+            }
+          },
+          "totals": {
+            "type": "object",
+            "description": "The report totals"
+          }
+        },
+        "required": [
+          "periods",
+          "accounts"
+        ]
+      },
+      "BudgetVsActualResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "The report data",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BudgetVsActualReportDataDto"
+              }
+            ]
+          },
+          "query": {
+            "type": "object",
+            "description": "The report query"
+          },
+          "meta": {
+            "type": "object",
+            "description": "The report meta"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BudgetVsActualTableResponseDto": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "type": "object",
+            "description": "The report table columns and rows"
+          },
+          "query": {
+            "type": "object",
+            "description": "The report query"
+          },
+          "meta": {
+            "type": "object",
+            "description": "The report meta"
+          }
+        },
+        "required": [
+          "table"
         ]
       },
       "RoleAbilityResponseDto": {

@@ -81,6 +81,7 @@ export enum DialogsName {
   VendorTransactionsPdfPreview = 'VendorTransactionsPdfPreview',
   GeneralLedgerPdfPreview = 'GeneralLedgerPdfPreview',
   SalesTaxLiabilitySummaryPdfPreview = 'SalesTaxLiabilitySummaryPdfPreview',
+  BudgetVsActualPdfPreview = 'BudgetVsActualPdfPreview',
   Export = 'Export',
   BankRuleForm = 'BankRuleForm',
   DisconnectBankAccountConfirmation = 'DisconnectBankAccountConfirmation',

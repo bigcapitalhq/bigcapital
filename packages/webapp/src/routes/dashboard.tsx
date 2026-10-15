@@ -88,6 +88,18 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+  // Budgets.
+  {
+    path: `/budgets`,
+    component: lazy(() =>
+      import('@/containers/Budgets/BudgetsLanding/BudgetsList').then((m) => ({
+        default: m.BudgetsList,
+      })),
+    ),
+    breadcrumb: intl.get('budgets'),
+    pageTitle: intl.get('budgets_list'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/item/categories/import`,
     component: lazy(() =>
@@ -514,6 +526,19 @@ export const getDashboardRoutes = () => [
     ),
     breadcrumb: intl.get('audit_log_report'),
     pageTitle: intl.get('audit_log_report'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/financial-reports/budget-vs-actual`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/BudgetVsActual/BudgetVsActual'
+      ).then((m) => ({ default: m.BudgetVsActual })),
+    ),
+    breadcrumb: intl.get('budget_vs_actual_report'),
+    pageTitle: intl.get('budget_vs_actual_report'),
     backLink: true,
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],

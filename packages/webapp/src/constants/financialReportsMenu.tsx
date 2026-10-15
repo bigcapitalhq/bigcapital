@@ -90,6 +90,13 @@ export const financialReportMenus: FinancialSection[] = [
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_PROFIT_LOSS,
       },
+      {
+        title: <T id={'budget_vs_actual_report'} />,
+        desc: <T id={'budget_vs_actual_report_desc'} />,
+        link: '/financial-reports/budget-vs-actual',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_BUDGET_VS_ACTUAL,
+      },
     ],
   },
   {

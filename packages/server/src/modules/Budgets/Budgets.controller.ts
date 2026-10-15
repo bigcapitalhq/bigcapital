@@ -18,6 +18,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
@@ -30,7 +31,7 @@ import { BudgetAction } from './types/Budgets.types';
 
 @Controller('budgets')
 @ApiTags('Budgets')
-@ApiExtraModels(BudgetResponseDto)
+@ApiExtraModels(BudgetResponseDto, PaginatedResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class BudgetsController {
@@ -114,8 +115,17 @@ export class BudgetsController {
     status: 200,
     description: 'The budgets have been successfully retrieved.',
     schema: {
-      type: 'array',
-      items: { $ref: getSchemaPath(BudgetResponseDto) },
+      allOf: [
+        { $ref: getSchemaPath(PaginatedResponseDto) },
+        {
+          properties: {
+            data: {
+              type: 'array',
+              items: { $ref: getSchemaPath(BudgetResponseDto) },
+            },
+          },
+        },
+      ],
     },
   })
   public getBudgets(@Query() filterDTO: GetBudgetsQueryDto) {
