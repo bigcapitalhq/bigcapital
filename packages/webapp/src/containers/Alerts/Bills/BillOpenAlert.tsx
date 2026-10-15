@@ -42,7 +42,7 @@ function BillOpenAlertInner({
         });
       })
       .catch((error: Error) => {
-        // Bugfix: original @ts-nocheck silently closed the alert on error without surfacing the failure.
+        // Bugfix: the original silently closed the alert on error without surfacing the failure.
         AppToaster.show({
           message: error.message,
           intent: Intent.DANGER,

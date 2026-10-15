@@ -31,7 +31,7 @@ function ClearAllLinesAlert({
     closeAlert(name);
   };
 
-  // Bugfix: original @ts-nocheck had an empty `() => {}` body — clicking confirm did nothing. Now closes the alert.
+  // Bugfix: the original had an empty `() => {}` body — clicking confirm did nothing. Now closes the alert.
   const handleConfirm = () => {
     closeAlert(name);
   };

@@ -64,7 +64,7 @@ function BranchFormInner({ closeDialog }: BranchFormProps): React.ReactElement {
       data: { errors: Array<{ type: string }> };
     }) => {
       if (errors) {
-        // no-op (preserved from @ts-nocheck original).
+        // no-op (preserved from the original).
       }
       transformErrors(errors, { setErrors });
       setSubmitting(false);

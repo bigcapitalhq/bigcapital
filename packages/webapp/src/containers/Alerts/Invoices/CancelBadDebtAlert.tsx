@@ -43,7 +43,7 @@ function CancelBadDebtAlertInner({
         });
       })
       .catch((error: Error) => {
-        // Bugfix: original @ts-nocheck had an empty `.catch(() => {})` that silently swallowed failures.
+        // Bugfix: the original had an empty `.catch(() => {})` that silently swallowed failures.
         AppToaster.show({
           message: error.message,
           intent: Intent.DANGER,

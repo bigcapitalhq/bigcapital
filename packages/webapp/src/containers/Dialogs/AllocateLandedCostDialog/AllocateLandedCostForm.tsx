@@ -101,9 +101,9 @@ function AllocateLandedCostFormInner({
         });
       }
     };
-    // `useCreateLandedCost` lives in an `@ts-nocheck` queries file and infers
-    // a `void` variables type; the runtime accepts `[billId, form]`.
-    // @ts-expect-error — @ts-nocheck hook infers void variables type.
+    // `useCreateLandedCost` infers a `void` variables type while the runtime
+    // accepts `[billId, form]`.
+    // @ts-expect-error — hook infers void variables type.
     createLandedCostMutate([billId, form]).then(onSuccess).catch(onError);
   };
 

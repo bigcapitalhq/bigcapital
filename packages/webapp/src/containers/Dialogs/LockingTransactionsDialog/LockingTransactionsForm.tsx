@@ -37,7 +37,7 @@ function LockingTransactionsFormInner({
   } = useLockingTransactionsContext();
 
   // FIXME: deps array only includes `isEnabled` — ignores `transactionLocking`
-  // and `moduleName`. Preserved from @ts-nocheck original.
+  // and `moduleName`. Preserved from the original.
   const initialValues = React.useMemo<LockingTransactionsFormValues>(
     () => ({
       ...(isEnabled

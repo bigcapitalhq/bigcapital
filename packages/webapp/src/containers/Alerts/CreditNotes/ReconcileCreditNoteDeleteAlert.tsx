@@ -48,7 +48,7 @@ function ReconcileCreditNoteDeleteAlertInner({
         });
       })
       .catch((error: Error) => {
-        // Bugfix: original @ts-nocheck had a commented-out `handleDeleteErrors(errors)` and empty catch — failures were silently swallowed.
+        // Bugfix: the original had a commented-out `handleDeleteErrors(errors)` and empty catch — failures were silently swallowed.
         AppToaster.show({
           message: error.message,
           intent: Intent.DANGER,

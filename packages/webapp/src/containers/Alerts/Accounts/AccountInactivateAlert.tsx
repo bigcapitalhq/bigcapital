@@ -43,7 +43,7 @@ function AccountInactivateAlertInner({
         });
       })
       .catch((error: Error) => {
-        // Bugfix: original @ts-nocheck hid an empty `.catch(() => {})` that silently swallowed failures.
+        // Bugfix: the original hid an empty `.catch(() => {})` that silently swallowed failures.
         AppToaster.show({
           message: error.message,
           intent: Intent.DANGER,

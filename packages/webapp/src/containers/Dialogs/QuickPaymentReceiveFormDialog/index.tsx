@@ -29,7 +29,7 @@ function QuickPaymentReceiveFormDialog({
       name={dialogName}
       title={<T id={'quick_receive_payment'} />}
       isOpen={isOpen}
-      // FIXME: typo `canEscapeJeyClose` preserved from @ts-nocheck original.
+      // FIXME: typo `canEscapeJeyClose` preserved from the original.
       canEscapeJeyClose={true}
       autoFocus={true}
       className={'dialog--quick-payment-receive'}
