@@ -29,7 +29,7 @@ export interface ItemsCategoriesContextValue {
   itemsCategoriesSettings: SettingsGroup | undefined;
   // FIXME: response shape mismatch — `ItemCategoriesListResponse` is the array
   // type but the original code reads `.itemsCategories`/`.pagination`. Preserved
-  // from @ts-nocheck original; both are `undefined` at runtime.
+  // from the original; both are `undefined` at runtime.
   itemsCategories: ItemCategoryTableRow[] | undefined;
   pagination?: { total?: number; [key: string]: unknown };
   query: ReturnType<typeof transformTableStateToQuery>;
@@ -84,10 +84,7 @@ function ItemsCategoriesProvider({
 
   return (
     <DashboardInsider
-      // `DashboardInsider` accepts `loading`, not `isLoading` — the original
-      // `isLoading` was always ignored (latent bug preserved).
-      // @ts-expect-error see comment above
-      isLoading={isResourceLoading}
+      loading={isResourceLoading}
       name={'items-categories-list'}
     >
       <ItemsCategoriesContext.Provider value={state} {...props} />

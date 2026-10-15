@@ -48,8 +48,7 @@ function ItemDeleteAlertInner({
           message: intl.get('the_item_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        // @ts-expect-error — latent bug: `page` is not a TableQuery key (should be `pageIndex`). Preserved from @ts-nocheck original.
-        setItemsTableState({ page: 1 });
+        setItemsTableState({ pageIndex: 0 });
         closeDrawer(DRAWERS.ITEM_DETAILS);
       })
       .catch(({ data: { errors } }) => {

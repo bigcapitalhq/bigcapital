@@ -22,7 +22,7 @@ interface CurrencyFormDialogProps {
  */
 function CurrencyFormDialog({
   dialogName,
-  payload = { action: '', id: null, currency: '' },
+  payload = { action: '' },
   isOpen,
 }: CurrencyFormDialogProps): React.ReactElement {
   return (
@@ -44,7 +44,7 @@ function CurrencyFormDialog({
       <DialogSuspense>
         <CurrencyFormDialogContent
           dialogName={dialogName}
-          currencyCode={payload.currency}
+          currency={payload.currency}
           action={payload.action}
         />
       </DialogSuspense>

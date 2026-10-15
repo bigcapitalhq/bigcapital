@@ -140,11 +140,7 @@ export const ActionsMenu = ({
         <MenuDivider />
         <If condition={!original.isPublished}>
           <MenuItem
-            icon={
-              // Icon wants `iconSize`, not `size`; preserved from @ts-nocheck.
-              // @ts-expect-error see comment above
-              <Icon icon={'arrow-to-top'} size={16} />
-            }
+            icon={<Icon icon={'arrow-to-top'} iconSize={16} />}
             text={intl.get('publish_adjustment')}
             onClick={safeCallback(onPublish, original)}
           />

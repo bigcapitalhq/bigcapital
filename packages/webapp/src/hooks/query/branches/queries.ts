@@ -104,7 +104,7 @@ export function useBranch(
 }
 
 export function useActivateBranches(
-  props?: UseMutationOptions<void, Error, number | string>,
+  props?: UseMutationOptions<void, Error, void>,
 ) {
   const queryClient = useQueryClient();
   const fetcher = useApiFetcher();

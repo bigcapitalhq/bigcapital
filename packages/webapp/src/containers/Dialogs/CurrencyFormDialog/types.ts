@@ -12,17 +12,13 @@ export interface CurrencyFormValues {
 
 export type CurrencyFormDialogPayload = {
   action?: string;
-  id?: number | null;
-  currency?: string;
+  currency?: Currency;
 };
 
-// `currency` arrives as a code string from the dialog payload (`payload.currency`),
-// not a `Currency` object. Edit-mode code paths that read `.id` on it are broken
-// at runtime — flagged in the form with `@ts-expect-error`.
 export type CurrencyFormContextValue = {
   createCurrencyMutate: (values: CreateCurrencyBody) => Promise<unknown>;
   editCurrencyMutate: (vars: [number, EditCurrencyBody]) => Promise<unknown>;
   dialogName: string;
-  currency: string | Currency | undefined;
-  isEditMode: boolean | string;
+  currency: Currency | undefined;
+  isEditMode: boolean;
 };

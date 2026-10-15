@@ -1,5 +1,6 @@
 import React, { createContext } from 'react';
 import type { CurrencyFormContextValue } from './types';
+import type { Currency } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { useCreateCurrency, useEditCurrency } from '@/hooks/query';
 
@@ -8,10 +9,8 @@ const CurrencyFormContext = createContext<CurrencyFormContextValue>(
 );
 
 interface CurrencyFormProviderProps {
-  // FIXME: `isEditMode` receives `action` (string) from `CurrencyFormDialogContent`,
-  // not a boolean — kept as a union to reflect runtime while flagging the mismatch.
-  isEditMode: boolean | string;
-  currency: string | undefined;
+  isEditMode: boolean;
+  currency?: Currency;
   dialogName: string;
   children?: React.ReactNode;
 }

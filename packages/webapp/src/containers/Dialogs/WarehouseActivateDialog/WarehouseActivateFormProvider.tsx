@@ -3,7 +3,7 @@ import { DialogContent } from '@/components';
 import { useActivateWarehouses } from '@/hooks/query';
 
 interface WarehouseActivateContextValue {
-  activateWarehouses: (id: number) => Promise<unknown>;
+  activateWarehouses: () => Promise<unknown>;
   dialogName: string;
 }
 
