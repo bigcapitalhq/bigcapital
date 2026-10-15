@@ -46,7 +46,7 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    * @returns {number}
    */
   protected amount(bill) {
-    return bill.amount;
+    return bill.dueAmount;
   }
 
   /**
@@ -55,7 +55,7 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    * @returns {string}
    */
   protected amountFormatted(bill) {
-    return this.formatNumber(bill.amount, {
+    return this.formatNumber(bill.dueAmount, {
       currencyCode: bill.currencyCode,
       money: true,
     });
