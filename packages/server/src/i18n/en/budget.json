@@ -1,0 +1,9 @@
+{
+  "field": {
+    "name": "Name",
+    "description": "Description",
+    "from_date": "From date",
+    "to_date": "To date",
+    "created_at": "Created at"
+  }
+}

@@ -210,3 +210,19 @@ export const SALES_TAX_LIABILITY_COLUMN_KEYS = {
 
 export type SalesTaxLiabilityColumnKey =
   (typeof SALES_TAX_LIABILITY_COLUMN_KEYS)[keyof typeof SALES_TAX_LIABILITY_COLUMN_KEYS];
+
+// ----------------------------------------
+// # Budget vs actual.
+// ----------------------------------------
+export const BUDGET_VS_ACTUAL_COLUMN_KEYS = {
+  ACCOUNT: 'account',
+  BUDGET: 'budget',
+  ACTUAL: 'actual',
+  TOTAL_BUDGET: 'total_budget',
+  TOTAL_ACTUAL: 'total_actual',
+  VARIANCE: 'variance',
+  VARIANCE_PERCENTAGE: 'variance_percentage',
+} as const;
+
+export type BudgetVsActualColumnKey =
+  (typeof BUDGET_VS_ACTUAL_COLUMN_KEYS)[keyof typeof BUDGET_VS_ACTUAL_COLUMN_KEYS];
