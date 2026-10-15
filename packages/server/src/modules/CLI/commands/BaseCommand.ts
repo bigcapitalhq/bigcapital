@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
+import { DATE_ONLY_COLUMNS_OPTIONS } from '@/common/constants/database.constants';
 
 @Injectable()
 export abstract class BaseCommand extends CommandRunner {
@@ -20,6 +21,7 @@ export abstract class BaseCommand extends CommandRunner {
         password: this.configService.get('systemDatabase.password'),
         database: this.configService.get('systemDatabase.databaseName'),
         charset: 'utf8',
+        ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       migrations: {
         directory: this.configService.get('systemDatabase.migrationDir'),
@@ -43,6 +45,7 @@ export abstract class BaseCommand extends CommandRunner {
         password: this.configService.get('tenantDatabase.password'),
         database: `${this.configService.get('tenantDatabase.dbNamePrefix')}${organizationId}`,
         charset: 'utf8',
+        ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       migrations: {
         directory:

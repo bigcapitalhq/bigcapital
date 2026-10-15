@@ -69,7 +69,7 @@ export class RefundVendorCreditResponseDto {
 
   @ApiProperty({
     description: 'The date of the refund',
-    example: '2024-03-15T00:00:00Z',
+    example: '2024-03-15',
   })
   date: Date;
 

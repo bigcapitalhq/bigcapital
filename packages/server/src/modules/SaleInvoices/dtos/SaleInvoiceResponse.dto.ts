@@ -17,13 +17,13 @@ export class SaleInvoiceResponseDto {
 
   @ApiProperty({
     description: 'The date of the invoice',
-    example: '2023-01-01T00:00:00Z',
+    example: '2023-01-01',
   })
   invoiceDate: Date;
 
   @ApiProperty({
     description: 'The due date of the invoice',
-    example: '2023-01-15T00:00:00Z',
+    example: '2023-01-15',
   })
   dueDate: Date;
 
@@ -96,7 +96,7 @@ export class SaleInvoiceResponseDto {
 
   @ApiProperty({
     description: 'The date when the invoice was delivered',
-    example: '2023-01-02T00:00:00Z',
+    example: '2023-01-02',
     required: false,
   })
   deliveredAt?: Date;

@@ -51,12 +51,12 @@ class CommandSaleInvoiceDto {
 
   @IsDateString()
   @IsNotEmpty()
-  @ApiProperty({ description: 'Invoice date', example: '2023-01-01T00:00:00Z' })
+  @ApiProperty({ description: 'Invoice date', example: '2023-01-01' })
   invoiceDate: Date;
 
   @IsDateString()
   @IsNotEmpty()
-  @ApiProperty({ description: 'Due date', example: '2023-01-15T00:00:00Z' })
+  @ApiProperty({ description: 'Due date', example: '2023-01-15' })
   dueDate: Date;
 
   @IsOptional()
