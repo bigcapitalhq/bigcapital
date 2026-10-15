@@ -3,6 +3,7 @@ import {
   AP_AGING_SUMMARY,
   AR_AGING_SUMMARY,
   BALANCE_SHEET,
+  BUDGET_VS_ACTUAL,
   CASH_FLOW_STATEMENT,
   CUSTOMERS_BALANCE_SUMMARY,
   CUSTOMERS_TRANSACTIONS,
@@ -50,6 +51,7 @@ const initialState: FinancialStatementsState = {
   realizedGainOrLoss: { displayFilterDrawer: false },
   unrealizedGainOrLoss: { displayFilterDrawer: false },
   salesTaxLiabilitySummary: { displayFilterDrawer: false },
+  budgetVsActual: { displayFilterDrawer: false },
 };
 
 type ToggleAction = { payload?: { toggle?: boolean } };
@@ -113,4 +115,5 @@ export const financialStatementsReducer = createReducer(initialState, {
     SALES_TAX_LIABILITY_SUMMARY,
     'salesTaxLiabilitySummary',
   ),
+  ...financialStatementFilterToggle(BUDGET_VS_ACTUAL, 'budgetVsActual'),
 });

@@ -2716,6 +2716,43 @@ export interface paths {
         patch: operations["ManualJournalsController_publishManualJournal"];
         trace?: never;
     };
+    "/api/budgets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the budgets paginated list. */
+        get: operations["BudgetsController_getBudgets"];
+        put?: never;
+        /** Create a new budget. */
+        post: operations["BudgetsController_createBudget"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/budgets/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the given budget details. */
+        get: operations["BudgetsController_getBudget"];
+        /** Edit the given budget. */
+        put: operations["BudgetsController_editBudget"];
+        post?: never;
+        /** Delete the given budget. */
+        delete: operations["BudgetsController_deleteBudget"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/credit-notes": {
         parameters: {
             query?: never;
@@ -4204,6 +4241,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/budget-vs-actual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get budget vs actual report */
+        get: operations["BudgetVsActualController_budgetVsActual"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/dashboard/boot": {
         parameters: {
             query?: never;
@@ -5219,7 +5273,7 @@ export interface components {
              */
             id: number;
             /**
-             * @description The API key string
+             * @description The API key string. Returned only once when the key is created.
              * @example bc_1234567890abcdef
              */
             key: string;
@@ -5248,7 +5302,7 @@ export interface components {
              */
             name: string;
             /**
-             * @description First 8 characters of the API key token
+             * @description Masked API key prefix
              * @example bc_1234...
              */
             token: string;
@@ -11746,6 +11800,132 @@ export interface components {
             /** @description Attachments */
             attachments?: components["schemas"]["AttachmentDto"][];
         };
+        BudgetEntryResponseDto: {
+            /**
+             * @description Budget entry ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Budget ID
+             * @example 1
+             */
+            budgetId: number;
+            /**
+             * @description Account ID
+             * @example 1
+             */
+            accountId: number;
+            /**
+             * @description Account name
+             * @example Sales
+             */
+            accountName: string;
+            /**
+             * @description Account code
+             * @example 4000
+             */
+            accountCode: string;
+            /**
+             * Format: date-time
+             * @description Budget entry month date
+             * @example 2024-01-01
+             */
+            date: string;
+            /**
+             * @description Formatted budget entry date
+             * @example Jan 2024
+             */
+            formattedDate: string;
+            /**
+             * @description Budgeted amount
+             * @example 1000
+             */
+            amount: number;
+            /**
+             * @description Formatted budgeted amount
+             * @example $1,000.00
+             */
+            formattedAmount: string;
+        };
+        BudgetResponseDto: {
+            /**
+             * @description Budget ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Budget name
+             * @example Annual budget 2024
+             */
+            name: string;
+            /**
+             * @description Budget description
+             * @example The annual budget of the organization
+             */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description Budget start date
+             * @example 2024-01-01
+             */
+            fromDate: string;
+            /**
+             * Format: date-time
+             * @description Budget end date
+             * @example 2024-12-31
+             */
+            toDate: string;
+            /**
+             * @description Formatted budget start date
+             * @example Jan 1, 2024
+             */
+            formattedFromDate: string;
+            /**
+             * @description Formatted budget end date
+             * @example Dec 31, 2024
+             */
+            formattedToDate: string;
+            /**
+             * @description Formatted created date
+             * @example Mar 20, 2024
+             */
+            formattedCreatedAt: string;
+            /** @description Budget entries */
+            entries: components["schemas"]["BudgetEntryResponseDto"][];
+        };
+        BudgetEntryDto: {
+            /** @description Account ID */
+            accountId: number;
+            /** @description Budget entry month date (the first day of the month) */
+            date: Record<string, never>;
+            /** @description Budgeted amount */
+            amount: number;
+        };
+        CreateBudgetDto: {
+            /** @description Budget name */
+            name: string;
+            /** @description Budget description */
+            description?: string;
+            /** @description Budget start date */
+            fromDate: Record<string, never>;
+            /** @description Budget end date */
+            toDate: Record<string, never>;
+            /** @description Budget entries */
+            entries: components["schemas"]["BudgetEntryDto"][];
+        };
+        EditBudgetDto: {
+            /** @description Budget name */
+            name: string;
+            /** @description Budget description */
+            description?: string;
+            /** @description Budget start date */
+            fromDate: Record<string, never>;
+            /** @description Budget end date */
+            toDate: Record<string, never>;
+            /** @description Budget entries */
+            entries: components["schemas"]["BudgetEntryDto"][];
+        };
         CreditNoteHtmlContentResponseDto: {
             /**
              * @description The HTML content of the credit note
@@ -16309,6 +16489,122 @@ export interface components {
             query: components["schemas"]["CashflowStatementQueryResponseDto"];
             /** @description Report metadata */
             meta: components["schemas"]["CashflowStatementMetaDto"];
+        };
+        BudgetVsActualPeriodDto: {
+            /**
+             * @description Period key
+             * @example 2024-01
+             */
+            key: string;
+            /**
+             * @description Period label
+             * @example Jan 2024
+             */
+            label: string;
+            /**
+             * Format: date-time
+             * @description Period from date
+             * @example 2024-01-01
+             */
+            fromDate: string;
+            /**
+             * Format: date-time
+             * @description Period to date
+             * @example 2024-01-31
+             */
+            toDate: string;
+        };
+        BudgetVsActualCellDto: {
+            /**
+             * @description Budgeted amount
+             * @example 1000
+             */
+            budget: number;
+            /**
+             * @description Formatted budgeted amount
+             * @example $1,000.00
+             */
+            formattedBudget: string;
+            /**
+             * @description Actual amount
+             * @example 800
+             */
+            actual: number;
+            /**
+             * @description Formatted actual amount
+             * @example $800.00
+             */
+            formattedActual: string;
+            /**
+             * @description Variance amount (actual - budget)
+             * @example 9000
+             */
+            variance: number;
+            /**
+             * @description Formatted variance amount
+             * @example $9,000.00
+             */
+            formattedVariance: string;
+            /**
+             * @description Variance percentage of the budget
+             * @example 0.06
+             */
+            percentage: number;
+            /**
+             * @description Formatted variance percentage
+             * @example %6.00
+             */
+            formattedPercentage: string;
+        };
+        BudgetVsActualAccountRowDto: {
+            /**
+             * @description Account ID
+             * @example 1
+             */
+            accountId: number;
+            /**
+             * @description Account code
+             * @example 4000
+             */
+            accountCode: string;
+            /**
+             * @description Account name
+             * @example Sales
+             */
+            accountName: string;
+            /**
+             * @description Account type
+             * @example income
+             */
+            accountType: string;
+            /** @description Period cells */
+            cells: components["schemas"]["BudgetVsActualCellDto"][];
+            /** @description Total cell */
+            total: components["schemas"]["BudgetVsActualCellDto"];
+        };
+        BudgetVsActualReportDataDto: {
+            /** @description The report date periods */
+            periods: components["schemas"]["BudgetVsActualPeriodDto"][];
+            /** @description The report accounts */
+            accounts: components["schemas"]["BudgetVsActualAccountRowDto"][];
+            /** @description The report totals */
+            totals?: Record<string, never>;
+        };
+        BudgetVsActualResponseDto: {
+            /** @description The report data */
+            data: components["schemas"]["BudgetVsActualReportDataDto"];
+            /** @description The report query */
+            query?: Record<string, never>;
+            /** @description The report meta */
+            meta?: Record<string, never>;
+        };
+        BudgetVsActualTableResponseDto: {
+            /** @description The report table columns and rows */
+            table: Record<string, never>;
+            /** @description The report query */
+            query?: Record<string, never>;
+            /** @description The report meta */
+            meta?: Record<string, never>;
         };
         RoleAbilityResponseDto: {
             /**
@@ -23829,6 +24125,188 @@ export interface operations {
                 };
             };
             /** @description The manual journal not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BudgetsController_getBudgets: {
+        parameters: {
+            query?: {
+                /** @description Page number (1-based) */
+                page?: number;
+                /** @description Page size */
+                pageSize?: number;
+                /** @description Custom view ID */
+                customViewId?: number;
+                /** @description Filter roles */
+                filterRoles?: string[];
+                /** @description Column to sort by */
+                columnSortBy?: string;
+                /** @description Sort order (asc/desc) */
+                sortOrder?: string;
+                /** @description Stringified filter roles */
+                stringifiedFilterRoles?: string;
+                /** @description Search keyword */
+                searchKeyword?: string;
+                /** @description View slug */
+                viewSlug?: string;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The budgets have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseDto"] & {
+                        data?: components["schemas"]["BudgetResponseDto"][];
+                    };
+                };
+            };
+        };
+    };
+    BudgetsController_createBudget: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBudgetDto"];
+            };
+        };
+        responses: {
+            /** @description The budget has been successfully created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BudgetResponseDto"];
+                };
+            };
+        };
+    };
+    BudgetsController_getBudget: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The budget id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The budget details have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BudgetResponseDto"];
+                };
+            };
+            /** @description The budget not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BudgetsController_editBudget: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The budget id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditBudgetDto"];
+            };
+        };
+        responses: {
+            /** @description The budget has been successfully edited. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BudgetResponseDto"];
+                };
+            };
+            /** @description The budget not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BudgetsController_deleteBudget: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The budget id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The budget has been successfully deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The budget not found. */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -31653,6 +32131,128 @@ export interface operations {
                      */
                     "application/json": components["schemas"]["CashflowStatementResponseDto"];
                     "application/json+table": components["schemas"]["CashflowStatementTableResponseDto"];
+                };
+            };
+        };
+    };
+    BudgetVsActualController_budgetVsActual: {
+        parameters: {
+            query: {
+                /** @description Filter out branches (if multiple branches feature is enabled) */
+                branchesIds?: number[];
+                /** @description The budget id */
+                budgetId: number;
+                /** @description Start date of the report (defaults to the budget start date) */
+                fromDate?: string;
+                /** @description End date of the report (defaults to the budget end date) */
+                toDate?: string;
+                /** @description How to display the report columns */
+                displayColumnsBy?: "month" | "quarter" | "year";
+                /** @description Array of account IDs to include */
+                accountsIds?: string[];
+                /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
+                numberFormat?: components["schemas"]["NumberFormatQueryDto"];
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+                accept: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Budget vs actual report */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "data": {
+                     *         "periods": [
+                     *           {
+                     *             "key": "2024-01",
+                     *             "label": "Jan 2024",
+                     *             "fromDate": "2024-01-01",
+                     *             "toDate": "2024-01-31"
+                     *           },
+                     *           {
+                     *             "key": "2024-02",
+                     *             "label": "Feb 2024",
+                     *             "fromDate": "2024-02-01",
+                     *             "toDate": "2024-02-29"
+                     *           }
+                     *         ],
+                     *         "accounts": [
+                     *           {
+                     *             "accountId": 1,
+                     *             "accountCode": "4000",
+                     *             "accountName": "Sales",
+                     *             "accountType": "income",
+                     *             "cells": [
+                     *               {
+                     *                 "budget": 150000,
+                     *                 "formattedBudget": "$150,000.00",
+                     *                 "actual": 159000,
+                     *                 "formattedActual": "$159,000.00",
+                     *                 "variance": 9000,
+                     *                 "formattedVariance": "$9,000.00",
+                     *                 "percentage": 0.06,
+                     *                 "formattedPercentage": "%6.00"
+                     *               }
+                     *             ],
+                     *             "total": {
+                     *               "budget": 150000,
+                     *               "formattedBudget": "$150,000.00",
+                     *               "actual": 159000,
+                     *               "formattedActual": "$159,000.00",
+                     *               "variance": 9000,
+                     *               "formattedVariance": "$9,000.00",
+                     *               "percentage": 0.06,
+                     *               "formattedPercentage": "%6.00"
+                     *             }
+                     *           }
+                     *         ],
+                     *         "totals": {
+                     *           "periods": [],
+                     *           "total": {
+                     *             "budget": 150000,
+                     *             "formattedBudget": "$150,000.00",
+                     *             "actual": 159000,
+                     *             "formattedActual": "$159,000.00",
+                     *             "variance": 9000,
+                     *             "formattedVariance": "$9,000.00",
+                     *             "percentage": 0.06,
+                     *             "formattedPercentage": "%6.00"
+                     *           }
+                     *         }
+                     *       },
+                     *       "query": {
+                     *         "budgetId": 1,
+                     *         "fromDate": "2024-01-01",
+                     *         "toDate": "2024-12-31",
+                     *         "displayColumnsBy": "month"
+                     *       },
+                     *       "meta": {
+                     *         "organizationName": "Bigcapital, Inc.",
+                     *         "baseCurrency": "USD",
+                     *         "dateFormat": "YYYY MMM DD",
+                     *         "sheetName": "Budget vs actual",
+                     *         "budgetId": 1,
+                     *         "budgetName": "Annual budget 2024",
+                     *         "formattedFromDate": "2024 Jan 01",
+                     *         "formattedToDate": "2024 Dec 31",
+                     *         "formattedDateRange": "From 2024 Jan 01 | To 2024 Dec 31"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["BudgetVsActualResponseDto"];
+                    "application/json+table": components["schemas"]["BudgetVsActualTableResponseDto"];
                 };
             };
         };

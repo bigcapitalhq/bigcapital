@@ -19,6 +19,7 @@ export const TRANSACTIONS_BY_REFERENCE = 'TRANSACTIONS_BY_REFERENCE';
 export const REALIZED_GAIN_OR_LOSS = 'REALIZED_GAIN_OR_LOSS';
 export const UNREALIZED_GAIN_OR_LOSS = 'UNREALIZED_GAIN_OR_LOSS';
 export const SALES_TAX_LIABILITY_SUMMARY = 'SALES_TAX_LIABILITY_SUMMARY';
+export const BUDGET_VS_ACTUAL = 'BUDGET_VS_ACTUAL';
 
 // Query key factory
 export const financialReportsKeys = {
@@ -63,6 +64,8 @@ export const financialReportsKeys = {
     [FINANCIAL_REPORT, UNREALIZED_GAIN_OR_LOSS, query] as const,
   salesTaxLiability: (query?: Record<string, unknown>) =>
     [FINANCIAL_REPORT, SALES_TAX_LIABILITY_SUMMARY, query] as const,
+  budgetVsActual: (query?: Record<string, unknown>) =>
+    [FINANCIAL_REPORT, BUDGET_VS_ACTUAL, query] as const,
 };
 
 // Grouped object for use in components/hooks
@@ -88,4 +91,5 @@ export const FinancialReportsQueryKeys = {
   REALIZED_GAIN_OR_LOSS,
   UNREALIZED_GAIN_OR_LOSS,
   SALES_TAX_LIABILITY_SUMMARY,
+  BUDGET_VS_ACTUAL,
 } as const;

@@ -69,6 +69,9 @@ export const salesTaxLiabilitySummaryFilterDrawerSelector = (
   state: RootState,
 ) => filterDrawerByTypeSelector('salesTaxLiabilitySummary')(state);
 
+export const budgetVsActualFilterDrawerSelector = (state: RootState) =>
+  filterDrawerByTypeSelector('budgetVsActual')(state);
+
 export const getBalanceSheetFilterDrawer = createSelector(
   balanceSheetFilterDrawerSelector,
   (isOpen) => isOpen,
@@ -147,5 +150,9 @@ export const getUnrealizedGainOrLossFilterDrawer = createSelector(
 );
 export const getSalesTaxLiabilitySummaryFilterDrawer = createSelector(
   salesTaxLiabilitySummaryFilterDrawerSelector,
+  (isOpen) => isOpen,
+);
+export const getBudgetVsActualFilterDrawer = createSelector(
+  budgetVsActualFilterDrawerSelector,
   (isOpen) => isOpen,
 );
