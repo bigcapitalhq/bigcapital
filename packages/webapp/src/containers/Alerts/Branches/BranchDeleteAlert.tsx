@@ -64,7 +64,6 @@ function BranchDeleteAlertInner({
       loading={isLoading}
     >
       <p data-testId={'branch-delete-alert'}>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage id={'branch.once_delete_this_branch'} />
       </p>
     </Alert>

@@ -66,7 +66,6 @@ function InventoryAdjustmentDeleteAlertInner({
       loading={isPending}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch */}
         <FormattedHTMLMessage
           id={
             'once_delete_this_inventory_a_adjustment_you_will_able_to_restore_it'

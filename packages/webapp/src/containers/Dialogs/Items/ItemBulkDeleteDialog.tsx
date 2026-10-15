@@ -11,31 +11,35 @@ import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDel
 import { withItemsActions } from '@/containers/Items/withItemsActions';
 import { useBulkDeleteItems } from '@/hooks/query/items';
 
+interface ItemBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
 interface ItemBulkDeleteDialogProps
   extends WithDialogActionsProps,
     WithItemsActionsProps {
   dialogName: string;
   isOpen: boolean;
-  payload: {
-    ids?: number[];
-    deletableCount?: number;
-    undeletableCount?: number;
-    totalSelected?: number;
-  };
+  payload?: ItemBulkDeleteDialogPayload;
 }
 
 function ItemBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+  resetItemsSelectedRows,
+  closeDialog,
+}: ItemBulkDeleteDialogProps): React.ReactElement {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
-  resetItemsSelectedRows,
-  closeDialog,
-}: ItemBulkDeleteDialogProps): React.ReactElement {
+  }: ItemBulkDeleteDialogPayload = payload ?? {};
+
   const { mutateAsync: bulkDeleteItems, isPending } = useBulkDeleteItems();
 
   const handleCancel = () => {

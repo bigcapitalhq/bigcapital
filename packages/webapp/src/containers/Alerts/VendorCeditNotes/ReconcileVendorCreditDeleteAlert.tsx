@@ -73,7 +73,6 @@ function ReconcileVendorCreditDeleteAlertInner({
       loading={isLoading}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={
             'reconcile_vendor_credit.alert.once_you_delete_this_reconcile_vendor_credit'

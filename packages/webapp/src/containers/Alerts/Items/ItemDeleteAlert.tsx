@@ -72,7 +72,6 @@ function ItemDeleteAlertInner({
       loading={isPending}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library issue, fixed in source module pending) */}
         <FormattedHTMLMessage
           id={'once_delete_this_item_you_will_able_to_restore_it'}
         />

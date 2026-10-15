@@ -28,7 +28,8 @@ export const BrandingThemeSelectButton = (props: ButtonProps) => {
 export const convertBrandingTemplatesToOptions = (
   brandingTemplates: Array<any>,
 ) => {
-  return brandingTemplates?.map(
-    (template) => ({ text: template.templateName, value: template.id }) || [],
-  );
+  return brandingTemplates?.map((template) => ({
+    text: template.templateName,
+    value: template.id,
+  }));
 };

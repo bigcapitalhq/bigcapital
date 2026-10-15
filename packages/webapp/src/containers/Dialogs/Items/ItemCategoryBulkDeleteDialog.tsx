@@ -11,31 +11,35 @@ import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDel
 import { withItemCategoriesActions } from '@/containers/ItemsCategories/withItemCategoriesActions';
 import { useBulkDeleteItemCategories } from '@/hooks/query/items-categories';
 
+interface ItemCategoryBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
 interface ItemCategoryBulkDeleteDialogProps
   extends WithDialogActionsProps,
     WithItemCategoriesActionsProps {
   dialogName: string;
   isOpen: boolean;
-  payload: {
-    ids?: number[];
-    deletableCount?: number;
-    undeletableCount?: number;
-    totalSelected?: number;
-  };
+  payload?: ItemCategoryBulkDeleteDialogPayload;
 }
 
 function ItemCategoryBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+  resetItemsCategoriesSelectedRows,
+  closeDialog,
+}: ItemCategoryBulkDeleteDialogProps): React.ReactElement {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
-  resetItemsCategoriesSelectedRows,
-  closeDialog,
-}: ItemCategoryBulkDeleteDialogProps): React.ReactElement {
+  }: ItemCategoryBulkDeleteDialogPayload = payload ?? {};
+
   const { mutateAsync: bulkDeleteItemCategories, isPending } =
     useBulkDeleteItemCategories();
 

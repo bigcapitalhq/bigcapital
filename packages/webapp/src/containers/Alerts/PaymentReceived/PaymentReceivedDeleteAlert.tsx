@@ -74,7 +74,6 @@ function PaymentReceivedDeleteAlertInner({
       loading={isLoading}
     >
       <p>
-        {/* @ts-expect-error — react-intl-universal FormattedHTMLMessage JSX type mismatch (library-level issue, see Alerts/Items/ItemDeleteAlert.tsx) */}
         <FormattedHTMLMessage
           id={'once_delete_this_payment_received_you_will_able_to_restore_it'}
         />
