@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
 import React from 'react';
@@ -27,13 +26,12 @@ export function FeaturesForm() {
       {/* ----------- Landed Cost ----------- */}
       <FFormGroup
         name={'features.landedCost'}
-        type={'switch'}
         inline={true}
         helperText={<T id={'features.landed_cost.helper_text'} />}
       >
         <FSwitch
           name={'features.landedCost'}
-          label={<T id={'features.landed_cost'} />}
+          labelElement={<T id={'features.landed_cost'} />}
           large={true}
         />
       </FFormGroup>
@@ -41,13 +39,12 @@ export function FeaturesForm() {
       {/* ----------- Sales Tax ----------- */}
       <FFormGroup
         name={'features.salesTax'}
-        type={'switch'}
         inline={true}
         helperText={<T id={'features.sales_tax.helper_text'} />}
       >
         <FSwitch
           name={'features.salesTax'}
-          label={<T id={'features.sales_tax'} />}
+          labelElement={<T id={'features.sales_tax'} />}
           large={true}
         />
       </FFormGroup>
@@ -55,13 +52,12 @@ export function FeaturesForm() {
       {/* ----------- SMS Notifications ----------- */}
       <FFormGroup
         name={'features.smsNotifications'}
-        type={'switch'}
         inline={true}
         helperText={<T id={'features.sms_notifications.helper_text'} />}
       >
         <FSwitch
           name={'features.smsNotifications'}
-          label={<T id={'features.sms_notifications'} />}
+          labelElement={<T id={'features.sms_notifications'} />}
           large={true}
         />
       </FFormGroup>

@@ -1,9 +1,19 @@
-// @ts-nocheck
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import React from 'react';
+import type { BankRuleTableRow } from './hooks';
 import { Can, Icon } from '@/components';
 import { AbilitySubject, BankRuleAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
+
+interface BankRulesTableActionsMenuPayload {
+  onEdit: (rule: BankRuleTableRow) => void;
+  onDelete: (rule: BankRuleTableRow) => void;
+}
+
+interface BankRulesTableActionsMenuProps {
+  payload: BankRulesTableActionsMenuPayload;
+  row: { original: BankRuleTableRow };
+}
 
 /**
  * Tax rates table actions menu.
@@ -12,7 +22,7 @@ import { safeCallback } from '@/utils';
 export function BankRulesTableActionsMenu({
   payload: { onEdit, onDelete },
   row: { original },
-}) {
+}: BankRulesTableActionsMenuProps) {
   return (
     <Menu>
       <Can I={BankRuleAction.Edit} a={AbilitySubject.BankRule}>

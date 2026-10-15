@@ -1,13 +1,26 @@
-// @ts-nocheck
 import { Intent, Alert } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteBankRule } from '@/hooks/query/banking';
+
+interface BankRuleDeleteAlertPayload {
+  id: number;
+}
+
+interface BankRuleDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: BankRuleDeleteAlertPayload;
+}
 
 /**
  * Project delete alert.
@@ -24,8 +37,16 @@ function BankRuleDeleteAlert({
 
   // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteBankRule, isLoading } = useDeleteBankRule();
+}: BankRuleDeleteAlertProps) {
+  const deleteBankRuleMutation = useDeleteBankRule();
+  const { mutateAsync: deleteBankRule } = deleteBankRuleMutation;
+
+  // Latent bug (behavior preserved): TanStack Query v5 renamed the mutation
+  // result's `isLoading` to `isPending`, so reading `isLoading` here has always
+  // yielded `undefined` and the alert never rendered a loading state. Keep
+  // reading it through a cast so the rendering behavior stays identical.
+  const isLoading = (deleteBankRuleMutation as { isLoading?: boolean })
+    .isLoading;
 
   // handle cancel delete project alert.
   const handleCancelDeleteAlert = () => {
@@ -52,7 +73,7 @@ function BankRuleDeleteAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Delete'}
       intent={Intent.DANGER}
       isOpen={isOpen}

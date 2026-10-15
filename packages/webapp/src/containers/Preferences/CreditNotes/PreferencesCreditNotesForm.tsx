@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button, Intent } from '@blueprintjs/core';
 import { Form } from 'formik';
 import intl from 'react-intl-universal';
@@ -31,12 +30,7 @@ export function PreferencesCreditNotesForm({
         label={intl.get('pref.creditNotes.customerNotes.field')}
         fastField={true}
       >
-        <FTextArea
-          medium={true}
-          name={'customerNotes'}
-          fastField={true}
-          fill={true}
-        />
+        <FTextArea name={'customerNotes'} fastField={true} fill={true} />
       </FFormGroup>
 
       {/* ---------- Terms & Conditions ----------  */}
@@ -45,12 +39,7 @@ export function PreferencesCreditNotesForm({
         label={intl.get('pref.creditNotes.termsConditions.field')}
         fastField={true}
       >
-        <FTextArea
-          medium={true}
-          name={'termsConditions'}
-          fastField={true}
-          fill={true}
-        />
+        <FTextArea name={'termsConditions'} fastField={true} fill={true} />
       </FFormGroup>
 
       <CardFooterActions>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import {
@@ -33,7 +32,6 @@ export function RoleFormHeader() {
       >
         <FInputGroup
           name={'roleName'}
-          medium={true}
           inputRef={(ref: HTMLInputElement | null) => {
             roleNameFieldRef.current = ref;
           }}
@@ -52,7 +50,6 @@ export function RoleFormHeader() {
         <FTextArea
           name={'roleDescription'}
           growVertically={true}
-          height={280}
           placeholder="Max. 500 characters"
           fill
           fastField

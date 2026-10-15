@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { RulesListActionsBar } from './RulesListActionsBar';
 import { RulesListBoot } from './RulesListBoot';

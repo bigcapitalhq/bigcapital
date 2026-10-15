@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FormGroup, Radio, Button, Intent } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
 import React from 'react';
@@ -49,7 +48,7 @@ export function AccountantForm() {
         <FFormGroup inline={true} name={'accounts.accountCodeRequired'}>
           <FCheckbox
             inline={true}
-            label={
+            labelElement={
               <T id={'make_account_code_required_when_create_a_new_accounts'} />
             }
             name={'accounts.accountCodeRequired'}
@@ -57,14 +56,10 @@ export function AccountantForm() {
         </FFormGroup>
 
         {/*------------ Account Code (unique) -----------*/}
-        <FFormGroup
-          name={'accounts.accountCodeUnique'}
-          type={'checkbox'}
-          inline={true}
-        >
+        <FFormGroup name={'accounts.accountCodeUnique'} inline={true}>
           <FCheckbox
             inline={true}
-            label={
+            labelElement={
               <T
                 id={'should_account_code_be_unique_when_create_a_new_account'}
               />
@@ -76,7 +71,6 @@ export function AccountantForm() {
 
       {/* ----------- Accounting Basis ----------- */}
       <FormGroup
-        name={'organization.accountingBasis'}
         labelInfo={<FieldRequiredHint />}
         label={
           <strong>

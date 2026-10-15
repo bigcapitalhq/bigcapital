@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { getAllCountries } from '@bigcapital/utils';
 import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import { TimezonePicker, getTimezoneMetadata } from '@blueprintjs/timezone';
@@ -21,7 +20,6 @@ import {
   Group,
 } from '@/components';
 import { SelectButton } from '@/components/Forms/Select';
-import { CLASSES } from '@/constants/classes';
 import { getAllCurrenciesOptions } from '@/constants/currencies';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
@@ -65,7 +63,7 @@ export function PreferencesGeneralForm({
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
         fastField={true}
       >
-        <FInputGroup medium={true} name={'name'} fastField={true} />
+        <FInputGroup name={'name'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Organization Tax Number ----------  */}
@@ -76,7 +74,7 @@ export function PreferencesGeneralForm({
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
         fastField={true}
       >
-        <FInputGroup medium={true} name={'taxNumber'} fastField={true} />
+        <FInputGroup name={'taxNumber'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Industry ----------  */}
@@ -86,7 +84,7 @@ export function PreferencesGeneralForm({
         inline={true}
         fastField={true}
       >
-        <FInputGroup name={'industry'} medium={true} fastField={true} />
+        <FInputGroup name={'industry'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Location ---------- */}
@@ -152,7 +150,6 @@ export function PreferencesGeneralForm({
       {/* ----------  Base currency ----------  */}
       <FFormGroup
         name={'baseCurrency'}
-        baseCurrencyDisabled={baseCurrencyDisabled}
         label={intl.get('base_currency')}
         labelInfo={<FieldRequiredHint />}
         inline={true}
@@ -162,7 +159,6 @@ export function PreferencesGeneralForm({
           />
         }
         fastField={true}
-        shouldUpdate={shouldBaseCurrencyUpdate}
       >
         <FSelect
           name={'baseCurrency'}
@@ -201,11 +197,9 @@ export function PreferencesGeneralForm({
 
       {/* ---------- Language ---------- */}
       <FormGroup
-        name={'language'}
         label={intl.get('language')}
         labelInfo={<FieldRequiredHint />}
         inline={true}
-        fastField={true}
       >
         <FSelect
           name={'language'}
@@ -297,14 +291,13 @@ function TimezoneField() {
       label={intl.get('time_zone')}
       labelInfo={<FieldRequiredHint />}
       inline={true}
-      intent={inputIntent({ error, touched: isTouched })}
+      intent={inputIntent({ error, touched: isTouched }) as Intent | undefined}
       helperText={<ErrorMessage name="timezone" />}
     >
       <TimezonePicker
         value={value}
         onChange={(timezone: string) => setFieldValue('timezone', timezone)}
         popoverProps={{ minimal: true, fill: true }}
-        fill
       >
         <SelectButton
           text={compositeLabel}

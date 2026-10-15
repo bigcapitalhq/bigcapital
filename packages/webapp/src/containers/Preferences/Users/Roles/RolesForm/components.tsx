@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { Checkbox, Popover } from '@blueprintjs/core';
-import { Field } from 'formik';
+import { Field, FieldProps } from 'formik';
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -18,7 +17,9 @@ import {
 
 interface PermissionItem {
   subject: string;
-  ability?: string;
+  // NOTE: required `ability` to stay structurally compatible with the
+  // private permission types used by ./utils.
+  ability: string;
   key?: string;
   value: boolean;
   default?: boolean;
@@ -131,7 +132,7 @@ function PermissionBodyColumn({ column }: PermissionBodyColumnProps) {
         name={`permissions.${service.subject}/${permission.key}`}
         type="checkbox"
       >
-        {({ field, form }) => (
+        {({ field, form }: FieldProps) => (
           <PermissionCheckbox
             inline={true}
             {...field}
@@ -185,7 +186,7 @@ function ModuleExtraPermissionsPopover() {
             name={`permissions.${service.subject}/${permission.key}`}
             type="checkbox"
           >
-            {({ form, field }) => (
+            {({ form, field }: FieldProps) => (
               <PermissionCheckbox
                 inline={true}
                 label={permission.label}
@@ -235,7 +236,7 @@ function ModulePermissionsTableHead() {
     <thead>
       <tr>
         <th></th>
-        <If condition={serviceFullAccess}>
+        <If condition={!!serviceFullAccess}>
           <th className={'full'}>
             <T id={'permissions.column.full_access'} />
           </th>
@@ -264,10 +265,10 @@ function ModulePermissionsServiceFullAccess() {
   const service = svcCtx?.service as PermissionService;
 
   return (
-    <If condition={module.serviceFullAccess}>
+    <If condition={!!module.serviceFullAccess}>
       <td className="full-access-permission">
         <Field name={`serviceFullAccess.${service.subject}`} type="checkbox">
-          {({ form, field }) => (
+          {({ form, field }: FieldProps) => (
             <PermissionCheckbox
               inline={true}
               {...field}
@@ -341,7 +342,7 @@ function ModuleVerticalTableCells() {
             name={`permissions.${service.subject}/${permission.key}`}
             type="checkbox"
           >
-            {({ form, field }) => (
+            {({ form, field }: FieldProps) => (
               <PermissionCheckbox
                 inline={true}
                 label={permission.label}

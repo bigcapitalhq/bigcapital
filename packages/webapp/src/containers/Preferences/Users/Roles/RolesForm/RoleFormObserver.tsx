@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useFormikContext } from 'formik';
 import React from 'react';
 import type { RolesFormValues } from './types';
@@ -13,5 +12,12 @@ export function RoleFormObserver() {
   // Handles the form change.
   const handleFormChange = () => {};
 
-  return <FormikObserver onChange={handleFormChange} values={values} />;
+  return (
+    <FormikObserver
+      onChange={handleFormChange}
+      // FormikObserver reads form values from its own Formik context and
+      // ignores this prop; spread-cast keeps the runtime props unchanged.
+      {...({ values } as { values: RolesFormValues })}
+    />
+  );
 }
