@@ -7320,6 +7320,103 @@
         ]
       }
     },
+    "/api/warehouse-transfers/validate-bulk-delete": {
+      "post": {
+        "operationId": "WarehouseTransfersController_validateBulkDeleteWarehouseTransfers",
+        "summary": "Validates which warehouse transfers can be deleted and returns the results.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation completed with counts and IDs of deletable and non-deletable warehouse transfers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateBulkDeleteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Warehouse Transfers"
+        ]
+      }
+    },
+    "/api/warehouse-transfers/bulk-delete": {
+      "post": {
+        "operationId": "WarehouseTransfersController_bulkDeleteWarehouseTransfers",
+        "summary": "Deletes multiple warehouse transfers.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Warehouse transfers deleted successfully."
+          }
+        },
+        "tags": [
+          "Warehouse Transfers"
+        ]
+      }
+    },
     "/api/warehouse-transfers": {
       "post": {
         "operationId": "WarehouseTransfersController_createWarehouseTransfer",
@@ -20678,7 +20775,7 @@
             "in": "query",
             "description": "The date for which the inventory valuation is requested",
             "schema": {
-              "example": "2024-01-01T00:00:00.000Z",
+              "example": "2024-01-01",
               "type": "string"
             }
           },
@@ -25102,7 +25199,7 @@
           "key": {
             "type": "string",
             "example": "bc_1234567890abcdef",
-            "description": "The API key string"
+            "description": "The API key string. Returned only once when the key is created."
           }
         },
         "required": [
@@ -25145,7 +25242,7 @@
           "token": {
             "type": "string",
             "example": "bc_1234...",
-            "description": "First 8 characters of the API key token"
+            "description": "Masked API key prefix"
           },
           "createdAt": {
             "format": "date-time",
@@ -26291,7 +26388,7 @@
           "publishedAt": {
             "type": "string",
             "description": "The date when the adjustment was published",
-            "example": "2024-03-20T10:00:00Z"
+            "example": "2024-03-20"
           },
           "isPublished": {
             "type": "boolean",
@@ -27849,7 +27946,7 @@
           "openingBalanceAt": {
             "format": "date-time",
             "type": "string",
-            "example": "2024-01-01T00:00:00Z"
+            "example": "2024-01-01"
           },
           "openingBalanceExchangeRate": {
             "type": "number",
@@ -28014,13 +28111,13 @@
             "format": "date-time",
             "type": "string",
             "description": "The date of the invoice",
-            "example": "2023-01-01T00:00:00Z"
+            "example": "2023-01-01"
           },
           "dueDate": {
             "format": "date-time",
             "type": "string",
             "description": "The due date of the invoice",
-            "example": "2023-01-15T00:00:00Z"
+            "example": "2023-01-15"
           },
           "invoiceNo": {
             "type": "string",
@@ -28080,7 +28177,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The date when the invoice was delivered",
-            "example": "2023-01-02T00:00:00Z"
+            "example": "2023-01-02"
           },
           "warehouseId": {
             "type": "number",
@@ -28375,13 +28472,13 @@
             "format": "date-time",
             "type": "string",
             "description": "Invoice date",
-            "example": "2023-01-01T00:00:00Z"
+            "example": "2023-01-01"
           },
           "dueDate": {
             "format": "date-time",
             "type": "string",
             "description": "Due date",
-            "example": "2023-01-15T00:00:00Z"
+            "example": "2023-01-15"
           },
           "invoiceNo": {
             "type": "string",
@@ -28511,13 +28608,13 @@
             "format": "date-time",
             "type": "string",
             "description": "Invoice date",
-            "example": "2023-01-01T00:00:00Z"
+            "example": "2023-01-01"
           },
           "dueDate": {
             "format": "date-time",
             "type": "string",
             "description": "Due date",
-            "example": "2023-01-15T00:00:00Z"
+            "example": "2023-01-15"
           },
           "invoiceNo": {
             "type": "string",
@@ -29236,7 +29333,7 @@
           "paymentDate": {
             "type": "object",
             "description": "The date of the payment",
-            "example": "2023-01-01T00:00:00Z"
+            "example": "2023-01-01"
           },
           "formattedPaymentDate": {
             "type": "string",
@@ -30654,7 +30751,7 @@
           "publishedAt": {
             "format": "date-time",
             "type": "string",
-            "example": "2024-03-20T10:00:00Z",
+            "example": "2024-03-20",
             "description": "The date when the expense was published"
           },
           "userId": {
@@ -30665,7 +30762,7 @@
           "paymentDate": {
             "format": "date-time",
             "type": "string",
-            "example": "2024-03-20T10:00:00Z",
+            "example": "2024-03-20",
             "description": "The payment date of the expense"
           },
           "payeeId": {
@@ -31089,13 +31186,13 @@
             "format": "date-time",
             "type": "string",
             "description": "The date when the transfer was initiated",
-            "example": "2024-03-20T10:00:00Z"
+            "example": "2024-03-20"
           },
           "transferDeliveredAt": {
             "format": "date-time",
             "type": "string",
             "description": "The date when the transfer was delivered",
-            "example": "2024-03-21T15:00:00Z"
+            "example": "2024-03-21"
           },
           "isInitiated": {
             "type": "boolean",
@@ -31720,7 +31817,7 @@
           "openingBalanceAt": {
             "format": "date-time",
             "type": "string",
-            "example": "2024-01-01T00:00:00Z"
+            "example": "2024-01-01"
           },
           "openingBalanceExchangeRate": {
             "type": "number",
@@ -33059,7 +33156,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The date of the sale receipt",
-            "example": "2024-01-01T00:00:00Z"
+            "example": "2024-01-01"
           },
           "receiptNumber": {
             "type": "string",
@@ -33130,7 +33227,7 @@
           "closedAt": {
             "type": "object",
             "description": "The date when the receipt was closed",
-            "example": "2024-01-02T00:00:00Z"
+            "example": "2024-01-02"
           },
           "warehouseId": {
             "type": "number",
@@ -33675,13 +33772,13 @@
             "format": "date-time",
             "type": "string",
             "description": "The date the bill was issued",
-            "example": "2024-03-15T00:00:00Z"
+            "example": "2024-03-15"
           },
           "dueDate": {
             "format": "date-time",
             "type": "string",
             "description": "The due date of the bill",
-            "example": "2024-04-15T00:00:00Z"
+            "example": "2024-04-15"
           },
           "referenceNo": {
             "type": "string",
@@ -34458,7 +34555,7 @@
             "format": "date-time",
             "type": "string",
             "description": "Published date",
-            "example": "2024-03-20T10:00:00Z"
+            "example": "2024-03-20"
           },
           "createdAt": {
             "format": "date-time",
@@ -34882,7 +34979,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The date of the credit note",
-            "example": "2023-01-01T00:00:00Z"
+            "example": "2023-01-01"
           },
           "creditNoteNumber": {
             "type": "string",
@@ -35702,7 +35799,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The date of the vendor credit",
-            "example": "2024-03-15T00:00:00Z"
+            "example": "2024-03-15"
           },
           "referenceNo": {
             "type": "string",
@@ -35738,7 +35835,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The date the vendor credit was opened",
-            "example": "2024-03-15T00:00:00Z"
+            "example": "2024-03-15"
           },
           "userId": {
             "type": "number",
@@ -36234,7 +36331,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The vendor credit date",
-            "example": "2024-03-15T00:00:00Z"
+            "example": "2024-03-15"
           },
           "formattedVendorCreditDate": {
             "type": "string",
@@ -36890,7 +36987,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The date of the refund",
-            "example": "2024-03-15T00:00:00Z"
+            "example": "2024-03-15"
           },
           "depositAccount": {
             "description": "The deposit account the refund was paid into",
@@ -37210,7 +37307,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The date of the bank transaction",
-            "example": "2023-01-01T00:00:00.000Z"
+            "example": "2023-01-01"
           },
           "creditAccountId": {
             "type": "number",
@@ -37345,7 +37442,7 @@
             "format": "date-time",
             "type": "string",
             "description": "Transaction date",
-            "example": "2024-03-20T10:30:00Z"
+            "example": "2024-03-20"
           },
           "formattedDate": {
             "type": "string",
@@ -37474,7 +37571,7 @@
           "date": {
             "format": "date-time",
             "type": "string",
-            "example": "2024-01-15T00:00:00Z"
+            "example": "2024-01-15"
           },
           "formattedDate": {
             "type": "string",
@@ -37592,7 +37689,7 @@
             "format": "date-time",
             "type": "string",
             "description": "The date of the bank transaction",
-            "example": "2023-01-01T00:00:00.000Z"
+            "example": "2023-01-01"
           },
           "transactionNumber": {
             "type": "string",
@@ -46123,7 +46220,7 @@
           "openingBalanceAt": {
             "format": "date-time",
             "type": "string",
-            "example": "2024-01-15T00:00:00Z",
+            "example": "2024-01-15",
             "nullable": true
           },
           "salutation": {

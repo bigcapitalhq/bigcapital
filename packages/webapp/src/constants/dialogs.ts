@@ -56,6 +56,7 @@ export enum DialogsName {
   ItemCategoryBulkDelete = 'item-categories-bulk-delete',
   CustomerBulkDelete = 'customers-bulk-delete',
   VendorBulkDelete = 'vendors-bulk-delete',
+  WarehouseTransferBulkDelete = 'warehouse-transfers-bulk-delete',
   InvoiceMail = 'invoice-mail',
   EstimateMail = 'estimate-mail',
   ReceiptMail = 'receipt-mail',

@@ -1,10 +1,12 @@
 import * as FF from 'fp-ts/function';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
 import { WarehouseTransfersEmptyStatus } from './WarehouseTransfersEmptyStatus';
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
+import type { WithWarehouseTransfersProps } from './withWarehouseTransfers';
 import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
 import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -36,8 +38,9 @@ interface DataTableFetchParams {
 interface WarehouseTransfersDataTableInnerProps
   extends Pick<
       WithWarehouseTransfersActionsProps,
-      'setWarehouseTransferTableState'
+      'setWarehouseTransferTableState' | 'setWarehouseTransferSelectedRows'
     >,
+    Pick<WithWarehouseTransfersProps, 'warehouseTransferSelectedRows'>,
     Pick<WithAlertActionsProps, 'openAlert'>,
     Pick<WithDrawerActionsProps, 'openDrawer'>,
     Pick<WithDialogActionsProps, 'openDialog'> {}
@@ -48,6 +51,10 @@ interface WarehouseTransfersDataTableInnerProps
 function WarehouseTransfersDataTableInner({
   // #withWarehouseTransfersActions
   setWarehouseTransferTableState,
+  setWarehouseTransferSelectedRows,
+
+  // #withWarehouseTransfers
+  warehouseTransferSelectedRows,
 
   // #withAlertActions
   openAlert,
@@ -85,6 +92,15 @@ function WarehouseTransfersDataTableInner({
       });
     },
     [setWarehouseTransferTableState],
+  );
+
+  // Handles selected rows changes.
+  const handleSelectedRowsChange = useCallback(
+    (selectedFlatRows: Array<{ original: WarehouseTransferRow }>) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setWarehouseTransferSelectedRows(selectedIds);
+    },
+    [setWarehouseTransferSelectedRows],
   );
 
   // Display invoice empty status instead of the table.
@@ -136,6 +152,8 @@ function WarehouseTransfersDataTableInner({
         onFetchData={handleDataTableFetchData}
         manualSortBy={true}
         selectionColumn={true}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={warehouseTransferSelectedRows}
         noInitialFetch={true}
         sticky={true}
         pagination={true}
@@ -143,6 +161,7 @@ function WarehouseTransfersDataTableInner({
         rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
+        autoResetSelectedRows={false}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
@@ -166,6 +185,9 @@ export const WarehouseTransfersDataTable = FF.pipe(
   withDialogActions,
   withDrawerActions,
   withAlertActions,
+  withWarehouseTransfers(({ warehouseTransferSelectedRows }) => ({
+    warehouseTransferSelectedRows,
+  })),
   withWarehouseTransfersActions,
   withDashboardActions,
 );

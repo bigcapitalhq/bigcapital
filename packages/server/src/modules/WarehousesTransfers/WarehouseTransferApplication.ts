@@ -7,6 +7,8 @@ import { GetWarehouseTransfer } from './queries/GetWarehouseTransfer';
 import { GetWarehouseTransfers } from './queries/GetWarehouseTransfers';
 import { InitiateWarehouseTransfer } from './commands/InitiateWarehouseTransfer';
 import { TransferredWarehouseTransfer } from './commands/TransferredWarehouseTransfer';
+import { BulkDeleteWarehouseTransfersService } from './BulkDeleteWarehouseTransfers.service';
+import { ValidateBulkDeleteWarehouseTransfersService } from './ValidateBulkDeleteWarehouseTransfers.service';
 import { WarehouseTransfer } from './models/WarehouseTransfer';
 import {
   CreateWarehouseTransferDto,
@@ -24,6 +26,8 @@ export class WarehouseTransferApplication {
     private readonly getWarehousesTransfersService: GetWarehouseTransfers,
     private readonly initiateWarehouseTransferService: InitiateWarehouseTransfer,
     private readonly transferredWarehouseTransferService: TransferredWarehouseTransfer,
+    private readonly bulkDeleteWarehouseTransfersService: BulkDeleteWarehouseTransfersService,
+    private readonly validateBulkDeleteWarehouseTransfersService: ValidateBulkDeleteWarehouseTransfersService,
   ) {}
 
   /**
@@ -64,6 +68,33 @@ export class WarehouseTransferApplication {
   ): Promise<void> => {
     return this.deleteWarehouseTransferService.deleteWarehouseTransfer(
       warehouseTransferId,
+    );
+  };
+
+  /**
+   * Deletes the given warehouse transfers with associated inventory transactions.
+   * @param {number|Array<number>} warehouseTransferIds - Warehouse transfer ids.
+   * @param {{ skipUndeletable?: boolean }} options - Bulk delete options.
+   */
+  public bulkDeleteWarehouseTransfers = (
+    warehouseTransferIds: number | Array<number>,
+    options?: { skipUndeletable?: boolean },
+  ): Promise<void> => {
+    return this.bulkDeleteWarehouseTransfersService.bulkDeleteWarehouseTransfers(
+      warehouseTransferIds,
+      options,
+    );
+  };
+
+  /**
+   * Validates the bulk delete of the given warehouse transfers.
+   * @param {number[]} warehouseTransferIds - Warehouse transfer ids.
+   */
+  public validateBulkDeleteWarehouseTransfers = (
+    warehouseTransferIds: number[],
+  ) => {
+    return this.validateBulkDeleteWarehouseTransfersService.validateBulkDeleteWarehouseTransfers(
+      warehouseTransferIds,
     );
   };
 

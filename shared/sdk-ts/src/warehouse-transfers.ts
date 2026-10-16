@@ -7,6 +7,8 @@ export const WAREHOUSE_TRANSFERS_ROUTES = {
   BY_ID: '/api/warehouse-transfers/{id}',
   INITIATE: '/api/warehouse-transfers/{id}/initiate',
   TRANSFERRED: '/api/warehouse-transfers/{id}/transferred',
+  VALIDATE_BULK_DELETE: '/api/warehouse-transfers/validate-bulk-delete',
+  BULK_DELETE: '/api/warehouse-transfers/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
 export type WarehouseTransfersListResponse = OpResponseBody<OpForPath<typeof WAREHOUSE_TRANSFERS_ROUTES.LIST, 'get'>>;
@@ -62,4 +64,32 @@ export async function initiateWarehouseTransfer(fetcher: ApiFetcher, id: number)
 export async function transferredWarehouseTransfer(fetcher: ApiFetcher, id: number): Promise<void> {
   const put = fetcher.path(WAREHOUSE_TRANSFERS_ROUTES.TRANSFERRED).method('put').create();
   await (put as unknown as (params: { id: number }) => Promise<void>)({ id });
+}
+
+export type BulkDeleteWarehouseTransfersBody = {
+  ids: number[];
+  skipUndeletable?: boolean;
+};
+export type ValidateBulkDeleteWarehouseTransfersResponse = {
+  deletableCount: number;
+  nonDeletableCount: number;
+  deletableIds: number[];
+  nonDeletableIds: number[];
+};
+
+export async function bulkDeleteWarehouseTransfers(
+  fetcher: ApiFetcher,
+  body: BulkDeleteWarehouseTransfersBody
+): Promise<void> {
+  const post = fetcher.path(WAREHOUSE_TRANSFERS_ROUTES.BULK_DELETE).method('post').create();
+  await post({ ids: body.ids, skipUndeletable: body.skipUndeletable ?? false } as never);
+}
+
+export async function validateBulkDeleteWarehouseTransfers(
+  fetcher: ApiFetcher,
+  ids: number[]
+): Promise<ValidateBulkDeleteWarehouseTransfersResponse> {
+  const post = fetcher.path(WAREHOUSE_TRANSFERS_ROUTES.VALIDATE_BULK_DELETE).method('post').create();
+  const { data } = await post({ ids, skipUndeletable: false } as never);
+  return data as ValidateBulkDeleteWarehouseTransfersResponse;
 }

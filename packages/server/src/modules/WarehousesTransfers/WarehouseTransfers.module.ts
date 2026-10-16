@@ -20,6 +20,8 @@ import { WarehouseTransfer } from './models/WarehouseTransfer';
 import { WarehouseTransferEntry } from './models/WarehouseTransferEntry';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
+import { BulkDeleteWarehouseTransfersService } from './BulkDeleteWarehouseTransfers.service';
+import { ValidateBulkDeleteWarehouseTransfersService } from './ValidateBulkDeleteWarehouseTransfers.service';
 
 const models = [
   RegisterTenancyModel(WarehouseTransfer),
@@ -48,6 +50,8 @@ const models = [
     TransferredWarehouseTransfer,
     InitiateWarehouseTransfer,
     CommandWarehouseTransfer,
+    BulkDeleteWarehouseTransfersService,
+    ValidateBulkDeleteWarehouseTransfersService,
   ],
   exports: [...models],
   controllers: [WarehouseTransfersController],
