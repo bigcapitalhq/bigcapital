@@ -22,7 +22,7 @@ const companyName = () => `${faker.company.name()} ${faker.string.alphanumeric(4
  */
 async function waitForVendorsList(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Vendors List',
+    'Vendors',
     { timeout: 30_000 },
   );
   await expect(

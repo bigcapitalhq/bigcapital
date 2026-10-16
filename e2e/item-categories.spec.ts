@@ -9,7 +9,7 @@ const categoryName = () =>
  */
 async function waitForItemCategories(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Categories List',
+    'Categories',
     { timeout: 30_000 },
   );
   await expect(

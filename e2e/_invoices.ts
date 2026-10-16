@@ -5,7 +5,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
  */
 export async function waitForInvoicesList(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Invoices List',
+    'Invoices',
     { timeout: 30_000 },
   );
   await expect(

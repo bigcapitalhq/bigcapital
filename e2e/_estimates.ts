@@ -57,7 +57,7 @@ export async function setEstimateExpirationDateBeforeEstimateDate(
  */
 export async function waitForEstimatesList(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Estimates List',
+    'Estimates',
     { timeout: 30_000 },
   );
   await expect(
