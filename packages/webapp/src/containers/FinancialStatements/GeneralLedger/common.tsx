@@ -3,6 +3,7 @@ import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -53,7 +54,7 @@ const parseGeneralLedgerQuery = (locationQuery: Record<string, unknown>) => {
   const defaultQuery = getDefaultGeneralLedgerQuery();
 
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {

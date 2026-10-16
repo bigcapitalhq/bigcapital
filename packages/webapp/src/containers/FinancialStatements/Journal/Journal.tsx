@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useCallback, useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { JournalSheetLoadingBar, JournalSheetAlerts } from './components';
 import { JournalActionsBar } from './JournalActionsBar';
 import { JournalBody } from './JournalBody';
@@ -33,6 +34,7 @@ function JournalInner({
         fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
       };
+      writeReportingPeriod(_filter);
       setLocationQuery(_filter);
     },
     [setLocationQuery],
