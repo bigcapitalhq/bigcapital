@@ -51,9 +51,28 @@ export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
     ): boolean => {
       return ifElse(
         this.isNodeType(ProfitLossNodeType.ACCOUNT),
-        this.isNodeNoneZero,
+        this.isNodeHasPeriodTransactions,
         constant(true),
       )(node);
+    };
+
+    /**
+     * Determines whether the account node has transactions within the report
+     * date period (from date to to date), unlike `isNodeNoneZero` which only
+     * checks the total amount.
+     * @param {IProfitLossSheetNode} node - P&L sheet node.
+     * @returns {boolean}
+     */
+    private isNodeHasPeriodTransactions = (
+      node: IProfitLossSheetNode,
+    ): boolean => {
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
+        node.id,
+      );
+      const accountLedger =
+        this.repository.totalAccountsLedger.whereAccountsIds(accountIds);
+
+      return !accountLedger.isEmpty();
     };
 
     /**
