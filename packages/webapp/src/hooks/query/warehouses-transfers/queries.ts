@@ -6,6 +6,8 @@ import {
   deleteWarehouseTransfer,
   initiateWarehouseTransfer,
   transferredWarehouseTransfer,
+  bulkDeleteWarehouseTransfers,
+  validateBulkDeleteWarehouseTransfers,
 } from '@bigcapital/sdk-ts';
 import {
   useMutation,
@@ -18,8 +20,10 @@ import { useApiFetcher } from '../../useRequest';
 import { itemsKeys } from '../items/query-keys';
 import { warehousesTransfersKeys } from './query-keys';
 import type {
+  BulkDeleteWarehouseTransfersBody,
   CreateWarehouseTransferBody,
   EditWarehouseTransferBody,
+  ValidateBulkDeleteWarehouseTransfersResponse,
   WarehouseTransfer,
   WarehouseTransfersListResponse,
 } from '@bigcapital/sdk-ts';
@@ -89,6 +93,42 @@ export function useDeleteWarehouseTransfer(
     ...props,
     mutationFn: (id: number) => deleteWarehouseTransfer(fetcher, id),
     onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+/**
+ * Deletes the given warehouse transfers in bulk.
+ */
+export function useBulkDeleteWarehouseTransfers(
+  props?: UseMutationOptions<void, Error, BulkDeleteWarehouseTransfersBody>,
+) {
+  const queryClient = useQueryClient();
+  const fetcher = useApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (body: BulkDeleteWarehouseTransfersBody) =>
+      bulkDeleteWarehouseTransfers(fetcher, body),
+    onSuccess: () => commonInvalidateQueries(queryClient),
+  });
+}
+
+/**
+ * Validates the deletable warehouse transfers in bulk.
+ */
+export function useValidateBulkDeleteWarehouseTransfers(
+  props?: UseMutationOptions<
+    ValidateBulkDeleteWarehouseTransfersResponse,
+    Error,
+    number[]
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useMutation({
+    ...props,
+    mutationFn: (ids: number[]) =>
+      validateBulkDeleteWarehouseTransfers(fetcher, ids),
   });
 }
 

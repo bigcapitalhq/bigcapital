@@ -1911,6 +1911,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/warehouse-transfers/validate-bulk-delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validates which warehouse transfers can be deleted and returns the results. */
+        post: operations["WarehouseTransfersController_validateBulkDeleteWarehouseTransfers"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse-transfers/bulk-delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Deletes multiple warehouse transfers. */
+        post: operations["WarehouseTransfersController_bulkDeleteWarehouseTransfers"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/warehouse-transfers": {
         parameters: {
             query?: never;
@@ -5219,7 +5253,7 @@ export interface components {
              */
             id: number;
             /**
-             * @description The API key string
+             * @description The API key string. Returned only once when the key is created.
              * @example bc_1234567890abcdef
              */
             key: string;
@@ -5248,7 +5282,7 @@ export interface components {
              */
             name: string;
             /**
-             * @description First 8 characters of the API key token
+             * @description Masked API key prefix
              * @example bc_1234...
              */
             token: string;
@@ -6095,7 +6129,7 @@ export interface components {
             userId: number;
             /**
              * @description The date when the adjustment was published
-             * @example 2024-03-20T10:00:00Z
+             * @example 2024-03-20
              */
             publishedAt?: string;
             /**
@@ -7152,7 +7186,7 @@ export interface components {
             openingBalance: number;
             /**
              * Format: date-time
-             * @example 2024-01-01T00:00:00Z
+             * @example 2024-01-01
              */
             openingBalanceAt: string;
             /** @example 1 */
@@ -7237,13 +7271,13 @@ export interface components {
             /**
              * Format: date-time
              * @description The date of the invoice
-             * @example 2023-01-01T00:00:00Z
+             * @example 2023-01-01
              */
             invoiceDate: string;
             /**
              * Format: date-time
              * @description The due date of the invoice
-             * @example 2023-01-15T00:00:00Z
+             * @example 2023-01-15
              */
             dueDate: string;
             /**
@@ -7293,7 +7327,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date when the invoice was delivered
-             * @example 2023-01-02T00:00:00Z
+             * @example 2023-01-02
              */
             deliveredAt?: string;
             /**
@@ -7522,13 +7556,13 @@ export interface components {
             /**
              * Format: date-time
              * @description Invoice date
-             * @example 2023-01-01T00:00:00Z
+             * @example 2023-01-01
              */
             invoiceDate: string;
             /**
              * Format: date-time
              * @description Due date
-             * @example 2023-01-15T00:00:00Z
+             * @example 2023-01-15
              */
             dueDate: string;
             /**
@@ -7630,13 +7664,13 @@ export interface components {
             /**
              * Format: date-time
              * @description Invoice date
-             * @example 2023-01-01T00:00:00Z
+             * @example 2023-01-01
              */
             invoiceDate: string;
             /**
              * Format: date-time
              * @description Due date
-             * @example 2023-01-15T00:00:00Z
+             * @example 2023-01-15
              */
             dueDate: string;
             /**
@@ -8119,7 +8153,7 @@ export interface components {
             paymentReceiveNo: string;
             /**
              * @description The date of the payment
-             * @example 2023-01-01T00:00:00Z
+             * @example 2023-01-01
              */
             paymentDate: Record<string, never>;
             /**
@@ -8993,7 +9027,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date when the expense was published
-             * @example 2024-03-20T10:00:00Z
+             * @example 2024-03-20
              */
             publishedAt?: string;
             /**
@@ -9004,7 +9038,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The payment date of the expense
-             * @example 2024-03-20T10:00:00Z
+             * @example 2024-03-20
              */
             paymentDate: string;
             /**
@@ -9329,13 +9363,13 @@ export interface components {
             /**
              * Format: date-time
              * @description The date when the transfer was initiated
-             * @example 2024-03-20T10:00:00Z
+             * @example 2024-03-20
              */
             transferInitiatedAt: string;
             /**
              * Format: date-time
              * @description The date when the transfer was delivered
-             * @example 2024-03-21T15:00:00Z
+             * @example 2024-03-21
              */
             transferDeliveredAt: string;
             /**
@@ -9728,7 +9762,7 @@ export interface components {
             openingBalance: number;
             /**
              * Format: date-time
-             * @example 2024-01-01T00:00:00Z
+             * @example 2024-01-01
              */
             openingBalanceAt: string;
             /** @example 1 */
@@ -10517,7 +10551,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date of the sale receipt
-             * @example 2024-01-01T00:00:00Z
+             * @example 2024-01-01
              */
             receiptDate: string;
             /**
@@ -10576,7 +10610,7 @@ export interface components {
             isDraft?: boolean;
             /**
              * @description The date when the receipt was closed
-             * @example 2024-01-02T00:00:00Z
+             * @example 2024-01-02
              */
             closedAt?: Record<string, never>;
             /**
@@ -10989,13 +11023,13 @@ export interface components {
             /**
              * Format: date-time
              * @description The date the bill was issued
-             * @example 2024-03-15T00:00:00Z
+             * @example 2024-03-15
              */
             billDate: string;
             /**
              * Format: date-time
              * @description The due date of the bill
-             * @example 2024-04-15T00:00:00Z
+             * @example 2024-04-15
              */
             dueDate: string;
             /**
@@ -11629,7 +11663,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Published date
-             * @example 2024-03-20T10:00:00Z
+             * @example 2024-03-20
              */
             publishedAt?: string;
             /**
@@ -11801,7 +11835,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date of the credit note
-             * @example 2023-01-01T00:00:00Z
+             * @example 2023-01-01
              */
             creditNoteDate: string;
             /**
@@ -12353,7 +12387,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date of the vendor credit
-             * @example 2024-03-15T00:00:00Z
+             * @example 2024-03-15
              */
             vendorCreditDate: string;
             /**
@@ -12389,7 +12423,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date the vendor credit was opened
-             * @example 2024-03-15T00:00:00Z
+             * @example 2024-03-15
              */
             openedAt?: string;
             /**
@@ -12785,7 +12819,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The vendor credit date
-             * @example 2024-03-15T00:00:00Z
+             * @example 2024-03-15
              */
             vendorCreditDate?: string;
             /**
@@ -13233,7 +13267,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date of the refund
-             * @example 2024-03-15T00:00:00Z
+             * @example 2024-03-15
              */
             date: string;
             /** @description The deposit account the refund was paid into */
@@ -13468,7 +13502,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date of the bank transaction
-             * @example 2023-01-01T00:00:00.000Z
+             * @example 2023-01-01
              */
             date: string;
             /**
@@ -13591,7 +13625,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Transaction date
-             * @example 2024-03-20T10:30:00Z
+             * @example 2024-03-20
              */
             date: string;
             /**
@@ -13648,7 +13682,7 @@ export interface components {
             exchangeRate: number;
             /**
              * Format: date-time
-             * @example 2024-01-15T00:00:00Z
+             * @example 2024-01-15
              */
             date: string;
             /** @example 2024-01-15 */
@@ -13709,7 +13743,7 @@ export interface components {
             /**
              * Format: date-time
              * @description The date of the bank transaction
-             * @example 2023-01-01T00:00:00.000Z
+             * @example 2023-01-01
              */
             date: string;
             /**
@@ -17399,7 +17433,7 @@ export interface components {
             openingBalance?: number | null;
             /**
              * Format: date-time
-             * @example 2024-01-15T00:00:00Z
+             * @example 2024-01-15
              */
             openingBalanceAt?: string | null;
             /** @example Mr. */
@@ -21859,6 +21893,62 @@ export interface operations {
         requestBody?: never;
         responses: {
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    WarehouseTransfersController_validateBulkDeleteWarehouseTransfers: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkDeleteDto"];
+            };
+        };
+        responses: {
+            /** @description Validation completed with counts and IDs of deletable and non-deletable warehouse transfers. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidateBulkDeleteResponseDto"];
+                };
+            };
+        };
+    };
+    WarehouseTransfersController_bulkDeleteWarehouseTransfers: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkDeleteDto"];
+            };
+        };
+        responses: {
+            /** @description Warehouse transfers deleted successfully. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

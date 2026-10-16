@@ -3,14 +3,18 @@ import {
   Classes,
   NavbarDivider,
   NavbarGroup,
+  Intent,
   Alignment,
 } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useBulkDeleteWarehouseTransfersDialog } from './hooks/use-bulk-delete-warehouse-transfers-dialog';
 import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
 import { withWarehouseTransfers } from './withWarehouseTransfers';
 import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
+import type { WithWarehouseTransfersProps } from './withWarehouseTransfers';
 import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
 import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import {
@@ -26,9 +30,10 @@ import { useSaveSettings } from '@/hooks/query';
 
 interface WarehouseTransfersActionsBarInnerProps
   extends Pick<
-    WithWarehouseTransfersActionsProps,
-    'setWarehouseTransferTableState'
-  > {
+      WithWarehouseTransfersActionsProps,
+      'setWarehouseTransferTableState'
+    >,
+    Pick<WithWarehouseTransfersProps, 'warehouseTransferSelectedRows'> {
   warehouseTransferFilterRoles: IFilterRole[];
 }
 
@@ -42,6 +47,7 @@ interface ViewOption {
 function WarehouseTransfersActionsBarInner({
   // #withWarehouseTransfers
   warehouseTransferFilterRoles,
+  warehouseTransferSelectedRows = [],
 
   // #withWarehouseTransfersActions
   setWarehouseTransferTableState,
@@ -49,6 +55,9 @@ function WarehouseTransfersActionsBarInner({
   const { mutateAsync: saveSettings } = useSaveSettings();
 
   const history = useHistory();
+
+  const { openBulkDeleteDialog, isValidatingBulkDeleteWarehouseTransfers } =
+    useBulkDeleteWarehouseTransfersDialog();
 
   // credit note list context.
   const { WarehouseTransferView, fields, refresh, warehouseTransferSettings } =
@@ -76,6 +85,28 @@ function WarehouseTransfersActionsBarInner({
       options: [{ group: 'warehouseTransfers', key: 'tableSize', value: size }],
     });
   };
+
+  // Handle bulk delete button click.
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(warehouseTransferSelectedRows as number[]);
+  };
+
+  if (!isEmpty(warehouseTransferSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteWarehouseTransfers}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -148,9 +179,12 @@ function WarehouseTransfersActionsBarInner({
 
 export const WarehouseTransfersActionsBar = FF.pipe(
   WarehouseTransfersActionsBarInner,
-  withWarehouseTransfers(({ warehouseTransferTableState }) => ({
-    warehouseTransferFilterRoles:
-      warehouseTransferTableState?.filterRoles ?? [],
-  })),
+  withWarehouseTransfers(
+    ({ warehouseTransferTableState, warehouseTransferSelectedRows }) => ({
+      warehouseTransferFilterRoles:
+        warehouseTransferTableState?.filterRoles ?? [],
+      warehouseTransferSelectedRows,
+    }),
+  ),
   withWarehouseTransfersActions,
 );

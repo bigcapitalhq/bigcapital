@@ -5,11 +5,15 @@ import type { ComponentType } from 'react';
 import {
   setWarehouseTransferTableState,
   resetWarehouseTransferTableState,
+  setWarehouseTransferSelectedRows,
+  resetWarehouseTransferSelectedRows,
 } from '@/store/warehouse-transfer/warehouse-transfer.actions';
 
 export interface WithWarehouseTransfersActionsProps {
   setWarehouseTransferTableState: (queries: Partial<TableQuery>) => void;
   resetWarehouseTransferTableState: () => void;
+  setWarehouseTransferSelectedRows: (selectedRows: Array<unknown>) => void;
+  resetWarehouseTransferSelectedRows: () => void;
 }
 
 export const mapDipatchToProps = (
@@ -19,6 +23,10 @@ export const mapDipatchToProps = (
     dispatch(setWarehouseTransferTableState(queries)),
   resetWarehouseTransferTableState: () =>
     dispatch(resetWarehouseTransferTableState()),
+  setWarehouseTransferSelectedRows: (selectedRows: Array<unknown>) =>
+    dispatch(setWarehouseTransferSelectedRows(selectedRows)),
+  resetWarehouseTransferSelectedRows: () =>
+    dispatch(resetWarehouseTransferSelectedRows()),
 });
 
 export function withWarehouseTransfersActions<P>(
