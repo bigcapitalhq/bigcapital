@@ -4,6 +4,12 @@
 .#{$ns}-dialog{
   background: #fff;
 
+  // Individual dialogs set their own fixed pixel width (e.g. 650px, 1000px)
+  // with nothing capping it to the viewport, so on a narrow screen the
+  // dialog itself forces the page into horizontal scroll. Clamp every
+  // dialog to the viewport width, leaving a small gutter either side.
+  max-width: calc(100vw - 32px);
+
   &-header{
     background: #ebf1f5;
   }
