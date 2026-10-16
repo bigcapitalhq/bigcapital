@@ -92,7 +92,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
                 },
               },
               {
-                text: <T id={'categories_list'} />,
+                text: <T id={'categories'} />,
                 href: '/items/categories',
                 type: ISidebarMenuItemType.Link,
                 permission: {
@@ -469,7 +469,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
         type: ISidebarMenuItemType.Group,
         children: [
           {
-            text: <T id={'sidebar.cash_bank_accounts'} />,
+            text: <T id={'sidebar.bank_accounts'} />,
             href: '/cashflow-accounts',
             type: ISidebarMenuItemType.Link,
             permission: {

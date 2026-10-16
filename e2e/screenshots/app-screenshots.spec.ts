@@ -377,42 +377,42 @@ test.describe('app screenshots', () => {
 
   test('captures the invoices list', async ({ page }) => {
     await capture(page, '/invoices', 'invoices.png', {
-      title: 'Invoices List',
+      title: 'Invoices',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the bills list', async ({ page }) => {
     await capture(page, '/bills', 'bills.png', {
-      title: 'Bills List',
+      title: 'Bills',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the customers list', async ({ page }) => {
     await capture(page, '/customers', 'customers.png', {
-      title: 'Customers List',
+      title: 'Customers',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the vendors list', async ({ page }) => {
     await capture(page, '/vendors', 'vendors.png', {
-      title: 'Vendors List',
+      title: 'Vendors',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the items list', async ({ page }) => {
     await capture(page, '/items', 'items.png', {
-      title: 'Items List',
+      title: 'Items',
       rowSelector: '.tbody .tr',
     });
   });
 
   test('captures the expenses list', async ({ page }) => {
     await capture(page, '/expenses', 'expenses.png', {
-      title: 'Expenses List',
+      title: 'Expenses',
       rowSelector: '.tbody .tr',
     });
   });

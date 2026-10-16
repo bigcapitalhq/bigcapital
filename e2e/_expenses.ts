@@ -8,7 +8,7 @@ export const EXPENSE_ACCOUNT = 'Rent';
  */
 export async function waitForExpensesPage(page: Page) {
   await expect(page.getByTestId('dashboard-topbar').locator('h1')).toHaveText(
-    'Expenses List',
+    'Expenses',
     { timeout: 30_000 },
   );
   await expect(
