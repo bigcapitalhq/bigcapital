@@ -67,10 +67,12 @@ export class BalanceSheetRepository extends flow(
 
   /**
    * Retrieves the given account id with its children account ids.
-   * @param {number} accountId
+   * @param {number|string} accountId
    * @returns {number[]}
    */
-  public getAccountsIdsIncludingChildren = (accountId: number): number[] => {
+  public getAccountsIdsIncludingChildren = (
+    accountId: number | string,
+  ): number[] => {
     const childrenAccountIds = this.accountsGraph.dependenciesOf(accountId);
 
     return A.uniq(eqNumber)([...childrenAccountIds, accountId] as number[]);
@@ -197,7 +199,9 @@ export class BalanceSheetRepository extends flow(
     await this.initAccountsTotalLedger();
 
     // Date periods.
-    if (this.query.isDatePeriodsColumnsType()) {
+    // The period-range accounts ledger is also required by the
+    // none-transactions filter (`BalanceSheetFiltering`).
+    if (this.query.isDatePeriodsColumnsType() || this.query.noneTransactions) {
       await this.initTotalDatePeriods();
     }
     // Previous Year (PY).
