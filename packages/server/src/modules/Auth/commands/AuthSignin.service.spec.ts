@@ -5,7 +5,7 @@ import { UserNotFoundException } from '../exceptions/UserNotFound.exception';
 
 describe('AuthSigninService token claims', () => {
   const userId = 42;
-  const user = { id: userId, email: 'owner@corp.com' } as any;
+  const user = { id: userId, email: 'owner@corp.com', active: true } as any;
 
   const createService = (foundUser: any = user) => {
     const findOne = jest.fn().mockImplementation(() => {
@@ -107,5 +107,94 @@ describe('AuthSigninService token claims', () => {
         expect.objectContaining({ expiresIn: '30d' }),
       );
     });
+  });
+});
+
+import { InvalidEmailPasswordException } from '../exceptions/InvalidEmailPassword.exception';
+
+jest.mock('@/modules/System/models/SystemUser', () => ({
+  SystemUser: class SystemUser {},
+}));
+jest.mock('@/modules/System/models/TenantModel', () => ({
+  TenantModel: class TenantModel {},
+}));
+jest.mock('@/modules/System/models/UserTenant.model', () => ({
+  UserTenant: class UserTenant {},
+}));
+
+describe('user activity during authentication', () => {
+  const email = 'staff@example.test';
+  const payload = {
+    sub: String(7),
+    iss: JWT_ISSUER,
+    aud: JWT_AUDIENCE,
+    iat: 1,
+    exp: 2,
+  };
+  let user: any;
+  let cls: any;
+  let service: AuthSigninService;
+
+  beforeEach(() => {
+    user = {
+      id: 7,
+      email,
+      active: true,
+      checkPassword: jest.fn().mockResolvedValue(true),
+    };
+    cls = { set: jest.fn() };
+    const users = {
+      query: () => ({
+        findOne: () => ({
+          throwIfNotFound: async () => {
+            if (!user) throw new Error('missing user');
+            return user;
+          },
+        }),
+      }),
+    };
+    service = new AuthSigninService(
+      users as any,
+      {} as any,
+      {} as any,
+      {} as any,
+      cls,
+    );
+  });
+
+  it('refuses the same password after the user is inactivated', async () => {
+    await expect(service.signin(email, 'valid-password')).resolves.toBe(user);
+    user.active = false;
+    await expect(
+      service.signin(email, 'valid-password'),
+    ).rejects.toBeInstanceOf(InvalidEmailPasswordException);
+  });
+
+  it('refuses an existing session after the user is inactivated', async () => {
+    await expect(service.verifyPayload(payload)).resolves.toBe(payload);
+    cls.set.mockClear();
+    user.active = false;
+    await expect(service.verifyPayload(payload)).rejects.toBeInstanceOf(
+      UserNotFoundException,
+    );
+    expect(cls.set).not.toHaveBeenCalled();
+  });
+
+  it('still refuses invalid passwords', async () => {
+    user.checkPassword.mockResolvedValue(false);
+    await expect(service.signin(email, 'invalid')).rejects.toBeInstanceOf(
+      InvalidEmailPasswordException,
+    );
+  });
+
+  it('refuses deleted users without setting the request identity', async () => {
+    user = undefined;
+    await expect(service.signin(email, 'password')).rejects.toBeInstanceOf(
+      InvalidEmailPasswordException,
+    );
+    await expect(service.verifyPayload(payload)).rejects.toBeInstanceOf(
+      UserNotFoundException,
+    );
+    expect(cls.set).not.toHaveBeenCalled();
   });
 });
