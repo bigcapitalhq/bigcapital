@@ -75,6 +75,8 @@ export class BillGL {
       projectId: this.bill.projectId,
 
       createdAt: this.bill.createdAt,
+
+      basis: 'accrual' as const,
     };
   }
 

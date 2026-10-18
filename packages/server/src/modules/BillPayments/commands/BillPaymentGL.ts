@@ -70,6 +70,8 @@ export class BillPaymentGL {
       createdAt: this.billPayment.createdAt,
 
       branchId: this.billPayment.branchId,
+
+      basis: 'accrual' as const,
     };
   }
 

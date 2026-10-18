@@ -71,9 +71,14 @@ describe('GL entries — Purchases transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '20001', contactId: vendorId, credit: 1800 },
-          { accountCode: '40002', debit: 2000 },
-          { accountCode: '40009', credit: 200 },
+          {
+            accountCode: '20001',
+            contactId: vendorId,
+            credit: 1800,
+            basis: 'accrual',
+          },
+          { accountCode: '40002', debit: 2000, basis: 'accrual' },
+          { accountCode: '40009', credit: 200, basis: 'accrual' },
         ],
         'Bill',
       );
@@ -139,10 +144,15 @@ describe('GL entries — Purchases transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '20001', contactId: vendorId, credit: 2000 },
-          { accountCode: '40002', debit: 2000 },
-          { accountCode: '20006', debit: 200 },
-          { accountCode: '40009', credit: 200 },
+          {
+            accountCode: '20001',
+            contactId: vendorId,
+            credit: 2000,
+            basis: 'accrual',
+          },
+          { accountCode: '40002', debit: 2000, basis: 'accrual' },
+          { accountCode: '20006', debit: 200, basis: 'accrual' },
+          { accountCode: '40009', credit: 200, basis: 'accrual' },
         ],
         'Bill',
       );
@@ -275,8 +285,17 @@ describe('GL entries — Purchases transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '20001', contactId: vendorId, debit: 1000 },
-          { accountCode: '10001', credit: 1000 },
+          // Accrual basis: settle the payable against the payment account.
+          {
+            accountCode: '20001',
+            contactId: vendorId,
+            debit: 1000,
+            basis: 'accrual',
+          },
+          { accountCode: '10001', credit: 1000, basis: 'accrual' },
+          // Cash basis: recognize the purchase expense composition.
+          { accountCode: '40002', debit: 1000, basis: 'cash' },
+          { accountCode: '10001', credit: 1000, basis: 'cash' },
         ],
         'BillPayment',
       );
