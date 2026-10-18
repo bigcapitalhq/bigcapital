@@ -5,6 +5,8 @@ import {
 import { IFinancialTable } from '../../types/Table.types';
 
 export interface IJournalReportQuery {
+  basis: 'cash' | 'accrual';
+
   fromDate: Date | string;
   toDate: Date | string;
   numberFormat: INumberFormatQuery;

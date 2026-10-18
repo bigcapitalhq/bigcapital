@@ -30,7 +30,12 @@ export class LedgerClickHouseSink {
     const deltas: ILedgerDelta[] = ledger
       .getEntries()
       .filter(
-        (entry) => Boolean(entry.credit || entry.debit) && entry.accountId,
+        (entry) =>
+          Boolean(entry.credit || entry.debit) &&
+          entry.accountId &&
+          // The cash basis entries are excluded from the analytics
+          // store which is accrual based.
+          entry.basis !== 'cash',
       )
       .map((entry) => ({
         accountId: entry.accountId,
@@ -48,17 +53,27 @@ export class LedgerClickHouseSink {
   /**
    * Queues the negated deltas of the deleted ledger entries to
    * the analytics store.
-   * @param {Array<{accountId: number; credit: number; debit: number}>} deletedEntries - The deleted rows as they were read from the tenant database.
+   * @param {Array<{accountId: number, credit: number, debit: number, basis?: string}>} deletedEntries - The deleted rows as they were read from the tenant database.
    */
   public onLedgerDeleted(
-    deletedEntries: Array<{ accountId: number; credit: number; debit: number }>,
+    deletedEntries: Array<{
+      accountId: number;
+      credit: number;
+      debit: number;
+      basis?: string;
+    }>,
   ): void {
     const organizationId = this.cls.get<string>('organizationId');
     if (!organizationId) return;
 
     const deltas: ILedgerDelta[] = deletedEntries
       .filter(
-        (entry) => Boolean(entry.credit || entry.debit) && entry.accountId,
+        (entry) =>
+          Boolean(entry.credit || entry.debit) &&
+          entry.accountId &&
+          // The cash basis entries are excluded from the analytics
+          // store which is accrual based.
+          entry.basis !== 'cash',
       )
       .map((entry) => ({
         accountId: entry.accountId,

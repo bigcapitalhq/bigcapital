@@ -5,6 +5,18 @@ import { ILedgerEntry } from './types/Ledger.types';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { ModelObject } from 'objection';
 
+/**
+ * Determines whether the ledger entry affects the stored account
+ * and contact balances. The cash basis entries are stored in the
+ * ledger but they are excluded from the balances mutation since the
+ * recorded balances are accrual based.
+ * @param {ILedgerEntry} entry - The ledger entry.
+ * @returns {boolean}
+ */
+export const isEntryAffectingBalance = (entry: ILedgerEntry): boolean => {
+  return entry.basis !== 'cash';
+};
+
 export class Ledger implements ILedger {
   readonly entries: ILedgerEntry[];
 
@@ -271,6 +283,8 @@ export class Ledger implements ILedger {
       taxRate: entry.taxRate,
 
       note: entry.note,
+
+      basis: entry.basis ?? null,
     };
   }
 

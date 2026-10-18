@@ -85,6 +85,8 @@ export class PaymentReceivedGL {
       createdAt: this.paymentReceived.createdAt,
 
       branchId: this.paymentReceived.branchId,
+
+      basis: 'accrual' as const,
     };
   }
 

@@ -39,5 +39,7 @@ export const transformLedgerEntryToTransaction = (
 
     taxRateId: entry.taxRateId,
     taxRate: entry.taxRate,
+
+    basis: entry.basis ?? null,
   };
 };

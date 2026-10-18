@@ -11,6 +11,8 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ModelObject } from 'objection';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class SalesTaxLiabilitySummaryRepository {
@@ -24,6 +26,15 @@ export class SalesTaxLiabilitySummaryRepository {
 
   @Inject(Account.name)
   private readonly accountModel: TenantModelProxy<typeof Account>;
+
+  @Inject(AccountingBasisService)
+  private readonly accountingBasisService: AccountingBasisService;
+
+  /**
+   * The report accounting basis.
+   * @param {LedgerBasis}
+   */
+  basis: LedgerBasis;
 
   /**
    * @param {SalesTaxLiabilitySummarySalesById}
@@ -51,6 +62,7 @@ export class SalesTaxLiabilitySummaryRepository {
    */
   async load(filter: SalesTaxLiabilitySummaryQuery) {
     this.filter = filter;
+    this.basis = await this.accountingBasisService.resolve(filter.basis);
 
     await this.initTaxRates();
     await this.initTaxesPayableByTaxRateId();
@@ -109,6 +121,7 @@ export class SalesTaxLiabilitySummaryRepository {
       .whereIn('account_id', payableAccountsIds)
       .whereNot('tax_rate_id', null)
       .modify('filterDateRange', this.filter.fromDate, this.filter.toDate)
+      .modify('filterByBasis', this.basis)
       .groupBy('tax_rate_id')
       .select(['tax_rate_id'])
       .sum('credit as credit')
@@ -136,6 +149,7 @@ export class SalesTaxLiabilitySummaryRepository {
         .whereIn('account_id', incomeAccountsIds)
         .whereNot('tax_rate_id', null)
         .modify('filterDateRange', this.filter.fromDate, this.filter.toDate)
+        .modify('filterByBasis', this.basis)
         .groupBy('tax_rate_id')
         .select(['tax_rate_id'])
         .sum('credit as credit')

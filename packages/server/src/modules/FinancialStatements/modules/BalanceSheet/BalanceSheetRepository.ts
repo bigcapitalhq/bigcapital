@@ -19,6 +19,8 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class BalanceSheetRepository extends flow(
@@ -38,6 +40,15 @@ export class BalanceSheetRepository extends flow(
   public readonly accountTransactionModel: TenantModelProxy<
     typeof AccountTransaction
   >;
+
+  @Inject(AccountingBasisService)
+  public readonly accountingBasisService: AccountingBasisService;
+
+  /**
+   * The report accounting basis.
+   * @param {LedgerBasis}
+   */
+  public basis: LedgerBasis;
 
   /**
    * @description Balance sheet query.
@@ -190,6 +201,7 @@ export class BalanceSheetRepository extends flow(
    */
   public asyncInitialize = async (query: IBalanceSheetQuery) => {
     this.setQuery(query);
+    await this.initBasis();
 
     await this.initAccounts();
     await this.initAccountsGraph();
@@ -233,6 +245,13 @@ export class BalanceSheetRepository extends flow(
     this.accounts = accounts;
     this.accountsByType = transformToMapBy(accounts, 'accountType');
     this.accountsByParentType = transformToMapBy(accounts, 'accountParentType');
+  };
+
+  /**
+   * Initialize the report accounting basis.
+   */
+  public initBasis = async () => {
+    this.basis = await this.accountingBasisService.resolve(this.query.basis);
   };
 
   /**
@@ -391,6 +410,7 @@ export class BalanceSheetRepository extends flow(
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
+        query.modify('filterByBasis', this.basis);
       });
   };
 
@@ -411,6 +431,7 @@ export class BalanceSheetRepository extends flow(
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
+        query.modify('filterByBasis', this.basis);
       });
   };
 

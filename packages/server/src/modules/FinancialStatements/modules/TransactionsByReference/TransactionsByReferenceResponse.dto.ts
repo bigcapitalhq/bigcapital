@@ -54,6 +54,12 @@ export class TransactionByReferenceTransactionDto {
 
   @ApiProperty({ description: 'Account ID', type: Number })
   accountId: number;
+
+  @ApiProperty({
+    description: 'Accounting basis of the entry',
+    enum: ['general', 'cash', 'accrual'],
+  })
+  basis: string;
 }
 
 export class TransactionsByReferenceResponseDto {

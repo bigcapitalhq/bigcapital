@@ -2,11 +2,13 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { transformToMap } from '@/utils/transform-to-key';
 import { Inject } from '@nestjs/common';
 import { ModelObject } from 'objection';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 export class JournalSheetRepository {
   @Inject(TenancyContext)
@@ -23,6 +25,14 @@ export class JournalSheetRepository {
 
   @Inject(AccountTransaction.name)
   private accountTransactions: Array<ModelObject<AccountTransaction>>;
+
+  @Inject(AccountingBasisService)
+  private accountingBasisService: AccountingBasisService;
+
+  /**
+   * The report accounting basis.
+   */
+  public basis: LedgerBasis;
 
   /**
    *
@@ -60,10 +70,18 @@ export class JournalSheetRepository {
    */
   async load() {
     await this.initBaseCurrency();
+    await this.initBasis();
     await this.initAccountsGraph();
     await this.initAccountTransactions();
     await this.initContacts();
     await this.initLedger();
+  }
+
+  /**
+   * Initialize the report accounting basis.
+   */
+  async initBasis() {
+    this.basis = await this.accountingBasisService.resolve(this.filter?.basis);
   }
 
   /**
@@ -112,6 +130,7 @@ export class JournalSheetRepository {
         if (this.filter.transactionType && this.filter.transactionId) {
           query.where('reference_id', this.filter.transactionId);
         }
+        query.modify('filterByBasis', this.basis);
         query.withGraphFetched('account');
       });
     this.accountTransactions = transactions;

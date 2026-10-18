@@ -18,6 +18,8 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
@@ -31,6 +33,15 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
 
   @Inject(TenancyContext)
   public tenancyContext: TenancyContext;
+
+  @Inject(AccountingBasisService)
+  public accountingBasisService: AccountingBasisService;
+
+  /**
+   * The report accounting basis.
+   * @param {LedgerBasis}
+   */
+  public basis: LedgerBasis;
 
   /**
    * Tenancy base currency.
@@ -166,6 +177,7 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
    */
   public asyncInitialize = async () => {
     await this.initBaseCurrency();
+    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsGraph();
 
@@ -196,6 +208,13 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
       await this.initPeriodsPreviousYear();
     }
   };
+
+  /**
+   * Initialize the report accounting basis.
+   */
+  async initBasis() {
+    this.basis = await this.accountingBasisService.resolve(this.query.basis);
+  }
 
   /**
    * Initialize the base currency.
@@ -340,6 +359,7 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
+        query.modify('filterByBasis', this.basis);
       });
   };
 
@@ -367,6 +387,7 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
         query.withGraphFetched('account');
 
         this.commonFilterBranchesQuery(query);
+        query.modify('filterByBasis', this.basis);
       });
   };
 

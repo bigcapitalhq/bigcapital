@@ -68,6 +68,8 @@ describe('GL entries — Sales transactions (e2e)', () => {
       const legs = await fetchLegs('SaleInvoice', invoiceId);
 
       expectBalanced(legs);
+      // The invoice journal entries are accrual basis flagged.
+      expect(legs.every((leg) => leg.basis === 'accrual')).toBe(true);
       expectLegs(
         legs,
         [
@@ -323,8 +325,84 @@ describe('GL entries — Sales transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '10001', debit: 1000 },
-          { accountCode: '10007', contactId: customerId, credit: 1000 },
+          // Accrual basis: Dr deposit / Cr A/R.
+          { accountCode: '10001', debit: 1000, basis: 'accrual' },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 1000,
+            basis: 'accrual',
+          },
+          // Cash basis: Dr deposit / Cr income.
+          { accountCode: '10001', debit: 1000, basis: 'cash' },
+          { accountCode: '50002', credit: 1000, basis: 'cash' },
+        ],
+        'PaymentReceive',
+      );
+    });
+
+    it('posts both accrual and cash journals for a partial payment of a taxed invoice', async () => {
+      const invoiceRes = await request(app.getHttpServer())
+        .post('/sale-invoices')
+        .set(authHeaders())
+        .send({
+          customerId,
+          invoiceDate: '2023-01-01',
+          dueDate: '2023-02-01',
+          invoiceNo: faker.string.uuid(),
+          referenceNo: 'REF-000202',
+          delivered: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 1,
+              rate: 1000,
+              taxRateId: taxRate10,
+              description: 'Item description...',
+            },
+          ],
+        })
+        .expect(201);
+
+      const paymentRes = await request(app.getHttpServer())
+        .post('/payments-received')
+        .set(authHeaders())
+        .send({
+          customerId,
+          paymentDate: '2023-01-01',
+          exchangeRate: 1,
+          referenceNo: faker.string.uuid(),
+          depositAccountId: 1000,
+          paymentReceiveNo: faker.string.uuid(),
+          statement: 'Partial payment received for invoice',
+          entries: [
+            { index: 1, invoiceId: invoiceRes.body.id, paymentAmount: 550 },
+          ],
+          branchId: 1,
+        })
+        .expect(201);
+
+      const legs = await fetchLegs('PaymentReceive', paymentRes.body.id);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          // Accrual basis: Dr deposit / Cr A/R.
+          { accountCode: '10001', debit: 550, basis: 'accrual' },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 550,
+            basis: 'accrual',
+          },
+          // Cash basis: the paid proportion of the invoice composition.
+          { accountCode: '10001', debit: 550, basis: 'cash' },
+          { accountCode: '50002', credit: 500, basis: 'cash' },
+          { accountCode: '20006', credit: 50, basis: 'cash' },
         ],
         'PaymentReceive',
       );

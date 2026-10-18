@@ -1030,6 +1030,7 @@
   "closing_balance": "الرصيد الختامي",
   "view_more_transactions": "عرض المزيد من المعاملات.",
   "there_is_no_results_in_the_table": "لا توجد نتائج في الجدول.",
+  "no_cash_basis_journal_entries": "لا توجد قيود يومية على الأساس النقدي لهذه الفاتورة بعد.",
   "journal_details": "تفاصيل القيد",
   "expense_amount": "قيمة المصروف",
   "expense_details": "تفاصيل المصروف",

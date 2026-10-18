@@ -15517,6 +15517,11 @@ export interface components {
             accountCode: string;
             /** @description Account ID */
             accountId: number;
+            /**
+             * @description Accounting basis of the entry
+             * @enum {string}
+             */
+            basis: "general" | "cash" | "accrual";
         };
         TransactionsByReferenceResponseDto: {
             /** @description Transactions linked to the given reference */
@@ -30679,6 +30684,8 @@ export interface operations {
             query?: {
                 /** @description Filter out branches (if multiple branches feature is enabled) */
                 branchesIds?: number[];
+                /** @description Accounting basis for the report */
+                basis?: "cash" | "accrual";
                 /** @description Type of transaction to filter */
                 transactionType?: string;
                 /** @description ID of the transaction to filter */

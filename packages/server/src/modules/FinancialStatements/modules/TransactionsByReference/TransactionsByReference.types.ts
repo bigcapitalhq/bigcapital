@@ -33,6 +33,11 @@ export interface ITransactionsByReferenceTransaction {
   accountName: string;
   accountCode: string;
   accountId: number;
+
+  /**
+   * The accounting basis of the entry (general, cash, accrual).
+   */
+  basis: string;
 }
 
 export interface ITransactionsByReferencePojo {

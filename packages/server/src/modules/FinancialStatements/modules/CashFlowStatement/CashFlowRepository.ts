@@ -162,7 +162,7 @@ export class CashFlowRepository {
   }
 
   /**
-   * Common branches filter query.
+   * Common branches and basis filter query.
    * @param {Knex.QueryBuilder} query
    */
   private commonFilterBranchesQuery = (
@@ -172,5 +172,6 @@ export class CashFlowRepository {
     if (!isEmpty(query.branchesIds)) {
       knexQuery.modify('filterByBranches', query.branchesIds);
     }
+    knexQuery.modify('filterByBasis', query.basis);
   };
 }

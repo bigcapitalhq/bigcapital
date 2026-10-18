@@ -51,6 +51,9 @@ describe('SalesTaxLiabilitySummaryRepository', () => {
     (repository as any).accountTransactionModel = jest.fn(() => ({
       query: transactionQueries,
     }));
+    (repository as any).accountingBasisService = {
+      resolve: jest.fn(async () => filter.basis),
+    };
 
     return { repository, payableQuery, salesQuery };
   };
@@ -76,6 +79,21 @@ describe('SalesTaxLiabilitySummaryRepository', () => {
       'filterDateRange',
       filter.fromDate,
       filter.toDate,
+    );
+  });
+
+  it('filters the taxes payable and sales sums by the report basis', async () => {
+    const { repository, payableQuery, salesQuery } = setup();
+
+    await repository.load(filter);
+
+    expect(payableQuery.modify).toHaveBeenCalledWith(
+      'filterByBasis',
+      filter.basis,
+    );
+    expect(salesQuery.modify).toHaveBeenCalledWith(
+      'filterByBasis',
+      filter.basis,
     );
   });
 });

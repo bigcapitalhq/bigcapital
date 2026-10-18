@@ -60,6 +60,8 @@ export class TransactionsByReference extends FinancialSheet {
       accountName: transaction.account?.name || '',
       accountCode: transaction.account?.code || '',
       accountId: transaction.accountId,
+
+      basis: transaction.basis || 'general',
     };
   };
 

@@ -11,6 +11,7 @@ import { Contact } from '../Contacts/models/Contact';
 import { Account } from '../Accounts/models/Account.model';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { isEntryAffectingBalance } from './Ledger';
 
 @Injectable()
 export class LedgerContactsBalanceStorage {
@@ -34,16 +35,20 @@ export class LedgerContactsBalanceStorage {
     ledger: ILedger,
     trx?: Knex.Transaction,
   ): Promise<void> => {
+    // The cash basis entries are stored in the ledger but excluded from
+    // the stored balances mutation since the balances are accrual based.
+    const balanceLedger = ledger.filter(isEntryAffectingBalance);
+
     // Save contact balance queue.
     const saveContactsBalanceQueue = async.queue(
       this.saveContactBalanceTask,
       10,
     );
     // Retrieves the effected contacts ids.
-    const effectedContactsIds = ledger.getContactsIds();
+    const effectedContactsIds = balanceLedger.getContactsIds();
 
     effectedContactsIds.forEach((contactId: number) => {
-      saveContactsBalanceQueue.push({ contactId, ledger, trx });
+      saveContactsBalanceQueue.push({ contactId, ledger: balanceLedger, trx });
     });
     if (effectedContactsIds.length > 0) await saveContactsBalanceQueue.drain();
   };

@@ -101,13 +101,20 @@ export class LedgerAnalyticsSyncService {
     // snake-case/upper-case mappers normalize the identifiers, while raw
     // expressions would bypass the mappers and break against the
     // case-sensitive table aliases.
-    return tenantKnex('accounts_transactions as t')
-      .join('accounts as a', 'a.id', 't.accountId')
-      .where('a.active', 1)
-      .groupBy('t.accountId', 'a.accountType')
-      .select('a.accountType as accountType')
-      .sum('credit as credit')
-      .sum('debit as debit');
+    return (
+      tenantKnex('accounts_transactions as t')
+        .join('accounts as a', 'a.id', 't.accountId')
+        .where('a.active', 1)
+        // The cash basis entries are excluded from the analytics store
+        // which is accrual based; NULL basis means general.
+        .where((query) =>
+          query.where('t.basis', 'accrual').orWhereNull('t.basis'),
+        )
+        .groupBy('t.accountId', 'a.accountType')
+        .select('a.accountType as accountType')
+        .sum('credit as credit')
+        .sum('debit as debit')
+    );
   }
 
   /**
@@ -269,6 +276,9 @@ export class LedgerAnalyticsSyncService {
           'debit as debit',
         )
         .where('id', '>', lastId)
+        // The cash basis entries are excluded from the analytics store
+        // which is accrual based; NULL basis means general.
+        .where((query) => query.where('basis', 'accrual').orWhereNull('basis'))
         .orderBy('id')
         .limit(PAGE_SIZE)) as ILedgerTransactionPageRow[];
 

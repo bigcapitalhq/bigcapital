@@ -5,6 +5,7 @@ import { isEmpty, castArray } from 'lodash';
 import { BaseModel } from '@/models/Model';
 import { Account } from './Account.model';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
+import type { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
 // import { getTransactionTypeLabel } from '@/utils/transactions-types';
 
 export class AccountTransaction extends BaseModel {
@@ -35,6 +36,11 @@ export class AccountTransaction extends BaseModel {
   public readonly projectId!: number;
   public readonly costable!: boolean;
   public readonly account: Account;
+
+  /**
+   * The accounting basis flag; NULL means general.
+   */
+  public readonly basis!: LedgerBasis | null;
 
   /**
    * Table name
@@ -229,6 +235,24 @@ export class AccountTransaction extends BaseModel {
       filterByReference(query, referenceId: number, referenceType: string) {
         query.where('reference_id', referenceId);
         query.where('reference_type', referenceType);
+      },
+
+      /**
+       * Filters the transactions by the given accounting basis.
+       * The null basis means general which is included in both bases.
+       * @param {Query} query
+       * @param {string} basis - The accounting basis (cash, accrual).
+       */
+      filterByBasis(query, basis: LedgerBasis) {
+        if (basis === 'cash') {
+          query.where((builder) => {
+            builder.where('basis', 'cash').orWhereNull('basis');
+          });
+        } else if (basis === 'accrual') {
+          query.where((builder) => {
+            builder.where('basis', 'accrual').orWhereNull('basis');
+          });
+        }
       },
     };
   }

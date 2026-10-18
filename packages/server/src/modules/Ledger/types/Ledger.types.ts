@@ -1,6 +1,13 @@
 import { Knex } from 'knex';
 import * as moment from 'moment';
 
+/**
+ * The accounting basis flag of the ledger entry.
+ * A null/undefined basis means general; the entry is included
+ * in both the cash and accrual basis reports.
+ */
+export type LedgerBasis = 'cash' | 'accrual';
+
 export interface ILedger {
   entries: ILedgerEntry[];
 
@@ -69,6 +76,11 @@ export interface ILedgerEntry {
   createdAt?: Date | string;
 
   costable?: boolean;
+
+  /**
+   * The accounting basis flag; NULL means general.
+   */
+  basis?: LedgerBasis | null;
 }
 
 export interface ISaveLedgerEntryQueuePayload {

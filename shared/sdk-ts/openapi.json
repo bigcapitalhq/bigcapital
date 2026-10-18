@@ -21035,6 +21035,20 @@
             }
           },
           {
+            "name": "basis",
+            "required": false,
+            "in": "query",
+            "description": "Accounting basis for the report",
+            "schema": {
+              "example": "accrual",
+              "enum": [
+                "cash",
+                "accrual"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "name": "transactionType",
             "required": false,
             "in": "query",
@@ -41846,6 +41860,15 @@
           "accountId": {
             "type": "number",
             "description": "Account ID"
+          },
+          "basis": {
+            "type": "string",
+            "description": "Accounting basis of the entry",
+            "enum": [
+              "general",
+              "cash",
+              "accrual"
+            ]
           }
         },
         "required": [
@@ -41860,7 +41883,8 @@
           "referenceId",
           "accountName",
           "accountCode",
-          "accountId"
+          "accountId",
+          "basis"
         ]
       },
       "TransactionsByReferenceResponseDto": {

@@ -77,6 +77,8 @@ export class InvoiceGL {
       indexGroup: 10,
 
       branchId: this.saleInvoice.branchId,
+
+      basis: 'accrual' as const,
     };
   }
 

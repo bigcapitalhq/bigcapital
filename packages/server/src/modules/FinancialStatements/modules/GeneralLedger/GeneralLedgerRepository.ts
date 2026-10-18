@@ -12,6 +12,8 @@ import { transformToMap } from '@/utils/transform-to-key';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { TenantModel } from '@/modules/System/models/TenantModel';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class GeneralLedgerRepository {
@@ -51,6 +53,15 @@ export class GeneralLedgerRepository {
   @Inject(TenancyContext)
   private readonly tenancyContext: TenancyContext;
 
+  @Inject(AccountingBasisService)
+  private readonly accountingBasisService: AccountingBasisService;
+
+  /**
+   * The report accounting basis.
+   * @param {LedgerBasis}
+   */
+  public basis: LedgerBasis;
+
   /**
    * Set the filter.
    * @param {IGeneralLedgerSheetQuery} filter - The filter.
@@ -64,6 +75,7 @@ export class GeneralLedgerRepository {
    */
   public async asyncInitialize() {
     await this.initTenant();
+    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsGraph();
     await this.initContacts();
@@ -78,6 +90,13 @@ export class GeneralLedgerRepository {
    */
   public async initTenant() {
     this.tenant = await this.tenancyContext.getTenant(true);
+  }
+
+  /**
+   * Initialize the report accounting basis.
+   */
+  public async initBasis() {
+    this.basis = await this.accountingBasisService.resolve(this.filter.basis);
   }
 
   /**
@@ -119,6 +138,7 @@ export class GeneralLedgerRepository {
         if (!isEmpty(this.filter.branchesIds)) {
           query.modify('filterByBranches', this.filter.branchesIds);
         }
+        query.modify('filterByBasis', this.basis);
         query.orderBy('date', 'ASC');
 
         if (this.filter.accountsIds?.length > 0) {
@@ -146,6 +166,7 @@ export class GeneralLedgerRepository {
         if (!isEmpty(this.filter.branchesIds)) {
           query.modify('filterByBranches', this.filter.branchesIds);
         }
+        query.modify('filterByBasis', this.basis);
         query.withGraphFetched('account');
       });
     // Accounts opening transactions.
