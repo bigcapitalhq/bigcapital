@@ -279,11 +279,20 @@ describe('GL entries — Purchases transactions (e2e)', () => {
         })
         .expect(201);
 
-      const legs = await fetchLegs('BillPayment', paymentRes.body.id);
+      const accrualLegs = await fetchLegs(
+        'BillPayment',
+        paymentRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'BillPayment',
+        paymentRes.body.id,
+        'cash',
+      );
 
-      expectBalanced(legs);
+      expectBalanced(accrualLegs);
       expectLegs(
-        legs,
+        accrualLegs,
         [
           // Accrual basis: settle the payable against the payment account.
           {
@@ -293,11 +302,19 @@ describe('GL entries — Purchases transactions (e2e)', () => {
             basis: 'accrual',
           },
           { accountCode: '10001', credit: 1000, basis: 'accrual' },
+        ],
+        'BillPayment (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
           // Cash basis: recognize the purchase expense composition.
           { accountCode: '40002', debit: 1000, basis: 'cash' },
           { accountCode: '10001', credit: 1000, basis: 'cash' },
         ],
-        'BillPayment',
+        'BillPayment (cash)',
       );
     });
   });
