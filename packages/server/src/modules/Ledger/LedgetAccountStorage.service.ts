@@ -10,6 +10,7 @@ import { Account } from '../Accounts/models/Account.model';
 import { AccountRepository } from '../Accounts/repositories/Account.repository';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { isEntryAffectingBalance } from './Ledger';
 
 @Injectable()
 export class LedegrAccountsStorage {
@@ -71,18 +72,22 @@ export class LedegrAccountsStorage {
     ledger: ILedger,
     trx?: Knex.Transaction,
   ): Promise<void> => {
+    // The cash basis entries are stored in the ledger but excluded from
+    // the stored balances mutation since the balances are accrual based.
+    const balanceLedger = ledger.filter(isEntryAffectingBalance);
+
     // Initiate a new queue for accounts balance mutation.
     const saveAccountsBalanceQueue = async.queue(
       this.saveAccountBalanceTask,
       10,
     );
-    const effectedAccountsIds = ledger.getAccountsIds();
+    const effectedAccountsIds = balanceLedger.getAccountsIds();
     const dependAccountsIds = await this.findDependantsAccountsIds(
       effectedAccountsIds,
       trx,
     );
     dependAccountsIds.forEach((accountId: number) => {
-      saveAccountsBalanceQueue.push({ ledger, accountId, trx });
+      saveAccountsBalanceQueue.push({ ledger: balanceLedger, accountId, trx });
     });
     if (dependAccountsIds.length > 0) {
       await saveAccountsBalanceQueue.drain();

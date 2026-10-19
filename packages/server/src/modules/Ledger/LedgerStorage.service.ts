@@ -74,7 +74,7 @@ export class LedgerStorageService {
         ? await this.accountTransactionModel()
             .query(trx)
             .whereIn('id', deletedEntryIds)
-            .select('accountId', 'credit', 'debit')
+            .select('accountId', 'credit', 'debit', 'basis')
         : [];
 
     const tasks = [

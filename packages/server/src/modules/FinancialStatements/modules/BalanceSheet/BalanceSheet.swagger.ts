@@ -1,3 +1,5 @@
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+
 export const BalanceSheetResponseExample = {
   query: {
     display_columns_type: 'total',
@@ -13,7 +15,7 @@ export const BalanceSheetResponseExample = {
     },
     none_zero: false,
     none_transactions: false,
-    basis: 'cash',
+    basis: AccountingBasis.Cash,
     account_ids: [],
     percentage_of_column: false,
     percentage_of_row: false,
@@ -1212,7 +1214,7 @@ export const BalanceSheetTableResponseExample = {
     },
     none_zero: false,
     none_transactions: false,
-    basis: 'cash',
+    basis: AccountingBasis.Cash,
     account_ids: [],
     percentage_of_column: false,
     percentage_of_row: false,

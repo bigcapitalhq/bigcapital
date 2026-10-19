@@ -4,6 +4,7 @@ import { Ledger } from '@/modules/Ledger/Ledger';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { CashFlowStatement } from './CashFlow';
 import { ICashFlowStatementQuery } from './Cashflow.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 const query: ICashFlowStatementQuery = {
   fromDate: '2023-01-01',
@@ -12,7 +13,7 @@ const query: ICashFlowStatementQuery = {
   displayColumnsType: 'total',
   noneZero: false,
   noneTransactions: false,
-  basis: 'cash',
+  basis: AccountingBasis.Cash,
   numberFormat: {
     precision: 2,
     divideOn1000: false,

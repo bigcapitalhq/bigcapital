@@ -4,11 +4,12 @@ import {
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import { DateInput } from '@/common/types/Date';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export interface SalesTaxLiabilitySummaryQuery {
   fromDate: DateInput;
   toDate: DateInput;
-  basis: 'cash' | 'accrual';
+  basis: AccountingBasis;
   numberFormat?: Partial<INumberFormatQuery>;
 }
 

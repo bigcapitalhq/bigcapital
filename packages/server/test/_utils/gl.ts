@@ -17,6 +17,7 @@ export interface GLTestLeg {
   debit: { amount: number };
   referenceType: string;
   referenceId: number;
+  basis: string;
 }
 
 export interface RawGLTestLeg {
@@ -29,6 +30,7 @@ export interface RawGLTestLeg {
   debit?: { amount?: number } | number;
   reference_type?: string;
   reference_id?: number;
+  basis?: string;
 }
 
 export const authHeaders = () => ({
@@ -67,11 +69,12 @@ const legAmount = (amount: any): number =>
 export const fetchLegs = async (
   referenceType: string,
   referenceId: number,
+  basis?: 'cash' | 'accrual',
 ): Promise<GLTestLeg[]> => {
   const res = await request(app.getHttpServer())
     .get('/reports/transactions-by-reference')
     .set(authHeaders())
-    .query({ referenceType, referenceId })
+    .query({ referenceType, referenceId, ...(basis ? { basis } : {}) })
     .expect(200);
 
   return (res.body.transactions as RawGLTestLeg[]).map((t) => ({
@@ -84,6 +87,7 @@ export const fetchLegs = async (
     debit: { amount: legAmount(t.debit) },
     referenceType: t.reference_type,
     referenceId: t.reference_id,
+    basis: t.basis,
   }));
 };
 
@@ -108,6 +112,7 @@ export interface GLExpectLeg {
   contactId?: number;
   debit?: number;
   credit?: number;
+  basis?: string;
 }
 
 /**
@@ -119,11 +124,12 @@ export const expectLeg = (
   expected: GLExpectLeg,
   label = '',
 ) => {
-  const { accountCode, contactId, debit, credit } = expected;
+  const { accountCode, contactId, debit, credit, basis } = expected;
   const leg = legs.find(
     (l) =>
       (accountCode !== undefined ? l.accountCode === accountCode : true) &&
-      (contactId !== undefined ? l.contactId === contactId : true),
+      (contactId !== undefined ? l.contactId === contactId : true) &&
+      (basis !== undefined ? l.basis === basis : true),
   );
 
   if (!leg) {

@@ -1,3 +1,5 @@
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+
 export const ProfitLossSheetResponseExample = {
   query: {
     fromDate: '2025-01-01',
@@ -9,7 +11,7 @@ export const ProfitLossSheetResponseExample = {
       formatMoney: 'total',
       precision: 2,
     },
-    basis: 'accrual',
+    basis: AccountingBasis.Accrual,
     noneZero: false,
     noneTransactions: false,
     displayColumnsType: 'total',

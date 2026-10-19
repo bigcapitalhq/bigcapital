@@ -5,11 +5,12 @@ import {
   SalesTaxLiabilitySummaryQuery,
   SalesTaxLiabilitySummarySalesById,
 } from './SalesTaxLiability.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 const query: SalesTaxLiabilitySummaryQuery = {
   fromDate: '2026-01-01',
   toDate: '2026-01-31',
-  basis: 'accrual',
+  basis: AccountingBasis.Accrual,
   numberFormat: {},
 };
 

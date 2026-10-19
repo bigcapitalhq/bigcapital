@@ -15517,6 +15517,11 @@ export interface components {
             accountCode: string;
             /** @description Account ID */
             accountId: number;
+            /**
+             * @description Accounting basis of the entry; null means general
+             * @enum {string|null}
+             */
+            basis: "cash" | "accrual" | null;
         };
         TransactionsByReferenceResponseDto: {
             /** @description Transactions linked to the given reference */
@@ -30010,6 +30015,8 @@ export interface operations {
                 referenceType: string;
                 /** @description The ID of the reference */
                 referenceId: number;
+                /** @description The accounting basis of the transactions */
+                basis?: "cash" | "accrual";
                 /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
                 numberFormat?: components["schemas"]["NumberFormatQueryDto"];
             };
@@ -30679,6 +30686,8 @@ export interface operations {
             query?: {
                 /** @description Filter out branches (if multiple branches feature is enabled) */
                 branchesIds?: number[];
+                /** @description Accounting basis for the report */
+                basis?: "cash" | "accrual";
                 /** @description Type of transaction to filter */
                 transactionType?: string;
                 /** @description ID of the transaction to filter */

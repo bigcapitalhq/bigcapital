@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import * as moment from 'moment';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export interface ILedger {
   entries: ILedgerEntry[];
@@ -69,6 +70,11 @@ export interface ILedgerEntry {
   createdAt?: Date | string;
 
   costable?: boolean;
+
+  /**
+   * The accounting basis flag; NULL means general.
+   */
+  basis?: AccountingBasis | null;
 }
 
 export interface ISaveLedgerEntryQueuePayload {

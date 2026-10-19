@@ -10,6 +10,7 @@ import { DISPLAY_COLUMNS_BY } from './constants';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { INumberFormatQuery } from '../../types/Report.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class BalanceSheetQuery extends flow(FinancialDateRanges)(
   class {} as GConstructor<FinancialSheet>,
@@ -20,7 +21,7 @@ export class BalanceSheetQuery extends flow(FinancialDateRanges)(
    */
   public readonly query: IBalanceSheetQuery;
 
-  public basis: 'cash' | 'accrual';
+  public basis: AccountingBasis;
   public fromDate: moment.MomentInput;
   public toDate: moment.MomentInput;
   public numberFormat: INumberFormatQuery;

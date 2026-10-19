@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export const getTrialBalanceSheetDefaultQuery = () => ({
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
@@ -10,7 +11,7 @@ export const getTrialBalanceSheetDefaultQuery = () => ({
     formatMoney: 'total',
     precision: 2,
   },
-  basis: 'accrual',
+  basis: AccountingBasis.Accrual,
   noneZero: false,
   noneTransactions: true,
   onlyActive: false,

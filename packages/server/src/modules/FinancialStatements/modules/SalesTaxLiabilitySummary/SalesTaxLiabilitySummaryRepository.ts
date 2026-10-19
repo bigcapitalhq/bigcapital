@@ -11,6 +11,8 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ModelObject } from 'objection';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class SalesTaxLiabilitySummaryRepository {
@@ -24,6 +26,15 @@ export class SalesTaxLiabilitySummaryRepository {
 
   @Inject(Account.name)
   private readonly accountModel: TenantModelProxy<typeof Account>;
+
+  @Inject(AccountingBasisService)
+  private readonly accountingBasisService: AccountingBasisService;
+
+  /**
+   * The report accounting basis.
+   * @param {AccountingBasis}
+   */
+  basis: AccountingBasis;
 
   /**
    * @param {SalesTaxLiabilitySummarySalesById}
@@ -52,9 +63,17 @@ export class SalesTaxLiabilitySummaryRepository {
   async load(filter: SalesTaxLiabilitySummaryQuery) {
     this.filter = filter;
 
+    await this.initAccountingBasis();
     await this.initTaxRates();
     await this.initTaxesPayableByTaxRateId();
     await this.initAccountTransactionsByTaxRateId();
+  }
+
+  /**
+   * Initialize the default accounting basis.
+   */
+  async initAccountingBasis() {
+    this.basis = await this.accountingBasisService.resolve(this.filter.basis);
   }
 
   /**
@@ -109,6 +128,7 @@ export class SalesTaxLiabilitySummaryRepository {
       .whereIn('account_id', payableAccountsIds)
       .whereNot('tax_rate_id', null)
       .modify('filterDateRange', this.filter.fromDate, this.filter.toDate)
+      .modify('filterByBasis', this.basis)
       .groupBy('tax_rate_id')
       .select(['tax_rate_id'])
       .sum('credit as credit')
@@ -136,6 +156,7 @@ export class SalesTaxLiabilitySummaryRepository {
         .whereIn('account_id', incomeAccountsIds)
         .whereNot('tax_rate_id', null)
         .modify('filterDateRange', this.filter.fromDate, this.filter.toDate)
+        .modify('filterByBasis', this.basis)
         .groupBy('tax_rate_id')
         .select(['tax_rate_id'])
         .sum('credit as credit')

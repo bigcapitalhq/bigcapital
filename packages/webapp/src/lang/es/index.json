@@ -1035,6 +1035,7 @@
   "closing_balance": "Saldo de Cierre",
   "view_more_transactions": "Ver más transacciones.",
   "there_is_no_results_in_the_table": "No hay resultados en la tabla.",
+  "no_cash_basis_journal_entries": "Aún no hay asientos de diario en base de efectivo para esta factura.",
   "journal_details": "Detalles del Diario",
   "expense_amount": "Monto del Gasto",
   "expense_details": "Detalles del Gasto",

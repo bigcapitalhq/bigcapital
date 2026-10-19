@@ -5,8 +5,9 @@ import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { SaleInvoice } from '../models/SaleInvoice';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
-export class InvoiceGL {
+export class InvoiceAccrualGL {
   private saleInvoice: SaleInvoice;
   private ARAccountId: number;
   private taxPayableAccountId: number;
@@ -77,6 +78,8 @@ export class InvoiceGL {
       indexGroup: 10,
 
       branchId: this.saleInvoice.branchId,
+
+      basis: AccountingBasis.Accrual,
     };
   }
 
@@ -205,7 +208,6 @@ export class InvoiceGL {
    */
   public getInvoiceLedger = (): ILedger => {
     const entries = this.getInvoiceGLEntries();
-
     return new Ledger(entries);
   };
 }

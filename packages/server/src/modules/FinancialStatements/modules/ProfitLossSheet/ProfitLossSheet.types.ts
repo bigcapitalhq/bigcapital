@@ -5,6 +5,7 @@ import {
   INumberFormatQuery,
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export enum ProfitLossAggregateNodeId {
   INCOME = 'INCOME',
@@ -60,7 +61,7 @@ export interface IFinancialCommonHorizDatePeriodNode {
 }
 
 export interface IProfitLossSheetQuery extends IFinancialSheetBranchesQuery {
-  basis: string;
+  basis: AccountingBasis;
 
   fromDate: moment.MomentInput;
   toDate: moment.MomentInput;

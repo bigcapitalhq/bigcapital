@@ -1017,6 +1017,7 @@
   "closing_balance": "Utgående balans",
   "view_more_transactions": "Visa fler transaktioner.",
   "there_is_no_results_in_the_table": "Det finns inga resultat i tabellen.",
+  "no_cash_basis_journal_entries": "Det finns inga kassabaserade verifikat för den här fakturan ännu.",
   "journal_details": "Journaluppgifter",
   "expense_amount": "Kostnadsbelopp",
   "expense_details": "Utgiftsinformation",

@@ -1109,6 +1109,7 @@
   "closing_balance": "Closing Balance",
   "view_more_transactions": "View more transactions.",
   "there_is_no_results_in_the_table": "There is no results in the table.",
+  "no_cash_basis_journal_entries": "There are no cash basis journal entries for this invoice yet.",
   "journal_details": "Journal details",
   "expense_amount": "Expense Amount",
   "expense_details": "Expense details",
