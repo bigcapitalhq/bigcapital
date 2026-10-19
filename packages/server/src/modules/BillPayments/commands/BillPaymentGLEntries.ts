@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { BillPaymentGL } from './BillPaymentGL';
+import { BillPaymentAccrualGL } from './BillPaymentAccrualGL';
 import { BillPaymentCashGL } from './BillPaymentCashGL';
 import { Inject, Injectable } from '@nestjs/common';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
@@ -113,13 +113,13 @@ export class BillPaymentGLEntries {
       .modify('findBySlug', 'exchange-grain-loss')
       .first();
 
-    const billPaymentGL = new BillPaymentGL(billPayment)
+    const billPaymentAccrualGL = new BillPaymentAccrualGL(billPayment)
       .setAPAccountId(APAccount.id)
       .setGainLossAccountId(EXGainLossAccount.id)
       .setBaseCurrency(baseCurrency);
 
     // Accrual basis ledger entries.
-    const accrualLedger = billPaymentGL.getBillPaymentLedger();
+    const accrualLedger = billPaymentAccrualGL.getBillPaymentLedger();
 
     // Find or create tax payable account.
     const taxPayableAccount =
