@@ -21,7 +21,7 @@ export class TransactionsByReferenceRepository {
   public async getTransactions(
     referenceId: number,
     referenceType: string,
-  ): Promise<Array<ModelObject<AccountTransaction>>> {
+  ): Promise<Array<AccountTransaction>> {
     return this.accountTransactionModel()
       .query()
       .skipUndefined()
