@@ -5,7 +5,7 @@ import { isEmpty, castArray } from 'lodash';
 import { BaseModel } from '@/models/Model';
 import { Account } from './Account.model';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
-import type { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 // import { getTransactionTypeLabel } from '@/utils/transactions-types';
 
 export class AccountTransaction extends BaseModel {
@@ -40,7 +40,7 @@ export class AccountTransaction extends BaseModel {
   /**
    * The accounting basis flag; NULL means general.
    */
-  public readonly basis!: LedgerBasis | null;
+  public readonly basis!: AccountingBasis | null;
 
   /**
    * Table name
@@ -241,16 +241,18 @@ export class AccountTransaction extends BaseModel {
        * Filters the transactions by the given accounting basis.
        * The null basis means general which is included in both bases.
        * @param {Query} query
-       * @param {string} basis - The accounting basis (cash, accrual).
+       * @param {AccountingBasis} basis - The accounting basis (cash, accrual).
        */
-      filterByBasis(query, basis: LedgerBasis) {
-        if (basis === 'cash') {
+      filterByBasis(query, basis: AccountingBasis) {
+        if (basis === AccountingBasis.Cash) {
           query.where((builder) => {
-            builder.where('basis', 'cash').orWhereNull('basis');
+            builder.where('basis', AccountingBasis.Cash).orWhereNull('basis');
           });
-        } else if (basis === 'accrual') {
+        } else if (basis === AccountingBasis.Accrual) {
           query.where((builder) => {
-            builder.where('basis', 'accrual').orWhereNull('basis');
+            builder
+              .where('basis', AccountingBasis.Accrual)
+              .orWhereNull('basis');
           });
         }
       },

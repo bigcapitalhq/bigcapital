@@ -19,7 +19,7 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
-import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -46,9 +46,9 @@ export class BalanceSheetRepository extends flow(
 
   /**
    * The report accounting basis.
-   * @param {LedgerBasis}
+   * @param {AccountingBasis}
    */
-  public basis: LedgerBasis;
+  public basis: AccountingBasis;
 
   /**
    * @description Balance sheet query.
@@ -201,8 +201,8 @@ export class BalanceSheetRepository extends flow(
    */
   public asyncInitialize = async (query: IBalanceSheetQuery) => {
     this.setQuery(query);
-    await this.initBasis();
 
+    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsGraph();
 

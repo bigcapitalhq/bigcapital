@@ -1,8 +1,10 @@
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+
 export const GeneralLedgerResponseExample = {
   query: {
     from_date: '2025-06-01',
     to_date: '2025-06-16',
-    basis: 'cash',
+    basis: AccountingBasis.Cash,
     number_format: {
       no_cents: false,
       divide_on1000: false,

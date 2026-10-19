@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { FinancialReportTotalDto } from '../../dtos/FinancialReportResponse.dto';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class TransactionByReferenceDateDto {
   @ApiProperty({ description: 'Formatted date string' })
@@ -56,10 +57,11 @@ export class TransactionByReferenceTransactionDto {
   accountId: number;
 
   @ApiProperty({
-    description: 'Accounting basis of the entry',
-    enum: ['general', 'cash', 'accrual'],
+    description: 'Accounting basis of the entry; null means general',
+    enum: AccountingBasis,
+    nullable: true,
   })
-  basis: string;
+  basis: AccountingBasis | null;
 }
 
 export class TransactionsByReferenceResponseDto {

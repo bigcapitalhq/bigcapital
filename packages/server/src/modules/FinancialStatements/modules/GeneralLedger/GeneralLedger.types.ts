@@ -3,11 +3,12 @@ import {
   INumberFormatQuery,
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export interface IGeneralLedgerSheetQuery {
   fromDate: Date | string;
   toDate: Date | string;
-  basis: string;
+  basis: AccountingBasis;
   numberFormat: IGeneralLedgerNumberFormat;
   dateFormat?: string;
   noneTransactions: boolean;

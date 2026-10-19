@@ -69,11 +69,12 @@ const legAmount = (amount: any): number =>
 export const fetchLegs = async (
   referenceType: string,
   referenceId: number,
+  basis?: 'cash' | 'accrual',
 ): Promise<GLTestLeg[]> => {
   const res = await request(app.getHttpServer())
     .get('/reports/transactions-by-reference')
     .set(authHeaders())
-    .query({ referenceType, referenceId })
+    .query({ referenceType, referenceId, ...(basis ? { basis } : {}) })
     .expect(200);
 
   return (res.body.transactions as RawGLTestLeg[]).map((t) => ({

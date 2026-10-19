@@ -12,6 +12,7 @@ import {
   findItemIdByName,
   findVendorIdByName,
   readApiAuth,
+  waitForCostCompute,
 } from './_api';
 
 const API_BASE = process.env.PLAYWRIGHT_TEST_API_URL || 'http://localhost:3000';
@@ -107,7 +108,9 @@ const REPORTS: ReportConfig[] = [
   },
   {
     title: 'Sales Tax Liability Summary',
-    path: '/financial-reports/sales-tax-liability-summary',
+    // The seeded invoice is not paid, so tax is only recognised on the
+    // accrual basis (the report page defaults to cash).
+    path: '/financial-reports/sales-tax-liability-summary?basis=accrual',
     rowPrefix: 'sales-tax-liability',
   },
   {
@@ -389,6 +392,11 @@ test.describe('number format', () => {
     test(`should divide the ${report.title} report amounts by 1000.`, async ({
       page,
     }) => {
+      // The inventory cost-compute job can change report amounts while it
+      // runs. Wait for it first so the baseline cell below is not stale.
+      test.setTimeout(180_000);
+      await waitForCostCompute(API_BASE, readApiAuth());
+
       await page.goto(report.path);
       await waitForReportPage(page, report.title);
       await waitForReportRows(page, report.rowPrefix);

@@ -4,6 +4,7 @@ import { ILedger } from './types/Ledger.types';
 import { ILedgerEntry } from './types/Ledger.types';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
 import { ModelObject } from 'objection';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 /**
  * Determines whether the ledger entry affects the stored account
@@ -14,7 +15,7 @@ import { ModelObject } from 'objection';
  * @returns {boolean}
  */
 export const isEntryAffectingBalance = (entry: ILedgerEntry): boolean => {
-  return entry.basis !== 'cash';
+  return entry.basis !== AccountingBasis.Cash;
 };
 
 export class Ledger implements ILedger {

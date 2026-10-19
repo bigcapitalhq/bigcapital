@@ -11,7 +11,7 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ModelObject } from 'objection';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -32,9 +32,9 @@ export class SalesTaxLiabilitySummaryRepository {
 
   /**
    * The report accounting basis.
-   * @param {LedgerBasis}
+   * @param {AccountingBasis}
    */
-  basis: LedgerBasis;
+  basis: AccountingBasis;
 
   /**
    * @param {SalesTaxLiabilitySummarySalesById}
@@ -62,11 +62,18 @@ export class SalesTaxLiabilitySummaryRepository {
    */
   async load(filter: SalesTaxLiabilitySummaryQuery) {
     this.filter = filter;
-    this.basis = await this.accountingBasisService.resolve(filter.basis);
 
+    await this.initAccountingBasis();
     await this.initTaxRates();
     await this.initTaxesPayableByTaxRateId();
     await this.initAccountTransactionsByTaxRateId();
+  }
+
+  /**
+   * Initialize the default accounting basis.
+   */
+  async initAccountingBasis() {
+    this.basis = await this.accountingBasisService.resolve(this.filter.basis);
   }
 
   /**

@@ -7,7 +7,7 @@ import { ITrialBalanceSheetQuery } from './TrialBalanceSheet.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -29,7 +29,7 @@ export class TrialBalanceSheetRepository {
   /**
    * The report accounting basis.
    */
-  public basis: LedgerBasis;
+  public basis: AccountingBasis;
 
   public accountsDepGraph: any;
   public accounts: Array<ModelObject<Account>>;

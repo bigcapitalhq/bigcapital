@@ -12,7 +12,7 @@ import { transformToMap } from '@/utils/transform-to-key';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { TenantModel } from '@/modules/System/models/TenantModel';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -58,9 +58,9 @@ export class GeneralLedgerRepository {
 
   /**
    * The report accounting basis.
-   * @param {LedgerBasis}
+   * @param {AccountingBasis}
    */
-  public basis: LedgerBasis;
+  public basis: AccountingBasis;
 
   /**
    * Set the filter.

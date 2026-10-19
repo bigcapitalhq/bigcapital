@@ -5,6 +5,7 @@ import {
   INumberFormatQuery,
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 // Balance sheet schema nodes types.
 export enum BALANCE_SHEET_SCHEMA_NODE_TYPE {
@@ -50,7 +51,7 @@ export interface IBalanceSheetQuery extends IFinancialSheetBranchesQuery {
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;
   noneZero: boolean;
-  basis: 'cash' | 'accrual';
+  basis: AccountingBasis;
   accountIds: number[];
 
   percentageOfColumn: boolean;

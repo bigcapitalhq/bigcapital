@@ -19932,6 +19932,20 @@
             }
           },
           {
+            "name": "basis",
+            "required": false,
+            "in": "query",
+            "description": "The accounting basis of the transactions",
+            "schema": {
+              "example": "accrual",
+              "enum": [
+                "cash",
+                "accrual"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "name": "numberFormat",
             "required": false,
             "in": "query",
@@ -41863,12 +41877,12 @@
           },
           "basis": {
             "type": "string",
-            "description": "Accounting basis of the entry",
+            "description": "Accounting basis of the entry; null means general",
             "enum": [
-              "general",
               "cash",
               "accrual"
-            ]
+            ],
+            "nullable": true
           }
         },
         "required": [

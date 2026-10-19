@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { PaymentReceivedGL } from './PaymentReceivedGL';
+import { PaymentReceivedAccrualGL } from './PaymentReceivedAccrualGL';
 import { PaymentReceivedCashGL } from './PaymentReceivedCashGL';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
@@ -86,15 +86,13 @@ export class PaymentReceivedGLEntries {
   };
 
   /**
-   * Retrieves the payment receive general ledger.
-   * The ledger contains both the accrual basis entries (deposit/A/R)
-   * and the cash basis entries (deposit/income) flagged by the basis.
+   * Retrieves the payment receive accrual basis ledger.
    * @param {PaymentReceived} paymentReceive - Payment received.
    * @param {string} baseCurrencyCode - Base currency code.
    * @param {Knex.Transaction} trx - Knex transaction.
    * @returns {Ledger}
    */
-  public getPaymentReceiveGLedger = async (
+  public getPaymentReceiveAccrualLedger = async (
     paymentReceive: PaymentReceived,
     baseCurrencyCode: string,
     trx?: Knex.Transaction,
@@ -103,20 +101,34 @@ export class PaymentReceivedGLEntries {
     const receivableAccount =
       await this.accountRepository.findOrCreateAccountReceivable(
         paymentReceive.currencyCode,
+        {},
+        trx,
       );
     // Exchange gain/loss account.
     const exGainLossAccount = (await this.accountRepository.findBySlug(
       'exchange-grain-loss',
     )) as Account;
 
-    const paymentReceivedGL = new PaymentReceivedGL(paymentReceive)
+    const paymentReceivedAccrualGL = new PaymentReceivedAccrualGL(
+      paymentReceive,
+    )
       .setARAccountId(receivableAccount.id)
       .setExchangeGainOrLossAccountId(exGainLossAccount.id)
       .setBaseCurrencyCode(baseCurrencyCode);
 
-    // Accrual basis ledger entries.
-    const accrualLedger = paymentReceivedGL.getLedger();
+    return paymentReceivedAccrualGL.getLedger();
+  };
 
+  /**
+   * Retrieves the payment receive cash basis ledger.
+   * @param {PaymentReceived} paymentReceive - Payment received.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Ledger}
+   */
+  public getPaymentReceiveCashLedger = async (
+    paymentReceive: PaymentReceived,
+    trx?: Knex.Transaction,
+  ): Promise<Ledger> => {
     // Find or create the tax payable account.
     const taxPayableAccount =
       await this.accountRepository.findOrCreateTaxPayable({}, trx);
@@ -132,9 +144,34 @@ export class PaymentReceivedGLEntries {
       .setDiscountAccountId(discountAccount.id)
       .setOtherChargesAccountId(otherChargesAccount.id);
 
-    // Cash basis ledger entries.
-    const cashLedger = paymentReceivedCashGL.getLedger();
+    return paymentReceivedCashGL.getLedger();
+  };
 
+  /**
+   * Retrieves the payment receive general ledger.
+   * The ledger contains both the accrual basis entries (deposit/A/R)
+   * and the cash basis entries (deposit/income) flagged by the basis.
+   * @param {PaymentReceived} paymentReceive - Payment received.
+   * @param {string} baseCurrencyCode - Base currency code.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Ledger}
+   */
+  public getPaymentReceiveGLedger = async (
+    paymentReceive: PaymentReceived,
+    baseCurrencyCode: string,
+    trx?: Knex.Transaction,
+  ): Promise<Ledger> => {
+    // Accrual basis ledger entries.
+    const accrualLedger = await this.getPaymentReceiveAccrualLedger(
+      paymentReceive,
+      baseCurrencyCode,
+      trx,
+    );
+    // Cash basis ledger entries.
+    const cashLedger = await this.getPaymentReceiveCashLedger(
+      paymentReceive,
+      trx,
+    );
     return new Ledger([
       ...accrualLedger.getEntries(),
       ...cashLedger.getEntries(),

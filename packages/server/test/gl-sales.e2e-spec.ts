@@ -319,11 +319,20 @@ describe('GL entries — Sales transactions (e2e)', () => {
         })
         .expect(201);
 
-      const legs = await fetchLegs('PaymentReceive', paymentRes.body.id);
+      const accrualLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'cash',
+      );
 
-      expectBalanced(legs);
+      expectBalanced(accrualLegs);
       expectLegs(
-        legs,
+        accrualLegs,
         [
           // Accrual basis: Dr deposit / Cr A/R.
           { accountCode: '10001', debit: 1000, basis: 'accrual' },
@@ -333,11 +342,19 @@ describe('GL entries — Sales transactions (e2e)', () => {
             credit: 1000,
             basis: 'accrual',
           },
+        ],
+        'PaymentReceive (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
           // Cash basis: Dr deposit / Cr income.
           { accountCode: '10001', debit: 1000, basis: 'cash' },
           { accountCode: '50002', credit: 1000, basis: 'cash' },
         ],
-        'PaymentReceive',
+        'PaymentReceive (cash)',
       );
     });
 
@@ -385,11 +402,20 @@ describe('GL entries — Sales transactions (e2e)', () => {
         })
         .expect(201);
 
-      const legs = await fetchLegs('PaymentReceive', paymentRes.body.id);
+      const accrualLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'cash',
+      );
 
-      expectBalanced(legs);
+      expectBalanced(accrualLegs);
       expectLegs(
-        legs,
+        accrualLegs,
         [
           // Accrual basis: Dr deposit / Cr A/R.
           { accountCode: '10001', debit: 550, basis: 'accrual' },
@@ -399,12 +425,20 @@ describe('GL entries — Sales transactions (e2e)', () => {
             credit: 550,
             basis: 'accrual',
           },
+        ],
+        'PaymentReceive (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
           // Cash basis: the paid proportion of the invoice composition.
           { accountCode: '10001', debit: 550, basis: 'cash' },
           { accountCode: '50002', credit: 500, basis: 'cash' },
           { accountCode: '20006', credit: 50, basis: 'cash' },
         ],
-        'PaymentReceive',
+        'PaymentReceive (cash)',
       );
     });
   });

@@ -44,7 +44,6 @@ export class LedgerContactsBalanceStorage {
       this.saveContactBalanceTask,
       10,
     );
-    // Retrieves the effected contacts ids.
     const effectedContactsIds = balanceLedger.getContactsIds();
 
     effectedContactsIds.forEach((contactId: number) => {

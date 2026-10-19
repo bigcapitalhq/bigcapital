@@ -199,7 +199,11 @@ test.describe('financial reports', () => {
   test('should render the Sales Tax Liability Summary report.', async ({
     page,
   }) => {
-    await page.goto('/financial-reports/sales-tax-liability-summary');
+    // The seeded invoice is not paid, so tax is only recognised on the
+    // accrual basis (the report page defaults to cash).
+    await page.goto(
+      '/financial-reports/sales-tax-liability-summary?basis=accrual',
+    );
     await waitForReportPage(page, 'Sales Tax Liability Summary');
     await waitForReportRows(page, 'sales-tax-liability');
   });

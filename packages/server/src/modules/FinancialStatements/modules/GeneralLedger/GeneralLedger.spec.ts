@@ -5,11 +5,12 @@ import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { GeneralLedgerRepository } from './GeneralLedgerRepository';
 import { GeneralLedgerSheet } from './GeneralLedger';
 import { IGeneralLedgerSheetQuery } from './GeneralLedger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 const query: IGeneralLedgerSheetQuery = {
   fromDate: '2026-01-01',
   toDate: '2026-01-31',
-  basis: 'cash',
+  basis: AccountingBasis.Cash,
   numberFormat: {
     precision: 2,
     divideOn1000: false,

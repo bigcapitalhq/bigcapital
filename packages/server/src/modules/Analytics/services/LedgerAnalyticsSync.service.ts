@@ -15,6 +15,7 @@ import {
   aggregateFinancialTotals,
   getAccountTypeMeta,
 } from './LedgerAnalyticsAggregation';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 const PAGE_SIZE = 5000;
 
@@ -108,7 +109,9 @@ export class LedgerAnalyticsSyncService {
         // The cash basis entries are excluded from the analytics store
         // which is accrual based; NULL basis means general.
         .where((query) =>
-          query.where('t.basis', 'accrual').orWhereNull('t.basis'),
+          query
+            .where('t.basis', AccountingBasis.Accrual)
+            .orWhereNull('t.basis'),
         )
         .groupBy('t.accountId', 'a.accountType')
         .select('a.accountType as accountType')
@@ -278,7 +281,9 @@ export class LedgerAnalyticsSyncService {
         .where('id', '>', lastId)
         // The cash basis entries are excluded from the analytics store
         // which is accrual based; NULL basis means general.
-        .where((query) => query.where('basis', 'accrual').orWhereNull('basis'))
+        .where((query) =>
+          query.where('basis', AccountingBasis.Accrual).orWhereNull('basis'),
+        )
         .orderBy('id')
         .limit(PAGE_SIZE)) as ILedgerTransactionPageRow[];
 
