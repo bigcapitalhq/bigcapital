@@ -41863,12 +41863,12 @@
           },
           "basis": {
             "type": "string",
-            "description": "Accounting basis of the entry",
+            "description": "Accounting basis of the entry; null means general",
             "enum": [
-              "general",
               "cash",
               "accrual"
-            ]
+            ],
+            "nullable": true
           }
         },
         "required": [

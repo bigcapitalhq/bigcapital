@@ -62,11 +62,18 @@ export class SalesTaxLiabilitySummaryRepository {
    */
   async load(filter: SalesTaxLiabilitySummaryQuery) {
     this.filter = filter;
-    this.basis = await this.accountingBasisService.resolve(filter.basis);
 
+    await this.initAccountingBasis();
     await this.initTaxRates();
     await this.initTaxesPayableByTaxRateId();
     await this.initAccountTransactionsByTaxRateId();
+  }
+
+  /**
+   * Initialize the default accounting basis.
+   */
+  async initAccountingBasis() {
+    this.basis = await this.accountingBasisService.resolve(this.filter.basis);
   }
 
   /**

@@ -15518,10 +15518,10 @@ export interface components {
             /** @description Account ID */
             accountId: number;
             /**
-             * @description Accounting basis of the entry
-             * @enum {string}
+             * @description Accounting basis of the entry; null means general
+             * @enum {string|null}
              */
-            basis: "general" | "cash" | "accrual";
+            basis: "cash" | "accrual" | null;
         };
         TransactionsByReferenceResponseDto: {
             /** @description Transactions linked to the given reference */
