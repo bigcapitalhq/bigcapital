@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { LedgerStorageService } from '../../Ledger/LedgerStorage.service';
 import { SaleInvoice } from '../models/SaleInvoice';
 import { AccountRepository } from '../../Accounts/repositories/Account.repository';
-import { InvoiceGL } from './InvoiceGL';
+import { InvoiceAccrualGL } from './InvoiceAccrualGL';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
@@ -48,14 +48,14 @@ export class SaleInvoiceGLEntries {
       await this.accountRepository.findOrCreateOtherChargesAccount({}, trx);
 
     // Retrieves the ledger of the invoice.
-    const invoiceGL = new InvoiceGL(saleInvoice);
+    const invoiceAccrualGL = new InvoiceAccrualGL(saleInvoice);
 
-    invoiceGL.setARAccountId(ARAccount.id);
-    invoiceGL.setTaxPayableAccountId(taxPayableAccount.id);
-    invoiceGL.setDiscountAccountId(discountAccount.id);
-    invoiceGL.setOtherChargesAccountId(otherChargesAccount.id);
+    invoiceAccrualGL.setARAccountId(ARAccount.id);
+    invoiceAccrualGL.setTaxPayableAccountId(taxPayableAccount.id);
+    invoiceAccrualGL.setDiscountAccountId(discountAccount.id);
+    invoiceAccrualGL.setOtherChargesAccountId(otherChargesAccount.id);
 
-    const ledger = invoiceGL.getInvoiceLedger();
+    const ledger = invoiceAccrualGL.getInvoiceLedger();
 
     // Commits the ledger entries to the storage as UOW.
     await this.ledegrRepository.commit(ledger, trx);

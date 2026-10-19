@@ -6,7 +6,7 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { SaleInvoice } from '../models/SaleInvoice';
 
-export class InvoiceGL {
+export class InvoiceAccrualGL {
   private saleInvoice: SaleInvoice;
   private ARAccountId: number;
   private taxPayableAccountId: number;

@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { PaymentReceivedGL } from './PaymentReceivedGL';
+import { PaymentReceivedAccrualGL } from './PaymentReceivedAccrualGL';
 import { PaymentReceivedCashGL } from './PaymentReceivedCashGL';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
@@ -109,13 +109,15 @@ export class PaymentReceivedGLEntries {
       'exchange-grain-loss',
     )) as Account;
 
-    const paymentReceivedGL = new PaymentReceivedGL(paymentReceive)
+    const paymentReceivedAccrualGL = new PaymentReceivedAccrualGL(
+      paymentReceive,
+    )
       .setARAccountId(receivableAccount.id)
       .setExchangeGainOrLossAccountId(exGainLossAccount.id)
       .setBaseCurrencyCode(baseCurrencyCode);
 
     // Accrual basis ledger entries.
-    const accrualLedger = paymentReceivedGL.getLedger();
+    const accrualLedger = paymentReceivedAccrualGL.getLedger();
 
     // Find or create the tax payable account.
     const taxPayableAccount =

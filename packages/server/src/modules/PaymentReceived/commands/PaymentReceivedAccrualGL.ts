@@ -4,7 +4,7 @@ import { sumBy } from 'lodash';
 import { AccountNormal } from '@/interfaces/Account';
 import { Ledger } from '@/modules/Ledger/Ledger';
 
-export class PaymentReceivedGL {
+export class PaymentReceivedAccrualGL {
   private readonly paymentReceived: PaymentReceived;
   private ARAccountId: number;
   private exchangeGainOrLossAccountId: number;
@@ -21,7 +21,7 @@ export class PaymentReceivedGL {
   /**
    * Sets the A/R account ID.
    * @param {number} ARAccountId - A/R account ID.
-   * @returns {PaymentReceivedGL}
+   * @returns {PaymentReceivedAccrualGL}
    */
   setARAccountId(ARAccountId: number) {
     this.ARAccountId = ARAccountId;
@@ -31,7 +31,7 @@ export class PaymentReceivedGL {
   /**
    * Sets the exchange gain/loss account ID.
    * @param {number} exchangeGainOrLossAccountId - Exchange gain/loss account ID.
-   * @returns {PaymentReceivedGL}
+   * @returns {PaymentReceivedAccrualGL}
    */
   setExchangeGainOrLossAccountId(exchangeGainOrLossAccountId: number) {
     this.exchangeGainOrLossAccountId = exchangeGainOrLossAccountId;
@@ -41,7 +41,7 @@ export class PaymentReceivedGL {
   /**
    * Sets the base currency code.
    * @param {string} baseCurrencyCode - Base currency code.
-   * @returns {PaymentReceivedGL}
+   * @returns {PaymentReceivedAccrualGL}
    */
   setBaseCurrencyCode(baseCurrencyCode: string) {
     this.baseCurrencyCode = baseCurrencyCode;
