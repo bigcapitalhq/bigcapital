@@ -322,6 +322,8 @@ describe('GL entries — Purchases transactions (e2e)', () => {
         ],
         'VendorCredit',
       );
+      // The vendor credit journal entries are accrual basis flagged.
+      expect(legs.every((leg) => leg.basis === 'accrual')).toBe(true);
     });
 
     it('posts a balanced journal for an opened vendor credit with an amount-type line discount', async () => {
@@ -360,6 +362,67 @@ describe('GL entries — Purchases transactions (e2e)', () => {
           { accountCode: '40002', credit: 1900 },
         ],
         'VendorCredit',
+      );
+    });
+  });
+
+  describe('Vendor Credit Refund', () => {
+    it('posts a balanced journal for a vendor credit refund', async () => {
+      const creditRes = await request(app.getHttpServer())
+        .post('/vendor-credits')
+        .set(authHeaders())
+        .send({
+          vendorId,
+          exchangeRate: 1,
+          vendorCreditNumber: faker.string.uuid(),
+          vendorCreditDate: '2025-01-01',
+          open: true,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 1,
+              rate: 1000,
+              description: "It's description here.",
+            },
+          ],
+          branchId: 1,
+          warehouseId: 1,
+        })
+        .expect(201);
+
+      const refundRes = await request(app.getHttpServer())
+        .post(`/vendor-credits/${creditRes.body.id}/refund`)
+        .set(authHeaders())
+        .send({
+          depositAccountId: 1000,
+          amount: 1000,
+          exchangeRate: 1,
+          referenceNo: faker.string.uuid(),
+          description: 'Refund vendor credit',
+          date: '2025-01-02',
+        })
+        .expect(201);
+
+      const legs = await fetchLegs('RefundVendorCredit', refundRes.body.id);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          // Accrual basis: Dr deposit / Cr A/P.
+          { accountCode: '10001', debit: 1000, basis: 'accrual' },
+          {
+            accountCode: '20001',
+            contactId: vendorId,
+            credit: 1000,
+            basis: 'accrual',
+          },
+          // Cash basis: Dr deposit / Cr cost of goods sold.
+          { accountCode: '10001', debit: 1000, basis: 'cash' },
+          { accountCode: '40002', credit: 1000, basis: 'cash' },
+        ],
+        'RefundVendorCredit',
       );
     });
   });

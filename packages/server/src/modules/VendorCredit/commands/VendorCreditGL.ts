@@ -3,6 +3,7 @@ import { VendorCredit } from '../models/VendorCredit';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { AccountNormal } from '@/interfaces/Account';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class VendorCreditGL {
   private APAccountId: number;
@@ -60,6 +61,8 @@ export class VendorCreditGL {
       debit: 0,
 
       branchId: this.vendorCredit.branchId,
+
+      basis: AccountingBasis.Accrual,
     };
   }
 

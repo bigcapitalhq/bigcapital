@@ -6,6 +6,7 @@ import {
   cancelTransactionsLock,
   createCustomer,
   createServiceItem,
+  createVendor,
   getBaseCurrency,
 } from './_utils/gl';
 import {
@@ -239,6 +240,204 @@ describe('Accounting basis — cash vs accrual reports (e2e)', () => {
     it('keeps no receivable on the cash basis trial balance', async () => {
       const arCash = await fetchTrialBalanceRow(arAccountId, 'cash');
       expect(arCash.balance - paymentBaseline.arCash.balance).toBeCloseTo(0, 2);
+    });
+  });
+
+  describe('Vendor credits and refunds', () => {
+    const EXPENSE_ACCOUNT_CODE = '40002';
+    const AP_ACCOUNT_CODE = '20001';
+    const BANK_ACCOUNT_CODE = '10001';
+
+    const vendorCreditDate = '2033-06-19';
+    const refundDate = '2033-06-20';
+
+    let vendorId: number;
+    let expenseAccountId: number;
+    let apAccountId: number;
+    let bankAccountId: number;
+
+    let baseline: {
+      expenseAccrual: number;
+      expenseCash: number;
+      apAccrual: TrialBalanceRow;
+      apCash: TrialBalanceRow;
+    };
+
+    /**
+     * Fetches the profit & loss expense total of the tested account.
+     */
+    const fetchExpenseTotal = async (basis: 'cash' | 'accrual') => {
+      const res = await request(app.getHttpServer())
+        .get('/reports/profit-loss-sheet')
+        .query({ ...range, basis })
+        .set(authHeaders())
+        .expect(200);
+
+      const node = collectAccountNodes(res.body.data).find(
+        (n) => Number(n.id) === expenseAccountId,
+      );
+      return node ? Number(node.total.amount) : 0;
+    };
+
+    const createVendorCredit = async () => {
+      const res = await request(app.getHttpServer())
+        .post('/vendor-credits')
+        .set(authHeaders())
+        .send({
+          vendorId,
+          exchangeRate: 1,
+          vendorCreditNumber: faker.string.uuid(),
+          vendorCreditDate,
+          open: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 1,
+              rate: 1000,
+              description: 'Accounting basis test vendor credit',
+            },
+          ],
+        })
+        .expect(201);
+
+      return res.body.id;
+    };
+
+    const createRefund = async (vendorCreditId: number) => {
+      const res = await request(app.getHttpServer())
+        .post(`/vendor-credits/${vendorCreditId}/refund`)
+        .set(authHeaders())
+        .send({
+          depositAccountId: bankAccountId,
+          amount: 1000,
+          exchangeRate: 1,
+          referenceNo: faker.string.uuid(),
+          description: 'Accounting basis test vendor credit refund',
+          date: refundDate,
+        })
+        .expect(201);
+
+      return res.body.id;
+    };
+
+    beforeAll(async () => {
+      const baseCurrency = await getBaseCurrency();
+      vendorId = await createVendor(baseCurrency);
+
+      const accountsByCode = await fetchAccountsByCode();
+      expenseAccountId = accountsByCode[EXPENSE_ACCOUNT_CODE].id;
+      apAccountId = accountsByCode[AP_ACCOUNT_CODE].id;
+      bankAccountId = accountsByCode[BANK_ACCOUNT_CODE].id;
+
+      // Capture the baseline numbers before seeding the fixtures.
+      baseline = {
+        expenseAccrual: await fetchExpenseTotal('accrual'),
+        expenseCash: await fetchExpenseTotal('cash'),
+        apAccrual: await fetchTrialBalanceRow(apAccountId, 'accrual'),
+        apCash: await fetchTrialBalanceRow(apAccountId, 'cash'),
+      };
+    });
+
+    describe('Opened vendor credit', () => {
+      beforeAll(async () => {
+        await createVendorCredit();
+      });
+
+      it('reduces the expense on the accrual basis report', async () => {
+        const expenseAccrual = await fetchExpenseTotal('accrual');
+        expect(expenseAccrual - baseline.expenseAccrual).toBeCloseTo(-1000, 2);
+      });
+
+      it('does not reduce the expense on the cash basis report', async () => {
+        const expenseCash = await fetchExpenseTotal('cash');
+        expect(expenseCash - baseline.expenseCash).toBeCloseTo(0, 2);
+      });
+
+      it('debits the payable on the accrual basis trial balance', async () => {
+        const apAccrual = await fetchTrialBalanceRow(apAccountId, 'accrual');
+        expect(apAccrual.balance - baseline.apAccrual.balance).toBeCloseTo(
+          1000,
+          2,
+        );
+      });
+
+      it('has no payable on the cash basis trial balance', async () => {
+        const apCash = await fetchTrialBalanceRow(apAccountId, 'cash');
+        expect(apCash.balance - baseline.apCash.balance).toBeCloseTo(0, 2);
+      });
+    });
+
+    describe('Vendor credit refund', () => {
+      let refundBaseline: {
+        expenseAccrual: number;
+        expenseCash: number;
+        apAccrual: TrialBalanceRow;
+        apCash: TrialBalanceRow;
+        bankAccrual: TrialBalanceRow;
+        bankCash: TrialBalanceRow;
+      };
+
+      beforeAll(async () => {
+        // Capture the baseline after the previous vendor credit fixture.
+        refundBaseline = {
+          expenseAccrual: await fetchExpenseTotal('accrual'),
+          expenseCash: await fetchExpenseTotal('cash'),
+          apAccrual: await fetchTrialBalanceRow(apAccountId, 'accrual'),
+          apCash: await fetchTrialBalanceRow(apAccountId, 'cash'),
+          bankAccrual: await fetchTrialBalanceRow(bankAccountId, 'accrual'),
+          bankCash: await fetchTrialBalanceRow(bankAccountId, 'cash'),
+        };
+
+        const vendorCreditId = await createVendorCredit();
+        await createRefund(vendorCreditId);
+      });
+
+      it('does not double reduce the expense on the accrual basis report', async () => {
+        const expenseAccrual = await fetchExpenseTotal('accrual');
+        expect(expenseAccrual - refundBaseline.expenseAccrual).toBeCloseTo(
+          -1000,
+          2,
+        );
+      });
+
+      it('reverses the expense on the cash basis report', async () => {
+        const expenseCash = await fetchExpenseTotal('cash');
+        expect(expenseCash - refundBaseline.expenseCash).toBeCloseTo(-1000, 2);
+      });
+
+      it('settles the payable back on the accrual basis trial balance', async () => {
+        const apAccrual = await fetchTrialBalanceRow(apAccountId, 'accrual');
+        expect(
+          apAccrual.balance - refundBaseline.apAccrual.balance,
+        ).toBeCloseTo(-1000, 2);
+      });
+
+      it('keeps no payable on the cash basis trial balance', async () => {
+        const apCash = await fetchTrialBalanceRow(apAccountId, 'cash');
+        expect(apCash.balance - refundBaseline.apCash.balance).toBeCloseTo(
+          0,
+          2,
+        );
+      });
+
+      it('posts the cash inflow once on both bases', async () => {
+        const bankAccrual = await fetchTrialBalanceRow(
+          bankAccountId,
+          'accrual',
+        );
+        const bankCash = await fetchTrialBalanceRow(bankAccountId, 'cash');
+
+        expect(
+          bankAccrual.balance - refundBaseline.bankAccrual.balance,
+        ).toBeCloseTo(1000, 2);
+        expect(bankCash.balance - refundBaseline.bankCash.balance).toBeCloseTo(
+          1000,
+          2,
+        );
+      });
     });
   });
 });
