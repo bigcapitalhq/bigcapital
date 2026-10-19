@@ -283,9 +283,7 @@ export class BillPaymentCashGL {
    * @returns {ILedgerEntry[]}
    */
   public GLEntries(): ILedgerEntry[] {
-    return (this.billPayment.entries || []).flatMap(
-      this.getPaymentEntryCashEntries,
-    );
+    return this.billPayment.entries.flatMap(this.getPaymentEntryCashEntries);
   }
 
   /**

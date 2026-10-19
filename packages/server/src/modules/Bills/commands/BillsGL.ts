@@ -8,6 +8,7 @@ import {
   IBillItemAllocatedCost,
   IBillLandedCostLedgerEntry,
 } from '../integrations/BillLandedCostsBridge';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class BillGL {
   private bill: Bill;
@@ -56,6 +57,8 @@ export class BillGL {
    */
   private get billCommonEntry() {
     return {
+      basis: AccountingBasis.Accrual,
+
       debit: 0,
       credit: 0,
 
@@ -75,8 +78,6 @@ export class BillGL {
       projectId: this.bill.projectId,
 
       createdAt: this.bill.createdAt,
-
-      basis: 'accrual' as const,
     };
   }
 
