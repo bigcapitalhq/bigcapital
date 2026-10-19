@@ -30015,6 +30015,8 @@ export interface operations {
                 referenceType: string;
                 /** @description The ID of the reference */
                 referenceId: number;
+                /** @description The accounting basis of the transactions */
+                basis?: "cash" | "accrual";
                 /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
                 numberFormat?: components["schemas"]["NumberFormatQueryDto"];
             };
