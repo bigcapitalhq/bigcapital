@@ -241,4 +241,173 @@ describe('Accounting basis — cash vs accrual reports (e2e)', () => {
       expect(arCash.balance - paymentBaseline.arCash.balance).toBeCloseTo(0, 2);
     });
   });
+
+  describe('Credit notes and refunds', () => {
+    const BANK_ACCOUNT_CODE = '10001';
+
+    const creditNoteDate = '2033-06-19';
+    const refundDate = '2033-06-20';
+
+    let bankAccountId: number;
+    let baseline: {
+      incomeAccrual: number;
+      incomeCash: number;
+      arAccrual: TrialBalanceRow;
+      arCash: TrialBalanceRow;
+    };
+
+    const createCreditNote = async () => {
+      const res = await request(app.getHttpServer())
+        .post('/credit-notes')
+        .set(authHeaders())
+        .send({
+          customerId,
+          creditNoteDate,
+          open: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 1,
+              rate: 1000,
+              description: 'Accounting basis test credit note',
+            },
+          ],
+        })
+        .expect(201);
+
+      return res.body.id;
+    };
+
+    const createRefund = async (creditNoteId: number) => {
+      const res = await request(app.getHttpServer())
+        .post(`/credit-notes/${creditNoteId}/refunds`)
+        .set(authHeaders())
+        .send({
+          fromAccountId: bankAccountId,
+          amount: 1000,
+          exchangeRate: 1,
+          referenceNo: faker.string.uuid(),
+          description: 'Accounting basis test credit note refund',
+          date: refundDate,
+        })
+        .expect(201);
+
+      return res.body.id;
+    };
+
+    beforeAll(async () => {
+      const accountsByCode = await fetchAccountsByCode();
+      bankAccountId = accountsByCode[BANK_ACCOUNT_CODE].id;
+
+      // Capture the baseline numbers before seeding the fixtures.
+      baseline = {
+        incomeAccrual: await fetchIncomeTotal('accrual'),
+        incomeCash: await fetchIncomeTotal('cash'),
+        arAccrual: await fetchTrialBalanceRow(arAccountId, 'accrual'),
+        arCash: await fetchTrialBalanceRow(arAccountId, 'cash'),
+      };
+    });
+
+    describe('Opened credit note', () => {
+      beforeAll(async () => {
+        await createCreditNote();
+      });
+
+      it('reduces the income on the accrual basis report', async () => {
+        const incomeAccrual = await fetchIncomeTotal('accrual');
+        expect(incomeAccrual - baseline.incomeAccrual).toBeCloseTo(-1000, 2);
+      });
+
+      it('does not reduce the income on the cash basis report', async () => {
+        const incomeCash = await fetchIncomeTotal('cash');
+        expect(incomeCash - baseline.incomeCash).toBeCloseTo(0, 2);
+      });
+
+      it('credits the receivable on the accrual basis trial balance', async () => {
+        const arAccrual = await fetchTrialBalanceRow(arAccountId, 'accrual');
+        expect(arAccrual.balance - baseline.arAccrual.balance).toBeCloseTo(
+          -1000,
+          2,
+        );
+      });
+
+      it('has no receivable on the cash basis trial balance', async () => {
+        const arCash = await fetchTrialBalanceRow(arAccountId, 'cash');
+        expect(arCash.balance - baseline.arCash.balance).toBeCloseTo(0, 2);
+      });
+    });
+
+    describe('Credit note refund', () => {
+      let refundBaseline: {
+        incomeAccrual: number;
+        incomeCash: number;
+        arAccrual: TrialBalanceRow;
+        arCash: TrialBalanceRow;
+        bankAccrual: TrialBalanceRow;
+        bankCash: TrialBalanceRow;
+      };
+
+      beforeAll(async () => {
+        // Capture the baseline after the previous credit note fixture.
+        refundBaseline = {
+          incomeAccrual: await fetchIncomeTotal('accrual'),
+          incomeCash: await fetchIncomeTotal('cash'),
+          arAccrual: await fetchTrialBalanceRow(arAccountId, 'accrual'),
+          arCash: await fetchTrialBalanceRow(arAccountId, 'cash'),
+          bankAccrual: await fetchTrialBalanceRow(bankAccountId, 'accrual'),
+          bankCash: await fetchTrialBalanceRow(bankAccountId, 'cash'),
+        };
+
+        const creditNoteId = await createCreditNote();
+        await createRefund(creditNoteId);
+      });
+
+      it('does not double reduce the income on the accrual basis report', async () => {
+        const incomeAccrual = await fetchIncomeTotal('accrual');
+        expect(incomeAccrual - refundBaseline.incomeAccrual).toBeCloseTo(
+          -1000,
+          2,
+        );
+      });
+
+      it('reverses the income on the cash basis report', async () => {
+        const incomeCash = await fetchIncomeTotal('cash');
+        expect(incomeCash - refundBaseline.incomeCash).toBeCloseTo(-1000, 2);
+      });
+
+      it('settles the receivable back on the accrual basis trial balance', async () => {
+        const arAccrual = await fetchTrialBalanceRow(arAccountId, 'accrual');
+        expect(
+          arAccrual.balance - refundBaseline.arAccrual.balance,
+        ).toBeCloseTo(0, 2);
+      });
+
+      it('keeps no receivable on the cash basis trial balance', async () => {
+        const arCash = await fetchTrialBalanceRow(arAccountId, 'cash');
+        expect(arCash.balance - refundBaseline.arCash.balance).toBeCloseTo(
+          0,
+          2,
+        );
+      });
+
+      it('posts the cash outflow once on both bases', async () => {
+        const bankAccrual = await fetchTrialBalanceRow(
+          bankAccountId,
+          'accrual',
+        );
+        const bankCash = await fetchTrialBalanceRow(bankAccountId, 'cash');
+
+        expect(
+          bankAccrual.balance - refundBaseline.bankAccrual.balance,
+        ).toBeCloseTo(-1000, 2);
+        expect(bankCash.balance - refundBaseline.bankCash.balance).toBeCloseTo(
+          -1000,
+          2,
+        );
+      });
+    });
+  });
 });
