@@ -48,7 +48,6 @@ export class BillPaymentGLEntries {
       tenantMeta.baseCurrency,
       trx,
     );
-
     // Commits the ledger on the storage.
     await this.ledgerStorage.commit(ledger, trx);
   };

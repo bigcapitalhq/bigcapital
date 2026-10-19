@@ -50,9 +50,14 @@ export function PaymentReceiveGLEntriesPanel() {
           ]}
         />
       </TableHeader>
-      <JournalEntriesTable
+      <PaymentReceiveGLEntriesDatatable
         loading={isTransactionsLoading}
         transactions={transactions}
+        noResults={
+          basis === 'cash'
+            ? intl.get('no_cash_basis_journal_entries')
+            : undefined
+        }
       />
     </PaymentReceiveGLEntriesRoot>
   );
@@ -66,3 +71,9 @@ const TableHeader = styled.div`
 `;
 
 const PaymentReceiveGLEntriesRoot = styled(Card)``;
+
+const PaymentReceiveGLEntriesDatatable = styled(JournalEntriesTable)`
+  .table .tbody .tr:last-child .td {
+    border-bottom: 0;
+  }
+`;

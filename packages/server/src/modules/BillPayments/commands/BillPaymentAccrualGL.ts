@@ -4,6 +4,7 @@ import { BillPayment } from '../models/BillPayment';
 import { AccountNormal } from '@/interfaces/Account';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 /**
  * Records the accrual basis journal entries of the bill payment.
@@ -76,7 +77,7 @@ export class BillPaymentAccrualGL {
 
       branchId: this.billPayment.branchId,
 
-      basis: 'accrual' as const,
+      basis: AccountingBasis.Accrual,
     };
   }
 
