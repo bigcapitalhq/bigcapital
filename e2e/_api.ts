@@ -441,6 +441,40 @@ export async function createQuickInventoryAdjustmentViaApi(
 }
 
 /**
+ * Waits until the inventory cost-compute background job finishes.
+ *
+ * Creating an inventory invoice/bill schedules a debounced cost recompute,
+ * which changes COGS/inventory amounts once it completes. Tests that compare
+ * report amounts before and after an action must wait for it, otherwise they
+ * read a stale baseline.
+ */
+export async function waitForCostCompute(
+  apiBase: string,
+  auth: ApiAuth,
+  timeoutMs = 120_000,
+): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  const toDate = today();
+  const fromDate = `${toDate.slice(0, 4)}-01-01`;
+
+  while (Date.now() < deadline) {
+    const body = await send(
+      apiBase,
+      auth,
+      `${API_PREFIX}/reports/balance-sheet?fromDate=${fromDate}&toDate=${toDate}`,
+      { method: 'GET' },
+    );
+    if (!body?.meta?.is_cost_compute_running) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2_000));
+  }
+  throw new Error(
+    '[e2e] Inventory cost computation did not finish within the timeout.',
+  );
+}
+
+/**
  * Resolves a customer id by display name.
  */
 export async function findCustomerIdByName(
