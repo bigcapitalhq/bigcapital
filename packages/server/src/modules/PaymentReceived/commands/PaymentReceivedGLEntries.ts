@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { PaymentReceivedAccrualGL } from './PaymentReceivedAccrualGL';
 import { PaymentReceivedCashGL } from './PaymentReceivedCashGL';
+import { PaymentReceivedCostGLEntries } from './PaymentReceivedCostGLEntries';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { Ledger } from '@/modules/Ledger/Ledger';
@@ -17,6 +18,7 @@ export class PaymentReceivedGLEntries {
     private readonly ledgerStorage: LedgerStorageService,
     private readonly accountRepository: AccountRepository,
     private readonly tenancyContext: TenancyContext,
+    private readonly paymentCostGLEntries: PaymentReceivedCostGLEntries,
 
     @Inject(PaymentReceived.name)
     private readonly paymentReceivedModel: TenantModelProxy<
@@ -51,6 +53,12 @@ export class PaymentReceivedGLEntries {
     );
     // Commit the ledger entries to the storage.
     await this.ledgerStorage.commit(ledger, trx);
+
+    // Writes the cash basis inventory cost entries of the payment.
+    await this.paymentCostGLEntries.writePaymentCostGLEntries(
+      paymentReceiveId,
+      trx,
+    );
   };
 
   /**

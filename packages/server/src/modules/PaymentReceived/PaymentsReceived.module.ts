@@ -26,6 +26,8 @@ import { PaymentReceivedAutoIncrementSubscriber } from './subscribers/PaymentRec
 import { PaymentReceivedSmsNotificationSubscriber } from './subscribers/PaymentReceivedSmsNotificationSubscriber';
 import { PaymentReceivedGLEntriesSubscriber } from './subscribers/PaymentReceivedGLEntriesSubscriber';
 import { PaymentReceivedGLEntries } from './commands/PaymentReceivedGLEntries';
+import { PaymentReceivedCostGLEntries } from './commands/PaymentReceivedCostGLEntries';
+import { PaymentReceivedCostGLEntriesSubscriber } from './subscribers/PaymentReceivedCostGLEntriesSubscriber';
 import { PaymentReceivedSyncInvoicesSubscriber } from './subscribers/PaymentReceivedSyncInvoices';
 import { PaymentReceivedInvoiceSync } from './commands/PaymentReceivedInvoiceSync.service';
 import { LedgerModule } from '../Ledger/Ledger.module';
@@ -66,10 +68,12 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     PaymentReceivedBrandingTemplate,
     PaymentReceivedIncrement,
     PaymentReceivedGLEntries,
+    PaymentReceivedCostGLEntries,
     PaymentReceivedInvoiceSync,
     PaymentReceivedAutoIncrementSubscriber,
     PaymentReceivedSmsNotificationSubscriber,
     PaymentReceivedGLEntriesSubscriber,
+    PaymentReceivedCostGLEntriesSubscriber,
     PaymentReceivedSyncInvoicesSubscriber,
     GetPaymentsReceivedService,
     SendPaymentReceiveMailNotification,
