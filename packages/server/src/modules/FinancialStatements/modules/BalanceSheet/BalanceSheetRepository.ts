@@ -201,8 +201,8 @@ export class BalanceSheetRepository extends flow(
    */
   public asyncInitialize = async (query: IBalanceSheetQuery) => {
     this.setQuery(query);
-    await this.initBasis();
 
+    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsGraph();
 
