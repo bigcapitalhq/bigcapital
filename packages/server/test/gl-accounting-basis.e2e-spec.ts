@@ -362,15 +362,16 @@ describe('Accounting basis — cash vs accrual reports (e2e)', () => {
 
       it('posts the payable on the accrual basis trial balance', async () => {
         const apAccrual = await fetchTrialBalanceRow(apAccountId, 'accrual');
-        expect(apAccrual.credit - baseline.apAccrual.credit).toBeCloseTo(
-          1000,
+        // A payable is a credit balance (debit - credit), hence the negative.
+        expect(apAccrual.balance - baseline.apAccrual.balance).toBeCloseTo(
+          -1000,
           2,
         );
       });
 
       it('has no payable on the cash basis trial balance', async () => {
         const apCash = await fetchTrialBalanceRow(apAccountId, 'cash');
-        expect(apCash.credit - baseline.apCash.credit).toBeCloseTo(0, 2);
+        expect(apCash.balance - baseline.apCash.balance).toBeCloseTo(0, 2);
       });
     });
 
@@ -414,15 +415,17 @@ describe('Accounting basis — cash vs accrual reports (e2e)', () => {
 
       it('settles the payable on the accrual basis trial balance', async () => {
         const apAccrual = await fetchTrialBalanceRow(apAccountId, 'accrual');
-        expect(apAccrual.credit - paymentBaseline.apAccrual.credit).toBeCloseTo(
-          0,
-          2,
-        );
+        expect(
+          apAccrual.balance - paymentBaseline.apAccrual.balance,
+        ).toBeCloseTo(0, 2);
       });
 
       it('keeps no payable on the cash basis trial balance', async () => {
         const apCash = await fetchTrialBalanceRow(apAccountId, 'cash');
-        expect(apCash.credit - paymentBaseline.apCash.credit).toBeCloseTo(0, 2);
+        expect(apCash.balance - paymentBaseline.apCash.balance).toBeCloseTo(
+          0,
+          2,
+        );
       });
 
       it('posts the cash outflow once on both bases', async () => {
@@ -433,9 +436,9 @@ describe('Accounting basis — cash vs accrual reports (e2e)', () => {
         const bankCash = await fetchTrialBalanceRow(paymentAccountId, 'cash');
 
         expect(
-          bankAccrual.credit - paymentBaseline.bankAccrual.credit,
+          paymentBaseline.bankAccrual.balance - bankAccrual.balance,
         ).toBeCloseTo(1000, 2);
-        expect(bankCash.credit - paymentBaseline.bankCash.credit).toBeCloseTo(
+        expect(paymentBaseline.bankCash.balance - bankCash.balance).toBeCloseTo(
           1000,
           2,
         );
