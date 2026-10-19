@@ -3,9 +3,10 @@ import {
   INumberFormatQuery,
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export interface IJournalReportQuery {
-  basis: 'cash' | 'accrual';
+  basis: AccountingBasis;
 
   fromDate: Date | string;
   toDate: Date | string;

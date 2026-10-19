@@ -4,13 +4,14 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsEnum,
   IsOptional,
-  IsString,
   ValidateNested,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class GeneralLedgerQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -36,9 +37,9 @@ export class GeneralLedgerQueryDto extends FinancialSheetBranchesQueryDto {
     example: 'accrual',
     required: false,
   })
-  @IsString()
+  @IsEnum(AccountingBasis)
   @IsOptional()
-  basis: string;
+  basis: AccountingBasis;
 
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)

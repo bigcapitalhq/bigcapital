@@ -2,7 +2,7 @@ import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { Contact } from '@/modules/Contacts/models/Contact';
 import { Ledger } from '@/modules/Ledger/Ledger';
-import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { transformToMap } from '@/utils/transform-to-key';
@@ -32,7 +32,7 @@ export class JournalSheetRepository {
   /**
    * The report accounting basis.
    */
-  public basis: LedgerBasis;
+  public basis: AccountingBasis;
 
   /**
    *

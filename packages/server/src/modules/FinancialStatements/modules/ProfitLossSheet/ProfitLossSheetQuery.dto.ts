@@ -14,12 +14,13 @@ import { Transform, Type } from 'class-transformer';
 import { ToNumber } from '@/common/decorators/Validators';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
-  @IsString()
+  @IsEnum(AccountingBasis)
   @IsOptional()
   @ApiProperty({ description: 'The basis for the profit and loss sheet' })
-  basis: string;
+  basis: AccountingBasis;
 
   @IsDateString()
   @IsOptional()

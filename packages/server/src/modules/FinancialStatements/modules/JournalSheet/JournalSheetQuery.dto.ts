@@ -11,16 +11,17 @@ import { Type } from 'class-transformer';
 import { FinancialSheetBranchesQueryDto } from '../../dtos/FinancialSheetBranchesQuery.dto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class JournalSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiPropertyOptional({
     description: 'Accounting basis for the report',
-    enum: ['cash', 'accrual'],
+    enum: AccountingBasis,
     example: 'accrual',
   })
-  @IsEnum(['cash', 'accrual'])
+  @IsEnum(AccountingBasis)
   @IsOptional()
-  basis: 'cash' | 'accrual';
+  basis: AccountingBasis;
 
   @ApiPropertyOptional({
     description: 'Start date for the journal sheet',

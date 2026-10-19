@@ -1,5 +1,6 @@
 import { PaymentReceivedCashGL } from './PaymentReceivedCashGL';
 import { PaymentReceived } from '../models/PaymentReceived';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 interface TestItemEntry {
   itemId?: number;
@@ -113,7 +114,7 @@ describe('PaymentReceivedCashGL', () => {
     const entries = buildGL(payment).GLEntries();
 
     entries.forEach((entry) => {
-      expect(entry.basis).toBe('cash');
+      expect(entry.basis).toBe(AccountingBasis.Cash);
       expect(entry.indexGroup).toBe(50);
       expect(entry.transactionType).toBe('PaymentReceive');
       expect(entry.transactionId).toBe(payment.id);

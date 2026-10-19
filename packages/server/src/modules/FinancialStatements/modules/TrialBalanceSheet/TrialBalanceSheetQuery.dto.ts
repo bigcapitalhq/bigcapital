@@ -5,13 +5,14 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsEnum,
   IsOptional,
-  IsString,
   ValidateNested,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class TrialBalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -40,11 +41,11 @@ export class TrialBalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
     description: 'Accounting basis for the report',
     required: false,
-    enum: ['cash', 'accrual'],
+    enum: AccountingBasis,
   })
-  @IsString()
+  @IsEnum(AccountingBasis)
   @IsOptional()
-  basis: 'cash' | 'accrual';
+  basis: AccountingBasis;
 
   @ApiProperty({
     description: 'Filter out zero balance accounts',

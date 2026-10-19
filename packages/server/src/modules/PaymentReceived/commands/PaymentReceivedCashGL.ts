@@ -4,6 +4,7 @@ import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountNormal } from '@/interfaces/Account';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { PaymentReceivedEntry } from '../models/PaymentReceivedEntry';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 /**
  * Records the cash basis journal entries of the payment received.
@@ -84,7 +85,7 @@ export class PaymentReceivedCashGL {
 
       indexGroup: 50,
 
-      basis: 'cash' as const,
+      basis: AccountingBasis.Cash,
     };
   }
 

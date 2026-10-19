@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
   FinancialReportTotalDto,
@@ -145,8 +146,8 @@ export class BalanceSheetQueryResponseDto {
   @ApiProperty({ description: 'Exclude accounts with no transactions' })
   noneTransactions: boolean;
 
-  @ApiProperty({ description: 'Accounting basis', enum: ['cash', 'accrual'] })
-  basis: string;
+  @ApiProperty({ description: 'Accounting basis', enum: AccountingBasis })
+  basis: AccountingBasis;
 
   @ApiProperty({ description: 'Account IDs to include', type: [Number] })
   accountIds: number[];

@@ -5,6 +5,7 @@ import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { SaleInvoice } from '../models/SaleInvoice';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class InvoiceAccrualGL {
   private saleInvoice: SaleInvoice;
@@ -78,7 +79,7 @@ export class InvoiceAccrualGL {
 
       branchId: this.saleInvoice.branchId,
 
-      basis: 'accrual' as const,
+      basis: AccountingBasis.Accrual,
     };
   }
 

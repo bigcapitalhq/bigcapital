@@ -11,6 +11,7 @@ import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberF
 import { Transform, Type } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -84,7 +85,7 @@ export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
     required: false,
     type: String,
   })
-  @IsString()
+  @IsEnum(AccountingBasis)
   @IsOptional()
-  basis: string;
+  basis: AccountingBasis;
 }

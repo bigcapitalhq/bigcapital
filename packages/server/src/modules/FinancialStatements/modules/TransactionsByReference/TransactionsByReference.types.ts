@@ -1,3 +1,5 @@
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+
 export interface ITransactionsByReferenceQuery {
   referenceType: string;
   referenceId: string;
@@ -37,7 +39,7 @@ export interface ITransactionsByReferenceTransaction {
   /**
    * The accounting basis of the entry (general, cash, accrual).
    */
-  basis: string;
+  basis: AccountingBasis | 'general';
 }
 
 export interface ITransactionsByReferencePojo {

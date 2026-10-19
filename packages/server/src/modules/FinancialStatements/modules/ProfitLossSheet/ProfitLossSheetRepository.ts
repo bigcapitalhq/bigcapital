@@ -18,7 +18,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
-import { LedgerBasis } from '@/modules/Ledger/types/Ledger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -39,9 +39,9 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
 
   /**
    * The report accounting basis.
-   * @param {LedgerBasis}
+   * @param {AccountingBasis}
    */
-  public basis: LedgerBasis;
+  public basis: AccountingBasis;
 
   /**
    * Tenancy base currency.

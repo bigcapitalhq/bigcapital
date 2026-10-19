@@ -3,6 +3,7 @@ import { PaymentReceived } from '../models/PaymentReceived';
 import { sumBy } from 'lodash';
 import { AccountNormal } from '@/interfaces/Account';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class PaymentReceivedAccrualGL {
   private readonly paymentReceived: PaymentReceived;
@@ -86,7 +87,7 @@ export class PaymentReceivedAccrualGL {
 
       branchId: this.paymentReceived.branchId,
 
-      basis: 'accrual' as const,
+      basis: AccountingBasis.Accrual,
     };
   }
 

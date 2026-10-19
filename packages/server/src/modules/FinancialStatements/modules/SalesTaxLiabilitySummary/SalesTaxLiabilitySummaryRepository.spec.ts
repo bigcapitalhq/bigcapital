@@ -1,5 +1,6 @@
 import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
 import { SalesTaxLiabilitySummaryQuery } from './SalesTaxLiability.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 const createQueryBuilder = (result: unknown) => {
   const builder: any = {
@@ -20,7 +21,7 @@ describe('SalesTaxLiabilitySummaryRepository', () => {
   const filter: SalesTaxLiabilitySummaryQuery = {
     fromDate: '2026-01-01',
     toDate: '2026-01-31',
-    basis: 'accrual',
+    basis: AccountingBasis.Accrual,
   };
 
   const setup = () => {
