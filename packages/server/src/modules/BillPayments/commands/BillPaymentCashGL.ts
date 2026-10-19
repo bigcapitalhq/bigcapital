@@ -4,6 +4,8 @@ import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountNormal } from '@/interfaces/Account';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
+import { Bill } from '@/modules/Bills/models/Bill';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { BillPayment } from '../models/BillPayment';
 import { BillPaymentEntry } from '../models/BillPaymentEntry';
 
@@ -85,7 +87,7 @@ export class BillPaymentCashGL {
 
       indexGroup: 50,
 
-      basis: 'cash' as const,
+      basis: AccountingBasis.Cash,
     };
   }
 
@@ -116,6 +118,117 @@ export class BillPaymentCashGL {
   };
 
   /**
+   * Retrieves the payment account (cash/bank) credit entry of the paid amount.
+   * @param {BillPaymentEntry} entry - Bill payment entry.
+   * @returns {ILedgerEntry}
+   */
+  private getPaymentEntryPaymentAccountEntry = (
+    entry: BillPaymentEntry,
+  ): ILedgerEntry => {
+    return {
+      ...this.cashEntriesCommonEntry,
+      credit: this.getPaymentEntryLocalAmount(entry),
+      accountId: this.billPayment.paymentAccountId,
+      index: 1,
+      accountNormal: AccountNormal.DEBIT,
+    };
+  };
+
+  /**
+   * Retrieves the cost/inventory accounts debit entries mirroring the bill items.
+   * @param {Bill} bill - Bill.
+   * @param {number} ratio - Paid proportion of the bill.
+   * @returns {ILedgerEntry[]}
+   */
+  private getPaymentEntryItemEntries = (
+    bill: Bill,
+    ratio: number,
+  ): ILedgerEntry[] => {
+    const billEntries = bill.entries || [];
+    const billExchangeRate = defaultTo(bill.exchangeRate, 1);
+
+    return billEntries.map((item, index) =>
+      this.getBillItemCashEntry(item, index, ratio, billExchangeRate),
+    );
+  };
+
+  /**
+   * Retrieves the tax payable debit entries mirroring the bill taxes.
+   * @param {Bill} bill - Bill.
+   * @param {number} ratio - Paid proportion of the bill.
+   * @returns {ILedgerEntry[]}
+   */
+  private getPaymentEntryTaxEntries = (
+    bill: Bill,
+    ratio: number,
+  ): ILedgerEntry[] => {
+    const billEntries = bill.entries || [];
+    const billExchangeRate = defaultTo(bill.exchangeRate, 1);
+
+    return billEntries
+      .filter((item) => item.taxAmount > 0)
+      .map((item, index) => ({
+        ...this.cashEntriesCommonEntry,
+        debit: item.taxAmount * billExchangeRate * ratio,
+        accountId: this.taxPayableAccountId,
+        index: billEntries.length + index + 2,
+        accountNormal: AccountNormal.CREDIT,
+        taxRateId: item.taxRateId,
+        taxRate: item.taxRate,
+      }));
+  };
+
+  /**
+   * Retrieves the discount entry mirroring the bill discount.
+   * @param {Bill} bill - Bill.
+   * @param {number} ratio - Paid proportion of the bill.
+   * @returns {ILedgerEntry[]}
+   */
+  private getPaymentEntryDiscountEntry = (
+    bill: Bill,
+    ratio: number,
+  ): ILedgerEntry[] => {
+    return bill.discountAmountLocal
+      ? [
+          {
+            ...this.cashEntriesCommonEntry,
+            credit: bill.discountAmountLocal * ratio,
+            accountId: this.purchaseDiscountAccountId,
+            accountNormal: AccountNormal.DEBIT,
+            index: 1,
+          },
+        ]
+      : [];
+  };
+
+  /**
+   * Retrieves the other charges (adjustment) entry mirroring the bill adjustment.
+   * @param {Bill} bill - Bill.
+   * @param {number} ratio - Paid proportion of the bill.
+   * @returns {ILedgerEntry[]}
+   */
+  private getPaymentEntryAdjustmentEntry = (
+    bill: Bill,
+    ratio: number,
+  ): ILedgerEntry[] => {
+    const adjustmentAmount = defaultTo(bill.adjustmentLocal, 0);
+
+    return bill.adjustmentLocal
+      ? [
+          {
+            ...this.cashEntriesCommonEntry,
+            debit: adjustmentAmount > 0 ? adjustmentAmount * ratio : 0,
+            credit:
+              adjustmentAmount < 0 ? Math.abs(adjustmentAmount) * ratio : 0,
+            accountId: this.otherExpensesAccountId,
+            accountNormal: AccountNormal.DEBIT,
+            index: 1,
+          },
+        ]
+      : [];
+  };
+
+  /**
    * Retrieves the cash basis entries of the given payment entry (bill allocation).
    * @param {BillPaymentEntry} entry - Bill payment entry.
    * @returns {ILedgerEntry[]}
@@ -129,72 +242,12 @@ export class BillPaymentCashGL {
     if (!bill || ratio <= 0) {
       return [];
     }
-    const commonEntry = this.cashEntriesCommonEntry;
-    const billEntries = bill.entries || [];
-    const billExchangeRate = defaultTo(bill.exchangeRate, 1);
-
-    // Payment account (cash/bank) credit entry of the paid amount.
-    const paymentEntry: ILedgerEntry = {
-      ...commonEntry,
-      credit: this.getPaymentEntryLocalAmount(entry),
-      accountId: this.billPayment.paymentAccountId,
-      index: 1,
-      accountNormal: AccountNormal.DEBIT,
-    };
-
-    // Cost/inventory accounts debit entries mirroring the bill items.
-    const itemsEntries: ILedgerEntry[] = billEntries.map((item, index) =>
-      this.getBillItemCashEntry(item, index, ratio, billExchangeRate),
-    );
-
-    // Tax payable debit entries mirroring the bill taxes.
-    const taxEntries: ILedgerEntry[] = billEntries
-      .filter((item) => item.taxAmount > 0)
-      .map((item, index) => ({
-        ...commonEntry,
-        debit: item.taxAmount * billExchangeRate * ratio,
-        accountId: this.taxPayableAccountId,
-        index: billEntries.length + index + 2,
-        accountNormal: AccountNormal.CREDIT,
-        taxRateId: item.taxRateId,
-        taxRate: item.taxRate,
-      }));
-
-    // Discount entry mirroring the bill discount.
-    const discountEntry: ILedgerEntry[] = bill.discountAmountLocal
-      ? [
-          {
-            ...commonEntry,
-            credit: bill.discountAmountLocal * ratio,
-            accountId: this.purchaseDiscountAccountId,
-            accountNormal: AccountNormal.DEBIT,
-            index: 1,
-          },
-        ]
-      : [];
-
-    // Other charges (adjustment) entry mirroring the bill adjustment.
-    const adjustmentAmount = defaultTo(bill.adjustmentLocal, 0);
-    const adjustmentEntry: ILedgerEntry[] = bill.adjustmentLocal
-      ? [
-          {
-            ...commonEntry,
-            debit: adjustmentAmount > 0 ? adjustmentAmount * ratio : 0,
-            credit:
-              adjustmentAmount < 0 ? Math.abs(adjustmentAmount) * ratio : 0,
-            accountId: this.otherExpensesAccountId,
-            accountNormal: AccountNormal.DEBIT,
-            index: 1,
-          },
-        ]
-      : [];
-
     return [
-      paymentEntry,
-      ...itemsEntries,
-      ...taxEntries,
-      ...discountEntry,
-      ...adjustmentEntry,
+      this.getPaymentEntryPaymentAccountEntry(entry),
+      ...this.getPaymentEntryItemEntries(bill, ratio),
+      ...this.getPaymentEntryTaxEntries(bill, ratio),
+      ...this.getPaymentEntryDiscountEntry(bill, ratio),
+      ...this.getPaymentEntryAdjustmentEntry(bill, ratio),
     ];
   };
 
