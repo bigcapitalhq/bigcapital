@@ -11,6 +11,9 @@ export interface MatchTransactionCheckboxProps {
   onChange?: (state: boolean) => void;
   label: string | React.ReactNode;
   date: string;
+  /** Transaction or reference number, shown next to the date to tell
+   * same-amount candidates apart. */
+  reference?: string | null;
 }
 
 export function MatchTransactionCheckbox({
@@ -19,6 +22,7 @@ export function MatchTransactionCheckbox({
   onChange,
   label,
   date,
+  reference,
 }: MatchTransactionCheckboxProps) {
   const [_active, handleChange] = useUncontrolled<boolean>({
     value: active,
@@ -45,7 +49,10 @@ export function MatchTransactionCheckbox({
     >
       <Stack spacing={2}>
         <span className={styles.label}>{label}</span>
-        <Text className={styles.date}>Date: {date}</Text>
+        <Text className={styles.date}>
+          Date: {date}
+          {reference ? ` \u00B7 ${reference}` : ''}
+        </Text>
       </Stack>
 
       <Checkbox
