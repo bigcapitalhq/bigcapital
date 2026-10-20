@@ -1,5 +1,6 @@
 import { BankRulesAlerts } from '../Banking/Rules/RulesList/BankRulesAlerts';
 import { BrandingTemplatesAlerts } from '../BrandingTemplates/alerts/BrandingTemplatesAlerts';
+import { BudgetsAlerts } from '../Budgets/alerts';
 import { CashflowAlerts } from '../CashFlow/CashflowAlerts';
 import { PaymentMethodsAlerts } from '../Preferences/PaymentMethods/alerts/PaymentMethodsAlerts';
 import { SubscriptionAlerts } from '../Subscriptions/alerts/alerts';
@@ -72,6 +73,7 @@ export const registered: RegisteredEntry[] = [
   ...WarehousesTransfersAlerts,
   ...BranchesAlerts,
   ...TaxRatesAlerts,
+  ...BudgetsAlerts,
   ...CashflowAlerts,
   ...BankRulesAlerts,
   ...SubscriptionAlerts,

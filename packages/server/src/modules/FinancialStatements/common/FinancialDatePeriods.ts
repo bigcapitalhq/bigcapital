@@ -25,6 +25,11 @@ export const FinancialDatePeriods = <T extends GConstructor<FinancialSheet>>(
       (fromDate: Date, toDate: Date, unit: moment.unitOfTime.StartOf) => {
         return dateRangeFromToCollection(fromDate, toDate, unit);
       },
+      // Keys the memo cache by every argument; the default resolver only uses
+      // the first one, which would return ranges memoized for another unit
+      // (e.g. month ranges served for a quarter/year request).
+      (fromDate: Date, toDate: Date, unit: moment.unitOfTime.StartOf) =>
+        `${fromDate}|${toDate}|${unit}`,
     );
 
     /**

@@ -1,0 +1,9 @@
+{
+  "sheet_name": "Budget vs actual",
+  "account_name": "Account name",
+  "budget": "Budget",
+  "actual": "Actual",
+  "variance": "Variance",
+  "variance_percentage": "Variance %",
+  "total": "Total"
+}

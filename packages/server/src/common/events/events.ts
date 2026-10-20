@@ -131,6 +131,20 @@ export const events = {
   },
 
   /**
+   * Budgets service.
+   */
+  budgets: {
+    onCreating: 'onBudgetCreating',
+    onCreated: 'onBudgetCreated',
+
+    onEditing: 'onBudgetEditing',
+    onEdited: 'onBudgetEdited',
+
+    onDeleting: 'onBudgetDeleting',
+    onDeleted: 'onBudgetDeleted',
+  },
+
+  /**
    * Expenses service.
    */
   expenses: {
@@ -796,5 +810,6 @@ export const events = {
     onVendorTransactionsViewed: 'onVendorTransactionsViewed',
     onSalesByItemViewed: 'onSalesByItemViewed',
     onPurchasesByItemViewed: 'onPurchasesByItemViewed',
+    onBudgetVsActualViewed: 'onBudgetVsActualViewed',
   },
 };

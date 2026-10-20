@@ -16,4 +16,5 @@ export * from './use-vendor-balance-summary';
 export * from './use-customer-transactions';
 export * from './use-vendor-transactions';
 export * from './use-sales-tax-liabilities-summary';
+export * from './use-budget-vs-actual';
 export * from './use-transactions-by-reference';

@@ -2,6 +2,7 @@ import {
   AP_AGING_SUMMARY,
   AR_AGING_SUMMARY,
   BALANCE_SHEET,
+  BUDGET_VS_ACTUAL,
   CASH_FLOW_STATEMENT,
   CUSTOMERS_BALANCE_SUMMARY,
   CUSTOMERS_TRANSACTIONS,
@@ -132,6 +133,12 @@ export function toggleUnrealizedGainOrLossFilterDrawer(toggle?: boolean) {
 export function toggleSalesTaxLiabilitySummaryFilterDrawer(toggle?: boolean) {
   return {
     type: `${SALES_TAX_LIABILITY_SUMMARY}/${DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: { toggle },
+  };
+}
+export function toggleBudgetVsActualFilterDrawer(toggle?: boolean) {
+  return {
+    type: `${BUDGET_VS_ACTUAL}/${DISPLAY_FILTER_DRAWER_TOGGLE}`,
     payload: { toggle },
   };
 }
