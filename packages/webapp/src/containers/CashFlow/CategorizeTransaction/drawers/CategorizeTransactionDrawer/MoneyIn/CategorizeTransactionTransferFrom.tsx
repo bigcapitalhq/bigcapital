@@ -10,6 +10,7 @@ import {
   FTextArea,
   Icon,
 } from '@/components';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useDateInputFormatter } from '@/hooks';
 
 export function CategorizeTransactionTransferFrom() {
@@ -55,7 +56,11 @@ export function CategorizeTransactionTransferFrom() {
         <AccountsSelect
           name={'creditAccountId'}
           items={accounts}
-          filterByRootTypes={['asset']}
+          filterByTypes={[
+            ACCOUNT_TYPE.CASH,
+            ACCOUNT_TYPE.BANK,
+            ACCOUNT_TYPE.CREDIT_CARD,
+          ]}
           fastField
           fill
           allowCreate
