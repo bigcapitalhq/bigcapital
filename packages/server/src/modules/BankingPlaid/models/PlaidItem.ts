@@ -7,6 +7,7 @@ export class PlaidItem extends BaseModel {
   tenantId: number;
   plaidItemId: string;
   plaidInstitutionId: string;
+  disconnectedPlaidAccountIds?: string[] | null;
 
   /**
    * Table name.
@@ -27,6 +28,13 @@ export class PlaidItem extends BaseModel {
    */
   static get relationMappings() {
     return {};
+  }
+
+  /**
+   * Json attributes.
+   */
+  static get jsonAttributes() {
+    return ['disconnectedPlaidAccountIds'];
   }
 
   /**
