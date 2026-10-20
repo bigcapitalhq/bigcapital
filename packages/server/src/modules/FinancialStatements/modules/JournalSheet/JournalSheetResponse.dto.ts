@@ -9,6 +9,7 @@ import {
   JournalColumnKey,
 } from '../../common/constants/tableColumnKeys';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class JournalEntryDto {
   @ApiProperty({ description: 'Entry index', type: Number })
@@ -94,6 +95,9 @@ export class JournalSheetQueryResponseDto {
 
   @ApiProperty({ description: 'End date' })
   toDate: string;
+
+  @ApiProperty({ description: 'Accounting basis', enum: AccountingBasis })
+  basis: AccountingBasis;
 
   @ApiPropertyOptional({ description: 'From range' })
   fromRange: number | null;
