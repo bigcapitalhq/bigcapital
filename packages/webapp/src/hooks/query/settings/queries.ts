@@ -199,6 +199,16 @@ export function useSettingsOrganization(props?: GroupQueryOptions) {
   });
 }
 
+export type AccountingBasis = 'accrual' | 'cash';
+
+/**
+ * The current organization's accounting basis (defaults to accrual).
+ */
+export function useCurrentOrganizationAccountingBasis(): AccountingBasis {
+  const { data } = useSettingsOrganization();
+  return data?.accountingBasis === 'cash' ? 'cash' : 'accrual';
+}
+
 export function useSettingsExpenses(props?: GroupQueryOptions) {
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
   return useQuery({
