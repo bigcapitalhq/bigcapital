@@ -3,8 +3,9 @@ import { CreditNote } from '../models/CreditNote';
 import { AccountNormal } from '@/interfaces/Account';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
-export class CreditNoteGL {
+export class CreditNoteAccrualGL {
   creditNoteModel: CreditNote;
   ARAccountId: number;
   discountAccountId: number;
@@ -46,7 +47,7 @@ export class CreditNoteGL {
 
   /**
    * Retrieve the credit note common entry.
-   * @returns {ICreditNoteGLCommonEntry}
+   * @returns {ICreditNoteAccrualGLCommonEntry}
    */
   private get creditNoteCommonEntry() {
     return {
@@ -68,6 +69,8 @@ export class CreditNoteGL {
       debit: 0,
 
       branchId: this.creditNoteModel.branchId,
+
+      basis: AccountingBasis.Accrual,
     };
   }
 

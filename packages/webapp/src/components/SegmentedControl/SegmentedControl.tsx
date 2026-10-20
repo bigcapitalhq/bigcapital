@@ -55,6 +55,14 @@ export function SegmentedControl<T extends string = string>({
 }
 
 const SegmentedControlGroup = styled(ButtonGroup)`
+  --segmented-control-active-background: var(--color-dark-gray2);
+  --segmented-control-active-hover-background: var(--color-dark-gray1);
+
+  .bp4-dark & {
+    --segmented-control-active-background: var(--color-dark-gray5);
+    --segmented-control-active-hover-background: var(--color-dark-gray4);
+  }
+
   && .bp4-button {
     font-weight: 500;
 
@@ -63,12 +71,13 @@ const SegmentedControlGroup = styled(ButtonGroup)`
     }
     &.bp4-active:not(.bp4-disabled) {
       z-index: 1;
-      color: #ffffff;
-      background-color: #2d72d2;
-      border-color: #2d72d2;
+      color: var(--color-white);
+      background-color: var(--segmented-control-active-background);
+      border-color: var(--segmented-control-active-background);
 
       &:hover {
-        background-color: #215db0;
+        background-color: var(--segmented-control-active-hover-background);
+        border-color: var(--segmented-control-active-hover-background);
       }
     }
   }

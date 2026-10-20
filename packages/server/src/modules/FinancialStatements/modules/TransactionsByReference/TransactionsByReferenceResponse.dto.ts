@@ -57,10 +57,11 @@ export class TransactionByReferenceTransactionDto {
   accountId: number;
 
   @ApiProperty({
-    description: 'Accounting basis of the entry',
-    enum: ['general', AccountingBasis.Cash, AccountingBasis.Accrual],
+    description: 'Accounting basis of the entry; null means general',
+    enum: AccountingBasis,
+    nullable: true,
   })
-  basis: AccountingBasis | 'general';
+  basis: AccountingBasis | null;
 }
 
 export class TransactionsByReferenceResponseDto {

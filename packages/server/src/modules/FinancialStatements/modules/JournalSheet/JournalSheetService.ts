@@ -30,6 +30,10 @@ export class JournalSheetService {
     this.journalRepository.setFilter(query);
     await this.journalRepository.load();
 
+    // Reflect the resolved accounting basis in the report query, including
+    // the organization setting fallback when no basis was requested.
+    filter.basis = this.journalRepository.basis;
+
     // Retrieve the journal sheet meta first to get the date format.
     const meta = await this.journalSheetMeta.meta(filter);
 

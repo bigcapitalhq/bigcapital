@@ -19932,6 +19932,20 @@
             }
           },
           {
+            "name": "basis",
+            "required": false,
+            "in": "query",
+            "description": "The accounting basis of the transactions",
+            "schema": {
+              "example": "accrual",
+              "enum": [
+                "cash",
+                "accrual"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "name": "numberFormat",
             "required": false,
             "in": "query",
@@ -21118,6 +21132,7 @@
                   "query": {
                     "from_date": "2025-06-01",
                     "to_date": "2025-06-21",
+                    "basis": "accrual",
                     "from_range": null,
                     "to_range": null,
                     "accounts_ids": [],
@@ -41863,12 +41878,12 @@
           },
           "basis": {
             "type": "string",
-            "description": "Accounting basis of the entry",
+            "description": "Accounting basis of the entry; null means general",
             "enum": [
-              "general",
               "cash",
               "accrual"
-            ]
+            ],
+            "nullable": true
           }
         },
         "required": [
@@ -43402,6 +43417,14 @@
             "type": "string",
             "description": "End date"
           },
+          "basis": {
+            "type": "string",
+            "description": "Accounting basis",
+            "enum": [
+              "cash",
+              "accrual"
+            ]
+          },
           "fromRange": {
             "type": "number",
             "description": "From range"
@@ -43429,6 +43452,7 @@
         "required": [
           "fromDate",
           "toDate",
+          "basis",
           "accountsIds",
           "numberFormat"
         ]

@@ -221,7 +221,6 @@ export class ProfitLossSheetRepository extends flow(FinancialDatePeriods)(
    */
   async initBaseCurrency() {
     const metadata = await this.tenancyContext.getTenantMetadata();
-
     this.baseCurrency = metadata.baseCurrency;
   }
 

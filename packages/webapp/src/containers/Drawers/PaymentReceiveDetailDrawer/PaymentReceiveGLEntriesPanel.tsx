@@ -6,27 +6,12 @@ import {
   JournalEntriesTable,
 } from '../../JournalEntriesTable/JournalEntriesTable';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
-import type { GLTransactionRow } from '@/containers/JournalEntriesTable/utils';
 import { Card, SegmentedControl } from '@/components';
 import {
-  useSettingsOrganization,
+  useCurrentOrganizationAccountingBasis,
   useTransactionsByReference,
+  type AccountingBasis,
 } from '@/hooks/query';
-
-type AccountingBasis = 'accrual' | 'cash';
-
-/**
- * Determines whether the given journal entry leg is within the given
- * accounting basis. The general (unflagged) legs are included in both.
- */
-function isLegWithinBasis(leg: GLTransactionRow, basis: AccountingBasis) {
-  const legBasis = leg.basis ?? 'general';
-
-  if (basis === 'cash') {
-    return legBasis === 'cash' || legBasis === 'general';
-  }
-  return legBasis === 'accrual' || legBasis === 'general';
-}
 
 /**
  * Payment receive GL entries table panel.
@@ -35,29 +20,22 @@ export function PaymentReceiveGLEntriesPanel() {
   const { paymentReceiveId } = usePaymentReceiveDetailContext();
 
   // Retrieves the organization accounting basis to use it as the default.
-  const { data: organizationSettings } = useSettingsOrganization();
+  const organizationBasis = useCurrentOrganizationAccountingBasis();
   const [selectedBasis, setSelectedBasis] =
     React.useState<AccountingBasis | null>(null);
 
-  const organizationBasis = organizationSettings?.accountingBasis as
-    | string
-    | undefined;
-  const basis: AccountingBasis =
-    selectedBasis ?? (organizationBasis === 'cash' ? 'cash' : 'accrual');
+  const basis: AccountingBasis = selectedBasis ?? organizationBasis;
 
   // Handle fetch transaction by reference.
   const { data, isLoading: isTransactionsLoading } = useTransactionsByReference(
     {
       referenceId: paymentReceiveId as number,
       referenceType: 'PaymentReceive',
+      basis,
     },
     { enabled: !!paymentReceiveId },
   );
-  const transactions = React.useMemo(
-    () =>
-      (data?.transactions ?? []).filter((leg) => isLegWithinBasis(leg, basis)),
-    [data, basis],
-  );
+  const transactions = data?.transactions ?? [];
 
   return (
     <PaymentReceiveGLEntriesRoot>
@@ -72,9 +50,14 @@ export function PaymentReceiveGLEntriesPanel() {
           ]}
         />
       </TableHeader>
-      <JournalEntriesTable
+      <PaymentReceiveGLEntriesDatatable
         loading={isTransactionsLoading}
         transactions={transactions}
+        noResults={
+          basis === 'cash'
+            ? intl.get('no_cash_basis_journal_entries')
+            : undefined
+        }
       />
     </PaymentReceiveGLEntriesRoot>
   );
@@ -88,3 +71,9 @@ const TableHeader = styled.div`
 `;
 
 const PaymentReceiveGLEntriesRoot = styled(Card)``;
+
+const PaymentReceiveGLEntriesDatatable = styled(JournalEntriesTable)`
+  .table .tbody .tr:last-child .td {
+    border-bottom: 0;
+  }
+`;

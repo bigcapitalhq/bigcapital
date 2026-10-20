@@ -37,9 +37,9 @@ export interface ITransactionsByReferenceTransaction {
   accountId: number;
 
   /**
-   * The accounting basis of the entry (general, cash, accrual).
+   * The accounting basis flag; null means general.
    */
-  basis: AccountingBasis | 'general';
+  basis: AccountingBasis | null;
 }
 
 export interface ITransactionsByReferencePojo {

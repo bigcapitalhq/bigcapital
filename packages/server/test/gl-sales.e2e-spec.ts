@@ -319,11 +319,20 @@ describe('GL entries — Sales transactions (e2e)', () => {
         })
         .expect(201);
 
-      const legs = await fetchLegs('PaymentReceive', paymentRes.body.id);
+      const accrualLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'cash',
+      );
 
-      expectBalanced(legs);
+      expectBalanced(accrualLegs);
       expectLegs(
-        legs,
+        accrualLegs,
         [
           // Accrual basis: Dr deposit / Cr A/R.
           { accountCode: '10001', debit: 1000, basis: 'accrual' },
@@ -333,11 +342,19 @@ describe('GL entries — Sales transactions (e2e)', () => {
             credit: 1000,
             basis: 'accrual',
           },
+        ],
+        'PaymentReceive (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
           // Cash basis: Dr deposit / Cr income.
           { accountCode: '10001', debit: 1000, basis: 'cash' },
           { accountCode: '50002', credit: 1000, basis: 'cash' },
         ],
-        'PaymentReceive',
+        'PaymentReceive (cash)',
       );
     });
 
@@ -385,11 +402,20 @@ describe('GL entries — Sales transactions (e2e)', () => {
         })
         .expect(201);
 
-      const legs = await fetchLegs('PaymentReceive', paymentRes.body.id);
+      const accrualLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'PaymentReceive',
+        paymentRes.body.id,
+        'cash',
+      );
 
-      expectBalanced(legs);
+      expectBalanced(accrualLegs);
       expectLegs(
-        legs,
+        accrualLegs,
         [
           // Accrual basis: Dr deposit / Cr A/R.
           { accountCode: '10001', debit: 550, basis: 'accrual' },
@@ -399,12 +425,20 @@ describe('GL entries — Sales transactions (e2e)', () => {
             credit: 550,
             basis: 'accrual',
           },
+        ],
+        'PaymentReceive (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
           // Cash basis: the paid proportion of the invoice composition.
           { accountCode: '10001', debit: 550, basis: 'cash' },
           { accountCode: '50002', credit: 500, basis: 'cash' },
           { accountCode: '20006', credit: 50, basis: 'cash' },
         ],
-        'PaymentReceive',
+        'PaymentReceive (cash)',
       );
     });
   });
@@ -440,9 +474,14 @@ describe('GL entries — Sales transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '10007', contactId: customerId, credit: 900 },
-          { accountCode: '50002', debit: 1000 },
-          { accountCode: '40008', credit: 100 },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 900,
+            basis: 'accrual',
+          },
+          { accountCode: '50002', debit: 1000, basis: 'accrual' },
+          { accountCode: '40008', credit: 100, basis: 'accrual' },
         ],
         'CreditNote',
       );
@@ -478,10 +517,89 @@ describe('GL entries — Sales transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '10007', contactId: customerId, credit: 1900 },
-          { accountCode: '50002', debit: 1900 },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 1900,
+            basis: 'accrual',
+          },
+          { accountCode: '50002', debit: 1900, basis: 'accrual' },
         ],
         'CreditNote',
+      );
+    });
+
+    it('posts both accrual and cash journals for a credit note refund', async () => {
+      const creditNoteRes = await request(app.getHttpServer())
+        .post('/credit-notes')
+        .set(authHeaders())
+        .send({
+          customerId,
+          creditNoteDate: '2020-02-02',
+          open: true,
+          branchId: 1,
+          warehouseId: 1,
+          entries: [
+            {
+              index: 1,
+              itemId,
+              quantity: 1,
+              rate: 1000,
+              description: "It's description here.",
+            },
+          ],
+        })
+        .expect(201);
+
+      const refundRes = await request(app.getHttpServer())
+        .post(`/credit-notes/${creditNoteRes.body.id}/refunds`)
+        .set(authHeaders())
+        .send({
+          fromAccountId: 1000,
+          amount: 1000,
+          exchangeRate: 1,
+          referenceNo: faker.string.uuid(),
+          description: 'Refund credit note',
+          date: '2020-02-03',
+        })
+        .expect(201);
+
+      const accrualLegs = await fetchLegs(
+        'RefundCreditNote',
+        refundRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'RefundCreditNote',
+        refundRes.body.id,
+        'cash',
+      );
+
+      expectBalanced(accrualLegs);
+      expectLegs(
+        accrualLegs,
+        [
+          // Accrual basis: Dr A/R / Cr withdrawal account.
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            debit: 1000,
+            basis: 'accrual',
+          },
+          { accountCode: '10001', credit: 1000, basis: 'accrual' },
+        ],
+        'RefundCreditNote (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
+          // Cash basis: Dr income / Cr withdrawal account.
+          { accountCode: '50002', debit: 1000, basis: 'cash' },
+          { accountCode: '10001', credit: 1000, basis: 'cash' },
+        ],
+        'RefundCreditNote (cash)',
       );
     });
   });

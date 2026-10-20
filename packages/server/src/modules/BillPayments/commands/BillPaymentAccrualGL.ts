@@ -4,8 +4,14 @@ import { BillPayment } from '../models/BillPayment';
 import { AccountNormal } from '@/interfaces/Account';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
-export class BillPaymentGL {
+/**
+ * Records the accrual basis journal entries of the bill payment.
+ * The accrual basis recognizes the payment against the accounts payable
+ * (A/P) with any realized exchange gain or loss.
+ */
+export class BillPaymentAccrualGL {
   private billPayment: BillPayment;
   private APAccountId: number;
   private gainLossAccountId: number;
@@ -18,7 +24,7 @@ export class BillPaymentGL {
   /**
    * Sets the A/P account ID.
    * @param {number} APAccountId -
-   * @returns {BillPaymentGL}
+   * @returns {BillPaymentAccrualGL}
    */
   setAPAccountId(APAccountId: number) {
     this.APAccountId = APAccountId;
@@ -28,7 +34,7 @@ export class BillPaymentGL {
   /**
    * Sets the gain/loss account ID.
    * @param {number} gainLossAccountId -
-   * @returns {BillPaymentGL}
+   * @returns {BillPaymentAccrualGL}
    */
   setGainLossAccountId(gainLossAccountId: number) {
     this.gainLossAccountId = gainLossAccountId;
@@ -38,7 +44,7 @@ export class BillPaymentGL {
   /**
    * Sets the base currency.
    * @param {string} baseCurrency -
-   * @returns {BillPaymentGL}
+   * @returns {BillPaymentAccrualGL}
    */
   setBaseCurrency(baseCurrency: string) {
     this.baseCurrency = baseCurrency;
@@ -70,6 +76,8 @@ export class BillPaymentGL {
       createdAt: this.billPayment.createdAt,
 
       branchId: this.billPayment.branchId,
+
+      basis: AccountingBasis.Accrual,
     };
   }
 

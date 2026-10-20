@@ -208,7 +208,6 @@ export class InvoiceAccrualGL {
    */
   public getInvoiceLedger = (): ILedger => {
     const entries = this.getInvoiceGLEntries();
-
     return new Ledger(entries);
   };
 }
