@@ -9,11 +9,12 @@ import {
   FInputGroup,
   FTextArea,
   Icon,
+  VendorsSelect,
 } from '@/components';
 import { useDateInputFormatter } from '@/hooks';
 
 export function CategorizeTransactionOtherExpense() {
-  const { accounts } = useCategorizeTransactionBoot();
+  const { accounts, vendors } = useCategorizeTransactionBoot();
   const dateInputFormatter = useDateInputFormatter();
 
   if (!accounts) {
@@ -59,6 +60,16 @@ export function CategorizeTransactionOtherExpense() {
           fastField
           fill
           allowCreate
+        />
+      </FFormGroup>
+
+      <FFormGroup name={'contactId'} label={'Payee'} inline>
+        <VendorsSelect
+          name={'contactId'}
+          items={vendors}
+          placeholder={'Select or create a vendor'}
+          allowCreate
+          fill
         />
       </FFormGroup>
 

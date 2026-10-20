@@ -4,7 +4,12 @@ import type { GetAutofillCategorizeTransaction } from '@/hooks/query/banking';
 import type { AccountsList, BranchesListResponse } from '@bigcapital/sdk-ts';
 import { DrawerLoading } from '@/components';
 import { Features } from '@/constants';
-import { useAccounts, useBranches } from '@/hooks/query';
+import {
+  useAccounts,
+  useBranches,
+  useCustomers,
+  useVendors,
+} from '@/hooks/query';
 import { useGetAutofillCategorizeTransaction } from '@/hooks/query/banking';
 import { useFeatureCan } from '@/hooks/state';
 
@@ -21,8 +26,12 @@ interface PrimaryBranch {
 interface CategorizeTransactionBootValue {
   branches: BranchesListResponse | undefined;
   accounts: AccountsList | undefined;
+  vendors: Array<unknown>;
+  customers: Array<unknown>;
   isBranchesLoading: boolean;
   isAccountsLoading: boolean;
+  isVendorsLoading: boolean;
+  isCustomersLoading: boolean;
   primaryBranch: PrimaryBranch | undefined;
   autofillCategorizeValues: GetAutofillCategorizeTransaction | null | undefined;
   isAutofillCategorizeValuesLoading: boolean;
@@ -52,6 +61,17 @@ function CategorizeTransactionBoot({
     {},
     { enabled: isBranchFeatureCan },
   );
+
+  // Fetches the vendors list, the payee options of money-out transactions.
+  const { data: vendorsData, isLoading: isVendorsLoading } = useVendors({
+    page_size: 10000,
+  });
+
+  // Fetches the customers list, the payee options of money-in transactions.
+  const { data: customersData, isLoading: isCustomersLoading } = useCustomers({
+    page_size: 10000,
+  });
+
   // Fetches the autofill values of categorize transaction.
   const {
     data: autofillCategorizeValues,
@@ -67,14 +87,22 @@ function CategorizeTransactionBoot({
   const provider: CategorizeTransactionBootValue = {
     branches: branches as BranchesListResponse | undefined,
     accounts,
+    vendors: vendorsData?.data ?? [],
+    customers: customersData?.data ?? [],
     isBranchesLoading,
     isAccountsLoading,
+    isVendorsLoading,
+    isCustomersLoading,
     primaryBranch,
     autofillCategorizeValues,
     isAutofillCategorizeValuesLoading,
   };
   const isLoading =
-    isBranchesLoading || isAccountsLoading || isAutofillCategorizeValuesLoading;
+    isBranchesLoading ||
+    isAccountsLoading ||
+    isVendorsLoading ||
+    isCustomersLoading ||
+    isAutofillCategorizeValuesLoading;
 
   return (
     <DrawerLoading loading={isLoading}>

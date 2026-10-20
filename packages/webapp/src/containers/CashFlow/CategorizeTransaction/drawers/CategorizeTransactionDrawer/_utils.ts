@@ -13,6 +13,7 @@ export interface CategorizeTransactionFormValues {
   transactionType: string;
   referenceNo: string;
   description: string;
+  contactId: string | number | null;
   branchId: string | number | null;
 }
 
@@ -26,6 +27,7 @@ export const defaultInitialValues: CategorizeTransactionFormValues = {
   transactionType: '',
   referenceNo: '',
   description: '',
+  contactId: '',
   branchId: '',
 };
 
@@ -41,7 +43,9 @@ export const transformToCategorizeForm = (
 export const tranformToRequest = (
   formValues: CategorizeTransactionFormValues,
   uncategorizedTransactionIds: Array<number>,
-): CategorizeTransactionBody => {
+  // `contactId` is not in the generated SDK body yet; the type is widened here
+  // rather than regenerating `@bigcapital/sdk-ts` from the OpenAPI spec.
+): CategorizeTransactionBody & { contactId?: number } => {
   return {
     date: formValues.date,
     creditAccountId: toNumber(formValues.creditAccountId) ?? 0,
@@ -49,6 +53,10 @@ export const tranformToRequest = (
     transactionType: formValues.transactionType,
     exchangeRate: toNumber(formValues.exchangeRate) ?? 1,
     description: formValues.description,
+    // An empty payee is a valid answer, so send nothing rather than zero.
+    contactId: formValues.contactId
+      ? toNumber(formValues.contactId)
+      : undefined,
     branchId: toNumber(formValues.branchId),
     uncategorizedTransactionIds,
   };
