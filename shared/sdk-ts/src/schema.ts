@@ -17283,6 +17283,27 @@ export interface components {
             /** @example MM/DD/YYYY */
             key: string;
         };
+        UsersErrorResponseDto: {
+            /**
+             * @description HTTP status code
+             * @example 400
+             */
+            statusCode: number;
+            /**
+             * @description Error type identifier
+             * @example CANNOT_GRANT_ROLE
+             * @enum {string}
+             */
+            type: "CANNOT_DELETE_LAST_USER" | "USER_ALREADY_ACTIVE" | "USER_ALREADY_INACTIVE" | "EMAIL_ALREADY_EXISTS" | "PHONE_NUMBER_ALREADY_EXIST" | "USER_NOT_FOUND" | "USER_SAME_THE_AUTHORIZED_USER" | "CANNOT_AUTHORIZED_USER_MUTATE_ROLE" | "EMAIL_ALREADY_INVITED" | "INVITE_TOKEN_INVALID" | "PHONE_NUMBER_EXISTS" | "EMAIL_EXISTS" | "EMAIL_NOT_EXISTS" | "USER_RECENTLY_INVITED" | "CANNOT_GRANT_ROLE" | "CANNOT_REMOVE_LAST_ADMIN" | "ROLE_NOT_FOUND";
+            /** @description Human-readable error message */
+            message?: string | null;
+            /** @description Additional error payload data */
+            payload?: Record<string, never> | null;
+        };
+        UsersApiErrorResponseDto: {
+            /** @description Array of error details */
+            errors: components["schemas"]["UsersErrorResponseDto"][];
+        };
         UserDto: {
             /**
              * @description The user ID
@@ -32828,6 +32849,15 @@ export interface operations {
                     "application/json": unknown;
                 };
             };
+            /** @description Validation error. Possible error types: CANNOT_AUTHORIZED_USER_MUTATE_ROLE, CANNOT_GRANT_ROLE, CANNOT_REMOVE_LAST_ADMIN, ROLE_NOT_FOUND, EMAIL_ALREADY_EXISTS, etc. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsersApiErrorResponseDto"];
+                };
+            };
         };
     };
     UsersController_deleteUser: {
@@ -32853,6 +32883,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation error. Possible error types: CANNOT_DELETE_LAST_USER, CANNOT_REMOVE_LAST_ADMIN, etc. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsersApiErrorResponseDto"];
                 };
             };
         };
@@ -32910,6 +32949,15 @@ export interface operations {
                     "application/json": unknown;
                 };
             };
+            /** @description Validation error. Possible error types: USER_SAME_THE_AUTHORIZED_USER, USER_ALREADY_ACTIVE, etc. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsersApiErrorResponseDto"];
+                };
+            };
         };
     };
     UsersController_inactivateUser: {
@@ -32937,12 +32985,26 @@ export interface operations {
                     "application/json": unknown;
                 };
             };
+            /** @description Validation error. Possible error types: USER_SAME_THE_AUTHORIZED_USER, USER_ALREADY_INACTIVE, CANNOT_REMOVE_LAST_ADMIN, etc. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsersApiErrorResponseDto"];
+                };
+            };
         };
     };
     UsersInviteController_sendInvite: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -32952,18 +33014,33 @@ export interface operations {
             };
         };
         responses: {
+            /** @description The invitation has been sent successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
+            /** @description Validation error. Possible error types: EMAIL_EXISTS, EMAIL_ALREADY_INVITED, CANNOT_GRANT_ROLE, ROLE_NOT_FOUND, etc. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsersApiErrorResponseDto"];
+                };
+            };
         };
     };
     UsersInviteController_resendInvite: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
             path: {
                 id: number;
             };
@@ -32971,18 +33048,33 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            201: {
+            /** @description The invitation has been resent successfully. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation error. Possible error types: USER_NOT_FOUND, USER_RECENTLY_INVITED, etc. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsersApiErrorResponseDto"];
+                };
             };
         };
     };
     UsersInviteController_sendBulkInvites: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -32992,11 +33084,21 @@ export interface operations {
             };
         };
         responses: {
-            201: {
+            /** @description Bulk invitations processed. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation error. Possible error types: EMAIL_EXISTS, CANNOT_GRANT_ROLE, ROLE_NOT_FOUND, etc. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsersApiErrorResponseDto"];
+                };
             };
         };
     };

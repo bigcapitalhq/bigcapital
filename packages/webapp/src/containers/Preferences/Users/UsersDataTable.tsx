@@ -1,3 +1,4 @@
+import { USERS_ERROR_TYPES } from '@bigcapital/sdk-ts';
 import { Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
@@ -82,7 +83,9 @@ function UsersDataTableInner({
         })
         .catch((err: ResendInvitationError) => {
           const errors = err?.data?.errors ?? [];
-          if (errors.find((e) => e.type === 'USER_RECENTLY_INVITED')) {
+          if (
+            errors.find((e) => e.type === USERS_ERROR_TYPES.UserRecentlyInvited)
+          ) {
             AppToaster.show({
               message:
                 'This person was recently invited. No need to invite them again just yet.',

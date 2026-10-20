@@ -1,3 +1,4 @@
+import { USERS_ERROR_TYPES } from '@bigcapital/sdk-ts';
 import { Alert, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
@@ -48,9 +49,23 @@ function UserDeleteAlertInner({
       })
       .catch(
         ({ data: { errors } }: { data: { errors: UserDeleteError[] } }) => {
-          if (errors.find((e) => e.type === 'CANNOT_DELETE_LAST_USER')) {
+          if (
+            errors.find(
+              (e) => e.type === USERS_ERROR_TYPES.CannotDeleteLastUser,
+            )
+          ) {
             AppToaster.show({
               message: 'Cannot delete the last user in the system.',
+              intent: Intent.DANGER,
+            });
+          }
+          if (
+            errors.find(
+              (e) => e.type === USERS_ERROR_TYPES.CannotRemoveLastAdmin,
+            )
+          ) {
+            AppToaster.show({
+              message: intl.get('roles.error.you_cannot_remove_the_last_admin'),
               intent: Intent.DANGER,
             });
           }
