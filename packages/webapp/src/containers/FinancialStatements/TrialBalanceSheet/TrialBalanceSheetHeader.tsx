@@ -22,6 +22,7 @@ import { transformToForm } from '@/utils';
 interface TrialBalanceFormValues {
   fromDate: Date;
   toDate: Date;
+  basis: 'cash' | 'accrual';
   branchesIds: string[];
   filterByOption: string;
   [key: string]: unknown;
@@ -67,6 +68,8 @@ function TrialBalanceSheetHeaderInner({
   const defaultValues: TrialBalanceFormValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
+    // Must match the report default basis in `getDefaultTrialBalanceQuery`.
+    basis: 'accrual',
     branchesIds: [],
     filterByOption: 'with-transactions',
   };
