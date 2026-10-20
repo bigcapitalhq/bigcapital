@@ -85,7 +85,7 @@ export interface ICreditNoteRefundDTO {
   branchId?: number;
 }
 
-export type ICreditNoteGLCommonEntry = Pick<
+export type ICreditNoteAccrualGLCommonEntry = Pick<
   ILedgerEntry,
   | 'date'
   | 'userId'
