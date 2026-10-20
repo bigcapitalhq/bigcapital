@@ -40,7 +40,10 @@ export class GetMatchedTransactions {
       { type: 'Bill', service: this.getMatchedBillsService },
       { type: 'Expense', service: this.getMatchedExpensesService },
       { type: 'ManualJournal', service: this.getMatchedManualJournalService },
-      { type: 'Cashflow', service: this.getMatchedCashflowService },
+      {
+        type: 'CashflowTransaction',
+        service: this.getMatchedCashflowService,
+      },
     ];
   }
 

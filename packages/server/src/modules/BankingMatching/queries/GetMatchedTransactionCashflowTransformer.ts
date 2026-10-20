@@ -1,4 +1,5 @@
 import { Transformer } from '@/modules/Transformer/Transformer';
+import { getCashflowTransactionFormattedType } from '@/modules/BankingTransactions/utils';
 
 export class GetMatchedTransactionCashflowTransformer extends Transformer {
   /**
@@ -111,7 +112,12 @@ export class GetMatchedTransactionCashflowTransformer extends Transformer {
    * @returns {string}
    */
   protected transsactionTypeFormatted(transaction) {
-    return transaction.transactionTypeFormatted;
+    const translationKey = getCashflowTransactionFormattedType(
+      transaction.transactionType,
+    );
+    return translationKey
+      ? this.context.i18n.t(translationKey)
+      : transaction.transactionType;
   }
 
   /**
