@@ -873,6 +873,7 @@
   "quick_made_payment": "Snabbt genomförd betalning",
   "the_payment_amount_bigger_than_invoice_due_amount": "Betalningsbeloppet är större än fakturans förfallna belopp.",
   "accounting_basis_": "Redovisningsprinciper",
+  "accounting_basis_hint": "Välj om du vill att den här verifikationen ska visas i rapporter som genereras enligt kontantmetoden, faktureringsmetoden eller båda.",
   "deposit_customer_account": "Insättning av kundkonto",
   "withdrawal_vendor_account": "Uttag leverantörskonto",
   "customer_advance_deposit": "Förskottsbetalning från kund",

@@ -42,6 +42,15 @@ export function ManualJournalDrawerHeader() {
               {manualJournal.journalType}
             </DetailItem>
 
+            <DetailItem
+              name={'accounting-method'}
+              label={intl.get('accounting_basis_')}
+            >
+              {manualJournal.basis
+                ? intl.get(manualJournal.basis)
+                : intl.get('general')}
+            </DetailItem>
+
             <DetailItem name={'journal-number'} label={intl.get('journal_no')}>
               {manualJournal.journalNumber}
             </DetailItem>

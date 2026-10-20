@@ -965,6 +965,7 @@
   "quick_made_payment": "Quick Made Payment",
   "the_payment_amount_bigger_than_invoice_due_amount": "The payment amount bigger than invoice due amount.",
   "accounting_basis_": "Accounting Basis",
+  "accounting_basis_hint": "Choose whether you want this journal entry to appear in reports generated on cash basis, accrual basis, or both.",
   "deposit_customer_account": "Deposit customer account",
   "withdrawal_vendor_account": "Withdrawal vendor account",
   "customer_advance_deposit": "Customer advance deposit",

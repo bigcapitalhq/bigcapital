@@ -2,36 +2,36 @@
   padding-bottom: 64px;
 }
 
-.page-form--make-journal-entries{
-  $self: '.page-form';  
+.page-form--make-journal-entries {
+  $self: '.page-form';
 
-  #{$self}__header{
+  #{$self}__header {
     display: flex;
 
     &-fields {
       flex: 1 0 0;
     }
-    
-    .bp4-label{
-      min-width: 140px;
+
+    .bp4-label {
+      min-width: 165px;
     }
-    .bp4-form-content{
+    .bp4-form-content {
       width: 100%;
     }
 
-    .bp4-form-group{
+    .bp4-form-group {
       margin-bottom: 18px;
 
-      &.bp4-inline{
-        max-width: 440px; 
+      &.bp4-inline {
+        max-width: 480px;
       }
     }
   }
 
-  .form-group--description{
+  .form-group--description {
     max-width: 500px;
 
-    textarea{
+    textarea {
       min-height: 60px;
       width: 100%;
     }

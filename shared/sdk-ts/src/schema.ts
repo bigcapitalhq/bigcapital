@@ -11631,6 +11631,12 @@ export interface components {
              */
             journalType?: string;
             /**
+             * @description Accounting basis of the journal entries; null means general, which appears in both cash and accrual reports
+             * @example accrual
+             * @enum {string|null}
+             */
+            basis?: "cash" | "accrual" | null;
+            /**
              * @description Reference number
              * @example REF-001
              */
@@ -11740,6 +11746,11 @@ export interface components {
             journalNumber?: string;
             /** @description Journal type */
             journalType?: string;
+            /**
+             * @description Accounting basis of the journal entries; null means general, which appears in both cash and accrual reports
+             * @enum {string|null}
+             */
+            basis?: "cash" | "accrual" | null;
             /** @description Reference */
             reference?: string;
             /** @description Description */
@@ -11767,6 +11778,11 @@ export interface components {
             journalNumber?: string;
             /** @description Journal type */
             journalType?: string;
+            /**
+             * @description Accounting basis of the journal entries; null means general, which appears in both cash and accrual reports
+             * @enum {string|null}
+             */
+            basis?: "cash" | "accrual" | null;
             /** @description Reference */
             reference?: string;
             /** @description Description */

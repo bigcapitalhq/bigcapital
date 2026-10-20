@@ -1,10 +1,12 @@
 import { ToNumber } from '@/common/decorators/Validators';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -98,6 +100,16 @@ export class CommandManualJournalDto {
   @IsString()
   @MaxLength(255)
   journalType?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Accounting basis of the journal entries; null means general, which appears in both cash and accrual reports',
+    enum: AccountingBasis,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsEnum(AccountingBasis)
+  basis?: AccountingBasis | null;
 
   @ApiPropertyOptional({ description: 'Reference' })
   @IsOptional()
