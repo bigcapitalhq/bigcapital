@@ -440,11 +440,20 @@ describe('GL entries — Purchases transactions (e2e)', () => {
         })
         .expect(201);
 
-      const legs = await fetchLegs('RefundVendorCredit', refundRes.body.id);
+      const accrualLegs = await fetchLegs(
+        'RefundVendorCredit',
+        refundRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'RefundVendorCredit',
+        refundRes.body.id,
+        'cash',
+      );
 
-      expectBalanced(legs);
+      expectBalanced(accrualLegs);
       expectLegs(
-        legs,
+        accrualLegs,
         [
           // Accrual basis: Dr deposit / Cr A/P.
           { accountCode: '10001', debit: 1000, basis: 'accrual' },
@@ -454,11 +463,19 @@ describe('GL entries — Purchases transactions (e2e)', () => {
             credit: 1000,
             basis: 'accrual',
           },
+        ],
+        'RefundVendorCredit (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
           // Cash basis: Dr deposit / Cr cost of goods sold.
           { accountCode: '10001', debit: 1000, basis: 'cash' },
           { accountCode: '40002', credit: 1000, basis: 'cash' },
         ],
-        'RefundVendorCredit',
+        'RefundVendorCredit (cash)',
       );
     });
   });
