@@ -891,6 +891,7 @@
   "quick_made_payment": "Pago rápido realizado",
   "the_payment_amount_bigger_than_invoice_due_amount": "El monto del pago es mayor que el monto adeudado de la factura.",
   "accounting_basis_": "Base contable",
+  "accounting_basis_hint": "Elige si quieres que este asiento contable aparezca en los informes generados en base caja, base devengo o ambas.",
   "deposit_customer_account": "Cuenta de depósito del cliente",
   "withdrawal_vendor_account": "Cuenta de retiro del proveedor",
   "customer_advance_deposit": "Depósito anticipado del cliente",

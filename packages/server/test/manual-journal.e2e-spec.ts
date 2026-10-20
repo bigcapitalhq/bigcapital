@@ -72,8 +72,28 @@ describe('Manual Journals (e2e)', () => {
     expect(getResponse.body.created_at).toMatch(
       /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
     );
+    // A journal without an explicit accounting basis is general.
+    expect(getResponse.body.basis).toBeNull();
 
     return getResponse;
+  });
+
+  it('/manual-journals (POST) persists the accounting basis', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/manual-journals')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ ...makeManualJournalRequest(), basis: 'cash' })
+      .expect(201);
+
+    const getResponse = await request(app.getHttpServer())
+      .get(`/manual-journals/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send()
+      .expect(200);
+
+    expect(getResponse.body.basis).toBe('cash');
   });
 
   it('/manual-journals/:id (PUT)', async () => {

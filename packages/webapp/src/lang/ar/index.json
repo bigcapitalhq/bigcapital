@@ -890,6 +890,7 @@
   "quick_made_payment": "سند دفع سريع",
   "the_payment_amount_bigger_than_invoice_due_amount": "مبلغ الدفعة أكبر من مبلغ الفاتورة المستحق.",
   "accounting_basis_": "الأساس المحاسبي",
+  "accounting_basis_hint": "اختر ما إذا كنت تريد أن يظهر قيد اليومية هذا في التقارير المعدة على الأساس النقدي أو أساس الاستحقاق أو كليهما.",
   "deposit_customer_account": "إيداع حساب الزبون",
   "withdrawal_vendor_account": "سحب حساب المورد",
   "customer_advance_deposit": "إيداعات الزبون المقدمة",

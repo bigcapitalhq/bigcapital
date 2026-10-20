@@ -14,7 +14,10 @@ import {
   transformAttachmentsToForm,
   transformAttachmentsToRequest,
 } from '@/containers/Attachments/utils';
-import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import {
+  useCurrentOrganizationBaseCurrency,
+  type AccountingBasis,
+} from '@/hooks/query';
 import {
   updateTableCell,
   repeatValue,
@@ -55,6 +58,7 @@ export type MakeJournalFormValues = {
   journalNumber: string;
   journalNumberManually: string;
   journalType: string;
+  basis: AccountingBasis | '';
   date: string;
   description: string;
   reference: string;
@@ -85,6 +89,7 @@ export const defaultManualJournal: MakeJournalFormValues = {
   journalNumber: '',
   journalNumberManually: '',
   journalType: 'Journal',
+  basis: '',
   date: moment(new Date()).format('YYYY-MM-DD'),
   description: '',
   reference: '',
@@ -117,8 +122,12 @@ export function transformToEditForm(
 
   const attachments = transformAttachmentsToForm(manualJournal);
 
+  const formValues = transformToForm(manualJournal, defaultManualJournal);
+
   return {
-    ...transformToForm(manualJournal, defaultManualJournal),
+    ...formValues,
+    // The general basis is stored as `null` on the server.
+    basis: formValues.basis ?? '',
     entries,
     attachments,
   } as MakeJournalFormValues;
@@ -143,6 +152,8 @@ export function transformFormValuesToRequest(
       journalNumber: values.journalNumber,
     }),
     branchId: values.branchId === '' ? undefined : Number(values.branchId),
+    // The general basis is stored as `null` on the server.
+    basis: values.basis || null,
     publish,
     entries,
     attachments,

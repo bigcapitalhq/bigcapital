@@ -17,6 +17,7 @@ import {
   FFormGroup,
   FInputGroup,
   FDateInput,
+  SegmentedControl,
   Stack,
 } from '@/components';
 import { useDateInputFormatter } from '@/hooks';
@@ -26,10 +27,10 @@ const getFieldsStyle = (theme: Theme) => css`
     margin-bottom: 0;
 
     &.${theme.bpPrefix}-inline {
-      max-width: 450px;
+      max-width: 480px;
     }
     .${theme.bpPrefix}-label {
-      min-width: 150px;
+      min-width: 165px;
       font-weight: 500;
     }
     .${theme.bpPrefix}-form-content {
@@ -37,6 +38,8 @@ const getFieldsStyle = (theme: Theme) => css`
     }
   }
 `;
+
+type MakeJournalBasisOption = 'general' | 'accrual' | 'cash';
 
 /**
  * Make journal entries header fields.
@@ -101,6 +104,31 @@ export function MakeJournalEntriesHeader() {
         fastField
       >
         <FInputGroup name={'journalType'} fill />
+      </FFormGroup>
+
+      {/*------------ Accounting method  ----------- */}
+      <FFormGroup
+        name={'basis'}
+        label={intl.get('accounting_basis_')}
+        labelInfo={
+          <Hint
+            content={<T id={'accounting_basis_hint'} />}
+            position={Position.RIGHT}
+          />
+        }
+        inline
+      >
+        <SegmentedControl<MakeJournalBasisOption>
+          value={form.values.basis || 'general'}
+          onChange={(value) => {
+            form.setFieldValue('basis', value === 'general' ? '' : value);
+          }}
+          items={[
+            { label: intl.get('general'), value: 'general' },
+            { label: intl.get('accrual'), value: 'accrual' },
+            { label: intl.get('cash'), value: 'cash' },
+          ]}
+        />
       </FFormGroup>
 
       {/*------------ Currency  -----------*/}

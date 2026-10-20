@@ -34550,6 +34550,16 @@
             "description": "Journal type",
             "example": "General"
           },
+          "basis": {
+            "type": "string",
+            "description": "Accounting basis of the journal entries; null means general, which appears in both cash and accrual reports",
+            "enum": [
+              "cash",
+              "accrual"
+            ],
+            "nullable": true,
+            "example": "accrual"
+          },
           "reference": {
             "type": "string",
             "description": "Reference number",
@@ -34716,6 +34726,15 @@
             "type": "string",
             "description": "Journal type"
           },
+          "basis": {
+            "type": "string",
+            "description": "Accounting basis of the journal entries; null means general, which appears in both cash and accrual reports",
+            "enum": [
+              "cash",
+              "accrual"
+            ],
+            "nullable": true
+          },
           "reference": {
             "type": "string",
             "description": "Reference"
@@ -34775,6 +34794,15 @@
           "journalType": {
             "type": "string",
             "description": "Journal type"
+          },
+          "basis": {
+            "type": "string",
+            "description": "Accounting basis of the journal entries; null means general, which appears in both cash and accrual reports",
+            "enum": [
+              "cash",
+              "accrual"
+            ],
+            "nullable": true
           },
           "reference": {
             "type": "string",

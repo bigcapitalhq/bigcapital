@@ -1,4 +1,5 @@
 import { AccountNormal } from '@/modules/Accounts/Accounts.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { ManualJournalGL } from './ManualJournalGL';
 
 const buildManualJournal = (overrides: Record<string, any> = {}) =>
@@ -88,4 +89,19 @@ describe('ManualJournalGL', () => {
     expect(entry.currencyCode).toBe('EUR');
     expect(entry.exchangeRate).toBe(2);
   });
+
+  it.each([
+    [AccountingBasis.Cash, AccountingBasis.Cash],
+    [AccountingBasis.Accrual, AccountingBasis.Accrual],
+    [null, null],
+  ])(
+    'flags every ledger entry with the journal accounting basis %s',
+    (basis, expected) => {
+      const ledger = buildLedger(buildManualJournal({ basis }));
+
+      expect(
+        ledger.getEntries().every((entry) => entry.basis === expected),
+      ).toBe(true);
+    },
+  );
 });
