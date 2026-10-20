@@ -3,31 +3,16 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import { useJournalEntriesTransactionsColumns } from './components';
-import type { GLTransactionRow } from '@/containers/JournalEntriesTable/utils';
 import { Card, SegmentedControl } from '@/components';
 import {
   AmountDisplayedBaseCurrencyMessage,
   JournalEntriesTable,
 } from '@/containers/JournalEntriesTable/JournalEntriesTable';
 import {
-  useSettingsOrganization,
+  useCurrentOrganizationAccountingBasis,
   useTransactionsByReference,
+  type AccountingBasis,
 } from '@/hooks/query';
-
-type AccountingBasis = 'accrual' | 'cash';
-
-/**
- * Determines whether the given journal entry leg is within the given
- * accounting basis. The general (unflagged) legs are included in both.
- */
-function isLegWithinBasis(leg: GLTransactionRow, basis: AccountingBasis) {
-  const legBasis = leg.basis ?? 'general';
-
-  if (basis === 'cash') {
-    return legBasis === 'cash' || legBasis === 'general';
-  }
-  return legBasis === 'accrual' || legBasis === 'general';
-}
 
 /**
  * Journal entries vendor credit transactions table.
@@ -39,29 +24,22 @@ export function VendorCreditGLEntriesTable() {
   const columns = useJournalEntriesTransactionsColumns();
 
   // Retrieves the organization accounting basis to use it as the default.
-  const { data: organizationSettings } = useSettingsOrganization();
+  const organizationBasis = useCurrentOrganizationAccountingBasis();
   const [selectedBasis, setSelectedBasis] =
     React.useState<AccountingBasis | null>(null);
 
-  const organizationBasis = organizationSettings?.accountingBasis as
-    | string
-    | undefined;
-  const basis: AccountingBasis =
-    selectedBasis ?? (organizationBasis === 'cash' ? 'cash' : 'accrual');
+  const basis: AccountingBasis = selectedBasis ?? organizationBasis;
 
   // Handle fetch transaction by reference.
   const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
     {
       referenceId: vendorCreditId ?? 0,
       referenceType: 'VendorCredit',
+      basis,
     },
     { enabled: !!vendorCreditId },
   );
-  const transactions = React.useMemo(
-    () =>
-      (data?.transactions ?? []).filter((leg) => isLegWithinBasis(leg, basis)),
-    [data, basis],
-  );
+  const transactions = data?.transactions ?? [];
 
   return (
     <Card>
