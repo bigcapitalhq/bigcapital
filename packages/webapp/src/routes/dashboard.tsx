@@ -526,7 +526,7 @@ export const getDashboardRoutes = () => [
       })),
     ),
     breadcrumb: intl.get('financial_reports'),
-    pageTitle: intl.get('all_financial_reports'),
+    pageTitle: intl.get('reports'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   // Expenses.
