@@ -33,6 +33,7 @@ import { ExcludeNullInterceptor } from '@/interceptors/ExcludeNull.interceptor';
 import { UserIpInterceptor } from '@/interceptors/user-ip.interceptor';
 import { TransformerModule } from '../Transformer/Transformer.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { AccountsTemplatesModule } from '../AccountsTemplates/AccountsTemplates.module';
 import { ExpensesModule } from '../Expenses/Expenses.module';
 import { ItemCategoryModule } from '../ItemCategories/ItemCategory.module';
 import { TaxRatesModule } from '../TaxRates/TaxRate.module';
@@ -201,6 +202,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     ItemsModule,
     ItemCategoryModule,
     AccountsModule,
+    AccountsTemplatesModule,
     ExpensesModule,
     TaxRatesModule,
     PdfTemplatesModule,

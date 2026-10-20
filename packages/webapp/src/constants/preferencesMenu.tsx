@@ -60,6 +60,11 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     href: '/preferences/accountant',
   },
   {
+    text: <T id={'accounts_templates.title'} />,
+    disabled: false,
+    href: '/preferences/chart-of-accounts',
+  },
+  {
     text: <T id={'features.label'} />,
     disabled: false,
     href: '/preferences/features',
