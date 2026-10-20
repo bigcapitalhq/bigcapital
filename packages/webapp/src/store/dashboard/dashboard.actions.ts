@@ -13,6 +13,7 @@ import {
   REMOVE_AUTOFILL_REF,
   RESET_AUTOFILL_REF,
   SET_FEATURE_DASHBOARD_META,
+  SIDEBAR_EXPEND_SET_DEFAULT,
   SIDEBAR_EXPEND_TOGGLE,
   SIDEBAR_SUBMENU_CLOSE,
   SIDEBAR_SUBMENU_OPEN,
@@ -46,6 +47,13 @@ export function closeDrawer(name: string, payload?: Record<string, unknown>) {
 }
 export function toggleExpendSidebar(toggle?: boolean) {
   return { type: SIDEBAR_EXPEND_TOGGLE, payload: { toggle } };
+}
+/**
+ * Sets the route-level default of the sidebar expending. Ignored once the user
+ * has toggled the sidebar themselves.
+ */
+export function setDefaultExpendSidebar(toggle: boolean) {
+  return { type: SIDEBAR_EXPEND_SET_DEFAULT, payload: { toggle } };
 }
 export function appIsLoading(toggle: boolean) {
   return { type: APP_IS_LOADING, payload: { isLoading: toggle } };
