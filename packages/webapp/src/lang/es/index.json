@@ -241,7 +241,7 @@
   "sales": "Ventas",
   "purchases": "Compras",
   "financial_reports": "Informes financieros",
-  "all_financial_reports": "Todos los informes financieros",
+  "reports": "Todos los informes financieros",
   "balance_sheet": "Hoja de balance",
   "trial_balance_sheet": "Hoja de balance de prueba",
   "journal": "Diario",
