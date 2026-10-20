@@ -15991,6 +15991,11 @@ export interface components {
             fromDate: string;
             /** @description End date */
             toDate: string;
+            /**
+             * @description Accounting basis
+             * @enum {string}
+             */
+            basis: "cash" | "accrual";
             /** @description From range */
             fromRange?: number;
             /** @description To range */
@@ -30722,6 +30727,7 @@ export interface operations {
                      *       "query": {
                      *         "from_date": "2025-06-01",
                      *         "to_date": "2025-06-21",
+                     *         "basis": "accrual",
                      *         "from_range": null,
                      *         "to_range": null,
                      *         "accounts_ids": [],
