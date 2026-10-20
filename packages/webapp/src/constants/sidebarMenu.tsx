@@ -586,6 +586,21 @@ export const SidebarMenu: SidebarMenuItem[] = [
         type: ISidebarMenuItemType.Group,
         children: [
           {
+            text: <T id={'all_reports'} />,
+            href: '/financial-reports',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.ALL,
+            },
+          },
+        ],
+      },
+      {
+        text: <T id={'sidebar.finance'} />,
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
             text: <T id={'sidebar.balance_sheet'} />,
             href: '/financial-reports/balance-sheet',
             type: ISidebarMenuItemType.Link,
@@ -657,105 +672,105 @@ export const SidebarMenu: SidebarMenuItem[] = [
               ability: ReportsAction.READ_AP_AGING_SUMMARY,
             },
           },
-        ],
-      },
-      {
-        text: <T id={'sidebar.sales_purchases'} />,
-        type: ISidebarMenuItemType.Group,
-        children: [
           {
-            text: <T id={'sidebar.purchases_by_items'} />,
-            type: ISidebarMenuItemType.Link,
-            href: '/financial-reports/purchases-by-items',
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
-            },
+            text: <T id={'sidebar.sales_purchases'} />,
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: <T id={'sidebar.purchases_by_items'} />,
+                type: ISidebarMenuItemType.Link,
+                href: '/financial-reports/purchases-by-items',
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_PURCHASES_BY_ITEMS,
+                },
+              },
+              {
+                text: <T id={'sidebar.sales_by_items'} />,
+                href: '/financial-reports/sales-by-items',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_SALES_BY_ITEMS,
+                },
+              },
+              {
+                text: <T id={'sidebar.customers_transactions'} />,
+                href: '/financial-reports/transactions-by-customers',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
+                },
+              },
+              {
+                text: <T id={'sidebar.vendors_transactions'} />,
+                href: '/financial-reports/transactions-by-vendors',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
+                },
+              },
+              {
+                text: <T id={'sidebar.customers_balance_summary'} />,
+                href: '/financial-reports/customers-balance-summary',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
+                },
+              },
+              {
+                text: <T id={'sidebar.vendors_balance_summary'} />,
+                href: '/financial-reports/vendors-balance-summary',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
+                },
+              },
+            ],
           },
           {
-            text: <T id={'sidebar.sales_by_items'} />,
-            href: '/financial-reports/sales-by-items',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_SALES_BY_ITEMS,
-            },
+            text: 'Taxes',
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: 'Sales Tax Liability Summary',
+                href: '/financial-reports/sales-tax-liability-summary',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.SalesTax,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+                },
+              },
+            ],
           },
           {
-            text: <T id={'sidebar.customers_transactions'} />,
-            href: '/financial-reports/transactions-by-customers',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
-            },
-          },
-          {
-            text: <T id={'sidebar.vendors_transactions'} />,
-            href: '/financial-reports/transactions-by-vendors',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_VENDORS_TRANSACTIONS,
-            },
-          },
-          {
-            text: <T id={'sidebar.customers_balance_summary'} />,
-            href: '/financial-reports/customers-balance-summary',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_CUSTOMERS_SUMMARY_BALANCE,
-            },
-          },
-          {
-            text: <T id={'sidebar.vendors_balance_summary'} />,
-            href: '/financial-reports/vendors-balance-summary',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
-            },
-          },
-        ],
-      },
-      {
-        text: 'Taxes',
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: 'Sales Tax Liability Summary',
-            href: '/financial-reports/sales-tax-liability-summary',
-            type: ISidebarMenuItemType.Link,
-            feature: Features.SalesTax,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
-            },
-          },
-        ],
-      },
-      {
-        text: <T id={'sidebar.inventory'} />,
-        type: ISidebarMenuItemType.Group,
-        children: [
-          {
-            text: <T id={'sidebar.inventory_item_details'} />,
-            href: '/financial-reports/inventory-item-details',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
-            },
-          },
-          {
-            text: <T id={'sidebar.inventory_valuation'} />,
-            href: '/financial-reports/inventory-valuation',
-            type: ISidebarMenuItemType.Link,
-            permission: {
-              subject: AbilitySubject.Report,
-              ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
-            },
+            text: <T id={'sidebar.inventory'} />,
+            type: ISidebarMenuItemType.Group,
+            children: [
+              {
+                text: <T id={'sidebar.inventory_item_details'} />,
+                href: '/financial-reports/inventory-item-details',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
+                },
+              },
+              {
+                text: <T id={'sidebar.inventory_valuation'} />,
+                href: '/financial-reports/inventory-valuation',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
+                },
+              },
+            ],
           },
         ],
       },

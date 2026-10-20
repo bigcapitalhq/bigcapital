@@ -2194,6 +2194,7 @@
   "sidebar.new_payment_received": "New Payment Received",
   "sidebar.accounting": "Accounting",
   "sidebar.financial": "Financial",
+  "sidebar.finance": "Finance",
   "sidebar.accounts_chart": "Accounts Chart",
   "sidebar.manual_journals": "Manual Journals",
   "sidebar.transactions_locking": "Transactions Locking",
