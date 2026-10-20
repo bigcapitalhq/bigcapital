@@ -564,11 +564,20 @@ describe('GL entries — Sales transactions (e2e)', () => {
         })
         .expect(201);
 
-      const legs = await fetchLegs('RefundCreditNote', refundRes.body.id);
+      const accrualLegs = await fetchLegs(
+        'RefundCreditNote',
+        refundRes.body.id,
+        'accrual',
+      );
+      const cashLegs = await fetchLegs(
+        'RefundCreditNote',
+        refundRes.body.id,
+        'cash',
+      );
 
-      expectBalanced(legs);
+      expectBalanced(accrualLegs);
       expectLegs(
-        legs,
+        accrualLegs,
         [
           // Accrual basis: Dr A/R / Cr withdrawal account.
           {
@@ -578,11 +587,19 @@ describe('GL entries — Sales transactions (e2e)', () => {
             basis: 'accrual',
           },
           { accountCode: '10001', credit: 1000, basis: 'accrual' },
+        ],
+        'RefundCreditNote (accrual)',
+      );
+
+      expectBalanced(cashLegs);
+      expectLegs(
+        cashLegs,
+        [
           // Cash basis: Dr income / Cr withdrawal account.
           { accountCode: '50002', debit: 1000, basis: 'cash' },
           { accountCode: '10001', credit: 1000, basis: 'cash' },
         ],
-        'RefundCreditNote',
+        'RefundCreditNote (cash)',
       );
     });
   });
