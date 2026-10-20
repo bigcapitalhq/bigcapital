@@ -5,7 +5,7 @@ import { AccountNormal } from '@/interfaces/Account';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
 
-export class VendorCreditGL {
+export class VendorCreditAccrualGL {
   private APAccountId: number;
   private purchaseDiscountAccountId: number;
   private otherExpensesAccountId: number;
@@ -15,7 +15,7 @@ export class VendorCreditGL {
   /**
    * Sets the payable account (A/P) ID.
    * @param {number} APAccountId
-   * @returns {VendorCreditGL}
+   * @returns {VendorCreditAccrualGL}
    */
   public setAPAccountId(APAccountId: number) {
     this.APAccountId = APAccountId;
@@ -25,7 +25,7 @@ export class VendorCreditGL {
   /**
    * Sets the purchase discount account ID.
    * @param {number} purchaseDiscountAccountId
-   * @returns {VendorCreditGL}
+   * @returns {VendorCreditAccrualGL}
    */
   public setPurchaseDiscountAccountId(purchaseDiscountAccountId: number) {
     this.purchaseDiscountAccountId = purchaseDiscountAccountId;
@@ -35,7 +35,7 @@ export class VendorCreditGL {
   /**
    * Sets the other expenses account ID.
    * @param {number} otherExpensesAccountId
-   * @returns {VendorCreditGL}
+   * @returns {VendorCreditAccrualGL}
    */
   public setOtherExpensesAccountId(otherExpensesAccountId: number) {
     this.otherExpensesAccountId = otherExpensesAccountId;
