@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { RefundVendorCreditDetailActionsBar } from './RefundVendorCreditDetailActionsBar';
 import { RefundVendorCreditDetailTab } from './RefundVendorCreditDetailTab';
+import { RefundVendorCreditGLEntriesPanel } from './RefundVendorCreditGLEntriesPanel';
 import { DrawerMainTabs } from '@/components';
 
 /**
@@ -28,6 +29,11 @@ function RefundVendorCreditDetailTabs() {
         title={intl.get('details')}
         id={'details'}
         panel={<RefundVendorCreditDetailTab />}
+      />
+      <Tab
+        title={intl.get('journal_entries')}
+        id={'journal_entries'}
+        panel={<RefundVendorCreditGLEntriesPanel />}
       />
     </DrawerMainTabs>
   );

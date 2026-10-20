@@ -8,6 +8,8 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { AccountNormal } from '@/interfaces/Account';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { RefundVendorCreditCashGL } from './RefundVendorCreditCashGL';
 
 @Injectable()
 export class RefundVendorCreditGLEntries {
@@ -52,6 +54,8 @@ export class RefundVendorCreditGLEntries {
 
       note: refundVendorCredit.description,
       branchId: refundVendorCredit.branchId,
+
+      basis: AccountingBasis.Accrual,
     };
   };
 
@@ -119,6 +123,47 @@ export class RefundVendorCreditGLEntries {
   }
 
   /**
+   * Retrieves the refund vendor credit general ledger.
+   * The ledger contains both the accrual basis entries (A/P/deposit) and the
+   * cash basis entries (deposit/expense) flagged by the basis.
+   * @param {RefundVendorCredit} refundVendorCredit - Refund vendor credit.
+   * @param {number} APAccountId - A/P account id.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<Ledger>}
+   */
+  public getRefundVendorCreditGLedger = async (
+    refundVendorCredit: RefundVendorCredit,
+    APAccountId: number,
+    trx?: Knex.Transaction,
+  ): Promise<Ledger> => {
+    // Accrual basis ledger entries.
+    const accrualLedger = new Ledger(
+      this.getRefundVendorCreditGLEntries(refundVendorCredit, APAccountId),
+    );
+
+    // Find or create the purchase discount account.
+    const purchaseDiscountAccount =
+      await this.accountRepository.findOrCreatePurchaseDiscountAccount({}, trx);
+    // Find or create the other expenses (adjustment) account.
+    const otherExpensesAccount =
+      await this.accountRepository.findOrCreateOtherExpensesAccount({}, trx);
+
+    const refundVendorCreditCashGL = new RefundVendorCreditCashGL(
+      refundVendorCredit,
+    )
+      .setPurchaseDiscountAccountId(purchaseDiscountAccount.id)
+      .setOtherExpensesAccountId(otherExpensesAccount.id);
+
+    // Cash basis ledger entries.
+    const cashLedger = refundVendorCreditCashGL.getLedger();
+
+    return new Ledger([
+      ...accrualLedger.getEntries(),
+      ...cashLedger.getEntries(),
+    ]);
+  };
+
+  /**
    * Creates refund vendor credit GL entries.
    * @param {number} refundVendorCreditId
    * @param {Knex.Transaction} trx
@@ -127,11 +172,11 @@ export class RefundVendorCreditGLEntries {
     refundVendorCreditId: number,
     trx?: Knex.Transaction,
   ) => {
-    // Retrieve the refund with associated vendor credit.
+    // Retrieve the refund with associated vendor credit and items.
     const refundVendorCredit = await this.refundVendorCreditModel()
       .query(trx)
       .findById(refundVendorCreditId)
-      .withGraphFetched('vendorCredit');
+      .withGraphFetched('vendorCredit.entries.item');
 
     // Retrieve the payable account (A/P) account based on the given currency.
     const APAccount = await this.accountRepository.findOrCreateAccountsPayable(
@@ -140,12 +185,12 @@ export class RefundVendorCreditGLEntries {
       trx,
     );
 
-    // Retrieve refund vendor credit GL entries.
-    const refundGLEntries = this.getRefundVendorCreditGLEntries(
+    // Retrieve refund vendor credit ledger entries.
+    const ledger = await this.getRefundVendorCreditGLedger(
       refundVendorCredit,
       APAccount.id,
+      trx,
     );
-    const ledger = new Ledger(refundGLEntries);
 
     // Saves refund ledger entries.
     await this.ledgerStorage.commit(ledger, trx);

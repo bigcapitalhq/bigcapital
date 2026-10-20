@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { VendorCreditGL } from './VendorCreditGL';
+import { VendorCreditAccrualGL } from './VendorCreditAccrualGL';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
@@ -45,7 +45,7 @@ export class VendorCreditGLEntries {
     const otherExpensesAccount =
       await this.accountRepository.findOrCreateOtherExpensesAccount({}, trx);
 
-    const vendorCreditLedger = new VendorCreditGL(vendorCredit)
+    const vendorCreditLedger = new VendorCreditAccrualGL(vendorCredit)
       .setAPAccountId(APAccount.id)
       .setPurchaseDiscountAccountId(purchaseDiscountAccount.id)
       .setOtherExpensesAccountId(otherExpensesAccount.id)
