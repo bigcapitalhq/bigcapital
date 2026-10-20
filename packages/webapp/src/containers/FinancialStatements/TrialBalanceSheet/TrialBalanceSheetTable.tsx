@@ -23,6 +23,7 @@ export function TrialBalanceSheetTable({
 
   const table = (trialBalanceSheet as any)?.table;
   const meta = (trialBalanceSheet as any)?.meta;
+  const query = trialBalanceSheet?.query;
 
   // Trial balance sheet table columns.
   const columns = useTrialBalanceSheetTableColumns();
@@ -32,7 +33,7 @@ export function TrialBalanceSheetTable({
       companyName={companyName}
       sheetType={intl.get('trial_balance_sheet')}
       dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
-      basis={'cash'}
+      basis={query?.basis}
     >
       <TrialBalanceDataTable
         columns={columns}
