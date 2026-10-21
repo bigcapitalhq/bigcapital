@@ -151,7 +151,7 @@ describe('sortBalanceSheetAccountsNodes', () => {
     ]);
   });
 
-  it('sorts by the formatted account name', () => {
+  it('sorts by the account name', () => {
     const nodes = [
       createAggregateNode([
         createAccountsNode([
