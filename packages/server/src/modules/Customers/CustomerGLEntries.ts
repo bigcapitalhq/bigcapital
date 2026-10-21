@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AccountNormal } from '@/interfaces/Account';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { Customer } from './models/Customer';
 
 @Injectable()
@@ -24,6 +25,11 @@ export class CustomerGLEntries {
       debit: 0,
 
       branchId: customer.openingBalanceBranchId,
+
+      // The customer opening balance recognizes the receivable and the
+      // offsetting income without any cash movement, hence it is an
+      // accrual basis entry and it is excluded from the cash basis reports.
+      basis: AccountingBasis.Accrual,
     };
   };
 
