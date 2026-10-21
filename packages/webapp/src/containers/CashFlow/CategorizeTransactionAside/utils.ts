@@ -57,3 +57,21 @@ export const useIsShowReconcileTransactionLink = () => {
 
   return atleastOneSelected && pendingAmount !== 0;
 };
+
+/**
+ * Days either side of the bank transaction date that candidate matches are
+ * searched in by default.
+ */
+export const DEFAULT_MATCH_DATE_WINDOW_DAYS = 90;
+
+/**
+ * Date windows offered for narrowing the matching candidates. Zero disables
+ * the window and searches the whole ledger.
+ */
+export const MATCH_DATE_WINDOW_OPTIONS = [
+  { label: '\u00B1 30 days', value: 30 },
+  { label: '\u00B1 90 days', value: 90 },
+  { label: '\u00B1 6 months', value: 182 },
+  { label: '\u00B1 1 year', value: 365 },
+  { label: 'All time', value: 0 },
+];
