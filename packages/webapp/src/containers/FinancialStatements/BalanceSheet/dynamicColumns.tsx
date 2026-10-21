@@ -18,6 +18,7 @@ interface ReportTableColumn {
 
 interface TableColumn {
   key: string;
+  id?: string;
   Header: string;
   accessor?: string;
   className?: string;
@@ -60,6 +61,8 @@ const accountNameMapper: ColumnMapper = (data) => (column) => {
 
   return {
     key: column.key,
+    // The column id is sent to the backend as the sorting column key.
+    id: column.key,
     Header: column.label,
     accessor,
     className: column.key,
@@ -73,6 +76,30 @@ const accountNameMapper: ColumnMapper = (data) => (column) => {
  * Shared money column mapper.
  */
 const moneyColumnMapper: ColumnMapper = (data) => (column) => {
+  const accessor = getTableCellValueAccessor(column.cellIndex);
+  const width = getReportColWidth(data, accessor, column.label);
+
+  return {
+    Header: column.label,
+    key: column.key,
+    // The column id is sent to the backend as the sorting column key.
+    id: column.key,
+    accessor,
+    width,
+    align: Align.Right,
+    textOverview: true,
+    money: true,
+  };
+};
+
+/**
+ * Date periods money column mapper.
+ *
+ * The backend does not support sorting date periods columns, and the same
+ * column keys are repeated on each date range, so they are not sortable and
+ * keep the accessor as their unique id.
+ */
+const datePeriodColumnMapper: ColumnMapper = (data) => (column) => {
   const accessor = getTableCellValueAccessor(column.cellIndex);
   const width = getReportColWidth(data, accessor, column.label);
 
@@ -153,9 +180,11 @@ const totalMapper: ColumnMapper = (data) => (column) => {
     accessor,
     textOverview: true,
     width,
-    disableSortBy: true,
+    // Group headers are not sortable, only the leaf total column is.
+    disableSortBy: hasChildren,
     money: true,
     align: hasChildren ? Align.Center : Align.Right,
+    ...(!hasChildren ? { id: column.key } : {}),
   };
 
   return FF.pipe(
@@ -167,6 +196,26 @@ const totalMapper: ColumnMapper = (data) => (column) => {
 };
 
 /**
+ * Date range children columns composer.
+ */
+const dateRangeColumnsComposer = (
+  data: unknown[],
+  column: ReportTableColumn,
+): TableColumn[] => {
+  return FF.pipe(column.children ?? [], FA.map(datePeriodColumnMapper(data)));
+};
+
+/**
+ * Assoc the date range children columns.
+ */
+const assocColumnsToDateRange =
+  (data: unknown[], column: ReportTableColumn) =>
+  (columnAccessor: TableColumn): TableColumn => ({
+    ...columnAccessor,
+    columns: dateRangeColumnsComposer(data, column),
+  });
+
+/**
  * Date range columns mapper.
  */
 const dateRangeMapper: ColumnMapper = (data) => (column) => {
@@ -175,6 +224,7 @@ const dateRangeMapper: ColumnMapper = (data) => (column) => {
   const base: TableColumn = {
     Header: column.label,
     key: column.key,
+    // Date periods columns are not supported by the backend sorting.
     disableSortBy: true,
     textOverview: true,
     money: true,
@@ -184,7 +234,7 @@ const dateRangeMapper: ColumnMapper = (data) => (column) => {
   return FF.pipe(
     base,
     FO.fromPredicate(FF.constant(hasChildren)),
-    FO.map(assocColumnsToTotal(data, column)),
+    FO.map(assocColumnsToDateRange(data, column)),
     FO.alt(() =>
       FF.pipe(
         base,

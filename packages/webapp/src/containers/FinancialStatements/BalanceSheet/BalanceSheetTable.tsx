@@ -2,6 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { getReportCellTestId, getReportRowTestId } from '../reportTestIds';
+import { useFinancialReportSorting } from '../useReportSorting';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { useBalanceSheetColumns } from './components';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -14,7 +15,7 @@ interface BalanceSheetTableProps {
 
 export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
   // Balance sheet context.
-  const { balanceSheet } = useBalanceSheetContext();
+  const { balanceSheet, pageQuery, setPageQuery } = useBalanceSheetContext();
 
   // Retrieve the database columns.
   const tableColumns = useBalanceSheetColumns();
@@ -24,6 +25,12 @@ export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
     () => defaultExpanderReducer(balanceSheet?.table?.rows ?? [], 3),
     [balanceSheet?.table],
   );
+
+  // Balance sheet backend columns sorting.
+  const { sortableTableProps } = useFinancialReportSorting({
+    pageQuery,
+    setPageQuery,
+  });
 
   return (
     <FinancialSheet
@@ -48,6 +55,7 @@ export function BalanceSheetTable({ companyName }: BalanceSheetTableProps) {
         expandColumnSpace={0.8}
         headerLoading={true}
         sticky={true}
+        {...sortableTableProps}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
