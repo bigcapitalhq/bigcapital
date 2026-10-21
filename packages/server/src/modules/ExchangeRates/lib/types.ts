@@ -4,6 +4,7 @@ export interface IExchangeRateService {
 
 export enum ExchangeRateServiceType {
   OpenExchangeRate = 'OpenExchangeRate',
+  FXMacroData = 'FXMacroData',
 }
 
 export enum EchangeRateErrors {
@@ -15,3 +16,5 @@ export enum EchangeRateErrors {
 
 export const OPEN_EXCHANGE_RATE_LATEST_URL =
   'https://openexchangerates.org/api/latest.json';
+
+export const FXMACRODATA_FOREX_URL = 'https://api.fxmacrodata.com/v1/forex';
