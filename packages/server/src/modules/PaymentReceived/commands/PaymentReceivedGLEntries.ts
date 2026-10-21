@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { PaymentReceivedAccrualGL } from './PaymentReceivedAccrualGL';
 import { PaymentReceivedCashGL } from './PaymentReceivedCashGL';
+import { PaymentReceivedCostGLEntries } from './PaymentReceivedCostGLEntries';
 import { PaymentReceived } from '../models/PaymentReceived';
 import { LedgerStorageService } from '@/modules/Ledger/LedgerStorage.service';
 import { Ledger } from '@/modules/Ledger/Ledger';
@@ -17,6 +18,7 @@ export class PaymentReceivedGLEntries {
     private readonly ledgerStorage: LedgerStorageService,
     private readonly accountRepository: AccountRepository,
     private readonly tenancyContext: TenancyContext,
+    private readonly paymentReceivedCostGLEntries: PaymentReceivedCostGLEntries,
 
     @Inject(PaymentReceived.name)
     private readonly paymentReceivedModel: TenantModelProxy<
@@ -26,6 +28,9 @@ export class PaymentReceivedGLEntries {
 
   /**
    * Writes payment GL entries to the storage.
+   * The written entries include the accrual basis entries (deposit/A/R),
+   * the cash basis income entries and the cash basis cost entries
+   * (COGS/inventory).
    * @param {number} paymentReceiveId - Payment received id.
    * @param {Knex.Transaction} trx - Knex transaction.
    * @returns {Promise<void>}
@@ -149,8 +154,9 @@ export class PaymentReceivedGLEntries {
 
   /**
    * Retrieves the payment receive general ledger.
-   * The ledger contains both the accrual basis entries (deposit/A/R)
-   * and the cash basis entries (deposit/income) flagged by the basis.
+   * The ledger contains the accrual basis entries (deposit/A/R), the cash
+   * basis entries (deposit/income) and the cash basis cost entries
+   * (COGS/inventory) flagged by the basis.
    * @param {PaymentReceived} paymentReceive - Payment received.
    * @param {string} baseCurrencyCode - Base currency code.
    * @param {Knex.Transaction} trx - Knex transaction.
@@ -172,9 +178,16 @@ export class PaymentReceivedGLEntries {
       paymentReceive,
       trx,
     );
+    // Cash basis cost (COGS) ledger entries.
+    const costLedger =
+      await this.paymentReceivedCostGLEntries.getPaymentCostLedger(
+        paymentReceive,
+        trx,
+      );
     return new Ledger([
       ...accrualLedger.getEntries(),
       ...cashLedger.getEntries(),
+      ...costLedger.getEntries(),
     ]);
   };
 }
