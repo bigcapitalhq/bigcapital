@@ -646,11 +646,25 @@ describe('GL entries — Sales transactions (e2e)', () => {
       expectLegs(
         legs,
         [
-          { accountCode: '40007', debit: 1000 },
-          { accountCode: '10007', contactId: customerId, credit: 1000 },
+          { accountCode: '40007', debit: 1000, basis: 'accrual' },
+          {
+            accountCode: '10007',
+            contactId: customerId,
+            credit: 1000,
+            basis: 'accrual',
+          },
         ],
         'InvoiceWriteOff',
       );
+
+      // The write-off has no cash movement, so it must not appear in the
+      // cash basis journal.
+      const cashLegs = await fetchLegs(
+        'InvoiceWriteOff',
+        invoiceRes.body.id,
+        'cash',
+      );
+      expect(cashLegs).toHaveLength(0);
     });
   });
 });
