@@ -49,7 +49,7 @@ function ProfitLossSheetInner({
   );
 
   return (
-    <ProfitLossSheetProvider query={query}>
+    <ProfitLossSheetProvider query={query} setQuery={setLocationQuery}>
       <ProfitLossActionsBar
         numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}

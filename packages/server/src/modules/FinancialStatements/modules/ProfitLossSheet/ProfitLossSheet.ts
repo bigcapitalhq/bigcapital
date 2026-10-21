@@ -32,6 +32,7 @@ import {
   IFinancialReportMeta,
   DEFAULT_REPORT_META,
 } from '../../types/Report.types';
+import { sortProfitLossSheetAccountsNodes } from './_utils';
 
 export default class ProfitLossSheet extends ProfitLossSheetPreviousYear(
   flow(
@@ -321,6 +322,21 @@ export default class ProfitLossSheet extends ProfitLossSheetPreviousYear(
   };
 
   /**
+   * Sorts the report account nodes by the query column sorting.
+   * @param {IProfitLossSheetNode[]} nodes
+   * @returns {IProfitLossSheetNode[]}
+   */
+  private sortAccountsNodes = (
+    nodes: IProfitLossSheetNode[],
+  ): IProfitLossSheetNode[] => {
+    return sortProfitLossSheetAccountsNodes(
+      nodes,
+      this.query.query.columnSortBy,
+      this.query.query.sortOrder,
+    );
+  };
+
+  /**
    * Retrieve profit/loss report data.
    * @return {IProfitLossSheetStatement}
    */
@@ -332,6 +348,7 @@ export default class ProfitLossSheet extends ProfitLossSheetPreviousYear(
       this.reportSchemaEquationNodesCompose,
       this.reportColumnsPerentageCompose,
       this.reportRowsPercentageCompose,
+      this.sortAccountsNodes,
       this.reportFilterPlugin,
     )(schema);
   };

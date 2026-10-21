@@ -13,10 +13,13 @@ type ProfitLossSheetContextValue = {
   sheetRefetch: UseProfitLossSheetResult['refetch'];
   httpQuery: Record<string, unknown>;
   query: Record<string, unknown>;
+  pageQuery: ProfitLossTableQuery;
+  setPageQuery: (values: Record<string, unknown>) => void;
 };
 
 type ProfitLossSheetProviderProps = {
   query: Record<string, unknown>;
+  setQuery: (values: Record<string, unknown>) => void;
   children?: React.ReactNode;
 };
 
@@ -29,6 +32,7 @@ const ProfitLossSheetContext = createContext<
  */
 function ProfitLossSheetProvider({
   query,
+  setQuery,
   ...props
 }: ProfitLossSheetProviderProps) {
   const httpQuery = useMemo(
@@ -41,7 +45,9 @@ function ProfitLossSheetProvider({
     isFetching,
     isLoading,
     refetch,
-  } = useProfitLossSheet(httpQuery as ProfitLossTableQuery);
+  } = useProfitLossSheet(httpQuery as ProfitLossTableQuery, {
+    placeholderData: (previousData) => previousData,
+  });
 
   const provider: ProfitLossSheetContextValue = {
     profitLossSheet,
@@ -50,6 +56,8 @@ function ProfitLossSheetProvider({
     sheetRefetch: refetch,
     query: httpQuery,
     httpQuery,
+    pageQuery: query as ProfitLossTableQuery,
+    setPageQuery: setQuery,
   };
 
   return (

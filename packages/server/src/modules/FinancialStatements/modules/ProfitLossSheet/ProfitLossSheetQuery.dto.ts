@@ -5,6 +5,7 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
+  IsIn,
   IsOptional,
   IsString,
   ValidateNested,
@@ -15,6 +16,11 @@ import { ToNumber } from '@/common/decorators/Validators';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
+import {
+  PROFIT_LOSS_COLUMN_KEYS,
+  ProfitLossColumnKey,
+} from '../../common/constants/tableColumnKeys';
+import { ProfitLossSheetSortOrder } from './ProfitLossSheet.types';
 
 export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @IsEnum(AccountingBasis)
@@ -139,4 +145,22 @@ export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
     description: 'Whether to show previous year percentage change',
   })
   previousYearPercentageChange: boolean;
+
+  @ApiProperty({
+    description: 'Column to sort the accounts by',
+    required: false,
+    enum: Object.values(PROFIT_LOSS_COLUMN_KEYS),
+  })
+  @IsIn(Object.values(PROFIT_LOSS_COLUMN_KEYS))
+  @IsOptional()
+  columnSortBy?: ProfitLossColumnKey;
+
+  @ApiProperty({
+    description: 'Sort order for the accounts',
+    required: false,
+    enum: ['asc', 'desc'],
+  })
+  @IsIn(['asc', 'desc'])
+  @IsOptional()
+  sortOrder?: ProfitLossSheetSortOrder;
 }
