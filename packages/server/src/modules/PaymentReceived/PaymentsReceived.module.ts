@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { InventoryCostLotTracker } from '../InventoryCost/models/InventoryCostLotTracker';
 import { PaymentReceivesController } from './PaymentsReceived.controller';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
 import { CreatePaymentReceivedService } from './commands/CreatePaymentReceived.serivce';
@@ -26,6 +28,8 @@ import { PaymentReceivedAutoIncrementSubscriber } from './subscribers/PaymentRec
 import { PaymentReceivedSmsNotificationSubscriber } from './subscribers/PaymentReceivedSmsNotificationSubscriber';
 import { PaymentReceivedGLEntriesSubscriber } from './subscribers/PaymentReceivedGLEntriesSubscriber';
 import { PaymentReceivedGLEntries } from './commands/PaymentReceivedGLEntries';
+import { PaymentReceivedCostGLEntries } from './commands/PaymentReceivedCostGLEntries';
+import { PaymentReceivedCostGLEntriesSubscriber } from './subscribers/PaymentReceivedCostGLEntriesSubscriber';
 import { PaymentReceivedSyncInvoicesSubscriber } from './subscribers/PaymentReceivedSyncInvoices';
 import { PaymentReceivedInvoiceSync } from './commands/PaymentReceivedInvoiceSync.service';
 import { LedgerModule } from '../Ledger/Ledger.module';
@@ -49,6 +53,8 @@ import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailSta
 import { BulkDeletePaymentReceivedService } from './BulkDeletePaymentReceived.service';
 import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePaymentReceived.service';
 
+const models = [RegisterTenancyModel(InventoryCostLotTracker)];
+
 @Module({
   controllers: [PaymentReceivesController],
   providers: [
@@ -66,10 +72,12 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
     PaymentReceivedBrandingTemplate,
     PaymentReceivedIncrement,
     PaymentReceivedGLEntries,
+    PaymentReceivedCostGLEntries,
     PaymentReceivedInvoiceSync,
     PaymentReceivedAutoIncrementSubscriber,
     PaymentReceivedSmsNotificationSubscriber,
     PaymentReceivedGLEntriesSubscriber,
+    PaymentReceivedCostGLEntriesSubscriber,
     PaymentReceivedSyncInvoicesSubscriber,
     GetPaymentsReceivedService,
     SendPaymentReceiveMailNotification,
@@ -92,6 +100,7 @@ import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePa
   ],
   imports: [
     TenancyModule,
+    ...models,
     ChromiumlyTenancyModule,
     TemplateInjectableModule,
     BranchesModule,
