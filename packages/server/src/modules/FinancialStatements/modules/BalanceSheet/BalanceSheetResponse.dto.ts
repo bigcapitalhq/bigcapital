@@ -12,6 +12,7 @@ import {
   BALANCE_SHEET_COLUMN_KEYS,
   BalanceSheetColumnKey,
 } from '../../common/constants/tableColumnKeys';
+import { BalanceSheetSortOrder } from './BalanceSheet.types';
 
 export class BalanceSheetDataNodeDto {
   @ApiProperty({
@@ -175,6 +176,18 @@ export class BalanceSheetQueryResponseDto {
 
   @ApiProperty({ description: 'Show previous year percentage change' })
   previousYearPercentageChange: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Column the accounts are sorted by',
+    enum: Object.values(BALANCE_SHEET_COLUMN_KEYS),
+  })
+  columnSortBy?: BalanceSheetColumnKey;
+
+  @ApiPropertyOptional({
+    description: 'Sort order of the accounts',
+    enum: ['asc', 'desc'],
+  })
+  sortOrder?: BalanceSheetSortOrder;
 }
 
 export class BalanceSheetResponseDto {

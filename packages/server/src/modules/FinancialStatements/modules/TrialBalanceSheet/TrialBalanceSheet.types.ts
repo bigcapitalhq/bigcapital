@@ -5,8 +5,9 @@ import {
 import { IFinancialTable } from '../../types/Table.types';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { TrialBalanceColumnKey } from '../../common/constants/tableColumnKeys';
+import { FinancialReportSortOrder } from '../../utils/Sorting.utils';
 
-export type TrialBalanceSortOrder = 'asc' | 'desc';
+export type TrialBalanceSortOrder = FinancialReportSortOrder;
 
 export interface ITrialBalanceSheetQuery {
   fromDate: Date | string;

@@ -15851,6 +15851,40 @@
             }
           },
           {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort the accounts by",
+            "schema": {
+              "enum": [
+                "name",
+                "total",
+                "previous_period",
+                "previous_period_change",
+                "previous_period_percentage",
+                "previous_year",
+                "previous_year_change",
+                "previous_year_percentage",
+                "percentage_of_column",
+                "percentage_of_row"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order for the accounts",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "name": "numberFormat",
             "required": false,
             "in": "query",
@@ -39058,6 +39092,30 @@
           "previousYearPercentageChange": {
             "type": "boolean",
             "description": "Show previous year percentage change"
+          },
+          "columnSortBy": {
+            "type": "string",
+            "description": "Column the accounts are sorted by",
+            "enum": [
+              "name",
+              "total",
+              "previous_period",
+              "previous_period_change",
+              "previous_period_percentage",
+              "previous_year",
+              "previous_year_change",
+              "previous_year_percentage",
+              "percentage_of_column",
+              "percentage_of_row"
+            ]
+          },
+          "sortOrder": {
+            "type": "string",
+            "description": "Sort order of the accounts",
+            "enum": [
+              "asc",
+              "desc"
+            ]
           }
         },
         "required": [

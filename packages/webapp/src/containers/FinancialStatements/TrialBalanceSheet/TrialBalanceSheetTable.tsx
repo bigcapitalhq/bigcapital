@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { getReportRowTestId } from '../reportTestIds';
+import { useFinancialReportSorting } from '../useReportSorting';
 import { useTrialBalanceSheetTableColumns } from './hooks';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -29,35 +30,11 @@ export function TrialBalanceSheetTable({
   // Trial balance sheet table columns.
   const columns = useTrialBalanceSheetTableColumns();
 
-  // The initial sorting state is derived from the page query to keep the
-  // table header in sync with the backend sorting after a page reload.
-  const initialSortBy = useMemo(() => {
-    return pageQuery?.columnSortBy
-      ? [
-          {
-            id: pageQuery.columnSortBy,
-            desc: pageQuery.sortOrder === 'desc',
-          },
-        ]
-      : [];
-  }, [pageQuery?.columnSortBy, pageQuery?.sortOrder]);
-
-  // Stores the sorting state in the page query to let the backend sort the
-  // report data instead of sorting the loaded rows on the client.
-  const handleFetchData = useCallback(
-    ({ sortBy }: { sortBy: Array<{ id: string; desc: boolean }> }) => {
-      const [sortedColumn] = sortBy;
-      setPageQuery({
-        columnSortBy: sortedColumn?.id,
-        sortOrder: sortedColumn
-          ? sortedColumn.desc
-            ? 'desc'
-            : 'asc'
-          : undefined,
-      });
-    },
-    [setPageQuery],
-  );
+  // Trial balance sheet backend columns sorting.
+  const { sortableTableProps } = useFinancialReportSorting({
+    pageQuery,
+    setPageQuery,
+  });
 
   return (
     <FinancialSheet
@@ -73,11 +50,8 @@ export function TrialBalanceSheetTable({
         expandToggleColumn={1}
         expandColumnSpace={1}
         sticky={true}
-        manualSortBy={true}
-        autoResetSortBy={false}
-        initialSortBy={initialSortBy}
         noInitialFetch={true}
-        onFetchData={handleFetchData}
+        {...sortableTableProps}
         rowClassNames={tableRowTypesToClassnames}
         rowTestId={getReportRowTestId('trial-balance')}
         styleName={TableStyle.Constrant}

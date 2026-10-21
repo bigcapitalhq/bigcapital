@@ -56,7 +56,7 @@ function BalanceSheetInner({
   );
 
   return (
-    <BalanceSheetProvider filter={query}>
+    <BalanceSheetProvider filter={query} setQuery={setLocationQuery}>
       <BalanceSheetActionsBar
         numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}

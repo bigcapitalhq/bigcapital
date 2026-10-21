@@ -4,13 +4,19 @@ import {
   ITrialBalanceAccount,
   TrialBalanceSortOrder,
 } from './TrialBalanceSheet.types';
+import {
+  FinancialReportSortValue,
+  sortFinancialReportNodes,
+} from '../../utils/Sorting.utils';
 import { TrialBalanceColumnKey } from '../../common/constants/tableColumnKeys';
 
-type TrialBalanceSortValue = string | number;
+type TrialBalanceSortValueAccessor = (
+  account: ITrialBalanceAccount,
+) => FinancialReportSortValue;
 
 const sortValueAccessors: Record<
   TrialBalanceColumnKey,
-  (account: ITrialBalanceAccount) => TrialBalanceSortValue
+  TrialBalanceSortValueAccessor
 > = {
   account: (account) => account.formattedName,
   debit: (account) => account.debit,
@@ -32,24 +38,7 @@ export const sortTrialBalanceAccounts = (
 ): ITrialBalanceAccount[] => {
   const accessor = columnSortBy ? sortValueAccessors[columnSortBy] : undefined;
 
-  if (!accessor) {
-    return accounts;
-  }
-  const direction = sortOrder === 'desc' ? -1 : 1;
-
-  return [...accounts].sort((a, b) => {
-    const valueA = accessor(a);
-    const valueB = accessor(b);
-    const comparison =
-      typeof valueA === 'string' && typeof valueB === 'string'
-        ? valueA.localeCompare(valueB, undefined, {
-            numeric: true,
-            sensitivity: 'base',
-          })
-        : (valueA as number) - (valueB as number);
-
-    return comparison !== 0 ? comparison * direction : 0;
-  });
+  return sortFinancialReportNodes(accounts, accessor, sortOrder);
 };
 
 export const getTrialBalanceSheetDefaultQuery = () => ({

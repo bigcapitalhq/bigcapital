@@ -6,6 +6,11 @@ import {
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { BalanceSheetColumnKey } from '../../common/constants/tableColumnKeys';
+import { FinancialReportSortOrder } from '../../utils/Sorting.utils';
+
+// Balance sheet sorting order.
+export type BalanceSheetSortOrder = FinancialReportSortOrder;
 
 // Balance sheet schema nodes types.
 export enum BALANCE_SHEET_SCHEMA_NODE_TYPE {
@@ -64,6 +69,9 @@ export interface IBalanceSheetQuery extends IFinancialSheetBranchesQuery {
   previousYear: boolean;
   previousYearAmountChange: boolean;
   previousYearPercentageChange: boolean;
+
+  columnSortBy?: BalanceSheetColumnKey;
+  sortOrder?: BalanceSheetSortOrder;
 }
 
 // Balance sheet meta.

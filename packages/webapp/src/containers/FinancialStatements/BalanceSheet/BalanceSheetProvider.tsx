@@ -13,10 +13,13 @@ type BalanceSheetContextValue = {
   refetchBalanceSheet: UseBalanceSheetResult['refetch'];
   httpQuery: Record<string, unknown>;
   filter: Record<string, unknown>;
+  pageQuery: BalanceSheetTableQuery;
+  setPageQuery: (values: Record<string, unknown>) => void;
 };
 
 type BalanceSheetProviderProps = {
   filter: Record<string, unknown>;
+  setQuery: (values: Record<string, unknown>) => void;
   children?: React.ReactNode;
 };
 
@@ -24,7 +27,11 @@ const BalanceSheetContext = createContext<BalanceSheetContextValue | undefined>(
   undefined,
 );
 
-function BalanceSheetProvider({ filter, ...props }: BalanceSheetProviderProps) {
+function BalanceSheetProvider({
+  filter,
+  setQuery,
+  ...props
+}: BalanceSheetProviderProps) {
   const httpQuery = useMemo(
     () => transformFilterFormToQuery(filter) as Record<string, unknown>,
     [filter],
@@ -45,6 +52,8 @@ function BalanceSheetProvider({ filter, ...props }: BalanceSheetProviderProps) {
     refetchBalanceSheet: refetch,
     httpQuery,
     filter,
+    pageQuery: filter as BalanceSheetTableQuery,
+    setPageQuery: setQuery,
   };
   return (
     <FinancialReportPage name={'balance-sheet'}>
