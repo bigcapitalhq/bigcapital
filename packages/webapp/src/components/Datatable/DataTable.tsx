@@ -58,6 +58,9 @@ export function DataTable(props) {
     initialPageIndex = 0,
     initialPageSize = 20,
 
+    // Sorting props.
+    initialSortBy = [],
+
     // Hidden columns.
     initialHiddenColumns = [],
 
@@ -111,6 +114,7 @@ export function DataTable(props) {
         pageIndex: initialPageIndex,
         pageSize: initialPageSize,
         expanded,
+        sortBy: initialSortBy,
         columnResizing: {
           columnWidths: initialColumnsWidths || {},
         },

@@ -19096,6 +19096,34 @@
             }
           },
           {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort the accounts by",
+            "schema": {
+              "enum": [
+                "account",
+                "debit",
+                "credit",
+                "total"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order for the accounts",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
             "name": "accept",
             "required": true,
             "in": "header",
@@ -40970,6 +40998,24 @@
               {
                 "$ref": "#/components/schemas/NumberFormatQueryDto"
               }
+            ]
+          },
+          "columnSortBy": {
+            "type": "string",
+            "description": "Column the accounts are sorted by",
+            "enum": [
+              "account",
+              "debit",
+              "credit",
+              "total"
+            ]
+          },
+          "sortOrder": {
+            "type": "string",
+            "description": "Sort order of the accounts",
+            "enum": [
+              "asc",
+              "desc"
             ]
           }
         },
