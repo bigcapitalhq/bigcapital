@@ -53,4 +53,14 @@ describe('ProfitLossSheetQuery', () => {
     expect(query.query.previousYearAmountChange).toBe(false);
     expect(query.query.previousYearPercentageChange).toBe(false);
   });
+
+  it('keeps the columns sorting query', () => {
+    const query = new ProfitLossSheetQuery({
+      ...baseQuery(),
+      columnSortBy: 'total',
+      sortOrder: 'desc',
+    });
+    expect(query.query.columnSortBy).toBe('total');
+    expect(query.query.sortOrder).toBe('desc');
+  });
 });

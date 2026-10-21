@@ -12,6 +12,7 @@ import {
   PROFIT_LOSS_COLUMN_KEYS,
   ProfitLossColumnKey,
 } from '../../common/constants/tableColumnKeys';
+import { ProfitLossSheetSortOrder } from './ProfitLossSheet.types';
 
 export class ProfitLossSheetDataNodeDto {
   @ApiProperty({
@@ -193,6 +194,18 @@ export class ProfitLossSheetQueryResponseDto {
 
   @ApiProperty({ description: 'Show previous year percentage change' })
   previousYearPercentageChange: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Column the accounts are sorted by',
+    enum: Object.values(PROFIT_LOSS_COLUMN_KEYS),
+  })
+  columnSortBy?: ProfitLossColumnKey;
+
+  @ApiPropertyOptional({
+    description: 'Sort order of the accounts',
+    enum: ['asc', 'desc'],
+  })
+  sortOrder?: ProfitLossSheetSortOrder;
 }
 
 export class ProfitLossSheetResponseDto {

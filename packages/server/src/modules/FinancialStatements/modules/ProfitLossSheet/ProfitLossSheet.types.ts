@@ -6,6 +6,11 @@ import {
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { ProfitLossColumnKey } from '../../common/constants/tableColumnKeys';
+import { FinancialReportSortOrder } from '../../utils/Sorting.utils';
+
+// Profit & loss sheet sorting order.
+export type ProfitLossSheetSortOrder = FinancialReportSortOrder;
 
 export enum ProfitLossAggregateNodeId {
   INCOME = 'INCOME',
@@ -87,6 +92,9 @@ export interface IProfitLossSheetQuery extends IFinancialSheetBranchesQuery {
   previousYear: boolean;
   previousYearAmountChange: boolean;
   previousYearPercentageChange: boolean;
+
+  columnSortBy?: ProfitLossColumnKey;
+  sortOrder?: ProfitLossSheetSortOrder;
 }
 
 export interface IProfitLossSheetTotal {
@@ -125,6 +133,8 @@ export interface IProfitLossSheetCommonNode
 
   percentageRow?: IProfitLossSheetPercentage;
   percentageColumn?: IProfitLossSheetPercentage;
+  percentageIncome?: IProfitLossSheetPercentage;
+  percentageExpense?: IProfitLossSheetPercentage;
 }
 export interface IProfitLossSheetAccountNode
   extends IProfitLossSheetCommonNode {

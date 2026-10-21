@@ -2,6 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { getReportRowTestId } from '../reportTestIds';
+import { useFinancialReportSorting } from '../useReportSorting';
 import { useProfitLossSheetColumns } from './hooks';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -15,7 +16,8 @@ interface ProfitLossSheetTableProps {
 export function ProfitLossSheetTable({
   companyName,
 }: ProfitLossSheetTableProps) {
-  const { profitLossSheet } = useProfitLossSheetContext();
+  const { profitLossSheet, pageQuery, setPageQuery } =
+    useProfitLossSheetContext();
   const table = profitLossSheet?.table;
   const query = profitLossSheet?.query;
   const meta = profitLossSheet?.meta;
@@ -26,6 +28,12 @@ export function ProfitLossSheetTable({
     () => defaultExpanderReducer(table?.rows ?? [], 3),
     [table],
   );
+
+  // Profit/loss sheet backend columns sorting.
+  const { sortableTableProps } = useFinancialReportSorting({
+    pageQuery,
+    setPageQuery,
+  });
 
   return (
     <FinancialSheet
@@ -44,6 +52,7 @@ export function ProfitLossSheetTable({
         expandable={true}
         expandToggleColumn={1}
         sticky={true}
+        {...sortableTableProps}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>

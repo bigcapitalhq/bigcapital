@@ -6,15 +6,8 @@ import { BalanceSheetColumnKey } from '../../common/constants/tableColumnKeys';
 import {
   FinancialReportSortOrder,
   FinancialReportSortValue,
-  sortFinancialReportNodes,
+  sortFinancialReportNodesTree,
 } from '../../utils/Sorting.utils';
-
-/**
- * Balance sheet data node with the optional children property of the union.
- */
-type BalanceSheetSortNode = IBalanceSheetDataNode & {
-  children?: IBalanceSheetDataNode[];
-};
 
 type BalanceSheetSortValueAccessor = (
   node: IBalanceSheetDataNode,
@@ -47,47 +40,11 @@ const isAccountNode = (node: IBalanceSheetDataNode): boolean => {
 };
 
 /**
- * Sorts the account nodes of the given report node children.
- * Aggregate, accounts and net income nodes define the report structure, so
- * they are never reordered; only the account nodes within each parent are
- * sorted while the structural nodes keep their relative order.
- * @param {IBalanceSheetDataNode} node
- * @param {BalanceSheetSortValueAccessor} accessor
- * @param {FinancialReportSortOrder} sortOrder
- * @returns {IBalanceSheetDataNode}
- */
-const sortNodeChildren = (
-  node: BalanceSheetSortNode,
-  accessor: BalanceSheetSortValueAccessor,
-  sortOrder: FinancialReportSortOrder,
-): IBalanceSheetDataNode => {
-  const children = node.children;
-
-  if (!children?.length) {
-    return node;
-  }
-  const accountNodes = children.filter(isAccountNode);
-  const structuralNodes = children.filter((child) => !isAccountNode(child));
-
-  const sortedAccountNodes = sortFinancialReportNodes(
-    accountNodes,
-    accessor,
-    sortOrder,
-  ).map((child) =>
-    sortNodeChildren(child as BalanceSheetSortNode, accessor, sortOrder),
-  );
-  const sortedStructuralNodes = structuralNodes.map((child) =>
-    sortNodeChildren(child as BalanceSheetSortNode, accessor, sortOrder),
-  );
-
-  return {
-    ...node,
-    children: [...sortedAccountNodes, ...sortedStructuralNodes],
-  } as IBalanceSheetDataNode;
-};
-
-/**
  * Sorts the balance sheet report account nodes by the given column and order.
+ *
+ * The aggregate, accounts and net income nodes define the report structure,
+ * so they are never reordered; only the account nodes within each parent are
+ * sorted.
  * @param {IBalanceSheetDataNode[]} nodes
  * @param {BalanceSheetColumnKey} columnSortBy
  * @param {FinancialReportSortOrder} sortOrder
@@ -100,10 +57,10 @@ export const sortBalanceSheetAccountsNodes = (
 ): IBalanceSheetDataNode[] => {
   const accessor = columnSortBy ? sortValueAccessors[columnSortBy] : undefined;
 
-  if (!accessor) {
-    return nodes;
-  }
-  return nodes.map((node) =>
-    sortNodeChildren(node as BalanceSheetSortNode, accessor, sortOrder),
+  return sortFinancialReportNodesTree(
+    nodes,
+    isAccountNode,
+    accessor,
+    sortOrder,
   );
 };
