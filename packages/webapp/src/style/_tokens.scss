@@ -1,0 +1,29 @@
+// Static design tokens for SCSS modules.
+//
+// Colors and theme-aware values belong in `_variables.scss` as CSS custom
+// properties so they can change with `.bp4-dark`. These tokens are for values
+// that do not change at runtime: spacing, radii, font sizes and weights.
+
+$space-0: 0;
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-7: 28px;
+$space-8: 32px;
+
+$radius-sm: 2px;
+$radius-md: 4px;
+$radius-lg: 6px;
+
+$font-size-xs: 11px;
+$font-size-sm: 12px;
+$font-size-md: 14px;
+$font-size-lg: 16px;
+$font-size-xl: 20px;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
