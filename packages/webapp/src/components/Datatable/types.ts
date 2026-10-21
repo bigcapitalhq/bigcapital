@@ -154,6 +154,7 @@ export interface DataTableProps<D extends object = any> {
 
   initialPageIndex?: number;
   initialPageSize?: number;
+  initialSortBy?: Array<{ id: string; desc: boolean }>;
   initialHiddenColumns?: string[];
   updateDebounceTime?: number;
   selectionColumnWidth?: number;

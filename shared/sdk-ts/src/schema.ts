@@ -15232,6 +15232,16 @@ export interface components {
             displayColumnsBy: "day" | "month" | "year" | "quarter";
             /** @description Number format settings */
             numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /**
+             * @description Column the accounts are sorted by
+             * @enum {string}
+             */
+            columnSortBy?: "account" | "debit" | "credit" | "total";
+            /**
+             * @description Sort order of the accounts
+             * @enum {string}
+             */
+            sortOrder?: "asc" | "desc";
         };
         TrialBalanceSheetAccountDto: {
             /** @description Account ID */
@@ -29343,6 +29353,10 @@ export interface operations {
                 onlyActive?: boolean;
                 /** @description Filter by specific account IDs */
                 accountIds?: number[];
+                /** @description Column to sort the accounts by */
+                columnSortBy?: "account" | "debit" | "credit" | "total";
+                /** @description Sort order for the accounts */
+                sortOrder?: "asc" | "desc";
                 /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
                 numberFormat?: components["schemas"]["NumberFormatQueryDto"];
             };

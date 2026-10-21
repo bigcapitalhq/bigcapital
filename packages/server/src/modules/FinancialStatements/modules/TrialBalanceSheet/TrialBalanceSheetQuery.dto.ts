@@ -6,6 +6,7 @@ import {
   IsBoolean,
   IsDateString,
   IsEnum,
+  IsIn,
   IsOptional,
   ValidateNested,
 } from 'class-validator';
@@ -13,6 +14,11 @@ import { Transform, Type } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
 import { AccountingBasis } from '@/common/types/AccountingBasis';
+import {
+  TRIAL_BALANCE_COLUMN_KEYS,
+  TrialBalanceColumnKey,
+} from '../../common/constants/tableColumnKeys';
+import { TrialBalanceSortOrder } from './TrialBalanceSheet.types';
 
 export class TrialBalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -88,4 +94,22 @@ export class TrialBalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @IsArray()
   @IsOptional()
   accountIds: number[];
+
+  @ApiProperty({
+    description: 'Column to sort the accounts by',
+    required: false,
+    enum: Object.values(TRIAL_BALANCE_COLUMN_KEYS),
+  })
+  @IsIn(Object.values(TRIAL_BALANCE_COLUMN_KEYS))
+  @IsOptional()
+  columnSortBy?: TrialBalanceColumnKey;
+
+  @ApiProperty({
+    description: 'Sort order for the accounts',
+    required: false,
+    enum: ['asc', 'desc'],
+  })
+  @IsIn(['asc', 'desc'])
+  @IsOptional()
+  sortOrder?: TrialBalanceSortOrder;
 }

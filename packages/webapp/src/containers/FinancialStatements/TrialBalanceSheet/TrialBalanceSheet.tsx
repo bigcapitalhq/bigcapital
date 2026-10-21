@@ -59,7 +59,7 @@ function TrialBalanceSheetInner({
   );
 
   return (
-    <TrialBalanceSheetProvider query={query}>
+    <TrialBalanceSheetProvider query={query} setQuery={setLocationQuery}>
       <TrialBalanceActionsBar
         numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
