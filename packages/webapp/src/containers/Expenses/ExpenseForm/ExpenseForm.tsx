@@ -1,5 +1,4 @@
 import { Intent } from '@blueprintjs/core';
-import { css } from '@emotion/css';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as FF from 'fp-ts/function';
 import { defaultTo, sumBy, isEmpty } from 'lodash';
@@ -7,6 +6,7 @@ import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { ExpenseFloatingFooter } from './ExpenseFloatingActions';
+import styles from './ExpenseForm.module.scss';
 import {
   CreateExpenseFormSchema,
   EditExpenseFormSchema,
@@ -24,8 +24,7 @@ import {
 } from './utils';
 import type { ExpenseErrorResponse, ExpenseFormValues } from './types';
 import type { CreateExpenseBody, EditExpenseBody } from '@bigcapital/sdk-ts';
-import { AppToaster, Box } from '@/components';
-import { PageForm } from '@/components/PageForm';
+import { AppToaster } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
@@ -137,29 +136,20 @@ function ExpenseFormInner() {
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >
-      <Form
-        className={css({
-          overflow: 'hidden',
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-        })}
-      >
-        <PageForm flex={1}>
-          <PageForm.Body>
+      <Form className={styles.form}>
+        <div className={styles.formInner}>
+          <div className={styles.formBody}>
             <ExpenseFormTopBar />
             <ExpenseFormHeader />
 
-            <Box p="18px 32px 0">
+            <div className={styles.formContent}>
               <ExpenseFormBody />
-            </Box>
+            </div>
             <ExpenseFormFooter />
-          </PageForm.Body>
+          </div>
 
-          <PageForm.Footer>
-            <ExpenseFloatingFooter />
-          </PageForm.Footer>
-        </PageForm>
+          <ExpenseFloatingFooter />
+        </div>
       </Form>
     </Formik>
   );

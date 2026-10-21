@@ -39,6 +39,18 @@ export default defineConfig(({ mode }) => {
         path: 'path-browserify',
       },
     },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          // Design tokens and mixins are available in every SCSS module without
+          // repeating `@use` in each file.
+          additionalData: [
+            '@use "@/style/tokens" as *;',
+            '@use "@/style/mixins" as *;',
+          ].join('\n'),
+        },
+      },
+    },
     define: {
       'process.env': {
         NODE_ENV: mode,

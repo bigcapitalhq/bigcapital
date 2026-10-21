@@ -1,20 +1,17 @@
 import { FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { css } from '@emotion/css';
-import { useTheme } from '@emotion/react';
 import classNames from 'classnames';
 import { FastField, ErrorMessage } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { ExpensesExchangeRateInputField } from './components';
 import { SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES } from './constants';
+import styles from './ExpenseForm.module.scss';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
-import type { Theme } from '@xstyled/emotion';
 import {
   CustomersSelect,
   FInputGroup,
-  Stack,
   FormattedMessage as T,
 } from '@/components';
 import {
@@ -24,38 +21,18 @@ import {
   FieldRequiredHint,
   Hint,
 } from '@/components';
-import { CLASSES } from '@/constants/classes';
 import { useDateInputFormatter } from '@/hooks';
 import { tansformDateValue, inputIntent, handleDateChange } from '@/utils';
-
-const getFieldsStyle = (theme: Theme) => css`
-  .${theme.bpPrefix}-form-group {
-    margin-bottom: 0;
-
-    &.${theme.bpPrefix}-inline {
-      max-width: 450px;
-    }
-    .${theme.bpPrefix}-label {
-      min-width: 150px;
-      font-weight: 500;
-    }
-    .${theme.bpPrefix}-form-content {
-      width: 100%;
-    }
-  }
-`;
 
 /**
  * Expense form header.
  */
 export function ExpenseFormHeader() {
   const { currencies, accounts, customers } = useExpenseFormContext();
-  const theme = useTheme() as unknown as Theme;
-  const fieldsClassName = getFieldsStyle(theme);
   const dateInputFormatter = useDateInputFormatter();
 
   return (
-    <Stack spacing={18} flex={1} className={fieldsClassName}>
+    <div className={styles.headerFields}>
       <FastField name={'paymentDate'}>
         {({ form, field: { value }, meta: { error, touched } }: any) => (
           <FormGroup
@@ -142,7 +119,7 @@ export function ExpenseFormHeader() {
 
       {/* ----------- Customer ----------- */}
       <ExpenseFormCustomerSelect customers={customers} />
-    </Stack>
+    </div>
   );
 }
 

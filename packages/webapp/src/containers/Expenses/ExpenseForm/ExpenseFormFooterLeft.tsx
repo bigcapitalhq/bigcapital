@@ -1,13 +1,14 @@
 import React from 'react';
 import intl from 'react-intl-universal';
-import styled from 'styled-components';
+import styles from './ExpenseForm.module.scss';
 import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 
 export function ExpenseFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Description --------- */}
-      <DescriptionFormGroup
+      <FFormGroup
+        className={styles.descriptionGroup}
         label={intl.get('description')}
         name={'description'}
       >
@@ -17,18 +18,7 @@ export function ExpenseFormFooterLeft() {
           multiline
           fastField
         />
-      </DescriptionFormGroup>
+      </FFormGroup>
     </React.Fragment>
   );
 }
-const DescriptionFormGroup = styled(FFormGroup)`
-  &.bp4-form-group {
-    .bp4-label {
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-    .bp4-form-content {
-      margin-left: 10px;
-    }
-  }
-`;
