@@ -1,5 +1,6 @@
 import moment from 'moment';
 import React from 'react';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -21,7 +22,7 @@ const parseJournalQuery = (locationQuery: Record<string, unknown>) => {
   const defaultQuery = getDefaultJournalQuery();
 
   return {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
 };
