@@ -4,6 +4,7 @@ import { ClsService } from 'nestjs-cls';
 import { TenantModel } from '@/modules/System/models/TenantModel';
 import { AuthApiKeyPrefix } from '../Auth.constants';
 import { hashApiKey } from '../Auth.utils';
+import { SystemUser } from '@/modules/System/models/SystemUser';
 
 @Injectable()
 export class AuthApiKeyAuthorizeService {
@@ -15,6 +16,9 @@ export class AuthApiKeyAuthorizeService {
 
     @Inject(TenantModel.name)
     private readonly tenantModel: typeof TenantModel,
+
+    @Inject(SystemUser.name)
+    private readonly systemUserModel: typeof SystemUser,
   ) {}
 
   /**
@@ -40,6 +44,12 @@ export class AuthApiKeyAuthorizeService {
     ) {
       return false;
     }
+    const user = await this.systemUserModel
+      .query()
+      .findById(apiKeyRecord.userId);
+
+    if (!user?.active) return false;
+
     const tenant = await this.tenantModel
       .query()
       .findById(apiKeyRecord.tenantId);
