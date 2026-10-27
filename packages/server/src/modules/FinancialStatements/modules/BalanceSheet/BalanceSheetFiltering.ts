@@ -46,7 +46,25 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
     };
 
     /**
-     * Detarmines account none-transactions node.
+     * Keeps an account when it or a descendant account has ledger entries.
+     * Parents stay so children that have transactions are not removed with them.
+     * @param   {IBalanceSheetDataNode} node
+     * @returns {boolean}
+     */
+    private isAccountNodeHasTransactions = (
+      node: IBalanceSheetDataNode,
+    ): boolean => {
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
+        node.id as number,
+      );
+
+      return !this.repository.totalAccountsLedger
+        .whereAccountsIds(accountIds)
+        .isEmpty();
+    };
+
+    /**
+     * Determines account none-transactions node.
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
@@ -55,7 +73,7 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
     ): boolean => {
       return ifElse(
         this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNT),
-        this.isNodeNoneZero,
+        this.isAccountNodeHasTransactions,
         constant(true),
       )(node);
     };

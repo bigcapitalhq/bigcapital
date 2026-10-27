@@ -755,15 +755,167 @@ describe('Balance Sheet (e2e)', () => {
       expect(accountNodes.length).toBeLessThan(defaultAccounts.length);
     });
 
-    it('excludes zero-balance accounts with noneTransactions', async () => {
-      const { data } = await fetchBalanceSheet({
+    it('filters accounts by transaction presence with noneTransactions', async () => {
+      const suffix = `${Date.now().toString(36)}${Math.floor(Math.random() * 36).toString(36)}`;
+      const code = (prefix: string) =>
+        `${prefix}${suffix}`.slice(0, 6).toUpperCase();
+
+      const createAccount = async (
+        name: string,
+        accountType: string,
+        accountCode: string,
+        parentAccountId?: number,
+      ) => {
+        const res = await request(app.getHttpServer())
+          .post('/accounts')
+          .set(authHeaders())
+          .send({
+            name,
+            accountType,
+            code: accountCode,
+            ...(parentAccountId ? { parentAccountId } : {}),
+          })
+          .expect(201);
+
+        accountsByCode[accountCode] = {
+          id: Number(res.body.id),
+          name,
+          accountType,
+        };
+        return Number(res.body.id);
+      };
+
+      const emptyCashId = await createAccount(
+        `Empty cash ${suffix}`,
+        'cash',
+        code('e'),
+      );
+      const parentCashId = await createAccount(
+        `Parent cash ${suffix}`,
+        'cash',
+        code('p'),
+      );
+      const childCashCode = code('c');
+      const childCashId = await createAccount(
+        `Child cash ${suffix}`,
+        'cash',
+        childCashCode,
+        parentCashId,
+      );
+      const offsetCashCode = code('o');
+      await createAccount(`Offset cash ${suffix}`, 'cash', offsetCashCode);
+
+      const emptyIncomeId = await createAccount(
+        `Empty income ${suffix}`,
+        'income',
+        code('i'),
+      );
+      const parentIncomeId = await createAccount(
+        `Parent income ${suffix}`,
+        'income',
+        code('n'),
+      );
+      const childIncomeCode = code('h');
+      const childIncomeId = await createAccount(
+        `Child income ${suffix}`,
+        'income',
+        childIncomeCode,
+        parentIncomeId,
+      );
+      const offsetIncomeCode = code('f');
+      const offsetIncomeId = await createAccount(
+        `Offset income ${suffix}`,
+        'income',
+        offsetIncomeCode,
+      );
+
+      // Activity that nets to zero still counts as transactions.
+      await createManualJournal(accountsByCode, {
+        date: '2023-07-01',
+        entries: [
+          { code: childCashCode, debit: 40 },
+          { code: offsetCashCode, credit: 40 },
+        ],
+      });
+      await createManualJournal(accountsByCode, {
+        date: '2023-07-02',
+        entries: [
+          { code: offsetCashCode, debit: 40 },
+          { code: childCashCode, credit: 40 },
+        ],
+      });
+      await createManualJournal(accountsByCode, {
+        date: '2023-07-03',
+        entries: [
+          { code: childIncomeCode, debit: 25 },
+          { code: offsetIncomeCode, credit: 25 },
+        ],
+      });
+      await createManualJournal(accountsByCode, {
+        date: '2023-07-04',
+        entries: [
+          { code: offsetIncomeCode, debit: 25 },
+          { code: childIncomeCode, credit: 25 },
+        ],
+      });
+
+      const { data: balanceSheet } = await fetchBalanceSheet({
         ...FY2023,
         noneTransactions: true,
       });
+      const balanceSheetIds = collectAccountNodes(balanceSheet).map(
+        (node) => node.id,
+      );
 
-      for (const node of collectAccountNodes(data)) {
-        expect(node.total.amount).not.toBe(0);
-      }
+      expect(balanceSheetIds).toEqual(
+        expect.arrayContaining([parentCashId, childCashId]),
+      );
+      expect(balanceSheetIds).not.toContain(emptyCashId);
+      expect(findNode(balanceSheet, childCashId).total.amount).toBeCloseTo(
+        0,
+        2,
+      );
+      expect(findNode(balanceSheet, bankId)).toBeDefined();
+
+      const { data: zeroBalanceSheet } = await fetchBalanceSheet({
+        ...FY2023,
+        noneZero: true,
+      });
+      const zeroBalanceIds = collectAccountNodes(zeroBalanceSheet).map(
+        (node) => node.id,
+      );
+      expect(zeroBalanceIds).not.toContain(childCashId);
+      expect(zeroBalanceIds).not.toContain(parentCashId);
+      expect(zeroBalanceIds).not.toContain(emptyCashId);
+
+      const profitLoss = await request(app.getHttpServer())
+        .get('/reports/profit-loss-sheet')
+        .query({ ...FY2023, noneTransactions: true })
+        .set(authHeaders())
+        .expect(200);
+      const profitLossIds = collectAccountNodes(profitLoss.body.data).map(
+        (node) => node.id,
+      );
+
+      expect(profitLossIds).toEqual(
+        expect.arrayContaining([parentIncomeId, childIncomeId, offsetIncomeId]),
+      );
+      expect(profitLossIds).not.toContain(emptyIncomeId);
+      expect(
+        findNode(profitLoss.body.data, childIncomeId).total.amount,
+      ).toBeCloseTo(0, 2);
+
+      const zeroProfitLoss = await request(app.getHttpServer())
+        .get('/reports/profit-loss-sheet')
+        .query({ ...FY2023, noneZero: true })
+        .set(authHeaders())
+        .expect(200);
+      const zeroProfitLossIds = collectAccountNodes(
+        zeroProfitLoss.body.data,
+      ).map((node) => node.id);
+      expect(zeroProfitLossIds).not.toContain(childIncomeId);
+      expect(zeroProfitLossIds).not.toContain(parentIncomeId);
+      expect(zeroProfitLossIds).not.toContain(emptyIncomeId);
     });
   });
 
