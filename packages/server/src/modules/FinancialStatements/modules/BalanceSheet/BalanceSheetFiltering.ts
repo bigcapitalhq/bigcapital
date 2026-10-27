@@ -55,9 +55,32 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
     ): boolean => {
       return ifElse(
         this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNT),
-        this.isNodeNoneZero,
+        this.isNodeHasPeriodTransactions,
         constant(true),
       )(node);
+    };
+
+    /**
+     * Detarmines whether the account node has transactions within the report
+     * date period (from date to date), unlike `isNodeNoneZero` which only
+     * checks the total amount.
+     * @param   {IBalanceSheetDataNode} node - Balance sheet node.
+     * @returns {boolean}
+     */
+    private isNodeHasPeriodTransactions = (
+      node: IBalanceSheetDataNode,
+    ): boolean => {
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
+        node.id,
+      );
+      // The period-range ledger is initialized when the date-periods columns
+      // type is active or when the none-transactions filter is applied, falls
+      // back into the total ledger defensively.
+      const ledger =
+        this.repository.periodsAccountsLedger ??
+        this.repository.totalAccountsLedger;
+
+      return !ledger.whereAccountsIds(accountIds).isEmpty();
     };
 
     /**

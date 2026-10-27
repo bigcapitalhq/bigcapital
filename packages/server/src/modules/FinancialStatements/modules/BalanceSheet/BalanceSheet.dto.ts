@@ -62,7 +62,8 @@ export class BalanceSheetQueryDto extends FinancialSheetBranchesQueryDto {
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({
-    description: 'Whether to include accounts with no transactions',
+    description:
+      'Whether to exclude accounts with no transactions in the period',
     default: false,
     required: false,
   })

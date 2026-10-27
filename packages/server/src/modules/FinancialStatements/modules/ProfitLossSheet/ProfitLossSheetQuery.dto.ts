@@ -52,7 +52,10 @@ export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @IsBoolean()
   @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
-  @ApiPropertyOptional({ description: 'Whether to exclude transactions' })
+  @ApiPropertyOptional({
+    description:
+      'Whether to exclude accounts with no transactions in the period',
+  })
   noneTransactions: boolean;
 
   @IsArray()
