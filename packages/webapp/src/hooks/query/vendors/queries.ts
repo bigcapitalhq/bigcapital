@@ -16,6 +16,7 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
+import { settingsKeys } from '../settings/query-keys';
 import { vendorsKeys } from './query-keys';
 import type {
   Vendor,
@@ -128,7 +129,10 @@ export function useCreateVendor(
   return useMutation({
     ...props,
     mutationFn: (values: CreateVendorBody) => createVendor(fetcher, values),
-    onSuccess: () => commonInvalidateQueries(queryClient),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: settingsKeys.vendors() });
+      commonInvalidateQueries(queryClient);
+    },
   });
 }
 

@@ -105,6 +105,13 @@ export class VendorResponseDto {
   @ApiProperty({ example: true })
   active: boolean;
 
+  @ApiProperty({
+    required: false,
+    description: 'Vendor code.',
+    example: 'VEND-00001',
+  })
+  code?: string;
+
   @ApiProperty({ example: '2024-01-01T00:00:00Z' })
   @Type(() => Date)
   createdAt: Date;

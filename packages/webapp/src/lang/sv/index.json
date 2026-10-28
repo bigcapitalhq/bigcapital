@@ -2314,5 +2314,20 @@
   "preferences.estimates.success_message": "Inställningarna har sparats på ett framgångsrikt sätt.",
   "preferences.credit_notes.success_message": "Inställningarna har sparats på ett framgångsrikt sätt.",
   "preferences.receipts.success_message": "Inställningarna har sparats på ett framgångsrikt sätt.",
-  "preferences.invoices.success_message": "Inställningarna har sparats på ett framgångsrikt sätt."
+  "preferences.invoices.success_message": "Inställningarna har sparats på ett framgångsrikt sätt.",
+  "preferences.contacts": "Kunder och leverantörer",
+  "pref.contacts.customers.title": "Kundnummer",
+  "pref.contacts.vendors.title": "Leverantörsnummer",
+  "pref.contacts.auto_increment": "Generera nummer automatiskt",
+  "pref.contacts.number_prefix": "Prefix",
+  "pref.contacts.number_prefix_hint": "Valfritt prefix före numret.",
+  "pref.contacts.next_number": "Nästa nummer",
+  "pref.contacts.next_number_hint": "Nästa nummer som används för nya poster.",
+  "pref.contacts.next_number_preview": "Förhandsgranskning: {code}",
+  "pref.contacts.success_message": "Inställningarna för kund- och leverantörsnummer har sparats.",
+  "pref.contacts.existing_records_hint": "Befintliga kunder och leverantörer numreras inte om. Sekvensen gäller endast nya poster.",
+  "customer_code_auto_increment_hint": "Lämna tomt för att använda nästa automatiskt genererade nummer ({code}), eller skriv en kod för att åsidosätta.",
+  "vendor_code_auto_increment_hint": "Lämna tomt för att använda nästa automatiskt genererade nummer ({code}), eller skriv en kod för att åsidosätta.",
+  "customer_code_is_already_used": "Kundkoden används redan.",
+  "vendor_code_is_already_used": "Leverantörskoden används redan."
 }

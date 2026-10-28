@@ -3,6 +3,7 @@ import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { ActivateVendorService } from './commands/ActivateVendor.service';
 import { CreateEditVendorDTOService } from './commands/CreateEditVendorDTO';
 import { CreateVendorService } from './commands/CreateVendor.service';
+import { VendorIncrement } from './commands/VendorIncrement.service';
 import { DeleteVendorService } from './commands/DeleteVendor.service';
 import { EditOpeningBalanceVendorService } from './commands/EditOpeningBalanceVendor.service';
 import { EditVendorService } from './commands/EditVendor.service';
@@ -13,6 +14,7 @@ import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { VendorsController } from './Vendors.controller';
 import { GetVendorsService } from './queries/GetVendors.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { VendorsExportable } from './VendorsExportable';
 import { VendorsImportable } from './VendorsImportable';
 import { BulkDeleteVendorsService } from './BulkDeleteVendors.service';
@@ -30,12 +32,14 @@ import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSu
     DynamicListModule,
     LedgerModule,
     AccountsModule,
+    AutoIncrementOrdersModule,
   ],
   controllers: [VendorsController],
   providers: [
     ActivateVendorService,
     CreateEditVendorDTOService,
     CreateVendorService,
+    VendorIncrement,
     EditVendorService,
     EditOpeningBalanceVendorService,
     GetVendorService,

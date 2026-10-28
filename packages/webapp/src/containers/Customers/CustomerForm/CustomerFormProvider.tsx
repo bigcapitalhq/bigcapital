@@ -109,7 +109,9 @@ export function CustomerFormProvider({
     customer,
     currencies: currencies ?? [],
     branches: branches ?? [],
-    contactDuplicate: contactDuplicate || undefined,
+    contactDuplicate: contactDuplicate
+      ? { ...contactDuplicate, code: '' }
+      : undefined,
     submitPayload,
     isNewMode,
 

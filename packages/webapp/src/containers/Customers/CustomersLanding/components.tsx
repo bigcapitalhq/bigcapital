@@ -155,6 +155,15 @@ export function useCustomersTableColumns() {
         clickable: true,
       },
       {
+        id: 'code',
+        Header: intl.get('code'),
+        accessor: 'code',
+        className: clsx('code', CLASSES.TEXT_MUTED),
+        width: 100,
+        clickable: true,
+        disableSortBy: true,
+      },
+      {
         id: 'company_name',
         Header: intl.get('company_name'),
         accessor: 'companyName',

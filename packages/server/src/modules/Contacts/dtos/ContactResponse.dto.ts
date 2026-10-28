@@ -103,6 +103,14 @@ export class ContactResponseDto {
   @ApiProperty({ example: true })
   active: boolean;
 
+  @ApiProperty({
+    example: 'CUST-00001',
+    required: false,
+    nullable: true,
+    description: 'Contact code (customer or vendor).',
+  })
+  code?: string | null;
+
   @ApiProperty({ example: 'Customer', required: false })
   formattedContactService?: string;
 

@@ -4,6 +4,7 @@ import {
   Icon as BlueprintIcon,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import { useVendorFormContext } from './VendorFormProvider';
 import { VendorFormSectionTitle } from './VendorFormSectionTitle';
 import {
   SalutationList,
@@ -17,10 +18,24 @@ import {
   Stack,
 } from '@/components';
 import { useAutofocus } from '@/hooks';
+import { useSettingsVendors } from '@/hooks/query';
+import { transactionNumber } from '@/utils';
 
 export function VendorFormBasicSection() {
   const firstNameFieldRef = useAutofocus<HTMLInputElement>();
   const { syncDisplayName, createFieldOnChange } = useDisplayNameSynchronizer();
+  const { isNewMode } = useVendorFormContext();
+  const { data: vendorSettings } = useSettingsVendors();
+
+  const autoIncrement = Boolean(vendorSettings?.autoIncrement);
+  const nextCode = transactionNumber(
+    vendorSettings?.numberPrefix as string | undefined,
+    vendorSettings?.nextNumber as string | number | undefined,
+  );
+  const showAutoCode = isNewMode && autoIncrement && Boolean(nextCode);
+  const codeHelperText = showAutoCode
+    ? intl.get('vendor_code_auto_increment_hint', { code: nextCode })
+    : 'Add a unique account number to identify, reference and search for the contact.';
 
   return (
     <Box data-section-id="primary">
@@ -67,13 +82,14 @@ export function VendorFormBasicSection() {
       <FFormGroup
         name={'code'}
         label={'Vendor Code'}
-        helperText="Add a unique account number to identify, reference and search for the contact."
+        helperText={codeHelperText}
         inline
         fastField
       >
         <FInputGroup
           name={'code'}
           data-testId={'vendor-code-input'}
+          placeholder={showAutoCode ? nextCode : undefined}
           fill
           fastField
         />

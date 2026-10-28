@@ -16,6 +16,7 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
+import { settingsKeys } from '../settings/query-keys';
 import { customersKeys } from './query-keys';
 import type {
   Customer,
@@ -127,7 +128,10 @@ export function useCreateCustomer(
   return useMutation({
     ...props,
     mutationFn: (values: CreateCustomerBody) => createCustomer(fetcher, values),
-    onSuccess: () => commonInvalidateQueries(queryClient),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: settingsKeys.customers() });
+      commonInvalidateQueries(queryClient);
+    },
   });
 }
 

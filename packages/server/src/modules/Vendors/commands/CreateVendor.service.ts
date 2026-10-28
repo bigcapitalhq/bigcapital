@@ -9,6 +9,8 @@ import {
   IVendorEventCreatingPayload,
 } from '../types/Vendors.types';
 import { CreateEditVendorDTOService } from './CreateEditVendorDTO';
+import { VendorIncrement } from './VendorIncrement.service';
+import { VendorValidators } from './VendorValidators';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateVendorDto } from '../dtos/CreateVendor.dto';
 
@@ -18,12 +20,16 @@ export class CreateVendorService {
    * @param {UnitOfWork} uow - Unit of work service.
    * @param {EventEmitter2} eventPublisher - Event emitter service.
    * @param {CreateEditVendorDTOService} transformDTO - Create edit vendor DTO service.
+   * @param {VendorIncrement} vendorIncrement - Vendor increment service.
+   * @param {VendorValidators} validators - Vendor validators service.
    * @param {typeof Vendor} vendorModel - Vendor model.
    */
   constructor(
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
     private readonly transformDTO: CreateEditVendorDTOService,
+    private readonly vendorIncrement: VendorIncrement,
+    private readonly validators: VendorValidators,
 
     @Inject(Vendor.name)
     private readonly vendorModel: TenantModelProxy<typeof Vendor>,
@@ -41,6 +47,18 @@ export class CreateVendorService {
     // Transforms create DTO to customer object.
     const vendorObject = await this.transformDTO.transformCreateDTO(vendorDTO);
 
+    // Retrieves the next auto-generated vendor code when no manual code provided.
+    const autoCode = vendorObject.code
+      ? ''
+      : await this.vendorIncrement.getNextVendorCode();
+
+    // Manual codes take precedence over auto-generated ones.
+    const code = vendorObject.code || autoCode;
+    const isAutoCodeUsed = !vendorObject.code && Boolean(autoCode);
+
+    // Validates the vendor code uniqueness.
+    await this.validators.validateVendorCodeUnique(code);
+
     // Creates vendor contact under unit-of-work environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Triggers `onVendorCreating` event.
@@ -54,7 +72,13 @@ export class CreateVendorService {
         .query(trx)
         .insertAndFetch({
           ...vendorObject,
+          ...(code ? { code } : {}),
         });
+
+      // Increments the next vendor code once the auto-generated code is used.
+      if (isAutoCodeUsed) {
+        await this.vendorIncrement.incrementNextVendorCode();
+      }
       // Triggers `onVendorCreated` event.
       await this.eventPublisher.emitAsync(events.vendors.onCreated, {
         vendorId: vendor.id,
