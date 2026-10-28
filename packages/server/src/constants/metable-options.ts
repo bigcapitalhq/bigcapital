@@ -153,6 +153,9 @@ export const SettingsOptions = {
     preferred_inventory_account: {
       type: 'number',
     },
+    prevent_stock_from_going_below_zero: {
+      type: 'boolean',
+    },
   },
   item_categories: {
     table_size: {
