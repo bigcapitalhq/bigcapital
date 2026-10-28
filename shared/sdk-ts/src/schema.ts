@@ -5692,6 +5692,13 @@ export interface components {
              */
             code?: string;
             /**
+             * @description Unit of measure the item is measured in
+             * @default piece
+             * @example kg
+             * @enum {string}
+             */
+            unit: "piece" | "dozen" | "pair" | "set" | "pack" | "box" | "kg" | "g" | "lb" | "oz" | "l" | "ml" | "m" | "cm" | "m2" | "m3" | "hour" | "day";
+            /**
              * @description Whether the item can be sold
              * @example true
              */
@@ -5826,6 +5833,12 @@ export interface components {
              */
             code?: string;
             /**
+             * @description Unit of measure the item is measured in
+             * @example kg
+             * @enum {string}
+             */
+            unit?: "piece" | "dozen" | "pair" | "set" | "pack" | "box" | "kg" | "g" | "lb" | "oz" | "l" | "ml" | "m" | "cm" | "m2" | "m3" | "hour" | "day";
+            /**
              * @description Whether the item can be purchased
              * @example true
              */
@@ -5939,6 +5952,12 @@ export interface components {
              * @example CHAIR-X2000
              */
             code?: string;
+            /**
+             * @description Unit of measure the item is measured in
+             * @example kg
+             * @enum {string}
+             */
+            unit?: "piece" | "dozen" | "pair" | "set" | "pack" | "box" | "kg" | "g" | "lb" | "oz" | "l" | "ml" | "m" | "cm" | "m2" | "m3" | "hour" | "day";
             /**
              * @description Whether the item can be purchased
              * @example true

@@ -25958,6 +25958,32 @@
             "description": "The item code/SKU",
             "example": "CHAIR-X2000"
           },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure the item is measured in",
+            "enum": [
+              "piece",
+              "dozen",
+              "pair",
+              "set",
+              "pack",
+              "box",
+              "kg",
+              "g",
+              "lb",
+              "oz",
+              "l",
+              "ml",
+              "m",
+              "cm",
+              "m2",
+              "m3",
+              "hour",
+              "day"
+            ],
+            "default": "piece",
+            "example": "kg"
+          },
           "sellable": {
             "type": "boolean",
             "description": "Whether the item can be sold",
@@ -26094,6 +26120,7 @@
           "name",
           "type",
           "typeFormatted",
+          "unit",
           "sellable",
           "purchasable",
           "currencyCode",
@@ -26124,6 +26151,31 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure the item is measured in",
+            "enum": [
+              "piece",
+              "dozen",
+              "pair",
+              "set",
+              "pack",
+              "box",
+              "kg",
+              "g",
+              "lb",
+              "oz",
+              "l",
+              "ml",
+              "m",
+              "cm",
+              "m2",
+              "m3",
+              "hour",
+              "day"
+            ],
+            "example": "kg"
           },
           "purchasable": {
             "type": "boolean",
@@ -26267,6 +26319,31 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure the item is measured in",
+            "enum": [
+              "piece",
+              "dozen",
+              "pair",
+              "set",
+              "pack",
+              "box",
+              "kg",
+              "g",
+              "lb",
+              "oz",
+              "l",
+              "ml",
+              "m",
+              "cm",
+              "m2",
+              "m3",
+              "hour",
+              "day"
+            ],
+            "example": "kg"
           },
           "purchasable": {
             "type": "boolean",
