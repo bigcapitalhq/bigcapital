@@ -13,11 +13,15 @@ export interface CreditNoteCustomizeValues extends BrandingTemplateValues {
   // Company Logo
   showCompanyLogo?: boolean;
 
+  // Addresses
+  showCustomerAddress?: boolean;
+  showCompanyAddress?: boolean;
+  billedToLabel?: string;
+
   // Entries
-  itemNameLabel?: string;
-  itemDescriptionLabel?: string;
-  itemRateLabel?: string;
-  itemTotalLabel?: string;
+  lineItemLabel?: string;
+  lineRateLabel?: string;
+  lineTotalLabel?: string;
 
   // Total
   showTotal?: boolean;

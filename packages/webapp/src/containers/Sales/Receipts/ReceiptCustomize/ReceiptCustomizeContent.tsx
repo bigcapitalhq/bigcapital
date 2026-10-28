@@ -1,12 +1,12 @@
+import {
+  ReceiptPaperTemplate,
+  ReceiptPaperTemplateProps,
+} from '@bigcapital/pdf-templates';
 import { useFormikContext } from 'formik';
 import { initialValues } from './constants';
 import { ReceiptCustomizeFieldsContent } from './ReceiptCustomizeFieldsContent';
 import { ReceiptCustomizeGeneralField } from './ReceiptCustomizeFieldsGeneral';
-import {
-  ReceiptPaperTemplate,
-  ReceiptPaperTemplateProps,
-} from './ReceiptPaperTemplate';
-import { EstimateBrandingState, ReceiptCustomizeValues } from './types';
+import { ReceiptBrandingState, ReceiptCustomizeValues } from './types';
 import { Box } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
@@ -16,6 +16,10 @@ import {
   ElementCustomizeContent,
 } from '@/containers/ElementCustomize/ElementCustomize';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import {
+  paperTemplatePreviewStyle,
+  pickPaperTemplateProps,
+} from '@/containers/ElementCustomize/paperTemplatePreview';
 import { useDrawerActions } from '@/hooks/state';
 
 export function ReceiptCustomizeContent() {
@@ -28,7 +32,7 @@ export function ReceiptCustomizeContent() {
   };
 
   return (
-    <BrandingTemplateForm<ReceiptCustomizeValues, EstimateBrandingState>
+    <BrandingTemplateForm<ReceiptCustomizeValues, ReceiptBrandingState>
       resource={'SaleReceipt'}
       templateId={templateId}
       defaultValues={initialValues}
@@ -69,10 +73,12 @@ function ReceiptPaperTemplateFormConnected() {
   const { values } = useFormikContext<ReceiptCustomizeValues>();
   const { brandingState } = useElementCustomizeContext();
 
-  const mergedProps: ReceiptPaperTemplateProps = {
-    ...brandingState,
-    ...values,
-  };
+  const mergedProps = pickPaperTemplateProps<ReceiptPaperTemplateProps>(
+    { ...brandingState, ...values },
+    initialValues,
+  );
 
-  return <ReceiptPaperTemplate {...mergedProps} />;
+  return (
+    <ReceiptPaperTemplate {...mergedProps} style={paperTemplatePreviewStyle} />
+  );
 }
