@@ -166,6 +166,14 @@ export class ItemResponseDto {
   quantityOnHand?: number;
 
   @ApiProperty({
+    description:
+      'The stock level at which the item should be reordered (for inventory items)',
+    example: 10,
+    required: false,
+  })
+  reorderPoint?: number;
+
+  @ApiProperty({
     description: 'Additional notes about the item',
     example:
       'Available in black, gray, and navy colors. 5-year warranty included.',

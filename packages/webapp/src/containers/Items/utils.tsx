@@ -36,6 +36,7 @@ const defaultInitialValues: ItemFormValues = {
   name: '',
   type: 'service',
   code: '',
+  reorderPoint: '',
   costPrice: '',
   sellPrice: '',
   costAccountId: '',

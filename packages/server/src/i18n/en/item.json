@@ -15,6 +15,7 @@
   "field.inventory_account": "Inventory Account",
   "field.purchase_description": "Purchase Description",
   "field.quantity_on_hand": "Quantity on Hand",
+  "field.reorder_point": "Reorder Point",
   "field.note": "Note",
   "field.category": "Category",
   "field.category_hint": "Matches the category name.",
