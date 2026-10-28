@@ -5,6 +5,7 @@ import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 const makeItemRequest = () => ({
   name: faker.commerce.productName(),
   type: 'service',
+  unit: 'kg',
 });
 
 describe.only('Items (e2e)', () => {
@@ -50,11 +51,13 @@ describe.only('Items (e2e)', () => {
       .send(makeItemRequest());
     const itemId = response.body.id;
 
-    return request(app.getHttpServer())
+    const itemResponse = await request(app.getHttpServer())
       .get(`/items/${itemId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+
+    expect(itemResponse.body.unit).toEqual('kg');
   });
 
   it('/items/:id/inactivate (PATCH)', async () => {

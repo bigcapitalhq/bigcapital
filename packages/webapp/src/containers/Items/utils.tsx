@@ -3,6 +3,7 @@ import { defaultTo, includes } from 'lodash';
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
+import { DEFAULT_ITEM_UNIT } from './constants';
 import { transformItemFormData } from './ItemForm.schema';
 import type { ItemFormValues } from './types';
 import type { Item } from '@bigcapital/sdk-ts';
@@ -36,6 +37,7 @@ const defaultInitialValues: ItemFormValues = {
   name: '',
   type: 'service',
   code: '',
+  unit: DEFAULT_ITEM_UNIT,
   costPrice: '',
   sellPrice: '',
   costAccountId: '',

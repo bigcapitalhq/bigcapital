@@ -41,6 +41,10 @@ export function ItemDetailHeader() {
             label={intl.get('item_code')}
             children={defaultTo(item?.code, '-')}
           />
+          <DetailItem
+            label={intl.get('item_unit')}
+            children={defaultTo(item?.unit, '-')}
+          />
           <If condition={item?.type === 'inventory'}>
             <DetailItem name={'quantity'} label={intl.get('quantity_on_hand')}>
               <span

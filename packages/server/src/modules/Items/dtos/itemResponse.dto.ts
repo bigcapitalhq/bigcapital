@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { DEFAULT_ITEM_UNIT, ITEM_UNITS } from '../Items.constants';
 
 export class ItemResponseDto {
   @ApiProperty({
@@ -32,6 +33,14 @@ export class ItemResponseDto {
     required: false,
   })
   code?: string;
+
+  @ApiProperty({
+    description: 'Unit of measure the item is measured in',
+    enum: [...ITEM_UNITS],
+    default: DEFAULT_ITEM_UNIT,
+    example: 'kg',
+  })
+  unit: string;
 
   @ApiProperty({
     description: 'Whether the item can be sold',
