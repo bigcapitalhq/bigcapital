@@ -243,7 +243,7 @@ export interface InvoicePdfTemplateAttributes {
   companyName: string;
 
   showCompanyLogo: boolean;
-  companyLogo: string;
+  companyLogoUri: string;
 
   dueDate: string;
   dueDateLabel: string;

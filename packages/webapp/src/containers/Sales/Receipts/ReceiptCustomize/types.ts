@@ -3,7 +3,7 @@ import {
   BrandingTemplateValues,
 } from '@/containers/BrandingTemplates/types';
 
-export interface EstimateBrandingState extends BrandingState {}
+export interface ReceiptBrandingState extends BrandingState {}
 
 export interface ReceiptCustomizeValues extends BrandingTemplateValues {
   // Colors
@@ -22,15 +22,14 @@ export interface ReceiptCustomizeValues extends BrandingTemplateValues {
   receiptDateLabel?: string;
 
   // Addresses
-  showBilledFromAddress?: boolean;
-  showBilledToAddress?: boolean;
+  showCustomerAddress?: boolean;
+  showCompanyAddress?: boolean;
   billedToLabel?: string;
 
   // Entries
-  itemNameLabel?: string;
-  itemDescriptionLabel?: string;
-  itemRateLabel?: string;
-  itemTotalLabel?: string;
+  lineItemLabel?: string;
+  lineRateLabel?: string;
+  lineTotalLabel?: string;
 
   // Subtotal
   showSubtotal?: boolean;

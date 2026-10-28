@@ -115,7 +115,7 @@ export interface CreditNotePdfTemplateAttributes {
 
   // # Company logo
   showCompanyLogo: boolean;
-  companyLogo: string;
+  companyLogoUri: string;
 
   // # Company name
   companyName: string;
@@ -128,6 +128,12 @@ export interface CreditNotePdfTemplateAttributes {
   showCompanyAddress: boolean;
   companyAddress: string;
   billedToLabel: string;
+
+  // Entries
+  lineItemLabel: string;
+  lineQuantityLabel: string;
+  lineRateLabel: string;
+  lineTotalLabel: string;
 
   total: string;
   totalLabel: string;

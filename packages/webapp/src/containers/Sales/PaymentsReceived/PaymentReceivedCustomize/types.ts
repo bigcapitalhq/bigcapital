@@ -13,54 +13,24 @@ export interface PaymentReceivedCustomizeValues extends BrandingTemplateValues {
   // Company Logo
   showCompanyLogo?: boolean;
 
-  // Top details.
-  showInvoiceNumber?: boolean;
-  invoiceNumberLabel?: string;
+  // Payment received number
+  showPaymentReceivedNumber?: boolean;
+  paymentReceivedNumberLabel?: string;
 
-  // # Issue date
-  showDateIssue?: boolean;
-  dateIssueLabel?: string;
+  // Payment received date
+  showPaymentReceivedDate?: boolean;
+  paymentReceivedDateLabel?: string;
 
-  // # Due date
-  showDueDate?: boolean;
-  dueDateLabel?: string;
-
-  // # Customer address
-  showCustomerAddress?: boolean;
-
-  // # Company address
+  // Addresses
   showCompanyAddress?: boolean;
+  showCustomerAddress?: boolean;
   billedToLabel?: string;
 
-  // Entries
-  itemNameLabel?: string;
-  itemDescriptionLabel?: string;
-  itemRateLabel?: string;
-  itemTotalLabel?: string;
-
-  // Totals
+  // Subtotal
   showSubtotal?: boolean;
   subtotalLabel?: string;
 
-  showDiscount?: boolean;
-  discountLabel?: string;
-
-  showTaxes?: boolean;
-
+  // Total
   showTotal?: boolean;
   totalLabel?: string;
-
-  paymentMadeLabel?: string;
-  showPaymentMade?: boolean;
-
-  dueAmountLabel?: string;
-  showDueAmount?: boolean;
-
-  // Footer paragraphs.
-  termsConditionsLabel?: string;
-  showTermsConditions?: boolean;
-
-  // # Statement
-  statementLabel?: string;
-  showStatement?: boolean;
 }

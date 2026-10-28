@@ -15,7 +15,7 @@ export const transformReceiptToBrandingTemplateAttributes = (
       quantity: entry.quantityFormatted,
       total: entry.totalFormatted,
     })),
-    receiptNumber: saleReceipt.receiptNumber,
+    receiptNumebr: saleReceipt.receiptNumber,
     receiptDate: saleReceipt.formattedReceiptDate,
     adjustment: saleReceipt.adjustmentFormatted,
     discount: saleReceipt.discountAmountFormatted,

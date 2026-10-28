@@ -154,8 +154,8 @@ PaperTemplate.Table = ({ columns, data }: PaperTemplateTableProps) => {
       </thead>
 
       <tbody>
-        {data.map((_data) => (
-          <tr>
+        {data.map((_data, rowIndex) => (
+          <tr key={rowIndex}>
             {filteredColumns.map((column, index) => (
               <x.td textAlign={column.align} key={index}>
                 {isFunction(column?.accessor)
