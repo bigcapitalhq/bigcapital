@@ -26044,6 +26044,11 @@
             "description": "The quantity of the item in stock (for inventory items)",
             "example": 50
           },
+          "reorderPoint": {
+            "type": "number",
+            "description": "The stock level at which the item should be reordered (for inventory items)",
+            "example": 10
+          },
           "note": {
             "type": "string",
             "description": "Additional notes about the item",
@@ -26124,6 +26129,11 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
+          },
+          "reorderPoint": {
+            "type": "number",
+            "description": "Stock level at which the item should be reordered (inventory items only)",
+            "example": 10
           },
           "purchasable": {
             "type": "boolean",
@@ -26267,6 +26277,11 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
+          },
+          "reorderPoint": {
+            "type": "number",
+            "description": "Stock level at which the item should be reordered (inventory items only)",
+            "example": 10
           },
           "purchasable": {
             "type": "boolean",

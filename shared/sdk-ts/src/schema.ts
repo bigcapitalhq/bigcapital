@@ -5770,6 +5770,11 @@ export interface components {
              */
             quantityOnHand?: number;
             /**
+             * @description The stock level at which the item should be reordered (for inventory items)
+             * @example 10
+             */
+            reorderPoint?: number;
+            /**
              * @description Additional notes about the item
              * @example Available in black, gray, and navy colors. 5-year warranty included.
              */
@@ -5825,6 +5830,11 @@ export interface components {
              * @example CHAIR-X2000
              */
             code?: string;
+            /**
+             * @description Stock level at which the item should be reordered (inventory items only)
+             * @example 10
+             */
+            reorderPoint?: number;
             /**
              * @description Whether the item can be purchased
              * @example true
@@ -5939,6 +5949,11 @@ export interface components {
              * @example CHAIR-X2000
              */
             code?: string;
+            /**
+             * @description Stock level at which the item should be reordered (inventory items only)
+             * @example 10
+             */
+            reorderPoint?: number;
             /**
              * @description Whether the item can be purchased
              * @example true

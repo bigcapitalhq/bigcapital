@@ -43,6 +43,19 @@ export class CommandItemDto {
   })
   code?: string;
 
+  @IsOptional()
+  @ToNumber()
+  @IsNumber({ maxDecimalPlaces: 3 })
+  @Min(0)
+  @ApiProperty({
+    description:
+      'Stock level at which the item should be reordered (inventory items only)',
+    required: false,
+    minimum: 0,
+    example: 10,
+  })
+  reorderPoint?: number;
+
   // Purchase attributes
   @IsOptional()
   @IsBoolean()

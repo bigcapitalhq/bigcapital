@@ -153,6 +153,12 @@ export const SettingsOptions = {
     preferred_inventory_account: {
       type: 'number',
     },
+    reorder_point_notifications: {
+      type: 'boolean',
+    },
+    reorder_point_notification_email: {
+      type: 'string',
+    },
   },
   item_categories: {
     table_size: {
