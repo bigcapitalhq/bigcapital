@@ -23,6 +23,7 @@ const defaultFormValues: ItemPreferencesFormValues = {
   preferredSellAccount: '',
   preferredCostAccount: '',
   preferredInventoryAccount: '',
+  preventStockFromGoingBelowZero: false,
 };
 
 interface ItemPreferencesFormPageProps extends WithDashboardActionsProps {}
@@ -50,6 +51,7 @@ function ItemPreferencesFormPageInner({
         preferredSellAccount: values.preferredSellAccount,
         preferredCostAccount: values.preferredCostAccount,
         preferredInventoryAccount: values.preferredInventoryAccount,
+        preventStockFromGoingBelowZero: values.preventStockFromGoingBelowZero,
       }),
     ).map((option) => ({
       ...option,
