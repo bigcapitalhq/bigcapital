@@ -43,6 +43,10 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     href: '/preferences/credit-notes',
   },
   {
+    text: <T id={'preferences.contacts'} />,
+    href: '/preferences/contacts',
+  },
+  {
     text: <T id={'currencies'} />,
     href: '/preferences/currencies',
   },

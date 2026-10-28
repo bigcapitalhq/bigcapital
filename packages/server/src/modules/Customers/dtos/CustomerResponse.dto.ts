@@ -105,6 +105,13 @@ export class CustomerResponseDto {
   @ApiProperty({ example: true })
   active: boolean;
 
+  @ApiProperty({
+    required: false,
+    description: 'Customer code.',
+    example: 'CUST-00001',
+  })
+  code?: string;
+
   @ApiProperty({ example: '2024-01-01T00:00:00Z' })
   @Type(() => Date)
   createdAt: Date;

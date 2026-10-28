@@ -219,6 +219,28 @@ export const SettingsOptions = {
       type: 'boolean',
     },
   },
+  customers: {
+    next_number: {
+      type: 'string',
+    },
+    number_prefix: {
+      type: 'string',
+    },
+    auto_increment: {
+      type: 'boolean',
+    },
+  },
+  vendors: {
+    next_number: {
+      type: 'string',
+    },
+    number_prefix: {
+      type: 'string',
+    },
+    auto_increment: {
+      type: 'boolean',
+    },
+  },
   warehouse_transfers: {
     next_number: {
       type: 'string',

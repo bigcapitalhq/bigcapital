@@ -41,6 +41,15 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/contacts`,
+    component: lazy(() =>
+      import('../containers/Preferences/Contacts').then((m) => ({
+        default: m.ContactsPreferences,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/payment-methods`,
     component: lazy(() =>
       import(

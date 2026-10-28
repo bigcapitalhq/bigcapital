@@ -2346,5 +2346,20 @@
   "preferences.estimates.success_message": "Las preferencias se han guardado con éxito.",
   "preferences.credit_notes.success_message": "Las preferencias se han guardado con éxito.",
   "preferences.receipts.success_message": "Las preferencias se han guardado con éxito.",
-  "preferences.invoices.success_message": "Las preferencias se han guardado con éxito."
+  "preferences.invoices.success_message": "Las preferencias se han guardado con éxito.",
+  "preferences.contacts": "Clientes y proveedores",
+  "pref.contacts.customers.title": "Número de cliente",
+  "pref.contacts.vendors.title": "Número de proveedor",
+  "pref.contacts.auto_increment": "Generar números automáticamente",
+  "pref.contacts.number_prefix": "Prefijo",
+  "pref.contacts.number_prefix_hint": "Prefijo opcional colocado antes del número.",
+  "pref.contacts.next_number": "Siguiente número",
+  "pref.contacts.next_number_hint": "El siguiente número utilizado para nuevos registros.",
+  "pref.contacts.next_number_preview": "Vista previa: {code}",
+  "pref.contacts.success_message": "Las preferencias de numeración de clientes y proveedores se han guardado.",
+  "pref.contacts.existing_records_hint": "Los clientes y proveedores existentes no se renumeran. La secuencia se aplica solo a nuevos registros.",
+  "customer_code_auto_increment_hint": "Déjalo en blanco para usar el siguiente número generado automáticamente ({code}), o escribe un código para reemplazarlo.",
+  "vendor_code_auto_increment_hint": "Déjalo en blanco para usar el siguiente número generado automáticamente ({code}), o escribe un código para reemplazarlo.",
+  "customer_code_is_already_used": "El código del cliente ya está en uso.",
+  "vendor_code_is_already_used": "El código del proveedor ya está en uso."
 }

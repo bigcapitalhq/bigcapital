@@ -7267,6 +7267,11 @@ export interface components {
             /** @example true */
             active: boolean;
             /**
+             * @description Customer code.
+             * @example CUST-00001
+             */
+            code?: string;
+            /**
              * Format: date-time
              * @example 2024-01-01T00:00:00Z
              */
@@ -9842,6 +9847,11 @@ export interface components {
             note: string;
             /** @example true */
             active: boolean;
+            /**
+             * @description Vendor code.
+             * @example VEND-00001
+             */
+            code?: string;
             /**
              * Format: date-time
              * @example 2024-01-01T00:00:00Z
@@ -17547,6 +17557,11 @@ export interface components {
             note?: string | null;
             /** @example true */
             active: boolean;
+            /**
+             * @description Contact code (customer or vendor).
+             * @example CUST-00001
+             */
+            code?: string | null;
             /** @example Customer */
             formattedContactService?: string;
             /** @example debit */

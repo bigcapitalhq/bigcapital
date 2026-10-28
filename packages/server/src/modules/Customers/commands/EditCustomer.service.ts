@@ -5,6 +5,7 @@ import {
   ICustomerEventEditingPayload,
 } from '../types/Customers.types';
 import { CreateEditCustomerDTO } from './CreateEditCustomerDTO.service';
+import { CustomerValidators } from './CustomerValidators.service';
 import { Customer } from '../models/Customer';
 import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -18,12 +19,14 @@ export class EditCustomer {
    * @param {UnitOfWork} uow - Unit of work service.
    * @param {EventEmitter2} eventPublisher - Event emitter service.
    * @param {CreateEditCustomerDTO} customerDTO - Customer DTO.
+   * @param {CustomerValidators} validators - Customer validators service.
    * @param {TenantModelProxy<typeof Customer>} contactModel - Customer model.
    */
   constructor(
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
     private customerDTO: CreateEditCustomerDTO,
+    private validators: CustomerValidators,
 
     @Inject(Customer.name)
     private customerModel: TenantModelProxy<typeof Customer>,
@@ -47,6 +50,12 @@ export class EditCustomer {
 
     // Transforms the given customer DTO to object.
     const customerObj = this.customerDTO.transformEditDTO(customerDTO);
+
+    // Validates the customer code uniqueness.
+    await this.validators.validateCustomerCodeUnique(
+      customerObj.code,
+      customerId,
+    );
 
     // Edits the given customer under unit-of-work environment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {

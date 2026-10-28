@@ -8,7 +8,7 @@ const makeItemRequest = () => ({
   unit: 'kg',
 });
 
-describe.only('Items (e2e)', () => {
+describe('Items (e2e)', () => {
   it('/items (POST)', () => {
     return request(app.getHttpServer())
       .post('/items')

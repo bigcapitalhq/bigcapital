@@ -2,7 +2,7 @@ import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
-describe.only('Vendors (e2e)', () => {
+describe('Vendors (e2e)', () => {
   it('/vendors (POST)', () => {
     return request(app.getHttpServer())
       .post('/vendors')

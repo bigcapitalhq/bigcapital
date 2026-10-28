@@ -4,6 +4,7 @@ import {
   Icon as BlueprintIcon,
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
+import { useCustomerFormContext } from './CustomerFormProvider';
 import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
 import { CustomerTypeRadioField } from './CustomerTypeRadioField';
 import {
@@ -18,10 +19,24 @@ import {
   Stack,
 } from '@/components';
 import { useAutofocus } from '@/hooks';
+import { useSettingsCustomers } from '@/hooks/query';
+import { transactionNumber } from '@/utils';
 
 export function CustomerFormBasicSection() {
   const firstNameFieldRef = useAutofocus<HTMLInputElement>();
   const { syncDisplayName, createFieldOnChange } = useDisplayNameSynchronizer();
+  const { isNewMode } = useCustomerFormContext();
+  const { data: customerSettings } = useSettingsCustomers();
+
+  const autoIncrement = Boolean(customerSettings?.autoIncrement);
+  const nextCode = transactionNumber(
+    customerSettings?.numberPrefix as string | undefined,
+    customerSettings?.nextNumber as string | number | undefined,
+  );
+  const showAutoCode = isNewMode && autoIncrement && Boolean(nextCode);
+  const codeHelperText = showAutoCode
+    ? intl.get('customer_code_auto_increment_hint', { code: nextCode })
+    : 'Add a unique account number to identify, reference and search for the contact.';
 
   return (
     <Box data-section-id="primary">
@@ -63,10 +78,15 @@ export function CustomerFormBasicSection() {
       <FFormGroup
         name={'code'}
         label={'Customer Code'}
-        helperText="Add a unique account number to identify, reference and search for the contact."
+        helperText={codeHelperText}
         inline
       >
-        <FInputGroup name={'code'} data-testId={'customer-code-input'} fill />
+        <FInputGroup
+          name={'code'}
+          data-testId={'customer-code-input'}
+          placeholder={showAutoCode ? nextCode : undefined}
+          fill
+        />
       </FFormGroup>
 
       {/*----------- Company Name -----------*/}

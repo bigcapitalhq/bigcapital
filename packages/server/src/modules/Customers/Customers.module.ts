@@ -3,6 +3,7 @@ import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { ActivateCustomer } from './commands/ActivateCustomer.service';
 import { CreateCustomer } from './commands/CreateCustomer.service';
+import { CustomerIncrement } from './commands/CustomerIncrement.service';
 import { CustomerValidators } from './commands/CustomerValidators.service';
 import { EditCustomer } from './commands/EditCustomer.service';
 import { EditOpeningBalanceCustomer } from './commands/EditOpeningBalanceCustomer.service';
@@ -15,6 +16,7 @@ import { CustomersExportable } from './CustomersExportable';
 import { CustomersImportable } from './CustomersImportable';
 import { GetCustomers } from './queries/GetCustomers.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
+import { AutoIncrementOrdersModule } from '../AutoIncrementOrders/AutoIncrementOrders.module';
 import { BulkDeleteCustomersService } from './BulkDeleteCustomers.service';
 import { ValidateBulkDeleteCustomersService } from './ValidateBulkDeleteCustomers.service';
 import { LedgerModule } from '../Ledger/Ledger.module';
@@ -30,11 +32,13 @@ import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerG
     DynamicListModule,
     LedgerModule,
     AccountsModule,
+    AutoIncrementOrdersModule,
   ],
   controllers: [CustomersController],
   providers: [
     ActivateCustomer,
     CreateCustomer,
+    CustomerIncrement,
     CustomerValidators,
     EditCustomer,
     EditOpeningBalanceCustomer,

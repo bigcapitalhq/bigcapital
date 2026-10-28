@@ -69,6 +69,7 @@ export interface IContact extends IContactAddress {
 
   note: string;
   active: boolean;
+  code?: string | null;
 }
 export interface IContactNewDTO {
   contactType?: string;

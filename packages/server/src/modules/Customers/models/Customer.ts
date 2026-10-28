@@ -216,6 +216,7 @@ export class Customer extends TenantBaseModel {
   static get searchRoles() {
     return [
       { fieldKey: 'display_name', comparator: 'contains' },
+      { condition: 'or', fieldKey: 'code', comparator: 'contains' },
       { condition: 'or', fieldKey: 'first_name', comparator: 'contains' },
       { condition: 'or', fieldKey: 'last_name', comparator: 'equals' },
       { condition: 'or', fieldKey: 'company_name', comparator: 'equals' },
