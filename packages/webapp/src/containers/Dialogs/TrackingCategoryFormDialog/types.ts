@@ -13,6 +13,7 @@ export interface TrackingCategoryFormOption {
 export interface TrackingCategoryFormValues {
   name: string;
   description: string;
+  mandatory: boolean;
   options: TrackingCategoryFormOption[];
 }
 

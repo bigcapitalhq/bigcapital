@@ -31612,6 +31612,11 @@
             "description": "Whether the category is active",
             "example": true
           },
+          "mandatory": {
+            "type": "boolean",
+            "description": "Whether every manual journal entry must assign this tracking category",
+            "example": false
+          },
           "options": {
             "description": "Tracking options",
             "type": "array",
@@ -31634,6 +31639,7 @@
           "id",
           "name",
           "active",
+          "mandatory",
           "options"
         ]
       },
@@ -31678,6 +31684,11 @@
             "description": "Whether the category is active",
             "example": true
           },
+          "mandatory": {
+            "type": "boolean",
+            "description": "Whether every manual journal entry must assign this tracking category",
+            "example": false
+          },
           "options": {
             "description": "Tracking options",
             "type": "array",
@@ -31707,6 +31718,11 @@
             "type": "boolean",
             "description": "Whether the category is active",
             "example": true
+          },
+          "mandatory": {
+            "type": "boolean",
+            "description": "Whether every manual journal entry must assign this tracking category",
+            "example": false
           },
           "options": {
             "description": "Tracking options",
@@ -35082,12 +35098,18 @@
             "type": "boolean",
             "description": "Whether the category is active",
             "example": true
+          },
+          "mandatory": {
+            "type": "boolean",
+            "description": "Whether every manual journal entry must assign this tracking category",
+            "example": false
           }
         },
         "required": [
           "id",
           "name",
-          "active"
+          "active",
+          "mandatory"
         ]
       },
       "TrackingCategoryOptionSummaryResponseDto": {

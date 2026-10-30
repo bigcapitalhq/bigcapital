@@ -13,6 +13,7 @@ const enableFeature = (value: number) =>
 
 const createTrackingCategory = async (
   options = ['North Store', 'South Store'],
+  payload: Record<string, any> = {},
 ) => {
   const response = await request(app.getHttpServer())
     .post('/tracking-categories')
@@ -21,6 +22,7 @@ const createTrackingCategory = async (
     .send({
       name: `Location ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
       options: options.map((name) => ({ name })),
+      ...payload,
     })
     .expect(201);
 
@@ -287,6 +289,166 @@ describe('Manual Journals (e2e)', () => {
 
     await request(app.getHttpServer())
       .delete(`/manual-journals/${journalId}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .delete(`/tracking-categories/${category.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
+  it('enforces mandatory tracking categories on create and edit', async () => {
+    const category = await createTrackingCategory(['North Store'], {
+      mandatory: true,
+    });
+    const optionId = category.options[0].id;
+    const basePayload = makeManualJournalRequest();
+
+    const rejectedCreate = await request(app.getHttpServer())
+      .post('/manual-journals')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(basePayload)
+      .expect(400);
+
+    expect(rejectedCreate.body.errors[0].type).toBe(
+      'TRACKING_CATEGORY_MANDATORY',
+    );
+    expect(rejectedCreate.body.errors[0].payload.assignments).toEqual([
+      { index: 1, categoryId: category.id, categoryName: category.name },
+      { index: 2, categoryId: category.id, categoryName: category.name },
+    ]);
+
+    const assignedEntries = basePayload.entries.map((entry) => ({
+      ...entry,
+      trackingCategories: [{ categoryId: category.id, optionId }],
+    }));
+    const assignedPayload = { ...basePayload, entries: assignedEntries };
+    const created = await request(app.getHttpServer())
+      .post('/manual-journals')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(assignedPayload)
+      .expect(201);
+
+    const rejectedEdit = await request(app.getHttpServer())
+      .put(`/manual-journals/${created.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ...assignedPayload,
+        entries: assignedEntries.map((entry, index) =>
+          index === 1 ? { ...entry, trackingCategories: [] } : entry,
+        ),
+      })
+      .expect(400);
+
+    expect(rejectedEdit.body.errors[0].type).toBe(
+      'TRACKING_CATEGORY_MANDATORY',
+    );
+
+    await request(app.getHttpServer())
+      .delete(`/manual-journals/${created.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .delete(`/tracking-categories/${category.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
+  it('does not enforce archived mandatory tracking categories', async () => {
+    const category = await createTrackingCategory(['North Store'], {
+      mandatory: true,
+    });
+
+    await request(app.getHttpServer())
+      .put(`/tracking-categories/${category.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ active: false })
+      .expect(200);
+
+    const created = await request(app.getHttpServer())
+      .post('/manual-journals')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(makeManualJournalRequest())
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .delete(`/manual-journals/${created.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .delete(`/tracking-categories/${category.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
+  it('enforces mandatory tracking categories when publishing a draft', async () => {
+    const category = await createTrackingCategory(['North Store']);
+    const optionId = category.options[0].id;
+    const basePayload = makeManualJournalRequest();
+
+    const created = await request(app.getHttpServer())
+      .post('/manual-journals')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(basePayload)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .put(`/tracking-categories/${category.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ mandatory: true })
+      .expect(200);
+
+    const rejectedPublish = await request(app.getHttpServer())
+      .patch(`/manual-journals/${created.body.id}/publish`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send()
+      .expect(400);
+
+    expect(rejectedPublish.body.errors[0].type).toBe(
+      'TRACKING_CATEGORY_MANDATORY',
+    );
+
+    const assignedPayload = {
+      ...basePayload,
+      entries: basePayload.entries.map((entry) => ({
+        ...entry,
+        trackingCategories: [{ categoryId: category.id, optionId }],
+      })),
+    };
+
+    await request(app.getHttpServer())
+      .put(`/manual-journals/${created.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(assignedPayload)
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .patch(`/manual-journals/${created.body.id}/publish`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send()
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .delete(`/manual-journals/${created.body.id}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);

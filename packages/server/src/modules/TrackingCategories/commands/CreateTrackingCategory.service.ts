@@ -36,6 +36,10 @@ export class CreateTrackingCategoryService {
     }
     await this.validator.validateNameUnique(name);
     this.validator.validateOptionsUnique(options);
+    this.validator.validateMandatoryCategoryHasActiveOption(
+      dto.mandatory ?? false,
+      options,
+    );
 
     const category = await this.trackingCategoryModel()
       .query()
@@ -43,6 +47,7 @@ export class CreateTrackingCategoryService {
         name,
         description: dto.description?.trim() || null,
         active: dto.active ?? true,
+        mandatory: dto.mandatory ?? false,
         options,
       });
 

@@ -6,6 +6,7 @@ export class TrackingCategory extends BaseModel {
   public name!: string;
   public description!: string | null;
   public active!: boolean;
+  public mandatory!: boolean;
 
   public options?: TrackingCategoryOption[];
 

@@ -8,6 +8,7 @@ import { useMakeJournalFormContext } from './MakeJournalProvider';
 import type {
   ManualJournal,
   CreateManualJournalBody,
+  TrackingCategoriesList,
 } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
 import {
@@ -40,6 +41,7 @@ const ERROR = {
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
   COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS:
     'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS',
+  MANDATORY_TRACKING_CATEGORY: 'TRACKING_CATEGORY_MANDATORY',
 } as const;
 
 export const MIN_LINES_NUMBER = 1;
@@ -80,6 +82,19 @@ export type MakeJournalErrorResponse = {
   type: string;
   indexes?: number[];
   meta?: { contact_type?: string; indexes?: number[] }[];
+  payload?: {
+    assignments?: Array<{
+      index: number;
+      categoryId: number;
+      categoryName: string;
+    }>;
+  };
+};
+
+export type MissingMandatoryTrackingCategory = {
+  index: number;
+  categoryId: number;
+  categoryName: string;
 };
 
 export const defaultEntry: MakeJournalEntry = {
@@ -91,6 +106,43 @@ export const defaultEntry: MakeJournalEntry = {
   trackingCategories: [],
   note: '',
 };
+
+/**
+ * Retrieves the missing mandatory tracking category assignments of the given
+ * journal entries. Only entries with a debit or credit amount are enforced.
+ */
+export function getMissingMandatoryTrackingCategories(
+  entries: MakeJournalEntry[],
+  trackingCategories: TrackingCategoriesList,
+): MissingMandatoryTrackingCategory[] {
+  const mandatoryCategories = (trackingCategories ?? []).filter(
+    (category) => category.active && category.mandatory,
+  );
+
+  if (mandatoryCategories.length === 0) {
+    return [];
+  }
+  return entries.flatMap((entry, index) => {
+    const hasAmount = Number(entry.debit) > 0 || Number(entry.credit) > 0;
+
+    if (!hasAmount) {
+      return [];
+    }
+    const assignedCategoryIds = new Set(
+      (entry.trackingCategories ?? []).map(
+        (assignment) => assignment.categoryId,
+      ),
+    );
+
+    return mandatoryCategories
+      .filter((category) => !assignedCategoryIds.has(category.id))
+      .map((category) => ({
+        index,
+        categoryId: category.id,
+        categoryName: category.name,
+      }));
+  });
+}
 
 export const defaultManualJournal: MakeJournalFormValues = {
   journalNumber: '',
@@ -277,6 +329,36 @@ export const transformErrors = (
     }
     const indexes = (error.meta ?? []).map((meta) => meta.indexes ?? []).flat();
     setEntriesErrors(indexes, 'contactId', 'error');
+  }
+  if ((error = getError(ERROR.MANDATORY_TRACKING_CATEGORY))) {
+    const assignments = error.payload?.assignments ?? [];
+
+    assignments.forEach((assignment) => {
+      newErrors = setWith(
+        newErrors,
+        [
+          'entries',
+          Math.max(assignment.index - 1, 0),
+          `tracking-category-${assignment.categoryId}`,
+        ],
+        'error',
+      );
+    });
+    const categoryNames = Array.from(
+      new Set(
+        assignments
+          .map((assignment) => assignment.categoryName)
+          .filter(Boolean),
+      ),
+    );
+
+    categoryNames.forEach((categoryName) => {
+      toastMessages.push(
+        intl.get('make_journal.errors.tracking_category_mandatory', {
+          category: categoryName,
+        }),
+      );
+    });
   }
   if ((error = getError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS))) {
     newErrors = setWith(

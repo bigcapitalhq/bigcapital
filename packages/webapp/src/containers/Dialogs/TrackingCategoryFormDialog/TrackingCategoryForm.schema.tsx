@@ -13,6 +13,22 @@ export const TrackingCategoryFormSchema = Yup.object().shape({
     .max(500)
     .nullable()
     .label(intl.get('tracking_categories.field.description')),
+  mandatory: Yup.boolean().test(
+    'mandatory-has-active-option',
+    intl.get('tracking_categories.error.mandatory_without_active_options'),
+    function (value: boolean | null | undefined) {
+      if (!value) {
+        return true;
+      }
+      const { options } = this.parent as {
+        options?: Array<{ name?: string; active?: boolean }>;
+      };
+
+      return (options ?? []).some(
+        (option) => Boolean(option?.active) && Boolean(option?.name?.trim()),
+      );
+    },
+  ),
   options: Yup.array()
     .of(
       Yup.object().shape({

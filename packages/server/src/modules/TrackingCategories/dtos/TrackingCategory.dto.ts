@@ -60,6 +60,15 @@ export class CreateTrackingCategoryDto {
   active?: boolean;
 
   @ApiPropertyOptional({
+    description:
+      'Whether every manual journal entry must assign this tracking category',
+    example: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  mandatory?: boolean;
+
+  @ApiPropertyOptional({
     description: 'Tracking options',
     type: [TrackingCategoryOptionDto],
   })
@@ -94,6 +103,15 @@ export class EditTrackingCategoryDto {
   @IsOptional()
   @IsBoolean()
   active?: boolean;
+
+  @ApiPropertyOptional({
+    description:
+      'Whether every manual journal entry must assign this tracking category',
+    example: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  mandatory?: boolean;
 
   @ApiPropertyOptional({
     description: 'Tracking options',

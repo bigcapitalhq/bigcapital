@@ -24,6 +24,7 @@ export class TrackingCategoryTransformer extends Transformer {
     return {
       ...category,
       active: Boolean(category.active),
+      mandatory: Boolean(category.mandatory),
       options: this.item(
         category.options ?? [],
         new TrackingCategoryOptionTransformer(),
