@@ -46,7 +46,7 @@ export class AuthSigninService {
     } catch (_err) {
       throw new InvalidEmailPasswordException(email);
     }
-    if (!(await user.checkPassword(password))) {
+    if (!user.active || !(await user.checkPassword(password))) {
       throw new InvalidEmailPasswordException(email);
     }
     return user;
@@ -68,6 +68,9 @@ export class AuthSigninService {
         .findOne({ id: Number(payload.sub) })
         .throwIfNotFound();
 
+      if (!user.active) {
+        throw new UserNotFoundException(String(payload.sub));
+      }
       this.clsService.set('userId', user.id);
     } catch (_error) {
       throw new UserNotFoundException(String(payload.sub));
