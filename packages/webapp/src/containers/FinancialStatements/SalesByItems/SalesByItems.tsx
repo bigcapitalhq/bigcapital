@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import { useEffect, useCallback } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { SalesByItemsLoadingBar } from './components';
 import { SalesByItemProvider } from './SalesByItemProvider';
 import { SalesByItemsActionsBar } from './SalesByItemsActionsBar';
@@ -35,6 +36,7 @@ function SalesByItemsInner({
         fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
       };
+      writeReportingPeriod(parsedFilter);
       setLocationQuery(parsedFilter);
     },
     [setLocationQuery],
