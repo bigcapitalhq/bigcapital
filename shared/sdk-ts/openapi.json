@@ -7320,6 +7320,262 @@
         ]
       }
     },
+    "/api/tracking-categories": {
+      "get": {
+        "operationId": "TrackingCategoriesController_getTrackingCategories",
+        "summary": "Retrieves all tracking categories.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The tracking categories have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrackingCategoryResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tracking Categories"
+        ]
+      },
+      "post": {
+        "operationId": "TrackingCategoriesController_createTrackingCategory",
+        "summary": "Creates a new tracking category.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrackingCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The tracking category has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingCategoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tracking Categories"
+        ]
+      }
+    },
+    "/api/tracking-categories/{id}": {
+      "get": {
+        "operationId": "TrackingCategoriesController_getTrackingCategory",
+        "summary": "Retrieves the tracking category details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The tracking category id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The tracking category details have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingCategoryResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The tracking category not found."
+          }
+        },
+        "tags": [
+          "Tracking Categories"
+        ]
+      },
+      "put": {
+        "operationId": "TrackingCategoriesController_editTrackingCategory",
+        "summary": "Edits the given tracking category.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The tracking category id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditTrackingCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The tracking category has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingCategoryResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The tracking category not found."
+          }
+        },
+        "tags": [
+          "Tracking Categories"
+        ]
+      },
+      "delete": {
+        "operationId": "TrackingCategoriesController_deleteTrackingCategory",
+        "summary": "Deletes the given tracking category.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The tracking category id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The tracking category has been successfully deleted."
+          },
+          "404": {
+            "description": "The tracking category not found."
+          }
+        },
+        "tags": [
+          "Tracking Categories"
+        ]
+      }
+    },
     "/api/warehouse-transfers/validate-bulk-delete": {
       "post": {
         "operationId": "WarehouseTransfersController_validateBulkDeleteWarehouseTransfers",
@@ -31292,6 +31548,175 @@
           "attachments"
         ]
       },
+      "TrackingCategoryOptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Option ID",
+            "example": 1
+          },
+          "categoryId": {
+            "type": "number",
+            "description": "Tracking category ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Option name",
+            "example": "North Store"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the option is active",
+            "example": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created date"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated date"
+          }
+        },
+        "required": [
+          "id",
+          "categoryId",
+          "name",
+          "active"
+        ]
+      },
+      "TrackingCategoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Tracking category ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Category name",
+            "example": "Location"
+          },
+          "description": {
+            "type": "string",
+            "description": "Category description",
+            "example": "Tracks the business location of transactions"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the category is active",
+            "example": true
+          },
+          "options": {
+            "description": "Tracking options",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingCategoryOptionResponseDto"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created date"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated date"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "active",
+          "options"
+        ]
+      },
+      "TrackingCategoryOptionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Option ID (only provided when updating an existing option)",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Option name",
+            "example": "North Store"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the option is active",
+            "example": true
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateTrackingCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Category name",
+            "example": "Location"
+          },
+          "description": {
+            "type": "string",
+            "description": "Category description",
+            "example": "Tracks the business location of transactions"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the category is active",
+            "example": true
+          },
+          "options": {
+            "description": "Tracking options",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingCategoryOptionDto"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "EditTrackingCategoryDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Category name",
+            "example": "Location"
+          },
+          "description": {
+            "type": "string",
+            "description": "Category description",
+            "example": "Tracks the business location of transactions"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the category is active",
+            "example": true
+          },
+          "options": {
+            "description": "Tracking options",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingCategoryOptionDto"
+            }
+          }
+        }
+      },
       "WarehouseTransferEntryResponseDto": {
         "type": "object",
         "properties": {
@@ -34640,6 +35065,97 @@
           "entries"
         ]
       },
+      "TrackingCategorySummaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Tracking category ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Category name",
+            "example": "Location"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the category is active",
+            "example": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "active"
+        ]
+      },
+      "TrackingCategoryOptionSummaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Option ID",
+            "example": 1
+          },
+          "categoryId": {
+            "type": "number",
+            "description": "Tracking category ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Option name",
+            "example": "North Store"
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the option is active",
+            "example": true
+          }
+        },
+        "required": [
+          "id",
+          "categoryId",
+          "name",
+          "active"
+        ]
+      },
+      "ManualJournalEntryTrackingCategoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "number",
+            "description": "Tracking category ID",
+            "example": 1
+          },
+          "optionId": {
+            "type": "number",
+            "description": "Tracking category option ID",
+            "example": 2
+          },
+          "category": {
+            "description": "Tracking category details",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TrackingCategorySummaryResponseDto"
+              }
+            ]
+          },
+          "option": {
+            "description": "Tracking category option details",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TrackingCategoryOptionSummaryResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "categoryId",
+          "optionId"
+        ]
+      },
       "ManualJournalEntryResponseDto": {
         "type": "object",
         "properties": {
@@ -34694,6 +35210,13 @@
           "branch": {
             "type": "object",
             "description": "Branch details"
+          },
+          "trackingCategories": {
+            "description": "Tracking category assignments",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualJournalEntryTrackingCategoryResponseDto"
+            }
           }
         },
         "required": [
@@ -34836,6 +35359,25 @@
           "entries"
         ]
       },
+      "TrackingCategoryAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "number",
+            "description": "Tracking category ID",
+            "example": 1
+          },
+          "optionId": {
+            "type": "number",
+            "description": "Tracking category option ID",
+            "example": 2
+          }
+        },
+        "required": [
+          "categoryId",
+          "optionId"
+        ]
+      },
       "ManualJournalEntryDto": {
         "type": "object",
         "properties": {
@@ -34870,6 +35412,13 @@
           "projectId": {
             "type": "number",
             "description": "Project ID"
+          },
+          "trackingCategories": {
+            "description": "Tracking category assignments of the entry",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrackingCategoryAssignmentDto"
+            }
           }
         },
         "required": [

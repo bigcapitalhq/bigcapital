@@ -8,6 +8,7 @@ import { CLASSES } from '@/constants/classes';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
 import { ApiKeysActions } from '@/containers/Preferences/ApiKeys/ApiKeysActions';
 import { BranchesActions } from '@/containers/Preferences/Branches/BranchesActions';
+import { TrackingCategoriesActions } from '@/containers/Preferences/TrackingCategories/TrackingCategoriesActions';
 import { CurrenciesActions } from '@/containers/Preferences/Currencies/CurrenciesActions';
 import { UsersActions } from '@/containers/Preferences/Users/UsersActions';
 import { WarehousesActions } from '@/containers/Preferences/Warehouses/WarehousesActions';
@@ -45,6 +46,11 @@ function PreferencesTopbar({ preferencesPageTitle }) {
               exact
               path={'/preferences/branches'}
               component={BranchesActions}
+            />
+            <Route
+              exact
+              path={'/preferences/tracking-categories'}
+              component={TrackingCategoriesActions}
             />
             <Route
               exact

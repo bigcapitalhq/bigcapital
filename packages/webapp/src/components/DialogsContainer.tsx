@@ -31,6 +31,7 @@ import { index as ReconcileVendorCreditDialog } from '@/containers/Dialogs/Recon
 import { index as RefundCreditNoteDialog } from '@/containers/Dialogs/RefundCreditNoteDialog';
 import { index as RefundVendorCreditDialog } from '@/containers/Dialogs/RefundVendorCreditDialog';
 import { index as SMSMessageDialog } from '@/containers/Dialogs/SMSMessageDialog';
+import { index as TrackingCategoryFormDialog } from '@/containers/Dialogs/TrackingCategoryFormDialog';
 import { index as UnlockingPartialTransactionsDialog } from '@/containers/Dialogs/UnlockingPartialTransactionsDialog';
 import { index as UnlockingTransactionsDialog } from '@/containers/Dialogs/UnlockingTransactionsDialog';
 import { index as UserFormDialog } from '@/containers/Dialogs/UserFormDialog';
@@ -106,6 +107,9 @@ export default function DialogsContainer() {
       />
       <WarehouseFormDialog dialogName={DialogsName.WarehouseForm} />
       <BranchFormDialog dialogName={DialogsName.BranchForm} />
+      <TrackingCategoryFormDialog
+        dialogName={DialogsName.TrackingCategoryForm}
+      />
       <BranchActivateDialog dialogName={DialogsName.BranchActivateForm} />
       <WarehouseActivateDialog dialogName={DialogsName.WarehouseActivateForm} />
       <CustomerOpeningBalanceDialog

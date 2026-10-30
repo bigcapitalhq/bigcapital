@@ -4,6 +4,7 @@ import intl from 'react-intl-universal';
 import {
   useManualJournalDrawerContext,
   ManualJournalDetail,
+  ManualJournalDetailEntry,
 } from './ManualJournalDrawerProvider';
 import {
   T,
@@ -50,7 +51,24 @@ export const useManualJournalEntriesColumns = () => {
 
   // manual journal details drawer context.
   const { manualJournal } = useManualJournalDrawerContext();
-  const entries = manualJournal?.entries ?? [];
+  const entries = React.useMemo(
+    () => manualJournal?.entries ?? [],
+    [manualJournal],
+  );
+
+  // Categories actually used by this journal, ordered as they appear.
+  const usedTrackingCategories = React.useMemo(() => {
+    const categories = new Map<number, { id: number; name: string }>();
+
+    entries.forEach((entry) => {
+      (entry.trackingCategories ?? []).forEach((assignment) => {
+        if (assignment.category) {
+          categories.set(assignment.category.id, assignment.category);
+        }
+      });
+    });
+    return [...categories.values()];
+  }, [entries]);
 
   return React.useMemo(
     () => [
@@ -88,6 +106,18 @@ export const useManualJournalEntriesColumns = () => {
             },
           ]
         : []),
+      ...usedTrackingCategories.map((category) => ({
+        id: `tracking-category-${category.id}`,
+        Header: category.name,
+        accessor: (entry: ManualJournalDetailEntry) =>
+          (entry.trackingCategories ?? []).find(
+            (assignment) => assignment.categoryId === category.id,
+          )?.option?.name ?? '',
+        Cell: TextOverviewTooltipCell,
+        width: 100,
+        disableSortBy: true,
+        textOverview: true,
+      })),
       {
         Header: intl.get('debit'),
         accessor: 'debit',
@@ -117,6 +147,6 @@ export const useManualJournalEntriesColumns = () => {
         align: 'right',
       },
     ],
-    [],
+    [featureCan, entries, usedTrackingCategories],
   );
 };

@@ -55,6 +55,10 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     href: '/preferences/warehouses',
   },
   {
+    text: <T id={'tracking_categories.label'} />,
+    href: '/preferences/tracking-categories',
+  },
+  {
     text: <T id={'accountant'} />,
     disabled: false,
     href: '/preferences/accountant',

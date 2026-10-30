@@ -8,6 +8,7 @@ import type {
   CurrenciesListResponse,
   ContactsAutoCompleteResponse,
   SettingsGroup,
+  TrackingCategoriesList,
 } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
 import { Features } from '@/constants';
@@ -20,6 +21,7 @@ import {
   useEditJournal,
   useBranches,
   useSettingsManualJournals,
+  useTrackingCategories,
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 
@@ -34,6 +36,7 @@ type MakeJournalFormContextValue = {
   contacts: ContactsAutoCompleteResponse;
   currencies: CurrenciesListResponse;
   branches: BranchesListResponse;
+  trackingCategories: TrackingCategoriesList;
   manualJournal: ManualJournal | undefined;
   submitPayload: MakeJournalFormSubmitPayload;
   isNewMode: boolean;
@@ -50,6 +53,7 @@ type MakeJournalFormContextValue = {
   isSettingsLoading: boolean;
   isBranchesLoading: boolean;
   isBranchesSuccess: boolean;
+  isTrackingCategoriesLoading: boolean;
   setSubmitPayload: React.Dispatch<
     React.SetStateAction<MakeJournalFormSubmitPayload>
   >;
@@ -109,12 +113,16 @@ function MakeJournalProvider({
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
+  // Fetches the tracking categories list.
+  const { data: trackingCategories, isLoading: isTrackingCategoriesLoading } =
+    useTrackingCategories();
+
   // Submit form payload.
   const [submitPayload, setSubmitPayload] =
     useState<MakeJournalFormSubmitPayload>({});
 
-  // Determines whether the branches are loading.
-  const isFeatureLoading = isBranchesLoading;
+  // Determines whether the feature lists are loading.
+  const isFeatureLoading = isBranchesLoading || isTrackingCategoriesLoading;
 
   const provider: MakeJournalFormContextValue = {
     accounts: accounts ?? [],
@@ -122,6 +130,7 @@ function MakeJournalProvider({
     currencies: currencies ?? [],
     manualJournal,
     branches: branches ?? [],
+    trackingCategories: trackingCategories ?? [],
 
     createJournalMutate,
     editJournalMutate,
@@ -134,6 +143,7 @@ function MakeJournalProvider({
     isSettingsLoading,
     isBranchesLoading,
     isBranchesSuccess,
+    isTrackingCategoriesLoading,
     isNewMode: !journalId,
     manualJournalsSettings,
 
@@ -148,7 +158,8 @@ function MakeJournalProvider({
         isAccountsLoading ||
         isCurrenciesLoading ||
         isContactsLoading ||
-        isSettingsLoading
+        isSettingsLoading ||
+        isTrackingCategoriesLoading
       }
       name={'make-journal-page'}
     >

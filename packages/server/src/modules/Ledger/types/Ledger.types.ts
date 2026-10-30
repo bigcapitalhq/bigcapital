@@ -72,6 +72,11 @@ export interface ILedgerEntry {
   costable?: boolean;
 
   /**
+   * The tracking category assignments of the entry.
+   */
+  trackingCategories?: Array<{ categoryId: number; optionId: number }>;
+
+  /**
    * The accounting basis flag; NULL means general.
    */
   basis?: AccountingBasis | null;

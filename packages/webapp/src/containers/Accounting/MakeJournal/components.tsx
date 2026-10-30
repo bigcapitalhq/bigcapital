@@ -17,6 +17,7 @@ import {
   InputGroupCell,
   ContactsListFieldCell,
   BranchesListFieldCell,
+  TrackingCategoryOptionFieldCell,
 } from '@/components/DataTableCells';
 import { CellType, Features, Align } from '@/constants';
 import { useUpdateEffect } from '@/hooks';
@@ -110,6 +111,25 @@ ActionsCellRenderer.cellType = CellType.Button;
  */
 export const useJournalTableEntriesColumns = () => {
   const { featureCan } = useFeatureCan();
+  const { trackingCategories, manualJournal } = useMakeJournalFormContext();
+
+  // Archived categories are hidden for new journals, but remain visible on
+  // edit when the journal already references them so history is preserved.
+  const usedCategoryIds = React.useMemo(() => {
+    return new Set(
+      (manualJournal?.entries ?? []).flatMap((entry) =>
+        (entry.trackingCategories ?? []).map(
+          (assignment) => assignment.categoryId,
+        ),
+      ),
+    );
+  }, [manualJournal]);
+
+  const visibleCategories = React.useMemo(() => {
+    return trackingCategories.filter(
+      (category) => !!category.active || usedCategoryIds.has(category.id),
+    );
+  }, [trackingCategories, usedCategoryIds]);
 
   return React.useMemo(
     () => [
@@ -159,6 +179,27 @@ export const useJournalTableEntriesColumns = () => {
             },
           ]
         : []),
+      ...visibleCategories.map((category) => ({
+        Header: category.active
+          ? category.name
+          : `${category.name} (${intl.get(
+              'tracking_categories.status.archived',
+            )})`,
+        id: `tracking-category-${category.id}`,
+        accessor: (entry: {
+          trackingCategories?: Array<{
+            categoryId: number;
+            optionId: number;
+          }>;
+        }) =>
+          entry.trackingCategories?.find(
+            (assignment) => assignment.categoryId === category.id,
+          )?.optionId,
+        Cell: TrackingCategoryOptionFieldCell,
+        trackingCategory: category,
+        disableSortBy: true,
+        width: 140,
+      })),
       {
         Header: intl.get('note'),
         accessor: 'note',
@@ -176,7 +217,7 @@ export const useJournalTableEntriesColumns = () => {
         align: Align.Center,
       },
     ],
-    [],
+    [featureCan, visibleCategories],
   );
 };
 

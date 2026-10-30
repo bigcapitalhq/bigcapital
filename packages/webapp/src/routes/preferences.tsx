@@ -131,6 +131,15 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/tracking-categories`,
+    component: lazy(() =>
+      import('../containers/Preferences/TrackingCategories').then((m) => ({
+        default: m.TrackingCategoriesPreferences,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/accountant`,
     component: lazy(() =>
       import('@/containers/Preferences/Accountant/Accountant').then((m) => ({

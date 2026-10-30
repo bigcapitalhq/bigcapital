@@ -25,6 +25,9 @@ export class GetManualJournal {
       .withGraphFetched('entries.account')
       .withGraphFetched('entries.contact')
       .withGraphFetched('entries.branch')
+      .withGraphFetched('entries.trackingCategories')
+      .withGraphFetched('entries.trackingCategories.category')
+      .withGraphFetched('entries.trackingCategories.option')
       .withGraphFetched('transactions')
       .withGraphFetched('attachments')
       .throwIfNotFound();
