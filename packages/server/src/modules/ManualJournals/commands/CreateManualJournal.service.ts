@@ -1,5 +1,7 @@
 import { sumBy, omit } from 'lodash';
 import * as moment from 'moment';
+import * as A from 'fp-ts/Array';
+import * as F from 'fp-ts/function';
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import * as composeAsync from 'async/compose';
@@ -19,6 +21,7 @@ import { ManualJournalBranchesDTOTransformer } from '@/modules/Branches/integrat
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateManualJournalDto } from '../dtos/ManualJournal.dto';
 import { CommandTrackingCategoryValidator } from '@/modules/TrackingCategories/commands/CommandTrackingCategoryValidator.service';
+import { transformManualJournalEntry } from './transformManualJournalEntry';
 
 @Injectable()
 export class CreateManualJournalService {
@@ -57,13 +60,10 @@ export class CreateManualJournalService {
 
     // Maps the tracking category assignments into their storage shape and
     // associates the default index to each entry.
-    const entries = assocItemEntriesDefaultIndex(
-      manualJournalDTO.entries.map((entry) => ({
-        ...entry,
-        trackingCategories: (entry.trackingCategories ?? []).map(
-          ({ categoryId, optionId }) => ({ categoryId, optionId }),
-        ),
-      })),
+    const entries = F.pipe(
+      manualJournalDTO.entries,
+      A.map(transformManualJournalEntry),
+      assocItemEntriesDefaultIndex,
     );
 
     const initialDTO = {
