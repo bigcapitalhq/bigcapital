@@ -55,6 +55,18 @@ export function TrackingCategoryFormFields(): React.ReactElement {
         />
       </FFormGroup>
 
+      <FFormGroup
+        name={'mandatory'}
+        inline={true}
+        helperText={intl.get('tracking_categories.field.mandatory_hint')}
+      >
+        <FSwitch
+          name={'mandatory'}
+          label={intl.get('tracking_categories.field.mandatory')}
+          large={true}
+        />
+      </FFormGroup>
+
       <FormGroup
         label={intl.get('tracking_categories.field.options')}
         labelInfo={

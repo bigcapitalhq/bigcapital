@@ -2,12 +2,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { uniq } from 'lodash';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { FeaturesManager } from '@/modules/Features/FeaturesManager';
+import { Features } from '@/common/types/Features';
 import { AccountTransactionTrackingCategory } from '../models/AccountTransactionTrackingCategory';
 import { ManualJournalEntryTrackingCategory } from '../models/ManualJournalEntryTrackingCategory';
 import { TrackingCategory } from '../models/TrackingCategory';
 import { TrackingCategoryOption } from '../models/TrackingCategoryOption';
 import { ERRORS } from '../constants';
-import { ITrackingCategoryEntry } from '../types/TrackingCategory.types';
+import {
+  IMandatoryTrackingCategoryAssignment,
+  ITrackingCategoryEntry,
+} from '../types/TrackingCategory.types';
 
 interface ITrackingCategoryOptionInput {
   id?: number;
@@ -39,6 +44,7 @@ export class CommandTrackingCategoryValidator {
     private readonly accountTransactionTrackingCategoryModel: TenantModelProxy<
       typeof AccountTransactionTrackingCategory
     >,
+    private readonly featuresManager: FeaturesManager,
   ) {}
 
   /**
@@ -83,6 +89,28 @@ export class CommandTrackingCategoryValidator {
       }
       normalizedNames.add(name);
     });
+  }
+
+  /**
+   * Validates that a mandatory category has at least one active option so
+   * journal entries can actually satisfy the requirement.
+   * @param {boolean} mandatory - Whether the category is mandatory.
+   * @param {ITrackingCategoryOptionInput[]} options - Category options.
+   */
+  public validateMandatoryCategoryHasActiveOption(
+    mandatory: boolean,
+    options: ITrackingCategoryOptionInput[],
+  ): void {
+    if (!mandatory) {
+      return;
+    }
+    const hasActiveOption = options.some((option) => Boolean(option.active));
+
+    if (!hasActiveOption) {
+      throw new ServiceError(
+        ERRORS.TRACKING_CATEGORY_MANDATORY_NEEDS_ACTIVE_OPTION,
+      );
+    }
   }
 
   /**
@@ -207,66 +235,127 @@ export class CommandTrackingCategoryValidator {
       });
     });
 
-    if (assignments.length === 0) {
+    if (assignments.length > 0) {
+      const categoryIds = uniq(
+        assignments.map((assignment) => assignment.categoryId),
+      );
+      const categories = await this.trackingCategoryModel()
+        .query()
+        .whereIn('id', categoryIds)
+        .withGraphFetched('options');
+
+      const categoriesMap = new Map(
+        categories.map((category) => [category.id, category]),
+      );
+      const previousAssignmentsSet = new Set(previousAssignments);
+
+      assignments.forEach((assignment) => {
+        const category = categoriesMap.get(assignment.categoryId);
+        const pairKey = `${assignment.categoryId}:${assignment.optionId}`;
+
+        if (!category) {
+          throw new ServiceError(
+            ERRORS.TRACKING_CATEGORY_NOT_FOUND,
+            undefined,
+            {
+              categoryId: assignment.categoryId,
+              index: assignment.index,
+            },
+          );
+        }
+        const option = (category.options ?? []).find(
+          (item) => item.id === assignment.optionId,
+        );
+
+        if (!option) {
+          throw new ServiceError(
+            ERRORS.TRACKING_CATEGORY_OPTION_MISMATCH,
+            undefined,
+            {
+              categoryId: assignment.categoryId,
+              optionId: assignment.optionId,
+              index: assignment.index,
+            },
+          );
+        }
+        const isPreviouslyUsed = previousAssignmentsSet.has(pairKey);
+
+        if (!category.active && !(allowInactive && isPreviouslyUsed)) {
+          throw new ServiceError(ERRORS.INACTIVE_TRACKING_CATEGORY, undefined, {
+            categoryId: assignment.categoryId,
+            index: assignment.index,
+          });
+        }
+        if (!option.active && !(allowInactive && isPreviouslyUsed)) {
+          throw new ServiceError(
+            ERRORS.INACTIVE_TRACKING_CATEGORY_OPTION,
+            undefined,
+            {
+              categoryId: assignment.categoryId,
+              optionId: assignment.optionId,
+              index: assignment.index,
+            },
+          );
+        }
+      });
+    }
+
+    await this.validateMandatoryCategories(entries);
+  }
+
+  /**
+   * Validates that every journal entry with an amount has an assignment for
+   * each active mandatory tracking category.
+   * @param {ITrackingCategoryEntry[]} entries - Manual journal entries.
+   */
+  private async validateMandatoryCategories(
+    entries: ITrackingCategoryEntry[],
+  ): Promise<void> {
+    const isFeatureEnabled = await this.featuresManager.accessible(
+      Features.TRACKING_CATEGORIES,
+    );
+
+    if (!isFeatureEnabled) {
       return;
     }
-    const categoryIds = uniq(
-      assignments.map((assignment) => assignment.categoryId),
-    );
-    const categories = await this.trackingCategoryModel()
+    const mandatoryCategories = await this.trackingCategoryModel()
       .query()
-      .whereIn('id', categoryIds)
-      .withGraphFetched('options');
+      .where('active', true)
+      .where('mandatory', true);
 
-    const categoriesMap = new Map(
-      categories.map((category) => [category.id, category]),
-    );
-    const previousAssignmentsSet = new Set(previousAssignments);
+    if (mandatoryCategories.length === 0) {
+      return;
+    }
+    const missingAssignments: IMandatoryTrackingCategoryAssignment[] = [];
 
-    assignments.forEach((assignment) => {
-      const category = categoriesMap.get(assignment.categoryId);
-      const pairKey = `${assignment.categoryId}:${assignment.optionId}`;
+    entries.forEach((entry) => {
+      const hasAmount =
+        Number(entry.debit ?? 0) > 0 || Number(entry.credit ?? 0) > 0;
 
-      if (!category) {
-        throw new ServiceError(ERRORS.TRACKING_CATEGORY_NOT_FOUND, undefined, {
-          categoryId: assignment.categoryId,
-          index: assignment.index,
-        });
+      if (!hasAmount) {
+        return;
       }
-      const option = (category.options ?? []).find(
-        (item) => item.id === assignment.optionId,
+      const assignedCategoryIds = new Set(
+        (entry.trackingCategories ?? []).map(
+          (assignment) => assignment.categoryId,
+        ),
       );
 
-      if (!option) {
-        throw new ServiceError(
-          ERRORS.TRACKING_CATEGORY_OPTION_MISMATCH,
-          undefined,
-          {
-            categoryId: assignment.categoryId,
-            optionId: assignment.optionId,
-            index: assignment.index,
-          },
-        );
-      }
-      const isPreviouslyUsed = previousAssignmentsSet.has(pairKey);
-
-      if (!category.active && !(allowInactive && isPreviouslyUsed)) {
-        throw new ServiceError(ERRORS.INACTIVE_TRACKING_CATEGORY, undefined, {
-          categoryId: assignment.categoryId,
-          index: assignment.index,
-        });
-      }
-      if (!option.active && !(allowInactive && isPreviouslyUsed)) {
-        throw new ServiceError(
-          ERRORS.INACTIVE_TRACKING_CATEGORY_OPTION,
-          undefined,
-          {
-            categoryId: assignment.categoryId,
-            optionId: assignment.optionId,
-            index: assignment.index,
-          },
-        );
-      }
+      mandatoryCategories.forEach((category) => {
+        if (!assignedCategoryIds.has(category.id)) {
+          missingAssignments.push({
+            index: entry.index,
+            categoryId: category.id,
+            categoryName: category.name,
+          });
+        }
+      });
     });
+
+    if (missingAssignments.length > 0) {
+      throw new ServiceError(ERRORS.TRACKING_CATEGORY_MANDATORY, undefined, {
+        assignments: missingAssignments,
+      });
+    }
   }
 }

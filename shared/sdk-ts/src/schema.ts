@@ -9393,6 +9393,11 @@ export interface components {
              * @example true
              */
             active: boolean;
+            /**
+             * @description Whether every manual journal entry must assign this tracking category
+             * @example false
+             */
+            mandatory: boolean;
             /** @description Tracking options */
             options: components["schemas"]["TrackingCategoryOptionResponseDto"][];
             /**
@@ -9439,6 +9444,11 @@ export interface components {
              * @example true
              */
             active?: boolean;
+            /**
+             * @description Whether every manual journal entry must assign this tracking category
+             * @example false
+             */
+            mandatory?: boolean;
             /** @description Tracking options */
             options?: components["schemas"]["TrackingCategoryOptionDto"][];
         };
@@ -9458,6 +9468,11 @@ export interface components {
              * @example true
              */
             active?: boolean;
+            /**
+             * @description Whether every manual journal entry must assign this tracking category
+             * @example false
+             */
+            mandatory?: boolean;
             /** @description Tracking options */
             options?: components["schemas"]["TrackingCategoryOptionDto"][];
         };
@@ -11753,6 +11768,11 @@ export interface components {
              * @example true
              */
             active: boolean;
+            /**
+             * @description Whether every manual journal entry must assign this tracking category
+             * @example false
+             */
+            mandatory: boolean;
         };
         TrackingCategoryOptionSummaryResponseDto: {
             /**

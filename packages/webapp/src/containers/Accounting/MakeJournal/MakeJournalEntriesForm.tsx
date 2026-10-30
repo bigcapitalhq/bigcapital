@@ -1,8 +1,8 @@
 import { Intent } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import classNames from 'classnames';
-import { Formik, Form, type FormikHelpers } from 'formik';
-import { sumBy, round, isEmpty } from 'lodash';
+import { Formik, Form, type FormikErrors, type FormikHelpers } from 'formik';
+import { sumBy, round, isEmpty, setWith } from 'lodash';
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
@@ -22,6 +22,7 @@ import {
   transformErrors,
   transformToEditForm,
   transformFormValuesToRequest,
+  getMissingMandatoryTrackingCategories,
   defaultManualJournal,
   type MakeJournalEntry,
   type MakeJournalFormValues,
@@ -47,6 +48,7 @@ function MakeJournalEntriesFormInner() {
     manualJournal,
     submitPayload,
     manualJournalsSettings,
+    trackingCategories,
   } = useMakeJournalFormContext();
 
   // Auto-increment settings derived from the manual journals settings group.
@@ -123,6 +125,42 @@ function MakeJournalEntriesFormInner() {
     } else if (totalCredit === 0 || totalDebit === 0) {
       AppToaster.show({
         message: intl.get('amount_cannot_be_zero_or_empty'),
+        intent: Intent.DANGER,
+      });
+      setSubmitting(false);
+      return;
+    }
+    // Validate the mandatory tracking categories assignments.
+    const missingMandatoryCategories = getMissingMandatoryTrackingCategories(
+      values.entries,
+      trackingCategories,
+    );
+
+    if (missingMandatoryCategories.length > 0) {
+      let newErrors: FormikErrors<MakeJournalFormValues> = {};
+
+      missingMandatoryCategories.forEach(({ index, categoryId }) => {
+        newErrors = setWith(
+          newErrors,
+          ['entries', index, `tracking-category-${categoryId}`],
+          'error',
+        );
+      });
+      setErrors(newErrors);
+
+      const categoryNames = Array.from(
+        new Set(
+          missingMandatoryCategories.map((category) => category.categoryName),
+        ),
+      );
+      AppToaster.show({
+        message: categoryNames.map((categoryName) => (
+          <div key={categoryName}>
+            {intl.get('make_journal.errors.tracking_category_mandatory', {
+              category: categoryName,
+            })}
+          </div>
+        )),
         intent: Intent.DANGER,
       });
       setSubmitting(false);

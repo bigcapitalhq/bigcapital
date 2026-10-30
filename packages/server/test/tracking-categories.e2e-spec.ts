@@ -43,9 +43,83 @@ describe('Tracking Categories (e2e)', () => {
 
     expect(category.name).toContain('Location');
     expect(category.active).toBe(true);
+    expect(category.mandatory).toBe(false);
     expect(category.options).toHaveLength(2);
     expect(category.options[0].active).toBe(true);
     expect(category.options[0].category_id).toBe(category.id);
+  });
+
+  it('/tracking-categories (POST) creates a mandatory category', async () => {
+    const created = await createTrackingCategory({ mandatory: true });
+
+    expect(created.mandatory).toBe(true);
+
+    const fetched = await request(app.getHttpServer())
+      .get(`/tracking-categories/${created.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(fetched.body.mandatory).toBe(true);
+
+    const edited = await request(app.getHttpServer())
+      .put(`/tracking-categories/${created.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ mandatory: false })
+      .expect(200);
+
+    expect(edited.body.mandatory).toBe(false);
+
+    await request(app.getHttpServer())
+      .delete(`/tracking-categories/${created.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
+  it('rejects a mandatory category without an active option', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/tracking-categories')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        name: uniqueName('Mandatory without options'),
+        mandatory: true,
+        options: [],
+      })
+      .expect(400);
+
+    expect(response.body.errors[0].type).toBe(
+      'TRACKING_CATEGORY_MANDATORY_NEEDS_ACTIVE_OPTION',
+    );
+  });
+
+  it('rejects archiving the last active option of a mandatory category', async () => {
+    const category = await createTrackingCategory({
+      mandatory: true,
+      options: [{ name: 'Only Store' }],
+    });
+    const optionId = category.options[0].id;
+
+    const response = await request(app.getHttpServer())
+      .put(`/tracking-categories/${category.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        options: [{ id: optionId, name: 'Only Store', active: false }],
+      })
+      .expect(400);
+
+    expect(response.body.errors[0].type).toBe(
+      'TRACKING_CATEGORY_MANDATORY_NEEDS_ACTIVE_OPTION',
+    );
+
+    await request(app.getHttpServer())
+      .delete(`/tracking-categories/${category.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
   });
 
   it('/tracking-categories (GET) returns categories with options', async () => {

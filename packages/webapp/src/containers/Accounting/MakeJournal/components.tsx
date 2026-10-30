@@ -181,11 +181,18 @@ export const useJournalTableEntriesColumns = () => {
         : []),
       ...(featureCan(Features.TrackingCategories)
         ? visibleCategories.map((category) => ({
-            Header: category.active
-              ? category.name
-              : `${category.name} (${intl.get(
-                  'tracking_categories.status.archived',
-                )})`,
+            Header: (
+              <>
+                {category.active
+                  ? category.name
+                  : `${category.name} (${intl.get(
+                      'tracking_categories.status.archived',
+                    )})`}
+                {category.active && category.mandatory && (
+                  <span className={'required'}> *</span>
+                )}
+              </>
+            ),
             id: `tracking-category-${category.id}`,
             accessor: (entry: {
               trackingCategories?: Array<{

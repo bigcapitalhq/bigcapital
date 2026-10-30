@@ -37,6 +37,13 @@ export class TrackingCategoryResponseDto {
   active: boolean;
 
   @ApiProperty({
+    description:
+      'Whether every manual journal entry must assign this tracking category',
+    example: false,
+  })
+  mandatory: boolean;
+
+  @ApiProperty({
     description: 'Tracking options',
     type: [TrackingCategoryOptionResponseDto],
   })
@@ -58,6 +65,13 @@ export class TrackingCategorySummaryResponseDto {
 
   @ApiProperty({ description: 'Whether the category is active', example: true })
   active: boolean;
+
+  @ApiProperty({
+    description:
+      'Whether every manual journal entry must assign this tracking category',
+    example: false,
+  })
+  mandatory: boolean;
 }
 
 export class TrackingCategoryOptionSummaryResponseDto {

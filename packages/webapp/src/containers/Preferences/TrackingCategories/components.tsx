@@ -55,10 +55,20 @@ export function ActionsMenu({
 
 interface NameCellProps {
   value: string;
+  row: { original: TrackingCategory };
 }
 
-function NameCell({ value }: NameCellProps) {
-  return <span>{value}</span>;
+function NameCell({ value, row }: NameCellProps) {
+  return (
+    <span>
+      {value}
+      <If condition={row.original.mandatory}>
+        <Tag minimal={true} intent={Intent.PRIMARY} style={{ marginLeft: 6 }}>
+          {intl.get('tracking_categories.status.mandatory')}
+        </Tag>
+      </If>
+    </span>
+  );
 }
 
 interface OptionsCellProps {

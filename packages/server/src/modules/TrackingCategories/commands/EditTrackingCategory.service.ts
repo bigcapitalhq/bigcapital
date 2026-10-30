@@ -75,6 +75,23 @@ export class EditTrackingCategoryService {
       await this.validator.validateOptionsNotInUse(removedOptionIds);
     }
 
+    const resultingMandatory =
+      dto.mandatory !== undefined
+        ? dto.mandatory
+        : Boolean(oldCategory.mandatory);
+    const resultingOptions =
+      options ??
+      (oldCategory.options ?? []).map((option) => ({
+        id: option.id,
+        name: option.name,
+        active: Boolean(option.active),
+      }));
+
+    this.validator.validateMandatoryCategoryHasActiveOption(
+      resultingMandatory,
+      resultingOptions,
+    );
+
     const updatedCategory = await this.trackingCategoryModel()
       .query()
       .upsertGraphAndFetch({
@@ -84,6 +101,7 @@ export class EditTrackingCategoryService {
           ? { description: dto.description?.trim() || null }
           : {}),
         ...(dto.active !== undefined ? { active: dto.active } : {}),
+        ...(dto.mandatory !== undefined ? { mandatory: dto.mandatory } : {}),
         ...(options !== null ? { options } : {}),
       });
 

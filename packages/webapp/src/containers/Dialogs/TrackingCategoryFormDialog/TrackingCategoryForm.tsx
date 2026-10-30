@@ -22,6 +22,7 @@ import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 const defaultInitialValues: TrackingCategoryFormValues = {
   name: '',
   description: '',
+  mandatory: false,
   options: [{ name: '', active: true }],
 };
 
@@ -42,6 +43,7 @@ function TrackingCategoryFormInner({
     ? {
         name: category.name ?? '',
         description: category.description ?? '',
+        mandatory: !!category.mandatory,
         options: (category.options ?? []).map((option) => ({
           id: option.id,
           name: option.name,
@@ -66,6 +68,7 @@ function TrackingCategoryFormInner({
     const form = {
       name: values.name.trim(),
       description: values.description?.trim() ?? '',
+      mandatory: !!values.mandatory,
       options,
     };
 

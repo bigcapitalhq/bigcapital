@@ -35,6 +35,11 @@ export const handleTrackingCategoryFormErrors = (
       message: intl.get('tracking_categories.error.option_in_use'),
       intent: Intent.DANGER,
     });
+  } else if (hasError('TRACKING_CATEGORY_MANDATORY_NEEDS_ACTIVE_OPTION')) {
+    setFieldError(
+      'mandatory',
+      intl.get('tracking_categories.error.mandatory_without_active_options'),
+    );
   } else {
     AppToaster.show({
       message: intl.get('tracking_categories.error.save_failed'),

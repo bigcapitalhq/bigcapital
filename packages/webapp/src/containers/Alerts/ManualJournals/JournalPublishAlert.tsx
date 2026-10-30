@@ -13,6 +13,19 @@ interface JournalPublishAlertPayload {
   journalNumber: string;
 }
 
+interface PublishJournalError {
+  message?: string;
+  data?: {
+    errors?: Array<{
+      type?: string;
+      message?: string;
+      payload?: {
+        assignments?: Array<{ categoryName?: string }>;
+      };
+    }>;
+  };
+}
+
 interface JournalPublishAlertProps extends WithAlertActionsProps {
   name: string;
   isOpen: boolean;
@@ -43,10 +56,34 @@ function JournalPublishAlertInner({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error: Error) => {
+      .catch((error: PublishJournalError) => {
         // Bugfix: the original had an empty `.catch((error) => {})` that silently swallowed failures.
+        const mandatoryError = error.data?.errors?.find(
+          (err) => err.type === 'TRACKING_CATEGORY_MANDATORY',
+        );
+        const categoryNames = Array.from(
+          new Set(
+            (mandatoryError?.payload?.assignments ?? [])
+              .map((assignment) => assignment.categoryName)
+              .filter((name): name is string => Boolean(name)),
+          ),
+        );
+
+        if (categoryNames.length > 0) {
+          AppToaster.show({
+            message: categoryNames.map((categoryName) => (
+              <div key={categoryName}>
+                {intl.get('make_journal.errors.tracking_category_mandatory', {
+                  category: categoryName,
+                })}
+              </div>
+            )),
+            intent: Intent.DANGER,
+          });
+          return;
+        }
         AppToaster.show({
-          message: error.message,
+          message: error.message ?? intl.get('something_went_wrong'),
           intent: Intent.DANGER,
         });
       })

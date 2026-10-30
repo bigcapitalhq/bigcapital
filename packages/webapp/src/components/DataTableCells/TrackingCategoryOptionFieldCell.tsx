@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Classes, FormGroup } from '@blueprintjs/core';
+import { Classes, FormGroup, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
@@ -12,7 +12,7 @@ import { CellType } from '@/constants';
 export default function TrackingCategoryOptionFieldCell({
   column,
   row: { index, original },
-  payload: { updateData },
+  payload: { updateData, errors },
 }) {
   const category = column.trackingCategory;
   const assignments = original?.trackingCategories ?? [];
@@ -21,6 +21,7 @@ export default function TrackingCategoryOptionFieldCell({
   );
   const selectedOptionId = currentAssignment?.optionId;
   const isArchived = !category.active;
+  const error = errors?.[index]?.[column.id];
 
   // Active options are always selectable; an already selected archived option
   // stays visible so historical assignments are preserved.
@@ -51,7 +52,10 @@ export default function TrackingCategoryOptionFieldCell({
     : intl.get('tracking_categories.no_options');
 
   return (
-    <FormGroup className={classNames('form-group--select-list', Classes.FILL)}>
+    <FormGroup
+      intent={error ? Intent.DANGER : null}
+      className={classNames('form-group--select-list', Classes.FILL)}
+    >
       <TrackingCategoryOptionSuggestField
         options={options}
         selectedOptionId={selectedOptionId}

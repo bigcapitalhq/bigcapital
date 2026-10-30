@@ -11,6 +11,7 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { ManualJournal } from '../models/ManualJournal';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CommandTrackingCategoryValidator } from '@/modules/TrackingCategories/commands/CommandTrackingCategoryValidator.service';
 
 @Injectable()
 export class PublishManualJournal {
@@ -18,6 +19,7 @@ export class PublishManualJournal {
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
     private validator: CommandManualJournalValidators,
+    private trackingCategoriesValidator: CommandTrackingCategoryValidator,
 
     @Inject(ManualJournal.name)
     private manualJournalModel: TenantModelProxy<typeof ManualJournal>,
@@ -55,6 +57,24 @@ export class PublishManualJournal {
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       // Validates the publish operation against the locked manual journal row.
       const oldManualJournal = await this.validate(manualJournalId, trx);
+
+      // Validates the mandatory tracking categories against the stored entries.
+      const journalWithEntries = await this.manualJournalModel()
+        .query(trx)
+        .findById(manualJournalId)
+        .withGraphFetched('entries.trackingCategories')
+        .throwIfNotFound();
+
+      const previousAssignments = (journalWithEntries.entries ?? []).flatMap(
+        (entry) =>
+          (entry.trackingCategories ?? []).map(
+            (assignment) => `${assignment.categoryId}:${assignment.optionId}`,
+          ),
+      );
+      await this.trackingCategoriesValidator.validateEntries(
+        journalWithEntries.entries ?? [],
+        { allowInactive: true, previousAssignments },
+      );
 
       // Triggers `onManualJournalPublishing` event.
       await this.eventPublisher.emitAsync(events.manualJournals.onPublishing, {
