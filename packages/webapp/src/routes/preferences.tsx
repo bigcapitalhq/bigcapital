@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { lazy } from 'react';
+import { Features } from '@/constants/features';
 
 const BASE_URL = '/preferences';
 
@@ -129,6 +130,16 @@ export const getPreferenceRoutes = () => [
       })),
     ),
     exact: true,
+  },
+  {
+    path: `${BASE_URL}/tracking-categories`,
+    component: lazy(() =>
+      import('../containers/Preferences/TrackingCategories').then((m) => ({
+        default: m.TrackingCategoriesPreferences,
+      })),
+    ),
+    exact: true,
+    feature: Features.TrackingCategories,
   },
   {
     path: `${BASE_URL}/accountant`,

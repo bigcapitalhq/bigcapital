@@ -15,6 +15,12 @@ export type ManualJournalDetailEntry = ManualJournal['entries'][number] & {
   account?: { name?: string };
   contact?: { name?: string; display_name?: string };
   branch?: { name?: string };
+  trackingCategories?: Array<{
+    categoryId: number;
+    optionId: number;
+    category?: { id: number; name: string; active?: boolean | number };
+    option?: { id: number; name: string; active?: boolean | number };
+  }>;
 };
 
 export interface ManualJournalDetail extends Omit<ManualJournal, 'entries'> {

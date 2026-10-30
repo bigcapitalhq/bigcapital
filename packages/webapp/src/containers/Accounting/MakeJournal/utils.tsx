@@ -45,12 +45,18 @@ const ERROR = {
 export const MIN_LINES_NUMBER = 1;
 export const DEFAULT_LINES_NUMBER = 1;
 
+export type MakeJournalTrackingCategoryAssignment = {
+  categoryId: number;
+  optionId: number;
+};
+
 export type MakeJournalEntry = {
   accountId: string | number;
   credit: string | number;
   debit: string | number;
   contactId: string | number;
   branchId: string | number;
+  trackingCategories: MakeJournalTrackingCategoryAssignment[];
   note: string;
 };
 
@@ -82,6 +88,7 @@ export const defaultEntry: MakeJournalEntry = {
   debit: '',
   contactId: '',
   branchId: '',
+  trackingCategories: [],
   note: '',
 };
 
@@ -108,6 +115,12 @@ export function transformToEditForm(
   const initialEntries: MakeJournalEntry[] = [
     ...manualJournal.entries.map((entry) => ({
       ...transformToForm(entry, defaultEntry),
+      trackingCategories: (entry.trackingCategories ?? []).map(
+        (assignment) => ({
+          categoryId: assignment.categoryId,
+          optionId: assignment.optionId,
+        }),
+      ),
     })),
     ...repeatValue(
       defaultEntry,
@@ -143,7 +156,20 @@ export function transformFormValuesToRequest(
   const nonZeroEntries = values.entries.filter(
     (entry) => entry.debit || entry.credit,
   );
-  const entries = orderingLinesIndexes(nonZeroEntries);
+  const entries = orderingLinesIndexes(nonZeroEntries).map(
+    (entry: MakeJournalEntry) => ({
+      ...entry,
+      trackingCategories: (entry.trackingCategories ?? [])
+        .filter(
+          (assignment: MakeJournalTrackingCategoryAssignment) =>
+            assignment.categoryId && assignment.optionId,
+        )
+        .map((assignment: MakeJournalTrackingCategoryAssignment) => ({
+          categoryId: Number(assignment.categoryId),
+          optionId: Number(assignment.optionId),
+        })),
+    }),
+  );
   const attachments = transformAttachmentsToRequest(values);
 
   return {
@@ -180,7 +206,7 @@ function adjustmentEntries(entries: MakeJournalEntry[]): {
  * Adjustment credit/debit entries.
  */
 export const updateAdjustEntries =
-  (rowIndex: number, columnId: string, value: string | number) =>
+  (rowIndex: number, columnId: string, value: string | number | unknown[]) =>
   (rows: MakeJournalEntry[]): MakeJournalEntry[] => {
     let newRows = [...rows];
 

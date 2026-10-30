@@ -1,0 +1,29 @@
+.dialog--tracking-category-form {
+  width: 640px;
+
+  .bp4-dialog-body {
+    .bp4-form-group {
+      margin-bottom: 15px;
+    }
+    .bp4-form-group.bp4-inline {
+      .bp4-label {
+        font-size: 13px;
+        margin-bottom: 3px;
+        min-width: 150px;
+      }
+      .bp4-form-content {
+        width: 100%;
+      }
+    }
+  }
+  .bp4-dialog-footer {
+    padding-top: 10px;
+  }
+
+  .tracking-category-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+}

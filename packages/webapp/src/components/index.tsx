@@ -48,6 +48,7 @@ export * from './FlexGrid';
 export * from './Menu';
 export * from './Icon';
 export * from './Items';
+export * from './TrackingCategories';
 export * from './Select';
 export * from './FormattedMessage';
 export * from './MaterialProgressBar';

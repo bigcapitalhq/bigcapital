@@ -68,6 +68,12 @@ export class ManualJournalGL {
 
       branchId: entry.branchId,
       projectId: entry.projectId,
+      trackingCategories: (entry.trackingCategories ?? []).map(
+        (assignment) => ({
+          categoryId: assignment.categoryId,
+          optionId: assignment.optionId,
+        }),
+      ),
     };
   }
 

@@ -35,6 +35,10 @@ import { RefundCreditNote } from '@/modules/CreditNoteRefunds/models/RefundCredi
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { RefundVendorCredit } from '@/modules/VendorCreditsRefund/models/RefundVendorCredit';
 import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
+import { TrackingCategory } from '@/modules/TrackingCategories/models/TrackingCategory';
+import { TrackingCategoryOption } from '@/modules/TrackingCategories/models/TrackingCategoryOption';
+import { ManualJournalEntryTrackingCategory } from '@/modules/TrackingCategories/models/ManualJournalEntryTrackingCategory';
+import { AccountTransactionTrackingCategory } from '@/modules/TrackingCategories/models/AccountTransactionTrackingCategory';
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
 import { TenantUser } from './models/TenantUser.model';
@@ -76,6 +80,10 @@ const models = [
   PaymentReceived,
   PaymentReceivedEntry,
   TenantUser,
+  TrackingCategory,
+  TrackingCategoryOption,
+  ManualJournalEntryTrackingCategory,
+  AccountTransactionTrackingCategory,
 ];
 
 /**

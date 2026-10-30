@@ -306,5 +306,8 @@ export const SettingsOptions = {
     sales_tax: {
       type: 'boolean',
     },
+    tracking_categories: {
+      type: 'boolean',
+    },
   },
 };

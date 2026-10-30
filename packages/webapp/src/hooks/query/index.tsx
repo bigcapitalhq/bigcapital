@@ -41,6 +41,7 @@ export * from './cashflow-accounts';
 export * from './transactions-locking';
 export * from './warehouses';
 export * from './branches';
+export * from './tracking-categories';
 export * from './warehouses-transfers';
 
 // Banking and payment hooks (nested directory structure)
