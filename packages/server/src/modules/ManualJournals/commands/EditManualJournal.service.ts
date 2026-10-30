@@ -1,6 +1,8 @@
 import { Knex } from 'knex';
 import { omit, sumBy } from 'lodash';
 import * as moment from 'moment';
+import * as A from 'fp-ts/Array';
+import * as F from 'fp-ts/function';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   IManualJournalEventEditedPayload,
@@ -14,6 +16,7 @@ import { ManualJournal } from '../models/ManualJournal';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditManualJournalDto } from '../dtos/ManualJournal.dto';
 import { CommandTrackingCategoryValidator } from '@/modules/TrackingCategories/commands/CommandTrackingCategoryValidator.service';
+import { transformManualJournalEntry } from './transformManualJournalEntry';
 
 @Injectable()
 export class EditManualJournal {
@@ -76,12 +79,10 @@ export class EditManualJournal {
   ) => {
     const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
     const date = moment(manualJournalDTO.date).toDate();
-    const entries = manualJournalDTO.entries.map((entry) => ({
-      ...entry,
-      trackingCategories: (entry.trackingCategories ?? []).map(
-        ({ categoryId, optionId }) => ({ categoryId, optionId }),
-      ),
-    }));
+    const entries = F.pipe(
+      manualJournalDTO.entries,
+      A.map(transformManualJournalEntry),
+    );
 
     return {
       id: oldManualJournal.id,
