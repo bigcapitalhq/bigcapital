@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiExtraModels,
@@ -22,11 +23,13 @@ import {
   EditTrackingCategoryDto,
 } from './dtos/TrackingCategory.dto';
 import { TrackingCategoryResponseDto } from './dtos/TrackingCategoryResponse.dto';
+import { TrackingCategoriesFeatureGuard } from './TrackingCategoriesFeatureGuard';
 
 @Controller('tracking-categories')
 @ApiTags('Tracking Categories')
 @ApiExtraModels(TrackingCategoryResponseDto)
 @ApiCommonHeaders()
+@UseGuards(TrackingCategoriesFeatureGuard)
 export class TrackingCategoriesController {
   constructor(
     private readonly trackingCategoriesApplication: TrackingCategoriesApplication,

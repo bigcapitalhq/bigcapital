@@ -80,6 +80,9 @@ function MakeJournalProvider({
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
+  const isTrackingCategoriesFeatureCan = featureCan(
+    Features.TrackingCategories,
+  );
 
   // Load the accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
@@ -115,7 +118,7 @@ function MakeJournalProvider({
 
   // Fetches the tracking categories list.
   const { data: trackingCategories, isLoading: isTrackingCategoriesLoading } =
-    useTrackingCategories();
+    useTrackingCategories({ enabled: isTrackingCategoriesFeatureCan });
 
   // Submit form payload.
   const [submitPayload, setSubmitPayload] =

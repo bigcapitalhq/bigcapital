@@ -2,6 +2,15 @@ import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
+const enableFeature = (value: number) =>
+  request(app.getHttpServer())
+    .put('/settings')
+    .set('organization-id', orgainzationId)
+    .set('Authorization', AuthorizationHeader)
+    .send({
+      options: [{ group: 'features', key: 'tracking_categories', value }],
+    });
+
 const createTrackingCategory = async (
   options = ['North Store', 'South Store'],
 ) => {
@@ -40,6 +49,14 @@ const makeManualJournalRequest = () => ({
 });
 
 describe('Manual Journals (e2e)', () => {
+  beforeAll(async () => {
+    await enableFeature(1).expect(200);
+  });
+
+  afterAll(async () => {
+    await enableFeature(0).expect(200);
+  });
+
   it('/manual-journals (POST)', () => {
     return request(app.getHttpServer())
       .post('/manual-journals')

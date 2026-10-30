@@ -5,6 +5,15 @@ import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 const uniqueName = (prefix: string) =>
   `${prefix} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`;
 
+const enableFeature = (value: number) =>
+  request(app.getHttpServer())
+    .put('/settings')
+    .set('organization-id', orgainzationId)
+    .set('Authorization', AuthorizationHeader)
+    .send({
+      options: [{ group: 'features', key: 'tracking_categories', value }],
+    });
+
 const createTrackingCategory = async (payload?: Record<string, any>) => {
   const response = await request(app.getHttpServer())
     .post('/tracking-categories')
@@ -21,6 +30,14 @@ const createTrackingCategory = async (payload?: Record<string, any>) => {
 };
 
 describe('Tracking Categories (e2e)', () => {
+  beforeAll(async () => {
+    await enableFeature(1).expect(200);
+  });
+
+  afterAll(async () => {
+    await enableFeature(0).expect(200);
+  });
+
   it('/tracking-categories (POST) creates a category with options', async () => {
     const category = await createTrackingCategory();
 
@@ -149,6 +166,20 @@ describe('Tracking Categories (e2e)', () => {
 
     expect(response.body.errors[0].type).toBe(
       'TRACKING_CATEGORY_OPTION_NAME_EXISTS',
+    );
+  });
+
+  it('rejects the tracking categories endpoints when the feature is disabled', async () => {
+    await enableFeature(0).expect(200);
+
+    const response = await request(app.getHttpServer())
+      .get('/tracking-categories')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(400);
+
+    expect(response.body.errors[0].type).toBe(
+      'TRACKING_CATEGORIES_FEATURE_NOT_ENABLED',
     );
   });
 });

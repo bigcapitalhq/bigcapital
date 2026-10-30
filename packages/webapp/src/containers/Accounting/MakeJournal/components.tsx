@@ -179,27 +179,29 @@ export const useJournalTableEntriesColumns = () => {
             },
           ]
         : []),
-      ...visibleCategories.map((category) => ({
-        Header: category.active
-          ? category.name
-          : `${category.name} (${intl.get(
-              'tracking_categories.status.archived',
-            )})`,
-        id: `tracking-category-${category.id}`,
-        accessor: (entry: {
-          trackingCategories?: Array<{
-            categoryId: number;
-            optionId: number;
-          }>;
-        }) =>
-          entry.trackingCategories?.find(
-            (assignment) => assignment.categoryId === category.id,
-          )?.optionId,
-        Cell: TrackingCategoryOptionFieldCell,
-        trackingCategory: category,
-        disableSortBy: true,
-        width: 140,
-      })),
+      ...(featureCan(Features.TrackingCategories)
+        ? visibleCategories.map((category) => ({
+            Header: category.active
+              ? category.name
+              : `${category.name} (${intl.get(
+                  'tracking_categories.status.archived',
+                )})`,
+            id: `tracking-category-${category.id}`,
+            accessor: (entry: {
+              trackingCategories?: Array<{
+                categoryId: number;
+                optionId: number;
+              }>;
+            }) =>
+              entry.trackingCategories?.find(
+                (assignment) => assignment.categoryId === category.id,
+              )?.optionId,
+            Cell: TrackingCategoryOptionFieldCell,
+            trackingCategory: category,
+            disableSortBy: true,
+            width: 140,
+          }))
+        : []),
       {
         Header: intl.get('note'),
         accessor: 'note',

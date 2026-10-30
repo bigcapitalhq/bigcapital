@@ -106,18 +106,20 @@ export const useManualJournalEntriesColumns = () => {
             },
           ]
         : []),
-      ...usedTrackingCategories.map((category) => ({
-        id: `tracking-category-${category.id}`,
-        Header: category.name,
-        accessor: (entry: ManualJournalDetailEntry) =>
-          (entry.trackingCategories ?? []).find(
-            (assignment) => assignment.categoryId === category.id,
-          )?.option?.name ?? '',
-        Cell: TextOverviewTooltipCell,
-        width: 100,
-        disableSortBy: true,
-        textOverview: true,
-      })),
+      ...(featureCan(Features.TrackingCategories)
+        ? usedTrackingCategories.map((category) => ({
+            id: `tracking-category-${category.id}`,
+            Header: category.name,
+            accessor: (entry: ManualJournalDetailEntry) =>
+              (entry.trackingCategories ?? []).find(
+                (assignment) => assignment.categoryId === category.id,
+              )?.option?.name ?? '',
+            Cell: TextOverviewTooltipCell,
+            width: 100,
+            disableSortBy: true,
+            textOverview: true,
+          }))
+        : []),
       {
         Header: intl.get('debit'),
         accessor: 'debit',
