@@ -4207,6 +4207,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/inventory-turnover-by-amount": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the inventory turnover by amount report */
+        get: operations["InventoryTurnoverByAmountController_inventoryTurnoverByAmount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/sales-tax-liability-summary": {
         parameters: {
             query?: never;
@@ -5875,6 +5892,11 @@ export interface components {
              */
             code?: string;
             /**
+             * @description Stock level at which the item should be reordered (inventory items only)
+             * @example 10
+             */
+            reorderPoint?: number;
+            /**
              * @description Unit of measure the item is measured in
              * @example kg
              * @enum {string}
@@ -5994,6 +6016,17 @@ export interface components {
              * @example CHAIR-X2000
              */
             code?: string;
+            /**
+             * @description Stock level at which the item should be reordered (inventory items only)
+             * @example 10
+             */
+            reorderPoint?: number;
+            /**
+             * @description Unit of measure the item is measured in
+             * @example kg
+             * @enum {string}
+             */
+            unit?: "piece" | "dozen" | "pair" | "set" | "pack" | "box" | "kg" | "g" | "lb" | "oz" | "l" | "ml" | "m" | "cm" | "m2" | "m3" | "hour" | "day";
             /**
              * @description Whether the item can be purchased
              * @example true
@@ -16211,6 +16244,157 @@ export interface components {
             query: components["schemas"]["InventoryValuationQueryResponseDto"];
             /** @description Report metadata */
             meta: components["schemas"]["InventoryValuationMetaDto"];
+        };
+        InventoryTurnoverByAmountQueryResponseDto: {
+            /** @description From date */
+            fromDate: string;
+            /** @description To date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Item IDs to include */
+            itemsIds: number[];
+            /** @description Warehouse IDs to include */
+            warehousesIds: number[];
+            /** @description Branch IDs to include */
+            branchesIds: number[];
+        };
+        InventoryTurnoverByAmountItemDto: {
+            /** @description Item ID */
+            id: number;
+            /** @description Item name */
+            name: string;
+            /** @description Item code */
+            code: string;
+            /** @description Opening inventory balance */
+            openingBalance: number;
+            /** @description Closing inventory balance */
+            closingBalance: number;
+            /** @description Cost of goods sold */
+            costOfGoodsSold: number;
+            /** @description Average inventory price */
+            averagePrice: number;
+            /** @description Inventory turnover ratio */
+            turnoverRatio: number;
+            /** @description Average turnover days */
+            averageTurnoverDays: number;
+            /** @description Quantity on hand */
+            qtyOnHand: number;
+            /** @description Last sale date */
+            lastSellDate?: string | null;
+            /** @description Formatted opening balance */
+            openingBalanceFormatted: string;
+            /** @description Formatted closing balance */
+            closingBalanceFormatted: string;
+            /** @description Formatted cost of goods sold */
+            costOfGoodsSoldFormatted: string;
+            /** @description Formatted average price */
+            averagePriceFormatted: string;
+            /** @description Formatted turnover ratio */
+            turnoverRatioFormatted: string;
+            /** @description Formatted average turnover days */
+            averageTurnoverDaysFormatted: string;
+            /** @description Formatted quantity on hand */
+            qtyOnHandFormatted: string;
+            /** @description Formatted last sale date */
+            lastSellDateFormatted: string;
+            /** @description Currency code */
+            currencyCode: string;
+        };
+        InventoryTurnoverByAmountTotalDto: {
+            /** @description Total opening balance */
+            openingBalance: number;
+            /** @description Total closing balance */
+            closingBalance: number;
+            /** @description Total cost of goods sold */
+            costOfGoodsSold: number;
+            /** @description Total average price */
+            averagePrice: number;
+            /** @description Total turnover ratio */
+            turnoverRatio: number;
+            /** @description Total average turnover days */
+            averageTurnoverDays: number;
+            /** @description Total quantity on hand */
+            qtyOnHand: number;
+            /** @description Total last sale date */
+            lastSellDate?: string | null;
+            /** @description Formatted total opening balance */
+            openingBalanceFormatted: string;
+            /** @description Formatted total closing balance */
+            closingBalanceFormatted: string;
+            /** @description Formatted total cost of goods sold */
+            costOfGoodsSoldFormatted: string;
+            /** @description Formatted total average price */
+            averagePriceFormatted: string;
+            /** @description Formatted total turnover ratio */
+            turnoverRatioFormatted: string;
+            /** @description Formatted total average turnover days */
+            averageTurnoverDaysFormatted: string;
+            /** @description Formatted total quantity on hand */
+            qtyOnHandFormatted: string;
+            /** @description Formatted total last sale date */
+            lastSellDateFormatted: string;
+            /** @description Currency code */
+            currencyCode: string;
+        };
+        InventoryTurnoverByAmountDataDto: {
+            /** @description Inventory turnover items */
+            items: components["schemas"]["InventoryTurnoverByAmountItemDto"][];
+            /** @description Inventory turnover totals */
+            total: components["schemas"]["InventoryTurnoverByAmountTotalDto"];
+        };
+        InventoryTurnoverByAmountMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        InventoryTurnoverByAmountResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventoryTurnoverByAmountQueryResponseDto"];
+            /** @description Inventory turnover report data */
+            data: components["schemas"]["InventoryTurnoverByAmountDataDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventoryTurnoverByAmountMetaDto"];
+        };
+        InventoryTurnoverByAmountTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "item_name" | "opening_balance" | "closing_balance" | "cost_of_goods_sold" | "average_price" | "turnover_ratio" | "average_turnover_days" | "last_sell_date" | "qty_on_hand";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        InventoryTurnoverByAmountTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["InventoryTurnoverByAmountTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
+        InventoryTurnoverByAmountTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["InventoryTurnoverByAmountTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventoryTurnoverByAmountQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventoryTurnoverByAmountMetaDto"];
         };
         SalesTaxLiabilitySummaryQueryResponseDto: {
             /** @description Start date */
@@ -31126,6 +31310,46 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["InventoryValuationResponseDto"];
                     "application/json+table": components["schemas"]["InventoryValuationTableResponseDto"];
+                };
+            };
+        };
+    };
+    InventoryTurnoverByAmountController_inventoryTurnoverByAmount: {
+        parameters: {
+            query?: {
+                /** @description Start date for the inventory turnover report */
+                fromDate?: string;
+                /** @description End date for the inventory turnover report */
+                toDate?: string;
+                /** @description Array of item IDs to filter */
+                itemsIds?: number[];
+                /** @description Array of warehouse IDs to filter */
+                warehousesIds?: number[];
+                /** @description Array of branch IDs to filter */
+                branchesIds?: number[];
+                /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
+                numberFormat?: components["schemas"]["NumberFormatQueryDto"];
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+                accept: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Inventory turnover by amount report */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InventoryTurnoverByAmountResponseDto"];
+                    "application/json+table": components["schemas"]["InventoryTurnoverByAmountTableResponseDto"];
                 };
             };
         };

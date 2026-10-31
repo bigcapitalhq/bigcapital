@@ -378,6 +378,20 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/financial-reports/inventory-turnover-by-amount`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/InventoryTurnoverByAmount/InventoryTurnoverByAmount'
+      ).then((m) => ({ default: m.InventoryTurnoverByAmount })),
+    ),
+    breadcrumb: intl.get('inventory_turnover_by_amount'),
+    hint: intl.get('reports_inventory_turnover_by_amount_desc'),
+    pageTitle: intl.get('inventory_turnover_by_amount'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/financial-reports/customers-balance-summary`,
     component: lazy(() =>
       import(

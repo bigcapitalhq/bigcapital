@@ -183,6 +183,13 @@ export const financialReportMenus: FinancialSection[] = [
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
       },
+      {
+        title: <T id={'inventory_turnover_by_amount'} />,
+        desc: <T id={'reports_inventory_turnover_by_amount_desc'} />,
+        link: '/financial-reports/inventory-turnover-by-amount',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_INVENTORY_TURNOVER_BY_AMOUNT,
+      },
     ],
   },
   {

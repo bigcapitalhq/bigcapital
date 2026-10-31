@@ -9,6 +9,7 @@ import {
   DISPLAY_FILTER_DRAWER_TOGGLE,
   GENERAL_LEDGER,
   INVENTORY_ITEM_DETAILS,
+  INVENTORY_TURNOVER_BY_AMOUNT,
   INVENTORY_VALUATION,
   JOURNAL,
   PROFIT_LOSS,
@@ -41,6 +42,7 @@ const initialState: FinancialStatementsState = {
   purchasesByItems: { displayFilterDrawer: false },
   salesByItems: { displayFilterDrawer: false },
   inventoryValuation: { displayFilterDrawer: false },
+  inventoryTurnoverByAmount: { displayFilterDrawer: false },
   customersBalanceSummary: { displayFilterDrawer: false },
   vendorsBalanceSummary: { displayFilterDrawer: false },
   customersTransactions: { displayFilterDrawer: false },
@@ -80,6 +82,10 @@ export const financialStatementsReducer = createReducer(initialState, {
   ...financialStatementFilterToggle(PURCHASES_BY_ITEMS, 'purchasesByItems'),
   ...financialStatementFilterToggle(SALES_BY_ITEMS, 'salesByItems'),
   ...financialStatementFilterToggle(INVENTORY_VALUATION, 'inventoryValuation'),
+  ...financialStatementFilterToggle(
+    INVENTORY_TURNOVER_BY_AMOUNT,
+    'inventoryTurnoverByAmount',
+  ),
   ...financialStatementFilterToggle(
     CUSTOMERS_BALANCE_SUMMARY,
     'customersBalanceSummary',

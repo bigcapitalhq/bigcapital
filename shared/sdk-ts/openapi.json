@@ -21230,6 +21230,139 @@
         ]
       }
     },
+    "/api/reports/inventory-turnover-by-amount": {
+      "get": {
+        "operationId": "InventoryTurnoverByAmountController_inventoryTurnoverByAmount",
+        "summary": "Retrieves the inventory turnover by amount report",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Start date for the inventory turnover report",
+            "schema": {
+              "example": "2024-01-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "End date for the inventory turnover report",
+            "schema": {
+              "example": "2024-01-31",
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemsIds",
+            "required": false,
+            "in": "query",
+            "description": "Array of item IDs to filter",
+            "schema": {
+              "example": [
+                1,
+                2,
+                3
+              ],
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "warehousesIds",
+            "required": false,
+            "in": "query",
+            "description": "Array of warehouse IDs to filter",
+            "schema": {
+              "example": [
+                10,
+                20
+              ],
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "branchesIds",
+            "required": false,
+            "in": "query",
+            "description": "Array of branch IDs to filter",
+            "schema": {
+              "example": [
+                100,
+                200
+              ],
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "accept",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numberFormat",
+            "required": false,
+            "in": "query",
+            "description": "Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)",
+            "schema": {
+              "$ref": "#/components/schemas/NumberFormatQueryDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inventory turnover by amount report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventoryTurnoverByAmountResponseDto"
+                }
+              },
+              "application/json+table": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventoryTurnoverByAmountTableResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/api/reports/sales-tax-liability-summary": {
       "get": {
         "operationId": "SalesTaxLiabilitySummaryController_getSalesTaxLiabilitySummary",
@@ -26413,6 +26546,12 @@
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
           },
+          "reorderPoint": {
+            "type": "number",
+            "description": "Stock level at which the item should be reordered (inventory items only)",
+            "minimum": 0,
+            "example": 10
+          },
           "unit": {
             "type": "string",
             "description": "Unit of measure the item is measured in",
@@ -26580,6 +26719,37 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
+          },
+          "reorderPoint": {
+            "type": "number",
+            "description": "Stock level at which the item should be reordered (inventory items only)",
+            "minimum": 0,
+            "example": 10
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure the item is measured in",
+            "enum": [
+              "piece",
+              "dozen",
+              "pair",
+              "set",
+              "pack",
+              "box",
+              "kg",
+              "g",
+              "lb",
+              "oz",
+              "l",
+              "ml",
+              "m",
+              "cm",
+              "m2",
+              "m3",
+              "hour",
+              "day"
+            ],
+            "example": "kg"
           },
           "purchasable": {
             "type": "boolean",
@@ -43968,6 +44138,456 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/InventoryValuationMetaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "table",
+          "query",
+          "meta"
+        ]
+      },
+      "InventoryTurnoverByAmountQueryResponseDto": {
+        "type": "object",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "description": "From date"
+          },
+          "toDate": {
+            "type": "string",
+            "description": "To date"
+          },
+          "numberFormat": {
+            "description": "Number format settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumberFormatQueryDto"
+              }
+            ]
+          },
+          "itemsIds": {
+            "description": "Item IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "warehousesIds": {
+            "description": "Warehouse IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "branchesIds": {
+            "description": "Branch IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "fromDate",
+          "toDate",
+          "numberFormat",
+          "itemsIds",
+          "warehousesIds",
+          "branchesIds"
+        ]
+      },
+      "InventoryTurnoverByAmountItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Item ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Item name"
+          },
+          "code": {
+            "type": "string",
+            "description": "Item code"
+          },
+          "openingBalance": {
+            "type": "number",
+            "description": "Opening inventory balance"
+          },
+          "closingBalance": {
+            "type": "number",
+            "description": "Closing inventory balance"
+          },
+          "costOfGoodsSold": {
+            "type": "number",
+            "description": "Cost of goods sold"
+          },
+          "averagePrice": {
+            "type": "number",
+            "description": "Average inventory price"
+          },
+          "turnoverRatio": {
+            "type": "number",
+            "description": "Inventory turnover ratio"
+          },
+          "averageTurnoverDays": {
+            "type": "number",
+            "description": "Average turnover days"
+          },
+          "qtyOnHand": {
+            "type": "number",
+            "description": "Quantity on hand"
+          },
+          "lastSellDate": {
+            "type": "string",
+            "description": "Last sale date",
+            "nullable": true
+          },
+          "openingBalanceFormatted": {
+            "type": "string",
+            "description": "Formatted opening balance"
+          },
+          "closingBalanceFormatted": {
+            "type": "string",
+            "description": "Formatted closing balance"
+          },
+          "costOfGoodsSoldFormatted": {
+            "type": "string",
+            "description": "Formatted cost of goods sold"
+          },
+          "averagePriceFormatted": {
+            "type": "string",
+            "description": "Formatted average price"
+          },
+          "turnoverRatioFormatted": {
+            "type": "string",
+            "description": "Formatted turnover ratio"
+          },
+          "averageTurnoverDaysFormatted": {
+            "type": "string",
+            "description": "Formatted average turnover days"
+          },
+          "qtyOnHandFormatted": {
+            "type": "string",
+            "description": "Formatted quantity on hand"
+          },
+          "lastSellDateFormatted": {
+            "type": "string",
+            "description": "Formatted last sale date"
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Currency code"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "code",
+          "openingBalance",
+          "closingBalance",
+          "costOfGoodsSold",
+          "averagePrice",
+          "turnoverRatio",
+          "averageTurnoverDays",
+          "qtyOnHand",
+          "openingBalanceFormatted",
+          "closingBalanceFormatted",
+          "costOfGoodsSoldFormatted",
+          "averagePriceFormatted",
+          "turnoverRatioFormatted",
+          "averageTurnoverDaysFormatted",
+          "qtyOnHandFormatted",
+          "lastSellDateFormatted",
+          "currencyCode"
+        ]
+      },
+      "InventoryTurnoverByAmountTotalDto": {
+        "type": "object",
+        "properties": {
+          "openingBalance": {
+            "type": "number",
+            "description": "Total opening balance"
+          },
+          "closingBalance": {
+            "type": "number",
+            "description": "Total closing balance"
+          },
+          "costOfGoodsSold": {
+            "type": "number",
+            "description": "Total cost of goods sold"
+          },
+          "averagePrice": {
+            "type": "number",
+            "description": "Total average price"
+          },
+          "turnoverRatio": {
+            "type": "number",
+            "description": "Total turnover ratio"
+          },
+          "averageTurnoverDays": {
+            "type": "number",
+            "description": "Total average turnover days"
+          },
+          "qtyOnHand": {
+            "type": "number",
+            "description": "Total quantity on hand"
+          },
+          "lastSellDate": {
+            "type": "string",
+            "description": "Total last sale date",
+            "nullable": true
+          },
+          "openingBalanceFormatted": {
+            "type": "string",
+            "description": "Formatted total opening balance"
+          },
+          "closingBalanceFormatted": {
+            "type": "string",
+            "description": "Formatted total closing balance"
+          },
+          "costOfGoodsSoldFormatted": {
+            "type": "string",
+            "description": "Formatted total cost of goods sold"
+          },
+          "averagePriceFormatted": {
+            "type": "string",
+            "description": "Formatted total average price"
+          },
+          "turnoverRatioFormatted": {
+            "type": "string",
+            "description": "Formatted total turnover ratio"
+          },
+          "averageTurnoverDaysFormatted": {
+            "type": "string",
+            "description": "Formatted total average turnover days"
+          },
+          "qtyOnHandFormatted": {
+            "type": "string",
+            "description": "Formatted total quantity on hand"
+          },
+          "lastSellDateFormatted": {
+            "type": "string",
+            "description": "Formatted total last sale date"
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Currency code"
+          }
+        },
+        "required": [
+          "openingBalance",
+          "closingBalance",
+          "costOfGoodsSold",
+          "averagePrice",
+          "turnoverRatio",
+          "averageTurnoverDays",
+          "qtyOnHand",
+          "openingBalanceFormatted",
+          "closingBalanceFormatted",
+          "costOfGoodsSoldFormatted",
+          "averagePriceFormatted",
+          "turnoverRatioFormatted",
+          "averageTurnoverDaysFormatted",
+          "qtyOnHandFormatted",
+          "lastSellDateFormatted",
+          "currencyCode"
+        ]
+      },
+      "InventoryTurnoverByAmountDataDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Inventory turnover items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryTurnoverByAmountItemDto"
+            }
+          },
+          "total": {
+            "description": "Inventory turnover totals",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventoryTurnoverByAmountTotalDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ]
+      },
+      "InventoryTurnoverByAmountMetaDto": {
+        "type": "object",
+        "properties": {
+          "organizationName": {
+            "type": "string",
+            "description": "Organization name"
+          },
+          "baseCurrency": {
+            "type": "string",
+            "description": "Base currency code"
+          },
+          "dateFormat": {
+            "type": "string",
+            "description": "Date format string"
+          },
+          "isCostComputeRunning": {
+            "type": "boolean",
+            "description": "Whether cost computation is running"
+          },
+          "sheetName": {
+            "type": "string",
+            "description": "Sheet name"
+          },
+          "formattedFromDate": {
+            "type": "string",
+            "description": "Formatted from date"
+          },
+          "formattedToDate": {
+            "type": "string",
+            "description": "Formatted to date"
+          },
+          "formattedDateRange": {
+            "type": "string",
+            "description": "Formatted date range"
+          }
+        },
+        "required": [
+          "organizationName",
+          "baseCurrency",
+          "dateFormat",
+          "isCostComputeRunning",
+          "sheetName",
+          "formattedFromDate",
+          "formattedToDate",
+          "formattedDateRange"
+        ]
+      },
+      "InventoryTurnoverByAmountResponseDto": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "Query parameters used to generate the report",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventoryTurnoverByAmountQueryResponseDto"
+              }
+            ]
+          },
+          "data": {
+            "description": "Inventory turnover report data",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventoryTurnoverByAmountDataDto"
+              }
+            ]
+          },
+          "meta": {
+            "description": "Report metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventoryTurnoverByAmountMetaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "query",
+          "data",
+          "meta"
+        ]
+      },
+      "InventoryTurnoverByAmountTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "opening_balance",
+              "closing_balance",
+              "cost_of_goods_sold",
+              "average_price",
+              "turnover_ratio",
+              "average_turnover_days",
+              "last_sell_date",
+              "qty_on_hand"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "InventoryTurnoverByAmountTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventoryTurnoverByAmountTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
+      "InventoryTurnoverByAmountTableResponseDto": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "description": "Table data structure",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventoryTurnoverByAmountTableDataDto"
+              }
+            ]
+          },
+          "query": {
+            "description": "Query parameters used to generate the report",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventoryTurnoverByAmountQueryResponseDto"
+              }
+            ]
+          },
+          "meta": {
+            "description": "Report metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventoryTurnoverByAmountMetaDto"
               }
             ]
           }
