@@ -7,6 +7,7 @@ export interface ItemFormValues {
   name: string;
   type: ItemFormType;
   code: string;
+  reorderPoint: string | number;
   unit: string;
   costPrice: string | number;
   sellPrice: string | number;

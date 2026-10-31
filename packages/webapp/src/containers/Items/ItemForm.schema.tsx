@@ -20,6 +20,18 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('item_type_')),
   code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
+  reorderPoint: Yup.number()
+    .transform((value, originalValue) =>
+      originalValue === '' ||
+      originalValue === null ||
+      originalValue === undefined
+        ? null
+        : value,
+    )
+    .nullable()
+    .min(0)
+    .max(DATATYPES_LENGTH.DECIMAL_13_3)
+    .label(intl.get('reorder_point')),
   unit: Yup.string()
     .oneOf([...ITEM_UNITS])
     .required()

@@ -87,6 +87,9 @@ export class CreateItemService {
       unit: defaultTo(itemDTO.unit, DEFAULT_ITEM_UNIT),
       active: Boolean(defaultTo(itemDTO.active, true)),
       quantityOnHand: itemDTO.type === 'inventory' ? 0 : null,
+      reorderPoint:
+        itemDTO.type === 'inventory' ? (itemDTO.reorderPoint ?? null) : null,
+      reorderPointNotified: false,
     };
   }
 

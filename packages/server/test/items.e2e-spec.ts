@@ -18,6 +18,28 @@ describe.only('Items (e2e)', () => {
       .expect(201);
   });
 
+  it('/items (POST) with reorder point', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        name: faker.commerce.productName(),
+        type: 'inventory',
+        inventory_account_id: 1007,
+        reorder_point: 12.5,
+      })
+      .expect(201);
+
+    const itemResponse = await request(app.getHttpServer())
+      .get(`/items/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(Number(itemResponse.body.reorder_point)).toEqual(12.5);
+  });
+
   it('/items/:id (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/items')

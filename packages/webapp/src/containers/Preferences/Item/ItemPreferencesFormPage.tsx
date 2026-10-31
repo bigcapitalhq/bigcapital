@@ -23,6 +23,8 @@ const defaultFormValues: ItemPreferencesFormValues = {
   preferredSellAccount: '',
   preferredCostAccount: '',
   preferredInventoryAccount: '',
+  reorderPointNotifications: false,
+  reorderPointNotificationEmail: '',
   preventStockFromGoingBelowZero: false,
 };
 
@@ -51,6 +53,9 @@ function ItemPreferencesFormPageInner({
         preferredSellAccount: values.preferredSellAccount,
         preferredCostAccount: values.preferredCostAccount,
         preferredInventoryAccount: values.preferredInventoryAccount,
+        reorderPointNotifications: Boolean(values.reorderPointNotifications),
+        reorderPointNotificationEmail:
+          values.reorderPointNotificationEmail ?? '',
         preventStockFromGoingBelowZero: values.preventStockFromGoingBelowZero,
       }),
     ).map((option) => ({

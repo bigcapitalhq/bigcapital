@@ -5814,6 +5814,11 @@ export interface components {
              */
             quantityOnHand?: number;
             /**
+             * @description The stock level at which the item should be reordered (for inventory items)
+             * @example 10
+             */
+            reorderPoint?: number;
+            /**
              * @description Additional notes about the item
              * @example Available in black, gray, and navy colors. 5-year warranty included.
              */
@@ -5989,12 +5994,6 @@ export interface components {
              * @example CHAIR-X2000
              */
             code?: string;
-            /**
-             * @description Unit of measure the item is measured in
-             * @example kg
-             * @enum {string}
-             */
-            unit?: "piece" | "dozen" | "pair" | "set" | "pack" | "box" | "kg" | "g" | "lb" | "oz" | "l" | "ml" | "m" | "cm" | "m2" | "m3" | "hour" | "day";
             /**
              * @description Whether the item can be purchased
              * @example true

@@ -26326,6 +26326,11 @@
             "description": "The quantity of the item in stock (for inventory items)",
             "example": 50
           },
+          "reorderPoint": {
+            "type": "number",
+            "description": "The stock level at which the item should be reordered (for inventory items)",
+            "example": 10
+          },
           "note": {
             "type": "string",
             "description": "Additional notes about the item",
@@ -26575,31 +26580,6 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
-          },
-          "unit": {
-            "type": "string",
-            "description": "Unit of measure the item is measured in",
-            "enum": [
-              "piece",
-              "dozen",
-              "pair",
-              "set",
-              "pack",
-              "box",
-              "kg",
-              "g",
-              "lb",
-              "oz",
-              "l",
-              "ml",
-              "m",
-              "cm",
-              "m2",
-              "m3",
-              "hour",
-              "day"
-            ],
-            "example": "kg"
           },
           "purchasable": {
             "type": "boolean",

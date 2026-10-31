@@ -9,6 +9,7 @@ import {
   CardFooterActions,
   FieldRequiredHint,
   FFormGroup,
+  FSelect,
   FSwitch,
   FormattedMessage as T,
 } from '@/components';
@@ -18,14 +19,38 @@ export interface ItemPreferencesFormValues {
   preferredSellAccount: string | number;
   preferredCostAccount: string | number;
   preferredInventoryAccount: string | number;
+  reorderPointNotifications: boolean;
+  reorderPointNotificationEmail: string;
   preventStockFromGoingBelowZero: boolean;
 }
 
 export function ItemForm(): React.ReactElement {
   const history = useHistory();
-  const { accounts } = useItemPreferencesFormContext();
+  const { accounts, users } = useItemPreferencesFormContext();
 
-  const { isSubmitting } = useFormikContext<ItemPreferencesFormValues>();
+  const { isSubmitting, values } =
+    useFormikContext<ItemPreferencesFormValues>();
+
+  const userOptions = users
+    .filter((user) => user.active && user.email)
+    .map((user) => ({
+      value: user.email,
+      label: `${[user.firstName, user.lastName]
+        .filter(Boolean)
+        .join(' ')} (${user.email})`,
+    }));
+
+  if (
+    values.reorderPointNotificationEmail &&
+    !userOptions.some(
+      (option) => option.value === values.reorderPointNotificationEmail,
+    )
+  ) {
+    userOptions.push({
+      value: values.reorderPointNotificationEmail,
+      label: values.reorderPointNotificationEmail,
+    });
+  }
 
   const handleCloseClick = () => {
     history.go(-1);
@@ -110,6 +135,19 @@ export function ItemForm(): React.ReactElement {
 
       <Divider style={{ margin: '20px 0' }} />
 
+      {/* ----------- Reorder point notifications ----------- */}
+      <ItemFormGroup
+        name={'reorderPointNotifications'}
+        helperText={<T id={'reorder_point_notifications_hint'} />}
+        inline={true}
+      >
+        <FSwitch
+          name={'reorderPointNotifications'}
+          labelElement={<T id={'reorder_point_notifications'} />}
+          large={true}
+        />
+      </ItemFormGroup>
+
       {/* ----------- Prevent stock from going below zero ----------- */}
       <ItemFormGroup
         name={'preventStockFromGoingBelowZero'}
@@ -119,7 +157,29 @@ export function ItemForm(): React.ReactElement {
         <FSwitch
           name={'preventStockFromGoingBelowZero'}
           labelElement={<T id={'prevent_stock_from_going_below_zero'} />}
-          large={true}
+        />
+      </ItemFormGroup>
+
+      {/* ----------- Notify to ----------- */}
+      <ItemFormGroup
+        name={'reorderPointNotificationEmail'}
+        label={
+          <strong>
+            <T id={'reorder_point_notification_email'} />
+          </strong>
+        }
+        helperText={<T id={'reorder_point_notification_email_hint'} />}
+        inline={true}
+      >
+        <FSelect
+          name={'reorderPointNotificationEmail'}
+          items={userOptions}
+          valueAccessor={'value'}
+          textAccessor={'label'}
+          placeholder={<T id={'select_user'} />}
+          disabled={!values.reorderPointNotifications}
+          popoverProps={{ minimal: true, captureDismiss: true }}
+          fill={true}
         />
       </ItemFormGroup>
 

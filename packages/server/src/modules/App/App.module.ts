@@ -22,6 +22,7 @@ import { ClsModule, ClsService } from 'nestjs-cls';
 import { AppController } from './App.controller';
 import { AppService } from './App.service';
 import { ItemsModule } from '../Items/Items.module';
+import { ItemReorderPointsModule } from '../ItemReorderPoints/ItemReorderPoints.module';
 import { config } from '../../common/config';
 import { ENV_FILE_PATHS } from '../../common/config/env';
 import { SystemDatabaseModule } from '../System/SystemDB/SystemDB.module';
@@ -200,6 +201,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     TransformerModule,
     MailModule,
     ItemsModule,
+    ItemReorderPointsModule,
     ItemCategoryModule,
     AccountsModule,
     ExpensesModule,
