@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Classes,
   FormGroup,
   Icon,
@@ -14,12 +15,17 @@ import styled from 'styled-components';
 import type { TrackingCategoryFormValues } from './types';
 import {
   FieldRequiredHint,
+  FCheckbox,
   FFormGroup,
   FInputGroup,
   FSwitch,
   FTextArea,
   Hint,
 } from '@/components';
+import {
+  TRACKING_CATEGORY_MODULE_LABELS,
+  TRACKING_CATEGORY_MODULES,
+} from '@/constants';
 
 /**
  * Tracking category form fields.
@@ -55,6 +61,20 @@ export function TrackingCategoryFormFields(): React.ReactElement {
         />
       </FFormGroup>
 
+      <FFormGroup
+        name={'modules'}
+        label={intl.get('tracking_categories.field.modules')}
+        labelInfo={
+          <Hint
+            content={intl.get('tracking_categories.field.modules_hint')}
+            position={Position.RIGHT}
+          />
+        }
+        inline={true}
+      >
+        <ModulesField />
+      </FFormGroup>
+
       <FormGroup
         label={intl.get('tracking_categories.field.options')}
         labelInfo={
@@ -68,6 +88,48 @@ export function TrackingCategoryFormFields(): React.ReactElement {
         <OptionsFieldArray options={values.options} />
       </FormGroup>
     </div>
+  );
+}
+
+/**
+ * Modules (Sale Invoice, Estimate, Manual Journal) checkbox group.
+ */
+function ModulesField() {
+  const { values, setFieldValue } =
+    useFormikContext<TrackingCategoryFormValues>();
+
+  const selectedModules = values.modules ?? [];
+  const allSelected = TRACKING_CATEGORY_MODULES.every((module) =>
+    selectedModules.includes(module),
+  );
+  const someSelected = selectedModules.length > 0;
+
+  // Handles changing the "All" checkbox.
+  const handleAllChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setFieldValue(
+      'modules',
+      event.currentTarget.checked ? [...TRACKING_CATEGORY_MODULES] : [],
+    );
+  };
+
+  return (
+    <ModulesCheckboxes>
+      {TRACKING_CATEGORY_MODULES.map((module) => (
+        <FCheckbox
+          key={module}
+          name={'modules'}
+          value={module}
+          label={intl.get(TRACKING_CATEGORY_MODULE_LABELS[module])}
+        />
+      ))}
+
+      <Checkbox
+        checked={allSelected}
+        indeterminate={!allSelected && someSelected}
+        onChange={handleAllChange}
+        label={intl.get('tracking_categories.module.all')}
+      />
+    </ModulesCheckboxes>
   );
 }
 
@@ -132,6 +194,17 @@ function OptionsFieldArray({ options }: OptionsFieldArrayProps) {
     />
   );
 }
+
+const ModulesCheckboxes = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+
+  .bp4-control {
+    margin-bottom: 0;
+  }
+`;
 
 const OptionsList = styled.div`
   display: flex;

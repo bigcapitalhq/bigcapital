@@ -17,11 +17,13 @@ import type {
   EditTrackingCategoryBody,
 } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
+import { TRACKING_CATEGORY_MODULES } from '@/constants';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 const defaultInitialValues: TrackingCategoryFormValues = {
   name: '',
   description: '',
+  modules: [...TRACKING_CATEGORY_MODULES],
   options: [{ name: '', active: true }],
 };
 
@@ -42,6 +44,7 @@ function TrackingCategoryFormInner({
     ? {
         name: category.name ?? '',
         description: category.description ?? '',
+        modules: category.modules ?? [...TRACKING_CATEGORY_MODULES],
         options: (category.options ?? []).map((option) => ({
           id: option.id,
           name: option.name,
@@ -66,6 +69,9 @@ function TrackingCategoryFormInner({
     const form = {
       name: values.name.trim(),
       description: values.description?.trim() ?? '',
+      modules: TRACKING_CATEGORY_MODULES.filter((module) =>
+        (values.modules ?? []).includes(module),
+      ),
       options,
     };
 

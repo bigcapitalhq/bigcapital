@@ -7,6 +7,7 @@ import { EditTrackingCategoryDto } from '../dtos/TrackingCategory.dto';
 import { TrackingCategoryTransformer } from '../queries/TrackingCategoryTransformer';
 import { CommandTrackingCategoryValidator } from './CommandTrackingCategoryValidator.service';
 import { ERRORS } from '../constants';
+import { normalizeTrackingCategoryModules } from '../utils';
 
 @Injectable()
 export class EditTrackingCategoryService {
@@ -84,6 +85,9 @@ export class EditTrackingCategoryService {
           ? { description: dto.description?.trim() || null }
           : {}),
         ...(dto.active !== undefined ? { active: dto.active } : {}),
+        ...(dto.modules !== undefined
+          ? { modules: normalizeTrackingCategoryModules(dto.modules) }
+          : {}),
         ...(options !== null ? { options } : {}),
       });
 

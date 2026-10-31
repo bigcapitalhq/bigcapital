@@ -40,6 +40,7 @@ const ERROR = {
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
   COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS:
     'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS',
+  TRACKING_CATEGORY_MODULE_NOT_ALLOWED: 'TRACKING_CATEGORY_MODULE_NOT_ALLOWED',
 } as const;
 
 export const MIN_LINES_NUMBER = 1;
@@ -79,6 +80,11 @@ export type MakeJournalFormValues = {
 export type MakeJournalErrorResponse = {
   type: string;
   indexes?: number[];
+  payload?: {
+    categoryId?: number;
+    module?: string;
+    index?: number;
+  };
   meta?: { contact_type?: string; indexes?: number[] }[];
 };
 
@@ -292,6 +298,11 @@ export const transformErrors = (
       intl.get(
         'make_journal.errors.should_add_accounts_in_same_currency_or_base_currency',
       ),
+    );
+  }
+  if ((error = getError(ERROR.TRACKING_CATEGORY_MODULE_NOT_ALLOWED))) {
+    toastMessages.push(
+      intl.get('tracking_categories.error.not_available_for_manual_journals'),
     );
   }
   setErrors({ ...newErrors });

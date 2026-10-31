@@ -9393,6 +9393,8 @@ export interface components {
              * @example true
              */
             active: boolean;
+            /** @description Modules where the tracking category is available */
+            modules: ("manual_journals" | "sale_invoices" | "sale_estimates")[];
             /** @description Tracking options */
             options: components["schemas"]["TrackingCategoryOptionResponseDto"][];
             /**
@@ -9439,6 +9441,14 @@ export interface components {
              * @example true
              */
             active?: boolean;
+            /**
+             * @description Modules where the tracking category is available
+             * @example [
+             *       "sale_invoices",
+             *       "sale_estimates"
+             *     ]
+             */
+            modules?: ("manual_journals" | "sale_invoices" | "sale_estimates")[];
             /** @description Tracking options */
             options?: components["schemas"]["TrackingCategoryOptionDto"][];
         };
@@ -9458,6 +9468,14 @@ export interface components {
              * @example true
              */
             active?: boolean;
+            /**
+             * @description Modules where the tracking category is available
+             * @example [
+             *       "sale_invoices",
+             *       "sale_estimates"
+             *     ]
+             */
+            modules?: ("manual_journals" | "sale_invoices" | "sale_estimates")[];
             /** @description Tracking options */
             options?: components["schemas"]["TrackingCategoryOptionDto"][];
         };

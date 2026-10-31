@@ -19,7 +19,12 @@ import {
   BranchesListFieldCell,
   TrackingCategoryOptionFieldCell,
 } from '@/components/DataTableCells';
-import { CellType, Features, Align } from '@/constants';
+import {
+  CellType,
+  Features,
+  Align,
+  TrackingCategoryModules,
+} from '@/constants';
 import { useUpdateEffect } from '@/hooks';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
@@ -113,8 +118,9 @@ export const useJournalTableEntriesColumns = () => {
   const { featureCan } = useFeatureCan();
   const { trackingCategories, manualJournal } = useMakeJournalFormContext();
 
-  // Archived categories are hidden for new journals, but remain visible on
-  // edit when the journal already references them so history is preserved.
+  // Categories already used by the journal remain visible on edit so history
+  // is preserved even after the category is archived or its module
+  // availability changes.
   const usedCategoryIds = React.useMemo(() => {
     return new Set(
       (manualJournal?.entries ?? []).flatMap((entry) =>
@@ -126,9 +132,19 @@ export const useJournalTableEntriesColumns = () => {
   }, [manualJournal]);
 
   const visibleCategories = React.useMemo(() => {
-    return trackingCategories.filter(
-      (category) => !!category.active || usedCategoryIds.has(category.id),
-    );
+    return trackingCategories.filter((category) => {
+      // Categories already used by the journal stay visible so historical
+      // assignments survive even after the category is archived or its module
+      // availability changes.
+      if (usedCategoryIds.has(category.id)) {
+        return true;
+      }
+      const isAvailableForManualJournals =
+        category.modules?.includes(TrackingCategoryModules.ManualJournals) ??
+        true;
+
+      return !!category.active && isAvailableForManualJournals;
+    });
   }, [trackingCategories, usedCategoryIds]);
 
   return React.useMemo(

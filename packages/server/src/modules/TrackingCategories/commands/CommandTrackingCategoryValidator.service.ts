@@ -7,7 +7,11 @@ import { ManualJournalEntryTrackingCategory } from '../models/ManualJournalEntry
 import { TrackingCategory } from '../models/TrackingCategory';
 import { TrackingCategoryOption } from '../models/TrackingCategoryOption';
 import { ERRORS } from '../constants';
-import { ITrackingCategoryEntry } from '../types/TrackingCategory.types';
+import { isTrackingCategoryAvailableForModule } from '../utils';
+import {
+  ITrackingCategoryEntry,
+  TrackingCategoryModule,
+} from '../types/TrackingCategory.types';
 
 interface ITrackingCategoryOptionInput {
   id?: number;
@@ -18,6 +22,8 @@ interface ITrackingCategoryOptionInput {
 export interface IValidateTrackingCategoryEntriesOptions {
   allowInactive?: boolean;
   previousAssignments?: string[];
+  previousCategoryIds?: number[];
+  module?: TrackingCategoryModule;
 }
 
 @Injectable()
@@ -176,7 +182,12 @@ export class CommandTrackingCategoryValidator {
     entries: ITrackingCategoryEntry[],
     options: IValidateTrackingCategoryEntriesOptions = {},
   ): Promise<void> {
-    const { allowInactive = false, previousAssignments = [] } = options;
+    const {
+      allowInactive = false,
+      previousAssignments = [],
+      previousCategoryIds = [],
+      module = TrackingCategoryModule.ManualJournals,
+    } = options;
 
     const assignments: Array<{
       categoryId: number;
@@ -222,6 +233,7 @@ export class CommandTrackingCategoryValidator {
       categories.map((category) => [category.id, category]),
     );
     const previousAssignmentsSet = new Set(previousAssignments);
+    const previousCategoryIdsSet = new Set(previousCategoryIds);
 
     assignments.forEach((assignment) => {
       const category = categoriesMap.get(assignment.categoryId);
@@ -249,7 +261,24 @@ export class CommandTrackingCategoryValidator {
         );
       }
       const isPreviouslyUsed = previousAssignmentsSet.has(pairKey);
+      const isCategoryPreviouslyUsed = previousCategoryIdsSet.has(
+        assignment.categoryId,
+      );
 
+      if (
+        !isTrackingCategoryAvailableForModule(category, module) &&
+        !isCategoryPreviouslyUsed
+      ) {
+        throw new ServiceError(
+          ERRORS.TRACKING_CATEGORY_MODULE_NOT_ALLOWED,
+          undefined,
+          {
+            categoryId: assignment.categoryId,
+            module,
+            index: assignment.index,
+          },
+        );
+      }
       if (!category.active && !(allowInactive && isPreviouslyUsed)) {
         throw new ServiceError(ERRORS.INACTIVE_TRACKING_CATEGORY, undefined, {
           categoryId: assignment.categoryId,
