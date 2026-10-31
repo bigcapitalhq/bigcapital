@@ -1,11 +1,13 @@
 import { Model } from 'objection';
 import { BaseModel } from '@/models/Model';
+import type { TrackingCategoryModule } from '../types/TrackingCategory.types';
 import type { TrackingCategoryOption } from './TrackingCategoryOption';
 
 export class TrackingCategory extends BaseModel {
   public name!: string;
   public description!: string | null;
   public active!: boolean;
+  public modules!: TrackingCategoryModule[];
 
   public options?: TrackingCategoryOption[];
 
@@ -17,6 +19,13 @@ export class TrackingCategory extends BaseModel {
    */
   static get tableName() {
     return 'tracking_categories';
+  }
+
+  /**
+   * JSON columns.
+   */
+  static get jsonAttributes() {
+    return ['modules'];
   }
 
   /**

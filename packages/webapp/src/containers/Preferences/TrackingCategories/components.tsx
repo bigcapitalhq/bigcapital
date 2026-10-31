@@ -3,6 +3,10 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import type { TrackingCategoriesList } from '@bigcapital/sdk-ts';
 import { Icon, If } from '@/components';
+import {
+  TRACKING_CATEGORY_MODULE_LABELS,
+  TRACKING_CATEGORY_MODULES,
+} from '@/constants';
 import { safeCallback } from '@/utils';
 
 export type TrackingCategory = TrackingCategoriesList[number];
@@ -96,6 +100,38 @@ function OptionsCell({ value }: OptionsCellProps) {
   );
 }
 
+interface ModulesCellProps {
+  value: TrackingCategory['modules'];
+}
+
+/**
+ * Modules cell.
+ */
+function ModulesCell({ value }: ModulesCellProps) {
+  const modules = value ?? [];
+
+  if (modules.length === 0) {
+    return <span className={'text-muted'}>—</span>;
+  }
+  const isAll = TRACKING_CATEGORY_MODULES.every((module) =>
+    modules.includes(module),
+  );
+
+  return (
+    <div className={'tracking-categories-modules-cell'}>
+      {isAll ? (
+        <Tag minimal={true}>{intl.get('tracking_categories.module.all')}</Tag>
+      ) : (
+        modules.map((module) => (
+          <Tag key={module} minimal={true}>
+            {intl.get(TRACKING_CATEGORY_MODULE_LABELS[module])}
+          </Tag>
+        ))
+      )}
+    </div>
+  );
+}
+
 interface StatusCellProps {
   value: boolean;
 }
@@ -138,6 +174,14 @@ export function useTrackingCategoriesTableColumns() {
         width: 220,
         disableSortBy: true,
         textOverview: true,
+      },
+      {
+        id: 'modules',
+        Header: intl.get('tracking_categories.column.modules'),
+        accessor: 'modules',
+        Cell: ModulesCell,
+        width: 200,
+        disableSortBy: true,
       },
       {
         id: 'options',

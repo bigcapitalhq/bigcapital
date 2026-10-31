@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { TrackingCategoryModule } from '../types/TrackingCategory.types';
 
 export class TrackingCategoryOptionResponseDto {
   @ApiProperty({ description: 'Option ID', example: 1 })
@@ -35,6 +36,13 @@ export class TrackingCategoryResponseDto {
 
   @ApiProperty({ description: 'Whether the category is active', example: true })
   active: boolean;
+
+  @ApiProperty({
+    description: 'Modules where the tracking category is available',
+    enum: TrackingCategoryModule,
+    isArray: true,
+  })
+  modules: TrackingCategoryModule[];
 
   @ApiProperty({
     description: 'Tracking options',

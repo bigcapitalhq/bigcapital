@@ -1,5 +1,6 @@
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { TRACKING_CATEGORY_MODULES } from '@/constants';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 export const TrackingCategoryFormSchema = Yup.object().shape({
@@ -13,6 +14,7 @@ export const TrackingCategoryFormSchema = Yup.object().shape({
     .max(500)
     .nullable()
     .label(intl.get('tracking_categories.field.description')),
+  modules: Yup.array().of(Yup.string().oneOf(TRACKING_CATEGORY_MODULES)),
   options: Yup.array()
     .of(
       Yup.object().shape({

@@ -1,4 +1,5 @@
 import { Transformer } from '@/modules/Transformer/Transformer';
+import { normalizeTrackingCategoryModules } from '../utils';
 
 export class TrackingCategoryOptionTransformer extends Transformer {
   /**
@@ -24,6 +25,7 @@ export class TrackingCategoryTransformer extends Transformer {
     return {
       ...category,
       active: Boolean(category.active),
+      modules: normalizeTrackingCategoryModules(category.modules),
       options: this.item(
         category.options ?? [],
         new TrackingCategoryOptionTransformer(),

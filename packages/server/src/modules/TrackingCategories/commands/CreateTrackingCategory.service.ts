@@ -7,6 +7,7 @@ import { CreateTrackingCategoryDto } from '../dtos/TrackingCategory.dto';
 import { TrackingCategoryTransformer } from '../queries/TrackingCategoryTransformer';
 import { CommandTrackingCategoryValidator } from './CommandTrackingCategoryValidator.service';
 import { ERRORS } from '../constants';
+import { normalizeTrackingCategoryModules } from '../utils';
 
 @Injectable()
 export class CreateTrackingCategoryService {
@@ -43,6 +44,7 @@ export class CreateTrackingCategoryService {
         name,
         description: dto.description?.trim() || null,
         active: dto.active ?? true,
+        modules: normalizeTrackingCategoryModules(dto.modules),
         options,
       });
 

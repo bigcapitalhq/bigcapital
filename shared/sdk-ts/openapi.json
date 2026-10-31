@@ -31612,6 +31612,18 @@
             "description": "Whether the category is active",
             "example": true
           },
+          "modules": {
+            "type": "array",
+            "description": "Modules where the tracking category is available",
+            "items": {
+              "type": "string",
+              "enum": [
+                "manual_journals",
+                "sale_invoices",
+                "sale_estimates"
+              ]
+            }
+          },
           "options": {
             "description": "Tracking options",
             "type": "array",
@@ -31634,6 +31646,7 @@
           "id",
           "name",
           "active",
+          "modules",
           "options"
         ]
       },
@@ -31678,6 +31691,22 @@
             "description": "Whether the category is active",
             "example": true
           },
+          "modules": {
+            "type": "array",
+            "description": "Modules where the tracking category is available",
+            "example": [
+              "sale_invoices",
+              "sale_estimates"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "manual_journals",
+                "sale_invoices",
+                "sale_estimates"
+              ]
+            }
+          },
           "options": {
             "description": "Tracking options",
             "type": "array",
@@ -31707,6 +31736,22 @@
             "type": "boolean",
             "description": "Whether the category is active",
             "example": true
+          },
+          "modules": {
+            "type": "array",
+            "description": "Modules where the tracking category is available",
+            "example": [
+              "sale_invoices",
+              "sale_estimates"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "manual_journals",
+                "sale_invoices",
+                "sale_estimates"
+              ]
+            }
           },
           "options": {
             "description": "Tracking options",

@@ -1,3 +1,4 @@
+import type { TrackingCategoryModule } from '@/constants';
 import type {
   CreateTrackingCategoryBody,
   EditTrackingCategoryBody,
@@ -13,6 +14,7 @@ export interface TrackingCategoryFormOption {
 export interface TrackingCategoryFormValues {
   name: string;
   description: string;
+  modules: TrackingCategoryModule[];
   options: TrackingCategoryFormOption[];
 }
 

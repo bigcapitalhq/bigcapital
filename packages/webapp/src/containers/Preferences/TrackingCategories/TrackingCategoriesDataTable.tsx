@@ -105,7 +105,8 @@ const TrackingCategoriesTable = styled(DataTable)`
   .table .tr {
     min-height: 40px;
   }
-  .tracking-categories-options-cell {
+  .tracking-categories-options-cell,
+  .tracking-categories-modules-cell {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;

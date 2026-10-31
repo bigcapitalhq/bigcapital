@@ -1,8 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayUnique,
   IsArray,
   IsBoolean,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -10,6 +12,7 @@ import {
   MaxLength,
   ValidateNested,
 } from 'class-validator';
+import { TrackingCategoryModule } from '../types/TrackingCategory.types';
 
 export class TrackingCategoryOptionDto {
   @ApiPropertyOptional({
@@ -60,6 +63,21 @@ export class CreateTrackingCategoryDto {
   active?: boolean;
 
   @ApiPropertyOptional({
+    description: 'Modules where the tracking category is available',
+    enum: TrackingCategoryModule,
+    isArray: true,
+    example: [
+      TrackingCategoryModule.SaleInvoices,
+      TrackingCategoryModule.SaleEstimates,
+    ],
+  })
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  @IsEnum(TrackingCategoryModule, { each: true })
+  modules?: TrackingCategoryModule[];
+
+  @ApiPropertyOptional({
     description: 'Tracking options',
     type: [TrackingCategoryOptionDto],
   })
@@ -94,6 +112,21 @@ export class EditTrackingCategoryDto {
   @IsOptional()
   @IsBoolean()
   active?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Modules where the tracking category is available',
+    enum: TrackingCategoryModule,
+    isArray: true,
+    example: [
+      TrackingCategoryModule.SaleInvoices,
+      TrackingCategoryModule.SaleEstimates,
+    ],
+  })
+  @IsOptional()
+  @IsArray()
+  @ArrayUnique()
+  @IsEnum(TrackingCategoryModule, { each: true })
+  modules?: TrackingCategoryModule[];
 
   @ApiPropertyOptional({
     description: 'Tracking options',

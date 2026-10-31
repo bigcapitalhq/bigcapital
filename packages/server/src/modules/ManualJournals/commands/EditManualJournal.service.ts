@@ -16,6 +16,7 @@ import { ManualJournal } from '../models/ManualJournal';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditManualJournalDto } from '../dtos/ManualJournal.dto';
 import { CommandTrackingCategoryValidator } from '@/modules/TrackingCategories/commands/CommandTrackingCategoryValidator.service';
+import { getAssignedTrackingCategoryIds } from '@/modules/TrackingCategories/utils';
 import { transformManualJournalEntry } from './transformManualJournalEntry';
 
 @Injectable()
@@ -39,6 +40,7 @@ export class EditManualJournal {
     manualJournalId: number,
     manualJournalDTO: EditManualJournalDto,
     previousAssignments: string[],
+    previousCategoryIds: number[],
   ) => {
     // Validates the total credit and debit to be equals.
     this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
@@ -64,7 +66,7 @@ export class EditManualJournal {
     // allowed only when they already existed on the journal.
     await this.trackingCategoriesValidator.validateEntries(
       manualJournalDTO.entries,
-      { allowInactive: true, previousAssignments },
+      { allowInactive: true, previousAssignments, previousCategoryIds },
     );
   };
 
@@ -123,12 +125,16 @@ export class EditManualJournal {
           (assignment) => `${assignment.categoryId}:${assignment.optionId}`,
         ),
     );
+    const previousCategoryIds = getAssignedTrackingCategoryIds(
+      oldManualJournal.entries ?? [],
+    );
 
     // Authorize manual journal editing.
     await this.authorize(
       manualJournalId,
       manualJournalDTO,
       previousAssignments,
+      previousCategoryIds,
     );
 
     // Transform manual journal DTO to model.
