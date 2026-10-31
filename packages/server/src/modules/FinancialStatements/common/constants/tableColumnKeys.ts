@@ -198,6 +198,24 @@ export type InventoryItemDetailsColumnKey =
   (typeof INVENTORY_ITEM_DETAILS_COLUMN_KEYS)[keyof typeof INVENTORY_ITEM_DETAILS_COLUMN_KEYS];
 
 // ----------------------------------------
+// # Inventory turnover by amount.
+// ----------------------------------------
+export const INVENTORY_TURNOVER_BY_AMOUNT_COLUMN_KEYS = {
+  ITEM_NAME: 'item_name',
+  OPENING_BALANCE: 'opening_balance',
+  CLOSING_BALANCE: 'closing_balance',
+  COST_OF_GOODS_SOLD: 'cost_of_goods_sold',
+  AVERAGE_PRICE: 'average_price',
+  TURNOVER_RATIO: 'turnover_ratio',
+  AVERAGE_TURNOVER_DAYS: 'average_turnover_days',
+  LAST_SELL_DATE: 'last_sell_date',
+  QTY_ON_HAND: 'qty_on_hand',
+} as const;
+
+export type InventoryTurnoverByAmountColumnKey =
+  (typeof INVENTORY_TURNOVER_BY_AMOUNT_COLUMN_KEYS)[keyof typeof INVENTORY_TURNOVER_BY_AMOUNT_COLUMN_KEYS];
+
+// ----------------------------------------
 // # Sales tax liability summary.
 // ----------------------------------------
 export const SALES_TAX_LIABILITY_COLUMN_KEYS = {

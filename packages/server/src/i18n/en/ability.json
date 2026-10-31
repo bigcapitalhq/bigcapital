@@ -39,6 +39,7 @@
   "vendors_summary_balance_report": "Vendors summary balance",
   "inventory_valuation_summary": "Inventory valuation summary",
   "inventory_items_details": "Inventory items details",
+  "inventory_turnover_by_amount": "Inventory turnover by amount",
   "cashflow_account_transactions": "Cashflow account transactions",
   "sales_tax_liability_summary_report": "Sales tax liability summary"
 }

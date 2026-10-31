@@ -1,0 +1,12 @@
+{
+  "sheet_name": "Inventory Turnover By Amount",
+  "item_name": "Item Name",
+  "opening_balance": "Opening Balance",
+  "closing_balance": "Closing Balance",
+  "cost_of_goods_sold": "Cost of Goods Sold",
+  "average_price": "Average Price",
+  "turnover_ratio": "Turn Over Ratio",
+  "average_turnover_days": "Avg. Turnover Days",
+  "last_sell_date": "Last Sell Date",
+  "qty_on_hand": "Qty on Hands"
+}

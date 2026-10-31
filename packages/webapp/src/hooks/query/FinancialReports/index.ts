@@ -9,6 +9,7 @@ export * from './use-ap-aging-summary';
 export * from './use-ar-aging-summary';
 export * from './use-inventory-valuation';
 export * from './use-inventory-item-details';
+export * from './use-inventory-turnover-by-amount';
 export * from './use-purchases-by-items';
 export * from './use-sales-by-items';
 export * from './use-customer-balance-summary';

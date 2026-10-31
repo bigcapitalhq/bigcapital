@@ -770,6 +770,15 @@ export const SidebarMenu: SidebarMenuItem[] = [
                   ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
                 },
               },
+              {
+                text: <T id={'sidebar.inventory_turnover_by_amount'} />,
+                href: '/financial-reports/inventory-turnover-by-amount',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_INVENTORY_TURNOVER_BY_AMOUNT,
+                },
+              },
             ],
           },
         ],

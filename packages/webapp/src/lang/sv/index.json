@@ -2372,5 +2372,9 @@
   "tracking_categories.error.delete_failed": "Unable to delete the tracking category.",
   "tracking_categories.error.save_failed": "Unable to save the tracking category.",
   "tracking_categories.alert.delete_message": "Are you sure you want to delete the tracking category \"{name}\"? This can't be undone.",
-  "tracking_categories.no_options": "No options available"
+  "tracking_categories.no_options": "No options available",
+  "inventory_turnover_by_amount": "Lageromsättning efter belopp",
+  "reports_inventory_turnover_by_amount_desc": "Visar hur effektivt lagret säljs genom att jämföra kostnaden för sålda varor med det genomsnittliga lagervärdet.",
+  "permissions.inventory_turnover_by_amount": "Lageromsättning efter belopp",
+  "sidebar.inventory_turnover_by_amount": "Lageromsättning efter belopp"
 }

@@ -41,6 +41,10 @@ export const salesByItemsFilterDrawerSelector = (state: RootState) =>
 export const inventoryValuationFilterDrawerSelector = (state: RootState) =>
   filterDrawerByTypeSelector('inventoryValuation')(state);
 
+export const inventoryTurnoverByAmountFilterDrawerSelector = (
+  state: RootState,
+) => filterDrawerByTypeSelector('inventoryTurnoverByAmount')(state);
+
 export const customerBalanceSummaryFilterDrawerSelector = (state: RootState) =>
   filterDrawerByTypeSelector('customersBalanceSummary')(state);
 
@@ -111,6 +115,10 @@ export const getSalesByItemsFilterDrawer = createSelector(
 );
 export const getInventoryValuationFilterDrawer = createSelector(
   inventoryValuationFilterDrawerSelector,
+  (isOpen) => isOpen,
+);
+export const getInventoryTurnoverByAmountFilterDrawer = createSelector(
+  inventoryTurnoverByAmountFilterDrawerSelector,
   (isOpen) => isOpen,
 );
 export const getCustomersBalanceSummaryFilterDrawer = createSelector(

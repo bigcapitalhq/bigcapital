@@ -2404,5 +2404,9 @@
   "tracking_categories.error.delete_failed": "Unable to delete the tracking category.",
   "tracking_categories.error.save_failed": "Unable to save the tracking category.",
   "tracking_categories.alert.delete_message": "Are you sure you want to delete the tracking category \"{name}\"? This can't be undone.",
-  "tracking_categories.no_options": "No options available"
+  "tracking_categories.no_options": "No options available",
+  "inventory_turnover_by_amount": "Rotación de inventario por importe",
+  "reports_inventory_turnover_by_amount_desc": "Muestra la eficiencia con la que se vende el inventario comparando el costo de los bienes vendidos con el valor promedio del inventario.",
+  "permissions.inventory_turnover_by_amount": "Rotación de inventario por importe",
+  "sidebar.inventory_turnover_by_amount": "Rotación de Inventario por Importe"
 }

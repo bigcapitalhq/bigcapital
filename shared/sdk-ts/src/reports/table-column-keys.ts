@@ -47,5 +47,8 @@ export type InventoryValuationColumnKey =
 export type InventoryItemDetailsColumnKey =
   components['schemas']['InventoryItemDetailsTableColumnDto']['key'];
 
+export type InventoryTurnoverByAmountColumnKey =
+  components['schemas']['InventoryTurnoverByAmountTableColumnDto']['key'];
+
 export type SalesTaxLiabilityColumnKey =
   components['schemas']['SalesTaxLiabilitySummaryTableColumnDto']['key'];
