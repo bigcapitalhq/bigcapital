@@ -19,6 +19,7 @@ export * from './expenses';
 export * from './export';
 export * from './import';
 export * from './manual-journals';
+export * from './tracking-categories';
 export * from './roles';
 export * from './users';
 export * from './dashboard';

@@ -94,6 +94,14 @@ export interface IItemsQuantityChanges {
   balanceChange: number;
 }
 
+export interface IInventoryStockShortage {
+  itemId: number;
+  itemName: string;
+  availableQuantity: number;
+  requestedQuantity: number;
+  warehouseId?: number;
+}
+
 export interface IInventoryTransactionsCreatedPayload {
   inventoryTransactions: InventoryTransaction[];
   trx: Knex.Transaction;

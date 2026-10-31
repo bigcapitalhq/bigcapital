@@ -2,6 +2,7 @@ import { Radio, Position, Tooltip } from '@blueprintjs/core';
 import classNames from 'classnames';
 import React, { useRef, useEffect } from 'react';
 import intl from 'react-intl-universal';
+import { getItemUnitOptions } from './constants';
 import { useItemFormContext } from './ItemFormProvider';
 import { ItemFormSectionTitle } from './ItemFormSectionTitle';
 import {
@@ -106,6 +107,24 @@ export function ItemFormBasicSection() {
         fastField
       >
         <FInputGroup name={'code'} fastField fill />
+      </FFormGroup>
+
+      {/*----------- Unit ----------*/}
+      <FFormGroup
+        name={'unit'}
+        label={<T id={'item_unit'} />}
+        labelInfo={<FieldRequiredHint />}
+        inline={true}
+      >
+        <FSelect
+          name={'unit'}
+          items={getItemUnitOptions()}
+          valueAccessor={'value'}
+          textAccessor={'label'}
+          placeholder={<T id={'select_unit'} />}
+          popoverProps={{ minimal: true, captureDismiss: true }}
+          fill
+        />
       </FFormGroup>
 
       {/*----------- Item category ----------*/}

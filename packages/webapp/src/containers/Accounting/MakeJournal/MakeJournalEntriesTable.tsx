@@ -34,7 +34,8 @@ export function MakeJournalEntriesTable({
   minLinesNumber = 1,
   currencyCode,
 }: MakeJournalEntriesTableProps) {
-  const { accounts, contacts, branches } = useMakeJournalFormContext();
+  const { accounts, contacts, branches, trackingCategories } =
+    useMakeJournalFormContext();
 
   // Memorized data table columns.
   const columns = useJournalTableEntriesColumns();
@@ -43,7 +44,7 @@ export function MakeJournalEntriesTable({
   const handleUpdateData = (
     rowIndex: number,
     columnId: string,
-    value: string | number,
+    value: string | number | unknown[],
   ) => {
     const newRows: MakeJournalEntry[] = FF.pipe(
       entries, // Update entry of the given row index and column id.
@@ -79,6 +80,7 @@ export function MakeJournalEntriesTable({
         removeRow: handleRemoveRow,
         contacts,
         branches,
+        trackingCategories,
         autoFocus: ['accountId', 0],
         currencyCode,
       }}

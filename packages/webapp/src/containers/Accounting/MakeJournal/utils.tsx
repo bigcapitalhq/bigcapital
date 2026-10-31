@@ -40,10 +40,16 @@ const ERROR = {
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
   COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS:
     'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS',
+  TRACKING_CATEGORY_MODULE_NOT_ALLOWED: 'TRACKING_CATEGORY_MODULE_NOT_ALLOWED',
 } as const;
 
 export const MIN_LINES_NUMBER = 1;
 export const DEFAULT_LINES_NUMBER = 1;
+
+export type MakeJournalTrackingCategoryAssignment = {
+  categoryId: number;
+  optionId: number;
+};
 
 export type MakeJournalEntry = {
   accountId: string | number;
@@ -51,6 +57,7 @@ export type MakeJournalEntry = {
   debit: string | number;
   contactId: string | number;
   branchId: string | number;
+  trackingCategories: MakeJournalTrackingCategoryAssignment[];
   note: string;
 };
 
@@ -73,6 +80,11 @@ export type MakeJournalFormValues = {
 export type MakeJournalErrorResponse = {
   type: string;
   indexes?: number[];
+  payload?: {
+    categoryId?: number;
+    module?: string;
+    index?: number;
+  };
   meta?: { contact_type?: string; indexes?: number[] }[];
 };
 
@@ -82,6 +94,7 @@ export const defaultEntry: MakeJournalEntry = {
   debit: '',
   contactId: '',
   branchId: '',
+  trackingCategories: [],
   note: '',
 };
 
@@ -108,6 +121,12 @@ export function transformToEditForm(
   const initialEntries: MakeJournalEntry[] = [
     ...manualJournal.entries.map((entry) => ({
       ...transformToForm(entry, defaultEntry),
+      trackingCategories: (entry.trackingCategories ?? []).map(
+        (assignment) => ({
+          categoryId: assignment.categoryId,
+          optionId: assignment.optionId,
+        }),
+      ),
     })),
     ...repeatValue(
       defaultEntry,
@@ -143,7 +162,20 @@ export function transformFormValuesToRequest(
   const nonZeroEntries = values.entries.filter(
     (entry) => entry.debit || entry.credit,
   );
-  const entries = orderingLinesIndexes(nonZeroEntries);
+  const entries = orderingLinesIndexes(nonZeroEntries).map(
+    (entry: MakeJournalEntry) => ({
+      ...entry,
+      trackingCategories: (entry.trackingCategories ?? [])
+        .filter(
+          (assignment: MakeJournalTrackingCategoryAssignment) =>
+            assignment.categoryId && assignment.optionId,
+        )
+        .map((assignment: MakeJournalTrackingCategoryAssignment) => ({
+          categoryId: Number(assignment.categoryId),
+          optionId: Number(assignment.optionId),
+        })),
+    }),
+  );
   const attachments = transformAttachmentsToRequest(values);
 
   return {
@@ -180,7 +212,7 @@ function adjustmentEntries(entries: MakeJournalEntry[]): {
  * Adjustment credit/debit entries.
  */
 export const updateAdjustEntries =
-  (rowIndex: number, columnId: string, value: string | number) =>
+  (rowIndex: number, columnId: string, value: string | number | unknown[]) =>
   (rows: MakeJournalEntry[]): MakeJournalEntry[] => {
     let newRows = [...rows];
 
@@ -266,6 +298,11 @@ export const transformErrors = (
       intl.get(
         'make_journal.errors.should_add_accounts_in_same_currency_or_base_currency',
       ),
+    );
+  }
+  if ((error = getError(ERROR.TRACKING_CATEGORY_MODULE_NOT_ALLOWED))) {
+    toastMessages.push(
+      intl.get('tracking_categories.error.not_available_for_manual_journals'),
     );
   }
   setErrors({ ...newErrors });

@@ -159,6 +159,9 @@ export const SettingsOptions = {
     reorder_point_notification_email: {
       type: 'string',
     },
+    prevent_stock_from_going_below_zero: {
+      type: 'boolean',
+    },
   },
   item_categories: {
     table_size: {
@@ -307,6 +310,9 @@ export const SettingsOptions = {
       type: 'boolean',
     },
     sales_tax: {
+      type: 'boolean',
+    },
+    tracking_categories: {
       type: 'boolean',
     },
   },

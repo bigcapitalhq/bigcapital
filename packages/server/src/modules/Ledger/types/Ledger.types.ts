@@ -31,6 +31,11 @@ export interface ILedger {
   isEmpty(): boolean;
 }
 
+export interface ILedgerTrackingCategory {
+  categoryId: number;
+  optionId: number;
+}
+
 export interface ILedgerEntry {
   id?: number;
 
@@ -70,6 +75,11 @@ export interface ILedgerEntry {
   createdAt?: Date | string;
 
   costable?: boolean;
+
+  /**
+   * The tracking category assignments of the entry.
+   */
+  trackingCategories?: Array<ILedgerTrackingCategory>;
 
   /**
    * The accounting basis flag; NULL means general.

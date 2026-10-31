@@ -34,6 +34,7 @@ export enum DialogsName {
   PartialTransactionsUnlocking = 'unlocking-partial-transactions',
   WarehouseForm = 'warehouse-form',
   BranchForm = 'branch-form',
+  TrackingCategoryForm = 'tracking-category-form',
   BranchActivateForm = 'branch-activate',
   WarehouseActivateForm = 'warehouse-activate',
   CustomerOpeningBalanceForm = 'customer-opening-balance',

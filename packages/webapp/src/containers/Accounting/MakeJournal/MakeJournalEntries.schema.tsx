@@ -33,6 +33,12 @@ const Schema = Yup.object().shape({
         }),
       contactId: Yup.number().nullable(),
       contactType: Yup.string().nullable(),
+      trackingCategories: Yup.array().of(
+        Yup.object().shape({
+          categoryId: Yup.number().required(),
+          optionId: Yup.number().required(),
+        }),
+      ),
       note: Yup.string().max(DATATYPES_LENGTH.TEXT).nullable(),
     }),
   ),

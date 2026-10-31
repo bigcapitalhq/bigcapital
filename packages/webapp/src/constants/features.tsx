@@ -6,4 +6,5 @@ export const Features = {
   LandedCost: 'landed_cost',
   SmsNotifications: 'sms_notifications',
   SalesTax: 'sales_tax',
+  TrackingCategories: 'tracking_categories',
 };

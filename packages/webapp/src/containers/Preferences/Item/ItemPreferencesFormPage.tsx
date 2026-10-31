@@ -25,6 +25,7 @@ const defaultFormValues: ItemPreferencesFormValues = {
   preferredInventoryAccount: '',
   reorderPointNotifications: false,
   reorderPointNotificationEmail: '',
+  preventStockFromGoingBelowZero: false,
 };
 
 interface ItemPreferencesFormPageProps extends WithDashboardActionsProps {}
@@ -55,6 +56,7 @@ function ItemPreferencesFormPageInner({
         reorderPointNotifications: Boolean(values.reorderPointNotifications),
         reorderPointNotificationEmail:
           values.reorderPointNotificationEmail ?? '',
+        preventStockFromGoingBelowZero: values.preventStockFromGoingBelowZero,
       }),
     ).map((option) => ({
       ...option,

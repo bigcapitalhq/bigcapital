@@ -1911,6 +1911,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tracking-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves all tracking categories. */
+        get: operations["TrackingCategoriesController_getTrackingCategories"];
+        put?: never;
+        /** Creates a new tracking category. */
+        post: operations["TrackingCategoriesController_createTrackingCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tracking-categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the tracking category details. */
+        get: operations["TrackingCategoriesController_getTrackingCategory"];
+        /** Edits the given tracking category. */
+        put: operations["TrackingCategoriesController_editTrackingCategory"];
+        post?: never;
+        /** Deletes the given tracking category. */
+        delete: operations["TrackingCategoriesController_deleteTrackingCategory"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/warehouse-transfers/validate-bulk-delete": {
         parameters: {
             query?: never;
@@ -5692,6 +5729,13 @@ export interface components {
              */
             code?: string;
             /**
+             * @description Unit of measure the item is measured in
+             * @default piece
+             * @example kg
+             * @enum {string}
+             */
+            unit: "piece" | "dozen" | "pair" | "set" | "pack" | "box" | "kg" | "g" | "lb" | "oz" | "l" | "ml" | "m" | "cm" | "m2" | "m3" | "hour" | "day";
+            /**
              * @description Whether the item can be sold
              * @example true
              */
@@ -5831,10 +5875,11 @@ export interface components {
              */
             code?: string;
             /**
-             * @description Stock level at which the item should be reordered (inventory items only)
-             * @example 10
+             * @description Unit of measure the item is measured in
+             * @example kg
+             * @enum {string}
              */
-            reorderPoint?: number;
+            unit?: "piece" | "dozen" | "pair" | "set" | "pack" | "box" | "kg" | "g" | "lb" | "oz" | "l" | "ml" | "m" | "cm" | "m2" | "m3" | "hour" | "day";
             /**
              * @description Whether the item can be purchased
              * @example true
@@ -5949,11 +5994,6 @@ export interface components {
              * @example CHAIR-X2000
              */
             code?: string;
-            /**
-             * @description Stock level at which the item should be reordered (inventory items only)
-             * @example 10
-             */
-            reorderPoint?: number;
             /**
              * @description Whether the item can be purchased
              * @example true
@@ -9299,6 +9339,145 @@ export interface components {
              */
             attachments: string[];
         };
+        TrackingCategoryOptionResponseDto: {
+            /**
+             * @description Option ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Tracking category ID
+             * @example 1
+             */
+            categoryId: number;
+            /**
+             * @description Option name
+             * @example North Store
+             */
+            name: string;
+            /**
+             * @description Whether the option is active
+             * @example true
+             */
+            active: boolean;
+            /**
+             * Format: date-time
+             * @description Created date
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description Updated date
+             */
+            updatedAt?: string;
+        };
+        TrackingCategoryResponseDto: {
+            /**
+             * @description Tracking category ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Category name
+             * @example Location
+             */
+            name: string;
+            /**
+             * @description Category description
+             * @example Tracks the business location of transactions
+             */
+            description?: string;
+            /**
+             * @description Whether the category is active
+             * @example true
+             */
+            active: boolean;
+            /** @description Modules where the tracking category is available */
+            modules: ("manual_journals" | "sale_invoices" | "sale_estimates")[];
+            /** @description Tracking options */
+            options: components["schemas"]["TrackingCategoryOptionResponseDto"][];
+            /**
+             * Format: date-time
+             * @description Created date
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description Updated date
+             */
+            updatedAt?: string;
+        };
+        TrackingCategoryOptionDto: {
+            /**
+             * @description Option ID (only provided when updating an existing option)
+             * @example 1
+             */
+            id?: number;
+            /**
+             * @description Option name
+             * @example North Store
+             */
+            name: string;
+            /**
+             * @description Whether the option is active
+             * @example true
+             */
+            active?: boolean;
+        };
+        CreateTrackingCategoryDto: {
+            /**
+             * @description Category name
+             * @example Location
+             */
+            name: string;
+            /**
+             * @description Category description
+             * @example Tracks the business location of transactions
+             */
+            description?: string;
+            /**
+             * @description Whether the category is active
+             * @example true
+             */
+            active?: boolean;
+            /**
+             * @description Modules where the tracking category is available
+             * @example [
+             *       "sale_invoices",
+             *       "sale_estimates"
+             *     ]
+             */
+            modules?: ("manual_journals" | "sale_invoices" | "sale_estimates")[];
+            /** @description Tracking options */
+            options?: components["schemas"]["TrackingCategoryOptionDto"][];
+        };
+        EditTrackingCategoryDto: {
+            /**
+             * @description Category name
+             * @example Location
+             */
+            name?: string;
+            /**
+             * @description Category description
+             * @example Tracks the business location of transactions
+             */
+            description?: string;
+            /**
+             * @description Whether the category is active
+             * @example true
+             */
+            active?: boolean;
+            /**
+             * @description Modules where the tracking category is available
+             * @example [
+             *       "sale_invoices",
+             *       "sale_estimates"
+             *     ]
+             */
+            modules?: ("manual_journals" | "sale_invoices" | "sale_estimates")[];
+            /** @description Tracking options */
+            options?: components["schemas"]["TrackingCategoryOptionDto"][];
+        };
         WarehouseTransferEntryResponseDto: {
             /**
              * @description The ID of the warehouse transfer entry
@@ -11575,6 +11754,61 @@ export interface components {
              */
             adjustment?: number;
         };
+        TrackingCategorySummaryResponseDto: {
+            /**
+             * @description Tracking category ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Category name
+             * @example Location
+             */
+            name: string;
+            /**
+             * @description Whether the category is active
+             * @example true
+             */
+            active: boolean;
+        };
+        TrackingCategoryOptionSummaryResponseDto: {
+            /**
+             * @description Option ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Tracking category ID
+             * @example 1
+             */
+            categoryId: number;
+            /**
+             * @description Option name
+             * @example North Store
+             */
+            name: string;
+            /**
+             * @description Whether the option is active
+             * @example true
+             */
+            active: boolean;
+        };
+        ManualJournalEntryTrackingCategoryResponseDto: {
+            /**
+             * @description Tracking category ID
+             * @example 1
+             */
+            categoryId: number;
+            /**
+             * @description Tracking category option ID
+             * @example 2
+             */
+            optionId: number;
+            /** @description Tracking category details */
+            category?: components["schemas"]["TrackingCategorySummaryResponseDto"];
+            /** @description Tracking category option details */
+            option?: components["schemas"]["TrackingCategoryOptionSummaryResponseDto"];
+        };
         ManualJournalEntryResponseDto: {
             /**
              * @description Entry index
@@ -11622,6 +11856,8 @@ export interface components {
             contact?: Record<string, never>;
             /** @description Branch details */
             branch?: Record<string, never>;
+            /** @description Tracking category assignments */
+            trackingCategories?: components["schemas"]["ManualJournalEntryTrackingCategoryResponseDto"][];
         };
         ManualJournalResponseDto: {
             /**
@@ -11729,6 +11965,18 @@ export interface components {
             /** @description Attachments */
             attachments?: string[];
         };
+        TrackingCategoryAssignmentDto: {
+            /**
+             * @description Tracking category ID
+             * @example 1
+             */
+            categoryId: number;
+            /**
+             * @description Tracking category option ID
+             * @example 2
+             */
+            optionId: number;
+        };
         ManualJournalEntryDto: {
             /** @description Entry index */
             index: number;
@@ -11746,6 +11994,8 @@ export interface components {
             branchId?: number;
             /** @description Project ID */
             projectId?: number;
+            /** @description Tracking category assignments of the entry */
+            trackingCategories?: components["schemas"]["TrackingCategoryAssignmentDto"][];
         };
         CreateManualJournalDto: {
             /**
@@ -21964,6 +22214,167 @@ export interface operations {
         requestBody?: never;
         responses: {
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TrackingCategoriesController_getTrackingCategories: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The tracking categories have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackingCategoryResponseDto"][];
+                };
+            };
+        };
+    };
+    TrackingCategoriesController_createTrackingCategory: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTrackingCategoryDto"];
+            };
+        };
+        responses: {
+            /** @description The tracking category has been successfully created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackingCategoryResponseDto"];
+                };
+            };
+        };
+    };
+    TrackingCategoriesController_getTrackingCategory: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The tracking category id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The tracking category details have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackingCategoryResponseDto"];
+                };
+            };
+            /** @description The tracking category not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TrackingCategoriesController_editTrackingCategory: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The tracking category id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditTrackingCategoryDto"];
+            };
+        };
+        responses: {
+            /** @description The tracking category has been successfully updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrackingCategoryResponseDto"];
+                };
+            };
+            /** @description The tracking category not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TrackingCategoriesController_deleteTrackingCategory: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The tracking category id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The tracking category has been successfully deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The tracking category not found. */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -1,6 +1,7 @@
 import { defaultTo } from 'lodash';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
+import { ITEM_UNITS } from './constants';
 import type { ItemFormValues } from './types';
 import type { Item } from '@bigcapital/sdk-ts';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
@@ -31,6 +32,10 @@ const Schema = Yup.object().shape({
     .min(0)
     .max(DATATYPES_LENGTH.DECIMAL_13_3)
     .label(intl.get('reorder_point')),
+  unit: Yup.string()
+    .oneOf([...ITEM_UNITS])
+    .required()
+    .label(intl.get('item_unit')),
   costPrice: Yup.number()
     .min(0)
     .max(DATATYPES_LENGTH.DECIMAL_13_3)

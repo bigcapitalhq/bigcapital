@@ -18,6 +18,7 @@ const Schema = Yup.object().shape({
       otherwise: reorderPointNotificationEmailSchema,
     },
   ),
+  preventStockFromGoingBelowZero: Yup.boolean(),
 });
 
 export const ItemPreferencesSchema = Schema;

@@ -38,6 +38,10 @@ export class FeaturesConfigure {
         name: Features.SALES_TAX,
         defaultValue: true,
       },
+      {
+        name: Features.TRACKING_CATEGORIES,
+        defaultValue: false,
+      },
     ];
   }
 }

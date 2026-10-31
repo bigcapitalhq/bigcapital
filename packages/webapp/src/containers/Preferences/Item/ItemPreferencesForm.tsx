@@ -21,6 +21,7 @@ export interface ItemPreferencesFormValues {
   preferredInventoryAccount: string | number;
   reorderPointNotifications: boolean;
   reorderPointNotificationEmail: string;
+  preventStockFromGoingBelowZero: boolean;
 }
 
 export function ItemForm(): React.ReactElement {
@@ -144,6 +145,18 @@ export function ItemForm(): React.ReactElement {
           name={'reorderPointNotifications'}
           labelElement={<T id={'reorder_point_notifications'} />}
           large={true}
+        />
+      </ItemFormGroup>
+
+      {/* ----------- Prevent stock from going below zero ----------- */}
+      <ItemFormGroup
+        name={'preventStockFromGoingBelowZero'}
+        helperText={<T id={'prevent_stock_from_going_below_zero_hint'} />}
+        inline={true}
+      >
+        <FSwitch
+          name={'preventStockFromGoingBelowZero'}
+          labelElement={<T id={'prevent_stock_from_going_below_zero'} />}
         />
       </ItemFormGroup>
 

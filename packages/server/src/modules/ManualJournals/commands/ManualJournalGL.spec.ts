@@ -104,4 +104,38 @@ describe('ManualJournalGL', () => {
       ).toBe(true);
     },
   );
+
+  it('propagates the tracking category assignments to the ledger entries', () => {
+    const ledger = buildLedger(
+      buildManualJournal({
+        entries: [
+          {
+            id: 1,
+            index: 1,
+            debit: 1000,
+            credit: 0,
+            accountId: 10,
+            account: { accountNormal: AccountNormal.DEBIT },
+            trackingCategories: [{ categoryId: 3, optionId: 7 }],
+          },
+          {
+            id: 2,
+            index: 2,
+            debit: 0,
+            credit: 1000,
+            accountId: 20,
+            account: { accountNormal: AccountNormal.CREDIT },
+            trackingCategories: [],
+          },
+        ],
+      }),
+    );
+
+    const [debitEntry, creditEntry] = ledger.getEntries();
+
+    expect(debitEntry.trackingCategories).toEqual([
+      { categoryId: 3, optionId: 7 },
+    ]);
+    expect(creditEntry.trackingCategories).toEqual([]);
+  });
 });

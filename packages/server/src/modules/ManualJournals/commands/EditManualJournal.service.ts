@@ -1,6 +1,8 @@
 import { Knex } from 'knex';
 import { omit, sumBy } from 'lodash';
 import * as moment from 'moment';
+import * as A from 'fp-ts/Array';
+import * as F from 'fp-ts/function';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   IManualJournalEventEditedPayload,
@@ -13,6 +15,9 @@ import { events } from '@/common/events/events';
 import { ManualJournal } from '../models/ManualJournal';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditManualJournalDto } from '../dtos/ManualJournal.dto';
+import { CommandTrackingCategoryValidator } from '@/modules/TrackingCategories/commands/CommandTrackingCategoryValidator.service';
+import { getAssignedTrackingCategoryIds } from '@/modules/TrackingCategories/utils';
+import { transformManualJournalEntry } from './transformManualJournalEntry';
 
 @Injectable()
 export class EditManualJournal {
@@ -20,6 +25,7 @@ export class EditManualJournal {
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
     private validator: CommandManualJournalValidators,
+    private trackingCategoriesValidator: CommandTrackingCategoryValidator,
 
     @Inject(ManualJournal.name)
     private manualJournalModel: TenantModelProxy<typeof ManualJournal>,
@@ -33,6 +39,8 @@ export class EditManualJournal {
   private authorize = async (
     manualJournalId: number,
     manualJournalDTO: EditManualJournalDto,
+    previousAssignments: string[],
+    previousCategoryIds: number[],
   ) => {
     // Validates the total credit and debit to be equals.
     this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
@@ -54,6 +62,12 @@ export class EditManualJournal {
     await this.validator.dynamicValidateAccountsWithContactType(
       manualJournalDTO.entries,
     );
+    // Validates the tracking category assignments. Archived assignments are
+    // allowed only when they already existed on the journal.
+    await this.trackingCategoriesValidator.validateEntries(
+      manualJournalDTO.entries,
+      { allowInactive: true, previousAssignments, previousCategoryIds },
+    );
   };
 
   /**
@@ -67,6 +81,10 @@ export class EditManualJournal {
   ) => {
     const amount = sumBy(manualJournalDTO.entries, 'credit') || 0;
     const date = moment(manualJournalDTO.date).toDate();
+    const entries = F.pipe(
+      manualJournalDTO.entries,
+      A.map(transformManualJournalEntry),
+    );
 
     return {
       id: oldManualJournal.id,
@@ -76,6 +94,7 @@ export class EditManualJournal {
         : {}),
       amount,
       date,
+      entries,
     };
   };
 
@@ -95,10 +114,28 @@ export class EditManualJournal {
     const oldManualJournal = await this.manualJournalModel()
       .query()
       .findById(manualJournalId)
+      .withGraphFetched('entries.trackingCategories')
       .throwIfNotFound();
 
+    // Keeps the previous assignments to allow archived dimensions to survive
+    // when a historical journal is edited.
+    const previousAssignments = (oldManualJournal.entries ?? []).flatMap(
+      (entry) =>
+        (entry.trackingCategories ?? []).map(
+          (assignment) => `${assignment.categoryId}:${assignment.optionId}`,
+        ),
+    );
+    const previousCategoryIds = getAssignedTrackingCategoryIds(
+      oldManualJournal.entries ?? [],
+    );
+
     // Authorize manual journal editing.
-    await this.authorize(manualJournalId, manualJournalDTO);
+    await this.authorize(
+      manualJournalId,
+      manualJournalDTO,
+      previousAssignments,
+      previousCategoryIds,
+    );
 
     // Transform manual journal DTO to model.
     const manualJournalObj = this.transformEditDTOToModel(
