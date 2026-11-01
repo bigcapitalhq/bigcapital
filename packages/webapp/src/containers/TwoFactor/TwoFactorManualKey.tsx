@@ -1,4 +1,11 @@
-import { Button, FormGroup, InputGroup, Intent, Position, Tooltip } from '@blueprintjs/core';
+import {
+  Button,
+  FormGroup,
+  InputGroup,
+  Intent,
+  Position,
+  Tooltip,
+} from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, Icon } from '@/components';

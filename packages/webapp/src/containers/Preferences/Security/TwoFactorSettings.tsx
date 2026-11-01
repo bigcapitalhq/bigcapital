@@ -170,7 +170,12 @@ interface SetupStepProps {
 /**
  * Scan the QR code, enter a code to confirm.
  */
-function SetupStep({ secret, otpauthUrl, onConfirmed, onCancel }: SetupStepProps) {
+function SetupStep({
+  secret,
+  otpauthUrl,
+  onConfirmed,
+  onCancel,
+}: SetupStepProps) {
   const [code, setCode] = useState('');
   const { mutateAsync: confirm, isPending } = useConfirmTwoFactorSetup();
 
@@ -194,7 +199,9 @@ function SetupStep({ secret, otpauthUrl, onConfirmed, onCancel }: SetupStepProps
           <FormGroup label={intl.get('two_factor.setup_enter_code')}>
             <InputGroup
               value={code}
-              onChange={(event) => setCode(normalizeCodeInput(event.target.value))}
+              onChange={(event) =>
+                setCode(normalizeCodeInput(event.target.value))
+              }
               inputMode="numeric"
               autoComplete="one-time-code"
               placeholder="123456"

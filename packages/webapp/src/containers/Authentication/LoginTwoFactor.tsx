@@ -203,9 +203,7 @@ export function LoginTwoFactorSetup({
     secret: string;
     otpauthUrl: string;
   } | null>(null);
-  const [confirmed, setConfirmed] = useState<SetupConfirmResponse | null>(
-    null,
-  );
+  const [confirmed, setConfirmed] = useState<SetupConfirmResponse | null>(null);
   const { mutateAsync: startSetup } = useAuthTwoFactorSetupStart();
   const { mutateAsync: confirmSetup } = useAuthTwoFactorSetupConfirm();
   const applyAuthLogin = useApplyAuthLogin();

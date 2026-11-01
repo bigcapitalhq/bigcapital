@@ -48,4 +48,6 @@ export function getTwoFactorErrorMessage(error: unknown): string {
  * Keeps digits only, for the 6-digit code field.
  */
 export const normalizeCodeInput = (value: string) =>
-  String(value ?? '').replace(/\D/g, '').slice(0, 6);
+  String(value ?? '')
+    .replace(/\D/g, '')
+    .slice(0, 6);
