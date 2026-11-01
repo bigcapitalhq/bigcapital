@@ -14,6 +14,7 @@ import { SystemSeedLatestCommand } from './commands/SystemSeedLatest.command';
 import { TenantsSeedLatestCommand } from './commands/TenantsSeedLatest.command';
 import { OpenApiExportCommand } from './commands/OpenApiExport.command';
 import { AnalyticsBackfillCommand } from './commands/AnalyticsBackfill.command';
+import { UsersTwoFactorDisableCommand } from './commands/UsersTwoFactorDisable.command';
 import { AnalyticsCoreModule } from '../Analytics/AnalyticsCore.module';
 
 @Module({
@@ -38,6 +39,7 @@ import { AnalyticsCoreModule } from '../Analytics/AnalyticsCore.module';
     TenantsSeedLatestCommand,
     OpenApiExportCommand,
     AnalyticsBackfillCommand,
+    UsersTwoFactorDisableCommand,
   ],
 })
 export class CLIModule {}

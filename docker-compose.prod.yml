@@ -82,6 +82,8 @@ services:
 
       # Authentication
       - 'APP_JWT_SECRET=${APP_JWT_SECRET:?APP_JWT_SECRET is required in .env - generate one with openssl rand -base64 48}'
+      - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY}
+      - TWO_FACTOR_ISSUER=${TWO_FACTOR_ISSUER:-Bigcapital}
 
       # Application
       - BASE_URL=${BASE_URL}
