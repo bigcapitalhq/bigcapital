@@ -1,27 +1,47 @@
-// @ts-nocheck
+import { PayableAgingTableQuery } from '@bigcapital/sdk-ts';
 import { useMemo, createContext, useContext } from 'react';
-
-import FinancialReportPage from '../FinancialReportPage';
-import { useAPAgingSummaryReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
+import { FinancialReportPage } from '../FinancialReportPage';
+import { useAPAgingSummaryReport } from '@/hooks/query';
 
-const APAgingSummaryContext = createContext();
+type UseAPAgingSummaryResult = ReturnType<typeof useAPAgingSummaryReport>;
 
-/**
- * A/P aging summary provider.
- */
-function APAgingSummaryProvider({ filter, ...props }) {
+type APAgingSummaryContextValue = {
+  APAgingSummary: UseAPAgingSummaryResult['data'];
+  isAPAgingLoading: boolean;
+  isAPAgingFetching: boolean;
+  refetch: UseAPAgingSummaryResult['refetch'];
+  query: PayableAgingTableQuery;
+  httpQuery: PayableAgingTableQuery;
+};
+
+type APAgingSummaryProviderProps = {
+  filter: Record<string, unknown>;
+  children?: React.ReactNode;
+};
+
+const APAgingSummaryContext = createContext<
+  APAgingSummaryContextValue | undefined
+>(undefined);
+
+function APAgingSummaryProvider({
+  filter,
+  ...props
+}: APAgingSummaryProviderProps) {
   // Transformers the filter from to the Url query.
-  const httpQuery = useMemo(() => transformFilterFormToQuery(filter), [filter]);
+  const httpQuery = useMemo(
+    () => transformFilterFormToQuery(filter) as PayableAgingTableQuery,
+    [filter],
+  );
 
   const {
     data: APAgingSummary,
     isLoading: isAPAgingLoading,
     isFetching: isAPAgingFetching,
     refetch,
-  } = useAPAgingSummaryReport(httpQuery, { keepPreviousData: true });
+  } = useAPAgingSummaryReport(httpQuery, { placeholderData: (prev) => prev });
 
-  const provider = {
+  const provider: APAgingSummaryContextValue = {
     APAgingSummary,
     isAPAgingLoading,
     isAPAgingFetching,
@@ -37,6 +57,13 @@ function APAgingSummaryProvider({ filter, ...props }) {
   );
 }
 
-const useAPAgingSummaryContext = () => useContext(APAgingSummaryContext);
+const useAPAgingSummaryContext = (): APAgingSummaryContextValue => {
+  const ctx = useContext(APAgingSummaryContext);
+  if (!ctx)
+    throw new Error(
+      'useAPAgingSummaryContext must be used within APAgingSummaryProvider',
+    );
+  return ctx;
+};
 
 export { APAgingSummaryProvider, useAPAgingSummaryContext };

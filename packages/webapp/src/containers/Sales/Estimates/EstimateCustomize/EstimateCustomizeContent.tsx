@@ -1,22 +1,26 @@
+import {
+  EstimatePaperTemplate,
+  EstimatePaperTemplateProps,
+} from '@bigcapital/pdf-templates';
 import { useFormikContext } from 'formik';
 import {
   ElementCustomize,
   ElementCustomizeContent,
 } from '../../../ElementCustomize/ElementCustomize';
-import { EstimateCustomizeGeneralField } from './EstimateCustomizeFieldsGeneral';
-import { EstimateCustomizeContentFields } from './EstimateCustomizeFieldsContent';
-import {
-  EstimatePaperTemplate,
-  EstimatePaperTemplateProps,
-} from './EstimatePaperTemplate';
-import { EstimateBrandingState, EstimateCustomizeValues } from './types';
 import { initialValues } from './constants';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useDrawerActions } from '@/hooks/state';
-import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
-import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
-import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { EstimateCustomizeContentFields } from './EstimateCustomizeFieldsContent';
+import { EstimateCustomizeGeneralField } from './EstimateCustomizeFieldsGeneral';
+import { EstimateBrandingState, EstimateCustomizeValues } from './types';
 import { Box } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
+import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import {
+  paperTemplatePreviewStyle,
+  pickPaperTemplateProps,
+} from '@/containers/ElementCustomize/paperTemplatePreview';
+import { useDrawerActions } from '@/hooks/state';
 
 export function EstimateCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -73,10 +77,12 @@ function EstimatePaperTemplateFormConnected() {
   const { values } = useFormikContext<EstimateCustomizeValues>();
   const { brandingState } = useElementCustomizeContext();
 
-  const mergedProps: EstimatePaperTemplateProps = {
-    ...brandingState,
-    ...values,
-  };
+  const mergedProps = pickPaperTemplateProps<EstimatePaperTemplateProps>(
+    { ...brandingState, ...values },
+    initialValues,
+  );
 
-  return <EstimatePaperTemplate {...mergedProps} />;
+  return (
+    <EstimatePaperTemplate {...mergedProps} style={paperTemplatePreviewStyle} />
+  );
 }

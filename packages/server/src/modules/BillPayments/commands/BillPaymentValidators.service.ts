@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { sumBy, difference } from 'lodash';
+import { Knex } from 'knex';
 import { ERRORS } from '../constants';
 import { Bill } from '../../Bills/models/Bill';
 import { BillPayment } from '../models/BillPayment';
@@ -104,17 +105,24 @@ export class BillPaymentValidators {
 
   /**
    * Validate whether the entries bills ids exist on the storage.
+   * @param {Knex.Transaction} trx - Locks the bill rows when given (FOR UPDATE).
    */
   public async validateBillsExistance(
     billPaymentEntries: { billId: number }[],
     vendorId: number,
+    trx?: Knex.Transaction,
   ) {
     const entriesBillsIds = billPaymentEntries.map((e: any) => e.billId);
 
-    const storedBills = await this.billModel()
-      .query()
+    const storedBillsQuery = this.billModel()
+      .query(trx)
       .whereIn('id', entriesBillsIds)
       .where('vendor_id', vendorId);
+
+    if (trx) {
+      storedBillsQuery.forUpdate();
+    }
+    const storedBills = await storedBillsQuery;
 
     const storedBillsIds = storedBills.map((t: Bill) => t.id);
     const notFoundBillsIds = difference(entriesBillsIds, storedBillsIds);
@@ -143,12 +151,20 @@ export class BillPaymentValidators {
   public async validateBillsDueAmount(
     billPaymentEntries: BillPaymentEntryDto[],
     oldPaymentEntries: BillPaymentEntry[] = [],
+    trx?: Knex.Transaction,
   ) {
     const billsIds = billPaymentEntries.map(
       (entry: BillPaymentEntryDto) => entry.billId,
     );
 
-    const storedBills = await this.billModel().query().whereIn('id', billsIds);
+    const storedBillsQuery = this.billModel()
+      .query(trx)
+      .whereIn('id', billsIds);
+
+    if (trx) {
+      storedBillsQuery.forUpdate();
+    }
+    const storedBills = await storedBillsQuery;
     const storedBillsMap = new Map(
       storedBills.map((bill) => {
         const oldEntries = oldPaymentEntries.filter(

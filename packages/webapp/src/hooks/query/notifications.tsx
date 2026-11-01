@@ -47,7 +47,13 @@ interface UseNotificationsOptions {
  * @returns {UseQueryResult<NotificationsResponse>}
  */
 export function useNotifications(options: UseNotificationsOptions = {}) {
-  const { limit = 20, offset = 0, unreadOnly = false, category, ...props } = options;
+  const {
+    limit = 20,
+    offset = 0,
+    unreadOnly = false,
+    category,
+    ...props
+  } = options;
 
   return useRequestQuery<NotificationsResponse>(
     [t.NOTIFICATIONS, { limit, offset, unreadOnly, category }],
@@ -99,7 +105,9 @@ export function useMarkNotificationAsRead(props?: any) {
 
   return useMutation(
     async (notificationId: number) => {
-      const response = await apiRequest.post(`notifications/${notificationId}/read`);
+      const response = await apiRequest.post(
+        `notifications/${notificationId}/read`,
+      );
       return transformToCamelCase(response.data.notification);
     },
     {
@@ -147,7 +155,9 @@ export function useDeleteNotification(props?: any) {
 
   return useMutation(
     async (notificationId: number) => {
-      const response = await apiRequest.post(`notifications/${notificationId}/delete`);
+      const response = await apiRequest.post(
+        `notifications/${notificationId}/delete`,
+      );
       return response.data.deleted;
     },
     {

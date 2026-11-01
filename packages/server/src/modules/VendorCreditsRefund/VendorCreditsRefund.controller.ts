@@ -9,8 +9,15 @@ import {
 } from '@nestjs/common';
 import { VendorCreditsRefundApplication } from './VendorCreditsRefund.application';
 import { RefundVendorCredit } from './models/RefundVendorCredit';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { RefundVendorCreditDto } from './dtos/RefundVendorCredit.dto';
+import { RefundVendorCreditResponseDto } from './dtos/RefundVendorCreditResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
@@ -21,11 +28,12 @@ import { VendorCreditAction } from '../VendorCredit/types/VendorCredit.types';
 @Controller('vendor-credits')
 @ApiTags('Vendor Credits Refunds')
 @ApiCommonHeaders()
+@ApiExtraModels(RefundVendorCreditResponseDto)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class VendorCreditsRefundController {
   constructor(
     private readonly vendorCreditsRefundApplication: VendorCreditsRefundApplication,
-  ) { }
+  ) {}
 
   /**
    * Retrieve a single refund vendor credit transaction by id.
@@ -34,7 +42,17 @@ export class VendorCreditsRefundController {
    */
   @Get('refunds/:refundCreditId')
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
-  @ApiOperation({ summary: 'Retrieve a refund vendor credit transaction by id.' })
+  @ApiOperation({
+    summary: 'Retrieve a refund vendor credit transaction by id.',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The refund vendor credit transaction has been successfully retrieved.',
+    schema: {
+      $ref: getSchemaPath(RefundVendorCreditResponseDto),
+    },
+  })
   public getRefundVendorCreditTransaction(
     @Param('refundCreditId') refundCreditId: string,
   ) {
@@ -51,6 +69,14 @@ export class VendorCreditsRefundController {
   @Get(':vendorCreditId/refund')
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
   @ApiOperation({ summary: 'Retrieve the vendor credit refunds graph.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The vendor credit refunds have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(RefundVendorCreditResponseDto) },
+    },
+  })
   public getVendorCreditRefunds(
     @Param('vendorCreditId') vendorCreditId: string,
   ) {

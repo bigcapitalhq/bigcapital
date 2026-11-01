@@ -1,25 +1,25 @@
-// @ts-nocheck
+import { RadioGroup, Radio } from '@blueprintjs/core';
+import { FastField } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FastField } from 'formik';
 import { handleStringChange } from '@/utils';
-import { RadioGroup, Radio } from '@blueprintjs/core';
 
-export default function RadiosAccountingBasis(props) {
+interface RadiosAccountingBasisProps {
+  key?: string;
+  [key: string]: unknown;
+}
+
+export function RadiosAccountingBasis(props: RadiosAccountingBasisProps) {
   const { key = 'basis', ...rest } = props;
-  
 
   return (
     <FastField name={'basis'}>
-      {({
-        form: { setFieldValue },
-        field: { value },
-      }) => (
+      {({ form: { setFieldValue }, field: { value } }: any) => (
         <RadioGroup
           inline={true}
           label={intl.get('accounting_basis')}
           name="basis"
-          onChange={handleStringChange((value) => {
+          onChange={handleStringChange((value: string) => {
             setFieldValue(key, value);
           })}
           className={'radio-group---accounting-basis'}

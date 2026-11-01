@@ -1,5 +1,6 @@
-import type { ApiFetcher } from './fetch-utils';
-import { paths } from './schema';
+import type { ApiFetcher, PdfDocument } from './fetch-utils';
+import { rawRequest, toPdfDocument } from './fetch-utils';
+import { paths, components } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const SALE_ESTIMATES_ROUTES = {
@@ -21,6 +22,15 @@ export type SaleEstimate = OpResponseBody<OpForPath<typeof SALE_ESTIMATES_ROUTES
 export type CreateSaleEstimateBody = OpRequestBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.LIST, 'post'>>;
 export type EditSaleEstimateBody = OpRequestBody<OpForPath<typeof SALE_ESTIMATES_ROUTES.BY_ID, 'put'>>;
 export type GetSaleEstimatesQuery = OpQueryParams<OpForPath<typeof SALE_ESTIMATES_ROUTES.LIST, 'get'>>;
+export type SaleEstimateHtmlContentResponse = { htmlContent: string };
+export type SaleEstimatesStateResponse = components['schemas']['SaleEstiamteStateResponseDto'];
+export type BulkDeleteEstimatesBody = { ids: number[]; skipUndeletable?: boolean };
+export type ValidateBulkDeleteEstimatesResponse = {
+  deletableCount: number;
+  nonDeletableCount: number;
+  deletableIds: number[];
+  nonDeletableIds: number[];
+};
 
 export async function fetchSaleEstimates(
   fetcher: ApiFetcher,
@@ -35,6 +45,20 @@ export async function fetchSaleEstimate(fetcher: ApiFetcher, id: number): Promis
   const get = fetcher.path(SALE_ESTIMATES_ROUTES.BY_ID).method('get').create();
   const { data } = await get({ id });
   return data;
+}
+
+/**
+ * Downloads the given sale estimate as a PDF document. The server picks the
+ * output format from the `Accept` header; the raw-response middleware returns
+ * the body as a Blob and the filename is read from Content-Disposition.
+ */
+export async function fetchSaleEstimatePdf(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<PdfDocument> {
+  const get = fetcher.path(SALE_ESTIMATES_ROUTES.BY_ID).method('get').create();
+  const response = await get({ id }, { headers: { Accept: 'application/pdf' } });
+  return toPdfDocument(response);
 }
 
 export async function createSaleEstimate(
@@ -59,13 +83,39 @@ export async function deleteSaleEstimate(fetcher: ApiFetcher, id: number): Promi
   await del({ id });
 }
 
-export type BulkDeleteEstimatesBody = { ids: number[]; skipUndeletable?: boolean };
-export type ValidateBulkDeleteEstimatesResponse = {
-  deletableCount: number;
-  nonDeletableCount: number;
-  deletableIds: number[];
-  nonDeletableIds: number[];
-};
+export interface SaleEstimateMailStateResponse {
+  from: string[];
+  to: string[];
+  cc?: string[];
+  bcc?: string[];
+  subject: string;
+  message: string;
+  formatArgs?: { customerName: string; estimateAmount: string };
+  toOptions: Array<{ label: string; mail: string; primary?: boolean }>;
+  fromOptions: Array<{ label: string; mail: string; primary?: boolean }>;
+  attachEstimate?: boolean;
+  estimateDate: string;
+  estimateDateFormatted: string;
+  expirationDate: string;
+  expirationDateFormatted: string;
+  total: number;
+  totalFormatted: string;
+  subtotal: number;
+  subtotalFormatted: string;
+  discountAmount: number;
+  discountAmountFormatted: string;
+  discountPercentage: number | null;
+  discountPercentageFormatted: string;
+  discountLabel: string;
+  adjustment: number;
+  adjustmentFormatted: string;
+  estimateNumber: string;
+  entries: Array<{ name: string; quantity: number; unitPrice: number; unitPriceFormatted: string; total: number; totalFormatted: string }>;
+  companyName: string;
+  companyLogoUri: string | null;
+  primaryColor: string | null;
+  customerName: string;
+}
 
 export async function bulkDeleteSaleEstimates(
   fetcher: ApiFetcher,
@@ -117,10 +167,10 @@ export async function fetchSaleEstimateSmsDetails(
   return data;
 }
 
-export async function fetchSaleEstimateMail(fetcher: ApiFetcher, id: number): Promise<unknown> {
+export async function fetchSaleEstimateMail(fetcher: ApiFetcher, id: number): Promise<SaleEstimateMailStateResponse> {
   const get = fetcher.path(SALE_ESTIMATES_ROUTES.MAIL).method('get').create();
   const { data } = await get({ id });
-  return data;
+  return data as SaleEstimateMailStateResponse;
 }
 
 export async function sendSaleEstimateMail(
@@ -132,8 +182,21 @@ export async function sendSaleEstimateMail(
   await post({ id, ...(body ?? {}) } as never);
 }
 
-export async function fetchSaleEstimatesState(fetcher: ApiFetcher): Promise<unknown> {
+export async function fetchSaleEstimatesState(fetcher: ApiFetcher): Promise<SaleEstimatesStateResponse> {
   const get = fetcher.path(SALE_ESTIMATES_ROUTES.STATE).method('get').create();
   const { data } = await get({});
-  return data;
+  return data as SaleEstimatesStateResponse;
+}
+
+export async function fetchSaleEstimateHtmlContent(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<SaleEstimateHtmlContentResponse> {
+  return rawRequest<SaleEstimateHtmlContentResponse>(
+    fetcher,
+    'GET',
+    `/api/sale-estimates/${id}`,
+    undefined,
+    { Accept: 'application/json+html' }
+  );
 }

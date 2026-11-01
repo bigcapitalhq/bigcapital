@@ -1,17 +1,19 @@
-// @ts-nocheck
-import React, { useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { compose } from '@/utils';
+import * as FF from 'fp-ts/function';
+import React, { useCallback } from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { Icon, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-function CurrenciesActions({ openDialog }) {
+type CurrenciesActionsInnerProps = Pick<WithDialogActionsProps, 'openDialog'>;
+
+function CurrenciesActionsInner({ openDialog }: CurrenciesActionsInnerProps) {
   const handleClickNewCurrency = useCallback(() => {
     openDialog('currency-form');
   }, [openDialog]);
 
   return (
-    <div class="users-actions">
+    <div className="users-actions">
       <Button
         icon={<Icon icon="plus" iconSize={12} />}
         onClick={handleClickNewCurrency}
@@ -23,4 +25,7 @@ function CurrenciesActions({ openDialog }) {
   );
 }
 
-export default compose(withDialogActions)(CurrenciesActions);
+export const CurrenciesActions = FF.pipe(
+  CurrenciesActionsInner,
+  withDialogActions,
+);

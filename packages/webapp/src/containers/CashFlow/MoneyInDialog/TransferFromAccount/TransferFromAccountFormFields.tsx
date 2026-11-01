@@ -1,7 +1,12 @@
-// @ts-nocheck
-import React from 'react';
 import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
-import classNames from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { MoneyInOutTransactionNoField } from '../../_components';
+import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
+import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
+import { useSetPrimaryBranchToForm, BranchRowDivider } from '../utils';
+import type { Account } from '@bigcapital/sdk-ts';
 import {
   FormattedMessage as T,
   FAccountsSuggestField,
@@ -17,36 +22,27 @@ import {
   FDateInput,
   FInputGroup,
 } from '@/components';
-import { MoneyInOutTransactionNoField } from '../../_components';
-import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
-import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
-import { momentFormatter } from '@/utils';
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
-import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
-import {
-  useSetPrimaryBranchToForm,
-  BranchRowDivider,
-} from '../../MoneyInDialog/utils';
+import { ACCOUNT_TYPE, Features } from '@/constants';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Transfer from account form fields.
  */
-export default function TransferFromAccountFormFields() {
-  // Money in dialog context.
+export function TransferFromAccountFormFields() {
   const { accounts, branches } = useMoneyInDailogContext();
   const { account } = useMoneyInFieldsContext();
 
-  // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <React.Fragment>
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup label={<T id={'branch'} />} name={'branch_id'}>
+            <FFormGroup label={intl.get('branch')} name={'branchId'}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -61,13 +57,12 @@ export default function TransferFromAccountFormFields() {
           {/*------------ Date -----------*/}
           <FFormGroup
             name={'date'}
-            label={<T id={'date'} />}
+            label={intl.get('date')}
             labelInfo={<FieldRequiredHint />}
-            fill
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{
                 position: Position.BOTTOM_LEFT,
                 minimal: true,
@@ -80,16 +75,17 @@ export default function TransferFromAccountFormFields() {
           <MoneyInOutTransactionNoField />
         </Col>
       </Row>
+
       {/*------------ Amount -----------*/}
       <Row>
         <Col xs={10}>
           <FormGroup
-            label={<T id={'amount'} />}
+            label={intl.get('amount')}
             labelInfo={<FieldRequiredHint />}
           >
             <ControlGroup>
-              <InputPrependText text={account.currency_code || '--'} />
-              <FMoneyInputGroup name={'amount'} minimal={true} />
+              <InputPrependText text={account?.currencyCode || '--'} />
+              <FMoneyInputGroup name={'amount'} minimal={true} fastField />
             </ControlGroup>
           </FormGroup>
         </Col>
@@ -102,15 +98,15 @@ export default function TransferFromAccountFormFields() {
         <Col xs={5}>
           {/*------------ Transfer from account -----------*/}
           <FFormGroup
-            name={'credit_account_id'}
+            name={'creditAccountId'}
             label={
               <T id={'cash_flow_transaction.label_transfer_from_account'} />
             }
             labelInfo={<FieldRequiredHint />}
           >
             <FAccountsSuggestField
-              name={'credit_account_id'}
-              items={accounts as any[]}
+              name={'creditAccountId'}
+              items={accounts}
               filterByTypes={[
                 ACCOUNT_TYPE.CASH,
                 ACCOUNT_TYPE.BANK,
@@ -122,14 +118,14 @@ export default function TransferFromAccountFormFields() {
 
         <Col xs={5}>
           {/*------------ Reference -----------*/}
-          <FFormGroup name={'reference_no'} label={<T id={'reference_no'} />}>
-            <FInputGroup name={'reference_no'} />
+          <FFormGroup name={'referenceNo'} label={intl.get('reference_no')}>
+            <FInputGroup name={'referenceNo'} />
           </FFormGroup>
         </Col>
       </Row>
 
       {/*------------ Description -----------*/}
-      <FormGroup name={'description'} label={<T id={'description'} />}>
+      <FormGroup label={intl.get('description')}>
         <FTextArea
           name={'description'}
           growVertically={true}

@@ -1,7 +1,7 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { IDateRange } from '../../types/Report.types';
-import { ITableColumn } from '../../types/Table.types';
+import { ITableColumn, ITableColumnAccessor } from '../../types/Table.types';
 import { FinancialTablePreviousYear } from '../../common/FinancialTablePreviousYear';
 import { FinancialDateRanges } from '../../common/FinancialDateRanges';
 import { GConstructor } from '@/common/types/Constructor';
@@ -13,7 +13,7 @@ export const BalanceSheetTablePreviousYear = <
 >(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialTablePreviousYear, FinancialDateRanges)(Base) {
+  class extends flow(FinancialTablePreviousYear, FinancialDateRanges)(Base) {
     query: BalanceSheetQuery;
 
     // --------------------
@@ -26,19 +26,25 @@ export const BalanceSheetTablePreviousYear = <
     public getPreviousYearColumns = (
       dateRange?: IDateRange,
     ): ITableColumn[] => {
-      return R.pipe(
+      return flow(
         // Previous year columns.
-        R.when(
-          this.query.isPreviousYearActive,
-          R.append(this.getPreviousYearTotalColumn(dateRange)),
-        ),
-        R.when(
+        when(this.query.isPreviousYearActive, (columns: ITableColumn[]) => [
+          ...columns,
+          this.getPreviousYearTotalColumn(dateRange),
+        ]),
+        when(
           this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeColumn()),
+          (columns: ITableColumn[]) => [
+            ...columns,
+            this.getPreviousYearChangeColumn(),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageColumn()),
+          (columns: ITableColumn[]) => [
+            ...columns,
+            this.getPreviousYearPercentageColumn(),
+          ],
         ),
       )([]);
     };
@@ -63,20 +69,29 @@ export const BalanceSheetTablePreviousYear = <
      * Retrieves previous year columns accessors.
      * @returns {ITableColumn[]}
      */
-    public previousYearColumnAccessor = (): ITableColumn[] => {
-      return R.pipe(
+    public previousYearColumnAccessor = (): ITableColumnAccessor[] => {
+      return flow(
         // Previous year columns.
-        R.when(
+        when(
           this.query.isPreviousYearActive,
-          R.append(this.getPreviousYearTotalAccessor()),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearTotalAccessor(),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeAccessor()),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearChangeAccessor(),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageAccessor()),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearPercentageAccessor(),
+          ],
         ),
       )([]);
     };
@@ -88,20 +103,29 @@ export const BalanceSheetTablePreviousYear = <
      */
     public previousYearHorizontalColumnAccessors = (
       index: number,
-    ): ITableColumn[] => {
-      return R.pipe(
+    ): ITableColumnAccessor[] => {
+      return flow(
         // Previous year columns.
-        R.when(
+        when(
           this.query.isPreviousYearActive,
-          R.append(this.getPreviousYearTotalHorizAccessor(index)),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearTotalHorizAccessor(index),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeHorizAccessor(index)),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearChangeHorizAccessor(index),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageHorizAccessor(index)),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearPercentageHorizAccessor(index),
+          ],
         ),
       )([]);
     };

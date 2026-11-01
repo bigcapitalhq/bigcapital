@@ -1,5 +1,4 @@
 import * as R from 'ramda';
-import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import { SaleInvoiceTransformer } from './SaleInvoice.transformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
@@ -24,10 +23,8 @@ export class GetSaleInvoicesService {
    * @param {GetSaleInvoicesQueryDto} filterDTO -
    * @returns {Promise<{ data: SaleInvoice[]; pagination: IPaginationMeta; filterMeta: IFilterMeta; }>}
    */
-  public async getSaleInvoices(
-    filterDTO: GetSaleInvoicesQueryDto,
-  ): Promise<{
-    salesInvoices: SaleInvoice[];
+  public async getSaleInvoices(filterDTO: GetSaleInvoicesQueryDto): Promise<{
+    data: SaleInvoice[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -58,13 +55,13 @@ export class GetSaleInvoicesService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed sale invoices.
-    const salesInvoices = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new SaleInvoiceTransformer(),
     );
 
     return {
-      salesInvoices,
+      data,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

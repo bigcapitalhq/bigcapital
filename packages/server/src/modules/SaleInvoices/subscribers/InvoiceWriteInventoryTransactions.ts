@@ -16,10 +16,12 @@ export class SaleInvoiceWriteInventoryTransactionsSubscriber {
   ) {}
 
   /**
-   * Handles the writing inventory transactions once the invoice created.
-   * @param {ISaleInvoiceCreatedPayload} payload
+   * Handles the writing inventory transactions once the invoice created
+   * or delivered in case it was created as draft.
+   * @param {ISaleInvoiceCreatedPayload | ISaleInvoiceEventDeliveredPayload} payload
    */
   @OnEvent(events.saleInvoice.onCreated)
+  @OnEvent(events.saleInvoice.onDelivered)
   public async handleWritingInventoryTransactions({
     saleInvoice,
     trx,
@@ -29,7 +31,7 @@ export class SaleInvoiceWriteInventoryTransactionsSubscriber {
 
     await this.saleInvoiceInventory.recordInventoryTranscactions(
       saleInvoice,
-      false,
+      true,
       trx,
     );
   }
@@ -43,6 +45,9 @@ export class SaleInvoiceWriteInventoryTransactionsSubscriber {
     saleInvoice,
     trx,
   }: ISaleInvoiceEditedPayload) {
+    // Can't continue if the sale invoice is not delivered yet.
+    if (!saleInvoice.deliveredAt) return null;
+
     await this.saleInvoiceInventory.recordInventoryTranscactions(
       saleInvoice,
       true,
@@ -57,7 +62,6 @@ export class SaleInvoiceWriteInventoryTransactionsSubscriber {
   @OnEvent(events.saleInvoice.onDeleted)
   public async handleDeletingInventoryTransactions({
     saleInvoiceId,
-    oldSaleInvoice,
     trx,
   }: ISaleInvoiceDeletedPayload) {
     await this.saleInvoiceInventory.revertInventoryTransactions(

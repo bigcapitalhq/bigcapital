@@ -1,19 +1,24 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { ITableColumn, ITableColumnAccessor } from '../../types/Table.types';
 import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialTablePreviousPeriod } from '../../common/FinancialTablePreviousPeriod';
 import { FinancialSheet } from '../../common/FinancialSheet';
-import { IDateRange } from '../../types/Report.types';
+import {
+  IDateRange,
+  IFinancialDatePeriodsUnit,
+} from '../../types/Report.types';
 
 export const ProfitLossTablePreviousPeriod = <
   T extends GConstructor<FinancialSheet>,
 >(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialTablePreviousPeriod)(Base) {
+  class extends flow(FinancialTablePreviousPeriod)(Base) {
     query: ProfitLossSheetQuery;
+
+    protected getPPDatePeriodDateRange: (fromDate, toDate, unit) => IDateRange;
 
     // ----------------------------
     // # Columns
@@ -25,16 +30,25 @@ export const ProfitLossTablePreviousPeriod = <
     protected getPreviousPeriodColumns = (
       dateRange?: IDateRange,
     ): ITableColumn[] => {
-      return R.pipe(
+      return flow(
         // Previous period columns.
-        R.append(this.getPreviousPeriodTotalColumn(dateRange)),
-        R.when(
+        (columns: ITableColumn[]) => [
+          ...columns,
+          this.getPreviousPeriodTotalColumn(dateRange),
+        ],
+        when(
           this.query.isPreviousPeriodChangeActive,
-          R.append(this.getPreviousPeriodChangeColumn()),
+          (columns: ITableColumn[]) => [
+            ...columns,
+            this.getPreviousPeriodChangeColumn(),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousPeriodPercentageActive,
-          R.append(this.getPreviousPeriodPercentageColumn()),
+          (columns: ITableColumn[]) => [
+            ...columns,
+            this.getPreviousPeriodPercentageColumn(),
+          ],
         ),
       )([]);
     };
@@ -50,7 +64,7 @@ export const ProfitLossTablePreviousPeriod = <
       const PPDateRange = this.getPPDatePeriodDateRange(
         dateRange.fromDate,
         dateRange.toDate,
-        this.query.displayColumnsBy,
+        this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
       );
       return this.getPreviousPeriodColumns(PPDateRange);
     };
@@ -63,16 +77,25 @@ export const ProfitLossTablePreviousPeriod = <
      * @returns {ITableColumn[]}
      */
     protected previousPeriodColumnAccessor = (): ITableColumnAccessor[] => {
-      return R.pipe(
+      return flow(
         // Previous period columns.
-        R.append(this.getPreviousPeriodTotalAccessor()),
-        R.when(
+        (accessors: ITableColumnAccessor[]) => [
+          ...accessors,
+          this.getPreviousPeriodTotalAccessor(),
+        ],
+        when(
           this.query.isPreviousPeriodChangeActive,
-          R.append(this.getPreviousPeriodChangeAccessor()),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousPeriodChangeAccessor(),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousPeriodPercentageActive,
-          R.append(this.getPreviousPeriodPercentageAccessor()),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousPeriodPercentageAccessor(),
+          ],
         ),
       )([]);
     };
@@ -85,16 +108,25 @@ export const ProfitLossTablePreviousPeriod = <
     protected previousPeriodHorizontalColumnAccessors = (
       index: number,
     ): ITableColumnAccessor[] => {
-      return R.pipe(
+      return flow(
         // Previous period columns.
-        R.append(this.getPreviousPeriodTotalHorizAccessor(index)),
-        R.when(
+        (accessors: ITableColumnAccessor[]) => [
+          ...accessors,
+          this.getPreviousPeriodTotalHorizAccessor(index),
+        ],
+        when(
           this.query.isPreviousPeriodChangeActive,
-          R.append(this.getPreviousPeriodChangeHorizAccessor(index)),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousPeriodChangeHorizAccessor(index),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousPeriodPercentageActive,
-          R.append(this.getPreviousPeriodPercentageHorizAccessor(index)),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousPeriodPercentageHorizAccessor(index),
+          ],
         ),
       )([]);
     };

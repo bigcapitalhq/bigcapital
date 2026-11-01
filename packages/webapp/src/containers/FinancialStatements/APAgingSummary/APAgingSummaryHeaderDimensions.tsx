@@ -1,20 +1,15 @@
-// @ts-nocheck
+import { FormGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormGroup, Classes } from '@blueprintjs/core';
-import { BranchMultiSelect, Row, Col } from '@/components';
 import {
   APAgingSummaryHeaderDimensionsProvider,
   useAPAgingSummaryHeaderDimensonsContext,
 } from './APAgingSummaryHeaderDimensionsProvider';
-import { useFeatureCan } from '@/hooks/state';
+import { BranchMultiSelect, Row, Col } from '@/components';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
-/**
- * APAging summary header dimensions.
- * @returns
- */
-export default function APAgingSummaryHeaderDimensions() {
+export function APAgingSummaryHeaderDimensions() {
   return (
     <APAgingSummaryHeaderDimensionsProvider>
       <APAgingSummaryHeaderDimensionsContent />
@@ -22,16 +17,10 @@ export default function APAgingSummaryHeaderDimensions() {
   );
 }
 
-/**
- * APAging summary header dimensions content.
- * @returns
- */
 function APAgingSummaryHeaderDimensionsContent() {
   const { branches } = useAPAgingSummaryHeaderDimensonsContext();
 
-  // Detarmines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
-
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (

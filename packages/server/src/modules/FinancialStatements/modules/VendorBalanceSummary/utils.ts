@@ -14,4 +14,4 @@ export const getVendorBalanceSummaryDefaultQuery = () => {
     noneZero: false,
     noneTransactions: true,
   };
-}
+};

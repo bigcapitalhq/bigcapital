@@ -6,7 +6,7 @@ const FinancialStatementRoot = styled.div``;
 const FinancialStatementBodyRoot = styled.div``;
 
 /**
- * 
+ *
  * @returns {React.JSX}
  */
 export function FinancialReport({ children, className }) {

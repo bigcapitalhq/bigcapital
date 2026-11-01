@@ -6,7 +6,7 @@ export class TransactionsByCustomersPdf {
   constructor(
     private readonly transactionsByCustomersTable: TransactionsByCustomersTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) { }
+  ) {}
 
   /**
    * Retrieves the transactions by customers in PDF format.

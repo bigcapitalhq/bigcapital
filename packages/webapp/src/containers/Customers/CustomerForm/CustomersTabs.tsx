@@ -1,14 +1,11 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import { Tabs, Tab } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
+import { CustomerAddressTabs } from './CustomerAddressTabs';
+import { CustomerAttachmentTabs } from './CustomerAttachmentTabs';
+import { CustomerFormFinancialSection } from './CustomerFormFinancialSection';
+import { CustomerNotePanel } from './CustomerNotePanel';
 
-import CustomerAddressTabs from './CustomerAddressTabs';
-import CustomerAttachmentTabs from './CustomerAttachmentTabs';
-import CustomerFinancialPanel from './CustomerFormFinancialSection';
-import CustomerNotePanel from './CustomerNotePanel';
-
-export default function CustomersTabs() {
+export function CustomersTabs() {
   return (
     <div>
       <Tabs
@@ -20,7 +17,7 @@ export default function CustomersTabs() {
         <Tab
           id={'financial'}
           title={intl.get('financial_details')}
-          panel={<CustomerFinancialPanel />}
+          panel={<CustomerFormFinancialSection />}
         />
         <Tab
           id={'address'}

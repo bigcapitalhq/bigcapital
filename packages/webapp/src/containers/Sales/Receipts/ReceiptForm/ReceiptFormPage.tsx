@@ -1,22 +1,20 @@
-// @ts-nocheck
+import { css } from '@emotion/css';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { css } from '@emotion/css';
-
+import { ReceiptForm } from './ReceiptForm';
 import {
   ReceiptFormProvider,
   useReceiptFormContext,
 } from './ReceiptFormProvider';
-import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 import { DashboardInsider } from '@/components';
-import { ReceiptForm } from './ReceiptForm';
+import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 
 /**
  * Receipt form page.
  */
-export default function ReceiptFormPage() {
-  const { id } = useParams();
-  const receiptId = parseInt(id, 10);
+export function ReceiptFormPage() {
+  const { id } = useParams<{ id?: string }>();
+  const receiptId = id ? parseInt(id, 10) : undefined;
 
   return (
     <ReceiptFormProvider receiptId={receiptId}>

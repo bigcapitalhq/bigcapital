@@ -1,6 +1,4 @@
-import {
-  IWarehouse,
-} from './Warehouse.types';
+import { IWarehouse } from './Warehouse.types';
 import { ActivateWarehousesService } from './commands/ActivateWarehouses.service';
 import { CreateWarehouse } from './commands/CreateWarehouse.service';
 import { DeleteWarehouseService } from './commands/DeleteWarehouse.service';

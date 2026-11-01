@@ -46,7 +46,7 @@ export class PlaidItemService {
     const plaidItemId = response.data.item_id;
 
     // Store the Plaid item metadata on tenant scope.
-    const plaidItem = await this.plaidItemModel().query().insertAndFetch({
+    const _plaidItem = await this.plaidItemModel().query().insertAndFetch({
       tenantId,
       plaidAccessToken,
       plaidItemId,

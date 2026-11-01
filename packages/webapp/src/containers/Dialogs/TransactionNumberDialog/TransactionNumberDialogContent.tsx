@@ -1,46 +1,56 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useSaveSettings } from '@/hooks/query';
-
 import { TransactionNumberDialogProvider } from './TransactionNumberDialogProvider';
-import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
-import { compose } from '@/utils';
+import { useSaveSettings, useSettingCashFlow } from '@/hooks/query';
+
+interface TransactionNumberDialogContentProps extends WithDialogActionsProps {
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
 
 /**
  * Transaction number dialog content.
  */
-function TransactionNumberDialogContent({
-  // #ownProps
+function TransactionNumberDialogContentInner({
   initialValues,
   onConfirm,
-
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
-  // #withDialogActions
   closeDialog,
-}) {
+}: TransactionNumberDialogContentProps): React.ReactElement {
+  const { data: cashflowSettings } = useSettingCashFlow();
+  const nextNumber = cashflowSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
+  const numberPrefix = cashflowSettings?.numberPrefix as string | undefined;
+  const autoIncrement = cashflowSettings?.autoIncrement as
+    | boolean
+    | string
+    | undefined;
+
   const { mutateAsync: saveSettings } = useSaveSettings();
-  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+  const [referenceFormValues, setReferenceFormValues] =
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
 
   // Handle the submit form.
-  const handleSubmitForm = (values, { setSubmitting }) => {
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     // Handle the form success.
     const handleSuccess = () => {
       setSubmitting(false);
       closeDialog('transaction-number-form');
-      onConfirm(values);
+      onConfirm?.(values);
     };
     // Handle the form errors.
     const handleErrors = () => {
@@ -69,7 +79,7 @@ function TransactionNumberDialogContent({
   };
 
   // Handle form change.
-  const handleChange = (values) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
 
@@ -93,12 +103,7 @@ function TransactionNumberDialogContent({
   );
 }
 
-export default compose(
+export const TransactionNumberDialogContent = FF.pipe(
+  TransactionNumberDialogContentInner,
   withDialogActions,
-  withSettingsActions,
-  withSettings(({ cashflowSetting }) => ({
-    nextNumber: cashflowSetting?.nextNumber,
-    numberPrefix: cashflowSetting?.numberPrefix,
-    autoIncrement: cashflowSetting?.autoIncrement,
-  })),
-)(TransactionNumberDialogContent);
+);

@@ -1,15 +1,26 @@
-// @ts-nocheck
+import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, MenuItem, Menu } from '@blueprintjs/core';
-import { safeCallback } from '@/utils';
 import { Can, FormatDateCell, Icon } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
+import { safeCallback } from '@/utils';
+
+interface ActionsMenuPayload {
+  onDelete: (row: { id: number }) => void;
+}
+
+interface ActionsMenuProps {
+  payload: ActionsMenuPayload;
+  row: { original: { id: number } };
+}
 
 /**
  * Actions menu.
  */
-export function ActionsMenu({ payload: { onDelete }, row: { original } }) {
+export function ActionsMenu({
+  payload: { onDelete },
+  row: { original },
+}: ActionsMenuProps) {
   return (
     <Menu>
       <Can I={CreditNoteAction.Delete} a={AbilitySubject.CreditNote}>
@@ -32,20 +43,20 @@ export function useReconcileCreditTransactionsTableColumns() {
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'formatted_credit_note_date',
+        accessor: 'formattedCreditNoteDate',
         Cell: FormatDateCell,
         width: 100,
         className: 'date',
       },
       {
         Header: intl.get('invoice_no'),
-        accessor: 'invoice_number',
+        accessor: 'invoiceNumber',
         width: 100,
         className: 'invoice_number',
       },
       {
         Header: intl.get('amount'),
-        accessor: 'formtted_amount',
+        accessor: 'formattedAmount',
         width: 100,
         className: 'amount',
         align: 'right',

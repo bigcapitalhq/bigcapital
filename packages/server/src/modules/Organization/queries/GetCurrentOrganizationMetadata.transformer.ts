@@ -15,7 +15,7 @@ export class GetCurrentOrganizationMetadataTransformer extends Transformer {
    * @param metadata
    * @returns {string | null}
    */
-  public logoUri = (metadata: Record<string, any>): string | null => {
+  public logoUri = (_metadata: Record<string, any>): string | null => {
     return this.options?.logoUri ?? null;
   };
 }

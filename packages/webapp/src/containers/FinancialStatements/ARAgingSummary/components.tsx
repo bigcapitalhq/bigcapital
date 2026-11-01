@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React, { useRef } from 'react';
-import classNames from 'classnames';
 import {
   Classes,
   Intent,
@@ -9,30 +6,30 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
-
-import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
-import { AppToaster, If, Stack, FormattedMessage as T } from '@/components';
-import FinancialLoadingBar from '../FinancialLoadingBar';
+import classNames from 'classnames';
+import React from 'react';
 import { agingSummaryDynamicColumns } from '../AgingSummary/dynamicColumns';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
+import type {
+  ReceivableAgingXlsxQuery,
+  ReceivableAgingCsvQuery,
+} from '@bigcapital/sdk-ts';
+import { AppToaster, If, Stack } from '@/components';
 import {
   useARAgingSheetCsvExport,
   useARAgingSheetXlsxExport,
 } from '@/hooks/query';
 
-/**
- * Retrieve AR aging summary columns.
- */
 export const useARAgingSummaryColumns = () => {
-  const {
-    ARAgingSummary: { table },
-  } = useARAgingSummaryContext();
+  const { ARAgingSummary } = useARAgingSummaryContext();
 
-  return agingSummaryDynamicColumns(table.columns, table.rows);
+  return agingSummaryDynamicColumns(
+    (ARAgingSummary as any)?.table?.columns ?? [],
+    (ARAgingSummary as any)?.table?.rows ?? [],
+  );
 };
 
-/**
- * A/R aging summary sheet loading bar.
- */
 export function ARAgingSummarySheetLoadingBar() {
   const { isARAgingFetching } = useARAgingSummaryContext();
 
@@ -43,79 +40,58 @@ export function ARAgingSummarySheetLoadingBar() {
   );
 }
 
-/**
- * A/R aging summary export menu.
- * @returns {JSX.Element}
- */
 export function ARAgingSummaryExportMenu() {
-  const toastKey = useRef(null);
   const commonToastConfig = {
     isCloseButtonShown: true,
     timeout: 2000,
   };
   const { httpQuery } = useARAgingSummaryContext();
 
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+            [Classes.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
 
-  // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useARAgingSheetXlsxExport(httpQuery, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Export the report to csv.
-  const { mutateAsync: csvExport } = useARAgingSheetCsvExport(httpQuery, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport();
+  const { mutateAsync: xlsxExport } = useARAgingSheetXlsxExport(
+    httpQuery as ReceivableAgingXlsxQuery,
+  );
+  const { mutateAsync: csvExport } = useARAgingSheetCsvExport(
+    httpQuery as ReceivableAgingCsvQuery,
+  );
+
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport();
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

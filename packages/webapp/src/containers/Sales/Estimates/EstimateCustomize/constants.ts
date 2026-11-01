@@ -28,10 +28,9 @@ export const initialValues = {
   billedToLabel: 'Billed To',
 
   // Entries
-  itemNameLabel: 'Item',
-  itemDescriptionLabel: 'Description',
-  itemRateLabel: 'Rate',
-  itemTotalLabel: 'Total',
+  lineItemLabel: 'Item',
+  lineRateLabel: 'Rate',
+  lineTotalLabel: 'Total',
 
   // Totals
   showSubtotal: true,

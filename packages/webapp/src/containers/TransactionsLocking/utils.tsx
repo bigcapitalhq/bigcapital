@@ -1,29 +1,60 @@
-// @ts-nocheck
-export const validateMoveToPartialLocking = (all) => {
-  return all.is_enabled;
+import type {
+  TransactionsLockingListResponse,
+  TransactionsLockingMeta,
+} from '@bigcapital/sdk-ts';
+
+export const validateMoveToPartialLocking = (
+  all: TransactionsLockingMeta,
+): boolean => {
+  return all.isEnabled;
 };
 
-export const validateMoveToFullLocking = (modules) => {
-  return modules.filter((module) => module.is_enabled);
+export const validateMoveToFullLocking = (
+  modules: TransactionsLockingMeta[],
+): TransactionsLockingMeta[] => {
+  return modules.filter((module) => module.isEnabled);
 };
 
-export const transformItem = (item) => {
+export interface TransactionsLockingViewItem {
+  name: string;
+  module: string;
+  description: string;
+  isEnabled: boolean;
+  isPartialUnlock: boolean;
+  lockToDate: string;
+  lockReason: string;
+  unlockFromDate: string;
+  unlockToDate: string;
+  unlockReason: string;
+  partialUnlockReason: string;
+}
+
+export const transformItem = (
+  item: TransactionsLockingMeta,
+): TransactionsLockingViewItem => {
   return {
-    name: item.formatted_module,
+    name: item.formattedModule,
     module: item.module,
     description: item.description,
-    isEnabled: item.is_enabled,
-    isPartialUnlock: item.is_partial_unlock,
-    lockToDate: item.formatted_lock_to_date,
-    lockReason: item.lock_reason,
-    unlockFromDate: item.formatted_unlock_from_date,
-    unlockToDate: item.formatted_unlock_to_date,
-    unlockReason: item.unlock_reason,
-    partialUnlockReason: item.partial_unlock_reason,
+    isEnabled: item.isEnabled,
+    isPartialUnlock: item.isPartialUnlock,
+    lockToDate: item.formattedLockToDate,
+    lockReason: item.lockReason,
+    unlockFromDate: item.formattedUnlockFromDate,
+    unlockToDate: item.formattedUnlockToDate,
+    unlockReason: item.unlockReason,
+    partialUnlockReason: item.partialUnlockReason,
   };
 };
 
-export const transformList = (res) => {
+export interface TransactionsLockingViewList {
+  all: TransactionsLockingViewItem;
+  modules: TransactionsLockingViewItem[];
+}
+
+export const transformList = (
+  res: TransactionsLockingListResponse,
+): TransactionsLockingViewList => {
   return {
     all: transformItem(res.all),
     modules: res.modules.map((module) => transformItem(module)),

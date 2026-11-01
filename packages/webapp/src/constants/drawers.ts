@@ -1,4 +1,3 @@
-// @ts-nocheck
 export enum DRAWERS {
   ACCOUNT_DETAILS = 'account-drawer',
   JOURNAL_DETAILS = 'journal-drawer',
@@ -38,7 +37,8 @@ export enum DRAWERS {
   ESTIMATE_SEND_MAIL = 'ESTIMATE_SEND_MAIL',
   RECEIPT_SEND_MAIL = 'RECEIPT_SEND_MAIL',
   PAYMENT_RECEIVED_SEND_MAIL = 'PAYMENT_RECEIVED_SEND_MAIL',
-  CREATE_WORKSPACE = 'create-workspace',
   ORGANIZATIONS_LIST = 'organizations-list',
   NOTIFICATIONS = 'notifications',
+  CREDIT_NOTE_SEND_MAIL = 'CREDIT_NOTE_SEND_MAIL',
+  CREATE_WORKSPACE = 'create-workspace',
 }

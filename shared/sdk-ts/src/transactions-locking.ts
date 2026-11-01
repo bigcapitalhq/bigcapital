@@ -1,6 +1,5 @@
 import type { ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
-import { OpForPath, OpResponseBody } from './utils';
 
 export const TRANSACTIONS_LOCKING_ROUTES = {
   LOCK: '/api/transactions-locking/lock',
@@ -11,21 +10,49 @@ export const TRANSACTIONS_LOCKING_ROUTES = {
   BY_MODULE: '/api/transactions-locking/{module}',
 } as const satisfies Record<string, keyof paths>;
 
-export type TransactionsLockingListResponse = OpResponseBody<OpForPath<typeof TRANSACTIONS_LOCKING_ROUTES.LIST, 'get'>>;
+export type TransactionsLockingType = 'all' | 'partial';
+
+/**
+ * A single module locking meta as returned by the transactions locking list
+ * endpoint. The OpenAPI response schema for this endpoint is inaccurate, so
+ * the shape is declared explicitly to match the server transformer output.
+ */
+export interface TransactionsLockingMeta {
+  module: string;
+  formattedModule: string;
+  description: string;
+  isEnabled: boolean;
+  isPartialUnlock: boolean;
+  lockToDate: string;
+  unlockFromDate: string;
+  unlockToDate: string;
+  lockReason: string;
+  unlockReason: string;
+  partialUnlockReason: string;
+  formattedLockToDate: string;
+  formattedUnlockFromDate: string;
+  formattedUnlockToDate: string;
+}
+
+export interface TransactionsLockingListResponse {
+  lockingType: TransactionsLockingType;
+  all: TransactionsLockingMeta;
+  modules: TransactionsLockingMeta[];
+}
 
 export async function fetchTransactionsLocking(fetcher: ApiFetcher): Promise<TransactionsLockingListResponse> {
   const get = fetcher.path(TRANSACTIONS_LOCKING_ROUTES.LIST).method('get').create();
   const { data } = await get({});
-  return data;
+  return data as unknown as TransactionsLockingListResponse;
 }
 
 export async function fetchTransactionsLockingByModule(
   fetcher: ApiFetcher,
   module: string
-): Promise<unknown> {
+): Promise<TransactionsLockingMeta> {
   const get = fetcher.path(TRANSACTIONS_LOCKING_ROUTES.BY_MODULE).method('get').create();
   const { data } = await get({ module });
-  return data;
+  return data as unknown as TransactionsLockingMeta;
 }
 
 export async function lockTransactions(

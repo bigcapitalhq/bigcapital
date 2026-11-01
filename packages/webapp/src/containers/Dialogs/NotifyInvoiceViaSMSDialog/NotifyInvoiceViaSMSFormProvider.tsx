@@ -1,39 +1,68 @@
-// @ts-nocheck
-import React from 'react';
+import { keepPreviousData } from '@tanstack/react-query';
+import React, { createContext } from 'react';
+import type { SaleInvoiceSmsDetailsResponse } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
-import { useCreateNotifyInvoiceBySMS, useInvoiceSMSDetail } from '@/hooks/query';
+import {
+  useCreateNotifyInvoiceBySMS,
+  useInvoiceSMSDetail,
+} from '@/hooks/query';
 
-const NotifyInvoiceViaSMSContext = React.createContext();
+interface NotifyInvoiceViaSMSContextValue {
+  invoiceId: number | null;
+  invoiceSMSDetail: Partial<SaleInvoiceSmsDetailsResponse>;
+  dialogName: string;
+  createNotifyInvoiceBySMSMutate: ReturnType<
+    typeof useCreateNotifyInvoiceBySMS
+  >['mutateAsync'];
+  notificationType: string;
+  setNotificationType: (next: string) => void;
+}
+
+const NotifyInvoiceViaSMSContext =
+  createContext<NotifyInvoiceViaSMSContextValue>(
+    {} as NotifyInvoiceViaSMSContextValue,
+  );
+
+interface NotifyInvoiceViaSMSFormProviderProps {
+  invoiceId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Invoice SMS notification provider.
  */
-function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
+function NotifyInvoiceViaSMSFormProvider({
+  invoiceId,
+  dialogName,
+  ...props
+}: NotifyInvoiceViaSMSFormProviderProps) {
   const [notificationType, setNotificationType] = React.useState('details');
 
   // Retrieve the invoice sms notification message details.
-  const { data: invoiceSMSDetail, isLoading: isInvoiceSMSDetailLoading } =
+  const { data: invoiceSMSDetailRaw, isLoading: isInvoiceSMSDetailLoading } =
     useInvoiceSMSDetail(
-      invoiceId,
-      {
-        notification_key: notificationType,
-      },
+      // Hook signature requires `number`; provider may receive null when
+      // dialog is closed. Cast to satisfy TS — runtime guards via `enabled`.
+      invoiceId as number,
+      notificationType as 'details' | 'reminder',
       {
         enabled: !!invoiceId,
-        keepPreviousData: true,
+        placeholderData: keepPreviousData,
       },
     );
+  const invoiceSMSDetail = invoiceSMSDetailRaw ?? {};
+
   // Create notfiy invoice by sms mutations.
   const { mutateAsync: createNotifyInvoiceBySMSMutate } =
     useCreateNotifyInvoiceBySMS();
 
   // State provider.
-  const provider = {
-    invoiceId,
+  const provider: NotifyInvoiceViaSMSContextValue = {
+    invoiceId: invoiceId ?? null,
     invoiceSMSDetail,
     dialogName,
     createNotifyInvoiceBySMSMutate,
-
     notificationType,
     setNotificationType,
   };

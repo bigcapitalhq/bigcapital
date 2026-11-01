@@ -1,60 +1,64 @@
-// @ts-nocheck
-import React, { useState, useEffect } from 'react';
-import { Formik } from 'formik';
-import intl from 'react-intl-universal';
-import { Intent } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
-import { useGenerateApiKey } from '@/hooks/query';
-import ApiKeysGenerateFormContent from './ApiKeysGenerateFormContent';
-import ApiKeysGenerateFormSchema from './ApiKeysGenerateForm.schema';
-import ApiKeyDisplayView from './ApiKeyDisplayView';
+import { Formik, type FormikHelpers } from 'formik';
+import React, { useState } from 'react';
+import { ApiKeyDisplayView } from './ApiKeyDisplayView';
+import { CreateApiKeyFormSchema as ApiKeysGenerateFormSchema } from './ApiKeysGenerateForm.schema';
+import { ApiKeysGenerateFormContent } from './ApiKeysGenerateFormContent';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { useGenerateApiKey } from '@/hooks/query';
 
-const defaultInitialValues = {
+interface ApiKeyFormValues {
+  name: string;
+}
+
+const defaultInitialValues: ApiKeyFormValues = {
   name: '',
 };
+
+interface ApiKeysGenerateDialogContentProps extends WithDialogActionsProps {
+  dialogName: string;
+}
 
 /**
  * API Keys Generate form dialog content.
  */
-function ApiKeysGenerateDialogContent({
-  // #withDialogActions
+function ApiKeysGenerateDialogContentInner({
   closeDialog,
   dialogName,
-}) {
-  const [generatedApiKey, setGeneratedApiKey] = useState(null);
+}: ApiKeysGenerateDialogContentProps): React.ReactElement {
+  const [generatedApiKey, setGeneratedApiKey] = useState<string | null>(null);
   const generateApiKeyMutate = useGenerateApiKey();
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = async (
+    values: ApiKeyFormValues,
+    { setSubmitting, setErrors }: FormikHelpers<ApiKeyFormValues>,
+  ) => {
     const form = { name: values.name || undefined };
 
-    // Handle request response errors.
-    const handleError = (error) => {
-      const errors = error?.response?.data?.errors;
+    try {
+      const response = await generateApiKeyMutate.mutateAsync(form);
+      if (response?.key) {
+        setGeneratedApiKey(response.key);
+      }
+    } catch (error: unknown) {
+      const err = error as {
+        response?: { data?: { errors?: Record<string, string[]> } };
+      };
+      const errors = err?.response?.data?.errors;
       if (errors) {
-        const errorsTransformed = Object.keys(errors).reduce((acc, key) => {
-          acc[key] = errors[key][0];
-          return acc;
-        }, {});
+        const errorsTransformed = Object.keys(errors).reduce(
+          (acc: Record<string, string>, key) => {
+            acc[key] = errors[key][0];
+            return acc;
+          },
+          {},
+        );
         setErrors(errorsTransformed);
       }
+    } finally {
       setSubmitting(false);
-    };
-
-    generateApiKeyMutate.mutate(form, {
-      onSuccess: (response) => {
-        // The API returns { key, id }, which might be wrapped in response.data
-        const apiKey = response?.data?.key || response?.key;
-        if (apiKey) {
-          setGeneratedApiKey(apiKey);
-        } else {
-          setSubmitting(false);
-        }
-      },
-      onError: handleError,
-    });
+    }
   };
 
   // If API key has been generated, show the display view
@@ -83,4 +87,6 @@ function ApiKeysGenerateDialogContent({
   );
 }
 
-export default compose(withDialogActions)(ApiKeysGenerateDialogContent);
+export const ApiKeysGenerateDialogContent = withDialogActions(
+  ApiKeysGenerateDialogContentInner,
+);

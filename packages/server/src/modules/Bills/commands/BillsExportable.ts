@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { BillsApplication } from '../Bills.application';
 import { Injectable } from '@nestjs/common';
 import { Exportable } from '@/modules/Export/Exportable';
@@ -33,6 +32,6 @@ export class BillsExportable extends Exportable {
 
     return this.billsApplication
       .getBills(parsedQuery)
-      .then((output) => output.bills);
+      .then((output) => output.data);
   }
 }

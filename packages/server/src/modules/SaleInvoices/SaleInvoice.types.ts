@@ -22,8 +22,8 @@ export interface PaymentIntegrationTransactionLink {
 }
 
 export interface PaymentIntegrationTransactionLinkEventPayload {
-  tenantId: number;
-  enable: true;
+  tenantId?: number;
+  enable: boolean;
   paymentIntegrationId: number;
   referenceType: string;
   referenceId: number;
@@ -32,8 +32,8 @@ export interface PaymentIntegrationTransactionLinkEventPayload {
 }
 
 export interface PaymentIntegrationTransactionLinkDeleteEventPayload {
-  tenantId: number;
-  enable: true;
+  tenantId?: number;
+  enable: boolean;
   paymentIntegrationId: number;
   referenceType: string;
   referenceId: number;
@@ -67,7 +67,7 @@ export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {
   fromEstimateId: number;
 }
 
-export interface ISaleInvoiceEditDTO extends ISaleInvoiceDTO {}
+export type ISaleInvoiceEditDTO = ISaleInvoiceDTO;
 
 export interface ISalesInvoicesFilter extends IDynamicListFilter {
   page: number;
@@ -243,7 +243,7 @@ export interface InvoicePdfTemplateAttributes {
   companyName: string;
 
   showCompanyLogo: boolean;
-  companyLogo: string;
+  companyLogoUri: string;
 
   dueDate: string;
   dueDateLabel: string;

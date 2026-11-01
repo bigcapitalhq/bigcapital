@@ -1,15 +1,24 @@
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { APAgingSummaryApplication } from './APAgingSummaryApplication';
 import { AcceptType } from '@/constants/accept-type';
 import {
   ApiExtraModels,
   ApiOperation,
   ApiProduces,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
 import { APAgingSummaryResponseExample } from './APAgingSummary.swagger';
 import {
@@ -27,13 +36,24 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
-@ApiExtraModels(APAgingSummaryResponseDto, APAgingSummaryTableResponseDto)
+@ApiExtraModels(
+  APAgingSummaryResponseDto,
+  APAgingSummaryTableResponseDto,
+  NumberFormatQueryDto,
+)
 export class APAgingSummaryController {
-  constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) { }
+  constructor(private readonly APAgingSummaryApp: APAgingSummaryApplication) {}
 
   @Get()
   @RequirePermission(ReportsAction.READ_AP_AGING_SUMMARY, AbilitySubject.Report)
   @ApiOperation({ summary: 'Get payable aging summary' })
+  @ApiQuery({
+    name: 'numberFormat',
+    required: false,
+    description:
+      'Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)',
+    schema: { $ref: getSchemaPath(NumberFormatQueryDto) },
+  })
   @ApiResponse({
     status: 200,
     description: 'A/P aging summary response',

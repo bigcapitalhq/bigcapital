@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteManualJournals } from '@/hooks/query/manualJournals';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithManualJournalsActionsProps } from '@/containers/Accounting/JournalsLanding/withManualJournalsActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withManualJournalsActions } from '@/containers/Accounting/JournalsLanding/withManualJournalsActions';
-import { compose } from '@/utils';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
+import { useBulkDeleteManualJournals } from '@/hooks/query/manual-journals';
 
-function ManualJournalBulkDeleteDialog({
+interface ManualJournalBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface ManualJournalBulkDeleteDialogProps
+  extends WithManualJournalsActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
+function ManualJournalBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withManualJournalsActions
+  resetManualJournalsSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: ManualJournalBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: ManualJournalBulkDeleteDialogPayload = payload ?? {};
 
-  // #withManualJournalsActions
-  setManualJournalsSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteManualJournals, isLoading } =
+  const { mutateAsync: bulkDeleteManualJournals, isPending: isLoading } =
     useBulkDeleteManualJournals();
 
   const handleCancel = () => {
@@ -44,7 +60,7 @@ function ManualJournalBulkDeleteDialog({
           message: intl.get('the_journals_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setManualJournalsSelectedRows([]);
+        resetManualJournalsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -98,9 +114,9 @@ function ManualJournalBulkDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
+export const ManualJournalBulkDeleteDialog = FF.pipe(
+  ManualJournalBulkDeleteDialogInner,
   withManualJournalsActions,
-)(ManualJournalBulkDeleteDialog);
-
+  withDialogActions,
+  withDialogRedux(),
+);

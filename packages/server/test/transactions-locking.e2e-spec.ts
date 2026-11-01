@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 describe('Transactions Locking (e2e)', () => {
@@ -6,7 +6,8 @@ describe('Transactions Locking (e2e)', () => {
     return request(app.getHttpServer())
       .put('/transactions-locking/cancel-lock')
       .set('organization-id', orgainzationId)
-      .set('Authorization', AuthorizationHeader);
+      .set('Authorization', AuthorizationHeader)
+      .send({ reason: 'test' });
   });
 
   it('/transactions-locking/lock (PUT)', () => {
@@ -38,6 +39,7 @@ describe('Transactions Locking (e2e)', () => {
       .put('/transactions-locking/cancel-lock')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
+      .send({ reason: 'test' })
       .expect(200);
   });
 

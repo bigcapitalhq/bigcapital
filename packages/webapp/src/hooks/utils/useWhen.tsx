@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 
-export function useWhen(condition, callback) {
+export function useWhen(condition: boolean, callback: () => void) {
   React.useEffect(() => {
     if (condition) {
       callback();
@@ -9,6 +8,6 @@ export function useWhen(condition, callback) {
   }, [condition, callback]);
 }
 
-export function useWhenNot(condition, callback) {
+export function useWhenNot(condition: boolean, callback: () => void) {
   return useWhen(!condition, callback);
 }

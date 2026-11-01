@@ -1,7 +1,5 @@
-// @ts-nocheck
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom"
+import { withRouter } from 'react-router-dom';
 
-export const withRoute = (mapState) => {
-  return () => withRouter ;
+export const withRoute = (_mapState?: unknown) => {
+  return () => withRouter;
 };

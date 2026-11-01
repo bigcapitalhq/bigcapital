@@ -1,16 +1,18 @@
-// @ts-nocheck
+import { AnchorButton } from '@blueprintjs/core';
+import { useProfitLossSheetContext } from '../ProfitLossProvider';
+import type { ProfitLossPdfQuery } from '@bigcapital/sdk-ts';
 import {
   DialogContent,
   PdfDocumentPreview,
   FormattedMessage as T,
 } from '@/components';
-import { AnchorButton } from '@blueprintjs/core';
 import { useProfitLossSheetPdf } from '@/hooks/query';
-import { useProfitLossSheetContext } from '../ProfitLossProvider';
 
-export default function ProfitLossSheetPdfDialogContent() {
+export function ProfitLossSheetPdfDialogContent() {
   const { httpQuery } = useProfitLossSheetContext();
-  const { isLoading, pdfUrl } = useProfitLossSheetPdf(httpQuery);
+  const { isLoading, pdfUrl } = useProfitLossSheetPdf(
+    httpQuery as ProfitLossPdfQuery,
+  );
 
   return (
     <DialogContent>

@@ -51,37 +51,15 @@ export class ApplyVendorCreditToBillsService {
     vendorCreditId: number,
     applyCreditToBillsDTO: IVendorCreditApplyToInvoicesDTO,
   ): Promise<void> => {
-    // Retrieves the vendor credit or throw not found service error.
-    const vendorCredit = await this.vendorCreditModel()
-      .query()
-      .findById(vendorCreditId)
-      .throwIfNotFound();
-
-    // Transfomes credit apply to bills DTO to model object.
-    const vendorCreditAppliedModel = this.transformApplyDTOToModel(
-      applyCreditToBillsDTO,
-      vendorCredit,
-    );
-
-    // Validate bills entries existance.
-    const appliedBills =
-      await this.billPaymentValidators.validateBillsExistance(
-        vendorCreditAppliedModel.entries,
-        vendorCredit.vendorId,
-      );
-
-    // Validate bills has remaining amount to apply.
-    this.validateBillsRemainingAmount(
-      appliedBills,
-      vendorCreditAppliedModel.amount,
-    );
-    // Validate vendor credit remaining credit amount.
-    this.vendorCreditDTOTransform.validateCreditRemainingAmount(
-      vendorCredit,
-      vendorCreditAppliedModel.amount,
-    );
     // Saves vendor credit applied to bills under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the apply operation against the locked vendor credit
+      // and bills rows.
+      const { vendorCredit, vendorCreditAppliedModel } = await this.validate(
+        vendorCreditId,
+        applyCreditToBillsDTO,
+        trx,
+      );
       // Inserts vendor credit applied to bills graph to the storage layer.
       const vendorCreditAppliedBills = await this.vendorCreditAppliedBillModel()
         .query(trx)
@@ -98,6 +76,56 @@ export class ApplyVendorCreditToBillsService {
       );
     });
   };
+
+  /**
+   * Validates the apply vendor credit to bills operation against the locked
+   * vendor credit and bills rows.
+   * @param {number} vendorCreditId - The vendor credit id.
+   * @param {IVendorCreditApplyToInvoicesDTO} applyCreditToBillsDTO - Apply DTO.
+   * @param {Knex.Transaction} trx - Locks the vendor credit and bill rows (FOR UPDATE).
+   * @returns {Promise<{ vendorCredit: VendorCredit, vendorCreditAppliedModel: IVendorCreditApplyToInvoicesModel }>}
+   */
+  async validate(
+    vendorCreditId: number,
+    applyCreditToBillsDTO: IVendorCreditApplyToInvoicesDTO,
+    trx: Knex.Transaction,
+  ): Promise<{
+    vendorCredit: VendorCredit;
+    vendorCreditAppliedModel: IVendorCreditApplyToInvoicesModel;
+  }> {
+    // Retrieves the vendor credit with a row lock or throw not found service error.
+    const vendorCredit = await this.vendorCreditModel()
+      .query(trx)
+      .findById(vendorCreditId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Transfomes credit apply to bills DTO to model object.
+    const vendorCreditAppliedModel = this.transformApplyDTOToModel(
+      applyCreditToBillsDTO,
+      vendorCredit,
+    );
+
+    // Validate bills entries existance (locks the bill rows).
+    const appliedBills =
+      await this.billPaymentValidators.validateBillsExistance(
+        vendorCreditAppliedModel.entries,
+        vendorCredit.vendorId,
+        trx,
+      );
+
+    // Validate bills has remaining amount to apply.
+    this.validateBillsRemainingAmount(
+      appliedBills,
+      vendorCreditAppliedModel.amount,
+    );
+    // Validate vendor credit remaining credit amount against the locked row.
+    this.vendorCreditDTOTransform.validateCreditRemainingAmount(
+      vendorCredit,
+      vendorCreditAppliedModel.amount,
+    );
+    return { vendorCredit, vendorCreditAppliedModel };
+  }
 
   /**
    * Transformes apply DTO to model.

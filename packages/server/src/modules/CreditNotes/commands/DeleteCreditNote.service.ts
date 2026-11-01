@@ -56,20 +56,11 @@ export class DeleteCreditNoteService {
     creditNoteId: number,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    // Retrieve the credit note or throw not found service error.
-    const oldCreditNote = await this.creditNoteModel()
-      .query()
-      .findById(creditNoteId)
-      .throwIfNotFound();
-
-    // Validate credit note has no refund transactions.
-    await this.validateCreditNoteHasNoRefundTransactions(creditNoteId);
-
-    // Validate credit note has no applied invoices transactions.
-    await this.validateCreditNoteHasNoApplyInvoiceTransactions(creditNoteId);
-
     // Deletes the credit note transactions under unit-of-work transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the delete operation against the locked credit note row.
+      const oldCreditNote = await this.validate(creditNoteId, trx);
+
       // Triggers `onCreditNoteDeleting` event.
       await this.eventPublisher.emitAsync(events.creditNote.onDeleting, {
         trx,
@@ -96,15 +87,47 @@ export class DeleteCreditNoteService {
   }
 
   /**
+   * Validates the delete credit note operation against the locked credit note
+   * row: existence, no associated refund transactions and no associated
+   * applied invoices transactions.
+   * @param {number} creditNoteId - Credit note id.
+   * @param {Knex.Transaction} trx - Locks the credit note row (FOR UPDATE).
+   * @returns {Promise<CreditNote>} The locked credit note.
+   */
+  async validate(
+    creditNoteId: number,
+    trx: Knex.Transaction,
+  ): Promise<CreditNote> {
+    // Lock the credit note row to serialize with concurrent refund/apply operations.
+    const oldCreditNote = await this.creditNoteModel()
+      .query(trx)
+      .findById(creditNoteId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate credit note has no refund transactions.
+    await this.validateCreditNoteHasNoRefundTransactions(creditNoteId, trx);
+
+    // Validate credit note has no applied invoices transactions.
+    await this.validateCreditNoteHasNoApplyInvoiceTransactions(
+      creditNoteId,
+      trx,
+    );
+    return oldCreditNote;
+  }
+
+  /**
    * Validates credit note has no associated refund transactions.
    * @param {number} creditNoteId
+   * @param {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
   private async validateCreditNoteHasNoRefundTransactions(
     creditNoteId: number,
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const refundTransactions = await this.refundCreditNoteModel()
-      .query()
+      .query(trx)
       .where('creditNoteId', creditNoteId);
 
     if (refundTransactions.length > 0) {
@@ -115,13 +138,15 @@ export class DeleteCreditNoteService {
   /**
    * Validate credit note has no associated applied invoices transactions.
    * @param {number} creditNoteId - Credit note id.
+   * @param {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
   private async validateCreditNoteHasNoApplyInvoiceTransactions(
     creditNoteId: number,
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const appliedTransactions = await this.creditNoteAppliedInvoiceModel()
-      .query()
+      .query(trx)
       .where('creditNoteId', creditNoteId);
 
     if (appliedTransactions.length > 0) {

@@ -1,10 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-import RefundVendorCreditFormFields from './RefundVendorCreditFormFields';
-import RefundVendorCreditFloatingActions from './RefundVendorCreditFloatingActions';
+import React from 'react';
+import { RefundVendorCreditFloatingActions } from './RefundVendorCreditFloatingActions';
+import { RefundVendorCreditFormFields } from './RefundVendorCreditFormFields';
 
-export default function RefundVendorCreditFormContent() {
+export function RefundVendorCreditFormContent(): React.ReactElement {
   return (
     <Form>
       <RefundVendorCreditFormFields />

@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteCustomers } from '@/hooks/query/customers';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithCustomersActionsProps } from '@/containers/Customers/CustomersLanding/withCustomersActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T, AppToaster } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withCustomersActions } from '@/containers/Customers/CustomersLanding/withCustomersActions';
-import { compose } from '@/utils';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
+import { useBulkDeleteCustomers } from '@/hooks/query/customers';
 
-function CustomerBulkDeleteDialog({
+interface CustomerBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface CustomerBulkDeleteDialogProps
+  extends WithCustomersActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
+function CustomerBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withCustomersActions
+  resetCustomersSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: CustomerBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: CustomerBulkDeleteDialogPayload = payload;
 
-  // #withCustomersActions
-  setCustomersSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteCustomers, isLoading } =
+  const { mutateAsync: bulkDeleteCustomers, isPending: isLoading } =
     useBulkDeleteCustomers();
 
   const handleCancel = () => {
@@ -44,7 +60,7 @@ function CustomerBulkDeleteDialog({
           message: intl.get('the_customers_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setCustomersSelectedRows([]);
+        resetCustomersSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -96,9 +112,9 @@ function CustomerBulkDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
+export const CustomerBulkDeleteDialog = FF.pipe(
+  CustomerBulkDeleteDialogInner,
   withCustomersActions,
-)(CustomerBulkDeleteDialog);
-
+  withDialogActions,
+  withDialogRedux(),
+);

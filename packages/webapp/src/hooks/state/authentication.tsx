@@ -1,9 +1,6 @@
-// @ts-nocheck
-import { useDispatch, useSelector } from 'react-redux';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { isAuthenticated } from '@/store/authentication/authentication.reducer';
 import {
-  setAuthTenantId,
   setAuthToken,
   setAuthUserId,
   setEmailConfirmed,
@@ -11,7 +8,8 @@ import {
   setOrganizationId,
   setLocale,
 } from '@/store/authentication/authentication.actions';
-import { useQueryClient } from 'react-query';
+import { isAuthenticated } from '@/store/authentication/authentication.reducer';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { removeCookie } from '@/utils';
 
 /**
@@ -26,11 +24,14 @@ function removeAuthenticationCookies() {
 }
 
 export const useAuthActions = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
   return {
-    setLogin: useCallback((login) => dispatch(setLogin(login)), [dispatch]),
+    setLogin: useCallback(
+      (_login: unknown) => dispatch(setLogin()),
+      [dispatch],
+    ),
     setLogout: useCallback(() => {
       // Resets store state.
       // dispatch(setStoreReset());
@@ -49,21 +50,21 @@ export const useAuthActions = () => {
  * Retrieve whether the user is authenticated.
  */
 export const useIsAuthenticated = () => {
-  return useSelector(isAuthenticated);
+  return useAppSelector(isAuthenticated);
 };
 
 /**
  * Retrieve the authentication token.
  */
 export const useAuthToken = () => {
-  return useSelector((state) => state.authentication.token);
+  return useAppSelector((state) => state.authentication.token);
 };
 
 /**
  * Retrieve the authentication user.
  */
 export const useAuthUser = () => {
-  return useSelector((state) => ({}));
+  return useAppSelector(() => ({}));
 };
 
 /**
@@ -77,14 +78,14 @@ export const useAuthUserId = () => {
  * Retrieve the authenticated organization id.
  */
 export const useAuthOrganizationId = () => {
-  return useSelector((state) => state.authentication.organizationId);
+  return useAppSelector((state) => state.authentication.organizationId);
 };
 
 /**
  * Retrieves the user's email verification status.
  */
 export const useAuthUserVerified = () => {
-  return useSelector((state) => state.authentication.verified);
+  return useAppSelector((state) => state.authentication.verified);
 };
 
 /**
@@ -92,24 +93,24 @@ export const useAuthUserVerified = () => {
  * @returns {string}
  */
 export const useAuthUserVerifyEmail = () => {
-  return useSelector((state) => state.authentication.verifyEmail);
+  return useAppSelector((state) => state.authentication.verifyEmail);
 };
 
 /**
  * Sets the user's email verification status.
  */
 export const useSetAuthEmailConfirmed = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
-    (verified?: boolean = true, email: string) =>
+    (verified: boolean | undefined, email: string) =>
       dispatch(setEmailConfirmed(verified, email)),
     [dispatch],
   );
 };
 
 export const useSetOrganizationId = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
     (organizationId: string) => dispatch(setOrganizationId(organizationId)),
@@ -118,7 +119,7 @@ export const useSetOrganizationId = () => {
 };
 
 export const useSetAuthToken = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
     (authToken: string) => dispatch(setAuthToken(authToken)),
@@ -126,17 +127,8 @@ export const useSetAuthToken = () => {
   );
 };
 
-export const useSetTenantId = () => {
-  const dispatch = useDispatch();
-
-  return useCallback(
-    (tenantId: string) => dispatch(setAuthTenantId(tenantId)),
-    [dispatch],
-  );
-};
-
 export const useSetAuthUserId = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
     (userId: string) => dispatch(setAuthUserId(userId)),
@@ -145,7 +137,7 @@ export const useSetAuthUserId = () => {
 };
 
 export const useSetLocale = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
     (locale: string) => dispatch(setLocale(locale)),

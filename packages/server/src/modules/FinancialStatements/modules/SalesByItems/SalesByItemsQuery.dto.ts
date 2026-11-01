@@ -30,10 +30,6 @@ export class SalesByItemsQueryDto {
   @IsOptional()
   toDate: Date | string;
 
-  @ApiPropertyOptional({
-    description: 'Number formatting options for the report',
-    type: NumberFormatQueryDto,
-  })
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
   @IsOptional()

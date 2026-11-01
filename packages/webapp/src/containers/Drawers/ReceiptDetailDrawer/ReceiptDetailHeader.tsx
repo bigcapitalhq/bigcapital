@@ -1,9 +1,9 @@
-// @ts-nocheck
+import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { defaultTo } from 'lodash';
-
+import { ReceiptDetailsStatus } from './components';
+import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import {
   CustomerDrawerLink,
   CommercialDocHeader,
@@ -15,21 +15,22 @@ import {
   DetailItem,
 } from '@/components';
 
-import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
-import { ReceiptDetailsStatus } from './components';
-
 /**
  * Receipt details header.
  */
-export default function ReceiptDetailHeader() {
+export function ReceiptDetailHeader() {
   const { receipt } = useReceiptDetailDrawerContext();
+
+  if (!receipt) {
+    return null;
+  }
 
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountReceiptItem label={intl.get('amount')}>
-            <h3 class="big-number">{receipt.total_formatted}</h3>
+            <h3 className="big-number">{receipt.totalFormatted}</h3>
           </AmountReceiptItem>
 
           <StatusReceiptItem>
@@ -43,24 +44,24 @@ export default function ReceiptDetailHeader() {
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('receipt.details.receipt_number')}
-              children={defaultTo(receipt.receipt_number, '-')}
+              children={defaultTo(receipt.receiptNumber, '-')}
             />
             <DetailItem label={intl.get('customer_name')}>
-              <CustomerDrawerLink customerId={receipt.customer_id}>
-                {receipt.customer?.display_name}
+              <CustomerDrawerLink customerId={receipt.customerId}>
+                {receipt.customer?.displayName}
               </CustomerDrawerLink>
             </DetailItem>
             <DetailItem
               label={intl.get('receipt_date')}
-              children={receipt.formatted_receipt_date}
+              children={receipt.formattedReceiptDate}
             />
             <DetailItem
               label={intl.get('closed_date')}
-              children={receipt.formatted_closed_at_date}
+              children={receipt.formattedClosedAtDate}
             />
             <ExchangeRateDetailItem
-              exchangeRate={receipt?.exchange_rate}
-              toCurrency={receipt?.currency_code}
+              exchangeRate={receipt?.exchangeRate}
+              toCurrency={receipt?.currencyCode}
             />
           </DetailsMenu>
         </Col>
@@ -73,15 +74,15 @@ export default function ReceiptDetailHeader() {
           >
             <DetailItem
               label={intl.get('deposit_account')}
-              children={receipt.deposit_account?.name}
+              children={receipt.depositAccount?.name}
             />
             <DetailItem
               label={intl.get('reference')}
-              children={defaultTo(receipt.reference_no, '--')}
+              children={defaultTo(receipt.referenceNo, '--')}
             />
             <DetailItem
               label={intl.get('receipt.details.created_at')}
-              children={receipt.formatted_created_at}
+              children={receipt.formattedCreatedAt}
             />
           </DetailsMenu>
         </Col>

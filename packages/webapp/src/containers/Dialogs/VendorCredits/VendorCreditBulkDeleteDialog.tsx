@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteVendorCredits } from '@/hooks/query/vendorCredit';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithVendorsCreditNotesActionsProps } from '@/containers/Purchases/CreditNotes/CreditNotesLanding/withVendorsCreditNotesActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withVendorsCreditNotesActions } from '@/containers/Purchases/CreditNotes/CreditNotesLanding/withVendorsCreditNotesActions';
-import { compose } from '@/utils';
+import { useBulkDeleteVendorCredits } from '@/hooks/query/vendor-credit';
 
-function VendorCreditBulkDeleteDialog({
+interface VendorCreditBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface VendorCreditBulkDeleteDialogProps
+  extends WithVendorsCreditNotesActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
+function VendorCreditBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withVendorsCreditNotesActions
+  resetVendorsCreditNoteSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: VendorCreditBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: VendorCreditBulkDeleteDialogPayload = payload ?? {};
 
-  // #withVendorsCreditNotesActions
-  setVendorsCreditNoteSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteVendorCredits, isLoading } =
+  const { mutateAsync: bulkDeleteVendorCredits, isPending: isLoading } =
     useBulkDeleteVendorCredits();
 
   const handleCancel = () => {
@@ -41,12 +57,10 @@ function VendorCreditBulkDeleteDialog({
     })
       .then(() => {
         AppToaster.show({
-          message: intl.get(
-            'the_vendor_credits_has_been_deleted_successfully',
-          ),
+          message: intl.get('the_vendor_credits_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setVendorsCreditNoteSelectedRows([]);
+        resetVendorsCreditNoteSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -98,9 +112,9 @@ function VendorCreditBulkDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
+export const VendorCreditBulkDeleteDialog = FF.pipe(
+  VendorCreditBulkDeleteDialogInner,
   withVendorsCreditNotesActions,
-)(VendorCreditBulkDeleteDialog);
-
+  withDialogActions,
+  withDialogRedux(),
+);

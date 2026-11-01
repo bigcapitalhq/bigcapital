@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Intent,
   Button,
@@ -10,69 +8,76 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { Group, FormattedMessage as T } from '@/components';
-import { PageForm } from '@/components/PageForm';
-import { useHistory } from 'react-router-dom';
-import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { If, Icon } from '@/components';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useBillFormContext } from './BillFormProvider';
+import type { BillFormValues } from './utils';
+import { Group, FormattedMessage as T } from '@/components';
+import { If, Icon } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { CLASSES } from '@/constants/classes';
 
 /**
  * Bill floating actions bar.
  */
-export default function BillFloatingActions() {
+export function BillFloatingActions() {
   const history = useHistory();
 
   // Formik context.
-  const { resetForm, submitForm, isSubmitting } = useFormikContext();
+  const { resetForm, submitForm, isSubmitting } =
+    useFormikContext<BillFormValues>();
 
   // Bill form context.
   const { bill, setSubmitPayload } = useBillFormContext();
 
   // Handle submit as open button click.
-  const handleSubmitOpenBtnClick = (event) => {
+  const handleSubmitOpenBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ redirect: true, status: true });
     submitForm();
   };
 
   // Handle submit, open and another new button click.
-  const handleSubmitOpenAndNewBtnClick = (event) => {
+  const handleSubmitOpenAndNewBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ redirect: false, status: true, resetForm: true });
     submitForm();
   };
 
   // Handle submit as open & continue editing button click.
-  const handleSubmitOpenContinueEditingBtnClick = (event) => {
+  const handleSubmitOpenContinueEditingBtnClick = (
+    _event: React.MouseEvent,
+  ) => {
     setSubmitPayload({ redirect: false, status: true });
     submitForm();
   };
 
   // Handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ redirect: true, status: false });
     submitForm();
   };
 
   // handle submit as draft & new button click.
-  const handleSubmitDraftAndNewBtnClick = (event) => {
+  const handleSubmitDraftAndNewBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ redirect: false, status: false, resetForm: true });
     submitForm();
   };
 
   // Handle submit as draft & continue editing button click.
-  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+  const handleSubmitDraftContinueEditingBtnClick = (
+    _event: React.MouseEvent,
+  ) => {
     setSubmitPayload({ redirect: false, status: false });
     submitForm();
   };
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = (_event: React.MouseEvent) => {
     history.goBack();
   };
 
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = (_event: React.MouseEvent) => {
     resetForm();
   };
 
@@ -82,7 +87,7 @@ export default function BillFloatingActions() {
       className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
     >
       {/* ----------- Save And Open ----------- */}
-      <If condition={!bill || !bill?.is_open}>
+      <If condition={!bill || !bill?.isOpen}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -148,7 +153,7 @@ export default function BillFloatingActions() {
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={bill && bill?.is_open}>
+      <If condition={Boolean(bill?.isOpen)}>
         <ButtonGroup>
           <Button
             loading={isSubmitting}

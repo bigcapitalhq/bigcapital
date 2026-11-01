@@ -1,30 +1,32 @@
-// @ts-nocheck
+import {
+  Classes,
+  Intent,
+  Menu,
+  MenuDivider,
+  MenuItem,
+} from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Intent,
-  Classes,
-} from '@blueprintjs/core';
-
+import type { Warehouse } from '@bigcapital/sdk-ts';
 import { Icon, If } from '@/components';
 import { safeCallback } from '@/utils';
 
 const WAREHOUSES_SKELETON_N = 4;
 
-/**
- * Warehouse grid item box context menu.
- * @returns {JSX.Element}
- */
+interface WarehouseContextMenuProps {
+  warehouse: Warehouse;
+  onEditClick: () => void;
+  onDeleteClick: () => void;
+  onMarkPrimary: () => void;
+}
+
 export function WarehouseContextMenu({
   onEditClick,
   onDeleteClick,
   onMarkPrimary,
   warehouse,
-}) {
+}: WarehouseContextMenuProps): React.ReactElement {
   return (
     <Menu>
       <MenuItem
@@ -50,11 +52,7 @@ export function WarehouseContextMenu({
   );
 }
 
-/**
- * Warehouse grid item box skeleton.
- * @returns {JSX.Element}
- */
-function WarehouseGridItemSkeletonBox() {
+function WarehouseGridItemSkeletonBox(): React.ReactElement {
   return (
     <WarehouseBoxRoot>
       <WarehouseHeader>
@@ -70,10 +68,16 @@ function WarehouseGridItemSkeletonBox() {
   );
 }
 
-/**
- * Warehouse grid item box.
- * @returns {JSX.Element}
- */
+interface WarehousesGridItemBoxProps {
+  title: string;
+  code: string;
+  city?: string;
+  country?: string;
+  email?: string;
+  phoneNumber?: string;
+  primary?: boolean;
+}
+
 export function WarehousesGridItemBox({
   title,
   code,
@@ -82,9 +86,9 @@ export function WarehousesGridItemBox({
   email,
   phoneNumber,
   primary,
-}) {
+}: WarehousesGridItemBoxProps): React.ReactElement {
   return (
-    <WarehouseBoxRoot>
+    <WarehouseBoxRoot data-testId="warehouse-item">
       <WarehouseHeader>
         <WarehouseTitle>
           {title} {primary ? <Icon icon={'star-18dp'} iconSize={16} /> : null}
@@ -104,10 +108,14 @@ export function WarehousesGridItemBox({
   );
 }
 
-export function WarehousesSkeleton() {
-  return [...Array(WAREHOUSES_SKELETON_N)].map((key, value) => (
-    <WarehouseGridItemSkeletonBox />
-  ));
+export function WarehousesSkeleton(): React.ReactElement {
+  return (
+    <>
+      {[...Array(WAREHOUSES_SKELETON_N)].map((_key, value) => (
+        <WarehouseGridItemSkeletonBox key={value} />
+      ))}
+    </>
+  );
 }
 
 export const WarehousesList = styled.div`

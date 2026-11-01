@@ -25,7 +25,7 @@ export class ImportFileDataValidator {
    */
   public async validateData(
     importableFields: ResourceMetaFieldsMap,
-    data: Record<string, any>
+    data: Record<string, any>,
   ): Promise<void | ImportInsertError[]> {
     const YupSchema = convertFieldsToYupValidation(importableFields);
     const _data = { ...data };

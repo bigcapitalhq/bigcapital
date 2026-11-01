@@ -1,8 +1,6 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
 import { Spinner } from '@blueprintjs/core';
 import { Button } from '@blueprintjs/core';
+import styled from 'styled-components';
 
 export function AuthenticationLoadingOverlay() {
   return (
@@ -16,7 +14,7 @@ const AuthOverlayRoot = styled.div`
   --x-color-background: rgba(252, 253, 255, 0.5);
 
   .bp4-dark & {
-    --x-color-background: rgba(37, 42, 49, 0.60);
+    --x-color-background: rgba(37, 42, 49, 0.6);
   }
   position: absolute;
   top: 0;
@@ -31,7 +29,7 @@ const AuthOverlayRoot = styled.div`
 export const AuthInsiderContent = styled.div`
   position: relative;
 `;
-export const AuthInsiderCard = styled.div`
+export const AuthInsiderCard = styled.div<{ textAlign?: string }>`
   --x-color-background: #fff;
   --x-color-border: #d5d5d5;
 
@@ -44,6 +42,7 @@ export const AuthInsiderCard = styled.div`
   padding: 26px 22px;
   background: var(--x-color-background);
   border-radius: 3px;
+  text-align: ${({ textAlign }) => textAlign || 'inherit'};
 `;
 
 export const AuthInsiderCopyright = styled.div`

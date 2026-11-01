@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteCreditNotes } from '@/hooks/query/creditNote';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithCreditNotesActionsProps } from '@/containers/Sales/CreditNotes/CreditNotesLanding/withCreditNotesActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withCreditNotesActions } from '@/containers/Sales/CreditNotes/CreditNotesLanding/withCreditNotesActions';
-import { compose } from '@/utils';
+import { useBulkDeleteCreditNotes } from '@/hooks/query/credit-note';
 
-function CreditNoteBulkDeleteDialog({
+interface CreditNoteBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface CreditNoteBulkDeleteDialogProps
+  extends WithCreditNotesActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
+function CreditNoteBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withCreditNotesActions
+  resetCreditNotesSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: CreditNoteBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: CreditNoteBulkDeleteDialogPayload = payload ?? {};
 
-  // #withCreditNotesActions
-  setCreditNotesSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteCreditNotes, isLoading } =
+  const { mutateAsync: bulkDeleteCreditNotes, isPending: isLoading } =
     useBulkDeleteCreditNotes();
 
   const handleCancel = () => {
@@ -44,7 +60,7 @@ function CreditNoteBulkDeleteDialog({
           message: intl.get('the_credit_notes_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setCreditNotesSelectedRows([]);
+        resetCreditNotesSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -96,9 +112,9 @@ function CreditNoteBulkDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
+export const CreditNoteBulkDeleteDialog = FF.pipe(
+  CreditNoteBulkDeleteDialogInner,
   withCreditNotesActions,
-)(CreditNoteBulkDeleteDialog);
-
+  withDialogActions,
+  withDialogRedux(),
+);

@@ -61,7 +61,7 @@ export interface ICustomersFilter extends IDynamicListFilter {
 }
 
 export interface GetCustomersResponse {
-  customers: Customer[];
+  data: Customer[];
   pagination: IPaginationMeta;
   filterMeta: IFilterMeta;
 }
@@ -129,9 +129,8 @@ export interface ICustomerOpeningBalanceEditedPayload {
   trx: Knex.Transaction;
 }
 
-
 export interface ICustomerActivatingPayload {
-  trx: Knex.Transaction,
+  trx: Knex.Transaction;
   oldCustomer: Customer;
 }
 

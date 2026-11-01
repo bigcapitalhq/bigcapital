@@ -1,4 +1,4 @@
-import { Features } from "@/common/types/Features";
+import { Features } from '@/common/types/Features';
 
 export const PaymentReceivedMeta = {
   importable: true,
@@ -9,7 +9,7 @@ export const PaymentReceivedMeta = {
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'paymentReceiveNo',
-  
+
   fields: {
     customer: {
       name: 'payment_receive.field.customer',

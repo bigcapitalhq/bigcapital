@@ -1,28 +1,40 @@
-// @ts-nocheck
+import { Tabs, Tab } from '@blueprintjs/core';
+import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import classNames from 'classnames';
-import { Tabs, Tab } from '@blueprintjs/core';
-
-import { CLASSES } from '@/constants/classes';
-import SMSMessagesDataTable from './SMSMessagesDataTable';
+import { SMSIntegrationForm } from './SMSIntegrationForm';
+import { SMSMessagesDataTable } from './SMSMessagesDataTable';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { Card } from '@/components';
+import { CLASSES } from '@/constants/classes';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { useAppQueryString } from '@/hooks';
 
 import '@/style/pages/Preferences/SMSIntegration.scss';
 
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import { compose } from '@/utils';
+type SMSIntegrationTabsInnerProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
 
 /**
  * SMS Integration Tabs.
- * @returns {React.JSX}
  */
-function SMSIntegrationTabs({
+function SMSIntegrationTabsInner({
   // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: SMSIntegrationTabsInnerProps) {
+  const [locationQuery, setLocationQuery] = useAppQueryString();
+
+  const activeTab =
+    locationQuery?.tab === 'overview' ? 'overview' : 'sms_messages';
+
+  const handleTabChange = (tabId: string | number) => {
+    setLocationQuery({ tab: String(tabId) });
+  };
+
   React.useEffect(() => {
     changePreferencesPageTitle(intl.get('sms_integration.label'));
   }, [changePreferencesPageTitle]);
@@ -30,10 +42,17 @@ function SMSIntegrationTabs({
   return (
     <SMSIntegrationCard>
       <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
-        <Tabs animate={true} defaultSelectedTabId={'sms_messages'}>
+        <Tabs
+          id="sms-integration-tabs"
+          animate={true}
+          selectedTabId={activeTab}
+          onChange={handleTabChange}
+          renderActiveTabPanelOnly={true}
+        >
           <Tab
             id="overview"
             title={intl.get('sms_integration.label.overview')}
+            panel={<SMSIntegrationForm />}
           />
           <Tab
             id="sms_messages"
@@ -46,7 +65,10 @@ function SMSIntegrationTabs({
   );
 }
 
-export default compose(withDashboardActions)(SMSIntegrationTabs);
+export const SMSIntegrationTabs = FF.pipe(
+  SMSIntegrationTabsInner,
+  withDashboardActions,
+);
 
 const SMSIntegrationCard = styled(Card)`
   padding: 0;

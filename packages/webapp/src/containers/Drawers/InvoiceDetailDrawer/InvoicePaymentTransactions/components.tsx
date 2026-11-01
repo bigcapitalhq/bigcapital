@@ -1,12 +1,25 @@
-// @ts-nocheck
+import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { CLASSES } from '@/constants/classes';
+import type { InvoicePaymentTransactionsResponse } from '@bigcapital/sdk-ts';
 import { FormatDateCell, Icon, Can } from '@/components';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
-import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
+
+type InvoicePaymentTransaction = InvoicePaymentTransactionsResponse[number];
+
+interface ActionsMenuProps {
+  row: { original: InvoicePaymentTransaction };
+  payload: {
+    onEdit: (row: InvoicePaymentTransaction) => void;
+    onDelete: (row: InvoicePaymentTransaction) => void;
+  };
+}
 
 /**
  * Table actions menu.
@@ -14,7 +27,7 @@ import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption'
 export function ActionsMenu({
   row: { original },
   payload: { onEdit, onDelete },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>
@@ -46,7 +59,7 @@ export const useInvoicePaymentTransactionsColumns = () => {
       {
         id: 'date',
         Header: intl.get('payment_date'),
-        accessor: 'formatted_payment_date',
+        accessor: 'formattedPaymentDate',
         Cell: FormatDateCell,
         width: 110,
         className: 'date',
@@ -55,14 +68,14 @@ export const useInvoicePaymentTransactionsColumns = () => {
       {
         id: 'deposit_account_name',
         Header: intl.get('invoice_transactions.column.withdrawal_account'),
-        accessor: 'deposit_account_name',
+        accessor: 'depositAccountName',
         width: 120,
         textOverview: true,
       },
       {
         id: 'amount',
         Header: intl.get('amount'),
-        accessor: 'formatted_payment_amount',
+        accessor: 'formattedPaymentAmount',
         align: 'right',
         width: 120,
         className: clsx(CLASSES.FONT_BOLD),
@@ -71,7 +84,7 @@ export const useInvoicePaymentTransactionsColumns = () => {
       {
         id: 'payment_number.',
         Header: intl.get('payment_no'),
-        accessor: 'payment_number',
+        accessor: 'paymentNumber',
         width: 100,
         className: 'payment_number',
         textOverview: true,
@@ -79,7 +92,7 @@ export const useInvoicePaymentTransactionsColumns = () => {
       {
         id: 'payment_reference_no',
         Header: intl.get('reference_no'),
-        accessor: 'payment_reference_no',
+        accessor: 'paymentReferenceNo',
         width: 90,
         className: 'payment_reference_no',
         clickable: true,

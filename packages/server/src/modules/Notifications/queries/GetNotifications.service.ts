@@ -25,7 +25,11 @@ export class GetNotificationsService {
   async getNotifications(
     userId: number,
     options: GetNotificationsOptions = {},
-  ): Promise<{ notifications: Notification[]; total: number; unreadCount: number }> {
+  ): Promise<{
+    notifications: Notification[];
+    total: number;
+    unreadCount: number;
+  }> {
     const { limit = 20, offset = 0, unreadOnly = false, category } = options;
 
     // Build base query for user's notifications

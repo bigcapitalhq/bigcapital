@@ -1,32 +1,34 @@
-// @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import { Position, Drawer, DrawerProps } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { Position, Drawer } from '@blueprintjs/core';
+import React, { useEffect, useRef, useState } from 'react';
 import '@/style/containers/FinancialStatements/DrawerHeader.scss';
 
-/**
- * Financial statement header.
- * @returns {JSX.Element}
- */
-export default function FinancialStatementHeader({
+interface FinancialStatementHeaderProps {
+  children?: React.ReactNode;
+  isOpen: boolean;
+  drawerProps?: Omit<DrawerProps, 'isOpen'>;
+  className?: string;
+}
+
+export function FinancialStatementHeader({
   children,
   isOpen,
   drawerProps,
   className,
-}) {
-  const timeoutRef = React.useRef();
+}: FinancialStatementHeaderProps) {
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Hides the content scrollbar and scroll to the top of the page once the drawer open.
   useEffect(() => {
     const contentPanel = document.querySelector('body');
-    contentPanel.classList.toggle('hide-scrollbar', isOpen);
+    contentPanel?.classList.toggle('hide-scrollbar', isOpen);
 
     if (isOpen) {
-      document.querySelector('.Pane2').scrollTo(0, 0);
+      (document.querySelector('.Pane2') as HTMLElement | null)?.scrollTo(0, 0);
     }
     return () => {
-      contentPanel.classList.remove('hide-scrollbar');
+      contentPanel?.classList.remove('hide-scrollbar');
     };
   }, [isOpen]);
 
@@ -42,6 +44,7 @@ export default function FinancialStatementHeader({
 
   return (
     <div
+      data-testId="financial-report-drawer"
       className={classNames(
         'financial-statement__header',
         'financial-header-drawer',

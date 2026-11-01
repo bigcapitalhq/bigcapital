@@ -9,7 +9,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { OrganizationBuildQueue } from './Organization.types';
 import { OrganizationBuildProcessor } from './processors/OrganizationBuild.processor';
 import { CommandOrganizationValidators } from './commands/CommandOrganizationValidators.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 import { OrganizationBaseCurrencyLocking } from './Organization/OrganizationBaseCurrencyLocking.service';
 import { SyncSystemUserToTenantService } from './commands/SyncSystemUserToTenant.service';
@@ -17,10 +17,11 @@ import { SyncSystemUserToTenantSubscriber } from './subscribers/SyncSystemUserTo
 import { GetBuildOrganizationBuildJob } from './commands/GetBuildOrganizationJob.service';
 import { AttachmentsModule } from '../Attachments/Attachment.module';
 import { TransformerModule } from '../Transformer/Transformer.module';
+import { SocketModule } from '../Socket/Socket.module';
+import { OrganizationBuiltSubscriber } from './subscribers/OrganizationBuilt.subscriber';
 
 @Module({
   providers: [
-    TenancyContext,
     GetCurrentOrganizationService,
     BuildOrganizationService,
     UpdateOrganizationService,
@@ -30,8 +31,10 @@ import { TransformerModule } from '../Transformer/Transformer.module';
     SyncSystemUserToTenantService,
     SyncSystemUserToTenantSubscriber,
     GetBuildOrganizationBuildJob,
+    OrganizationBuiltSubscriber,
   ],
   imports: [
+    TenancyModule,
     BullModule.registerQueue({ name: OrganizationBuildQueue }),
     BullBoardModule.forFeature({
       name: OrganizationBuildQueue,
@@ -40,7 +43,9 @@ import { TransformerModule } from '../Transformer/Transformer.module';
     TenantDBManagerModule,
     AttachmentsModule,
     TransformerModule,
+    SocketModule,
   ],
   controllers: [OrganizationController],
+  exports: [BuildOrganizationService],
 })
 export class OrganizationModule {}

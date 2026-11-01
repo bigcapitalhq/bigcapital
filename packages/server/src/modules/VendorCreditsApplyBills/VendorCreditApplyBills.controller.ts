@@ -8,9 +8,18 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { VendorCreditApplyBillsApplicationService } from './VendorCreditApplyBillsApplication.service';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { ApplyVendorCreditToBillsDto } from './dtos/ApplyVendorCreditToBills.dto';
+import { VendorCreditAppliedBillResponseDto } from './dtos/VendorCreditAppliedBillResponse.dto';
+import { VendorCreditBillToApplyResponseDto } from './dtos/VendorCreditBillToApplyResponse.dto';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
@@ -20,6 +29,10 @@ import { VendorCreditAction } from '../VendorCredit/types/VendorCredit.types';
 @Controller('vendor-credits')
 @ApiTags('Vendor Credits Apply Bills')
 @ApiCommonHeaders()
+@ApiExtraModels(
+  VendorCreditAppliedBillResponseDto,
+  VendorCreditBillToApplyResponseDto,
+)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class VendorCreditApplyBillsController {
   constructor(
@@ -28,7 +41,17 @@ export class VendorCreditApplyBillsController {
 
   @Get(':vendorCreditId/bills-to-apply')
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
-  @ApiOperation({ summary: 'Get bills that can be applied with this vendor credit.' })
+  @ApiOperation({
+    summary: 'Get bills that can be applied with this vendor credit.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Bills that can be applied with this vendor credit.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(VendorCreditBillToApplyResponseDto) },
+    },
+  })
   async getVendorCreditToApplyBills(
     @Param('vendorCreditId') vendorCreditId: number,
   ) {
@@ -65,6 +88,15 @@ export class VendorCreditApplyBillsController {
   @Get(':vendorCreditId/applied-bills')
   @RequirePermission(VendorCreditAction.View, AbilitySubject.VendorCredit)
   @ApiOperation({ summary: 'Get bills already applied to this vendor credit.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The bills applied to the vendor credit have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(VendorCreditAppliedBillResponseDto) },
+    },
+  })
   async getAppliedBillsToVendorCredit(
     @Param('vendorCreditId') vendorCreditId: number,
   ) {

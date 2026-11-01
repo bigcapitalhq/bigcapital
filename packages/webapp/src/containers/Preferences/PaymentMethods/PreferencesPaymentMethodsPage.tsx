@@ -1,21 +1,19 @@
-// @ts-nocheck
+import { Classes, Text } from '@blueprintjs/core';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Classes, Text } from '@blueprintjs/core';
-import { Box, Stack } from '@/components';
-import { PaymentMethodsBoot } from './PreferencesPaymentMethodsBoot';
 import { StripePreSetupDialog } from './dialogs/StripePreSetupDialog/StripePreSetupDialog';
-import { useChangePreferencesPageTitle } from '@/hooks/state';
 import { StripeIntegrationEditDrawer } from './drawers/StripeIntegrationEditDrawer';
+import { PaymentMethodsBoot } from './PreferencesPaymentMethodsBoot';
 import { StripePaymentMethod } from './StripePaymentMethod';
+import { Box, Stack } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
 import { DRAWERS } from '@/constants/drawers';
+import { useChangePreferencesPageTitle } from '@/hooks/state';
 
 /**
  * Payment methods page.
- * @returns {JSX.Element}
  */
-export default function PreferencesPaymentMethodsPage() {
+export function PreferencesPaymentMethodsPage() {
   const changePageTitle = useChangePreferencesPageTitle();
 
   useEffect(() => {

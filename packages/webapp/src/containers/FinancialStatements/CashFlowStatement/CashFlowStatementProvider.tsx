@@ -1,29 +1,50 @@
-// @ts-nocheck
 import React from 'react';
-import FinancialReportPage from '../FinancialReportPage';
-import { useCashFlowStatementReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
+import { FinancialReportPage } from '../FinancialReportPage';
+import { useCashFlowStatementReport } from '@/hooks/query';
 
-const CashFLowStatementContext = React.createContext();
+type UseCashFlowResult = ReturnType<typeof useCashFlowStatementReport>;
+
+type CashFlowStatementContextValue = {
+  cashFlowStatement: UseCashFlowResult['data'];
+  isCashFlowFetching: boolean;
+  isCashFlowLoading: boolean;
+  refetchCashFlow: UseCashFlowResult['refetch'];
+  query: Record<string, unknown>;
+  filter: Record<string, unknown>;
+  httpQuery: Record<string, unknown>;
+};
+
+type CashFlowStatementProviderProps = {
+  filter: Record<string, unknown>;
+  children?: React.ReactNode;
+};
+
+const CashFLowStatementContext = React.createContext<
+  CashFlowStatementContextValue | undefined
+>(undefined);
 
 /**
  * Cash flow statement provider.
  */
-function CashFlowStatementProvider({ filter, ...props }) {
-  // Transforms the given state query to http query.
+function CashFlowStatementProvider({
+  filter,
+  ...props
+}: CashFlowStatementProviderProps) {
   const httpQuery = React.useMemo(
-    () => transformFilterFormToQuery(filter),
+    () => transformFilterFormToQuery(filter) as Record<string, unknown>,
     [filter],
   );
-  // Fetching the cash flow statement report.
   const {
     data: cashFlowStatement,
     isFetching: isCashFlowFetching,
     isLoading: isCashFlowLoading,
     refetch: refetchCashFlow,
-  } = useCashFlowStatementReport(httpQuery, { keepPreviousData: true });
+  } = useCashFlowStatementReport(httpQuery, {
+    placeholderData: (prev) => prev,
+  });
 
-  const provider = {
+  const provider: CashFlowStatementContextValue = {
     cashFlowStatement,
     isCashFlowFetching,
     isCashFlowLoading,
@@ -40,7 +61,14 @@ function CashFlowStatementProvider({ filter, ...props }) {
   );
 }
 
-const useCashFlowStatementContext = () =>
-  React.useContext(CashFLowStatementContext);
+const useCashFlowStatementContext = (): CashFlowStatementContextValue => {
+  const ctx = React.useContext(CashFLowStatementContext);
+  if (!ctx) {
+    throw new Error(
+      'useCashFlowStatementContext must be used within a CashFlowStatementProvider',
+    );
+  }
+  return ctx;
+};
 
 export { CashFlowStatementProvider, useCashFlowStatementContext };

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MailTenancy } from './MailTenancy.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 
 @Module({
-  providers: [MailTenancy, TenancyContext],
+  imports: [TenancyModule],
+  providers: [MailTenancy],
   exports: [MailTenancy],
 })
 export class MailTenancyModule {}

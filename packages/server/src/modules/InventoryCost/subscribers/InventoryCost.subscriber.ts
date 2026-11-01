@@ -20,7 +20,7 @@ export class InventoryCostSubscriber {
     private readonly itemsQuantitySync: InventoryItemsQuantitySyncService,
     private readonly inventoryService: InventoryComputeCostService,
     private readonly importAls: ImportAls,
-  ) { }
+  ) {}
 
   /**
    * Sync inventory items quantity once inventory transactions created.
@@ -44,7 +44,6 @@ export class InventoryCostSubscriber {
   @OnEvent(events.inventory.onInventoryTransactionsCreated)
   async handleScheduleItemsCostOnInventoryTransactionsCreated({
     inventoryTransactions,
-    trx,
   }: IInventoryTransactionsCreatedPayload) {
     const inImportPreviewScope = this.importAls.isImportPreview;
 
@@ -60,7 +59,7 @@ export class InventoryCostSubscriber {
    * Marks items cost compute running state.
    */
   @OnEvent(events.inventory.onInventoryTransactionsCreated)
-  async markGlobalSettingsComputeItems({ }) {
+  async markGlobalSettingsComputeItems({}) {
     await this.inventoryService.markItemsCostComputeRunning(true);
   }
 
@@ -68,7 +67,7 @@ export class InventoryCostSubscriber {
    * Marks items cost compute as completed.
    */
   @OnEvent(events.inventory.onInventoryCostEntriesWritten)
-  async markGlobalSettingsComputeItemsCompeted({ }) {
+  async markGlobalSettingsComputeItemsCompeted({}) {
     await this.inventoryService.markItemsCostComputeRunning(false);
   }
 
@@ -77,13 +76,11 @@ export class InventoryCostSubscriber {
    */
   @OnEvent(events.inventory.onComputeItemCostJobCompleted)
   async onComputeItemCostJobFinished({
-    itemId,
     startingDate,
   }: IComputeItemCostJobCompletedPayload) {
     // Convert startingDate to Date if it's a string
-    const startingDateObj = startingDate instanceof Date
-      ? startingDate
-      : new Date(startingDate);
+    const startingDateObj =
+      startingDate instanceof Date ? startingDate : new Date(startingDate);
 
     // Write GL entries for inventory cost lots after cost computation completes
     await this.saleInvoicesCost.writeCostLotsGLEntries(startingDateObj);
@@ -110,7 +107,6 @@ export class InventoryCostSubscriber {
   @OnEvent(events.inventory.onInventoryTransactionsDeleted)
   async handleScheduleItemsCostOnInventoryTransactionsDeleted({
     transactionType,
-    transactionId,
     oldInventoryTransactions,
     trx,
   }: IInventoryTransactionsDeletedPayload) {
@@ -122,7 +118,7 @@ export class InventoryCostSubscriber {
     }
     const inventoryItemsIds = map(oldInventoryTransactions, 'itemId');
     const startingDates = map(oldInventoryTransactions, 'date');
-    const startingDate: Date = head(startingDates);
+    const startingDate = new Date(head(startingDates));
 
     runAfterTransaction(trx, async () => {
       try {

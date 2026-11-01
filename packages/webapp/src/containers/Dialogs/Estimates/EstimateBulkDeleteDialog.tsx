@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteEstimates } from '@/hooks/query/estimates';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithEstimatesActionsProps } from '@/containers/Sales/Estimates/EstimatesLanding/withEstimatesActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withEstimatesActions } from '@/containers/Sales/Estimates/EstimatesLanding/withEstimatesActions';
-import { compose } from '@/utils';
+import { useBulkDeleteEstimates } from '@/hooks/query/estimates';
 
-function EstimateBulkDeleteDialog({
+interface EstimateBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface EstimateBulkDeleteDialogProps
+  extends WithEstimatesActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
+function EstimateBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withEstimatesActions
+  resetEstimatesSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: EstimateBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: EstimateBulkDeleteDialogPayload = payload ?? {};
 
-  // #withEstimatesActions
-  setEstimatesSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteEstimates, isLoading } =
+  const { mutateAsync: bulkDeleteEstimates, isPending: isLoading } =
     useBulkDeleteEstimates();
 
   const handleCancel = () => {
@@ -44,7 +60,7 @@ function EstimateBulkDeleteDialog({
           message: intl.get('the_estimates_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setEstimatesSelectedRows([]);
+        resetEstimatesSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -96,9 +112,9 @@ function EstimateBulkDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
+export const EstimateBulkDeleteDialog = FF.pipe(
+  EstimateBulkDeleteDialogInner,
   withEstimatesActions,
-)(EstimateBulkDeleteDialog);
-
+  withDialogActions,
+  withDialogRedux(),
+);

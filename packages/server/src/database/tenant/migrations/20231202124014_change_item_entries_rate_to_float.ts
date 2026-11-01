@@ -5,5 +5,5 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-  return knex.table('items_entries', (table) => {});
+  return knex.table('items_entries', (_table) => {});
 };

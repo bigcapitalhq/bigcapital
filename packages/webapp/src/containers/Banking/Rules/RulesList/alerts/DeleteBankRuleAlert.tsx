@@ -1,15 +1,26 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { AppToaster } from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useDeleteBankRule } from '@/hooks/query/banking';
 
-import { useDeleteBankRule } from '@/hooks/query/bank-rules';
-import { compose } from '@/utils';
+interface BankRuleDeleteAlertPayload {
+  id: number;
+}
+
+interface BankRuleDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: BankRuleDeleteAlertPayload;
+}
 
 /**
  * Project delete alert.
@@ -26,8 +37,16 @@ function BankRuleDeleteAlert({
 
   // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteBankRule, isLoading } = useDeleteBankRule();
+}: BankRuleDeleteAlertProps) {
+  const deleteBankRuleMutation = useDeleteBankRule();
+  const { mutateAsync: deleteBankRule } = deleteBankRuleMutation;
+
+  // Latent bug (behavior preserved): TanStack Query v5 renamed the mutation
+  // result's `isLoading` to `isPending`, so reading `isLoading` here has always
+  // yielded `undefined` and the alert never rendered a loading state. Keep
+  // reading it through a cast so the rendering behavior stays identical.
+  const isLoading = (deleteBankRuleMutation as { isLoading?: boolean })
+    .isLoading;
 
   // handle cancel delete project alert.
   const handleCancelDeleteAlert = () => {
@@ -44,23 +63,17 @@ function BankRuleDeleteAlert({
         });
         closeAlert(name);
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
-          AppToaster.show({
-            message: 'Something went wrong.',
-            intent: Intent.DANGER,
-          });
-        },
-      );
+      .catch(({ data: { errors } }) => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Delete'}
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -68,13 +81,16 @@ function BankRuleDeleteAlert({
       onConfirm={handleConfirmBtnClick}
       loading={isLoading}
     >
-      <p>Are you sure want to delete the bank rule?</p>
+      <p data-testId={'bank-rule-delete-alert'}>
+        Are you sure want to delete the bank rule?
+      </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const DeleteBankRuleAlert = FF.pipe(
+  BankRuleDeleteAlert,
   withDrawerActions,
-)(BankRuleDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

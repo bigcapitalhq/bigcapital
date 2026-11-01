@@ -80,7 +80,10 @@ export class PurchasesByItemsService {
       filter,
       inventoryItems,
       inventoryTransactions,
-      { baseCurrency: tenantMetadata.baseCurrency, dateFormat: meta.dateFormat },
+      {
+        baseCurrency: tenantMetadata.baseCurrency,
+        dateFormat: meta.dateFormat,
+      },
     );
     const purchasesByItemsData = purchasesByItemsInstance.reportData();
 

@@ -1,8 +1,7 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ExcessPaymentDialogContent = React.lazy(() =>
   import('./ExcessPaymentDialogContent').then((module) => ({
@@ -10,10 +9,18 @@ const ExcessPaymentDialogContent = React.lazy(() =>
   })),
 );
 
+type ExcessPaymentDialogRootProps = {
+  dialogName: string;
+  isOpen?: boolean;
+};
+
 /**
  * Excess payment dialog of the payment received form.
  */
-function ExcessPaymentDialogRoot({ dialogName, isOpen }) {
+function ExcessPaymentDialogRoot({
+  dialogName,
+  isOpen,
+}: ExcessPaymentDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -30,8 +37,9 @@ function ExcessPaymentDialogRoot({ dialogName, isOpen }) {
   );
 }
 
-export const ExcessPaymentDialog = compose(withDialogRedux())(
+export const ExcessPaymentDialog = FF.pipe(
   ExcessPaymentDialogRoot,
+  withDialogRedux(),
 );
 
 ExcessPaymentDialog.displayName = 'ExcessPaymentDialog';

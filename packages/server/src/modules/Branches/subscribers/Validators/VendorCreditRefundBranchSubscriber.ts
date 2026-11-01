@@ -8,7 +8,7 @@ import { IRefundVendorCreditCreatingPayload } from '@/modules/VendorCreditsRefun
 export class VendorCreditRefundBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on refund credit note creating.

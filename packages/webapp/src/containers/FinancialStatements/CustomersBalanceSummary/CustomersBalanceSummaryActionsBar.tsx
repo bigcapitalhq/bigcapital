@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   NavbarGroup,
   Button,
@@ -8,58 +7,63 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T, DashboardActionsBar } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
-import { withCustomersBalanceSummary } from './withCustomersBalanceSummary';
-import { withCustomersBalanceSummaryActions } from './withCustomersBalanceSummaryActions';
-import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
-import { compose, saveInvoke } from '@/utils';
+import * as FF from 'fp-ts/function';
 import { CustomerBalanceSummaryExportMenu } from './components';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
+import { withCustomersBalanceSummary } from './withCustomersBalanceSummary';
+import {
+  withCustomersBalanceSummaryActions,
+  WithCustomersBalanceSummaryActionsProps,
+} from './withCustomersBalanceSummaryActions';
+import { Icon, FormattedMessage as T, DashboardActionsBar } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { saveInvoke } from '@/utils';
 
-/**
- * customer balance summary action bar.
- */
-function CustomersBalanceSummaryActionsBar({
-  // #ownProps
+interface CustomersBalanceSummaryActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
+
+type CustomersBalanceSummaryActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<
+  WithCustomersBalanceSummaryActionsProps,
+  'toggleCustomerBalanceFilterDrawer'
+> &
+  WithDialogActionsProps &
+  CustomersBalanceSummaryActionsBarOwnProps;
+
+function CustomersBalanceSummaryActionsBarInner({
   numberFormat,
   onNumberFormatSubmit,
-
-  //#withCustomersBalanceSummary
   isFilterDrawerOpen,
-
-  //#withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
-
-  // #withDialogActions
-  openDialog
-}) {
+  openDialog,
+}: CustomersBalanceSummaryActionsBarProps) {
   const { refetch, isCustomersBalanceLoading } =
     useCustomersBalanceSummaryContext();
 
-  // Handle filter toggle click.
   const handleFilterToggleClick = () => {
     toggleCustomerBalanceFilterDrawer();
   };
 
-  // Handle recalculate the report button.
   const handleRecalcReport = () => {
     refetch();
   };
 
-  // Handle number format form submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
 
-  // Handle the print button click.
   const handlePrintBtnClick = () => {
     openDialog(DialogsName.CustomerBalanceSummaryPdfPreview);
-  }
+  };
 
   return (
     <DashboardActionsBar>
@@ -128,10 +132,12 @@ function CustomersBalanceSummaryActionsBar({
     </DashboardActionsBar>
   );
 }
-export default compose(
+
+export const CustomersBalanceSummaryActionsBar = FF.pipe(
+  CustomersBalanceSummaryActionsBarInner,
+  withDialogActions,
+  withCustomersBalanceSummaryActions,
   withCustomersBalanceSummary(({ customersBalanceDrawerFilter }) => ({
     isFilterDrawerOpen: customersBalanceDrawerFilter,
   })),
-  withCustomersBalanceSummaryActions,
-  withDialogActions
-)(CustomersBalanceSummaryActionsBar);
+);

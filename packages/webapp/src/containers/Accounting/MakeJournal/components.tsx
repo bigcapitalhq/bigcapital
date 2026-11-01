@@ -1,11 +1,10 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
-import intl from 'react-intl-universal';
 import { Menu, MenuItem, Position, Button, Intent } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import {
   ExchangeRateInputGroup,
   Icon,
@@ -18,16 +17,23 @@ import {
   InputGroupCell,
   ContactsListFieldCell,
   BranchesListFieldCell,
-  ProjectsListFieldCell,
+  TrackingCategoryOptionFieldCell,
 } from '@/components/DataTableCells';
-
-import { CellType, Features, Align } from '@/constants';
-
-import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
-import { useJournalIsForeign } from './utils';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { transactionNumber } from '@/utils';
+import {
+  CellType,
+  Features,
+  Align,
+  TrackingCategoryModules,
+} from '@/constants';
 import { useUpdateEffect } from '@/hooks';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
+import { transactionNumber } from '@/utils';
+
+type JournalExchangeRateInputFieldRootProps = Omit<
+  React.ComponentProps<typeof ExchangeRateInputGroup>,
+  'fromCurrency' | 'toCurrency' | 'onCancel' | 'onRecalcConfirm'
+>;
 
 /**
  * Contact header cell.
@@ -44,30 +50,43 @@ export function ContactHeaderCell() {
   );
 }
 
+type CurrencyHeaderCellProps = {
+  payload: { currencyCode: string };
+};
+
 /**
  * Credit header cell.
  */
-export function CreditHeaderCell({ payload: { currencyCode } }) {
+export function CreditHeaderCell({
+  payload: { currencyCode },
+}: CurrencyHeaderCellProps): string {
   return intl.get('credit_currency', { currency: currencyCode });
 }
 
 /**
  * debit header cell.
  */
-export function DebitHeaderCell({ payload: { currencyCode } }) {
+export function DebitHeaderCell({
+  payload: { currencyCode },
+}: CurrencyHeaderCellProps): string {
   return intl.get('debit_currency', { currency: currencyCode });
 }
+
+type ActionsCellRendererProps = {
+  row: { index: number };
+  column: { id: string };
+  cell: { value: unknown };
+  data: unknown[];
+  payload: { removeRow: (index: number) => void };
+};
 
 /**
  * Actions cell renderer.
  */
 export const ActionsCellRenderer = ({
   row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  data,
   payload,
-}) => {
+}: ActionsCellRendererProps) => {
   const handleClickRemoveRole = () => {
     payload.removeRow(index);
   };
@@ -84,7 +103,6 @@ export const ActionsCellRenderer = ({
     <Popover2 content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
-        iconSize={14}
         className="m12"
         minimal={true}
       />
@@ -98,13 +116,43 @@ ActionsCellRenderer.cellType = CellType.Button;
  */
 export const useJournalTableEntriesColumns = () => {
   const { featureCan } = useFeatureCan();
+  const { trackingCategories, manualJournal } = useMakeJournalFormContext();
+
+  // Categories already used by the journal remain visible on edit so history
+  // is preserved even after the category is archived or its module
+  // availability changes.
+  const usedCategoryIds = React.useMemo(() => {
+    return new Set(
+      (manualJournal?.entries ?? []).flatMap((entry) =>
+        (entry.trackingCategories ?? []).map(
+          (assignment) => assignment.categoryId,
+        ),
+      ),
+    );
+  }, [manualJournal]);
+
+  const visibleCategories = React.useMemo(() => {
+    return trackingCategories.filter((category) => {
+      // Categories already used by the journal stay visible so historical
+      // assignments survive even after the category is archived or its module
+      // availability changes.
+      if (usedCategoryIds.has(category.id)) {
+        return true;
+      }
+      const isAvailableForManualJournals =
+        category.modules?.includes(TrackingCategoryModules.ManualJournals) ??
+        true;
+
+      return !!category.active && isAvailableForManualJournals;
+    });
+  }, [trackingCategories, usedCategoryIds]);
 
   return React.useMemo(
     () => [
       {
         Header: intl.get('account'),
-        id: 'account_id',
-        accessor: 'account_id',
+        id: 'accountId',
+        accessor: 'accountId',
         Cell: AccountsListFieldCell,
         disableSortBy: true,
         width: 160,
@@ -128,8 +176,8 @@ export const useJournalTableEntriesColumns = () => {
       },
       {
         Header: ContactHeaderCell,
-        id: 'contact_id',
-        accessor: 'contact_id',
+        id: 'contactId',
+        accessor: 'contactId',
         Cell: ContactsListFieldCell,
         disableSortBy: true,
         width: 120,
@@ -138,28 +186,37 @@ export const useJournalTableEntriesColumns = () => {
       ...(featureCan(Features.Branches)
         ? [
             {
-              Header: intl.get('project'),
-              id: 'project_id',
-              accessor: 'project_id',
-              Cell: ProjectsListFieldCell,
-              className: 'project_id',
-              disableSortBy: true,
-              width: 120,
-            },
-          ]
-        : []),
-
-      ...(featureCan(Features.Branches)
-        ? [
-            {
               Header: intl.get('branch'),
-              id: 'branch_id',
-              accessor: 'branch_id',
+              id: 'branchId',
+              accessor: 'branchId',
               Cell: BranchesListFieldCell,
               disableSortBy: true,
               width: 120,
             },
           ]
+        : []),
+      ...(featureCan(Features.TrackingCategories)
+        ? visibleCategories.map((category) => ({
+            Header: category.active
+              ? category.name
+              : `${category.name} (${intl.get(
+                  'tracking_categories.status.archived',
+                )})`,
+            id: `tracking-category-${category.id}`,
+            accessor: (entry: {
+              trackingCategories?: Array<{
+                categoryId: number;
+                optionId: number;
+              }>;
+            }) =>
+              entry.trackingCategories?.find(
+                (assignment) => assignment.categoryId === category.id,
+              )?.optionId,
+            Cell: TrackingCategoryOptionFieldCell,
+            trackingCategory: category,
+            disableSortBy: true,
+            width: 140,
+          }))
         : []),
       {
         Header: intl.get('note'),
@@ -178,52 +235,57 @@ export const useJournalTableEntriesColumns = () => {
         align: Align.Center,
       },
     ],
-    [],
+    [featureCan, visibleCategories],
   );
 };
 
 /**
  * Journal exchange rate input field.
- * @returns {JSX.Element}
  */
-export function JournalExchangeRateInputField({ ...props }) {
-  const currentOrganization = useCurrentOrganization();
-  const { values } = useFormikContext();
+export function JournalExchangeRateInputField({
+  ...props
+}: JournalExchangeRateInputFieldRootProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<MakeJournalFormValues>();
 
-  const isForeignJouranl = useJournalIsForeign();
+  const isForeignJournal = useJournalIsForeign();
 
-  // Can't continue if the customer is not foreign.
-  if (!isForeignJouranl) {
+  // Can't continue if the journal is not foreign.
+  if (!isForeignJournal) {
     return null;
   }
   return (
     <ExchangeRateInputGroup
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
       {...props}
+      fromCurrency={values.currencyCode}
+      toCurrency={baseCurrency ?? ''}
     />
   );
 }
 
 /**
  * Syncs journal auto-increment settings to form.
- * @return {React.ReactNode}
  */
-export const JournalSyncIncrementSettingsToForm = R.compose(
-  withSettings(({ manualJournalsSettings }) => ({
-    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
-    journalNextNumber: manualJournalsSettings?.nextNumber,
-    journalNumberPrefix: manualJournalsSettings?.numberPrefix,
-  })),
-)(({ journalAutoIncrement, journalNextNumber, journalNumberPrefix }) => {
-  const { setFieldValue } = useFormikContext();
+export const JournalSyncIncrementSettingsToForm = () => {
+  const { setFieldValue } = useFormikContext<MakeJournalFormValues>();
+  const { manualJournalsSettings } = useMakeJournalFormContext();
+
+  const journalAutoIncrement = manualJournalsSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const journalNextNumber = manualJournalsSettings?.nextNumber as
+    | number
+    | undefined;
+  const journalNumberPrefix = manualJournalsSettings?.numberPrefix as
+    | string
+    | undefined;
 
   useUpdateEffect(() => {
     // Do not update if the journal auto-increment mode is disabled.
-    if (!journalAutoIncrement) return null;
+    if (!journalAutoIncrement) return;
 
     setFieldValue(
-      'journal_number',
+      'journalNumber',
       transactionNumber(journalNumberPrefix, journalNextNumber),
     );
   }, [
@@ -234,7 +296,7 @@ export const JournalSyncIncrementSettingsToForm = R.compose(
   ]);
 
   return null;
-});
+};
 
 JournalSyncIncrementSettingsToForm.displayName =
   'JournalSyncIncrementSettingsToForm';

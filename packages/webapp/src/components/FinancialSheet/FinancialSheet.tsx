@@ -1,9 +1,6 @@
-// @ts-nocheck
-import React, { useMemo, useCallback } from 'react';
 import moment from 'moment';
+import React, { useMemo, useCallback } from 'react';
 import intl from 'react-intl-universal';
-
-import { FormattedMessage as T } from '@/components';
 import {
   FinancialSheetRoot,
   FinancialSheetFooterCurrentTime,
@@ -15,11 +12,21 @@ import {
   FinancialSheetType,
   FinancialSheetTitle,
 } from './StyledFinancialSheet';
+import { FormattedMessage as T } from '@/components';
 
-/**
- * Financial sheet.
- * @returns {React.JSX}
- */
+interface FinancialSheetProps {
+  companyName?: string;
+  sheetType?: string;
+  dateText?: string;
+  children?: React.ReactNode;
+  accountingBasis?: React.ReactNode;
+  basis?: 'cash' | 'accrual';
+  minimal?: boolean;
+  fullWidth?: boolean;
+  currentDate?: boolean;
+  className?: string;
+}
+
 export function FinancialSheet({
   companyName,
   sheetType,
@@ -31,7 +38,7 @@ export function FinancialSheet({
   fullWidth = false,
   currentDate = true,
   className,
-}) {
+}: FinancialSheetProps) {
   const methodsLabels = useMemo(
     () => ({
       cash: intl.get('cash'),
@@ -39,22 +46,41 @@ export function FinancialSheet({
     }),
     [],
   );
-  const getBasisLabel = useCallback((b) => methodsLabels[b], [methodsLabels]);
+  const getBasisLabel = useCallback(
+    (b: 'cash' | 'accrual') => methodsLabels[b],
+    [methodsLabels],
+  );
   const basisLabel = useMemo(
-    () => getBasisLabel(basis),
+    () => (basis ? getBasisLabel(basis) : undefined),
     [getBasisLabel, basis],
   );
+  const hasHead = companyName || sheetType || dateText;
 
   return (
     <FinancialSheetRoot
-      minimal={minimal}
-      fullWidth={fullWidth}
+      $minimal={minimal}
+      $fullWidth={fullWidth}
       className={className}
     >
-      {companyName && <FinancialSheetTitle>{companyName}</FinancialSheetTitle>}
-      {sheetType && <FinancialSheetType>{sheetType}</FinancialSheetType>}
-
-      {dateText && <FinancialSheetDate>{dateText}</FinancialSheetDate>}
+      {hasHead && (
+        <div>
+          {companyName && (
+            <FinancialSheetTitle data-testId="financial-sheet-title">
+              {companyName}
+            </FinancialSheetTitle>
+          )}
+          {sheetType && (
+            <FinancialSheetType data-testId="financial-sheet-type">
+              {sheetType}
+            </FinancialSheetType>
+          )}
+          {dateText && (
+            <FinancialSheetDate data-testId="financial-sheet-date">
+              {dateText}
+            </FinancialSheetDate>
+          )}
+        </div>
+      )}
 
       <FinancialSheetTable>{children}</FinancialSheetTable>
       <FinancialSheetAccountingBasis>
@@ -63,13 +89,13 @@ export function FinancialSheet({
 
       <FinancialSheetFooter>
         {basisLabel && (
-          <FinancialSheetFooterBasis>
+          <FinancialSheetFooterBasis data-testId="financial-sheet-accounting-basis">
             <T id={'accounting_basis'} /> {basisLabel}
           </FinancialSheetFooterBasis>
         )}
         {currentDate && (
           <FinancialSheetFooterCurrentTime>
-            {moment().format('YYYY MMM DD  HH:MM')}
+            {moment().format('YYYY MMM DD HH:mm')}
           </FinancialSheetFooterCurrentTime>
         )}
       </FinancialSheetFooter>

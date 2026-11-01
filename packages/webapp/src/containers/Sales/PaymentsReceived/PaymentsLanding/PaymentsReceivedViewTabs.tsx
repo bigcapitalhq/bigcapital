@@ -1,32 +1,33 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
-import { pick } from 'lodash';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
-import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
+import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
+import { FormattedMessage as T, DashboardViewsTabs } from '@/components';
+import { transfromViewsToTabs } from '@/utils';
 
-import { compose } from '@/utils';
+interface PaymentsReceivedViewTabsProps
+  extends WithPaymentsReceivedActionsProps,
+    Pick<WithPaymentsReceivedProps, 'paymentReceivesTableState'> {}
 
 /**
  * Payment receive view tabs.
  */
-function PaymentsReceivedViewTabs({
+function PaymentsReceivedViewTabsInner({
   // #withPaymentsReceivedActions
-  addPaymentReceivesTableQueries,
+  setPaymentReceivesTableState,
 
   // #withPaymentsReceived
   paymentReceivesTableState,
-}) {
+}: PaymentsReceivedViewTabsProps) {
   const history = useHistory();
-  const { paymentReceivesViews, ...res } = usePaymentsReceivedListContext();
+  const { paymentReceivesViews } = usePaymentsReceivedListContext();
 
-  const tabs = paymentReceivesViews.map((view) => ({
-    ...pick(view, ['name', 'id']),
-  }));
+  const tabs = transfromViewsToTabs(paymentReceivesViews);
 
   // Handles click a new view tab.
   const handleClickNewView = () => {
@@ -34,8 +35,8 @@ function PaymentsReceivedViewTabs({
   };
 
   // Handles the active tab chaing.
-  const handleTabsChange = (customView) => {
-    addPaymentReceivesTableQueries({
+  const handleTabsChange = (customView: number | null) => {
+    setPaymentReceivesTableState({
       customViewId: customView || null,
     });
   };
@@ -44,7 +45,8 @@ function PaymentsReceivedViewTabs({
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>
         <DashboardViewsTabs
-          customViewId={paymentReceivesTableState.customViewId}
+          currentViewSlug={paymentReceivesTableState.customViewId}
+          resourceName={'payment-received'}
           tabs={tabs}
           defaultTabText={<T id={'all_payments'} />}
           onNewViewTabClick={handleClickNewView}
@@ -55,9 +57,10 @@ function PaymentsReceivedViewTabs({
   );
 }
 
-export default compose(
-  withPaymentsReceivedActions,
+export const PaymentsReceivedViewTabs = FF.pipe(
+  PaymentsReceivedViewTabsInner,
   withPaymentsReceived(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),
-)(PaymentsReceivedViewTabs);
+  withPaymentsReceivedActions,
+);

@@ -1,40 +1,46 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { useDeleteExpense } from '@/hooks/query';
-import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
 import { handleDeleteErrors } from './_utils';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useDeleteExpense } from '@/hooks/query';
+
+interface ExpenseDeleteAlertPayload {
+  expenseId: number;
+}
+
+interface ExpenseDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ExpenseDeleteAlertPayload;
+}
 
 /**
  * Expense delete alert.
  */
-function ExpenseDeleteAlert({
-  // #withAlertActions
+function ExpenseDeleteAlertInner({
+  name,
   closeAlert,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { expenseId },
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteExpenseMutate, isLoading } = useDeleteExpense();
+}: ExpenseDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteExpenseMutate, isPending: isLoading } =
+    useDeleteExpense();
 
-  // Handle cancel expense journal.
   const handleCancelExpenseDelete = () => {
-    closeAlert('expense-delete');
+    closeAlert(name);
   };
 
-  // Handle confirm delete expense.
   const handleConfirmExpenseDelete = () => {
     deleteExpenseMutate(expenseId)
       .then(() => {
@@ -47,23 +53,19 @@ function ExpenseDeleteAlert({
         closeDrawer(DRAWERS.EXPENSE_DETAILS);
       })
       .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
           handleDeleteErrors(errors);
         },
       )
       .finally(() => {
-        closeAlert('expense-delete');
+        closeAlert(name);
       });
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -71,15 +73,16 @@ function ExpenseDeleteAlert({
       onConfirm={handleConfirmExpenseDelete}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'expense-delete-alert'}>
         <T id={'once_delete_this_expense_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const ExpenseDeleteAlert = FF.pipe(
+  ExpenseDeleteAlertInner,
   withDrawerActions,
-)(ExpenseDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

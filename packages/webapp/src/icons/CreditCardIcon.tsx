@@ -1,9 +1,6 @@
 import { SVGProps } from 'react';
 
-
-interface CreditCardIconProps extends SVGProps<SVGSVGElement> {
-}
-
+interface CreditCardIconProps extends SVGProps<SVGSVGElement> {}
 
 export function CreditCardIcon(props: CreditCardIconProps) {
   return (

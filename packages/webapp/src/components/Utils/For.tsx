@@ -1,10 +1,10 @@
-// @ts-nocheck
-import PropTypes from 'prop-types';
+import React from 'react';
 
-export const For = ({ render, of }) =>
-  of.map((item, index) => render(item, index));
+export interface ForProps<T> {
+  render: (item: T, index: number) => React.ReactNode;
+  of: T[];
+}
 
-For.propTypes = {
-  of: PropTypes.array.isRequired,
-  render: PropTypes.func.isRequired,
-};
+export function For<T>({ render, of }: ForProps<T>) {
+  return <>{of.map((item, index) => render(item, index))}</>;
+}

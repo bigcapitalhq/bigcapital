@@ -7,6 +7,10 @@ const vendorFormSectionTitleClass = css`
   margin-top: 10px;
 `;
 
-export function VendorFormSectionTitle({ children }: { children: React.ReactNode | string }) {
+export function VendorFormSectionTitle({
+  children,
+}: {
+  children: React.ReactNode | string;
+}) {
   return <h4 className={vendorFormSectionTitleClass}>{children}</h4>;
 }

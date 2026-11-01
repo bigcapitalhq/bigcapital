@@ -1,34 +1,41 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster, FormattedMessage as T } from '@/components';
-
-import { useDeleteTaxRate } from '@/hooks/query/taxRates';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
+import * as FF from 'fp-ts/function';
+import intl from 'react-intl-universal';
+import { AppToaster } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withAlertStoreConnect,
+  WithAlertStoreConnectProps,
+} from '@/containers/Alert/withAlertStoreConnect';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { useDeleteTaxRate } from '@/hooks/query/tax-rates';
+
+interface TaxRateDeleteAlertInnerProps
+  extends Pick<WithAlertStoreConnectProps, 'isOpen'>,
+    Pick<WithAlertActionsProps, 'closeAlert'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'> {
+  name: string;
+  payload: { taxRateId: number };
+}
 
 /**
  * Item delete alerts.
  */
-function TaxRateDeleteAlert({
+function TaxRateDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { taxRateId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteTaxRate, isLoading } = useDeleteTaxRate();
+}: TaxRateDeleteAlertInnerProps) {
+  const { mutateAsync: deleteTaxRate, isPending } = useDeleteTaxRate();
 
   // Handle cancel delete item alert.
   const handleCancelItemDelete = () => {
@@ -44,18 +51,12 @@ function TaxRateDeleteAlert({
         });
         closeDrawer(DRAWERS.TAX_RATE_DETAILS);
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
-          AppToaster.show({
-            message: 'Something went wrong.',
-            intent: Intent.DANGER,
-          });
-        },
-      )
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -63,14 +64,14 @@ function TaxRateDeleteAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelItemDelete}
       onConfirm={handleConfirmDeleteItem}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         Once you delete this tax rate, you won't be able to restore the item
@@ -85,8 +86,9 @@ function TaxRateDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const TaxRateDeleteAlert = FF.pipe(
+  TaxRateDeleteAlertInner,
   withDrawerActions,
-)(TaxRateDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

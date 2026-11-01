@@ -2,10 +2,8 @@ import { Knex } from 'knex';
 import { omit, get, isNumber } from 'lodash';
 import * as R from 'ramda';
 import {
-  ICreateWarehouseTransferDTO,
   IWarehouseTransferCreate,
   IWarehouseTransferCreated,
-  IWarehouseTransferEntryDTO,
 } from '@/modules/Warehouses/Warehouse.types';
 import { CommandWarehouseTransfer } from './CommandWarehouseTransfer';
 import { WarehouseTransferAutoIncrement } from './WarehouseTransferAutoIncrement';
@@ -19,11 +17,20 @@ import { Inject, Injectable } from '@nestjs/common';
 import { events } from '@/common/events/events';
 import { IInventoryItemCostMeta } from '@/modules/InventoryCost/types/InventoryCost.types';
 import { ModelObject } from 'objection';
-import { WarehouseTransferEntry } from '../models/WarehouseTransferEntry';
 import {
   CreateWarehouseTransferDto,
   WarehouseTransferEntryDto,
 } from '../dtos/WarehouseTransfer.dto';
+
+type WarehouseTransferGraphInsert = {
+  date?: Date;
+  fromWarehouseId?: number;
+  toWarehouseId?: number;
+  transactionNumber?: string;
+  transferDeliveredAt?: Date;
+  transferInitiatedAt?: Date;
+  entries: WarehouseTransferEntryDto[];
+};
 
 @Injectable()
 export class CreateWarehouseTransfer {
@@ -57,13 +64,14 @@ export class CreateWarehouseTransfer {
    */
   private transformDTOToModel = async (
     warehouseTransferDTO: CreateWarehouseTransferDto,
-  ): Promise<ModelObject<WarehouseTransfer>> => {
+  ): Promise<WarehouseTransferGraphInsert> => {
     const entries = await this.transformEntries(
       warehouseTransferDTO,
       warehouseTransferDTO.entries,
     );
     // Retrieves the auto-increment the warehouse transfer number.
-    const autoNextNumber = this.autoIncrementOrders.getNextTransferNumber();
+    const autoNextNumber =
+      await this.autoIncrementOrders.getNextTransferNumber();
 
     // Warehouse transfer order transaction number.
     const transactionNumber =
@@ -113,7 +121,7 @@ export class CreateWarehouseTransfer {
   public transformEntries = async (
     warehouseTransferDTO: CreateWarehouseTransferDto,
     entries: WarehouseTransferEntryDto[],
-  ): Promise<ModelObject<WarehouseTransferEntry>[]> => {
+  ): Promise<WarehouseTransferEntryDto[]> => {
     const inventoryItemsIds = warehouseTransferDTO.entries.map((e) => e.itemId);
 
     // Retrieves the inventory items valuation map.
@@ -141,12 +149,12 @@ export class CreateWarehouseTransfer {
       warehouseTransferDTO,
     );
     // Retrieves the from warehouse or throw not found service error.
-    const fromWarehouse =
+    const _fromWarehouse =
       await this.commandWarehouseTransfer.getFromWarehouseOrThrow(
         warehouseTransferDTO.fromWarehouseId,
       );
     // Retrieves the to warehouse or throw not found service error.
-    const toWarehouse =
+    const _toWarehouse =
       await this.commandWarehouseTransfer.getToWarehouseOrThrow(
         warehouseTransferDTO.toWarehouseId,
       );

@@ -1,6 +1,5 @@
-import { SaleInvoiceTransformer } from "@/modules/SaleInvoices/queries/SaleInvoice.transformer";
-import { Transformer } from "@/modules/Transformer/Transformer";
-
+import { SaleInvoiceTransformer } from '@/modules/SaleInvoices/queries/SaleInvoice.transformer';
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class PaymentReceivedEntryTransfromer extends Transformer {
   /**

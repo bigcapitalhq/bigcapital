@@ -1,12 +1,24 @@
-// @ts-nocheck
+import * as FA from 'fp-ts/Array';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
+import { useInventoryValuationContext } from './InventoryValuationProvider';
+import type { InventoryValuationColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
-import * as R from 'ramda';
-import { useInventoryValuationContext } from './InventoryValuationProvider';
+import { firstMatch, when } from '@/utils/fp';
 
-const getTableCellValueAccessor = (index) => `cells[${index}].value`;
+const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
-const getReportColWidth = (data, accessor, headerText) => {
+const isColumnKey =
+  (key: InventoryValuationColumnKey): FF.Predicate<Record<string, any>> =>
+  (column) =>
+    column.key === key;
+
+const getReportColWidth = (
+  data: unknown[],
+  accessor: string,
+  headerText?: string,
+) => {
   return getColumnWidth(
     data,
     accessor,
@@ -18,69 +30,81 @@ const getReportColWidth = (data, accessor, headerText) => {
 /**
  * Common column mapper.
  */
-const commonAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
+const commonAccessor =
+  (data: unknown[]) =>
+  (column: Record<string, any>): Record<string, any> => {
+    const accessor = getTableCellValueAccessor(column.cellIndex);
 
-  return {
-    key: column.key,
-    Header: column.label,
-    accessor,
-    className: column.key,
-    textOverview: true,
-    align: Align.Left,
+    return {
+      key: column.key,
+      Header: column.label,
+      accessor,
+      className: column.key,
+      textOverview: true,
+      align: Align.Left,
+    };
   };
-});
 
 /**
  * Numeric columns accessor.
  */
-const numericColumnAccessor = R.curry((data, column) => {
-  const accessor = getTableCellValueAccessor(column.cell_index);
-  const width = getReportColWidth(data, accessor, column.label);
+const numericColumnAccessor =
+  (data: unknown[]) =>
+  (column: Record<string, any>): Record<string, any> => {
+    const accessor = getTableCellValueAccessor(column.cellIndex);
+    const width = getReportColWidth(data, accessor, column.label);
 
-  return {
-    ...column,
-    align: Align.Right,
-    money: true,
-    width,
+    return {
+      ...column,
+      align: Align.Right,
+      money: true,
+      width,
+    };
   };
-});
 
 /**
  * Item name column accessor.
  */
-const itemNameColumnAccessor = R.curry((data, column) => {
-  return {
-    ...column,
-    width: 240,
-  }
-});
+const itemNameColumnAccessor =
+  (data: unknown[]) =>
+  (column: Record<string, any>): Record<string, any> => {
+    return {
+      ...column,
+      width: 240,
+    };
+  };
+
+const dynamicColumnMatchers = (data: unknown[]) => [
+  when(isColumnKey('item_name'), itemNameColumnAccessor(data)),
+  when(isColumnKey('quantity'), numericColumnAccessor(data)),
+  when(isColumnKey('valuation'), numericColumnAccessor(data)),
+  when(isColumnKey('average'), numericColumnAccessor(data)),
+];
 
 /**
  * Dynamic column mapper.
- * @param {} data -
- * @param {} column -
  */
-const dynamicColumnMapper = R.curry((data, column) => {
-  const _commonAccessor = commonAccessor(data);
-  const _numericColumnAccessor = numericColumnAccessor(data);
-  const _itemNameColumnAccessor = itemNameColumnAccessor(data);
+const dynamicColumnMapper =
+  (data: unknown[]) =>
+  (column: Record<string, any>): Record<string, any> => {
+    const fallback = commonAccessor(data)(column);
 
-  return R.compose(
-    R.when(R.pathEq(['key'], 'item_name'), _itemNameColumnAccessor),
-    R.when(R.pathEq(['key'], 'quantity'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'valuation'), _numericColumnAccessor),
-    R.when(R.pathEq(['key'], 'average'), _numericColumnAccessor),
-    _commonAccessor,
-  )(column);
-});
+    return FF.pipe(
+      fallback,
+      firstMatch(dynamicColumnMatchers(data)),
+      FO.match(() => fallback, FF.identity),
+    );
+  };
 
 /**
- * Composes the fetched dynamic columns from the server to the columns to pass it 
+ * Composes the fetched dynamic columns from the server to the columns to pass it
  * to the table component.
  */
-export const dynamicColumns = (columns, data) => {
-  return R.map(dynamicColumnMapper(data), columns);
+export const dynamicColumns = (
+  columns: Record<string, any>[],
+  data: unknown[],
+) => {
+  return FF.pipe(columns, FA.map(dynamicColumnMapper(data)));
 };
 
 /**
@@ -92,7 +116,7 @@ export const useInventoryValuationColumns = () => {
   if (!inventoryValuation) {
     throw new Error('The inventory valuation is not loaded');
   }
-  const { table } = inventoryValuation;
+  const table = (inventoryValuation as any).table;
 
   return dynamicColumns(table.columns, table.rows);
 };

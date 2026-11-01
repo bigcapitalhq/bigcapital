@@ -4,9 +4,14 @@ import { DeleteBillPayment } from './commands/DeleteBillPayment.service';
 import { EditBillPayment } from './commands/EditBillPayment.service';
 import { GetBillPayment } from './queries/GetBillPayment.service';
 import { GetPaymentBills } from './queries/GetPaymentBills.service';
-import { CreateBillPaymentDto, EditBillPaymentDto } from './dtos/BillPayment.dto';
+import {
+  CreateBillPaymentDto,
+  EditBillPaymentDto,
+} from './dtos/BillPayment.dto';
 import { GetBillPaymentsService } from './queries/GetBillPayments.service';
 import { GetBillPaymentsFilterDto } from './dtos/GetBillPaymentsFilter.dto';
+import { BulkDeleteBillPaymentsService } from './BulkDeleteBillPayments.service';
+import { ValidateBulkDeleteBillPaymentsService } from './ValidateBulkDeleteBillPayments.service';
 
 /**
  * Bill payments application.
@@ -21,6 +26,8 @@ export class BillPaymentsApplication {
     private getBillPaymentService: GetBillPayment,
     private getPaymentBillsService: GetPaymentBills,
     private getBillPaymentsService: GetBillPaymentsService,
+    private bulkDeleteBillPaymentsService: BulkDeleteBillPaymentsService,
+    private validateBulkDeleteBillPaymentsService: ValidateBulkDeleteBillPaymentsService,
   ) {}
 
   /**
@@ -38,6 +45,31 @@ export class BillPaymentsApplication {
    */
   public deleteBillPayment(billPaymentId: number) {
     return this.deleteBillPaymentService.deleteBillPayment(billPaymentId);
+  }
+
+  /**
+   * Deletes the given bill payments with associated GL entries.
+   * @param {number|Array<number>} billPaymentIds - Bill payment ids.
+   * @param {{ skipUndeletable?: boolean }} options - Bulk delete options.
+   */
+  public bulkDeleteBillPayments(
+    billPaymentIds: number | Array<number>,
+    options?: { skipUndeletable?: boolean },
+  ) {
+    return this.bulkDeleteBillPaymentsService.bulkDeleteBillPayments(
+      billPaymentIds,
+      options,
+    );
+  }
+
+  /**
+   * Validates the bulk delete of the given bill payments.
+   * @param {number[]} billPaymentIds - Bill payment ids.
+   */
+  public validateBulkDeleteBillPayments(billPaymentIds: number[]) {
+    return this.validateBulkDeleteBillPaymentsService.validateBulkDeleteBillPayments(
+      billPaymentIds,
+    );
   }
 
   /**

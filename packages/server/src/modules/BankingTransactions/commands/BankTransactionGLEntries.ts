@@ -11,7 +11,9 @@ export class BankTransactionGLEntriesService {
     private readonly ledgerStorage: LedgerStorageService,
 
     @Inject(BankTransaction.name)
-    private readonly bankTransactionModel: TenantModelProxy<typeof BankTransaction>,
+    private readonly bankTransactionModel: TenantModelProxy<
+      typeof BankTransaction
+    >,
   ) {}
 
   /**

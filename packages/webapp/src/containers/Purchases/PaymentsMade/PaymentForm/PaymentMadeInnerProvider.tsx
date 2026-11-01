@@ -1,43 +1,66 @@
-// @ts-nocheck
-import React, { createContext, useContext, useEffect } from 'react';
 import { useFormikContext } from 'formik';
-import { usePaymentMadeNewPageEntries } from '@/hooks/query';
+import React, { createContext, useContext, useEffect } from 'react';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { transformToNewPageEntries } from './utils';
+import { transformToNewPageEntries, type PaymentMadeFormValues } from './utils';
+import { usePaymentMadeNewPageEntries } from '@/hooks/query';
 
-const PaymentMadeInnerContext = createContext();
+type BillRow = {
+  id?: string | number;
+  billId?: string | number;
+  dueAmount?: string | number;
+  date?: string;
+  amount?: string | number;
+  currencyCode?: string;
+  billNo?: string;
+  branchId?: string | number;
+  totalPaymentAmount?: string | number;
+};
+
+interface PaymentMadeInnerContextValue {
+  newPageEntries: BillRow[] | undefined;
+  isNewEntriesLoading: boolean;
+  isNewEntriesFetching: boolean;
+}
+
+const PaymentMadeInnerContext = createContext<
+  PaymentMadeInnerContextValue | undefined
+>(undefined);
 
 /**
  * Payment made inner form provider.
  */
-function PaymentMadeInnerProvider({ ...props }) {
+function PaymentMadeInnerProvider({
+  ...props
+}: {
+  children?: React.ReactNode;
+}) {
   // Payment made form context.
   const { isNewMode } = usePaymentMadeFormContext();
 
   // Formik context.
   const {
-    values: { vendor_id: vendorId },
+    values: { vendorId },
     setFieldValue,
-  } = useFormikContext();
+  } = useFormikContext<PaymentMadeFormValues>();
 
+  // `usePaymentMadeNewPageEntries` manages `enabled` internally based on vendorId.
   const {
     data: newPageEntries,
     isLoading: isNewEntriesLoading,
     isFetching: isNewEntriesFetching,
-  } = usePaymentMadeNewPageEntries(vendorId, {
-    enabled: !!vendorId && isNewMode,
-    keepPreviousData: true,
-  });
+  } = usePaymentMadeNewPageEntries(vendorId as number | undefined);
 
   useEffect(() => {
     if (!isNewEntriesFetching && newPageEntries && isNewMode) {
-      setFieldValue('entries', transformToNewPageEntries(newPageEntries));
+      setFieldValue(
+        'entries',
+        transformToNewPageEntries(newPageEntries as BillRow[]),
+      );
     }
   }, [isNewEntriesFetching, newPageEntries, isNewMode, setFieldValue]);
 
-  // Provider payload.
-  const provider = {
-    newPageEntries,
+  const provider: PaymentMadeInnerContextValue = {
+    newPageEntries: newPageEntries as BillRow[] | undefined,
     isNewEntriesLoading,
     isNewEntriesFetching,
   };
@@ -45,6 +68,14 @@ function PaymentMadeInnerProvider({ ...props }) {
   return <PaymentMadeInnerContext.Provider value={provider} {...props} />;
 }
 
-const usePaymentMadeInnerContext = () => useContext(PaymentMadeInnerContext);
+const usePaymentMadeInnerContext = (): PaymentMadeInnerContextValue => {
+  const ctx = useContext(PaymentMadeInnerContext);
+  if (!ctx) {
+    throw new Error(
+      'usePaymentMadeInnerContext must be used within a PaymentMadeInnerProvider',
+    );
+  }
+  return ctx;
+};
 
 export { PaymentMadeInnerProvider, usePaymentMadeInnerContext };

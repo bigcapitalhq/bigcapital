@@ -1,10 +1,22 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
-import * as R from 'ramda';
-import intl from 'react-intl-universal';
-import moment from 'moment';
 import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
 import { omit, first } from 'lodash';
+import moment from 'moment';
+import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import { useEstimateFormContext } from './EstimateFormProvider';
+import type { SaleEstimate, CreateSaleEstimateBody } from '@bigcapital/sdk-ts';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
+import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
+import {
+  updateItemsEntriesTotal,
+  ensureEntriesHaveEmptyLine,
+  getEntriesTotal,
+} from '@/containers/Entries/utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
   repeatValue,
@@ -12,24 +24,44 @@ import {
   formattedAmount,
   toSafeNumber,
 } from '@/utils';
-import { useEstimateFormContext } from './EstimateFormProvider';
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
-import { useCurrentOrganization } from '@/hooks/state';
-import { getEntriesTotal } from '@/containers/Entries/utils';
-import {
-  transformAttachmentsToForm,
-  transformAttachmentsToRequest,
-} from '@/containers/Attachments/utils';
-import { convertBrandingTemplatesToOptions } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
 
 export const MIN_LINES_NUMBER = 1;
 
-export const defaultEstimateEntry = {
+export type EstimateEntry = {
+  index: number;
+  itemId: string | number;
+  rate: string | number;
+  discount: string | number;
+  quantity: string | number;
+  description: string;
+  amount: string | number;
+};
+
+export type EstimateFormValues = {
+  customerId: string | number;
+  estimateDate: string;
+  expirationDate: string;
+  estimateNumber: string;
+  estimateNumberManually: string;
+  delivered: boolean | '';
+  reference: string;
+  note: string;
+  termsConditions: string;
+  branchId: string | number;
+  warehouseId: string | number;
+  exchangeRate: string;
+  currencyCode: string;
+  pdfTemplateId: string | number;
+  entries: EstimateEntry[];
+  attachments: unknown[];
+  discount: string;
+  discountType: 'amount' | 'percentage';
+  adjustment: string;
+};
+
+export const defaultEstimateEntry: EstimateEntry = {
   index: 0,
-  item_id: '',
+  itemId: '',
   rate: '',
   discount: '',
   quantity: '',
@@ -39,71 +71,92 @@ export const defaultEstimateEntry = {
 
 const defaultEstimateEntryReq = {
   index: 0,
-  item_id: '',
+  itemId: '',
   rate: '',
   discount: '',
   quantity: '',
   description: '',
 };
 
-export const defaultEstimate = {
-  customer_id: '',
-  estimate_date: moment(new Date()).format('YYYY-MM-DD'),
-  expiration_date: moment(new Date()).format('YYYY-MM-DD'),
-  estimate_number: '',
+export const defaultEstimate: EstimateFormValues = {
+  customerId: '',
+  estimateDate: moment(new Date()).format('YYYY-MM-DD'),
+  expirationDate: moment(new Date()).format('YYYY-MM-DD'),
+  estimateNumber: '',
   // Holds the estimate number that entered manually only.
-  estimate_number_manually: '',
+  estimateNumberManually: '',
   delivered: '',
   reference: '',
   note: '',
-  terms_conditions: '',
-  branch_id: '',
-  warehouse_id: '',
-  exchange_rate: 1,
-  currency_code: '',
+  termsConditions: '',
+  branchId: '',
+  warehouseId: '',
+  exchangeRate: '1',
+  currencyCode: '',
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
   attachments: [],
-  pdf_template_id: '',
+  pdfTemplateId: '',
   adjustment: '',
   discount: '',
-  discount_type: 'amount',
+  discountType: 'amount',
 };
 
 const ERRORS = {
   ESTIMATE_NUMBER_IS_NOT_UNQIUE: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE',
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
+  SALE_ESTIMATE_EXPIRATION_DATE_INVALID:
+    'SALE_ESTIMATE_EXPIRATION_DATE_INVALID',
 };
 
-export const transformToEditForm = (estimate) => {
+/**
+ * Transform estimate to initial values in edit mode.
+ */
+export function transformToEditForm(
+  estimate: SaleEstimate,
+): EstimateFormValues {
   const initialEntries = [
-    ...estimate.entries.map((estimate) => ({
-      ...transformToForm(estimate, defaultEstimateEntry),
+    ...estimate.entries.map((entry) => ({
+      ...transformToForm(entry, defaultEstimateEntry),
     })),
     ...repeatValue(
       defaultEstimateEntry,
       Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
     ),
   ];
-  const entries = R.compose(
-    ensureEntriesHaveEmptyLine(defaultEstimateEntry),
+  const entries = FF.pipe(
+    initialEntries,
     updateItemsEntriesTotal,
-  )(initialEntries);
+    ensureEntriesHaveEmptyLine(defaultEstimateEntry),
+  );
 
   const attachments = transformAttachmentsToForm(estimate);
 
   return {
-    ...transformToForm(estimate, defaultEstimate),
+    ...defaultEstimate,
+    ...(transformToForm(
+      estimate,
+      defaultEstimate,
+    ) as Partial<EstimateFormValues>),
     entries,
     attachments,
   };
+}
+
+type FastFieldShouldUpdateProps = {
+  shouldUpdateDeps?: { items?: unknown[] };
+  items?: unknown;
+  [key: string]: unknown;
 };
 
 /**
  * Detarmines customers fast field when update.
  */
-export const customersFieldShouldUpdate = (newProps, oldProps) => {
+export const customersFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
-    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
+    newProps.shouldUpdateDeps?.items !== oldProps.shouldUpdateDeps?.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -111,7 +164,10 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Detarmines entries fast field should update.
  */
-export const entriesFieldShouldUpdate = (newProps, oldProps) => {
+export const entriesFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -137,75 +193,94 @@ export const ITEMS_FILTER_ROLES = JSON.stringify([
 
 /**
  * Transform response errors to fields.
- * @param {*} errors
- * @param {*} param1
  */
-export const handleErrors = (errors, { setErrors }) => {
+export const handleErrors = (
+  errors: Array<{ type: string }>,
+  { setErrors }: { setErrors: (errors: Record<string, unknown>) => void },
+) => {
   if (errors.some((e) => e.type === ERRORS.ESTIMATE_NUMBER_IS_NOT_UNQIUE)) {
     setErrors({
-      estimate_number: intl.get('estimate_number_is_not_unqiue'),
+      estimateNumber: intl.get('estimate_number_is_not_unqiue'),
     });
   }
   if (
     errors.some((error) => error.type === ERRORS.SALE_ESTIMATE_NO_IS_REQUIRED)
   ) {
     setErrors({
-      estimate_number: intl.get(
-        'estimate.field.error.estimate_number_required',
-      ),
+      estimateNumber: intl.get('estimate.field.error.estimate_number_required'),
+    });
+  }
+  if (
+    errors.some(
+      (error) => error.type === ERRORS.SALE_ESTIMATE_EXPIRATION_DATE_INVALID,
+    )
+  ) {
+    setErrors({
+      expirationDate: intl.get('estimate.validation.expiration_date', {
+        path: intl.get('expiration_date_'),
+        min: moment().format('YYYY/MM/DD'),
+      }),
     });
   }
 };
 
 /**
  * Transform the form values to request body.
+ *
+ * NOTE: `as unknown as CreateSaleEstimateBody` is required because the SDK request
+ * type reuses the response `ItemEntryDto`, which mandates server-computed fields
+ * that the client never sends — the backend populates them. Form field values are
+ * also string-typed (from inputs) while the DTO types them as numbers. Coercing
+ * every field would change the runtime payload, so we assemble the body as-is
+ * and assert the type.
  */
-export const transfromsFormValuesToRequest = (values) => {
-  const entries = values.entries.filter(
-    (item) => item.item_id && item.quantity,
-  );
+export function transformValueToRequest(
+  values: EstimateFormValues,
+): CreateSaleEstimateBody {
+  const entries = values.entries.filter((item) => item.itemId && item.quantity);
   const attachments = transformAttachmentsToRequest(values);
 
   return {
-    ...omit(values, ['estimate_number_manually', 'estimate_number']),
-    // The `estimate_number_manually` will be presented just if the auto-increment
+    ...omit(values, ['estimateNumberManually', 'estimateNumber']),
+    // The `estimateNumberManually` will be presented just if the auto-increment
     // is disable, always both attributes hold the same value in manual mode.
-    ...(values.estimate_number_manually && {
-      estimate_number: values.estimate_number,
+    ...(values.estimateNumberManually && {
+      estimateNumber: values.estimateNumber,
     }),
     entries: entries.map((entry) => ({
       ...transformToForm(entry, defaultEstimateEntryReq),
     })),
     attachments,
-  };
-};
+  } as unknown as CreateSaleEstimateBody;
+}
 
 export const useSetPrimaryWarehouseToForm = () => {
-  const { setFieldValue } = useFormikContext();
-  const { warehouses, isWarehousesSuccess, isNewMode } = useEstimateFormContext();
+  const { setFieldValue } = useFormikContext<EstimateFormValues>();
+  const { warehouses, isWarehousesSuccess, isNewMode } =
+    useEstimateFormContext();
 
   React.useEffect(() => {
-    if (isWarehousesSuccess && isNewMode) {
+    if (isWarehousesSuccess && isNewMode && warehouses) {
       const primaryWarehouse =
         warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
-        setFieldValue('warehouse_id', primaryWarehouse.id);
+        setFieldValue('warehouseId', primaryWarehouse.id);
       }
     }
   }, [isWarehousesSuccess, setFieldValue, warehouses, isNewMode]);
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<EstimateFormValues>();
   const { branches, isBranchesSuccess, isNewMode } = useEstimateFormContext();
 
   React.useEffect(() => {
-    if (isBranchesSuccess && isNewMode) {
+    if (isBranchesSuccess && isNewMode && branches) {
       const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches, isNewMode]);
@@ -218,9 +293,9 @@ export const useSetPrimaryBranchToForm = () => {
 export const useEstimateSubtotal = () => {
   const {
     values: { entries },
-  } = useFormikContext();
+  } = useFormikContext<EstimateFormValues>();
 
-  // Retrieves the invoice entries total.
+  // Retrieves the estimate entries total.
   const subtotal = useMemo(() => getEntriesTotal(entries), [entries]);
 
   return subtotal;
@@ -233,8 +308,8 @@ export const useEstimateSubtotal = () => {
 export const useEstimateSubtotalFormatted = () => {
   const subtotal = useEstimateSubtotal();
   const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<EstimateFormValues>();
 
   return formattedAmount(subtotal, currencyCode);
 };
@@ -244,11 +319,11 @@ export const useEstimateSubtotalFormatted = () => {
  * @returns {number}
  */
 export const useEstimateDiscount = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<EstimateFormValues>();
   const subtotal = useEstimateSubtotal();
   const discount = toSafeNumber(values.discount);
 
-  return values?.discount_type === 'percentage'
+  return values?.discountType === 'percentage'
     ? (subtotal * discount) / 100
     : discount;
 };
@@ -260,8 +335,8 @@ export const useEstimateDiscount = () => {
 export const useEstimateDiscountFormatted = () => {
   const discount = useEstimateDiscount();
   const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<EstimateFormValues>();
 
   return formattedAmount(discount, currencyCode);
 };
@@ -271,7 +346,7 @@ export const useEstimateDiscountFormatted = () => {
  * @returns {number}
  */
 export const useEstimateAdjustment = () => {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<EstimateFormValues>();
   const adjustmentAmount = toSafeNumber(values.adjustment);
 
   return adjustmentAmount;
@@ -284,8 +359,8 @@ export const useEstimateAdjustment = () => {
 export const useEstimateAdjustmentFormatted = () => {
   const adjustment = useEstimateAdjustment();
   const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<EstimateFormValues>();
 
   return formattedAmount(adjustment, currencyCode);
 };
@@ -299,10 +374,7 @@ export const useEstimateTotal = () => {
   const discount = useEstimateDiscount();
   const adjustment = useEstimateAdjustment();
 
-  return R.compose(
-    R.subtract(R.__, discount),
-    R.add(R.__, adjustment),
-  )(subtotal);
+  return subtotal + adjustment - discount;
 };
 
 /**
@@ -312,8 +384,8 @@ export const useEstimateTotal = () => {
 export const useEstimateTotalFormatted = () => {
   const total = useEstimateTotal();
   const {
-    values: { currency_code: currencyCode },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<EstimateFormValues>();
 
   return formattedAmount(total, currencyCode);
 };
@@ -323,12 +395,12 @@ export const useEstimateTotalFormatted = () => {
  * @returns {boolean}
  */
 export const useEstimateIsForeignCustomer = () => {
-  const { values } = useFormikContext();
-  const currentOrganization = useCurrentOrganization();
+  const { values } = useFormikContext<EstimateFormValues>();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const isForeignCustomer = React.useMemo(
-    () => values.currency_code !== currentOrganization.base_currency,
-    [values.currency_code, currentOrganization.base_currency],
+    () => values.currencyCode !== baseCurrency,
+    [values.currencyCode, baseCurrency],
   );
   return isForeignCustomer;
 };
@@ -336,13 +408,20 @@ export const useEstimateIsForeignCustomer = () => {
 /**
  * Resets the form values.
  */
-export const resetFormState = ({ initialValues, values, resetForm }) => {
+export const resetFormState = ({
+  initialValues,
+  values,
+  resetForm,
+}: {
+  initialValues: EstimateFormValues;
+  values: EstimateFormValues;
+  resetForm: (next?: { values: EstimateFormValues }) => void;
+}) => {
   resetForm({
     values: {
-      // Reset the all values except the warehouse and brand id.
+      // Reset the all values except the warehouse id.
       ...initialValues,
-      warehouse_id: values.warehouse_id,
-      brand_id: values.brand_id,
+      warehouseId: values.warehouseId,
     },
   });
 };

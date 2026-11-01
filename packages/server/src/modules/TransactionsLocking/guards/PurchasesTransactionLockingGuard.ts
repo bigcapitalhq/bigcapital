@@ -13,12 +13,10 @@ export class PurchasesTransactionLockingGuard {
    * Validates the transaction locking of purchases services commands.
    * @param {Date} transactionDate - The transaction date.
    */
-  public transactionLockingGuard = async (
-    transactionDate: MomentInput
-  ) => {
+  public transactionLockingGuard = async (transactionDate: MomentInput) => {
     await this.transactionLockingGuardService.transactionsLockingGuard(
       transactionDate,
-      TransactionsLockingGroup.Purchases
+      TransactionsLockingGroup.Purchases,
     );
   };
 }

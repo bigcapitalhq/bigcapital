@@ -105,9 +105,6 @@ export function ReceiptPaperTemplate({
   showCompanyLogo = true,
   companyLogoUri,
 
-  // # Company name
-  companyName = 'Bigcapital Technology, Inc.',
-
   // # Address
   showCustomerAddress = true,
   customerAddress = DefaultPdfTemplateAddressBilledTo,
@@ -174,9 +171,14 @@ export function ReceiptPaperTemplate({
   // # Line Discount
   lineDiscountLabel = 'Discount',
   showLineDiscount = false,
+  ...props
 }: ReceiptPaperTemplateProps) {
   return (
-    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
+    <PaperTemplate
+      primaryColor={primaryColor}
+      secondaryColor={secondaryColor}
+      {...props}
+    >
       <Stack spacing={24}>
         <Group align={'start'} spacing={10}>
           <Stack flex={1}>

@@ -1,5 +1,6 @@
 import { Model } from 'objection';
 import { PaymentReceivedEntry } from './PaymentReceivedEntry';
+import { Customer } from '@/modules/Customers/models/Customer';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
@@ -34,6 +35,7 @@ export class PaymentReceived extends TenantBaseModel {
   updatedAt: string;
 
   entries?: PaymentReceivedEntry[];
+  customer?: Customer;
   public attachments!: Document[];
 
   /**

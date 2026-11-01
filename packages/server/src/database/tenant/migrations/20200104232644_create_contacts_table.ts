@@ -1,6 +1,5 @@
-
-exports.up = function(knex) {
-  return knex.schema.createTable('contacts', table => {
+exports.up = function (knex) {
+  return knex.schema.createTable('contacts', (table) => {
     table.increments();
 
     table.string('contact_service');
@@ -31,8 +30,7 @@ exports.up = function(knex) {
     table.string('billing_address_email').nullable();
     table.string('billing_address_postcode').nullable();
     table.string('billing_address_phone').nullable();
-    table.string('billing_address_state').nullable(),
-
+    table.string('billing_address_state').nullable();
     table.string('shipping_address_1').nullable();
     table.string('shipping_address_2').nullable();
     table.string('shipping_address_city').nullable();
@@ -49,6 +47,6 @@ exports.up = function(knex) {
   });
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema.dropTableIfExists('contacts');
 };

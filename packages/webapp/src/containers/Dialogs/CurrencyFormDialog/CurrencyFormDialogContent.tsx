@@ -1,23 +1,24 @@
-// @ts-nocheck
 import React from 'react';
-import { CurrencyFormProvider } from './CurrencyFormProvider';
-
-import CurrencyForm from './CurrencyForm';
-import { withCurrencyDetail } from '@/containers/Currencies/withCurrencyDetail';
-
-import { compose } from '@/utils';
 import '@/style/pages/Currency/CurrencyFormDialog.scss';
+import { CurrencyForm } from './CurrencyForm';
+import { CurrencyFormProvider } from './CurrencyFormProvider';
+import type { Currency } from '@bigcapital/sdk-ts';
 
-function CurrencyFormDialogContent({
-  // #ownProp
+interface CurrencyFormDialogContentInnerProps {
+  action?: string;
+  currency?: Currency;
+  dialogName: string;
+}
+
+function CurrencyFormDialogContentInner({
   action,
-  currencyCode,
+  currency,
   dialogName,
-}) {
+}: CurrencyFormDialogContentInnerProps): React.ReactElement {
   return (
     <CurrencyFormProvider
-      isEditMode={action}
-      currency={currencyCode}
+      isEditMode={action === 'edit'}
+      currency={currency}
       dialogName={dialogName}
     >
       <CurrencyForm />
@@ -25,4 +26,4 @@ function CurrencyFormDialogContent({
   );
 }
 
-export default compose(withCurrencyDetail)(CurrencyFormDialogContent);
+export const CurrencyFormDialogContent = CurrencyFormDialogContentInner;

@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { ISortOrder } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { UncategorizedBankTransaction } from '../models/UncategorizedBankTransaction';
 import { BankTransaction } from '../models/BankTransaction';
 import { CreateBankTransactionDto } from '../dtos/CreateBankTransaction.dto';
@@ -54,7 +55,7 @@ export interface ICashflowNewCommandDTO extends ICashflowCommandDTO {
 export interface IBankAccountsFilter {
   inactiveMode: boolean;
   stringifiedFilterRoles?: string;
-  sortOrder: string;
+  sortOrder: ISortOrder;
   columnSortBy: string;
 }
 

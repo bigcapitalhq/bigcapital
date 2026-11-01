@@ -1,13 +1,24 @@
-// @ts-nocheck
-import React, { createContext, useContext } from 'react';
+import { keepPreviousData } from '@tanstack/react-query';
+import { createContext, ReactNode, useContext } from 'react';
+import type { TaxRate } from '@bigcapital/sdk-ts';
 import { DrawerLoading } from '@/components';
-import { useTaxRate } from '@/hooks/query/taxRates';
+import { useTaxRate } from '@/hooks/query/tax-rates';
 
-const TaxRateDetailsContext = createContext();
-
-interface TaxRateDetailsContentBootProps {
+export interface TaxRateDetailsContextValue {
+  isTaxRateLoading: boolean;
+  isTaxRateFetching: boolean;
+  taxRate: TaxRate | undefined;
   taxRateId: number;
 }
+
+export interface TaxRateDetailsContentBootProps {
+  taxRateId: number;
+  children?: ReactNode;
+}
+
+const TaxRateDetailsContext = createContext<
+  TaxRateDetailsContextValue | undefined
+>(undefined);
 
 /**
  * Tax rate details content boot.
@@ -21,9 +32,9 @@ export function TaxRateDetailsContentBoot({
     data: taxRate,
     isFetching: isTaxRateFetching,
     isLoading: isTaxRateLoading,
-  } = useTaxRate(taxRateId, { keepPreviousData: true });
+  } = useTaxRate(taxRateId, { placeholderData: keepPreviousData });
 
-  const provider = {
+  const provider: TaxRateDetailsContextValue = {
     isTaxRateLoading,
     isTaxRateFetching,
     taxRate,
@@ -37,4 +48,12 @@ export function TaxRateDetailsContentBoot({
   );
 }
 
-export const useTaxRateDetailsContext = () => useContext(TaxRateDetailsContext);
+export const useTaxRateDetailsContext = (): TaxRateDetailsContextValue => {
+  const context = useContext(TaxRateDetailsContext);
+  if (!context) {
+    throw new Error(
+      'useTaxRateDetailsContext must be used within a TaxRateDetailsContentBoot.',
+    );
+  }
+  return context;
+};

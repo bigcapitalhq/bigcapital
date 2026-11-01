@@ -1,9 +1,23 @@
 // @ts-nocheck
-import React from 'react';
 import clsx from 'classnames';
+import { ReactNode } from 'react';
 import styled from 'styled-components';
 
-export function Alert({ title, description, children, intent, className }) {
+export interface AlertProps {
+  title?: ReactNode;
+  description?: ReactNode;
+  children?: ReactNode;
+  intent?: 'danger' | 'primary';
+  className?: string;
+}
+
+export function Alert({
+  title,
+  description,
+  children,
+  intent,
+  className,
+}: AlertProps) {
   return (
     <AlertRoot className={clsx(className)} intent={intent}>
       {title && <AlertTitle>{title}</AlertTitle>}

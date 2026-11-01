@@ -1,12 +1,11 @@
-// @ts-nocheck
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import * as qs from 'qs';
-import { useHistory } from 'react-router';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-export interface QueryStringResult {
-  [0]: Record<string, any>;
-  [1]: Dispatch<SetStateAction<Record<string, any>>>;
-}
+export type QueryStringResult = [
+  Record<string, any>,
+  Dispatch<SetStateAction<Record<string, any>>>,
+];
 
 type NavigateCallback = (
   pathnameWithParams: string,
@@ -20,7 +19,7 @@ type ParseOptions = {
   [key: string]: any;
 };
 
-type StringifyOptions = qs.IStringifyOptions;
+type StringifyOptions = Record<string, unknown>;
 
 /**
  * Checks if a string represents a number (including negatives, decimals, scientific notation)
@@ -41,14 +40,23 @@ const isBoolean = (val: string): boolean => {
  * Based on query-types library approach: https://github.com/xpepermint/query-types
  */
 const createDecoder = (parseNumbers: boolean, parseBooleans: boolean) => {
-  return (str: string, defaultDecoder?: any, charset?: string, type?: 'key' | 'value') => {
+  return (
+    str: string,
+    defaultDecoder?: any,
+    charset?: string,
+    type?: 'key' | 'value',
+  ) => {
     // Only decode values, not keys
     if (type === 'key') {
-      return defaultDecoder ? defaultDecoder(str, defaultDecoder, charset) : str;
+      return defaultDecoder
+        ? defaultDecoder(str, defaultDecoder, charset)
+        : str;
     }
 
     // First decode using default decoder
-    const decoded = defaultDecoder ? defaultDecoder(str, defaultDecoder, charset) : decodeURIComponent(str);
+    const decoded = defaultDecoder
+      ? defaultDecoder(str, defaultDecoder, charset)
+      : decodeURIComponent(str);
 
     // Handle empty strings and undefined
     if (typeof decoded === 'undefined' || decoded === '') {
@@ -86,18 +94,24 @@ export function useQueryString(
   const isFirst = useRef(true);
 
   // Extract parseNumbers and parseBooleans from parseOptions
-  const { parseNumbers = false, parseBooleans = false, ...qsParseOptions } = parseOptions || {};
+  const {
+    parseNumbers = false,
+    parseBooleans = false,
+    ...qsParseOptions
+  } = parseOptions || {};
 
   // Create decoder if needed
   const parseConfig = {
     ...qsParseOptions,
-    ...(parseNumbers || parseBooleans ? {
-      decoder: createDecoder(parseNumbers, parseBooleans),
-    } : {}),
+    ...(parseNumbers || parseBooleans
+      ? {
+          decoder: createDecoder(parseNumbers, parseBooleans),
+        }
+      : {}),
   };
 
   const [state, setState] = useState(
-    qs.parse(location.search.substring(1), parseConfig)
+    qs.parse(location.search.substring(1), parseConfig),
   );
 
   useEffect((): void => {
@@ -115,7 +129,7 @@ export function useQueryString(
   const setQuery: typeof setState = (values): void => {
     const nextState = typeof values === 'function' ? values(state) : values;
     setState(
-      (state): Record<string, any> => ({
+      (state: Record<string, any>): Record<string, any> => ({
         ...state,
         ...nextState,
       }),
@@ -132,7 +146,7 @@ export function useQueryString(
  * @returns {QueryStringResult}
  */
 export const useAppQueryString = (
-  navigate: NavigateCallback,
+  navigate?: NavigateCallback,
   parseOptions: ParseOptions = {},
 ): QueryStringResult => {
   const history = useHistory();

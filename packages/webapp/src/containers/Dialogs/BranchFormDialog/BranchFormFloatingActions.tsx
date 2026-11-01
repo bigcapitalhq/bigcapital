@@ -1,24 +1,23 @@
-// @ts-nocheck
-import React from 'react';
-
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useBranchFormContext } from './BranchFormProvider';
+import type { BranchFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+
+interface BranchFormFloatingActionsProps extends WithDialogActionsProps {}
 
 /**
  * Branch form floating actions.
  */
-function BranchFormFloatingActions({
-  // #withDialogActions
+function BranchFormFloatingActionsInner({
   closeDialog,
-}) {
+}: BranchFormFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
-
+  const { isSubmitting } = useFormikContext<BranchFormValues>();
   const { dialogName } = useBranchFormContext();
 
   // Handle close button click.
@@ -38,10 +37,13 @@ function BranchFormFloatingActions({
           style={{ minWidth: '95px' }}
           type="submit"
         >
-          {<T id={'save'} />}
+          <T id={'save'} />
         </Button>
       </div>
     </div>
   );
 }
-export default compose(withDialogActions)(BranchFormFloatingActions);
+export const BranchFormFloatingActions = FF.pipe(
+  BranchFormFloatingActionsInner,
+  withDialogActions,
+);

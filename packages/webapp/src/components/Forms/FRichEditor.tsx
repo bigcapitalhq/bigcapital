@@ -1,6 +1,6 @@
-import React from 'react';
-import { FieldConfig, FieldProps } from 'formik';
 import { Field } from '@blueprintjs-formik/core';
+import { FieldConfig, FieldProps } from 'formik';
+import React from 'react';
 import { RichEditor, RichEditorProps } from '../../components/RichEditor';
 
 export interface FRichEditorProps

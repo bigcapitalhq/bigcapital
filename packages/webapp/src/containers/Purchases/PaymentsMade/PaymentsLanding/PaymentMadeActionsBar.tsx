@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Button,
   Classes,
@@ -7,11 +6,16 @@ import {
   Intent,
   Alignment,
 } from '@blueprintjs/core';
-
+import * as FF from 'fp-ts/function';
+import { isEmpty } from 'lodash';
 import { useHistory } from 'react-router-dom';
-
+import { useBulkDeletePaymentMadesDialog } from './hooks/use-bulk-delete-payment-mades-dialog';
+import { usePaymentMadesListContext } from './PaymentMadesListProvider';
+import { withPaymentMade } from './withPaymentMade';
+import { withPaymentMadeActions } from './withPaymentMadeActions';
+import type { WithPaymentMadeProps } from './withPaymentMade';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
-  If,
   Can,
   Icon,
   FormattedMessage as T,
@@ -22,78 +26,89 @@ import {
   DashboardActionsBar,
 } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { withPaymentMade } from './withPaymentMade';
-import { withPaymentMadeActions } from './withPaymentMadeActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { usePaymentMadesListContext } from './PaymentMadesListProvider';
-import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
-import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useRefreshPaymentMades } from '@/hooks/query/payment-mades';
 
-/**
- * Payment made actions bar.
- */
-function PaymentMadeActionsBar({
-  // #withPaymentMadeActions
+interface WithPaymentMadeActionsProps {
+  setPaymentMadesTableState: (state: Record<string, any>) => void;
+}
+
+interface PaymentMadeActionsBarProps
+  extends Pick<WithPaymentMadeProps, 'paymentMadesSelectedRows'>,
+    WithPaymentMadeActionsProps,
+    WithDialogActionsProps {
+  paymentMadesFilterConditions: any[];
+}
+
+function PaymentMadeActionsBarInner({
   setPaymentMadesTableState,
-
-  // #withPaymentMade
   paymentMadesFilterConditions,
-
-  // #withSettings
-  paymentMadesTableSize,
-
-  // #withDialogActions
+  paymentMadesSelectedRows,
   openDialog,
+}: PaymentMadeActionsBarProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
 
-  // #withSettingsActions
-  addSetting,
-}) {
   const history = useHistory();
 
-  // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
-  // Payment receives list context.
-  const { paymentMadesViews, fields } = usePaymentMadesListContext();
+  const { paymentMadesViews, fields, billPaymentSettings } =
+    usePaymentMadesListContext();
+  const paymentMadesTableSize = billPaymentSettings?.tableSize as
+    | string
+    | undefined;
 
-  // Payment receive refresh action.
   const { refresh } = useRefreshPaymentMades();
 
-  // Handle new payment made button click.
   const handleClickNewPaymentMade = () => {
     history.push('/payments-made/new');
   };
-  // Handle tab changing.
-  const handleTabChange = (viewSlug) => {
+  const handleTabChange = (viewSlug: string) => {
     setPaymentMadesTableState({ viewSlug });
   };
-  // Handle click a refresh payment receives.
   const handleRefreshBtnClick = () => {
     refresh();
   };
-  // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('billPayments', 'tableSize', size);
+  const handleTableRowSizeChange = (size: any) => {
+    saveSettings({
+      options: [{ group: 'billPayments', key: 'tableSize', value: size }],
+    });
   };
-  // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/payments-made/import');
   };
-  // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'bill_payment' });
   };
-  // Handle the print button click.
   const handlePrintBtnClick = () => {
     downloadExportPdf({ resource: 'BillPayment' });
   };
+
+  const { openBulkDeleteDialog, isValidatingBulkDeletePaymentMades } =
+    useBulkDeletePaymentMadesDialog();
+
+  if (!isEmpty(paymentMadesSelectedRows)) {
+    const handleBulkDelete = () => {
+      openBulkDeleteDialog(paymentMadesSelectedRows as number[]);
+    };
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeletePaymentMades}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -117,7 +132,7 @@ function PaymentMadeActionsBar({
             conditions: paymentMadesFilterConditions,
             defaultFieldKey: 'payment_number',
             fields: fields,
-            onFilterChange: (filterConditions) => {
+            onFilterChange: (filterConditions: any) => {
               setPaymentMadesTableState({ filterRoles: filterConditions });
             },
           }}
@@ -127,18 +142,9 @@ function PaymentMadeActionsBar({
           />
         </AdvancedFilterPopover>
 
-        <If condition={false}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon={'trash-16'} iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-          // onClick={handleBulkDelete}
-          />
-        </If>
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'print-16'} iconSize={'16'} />}
+          icon={<Icon icon={'print-16'} iconSize={16} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
         />
@@ -150,7 +156,7 @@ function PaymentMadeActionsBar({
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
+          icon={<Icon icon={'file-export-16'} iconSize={16} />}
           text={<T id={'export'} />}
           onClick={handleExportBtnClick}
         />
@@ -173,14 +179,12 @@ function PaymentMadeActionsBar({
   );
 }
 
-export default compose(
-  withPaymentMadeActions,
-  withSettingsActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({
-    paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
-  })),
-  withSettings(({ billPaymentSettings }) => ({
-    paymentMadesTableSize: billPaymentSettings?.tableSize,
-  })),
+export const PaymentMadeActionsBar = FF.pipe(
+  PaymentMadeActionsBarInner,
   withDialogActions,
-)(PaymentMadeActionsBar);
+  withPaymentMade(({ paymentMadesTableState, paymentMadesSelectedRows }) => ({
+    paymentMadesFilterConditions: paymentMadesTableState.filterRoles,
+    paymentMadesSelectedRows,
+  })),
+  withPaymentMadeActions,
+);

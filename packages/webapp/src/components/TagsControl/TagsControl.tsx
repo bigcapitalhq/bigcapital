@@ -1,7 +1,7 @@
 import { Tag } from '@blueprintjs/core';
-import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { Box } from '../Layout';
 import styles from './TagsControl.module.scss';
+import { useUncontrolled } from '@/hooks/useUncontrolled';
 
 interface TagsControProps {
   options: Array<{ label: string; value: string }>;

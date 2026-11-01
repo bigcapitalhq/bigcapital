@@ -1,18 +1,17 @@
-// @ts-nocheck
 import React from 'react';
-import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { trialBalancesheetDynamicColumns } from './dynamicColumns';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 
 /**
  * Retrieves the trial balance sheet columns.
  */
 export const useTrialBalanceSheetTableColumns = () => {
-  const {
-    trialBalanceSheet: { table },
-  } = useTrialBalanceSheetContext();
+  const { trialBalanceSheet } = useTrialBalanceSheetContext();
+
+  const table = (trialBalanceSheet as any)?.table;
 
   return React.useMemo(
-    () => trialBalancesheetDynamicColumns(table.columns, table.rows),
+    () => trialBalancesheetDynamicColumns(table?.columns, table?.rows),
     [table],
   );
 };

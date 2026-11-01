@@ -1,7 +1,7 @@
-import { BillTransformer } from "../../Bills/queries/Bill.transformer";
-import { Transformer } from "../../Transformer/Transformer";
+import { BillTransformer } from '../../Bills/queries/Bill.transformer';
+import { Transformer } from '../../Transformer/Transformer';
 
-export class BillPaymentEntryTransformer extends Transformer{
+export class BillPaymentEntryTransformer extends Transformer {
   /**
    * Include these attributes to bill payment object.
    * @returns {Array}

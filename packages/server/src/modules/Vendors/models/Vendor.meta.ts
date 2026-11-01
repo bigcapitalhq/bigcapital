@@ -131,26 +131,26 @@ export const VendorMeta = {
     openingBalance: {
       name: 'vendor.field.opening_balance',
       type: 'number',
-      printable: false
+      printable: false,
     },
     openingBalanceAt: {
       name: 'vendor.field.opening_balance_at',
       type: 'date',
-      printable: false
+      printable: false,
     },
     currencyCode: {
       name: 'vendor.field.currency',
       type: 'text',
-      printable: false
+      printable: false,
     },
     status: {
       name: 'vendor.field.status',
-      printable: false
+      printable: false,
     },
     note: {
       name: 'vendor.field.note',
       type: 'text',
-      printable: false
+      printable: false,
     },
     // Billing Address
     billingAddress1: {
@@ -158,49 +158,49 @@ export const VendorMeta = {
       column: 'billing_address1',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     billingAddress2: {
       name: 'Billing Address 2',
       column: 'billing_address2',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     billingAddressCity: {
       name: 'Billing Address City',
       column: 'billing_address_city',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     billingAddressCountry: {
       name: 'Billing Address Country',
       column: 'billing_address_country',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     billingAddressPostcode: {
       name: 'Billing Address Postcode',
       column: 'billing_address_postcode',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     billingAddressState: {
       name: 'Billing Address State',
       column: 'billing_address_state',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     billingAddressPhone: {
       name: 'Billing Address Phone',
       column: 'billing_address_phone',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     // Shipping Address
     shippingAddress1: {
@@ -208,55 +208,55 @@ export const VendorMeta = {
       column: 'shipping_address1',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     shippingAddress2: {
       name: 'Shipping Address 2',
       column: 'shipping_address2',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     shippingAddressCity: {
       name: 'Shipping Address City',
       column: 'shipping_address_city',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     shippingAddressCountry: {
       name: 'Shipping Address Country',
       column: 'shipping_address_country',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     shippingAddressPostcode: {
       name: 'Shipping Address Postcode',
       column: 'shipping_address_postcode',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     shippingAddressState: {
       name: 'Shipping Address State',
       column: 'shipping_address_state',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     shippingAddressPhone: {
       name: 'Shipping Address Phone',
       column: 'shipping_address_phone',
       type: 'text',
       exportable: true,
-      printable: false
+      printable: false,
     },
     createdAt: {
       name: 'vendor.field.created_at',
       type: 'date',
       exportable: true,
-      printable: false
+      printable: false,
     },
   },
   fields2: {

@@ -1,35 +1,26 @@
-// @ts-nocheck
-import moment from 'moment';
-import * as Yup from 'yup';
-import { transformToCamelCase, flatObject, transformToForm } from '@/utils';
-import { useAppQueryString } from '@/hooks';
-import { useMemo } from 'react';
 import { castArray } from 'lodash';
+import moment from 'moment';
+import { useMemo } from 'react';
+import * as Yup from 'yup';
+import { useAppQueryString } from '@/hooks';
+import { transformToCamelCase, flatObject, transformToForm } from '@/utils';
 
-export const transformFilterFormToQuery = (form) => {
+export const transformFilterFormToQuery = (form: Record<string, unknown>) => {
   return flatObject(transformToCamelCase(form));
 };
 
-/**
- * The default query of AP aging summary.
- * @returns
- */
 export const getDefaultAPAgingSummaryQuery = () => {
   return {
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
     agingDaysBefore: 30,
     agingPeriods: 3,
     filterByOption: 'without-zero-balance',
-    vendorsIds: [],
-    branchesIds: [],
-    numberFormat: {},
+    vendorsIds: [] as string[],
+    branchesIds: [] as string[],
+    numberFormat: {} as Record<string, unknown>,
   };
 };
 
-/**
- * Retrieves the query validation schema.
- * @returns {Yup}
- */
 export const getAPAgingSummaryQuerySchema = () => {
   return Yup.object({
     asDate: Yup.date().required().label('asDate'),
@@ -50,12 +41,7 @@ export const getAPAgingSummaryQuerySchema = () => {
   });
 };
 
-/**
- *  Parses the AP aging summary query state.
- * @param locationQuery
- * @returns
- */
-const parseAPAgingSummaryQuery = (locationQuery) => {
+const parseAPAgingSummaryQuery = (locationQuery: Record<string, unknown>) => {
   const defaultQuery = getDefaultAPAgingSummaryQuery();
 
   const transformed = {
@@ -69,14 +55,9 @@ const parseAPAgingSummaryQuery = (locationQuery) => {
   };
 };
 
-/**
- * AP aging summary query state.
- */
 export const useAPAgingSummaryQuery = () => {
-  // Retrieves location query.
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
-  // Merges the default filter query with location URL query.
   const query = useMemo(
     () => parseAPAgingSummaryQuery(locationQuery),
     [locationQuery],

@@ -1,19 +1,13 @@
-// @ts-nocheck
-import React from 'react';
-import { Formik } from 'formik';
-import { FormattedMessage as T } from '@/components';
 import { x } from '@xstyled/emotion';
-
-import SetupOrganizationForm from './SetupOrganizationForm';
-
-import { useOrganizationSetup } from '@/hooks/query';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-
+import { Formik, FormikHelpers } from 'formik';
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
-import { setCookie, compose, transfromToSnakeCase } from '@/utils';
+import { SetupOrganizationForm } from './SetupOrganizationForm';
+import type { SetupOrganizationFormValues } from './SetupOrganization.schema';
+import { useOrganizationSetup } from '@/hooks/query';
+import { setCookie, transfromToSnakeCase } from '@/utils';
 
 // Initial values.
-const defaultValues = {
+const defaultValues: SetupOrganizationFormValues = {
   name: '',
   location: '',
   baseCurrency: '',
@@ -22,31 +16,38 @@ const defaultValues = {
   timezone: '',
 };
 
+export interface SetupOrganizationPageProps {
+  wizard?: {
+    next?: () => void;
+  };
+}
+
 /**
  * Setup organization form.
  */
-function SetupOrganizationPage({ wizard }) {
+export function SetupOrganizationPage({ wizard }: SetupOrganizationPageProps) {
   const { mutateAsync: organizationSetupMutate } = useOrganizationSetup();
 
   // Validation schema.
   const validationSchema = getSetupOrganizationValidation();
 
   // Initialize values.
-  const initialValues = {
-    ...defaultValues,
-  };
+  const initialValues: SetupOrganizationFormValues = { ...defaultValues };
 
   // Handle the form submit.
-  const handleSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleSubmit = (
+    values: SetupOrganizationFormValues,
+    { setSubmitting }: FormikHelpers<SetupOrganizationFormValues>,
+  ) => {
     organizationSetupMutate({ ...transfromToSnakeCase(values) })
-      .then((response) => {
+      .then(() => {
         setSubmitting(false);
 
         // Sets locale cookie to next boot cycle.
         setCookie('locale', values.language);
-        wizard.next();
+        wizard?.next?.();
       })
-      .catch((erros) => {
+      .catch(() => {
         setSubmitting(false);
       });
   };
@@ -69,5 +70,3 @@ function SetupOrganizationPage({ wizard }) {
     </x.div>
   );
 }
-
-export default compose(withSettingsActions)(SetupOrganizationPage);

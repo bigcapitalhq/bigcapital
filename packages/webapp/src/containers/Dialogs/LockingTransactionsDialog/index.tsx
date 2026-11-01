@@ -1,21 +1,29 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
+import type { LockingTransactionsDialogPayload } from './types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const LockingTransactionsDialogContent = React.lazy(() =>
-  import('./LockingTransactionsDialogContent'),
+  import('./LockingTransactionsDialogContent').then((m) => ({
+    default: m.LockingTransactionsDialogContent,
+  })),
 );
+
+interface LockingTransactionsDialogProps {
+  dialogName: string;
+  payload: LockingTransactionsDialogPayload;
+  isOpen: boolean | undefined;
+}
 
 /**
  * Locking Transactions dialog
  */
 function LockingTransactionsDialog({
   dialogName,
-  payload: { module, isEnabled },
+  payload: { module, isEnabled } = {},
   isOpen,
-}) {
+}: LockingTransactionsDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -27,13 +35,13 @@ function LockingTransactionsDialog({
     >
       <DialogSuspense>
         <LockingTransactionsDialogContent
-          moduleName={module}
+          moduleName={module ?? ''}
           dialogName={dialogName}
-          isEnabled={isEnabled}
+          isEnabled={!!isEnabled}
         />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export default compose(withDialogRedux())(LockingTransactionsDialog);
+export const index = FF.pipe(LockingTransactionsDialog, withDialogRedux());

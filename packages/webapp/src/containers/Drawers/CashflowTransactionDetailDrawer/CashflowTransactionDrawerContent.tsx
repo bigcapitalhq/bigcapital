@@ -1,19 +1,20 @@
-// @ts-nocheck
 import React from 'react';
-
 import '@/style/components/Drawers/CashflowTransactionDrawer.scss';
-
-import { DrawerBody } from '@/components';
+import { CashflowTransactionDrawerDetails } from './CashflowTransactionDrawerDetails';
 import { CashflowTransactionDrawerProvider } from './CashflowTransactionDrawerProvider';
-import CashflowTransactionDrawerDetails from './CashflowTransactionDrawerDetails';
+import { DrawerBody } from '@/components';
+
+interface CashflowTransactionDrawerContentProps {
+  referenceId?: number | null;
+}
 
 /**
  * Cash flow transction drawer content.
  */
-export default function CashflowTransactionDrawerContent({
+export function CashflowTransactionDrawerContent({
   // #ownProp
   referenceId,
-}) {
+}: CashflowTransactionDrawerContentProps) {
   return (
     <CashflowTransactionDrawerProvider referenceId={referenceId}>
       <DrawerBody>

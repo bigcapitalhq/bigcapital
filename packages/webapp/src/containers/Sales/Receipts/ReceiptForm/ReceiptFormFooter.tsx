@@ -1,12 +1,11 @@
-// @ts-nocheck
-import React from 'react';
 import { x } from '@xstyled/emotion';
-import { Paper, Row, Col } from '@/components';
+import React from 'react';
 import { ReceiptFormFooterLeft } from './ReceiptFormFooterLeft';
 import { ReceiptFormFooterRight } from './ReceiptFormFooterRight';
+import { Paper, Row, Col } from '@/components';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
-export function ReceiptFormFooter({}) {
+export function ReceiptFormFooter() {
   return (
     <x.div mt={'20px'} px={'32px'} pb={'20px'} flex={1}>
       <Paper p={'20px'}>

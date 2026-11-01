@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { Button, DialogBody, DialogFooter, Intent } from '@blueprintjs/core';
+import { useState } from 'react';
 import styled from 'styled-components';
+import { usePaymentMethodsBoot } from '../../PreferencesPaymentMethodsBoot';
 import { Stack } from '@/components';
 import { useDialogContext } from '@/components/Dialog/DialogProvider';
 import { useDialogActions } from '@/hooks/state';
@@ -8,7 +9,6 @@ import { CreditCard2Icon } from '@/icons/CreditCard2';
 import { DollarIcon } from '@/icons/Dollar';
 import { LayoutAutoIcon } from '@/icons/LayoutAuto';
 import { SwitchIcon } from '@/icons/SwitchIcon';
-import { usePaymentMethodsBoot } from '../../PreferencesPaymentMethodsBoot';
 
 export function StripePreSetupDialogContent() {
   const { name } = useDialogContext();

@@ -1,11 +1,14 @@
-// @ts-nocheck
+import { Classes } from '@blueprintjs/core';
+import { FastField, useFormikContext } from 'formik';
+import { subtract } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { FastField, useFormikContext } from 'formik';
-import { Classes } from '@blueprintjs/core';
-import { subtract } from 'lodash';
-
-import { getEntriesTotal } from '@/containers/Entries/utils';
+import { ReconcileVendorCreditEntriesTable } from './ReconcileVendorCreditEntriesTable';
+import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
+import type {
+  ReconcileVendorCreditFormEntry,
+  ReconcileVendorCreditFormValues,
+} from './types';
 import {
   T,
   TotalLines,
@@ -13,14 +16,18 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import ReconcileVendorCreditEntriesTable from './ReconcileVendorCreditEntriesTable';
-import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
+import { getEntriesTotal } from '@/containers/Entries/utils';
 import { formattedAmount } from '@/utils';
 
-export default function ReconcileVendorCreditFormFields() {
-  const {
-    vendorCredit: { formatted_credits_remaining },
-  } = useReconcileVendorCreditContext();
+interface EntriesFastFieldRenderProps {
+  form: { setFieldValue: (field: string, value: unknown) => void };
+  field: { value: ReconcileVendorCreditFormEntry[] };
+  meta: { error?: unknown };
+}
+
+export function ReconcileVendorCreditFormFields(): React.ReactElement {
+  const { vendorCredit } = useReconcileVendorCreditContext();
+  const formattedCreditsRemaining = vendorCredit?.formattedCreditsRemaining;
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -28,20 +35,19 @@ export default function ReconcileVendorCreditFormFields() {
         <T id={'reconcile_vendor_note.dialog.credits_balance'} />
 
         <CreditRemainingBalance>
-          {formatted_credits_remaining}
+          {formattedCreditsRemaining}
         </CreditRemainingBalance>
       </CreditRemainingRoot>
 
       <FastField name={'entries'}>
         {({
-          form: { setFieldValue, values },
+          form: { setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+        }: EntriesFastFieldRenderProps) => (
           <ReconcileVendorCreditEntriesTable
             entries={value}
-            errors={error}
-            onUpdateData={(newEntries) => {
+            errors={undefined}
+            onUpdateData={(newEntries: ReconcileVendorCreditFormEntry[]) => {
               setFieldValue('entries', newEntries);
             }}
           />
@@ -55,14 +61,13 @@ export default function ReconcileVendorCreditFormFields() {
 
 /**
  * Reconcile vendor credit total lines.
- * @returns {React.JSX}
  */
-function ReconcileVendorCreditTotalLines() {
-  const {
-    vendorCredit: { currency_code, credits_remaining },
-  } = useReconcileVendorCreditContext();
+function ReconcileVendorCreditTotalLines(): React.ReactElement {
+  const { vendorCredit } = useReconcileVendorCreditContext();
+  const creditsRemaining = vendorCredit?.creditsRemaining ?? 0;
+  const currencyCode = vendorCredit?.currencyCode;
 
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<ReconcileVendorCreditFormValues>();
 
   // Calculate the total amount of credit entries.
   const totalAmount = React.useMemo(
@@ -71,7 +76,7 @@ function ReconcileVendorCreditTotalLines() {
   );
 
   // Calculate the total amount of credit remaining.
-  const creditsRemaining = subtract(credits_remaining, totalAmount);
+  const remainingCredits = subtract(creditsRemaining, totalAmount);
 
   return (
     <ReconcileVendorCreditTotalLinesRoot>
@@ -80,12 +85,12 @@ function ReconcileVendorCreditTotalLines() {
           title={
             <T id={'reconcile_vendor_credit.dialog.total_amount_to_credit'} />
           }
-          value={formattedAmount(totalAmount, currency_code)}
+          value={formattedAmount(totalAmount, currencyCode)}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine
           title={<T id={'reconcile_vendor_credit.dialog.remaining_credits'} />}
-          value={formattedAmount(creditsRemaining, currency_code)}
+          value={formattedAmount(remainingCredits, currencyCode)}
           borderStyle={TotalLineBorderStyle.SingleDark}
           textStyle={TotalLineTextStyle.Bold}
         />

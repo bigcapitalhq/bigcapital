@@ -1,6 +1,11 @@
-// @ts-nocheck
-import { Box, FFormGroup, FormattedMessage as T, FTextArea } from '@/components';
+import intl from 'react-intl-universal';
 import { VendorFormSectionTitle } from './VendorFormSectionTitle';
+import {
+  Box,
+  FFormGroup,
+  FormattedMessage as T,
+  FTextArea,
+} from '@/components';
 
 export function VendorFormNotesSection() {
   return (
@@ -9,7 +14,7 @@ export function VendorFormNotesSection() {
         <T id={'notes'} />
       </VendorFormSectionTitle>
 
-      <FFormGroup name={'note'} label={<T id={'note'} />} inline fill fastField>
+      <FFormGroup name={'note'} label={intl.get('note')} inline fastField>
         <FTextArea name={'note'} fill fastField />
       </FFormGroup>
     </Box>

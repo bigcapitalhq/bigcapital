@@ -1,12 +1,19 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
-const EstimateCustomizeDrawerBody = React.lazy(
-  () => import('./EstimateCustomizeDrawerBody'),
+const EstimateCustomizeDrawerBody = React.lazy(() =>
+  import('./EstimateCustomizeDrawerBody').then((m) => ({
+    default: m.EstimateCustomizeDrawerBody,
+  })),
 );
+
+interface EstimateCustomizeDrawerProps {
+  name: string;
+  isOpen?: boolean;
+  payload?: Record<string, any>;
+}
 
 /**
  * Estimate customize drawer.
@@ -18,7 +25,7 @@ function EstimateCustomizeDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: EstimateCustomizeDrawerProps) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -33,6 +40,7 @@ function EstimateCustomizeDrawerRoot({
   );
 }
 
-export const EstimateCustomizeDrawer = R.compose(withDrawers())(
+export const EstimateCustomizeDrawer = FF.pipe(
   EstimateCustomizeDrawerRoot,
+  withDrawers(),
 );

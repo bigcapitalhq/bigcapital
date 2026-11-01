@@ -1,31 +1,25 @@
-// @ts-nocheck
 import React from 'react';
+import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
+import { BankAccountDataTable } from '../components/BankAccountDataTable';
+import { usePendingTransactionsTableColumns } from './_hooks';
+import { usePendingTransactionsContext } from './PendingTransactionsTableBoot';
 import {
   TableFastCell,
   TableSkeletonRows,
   TableSkeletonHeader,
   TableVirtualizedListRows,
 } from '@/components';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withBankingActions } from '../../withBankingActions';
-
-import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
-import { usePendingTransactionsContext } from './PendingTransactionsTableBoot';
-import { usePendingTransactionsTableColumns } from './_hooks';
-
-import { BankAccountDataTable } from '../components/BankAccountDataTable';
-import { compose } from '@/utils';
 
 /**
  * Account transactions data table.
  */
-function PendingTransactionsDataTableRoot({
-  // #withSettings
-  cashflowTansactionsTableSize,
-}) {
+function PendingTransactionsDataTableRoot() {
   // Retrieve table columns.
   const columns = usePendingTransactionsTableColumns();
-  const { scrollableRef } = useAccountTransactionsContext();
+  const { scrollableRef, cashflowTransactionsSettings } =
+    useAccountTransactionsContext();
+  const cashflowTansactionsTableSize =
+    cashflowTransactionsSettings?.tableSize as string | undefined;
 
   // Retrieve list context.
   const {
@@ -56,9 +50,4 @@ function PendingTransactionsDataTableRoot({
   );
 }
 
-export const PendingTransactionsDataTable = compose(
-  withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
-  })),
-  withBankingActions,
-)(PendingTransactionsDataTableRoot);
+export const PendingTransactionsDataTable = PendingTransactionsDataTableRoot;

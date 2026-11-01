@@ -1,30 +1,33 @@
-// @ts-nocheck
-import React, { useEffect, useState, useCallback } from 'react';
-import { useAsync } from 'react-use';
-import { useParams } from 'react-router-dom';
 import { Intent, Alert } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import React, { useEffect, useState, useCallback } from 'react';
+import intl from 'react-intl-universal';
+import { useParams } from 'react-router-dom';
+import { useAsync } from 'react-use';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import type { WithResourcesActionsProps } from '@/containers/Resources/withResourcesActions';
+import type { ViewMeta } from '@/containers/Views/ViewForm';
+import type { WithViewsActionsProps } from '@/containers/Views/withViewsActions';
 import {
   If,
   AppToaster,
   DashboardInsider,
   DashboardPageContent,
   FormattedMessage as T,
-  FormattedHTMLMessage,
 } from '@/components';
-
-import ViewForm from '@/containers/Views/ViewForm';
-
-import { compose } from '@/utils';
-
-import { withResourcesActions } from '@/containers/Resources/withResourcesActions';
-import { withViewsActions } from '@/containers/Views/withViewsActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withResourcesActions } from '@/containers/Resources/withResourcesActions';
+import { ViewForm } from '@/containers/Views/ViewForm';
+import { withViewsActions } from '@/containers/Views/withViewsActions';
 
-// @flow
-function ViewFormPage({
+interface ViewFormPageProps
+  extends WithDashboardActionsProps,
+    WithResourcesActionsProps,
+    WithViewsActionsProps {}
+
+function ViewFormPageInner({
   // #withDashboardActions
   changePageTitle,
-  changePageSubtitle,
 
   requestFetchResourceFields,
   requestFetchResourceColumns,
@@ -32,9 +35,12 @@ function ViewFormPage({
 
   requestFetchView,
   requestDeleteView,
-}) {
-  const { resource_slug: resourceSlug, view_id: viewId } = useParams();
-  const [stateDeleteView, setStateDeleteView] = useState(null);
+}: ViewFormPageProps) {
+  const { resource_slug: resourceSlug, view_id: viewId } = useParams<{
+    resource_slug?: string;
+    view_id?: string;
+  }>();
+  const [stateDeleteView, setStateDeleteView] = useState<ViewMeta | null>(null);
 
   const fetchHook = useAsync(async () => {
     return Promise.all([
@@ -44,8 +50,8 @@ function ViewFormPage({
             requestFetchResourceFields(resourceSlug),
           ]
         : viewId
-        ? [requestFetchViewResource(viewId)]
-        : []),
+          ? [requestFetchViewResource(viewId)]
+          : []),
       ...(viewId ? [requestFetchView(viewId)] : []),
     ]);
   }, []);
@@ -62,7 +68,7 @@ function ViewFormPage({
   }, [viewId, changePageTitle]);
 
   // Handle delete view button click.
-  const handleDeleteView = useCallback((view) => {
+  const handleDeleteView = useCallback((view: ViewMeta | null) => {
     setStateDeleteView(view);
   }, []);
 
@@ -73,7 +79,10 @@ function ViewFormPage({
 
   // Handle confirm delete custom view.
   const handleConfirmDeleteView = useCallback(() => {
-    requestDeleteView(stateDeleteView.id).then((response) => {
+    if (!stateDeleteView?.id) {
+      return;
+    }
+    requestDeleteView(stateDeleteView.id).then(() => {
       setStateDeleteView(null);
       AppToaster.show({
         message: intl.get('the_custom_view_has_been_deleted_successfully'),
@@ -89,7 +98,7 @@ function ViewFormPage({
       mount={false}
     >
       <DashboardPageContent>
-        <If condition={fetchHook.value}>
+        <If condition={!!fetchHook.value}>
           <ViewForm
             viewId={viewId}
             resourceName={resourceSlug}
@@ -97,23 +106,23 @@ function ViewFormPage({
           />
 
           <Alert
-            cancelButtonText={<T id={'cancel'} />}
-            confirmButtonText={<T id={'delete'} />}
+            cancelButtonText={intl.get('cancel')}
+            confirmButtonText={intl.get('delete')}
             icon="trash"
             intent={Intent.DANGER}
-            isOpen={stateDeleteView}
+            isOpen={stateDeleteView != null}
             onCancel={handleCancelDeleteView}
             onConfirm={handleConfirmDeleteView}
           >
             <p>
-              <FormattedHTMLMessage
-                id={'once_delete_these_views_you_will_not_able_restore_them'}
-              />
+              {intl.formatHTMLMessage({
+                id: 'once_delete_these_views_you_will_not_able_restore_them',
+              })}
             </p>
           </Alert>
         </If>
 
-        <If condition={fetchHook.error}>
+        <If condition={!!fetchHook.error}>
           <h4>
             <T id={'something_wrong'} />
           </h4>
@@ -123,8 +132,9 @@ function ViewFormPage({
   );
 }
 
-export default compose(
-  withDashboardActions,
-  withViewsActions,
+export const ViewFormPage = FF.pipe(
+  ViewFormPageInner,
   withResourcesActions,
-)(ViewFormPage);
+  withViewsActions,
+  withDashboardActions,
+);

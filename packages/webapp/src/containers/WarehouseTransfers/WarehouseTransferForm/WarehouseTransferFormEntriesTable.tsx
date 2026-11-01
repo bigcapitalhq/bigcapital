@@ -1,19 +1,28 @@
-// @ts-nocheck
 import React from 'react';
-
-import { DataTableEditable } from '@/components';
-import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { useWarehouseTransferTableColumns } from '../utils';
 import { useFetchItemWarehouseQuantity } from './hooks';
-import { useDeepCompareEffect } from '@/hooks/utils';
-
-import { saveInvoke } from '@/utils';
 import { mutateTableCell, mutateTableRow, deleteTableRow } from './utils';
+import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import type { WarehouseTransferEntry } from './types';
+import { DataTableEditable } from '@/components';
+import { useDeepCompareEffect } from '@/hooks/utils';
+import { saveInvoke } from '@/utils';
+
+interface WarehouseTransferFormEntriesTableProps {
+  items: unknown;
+  entries: WarehouseTransferEntry[];
+  defaultEntry: WarehouseTransferEntry;
+  onUpdateData: (entries: WarehouseTransferEntry[]) => void;
+  errors?: unknown;
+
+  destinationWarehouseId: number | string;
+  sourceWarehouseId: number | string;
+}
 
 /**
  * Warehouse transfer form entries table.
  */
-export default function WarehouseTransferFormEntriesTable({
+export function WarehouseTransferFormEntriesTable({
   // #ownProps
   items,
   entries,
@@ -23,7 +32,7 @@ export default function WarehouseTransferFormEntriesTable({
 
   destinationWarehouseId,
   sourceWarehouseId,
-}) {
+}: WarehouseTransferFormEntriesTableProps) {
   // Fetch the table row.
   const { newRowMeta, setTableRow, resetTableRow, cellsLoading } =
     useFetchItemWarehouseQuantity();
@@ -37,11 +46,14 @@ export default function WarehouseTransferFormEntriesTable({
   // Observes the new row meta to call `onUpdateData` callback.
   useDeepCompareEffect(() => {
     if (newRowMeta) {
-      const newRow = {
-        item_id: newRowMeta.itemId,
+      const newRow: WarehouseTransferEntry = {
+        itemId: newRowMeta.itemId,
         warehouses: newRowMeta.warehouses,
         description: '',
         quantity: '',
+        index: 0,
+        sourceWarehouse: '',
+        destinationWarehouse: '',
       };
       const newRows = mutateTableRow(newRowMeta.rowIndex, newRow, entries);
 
@@ -52,8 +64,8 @@ export default function WarehouseTransferFormEntriesTable({
 
   // Handle update data.
   const handleUpdateData = React.useCallback(
-    (rowIndex, columnId, itemId) => {
-      if (columnId === 'item_id') {
+    (rowIndex: number, columnId: string, itemId: number) => {
+      if (columnId === 'itemId') {
         setTableRow({
           rowIndex,
           columnId,
@@ -78,7 +90,7 @@ export default function WarehouseTransferFormEntriesTable({
   );
   // Handles click remove datatable row.
   const handleRemoveRow = React.useCallback(
-    (rowIndex) => {
+    (rowIndex: number) => {
       const newRows = deleteTableRow(rowIndex, defaultEntry, entries);
       saveInvoke(onUpdateData, newRows);
     },
@@ -90,14 +102,14 @@ export default function WarehouseTransferFormEntriesTable({
       columns={columns}
       data={entries}
       cellsLoading={!!cellsLoading}
-      cellsLoadingCoords={cellsLoading}
-      progressBarLoading={isItemsCostFetching || cellsLoading}
+      cellsLoadingCoords={cellsLoading ?? undefined}
+      progressBarLoading={isItemsCostFetching || !!cellsLoading}
       payload={{
         items,
         errors: errors || [],
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,
-        autoFocus: ['item_id', 0],
+        autoFocus: ['itemId', 0],
 
         sourceWarehouseId,
         destinationWarehouseId,

@@ -1,7 +1,7 @@
 // @ts-nocheck
+import { MenuItem } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem } from '@blueprintjs/core';
 
 // Filter Contact List
 export const itemPredicate = (query, contact, index, exactMatch) => {

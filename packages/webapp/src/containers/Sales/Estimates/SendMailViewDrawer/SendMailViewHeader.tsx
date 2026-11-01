@@ -26,7 +26,7 @@ export function SendMailViewHeader({
     <Group
       p={'10px'}
       pl={'30px'}
-      bg={isDarkmode ? "var(--color-dark-gray2)" : "white"}
+      bg={isDarkmode ? 'var(--color-dark-gray2)' : 'white'}
       alignItems={'center'}
       boxShadow={`0 1px 0 ${isDarkmode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(17, 20, 24, .15)'}`}
       zIndex={1}
@@ -46,7 +46,12 @@ export function SendMailViewHeader({
         <Button
           aria-label="Close"
           className={Classes.DIALOG_CLOSE_BUTTON}
-          icon={<Icon icon={'smallCross'} color={isDarkmode ? 'rgba(255, 255, 255, 0.85)' : '#000'} />}
+          icon={
+            <Icon
+              icon={'smallCross'}
+              color={isDarkmode ? 'rgba(255, 255, 255, 0.85)' : '#000'}
+            />
+          }
           minimal={true}
           onClick={handleClose}
           style={{ marginLeft: 'auto' }}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AccountTransactionsCard } from '../UncategorizedTransactions/AccountTransactionsCard';
-import { PendingTransactionsBoot } from './PendingTransactionsTableBoot';
 import { PendingTransactionsDataTable } from './PendingTransactionsTable';
+import { PendingTransactionsBoot } from './PendingTransactionsTableBoot';
 
 export function PendingTransactions() {
   return (

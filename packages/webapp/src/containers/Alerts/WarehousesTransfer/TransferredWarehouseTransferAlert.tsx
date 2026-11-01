@@ -1,39 +1,32 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useTransferredWarehouseTransfer } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface TransferredWarehouseTransferAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { warehouseTransferId: number };
+}
 
-import { compose } from '@/utils';
-
-/**
- * warehouse transfer transferred alert.
- * @returns
- */
-function TransferredWarehouseTransferAlert({
+function TransferredWarehouseTransferAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { warehouseTransferId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: transferredWarehouseTransferMutate, isLoading } =
+}: TransferredWarehouseTransferAlertProps): React.ReactElement {
+  const { mutateAsync: transferredWarehouseTransferMutate, isPending } =
     useTransferredWarehouseTransfer();
 
-  // handle cancel alert.
   const handleCancelAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm alert.
   const handleConfirmTransferred = () => {
     transferredWarehouseTransferMutate(warehouseTransferId)
       .then(() => {
@@ -42,7 +35,7 @@ function TransferredWarehouseTransferAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -50,13 +43,13 @@ function TransferredWarehouseTransferAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'deliver'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('deliver')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelAlert}
       onConfirm={handleConfirmTransferred}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         <T id={'warehouse_transfer.alert.are_you_sure_you_want_to_deliver'} />
@@ -65,7 +58,8 @@ function TransferredWarehouseTransferAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const TransferredWarehouseTransferAlert = FF.pipe(
+  TransferredWarehouseTransferAlertInner,
   withAlertActions,
-)(TransferredWarehouseTransferAlert);
+  withAlertStoreConnect(),
+);

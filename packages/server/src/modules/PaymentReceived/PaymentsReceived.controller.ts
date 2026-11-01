@@ -1,7 +1,9 @@
 import { Response } from 'express';
 import {
+  ApiBody,
   ApiExtraModels,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
   getSchemaPath,
@@ -22,9 +24,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PaymentReceivesApplication } from './PaymentReceived.application';
-import {
-  PaymentReceiveMailOptsDTO,
-} from './types/PaymentReceived.types';
+import { PaymentReceiveMailOptsDTO } from './types/PaymentReceived.types';
 import { GetPaymentsReceivedQueryDto } from './dtos/GetPaymentsReceivedQuery.dto';
 import {
   CreatePaymentReceivedDto,
@@ -34,33 +34,51 @@ import { AcceptType } from '@/constants/accept-type';
 import { PaymentReceivedResponseDto } from './dtos/PaymentReceivedResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { PaymentReceivedStateResponseDto } from './dtos/PaymentReceivedStateResponse.dto';
+import { PaymentReceivedHtmlContentResponseDto } from './dtos/PaymentReceivedHtmlResponse.dto';
+import { PaymentReceiveEditPageResponseDto } from './dtos/PaymentReceiveEditPageResponse.dto';
+import { PaymentReceiveMailOptsDto } from './dtos/PaymentReceiveMailOpts.dto';
+import { PaymentReceiveMailStateResponseDto } from './dtos/PaymentReceiveMailStateResponse.dto';
+import { PaymentReceiveMailResponseDto } from './dtos/PaymentReceiveMailResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
   ValidateBulkDeleteResponseDto,
 } from '@/common/dtos/BulkDelete.dto';
+import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { PaymentReceiveAction } from './types/PaymentReceived.types';
+import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
 
 @Controller('payments-received')
 @ApiTags('Payments Received')
 @ApiExtraModels(PaymentReceivedResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(PaymentReceivedStateResponseDto)
+@ApiExtraModels(PaymentReceivedHtmlContentResponseDto)
+@ApiExtraModels(PaymentReceiveEditPageResponseDto)
+@ApiExtraModels(PaymentReceiveMailOptsDto)
+@ApiExtraModels(PaymentReceiveMailStateResponseDto)
+@ApiExtraModels(PaymentReceiveMailResponseDto)
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
+@ApiExtraModels(SmsNotificationDetailsResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class PaymentReceivesController {
-  constructor(private paymentReceivesApplication: PaymentReceivesApplication) { }
+  constructor(private paymentReceivesApplication: PaymentReceivesApplication) {}
 
   @Post(':id/mail')
   @HttpCode(200)
+  @ApiBody({
+    description: 'The payment receive mail options',
+    type: PaymentReceiveMailOptsDto,
+  })
   @ApiResponse({
     status: 200,
     description: 'The payment receive mail has been successfully sent.',
+    schema: { $ref: getSchemaPath(PaymentReceiveMailResponseDto) },
   })
   public sendPaymentReceiveMail(
     @Param('id', ParseIntPipe) paymentReceiveId: number,
@@ -75,8 +93,8 @@ export class PaymentReceivesController {
   @Get(':id/edit-page')
   @ApiResponse({
     status: 200,
-    description:
-      'The payment received edit page has been successfully retrieved.',
+    description: 'The payment received edit page data.',
+    schema: { $ref: getSchemaPath(PaymentReceiveEditPageResponseDto) },
   })
   public getPaymentReceiveEditPage(
     @Param('id', ParseIntPipe) paymentReceiveId: number,
@@ -91,6 +109,7 @@ export class PaymentReceivesController {
     status: 200,
     description:
       'The payment receive mail options have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(PaymentReceiveMailStateResponseDto) },
   })
   public getPaymentReceiveMailOptions(
     @Param('id', ParseIntPipe) paymentReceiveId: number,
@@ -155,9 +174,7 @@ export class PaymentReceivesController {
       ],
     },
   })
-  public getPaymentsReceived(
-    @Query() filterDTO: GetPaymentsReceivedQueryDto,
-  ) {
+  public getPaymentsReceived(@Query() filterDTO: GetPaymentsReceivedQueryDto) {
     return this.paymentReceivesApplication.getPaymentsReceived(filterDTO);
   }
 
@@ -190,9 +207,7 @@ export class PaymentReceivesController {
     status: 200,
     description: 'Payments received deleted successfully.',
   })
-  public bulkDeletePaymentsReceived(
-    @Body() bulkDeleteDto: BulkDeleteDto,
-  ) {
+  public bulkDeletePaymentsReceived(@Body() bulkDeleteDto: BulkDeleteDto) {
     return this.paymentReceivesApplication.bulkDeletePaymentReceives(
       bulkDeleteDto.ids,
       { skipUndeletable: bulkDeleteDto.skipUndeletable ?? false },
@@ -229,6 +244,55 @@ export class PaymentReceivesController {
     );
   }
 
+  @Post(':id/notify-by-sms')
+  @UseGuards(SmsNotificationsFeatureGuard)
+  @RequirePermission(
+    PaymentReceiveAction.NotifyBySms,
+    AbilitySubject.PaymentReceive,
+  )
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Notify the given payment received by SMS.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The payment received has been notified by SMS.',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The payment received id',
+  })
+  public notifyPaymentReceiveBySms(
+    @Param('id', ParseIntPipe) paymentReceiveId: number,
+  ) {
+    return this.paymentReceivesApplication.notifyPaymentReceiveBySms(
+      paymentReceiveId,
+    );
+  }
+
+  @Get(':id/sms-details')
+  @UseGuards(SmsNotificationsFeatureGuard)
+  @RequirePermission(PaymentReceiveAction.View, AbilitySubject.PaymentReceive)
+  @ApiOperation({ summary: 'Retrieves the payment received SMS details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The payment received SMS details have been retrieved.',
+    schema: { $ref: getSchemaPath(SmsNotificationDetailsResponseDto) },
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The payment received id',
+  })
+  public getPaymentReceiveSmsDetails(
+    @Param('id', ParseIntPipe) paymentReceiveId: number,
+  ) {
+    return this.paymentReceivesApplication.getPaymentReceiveSmsDetails(
+      paymentReceiveId,
+    );
+  }
+
   @Get(':id')
   @RequirePermission(PaymentReceiveAction.View, AbilitySubject.PaymentReceive)
   @ApiOperation({ summary: 'Retrieves the payment received details.' })
@@ -236,8 +300,17 @@ export class PaymentReceivesController {
     status: 200,
     description:
       'The payment received details have been successfully retrieved.',
-    schema: {
-      $ref: getSchemaPath(PaymentReceivedResponseDto),
+    content: {
+      'application/json': {
+        schema: {
+          $ref: getSchemaPath(PaymentReceivedResponseDto),
+        },
+      },
+      'application/json+html': {
+        schema: {
+          $ref: getSchemaPath(PaymentReceivedHtmlContentResponseDto),
+        },
+      },
     },
   })
   public async getPaymentReceive(
@@ -246,9 +319,10 @@ export class PaymentReceivesController {
     @Res({ passthrough: true }) res: Response,
   ) {
     if (acceptHeader?.includes(AcceptType.ApplicationPdf)) {
-      const [pdfContent, filename] = await this.paymentReceivesApplication.getPaymentReceivePdf(
-        paymentReceiveId,
-      );
+      const [pdfContent, filename] =
+        await this.paymentReceivesApplication.getPaymentReceivePdf(
+          paymentReceiveId,
+        );
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,

@@ -65,7 +65,7 @@ export class InactivateUserService {
     userId: number,
     authorizedUser: ModelObject<TenantUser>,
   ) {
-    if (userId === authorizedUser.id) {
+    if (Number(userId) === authorizedUser.id) {
       throw new ServiceError(ERRORS.USER_SAME_THE_AUTHORIZED_USER);
     }
   }

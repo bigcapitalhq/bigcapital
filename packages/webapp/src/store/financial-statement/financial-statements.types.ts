@@ -1,0 +1,22 @@
+export const BALANCE_SHEET = 'BALANCE_SHEET' as const;
+export const TRIAL_BALANCE_SHEET = 'TRIAL_BALANCE_SHEET' as const;
+export const JOURNAL = 'JOURNAL' as const;
+export const GENERAL_LEDGER = 'GENERAL_LEDGER' as const;
+export const PROFIT_LOSS = 'PROFIT_LOSS' as const;
+export const AR_AGING_SUMMARY = 'AR_AGING_SUMMARY' as const;
+export const AP_AGING_SUMMARY = 'AP_AGING_SUMMARY' as const;
+export const DISPLAY_FILTER_DRAWER_TOGGLE =
+  'DISPLAY_FILTER_DRAWER_TOGGLE' as const;
+export const PURCHASES_BY_ITEMS = 'PURCHASES_BY_ITEMS' as const;
+export const SALES_BY_ITEMS = 'SALES_BY_ITEMS' as const;
+export const INVENTORY_VALUATION = 'INVENTORY_VALUATION' as const;
+export const CUSTOMERS_BALANCE_SUMMARY = 'CUSTOMERS BALANCE SUMMARY' as const;
+export const VENDORS_BALANCE_SUMMARY = 'VENDORS BALANCE SUMMARY' as const;
+export const CUSTOMERS_TRANSACTIONS = 'CUSTOMERS TRANSACTIONS' as const;
+export const VENDORS_TRANSACTIONS = 'VENDORS TRANSACTIONS' as const;
+export const CASH_FLOW_STATEMENT = 'CASH FLOW STATEMENT' as const;
+export const INVENTORY_ITEM_DETAILS = 'INVENTORY ITEM DETAILS' as const;
+export const REALIZED_GAIN_OR_LOSS = 'REALIZED GAIN OR LOSS' as const;
+export const UNREALIZED_GAIN_OR_LOSS = 'UNREALIZED GAIN OR LOSS' as const;
+export const SALES_TAX_LIABILITY_SUMMARY =
+  'SALES TAX LIABILITY SUMMARY' as const;

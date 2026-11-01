@@ -19,7 +19,7 @@ export class DecrementUncategorizedTransactionOnExclude {
     private readonly uncategorizedBankTransaction: TenantModelProxy<
       typeof UncategorizedBankTransaction
     >,
-  ) { }
+  ) {}
 
   /**
    * Validates the cashflow transaction whether matched with bank transaction on deleting.

@@ -1,16 +1,26 @@
-import { IFinancialSheetCommonMeta, INumberFormatQuery } from "../../types/Report.types";
-import { IFinancialTable } from "../../types/Table.types";
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from '../../types/Report.types';
+import { IFinancialTable } from '../../types/Table.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { TrialBalanceColumnKey } from '../../common/constants/tableColumnKeys';
+import { FinancialReportSortOrder } from '../../utils/Sorting.utils';
+
+export type TrialBalanceSortOrder = FinancialReportSortOrder;
 
 export interface ITrialBalanceSheetQuery {
   fromDate: Date | string;
   toDate: Date | string;
   numberFormat: INumberFormatQuery;
-  basis: 'cash' | 'accrual';
+  basis: AccountingBasis;
   noneZero: boolean;
   noneTransactions: boolean;
   onlyActive: boolean;
   accountIds: number[];
   branchesIds?: number[];
+  columnSortBy?: TrialBalanceColumnKey;
+  sortOrder?: TrialBalanceSortOrder;
 }
 
 export interface ITrialBalanceTotal {

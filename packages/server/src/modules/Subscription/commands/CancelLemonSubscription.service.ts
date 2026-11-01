@@ -23,9 +23,7 @@ export class CancelLemonSubscription {
    * @param {number} subscriptionId - Subscription id.
    * @returns {Promise<void>}
    */
-  public async cancelSubscription(
-    subscriptionSlug: string = 'main',
-  ) {
+  public async cancelSubscription(subscriptionSlug: string = 'main') {
     configureLemonSqueezy();
 
     const tenant = await this.tenancyContext.getTenant();

@@ -1,35 +1,68 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
-
-import { AppToaster } from '@/components';
-import { useItemCategoryContext } from './ItemCategoryProvider';
-import { compose, transformToForm } from '@/utils';
 import {
   CreateItemCategoryFormSchema,
   EditItemCategoryFormSchema,
 } from './itemCategoryForm.schema';
-
+import { ItemCategoryForm as ItemCategoryFormContent } from './ItemCategoryFormContent';
+import { useItemCategoryContext } from './ItemCategoryProvider';
+import type { ItemCategoryFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type {
+  CreateItemCategoryBody,
+  EditItemCategoryBody,
+} from '@bigcapital/sdk-ts';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import ItemCategoryFormContent from './ItemCategoryFormContent';
+import { transformToForm } from '@/utils';
 
-const defaultInitialValues = {
+const defaultInitialValues: ItemCategoryFormValues = {
   name: '',
   description: '',
-  cost_account_id: '',
-  sell_account_id: '',
-  inventory_account_id: '',
+  costAccountId: '',
+  sellAccountId: '',
+  inventoryAccountId: '',
+  costMethod: '',
 };
 
-/**
- * Item category form.
- */
-function ItemCategoryForm({
-  // #withDialogActions
+// Coerce form-friendly string|number fields to the strict SDK body shape.
+// Empty strings become `undefined` so the account fields are omitted from the
+// request body — sending `0` makes the server insert an account_id of 0, which
+// violates the foreign key constraint.
+const toAccountId = (v: string | number): number | undefined =>
+  typeof v === 'number' ? v || undefined : Number(v) || undefined;
+
+const transformFormToCreateBody = (
+  values: ItemCategoryFormValues,
+): CreateItemCategoryBody =>
+  // The SDK body type requires the account fields though the server DTO makes
+  // them optional — `undefined` fields are omitted by `JSON.stringify` at
+  // request time, so the cast is purely to satisfy the generated types.
+  ({
+    name: values.name,
+    description: values.description,
+    costAccountId: toAccountId(values.costAccountId),
+    sellAccountId: toAccountId(values.sellAccountId),
+    inventoryAccountId: toAccountId(values.inventoryAccountId),
+    costMethod: values.costMethod,
+  }) as CreateItemCategoryBody;
+
+const transformFormToEditBody = (
+  values: ItemCategoryFormValues,
+): EditItemCategoryBody => transformFormToCreateBody(values);
+
+interface ResponseError {
+  type: string;
+}
+
+interface ItemCategoryFormProps extends WithDialogActionsProps {}
+
+function ItemCategoryFormInner({
   closeDialog,
-}) {
+}: ItemCategoryFormProps): React.ReactElement {
   const {
     isNewMode,
     itemCategory,
@@ -39,8 +72,7 @@ function ItemCategoryForm({
     editItemCategoryMutate,
   } = useItemCategoryContext();
 
-  // Initial values.
-  const initialValues = useMemo(
+  const initialValues = useMemo<ItemCategoryFormValues>(
     () => ({
       ...defaultInitialValues,
       ...transformToForm(itemCategory, defaultInitialValues),
@@ -48,8 +80,16 @@ function ItemCategoryForm({
     [itemCategory],
   );
 
-  // Transformes response errors.
-  const transformErrors = (errors, { setErrors }) => {
+  const transformErrors = (
+    errors: ResponseError[],
+    {
+      setErrors,
+    }: {
+      setErrors: (
+        errors: Partial<Record<keyof ItemCategoryFormValues, string>>,
+      ) => void;
+    },
+  ) => {
     if (errors.find((error) => error.type === 'CATEGORY_NAME_EXISTS')) {
       setErrors({
         name: intl.get('category_name_exists'),
@@ -57,17 +97,17 @@ function ItemCategoryForm({
     }
   };
 
-  // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: ItemCategoryFormValues,
+    { setSubmitting, setErrors }: FormikHelpers<ItemCategoryFormValues>,
+  ) => {
     setSubmitting(true);
     const form = { ...values };
 
-    // Handle close the dialog after success response.
     const afterSubmit = () => {
       closeDialog(dialogName);
     };
-    // Handle the response success.
-    const onSuccess = ({ response }) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -76,23 +116,25 @@ function ItemCategoryForm({
         ),
         intent: Intent.SUCCESS,
       });
-      afterSubmit(response);
+      afterSubmit();
     };
-    // Handle the response error.
-    const onError = (error) => {
+    const onError = (error: { data: { errors: ResponseError[] } }) => {
       const {
-        response: {
-          data: { errors },
-        },
+        data: { errors },
       } = error;
 
       transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
     if (isNewMode) {
-      createItemCategoryMutate(form).then(onSuccess).catch(onError);
+      createItemCategoryMutate(transformFormToCreateBody(form))
+        .then(onSuccess)
+        .catch(onError);
     } else {
-      editItemCategoryMutate([itemCategoryId, form])
+      editItemCategoryMutate([
+        itemCategoryId as number,
+        transformFormToEditBody(form),
+      ])
         .then(onSuccess)
         .catch(onError);
     }
@@ -111,4 +153,7 @@ function ItemCategoryForm({
   );
 }
 
-export default compose(withDialogActions)(ItemCategoryForm);
+export const ItemCategoryForm = FF.pipe(
+  ItemCategoryFormInner,
+  withDialogActions,
+);

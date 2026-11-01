@@ -1,11 +1,17 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
-import { compose } from '@/utils';
+const AccountDrawerContent = lazy(() =>
+  import('./AccountDrawerContent').then((m) => ({
+    default: m.AccountDrawerContent,
+  })),
+);
 
-const AccountDrawerContent = lazy(() => import('./AccountDrawerContent'));
+interface AccountDrawerProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  * Account drawer.
@@ -14,8 +20,10 @@ function AccountDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { accountId },
-}) {
+  payload,
+}: AccountDrawerProps) {
+  const accountId = payload?.accountId as number | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -30,4 +38,4 @@ function AccountDrawer({
   );
 }
 
-export default compose(withDrawers())(AccountDrawer);
+export const index = FF.pipe(AccountDrawer, withDrawers());

@@ -8,12 +8,12 @@ import { DeleteCreditNoteService } from './commands/DeleteCreditNote.service';
 export class BulkDeleteCreditNotesService {
   constructor(
     private readonly deleteCreditNoteService: DeleteCreditNoteService,
-  ) { }
+  ) {}
 
   async bulkDeleteCreditNotes(
     creditNoteIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const notesIds = uniq(castArray(creditNoteIds));
@@ -35,4 +35,3 @@ export class BulkDeleteCreditNotesService {
     }
   }
 }
-

@@ -6,13 +6,13 @@ import { TrialBalanceSheetService } from './TrialBalanceSheetInjectable';
 import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
 import { TrialBalanceSheetMeta } from './TrialBalanceSheetMeta';
 import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 import { TrialBalanceSheetPdfInjectable } from './TrialBalanceSheetPdfInjectsable';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
 import { AccountsModule } from '@/modules/Accounts/Accounts.module';
 
 @Module({
-  imports: [FinancialSheetCommonModule, AccountsModule],
+  imports: [TenancyModule, FinancialSheetCommonModule, AccountsModule],
   providers: [
     TrialBalanceSheetApplication,
     TrialBalanceSheetService,
@@ -20,8 +20,7 @@ import { AccountsModule } from '@/modules/Accounts/Accounts.module';
     TrialBalanceExportInjectable,
     TrialBalanceSheetMeta,
     TrialBalanceSheetRepository,
-    TenancyContext,
-    TrialBalanceSheetPdfInjectable
+    TrialBalanceSheetPdfInjectable,
   ],
   controllers: [TrialBalanceSheetController],
 })

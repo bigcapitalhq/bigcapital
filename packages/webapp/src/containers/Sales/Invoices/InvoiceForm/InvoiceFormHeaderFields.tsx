@@ -1,40 +1,30 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import classNames from 'classnames';
-import { Position, Classes } from '@blueprintjs/core';
-import { useFormikContext } from 'formik';
+import { Position } from '@blueprintjs/core';
 import { css } from '@emotion/css';
 import { Theme, useTheme } from '@emotion/react';
-
+import { useFormikContext } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { InvoiceExchangeRateInputField } from './components';
+import { InvoiceFormInvoiceNumberField } from './InvoiceFormInvoiceNumberField';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { customerNameFieldShouldUpdate } from './utils';
+import type { InvoiceFormValues } from './utils';
 import {
   FFormGroup,
   FormattedMessage as T,
   CustomerDrawerLink,
   FieldRequiredHint,
-  FeatureCan,
   CustomersSelect,
   Stack,
   FInputGroup,
   Icon,
   FDateInput,
 } from '@/components';
-import { customerNameFieldShouldUpdate } from './utils';
-
-import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import {
-  InvoiceExchangeRateInputField,
-  InvoiceProjectSelectButton,
-} from './components';
-import { InvoiceFormInvoiceNumberField } from './InvoiceFormInvoiceNumberField';
-import {
-  ProjectsSelect,
-  ProjectBillableEntriesLink,
-} from '@/containers/Projects/components';
-import { Features } from '@/constants';
+import { useDateInputFormatter } from '@/hooks';
 
-const getInvoiceFieldsStyle = (theme: Theme) => css`
+const getInvoiceFieldsStyle = (theme: Theme & { bpPrefix?: string }) => css`
   .${theme.bpPrefix}-form-group {
     margin-bottom: 0;
 
@@ -54,11 +44,10 @@ const getInvoiceFieldsStyle = (theme: Theme) => css`
 /**
  * Invoice form header fields.
  */
-export default function InvoiceFormHeaderFields() {
+export function InvoiceFormHeaderFields() {
   const theme = useTheme();
-  const { projects } = useInvoiceFormContext();
-  const { values } = useFormikContext();
   const invoiceFieldsClassName = getInvoiceFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={invoiceFieldsClassName}>
@@ -70,16 +59,15 @@ export default function InvoiceFormHeaderFields() {
 
       {/* ----------- Invoice date ----------- */}
       <FFormGroup
-        name={'invoice_date'}
-        label={<T id={'invoice_date'} />}
+        name={'invoiceDate'}
+        label={intl.get('invoice_date')}
         labelInfo={<FieldRequiredHint />}
         inline
         fastField
       >
         <FDateInput
-          name={'invoice_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          name={'invoiceDate'}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
@@ -95,16 +83,15 @@ export default function InvoiceFormHeaderFields() {
 
       {/* ----------- Due date ----------- */}
       <FFormGroup
-        name={'due_date'}
-        label={<T id={'due_date'} />}
+        name={'dueDate'}
+        label={intl.get('due_date')}
         labelInfo={<FieldRequiredHint />}
         inline
         fastField
       >
         <FDateInput
-          name={'due_date'}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          name={'dueDate'}
+          {...dateInputFormatter}
           popoverProps={{
             position: Position.BOTTOM_LEFT,
             minimal: true,
@@ -123,31 +110,12 @@ export default function InvoiceFormHeaderFields() {
       <InvoiceFormInvoiceNumberField />
 
       {/* ----------- Reference ----------- */}
-      <FFormGroup name={'reference_no'} label={<T id={'reference'} />} inline>
-        <FInputGroup name={'reference_no'} minimal={true} />
+      <FFormGroup name={'referenceNo'} label={intl.get('reference')} inline>
+        <FInputGroup
+          name={'referenceNo'}
+          data-testId="invoice-reference-input"
+        />
       </FFormGroup>
-
-      {/*------------ Project name -----------*/}
-      <FeatureCan feature={Features.Projects}>
-        <FFormGroup
-          name={'project_id'}
-          label={<T id={'invoice.project_name.label'} />}
-          inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
-        >
-          <ProjectsSelect
-            name={'project_id'}
-            projects={projects}
-            input={InvoiceProjectSelectButton}
-            popoverFill={true}
-          />
-          {values?.project_id && (
-            <ProjectBillableEntriesLink projectId={values?.project_id}>
-              <T id={'add_billable_entries'} />
-            </ProjectBillableEntriesLink>
-          )}
-        </FFormGroup>
-      </FeatureCan>
     </Stack>
   );
 }
@@ -157,46 +125,47 @@ export default function InvoiceFormHeaderFields() {
  * @returns {React.ReactNode}
  */
 function InvoiceFormCustomerSelect() {
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<InvoiceFormValues>();
   const { customers } = useInvoiceFormContext();
 
   const updateEntries = useCustomerUpdateExRate();
 
   // Handles the customer item change.
-  const handleItemChange = (customer) => {
+  const handleItemChange = (customer: { id: number; currencyCode: string }) => {
     // If the customer id has changed change the customer id and currency code.
-    if (values.customer_id !== customer.id) {
-      setFieldValue('customer_id', customer.id);
-      setFieldValue('currency_code', customer?.currency_code);
+    if (values.customerId !== customer.id) {
+      setFieldValue('customerId', customer.id);
+      setFieldValue('currencyCode', customer.currencyCode);
     }
     updateEntries(customer);
   };
 
   return (
     <FFormGroup
-      name={'customer_id'}
-      label={<T id={'customer_name'} />}
+      name={'customerId'}
+      label={intl.get('customer_name')}
       inline={true}
       labelInfo={<FieldRequiredHint />}
       fastField={true}
-      shouldUpdate={customerNameFieldShouldUpdate}
-      shouldUpdateDeps={{ items: customers }}
     >
-      <CustomersSelect
-        name={'customer_id'}
-        items={customers}
-        placeholder={<T id={'select_customer_account'} />}
-        onItemChange={handleItemChange}
-        allowCreate={true}
-        fastField={true}
-        shouldUpdate={customerNameFieldShouldUpdate}
-        shouldUpdateDeps={{ items: customers }}
-      />
-      {values.customer_id && (
-        <CustomerButtonLink customerId={values.customer_id}>
-          <T id={'view_customer_details'} />
-        </CustomerButtonLink>
-      )}
+      <>
+        <CustomersSelect
+          name={'customerId'}
+          items={customers}
+          placeholder={<T id={'select_customer_account'} />}
+          onItemChange={handleItemChange}
+          allowCreate={true}
+          fastField={true}
+          shouldUpdate={customerNameFieldShouldUpdate}
+          shouldUpdateDeps={{ items: customers }}
+          buttonProps={{ 'data-testId': 'invoice-customer-select' }}
+        />
+        {values.customerId && (
+          <CustomerButtonLink customerId={values.customerId}>
+            <T id={'view_customer_details'} />
+          </CustomerButtonLink>
+        )}
+      </>
     </FFormGroup>
   );
 }

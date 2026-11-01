@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React, { useRef } from 'react';
 import {
   Button,
   Classes,
@@ -10,6 +8,16 @@ import {
   Text,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
+import React from 'react';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { FinancialComputeAlert } from '../FinancialReportPage';
+import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
+import { dynamicColumns } from './utils';
+import { useInventoryValuationHttpQuery } from './utils2';
+import type {
+  InventoryItemDetailsXlsxQuery,
+  InventoryItemDetailsCsvQuery,
+} from '@bigcapital/sdk-ts';
 import {
   AppToaster,
   Icon,
@@ -17,24 +25,18 @@ import {
   Stack,
   FormattedMessage as T,
 } from '@/components';
-
-import { dynamicColumns } from './utils';
-import FinancialLoadingBar from '../FinancialLoadingBar';
 import {
   useInventoryItemDetailsCsvExport,
   useInventoryItemDetailsXlsxExport,
 } from '@/hooks/query';
-import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
-import { FinancialComputeAlert } from '../FinancialReportPage';
-import { useInventoryValuationHttpQuery } from './utils2';
 
 /**
  * Retrieve inventory item details columns.
  */
 export const useInventoryItemDetailsColumns = () => {
-  const {
-    inventoryItemDetails: { columns, tableRows },
-  } = useInventoryItemDetailsContext();
+  const { inventoryItemDetails } = useInventoryItemDetailsContext();
+  const columns = (inventoryItemDetails as any)?.columns ?? [];
+  const tableRows = (inventoryItemDetails as any)?.tableRows ?? [];
 
   return React.useMemo(
     () => dynamicColumns(columns, tableRows),
@@ -75,7 +77,7 @@ export function InventoryItemDetailsAlerts() {
     return null;
   }
   // Can't continue if the cost compute job is running.
-  if (!inventoryItemDetails.meta.is_cost_compute_running) {
+  if (!(inventoryItemDetails as any)?.meta?.isCostComputeRunning) {
     return null;
   }
 
@@ -96,80 +98,57 @@ export function InventoryItemDetailsAlerts() {
  * @returns {JSX.Element}
  */
 export function InventoryItemDetailsExportMenu() {
-  const toastKey = useRef(null);
   const commonToastConfig = {
     isCloseButtonShown: true,
     timeout: 2000,
   };
   const httpQuery = useInventoryValuationHttpQuery();
 
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+            [Classes.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
 
-  // Export the report to xlsx.
   const { mutateAsync: xlsxExport } = useInventoryItemDetailsXlsxExport(
-    httpQuery,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
-    },
+    httpQuery as InventoryItemDetailsXlsxQuery,
   );
-  // Export the report to csv.
   const { mutateAsync: csvExport } = useInventoryItemDetailsCsvExport(
-    httpQuery,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
-    },
+    httpQuery as InventoryItemDetailsCsvQuery,
   );
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport();
+
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport();
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

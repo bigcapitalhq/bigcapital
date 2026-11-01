@@ -1,8 +1,7 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
-import classNames from 'classnames';
+import intl from 'react-intl-universal';
+import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 import {
-  FormattedMessage as T,
   FAccountsSuggestField,
   FieldRequiredHint,
   Col,
@@ -10,16 +9,13 @@ import {
   FFormGroup,
   FSelect,
 } from '@/components';
-import { CLASSES, getAddMoneyInOptions } from '@/constants';
-
-import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import { getAddMoneyInOptions } from '@/constants';
 
 /**
  * Transaction type fields.
  */
-export default function TransactionTypeFields() {
-  // Money in dialog context.
-  const { cashflowAccounts, setAccountId, accountId } = useMoneyInDailogContext();
+export function TransactionTypeFields() {
+  const { cashflowAccounts, setAccountId } = useMoneyInDailogContext();
 
   // Retrieves the add money in button options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
@@ -30,12 +26,12 @@ export default function TransactionTypeFields() {
         <Col xs={5}>
           {/*------------ Transaction type -----------*/}
           <FFormGroup
-            name={'transaction_type'}
-            label={<T id={'transaction_type'} />}
+            name={'transactionType'}
+            label={intl.get('transaction_type')}
             labelInfo={<FieldRequiredHint />}
           >
             <FSelect
-              name={'transaction_type'}
+              name={'transactionType'}
               items={addMoneyInOptions}
               popoverProps={{ minimal: true }}
               valueAccessor={'value'}
@@ -47,16 +43,15 @@ export default function TransactionTypeFields() {
         <Col xs={5}>
           {/*------------ Current account -----------*/}
           <FFormGroup
-            name={'cashflow_account_id'}
-            label={<T id={'cash_flow_transaction.label_current_account'} />}
+            name={'cashflowAccountId'}
+            label={intl.get('cash_flow_transaction.label_current_account')}
             labelInfo={<FieldRequiredHint />}
-            fill
           >
             <FAccountsSuggestField
-              name={'cashflow_account_id'}
+              name={'cashflowAccountId'}
               items={cashflowAccounts}
-              onItemChange={(value) => {
-                setAccountId(value);
+              onItemChange={(value: string) => {
+                setAccountId(Number(value));
               }}
             />
           </FFormGroup>

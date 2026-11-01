@@ -3,7 +3,6 @@ import {
   CanActivate,
   ExecutionContext,
   Inject,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { PlanSubscription } from '../models/PlanSubscription';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
@@ -24,7 +23,7 @@ export class SubscriptionGuard implements CanActivate {
    */
   async canActivate(
     context: ExecutionContext,
-    subscriptionSlug: string = 'main', // Default value
+    _subscriptionSlug: string = 'main', // Default value
   ): Promise<boolean> {
     // const tenant = await this.tenancyContext.getTenant();
     // const subscription = await this.planSubscriptionModel

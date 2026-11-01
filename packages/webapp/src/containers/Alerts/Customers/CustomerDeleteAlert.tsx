@@ -1,39 +1,48 @@
-// @ts-nocheck
-import React, { useCallback } from 'react';
-import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-import { transformErrors } from '@/containers/Customers/utils';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { useDeleteCustomer } from '@/hooks/query';
-import { compose } from '@/utils';
+import * as FF from 'fp-ts/function';
+import { useCallback } from 'react';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { AppToaster } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { transformErrors } from '@/containers/Customers/utils';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useDeleteCustomer } from '@/hooks/query';
+
+interface CustomerDeleteAlertPayload {
+  contactId?: number;
+}
+
+interface CustomerDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithAlertStoreConnectProps,
+    WithDrawerActionsProps {
+  name: string;
+}
 
 /**
  * Customer delete alert.
  */
-function CustomerDeleteAlert({
+function CustomerDeleteAlertInner({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { contactId },
+  payload,
 
   // #withAlertActions
   closeAlert,
 
   // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteCustomerMutate, isLoading } = useDeleteCustomer();
+}: CustomerDeleteAlertProps) {
+  const { contactId } = (payload as CustomerDeleteAlertPayload) ?? {};
+  const { mutateAsync: deleteCustomerMutate, isPending: isLoading } =
+    useDeleteCustomer();
 
   // handle cancel delete  alert.
   const handleCancelDeleteAlert = () => {
@@ -42,7 +51,7 @@ function CustomerDeleteAlert({
 
   // handle confirm delete customer.
   const handleConfirmDeleteCustomer = useCallback(() => {
-    deleteCustomerMutate(contactId)
+    deleteCustomerMutate(contactId!)
       .then(() => {
         AppToaster.show({
           message: intl.get('the_customer_has_been_deleted_successfully'),
@@ -50,24 +59,19 @@ function CustomerDeleteAlert({
         });
         closeDrawer(DRAWERS.CUSTOMER_DETAILS);
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
-          transformErrors(errors);
-        },
-      )
+      .catch((error: { data?: { errors?: unknown } }) => {
+        const errors = error?.data?.errors;
+        transformErrors(errors);
+      })
       .finally(() => {
         closeAlert(name);
       });
-  }, [deleteCustomerMutate, contactId, closeAlert, name]);
+  }, [deleteCustomerMutate, contactId, closeAlert, name, closeDrawer]);
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -75,17 +79,21 @@ function CustomerDeleteAlert({
       onConfirm={handleConfirmDeleteCustomer}
       loading={isLoading}
     >
-      <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_customer_you_will_able_to_restore_it'}
-        />
+      <p data-testId={'customer-delete-alert'}>
+        {/* `intl.formatHTMLMessage` returns a React fragment containing the
+            translated HTML markup. The shape is not a JSX component so we
+            inline the call here. */}
+        {intl.formatHTMLMessage({
+          id: 'once_delete_this_customer_you_will_able_to_restore_it',
+        })}
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const CustomerDeleteAlert = FF.pipe(
+  CustomerDeleteAlertInner,
   withDrawerActions,
-)(CustomerDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

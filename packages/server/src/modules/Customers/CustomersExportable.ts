@@ -29,6 +29,6 @@ export class CustomersExportable extends Exportable {
 
     return this.customersApplication
       .getCustomers(parsedQuery)
-      .then((output) => output.customers);
+      .then((output) => output.data);
   }
 }

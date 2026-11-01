@@ -1,17 +1,37 @@
-// @ts-nocheck
+import { Intent, MenuItem, Menu } from '@blueprintjs/core';
+import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import clsx from 'classnames';
-import { Intent, MenuItem, Menu } from '@blueprintjs/core';
-import { safeCallback } from '@/utils';
+import type { BillLandedCostTransaction } from '@bigcapital/sdk-ts';
+import { Icon } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import {  Icon } from '@/components';
+import { safeCallback } from '@/utils';
+
+interface ActionsMenuProps {
+  row: { original: BillLandedCostTransaction };
+  payload: { onDelete: (row: BillLandedCostTransaction) => void };
+}
+
+interface FromTransactionCellProps {
+  row: { original: BillLandedCostTransaction };
+  payload: {
+    onFromTranscationClick?: (row: BillLandedCostTransaction) => void;
+  };
+}
+
+interface NameAccessorRow {
+  name?: string;
+  description?: string;
+}
 
 /**
  * Actions menu.
  */
-export function ActionsMenu({ row: { original }, payload: { onDelete } }) {
+export function ActionsMenu({
+  row: { original },
+  payload: { onDelete },
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -30,7 +50,7 @@ export function ActionsMenu({ row: { original }, payload: { onDelete } }) {
 export function FromTransactionCell({
   row: { original },
   payload: { onFromTranscationClick },
-}) {
+}: FromTransactionCellProps) {
   // Handle the link click
   const handleAnchorClick = () => {
     onFromTranscationClick && onFromTranscationClick(original);
@@ -38,7 +58,7 @@ export function FromTransactionCell({
 
   return (
     <a href="#" onClick={handleAnchorClick}>
-      {original.from_transaction_type} → {original.from_transaction_id}
+      {original.fromTransactionType} → {original.fromTransactionId}
     </a>
   );
 }
@@ -46,7 +66,7 @@ export function FromTransactionCell({
 /**
  * Name accessor.
  */
-export const NameAccessor = (row) => {
+export const NameAccessor = (row: NameAccessorRow) => {
   return (
     <span className="name">
       <LabelName>{row.name}</LabelName>
@@ -69,7 +89,7 @@ export function useLocatedLandedCostColumns() {
       },
       {
         Header: intl.get('amount'),
-        accessor: 'formatted_amount',
+        accessor: 'formattedAmount',
         width: 100,
         align: 'right',
         textOverview: true,
@@ -84,7 +104,7 @@ export function useLocatedLandedCostColumns() {
       },
       {
         Header: intl.get('allocation_method'),
-        accessor: 'allocation_method_formatted',
+        accessor: 'allocationMethodFormatted',
         width: 100,
         textOverview: true,
       },

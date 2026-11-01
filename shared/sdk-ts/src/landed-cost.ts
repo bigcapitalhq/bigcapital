@@ -15,6 +15,7 @@ export type AllocateLandedCostBody = OpRequestBody<OpForPath<typeof LANDED_COST_
 export type BillLandedCostTransactionsResponse = OpResponseBody<
   OpForPath<typeof LANDED_COST_ROUTES.BILL_TRANSACTIONS, 'get'>
 >;
+export type BillLandedCostTransaction = NonNullable<BillLandedCostTransactionsResponse['data']>[number];
 
 export async function fetchLandedCostTransactions(
   fetcher: ApiFetcher,

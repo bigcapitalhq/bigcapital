@@ -22,9 +22,7 @@ export class SystemMigrateRollbackCommand extends BaseCommand {
         this.success('Already at the base migration');
       }
 
-      this.success(
-        `Batch ${batchNo} rolled back: ${_log.length} migrations`
-      );
+      this.success(`Batch ${batchNo} rolled back: ${_log.length} migrations`);
     } catch (error) {
       this.exit(error);
     }

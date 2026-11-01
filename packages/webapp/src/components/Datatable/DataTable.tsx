@@ -11,29 +11,24 @@ import {
   useAsyncDebounce,
 } from 'react-table';
 import { useSticky } from 'react-table-sticky';
-
-import { useUpdateEffect } from '@/hooks';
-import { saveInvoke } from '@/utils';
-
 import '@/style/components/DataTable/DataTable.scss';
-
-import TableNoResultsRow from './TableNoResultsRow';
-import TableLoadingRow from './TableLoading';
-import TableHeader from './TableHeader';
-import TablePage from './TablePage';
+import TableCell from './TableCell';
+import TableContext from './TableContext';
 import TableFooter from './TableFooter';
+import TableHeader from './TableHeader';
+import TableIndeterminateCheckboxHeader from './TableIndeterminateCheckboxHeader';
+import TableIndeterminateCheckboxRow from './TableIndeterminateCheckboxRow';
+import TableLoadingRow from './TableLoading';
+import TableNoResultsRow from './TableNoResultsRow';
+import TablePage from './TablePage';
+import TablePagination from './TablePagination';
 import TableRow from './TableRow';
 import TableRows from './TableRows';
-import TableCell from './TableCell';
 import TableTBody from './TableTBody';
-import TableContext from './TableContext';
-import TablePagination from './TablePagination';
 import TableWrapper from './TableWrapper';
-
-import TableIndeterminateCheckboxRow from './TableIndeterminateCheckboxRow';
-import TableIndeterminateCheckboxHeader from './TableIndeterminateCheckboxHeader';
-
 import { useResizeObserver } from './utils';
+import { useUpdateEffect } from '@/hooks';
+import { saveInvoke } from '@/utils';
 
 /**
  * Datatable component.
@@ -46,6 +41,7 @@ export function DataTable(props) {
     onFetchData,
 
     onSelectedRowsChange,
+    selectedRowsIds,
     manualSortBy = false,
     manualPagination = true,
     selectionColumn = false,
@@ -56,11 +52,14 @@ export function DataTable(props) {
     expandable = false,
     noInitialFetch = false,
 
-    pagesCount: controlledPageCount,
+    rowsCount,
 
     // Pagination props.
     initialPageIndex = 0,
     initialPageSize = 20,
+
+    // Sorting props.
+    initialSortBy = [],
 
     // Hidden columns.
     initialHiddenColumns = [],
@@ -115,13 +114,17 @@ export function DataTable(props) {
         pageIndex: initialPageIndex,
         pageSize: initialPageSize,
         expanded,
+        sortBy: initialSortBy,
         columnResizing: {
           columnWidths: initialColumnsWidths || {},
         },
         hiddenColumns: initialHiddenColumns,
       },
       manualPagination,
-      pageCount: controlledPageCount,
+      pageCount:
+        rowsCount && initialPageSize > 0
+          ? Math.ceil(rowsCount / initialPageSize)
+          : 0,
       getSubRows: (row) => row.children,
       manualSortBy,
       expandSubRows,
@@ -176,6 +179,30 @@ export function DataTable(props) {
   useUpdateEffect(() => {
     saveInvoke(onSelectedRowsChange, selectedFlatRows);
   }, [selectedRowIds, onSelectedRowsChange]);
+
+  // Holds the latest table instance so the reset effect below can toggle the
+  // selection regardless of the table instance identity.
+  const tableRef = useRef(table);
+  tableRef.current = table;
+
+  // Tracks the previous selected rows ids to detect when the externally
+  // managed selection (e.g. the Redux mirror) transitions from non-empty to
+  // empty. That happens right after a successful bulk operation, and since
+  // `autoResetSelectedRows` is disabled on the list tables, we have to reset
+  // the internal selection explicitly.
+  const prevSelectedRowsIds = useRef(selectedRowsIds);
+
+  useEffect(() => {
+    const prev = prevSelectedRowsIds.current;
+    prevSelectedRowsIds.current = selectedRowsIds;
+
+    const hasSelection =
+      Object.keys(tableRef.current.state.selectedRowIds || {}).length > 0;
+
+    if (prev?.length > 0 && selectedRowsIds?.length === 0 && hasSelection) {
+      tableRef.current.toggleAllRowsSelected(false);
+    }
+  }, [selectedRowsIds]);
 
   // Column resizing observer.
   useResizeObserver(table.state, (current, columnWidth, columnsResizing) => {

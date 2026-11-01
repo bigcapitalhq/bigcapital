@@ -1,5 +1,4 @@
 import {
-  Button,
   Column,
   Container,
   Heading,
@@ -47,9 +46,6 @@ export const PaymentReceivedEmailTemplate: React.FC<
   // # Company
   companyName = 'Bigcapital, Inc.',
   companyLogoUri,
-
-  // # Colors
-  primaryColor = 'rgb(0, 82, 204)',
 
   // # Payment #
   paymentNumberLabel = 'Payment # {paymentNumber}',
@@ -143,6 +139,7 @@ export const PaymentReceivedEmailTemplate: React.FC<
  * @param {EstimatePaymentEmailProps} props
  * @returns {Promise<string>}
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const renderPaymentReceivedEmailTemplate = (
   props: PaymentReceivedEmailTemplateProps
 ) => {

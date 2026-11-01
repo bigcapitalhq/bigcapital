@@ -1,4 +1,3 @@
-import { BaseModel } from '@/models/Model';
 import { Model } from 'objection';
 import { BankRuleCondition } from './BankRuleCondition';
 import { BankRuleAssignCategory, BankRuleConditionType } from '../types';

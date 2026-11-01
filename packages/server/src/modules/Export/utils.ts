@@ -7,13 +7,13 @@ import { flatMap, get } from 'lodash';
  */
 export const flatDataCollections = (
   data: Record<string, any>,
-  flattenAttr: string
+  flattenAttr: string,
 ): Record<string, any>[] => {
   return flatMap(data, (item) =>
     item[flattenAttr].map((entry) => ({
       ...item,
       [flattenAttr]: entry,
-    }))
+    })),
   );
 };
 

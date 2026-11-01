@@ -6,9 +6,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class BillBranchesActivateSubscriber {
-  constructor(
-    private readonly billActivateBranches: BillActivateBranches,
-  ) { }
+  constructor(private readonly billActivateBranches: BillActivateBranches) {}
 
   /**
    * Updates bills transactions with the primary branch once

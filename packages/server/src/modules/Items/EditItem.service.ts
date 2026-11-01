@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { IItemDTO, IItemEventEditedPayload } from '@/interfaces/Item';
+import { IItemEventEditedPayload } from '@/interfaces/Item';
 import { events } from '@/common/events/events';
 import { ItemsValidators } from './ItemValidator.service';
 import { Item } from './models/Item';
@@ -90,6 +90,26 @@ export class EditItemService {
     itemDTO: EditItemDto,
     oldItem: Item,
   ): Partial<Item> {
+    const oldReorderPoint = this.normalizeReorderPoint(oldItem.reorderPoint);
+    const nextReorderPoint =
+      itemDTO.type === 'inventory'
+        ? this.normalizeReorderPoint(
+            itemDTO.reorderPoint !== undefined
+              ? itemDTO.reorderPoint
+              : oldItem.reorderPoint,
+          )
+        : null;
+    const reorderPointPatch =
+      itemDTO.type === 'inventory'
+        ? itemDTO.reorderPoint !== undefined
+          ? { reorderPoint: itemDTO.reorderPoint ?? null }
+          : {}
+        : { reorderPoint: null };
+    const reorderPointNotifiedPatch =
+      nextReorderPoint !== oldReorderPoint
+        ? { reorderPointNotified: false }
+        : {};
+
     return {
       ...itemDTO,
       ...(itemDTO.type === 'inventory' && oldItem.type !== 'inventory'
@@ -97,7 +117,23 @@ export class EditItemService {
             quantityOnHand: 0,
           }
         : {}),
+      ...reorderPointPatch,
+      ...reorderPointNotifiedPatch,
     };
+  }
+
+  /**
+   * Normalizes the reorder point value to a number or null.
+   * @param {unknown} value
+   * @returns {number | null}
+   */
+  private normalizeReorderPoint(value: unknown): number | null {
+    if (value === null || value === undefined || value === '') {
+      return null;
+    }
+    const parsedValue = Number(value);
+
+    return Number.isFinite(parsedValue) ? parsedValue : null;
   }
 
   /**

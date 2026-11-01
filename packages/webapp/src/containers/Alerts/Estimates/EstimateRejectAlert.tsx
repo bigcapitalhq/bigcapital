@@ -1,37 +1,39 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useRejectEstimate } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface EstimateRejectAlertPayload {
+  estimateId: number;
+}
 
-import { compose } from '@/utils';
+interface EstimateRejectAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: EstimateRejectAlertPayload;
+}
 
 /**
  *  Estimate reject delete alerts.
  */
-function EstimateRejectAlert({
+function EstimateRejectAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { estimateId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: rejectEstimateMutate, isLoading } = useRejectEstimate();
+}: EstimateRejectAlertProps): React.ReactElement {
+  const { mutateAsync: rejectEstimateMutate, isPending: isLoading } =
+    useRejectEstimate();
 
-  // Handle cancel reject estimate alert.
   const handleCancelRejectEstimate = () => {
     closeAlert(name);
   };
 
-  // Handle confirm estimate reject.
   const handleConfirmEstimateReject = () => {
     rejectEstimateMutate(estimateId)
       .then(() => {
@@ -40,7 +42,13 @@ function EstimateRejectAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: the original had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -48,8 +56,8 @@ function EstimateRejectAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'reject'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('reject')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelRejectEstimate}
@@ -63,7 +71,8 @@ function EstimateRejectAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const EstimateRejectAlert = FF.pipe(
+  EstimateRejectAlertInner,
   withAlertActions,
-)(EstimateRejectAlert);
+  withAlertStoreConnect(),
+);

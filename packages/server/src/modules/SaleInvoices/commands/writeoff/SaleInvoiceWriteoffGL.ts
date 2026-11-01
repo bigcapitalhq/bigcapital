@@ -3,6 +3,7 @@ import { ILedger } from '@/modules/Ledger/types/Ledger.types';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { AccountNormal } from '@/interfaces/Account';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class SaleInvoiceWriteoffGL {
   private saleInvoiceModel: SaleInvoice;
@@ -42,6 +43,11 @@ export class SaleInvoiceWriteoffGL {
 
       referenceNo: this.saleInvoiceModel.referenceNo,
       branchId: this.saleInvoiceModel.branchId,
+
+      // The write-off credits the account receivable and debits the bad debt
+      // expense without any cash movement, hence it is an accrual basis entry
+      // and it is excluded from the cash basis reports.
+      basis: AccountingBasis.Accrual,
     };
   }
 
@@ -77,7 +83,7 @@ export class SaleInvoiceWriteoffGL {
 
     return {
       ...commontEntry,
-      debit: this.saleInvoiceModel.writtenoffAmount,
+      debit: this.saleInvoiceModel.writtenoffAmountLocal,
       accountId: this.saleInvoiceModel.writtenoffExpenseAccountId,
       credit: 0,
       index: 2,

@@ -1,17 +1,42 @@
-// @ts-nocheck
-import {connect} from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
+import type { ComponentType } from 'react';
 import {
   getViewItemFactory,
   getViewMetaFactory,
-} from '@/store/customViews/customViews.selectors';
+} from '@/store/custom-views/custom-views.selectors';
+import { ApplicationState } from '@/store/reducers';
 
-export const withViewDetails = () => {
+export interface WithViewDetailsProps {
+  viewMeta: ReturnType<ReturnType<typeof getViewMetaFactory>>;
+  viewItem: ReturnType<ReturnType<typeof getViewItemFactory>>;
+}
+
+interface ViewDetailsOwnProps {
+  viewId: string | number;
+}
+
+export const withViewDetails = <
+  Props extends ViewDetailsOwnProps = ViewDetailsOwnProps,
+>() => {
   const getViewItem = getViewItemFactory();
   const getViewMeta = getViewMetaFactory();
 
-  const mapStateToProps = (state, props) => ({
+  const mapStateToProps: MapStateToProps<
+    WithViewDetailsProps,
+    Props,
+    ApplicationState
+  > = (state, props) => ({
     viewMeta: getViewMeta(state, props),
     viewItem: getViewItem(state, props),
   });
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof WithViewDetailsProps>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<
+      Omit<P, keyof WithViewDetailsProps>
+    >;
+  };
 };

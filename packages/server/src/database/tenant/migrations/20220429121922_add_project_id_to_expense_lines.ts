@@ -4,4 +4,4 @@ exports.up = (knex) => {
   });
 };
 
-exports.down = (knex) => {};
+exports.down = (_knex) => {};

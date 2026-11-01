@@ -1,14 +1,16 @@
-// @ts-nocheck
 import React from 'react';
-
+import { NotifyInvoiceViaSMSForm } from './NotifyInvoiceViaSMSForm';
 import { NotifyInvoiceViaSMSFormProvider } from './NotifyInvoiceViaSMSFormProvider';
-import NotifyInvoiceViaSMSForm from './NotifyInvoiceViaSMSForm';
 
-export default function NotifyInvoiceViaSMSDialogContent({
-  // #ownProps
+interface NotifyInvoiceViaSMSDialogContentProps {
+  dialogName: string;
+  invoiceId?: number | null;
+}
+
+export function NotifyInvoiceViaSMSDialogContent({
   dialogName,
   invoiceId,
-}) {
+}: NotifyInvoiceViaSMSDialogContentProps): React.ReactElement {
   return (
     <NotifyInvoiceViaSMSFormProvider
       invoiceId={invoiceId}

@@ -1,9 +1,20 @@
-import { IsArray, IsBoolean, IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { IAccountsStructureType } from '../Accounts.types';
-import { IFilterRole, ISortOrder } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import {
+  IFilterRole,
+  ISortOrder,
+} from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
 import { ToNumber } from '@/common/decorators/Validators';
 
 export class GetAccountsQueryDto {
@@ -114,4 +125,3 @@ export class GetAccountsQueryDto {
   @Min(1)
   pageSize?: number;
 }
-

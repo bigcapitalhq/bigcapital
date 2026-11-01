@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { SendSaleInvoiceMailJob, SendSaleInvoiceQueue } from '../constants';
+import { SendSaleInvoiceQueue } from '../constants';
 import { SendSaleInvoiceMail } from '../commands/SendSaleInvoiceMail';
 import { Scope } from '@nestjs/common';
 import { ClsService, UseCls } from 'nestjs-cls';
@@ -20,8 +20,7 @@ export class SendSaleInvoiceMailProcessor extends WorkerHost {
 
   @UseCls()
   async process(job: Job<SendSaleInvoiceMailJobPayload>) {
-    const { messageOptions, saleInvoiceId, organizationId, userId } =
-      job.data;
+    const { messageOptions, saleInvoiceId, organizationId, userId } = job.data;
 
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);

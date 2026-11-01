@@ -1,9 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 
-/**
- * Dashboard page content.
- */
-export function DashboardPageContent({ children }) {
-  return <div class="dashboard__page-content">{children}</div>;
+interface DashboardPageContentProps {
+  children: React.ReactNode;
+}
+
+export function DashboardPageContent({ children }: DashboardPageContentProps) {
+  return <div className="dashboard__page-content">{children}</div>;
 }

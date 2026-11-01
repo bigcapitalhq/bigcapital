@@ -1,8 +1,10 @@
-// @ts-nocheck
 import { GConstructor } from '@/common/types/Constructor';
 import { isEmpty } from 'lodash';
 import { FinancialSheet } from './FinancialSheet';
-import { IFinancialCommonNode } from '../types/Report.types';
+
+export interface IFinancialNodeWithChildren {
+  children?: IFinancialNodeWithChildren[];
+}
 
 export const FinancialFilter = <T extends GConstructor<FinancialSheet>>(
   Base: T,
@@ -10,10 +12,10 @@ export const FinancialFilter = <T extends GConstructor<FinancialSheet>>(
   class extends Base {
     /**
      * Detarmines whether the given node has children.
-     * @param {IBalanceSheetCommonNode} node
+     * @param {IFinancialNodeWithChildren} node
      * @returns {boolean}
      */
-    public isNodeHasChildren = (node: IFinancialCommonNode): boolean =>
+    public isNodeHasChildren = (node: IFinancialNodeWithChildren): boolean =>
       !isEmpty(node.children);
 
     /**

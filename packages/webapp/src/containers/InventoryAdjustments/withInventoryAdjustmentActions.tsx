@@ -1,10 +1,28 @@
-// @ts-nocheck
+import { ComponentType } from 'react';
 import { connect } from 'react-redux';
-import { setInventoryAdjustmentsTableState } from '@/store/inventoryAdjustments/inventoryAdjustment.actions';
+import { Dispatch } from 'redux';
+import type { TableQuery } from '@/store/store.types';
+import { setInventoryAdjustmentsTableState } from '@/store/inventory-adjustments/inventory-adjustment.actions';
 
-const mapDispatchToProps = (dispatch) => ({
+export interface WithInventoryAdjustmentActionsProps {
+  setInventoryAdjustmentTableState: (queries: Partial<TableQuery>) => void;
+}
+
+export const mapDispatchToProps = (
+  dispatch: Dispatch,
+): WithInventoryAdjustmentActionsProps => ({
   setInventoryAdjustmentTableState: (queries) =>
     dispatch(setInventoryAdjustmentsTableState(queries)),
 });
 
-export const withInventoryAdjustmentActions = connect(null, mapDispatchToProps);
+export function withInventoryAdjustmentActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithInventoryAdjustmentActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithInventoryAdjustmentActionsProps>
+  >;
+}

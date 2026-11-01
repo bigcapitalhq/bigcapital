@@ -24,14 +24,15 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { TaxRateAction } from './TaxRates.types';
+import { SalesTaxFeatureGuard } from './SalesTaxFeatureGuard';
 
 @Controller('tax-rates')
 @ApiTags('Tax Rates')
 @ApiExtraModels(TaxRateResponseDto)
 @ApiCommonHeaders()
-@UseGuards(AuthorizationGuard, PermissionGuard)
+@UseGuards(AuthorizationGuard, PermissionGuard, SalesTaxFeatureGuard)
 export class TaxRatesController {
-  constructor(private readonly taxRatesApplication: TaxRatesApplication) { }
+  constructor(private readonly taxRatesApplication: TaxRatesApplication) {}
 
   @Post()
   @RequirePermission(TaxRateAction.CREATE, AbilitySubject.TaxRate)
@@ -96,17 +97,7 @@ export class TaxRatesController {
   @ApiResponse({
     status: 200,
     description: 'The tax rates have been successfully retrieved.',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: {
-            $ref: getSchemaPath(TaxRateResponseDto),
-          },
-        },
-      },
-    },
+    type: [TaxRateResponseDto],
   })
   public getTaxRates() {
     return this.taxRatesApplication.getTaxRates();

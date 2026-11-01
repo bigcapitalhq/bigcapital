@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, {
   Dispatch,
   SetStateAction,
@@ -41,7 +40,7 @@ interface ImportFileContextValue {
 
   resource: string;
   description?: string;
-  params: Record<string, any>;
+  params: Record<string, unknown>;
   onImportSuccess?: () => void;
   onImportFailed?: () => void;
   onCancelClick?: () => void;
@@ -54,7 +53,7 @@ interface ImportFileContextValue {
 interface ImportFileProviderProps {
   resource: string;
   description?: string;
-  params: Record<string, any>;
+  params?: Record<string, unknown>;
   onImportSuccess?: () => void;
   onImportFailed?: () => void;
   onCancelClick?: () => void;
@@ -89,7 +88,7 @@ export const ImportFileProvider = ({
   resource,
   children,
   description,
-  params,
+  params = {},
   onImportFailed,
   onImportSuccess,
   onCancelClick,
@@ -100,7 +99,7 @@ export const ImportFileProvider = ({
   exampleDescription = ExampleDescription,
 }: ImportFileProviderProps) => {
   const [sheetColumns, setSheetColumns] = useState<SheetColumn[]>([]);
-  const [entityColumns, setEntityColumns] = useState<SheetColumn[]>([]);
+  const [entityColumns, setEntityColumns] = useState<EntityColumn[]>([]);
   const [sheetMapping, setSheetMapping] = useState<SheetMap[]>([]);
   const [importId, setImportId] = useState<string>('');
 

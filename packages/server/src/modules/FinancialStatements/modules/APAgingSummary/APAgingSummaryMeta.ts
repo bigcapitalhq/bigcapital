@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 import {
   IAgingSummaryMeta,
   IAgingSummaryQuery,
@@ -7,7 +8,10 @@ import { AgingSummaryMeta } from '../AgingSummary/AgingSummaryMeta';
 
 @Injectable()
 export class APAgingSummaryMeta {
-  constructor(private readonly agingSummaryMeta: AgingSummaryMeta) {}
+  constructor(
+    private readonly agingSummaryMeta: AgingSummaryMeta,
+    private readonly i18n: I18nService,
+  ) {}
 
   /**
    * Retrieve the aging summary meta.
@@ -18,7 +22,7 @@ export class APAgingSummaryMeta {
 
     return {
       ...commonMeta,
-      sheetName: 'A/P Aging Summary',
+      sheetName: this.i18n.t('aging_summary.ap_sheet_name'),
     };
   }
 }

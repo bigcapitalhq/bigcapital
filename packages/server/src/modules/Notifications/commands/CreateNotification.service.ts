@@ -23,16 +23,20 @@ export class CreateNotificationService {
    * @param {CreateNotificationPayload} payload - Notification data
    * @returns {Promise<Notification>}
    */
-  async createNotification(payload: CreateNotificationPayload): Promise<Notification> {
-    const notification = await this.notificationModel().query().insert({
-      userId: payload.userId ?? null,
-      title: payload.title,
-      message: payload.message,
-      type: payload.type ?? 'info',
-      category: payload.category ?? 'system',
-      metadata: payload.metadata ?? null,
-      readAt: null,
-    });
+  async createNotification(
+    payload: CreateNotificationPayload,
+  ): Promise<Notification> {
+    const notification = await this.notificationModel()
+      .query()
+      .insert({
+        userId: payload.userId ?? null,
+        title: payload.title,
+        message: payload.message,
+        type: payload.type ?? 'info',
+        category: payload.category ?? 'system',
+        metadata: payload.metadata ?? null,
+        readAt: null,
+      });
 
     return notification;
   }
@@ -43,7 +47,10 @@ export class CreateNotificationService {
    * @param {number} userId - The user ID (for authorization)
    * @returns {Promise<Notification | null>}
    */
-  async markAsRead(notificationId: number, userId: number): Promise<Notification | null> {
+  async markAsRead(
+    notificationId: number,
+    userId: number,
+  ): Promise<Notification | null> {
     const notification = await this.notificationModel()
       .query()
       .findById(notificationId)
@@ -82,7 +89,10 @@ export class CreateNotificationService {
    * @param {number} userId - The user ID (for authorization)
    * @returns {Promise<boolean>}
    */
-  async deleteNotification(notificationId: number, userId: number): Promise<boolean> {
+  async deleteNotification(
+    notificationId: number,
+    userId: number,
+  ): Promise<boolean> {
     const notification = await this.notificationModel()
       .query()
       .findById(notificationId)

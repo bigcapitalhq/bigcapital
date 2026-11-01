@@ -6,7 +6,7 @@ import { TransactionsByReferenceQueryDto } from './TransactionsByReferenceQuery.
 export class TransactionsByReferenceApplication {
   constructor(
     private readonly transactionsByReferenceService: TransactionsByReferenceService,
-  ) { }
+  ) {}
 
   /**
    * Retrieve accounts transactions by given reference id and type.

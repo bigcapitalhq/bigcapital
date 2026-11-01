@@ -1,22 +1,17 @@
-// @ts-nocheck
 import React from 'react';
-
-import { CommercialDocEntriesTable } from '@/components';
-
-import { usePaymentReceiveEntriesColumns } from './utils';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
-
+import { usePaymentReceiveEntriesColumns } from './utils';
+import { CommercialDocEntriesTable } from '@/components';
 import { TableStyle } from '@/constants';
 
 /**
  * Payment receive readonly details table.
  */
-export default function PaymentReceiveDetailTable() {
-  const columns = usePaymentReceiveEntriesColumns();
+export function PaymentReceiveDetailTable() {
+  const { paymentReceive } = usePaymentReceiveDetailContext();
+  const entries = paymentReceive?.entries ?? [];
 
-  const {
-    paymentReceive: { entries },
-  } = usePaymentReceiveDetailContext();
+  const columns = usePaymentReceiveEntriesColumns();
 
   return (
     <CommercialDocEntriesTable

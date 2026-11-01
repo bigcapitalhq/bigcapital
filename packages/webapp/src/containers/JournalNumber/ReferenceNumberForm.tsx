@@ -1,14 +1,12 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
-import * as Yup from 'yup';
-import { Formik, Form } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
-
+import { Formik, Form, FormikHelpers } from 'formik';
+import React from 'react';
+import * as Yup from 'yup';
 import '@/style/pages/ReferenceNumber/ReferenceNumber.scss';
-
-import { FormattedMessage as T, FormObserver } from '@/components';
-import ReferenceNumberFormContent from './ReferenceNumberFormContent';
+import { ReferenceNumberFormContent } from './ReferenceNumberFormContent';
 import { transformValuesToForm } from './utils';
+import type { ReferenceNumberFormValues } from './types';
+import { FormattedMessage as T, FormObserver } from '@/components';
 import { saveInvoke, transformToForm } from '@/utils';
 
 const initialFormValues = {
@@ -16,7 +14,7 @@ const initialFormValues = {
   numberPrefix: '',
   nextNumber: '',
   onceManualNumber: '',
-};
+} as ReferenceNumberFormValues;
 
 // Validation schema.
 const validationSchema = Yup.object().shape({
@@ -26,23 +24,37 @@ const validationSchema = Yup.object().shape({
   onceManualNumber: Yup.string(),
 });
 
+export interface ReferenceNumberFormProps {
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  description?: React.ReactNode;
+  onSubmit?: (
+    values: ReferenceNumberFormValues & { transactionNumber: string },
+    methods: FormikHelpers<ReferenceNumberFormValues>,
+  ) => void;
+  onClose?: () => void;
+  onChange?: (values: ReferenceNumberFormValues) => void;
+}
+
 /**
  * Reference number form.
  */
-export default function ReferenceNumberForm({
+export function ReferenceNumberForm({
   initialValues,
   description,
   onSubmit,
   onClose,
   onChange,
-}) {
+}: ReferenceNumberFormProps) {
   // Initial values.
   const formInitialValues = {
     ...initialFormValues,
     ...transformToForm(initialValues, initialFormValues),
   };
   // Handle the form submit.
-  const handleSubmit = (values, methods) => {
+  const handleSubmit = (
+    values: ReferenceNumberFormValues,
+    methods: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     const parsed = transformValuesToForm(values);
     saveInvoke(onSubmit, { ...values, ...parsed }, methods);
   };

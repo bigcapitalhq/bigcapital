@@ -1,9 +1,9 @@
-// @ts-nocheck
-import React, { createContext } from 'react';
 import { css } from '@emotion/css';
+import React, { createContext } from 'react';
+import type { ExpenseFormContext } from './types';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import {
   useCurrencies,
   useCustomers,
@@ -12,27 +12,35 @@ import {
   useBranches,
   useCreateExpense,
   useEditExpense,
+  useSettingsExpenses,
 } from '@/hooks/query';
-import { useProjects } from '@/containers/Projects/hooks';
+import { useFeatureCan } from '@/hooks/state';
 
-const ExpenseFormPageContext = createContext();
+const ExpenseFormPageContext = createContext<ExpenseFormContext | undefined>(
+  undefined,
+);
+
+type ExpenseFormPageProviderProps = {
+  expenseId: number;
+  query?: Record<string, any>;
+} & Omit<React.HTMLAttributes<HTMLDivElement>, 'children'>;
 
 /**
  * Accounts chart data provider.
  */
-function ExpenseFormPageProvider({ query, expenseId, ...props }) {
+function ExpenseFormPageProvider({
+  query,
+  expenseId,
+  ...props
+}: ExpenseFormPageProviderProps & { children?: React.ReactNode }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
-  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   // Fetches customers list.
-  const {
-    data: { customers },
-    isLoading: isCustomersLoading,
-  } = useCustomers();
+  const { data: customersData, isLoading: isCustomersLoading } = useCustomers();
 
   // Fetch the expense details.
   const { data: expense, isLoading: isExpenseLoading } = useExpense(expenseId, {
@@ -49,49 +57,53 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   // Fetch accounts list.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
-  // Fetch the  projects list.
-  const {
-    data: { projects },
-    isLoading: isProjectsLoading,
-  } = useProjects({}, { enabled: !!isProjectsFeatureCan });
-
   // Create and edit expense mutate.
   const { mutateAsync: createExpenseMutate } = useCreateExpense();
   const { mutateAsync: editExpenseMutate } = useEditExpense();
 
+  // Expense settings.
+  const { data: expenseSettings } = useSettingsExpenses();
+
   // Submit form payload - using ref for synchronous access.
-  const submitPayloadRef = React.useRef({});
+  const submitPayloadRef = React.useRef<
+    ExpenseFormContext['submitPayloadRef']['current']
+  >({});
 
   // Setter to update the ref.
-  const setSubmitPayload = React.useCallback((payload) => {
-    submitPayloadRef.current = payload;
-  }, []);
+  const setSubmitPayload = React.useCallback(
+    (payload: ExpenseFormContext['submitPayloadRef']['current']) => {
+      submitPayloadRef.current = payload;
+    },
+    [],
+  );
 
   // Detarmines whether the form in new mode.
   const isNewMode = !expenseId;
 
   // Provider payload.
-  const provider = {
+  const provider: ExpenseFormContext = {
     isNewMode,
     expenseId,
-    submitPayloadRef, // Expose ref for synchronous access
+    submitPayloadRef,
 
-    currencies,
-    customers,
+    currencies: currencies ?? [],
+    customers: customersData?.data ?? [],
     expense,
-    accounts,
-    branches,
-    projects,
+    accounts: accounts ?? [],
+    branches: branches ?? [],
 
     isCurrenciesLoading,
     isExpenseLoading,
     isCustomersLoading,
     isAccountsLoading,
     isBranchesSuccess,
+    isBranchesLoading,
 
     createExpenseMutate,
     editExpenseMutate,
     setSubmitPayload,
+
+    expenseSettings,
   };
 
   return (
@@ -100,8 +112,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
         isCurrenciesLoading ||
         isExpenseLoading ||
         isCustomersLoading ||
-        isAccountsLoading ||
-        isProjectsLoading
+        isAccountsLoading
       }
       name={'expense-form'}
       className={css`
@@ -114,6 +125,14 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
   );
 }
 
-const useExpenseFormContext = () => React.useContext(ExpenseFormPageContext);
+const useExpenseFormContext = (): ExpenseFormContext => {
+  const ctx = React.useContext(ExpenseFormPageContext);
+  if (!ctx) {
+    throw new Error(
+      'useExpenseFormContext must be used within an ExpenseFormPageProvider',
+    );
+  }
+  return ctx;
+};
 
 export { ExpenseFormPageProvider, useExpenseFormContext };

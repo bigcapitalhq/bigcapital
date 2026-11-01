@@ -14,7 +14,7 @@ export class UnexcludeBankTransactionsService {
    * @param {Array<number> | number} bankTransactionIds - The IDs of the bank transactions to unexclude.
    */
   public async unexcludeBankTransactions(
-    bankTransactionIds: Array<number> | number
+    bankTransactionIds: Array<number> | number,
   ) {
     const _bankTransactionIds = uniq(castArray(bankTransactionIds));
 
@@ -22,7 +22,7 @@ export class UnexcludeBankTransactionsService {
       .for(_bankTransactionIds)
       .process((bankTransactionId: number) => {
         return this.unexcludeBankTransaction.unexcludeBankTransaction(
-          bankTransactionId
+          bankTransactionId,
         );
       });
   }

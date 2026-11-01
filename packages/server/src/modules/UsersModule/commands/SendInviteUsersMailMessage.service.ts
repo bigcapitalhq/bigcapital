@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { ModelObject } from 'objection';
 import { Mail } from '@/modules/Mail/Mail';
 import { MailTransporter } from '@/modules/Mail/MailTransporter.service';
-import { SystemUser } from '@/modules/System/models/SystemUser';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { UserInvite } from '../models/InviteUser.model';
 import { TenantUser } from '@/modules/Tenancy/TenancyModels/models/TenantUser.model';

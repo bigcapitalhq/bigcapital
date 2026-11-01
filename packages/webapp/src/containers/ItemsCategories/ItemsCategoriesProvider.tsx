@@ -1,24 +1,60 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
+import type { ItemCategoryTableRow } from './components';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components';
-import { useItemsCategories, useResourceMeta } from '@/hooks/query';
+import {
+  useItemsCategories,
+  useResourceMeta,
+  useSettingsItemCategories,
+} from '@/hooks/query';
 import { transformTableStateToQuery, getFieldsFromResourceMeta } from '@/utils';
 
-const ItemsCategoriesContext = createContext();
+interface ItemsCategoriesProviderProps {
+  // The store-injected `itemsCategoriesTableState` is a complex selector return;
+  // keep it loose to avoid SDK-shape friction.
+  tableState: Record<string, unknown>;
+  children?: React.ReactNode;
+}
+
+export interface ItemsCategoriesContextValue {
+  isCategoriesFetching: boolean;
+  isCategoriesLoading: boolean;
+  fields: IResourceField[];
+  // `resourceMeta` is a complex SDK union; surface as `any` (matches Invoices
+  // pattern).
+  resourceMeta: any;
+  isResourceLoading: boolean;
+  isResourceFetching: boolean;
+  itemsCategoriesSettings: SettingsGroup | undefined;
+  // FIXME: response shape mismatch — `ItemCategoriesListResponse` is the array
+  // type but the original code reads `.itemsCategories`/`.pagination`. Preserved
+  // from the original; both are `undefined` at runtime.
+  itemsCategories: ItemCategoryTableRow[] | undefined;
+  pagination?: { total?: number; [key: string]: unknown };
+  query: ReturnType<typeof transformTableStateToQuery>;
+}
+
+const ItemsCategoriesContext = createContext<ItemsCategoriesContextValue>(
+  {} as ItemsCategoriesContextValue,
+);
 
 /**
  * Items categories provider.
  */
-function ItemsCategoriesProvider({ tableState, ...props }) {
+function ItemsCategoriesProvider({
+  tableState,
+  ...props
+}: ItemsCategoriesProviderProps) {
   // Transformes the table state to query.
   const query = transformTableStateToQuery(tableState);
 
   // Items categories list.
   const {
-    data: { itemsCategories, pagination },
+    data: itemsCategoriesData,
     isFetching: isCategoriesFetching,
     isLoading: isCategoriesLoading,
-  } = useItemsCategories(query, { keepPreviousData: true });
+  } = useItemsCategories(query);
 
   // Fetch the accounts resource fields.
   const {
@@ -27,23 +63,28 @@ function ItemsCategoriesProvider({ tableState, ...props }) {
     isFetching: isResourceFetching,
   } = useResourceMeta('item_category');
 
-  const state = {
+  // Fetch the item categories settings.
+  const { data: itemsCategoriesSettings } = useSettingsItemCategories();
+
+  const state: ItemsCategoriesContextValue = {
     isCategoriesFetching,
     isCategoriesLoading,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields
+      ? getFieldsFromResourceMeta(resourceMeta.fields)
+      : [],
     resourceMeta,
     isResourceLoading,
     isResourceFetching,
 
-    itemsCategories,
-    pagination,
+    itemsCategories: itemsCategoriesData,
+    itemsCategoriesSettings,
     query,
   };
 
   return (
     <DashboardInsider
-      isLoading={isResourceLoading}
+      loading={isResourceLoading}
       name={'items-categories-list'}
     >
       <ItemsCategoriesContext.Provider value={state} {...props} />

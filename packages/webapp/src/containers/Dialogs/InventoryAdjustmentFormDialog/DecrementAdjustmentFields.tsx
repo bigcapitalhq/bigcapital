@@ -1,37 +1,28 @@
-// @ts-nocheck
+import { useFormikContext } from 'formik';
 import React from 'react';
-import { Field, ErrorMessage, FastField, useFormikContext } from 'formik';
-import { FormGroup, InputGroup } from '@blueprintjs/core';
-import { inputIntent, toSafeNumber } from '@/utils';
+import intl from 'react-intl-universal';
+import { decrementQuantity } from './utils';
+import type { InventoryAdjustmentFormValues } from './types';
 import {
   Row,
   Col,
-  MoneyInputGroup,
-  FormattedMessage as T,
   FMoneyInputGroup,
   FFormGroup,
   FInputGroup,
 } from '@/components';
 import { useAutofocus } from '@/hooks';
-import { decrementQuantity } from './utils';
+import { toSafeNumber } from '@/utils';
 
-/**
- * Decrement adjustment fields.
- */
-function DecrementAdjustmentFields() {
-  const decrementFieldRef = useAutofocus();
-  const { values, setFieldValue } = useFormikContext();
+export function DecrementAdjustmentFields(): React.ReactElement {
+  const decrementFieldRef = useAutofocus<HTMLInputElement>();
+  const { values, setFieldValue } =
+    useFormikContext<InventoryAdjustmentFormValues>();
 
   return (
     <Row className={'row--decrement-fields'}>
-      {/*------------ Quantity on hand  -----------*/}
       <Col className={'col--quantity-on-hand'}>
-        <FFormGroup name={'quantity_on_hand'} label={<T id={'qty_on_hand'} />}>
-          <FInputGroup
-            name={'quantity_on_hand'}
-            disabled={true}
-            medium={'true'}
-          />
+        <FFormGroup name={'quantityOnHand'} label={intl.get('qty_on_hand')}>
+          <FInputGroup name={'quantityOnHand'} disabled={true} />
         </FFormGroup>
       </Col>
 
@@ -39,20 +30,21 @@ function DecrementAdjustmentFields() {
         <span>–</span>
       </Col>
 
-      {/*------------ Decrement -----------*/}
       <Col className={'col--decrement'}>
-        <FFormGroup name={'quantity'} label={<T id={'decrement'} />} fill>
+        <FFormGroup name={'quantity'} label={intl.get('decrement')}>
           <FMoneyInputGroup
             name={'quantity'}
             allowDecimals={false}
             allowNegativeValue={true}
-            inputRef={(ref) => (decrementFieldRef.current = ref)}
-            onBlurValue={(value) => {
+            inputRef={(ref: HTMLInputElement | null) => {
+              decrementFieldRef.current = ref;
+            }}
+            onBlurValue={(value: string) => {
               setFieldValue(
-                'new_quantity',
+                'newQuantity',
                 decrementQuantity(
                   toSafeNumber(value),
-                  toSafeNumber(values.quantity_on_hand),
+                  toSafeNumber(values.quantityOnHand),
                 ),
               );
             }}
@@ -63,24 +55,22 @@ function DecrementAdjustmentFields() {
       <Col className={'col--sign'}>
         <span>=</span>
       </Col>
-      {/*------------ New quantity -----------*/}
       <Col className={'col--quantity'}>
         <FFormGroup
-          name={'new_quantity'}
-          label={<T id={'new_quantity'} />}
-          fill
+          name={'newQuantity'}
+          label={intl.get('new_quantity')}
           fastField
         >
           <FMoneyInputGroup
-            name={'new_quantity'}
+            name={'newQuantity'}
             allowDecimals={false}
             allowNegativeValue={true}
-            onBlurValue={(value) => {
+            onBlurValue={(value: string) => {
               setFieldValue(
                 'quantity',
                 decrementQuantity(
                   toSafeNumber(value),
-                  toSafeNumber(values.quantity_on_hand),
+                  toSafeNumber(values.quantityOnHand),
                 ),
               );
             }}
@@ -90,5 +80,3 @@ function DecrementAdjustmentFields() {
     </Row>
   );
 }
-
-export default DecrementAdjustmentFields;

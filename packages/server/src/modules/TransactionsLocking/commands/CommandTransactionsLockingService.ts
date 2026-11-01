@@ -2,7 +2,6 @@ import { omit } from 'lodash';
 import {
   ITransactionLockingPartiallyDTO,
   ITransactionMeta,
-  ITransactionsLockingAllDTO,
   ITransactionsLockingCanceled,
   ITransactionsLockingPartialUnlocked,
   TransactionsLockingGroup,
@@ -26,7 +25,7 @@ export class TransactionsLockingService {
   constructor(
     private readonly transactionsLockingRepo: TransactionsLockingRepository,
     private readonly eventPublisher: EventEmitter2,
-  ) { }
+  ) {}
 
   /**
    * Enable/disable all transacations locking.

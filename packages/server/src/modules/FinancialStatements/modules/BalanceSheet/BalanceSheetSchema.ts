@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import {
   BALANCE_SHEET_SCHEMA_NODE_ID,
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
@@ -88,7 +87,7 @@ export const getBalanceSheetSchema = () => [
         type: BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE,
         children: [
           {
-            name: 'balance_sheet.current_liabilties',
+            name: 'balance_sheet.current_liabilities',
             id: BALANCE_SHEET_SCHEMA_NODE_ID.CURRENT_LIABILITY,
             type: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS,
             accountsTypes: [

@@ -1,7 +1,7 @@
 // @ts-nocheck
+import clsx from 'classnames';
 import React from 'react';
 import { Ref, useCallback } from 'react';
-import clsx from 'classnames';
 import {
   Accept,
   DropEvent,
@@ -10,21 +10,21 @@ import {
   FileWithPath,
   useDropzone,
 } from 'react-dropzone-esm';
+import { CloudLoadingIndicator } from '../Indicator';
+import { Box } from '../Layout';
+import styles from './Dropzone.module.css';
 import { DropzoneProvider } from './DropzoneProvider';
 import { DropzoneAccept, DropzoneIdle, DropzoneReject } from './DropzoneStatus';
-import { Box } from '../Layout';
-import { CloudLoadingIndicator } from '../Indicator';
-import styles from './Dropzone.module.css';
 
 export type DropzoneStylesNames = 'root' | 'inner';
 export type DropzoneVariant = 'filled' | 'light';
 export type DropzoneCssVariables = {
   root:
-  | '--dropzone-radius'
-  | '--dropzone-accept-color'
-  | '--dropzone-accept-bg'
-  | '--dropzone-reject-color'
-  | '--dropzone-reject-bg';
+    | '--dropzone-radius'
+    | '--dropzone-accept-color'
+    | '--dropzone-accept-bg'
+    | '--dropzone-reject-color'
+    | '--dropzone-reject-bg';
 };
 
 export interface DropzoneProps {
@@ -239,9 +239,9 @@ export const Dropzone = (_props: DropzoneProps) => {
             styles.root,
             {
               [styles.dropzoneAccept]: isDragAccept,
-              [styles.dropzoneReject]: isDragReject
+              [styles.dropzoneReject]: isDragReject,
             },
-            classNames?.root
+            classNames?.root,
           ),
         })}
         // {...getStyles('root', { focusable: true })}
@@ -273,7 +273,6 @@ Dropzone.displayName = '@mantine/dropzone/Dropzone';
 Dropzone.Accept = DropzoneAccept;
 Dropzone.Idle = DropzoneIdle;
 Dropzone.Reject = DropzoneReject;
-
 
 type PossibleRef<T> = Ref<T> | undefined;
 

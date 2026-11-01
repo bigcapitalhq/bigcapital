@@ -9,7 +9,6 @@ import { GetSaleReceipt } from './queries/GetSaleReceipt.service';
 import { EditSaleReceipt } from './commands/EditSaleReceipt.service';
 import {
   ISaleReceiptState,
-  SaleReceiptMailOpts,
   SaleReceiptMailOptsDTO,
 } from './types/SaleReceipts.types';
 import { GetSaleReceiptsQueryDto } from './dtos/GetSaleReceiptsQuery.dto';
@@ -22,6 +21,7 @@ import {
   EditSaleReceiptDto,
 } from './dtos/SaleReceipt.dto';
 import { GetSaleReceiptMailStateService } from './queries/GetSaleReceiptMailState.service';
+import { SaleReceiptSmsNotification } from './SaleReceiptSmsNotification';
 import { BulkDeleteSaleReceiptsService } from './BulkDeleteSaleReceipts.service';
 import { ValidateBulkDeleteSaleReceiptsService } from './ValidateBulkDeleteSaleReceipts.service';
 
@@ -38,9 +38,10 @@ export class SaleReceiptApplication {
     private getSaleReceiptStateService: GetSaleReceiptState,
     private saleReceiptNotifyByMailService: SaleReceiptMailNotification,
     private getSaleReceiptMailStateService: GetSaleReceiptMailStateService,
+    private saleReceiptSmsNotificationService: SaleReceiptSmsNotification,
     private bulkDeleteSaleReceiptsService: BulkDeleteSaleReceiptsService,
     private validateBulkDeleteSaleReceiptsService: ValidateBulkDeleteSaleReceiptsService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new sale receipt with associated entries.
@@ -137,6 +138,24 @@ export class SaleReceiptApplication {
   }
 
   /**
+   * Notify the customer of the given sale receipt by SMS.
+   * @param {number} saleReceiptId - Sale receipt id.
+   * @returns {Promise<SaleReceipt>}
+   */
+  public notifySaleReceiptBySms(saleReceiptId: number) {
+    return this.saleReceiptSmsNotificationService.triggerSms(saleReceiptId);
+  }
+
+  /**
+   * Retrieve the SMS details of the given sale receipt.
+   * @param {number} saleReceiptId - Sale receipt id.
+   * @returns {Promise<Record<string, string>>}
+   */
+  public getSaleReceiptSmsDetails(saleReceiptId: number) {
+    return this.saleReceiptSmsNotificationService.getSmsDetails(saleReceiptId);
+  }
+
+  /**
    * Retrieves the given sale receipt pdf.
    * @param {number} saleReceiptId
    */
@@ -182,9 +201,7 @@ export class SaleReceiptApplication {
    * Retrieves the mail state of the given sale receipt.
    * @param {number} saleReceiptId
    */
-  public getSaleReceiptMail(
-    saleReceiptId: number,
-  ): Promise<ISaleReceiptState> {
+  public getSaleReceiptMail(saleReceiptId: number): Promise<ISaleReceiptState> {
     return this.getSaleReceiptMailStateService.getMailState(saleReceiptId);
   }
 }

@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { first } from 'lodash';
 import { I18nService } from 'nestjs-i18n';
 import {
@@ -19,8 +19,9 @@ import {
 } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
+import { JOURNAL_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class JournalSheetTable extends R.pipe(
+export class JournalSheetTable extends flow(
   FinancialTable,
   FinancialSheetStructure,
 )(FinancialSheet) {
@@ -52,14 +53,20 @@ export class JournalSheetTable extends R.pipe(
    */
   private groupColumnsAccessors = (): ITableColumnAccessor[] => {
     return [
-      { key: 'date', accessor: 'dateFormatted' },
-      { key: 'transaction_type', accessor: 'referenceTypeFormatted' },
-      { key: 'transaction_number', accessor: 'entry.transactionNumber' },
-      { key: 'description', accessor: 'entry.note' },
-      { key: 'account_code', accessor: 'entry.accountCode' },
-      { key: 'account_name', accessor: 'entry.accountName' },
-      { key: 'debit', accessor: 'entry.formattedDebit' },
-      { key: 'credit', accessor: 'entry.formattedCredit' },
+      { key: JOURNAL_COLUMN_KEYS.DATE, accessor: 'dateFormatted' },
+      {
+        key: JOURNAL_COLUMN_KEYS.TRANSACTION_TYPE,
+        accessor: 'referenceTypeFormatted',
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.TRANSACTION_NUMBER,
+        accessor: 'entry.transactionNumber',
+      },
+      { key: JOURNAL_COLUMN_KEYS.DESCRIPTION, accessor: 'entry.note' },
+      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_CODE, accessor: 'entry.accountCode' },
+      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_NAME, accessor: 'entry.accountName' },
+      { key: JOURNAL_COLUMN_KEYS.DEBIT, accessor: 'entry.formattedDebit' },
+      { key: JOURNAL_COLUMN_KEYS.CREDIT, accessor: 'entry.formattedCredit' },
     ];
   };
 
@@ -69,14 +76,17 @@ export class JournalSheetTable extends R.pipe(
    */
   private entryColumnsAccessors = (): ITableColumnAccessor[] => {
     return [
-      { key: 'date', accessor: '_empty_' },
-      { key: 'transaction_type', accessor: '_empty_' },
-      { key: 'transaction_number', accessor: 'transactionNumber' },
-      { key: 'description', accessor: 'note' },
-      { key: 'account_code', accessor: 'accountCode' },
-      { key: 'account_name', accessor: 'accountName' },
-      { key: 'debit', accessor: 'formattedDebit' },
-      { key: 'credit', accessor: 'formattedCredit' },
+      { key: JOURNAL_COLUMN_KEYS.DATE, accessor: '_empty_' },
+      { key: JOURNAL_COLUMN_KEYS.TRANSACTION_TYPE, accessor: '_empty_' },
+      {
+        key: JOURNAL_COLUMN_KEYS.TRANSACTION_NUMBER,
+        accessor: 'transactionNumber',
+      },
+      { key: JOURNAL_COLUMN_KEYS.DESCRIPTION, accessor: 'note' },
+      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_CODE, accessor: 'accountCode' },
+      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_NAME, accessor: 'accountName' },
+      { key: JOURNAL_COLUMN_KEYS.DEBIT, accessor: 'formattedDebit' },
+      { key: JOURNAL_COLUMN_KEYS.CREDIT, accessor: 'formattedCredit' },
     ];
   };
 
@@ -86,14 +96,14 @@ export class JournalSheetTable extends R.pipe(
    */
   private totalEntryColumnAccessors = (): ITableColumnAccessor[] => {
     return [
-      { key: 'date', accessor: '_empty_' },
-      { key: 'transaction_type', accessor: '_empty_' },
-      { key: 'transaction_number', accessor: '_empty_' },
-      { key: 'description', accessor: '_empty_' },
-      { key: 'account_code', accessor: '_empty_' },
-      { key: 'account_name', accessor: '_empty_' },
-      { key: 'debit', accessor: 'formattedDebit' },
-      { key: 'credit', accessor: 'formattedCredit' },
+      { key: JOURNAL_COLUMN_KEYS.DATE, accessor: '_empty_' },
+      { key: JOURNAL_COLUMN_KEYS.TRANSACTION_TYPE, accessor: '_empty_' },
+      { key: JOURNAL_COLUMN_KEYS.TRANSACTION_NUMBER, accessor: '_empty_' },
+      { key: JOURNAL_COLUMN_KEYS.DESCRIPTION, accessor: '_empty_' },
+      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_CODE, accessor: '_empty_' },
+      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_NAME, accessor: '_empty_' },
+      { key: JOURNAL_COLUMN_KEYS.DEBIT, accessor: 'formattedDebit' },
+      { key: JOURNAL_COLUMN_KEYS.CREDIT, accessor: 'formattedCredit' },
     ];
   };
 
@@ -103,14 +113,14 @@ export class JournalSheetTable extends R.pipe(
    */
   private blankEnrtyColumnAccessors = (): IColumnMapperMeta[] => {
     return [
-      { key: 'date', value: '' },
-      { key: 'transaction_type', value: '' },
-      { key: 'transaction_number', value: '' },
-      { key: 'description', value: '' },
-      { key: 'account_code', value: '' },
-      { key: 'account_name', value: '' },
-      { key: 'debit', value: '' },
-      { key: 'credit', value: '' },
+      { key: JOURNAL_COLUMN_KEYS.DATE, value: '' },
+      { key: JOURNAL_COLUMN_KEYS.TRANSACTION_TYPE, value: '' },
+      { key: JOURNAL_COLUMN_KEYS.TRANSACTION_NUMBER, value: '' },
+      { key: JOURNAL_COLUMN_KEYS.DESCRIPTION, value: '' },
+      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_CODE, value: '' },
+      { key: JOURNAL_COLUMN_KEYS.ACCOUNT_NAME, value: '' },
+      { key: JOURNAL_COLUMN_KEYS.DEBIT, value: '' },
+      { key: JOURNAL_COLUMN_KEYS.CREDIT, value: '' },
     ];
   };
 
@@ -120,14 +130,38 @@ export class JournalSheetTable extends R.pipe(
    */
   private commonColumns(): ITableColumn[] {
     return [
-      { key: 'date', label: 'Date' },
-      { key: 'transaction_type', label: 'Transaction Type' },
-      { key: 'transaction_number', label: 'Num.' },
-      { key: 'description', label: 'Description' },
-      { key: 'account_code', label: 'Acc. Code' },
-      { key: 'account_name', label: 'Account' },
-      { key: 'debit', label: 'Debit' },
-      { key: 'credit', label: 'Credit' },
+      {
+        key: JOURNAL_COLUMN_KEYS.DATE,
+        label: this.i18n.t('journal_sheet.date'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.TRANSACTION_TYPE,
+        label: this.i18n.t('journal_sheet.transaction_type'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.TRANSACTION_NUMBER,
+        label: this.i18n.t('journal_sheet.transaction_number'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.DESCRIPTION,
+        label: this.i18n.t('journal_sheet.description'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.ACCOUNT_CODE,
+        label: this.i18n.t('journal_sheet.account_code'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.ACCOUNT_NAME,
+        label: this.i18n.t('journal_sheet.account_name'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.DEBIT,
+        label: this.i18n.t('journal_sheet.debit'),
+      },
+      {
+        key: JOURNAL_COLUMN_KEYS.CREDIT,
+        label: this.i18n.t('journal_sheet.credit'),
+      },
     ];
   }
 
@@ -141,6 +175,10 @@ export class JournalSheetTable extends R.pipe(
   ): ITableRow => {
     const meta = {
       rowTypes: [ROW_TYPE.ENTRY],
+      meta: {
+        referenceType: group.transactionType,
+        referenceId: group.referenceId,
+      },
     };
     const computedGroup = { ...group, entry: first(group.entries) };
     const columns = this.groupColumnsAccessors();
@@ -153,10 +191,19 @@ export class JournalSheetTable extends R.pipe(
    * @param {IJournalEntry} entry
    * @returns {ITableRow}
    */
-  private entryMapper = (entry: IJournalSheetEntry): ITableRow => {
+  private entryMapper = (
+    entry: IJournalSheetEntry,
+    reference?: { referenceType?: string; referenceId?: number },
+  ): ITableRow => {
     const columns = this.entryColumnsAccessors();
     const meta = {
       rowTypes: [ROW_TYPE.ENTRY],
+      ...(reference && {
+        meta: {
+          referenceType: reference.referenceType,
+          referenceId: reference.referenceId,
+        },
+      }),
     };
     return tableRowMapper(entry, columns, meta);
   };
@@ -167,9 +214,12 @@ export class JournalSheetTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   private entriesMapper = (group: IJournalReportEntriesGroup): ITableRow[] => {
-    const entries = R.remove(0, 1, group.entries);
-
-    return R.map(this.entryMapper, entries);
+    const entries = group.entries.slice(1);
+    const reference = {
+      referenceType: group.transactionType,
+      referenceId: group.referenceId,
+    };
+    return entries.map((entry) => this.entryMapper(entry, reference));
   };
 
   /**
@@ -217,7 +267,7 @@ export class JournalSheetTable extends R.pipe(
   private groupsMapper = (
     entries: IJournalReportEntriesGroup[],
   ): ITableRow[] => {
-    return R.compose(R.flatten, R.map(this.groupMapper))(entries);
+    return entries.map((group) => this.groupMapper(group)).flat();
   };
 
   /**
@@ -225,7 +275,7 @@ export class JournalSheetTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   public tableData(): ITableRow[] {
-    return R.compose(this.groupsMapper)(this.data);
+    return this.groupsMapper(this.data);
   }
 
   /**
@@ -235,6 +285,6 @@ export class JournalSheetTable extends R.pipe(
   public tableColumns(): ITableColumn[] {
     const columns = this.commonColumns();
 
-    return R.compose(this.tableColumnsCellIndexing)(columns);
+    return this.tableColumnsCellIndexing(columns);
   }
 }

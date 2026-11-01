@@ -1,18 +1,34 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
-import FinancialReportPage from '../FinancialReportPage';
-import { useJournalSheet } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
+import { FinancialReportPage } from '../FinancialReportPage';
+import type { JournalTableQuery } from '@bigcapital/sdk-ts';
+import { useJournalSheet } from '@/hooks/query';
 
-const JournalSheetContext = createContext();
+type UseJournalSheetResult = ReturnType<typeof useJournalSheet>;
+type JournalSheetContextValue = {
+  journalSheet: UseJournalSheetResult['data'];
+  isLoading: boolean;
+  isFetching: boolean;
+  refetchSheet: UseJournalSheetResult['refetch'];
+  httpQuery: Record<string, unknown>;
+};
+
+interface JournalSheetProviderProps {
+  query: Record<string, unknown>;
+  children?: React.ReactNode;
+}
+
+const JournalSheetContext = createContext<JournalSheetContextValue>(
+  {} as JournalSheetContextValue,
+);
 
 /**
  * Journal sheet provider.
  */
-function JournalSheetProvider({ query, ...props }) {
+function JournalSheetProvider({ query, children }: JournalSheetProviderProps) {
   // Transforms the sheet query to request query.
   const httpQuery = React.useMemo(
-    () => transformFilterFormToQuery(query),
+    () => transformFilterFormToQuery(query) as JournalTableQuery,
     [query],
   );
   const {
@@ -20,9 +36,11 @@ function JournalSheetProvider({ query, ...props }) {
     isFetching,
     isLoading,
     refetch,
-  } = useJournalSheet(httpQuery, { keepPreviousData: true });
+  } = useJournalSheet(httpQuery as JournalTableQuery, {
+    placeholderData: (prev) => prev,
+  });
 
-  const provider = {
+  const provider: JournalSheetContextValue = {
     journalSheet,
     isLoading,
     isFetching,
@@ -32,11 +50,21 @@ function JournalSheetProvider({ query, ...props }) {
 
   return (
     <FinancialReportPage name={'journal-sheet'}>
-      <JournalSheetContext.Provider value={provider} {...props} />
+      <JournalSheetContext.Provider value={provider}>
+        {children}
+      </JournalSheetContext.Provider>
     </FinancialReportPage>
   );
 }
 
-const useJournalSheetContext = () => useContext(JournalSheetContext);
+const useJournalSheetContext = (): JournalSheetContextValue => {
+  const ctx = useContext(JournalSheetContext);
+  if (!ctx) {
+    throw new Error(
+      'useJournalSheetContext must be used within a JournalSheetProvider',
+    );
+  }
+  return ctx;
+};
 
 export { JournalSheetProvider, useJournalSheetContext };

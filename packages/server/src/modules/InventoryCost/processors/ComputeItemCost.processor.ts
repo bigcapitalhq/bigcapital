@@ -44,7 +44,7 @@ export class ComputeItemCostProcessor extends WorkerHost {
 
     console.log(`[info] Compute item cost for item ${itemId} started`, {
       payload: job.data,
-      jobId: job.id
+      jobId: job.id,
     });
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);
@@ -59,15 +59,28 @@ export class ComputeItemCostProcessor extends WorkerHost {
         events.inventory.onComputeItemCostJobCompleted,
         { startingDate: startingDateObj, itemId, organizationId, userId },
       );
-      console.log(`[info] Compute item cost for item ${itemId} completed successfully`);
+      console.log(
+        `[info] Compute item cost for item ${itemId} completed successfully`,
+      );
     } catch (error) {
-      console.error(`[error] Error computing item cost for item ${itemId}:`, error);
-      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+      console.error(
+        `[error] Error computing item cost for item ${itemId}:`,
+        error,
+      );
+      console.error(
+        'Error stack:',
+        error instanceof Error ? error.stack : 'No stack trace',
+      );
       // Reset cost_compute_running when job fails so it does not stay true indefinitely
       try {
-        await this.inventoryComputeCostService.markItemsCostComputeRunning(false);
+        await this.inventoryComputeCostService.markItemsCostComputeRunning(
+          false,
+        );
       } catch (markError) {
-        console.error('[error] Failed to mark cost compute as not running:', markError);
+        console.error(
+          '[error] Failed to mark cost compute as not running:',
+          markError,
+        );
       }
       throw error;
     }

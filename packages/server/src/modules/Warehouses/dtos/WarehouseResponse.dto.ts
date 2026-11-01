@@ -2,6 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class WarehouseResponseDto {
   @ApiProperty({
+    description: 'The unique identifier of the warehouse',
+    example: 1,
+  })
+  id!: number;
+
+  @ApiProperty({
     description: 'The name of the warehouse',
     example: 'Main Warehouse',
   })

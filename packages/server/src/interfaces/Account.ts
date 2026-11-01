@@ -17,7 +17,7 @@ export interface IAccountCreateDTO extends IAccountDTO {
   plaidItemId?: string;
 }
 
-export interface IAccountEditDTO extends IAccountDTO {}
+export type IAccountEditDTO = IAccountDTO;
 
 export interface IAccount {
   id: number;
@@ -89,7 +89,7 @@ export interface IAccountTransaction {
   taxRateId?: number;
   taxRate?: number;
 }
-export interface IAccountResponse extends IAccount {}
+export type IAccountResponse = IAccount;
 
 export enum IAccountsStructureType {
   Tree = 'tree',
@@ -147,6 +147,8 @@ export interface IAccountEventDeletePayload {
 export interface IAccountEventActivatedPayload {
   tenantId: number;
   accountId: number;
+  activate: boolean;
+  account: IAccount;
   trx: Knex.Transaction;
 }
 
@@ -167,4 +169,5 @@ export enum TaxRateAction {
 
 export interface CreateAccountParams {
   ignoreUniqueName: boolean;
+  ignoreAccountCode?: boolean;
 }

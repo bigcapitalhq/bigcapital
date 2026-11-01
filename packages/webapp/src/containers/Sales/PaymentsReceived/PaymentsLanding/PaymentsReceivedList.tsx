@@ -1,32 +1,37 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-
 import '@/style/pages/PaymentReceive/List.scss';
-
-import { DashboardPageContent } from '@/components';
+import { PaymentsReceivedActionsBar } from './PaymentsReceivedActionsBar';
+import { PaymentsReceivedListDialogs } from './PaymentsReceivedListDialogs';
+import { PaymentsReceivedListDrawers } from './PaymentsReceivedListDrawers';
 import { PaymentsReceivedListProvider } from './PaymentsReceivedListProvider';
-import PaymentReceivesTable from './PaymentsReceivedTable';
-import PaymentsReceivedActionsBar from './PaymentsReceivedActionsBar';
-
+import { PaymentsReceivedTable as PaymentReceivesTable } from './PaymentsReceivedTable';
 import { withPaymentsReceived } from './withPaymentsReceived';
 import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
+import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
+import { DashboardPageContent } from '@/components';
+import { transformTableStateToQuery } from '@/utils';
 
-import { compose, transformTableStateToQuery } from '@/utils';
+interface PaymentsReceivedListProps
+  extends Pick<
+      WithPaymentsReceivedProps,
+      'paymentReceivesTableState' | 'paymentsTableStateChanged'
+    >,
+    WithPaymentsReceivedActionsProps {}
 
-function PaymentsReceivedList({
-  // #withPaymentsReceived
+function PaymentsReceivedListInner({
   paymentReceivesTableState,
   paymentsTableStateChanged,
-
-  // #withPaymentsReceivedActions
   resetPaymentReceivesTableState,
-}) {
-  // Resets the payment receives table state once the page unmount.
+  resetPaymentReceivesSelectedRows,
+}: PaymentsReceivedListProps) {
   React.useEffect(
     () => () => {
       resetPaymentReceivesTableState();
+      resetPaymentReceivesSelectedRows();
     },
-    [resetPaymentReceivesTableState],
+    [resetPaymentReceivesSelectedRows, resetPaymentReceivesTableState],
   );
 
   return (
@@ -35,6 +40,8 @@ function PaymentsReceivedList({
       tableStateChanged={paymentsTableStateChanged}
     >
       <PaymentsReceivedActionsBar />
+      <PaymentsReceivedListDrawers />
+      <PaymentsReceivedListDialogs />
 
       <DashboardPageContent>
         <PaymentReceivesTable />
@@ -43,12 +50,13 @@ function PaymentsReceivedList({
   );
 }
 
-export default compose(
+export const PaymentsReceivedList = FF.pipe(
+  PaymentsReceivedListInner,
+  withPaymentsReceivedActions,
   withPaymentsReceived(
     ({ paymentReceivesTableState, paymentsTableStateChanged }) => ({
       paymentReceivesTableState,
       paymentsTableStateChanged,
     }),
   ),
-  withPaymentsReceivedActions,
-)(PaymentsReceivedList);
+);

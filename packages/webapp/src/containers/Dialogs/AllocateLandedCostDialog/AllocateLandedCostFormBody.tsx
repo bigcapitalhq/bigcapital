@@ -1,19 +1,27 @@
-// @ts-nocheck
-import React from 'react';
-import { FastField } from 'formik';
-import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
-import AllocateLandedCostEntriesTable from './AllocateLandedCostEntriesTable';
+import { FastField } from 'formik';
+import React from 'react';
+import { AllocateLandedCostEntriesTable } from './AllocateLandedCostEntriesTable';
+import type {
+  AllocateLandedCostFormEntry,
+  AllocateLandedCostFormValues,
+} from './types';
+import { CLASSES } from '@/constants/classes';
 
-export default function AllocateLandedCostFormBody() {
+interface ItemsFastFieldRenderProps {
+  form: { setFieldValue: (field: string, value: unknown) => void };
+  field: { value: AllocateLandedCostFormEntry[] };
+  meta: { error?: unknown; touched?: boolean };
+}
+
+export function AllocateLandedCostFormBody() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
       <FastField name={'items'}>
         {({
-          form: { setFieldValue, values },
+          form: { setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+        }: ItemsFastFieldRenderProps) => (
           <AllocateLandedCostEntriesTable
             entries={value}
             onUpdateData={(newEntries) => {
@@ -25,3 +33,6 @@ export default function AllocateLandedCostFormBody() {
     </div>
   );
 }
+
+// Re-export to satisfy callers that import the form values type.
+export type { AllocateLandedCostFormValues };

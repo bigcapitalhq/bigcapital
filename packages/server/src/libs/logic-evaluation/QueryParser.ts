@@ -22,7 +22,9 @@ export class QueryParser {
   parseNode(node) {
     if (typeof node === 'string') {
       const nodeQuery = this.getQuery(node);
-      return (query) => { nodeQuery(query); };
+      return (query) => {
+        nodeQuery(query);
+      };
     }
     if (OPERATION[node.operation] === undefined) {
       throw new Error(`unknow expression ${node.operation}`);
@@ -34,16 +36,26 @@ export class QueryParser {
       case '&&':
       case 'AND':
       default:
-        return (nodeQuery) => nodeQuery.where((query) => {
-          query.where((q) => { leftQuery(q); });
-          query.andWhere((q) => { rightQuery(q); });
-        });
+        return (nodeQuery) =>
+          nodeQuery.where((query) => {
+            query.where((q) => {
+              leftQuery(q);
+            });
+            query.andWhere((q) => {
+              rightQuery(q);
+            });
+          });
       case '||':
       case 'OR':
-        return (nodeQuery) => nodeQuery.where((query) => {
-          query.where((q) => { leftQuery(q); });
-          query.orWhere((q) => { rightQuery(q); });
-        });
+        return (nodeQuery) =>
+          nodeQuery.where((query) => {
+            query.where((q) => {
+              leftQuery(q);
+            });
+            query.orWhere((q) => {
+              rightQuery(q);
+            });
+          });
     }
   }
 

@@ -15,13 +15,13 @@ export interface IBranchCreatePayload {
   createBranchDTO: ICreateBranchDTO;
   trx: Knex.Transaction;
 }
-export interface IBranchCreatedPayload {}
+export type IBranchCreatedPayload = object;
 
-export interface IBranchEditPayload {}
-export interface IBranchEditedPayload {}
+export type IBranchEditPayload = object;
+export type IBranchEditedPayload = object;
 
-export interface IBranchDeletePayload {}
-export interface IBranchDeletedPayload {}
+export type IBranchDeletePayload = object;
+export type IBranchDeletedPayload = object;
 
 export interface IBranchesActivatePayload {
   // tenantId: number;

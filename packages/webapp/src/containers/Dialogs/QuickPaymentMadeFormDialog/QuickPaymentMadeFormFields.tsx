@@ -1,22 +1,19 @@
-// @ts-nocheck
+import { Classes, Position, ControlGroup } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import { isEqual } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { FastField, useFormikContext } from 'formik';
-import { isEqual } from 'lodash';
-import { Classes, Position, ControlGroup } from '@blueprintjs/core';
-import { useAutofocus } from '@/hooks';
-import classNames from 'classnames';
-import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
-
+import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
+import { useSetPrimaryBranchToForm } from './utils';
+import type { QuickPaymentMadeFormValues } from './types';
 import {
   FieldRequiredHint,
   Col,
   Row,
-  FormattedMessage as T,
   FAccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
   Icon,
   If,
   FeatureCan,
@@ -28,38 +25,34 @@ import {
   FTextArea,
   FMoneyInputGroup,
 } from '@/components';
-import { inputIntent, momentFormatter } from '@/utils';
-import { useSetPrimaryBranchToForm } from './utils';
-import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { compose } from '@/utils';
+import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 /**
  * Quick payment made form fields.
  */
-function QuickPaymentMadeFormFields({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
-  const { accounts, branches, baseCurrency } = useQuickPaymentMadeContext();
+function QuickPaymentMadeFormFieldsInner(): React.ReactElement {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { accounts, branches } = useQuickPaymentMadeContext();
 
   // Intl context.
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<QuickPaymentMadeFormValues>();
 
-  const paymentMadeFieldRef = useAutofocus();
+  const paymentMadeFieldRef = useAutofocus<HTMLInputElement>();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div className={Classes.DIALOG_BODY}>
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup label={<T id={'branch'} />} name={'branch_id'}>
+            <FFormGroup label={intl.get('branch')} name={'branchId'}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -72,40 +65,42 @@ function QuickPaymentMadeFormFields({
       <Row>
         {/* ------------- Vendor name ------------- */}
         <Col xs={5}>
-          <FFormGroup name={'vendor_id'} label={<T id={'vendor_name'} />}>
-            <FInputGroup name={'vendor_id'} minimal={true} disabled={true} />
+          <FFormGroup name={'vendorId'} label={intl.get('vendor_name')}>
+            <FInputGroup name={'vendorId'} disabled={true} />
           </FFormGroup>
         </Col>
 
         {/* ------------ Payment number. ------------ */}
         <Col xs={5}>
-          <FFormGroup name={'payment_number'} label={<T id={'payment_no'} />}>
-            <FInputGroup name={'payment_number'} minimal={true} />
+          <FFormGroup name={'paymentNumber'} label={intl.get('payment_no')}>
+            <FInputGroup name={'paymentNumber'} />
           </FFormGroup>
         </Col>
       </Row>
 
-      {/*------------ Amount Received -----------*/}
-      <FFormGroup name={'amount'} label={<T id={'amount_received'} />}>
+      {/*------------ Amount Received ----------- */}
+      <FFormGroup name={'amount'} label={intl.get('amount_received')}>
         <ControlGroup>
-          <InputPrependText text={values.currency_code} />
+          <InputPrependText text={values.currencyCode} />
           <FMoneyInputGroup
             name={'amount'}
             minimal={true}
-            inputRef={(ref) => (paymentMadeFieldRef.current = ref)}
+            inputRef={(ref: HTMLInputElement | null) => {
+              paymentMadeFieldRef.current = ref;
+            }}
           />
         </ControlGroup>
       </FFormGroup>
 
-      <If condition={!isEqual(base_currency, values.currency_code)}>
-        {/*------------ exchange rate -----------*/}
+      <If condition={!isEqual(baseCurrency, values.currencyCode)}>
+        {/*------------ exchange rate ----------- */}
         <ExchangeRateMutedField
-          name={'exchange_rate'}
-          fromCurrency={base_currency}
-          toCurrency={values.currency_code}
+          name={'exchangeRate'}
+          fromCurrency={baseCurrency}
+          toCurrency={values.currencyCode}
           formGroupProps={{ label: '', inline: false }}
-          date={values.payment_date}
-          exchangeRate={values.exchange_rate}
+          date={values.paymentDate}
+          exchangeRate={values.exchangeRate}
         />
       </If>
 
@@ -113,14 +108,14 @@ function QuickPaymentMadeFormFields({
         <Col xs={5}>
           {/* ------------- Payment date ------------- */}
           <FFormGroup
-            name={'payment_date'}
-            label={<T id={'payment_date'} />}
+            name={'paymentDate'}
+            label={intl.get('payment_date')}
             labelInfo={<FieldRequiredHint />}
             className={classNames('form-group--select-list', CLASSES.FILL)}
           >
             <FDateInput
-              name={'payment_date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              name={'paymentDate'}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,
@@ -132,12 +127,12 @@ function QuickPaymentMadeFormFields({
         <Col xs={5}>
           {/* ------------ payment account ------------ */}
           <FFormGroup
-            name={'payment_account_id'}
-            label={<T id={'payment_account'} />}
+            name={'paymentAccountId'}
+            label={intl.get('payment_account')}
           >
             <FAccountsSuggestField
-              name={'payment_account_id'}
-              items={accounts}
+              name={'paymentAccountId'}
+              items={accounts ?? []}
               inputProps={{
                 placeholder: intl.get('select_account'),
               }}
@@ -152,26 +147,26 @@ function QuickPaymentMadeFormFields({
       </Row>
 
       {/* ------------ Reference No. ------------ */}
-      <FFormGroup name={'reference'} label={<T id={'reference'} />}>
-        <FInputGroup name={'reference'} minimal={true} />
+      <FFormGroup name={'reference'} label={intl.get('reference')}>
+        <FInputGroup name={'reference'} />
       </FFormGroup>
 
       {/* --------- Statement --------- */}
-      <FFormGroup name={'statement'} label={<T id={'statement'} />}>
+      <FFormGroup name={'statement'} label={intl.get('statement')}>
         <FTextArea name={'statement'} growVertically={true} fill={true} />
       </FFormGroup>
     </div>
   );
 }
 
-export default compose(withCurrentOrganization())(QuickPaymentMadeFormFields);
+export const QuickPaymentMadeFormFields = QuickPaymentMadeFormFieldsInner;
 
 export const BranchRowDivider = styled.div`
   height: 1px;
   background: #ebf1f6;
   margin-bottom: 15px;
 
-  .bp4-dark &{
+  .bp4-dark & {
     background: rgba(255, 255, 255, 0.1);
   }
 `;

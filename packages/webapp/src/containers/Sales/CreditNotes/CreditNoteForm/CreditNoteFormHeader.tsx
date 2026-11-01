@@ -1,15 +1,14 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import CreditNoteFormHeaderFields from './CreditNoteFormHeaderFields';
-import { Group, PageFormBigNumber } from '@/components';
+import { CreditNoteFormHeaderFields } from './CreditNoteFormHeaderFields';
 import { useCreditNoteTotalFormatted } from './utils';
+import { Group, PageFormBigNumber } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 /**
  * Credit note header.
  */
-function CreditNoteFormHeader() {
+export function CreditNoteFormHeader() {
   const isDarkMode = useIsDarkMode();
 
   return (
@@ -20,14 +19,16 @@ function CreditNoteFormHeader() {
       p="25px 32px"
       bg="var(--x-credit-note-form-header-background)"
       borderBottom="1px solid var(--x-credit-note-form-header-border)"
-      style={{
-        '--x-credit-note-form-header-background': isDarkMode
-          ? 'var(--color-dark-gray1)'
-          : 'var(--color-white)',
-        '--x-credit-note-form-header-border': isDarkMode
-          ? 'rgba(255, 255, 255, 0.1)'
-          : '#d2dce2',
-      }}
+      style={
+        {
+          '--x-credit-note-form-header-background': isDarkMode
+            ? 'var(--color-dark-gray1)'
+            : 'var(--color-white)',
+          '--x-credit-note-form-header-border': isDarkMode
+            ? 'rgba(255, 255, 255, 0.1)'
+            : '#d2dce2',
+        } as React.CSSProperties
+      }
     >
       <CreditNoteFormHeaderFields />
       <CreditNoteFormBigNumber />
@@ -49,5 +50,3 @@ function CreditNoteFormBigNumber() {
     />
   );
 }
-
-export default CreditNoteFormHeader;

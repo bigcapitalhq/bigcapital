@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
@@ -13,7 +13,7 @@ export const ProfitLossTablePreviousYear = <
 >(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialTablePreviousYear, FinancialDateRanges)(Base) {
+  class extends flow(FinancialTablePreviousYear, FinancialDateRanges)(Base) {
     query: ProfitLossSheetQuery;
 
     // ------------------------------------
@@ -26,16 +26,25 @@ export const ProfitLossTablePreviousYear = <
     protected getPreviousYearColumns = (
       dateRange?: IDateRange,
     ): ITableColumn[] => {
-      return R.pipe(
+      return flow(
         // Previous year columns.
-        R.append(this.getPreviousYearTotalColumn(dateRange)),
-        R.when(
+        (columns: ITableColumn[]) => [
+          ...columns,
+          this.getPreviousYearTotalColumn(dateRange),
+        ],
+        when(
           this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeColumn()),
+          (columns: ITableColumn[]) => [
+            ...columns,
+            this.getPreviousYearChangeColumn(),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageColumn()),
+          (columns: ITableColumn[]) => [
+            ...columns,
+            this.getPreviousYearPercentageColumn(),
+          ],
         ),
       )([]);
     };
@@ -74,16 +83,25 @@ export const ProfitLossTablePreviousYear = <
      * @returns {ITableColumnAccessor[]}
      */
     protected previousYearColumnAccessor = (): ITableColumnAccessor[] => {
-      return R.pipe(
+      return flow(
         // Previous year columns.
-        R.append(this.getPreviousYearTotalAccessor()),
-        R.when(
+        (accessors: ITableColumnAccessor[]) => [
+          ...accessors,
+          this.getPreviousYearTotalAccessor(),
+        ],
+        when(
           this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeAccessor()),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearChangeAccessor(),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageAccessor()),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearPercentageAccessor(),
+          ],
         ),
       )([]);
     };
@@ -96,16 +114,25 @@ export const ProfitLossTablePreviousYear = <
     protected previousYearHorizontalColumnAccessors = (
       index: number,
     ): ITableColumnAccessor[] => {
-      return R.pipe(
+      return flow(
         // Previous year columns.
-        R.append(this.getPreviousYearTotalHorizAccessor(index)),
-        R.when(
+        (accessors: ITableColumnAccessor[]) => [
+          ...accessors,
+          this.getPreviousYearTotalHorizAccessor(index),
+        ],
+        when(
           this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeHorizAccessor(index)),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearChangeHorizAccessor(index),
+          ],
         ),
-        R.when(
+        when(
           this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageHorizAccessor(index)),
+          (accessors: ITableColumnAccessor[]) => [
+            ...accessors,
+            this.getPreviousYearPercentageHorizAccessor(index),
+          ],
         ),
       )([]);
     };

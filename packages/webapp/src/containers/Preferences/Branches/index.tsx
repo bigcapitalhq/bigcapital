@@ -1,13 +1,11 @@
-// @ts-nocheck
 import React from 'react';
-
+import { Branches } from './Branches';
 import { BranchesProvider } from './BranchesProvider';
-import Branches from './Branches';
 
 /**
  * Branches .
  */
-export default function BranchesPreferences() {
+export function BranchesPreferences() {
   return (
     <BranchesProvider>
       <Branches />

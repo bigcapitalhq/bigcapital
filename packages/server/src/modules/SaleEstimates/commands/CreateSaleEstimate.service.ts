@@ -3,7 +3,6 @@ import { Knex } from 'knex';
 import {
   ISaleEstimateCreatedPayload,
   ISaleEstimateCreatingPayload,
-  ISaleEstimateDTO,
 } from '../types/SaleEstimates.types';
 import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer.service';
 import { SaleEstimateValidators } from './SaleEstimateValidators.service';
@@ -46,6 +45,12 @@ export class CreateSaleEstimate {
       .query()
       .findById(estimateDTO.customerId)
       .throwIfNotFound();
+
+    // Validate the expiration date is not before the estimate date.
+    this.validators.validateExpirationDate(
+      estimateDTO.estimateDate,
+      estimateDTO.expirationDate,
+    );
 
     // Transform DTO object to model object.
     const estimateObj = await this.transformerDTO.transformDTOToModel(

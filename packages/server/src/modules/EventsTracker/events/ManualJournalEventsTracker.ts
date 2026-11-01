@@ -19,7 +19,7 @@ export class ManualJournalEventsTracker {
 
   @OnEvent(events.manualJournals.onCreated)
   public handleTrackManualJournalCreatedEvent(
-    payload: IManualJournalEventCreatedPayload,
+    _payload: IManualJournalEventCreatedPayload,
   ) {
     this.posthog.trackEvent({
       event: MANUAL_JOURNAL_CREATED,
@@ -29,7 +29,7 @@ export class ManualJournalEventsTracker {
 
   @OnEvent(events.manualJournals.onEdited)
   public handleTrackEditedManualJournalEvent(
-    payload: IManualJournalEventEditedPayload,
+    _payload: IManualJournalEventEditedPayload,
   ) {
     this.posthog.trackEvent({
       event: MANUAL_JOURNAL_EDITED,
@@ -39,7 +39,7 @@ export class ManualJournalEventsTracker {
 
   @OnEvent(events.manualJournals.onDeleted)
   public handleTrackDeletedManualJournalEvent(
-    payload: IManualJournalEventDeletedPayload,
+    _payload: IManualJournalEventDeletedPayload,
   ) {
     this.posthog.trackEvent({
       event: MANUAL_JOURNAL_DELETED,

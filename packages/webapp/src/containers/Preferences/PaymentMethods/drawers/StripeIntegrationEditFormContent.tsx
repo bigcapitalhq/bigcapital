@@ -1,10 +1,10 @@
-import { AccountsSelect, FFormGroup, Group, Stack } from '@/components';
-import { useStripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import { useStripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
+import { AccountsSelect, FFormGroup, Group, Stack } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useDrawerActions } from '@/hooks/state';
 import { ACCOUNT_TYPE } from '@/constants';
+import { useDrawerActions } from '@/hooks/state';
 
 export function StripeIntegrationEditFormContent() {
   const { accounts } = useStripeIntegrationEditBoot();
@@ -30,8 +30,10 @@ export function StripeIntegrationEditFormContent() {
       <FFormGroup
         name={'clearingAccountId'}
         label={'Clearing Account'}
-        subLabel='Liability Account'
-        helperText={'Clearing account tracks all payments collected through Stripe.'}
+        subLabel="Liability Account"
+        helperText={
+          'Clearing account tracks all payments collected through Stripe.'
+        }
         style={{ maxWidth: 300 }}
       >
         <AccountsSelect

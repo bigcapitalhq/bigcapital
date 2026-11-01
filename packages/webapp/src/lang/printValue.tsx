@@ -39,7 +39,7 @@ export default function printValue(value, quoteStrings) {
 
   return JSON.stringify(
     value,
-    function(key, value) {
+    function (key, value) {
       let result = printSimpleValue(this[key], quoteStrings);
       if (result !== null) return result;
       return value;

@@ -1,1 +1,2 @@
-export { default } from './ApiKeysGenerateDialog';
+export { ApiKeysGenerateDialog } from './ApiKeysGenerateDialog';
+export { ApiKeysGenerateDialogContent } from './ApiKeysGenerateDialogContent';

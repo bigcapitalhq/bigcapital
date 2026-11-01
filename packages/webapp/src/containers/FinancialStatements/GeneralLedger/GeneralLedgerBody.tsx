@@ -1,23 +1,15 @@
-// @ts-nocheck
 import React from 'react';
-import * as R from 'ramda';
-
-import GeneralLedgerTable from './GeneralLedgerTable';
-
-import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
+import { GeneralLedgerTable } from './GeneralLedgerTable';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * General ledger body JSX.
  */
-function GeneralLedgerBodyJSX({
-  // #withCurrentOrganization
-  organizationName,
-}) {
+function GeneralLedgerBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = useGeneralLedgerContext();
 
   return (
@@ -31,8 +23,4 @@ function GeneralLedgerBodyJSX({
   );
 }
 
-export const GeneralLedgerBody = R.compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(GeneralLedgerBodyJSX);
+export const GeneralLedgerBody = GeneralLedgerBodyJSX;

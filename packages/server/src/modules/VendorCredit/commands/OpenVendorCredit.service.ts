@@ -37,32 +37,26 @@ export class OpenVendorCreditService {
     vendorCreditId: number,
     trx?: Knex.Transaction,
   ): Promise<VendorCredit> => {
-    // Retrieve the vendor credit or throw not found service error.
-    const oldVendorCredit = await this.vendorCreditModel()
-      .query()
-      .findById(vendorCreditId)
-      .throwIfNotFound();
-
-    // Throw service error if the credit note is already open.
-    this.throwErrorIfAlreadyOpen(oldVendorCredit);
-
-    // Triggers `onVendorCreditOpen` event.
-    await this.eventPublisher.emitAsync(events.vendorCredit.onOpen, {
-      vendorCreditId,
-      oldVendorCredit,
-    } as IVendorCreditOpenPayload);
-
     // Sales the credit note transactions with associated entries.
     return this.uow.withTransaction(async (trx) => {
+      // Validates the open operation against the locked vendor credit row.
+      const oldVendorCredit = await this.validate(vendorCreditId, trx);
+
+      // Triggers `onVendorCreditOpen` event.
+      await this.eventPublisher.emitAsync(events.vendorCredit.onOpen, {
+        vendorCreditId,
+        oldVendorCredit,
+      } as IVendorCreditOpenPayload);
+
       const eventPayload = {
         vendorCreditId,
         oldVendorCredit,
         trx,
       } as IVendorCreditOpeningPayload;
 
-      // Triggers `onCreditNoteOpening` event.
+      // Triggers `onVendorCreditOpening` event.
       await this.eventPublisher.emitAsync(
-        events.creditNote.onOpening,
+        events.vendorCredit.onOpening,
         eventPayload as IVendorCreditOpeningPayload,
       );
       // Saves the vendor credit graph to the storage.
@@ -71,7 +65,8 @@ export class OpenVendorCreditService {
         .findById(vendorCreditId)
         .updateAndFetchById(vendorCreditId, {
           openedAt: new Date(),
-        });
+        })
+        .withGraphFetched('entries');
       // Triggers `onVendorCreditOpened` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onOpened, {
         ...eventPayload,
@@ -80,6 +75,29 @@ export class OpenVendorCreditService {
 
       return vendorCredit;
     }, trx);
+  };
+
+  /**
+   * Validates the open vendor credit operation against the locked vendor
+   * credit row: existence and not already open.
+   * @param {number} vendorCreditId - Vendor credit id.
+   * @param {Knex.Transaction} trx - Locks the vendor credit row (FOR UPDATE).
+   * @returns {Promise<VendorCredit>} The locked vendor credit.
+   */
+  validate = async (
+    vendorCreditId: number,
+    trx: Knex.Transaction,
+  ): Promise<VendorCredit> => {
+    // Retrieve the vendor credit with a row lock or throw not found service error.
+    const oldVendorCredit = await this.vendorCreditModel()
+      .query(trx)
+      .findById(vendorCreditId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Throw service error if the credit note is already open.
+    this.throwErrorIfAlreadyOpen(oldVendorCredit);
+    return oldVendorCredit;
   };
 
   /**

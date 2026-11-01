@@ -1,51 +1,48 @@
-// @ts-nocheck
 import React from 'react';
-
 import intl from 'react-intl-universal';
-import { Intent, Tag } from '@blueprintjs/core';
-import { isBlank } from '@/utils';
 import { Link } from 'react-router-dom';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { BankingAccountsListResponse } from '@bigcapital/sdk-ts';
 
-/**
- * Account code accessor.
- */
-export const AccountCodeAccessor = (row) =>
-  !isBlank(row.code) ? (
-    <Tag minimal={true} round={true} intent={Intent.NONE}>
-      {row.code}
-    </Tag>
-  ) : null;
+export type CashflowAccountRow = BankingAccountsListResponse[number];
+
+interface CellProps {
+  cell: { row: { original: CashflowAccountRow } };
+}
+
+interface RowProps {
+  row: { original: CashflowAccountRow };
+}
 
 /**
  * Balance cell.
  */
-export const BalanceCell = ({ cell }) => {
+export const BalanceCell = ({ cell }: CellProps) => {
   const account = cell.row.original;
 
   return account.amount !== null ? (
-    <span>{account.formatted_amount}</span>
+    <span>{account.formattedAmount}</span>
   ) : (
-    <span class="placeholder">—</span>
+    <span className="placeholder">—</span>
   );
 };
 
 /**
  * Account cell.
  */
-const AccountCell = ({ row }) => {
+const AccountCell = ({ row }: RowProps) => {
   const account = row.original;
   return (
-    <>
-      <div>X</div>
-      <Link to={`/account/${account.id}/transactions`}>{account.name}</Link>
-    </>
+    <Link to={`/cashflow-accounts/${account.id}/transactions`}>
+      {account.name}
+    </Link>
   );
 };
 
 /**
  * Retrieve Cash flow table columns.
  */
-export function useCashFlowAccountsTableColumns() {
+export function useCashFlowAccountsTableColumns(): DataTableColumn<CashflowAccountRow>[] {
   return React.useMemo(
     () => [
       {
@@ -67,7 +64,7 @@ export function useCashFlowAccountsTableColumns() {
       {
         id: 'type',
         Header: intl.get('type'),
-        accessor: 'account_type_label',
+        accessor: 'accountType',
         className: 'type',
         width: 140,
         textOverview: true,
@@ -75,7 +72,7 @@ export function useCashFlowAccountsTableColumns() {
       {
         id: 'currency',
         Header: intl.get('currency'),
-        accessor: 'currency_code',
+        accessor: 'currencyCode',
         width: 75,
       },
       {

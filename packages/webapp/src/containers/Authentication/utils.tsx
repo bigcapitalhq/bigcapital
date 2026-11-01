@@ -1,7 +1,6 @@
-// @ts-nocheck
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 
 export const LOGIN_ERRORS = {
   INVALID_DETAILS: 'INVALID_DETAILS',
@@ -14,21 +13,80 @@ const REGISTER_ERRORS = {
   EMAIL_EXISTS: 'EMAIL_EXISTS',
 };
 
+const SEND_RESET_PASSWORD_ERRORS = {
+  EMAIL_NOT_REGISTERED: 'EMAIL_NOT_FOUND',
+};
+
+export interface AuthError {
+  code?: string;
+  message?: string;
+}
+
+export interface ApiErrorResponse {
+  errors?: Array<{ type?: string }>;
+}
+
+export interface ToastMessage {
+  message: string;
+  intent: Intent;
+}
+
+export interface LoginValues {
+  crediential: string;
+  password: string;
+  keepLoggedIn: boolean;
+}
+
+export interface RegisterValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface ResetPasswordValues {
+  password: string;
+  confirmPassword: string;
+}
+
+export interface SendResetPasswordValues {
+  crediential: string;
+}
+
+export type InviteAcceptFormValues = {
+  organizationName: string;
+  invitedEmail: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+};
+
+export const PASSWORD_MIN_LENGTH = 10;
+export const PASSWORD_MAX_LENGTH = 128;
+
+const validPassword = () =>
+  Yup.string()
+    .required()
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
+    .label(intl.get('password'));
+
 export const LoginSchema = Yup.object().shape({
   crediential: Yup.string().required().email().label(intl.get('email')),
-  password: Yup.string().required().min(4).label(intl.get('password')),
+  password: Yup.string().required().label(intl.get('password')),
 });
 
 export const RegisterSchema = Yup.object().shape({
-  first_name: Yup.string().required().label(intl.get('first_name_')),
-  last_name: Yup.string().required().label(intl.get('last_name_')),
+  firstName: Yup.string().required().label(intl.get('first_name_')),
+  lastName: Yup.string().required().label(intl.get('last_name_')),
   email: Yup.string().email().required().label(intl.get('email')),
-  password: Yup.string().min(6).required().label(intl.get('password')),
+  password: validPassword(),
 });
 
 export const ResetPasswordSchema = Yup.object().shape({
-  password: Yup.string().min(6).required().label(intl.get('password')),
-  confirm_password: Yup.string()
+  password: validPassword(),
+  confirmPassword: Yup.string()
+    .nullable()
     .oneOf([Yup.ref('password'), null])
     .required()
     .label(intl.get('confirm_password')),
@@ -40,15 +98,17 @@ export const SendResetPasswordSchema = Yup.object().shape({
 });
 
 export const InviteAcceptSchema = Yup.object().shape({
-  first_name: Yup.string().required().label(intl.get('first_name_')),
-  last_name: Yup.string().required().label(intl.get('last_name_')),
-  password: Yup.string().min(4).required().label(intl.get('password')),
+  firstName: Yup.string().required().label(intl.get('first_name_')),
+  lastName: Yup.string().required().label(intl.get('last_name_')),
+  password: validPassword(),
 });
 
-export const transformSendResetPassErrorsToToasts = (error) => {
-  const toastBuilders = [];
+export const transformSendResetPassErrorsToToasts = (
+  error: AuthError,
+): ToastMessage[] => {
+  const toastBuilders: ToastMessage[] = [];
 
-  if (error.code === ERRORS.EMAIL_NOT_REGISTERED) {
+  if (error.code === SEND_RESET_PASSWORD_ERRORS.EMAIL_NOT_REGISTERED) {
     toastBuilders.push({
       message: intl.get('we_couldn_t_find_your_account_with_that_email'),
       intent: Intent.DANGER,
@@ -57,8 +117,10 @@ export const transformSendResetPassErrorsToToasts = (error) => {
   return toastBuilders;
 };
 
-export const transformLoginErrorsToToasts = (error) => {
-  const toastBuilders = [];
+export const transformLoginErrorsToToasts = (
+  error: AuthError,
+): ToastMessage[] => {
+  const toastBuilders: ToastMessage[] = [];
 
   if (error.code === LOGIN_ERRORS.INVALID_DETAILS) {
     toastBuilders.push({
@@ -74,8 +136,10 @@ export const transformLoginErrorsToToasts = (error) => {
   return toastBuilders;
 };
 
-export const transformRegisterErrorsToForm = (errors) => {
-  const formErrors = {};
+export const transformRegisterErrorsToForm = (
+  errors: Array<{ type?: string }>,
+): Record<string, string> => {
+  const formErrors: Record<string, string> = {};
 
   if (errors.some((e) => e.type === REGISTER_ERRORS.EMAIL_EXISTS)) {
     formErrors.email = intl.get('the_email_already_used_in_another_account');
@@ -83,8 +147,10 @@ export const transformRegisterErrorsToForm = (errors) => {
   return formErrors;
 };
 
-export const transformRegisterToastMessages = (errors) => {
-  const toastErrors = [];
+export const transformRegisterToastMessages = (
+  errors: Array<{ type?: string }>,
+): ToastMessage[] => {
+  const toastErrors: ToastMessage[] = [];
 
   if (errors.some((e) => e.type === 'SIGNUP_RESTRICTED_NOT_ALLOWED')) {
     toastErrors.push({

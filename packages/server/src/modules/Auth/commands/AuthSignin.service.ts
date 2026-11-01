@@ -1,9 +1,12 @@
 import { ClsService } from 'nestjs-cls';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { SystemUser } from '@/modules/System/models/SystemUser';
+import { TenantModel } from '@/modules/System/models/TenantModel';
+import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { ModelObject } from 'objection';
 import { JwtPayload } from '../Auth.interfaces';
+import { JWT_ISSUER, JWT_AUDIENCE } from '../Auth.constants';
 import { InvalidEmailPasswordException } from '../exceptions/InvalidEmailPassword.exception';
 import { UserNotFoundException } from '../exceptions/UserNotFound.exception';
 
@@ -12,9 +15,16 @@ export class AuthSigninService {
   constructor(
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
+
+    @Inject(TenantModel.name)
+    private readonly tenantModel: typeof TenantModel,
+
+    @Inject(UserTenant.name)
+    private readonly userTenantModel: typeof UserTenant,
+
     private readonly jwtService: JwtService,
     private readonly clsService: ClsService,
-  ) { }
+  ) {}
 
   /**
    * Validates the given email and password.
@@ -33,7 +43,7 @@ export class AuthSigninService {
         .query()
         .findOne({ email })
         .throwIfNotFound();
-    } catch (err) {
+    } catch (_err) {
       throw new InvalidEmailPasswordException(email);
     }
     if (!(await user.checkPassword(password))) {
@@ -48,31 +58,87 @@ export class AuthSigninService {
    * @returns {Promise<any>}
    */
   async verifyPayload(payload: JwtPayload): Promise<any> {
+    if (payload.iss !== JWT_ISSUER || payload.aud !== JWT_AUDIENCE) {
+      throw new UnauthorizedException('Invalid token claims.');
+    }
     let user: SystemUser;
-
     try {
       user = await this.systemUserModel
         .query()
-        .findOne({ email: payload.sub })
+        .findOne({ id: Number(payload.sub) })
         .throwIfNotFound();
 
-      this.clsService.set('tenantId', user.tenantId);
       this.clsService.set('userId', user.id);
-    } catch (error) {
+    } catch (_error) {
       throw new UserNotFoundException(String(payload.sub));
     }
     return payload;
   }
 
   /**
+   * Resolves which tenant a user should sign in to:
+   *  1. Their explicit default workspace (`defaultTenantId`).
+   *  2. Their initial/legacy workspace (`tenantId`).
+   *  3. The first active workspace they have a membership in.
+   * Returns null when the user has no active workspace available.
+   */
+  async resolveSigninTenant(user: SystemUser): Promise<TenantModel | null> {
+    if (user.defaultTenantId) {
+      const tenant = await this.tryGetActiveTenantForUser(
+        user.id,
+        user.defaultTenantId,
+      );
+      if (tenant) return tenant;
+    }
+    if (user.tenantId) {
+      const tenant = await this.tryGetActiveTenantForUser(
+        user.id,
+        user.tenantId,
+      );
+      if (tenant) return tenant;
+    }
+    const memberships = await this.userTenantModel
+      .query()
+      .where('userId', user.id)
+      .withGraphFetched('tenant')
+      .orderBy('id', 'asc');
+
+    const active = memberships.find((m) => m.tenant?.isActive);
+    return active?.tenant ?? null;
+  }
+
+  /**
+   * Returns the tenant only when the user is a member and the tenant is active.
+   */
+  private async tryGetActiveTenantForUser(
+    userId: number,
+    tenantId: number,
+  ): Promise<TenantModel | null> {
+    const membership = await this.userTenantModel
+      .query()
+      .where({ userId, tenantId })
+      .withGraphFetched('tenant')
+      .first();
+
+    if (!membership?.tenant?.isActive) return null;
+    return membership.tenant;
+  }
+
+  /**
    *
    * @param {SystemUser} user
+   * @param {boolean} rememberMe - Extends the token lifetime when the user opted to stay signed in.
    * @returns {string}
    */
-  signToken(user: SystemUser): string {
+  signToken(user: SystemUser, rememberMe = false): string {
     const payload = {
-      sub: user.email,
+      sub: String(user.id),
     };
-    return this.jwtService.sign(payload);
+    const expiresIn = rememberMe ? '30d' : '1d';
+    return this.jwtService.sign(payload, {
+      expiresIn,
+      issuer: JWT_ISSUER,
+      audience: JWT_AUDIENCE,
+    });
   }
 }

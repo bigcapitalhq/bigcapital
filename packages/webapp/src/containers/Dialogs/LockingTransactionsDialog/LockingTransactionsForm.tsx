@@ -1,34 +1,33 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
-
+import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
 import '@/style/pages/TransactionsLocking/TransactionsLockingDialog.scss';
-
-import { AppToaster } from '@/components';
 import { CreateLockingTransactionsFormSchema } from './LockingTransactionsForm.schema';
-
+import { LockingTransactionsFormContent } from './LockingTransactionsFormContent';
 import { useLockingTransactionsContext } from './LockingTransactionsFormProvider';
-import LockingTransactionsFormContent from './LockingTransactionsFormContent';
-
+import type { LockingTransactionsFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { transformToCamelCase, transformToForm } from '@/utils';
 
-const defaultInitialValues = {
+const defaultInitialValues: LockingTransactionsFormValues = {
   module: '',
-  lock_to_date: moment(new Date()).format('YYYY-MM-DD'),
+  lockToDate: moment(new Date()).format('YYYY-MM-DD'),
   reason: '',
 };
+
+interface LockingTransactionsFormProps extends WithDialogActionsProps {}
 
 /**
  * Locking Transactions Form.
  */
-function LockingTransactionsForm({
-  // #withDialogActions
+function LockingTransactionsFormInner({
   closeDialog,
-}) {
+}: LockingTransactionsFormProps): React.ReactElement {
   const {
     dialogName,
     moduleName,
@@ -37,12 +36,16 @@ function LockingTransactionsForm({
     createLockingTransactionMutate,
   } = useLockingTransactionsContext();
 
-  // Initial form values.
-  const initialValues = React.useMemo(
+  // FIXME: deps array only includes `isEnabled` — ignores `transactionLocking`
+  // and `moduleName`. Preserved from the original.
+  const initialValues = React.useMemo<LockingTransactionsFormValues>(
     () => ({
       ...(isEnabled
         ? {
-            ...transformToForm(transactionLocking, defaultInitialValues),
+            ...(transformToForm(
+              transformToCamelCase(transactionLocking),
+              defaultInitialValues,
+            ) as LockingTransactionsFormValues),
             module: moduleName,
           }
         : {
@@ -54,11 +57,14 @@ function LockingTransactionsForm({
   );
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: LockingTransactionsFormValues,
+    { setSubmitting }: FormikHelpers<LockingTransactionsFormValues>,
+  ) => {
     setSubmitting(true);
 
     // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('locking_transactions.dialog.success_message'),
         intent: Intent.SUCCESS,
@@ -68,10 +74,12 @@ function LockingTransactionsForm({
 
     // Handle request response errors.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
     }) => {
+      // errors read but unused (preserved from original).
+      void errors;
       setSubmitting(false);
     };
 
@@ -87,4 +95,7 @@ function LockingTransactionsForm({
     />
   );
 }
-export default compose(withDialogActions)(LockingTransactionsForm);
+export const LockingTransactionsForm = FF.pipe(
+  LockingTransactionsFormInner,
+  withDialogActions,
+);

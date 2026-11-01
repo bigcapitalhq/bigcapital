@@ -25,10 +25,8 @@ export async function fetchVendors(
   query?: GetVendorsQuery
 ): Promise<VendorsListResponse> {
   const get = fetcher.path(VENDORS_ROUTES.LIST).method('get').create();
-  const { data } = await (get as (params: GetVendorsQuery) => Promise<{ data: VendorsListResponse }>)(
-    query ?? {}
-  );
-  return data;
+  const { data } = await get(query ?? ({} as GetVendorsQuery));
+  return data as VendorsListResponse;
 }
 
 export async function fetchVendor(fetcher: ApiFetcher, id: number): Promise<Vendor> {

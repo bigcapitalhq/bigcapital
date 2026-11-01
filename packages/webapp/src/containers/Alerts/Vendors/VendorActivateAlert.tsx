@@ -1,30 +1,39 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import { AppToaster, FormattedMessage as T } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-
+import * as FF from 'fp-ts/function';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
+import { AppToaster } from '@/components';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useActivateContact } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface VendorActivateAlertPayload {
+  vendorId?: number;
+}
 
-import { compose } from '@/utils';
+interface VendorActivateAlertProps
+  extends WithAlertActionsProps,
+    WithAlertStoreConnectProps {
+  name: string;
+}
 
 /**
  * Vendor activate alert.
  */
-function VendorActivateAlert({
+function VendorActivateAlertInner({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { vendorId },
+  payload,
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: activateContact, isLoading } = useActivateContact();
+}: VendorActivateAlertProps) {
+  const { vendorId } = (payload as VendorActivateAlertPayload) ?? {};
+  const { mutateAsync: activateContact, isPending: isLoading } =
+    useActivateContact();
 
   // Handle activate vendor alert cancel.
   const handleCancelActivateVendor = () => {
@@ -33,14 +42,16 @@ function VendorActivateAlert({
 
   // Handle confirm vendor activated.
   const handleConfirmVendorActivate = () => {
-    activateContact(vendorId)
+    activateContact(vendorId!)
       .then(() => {
         AppToaster.show({
           message: intl.get('vendor.alert.activated_message'),
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {
+        // Errors are surfaced via the alert UI; nothing to do here.
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -48,8 +59,8 @@ function VendorActivateAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('activate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelActivateVendor}
@@ -63,7 +74,8 @@ function VendorActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const VendorActivateAlert = FF.pipe(
+  VendorActivateAlertInner,
   withAlertActions,
-)(VendorActivateAlert);
+  withAlertStoreConnect(),
+);

@@ -1,21 +1,23 @@
-// @ts-nocheck
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import { Link } from 'react-router-dom';
-
-import { AppToaster as Toaster, FormattedMessage as T } from '@/components';
-import AuthInsider from '@/containers/Authentication/AuthInsider';
-import { useAuthLogin } from '@/hooks/query';
-
-import LoginForm from './LoginForm';
-import { LoginSchema, transformLoginErrorsToToasts } from './utils';
 import {
   AuthFooterLinks,
   AuthFooterLink,
   AuthInsiderCard,
 } from './_components';
 import { useAuthMetaBoot } from './AuthMetaBoot';
+import { LoginForm } from './LoginForm';
+import {
+  LoginSchema,
+  transformLoginErrorsToToasts,
+  LoginValues,
+} from './utils';
+import type { ApiError } from 'openapi-typescript-fetch';
+import { AppToaster as Toaster, FormattedMessage as T } from '@/components';
+import { AuthInsider } from '@/containers/Authentication/AuthInsider';
+import { useAuthLogin } from '@/hooks/query';
 
-const initialValues = {
+const initialValues: LoginValues = {
   crediential: '',
   password: '',
   keepLoggedIn: false,
@@ -24,16 +26,19 @@ const initialValues = {
 /**
  * Login page.
  */
-export default function Login() {
+export function Login() {
   const { mutateAsync: loginMutate } = useAuthLogin();
 
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: LoginValues,
+    { setSubmitting }: FormikHelpers<LoginValues>,
+  ) => {
     loginMutate({
       email: values.crediential,
       password: values.password,
-    }).catch(({ response }) => {
-      const { data: error } = response;
-      const toastMessages = transformLoginErrorsToToasts(error);
+      rememberMe: values.keepLoggedIn,
+    }).catch((response: ApiError) => {
+      const toastMessages = transformLoginErrorsToToasts(response.data);
 
       toastMessages.forEach((toastMessage) => {
         Toaster.show(toastMessage);

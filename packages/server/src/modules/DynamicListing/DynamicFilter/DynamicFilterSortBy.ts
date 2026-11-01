@@ -1,5 +1,6 @@
 import { FIELD_TYPE } from './constants';
 import { DynamicFilterRoleAbstractor } from './DynamicFilterRoleAbstractor';
+import { sanitizeSortDirection } from './sanitizeSortDirection';
 
 interface ISortRole {
   fieldKey: string;
@@ -67,17 +68,18 @@ export class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
   public buildQuery = () => {
     const field = this.model.getField(this.sortRole.fieldKey);
     const comparatorColumn = this.getFieldComparatorColumn(field);
+    const safeOrder = sanitizeSortDirection(this.sortRole.order);
 
     // Sort custom query.
     if (typeof field.sortCustomQuery !== 'undefined') {
       return (builder) => {
-        field.sortCustomQuery(builder, this.sortRole);
+        field.sortCustomQuery(builder, { ...this.sortRole, order: safeOrder });
       };
     }
 
     return (builder) => {
       if (this.sortRole.fieldKey) {
-        builder.orderBy(`${comparatorColumn}`, this.sortRole.order);
+        builder.orderBy(`${comparatorColumn}`, safeOrder);
       }
     };
   };

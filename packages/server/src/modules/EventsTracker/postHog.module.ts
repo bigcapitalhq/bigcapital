@@ -3,12 +3,12 @@ import { PostHog } from 'posthog-node';
 import { EventTrackerService } from './EventTracker.service';
 import { ConfigService } from '@nestjs/config';
 import { POSTHOG_PROVIDER } from './PostHog.constants';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 
 @Module({
+  imports: [TenancyModule],
   providers: [
     EventTrackerService,
-    TenancyContext,
     {
       provide: POSTHOG_PROVIDER,
       useFactory: (configService: ConfigService) => {

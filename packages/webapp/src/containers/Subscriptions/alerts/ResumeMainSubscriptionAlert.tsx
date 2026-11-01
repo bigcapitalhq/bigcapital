@@ -1,17 +1,28 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster, FormattedMessage as T } from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useResumeMainSubscription } from '@/hooks/query/subscription';
+
+/** Error shape rejected by the SDK fetcher on failed requests. */
+interface SubscriptionAlertError {
+  data: { errors: Array<{ type: string }> };
+}
+
+interface ResumeMainSubscriptionAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { module?: string };
+}
 
 /**
  * Resume Unlocking partial transactions alerts.
  */
-function ResumeMainSubscriptionAlert({
+function ResumeMainSubscriptionAlertInner({
   name,
 
   // #withAlertStoreConnect
@@ -20,8 +31,8 @@ function ResumeMainSubscriptionAlert({
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: resumeSubscription, isLoading } =
+}: ResumeMainSubscriptionAlertProps): React.ReactElement {
+  const { mutateAsync: resumeSubscription, isPending: isLoading } =
     useResumeMainSubscription();
 
   // Handle cancel.
@@ -40,13 +51,7 @@ function ResumeMainSubscriptionAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch(({ data: { errors } }: SubscriptionAlertError) => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -54,7 +59,7 @@ function ResumeMainSubscriptionAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Resume Subscription'}
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -73,7 +78,8 @@ function ResumeMainSubscriptionAlert({
   );
 }
 
-export default R.compose(
-  withAlertStoreConnect(),
+export const ResumeMainSubscriptionAlert = FF.pipe(
+  ResumeMainSubscriptionAlertInner,
   withAlertActions,
-)(ResumeMainSubscriptionAlert);
+  withAlertStoreConnect(),
+);

@@ -1,22 +1,26 @@
+import {
+  ReceiptPaperTemplate,
+  ReceiptPaperTemplateProps,
+} from '@bigcapital/pdf-templates';
 import { useFormikContext } from 'formik';
+import { initialValues } from './constants';
+import { ReceiptCustomizeFieldsContent } from './ReceiptCustomizeFieldsContent';
+import { ReceiptCustomizeGeneralField } from './ReceiptCustomizeFieldsGeneral';
+import { ReceiptBrandingState, ReceiptCustomizeValues } from './types';
+import { Box } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
+import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 import {
   ElementCustomize,
   ElementCustomizeContent,
 } from '@/containers/ElementCustomize/ElementCustomize';
-import { ReceiptCustomizeGeneralField } from './ReceiptCustomizeFieldsGeneral';
-import { ReceiptCustomizeFieldsContent } from './ReceiptCustomizeFieldsContent';
-import {
-  ReceiptPaperTemplate,
-  ReceiptPaperTemplateProps,
-} from './ReceiptPaperTemplate';
-import { EstimateBrandingState, ReceiptCustomizeValues } from './types';
-import { initialValues } from './constants';
-import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
-import { useDrawerActions } from '@/hooks/state';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
-import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
-import { Box } from '@/components';
+import {
+  paperTemplatePreviewStyle,
+  pickPaperTemplateProps,
+} from '@/containers/ElementCustomize/paperTemplatePreview';
+import { useDrawerActions } from '@/hooks/state';
 
 export function ReceiptCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -28,7 +32,7 @@ export function ReceiptCustomizeContent() {
   };
 
   return (
-    <BrandingTemplateForm<ReceiptCustomizeValues, EstimateBrandingState>
+    <BrandingTemplateForm<ReceiptCustomizeValues, ReceiptBrandingState>
       resource={'SaleReceipt'}
       templateId={templateId}
       defaultValues={initialValues}
@@ -69,10 +73,12 @@ function ReceiptPaperTemplateFormConnected() {
   const { values } = useFormikContext<ReceiptCustomizeValues>();
   const { brandingState } = useElementCustomizeContext();
 
-  const mergedProps: ReceiptPaperTemplateProps = {
-    ...brandingState,
-    ...values,
-  };
+  const mergedProps = pickPaperTemplateProps<ReceiptPaperTemplateProps>(
+    { ...brandingState, ...values },
+    initialValues,
+  );
 
-  return <ReceiptPaperTemplate {...mergedProps} />;
+  return (
+    <ReceiptPaperTemplate {...mergedProps} style={paperTemplatePreviewStyle} />
+  );
 }

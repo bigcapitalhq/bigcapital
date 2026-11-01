@@ -6,10 +6,44 @@ import {
   IsISO4217CurrencyCode,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { MONTHS } from '../Organization/constants';
 import { ACCEPTED_LOCALES, DATE_FORMATS } from '../Organization.constants';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export class OrganizationAddressDto {
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ example: '123 Main St' })
+  address1?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ example: 'Suite 100' })
+  address2?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ example: '10001' })
+  postalCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ example: 'New York' })
+  city?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ example: 'NY' })
+  stateProvince?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ example: '+1-555-123-4567' })
+  phone?: string;
+}
 
 export class BuildOrganizationDto {
   @IsString()
@@ -137,25 +171,13 @@ export class UpdateOrganizationDto {
   dateFormat?: string;
 
   @IsOptional()
+  @ValidateNested()
+  @Type(() => OrganizationAddressDto)
   @ApiPropertyOptional({
     description: 'Organization address details',
-    example: {
-      address_1: '123 Main St',
-      address_2: 'Suite 100',
-      postal_code: '10001',
-      city: 'New York',
-      stateProvince: 'NY',
-      phone: '+1-555-123-4567',
-    },
+    type: () => OrganizationAddressDto,
   })
-  address?: {
-    address_1?: string;
-    address_2?: string;
-    postal_code?: string;
-    city?: string;
-    stateProvince?: string;
-    phone?: string;
-  };
+  address?: OrganizationAddressDto;
 
   @IsOptional()
   @IsHexColor()

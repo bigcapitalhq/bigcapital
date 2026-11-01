@@ -1,9 +1,14 @@
 import { Spinner } from '@blueprintjs/core';
 import React, { createContext, useContext } from 'react';
+import type { ImportPreview } from './_types';
 import { Box } from '@/components';
 import { useImportFilePreview } from '@/hooks/query/import';
 
-interface ImportFilePreviewBootContextValue {}
+interface ImportFilePreviewBootContextValue {
+  importPreview: ImportPreview;
+  isImportPreviewLoading: boolean;
+  isImportPreviewFetching: boolean;
+}
 
 const ImportFilePreviewBootContext =
   createContext<ImportFilePreviewBootContextValue>(
@@ -41,7 +46,7 @@ export const ImportFilePreviewBootProvider = ({
   });
 
   const value = {
-    importPreview,
+    importPreview: importPreview as ImportPreview,
     isImportPreviewLoading,
     isImportPreviewFetching,
   };

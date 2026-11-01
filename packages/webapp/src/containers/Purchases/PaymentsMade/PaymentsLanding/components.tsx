@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import {
   Intent,
   Button,
@@ -10,26 +7,40 @@ import {
   MenuDivider,
   Position,
 } from '@blueprintjs/core';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { BillPaymentsListResponse } from '@bigcapital/sdk-ts';
 import { Icon, Money, Can } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
-
 import { safeCallback } from '@/utils';
 
-export function AmountAccessor(row) {
-  return <Money amount={row.amount} currency={row.currency_code} />;
+export type PaymentMadeTableRow = NonNullable<
+  BillPaymentsListResponse['data']
+>[number];
+
+export function AmountAccessor(row: PaymentMadeTableRow) {
+  return <Money amount={row.amount} currency={row.currencyCode} />;
 }
 
-/**
- * Actions menu.
- */
+interface PaymentMadeActionsPayload {
+  onEdit: (paymentMade: PaymentMadeTableRow) => void;
+  onDelete: (paymentMade: PaymentMadeTableRow) => void;
+  onViewDetails: (paymentMade: PaymentMadeTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: PaymentMadeTableRow };
+  payload: PaymentMadeActionsPayload;
+}
+
 export function ActionsMenu({
   row: { original },
   payload: { onEdit, onDelete, onViewDetails },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
-    <MenuItem
+      <MenuItem
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, original)}
@@ -56,10 +67,13 @@ export function ActionsMenu({
   );
 }
 
-/**
- * Payment mades table actions cell.
- */
-export function ActionsCell(props) {
+interface ActionsCellProps {
+  row: { original: PaymentMadeTableRow };
+  payload: PaymentMadeActionsPayload;
+  [key: string]: any;
+}
+
+export function ActionsCell(props: ActionsCellProps) {
   return (
     <Popover
       content={<ActionsMenu {...props} />}
@@ -70,64 +84,62 @@ export function ActionsCell(props) {
   );
 }
 
-/**
- * Retrieve payment mades table columns.
- */
-export function usePaymentMadesTableColumns() {
+export function usePaymentMadesTableColumns(): DataTableColumn<PaymentMadeTableRow>[] {
   return React.useMemo(
-    () => [
-      {
-        id: 'payment_date',
-        Header: intl.get('payment_date'),
-        accessor: 'formatted_payment_date',
-        width: 140,
-        className: 'payment_date',
-        clickable: true,
-      },
-      {
-        id: 'vendor',
-        Header: intl.get('vendor_name'),
-        accessor: 'vendor.display_name',
-        width: 140,
-        className: 'vendor_id',
-        clickable: true,
-      },
-      {
-        id: 'payment_number',
-        Header: intl.get('payment_number'),
-        accessor: (row) =>
-          row.payment_number ? `${row.payment_number}` : null,
-        width: 140,
-        className: 'payment_number',
-        clickable: true,
-      },
-      {
-        id: 'payment_account',
-        Header: intl.get('payment_account'),
-        accessor: 'payment_account.name',
-        width: 140,
-        className: 'payment_account_id',
-        clickable: true,
-      },
-      {
-        id: 'amount',
-        Header: intl.get('amount'),
-        accessor: AmountAccessor,
-        width: 140,
-        className: 'amount',
-        align: 'right',
-        clickable: true,
-        money: true,
-      },
-      {
-        id: 'reference_no',
-        Header: intl.get('reference'),
-        accessor: 'reference',
-        width: 140,
-        className: 'reference',
-        clickable: true,
-      },
-    ],
+    () =>
+      [
+        {
+          id: 'payment_date',
+          Header: intl.get('payment_date'),
+          accessor: 'formattedPaymentDate',
+          width: 140,
+          className: 'payment_date',
+          clickable: true,
+        },
+        {
+          id: 'vendor',
+          Header: intl.get('vendor_name'),
+          accessor: 'vendor.displayName',
+          width: 140,
+          className: 'vendor_id',
+          clickable: true,
+        },
+        {
+          id: 'payment_number',
+          Header: intl.get('payment_number'),
+          accessor: (row: PaymentMadeTableRow) =>
+            row.paymentNumber ? `${row.paymentNumber}` : null,
+          width: 140,
+          className: 'payment_number',
+          clickable: true,
+        },
+        {
+          id: 'payment_account',
+          Header: intl.get('payment_account'),
+          accessor: 'paymentAccount.name',
+          width: 140,
+          className: 'payment_account_id',
+          clickable: true,
+        },
+        {
+          id: 'amount',
+          Header: intl.get('amount'),
+          accessor: AmountAccessor,
+          width: 140,
+          className: 'amount',
+          align: 'right',
+          clickable: true,
+          money: true,
+        },
+        {
+          id: 'reference_no',
+          Header: intl.get('reference'),
+          accessor: 'reference',
+          width: 140,
+          className: 'reference',
+          clickable: true,
+        },
+      ] as DataTableColumn<PaymentMadeTableRow>[],
     [],
   );
 }

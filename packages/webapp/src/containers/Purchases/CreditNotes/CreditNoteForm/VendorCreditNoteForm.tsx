@@ -1,52 +1,41 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Formik, Form, FormikHelpers } from 'formik';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { Formik, Form } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { isEmpty } from 'lodash';
-import { CLASSES } from '@/constants/classes';
-import { css } from '@emotion/css';
-import { PageForm } from '@/components/PageForm';
+import {
+  defaultVendorCredit,
+  filterNonZeroEntries,
+  transformToEditForm,
+  transformFormValuesToRequest,
+  type VendorCreditFormValues,
+} from './utils';
+import { VendorCreditNoteFloatingActions } from './VendorCreditNoteFloatingActions';
 import {
   CreateCreditNoteFormSchema,
   EditCreditNoteFormSchema,
 } from './VendorCreditNoteForm.schema';
-
-import VendorCreditNoteFormHeader from './VendorCreditNoteFormHeader';
-import VendorCreditNoteItemsEntriesEditor from './VendorCreditNoteItemsEntriesEditor';
-import VendorCreditNoteFormFooter from './VendorCreditNoteFormFooter';
-import VendorCreditNoteFloatingActions from './VendorCreditNoteFloatingActions';
-import VendorCreditNoteFormDialogs from './VendorCreditNoteFormDialogs';
-import VendorCreditNoteFormTopBar from './VendorCreditNoteFormTopBar';
-
+import { VendorCreditNoteFormDialogs } from './VendorCreditNoteFormDialogs';
+import { VendorCreditNoteFormFooter } from './VendorCreditNoteFormFooter';
+import { VendorCreditNoteFormHeader } from './VendorCreditNoteFormHeader';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
-
+import { VendorCreditNoteFormTopBar } from './VendorCreditNoteFormTopBar';
+import { VendorCreditNoteItemsEntriesEditor } from './VendorCreditNoteItemsEntriesEditor';
 import { AppToaster, Box } from '@/components';
-import { compose, safeSumBy, transactionNumber } from '@/utils';
-import {
-  defaultVendorsCreditNote,
-  filterNonZeroEntries,
-  transformToEditForm,
-  transformFormValuesToRequest,
-} from './utils';
+import { PageForm } from '@/components/PageForm';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { safeSumBy, transactionNumber } from '@/utils';
 
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+interface VendorCreditNoteFormInnerProps {}
 
 /**
  * Vendor Credit note form.
  */
-function VendorCreditNoteForm({
-  // #withSettings
-  vendorcreditAutoIncrement,
-  vendorcreditNumberPrefix,
-  vendorcreditNextNumber,
+function VendorCreditNoteFormInner({}: VendorCreditNoteFormInnerProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
   const history = useHistory();
 
   // Vendor Credit note form context.
@@ -57,7 +46,18 @@ function VendorCreditNoteForm({
     newVendorCredit,
     createVendorCreditMutate,
     editVendorCreditMutate,
+    vendorCreditSettings,
   } = useVendorCreditNoteFormContext();
+
+  const vendorcreditAutoIncrement = vendorCreditSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const vendorcreditNextNumber = vendorCreditSettings?.nextNumber as
+    | number
+    | undefined;
+  const vendorcreditNumberPrefix = vendorCreditSettings?.numberPrefix as
+    | string
+    | undefined;
 
   // Credit number.
   const vendorCreditNumber = transactionNumber(
@@ -66,28 +66,24 @@ function VendorCreditNoteForm({
   );
 
   // Initial values.
-  const initialValues = React.useMemo(
-    () => ({
-      ...(!isEmpty(vendorCredit)
-        ? {
-          ...transformToEditForm(vendorCredit),
-        }
-        : {
-          ...defaultVendorsCreditNote,
-          ...(vendorcreditAutoIncrement && {
-            vendor_credit_number: vendorCreditNumber,
-          }),
-          currency_code: base_currency,
-          ...newVendorCredit,
-        }),
-    }),
-    [vendorCredit, base_currency],
-  );
+  const initialValues: VendorCreditFormValues = React.useMemo(() => {
+    if (!isEmpty(vendorCredit)) {
+      return transformToEditForm(vendorCredit);
+    }
+    return {
+      ...defaultVendorCredit,
+      ...(vendorcreditAutoIncrement && {
+        vendorCreditNumber,
+      }),
+      currencyCode: baseCurrency ?? '',
+      ...(Array.isArray(newVendorCredit) ? {} : newVendorCredit),
+    };
+  }, [vendorCredit, baseCurrency]);
 
   // Handles form submit.
   const handleFormSubmit = (
-    values,
-    { setSubmitting, setErrors, resetForm },
+    values: VendorCreditFormValues,
+    { setSubmitting, resetForm }: FormikHelpers<VendorCreditFormValues>,
   ) => {
     const entries = filterNonZeroEntries(values.entries);
     const totalQuantity = safeSumBy(entries, 'quantity');
@@ -102,10 +98,10 @@ function VendorCreditNoteForm({
     }
     const form = {
       ...transformFormValuesToRequest(values),
-      open: submitPayload.open,
+      open: submitPayload?.open ?? false,
     };
     // Handle the request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -116,24 +112,20 @@ function VendorCreditNoteForm({
       });
       setSubmitting(false);
 
-      if (submitPayload.redirect) {
+      if (submitPayload?.redirect) {
         history.push('/vendor-credits');
       }
-      if (submitPayload.resetForm) {
+      if (submitPayload?.resetForm) {
         resetForm();
       }
     };
     // Handle the request error.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = () => {
       setSubmitting(false);
     };
     if (isNewMode) {
       createVendorCreditMutate(form).then(onSuccess).catch(onError);
-    } else {
+    } else if (vendorCredit) {
       editVendorCreditMutate([vendorCredit.id, form])
         .then(onSuccess)
         .catch(onError);
@@ -141,7 +133,7 @@ function VendorCreditNoteForm({
   };
 
   return (
-    <Formik
+    <Formik<VendorCreditFormValues>
       validationSchema={
         isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
       }
@@ -180,11 +172,4 @@ function VendorCreditNoteForm({
   );
 }
 
-export default compose(
-  withSettings(({ vendorsCreditNoteSetting }) => ({
-    vendorcreditAutoIncrement: vendorsCreditNoteSetting?.autoIncrement,
-    vendorcreditNextNumber: vendorsCreditNoteSetting?.nextNumber,
-    vendorcreditNumberPrefix: vendorsCreditNoteSetting?.numberPrefix,
-  })),
-  withCurrentOrganization(),
-)(VendorCreditNoteForm);
+export const VendorCreditNoteForm = VendorCreditNoteFormInner;

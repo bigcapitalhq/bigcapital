@@ -10,7 +10,7 @@ export class ItemReceiptTransactionTransformer extends Transformer {
       'formattedAmount',
       'formattedReceiptDate',
       'formattedRate',
-      'formattedCost',
+      'formattedQuantity',
     ];
   };
 

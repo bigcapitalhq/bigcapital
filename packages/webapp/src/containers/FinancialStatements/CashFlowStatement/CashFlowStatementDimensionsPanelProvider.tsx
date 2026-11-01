@@ -1,29 +1,38 @@
-// @ts-nocheck
 import React from 'react';
+import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { Features } from '@/constants';
 import { useBranches } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
-const CashFlowStatementDimensionsPanelContext = React.createContext();
+type UseBranchesResult = ReturnType<typeof useBranches>;
 
-/**
- * cash flow statement dimensions panel provider.
- * @returns
- */
-function CashFlowStatementDimensionsPanelProvider({ query, ...props }) {
-  // Features guard.
+type CashFlowStatementDimensionsPanelContextValue = {
+  branches: UseBranchesResult['data'];
+  isBranchesLoading: boolean;
+};
+
+type CashFlowStatementDimensionsPanelProviderProps = {
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+};
+
+const CashFlowStatementDimensionsPanelContext = React.createContext<
+  CashFlowStatementDimensionsPanelContextValue | undefined
+>(undefined);
+
+function CashFlowStatementDimensionsPanelProvider({
+  query,
+  ...props
+}: CashFlowStatementDimensionsPanelProviderProps) {
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
-  // Fetches the branches list.
   const { isLoading: isBranchesLoading, data: branches } = useBranches(query, {
     enabled: isBranchFeatureCan,
-    keepPreviousData: true,
+    placeholderData: (prev) => prev,
   });
 
-  // Provider
-  const provider = {
+  const provider: CashFlowStatementDimensionsPanelContextValue = {
     branches,
     isBranchesLoading,
   };
@@ -37,8 +46,16 @@ function CashFlowStatementDimensionsPanelProvider({ query, ...props }) {
   );
 }
 
-const useCashFlowStatementDimensionsPanelContext = () =>
-  React.useContext(CashFlowStatementDimensionsPanelContext);
+const useCashFlowStatementDimensionsPanelContext =
+  (): CashFlowStatementDimensionsPanelContextValue => {
+    const ctx = React.useContext(CashFlowStatementDimensionsPanelContext);
+    if (!ctx) {
+      throw new Error(
+        'useCashFlowStatementDimensionsPanelContext must be used within CashFlowStatementDimensionsPanelProvider',
+      );
+    }
+    return ctx;
+  };
 
 export {
   CashFlowStatementDimensionsPanelProvider,

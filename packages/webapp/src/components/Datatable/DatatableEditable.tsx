@@ -1,18 +1,20 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
 import { DataTable } from './DataTable';
+import type { DataTableProps } from './types';
 
-/**
- * Editable datatable.
- */
+interface DataTableEditableProps extends DataTableProps {
+  totalRow?: boolean;
+  actions?: React.ReactNode;
+  name?: string;
+}
+
 export function DataTableEditable({
   totalRow = false,
   actions,
   name,
   ...tableProps
-}) {
+}: DataTableEditableProps) {
   return (
     <DatatableEditableRoot>
       <DataTable {...tableProps} />

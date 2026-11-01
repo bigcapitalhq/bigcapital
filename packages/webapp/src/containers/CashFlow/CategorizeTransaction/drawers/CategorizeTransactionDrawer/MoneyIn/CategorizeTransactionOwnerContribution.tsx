@@ -1,5 +1,7 @@
-// @ts-nocheck
 import { Position } from '@blueprintjs/core';
+import React from 'react';
+import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
+import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 import {
   AccountsSelect,
   FDateInput,
@@ -8,20 +10,22 @@ import {
   FTextArea,
   Icon,
 } from '@/components';
-import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
-import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
+import { useDateInputFormatter } from '@/hooks';
 
-export default function CategorizeTransactionOwnerContribution() {
+export function CategorizeTransactionOwnerContribution() {
   const { accounts } = useCategorizeTransactionBoot();
+  const dateInputFormatter = useDateInputFormatter();
 
+  if (!accounts) {
+    return null;
+  }
   return (
     <>
       <FFormGroup name={'date'} label={'Date'} fastField inline>
         <FDateInput
           name={'date'}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
         />
       </FFormGroup>
@@ -59,7 +63,7 @@ export default function CategorizeTransactionOwnerContribution() {
       </FFormGroup>
 
       <FFormGroup name={'referenceNo'} label={'Reference No.'} fastField inline>
-        <FInputGroup name={'reference_no'} fill />
+        <FInputGroup name={'referenceNo'} fill />
       </FFormGroup>
 
       <FFormGroup name={'description'} label={'Description'} fastField inline>

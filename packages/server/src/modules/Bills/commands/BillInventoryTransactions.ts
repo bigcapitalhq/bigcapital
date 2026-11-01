@@ -1,10 +1,10 @@
-// @ts-nocheck
 import { Knex } from 'knex';
 import { Bill } from '../models/Bill';
 import { Inject, Injectable } from '@nestjs/common';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { IInventoryTransactionFromItemsEntries } from '@/modules/InventoryCost/types/InventoryCost.types';
 
 @Injectable()
 export class BillInventoryTransactions {
@@ -26,17 +26,16 @@ export class BillInventoryTransactions {
     override?: boolean,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    // Retireve bill with assocaited entries and allocated cost entries.
-
+    // Retireve bill with assocaited entries.
     const bill = await this.bill()
       .query(trx)
       .findById(billId)
-      .withGraphFetched('entries.allocatedCostEntries');
+      .withGraphFetched('entries');
 
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(bill.entries);
-    const transaction = {
+    const transaction: IInventoryTransactionFromItemsEntries = {
       transactionId: bill.id,
       transactionType: 'Bill',
       exchangeRate: bill.exchangeRate,

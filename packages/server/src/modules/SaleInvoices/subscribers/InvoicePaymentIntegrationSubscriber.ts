@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { PaymentIntegrationTransactionLinkDeleteEventPayload } from '../SaleInvoice.types';
 import { PaymentIntegrationTransactionLinkEventPayload } from '../SaleInvoice.types';
-import { PaymentIntegrationTransactionLink } from '../SaleInvoice.types';
 import { omit } from 'lodash';
 import {
   ISaleInvoiceCreatedPayload,
@@ -23,7 +22,7 @@ export class InvoicePaymentIntegrationSubscriber {
    */
   @OnEvent(events.saleInvoice.onCreated)
   public handleCreatePaymentIntegrationEvents({
-    saleInvoiceDTO,
+    saleInvoiceDTO: _saleInvoiceDTO,
     saleInvoice,
     trx,
   }: ISaleInvoiceCreatedPayload) {
@@ -32,14 +31,14 @@ export class InvoicePaymentIntegrationSubscriber {
 
     paymentMethods.map(
       async (paymentMethod: TransactionPaymentServiceEntry) => {
-        const payload = {
+        const payload: PaymentIntegrationTransactionLinkEventPayload = {
           ...omit(paymentMethod, ['id']),
           saleInvoiceId: saleInvoice.id,
           trx,
         };
         await this.eventPublisher.emitAsync(
           events.paymentIntegrationLink.onPaymentIntegrationLink,
-          payload as PaymentIntegrationTransactionLinkEventPayload,
+          payload,
         );
       },
     );
@@ -59,11 +58,11 @@ export class InvoicePaymentIntegrationSubscriber {
 
     paymentMethods.map(
       async (paymentMethod: TransactionPaymentServiceEntry) => {
-        const payload = {
+        const payload: PaymentIntegrationTransactionLinkDeleteEventPayload = {
           ...omit(paymentMethod, ['id']),
           oldSaleInvoiceId: oldSaleInvoice.id,
           trx,
-        } as PaymentIntegrationTransactionLinkDeleteEventPayload;
+        };
 
         // Triggers `onPaymentIntegrationDeleteLink` event.
         await this.eventPublisher.emitAsync(

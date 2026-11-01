@@ -24,8 +24,6 @@ export class View extends BaseModel {
   }
 
   static get modifiers() {
-    const TABLE_NAME = View.tableName;
-
     return {
       allMetadata(query) {
         query.withGraphFetched('roles.field');

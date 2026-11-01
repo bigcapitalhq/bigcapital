@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
+import intl from 'react-intl-universal';
 import { FSelect, FFormGroup, FSwitch } from '@/components';
-import { FormattedMessage as T } from '@/components';
 import {
   moneyFormat,
   negativeFormat,
@@ -15,7 +15,7 @@ export default function NumberFormatFields() {
   return (
     <div className={'number-format-dropdown__content'}>
       {/*------------ Negative formats -----------*/}
-      <FFormGroup name={'negativeFormat'} label={<T id={'negative_format'} />}>
+      <FFormGroup name={'negativeFormat'} label={intl.get('negative_format')}>
         <FSelect
           name={'negativeFormat'}
           items={negativeFormat}
@@ -27,7 +27,7 @@ export default function NumberFormatFields() {
       </FFormGroup>
 
       {/*------------ Decimal places -----------*/}
-      <FFormGroup name={'precision'} label={<T id={'decimal_places'} />}>
+      <FFormGroup name={'precision'} label={intl.get('decimal_places')}>
         <FSelect
           name={'precision'}
           items={decimalPlaces}
@@ -39,7 +39,7 @@ export default function NumberFormatFields() {
       </FFormGroup>
 
       {/*------------ Money formats -----------*/}
-      <FFormGroup name={'formatMoney'} label={<T id={'money_format'} />}>
+      <FFormGroup name={'formatMoney'} label={intl.get('money_format')}>
         <FSelect
           name={'formatMoney'}
           items={moneyFormat}
@@ -57,7 +57,7 @@ export default function NumberFormatFields() {
             name={'showZero'}
             inline={true}
             small={true}
-            label={<T id={'show_zero'} />}
+            label={intl.get('show_zero')}
           />
         </FFormGroup>
 
@@ -66,7 +66,7 @@ export default function NumberFormatFields() {
           <FSwitch
             name={'showInRed'}
             inline={true}
-            label={<T id={'show_negative_in_red'} />}
+            label={intl.get('show_negative_in_red')}
           />
         </FFormGroup>
 
@@ -75,7 +75,7 @@ export default function NumberFormatFields() {
           <FSwitch
             name={'divideOn1000'}
             inline={true}
-            label={<T id={'divide_on_1000'} />}
+            label={intl.get('divide_on_1000')}
           />
         </FFormGroup>
       </div>

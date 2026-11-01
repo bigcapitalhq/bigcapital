@@ -104,7 +104,10 @@ export class Notification extends TenantBaseModel {
         title: { type: 'string', minLength: 1, maxLength: 255 },
         message: { type: 'string', minLength: 1 },
         type: { type: 'string', enum: ['success', 'info', 'warning', 'error'] },
-        category: { type: 'string', enum: ['inventory', 'billing', 'system', 'export', 'report'] },
+        category: {
+          type: 'string',
+          enum: ['inventory', 'billing', 'system', 'export', 'report'],
+        },
         metadata: { type: ['object', 'null'] },
         readAt: { type: ['string', 'null'], format: 'date-time' },
         createdAt: { type: 'string', format: 'date-time' },

@@ -17,14 +17,14 @@ export interface StackProps
 export function Stack({
   spacing = 20,
   align = 'stretch',
-  justify = 'top',
+  justify = 'flex-start',
   ...restProps
 }: StackProps) {
   return (
     <x.div
       display={'flex'}
       flexDirection="column"
-      justifyContent="justify"
+      justifyContent={justify}
       gap={`${spacing}px`}
       alignItems={align}
       {...restProps}

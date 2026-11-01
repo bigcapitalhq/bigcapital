@@ -1,7 +1,7 @@
-import { css } from '@emotion/css';
 import { Tabs, TabsProps } from '@blueprintjs/core';
+import { css } from '@emotion/css';
 
-interface InvoiceCustomizeTabsProps extends TabsProps { }
+interface InvoiceCustomizeTabsProps extends TabsProps {}
 
 export function InvoiceCustomizeTabs(props: InvoiceCustomizeTabsProps) {
   return (
@@ -26,7 +26,7 @@ export function InvoiceCustomizeTabs(props: InvoiceCustomizeTabsProps) {
         .bp4-tab-indicator-wrapper .bp4-tab-indicator {
           height: 2px;
         }
-        .bp4-tab-panel{
+        .bp4-tab-panel {
           margin: 0;
           overflow: auto;
         }

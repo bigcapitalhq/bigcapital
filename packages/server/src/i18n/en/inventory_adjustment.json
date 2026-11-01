@@ -1,4 +1,15 @@
 {
   "decrement": "Decrement",
-  "increment": "Increment"
+  "increment": "Increment",
+
+  "field.date": "Adjustment Date",
+  "field.type": "Adjustment Type",
+  "field.type.increment": "Increment",
+  "field.type.decrement": "Decrement",
+  "field.adjustment_account": "Adjustment Account",
+  "field.reason": "Reason",
+  "field.reference_no": "Reference No.",
+  "field.description": "Description",
+  "field.published_at": "Published At",
+  "field.created_at": "Created At"
 }

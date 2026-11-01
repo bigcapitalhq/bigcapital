@@ -1,33 +1,50 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteVendors } from '@/hooks/query/vendors';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithVendorsActionsProps } from '@/containers/Vendors/VendorsLanding/withVendorsActions';
+import { FormattedMessage as T, AppToaster } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withVendorsActions } from '@/containers/Vendors/VendorsLanding/withVendorsActions';
-import { compose } from '@/utils';
+import { useBulkDeleteVendors } from '@/hooks/query/vendors';
 
-function VendorBulkDeleteDialog({
+interface VendorBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface VendorBulkDeleteDialogProps
+  extends WithVendorsActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
+function VendorBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withVendorsActions
+  resetVendorsSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: VendorBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: VendorBulkDeleteDialogPayload = payload;
 
-  // #withVendorsActions
-  setVendorsSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteVendors, isLoading } = useBulkDeleteVendors();
+  const { mutateAsync: bulkDeleteVendors, isPending: isLoading } =
+    useBulkDeleteVendors();
 
   const handleCancel = () => {
     closeDialog(dialogName);
@@ -43,7 +60,7 @@ function VendorBulkDeleteDialog({
           message: intl.get('the_vendors_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setVendorsSelectedRows([]);
+        resetVendorsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -95,9 +112,9 @@ function VendorBulkDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
+export const VendorBulkDeleteDialog = FF.pipe(
+  VendorBulkDeleteDialogInner,
   withVendorsActions,
-)(VendorBulkDeleteDialog);
-
+  withDialogActions,
+  withDialogRedux(),
+);

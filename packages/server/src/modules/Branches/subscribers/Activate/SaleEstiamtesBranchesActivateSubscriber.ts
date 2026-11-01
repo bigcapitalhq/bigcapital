@@ -7,8 +7,8 @@ import { SaleEstimateActivateBranches } from '../../integrations/Sales/SaleEstim
 @Injectable()
 export class SaleEstimatesActivateBranchesSubscriber {
   constructor(
-      private readonly estimatesActivateBranches: SaleEstimateActivateBranches,
-    ) {}
+    private readonly estimatesActivateBranches: SaleEstimateActivateBranches,
+  ) {}
 
   /**
    * Updates accounts transactions with the primary branch once
@@ -22,7 +22,7 @@ export class SaleEstimatesActivateBranchesSubscriber {
   }: IBranchesActivatedPayload) {
     await this.estimatesActivateBranches.updateEstimatesWithBranch(
       primaryBranch.id,
-      trx
+      trx,
     );
-  };
+  }
 }

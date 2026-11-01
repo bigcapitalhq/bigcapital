@@ -15,6 +15,26 @@ export const BANKING_ACCOUNTS_ROUTES = {
 
 export type BankingAccountsListResponse = OpResponseBody<OpForPath<typeof BANKING_ACCOUNTS_ROUTES.LIST, 'get'>>;
 
+/** Query params for GET /api/banking/accounts. */
+export type GetBankingAccountsQuery = OpQueryParams<
+  OpForPath<typeof BANKING_ACCOUNTS_ROUTES.LIST, 'get'>
+>;
+
+/** List row for GET /api/banking/transactions. */
+export type BankingTransactionResponse = NonNullable<
+  OpResponseBody<OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTIONS, 'get'>>['data']
+>[number];
+
+/** Response for GET /api/banking/transactions/{id}. */
+export type BankingTransactionDetailResponse = OpResponseBody<
+  OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTION_BY_ID, 'get'>
+>;
+
+/** Response for GET /api/banking/uncategorized/{uncategorizedTransactionId}. */
+export type UncategorizedTransactionResponse = OpResponseBody<
+  OpForPath<typeof BANKING_ACCOUNTS_ROUTES.UNCATEGORIZED_BY_ID, 'get'>
+>;
+
 /** Bank account summary response (schema does not define response body). */
 export interface BankingAccountSummaryResponse {
   name: string;
@@ -22,9 +42,12 @@ export interface BankingAccountSummaryResponse {
   totalRecognizedTransactions: number;
 }
 
-export async function fetchBankingAccounts(fetcher: ApiFetcher): Promise<BankingAccountsListResponse> {
+export async function fetchBankingAccounts(
+  fetcher: ApiFetcher,
+  query?: GetBankingAccountsQuery,
+): Promise<BankingAccountsListResponse> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await get(query ?? {});
   return data;
 }
 
@@ -74,7 +97,7 @@ export async function fetchBankingTransactions(
 export async function getBankingTransaction(
   fetcher: ApiFetcher,
   id: string | number
-): Promise<unknown> {
+): Promise<BankingTransactionDetailResponse> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.TRANSACTION_BY_ID).method('get').create();
   const { data } = await get({ id: String(id) });
   return data;
@@ -112,7 +135,7 @@ export async function fetchUncategorizedTransactions(
 export async function getUncategorizedTransaction(
   fetcher: ApiFetcher,
   uncategorizedTransactionId: number
-): Promise<unknown> {
+): Promise<UncategorizedTransactionResponse> {
   const get = fetcher
     .path(BANKING_ACCOUNTS_ROUTES.UNCATEGORIZED_BY_ID)
     .method('get')
@@ -121,7 +144,8 @@ export async function getUncategorizedTransaction(
   return data;
 }
 
-export async function categorizeTransaction(
+/** Categorize multiple transactions at once (bulk operation). */
+export async function categorizeTransactionsBulk(
   fetcher: ApiFetcher,
   body: CategorizeTransactionBody
 ): Promise<void> {
@@ -135,4 +159,58 @@ export async function uncategorizeTransaction(
 ): Promise<void> {
   const del = fetcher.path(BANKING_ACCOUNTS_ROUTES.UNCATEGORIZE).method('delete').create();
   await del({ id });
+}
+
+// ============================================
+// Cashflow-named aliases for backward compatibility
+// ============================================
+
+/** Type aliases for cashflow naming convention */
+export type CreateCashflowTransactionBody = CreateBankingTransactionBody;
+export type CashflowAccountTransactionsQuery = GetBankingTransactionsQuery;
+export type CashflowAccountUncategorizedTransactionsQuery = GetUncategorizedTransactionsQuery;
+
+/** Fetch cashflow accounts (alias for fetchBankingAccounts). */
+export async function fetchCashflowAccounts(
+  fetcher: ApiFetcher,
+  query?: GetBankingAccountsQuery,
+): Promise<BankingAccountsListResponse> {
+  return fetchBankingAccounts(fetcher, query);
+}
+
+/** Create a cashflow transaction (alias for createBankingTransaction). */
+export const createCashflowTransaction = createBankingTransaction;
+
+/** Fetch a single cashflow transaction (alias for getBankingTransaction). */
+export const fetchCashflowTransaction = getBankingTransaction;
+
+/** Delete a cashflow transaction (alias for deleteBankingTransaction). */
+export const deleteCashflowTransaction = deleteBankingTransaction;
+
+/** Fetch account transactions with accountId included in query (wrapper for fetchBankingTransactions). */
+export async function fetchAccountTransactionsInfinity(
+  fetcher: ApiFetcher,
+  accountId: number,
+  query: GetBankingTransactionsQuery
+): Promise<BankingTransactionsListResponse & { pagination?: { nextPage?: number } }> {
+  const result = await fetchBankingTransactions(fetcher, { ...query, accountId });
+  return result as BankingTransactionsListResponse & { pagination?: { nextPage?: number } };
+}
+
+/** Fetch uncategorized transactions for an account (alias for fetchUncategorizedTransactions). */
+export const fetchAccountUncategorizedTransactions = fetchUncategorizedTransactions;
+
+/** Fetch a single uncategorized transaction (alias for getUncategorizedTransaction). */
+export const fetchUncategorizedTransaction = getUncategorizedTransaction;
+
+/** Categorize a single transaction by ID. */
+export async function categorizeTransaction(
+  fetcher: ApiFetcher,
+  id: number,
+  values: Omit<CategorizeTransactionBody, 'uncategorizedTransactionIds'>
+): Promise<void> {
+  return categorizeTransactionsBulk(fetcher, {
+    ...values,
+    uncategorizedTransactionIds: [id],
+  } as CategorizeTransactionBody);
 }

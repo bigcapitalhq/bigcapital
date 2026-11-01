@@ -5,7 +5,7 @@ import { DataTable } from '../Datatable';
 export const CommercialDocBox = styled(Card)`
   --x-background-color: var(--x-white);
   --x-background-color: var(--color-dark-gray2);
-  
+
   background-color: var(--x-background-color);
   padding: 22px 20px;
 `;

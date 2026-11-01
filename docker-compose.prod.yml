@@ -22,6 +22,8 @@ services:
     container_name: bigcapital-webapp
     image: bigcapitalhq/webapp:latest
     restart: on-failure
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - bigcapital_network
 
@@ -36,7 +38,10 @@ services:
     depends_on:
       - mysql
       - redis
+      - garage
     restart: on-failure
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - bigcapital_network
     environment:
@@ -67,8 +72,16 @@ services:
       # Tenants databases
       - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
 
+      # ClickHouse analytics store
+      - CLICKHOUSE_ENABLED=${CLICKHOUSE_ENABLED:-false}
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD is required in .env - generate one with openssl rand -base64 32}
+      - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE:-bigcapital_analytics}
+
       # Authentication
-      - JWT_SECRET=${JWT_SECRET}
+      - 'APP_JWT_SECRET=${APP_JWT_SECRET:?APP_JWT_SECRET is required in .env - generate one with openssl rand -base64 48}'
 
       # Application
       - BASE_URL=${BASE_URL}
@@ -87,7 +100,7 @@ services:
 
       # Exchange Rate
       - EXCHANGE_RATE_SERVICE=${EXCHANGE_RATE_SERVICE}
-      - OPEN_EXCHANGE_RATE_APP_ID-${OPEN_EXCHANGE_RATE_APP_ID}
+      - OPEN_EXCHANGE_RATE_APP_ID=${OPEN_EXCHANGE_RATE_APP_ID}
 
       # Bank Sync
       - BANK_FEED_ENABLED=${BANK_FEED_ENABLED}
@@ -97,6 +110,7 @@ services:
       - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
       - PLAID_SECRET=${PLAID_SECRET}
       - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
+      - PLAID_CLIENT_NAME=${PLAID_CLIENT_NAME}
 
       # Lemon Squeez
       - LEMONSQUEEZY_API_KEY=${LEMONSQUEEZY_API_KEY}
@@ -119,6 +133,7 @@ services:
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_BUCKET=${S3_BUCKET}
+      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE}
 
       # Stripe
       - STRIPE_PAYMENT_SECRET_KEY=${STRIPE_PAYMENT_SECRET_KEY}
@@ -126,6 +141,12 @@ services:
       - STRIPE_PAYMENT_CLIENT_ID=${STRIPE_PAYMENT_CLIENT_ID}
       - STRIPE_PAYMENT_WEBHOOKS_SECRET=${STRIPE_PAYMENT_WEBHOOKS_SECRET}
       - STRIPE_PAYMENT_REDIRECT_URL=${STRIPE_PAYMENT_REDIRECT_URL}
+
+      # API rate limiting (see .env.example)
+      - THROTTLE_GLOBAL_TTL=${THROTTLE_GLOBAL_TTL}
+      - THROTTLE_GLOBAL_LIMIT=${THROTTLE_GLOBAL_LIMIT}
+      - THROTTLE_AUTH_TTL=${THROTTLE_AUTH_TTL}
+      - THROTTLE_AUTH_LIMIT=${THROTTLE_AUTH_LIMIT}
 
   database_migration:
     container_name: bigcapital-database-migration
@@ -182,6 +203,52 @@ services:
     networks:
       - bigcapital_network
 
+  garage:
+    container_name: bigcapital-garage
+    image: dxflrs/garage:v1.3.1
+    restart: on-failure
+    environment:
+      - GARAGE_CONFIG_FILE=/etc/garage.toml
+      - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
+      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
+    volumes:
+      - ./docker/garage/garage.toml:/etc/garage.toml
+      - ./docker/garage/setup.sh:/garage-setup/setup.sh
+      - garage:/var/lib/garage
+    expose:
+      - '3900'
+      - '3903'
+    networks:
+      - bigcapital_network
+
+  clickhouse:
+    container_name: bigcapital-clickhouse
+    image: clickhouse/clickhouse-server:24.8
+    restart: on-failure
+    environment:
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD is required in .env - generate one with openssl rand -base64 32}
+      - CLICKHOUSE_DB=${CLICKHOUSE_DATABASE:-bigcapital_analytics}
+    expose:
+      - '8123'
+    volumes:
+      - clickhouse:/var/lib/clickhouse
+    networks:
+      - bigcapital_network
+
+  # Auto-updates the containers labelled "com.centurylinklabs.watchtower.enable=true"
+  # (webapp and server) by polling the registry for newer :latest images.
+  # Everything else (mysql, redis, gotenberg, garage, clickhouse, proxy) is untouched.
+  auto-update:
+    container_name: bigcapital-auto-update
+    image: containrrr/watchtower:1.7.1
+    restart: on-failure
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: --label-enable --cleanup --interval ${AUTO_UPDATE_INTERVAL:-3600}
+    networks:
+      - bigcapital_network
+
 # Volumes
 volumes:
   mysql:
@@ -190,6 +257,14 @@ volumes:
 
   redis:
     name: bigcapital_prod_redis
+    driver: local
+
+  garage:
+    name: bigcapital_prod_garage
+    driver: local
+
+  clickhouse:
+    name: bigcapital_prod_clickhouse
     driver: local
 
 # Networks

@@ -56,7 +56,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build shared packages
-        run: pnpm run build --scope "@bigcapital/utils" --scope "@bigcapital/email-components" --scope "@bigcapital/pdf-templates"
+        run: pnpm run build --scope "@bigcapital/utils" --scope "@bigcapital/email-components" --scope "@bigcapital/pdf-templates" --scope "@bigcapital/sdk-ts"
 
       - name: Run TypeScript type check
         run: pnpm run typecheck

@@ -21,6 +21,7 @@ import {
 } from './SaleInvoice.types';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
 import {
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -39,6 +40,7 @@ import { SaleInvoiceResponseDto } from './dtos/SaleInvoiceResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleInvoiceStateResponseDto } from './dtos/SaleInvoiceState.dto';
 import { GenerateSaleInvoiceSharableLinkResponseDto } from './dtos/GenerateSaleInvoiceSharableLinkResponse.dto';
+import { GenerateSaleInvoiceSharableLinkDto } from './dtos/GenerateSaleInvoiceSharableLink.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import {
   BulkDeleteDto,
@@ -49,6 +51,11 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { SaleInvoiceAction } from './SaleInvoice.types';
+import { InvoicePaymentTransactionDto } from './dtos/InvoicePaymentTransactionResponse.dto';
+import { SaleInvoiceHtmlContentResponseDto } from './dtos/SaleInvoiceHtmlResponse.dto';
+import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
+import { NotifySaleInvoiceBySmsDto } from './dtos/NotifySaleInvoiceBySms.dto';
+import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
@@ -58,9 +65,12 @@ import { SaleInvoiceAction } from './SaleInvoice.types';
 @ApiExtraModels(GenerateSaleInvoiceSharableLinkResponseDto)
 @ApiCommonHeaders()
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
+@ApiExtraModels(InvoicePaymentTransactionDto)
+@ApiExtraModels(SaleInvoiceHtmlContentResponseDto)
+@ApiExtraModels(SmsNotificationDetailsResponseDto)
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class SaleInvoicesController {
-  constructor(private saleInvoiceApplication: SaleInvoiceApplication) { }
+  constructor(private saleInvoiceApplication: SaleInvoiceApplication) {}
 
   @Post('validate-bulk-delete')
   @RequirePermission(SaleInvoiceAction.Delete, AbilitySubject.SaleInvoice)
@@ -209,8 +219,13 @@ export class SaleInvoicesController {
   @ApiResponse({
     status: 200,
     description: 'The sale invoice details have been successfully retrieved.',
-    schema: {
-      $ref: getSchemaPath(SaleInvoiceResponseDto),
+    content: {
+      'application/json': {
+        schema: { $ref: getSchemaPath(SaleInvoiceResponseDto) },
+      },
+      'application/json+html': {
+        schema: { $ref: getSchemaPath(SaleInvoiceHtmlContentResponseDto) },
+      },
     },
   })
   @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
@@ -232,6 +247,7 @@ export class SaleInvoicesController {
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
+        'Content-Disposition': `attachment; filename="${filename}.pdf"`,
       });
       res.send(pdfContent);
     } else if (acceptHeader?.includes(AcceptType.ApplicationTextHtml)) {
@@ -330,6 +346,14 @@ export class SaleInvoicesController {
   @Get(':id/payments')
   @RequirePermission(SaleInvoiceAction.View, AbilitySubject.SaleInvoice)
   @ApiOperation({ summary: 'Retrieves the sale invoice payments.' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of payment transactions for the invoice.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(InvoicePaymentTransactionDto) },
+    },
+  })
   @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
   @ApiParam({
     name: 'id',
@@ -344,6 +368,12 @@ export class SaleInvoicesController {
   @Get(':id/html')
   @RequirePermission(SaleInvoiceAction.View, AbilitySubject.SaleInvoice)
   @ApiOperation({ summary: 'Retrieves the sale invoice HTML.' })
+  @ApiResponse({
+    status: 200,
+    description:
+      'The sale invoice HTML content has been successfully retrieved.',
+    schema: { type: 'string', example: '<html>...</html>' },
+  })
   @ApiResponse({ status: 404, description: 'The sale invoice not found.' })
   @ApiParam({
     name: 'id',
@@ -375,10 +405,74 @@ export class SaleInvoicesController {
     return this.saleInvoiceApplication.getSaleInvoiceMailState(id);
   }
 
+  @Post(':id/notify-by-sms')
+  @UseGuards(SmsNotificationsFeatureGuard)
+  @RequirePermission(SaleInvoiceAction.NotifyBySms, AbilitySubject.SaleInvoice)
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Notify the given sale invoice by SMS.' })
+  @ApiBody({
+    description: 'The sale invoice SMS notification options.',
+    type: NotifySaleInvoiceBySmsDto,
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice has been notified by SMS.',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
+  notifySaleInvoiceBySms(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() smsOptions: NotifySaleInvoiceBySmsDto,
+  ) {
+    return this.saleInvoiceApplication.notifySaleInvoiceBySms(id, {
+      notificationKey:
+        smsOptions?.notificationKey ?? smsOptions?.notification_key,
+    });
+  }
+
+  @Get(':id/sms-details')
+  @UseGuards(SmsNotificationsFeatureGuard)
+  @RequirePermission(SaleInvoiceAction.View, AbilitySubject.SaleInvoice)
+  @ApiOperation({ summary: 'Retrieves the sale invoice SMS details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale invoice SMS details have been retrieved.',
+    schema: { $ref: getSchemaPath(SmsNotificationDetailsResponseDto) },
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale invoice id',
+  })
+  @ApiQuery({
+    name: 'notificationKey',
+    required: false,
+    type: String,
+    description: 'The SMS notification key. Defaults to `details`.',
+  })
+  getSaleInvoiceSmsDetails(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('notificationKey') notificationKey?: string,
+  ) {
+    return this.saleInvoiceApplication.getSaleInvoiceSmsDetails(id, {
+      notificationKey,
+    });
+  }
+
   @Post(':id/generate-link')
   @RequirePermission(SaleInvoiceAction.Edit, AbilitySubject.SaleInvoice)
   @ApiOperation({
     summary: 'Generate sharable sale invoice link (private or public)',
+  })
+  @ApiBody({
+    type: GenerateSaleInvoiceSharableLinkDto,
+    required: false,
   })
   @ApiResponse({
     status: 201,
@@ -393,7 +487,14 @@ export class SaleInvoicesController {
     type: Number,
     description: 'The sale invoice id',
   })
-  generateSaleInvoiceSharableLink(@Param('id', ParseIntPipe) id: number) {
-    return this.saleInvoiceApplication.generateSaleInvoiceSharableLink(id);
+  generateSaleInvoiceSharableLink(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: GenerateSaleInvoiceSharableLinkDto,
+  ) {
+    return this.saleInvoiceApplication.generateSaleInvoiceSharableLink(
+      id,
+      dto?.publicity,
+      dto?.expiryTime,
+    );
   }
 }

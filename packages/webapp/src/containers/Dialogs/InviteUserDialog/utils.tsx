@@ -1,8 +1,11 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 
-export const transformApiErrors = (errors) => {
-  const fields = {};
+interface ResponseError {
+  type: string;
+}
+
+export const transformApiErrors = (errors: ResponseError[]) => {
+  const fields: Record<string, string> = {};
 
   if (errors.find((error) => error.type === 'EMAIL.ALREADY.INVITED')) {
     fields.email = intl.get('email_is_already_used');

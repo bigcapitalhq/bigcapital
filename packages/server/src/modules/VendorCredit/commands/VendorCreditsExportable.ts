@@ -33,6 +33,6 @@ export class VendorCreditsExportable extends Exportable {
 
     return this.vendorCreditsApp
       .getVendorCredits(parsedQuery)
-      .then((output) => output.vendorCredits);
+      .then((output) => output.data);
   }
 }

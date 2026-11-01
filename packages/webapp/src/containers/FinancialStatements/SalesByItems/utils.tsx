@@ -1,15 +1,14 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
+import { SalesByItemsTableQuery } from '@bigcapital/sdk-ts';
 import { castArray } from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
 /**
  * Retrieves the validation schema.
- * @returns {Yup}
  */
 export const getSalesByItemsQueryShema = () => {
   return Yup.object().shape({
@@ -29,21 +28,23 @@ export const getDefaultSalesByItemsQuery = () => ({
   toDate: moment().format('YYYY-MM-DD'),
   filterByOption: 'with-transactions',
   itemsIds: [],
+  numberFormat: {},
 });
 
 /**
  * Parses sales by items query of browser location.
  */
-const parseSalesByItemsQuery = (locationQuery) => {
+const parseSalesByItemsQuery = (
+  locationQuery: Record<string, unknown>,
+): SalesByItemsTableQuery => {
   const defaultQuery = getDefaultSalesByItemsQuery();
-
   const transformed = {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {
     ...transformed,
-    itemsIds: castArray(transformed.itemsIds),
+    itemsIds: castArray(transformed.itemsIds).map(Number),
   };
 };
 

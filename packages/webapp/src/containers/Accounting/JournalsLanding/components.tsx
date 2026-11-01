@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Intent,
   Classes,
@@ -12,8 +10,9 @@ import {
   MenuDivider,
   Popover,
 } from '@blueprintjs/core';
+import React from 'react';
 import intl from 'react-intl-universal';
-
+import type { ManualJournal } from '@bigcapital/sdk-ts';
 import {
   Can,
   FormattedMessage as T,
@@ -22,34 +21,69 @@ import {
   If,
   Icon,
 } from '@/components';
-import {
-  ManualJournalAction,
-  AbilitySubject,
-} from "@/constants/abilityOption";
+import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
+
+export type ManualJournalEntryTableRow = {
+  index: number;
+  credit?: number;
+  debit?: number;
+  accountId: number;
+  note?: string;
+  account?: { id?: number; name?: string; code?: string };
+};
+
+export type ManualJournalTableRow = Omit<ManualJournal, 'entries'> & {
+  entries: ManualJournalEntryTableRow[];
+};
+
+interface AmountPopoverContentLineProps {
+  journalEntry: ManualJournalEntryTableRow;
+  currencyCode?: string;
+}
+
+interface AmountPopoverContentProps {
+  journalEntries: ManualJournalEntryTableRow[];
+  currencyCode?: string;
+}
+
+interface ActionsMenuPayload {
+  onPublish: (journal: ManualJournalTableRow) => void;
+  onEdit: (journal: ManualJournalTableRow) => void;
+  onDelete: (journal: ManualJournalTableRow) => void;
+  onViewDetails: (journal: ManualJournalTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: ManualJournalTableRow };
+  payload: ActionsMenuPayload;
+}
 
 /**
  * Amount accessor.
  */
-export const AmountAccessor = (r) => (
+export const AmountAccessor = (r: ManualJournalTableRow) => (
   <Tooltip
     content={
       <AmountPopoverContent
         journalEntries={r.entries}
-        currencyCode={r.currency_code}
+        currencyCode={r.currencyCode}
       />
     }
     position={Position.RIGHT_TOP}
     boundary={'viewport'}
   >
-    {r.amount_formatted}
+    {r.formattedAmount}
   </Tooltip>
 );
 
 /**
  * Amount popover content line.
  */
-export const AmountPopoverContentLine = ({ journalEntry, currencyCode }) => {
+export const AmountPopoverContentLine = ({
+  journalEntry,
+  currencyCode,
+}: AmountPopoverContentLineProps) => {
   const isCredit = !!journalEntry.credit;
   const isDebit = !!journalEntry.debit;
   const { account } = journalEntry;
@@ -59,14 +93,14 @@ export const AmountPopoverContentLine = ({ journalEntry, currencyCode }) => {
       <Choose.When condition={isDebit}>
         <div>
           C. <Money amount={journalEntry.debit} currency={currencyCode} /> -{' '}
-          {account.name} <If condition={account.code}>({account.code})</If>
+          {account?.name} <If condition={!!account?.code}>({account?.code})</If>
         </div>
       </Choose.When>
 
       <Choose.When condition={isCredit}>
         <div>
           D. <Money amount={journalEntry.credit} currency={currencyCode} /> -{' '}
-          {account.name} <If condition={account.code}>({account.code})</If>
+          {account?.name} <If condition={!!account?.code}>({account?.code})</If>
         </div>
       </Choose.When>
     </Choose>
@@ -76,18 +110,16 @@ export const AmountPopoverContentLine = ({ journalEntry, currencyCode }) => {
 /**
  * Amount popover content.
  */
-export function AmountPopoverContent({ journalEntries, currencyCode }) {
-  const journalLinesProps = journalEntries.map((journalEntry) => ({
-    journalEntry,
-    accountId: journalEntry.account_id,
-  }));
-
+export function AmountPopoverContent({
+  journalEntries,
+  currencyCode,
+}: AmountPopoverContentProps) {
   return (
     <div>
-      {journalLinesProps.map(({ journalEntry, accountId }) => (
+      {journalEntries.map((journalEntry) => (
         <AmountPopoverContentLine
+          key={journalEntry.index}
           journalEntry={journalEntry}
-          accountId={accountId}
           currencyCode={currencyCode}
         />
       ))}
@@ -98,10 +130,10 @@ export function AmountPopoverContent({ journalEntries, currencyCode }) {
 /**
  * Publish column accessor.
  */
-export const StatusAccessor = (row) => {
+export const StatusAccessor = (row: ManualJournalTableRow) => {
   return (
     <Choose>
-      <Choose.When condition={!!row.is_published}>
+      <Choose.When condition={!!row.isPublished}>
         <Tag round minimal>
           <T id={'published'} />
         </Tag>
@@ -119,9 +151,9 @@ export const StatusAccessor = (row) => {
 /**
  * Note column accessor.
  */
-export function NoteAccessor(row) {
+export function NoteAccessor(row: ManualJournalTableRow) {
   return (
-    <If condition={row.description}>
+    <If condition={!!row.description}>
       <Tooltip
         className={Classes.TOOLTIP_INDICATOR}
         content={row.description}
@@ -137,7 +169,7 @@ export function NoteAccessor(row) {
 /**
  * Table actions cell.
  */
-export const ActionsCell = (props) => {
+export const ActionsCell = (props: ActionsMenuProps) => {
   return (
     <Popover
       content={<ActionsMenu {...props} />}
@@ -154,7 +186,7 @@ export const ActionsCell = (props) => {
 export const ActionsMenu = ({
   payload: { onPublish, onEdit, onDelete, onViewDetails },
   row: { original },
-}) => {
+}: ActionsMenuProps) => {
   return (
     <Menu>
       <MenuItem
@@ -164,7 +196,7 @@ export const ActionsMenu = ({
       />
       <Can I={ManualJournalAction.Edit} a={AbilitySubject.ManualJournal}>
         <MenuDivider />
-        <If condition={!original.is_published}>
+        <If condition={!original.isPublished}>
           <MenuItem
             icon={<Icon icon="arrow-to-top" />}
             text={intl.get('publish_journal')}

@@ -1,6 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { GetDateFormatsService } from './queries/GetDateFormats.service';
-import { ApiExtraModels, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { DateFormatResponseDto } from './dtos/DateFormatResponse.dto';
 
 @Controller('/')

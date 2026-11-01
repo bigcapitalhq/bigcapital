@@ -1,25 +1,24 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
   date: Yup.date().required().label(intl.get('date')),
-  transaction_number: Yup.string()
+  transactionNumber: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('transaction_number')),
-  from_warehouse_id: Yup.number().required().label(intl.get('from_warehouse')),
-  to_warehouse_id: Yup.number().required().label(intl.get('from_warehouse')),
+  fromWarehouseId: Yup.number().required().label(intl.get('from_warehouse')),
+  toWarehouseId: Yup.number().required().label(intl.get('from_warehouse')),
   reason: Yup.string()
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('reason')),
-  transfer_initiated: Yup.boolean(),
-  transfer_delivered: Yup.boolean(),
+  transferInitiated: Yup.boolean(),
+  transferDelivered: Yup.boolean(),
   entries: Yup.array().of(
     Yup.object().shape({
-      item_id: Yup.number().nullable(),
+      itemId: Yup.number().nullable(),
       description: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
       quantity: Yup.number().min(1).max(DATATYPES_LENGTH.INT_10),
     }),

@@ -1,46 +1,62 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-
 import '@/style/pages/AllocateLandedCost/AllocateLandedCostForm.scss';
-
-import { AppToaster } from '@/components';
-import { AllocateLandedCostFormSchema } from './AllocateLandedCostForm.schema';
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
-import AllocateLandedCostFormContent from './AllocateLandedCostFormContent';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, transformToForm } from '@/utils';
+import { AllocateLandedCostFormSchema } from './AllocateLandedCostForm.schema';
+import { AllocateLandedCostFormContent } from './AllocateLandedCostFormContent';
 import { defaultInitialValues } from './utils';
+import type { AllocateLandedCostFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { transformToForm } from '@/utils';
+
+interface AllocateLandedCostFormProps
+  extends Pick<WithDialogActionsProps, 'closeDialog'> {}
+
+interface LandedCostErrorResponse {
+  response: { data: { errors: Array<{ type: string }> } };
+}
 
 /**
  * Allocate landed cost form.
  */
-function AllocateLandedCostForm({
+function AllocateLandedCostFormInner({
   // #withDialogActions
   closeDialog,
-}) {
+}: AllocateLandedCostFormProps) {
   const { dialogName, bill, billId, createLandedCostMutate } =
     useAllocateLandedConstDialogContext();
 
   // Initial form values.
-  const initialValues = {
+  const initialValues: AllocateLandedCostFormValues = {
     ...defaultInitialValues,
-    items: bill.entries.map((entry) => ({
+    items: (bill?.entries ?? []).map((entry) => ({
       ...entry,
-      entry_id: entry.id,
+      entryId: entry.id,
       cost: '',
-    })),
+    })) as AllocateLandedCostFormValues['items'],
   };
   // Handle form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
+  const handleFormSubmit = (
+    values: AllocateLandedCostFormValues,
+    { setSubmitting }: FormikHelpers<AllocateLandedCostFormValues>,
+  ) => {
     setSubmitting(true);
 
     // Filters the entries has no cost.
     const entries = values.items
-      .filter((entry) => entry.entry_id && entry.cost)
-      .map((entry) => transformToForm(entry, defaultInitialValues.items[0]));
+      .filter((entry) => entry.entryId && entry.cost)
+      .map(
+        (entry) =>
+          transformToForm(
+            entry,
+            defaultInitialValues.items[0],
+          ) as (typeof defaultInitialValues.items)[0],
+      );
 
     if (entries.length <= 0) {
       AppToaster.show({
@@ -54,7 +70,7 @@ function AllocateLandedCostForm({
       items: entries,
     };
     // Handle the request success.
-    const onSuccess = (response) => {
+    const onSuccess = (_response: unknown) => {
       AppToaster.show({
         message: intl.get('the_landed_cost_has_been_created_successfully'),
         intent: Intent.SUCCESS,
@@ -63,7 +79,7 @@ function AllocateLandedCostForm({
       closeDialog(dialogName);
     };
     // Handle the request error.
-    const onError = (res) => {
+    const onError = (res: LandedCostErrorResponse) => {
       const { errors } = res.response.data;
       setSubmitting(false);
 
@@ -85,6 +101,9 @@ function AllocateLandedCostForm({
         });
       }
     };
+    // `useCreateLandedCost` infers a `void` variables type while the runtime
+    // accepts `[billId, form]`.
+    // @ts-expect-error — hook infers void variables type.
     createLandedCostMutate([billId, form]).then(onSuccess).catch(onError);
   };
 
@@ -101,4 +120,7 @@ function AllocateLandedCostForm({
   );
 }
 
-export default compose(withDialogActions)(AllocateLandedCostForm);
+export const AllocateLandedCostForm = FF.pipe(
+  AllocateLandedCostFormInner,
+  withDialogActions,
+);

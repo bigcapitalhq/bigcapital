@@ -27,7 +27,7 @@ export class GetPaymentsReceivedService {
   public async getPaymentReceives(
     filterDTO: GetPaymentsReceivedQueryDto,
   ): Promise<{
-    paymentReceives: PaymentReceived[];
+    data: PaymentReceived[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -53,17 +53,19 @@ export class GetPaymentsReceivedService {
         builder.withGraphFetched('depositAccount');
 
         dynamicList.buildQuery()(builder);
-        _filterDto?.filterQuery && _filterDto.filterQuery(builder as any);
+        if (_filterDto?.filterQuery) {
+          _filterDto.filterQuery(builder as any);
+        }
       })
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformer the payment receives models to POJO.
-    const transformedPayments = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new PaymentReceiveTransfromer(),
     );
     return {
-      paymentReceives: transformedPayments,
+      data,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

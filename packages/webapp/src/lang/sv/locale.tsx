@@ -51,8 +51,7 @@ export const locale = {
   },
   boolean: {},
   object: {
-    noUnknown:
-      '${path}-fältet kan inte ha nycklar som inte anges i objektform',
+    noUnknown: '${path}-fältet kan inte ha nycklar som inte anges i objektform',
   },
   array: {
     min: '${path}-fältet måste ha minst ${min} objekt',

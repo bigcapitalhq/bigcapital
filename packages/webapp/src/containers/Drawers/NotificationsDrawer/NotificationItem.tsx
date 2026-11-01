@@ -33,7 +33,11 @@ function getTypeIcon(type: string): { icon: string; intent: Intent } {
 /**
  * Notification item component.
  */
-export function NotificationItem({ notification, onClick, onDelete }: NotificationItemProps) {
+export function NotificationItem({
+  notification,
+  onClick,
+  onDelete,
+}: NotificationItemProps) {
   const { icon, intent } = getTypeIcon(notification.type);
   const isUnread = !notification.readAt;
 
@@ -66,7 +70,9 @@ export function NotificationItem({ notification, onClick, onDelete }: Notificati
             position={Position.TOP}
           >
             <span className={styles.timestamp}>
-              {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+              {formatDistanceToNow(new Date(notification.createdAt), {
+                addSuffix: true,
+              })}
             </span>
           </Tooltip>
         </div>

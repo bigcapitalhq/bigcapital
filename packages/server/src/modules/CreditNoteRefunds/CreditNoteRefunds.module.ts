@@ -29,4 +29,4 @@ import { AccountsModule } from '../Accounts/Accounts.module';
   exports: [RefundSyncCreditNoteBalanceService],
   controllers: [CreditNoteRefundsController],
 })
-export class CreditNoteRefundsModule { }
+export class CreditNoteRefundsModule {}

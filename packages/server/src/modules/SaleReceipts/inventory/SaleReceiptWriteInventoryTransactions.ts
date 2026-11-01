@@ -2,6 +2,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import {
   ISaleReceiptCreatedPayload,
   ISaleReceiptEditedPayload,
+  ISaleReceiptEventClosedPayload,
   ISaleReceiptEventDeletedPayload,
 } from '../types/SaleReceipts.types';
 import { Injectable } from '@nestjs/common';
@@ -11,27 +12,29 @@ import { SaleReceiptInventoryTransactions } from './SaleReceiptInventoryTransact
 @Injectable()
 export class SaleReceiptInventoryTransactionsSubscriber {
   constructor(
-    private readonly saleReceiptInventory: SaleReceiptInventoryTransactions
+    private readonly saleReceiptInventory: SaleReceiptInventoryTransactions,
   ) {}
 
   /**
-   * Handles the writing inventory transactions once the receipt created.
-   * @param {ISaleReceiptCreatedPayload} payload -
+   * Handles the writing inventory transactions once the receipt created
+   * or closed in case it was created as draft.
+   * @param {ISaleReceiptCreatedPayload | ISaleReceiptEventClosedPayload} payload -
    */
   @OnEvent(events.saleReceipt.onCreated)
+  @OnEvent(events.saleReceipt.onClosed)
   public async handleWritingInventoryTransactions({
     saleReceipt,
     trx,
-  }: ISaleReceiptCreatedPayload) {
+  }: ISaleReceiptCreatedPayload | ISaleReceiptEventClosedPayload) {
     // Can't continue if the sale receipt is not closed yet.
     if (!saleReceipt.closedAt) return null;
 
     await this.saleReceiptInventory.recordInventoryTransactions(
       saleReceipt,
       false,
-      trx
+      trx,
     );
-  };
+  }
 
   /**
    * Rewriting the inventory transactions once the sale invoice be edited.
@@ -48,9 +51,9 @@ export class SaleReceiptInventoryTransactionsSubscriber {
     await this.saleReceiptInventory.recordInventoryTransactions(
       saleReceipt,
       true,
-      trx
+      trx,
     );
-  };
+  }
 
   /**
    * Handles deleting the inventory transactions once the receipt deleted.
@@ -63,7 +66,7 @@ export class SaleReceiptInventoryTransactionsSubscriber {
   }: ISaleReceiptEventDeletedPayload) {
     await this.saleReceiptInventory.revertInventoryTransactions(
       saleReceiptId,
-      trx
+      trx,
     );
-  };
+  }
 }

@@ -1,6 +1,5 @@
-// @ts-nocheck
-import { DependencyList, EffectCallback } from 'react';
 import isDeepEqualReact from 'fast-deep-equal/react';
+import { DependencyList, EffectCallback } from 'react';
 import { useCustomCompareEffect } from './useCustomCompareEffect';
 
 const isPrimitive = (val: any) => val !== Object(val);

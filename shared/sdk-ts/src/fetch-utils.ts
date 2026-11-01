@@ -1,14 +1,125 @@
-import { Fetcher } from 'openapi-typescript-fetch';
-import type { paths } from './schema';
-import { createCamelCaseMiddleware } from './middleware/camel-case-middleware';
+import { Fetcher } from "openapi-typescript-fetch";
+import type { ApiResponse } from "openapi-typescript-fetch";
+import type { paths } from "./schema";
+import { createCamelCaseMiddleware } from "./middleware/camel-case-middleware";
+import {
+  createSnakeCaseRequestMiddleware,
+  NESTED_QUERY_HEADER,
+} from "./middleware/snake-case-request-middleware";
+import { createErrorReporterMiddleware } from "./middleware/error-reporter-middleware";
+import { createRawResponseMiddleware } from "./middleware/raw-response-middleware";
+import {
+  transformKeysToCamelCase,
+  transformKeysToSnakeCase,
+} from "./utils/case-transform";
+import {
+  FORM_DATA_INIT_KEY,
+  createFormDataMiddleware,
+} from "./middleware/form-data-middleware";
+
+/**
+ * Splits a query object into a primitive-only payload and a per-call `init`
+ * carrying any nested object or array values via the SDK's sentinel header.
+ * The snake-case request middleware reads that header and re-serializes the
+ * nested values as bracket-style query params (`number_format[no_cents]=true`,
+ * `items_ids[]=1003`) so Express's `extended` qs parser can reconstruct them
+ * server-side.
+ *
+ * openapi-typescript-fetch's built-in query serializer calls `String(value)`,
+ * which would otherwise turn nested objects into the literal `[object Object]`.
+ * Arrays are routed the same way so that a single-element array is emitted as
+ * `key[]=value` instead of a bare scalar, which `qs` would parse as a string
+ * rather than an array.
+ */
+export function withNestedQuery<T>(query: T): {
+  payload: T;
+  init?: RequestInit;
+} {
+  const sanitized: Record<string, unknown> = {};
+  const nested: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(query as Record<string, unknown>)) {
+    if (
+      value !== null &&
+      typeof value === "object" &&
+      !(value instanceof Date) &&
+      !(value instanceof Blob)
+    ) {
+      nested[key] = value;
+    } else {
+      sanitized[key] = value;
+    }
+  }
+
+  if (Object.keys(nested).length === 0) {
+    return { payload: sanitized as T };
+  }
+  return {
+    payload: sanitized as T,
+    init: {
+      headers: {
+        [NESTED_QUERY_HEADER]: encodeURIComponent(JSON.stringify(nested)),
+      },
+    },
+  };
+}
+
+/**
+ * Attaches a `FormData` body to a per-call RequestInit via a custom property
+ * that survives openapi-typescript-fetch's init merging (its computed JSON
+ * body always overrides `init.body`). The form-data middleware swaps it back
+ * in as the real body before `fetch` executes, so the request still flows
+ * through the full middleware pipeline (snake-case request, camelCase
+ * response, error reporter, etc.). Pass the returned init as the second
+ * argument to the generated typed fetcher:
+ *
+ *   fetcher.path('/api/...').method('post').create()({}, withFormData(fd));
+ */
+export function withFormData(
+  formData: FormData,
+  init?: RequestInit,
+): RequestInit {
+  return {
+    ...(init ?? {}),
+    [FORM_DATA_INIT_KEY]: formData,
+  } as RequestInit;
+}
 
 export type ApiFetcher = ReturnType<typeof Fetcher.for<paths>>;
+
+/**
+ * A downloaded PDF document.
+ */
+export interface PdfDocument {
+  blob: Blob;
+  filename: string;
+}
+
+/**
+ * Extracts a PDF document (blob + filename) from an ApiResponse produced with
+ * an `Accept: application/pdf` header. The raw-response middleware returns the
+ * body as a Blob and preserves the response headers, so the filename is parsed
+ * from the Content-Disposition header (falling back to `default.pdf`).
+ */
+export function toPdfDocument<T>(response: ApiResponse<T>): PdfDocument {
+  const contentDisposition = response.headers.get("Content-Disposition") ?? "";
+  const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+
+  return {
+    blob: response.data as unknown as Blob,
+    filename: filenameMatch?.[1] ?? "default.pdf",
+  };
+}
 
 export interface CreateApiFetcherConfig {
   baseUrl?: string;
   init?: RequestInit;
-  /** Set to true to disable automatic snake_case to camelCase transformation */
+  /** Set to true to disable automatic snake_case to camelCase transformation on responses */
   disableCamelCaseTransform?: boolean;
+  /** Set to true to disable automatic camelCase to snake_case transformation on requests */
+  disableSnakeCaseTransform?: boolean;
+  /** Invoked with the rejection from any failed request, after which the error is re-thrown. Use for global side effects like surfacing toasts or triggering logout. */
+  onError?: (error: unknown) => void;
 }
 
 /**
@@ -19,12 +130,41 @@ export interface CreateApiFetcherConfig {
  * Set disableCamelCaseTransform: true to disable this behavior.
  */
 export function createApiFetcher(config?: CreateApiFetcherConfig): ApiFetcher {
+  const parsedConfig = {
+    baseUrl: "",
+    disableCamelCaseTransform: true,
+    disableSnakeCaseTransform: false,
+    ...config,
+  };
   const fetcher = Fetcher.for<paths>();
   fetcher.configure({
-    baseUrl: config?.baseUrl ?? '',
-    init: config?.init,
-    use: config?.disableCamelCaseTransform ? [] : [createCamelCaseMiddleware()],
+    baseUrl: parsedConfig.baseUrl,
+    init: parsedConfig?.init,
+    use: [
+      createFormDataMiddleware(),
+      ...(parsedConfig.disableSnakeCaseTransform
+        ? []
+        : [createSnakeCaseRequestMiddleware()]),
+      ...(parsedConfig.disableCamelCaseTransform
+        ? []
+        : [createCamelCaseMiddleware()]),
+      ...(parsedConfig.onError
+        ? [createErrorReporterMiddleware(parsedConfig.onError)]
+        : []),
+      createRawResponseMiddleware(),
+    ],
   });
+
+  // Expose the runtime config so manual helpers (rawRequest) can read the
+  // configured baseUrl, default headers (Authorization, organization-id)
+  // and case-transform flags.
+  (fetcher as FetcherWithConfig).config = {
+    baseUrl: parsedConfig.baseUrl,
+    init: parsedConfig.init,
+    disableCamelCaseTransform: parsedConfig.disableCamelCaseTransform,
+    disableSnakeCaseTransform: parsedConfig.disableSnakeCaseTransform,
+  };
+
   return fetcher;
 }
 
@@ -32,44 +172,85 @@ export function createApiFetcher(config?: CreateApiFetcherConfig): ApiFetcher {
  * Strips leading slash from a path segment to avoid double slashes when joining with a base (e.g. `/api/` + path).
  */
 export function normalizeApiPath(path: string): string {
-  return (path || '').replace(/^\//, '');
+  return (path || "").replace(/^\//, "");
 }
 
 /**
- * Makes a raw API request using the fetcher's configuration (baseUrl, headers, middleware).
+ * Fetcher configuration as exposed by `openapi-typescript-fetch` at runtime.
+ * The library does not surface this in its public types, so we declare the
+ * shape we depend on in one place rather than re-asserting it at each call site.
+ */
+interface FetcherRuntimeConfig {
+  baseUrl: string;
+  init?: RequestInit;
+  disableCamelCaseTransform?: boolean;
+  disableSnakeCaseTransform?: boolean;
+}
+
+interface FetcherWithConfig {
+  config?: FetcherRuntimeConfig;
+}
+
+function getFetcherConfig(fetcher: ApiFetcher): FetcherRuntimeConfig {
+  const config = (fetcher as FetcherWithConfig).config;
+  return {
+    baseUrl: config?.baseUrl ?? "",
+    init: config?.init,
+    disableCamelCaseTransform: config?.disableCamelCaseTransform ?? true,
+    disableSnakeCaseTransform: config?.disableSnakeCaseTransform ?? false,
+  };
+}
+
+/**
+ * Makes a raw API request using the fetcher's configuration (baseUrl, headers
+ * and case-transform flags). Mirrors the typed-fetcher middleware pipeline:
+ * JSON request bodies are converted to snake_case and JSON responses to
+ * camelCase, unless disabled via `createApiFetcher` flags.
  * Use this for endpoints not defined in the OpenAPI schema.
  */
 export async function rawRequest<T = unknown>(
   fetcher: ApiFetcher,
   method: string,
   path: string,
-  body?: Record<string, unknown>
+  body?: Record<string, unknown>,
+  headers?: Record<string, string>,
 ): Promise<T> {
-  // Access the fetcher's internal configuration
-  const fetcherConfig = (fetcher as unknown as { config?: { baseUrl: string; init?: RequestInit } }).config;
-  const baseUrl = fetcherConfig?.baseUrl ?? '';
-  const init = fetcherConfig?.init ?? {};
+  const {
+    baseUrl,
+    init,
+    disableCamelCaseTransform,
+    disableSnakeCaseTransform,
+  } = getFetcherConfig(fetcher);
 
   const url = `${baseUrl}${path}`;
-  const headers: Record<string, string> = {
-    'Accept': 'application/json',
-    ...(init.headers as Record<string, string> || {}),
+  const mergedHeaders: Record<string, string> = {
+    Accept: "application/json",
+    ...((init?.headers as Record<string, string> | undefined) ?? {}),
+    ...(headers ?? {}),
   };
 
   const requestInit: RequestInit = {
     ...init,
     method,
-    headers,
+    headers: mergedHeaders,
   };
 
-  if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
-    headers['Content-Type'] = 'application/json';
-    requestInit.body = JSON.stringify(body);
+  if (body && (method === "POST" || method === "PUT" || method === "PATCH")) {
+    mergedHeaders["Content-Type"] = "application/json";
+    requestInit.body = JSON.stringify(
+      disableSnakeCaseTransform ? body : transformKeysToSnakeCase(body),
+    );
   }
 
   const response = await fetch(url, requestInit);
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
-  return response.json() as Promise<T>;
+  const contentType = response.headers.get("content-type") ?? "";
+  const data = (await response.json()) as T;
+
+  if (disableCamelCaseTransform || !contentType.includes("application/json")) {
+    return data;
+  }
+  return transformKeysToCamelCase<T>(data);
 }

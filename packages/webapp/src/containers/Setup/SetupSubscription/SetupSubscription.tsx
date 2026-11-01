@@ -1,25 +1,25 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
-import * as R from 'ramda';
-
-import { Box } from '@/components';
-import { SubscriptionPlansSection } from './SubscriptionPlansSection';
-import { withSubscriptionPlansActions } from '../../Subscriptions/withSubscriptionPlansActions';
+import {
+  withSubscriptionPlansActions,
+  WithSubscriptionPlansActionsProps,
+} from '../../Subscriptions/withSubscriptionPlansActions';
 import styles from './SetupSubscription.module.scss';
+import { SubscriptionPlansSection } from './SubscriptionPlansSection';
+import { Box } from '@/components';
 
 /**
  * Subscription step of wizard setup.
  */
-function SetupSubscription({
-  // #withSubscriptionPlansActions
+function SetupSubscriptionInner({
   initSubscriptionPlans,
-}) {
+}: WithSubscriptionPlansActionsProps) {
   useEffect(() => {
     initSubscriptionPlans();
   }, [initSubscriptionPlans]);
 
   useEffect(() => {
-    window.LemonSqueezy.Setup({
+    window.LemonSqueezy?.Setup({
       eventHandler: (event) => {
         // Do whatever you want with this event data
         if (event.event === 'Checkout.Success') {
@@ -35,4 +35,7 @@ function SetupSubscription({
   );
 }
 
-export default R.compose(withSubscriptionPlansActions)(SetupSubscription);
+export const SetupSubscription = FF.pipe(
+  SetupSubscriptionInner,
+  withSubscriptionPlansActions,
+);

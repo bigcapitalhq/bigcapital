@@ -1,7 +1,5 @@
-export const jwtConstants = {
-  secret:
-    'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
-};
+export const JWT_ISSUER = 'bigcapital';
+export const JWT_AUDIENCE = 'bigcapital:api';
 
 export const ERRORS = {
   INVALID_DETAILS: 'INVALID_DETAILS',
@@ -28,3 +26,8 @@ export const SendSignupVerificationMailQueue =
 export const SendSignupVerificationMailJob = 'SendSignupVerificationMailJob';
 
 export const AuthApiKeyPrefix = 'bc_';
+
+/**
+ * Length of the displayable API key prefix stored with the hashed key.
+ */
+export const AuthApiKeyPrefixLength = 8;

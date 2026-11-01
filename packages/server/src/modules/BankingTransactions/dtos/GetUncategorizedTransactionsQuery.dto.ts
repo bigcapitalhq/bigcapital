@@ -7,7 +7,7 @@ export class GetUncategorizedTransactionsQueryDto {
     description: 'Page number for pagination',
     required: false,
     type: Number,
-    example: 1
+    example: 1,
   })
   page?: number;
 
@@ -16,7 +16,7 @@ export class GetUncategorizedTransactionsQueryDto {
     description: 'Number of items per page',
     required: false,
     type: Number,
-    example: 10
+    example: 10,
   })
   pageSize?: number;
 
@@ -25,7 +25,7 @@ export class GetUncategorizedTransactionsQueryDto {
     description: 'Minimum date for filtering transactions',
     required: false,
     type: Date,
-    example: '2023-01-01'
+    example: '2023-01-01',
   })
   minDate?: Date;
 
@@ -34,7 +34,7 @@ export class GetUncategorizedTransactionsQueryDto {
     description: 'Maximum date for filtering transactions',
     required: false,
     type: Date,
-    example: '2023-12-31'
+    example: '2023-12-31',
   })
   maxDate?: Date;
 
@@ -43,7 +43,7 @@ export class GetUncategorizedTransactionsQueryDto {
     description: 'Minimum amount for filtering transactions',
     required: false,
     type: Number,
-    example: 100
+    example: 100,
   })
   minAmount?: number;
 
@@ -52,7 +52,7 @@ export class GetUncategorizedTransactionsQueryDto {
     description: 'Maximum amount for filtering transactions',
     required: false,
     type: Number,
-    example: 1000
+    example: 1000,
   })
   maxAmount?: number;
 }

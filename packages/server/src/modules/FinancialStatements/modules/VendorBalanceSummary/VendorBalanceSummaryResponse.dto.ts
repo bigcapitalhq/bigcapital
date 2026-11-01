@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  CONTACT_BALANCE_COLUMN_KEYS,
+  VendorsBalanceColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class VendorBalanceDto {
   @ApiProperty({ description: 'Vendor ID', type: Number })
@@ -13,16 +18,28 @@ export class VendorBalanceDto {
   @ApiProperty({ description: 'Vendor name' })
   vendorName: string;
 
-  @ApiPropertyOptional({ description: 'Opening balance', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Opening balance',
+    type: FinancialReportTotalDto,
+  })
   openingBalance?: FinancialReportTotalDto;
 
-  @ApiProperty({ description: 'Closing balance', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Closing balance',
+    type: FinancialReportTotalDto,
+  })
   closingBalance: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Total debit', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Total debit',
+    type: FinancialReportTotalDto,
+  })
   totalDebit?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Total credit', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Total credit',
+    type: FinancialReportTotalDto,
+  })
   totalCredit?: FinancialReportTotalDto;
 }
 
@@ -38,7 +55,10 @@ export class VendorBalanceSummaryQueryResponseDto {
   @ApiProperty({ description: 'As-of date' })
   asDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Vendor IDs to include', type: [Number] })
@@ -52,13 +72,19 @@ export class VendorBalanceSummaryQueryResponseDto {
 }
 
 export class VendorBalanceSummaryResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: VendorBalanceSummaryQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: VendorBalanceSummaryQueryResponseDto,
+  })
   query: VendorBalanceSummaryQueryResponseDto;
 
   @ApiProperty({ description: 'Vendor balances', type: [VendorBalanceDto] })
   data: VendorBalanceDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: VendorBalanceSummaryMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: VendorBalanceSummaryMetaDto,
+  })
   meta: VendorBalanceSummaryMetaDto;
 }
 
@@ -66,17 +92,40 @@ export class VendorBalanceSummaryResponseDto {
 export {
   FinancialTableCellDto as VendorBalanceSummaryTableCellDto,
   FinancialTableRowDto as VendorBalanceSummaryTableRowDto,
-  FinancialTableColumnDto as VendorBalanceSummaryTableColumnDto,
-  FinancialTableDataDto as VendorBalanceSummaryTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
 
-export class VendorBalanceSummaryTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
-  table: FinancialTableDataDto;
+export class VendorBalanceSummaryTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(CONTACT_BALANCE_COLUMN_KEYS),
+  })
+  key: VendorsBalanceColumnKey;
+}
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: VendorBalanceSummaryQueryResponseDto })
+export class VendorBalanceSummaryTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [VendorBalanceSummaryTableColumnDto],
+  })
+  columns: VendorBalanceSummaryTableColumnDto[];
+}
+
+export class VendorBalanceSummaryTableResponseDto {
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => VendorBalanceSummaryTableDataDto,
+  })
+  table: VendorBalanceSummaryTableDataDto;
+
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: VendorBalanceSummaryQueryResponseDto,
+  })
   query: VendorBalanceSummaryQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: VendorBalanceSummaryMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: VendorBalanceSummaryMetaDto,
+  })
   meta: VendorBalanceSummaryMetaDto;
 }

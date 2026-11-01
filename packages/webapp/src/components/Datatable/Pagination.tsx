@@ -1,15 +1,12 @@
-// @ts-nocheck
-import React, { useReducer, useEffect } from 'react';
 import { Button, ButtonGroup, Intent, HTMLSelect } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import PropTypes from 'prop-types';
-import { range } from 'lodash';
-import styled from 'styled-components';
 import { x } from '@xstyled/emotion';
+import { range } from 'lodash';
+import { useReducer, useEffect } from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import { Icon, FormattedMessage as T } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
-// Styled components
 const StyledButtonGroup = styled(ButtonGroup)`
   .bp4-button {
     background: transparent;
@@ -19,10 +16,10 @@ const StyledButtonGroup = styled(ButtonGroup)`
 
 const StyledPaginationButton = styled(Button)`
   --x-button-text-color: #666666;
-  --x-button-hover-background: #E6EFFB;
+  --x-button-hover-background: #e6effb;
   --x-button-active-text-color: #000;
-  --x-button-active-background: #E6EFFB;
-  --x-button-active-disabled-background: #E6EFFB;
+  --x-button-active-background: #e6effb;
+  --x-button-active-disabled-background: #e6effb;
 
   .bp4-dark & {
     --x-button-text-color: rgba(255, 255, 255, 0.8);
@@ -35,9 +32,9 @@ const StyledPaginationButton = styled(Button)`
   min-height: 24px;
   border-radius: 5px;
 
-  &:not([class*="bp4-intent-"]).bp4-minimal {
+  &:not([class*='bp4-intent-']).bp4-minimal {
     color: var(--x-button-text-color);
-    
+
     &:hover {
       background-color: var(--x-button-hover-background);
     }
@@ -63,7 +60,7 @@ const StyledPreviousButton = styled(StyledPaginationButton)`
   padding-right: 10px;
 
   .bp4-icon {
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       transform: scale(-1);
     }
   }
@@ -88,9 +85,9 @@ const StyledHTMLSelect = styled(HTMLSelect)`
     --x-html-select-text-color: rgba(255, 255, 255, 0.8);
     --x-html-select-border-color: rgba(255, 255, 255, 0.15);
   }
-  &.bp4-html-select.bp4-minimal  {
+  &.bp4-html-select.bp4-minimal {
     margin-left: 6px;
-    
+
     select {
       height: 24px;
       width: auto;
@@ -115,21 +112,48 @@ const TYPE = {
   PAGE_CHANGE: 'PAGE_CHANGE',
   PAGE_SIZE_CHANGE: 'PAGE_SIZE_CHANGE',
   INITIALIZE: 'INITIALIZE',
-};
+} as const;
 
-const getState = ({ currentPage, size, total }) => {
+interface PaginationState {
+  currentPage: number;
+  size: number;
+  total: number;
+  pages: number[];
+  totalPages: number;
+}
+
+interface PaginationChangePayload {
+  page: number;
+  pageSize: number;
+}
+
+interface PaginationProps {
+  currentPage: number;
+  total: number;
+  size: number;
+  pageSizesOption?: number[];
+  onPageChange?: (payload: PaginationChangePayload) => void;
+  onPageSizeChange?: (payload: PaginationChangePayload) => void;
+}
+
+const getState = ({
+  currentPage,
+  size,
+  total,
+}: {
+  currentPage: number;
+  size: number;
+  total: number;
+}): PaginationState => {
   const totalPages = Math.ceil(total / size);
   const visibleItems = 5;
   const halfVisibleItems = Math.ceil(visibleItems / 2);
 
-  // create an array of pages to ng-repeat in the pager control
-  let startPage, endPage;
+  let startPage: number, endPage: number;
   if (totalPages <= visibleItems) {
-    // less than {visibleItems} total pages so show
     startPage = 1;
     endPage = totalPages;
   } else {
-    // more than {visibleItems} total pages so calculate start and end pages
     if (currentPage <= halfVisibleItems) {
       startPage = 1;
       endPage = visibleItems;
@@ -145,7 +169,6 @@ const getState = ({ currentPage, size, total }) => {
     (i) => startPage + i,
   );
 
-  // Too large or small currentPage
   let correctCurrentpage = currentPage;
   if (currentPage > totalPages) correctCurrentpage = totalPages;
   if (currentPage <= 0) correctCurrentpage = 1;
@@ -159,7 +182,12 @@ const getState = ({ currentPage, size, total }) => {
   };
 };
 
-const reducer = (state, action) => {
+type PaginationAction =
+  | { type: 'PAGE_CHANGE'; page: number }
+  | { type: 'PAGE_SIZE_CHANGE'; size: number }
+  | { type: 'INITIALIZE'; page: number; size: number; total: number };
+
+const reducer = (state: PaginationState, action: PaginationAction) => {
   switch (action.type) {
     case TYPE.PAGE_CHANGE:
       return getState({
@@ -188,10 +216,10 @@ export function Pagination({
   currentPage,
   total,
   size,
-  pageSizesOptions = [20, 30, 50, 75, 100, 150],
+  pageSizesOption = [20, 30, 50, 75, 100, 150],
   onPageChange,
   onPageSizeChange,
-}) {
+}: PaginationProps) {
   const isDark = useIsDarkMode();
   const [state, dispatch] = useReducer(
     reducer,
@@ -220,7 +248,7 @@ export function Pagination({
               const page = state.currentPage - 1;
               const { size: pageSize } = state;
 
-              onPageChange({ page, pageSize });
+              onPageChange?.({ page, pageSize });
             }}
             minimal={true}
             icon={<Icon icon={'arrow-back-24'} iconSize={12} />}
@@ -237,7 +265,7 @@ export function Pagination({
                 dispatch({ type: 'PAGE_CHANGE', page });
                 const { size: pageSize } = state;
 
-                onPageChange({ page, pageSize });
+                onPageChange?.({ page, pageSize });
               }}
               minimal={true}
               className={state.currentPage === page ? 'is-active' : ''}
@@ -255,7 +283,7 @@ export function Pagination({
               const page = state.currentPage + 1;
               const { size: pageSize } = state;
 
-              onPageChange({ page, pageSize });
+              onPageChange?.({ page, pageSize });
             }}
             minimal={true}
             icon={<Icon icon={'arrow-forward-24'} iconSize={12} />}
@@ -277,7 +305,7 @@ export function Pagination({
               const { size: pageSize } = state;
 
               dispatch({ type: 'PAGE_CHANGE', page });
-              onPageChange({ page, pageSize });
+              onPageChange?.({ page, pageSize });
             }}
           />
         </x.div>
@@ -286,20 +314,25 @@ export function Pagination({
           <T id={'page_size'} />
           <StyledHTMLSelect
             minimal={true}
-            options={pageSizesOptions}
+            options={pageSizesOption}
             value={size}
             onChange={(event) => {
               const pageSize = parseInt(event.currentTarget.value, 10);
               dispatch({ type: 'PAGE_SIZE_CHANGE', size: pageSize });
               dispatch({ type: 'PAGE_CHANGE', page: 1 });
 
-              onPageSizeChange({ pageSize, page: 1 });
+              onPageSizeChange?.({ pageSize, page: 1 });
             }}
           />
         </x.div>
       </x.div>
 
-      <x.div color={isDark ? 'rgba(255, 255, 255, 0.6)' : '#666'} ml="12px" display="flex" alignItems="center">
+      <x.div
+        color={isDark ? 'rgba(255, 255, 255, 0.6)' : '#666'}
+        ml="12px"
+        display="flex"
+        alignItems="center"
+      >
         {intl.get('showing_current_page_to_total', {
           currentPage: state.currentPage,
           totalPages: state.totalPages,
@@ -309,16 +342,3 @@ export function Pagination({
     </x.div>
   );
 }
-
-Pagination.propTypes = {
-  currentPage: PropTypes.number.isRequired,
-  size: PropTypes.number.isRequired,
-  total: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func,
-  onPageSizeChange: PropTypes.func,
-};
-
-Pagination.defaultProps = {
-  currentPage: 1,
-  size: 25,
-};

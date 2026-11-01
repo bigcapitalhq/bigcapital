@@ -1,12 +1,11 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { EmptyStatus } from '@/components';
 import { Can, FormattedMessage as T } from '@/components';
 import { BillAction, AbilitySubject } from '@/constants/abilityOption';
 
-export default function BillsEmptyStatus() {
+export function BillsEmptyStatus() {
   const history = useHistory();
 
   return (

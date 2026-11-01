@@ -1,23 +1,26 @@
-// @ts-nocheck
+import { Tabs, Tab } from '@blueprintjs/core';
+import classNames from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import styled from 'styled-components';
-import { Tabs, Tab } from '@blueprintjs/core';
-
 import '@/style/pages/Preferences/Users.scss';
-
 import { Card } from '@/components';
-import { CLASSES } from '@/constants/classes';
 import PreferencesSubContent from '@/components/Preferences/PreferencesSubContent';
+import { CLASSES } from '@/constants/classes';
+import {
+  withDialogActions,
+  type WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { useAppQueryString } from '@/hooks';
 
-import { withUserPreferences } from '@/containers/Preferences/Users/withUserPreferences';
+function UsersPreferences({ openDialog }: WithDialogActionsProps) {
+  const [locationQuery, setLocationQuery] = useAppQueryString();
 
-/**
- * Preferences page - Users page.
- */
-function UsersPreferences({ openDialog }) {
-  const onChangeTabs = (currentTabId) => {};
+  const activeTab = locationQuery?.tab === 'roles' ? 'roles' : 'users';
+
+  const onChangeTabs = (tabId: string | number) => {
+    setLocationQuery({ tab: String(tabId) });
+  };
 
   return (
     <div
@@ -28,7 +31,13 @@ function UsersPreferences({ openDialog }) {
     >
       <UsersPereferencesCard>
         <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
-          <Tabs animate={true} onChange={onChangeTabs}>
+          <Tabs
+            id="users-preferences-tabs"
+            animate={true}
+            selectedTabId={activeTab}
+            onChange={onChangeTabs}
+            renderActiveTabPanelOnly={true}
+          >
             <Tab
               id="users"
               title={intl.get('users')}
@@ -46,7 +55,7 @@ function UsersPreferences({ openDialog }) {
   );
 }
 
-export default withUserPreferences(UsersPreferences);
+export const Users = withDialogActions(UsersPreferences);
 
 const UsersPereferencesCard = styled(Card)`
   padding: 0;

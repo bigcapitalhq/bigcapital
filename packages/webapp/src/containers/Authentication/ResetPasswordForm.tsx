@@ -1,22 +1,22 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Form } from 'formik';
-import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { AuthSubmitButton } from './_components';
+import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
 
 /**
  * Reset password form.
  */
-export default function ResetPasswordForm({ isSubmitting }) {
+export function ResetPasswordForm({ isSubmitting }: { isSubmitting: boolean }) {
   return (
     <Form>
-      <FFormGroup name={'password'} label={<T id={'new_password'} />}>
+      <FFormGroup name={'password'} label={intl.get('new_password')}>
         <FInputGroup name={'password'} type={'password'} large={true} />
       </FFormGroup>
 
-      <FFormGroup name={'confirm_password'} label={<T id={'new_password'} />}>
-        <FInputGroup name={'confirm_password'} type={'password'} large={true} />
+      <FFormGroup name={'confirmPassword'} label={intl.get('new_password')}>
+        <FInputGroup name={'confirmPassword'} type={'password'} large={true} />
       </FFormGroup>
 
       <AuthSubmitButton

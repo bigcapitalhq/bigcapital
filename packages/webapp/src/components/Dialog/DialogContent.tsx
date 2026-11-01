@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React from 'react';
 import { Spinner, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
+import React from 'react';
 
 export function DialogContent(props) {
   const { isLoading, children } = props;

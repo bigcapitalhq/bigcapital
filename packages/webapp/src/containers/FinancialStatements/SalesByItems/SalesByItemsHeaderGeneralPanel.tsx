@@ -1,24 +1,18 @@
-// @ts-nocheck
 import React from 'react';
-import {
-  Row,
-  Col,
-  ItemsMultiSelect,
-  FormattedMessage as T,
-  FFormGroup,
-} from '@/components';
-import FinancialStatementDateRange from '../FinancialStatementDateRange';
-import FinancialStatementsFilter from '../FinancialStatementsFilter';
+import intl from 'react-intl-universal';
 import { filterItemsOptions } from '../constants';
+import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
+import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
 import {
   SalesByItemGeneralPanelProvider,
   useSalesByItemsGeneralPanelContext,
 } from './SalesByItemsHeaderGeneralPanelProvider';
+import { Row, Col, FItemsMultiSelect, FFormGroup } from '@/components';
 
 /**
  * Sales by items - Drawer header - General panel.
  */
-export default function SalesByItemsHeaderGeneralPanel() {
+export function SalesByItemsHeaderGeneralPanel() {
   return (
     <SalesByItemGeneralPanelProvider>
       <SalesByItemsHeaderGeneralPanelContent />
@@ -40,7 +34,7 @@ function SalesByItemsHeaderGeneralPanelContent() {
         <Col xs={4}>
           <FinancialStatementsFilter
             items={filterItemsOptions}
-            label={<T id={'items.label_filter_items'} />}
+            label={intl.get('items.label_filter_items')}
             initialSelectedItem={'with-transactions'}
           />
         </Col>
@@ -48,8 +42,8 @@ function SalesByItemsHeaderGeneralPanelContent() {
 
       <Row>
         <Col xs={4}>
-          <FFormGroup label={<T id={'Specific items'} />} name={'itemsIds'}>
-            <ItemsMultiSelect name={'itemsIds'} items={items} />
+          <FFormGroup label={intl.get('Specific items')} name={'itemsIds'}>
+            <FItemsMultiSelect name={'itemsIds'} items={items} />
           </FFormGroup>
         </Col>
       </Row>

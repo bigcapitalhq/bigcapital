@@ -1,11 +1,7 @@
-// @ts-nocheck
-import {
-  IBalanceSheetDOO,
-  IBalanceSheetQuery,
-} from './BalanceSheet.types';
+import { IBalanceSheetDOO, IBalanceSheetQuery } from './BalanceSheet.types';
 import { BalanceSheetRepository } from './BalanceSheetRepository';
 import { BalanceSheetMetaInjectable } from './BalanceSheetMeta';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { BalanceSheet } from './BalanceSheet';
@@ -35,7 +31,7 @@ export class BalanceSheetInjectable {
       ...getBalanceSheetDefaultQuery(),
       ...query,
     };
-    const tenantMetadata = await this.tenancyContext.getTenantMetadata(true);
+    const tenantMetadata = await this.tenancyContext.getTenantMetadata();
 
     // Loads all resources.
     await this.balanceSheetRepository.asyncInitialize(filter);
@@ -48,7 +44,10 @@ export class BalanceSheetInjectable {
       filter,
       this.balanceSheetRepository,
       this.i18n,
-      { baseCurrency: tenantMetadata.baseCurrency, dateFormat: meta.dateFormat },
+      {
+        baseCurrency: tenantMetadata.baseCurrency,
+        dateFormat: meta.dateFormat,
+      },
     );
     // Balance sheet data.
     const data = balanceSheetInstanace.reportData();

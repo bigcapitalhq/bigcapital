@@ -1,7 +1,10 @@
-import { test, expect, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.describe('item', () => {
-  test('should validate all required fields.', () => {});
-  test('should save the item successfully.', () => {});
-  test('should item code be unqiue.', () => {});
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/items');
+  });
+  test('should validate all required fields.', async () => {});
+  test('should save the item successfully.', async () => {});
+  test('should item code be unqiue.', async () => {});
 });

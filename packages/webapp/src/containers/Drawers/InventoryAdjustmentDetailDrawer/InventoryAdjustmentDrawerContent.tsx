@@ -1,14 +1,18 @@
-// @ts-nocheck
 import React from 'react';
-
-import { DrawerBody } from '@/components';
+import { InventoryAdjustmentDetail } from './InventoryAdjustmentDetail';
 import { InventoryAdjustmentDrawerProvider } from './InventoryAdjustmentDrawerProvider';
-import InventoryAdjustmentDetail from './InventoryAdjustmentDetail';
+import { DrawerBody } from '@/components';
+
+interface InventoryAdjustmentDrawerContentProps {
+  inventoryId: number | undefined;
+}
 
 /**
  * Inventory adjustment drawer content.
  */
-export default function InventoryAdjustmentDrawerContent({ inventoryId }) {
+export function InventoryAdjustmentDrawerContent({
+  inventoryId,
+}: InventoryAdjustmentDrawerContentProps) {
   return (
     <InventoryAdjustmentDrawerProvider inventoryId={inventoryId}>
       <DrawerBody>

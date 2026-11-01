@@ -1,0 +1,11 @@
+export const AUTH_LOGIN_REQUEST = 'AUTH_LOGIN_REQUEST' as const;
+export const AUTH_LOGIN_SUCCESS = 'AUTH_LOGIN_SUCCESS' as const;
+export const AUTH_LOGIN_FAILURE = 'AUTH_LOGIN_FAILURE' as const;
+export const AUTH_LOGOUT = 'AUTH_LOGOUT' as const;
+export const AUTH_LOGIN_CLEAR_ERRORS = 'AUTH_LOGIN_CLEAR_ERRORS' as const;
+export const RESET = 'RESET' as const;
+export const AUTH_SET_EMAIL_VERIFIED = 'AUTH_SET_EMAIL_VERIFIED' as const;
+export const AUTH_SET_AUTH_TOKEN = 'AUTH_SET_AUTH_TOKEN' as const;
+export const AUTH_SET_ORGANIZATIOIN_ID = 'AUTH_SET_ORGANIZATIOIN_ID' as const;
+export const AUTH_SET_USER_ID = 'AUTH_SET_USER_ID' as const;
+export const AUTH_SET_LOCALE = 'AUTH_SET_LOCALE' as const;

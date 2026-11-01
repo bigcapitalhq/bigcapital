@@ -2,10 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Scope } from '@nestjs/common';
 import { ClsService, UseCls } from 'nestjs-cls';
-import {
-  SendInviteUserMailJob,
-  SendInviteUserMailQueue,
-} from '../Users.constants';
+import { SendInviteUserMailQueue } from '../Users.constants';
 import { SendInviteUserMailJobPayload } from '../Users.types';
 import { SendInviteUsersMailMessage } from '../commands/SendInviteUsersMailMessage.service';
 

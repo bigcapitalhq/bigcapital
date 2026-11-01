@@ -1,10 +1,12 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Intent } from '@blueprintjs/core';
-
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
+import {
+  validateMoveToFullLocking,
+  validateMoveToPartialLocking,
+} from './utils';
 import {
   ButtonLink,
   AppToaster,
@@ -13,10 +15,6 @@ import {
   Alert,
   AlertDesc,
 } from '@/components';
-import {
-  validateMoveToFullLocking,
-  validateMoveToPartialLocking,
-} from './utils';
 
 /**
  * Transactions locking header.
@@ -32,10 +30,10 @@ export function TransactionsLockingHeader() {
   // Handle all lock link click.
   const handleAllLockClick = () => {
     const activeModules = validateMoveToFullLocking(
-      transactionsLocking.modules,
+      transactionsLocking?.modules ?? [],
     );
     const modulesStrong = activeModules.map((module) => (
-      <strong>{module.formatted_module}</strong>
+      <strong key={module.module}>{module.formattedModule}</strong>
     ));
     if (activeModules.length > 0) {
       AppToaster.show({
@@ -53,9 +51,9 @@ export function TransactionsLockingHeader() {
   };
 
   const handleUndividualLockClick = () => {
-    const isAllLockingActive = validateMoveToPartialLocking(
-      transactionsLocking.all,
-    );
+    const isAllLockingActive = transactionsLocking
+      ? validateMoveToPartialLocking(transactionsLocking.all)
+      : false;
 
     if (isAllLockingActive) {
       AppToaster.show({

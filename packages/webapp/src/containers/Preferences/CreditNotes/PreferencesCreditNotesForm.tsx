@@ -1,15 +1,20 @@
-// @ts-nocheck
-import styled from 'styled-components';
-import { Form } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
+import { Form } from 'formik';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-
+import styled from 'styled-components';
 import { FormattedMessage as T, FFormGroup, FTextArea } from '@/components';
+
+export interface PreferencesCreditNotesFormProps {
+  isSubmitting: boolean;
+}
 
 /**
  * Preferences credit notes form.
  */
-export function PreferencesCreditNotesForm({ isSubmitting }) {
+export function PreferencesCreditNotesForm({
+  isSubmitting,
+}: PreferencesCreditNotesFormProps) {
   const history = useHistory();
 
   // Handle close click.
@@ -22,29 +27,19 @@ export function PreferencesCreditNotesForm({ isSubmitting }) {
       {/* ---------- Customer Notes ----------  */}
       <FFormGroup
         name={'customerNotes'}
-        label={<T id={'pref.creditNotes.customerNotes.field'} />}
+        label={intl.get('pref.creditNotes.customerNotes.field')}
         fastField={true}
       >
-        <FTextArea
-          medium={'true'}
-          name={'customerNotes'}
-          fastField={true}
-          fill={true}
-        />
+        <FTextArea name={'customerNotes'} fastField={true} fill={true} />
       </FFormGroup>
 
       {/* ---------- Terms & Conditions ----------  */}
       <FFormGroup
         name={'termsConditions'}
-        label={<T id={'pref.creditNotes.termsConditions.field'} />}
+        label={intl.get('pref.creditNotes.termsConditions.field')}
         fastField={true}
       >
-        <FTextArea
-          medium={'true'}
-          name={'termsConditions'}
-          fastField={true}
-          fill={true}
-        />
+        <FTextArea name={'termsConditions'} fastField={true} fill={true} />
       </FFormGroup>
 
       <CardFooterActions>

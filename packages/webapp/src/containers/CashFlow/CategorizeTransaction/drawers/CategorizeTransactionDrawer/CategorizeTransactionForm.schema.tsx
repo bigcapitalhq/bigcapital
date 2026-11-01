@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as Yup from 'yup';
 
 const Schema = Yup.object().shape({

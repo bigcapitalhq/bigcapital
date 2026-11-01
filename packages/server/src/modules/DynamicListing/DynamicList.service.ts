@@ -16,7 +16,7 @@ export class DynamicListService {
     private dynamicListSearch: DynamicListSearch,
     private dynamicListSortBy: DynamicListSortBy,
     private dynamicListView: DynamicListCustomView,
-  ) { }
+  ) {}
 
   /**
    * Parses filter DTO.
@@ -31,9 +31,9 @@ export class DynamicListService {
       // Merges the default properties with filter object.
       ...(model.defaultSort
         ? {
-          sortOrder: model.defaultSort.sortOrder,
-          columnSortBy: model.defaultSort.sortOrder,
-        }
+            sortOrder: model.defaultSort.sortOrder,
+            columnSortBy: model.defaultSort.sortOrder,
+          }
         : {}),
       ...filterDTO,
     };

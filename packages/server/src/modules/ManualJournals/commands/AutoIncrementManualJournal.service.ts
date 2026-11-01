@@ -4,20 +4,20 @@ import { AutoIncrementOrdersService } from '@/modules/AutoIncrementOrders/AutoIn
 @Injectable()
 export class AutoIncrementManualJournal {
   /**
-   * 
-   * @param autoIncrementOrdersService 
+   *
+   * @param autoIncrementOrdersService
    */
   constructor(
-    private readonly autoIncrementOrdersService: AutoIncrementOrdersService
+    private readonly autoIncrementOrdersService: AutoIncrementOrdersService,
   ) {}
 
   /**
-   * 
+   *
    * @returns {boolean}
    */
   public autoIncrementEnabled = () => {
     return this.autoIncrementOrdersService.autoIncrementEnabled(
-      'manual_journals'
+      'manual_journals',
     );
   };
 
@@ -27,7 +27,7 @@ export class AutoIncrementManualJournal {
    */
   public getNextJournalNumber = (): Promise<string> => {
     return this.autoIncrementOrdersService.getNextTransactionNumber(
-      'manual_journals'
+      'manual_journals',
     );
   };
 
@@ -37,7 +37,7 @@ export class AutoIncrementManualJournal {
    */
   public incrementNextJournalNumber = () => {
     return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      'manual_journals'
+      'manual_journals',
     );
   };
 }

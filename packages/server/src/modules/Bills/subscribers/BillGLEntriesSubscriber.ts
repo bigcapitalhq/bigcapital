@@ -29,7 +29,7 @@ export class BillGLEntriesSubscriber {
     if (!bill.openedAt) return null;
 
     await this.billGLEntries.writeBillGLEntries(bill.id, trx);
-  };
+  }
 
   /**
    * Handles the overwriting journal entries once bill edited.
@@ -43,7 +43,7 @@ export class BillGLEntriesSubscriber {
     if (!bill.openedAt) return null;
 
     await this.billGLEntries.rewriteBillGLEntries(bill.id, trx);
-  };
+  }
 
   /**
    * Handles revert journal entries on bill deleted.
@@ -55,5 +55,5 @@ export class BillGLEntriesSubscriber {
     trx,
   }: IBIllEventDeletedPayload) {
     await this.billGLEntries.revertBillGLEntries(oldBill.id, trx);
-  };
+  }
 }

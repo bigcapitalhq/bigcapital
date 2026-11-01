@@ -1,11 +1,12 @@
 import { Knex } from 'knex';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SaleReceipt } from '@/modules/SaleReceipts/models/SaleReceipt';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 @Injectable()
 export class SaleReceiptActivateBranches {
   constructor(
+    @Inject(SaleReceipt.name)
     private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
   ) {}
 

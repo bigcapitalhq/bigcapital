@@ -11,7 +11,9 @@ export class InvoicePaymentsGLEntriesRewrite {
     private readonly paymentGLEntries: PaymentReceivedGLEntries,
 
     @Inject(PaymentReceivedEntry.name)
-    private readonly paymentReceivedEntryModel: TenantModelProxy<typeof PaymentReceivedEntry>
+    private readonly paymentReceivedEntryModel: TenantModelProxy<
+      typeof PaymentReceivedEntry
+    >,
   ) {}
 
   /**
@@ -19,14 +21,8 @@ export class InvoicePaymentsGLEntriesRewrite {
    * @param   {{ tenantId: number, paymentId: number, trx: Knex?.Transaction }}
    * @returns {Promise<void>}
    */
-  public rewritePaymentsGLEntriesTask = async ({
-    paymentId,
-    trx,
-  }) => {
-    await this.paymentGLEntries.rewritePaymentGLEntries(
-      paymentId,
-      trx
-    );
+  public rewritePaymentsGLEntriesTask = async ({ paymentId, trx }) => {
+    await this.paymentGLEntries.rewritePaymentGLEntries(paymentId, trx);
   };
 
   /**
@@ -36,7 +32,7 @@ export class InvoicePaymentsGLEntriesRewrite {
    */
   public rewritePaymentsGLEntriesQueue = async (
     paymentsIds: number[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Initiate a new queue for accounts balance mutation.
     const rewritePaymentGL = async.queue(this.rewritePaymentsGLEntriesTask, 10);
@@ -57,7 +53,7 @@ export class InvoicePaymentsGLEntriesRewrite {
    */
   public invoicePaymentsGLEntriesRewrite = async (
     invoiceId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const invoicePaymentEntries = await this.paymentReceivedEntryModel()
       .query()

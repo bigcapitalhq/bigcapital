@@ -2,7 +2,6 @@ import { IFinancialSheetCommonMeta } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import {
   IAgingPeriod,
-  IAgingSummaryQuery,
   IAgingSummaryTotal,
   IAgingSummaryContact,
   IAgingSummaryData,
@@ -13,7 +12,7 @@ export interface IAPAgingSummaryVendor extends IAgingSummaryContact {
   vendorName: string;
 }
 
-export interface IAPAgingSummaryTotal extends IAgingSummaryTotal {}
+export type IAPAgingSummaryTotal = IAgingSummaryTotal;
 
 export interface IAPAgingSummaryData extends IAgingSummaryData {
   vendors: IAPAgingSummaryVendor[];

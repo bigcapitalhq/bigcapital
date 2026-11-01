@@ -10,7 +10,7 @@ export class ValidateBulkDeleteItemsService {
     private readonly deleteItemService: DeleteItemService,
     @Inject(TENANCY_DB_CONNECTION)
     private readonly tenantKnex: () => Knex,
-  ) { }
+  ) {}
 
   /**
    * Validates which items from the provided IDs can be deleted.
@@ -71,4 +71,3 @@ export class ValidateBulkDeleteItemsService {
     }
   }
 }
-

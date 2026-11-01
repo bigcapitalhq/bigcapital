@@ -1,9 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  TRIAL_BALANCE_COLUMN_KEYS,
+  TrialBalanceColumnKey,
+} from '../../common/constants/tableColumnKeys';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { TrialBalanceSortOrder } from './TrialBalanceSheet.types';
 
 export class TrialBalanceSheetAccountDto {
   @ApiProperty({ description: 'Account ID', type: Number })
@@ -15,28 +23,52 @@ export class TrialBalanceSheetAccountDto {
   @ApiProperty({ description: 'Account code' })
   code: string;
 
-  @ApiPropertyOptional({ description: 'Opening balance', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Opening balance',
+    type: FinancialReportTotalDto,
+  })
   openingBalance?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Closing balance', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Closing balance',
+    type: FinancialReportTotalDto,
+  })
   closingBalance?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Debit total', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Debit total',
+    type: FinancialReportTotalDto,
+  })
   debitTotal?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Credit total', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Credit total',
+    type: FinancialReportTotalDto,
+  })
   creditTotal?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Debit/change', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Debit/change',
+    type: FinancialReportTotalDto,
+  })
   debit?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Credit/change', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Credit/change',
+    type: FinancialReportTotalDto,
+  })
   credit?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Period balance', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Period balance',
+    type: FinancialReportTotalDto,
+  })
   periodBalance?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Account normal', enum: ['debit', 'credit'] })
+  @ApiPropertyOptional({
+    description: 'Account normal',
+    enum: ['debit', 'credit'],
+  })
   accountNormal?: string;
 
   @ApiPropertyOptional({ description: 'Account index', type: Number })
@@ -82,24 +114,57 @@ export class TrialBalanceSheetQueryResponseDto {
   @ApiProperty({ description: 'Exclude accounts with no transactions' })
   noneTransactions: boolean;
 
-  @ApiProperty({ description: 'Accounting basis', enum: ['cash', 'accrual'] })
-  basis: string;
+  @ApiProperty({ description: 'Accounting basis', enum: AccountingBasis })
+  basis: AccountingBasis;
 
-  @ApiProperty({ description: 'Column display type', enum: ['total', 'date_periods'] })
+  @ApiProperty({
+    description: 'Column display type',
+    enum: ['total', 'date_periods'],
+  })
   displayColumnsType: string;
 
-  @ApiProperty({ description: 'Column grouping', enum: ['day', 'month', 'year', 'quarter'] })
+  @ApiProperty({
+    description: 'Column grouping',
+    enum: ['day', 'month', 'year', 'quarter'],
+  })
   displayColumnsBy: string;
+
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
+  numberFormat: NumberFormatQueryDto;
+
+  @ApiPropertyOptional({
+    description: 'Column the accounts are sorted by',
+    enum: Object.values(TRIAL_BALANCE_COLUMN_KEYS),
+  })
+  columnSortBy?: TrialBalanceColumnKey;
+
+  @ApiPropertyOptional({
+    description: 'Sort order of the accounts',
+    enum: ['asc', 'desc'],
+  })
+  sortOrder?: TrialBalanceSortOrder;
 }
 
 export class TrialBalanceSheetResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: TrialBalanceSheetQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: TrialBalanceSheetQueryResponseDto,
+  })
   query: TrialBalanceSheetQueryResponseDto;
 
-  @ApiProperty({ description: 'Trial balance sheet data', type: [TrialBalanceSheetAccountDto] })
+  @ApiProperty({
+    description: 'Trial balance sheet data',
+    type: [TrialBalanceSheetAccountDto],
+  })
   data: TrialBalanceSheetAccountDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: TrialBalanceSheetMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: TrialBalanceSheetMetaDto,
+  })
   meta: TrialBalanceSheetMetaDto;
 }
 
@@ -107,17 +172,40 @@ export class TrialBalanceSheetResponseDto {
 export {
   FinancialTableCellDto as TrialBalanceSheetTableCellDto,
   FinancialTableRowDto as TrialBalanceSheetTableRowDto,
-  FinancialTableColumnDto as TrialBalanceSheetTableColumnDto,
-  FinancialTableDataDto as TrialBalanceSheetTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
 
-export class TrialBalanceSheetTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
-  table: FinancialTableDataDto;
+export class TrialBalanceSheetTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(TRIAL_BALANCE_COLUMN_KEYS),
+  })
+  key: TrialBalanceColumnKey;
+}
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: TrialBalanceSheetQueryResponseDto })
+export class TrialBalanceSheetTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [TrialBalanceSheetTableColumnDto],
+  })
+  columns: TrialBalanceSheetTableColumnDto[];
+}
+
+export class TrialBalanceSheetTableResponseDto {
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => TrialBalanceSheetTableDataDto,
+  })
+  table: TrialBalanceSheetTableDataDto;
+
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: TrialBalanceSheetQueryResponseDto,
+  })
   query: TrialBalanceSheetQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: TrialBalanceSheetMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: TrialBalanceSheetMetaDto,
+  })
   meta: TrialBalanceSheetMetaDto;
 }

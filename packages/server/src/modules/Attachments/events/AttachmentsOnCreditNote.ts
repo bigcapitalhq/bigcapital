@@ -15,9 +15,9 @@ import { events } from '@/common/events/events';
 @Injectable()
 export class AttachmentsOnCreditNote {
   /**
-   * @param {LinkAttachment} linkAttachmentService - 
-   * @param {UnlinkAttachment} unlinkAttachmentService - 
-   * @param {ValidateAttachments} validateDocuments - 
+   * @param {LinkAttachment} linkAttachmentService -
+   * @param {UnlinkAttachment} unlinkAttachmentService -
+   * @param {ValidateAttachments} validateDocuments -
    */
   constructor(
     private readonly linkAttachmentService: LinkAttachment,

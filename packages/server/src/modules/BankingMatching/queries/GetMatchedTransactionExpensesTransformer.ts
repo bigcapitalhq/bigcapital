@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetMatchedTransactionExpensesTransformer extends Transformer {
   /**
@@ -112,7 +112,7 @@ export class GetMatchedTransactionExpensesTransformer extends Transformer {
    * @returns {string}
    */
   protected transsactionTypeFormatted() {
-    return 'Expense';
+    return this.context.i18n.t('transaction_type.expense');
   }
 
   /**

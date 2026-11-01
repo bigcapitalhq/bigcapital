@@ -1,6 +1,13 @@
 // @ts-nocheck
 import React, { useState } from 'react';
-import { Button, NonIdealState, Spinner, Intent, Tab, Tabs } from '@blueprintjs/core';
+import {
+  Button,
+  NonIdealState,
+  Spinner,
+  Intent,
+  Tab,
+  Tabs,
+} from '@blueprintjs/core';
 import { NotificationItem } from './NotificationItem';
 import {
   useNotifications,
@@ -61,7 +68,10 @@ export default function NotificationsDrawerContent() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Tabs selectedTabId={activeTab} onChange={(tabId) => setActiveTab(tabId)}>
+        <Tabs
+          selectedTabId={activeTab}
+          onChange={(tabId) => setActiveTab(tabId)}
+        >
           <Tab id="all" title={`All (${data?.total || 0})`} />
           <Tab id="unread" title={`Unread (${unreadCount})`} />
         </Tabs>

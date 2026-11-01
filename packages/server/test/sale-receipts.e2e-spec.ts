@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -28,11 +28,21 @@ const makeReceiptRequest = () => ({
 
 describe('Sale Receipts (e2e)', () => {
   beforeAll(async () => {
+    await request(app.getHttpServer())
+      .put('/transactions-locking/cancel-lock')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ reason: 'Cancel lock for e2e test' });
+
     const customer = await request(app.getHttpServer())
       .post('/customers')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send({ displayName: 'Test Customer' });
+      .send({
+        displayName: 'Test Customer',
+        customerType: 'business',
+        currencyCode: 'USD',
+      });
 
     customerId = customer.body.id;
 
@@ -41,7 +51,8 @@ describe('Sale Receipts (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'service',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,
@@ -52,7 +63,7 @@ describe('Sale Receipts (e2e)', () => {
     itemId = parseInt(item.body.id, 10);
   });
 
-  it('/sale-reeipts (POST)', () => {
+  it('/sale-receipts (POST)', () => {
     return request(app.getHttpServer())
       .post('/sale-receipts')
       .set('organization-id', orgainzationId)
@@ -73,7 +84,8 @@ describe('Sale Receipts (e2e)', () => {
     return request(app.getHttpServer())
       .delete(`/sale-receipts/${receiptId}`)
       .set('organization-id', orgainzationId)
-      .send();
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
   });
 
   it('/sale-receipts/:id (PUT)', async () => {
@@ -86,7 +98,7 @@ describe('Sale Receipts (e2e)', () => {
     const receiptId = response.body.id;
 
     return request(app.getHttpServer())
-      .delete(`/sale-receipts/${receiptId}`)
+      .put(`/sale-receipts/${receiptId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({

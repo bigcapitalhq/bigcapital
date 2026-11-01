@@ -1,16 +1,15 @@
-// @ts-nocheck
-import React, { useState } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { Form } from 'formik';
 import { Tooltip2 } from '@blueprintjs/popover2';
-
-import { FFormGroup, FInputGroup, FCheckbox, T } from '@/components';
+import { Form } from 'formik';
+import React, { useState } from 'react';
+import intl from 'react-intl-universal';
 import { AuthSubmitButton } from './_components';
+import { FFormGroup, FInputGroup, FCheckbox, T } from '@/components';
 
 /**
  * Login form.
  */
-export default function LoginForm({ isSubmitting }) {
+export function LoginForm({ isSubmitting }: { isSubmitting: boolean }) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // Handle password revealer changing.
@@ -32,11 +31,11 @@ export default function LoginForm({ isSubmitting }) {
 
   return (
     <Form>
-      <FFormGroup name={'crediential'} label={<T id={'email_address'} />}>
+      <FFormGroup name={'crediential'} label={intl.get('email_address')}>
         <FInputGroup name={'crediential'} large={true} />
       </FFormGroup>
 
-      <FFormGroup name={'password'} label={<T id={'password'} />}>
+      <FFormGroup name={'password'} label={intl.get('password')}>
         <FInputGroup
           name={'password'}
           large={true}

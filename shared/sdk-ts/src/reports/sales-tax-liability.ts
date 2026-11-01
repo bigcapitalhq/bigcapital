@@ -1,5 +1,6 @@
 import type { OpArgType } from 'openapi-typescript-fetch';
 import type { ApiFetcher } from '../fetch-utils';
+import { withNestedQuery } from "../fetch-utils";
 import type { paths } from '../schema';
 import {
   OpForPath,
@@ -22,7 +23,11 @@ export async function fetchSalesTaxLiabilityTable(
   query: SalesTaxLiabilityTableQuery
 ): Promise<SalesTaxLiabilityTableResponse> {
   const get = fetcher.path(SALES_TAX_LIABILITY_ROUTE).method('get').create();
-  const { data } = await get(query as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: 'application/json+table' },
+  });
   return data as unknown as SalesTaxLiabilityTableResponse;
 }
 
@@ -36,7 +41,8 @@ export async function fetchSalesTaxLiabilityJson(
   query: SalesTaxLiabilityJsonQuery
 ): Promise<SalesTaxLiabilityJsonResponse> {
   const get = fetcher.path(SALES_TAX_LIABILITY_ROUTE).method('get').create();
-  const { data } = await get(query as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as Arg, init);
   return data as unknown as SalesTaxLiabilityJsonResponse;
 }
 
@@ -49,7 +55,11 @@ export async function fetchSalesTaxLiabilityCsv(
   query: SalesTaxLiabilityCsvQuery
 ): Promise<SalesTaxLiabilityCsvResponse> {
   const get = fetcher.path(SALES_TAX_LIABILITY_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/csv' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as SalesTaxLiabilityCsvResponse;
 }
 
@@ -62,7 +72,11 @@ export async function fetchSalesTaxLiabilityXlsx(
   query: SalesTaxLiabilityXlsxQuery
 ): Promise<SalesTaxLiabilityXlsxResponse> {
   const get = fetcher.path(SALES_TAX_LIABILITY_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/xlsx' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as SalesTaxLiabilityXlsxResponse;
 }
 
@@ -75,6 +89,10 @@ export async function fetchSalesTaxLiabilityPdf(
   query: SalesTaxLiabilityPdfQuery
 ): Promise<SalesTaxLiabilityPdfResponse> {
   const get = fetcher.path(SALES_TAX_LIABILITY_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/pdf' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as SalesTaxLiabilityPdfResponse;
 }

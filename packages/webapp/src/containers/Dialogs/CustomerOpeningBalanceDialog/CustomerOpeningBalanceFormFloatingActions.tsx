@@ -1,26 +1,23 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import * as FF from 'fp-ts/function';
 import { useCustomerOpeningBalanceContext } from './CustomerOpeningBalanceFormProvider';
+import type { CustomerOpeningBalanceFormValues } from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
 /**
  * Customer Opening balance floating actions.
- * @returns
  */
-function CustomerOpeningBalanceFormFloatingActions({
-  // #withDialogActions
+function CustomerOpeningBalanceFormFloatingActionsInner({
   closeDialog,
-}) {
+}: WithDialogActionsProps) {
   // dialog context.
   const { dialogName } = useCustomerOpeningBalanceContext();
 
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<CustomerOpeningBalanceFormValues>();
 
   // Handle close button click.
   const handleCancelBtnClick = () => {
@@ -45,6 +42,7 @@ function CustomerOpeningBalanceFormFloatingActions({
     </div>
   );
 }
-export default compose(withDialogActions)(
-  CustomerOpeningBalanceFormFloatingActions,
+export const CustomerOpeningBalanceFormFloatingActions = FF.pipe(
+  CustomerOpeningBalanceFormFloatingActionsInner,
+  withDialogActions,
 );

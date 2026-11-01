@@ -1,36 +1,48 @@
-// @ts-nocheck
 import React from 'react';
-import { getColumnWidth } from '@/utils';
 import { useExcludedTransactionsBoot } from './ExcludedTransactionsTableBoot';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { ExcludedBankTransactionsListPage } from '@bigcapital/sdk-ts';
 import { CLASSES } from '@/constants';
+import { getColumnWidth } from '@/utils';
 
-const getReportColWidth = (data, accessor, headerText) => {
+export type ExcludedTransactionRow = NonNullable<
+  ExcludedBankTransactionsListPage['data']
+>[number] & {
+  // `id` is sent by the runtime but not declared on the SDK DTO.
+  id?: number;
+};
+
+const getReportColWidth = (
+  data: ExcludedTransactionRow[] | undefined,
+  accessor: string,
+  headerText: string,
+) => {
   return getColumnWidth(
-    data,
+    data ?? [],
     accessor,
     { magicSpacing: 10, minWidth: 100 },
     headerText,
   );
 };
 
-const descriptionAccessor = (transaction) => {
+const descriptionAccessor = (transaction: ExcludedTransactionRow) => {
   return <span className={CLASSES.TEXT_MUTED}>{transaction.description}</span>;
 };
 
 /**
  * Retrieve excluded transactions columns table.
  */
-export function useExcludedTransactionsColumns() {
+export function useExcludedTransactionsColumns(): DataTableColumn<ExcludedTransactionRow>[] {
   const { excludedBankTransactions: data } = useExcludedTransactionsBoot();
 
   const withdrawalWidth = getReportColWidth(
-    data,
-    'formatted_withdrawal_amount',
+    data ?? [],
+    'formattedWithdrawalAmount',
     'Withdrawal',
   );
   const depositWidth = getReportColWidth(
-    data,
-    'formatted_deposit_amount',
+    data ?? [],
+    'formattedDepositAmount',
     'Deposit',
   );
 
@@ -38,7 +50,7 @@ export function useExcludedTransactionsColumns() {
     () => [
       {
         Header: 'Date',
-        accessor: 'formatted_date',
+        accessor: 'formattedDate',
         width: 110,
       },
       {
@@ -52,19 +64,19 @@ export function useExcludedTransactionsColumns() {
       },
       {
         Header: 'Deposit',
-        accessor: 'formatted_deposit_amount',
+        accessor: 'formattedDepositAmount',
         align: 'right',
         width: depositWidth,
-        money: true
+        money: true,
       },
       {
         Header: 'Withdrawal',
-        accessor: 'formatted_withdrawal_amount',
+        accessor: 'formattedWithdrawalAmount',
         align: 'right',
         width: withdrawalWidth,
-        money: true
+        money: true,
       },
     ],
-    [],
+    [depositWidth, withdrawalWidth],
   );
 }

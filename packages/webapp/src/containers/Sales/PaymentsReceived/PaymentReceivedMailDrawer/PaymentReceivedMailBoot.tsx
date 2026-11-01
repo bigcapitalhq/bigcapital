@@ -1,15 +1,13 @@
-import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
-import {
-  GetPaymentReceivedMailStateResponse,
-  usePaymentReceivedMailState,
-} from '@/hooks/query';
+import React, { createContext, useContext } from 'react';
+import type { PaymentReceiveMailStateResponse } from '@bigcapital/sdk-ts';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { usePaymentReceivedMailState } from '@/hooks/query';
 
 interface PaymentReceivedSendMailBootValues {
   paymentReceivedId: number;
 
-  paymentReceivedMailState: GetPaymentReceivedMailStateResponse | undefined;
+  paymentReceivedMailState: PaymentReceiveMailStateResponse | undefined;
   isPaymentReceivedStateLoading: boolean;
 }
 interface InvoiceSendMailBootProps {

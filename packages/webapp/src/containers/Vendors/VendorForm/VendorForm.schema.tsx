@@ -1,42 +1,43 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 
 const Schema = Yup.object().shape({
   salutation: Yup.string().trim(),
-  first_name: Yup.string().trim(),
-  last_name: Yup.string().trim(),
-  company_name: Yup.string().trim(),
-  display_name: Yup.string().trim().required().label(intl.get('display_name_')),
+  firstName: Yup.string().trim(),
+  lastName: Yup.string().trim(),
+  companyName: Yup.string().trim(),
+  displayName: Yup.string().trim(),
+  code: Yup.string().trim(),
 
   email: Yup.string().email().nullable(),
-  work_phone: Yup.string().nullable(),
-  personal_phone: Yup.string().nullable(),
+  workPhone: Yup.string().nullable(),
+  personalPhone: Yup.string().nullable(),
   website: Yup.string().url().nullable(),
 
   active: Yup.boolean(),
   note: Yup.string().trim(),
 
-  billing_address_country: Yup.string().trim(),
-  billing_address1: Yup.string().trim(),
-  billing_address2: Yup.string().trim(),
-  billing_address_city: Yup.string().trim(),
-  billing_address_state: Yup.string().trim(),
-  billing_address_postcode: Yup.string().nullable(),
-  billing_address_phone: Yup.string().nullable(),
+  billingAddressCountry: Yup.string().trim(),
+  billingAddress1: Yup.string().trim(),
+  billingAddress2: Yup.string().trim(),
+  billingAddressCity: Yup.string().trim(),
+  billingAddressState: Yup.string().trim(),
+  billingAddressPostcode: Yup.string().nullable(),
+  billingAddressPhone: Yup.string().nullable(),
 
-  shipping_address_country: Yup.string().trim(),
-  shipping_address1: Yup.string().trim(),
-  shipping_address2: Yup.string().trim(),
-  shipping_address_city: Yup.string().trim(),
-  shipping_address_state: Yup.string().trim(),
-  shipping_address_postcode: Yup.string().nullable(),
-  shipping_address_phone: Yup.string().nullable(),
+  shippingAddressCountry: Yup.string().trim(),
+  shippingAddress1: Yup.string().trim(),
+  shippingAddress2: Yup.string().trim(),
+  shippingAddressCity: Yup.string().trim(),
+  shippingAddressState: Yup.string().trim(),
+  shippingAddressPostcode: Yup.string().nullable(),
+  shippingAddressPhone: Yup.string().nullable(),
 
-  opening_balance: Yup.number().nullable(),
-  currency_code: Yup.string(),
-  opening_balance_at: Yup.date(),
-  opening_balance_branch_id: Yup.string(),
+  openingBalance: Yup.number().nullable(),
+  currencyCode: Yup.string(),
+  openingBalanceAt: Yup.date(),
+  openingBalanceBranchId: Yup.mixed(),
+  openingBalanceExchangeRate: Yup.number().nullable(),
 });
 
 export const CreateVendorFormSchema = Schema;

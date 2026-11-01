@@ -1,25 +1,36 @@
-// @ts-nocheck
-import React from 'react';
-
+import { VendorsListResponse } from '@bigcapital/sdk-ts';
+import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useVendors } from '@/hooks/query';
 
-const VendorsBalanceSummaryGeneralPanelContext = React.createContext();
+interface VendorsBalanceSummaryGeneralPanelContextValue {
+  vendors: VendorsListResponse['data'] | undefined;
+  isVendorsFetching: boolean;
+  isVendorsLoading: boolean;
+}
+
+const VendorsBalanceSummaryGeneralPanelContext = createContext<
+  VendorsBalanceSummaryGeneralPanelContextValue | undefined
+>(undefined);
 
 /**
- * Vendors balance summary provider.
+ * Vendors balance summary general panel provider.
  */
-function VendorsBalanceSummaryGeneralPanelProvider({ filter, ...props }) {
+function VendorsBalanceSummaryGeneralPanelProvider({
+  ...props
+}: {
+  children?: React.ReactNode;
+}) {
   // Fetch vendors list with pagination meta.
   const {
-    data: { vendors },
+    data: vendorsData,
     isLoading: isVendorsLoading,
     isFetching: isVendorsFetching,
   } = useVendors({ page_size: 1000000 });
 
   // Provider.
-  const provider = {
-    vendors,
+  const provider: VendorsBalanceSummaryGeneralPanelContextValue = {
+    vendors: vendorsData?.data,
     isVendorsFetching,
     isVendorsLoading,
   };
@@ -36,8 +47,16 @@ function VendorsBalanceSummaryGeneralPanelProvider({ filter, ...props }) {
   );
 }
 
-const useVendorsBalanceSummaryGeneralPanelContext = () =>
-  React.useContext(VendorsBalanceSummaryGeneralPanelContext);
+const useVendorsBalanceSummaryGeneralPanelContext =
+  (): VendorsBalanceSummaryGeneralPanelContextValue => {
+    const ctx = useContext(VendorsBalanceSummaryGeneralPanelContext);
+    if (!ctx) {
+      throw new Error(
+        'useVendorsBalanceSummaryGeneralPanelContext must be used within a VendorsBalanceSummaryGeneralPanelProvider',
+      );
+    }
+    return ctx;
+  };
 
 export {
   VendorsBalanceSummaryGeneralPanelProvider,

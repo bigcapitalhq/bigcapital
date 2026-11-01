@@ -1,24 +1,25 @@
-// @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-
+import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
+import type { ReconcileVendorCreditFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
-function ReconcileVendorCreditFloatingActions({
-  // #withDialogActions
+interface ReconcileVendorCreditFloatingActionsProps
+  extends WithDialogActionsProps {}
+
+function ReconcileVendorCreditFloatingActionsInner({
   closeDialog,
-}) {
+}: ReconcileVendorCreditFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
-
+  const { isSubmitting } = useFormikContext<ReconcileVendorCreditFormValues>();
   const { dialogName } = useReconcileVendorCreditContext();
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = () => {
     closeDialog(dialogName);
   };
 
@@ -31,7 +32,7 @@ function ReconcileVendorCreditFloatingActions({
           type="submit"
           loading={isSubmitting}
         >
-          {<T id={'save'} />}
+          <T id={'save'} />
         </Button>
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
           <T id={'cancel'} />
@@ -40,4 +41,7 @@ function ReconcileVendorCreditFloatingActions({
     </div>
   );
 }
-export default compose(withDialogActions)(ReconcileVendorCreditFloatingActions);
+export const ReconcileVendorCreditFloatingActions = FF.pipe(
+  ReconcileVendorCreditFloatingActionsInner,
+  withDialogActions,
+);

@@ -1,79 +1,89 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchPurchasesByItemsJson,
+  fetchPurchasesByItemsTable,
+  fetchPurchasesByItemsXlsx,
+  fetchPurchasesByItemsCsv,
+  fetchPurchasesByItemsPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  PurchasesByItemsJsonQuery,
+  PurchasesByItemsJsonResponse,
+  PurchasesByItemsTableQuery,
+  PurchasesByItemsTableResponse,
+  PurchasesByItemsXlsxQuery,
+  PurchasesByItemsCsvQuery,
+  PurchasesByItemsPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve purchases by items.
- */
-export function usePurchasesByItems(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.PURCHASES_BY_ITEMS, query],
-    {
-      method: 'get',
-      url: '/reports/purchases-by-items',
-      params: query,
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function usePurchasesByItems(
+  query: PurchasesByItemsJsonQuery,
+  props?: Omit<
+    UseQueryOptions<PurchasesByItemsJsonResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.purchasesByItems(query),
+    queryFn: () => fetchPurchasesByItemsJson(fetcher, query),
+  });
 }
 
-export function usePurchasesByItemsTable(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.PURCHASES_BY_ITEMS, query],
-    {
-      method: 'get',
-      url: '/reports/purchases-by-items',
-      params: query,
-      headers: {
-        accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function usePurchasesByItemsTable(
+  query: PurchasesByItemsTableQuery,
+  props?: Omit<
+    UseQueryOptions<PurchasesByItemsTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.purchasesByItems(query),
+    queryFn: () => fetchPurchasesByItemsTable(fetcher, query),
+  });
 }
 
-export const usePurchasesByItemsCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/purchases-by-items',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'purchases_by_items.csv',
+export function usePurchasesByItemsCsvExport(
+  query: PurchasesByItemsCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchPurchasesByItemsCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'purchases_by_items.csv'),
+      ),
   });
-};
+}
 
-export const usePurchasesByItemsXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/purchases-by-items',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'purchases_by_items.xlsx',
+export function usePurchasesByItemsXlsxExport(
+  query: PurchasesByItemsXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchPurchasesByItemsXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'purchases_by_items.xlsx'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves the pdf document of purchases by items.
- */
-export const usePurchasesByItemsPdfExport = (query = {}) => {
-  return useRequestPdf({
-    url: '/reports/purchases-by-items',
-    params: query,
-  });
-};
+export function usePurchasesByItemsPdfExport(query: PurchasesByItemsPdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchPurchasesByItemsPdf(fetcher, query));
+}

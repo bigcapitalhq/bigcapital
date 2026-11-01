@@ -1,21 +1,30 @@
-// @ts-nocheck
-import React from 'react';
 import { useFormikContext } from 'formik';
-import EstimateNumberDialog from '@/containers/Dialogs/EstimateNumberDialog';
+import React from 'react';
+import type { EstimateFormValues } from './utils';
+import { DialogsName } from '@/constants/dialogs';
+import { index as EstimateNumberDialog } from '@/containers/Dialogs/EstimateNumberDialog';
+import { InvoiceExchangeRateChangeDialog } from '@/containers/Sales/Invoices/InvoiceForm/Dialogs/InvoiceExchangeRateChangeDialog';
+
+type EstimateNumberSettings = {
+  transactionNumber: string;
+  incrementMode: string;
+};
 
 /**
  * Estimate form dialogs.
  */
-export default function EstimateFormDialogs() {
-  const { setFieldValue } = useFormikContext();
+export function EstimateFormDialogs() {
+  const { setFieldValue } = useFormikContext<EstimateFormValues>();
 
   // Update the form once the estimate number form submit confirm.
-  const handleEstimateNumberFormConfirm = (settings) => {
-    setFieldValue('estimate_number', settings.transactionNumber);
-    setFieldValue('estimate_number_manually', '');
+  const handleEstimateNumberFormConfirm = (
+    settings: EstimateNumberSettings,
+  ) => {
+    setFieldValue('estimateNumber', settings.transactionNumber);
+    setFieldValue('estimateNumberManually', '');
 
     if (settings.incrementMode !== 'auto') {
-      setFieldValue('estimate_number_manually', settings.transactionNumber);
+      setFieldValue('estimateNumberManually', settings.transactionNumber);
     }
   };
 
@@ -24,6 +33,9 @@ export default function EstimateFormDialogs() {
       <EstimateNumberDialog
         dialogName={'estimate-number-form'}
         onConfirm={handleEstimateNumberFormConfirm}
+      />
+      <InvoiceExchangeRateChangeDialog
+        dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
       />
     </>
   );

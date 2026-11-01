@@ -8,8 +8,6 @@ export const SharePaymentLinkFormSchema = Yup.object().shape({
     .nullable()
     .required('Expiration date is required')
     .min(new Date(), 'Expiration date must be in the future'),
-  transactionId: Yup.string()
-    .required('Transaction ID is required'),
-  transactionType: Yup.string()
-    .required('Transaction type is required'),
+  transactionId: Yup.string().required('Transaction ID is required'),
+  transactionType: Yup.string().required('Transaction type is required'),
 });

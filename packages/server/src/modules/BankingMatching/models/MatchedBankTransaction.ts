@@ -5,7 +5,6 @@ export class MatchedBankTransaction extends BaseModel {
   public referenceType!: string;
   public uncategorizedTransactionId!: number;
 
-
   /**
    * Table name.
    */

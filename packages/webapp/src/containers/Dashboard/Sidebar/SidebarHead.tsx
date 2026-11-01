@@ -1,26 +1,156 @@
-// @ts-nocheck
-import { Button, Popover, Menu, Position } from '@blueprintjs/core';
-
-import { Icon } from '@/components';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { useAuthenticatedAccount } from '@/hooks/query';
-import { compose, firstLettersArgs } from '@/utils';
+import {
+  Button,
+  InputGroup,
+  Popover,
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Position,
+} from '@blueprintjs/core';
+import styled, { x } from '@xstyled/emotion';
+import * as FF from 'fp-ts/function';
+import { useMemo, useState } from 'react';
+import intl from 'react-intl-universal';
+import type { ComponentType } from 'react';
+import { Icon, IconProps, FormattedMessage as T } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { useWorkspaces } from '@/ee/workspaces/hooks/query';
+import { useSwitchOrganization } from '@/ee/workspaces/hooks/useSwitchOrganization';
+import {
+  useAuthenticatedAccount,
+  useCurrentOrganizationMetadata,
+} from '@/hooks/query';
+import { useAuthOrganizationId, useAuthActions } from '@/hooks/state';
+import { firstLettersArgs } from '@/utils';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {
   offset: { offset: '28, 8' },
 };
 
+// Minimum number of workspaces required to show the search input.
+const WORKSPACES_SEARCH_MIN_COUNT = 4;
+
+const DashboardOrganizationMenu = styled(Menu)`
+  padding: 10px;
+  min-width: 280px;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .org-workspace-item {
+    padding: 8px 10px;
+
+    &.is-active {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &:hover:not(.is-active):not(.bp4-disabled) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.bp4-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .bp4-menu-divider {
+    margin: 8px 0;
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .bp4-menu-item {
+    color: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    line-height: 20px;
+
+    &:hover:not(.bp4-disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .bp4-icon {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+`;
+
+const DashboardSearchInput = styled(InputGroup)`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+
+  .bp4-input {
+    background: transparent;
+    color: #fff;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+  }
+
+  .bp4-icon {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  &:focus-within,
+  &.bp4-active {
+    border-color: rgba(17, 131, 218, 0.55);
+    box-shadow: 0 0 0 1px rgba(17, 131, 218, 0.35);
+  }
+`;
+
+interface SidebarHeadProps extends Pick<WithDrawerActionsProps, 'openDrawer'> {}
+
+// The shared `Icon` ignores the legacy `size` prop (it wants `iconSize`) and
+// renders it as a DOM attribute; accepted here to preserve the current output.
+const SidebarIcon = Icon as unknown as ComponentType<
+  IconProps & { size?: number }
+>;
+
 /**
- * Sideabr head.
+ * Sidebar head.
  */
 function SidebarHeadJSX({
-  // #withCurrentOrganization
-  organization,
-}) {
-  // Retrieve authenticated user information.
+  // #withDrawerActions
+  openDrawer,
+}: SidebarHeadProps) {
+  const metadata = useCurrentOrganizationMetadata();
   const { data: user } = useAuthenticatedAccount();
+  const { data: workspaces } = useWorkspaces();
+  const currentOrganizationId = useAuthOrganizationId();
+  const switchOrganization = useSwitchOrganization();
+  const { setLogout } = useAuthActions();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredWorkspaces = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return workspaces || [];
+
+    return (workspaces || []).filter((workspace) =>
+      (workspace.metadata?.name || workspace.organizationId)
+        .toLowerCase()
+        .includes(query),
+    );
+  }, [workspaces, searchQuery]);
+
+  const handleSwitchWorkspace = (organizationId: string) => {
+    if (organizationId === currentOrganizationId) {
+      return;
+    }
+    switchOrganization(organizationId);
+  };
+
+  const handleLogout = () => {
+    setLogout();
+  };
 
   return (
     <div className="sidebar__head">
@@ -29,26 +159,182 @@ function SidebarHeadJSX({
           modifiers={POPOVER_MODIFIERS}
           boundary={'window'}
           content={
-            <Menu className={'menu--dashboard-organization'}>
-              <div class="org-item">
-                <div class="org-item__logo">
-                  {firstLettersArgs(...(organization.name || '').split(' '))}{' '}
-                </div>
-                <div class="org-item__name">{organization.name}</div>
-              </div>
-            </Menu>
+            <DashboardOrganizationMenu>
+              <x.div
+                display="flex"
+                alignItems="center"
+                gap={3}
+                py={'8px'}
+                px={'10px'}
+                backgroundColor="rgba(255, 255, 255, 0.05)"
+                borderRadius={4}
+              >
+                {metadata?.logoUri ? (
+                  <x.img
+                    src={metadata?.logoUri}
+                    alt={metadata?.name}
+                    h={'60px'}
+                    w={'60px'}
+                    borderRadius={10}
+                    objectFit="cover"
+                  />
+                ) : (
+                  <x.div
+                    h={'60px'}
+                    w={'60px'}
+                    lineHeight="60px"
+                    borderRadius={10}
+                    backgroundColor="#CB22E5"
+                    textAlign="center"
+                    fontWeight={400}
+                    fontSize={16}
+                    color="#fff"
+                  >
+                    {firstLettersArgs(...(metadata?.name || '').split(' '))}
+                  </x.div>
+                )}
+                <x.div fontWeight={600} color="#fff">
+                  {metadata?.name}
+                </x.div>
+              </x.div>
+              <MenuDivider />
+
+              <MenuItem
+                icon={<SidebarIcon icon={'list'} size={16} />}
+                text={<T id={'workspaces.view_all_workspaces'} />}
+                onClick={() => openDrawer(DRAWERS.ORGANIZATIONS_LIST)}
+              />
+              <MenuDivider />
+
+              {(workspaces?.length ?? 0) > WORKSPACES_SEARCH_MIN_COUNT && (
+                <x.div mb={'10px'} px={'2px'} flexShrink={0}>
+                  <DashboardSearchInput
+                    leftIcon="search"
+                    placeholder={intl.get(
+                      'workspaces.search_workspaces_short',
+                      { fallback: 'Search...' },
+                    )}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </x.div>
+              )}
+
+              <x.div flex="1" minHeight={0} overflowY="auto">
+                {filteredWorkspaces?.map((workspace) => {
+                  const name =
+                    workspace.metadata?.name || workspace.organizationId;
+                  const initials = firstLettersArgs(...(name || '').split(' '));
+                  const isActive =
+                    workspace.organizationId === currentOrganizationId;
+                  const isDisabled =
+                    !workspace.isReady || workspace.isBuildRunning;
+
+                  return (
+                    <MenuItem
+                      key={workspace.organizationId}
+                      className={`org-workspace-item ${isActive ? 'is-active' : ''}`}
+                      disabled={isDisabled}
+                      onClick={() =>
+                        handleSwitchWorkspace(workspace.organizationId)
+                      }
+                      text={
+                        <x.div
+                          display="flex"
+                          alignItems="center"
+                          gap={3}
+                          w="100%"
+                        >
+                          {workspace.metadata?.logoUri ? (
+                            <x.img
+                              src={workspace.metadata.logoUri}
+                              alt={name}
+                              w={'28px'}
+                              h={'28px'}
+                              borderRadius={'10px'}
+                              objectFit="cover"
+                              flexShrink={0}
+                            />
+                          ) : (
+                            <x.div
+                              w={'28px'}
+                              h={'28px'}
+                              borderRadius={'10px'}
+                              backgroundColor="#5c7c99"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              fontSize={12}
+                              color="#fff"
+                              flexShrink={0}
+                            >
+                              {initials}
+                            </x.div>
+                          )}
+                          <x.span
+                            flex={1}
+                            overflow="hidden"
+                            textOverflow="ellipsis"
+                            whiteSpace="nowrap"
+                            fontWeight={isActive ? 500 : undefined}
+                          >
+                            {name}
+                          </x.span>
+                          {isActive && (
+                            <Icon
+                              icon={'tick'}
+                              iconSize={14}
+                              color="#48aff0"
+                              style={{ flexShrink: 0 }}
+                            />
+                          )}
+                        </x.div>
+                      }
+                    />
+                  );
+                })}
+
+                {searchQuery && filteredWorkspaces.length === 0 && (
+                  <x.div
+                    py={'12px'}
+                    px={'10px'}
+                    fontSize={13}
+                    color="rgba(255, 255, 255, 0.5)"
+                  >
+                    {intl.get('workspaces.no_workspaces_found', {
+                      fallback: 'No workspaces found.',
+                    })}
+                  </x.div>
+                )}
+              </x.div>
+
+              <MenuDivider />
+              <MenuItem
+                icon={<SidebarIcon icon={'plus'} size={16} />}
+                text={<T id={'workspaces.create_workspace'} />}
+                onClick={() => openDrawer(DRAWERS.CREATE_WORKSPACE)}
+              />
+              <MenuDivider />
+              <MenuItem
+                icon={<SidebarIcon icon={'log-out'} size={16} />}
+                text={<T id={'logout'} />}
+                onClick={handleLogout}
+              />
+            </DashboardOrganizationMenu>
           }
           position={Position.BOTTOM}
           minimal={true}
         >
           <Button
             className="title"
-            rightIcon={<Icon icon={'caret-down-16'} size={16} />}
+            rightIcon={<SidebarIcon icon={'caret-down-16'} size={16} />}
           >
-            {organization.name}
+            {metadata?.name}
           </Button>
         </Popover>
-        <span class="subtitle">{user.full_name}</span>
+        <span className="subtitle">
+          {user.firstName} {user.lastName}
+        </span>
       </div>
 
       <div className="sidebar__head-logo">
@@ -63,6 +349,4 @@ function SidebarHeadJSX({
   );
 }
 
-export const SidebarHead = compose(
-  withCurrentOrganization(({ organization }) => ({ organization })),
-)(SidebarHeadJSX);
+export const SidebarHead = FF.pipe(SidebarHeadJSX, withDrawerActions);

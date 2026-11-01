@@ -9,23 +9,18 @@ import { INumberFormatQuery } from '../../types/Report.types';
 import { Transform, Type } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class InventoryValuationQueryDto {
   @ApiPropertyOptional({
     description: 'The date for which the inventory valuation is requested',
-    example: '2024-01-01T00:00:00.000Z',
+    example: '2024-01-01',
     type: String,
   })
   @IsDateString()
   @IsOptional()
   asDate: Date | string;
 
-  @ApiPropertyOptional({
-    description: 'Number format options',
-    type: NumberFormatQueryDto,
-    example: { currency: 'USD', decimals: 2 },
-  })
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
   @IsOptional()

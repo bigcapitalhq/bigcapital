@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { BranchesController } from './Branches.controller';
 import { CreateBranchService } from './commands/CreateBranch.service';
 import { DeleteBranchService } from './commands/DeleteBranch.service';
@@ -34,13 +33,25 @@ import { ExpensesActivateBranches } from './integrations/Expense/ExpensesActivat
 import { BillActivateBranches } from './integrations/Purchases/BillBranchesActivate';
 import { VendorCreditActivateBranches } from './integrations/Purchases/VendorCreditBranchesActivate';
 import { BillPaymentsActivateBranches } from './integrations/Purchases/PaymentMadeBranchesActivate';
+import { SaleInvoiceActivateBranches } from './integrations/Sales/SaleInvoiceBranchesActivate';
+import { SaleReceiptActivateBranches } from './integrations/Sales/SaleReceiptBranchesActivate';
+import { SaleEstimateActivateBranches } from './integrations/Sales/SaleEstimatesBranchesActivate';
+import { PaymentReceiveActivateBranches } from './integrations/Sales/PaymentReceiveBranchesActivate';
+import { CreditNoteActivateBranches } from './integrations/Sales/CreditNoteBranchesActivate';
 import { BillBranchesActivateSubscriber } from './subscribers/Activate/BillBranchesActivateSubscriber';
 import { VendorCreditBranchesActivateSubscriber } from './subscribers/Activate/VendorCreditBranchesActivateSubscriber';
 import { PaymentMadeActivateBranchesSubscriber } from './subscribers/Activate/PaymentMadeBranchesActivateSubscriber';
+import { CashflowActivateBranchesSubscriber } from './subscribers/Activate/CashflowBranchesActivateSubscriber';
+import { CreditNoteActivateBranchesSubscriber } from './subscribers/Activate/CreditNoteBranchesActivateSubscriber';
+import { ExpenseActivateBranchesSubscriber } from './subscribers/Activate/ExpenseBranchesActivateSubscriber';
+import { PaymentReceiveActivateBranchesSubscriber } from './subscribers/Activate/PaymentReceiveBranchesActivateSubscriber';
+import { SaleEstimatesActivateBranchesSubscriber } from './subscribers/Activate/SaleEstiamtesBranchesActivateSubscriber';
+import { SaleInvoicesActivateBranchesSubscriber } from './subscribers/Activate/SaleInvoiceBranchesActivateSubscriber';
+import { SaleReceiptsActivateBranchesSubscriber } from './subscribers/Activate/SaleReceiptsBranchesActivateSubscriber';
 import { FeaturesModule } from '../Features/Features.module';
 
 @Module({
-  imports: [TenancyDatabaseModule, FeaturesModule],
+  imports: [TenancyModule, TenancyDatabaseModule, FeaturesModule],
   controllers: [BranchesController],
   providers: [
     CreateBranchService,
@@ -52,8 +63,6 @@ import { FeaturesModule } from '../Features/Features.module';
     ActivateBranches,
     BranchesApplication,
     BranchesSettingsService,
-    TenancyContext,
-    TransformerInjectable,
     BranchCommandValidator,
     BranchTransactionDTOTransformer,
     ManualJournalBranchesDTOTransformer,
@@ -76,9 +85,21 @@ import { FeaturesModule } from '../Features/Features.module';
     BillActivateBranches,
     VendorCreditActivateBranches,
     BillPaymentsActivateBranches,
+    SaleInvoiceActivateBranches,
+    SaleReceiptActivateBranches,
+    SaleEstimateActivateBranches,
+    PaymentReceiveActivateBranches,
+    CreditNoteActivateBranches,
     BillBranchesActivateSubscriber,
     VendorCreditBranchesActivateSubscriber,
-    PaymentMadeActivateBranchesSubscriber
+    PaymentMadeActivateBranchesSubscriber,
+    CashflowActivateBranchesSubscriber,
+    CreditNoteActivateBranchesSubscriber,
+    ExpenseActivateBranchesSubscriber,
+    PaymentReceiveActivateBranchesSubscriber,
+    SaleEstimatesActivateBranchesSubscriber,
+    SaleInvoicesActivateBranchesSubscriber,
+    SaleReceiptsActivateBranchesSubscriber,
   ],
   exports: [
     BranchesSettingsService,
@@ -86,4 +107,4 @@ import { FeaturesModule } from '../Features/Features.module';
     ManualJournalBranchesDTOTransformer,
   ],
 })
-export class BranchesModule { }
+export class BranchesModule {}

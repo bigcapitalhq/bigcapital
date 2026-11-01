@@ -24,7 +24,7 @@ export class UnexcludeBankTransactionService {
     private readonly uncategorizedBankTransactionModel: TenantModelProxy<
       typeof UncategorizedBankTransaction
     >,
-  ) { }
+  ) {}
 
   /**
    * Marks the given bank transaction as excluded.
@@ -50,6 +50,7 @@ export class UnexcludeBankTransactionService {
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       await this.eventEmitter.emitAsync(events.bankTransactions.onUnexcluding, {
         uncategorizedTransactionId,
+        uncategorizedTransaction: oldUncategorizedTransaction,
         trx,
       } as IBankTransactionUnexcludingEventPayload);
 
@@ -62,6 +63,7 @@ export class UnexcludeBankTransactionService {
 
       await this.eventEmitter.emitAsync(events.bankTransactions.onUnexcluded, {
         uncategorizedTransactionId,
+        uncategorizedTransaction: oldUncategorizedTransaction,
         trx,
       } as IBankTransactionUnexcludedEventPayload);
     });

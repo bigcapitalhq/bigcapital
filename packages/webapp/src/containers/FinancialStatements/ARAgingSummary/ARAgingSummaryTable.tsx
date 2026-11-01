@@ -1,43 +1,37 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
-import { ReportDataTable, FinancialSheet } from '@/components';
-
+import { getReportRowTestId } from '../reportTestIds';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { useARAgingSummaryColumns } from './components';
-
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
 import { tableRowTypesToClassnames } from '@/utils';
 
-/**
- * AR aging summary table sheet.
- */
-export default function ReceivableAgingSummaryTable({
-  // #ownProps
-  organizationName,
-}) {
-  // AR aging summary report context.
-  const {
-    ARAgingSummary: { table, query, meta },
-    isARAgingLoading,
-  } = useARAgingSummaryContext();
+interface ARAgingSummaryTableProps {
+  organizationName: string;
+}
 
-  // AR aging summary columns.
+export function ARAgingSummaryTable({
+  organizationName,
+}: ARAgingSummaryTableProps) {
+  const { ARAgingSummary } = useARAgingSummaryContext();
+
   const columns = useARAgingSummaryColumns();
+  const table = (ARAgingSummary as any)?.table;
+  const meta = (ARAgingSummary as any)?.meta;
 
   return (
     <FinancialSheet
       companyName={organizationName}
       sheetType={intl.get('receivable_aging_summary')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      loading={isARAgingLoading}
+      dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
     >
       <ARAgingSummaryDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('ar-aging')}
         noInitialFetch={true}
         sticky={true}
         styleName={TableStyle.Constrant}

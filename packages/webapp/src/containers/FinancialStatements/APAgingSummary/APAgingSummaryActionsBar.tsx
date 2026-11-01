@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarDivider,
   NavbarGroup,
@@ -9,55 +7,60 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-
 import classNames from 'classnames';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { APAgingSummaryExportMenu } from './components';
-
-import { withAPAgingSummary } from './withAPAgingSummary';
-import { withAPAgingSummaryActions } from './withAPAgingSummaryActions';
-
-import { saveInvoke, compose } from '@/utils';
+import {
+  withAPAgingSummary,
+  WithAPAgingSummaryProps,
+} from './withAPAgingSummary';
+import {
+  withAPAgingSummaryActions,
+  WithAPAgingSummaryActionsProps,
+} from './withAPAgingSummaryActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { saveInvoke } from '@/utils';
 
-/**
- * AP Aging summary sheet - Actions bar.
- */
-function APAgingSummaryActionsBar({
-  // #withPayableAgingSummary
+interface APAgingSummaryActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (numberFormat: Record<string, unknown>) => void;
+}
+
+type APAgingSummaryActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<WithAPAgingSummaryActionsProps, 'toggleAPAgingSummaryFilterDrawer'> &
+  WithDialogActionsProps &
+  APAgingSummaryActionsBarOwnProps;
+
+function APAgingSummaryActionsBarInner({
   isFilterDrawerOpen,
-
-  // #withARAgingSummaryActions
   toggleAPAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
-
-  // #withDialogActions
   openDialog,
-
-  //#ownProps
   numberFormat,
   onNumberFormatSubmit,
-}) {
+}: APAgingSummaryActionsBarProps) {
   const { isAPAgingFetching, refetch } = useAPAgingSummaryContext();
 
   const handleFilterToggleClick = () => {
     toggleFilterDrawerDisplay();
   };
 
-  // handle recalculate report button.
   const handleRecalculateReport = () => {
     refetch();
   };
 
-  // handle number format submit.
-  const handleNumberFormatSubmit = (numberFormat) => {
+  const handleNumberFormatSubmit = (numberFormat: Record<string, unknown>) => {
     saveInvoke(onNumberFormatSubmit, numberFormat);
   };
 
-  // Handle the print button click.
   const handlePrintBtnClick = () => {
     openDialog(DialogsName.APAgingSummaryPdfPreview);
   };
@@ -130,10 +133,11 @@ function APAgingSummaryActionsBar({
   );
 }
 
-export default compose(
-  withAPAgingSummaryActions,
+export const APAgingSummaryActionsBar = FF.pipe(
+  APAgingSummaryActionsBarInner,
+  withDialogActions,
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
-  withDialogActions
-)(APAgingSummaryActionsBar);
+  withAPAgingSummaryActions,
+);

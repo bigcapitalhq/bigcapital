@@ -253,28 +253,28 @@ export const getResourceColumns = (resourceColumns: {
 }) => {
   const mapColumn =
     (group: string) =>
-      ([fieldKey, { name, importHint, required, order, ...field }]: [
-        string,
-        IModelMetaField2,
-      ]) => {
-        const extra: Record<string, any> = {};
-        const key = fieldKey;
+    ([fieldKey, { name, importHint, required, order, ...field }]: [
+      string,
+      IModelMetaField2,
+    ]) => {
+      const extra: Record<string, any> = {};
+      const key = fieldKey;
 
-        if (group) {
-          extra.group = group;
-        }
-        if (field.fieldType === 'collection') {
-          extra.fields = mapColumns(field.fields, key);
-        }
-        return {
-          key,
-          name,
-          required,
-          hint: importHint,
-          order,
-          ...extra,
-        };
+      if (group) {
+        extra.group = group;
+      }
+      if (field.fieldType === 'collection') {
+        extra.fields = mapColumns(field.fields, key);
+      }
+      return {
+        key,
+        name,
+        required,
+        hint: importHint,
+        order,
+        ...extra,
       };
+    };
   const sortColumn = (a, b) =>
     a.order && b.order ? a.order - b.order : a.order ? -1 : b.order ? 1 : 0;
 
@@ -288,50 +288,54 @@ export type ModelResolver = (modelName: string) => any;
 
 // Prases the given object value based on the field key type.
 export const valueParser =
-  (fields: ResourceMetaFieldsMap, modelResolver: ModelResolver, trx?: Knex.Transaction) =>
-    async (value: any, key: string, group = '') => {
-      let _value = value;
+  (
+    fields: ResourceMetaFieldsMap,
+    modelResolver: ModelResolver,
+    trx?: Knex.Transaction,
+  ) =>
+  async (value: any, key: string, group = '') => {
+    let _value = value;
 
-      const fieldKey = key.includes('.') ? key.split('.')[0] : key;
-      const field = group ? fields[group]?.fields[fieldKey] : fields[fieldKey];
+    const fieldKey = key.includes('.') ? key.split('.')[0] : key;
+    const field = group ? fields[group]?.fields[fieldKey] : fields[fieldKey];
 
-      // Parses the boolean value.
-      if (field.fieldType === 'boolean') {
-        _value = parseBoolean(value);
+    // Parses the boolean value.
+    if (field.fieldType === 'boolean') {
+      _value = parseBoolean(value);
 
-        // Parses the enumeration value.
-      } else if (field.fieldType === 'enumeration') {
-        const option = get(field, 'options', []).find(
-          (option) => option.label?.toLowerCase() === value?.toLowerCase(),
-        );
-        _value = get(option, 'key');
-        // Parses the numeric value.
-      } else if (field.fieldType === 'number') {
-        _value = multiNumberParse(value);
-        // Parses the relation value.
-      } else if (field.fieldType === 'relation') {
-        const RelationModel = modelResolver(field.relationModel);
+      // Parses the enumeration value.
+    } else if (field.fieldType === 'enumeration') {
+      const option = get(field, 'options', []).find(
+        (option) => option.label?.toLowerCase() === value?.toLowerCase(),
+      );
+      _value = get(option, 'key');
+      // Parses the numeric value.
+    } else if (field.fieldType === 'number') {
+      _value = multiNumberParse(value);
+      // Parses the relation value.
+    } else if (field.fieldType === 'relation') {
+      const RelationModel = modelResolver(field.relationModel);
 
-        if (!RelationModel) {
-          throw new Error(`The relation model of ${key} field is not exist.`);
-        }
-        const relationQuery = RelationModel.query(trx);
-        const relationKeys = castArray(field?.relationImportMatch);
-
-        relationQuery.where(function () {
-          relationKeys.forEach((relationKey: string) => {
-            this.orWhereRaw('LOWER(??) = LOWER(?)', [relationKey, value]);
-          });
-        });
-        const result = await relationQuery.first();
-        _value = get(result, 'id');
-      } else if (field.fieldType === 'collection') {
-        const ObjectFieldKey = key.includes('.') ? key.split('.')[1] : key;
-        const _valueParser = valueParser(fields, modelResolver);
-        _value = await _valueParser(value, ObjectFieldKey, fieldKey);
+      if (!RelationModel) {
+        throw new Error(`The relation model of ${key} field is not exist.`);
       }
-      return _value;
-    };
+      const relationQuery = RelationModel.query(trx);
+      const relationKeys = castArray(field?.relationImportMatch);
+
+      relationQuery.where(function () {
+        relationKeys.forEach((relationKey: string) => {
+          this.orWhereRaw('LOWER(??) = LOWER(?)', [relationKey, value]);
+        });
+      });
+      const result = await relationQuery.first();
+      _value = get(result, 'id');
+    } else if (field.fieldType === 'collection') {
+      const ObjectFieldKey = key.includes('.') ? key.split('.')[1] : key;
+      const _valueParser = valueParser(fields, modelResolver);
+      _value = await _valueParser(value, ObjectFieldKey, fieldKey);
+    }
+    return _value;
+  };
 
 /**
  * Parses the field key and detarmines the key path.
@@ -339,8 +343,9 @@ export const valueParser =
  * @param {string} key - Mapped key path. formats: `group.key` or `key`.
  * @returns {string}
  */
-export const parseKey = R.curry(
-  (fields: { [key: string]: IModelMetaField2 }, key: string) => {
+export const parseKey =
+  (fields: { [key: string]: IModelMetaField2 }) =>
+  (key: string): string => {
     const fieldKey = getFieldKey(key);
     const field = fields[fieldKey];
     let _key = key;
@@ -358,8 +363,7 @@ export const parseKey = R.curry(
       }
     }
     return _key;
-  },
-);
+  };
 
 /**
  * Retrieves the field root key, for instance: I -> entries.itemId O -> entries.
@@ -452,7 +456,12 @@ export const deleteImportFile = async (filename: string) => {
   const filePath = getImportsStoragePath();
 
   // Deletes the imported file.
-  await fs.unlink(`${filePath}/${filename}`);
+  await fs.unlink(`${filePath}/${filename}`).catch((error) => {
+    // Ignore the error if the file does not exist.
+    if (error.code !== 'ENOENT') {
+      throw error;
+    }
+  });
 };
 
 /**

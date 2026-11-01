@@ -33,7 +33,7 @@ export class StripePaymentService {
         },
       });
       return accountSession.client_secret;
-    } catch (error) {
+    } catch (_error) {
       throw new Error(
         'An error occurred when calling the Stripe API to create an account session',
       );
@@ -54,7 +54,7 @@ export class StripePaymentService {
         type: 'account_onboarding',
       });
       return accountLink;
-    } catch (error) {
+    } catch (_error) {
       throw new Error(
         'An error occurred when calling the Stripe API to create an account link:',
       );
@@ -71,7 +71,7 @@ export class StripePaymentService {
         type: 'standard',
       });
       return account;
-    } catch (error) {
+    } catch (_error) {
       throw new Error(
         'An error occurred when calling the Stripe API to create an account',
       );

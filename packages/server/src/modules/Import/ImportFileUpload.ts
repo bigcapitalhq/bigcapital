@@ -6,6 +6,7 @@ import {
   sanitizeResourceName,
   validateSheetEmpty,
 } from './_utils';
+import { validateImportFileMagicBytes } from './ImportMulter.utils';
 import { ResourceService } from '../Resource/ResourceService';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
@@ -24,7 +25,7 @@ export class ImportFileUploadService {
 
     @Inject(ImportModel.name)
     private readonly importModel: typeof ImportModel,
-  ) { }
+  ) {}
 
   /**
    * Imports the specified file for the given resource.
@@ -68,6 +69,9 @@ export class ImportFileUploadService {
     // Reads the imported file into buffer.
     const buffer = await readImportFile(filename);
 
+    // Guard against MIME-type spoofing by verifying actual file magic bytes.
+    await validateImportFileMagicBytes(buffer);
+
     // Parse the buffer file to array data.
     const [sheetData, sheetColumns] = parseSheetData(buffer);
     const coumnsStringified = JSON.stringify(sheetColumns);
@@ -84,7 +88,10 @@ export class ImportFileUploadService {
     } catch (error) {
       throw error;
     }
-    const _params = await this.importFileCommon.transformParams(resource, params);
+    const _params = await this.importFileCommon.transformParams(
+      resource,
+      params,
+    );
     const paramsStringified = JSON.stringify(_params);
 
     const tenant = await this.tenancyContext.getTenant();
@@ -100,7 +107,7 @@ export class ImportFileUploadService {
       params: paramsStringified,
     });
     const resourceColumnsMap =
-      this.resourceService.getResourceFields2(resource);
+      await this.resourceService.getResourceFields2(resource);
     const resourceColumns = getResourceColumns(resourceColumnsMap);
 
     return {

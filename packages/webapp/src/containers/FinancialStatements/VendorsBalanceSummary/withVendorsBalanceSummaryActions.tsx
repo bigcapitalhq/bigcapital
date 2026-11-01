@@ -1,10 +1,27 @@
-// @ts-nocheck
 import { connect } from 'react-redux';
-import { toggleVendorsBalanceSummaryFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
+import { Dispatch } from 'redux';
+import type { ComponentType } from 'react';
+import { toggleVendorsBalanceSummaryFilterDrawer } from '@/store/financial-statement/financial-statements.actions';
 
-const mapActionsToProps = (dispatch) => ({
-  toggleVendorSummaryFilterDrawer: (toggle) =>
+export interface WithVendorsBalanceSummaryActionsProps {
+  toggleVendorSummaryFilterDrawer: (toggle: boolean) => void;
+}
+
+export const mapActionsToProps = (
+  dispatch: Dispatch,
+): WithVendorsBalanceSummaryActionsProps => ({
+  toggleVendorSummaryFilterDrawer: (toggle: boolean) =>
     dispatch(toggleVendorsBalanceSummaryFilterDrawer(toggle)),
 });
 
-export const withVendorsBalanceSummaryActions = connect(null, mapActionsToProps);
+export function withVendorsBalanceSummaryActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithVendorsBalanceSummaryActionsProps>> {
+  const Connected = connect(
+    null,
+    mapActionsToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithVendorsBalanceSummaryActionsProps>
+  >;
+}

@@ -20,7 +20,7 @@ export class VendorCreditsRefundApplication {
     private readonly deleteRefundVendorCreditService: DeleteRefundVendorCreditService,
     private readonly getRefundVendorCreditsService: GetRefundVendorCreditsService,
     private readonly getRefundVendorCreditService: GetRefundVendorCreditService,
-  ) { }
+  ) {}
 
   /**
    * Retrieve the vendor credit refunds graph.

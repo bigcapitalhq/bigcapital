@@ -5,7 +5,7 @@ import { SocketGateway } from '../../Socket/Socket.gateway';
 
 @Injectable()
 export class TriggerInvalidateCacheOnSubscriptionChange {
-  constructor(private readonly socketGateway: SocketGateway) { }
+  constructor(private readonly socketGateway: SocketGateway) {}
 
   @OnEvent(events.subscription.onSubscriptionCancelled)
   @OnEvent(events.subscription.onSubscriptionResumed)

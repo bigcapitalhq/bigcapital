@@ -337,35 +337,3 @@
     }
   }
 }
-
-.menu--dashboard-organization {
-  padding: 10px;
-
-  .org-item {
-    display: flex;
-    align-items: center;
-
-    &__logo {
-      height: 40px;
-      width: 40px;
-      line-height: 40px;
-      border-radius: 3px;
-      background-color: #CB22E5;
-      text-align: center;
-      font-weight: 400;
-      font-size: 16px;
-      color: #fff;
-    }
-
-    &__name {
-      margin-left: 12px;
-      font-weight: 600;
-    }
-
-    &__divider {
-      margin: 4px 0;
-      height: 1px;
-      background: #ebebeb;
-    }
-  }
-}

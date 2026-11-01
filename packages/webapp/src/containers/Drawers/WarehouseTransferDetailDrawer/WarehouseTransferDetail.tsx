@@ -1,18 +1,12 @@
-// @ts-nocheck
+import { Tab } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Tab } from '@blueprintjs/core';
+import { WarehouseTransferDetailActionsBar } from './WarehouseTransferDetailActionsBar';
+import { WarehouseTransferDetailPanel } from './WarehouseTransferDetailPanel';
 import { DrawerMainTabs } from '@/components';
 
-import WarehouseTransferDetailPanel from './WarehouseTransferDetailPanel';
-import WarehouseTransferDetailActionsBar from './WarehouseTransferDetailActionsBar';
-
-/**
- * Warehouse transfer view detail.
- * @returns {React.JSX}
- */
-export default function WarehouseTransferDetail() {
+export function WarehouseTransferDetail(): React.ReactElement {
   return (
     <WarehouseTransferRoot>
       <WarehouseTransferDetailActionsBar />
@@ -21,11 +15,7 @@ export default function WarehouseTransferDetail() {
   );
 }
 
-/**
- * Warehouse transfer details tabs.
- * @returns {React.JSX}
- */
-function WarehouseTransferDetailsTabs() {
+function WarehouseTransferDetailsTabs(): React.ReactElement {
   return (
     <DrawerMainTabs>
       <Tab

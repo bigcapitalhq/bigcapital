@@ -1,45 +1,48 @@
-// @ts-nocheck
-import React, { useEffect, useCallback } from 'react';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
-
-import PurchasesByItemsActionsBar from './PurchasesByItemsActionsBar';
-import PurchasesByItemsHeader from './PurchasesByItemsHeader';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
+import { useEffect, useCallback } from 'react';
 import { PurchasesByItemsLoadingBar } from './components';
-import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
+import { PurchasesByItemsActionsBar } from './PurchasesByItemsActionsBar';
 import { PurchasesByItemsBody } from './PurchasesByItemsBody';
-import { usePurchasesByItemsQuery } from './utils';
-import { compose } from '@/utils';
-
-import { withPurchasesByItemsActions } from './withPurchasesByItemsActions';
 import { PurchasesByItemsDialogs } from './PurchasesByItemsDialogs';
+import { PurchasesByItemsHeader } from './PurchasesByItemsHeader';
+import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
+import { usePurchasesByItemsQuery } from './utils';
+import {
+  withPurchasesByItemsActions,
+  WithPurchasesByItemsActionsProps,
+} from './withPurchasesByItemsActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+
+interface PurchasesByItemsProps {
+  togglePurchasesByItemsFilterDrawer: WithPurchasesByItemsActionsProps['togglePurchasesByItemsFilterDrawer'];
+}
 
 /**
  * Purchases by items.
  */
-function PurchasesByItems({
+function PurchasesByItemsInner({
   // #withPurchasesByItemsActions
   togglePurchasesByItemsFilterDrawer,
-}) {
+}: PurchasesByItemsProps) {
   const { query, setLocationQuery } = usePurchasesByItemsQuery();
 
   // Handle filter form submit.
   const handleFilterSubmit = useCallback(
-    (filter) => {
+    (filter: Record<string, unknown>) => {
       const parsedFilter = {
         ...filter,
-        fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
-        toDate: moment(filter.toDate).format('YYYY-MM-DD'),
+        fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
+        toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
       };
       setLocationQuery(parsedFilter);
     },
     [setLocationQuery],
   );
   // Handle number format form submit.
-  const handleNumberFormatSubmit = (numberFormat) => {
-    setFilter({
-      ...filter,
+  const handleNumberFormatSubmit = (numberFormat: Record<string, unknown>) => {
+    setLocationQuery({
+      ...query,
       numberFormat,
     });
   };
@@ -54,7 +57,7 @@ function PurchasesByItems({
   return (
     <PurchasesByItemsProvider query={query}>
       <PurchasesByItemsActionsBar
-        numberFormat={query.numberFormat}
+        numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <PurchasesByItemsLoadingBar />
@@ -74,4 +77,7 @@ function PurchasesByItems({
   );
 }
 
-export default compose(withPurchasesByItemsActions)(PurchasesByItems);
+export const PurchasesByItems = FF.pipe(
+  PurchasesByItemsInner,
+  withPurchasesByItemsActions,
+);

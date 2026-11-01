@@ -1,15 +1,16 @@
-// @ts-nocheck
-import React from 'react';
 import { x } from '@xstyled/emotion';
 import { FastField } from 'formik';
-import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
+import React from 'react';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
+import type { EstimateFormValues } from './utils';
+import type { FieldProps } from 'formik';
+import { ItemsEntriesTable } from '@/containers/Entries/ItemsEntriesTable';
 
 /**
  * Estimate form items entries editor.
  */
-export default function EstimateFormItemsEntriesField() {
+export function EstimateFormItemsEntriesField() {
   const { items } = useEstimateFormContext();
 
   return (
@@ -22,8 +23,8 @@ export default function EstimateFormItemsEntriesField() {
         {({
           form: { values, setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+          meta: { error },
+        }: FieldProps<any[], EstimateFormValues>) => (
           <ItemsEntriesTable
             value={value}
             onChange={(entries) => {
@@ -32,7 +33,7 @@ export default function EstimateFormItemsEntriesField() {
             items={items}
             errors={error}
             linesNumber={4}
-            currencyCode={values.currency_code}
+            currencyCode={values.currencyCode}
             enableTaxRates={false}
           />
         )}

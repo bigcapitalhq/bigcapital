@@ -1,11 +1,7 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import intl from 'react-intl-universal';
 import TableContext from './TableContext';
 
-/**
- * Table no-results row text.
- */
 export default function TableNoResultsRow() {
   const {
     props: { noResults },
@@ -16,7 +12,7 @@ export default function TableNoResultsRow() {
 
   return (
     <div className={'tr no-results'}>
-      <div class="td">{noResultText}</div>
+      <div className="td">{noResultText}</div>
     </div>
   );
 }

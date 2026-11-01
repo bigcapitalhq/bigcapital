@@ -1,11 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 import { TransformerInjectable } from './TransformerInjectable.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 
 @Global()
 @Module({
-  providers: [TransformerInjectable, TenancyContext],
+  providers: [TransformerInjectable],
   exports: [TransformerInjectable],
-  imports: [],
+  imports: [TenancyModule],
 })
 export class TransformerModule {}

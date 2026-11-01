@@ -1,9 +1,8 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { I18nService } from 'nestjs-i18n';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
-  IBalanceSheetAggregateNode,
   IBalanceSheetDataNode,
   IBalanceSheetSchemaAggregateNode,
   IBalanceSheetSchemaNode,
@@ -23,7 +22,7 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(
+  class extends flow(
     BalanceSheetDatePeriods,
     BalanceSheetComparsionPreviousPeriod,
     BalanceSheetComparsionPreviousYear,
@@ -53,11 +52,6 @@ export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
     readonly baseCurrency: string;
 
     /**
-     * Localization.
-     */
-    readonly i18n: any;
-
-    /**
      * Sets total amount that calculated from node children.
      * @param {IBalanceSheetSection} node
      * @returns {IBalanceSheetDataNode}
@@ -65,18 +59,18 @@ export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
     public aggregateNodeTotalMapper = (
       node: IBalanceSheetDataNode,
     ): IBalanceSheetDataNode => {
-      return R.compose(
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearAggregateNodeComposer,
+      return flow(
+        when(
+          this.query.isDatePeriodsColumnsType,
+          this.assocAggregateNodeDatePeriods,
         ),
-        R.when(
+        when(
           this.query.isPreviousPeriodActive,
           this.previousPeriodAggregateNodeComposer,
         ),
-        R.when(
-          this.query.isDatePeriodsColumnsType,
-          this.assocAggregateNodeDatePeriods,
+        when(
+          this.query.isPreviousYearActive,
+          this.previousYearAggregateNodeComposer,
         ),
       )(node);
     };
@@ -88,7 +82,7 @@ export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
      */
     public reportSchemaAggregateNodeMapper = (
       node: IBalanceSheetSchemaAggregateNode,
-    ): IBalanceSheetAggregateNode => {
+    ): any => {
       const total = this.getTotalOfNodes(node.children);
 
       return {
@@ -108,10 +102,10 @@ export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
      */
     public schemaAggregateNodeCompose = (
       node: IBalanceSheetSchemaAggregateNode,
-    ) => {
-      return R.compose(
-        this.aggregateNodeTotalMapper,
+    ): any => {
+      return flow(
         this.reportSchemaAggregateNodeMapper,
+        this.aggregateNodeTotalMapper,
       )(node);
     };
 
@@ -123,13 +117,13 @@ export const BalanceSheetAggregators = <T extends GConstructor<FinancialSheet>>(
     public reportAggregateSchemaParser = (
       node: IBalanceSheetSchemaNode,
     ): IBalanceSheetDataNode => {
-      return R.compose(
-        R.when(
-          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE),
+      return flow(
+        when(
+          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS),
           this.schemaAggregateNodeCompose,
         ),
-        R.when(
-          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS),
+        when(
+          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE),
           this.schemaAggregateNodeCompose,
         ),
       )(node);

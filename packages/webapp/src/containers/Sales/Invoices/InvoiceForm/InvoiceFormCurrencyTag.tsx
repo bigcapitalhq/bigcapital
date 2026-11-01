@@ -1,25 +1,23 @@
-// @ts-nocheck
-import React from 'react';
 import { useFormikContext } from 'formik';
-
+import { useInvoiceIsForeignCustomer } from './utils';
+import type { InvoiceFormValues } from './utils';
 import { BaseCurrency, BaseCurrencyRoot } from '@/components';
-import { useInvoiceFormContext } from './InvoiceFormProvider';
 
 /**
  * Invoice form currency tag.
  */
-export default function InvoiceFormCurrencyTag() {
-  const { isForeignCustomer } = useInvoiceFormContext();
+export function InvoiceFormCurrencyTag() {
+  const isForeignCustomer = useInvoiceIsForeignCustomer();
   const {
-    values: { currency_code },
-  } = useFormikContext();
+    values: { currencyCode },
+  } = useFormikContext<InvoiceFormValues>();
 
   if (!isForeignCustomer) {
     return null;
   }
   return (
     <BaseCurrencyRoot>
-      <BaseCurrency currency={currency_code} />
+      <BaseCurrency currency={currencyCode} />
     </BaseCurrencyRoot>
   );
 }

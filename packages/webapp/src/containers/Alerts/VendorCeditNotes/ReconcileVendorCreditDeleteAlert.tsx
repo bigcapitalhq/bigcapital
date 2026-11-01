@@ -1,40 +1,42 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
 import { useDeleteReconcileVendorCredit } from '@/hooks/query';
-import { compose } from '@/utils';
+
+interface ReconcileVendorCreditDeleteAlertPayload {
+  vendorCreditId: number;
+}
+
+interface ReconcileVendorCreditDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ReconcileVendorCreditDeleteAlertPayload;
+}
 
 /**
  * Reconcile vendor credit delete alert.
  */
-function ReconcileVendorCreditDeleteAlert({
+function ReconcileVendorCreditDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { vendorCreditId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { isLoading, mutateAsync: deleteReconcileVendorCreditMutate } =
-    useDeleteReconcileVendorCredit();
+}: ReconcileVendorCreditDeleteAlertProps): React.ReactElement {
+  const {
+    isPending: isLoading,
+    mutateAsync: deleteReconcileVendorCreditMutate,
+  } = useDeleteReconcileVendorCredit();
 
-  // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
@@ -46,15 +48,14 @@ function ReconcileVendorCreditDeleteAlert({
           message: intl.get('reconcile_vendor_credit.alert.success_message'),
           intent: Intent.SUCCESS,
         });
-        // closeDrawer('vendor-credit-detail-drawer');
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch((error: Error) => {
+        // Bugfix: the original had an empty `.catch(({ data: { errors } }) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -62,8 +63,8 @@ function ReconcileVendorCreditDeleteAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -82,8 +83,9 @@ function ReconcileVendorCreditDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const ReconcileVendorCreditDeleteAlert = FF.pipe(
+  ReconcileVendorCreditDeleteAlertInner,
   withDrawerActions,
-)(ReconcileVendorCreditDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

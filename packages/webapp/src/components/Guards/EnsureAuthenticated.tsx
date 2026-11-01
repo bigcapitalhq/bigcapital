@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { useIsAuthenticated } from '@/hooks/state';

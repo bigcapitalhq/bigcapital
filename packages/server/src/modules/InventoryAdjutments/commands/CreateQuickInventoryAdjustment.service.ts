@@ -21,6 +21,7 @@ import { CreateQuickInventoryAdjustmentDto } from '../dtos/CreateQuickInventoryA
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ERRORS } from '../constants/InventoryAdjustments.constants';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { formatDateFields } from '@/utils/format-date-fields';
 
 @Injectable()
 export class CreateQuickInventoryAdjustmentService {
@@ -70,7 +71,10 @@ export class CreateQuickInventoryAdjustmentService {
       },
     ];
     const initialDTO = {
-      ...omit(adjustmentDTO, ['quantity', 'cost', 'itemId', 'publish']),
+      ...formatDateFields(
+        omit(adjustmentDTO, ['quantity', 'cost', 'itemId', 'publish']),
+        ['date'],
+      ),
       userId: authorizedUser.id,
       ...(adjustmentDTO.publish
         ? {
@@ -93,7 +97,7 @@ export class CreateQuickInventoryAdjustmentService {
     quickAdjustmentDTO: CreateQuickInventoryAdjustmentDto,
   ): Promise<InventoryAdjustment> {
     // Retrieve the adjustment account or throw not found error.
-    const adjustmentAccount = await this.accountModel()
+    const _adjustmentAccount = await this.accountModel()
       .query()
       .findById(quickAdjustmentDTO.adjustmentAccountId)
       .throwIfNotFound();

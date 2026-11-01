@@ -13,5 +13,4 @@ export class SettingsStore extends MetableDBStore {
     this.setExtraColumns(['group']);
     this.setRepository(repository);
   }
-
 }

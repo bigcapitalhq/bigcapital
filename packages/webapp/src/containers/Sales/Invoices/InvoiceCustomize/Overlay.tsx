@@ -1,6 +1,6 @@
 import clsx from 'classnames';
-import { Box } from '@/components';
 import styles from './Overlay.module.scss';
+import { Box } from '@/components';
 
 export interface OverlayProps {
   visible?: boolean;

@@ -13,10 +13,11 @@ import { AccountsModule } from '../Accounts/Accounts.module';
 import { CreatePaymentReceiveStripePayment } from './CreatePaymentReceivedStripePayment';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
 import { PaymentsReceivedModule } from '../PaymentReceived/PaymentsReceived.module';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 
 @Module({
   imports: [
+    TenancyModule,
     AccountsModule,
     PaymentsReceivedModule,
     forwardRef(() => SaleInvoicesModule),
@@ -31,9 +32,8 @@ import { TenancyContext } from '../Tenancy/TenancyContext.service';
     CreatePaymentReceiveStripePayment,
     SeedStripeAccountsOnOAuthGrantedSubscriber,
     StripeWebhooksSubscriber,
-    TenancyContext,
   ],
   exports: [StripePaymentService, GetStripeAuthorizationLinkService],
   controllers: [StripeIntegrationController, StripePaymentWebhooksController],
 })
-export class StripePaymentModule { }
+export class StripePaymentModule {}

@@ -1,12 +1,8 @@
-// @ts-nocheck
 import React from 'react';
 import { APAgingSummaryGeneralProvider } from './APAgingSummaryGeneralProvider';
-import APAgingSummaryHeaderGeneralContent from './APAgingSummaryHeaderGeneralContent';
+import { APAgingSummaryHeaderGeneralContent } from './APAgingSummaryHeaderGeneralContent';
 
-/**
- * AP Aging Summary - Drawer Header - General panel.
- */
-export default function APAgingSummaryHeaderGeneral() {
+export function APAgingSummaryHeaderGeneral() {
   return (
     <APAgingSummaryGeneralProvider>
       <APAgingSummaryHeaderGeneralContent />

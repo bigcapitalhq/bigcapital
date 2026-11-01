@@ -1,27 +1,21 @@
-// @ts-nocheck
 import React from 'react';
-
-import BalanceSheetTable from './BalanceSheetTable';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
+import { BalanceSheetTable } from './BalanceSheetTable';
 import { FinancialSheetSkeleton } from '@/components';
-import { compose } from '@/utils';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
-/**
- * Balance sheet body JSX.
- * @returns {React.JSX}
- */
-function BalanceSheetBodyJSX({
-  // #withCurrentOrganization
-  organizationName,
-}) {
-  const { isLoading } = useBalanceSheetContext();
+function BalanceSheetBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
+  const { isLoading, balanceSheet } = useBalanceSheetContext();
+
+  // Shows the skeleton only on the initial load. Refetches (e.g. sorting)
+  // keep the current report rendered while the request is in flight.
+  const isInitialLoading = isLoading && !balanceSheet;
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
+      {isInitialLoading ? (
         <FinancialSheetSkeleton />
       ) : (
         <BalanceSheetTable companyName={organizationName} />
@@ -30,8 +24,4 @@ function BalanceSheetBodyJSX({
   );
 }
 
-export const BalanceSheetBody = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(BalanceSheetBodyJSX);
+export const BalanceSheetBody = BalanceSheetBodyJSX;

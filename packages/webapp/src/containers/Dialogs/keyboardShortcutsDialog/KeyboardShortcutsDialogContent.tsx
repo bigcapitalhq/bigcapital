@@ -1,12 +1,11 @@
-// @ts-nocheck
 import React from 'react';
+import { ShortcutsTable } from '../../KeyboardShortcuts/ShortcutsTable';
+import { KeyboardShortcutsFooter } from './KeyboardShortcutsFooter';
 import { DialogContent } from '@/components';
-import ShortcutsTable from '../../KeyboardShortcuts/ShortcutsTable';
-import KeyboardShortcutsFooter from './KeyboardShortcutsFooter';
 
 import '@/style/pages/keyboardShortcuts/KeyboardShortcutDialog.scss';
 
-export default function KeyboardShortcutsDialogContent() {
+export function KeyboardShortcutsDialogContent(): React.ReactElement {
   return (
     <DialogContent name={'keyboard-shortcuts'}>
       <ShortcutsTable />

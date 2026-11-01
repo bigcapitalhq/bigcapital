@@ -2,7 +2,8 @@ import { SystemModel } from '@/modules/System/models/SystemModel';
 import { Model } from 'objection';
 
 export class ApiKeyModel extends SystemModel {
-  readonly key: string;
+  readonly keyHash: string;
+  readonly keyPrefix?: string;
   readonly name?: string;
   readonly createdAt: Date;
   readonly expiresAt?: Date;

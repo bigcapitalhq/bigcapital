@@ -11,10 +11,11 @@ interface DialogProviderProps {
   children: ReactNode;
 }
 
-export const DialogProvider: React.FC<DialogProviderProps> = ({ value, children }) => {
+export const DialogProvider: React.FC<DialogProviderProps> = ({
+  value,
+  children,
+}) => {
   return (
-    <DialogContext.Provider value={value}>
-      {children}
-    </DialogContext.Provider>
+    <DialogContext.Provider value={value}>{children}</DialogContext.Provider>
   );
 };

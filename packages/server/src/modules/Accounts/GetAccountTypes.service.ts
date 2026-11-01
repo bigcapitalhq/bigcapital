@@ -6,7 +6,7 @@ import { AccountTypesUtils } from './utils/AccountType.utils';
 export class GetAccountTypesService {
   /**
    * Retrieve all accounts types.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    * @return {IAccountType}
    */
   public getAccountsTypes() {

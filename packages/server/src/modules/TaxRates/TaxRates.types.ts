@@ -21,8 +21,8 @@ export interface ICommonTaxRateDTO {
   IsCompound: boolean;
   active: boolean;
 }
-export interface ICreateTaxRateDTO extends ICommonTaxRateDTO {}
-export interface IEditTaxRateDTO extends ICommonTaxRateDTO {}
+export type ICreateTaxRateDTO = ICommonTaxRateDTO;
+export type IEditTaxRateDTO = ICommonTaxRateDTO;
 
 export interface ITaxRateCreatingPayload {
   createTaxRateDTO: ICreateTaxRateDTO;

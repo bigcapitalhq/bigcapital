@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
-import intl from 'react-intl-universal';
-import clsx from 'classnames';
 import {
   Menu,
   MenuItem,
@@ -11,11 +7,28 @@ import {
   Position,
   Classes,
 } from '@blueprintjs/core';
-
+import clsx from 'classnames';
+import { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import type { Customer } from '@bigcapital/sdk-ts';
 import { Can, Icon, Money, If, AvatarCell } from '@/components';
+import { CLASSES } from '@/constants';
 import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
-import { CLASSES } from '@/constants';
+
+type CustomerRow = Pick<
+  Customer,
+  'id' | 'active' | 'personalPhone' | 'closingBalance' | 'currencyCode' | 'note'
+>;
+
+type ActionsMenuPayload = {
+  onEdit?: (row: CustomerRow) => void;
+  onDelete?: (row: CustomerRow) => void;
+  onDuplicate?: (row: CustomerRow) => void;
+  onInactivate?: (row: CustomerRow) => void;
+  onActivate?: (row: CustomerRow) => void;
+  onViewDetails?: (row: CustomerRow) => void;
+};
 
 /**
  * Actions menu.
@@ -30,6 +43,9 @@ export function ActionsMenu({
     onActivate,
     onViewDetails,
   },
+}: {
+  row: { original: CustomerRow };
+  payload: ActionsMenuPayload;
 }) {
   return (
     <Menu>
@@ -85,23 +101,23 @@ export function ActionsMenu({
 /**
  * Phone number accessor.
  */
-export function PhoneNumberAccessor(row) {
-  return <div className={'work_phone'}>{row.personal_phone}</div>;
+export function PhoneNumberAccessor(row: CustomerRow) {
+  return <div className={'work_phone'}>{row.personalPhone}</div>;
 }
 
 /**
  * Balance accessor.
  */
-export function BalanceAccessor(row) {
-  return <Money amount={row.closing_balance} currency={row.currency_code} />;
+export function BalanceAccessor(row: CustomerRow) {
+  return <Money amount={row.closingBalance} currency={row.currencyCode} />;
 }
 
 /**
  * Note column accessor.
  */
-export function NoteAccessor(row) {
+export function NoteAccessor(row: CustomerRow) {
   return (
-    <If condition={row.note}>
+    <If condition={Boolean(row.note)}>
       <Tooltip
         className={Classes.TOOLTIP_INDICATOR}
         content={row.note}
@@ -133,7 +149,7 @@ export function useCustomersTableColumns() {
       {
         id: 'display_name',
         Header: intl.get('display_name'),
-        accessor: 'display_name',
+        accessor: 'displayName',
         className: 'display_name',
         width: 150,
         clickable: true,
@@ -141,7 +157,7 @@ export function useCustomersTableColumns() {
       {
         id: 'company_name',
         Header: intl.get('company_name'),
-        accessor: 'company_name',
+        accessor: 'companyName',
         className: clsx('company_name', CLASSES.TEXT_MUTED),
         width: 150,
         clickable: true,
@@ -152,7 +168,7 @@ export function useCustomersTableColumns() {
         accessor: PhoneNumberAccessor,
         width: 100,
         clickable: true,
-        className: clsx('phone_number', CLASSES.TEXT_MUTED)
+        className: clsx('phone_number', CLASSES.TEXT_MUTED),
       },
       {
         id: 'note',
@@ -161,7 +177,7 @@ export function useCustomersTableColumns() {
         disableSortBy: true,
         width: 85,
         clickable: true,
-        className: clsx(CLASSES.TEXT_MUTED)
+        className: clsx(CLASSES.TEXT_MUTED),
       },
       {
         id: 'balance',

@@ -1,50 +1,57 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
+import { defaultTo } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { defaultTo } from 'lodash';
-
-import { DataTableEditable } from '@/components';
-import { compose, updateTableCell } from '@/utils';
-import { useDeepCompareEffect } from '@/hooks/utils';
+import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 import {
-  useReconcileCreditNoteTableColumns,
   maxAmountCreditFromRemaining,
   maxCreditNoteAmountEntries,
+  useReconcileCreditNoteTableColumns,
 } from './utils';
-import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
+import type { ReconcileCreditNoteFormEntry } from './types';
+import { DataTableEditable } from '@/components';
+import { useDeepCompareEffect } from '@/hooks/utils';
+import { updateTableCell } from '@/utils';
+
+interface ReconcileCreditNoteEntriesTableProps {
+  onUpdateData: (entries: ReconcileCreditNoteFormEntry[]) => void;
+  entries: ReconcileCreditNoteFormEntry[];
+  errors?: unknown;
+}
 
 /**
  * Reconcile credit note entries table.
  */
-export default function ReconcileCreditNoteEntriesTable({
+export function ReconcileCreditNoteEntriesTable({
   onUpdateData,
   entries,
   errors,
-}) {
+}: ReconcileCreditNoteEntriesTableProps): React.ReactElement {
   // Retrieve the reconcile credit note table columns.
   const columns = useReconcileCreditNoteTableColumns();
 
   // Reconcile credit note context provider.
-  const {
-    creditNote: { credits_remaining },
-  } = useReconcileCreditNoteContext();
+  const { creditNote } = useReconcileCreditNoteContext();
+  const creditsRemaining = creditNote?.creditsRemaining;
 
   // Handle update data.
   const handleUpdateData = React.useCallback(
-    (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+    (rowIndex: number, columnId: string, value: unknown) => {
+      const newRows = FF.pipe(
         entries,
-      );
+        updateTableCell(rowIndex, columnId, value),
+      ) as ReconcileCreditNoteFormEntry[];
       onUpdateData(newRows);
     },
     [onUpdateData, entries],
   );
   // Deep compare entries to modify new entries.
   useDeepCompareEffect(() => {
-    const newRows = compose(
-      maxCreditNoteAmountEntries(defaultTo(credits_remaining, 0)),
+    const newRows = FF.pipe(
+      entries,
       maxAmountCreditFromRemaining,
-    )(entries);
+      maxCreditNoteAmountEntries(defaultTo(creditsRemaining, 0)),
+    ) as ReconcileCreditNoteFormEntry[];
 
     onUpdateData(newRows);
   }, [entries]);

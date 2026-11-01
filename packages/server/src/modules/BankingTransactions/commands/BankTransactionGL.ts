@@ -17,7 +17,7 @@ export class BankTransactionGL {
    * @returns {Partial<ILedgerEntry>}
    */
   private get commonEntry() {
-    const { entries, ...transaction } = this.bankTransactionModel;
+    const { entries: _entries, ..._transaction } = this.bankTransactionModel;
 
     return {
       date: this.bankTransactionModel.date,

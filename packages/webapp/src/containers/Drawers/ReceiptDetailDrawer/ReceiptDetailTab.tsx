@@ -1,15 +1,12 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { ReceiptDetailFooter } from './ReceiptDetailFooter';
+import { ReceiptDetailHeader } from './ReceiptDetailHeader';
+import { ReceiptDetailTable } from './ReceiptDetailTable';
+import { ReceiptDetailTableFooter } from './ReceiptDetailTableFooter';
 import { CommercialDocBox } from '@/components';
 
-import ReceiptDetailHeader from './ReceiptDetailHeader';
-import ReceiptDetailTable from './ReceiptDetailTable';
-import ReceiptDetailTableFooter from './ReceiptDetailTableFooter';
-import ReceiptDetailFooter from './ReceiptDetailFooter';
-
-export default function ReceiptDetailTab() {
+export function ReceiptDetailTab() {
   return (
     <ReceiptDetailsOverviewRoot>
       <CommercialDocBox>

@@ -283,6 +283,17 @@ html[lang^='ar'] {
   font-weight: 600;
 }
 
+a.text-link {
+  text-decoration: none;
+  &,
+  .bp4-dark &{
+    color: inherit;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 
 span.table-tooltip-overview-target {
   display: inline;

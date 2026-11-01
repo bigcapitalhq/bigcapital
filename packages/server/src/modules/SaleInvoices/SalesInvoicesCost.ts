@@ -1,5 +1,4 @@
 import { Mutex } from 'async-mutex';
-import { chain } from 'lodash';
 import * as moment from 'moment';
 import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
@@ -59,14 +58,11 @@ export class SaleInvoicesCost {
   getMaxDateInventoryTransactions(
     inventoryTransactions: ModelObject<InventoryTransaction>[],
   ): ModelObject<InventoryTransaction>[] {
-    return chain(inventoryTransactions)
-      .reduce((acc: any, transaction) => {
-        const compatatorDate = acc[transaction.itemId];
+    const reduced = inventoryTransactions.reduce(
+      (acc: Record<number, ModelObject<InventoryTransaction>>, transaction) => {
+        const existing = acc[transaction.itemId];
 
-        if (
-          !compatatorDate ||
-          moment(compatatorDate.date).isBefore(transaction.date)
-        ) {
+        if (!existing || moment(existing.date).isBefore(transaction.date)) {
           return {
             ...acc,
             [transaction.itemId]: {
@@ -75,9 +71,10 @@ export class SaleInvoicesCost {
           };
         }
         return acc;
-      }, {})
-      .values()
-      .value();
+      },
+      {} as Record<number, ModelObject<InventoryTransaction>>,
+    );
+    return Object.values(reduced);
   }
 
   /**
@@ -112,7 +109,7 @@ export class SaleInvoicesCost {
    * @param {Date} startingDate - Starting date.
    * @return {Promise<agenda>}
    */
-  scheduleWriteJournalEntries(startingDate?: Date) {
+  scheduleWriteJournalEntries(_startingDate?: Date) {
     // const agenda = Container.get('agenda');
     // return agenda.schedule('in 3 seconds', 'rewrite-invoices-journal-entries', {
     //   startingDate,

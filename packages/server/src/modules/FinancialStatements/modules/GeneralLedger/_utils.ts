@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 /**
  * Calculate the running balance.
@@ -14,12 +15,11 @@ export function calculateRunningBalance(
   return amount + lastRunningBalance;
 }
 
-export const getGeneralLedgerReportQuery = (
-) => {
+export const getGeneralLedgerReportQuery = () => {
   return {
     fromDate: moment().startOf('month').format('YYYY-MM-DD'),
     toDate: moment().format('YYYY-MM-DD'),
-    basis: 'cash',
+    basis: AccountingBasis.Cash,
     numberFormat: {
       noCents: false,
       divideOn1000: false,

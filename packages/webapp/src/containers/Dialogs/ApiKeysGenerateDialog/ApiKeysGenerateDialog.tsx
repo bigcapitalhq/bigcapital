@@ -1,35 +1,44 @@
-// @ts-nocheck
-import React, { useState } from 'react';
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
-const ApiKeysGenerateDialogContent = React.lazy(
-  () => import('./ApiKeysGenerateDialogContent'),
+const ApiKeysGenerateDialogContent = lazy(() =>
+  import('./ApiKeysGenerateDialogContent').then((m) => ({
+    default: m.ApiKeysGenerateDialogContent,
+  })),
 );
 
+interface ApiKeysGenerateDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
+
 /**
- * API Keys Generate dialog.
+ * API keys generate dialog.
  */
-function ApiKeysGenerateDialog({ dialogName, payload, isOpen }) {
+function ApiKeysGenerateDialogRoot({
+  dialogName,
+  isOpen,
+}: ApiKeysGenerateDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
-      title={
-        <T id={'api_key.dialog.generate_title'} />
-      }
+      title={<T id={'api_key.dialog.generate_title'} />}
       isOpen={isOpen}
-      canEscapeJeyClose={true}
       autoFocus={true}
-      className={'dialog--api-keys-generate'}
-      style={{ width: '500px' }}
+      canEscapeKeyClose={true}
+      canOutsideClickClose={true}
+      style={{ width: '400px' }}
     >
       <DialogSuspense>
-        <ApiKeysGenerateDialogContent
-          dialogName={dialogName}
-        />
+        <ApiKeysGenerateDialogContent dialogName={dialogName} />
       </DialogSuspense>
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(ApiKeysGenerateDialog);
+
+export const ApiKeysGenerateDialog = FF.pipe(
+  ApiKeysGenerateDialogRoot,
+  withDialogRedux(),
+);

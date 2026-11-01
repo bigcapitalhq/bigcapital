@@ -1,30 +1,35 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
-import { compose } from 'lodash/fp';
-
 import '@/style/pages/CashFlow/CashFlowAccounts/List.scss';
-
-import { DashboardPageContent } from '@/components';
-import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';
-
-import CashflowAccountsGrid from './CashflowAccountsGrid';
-import CashFlowAccountsActionsBar from './CashFlowAccountsActionsBar';
-import { CashflowAccountsPlaidLink } from './CashflowAccountsPlaidLink';
+import { CashFlowAccountsActionsBar } from './CashFlowAccountsActionsBar';
+import { CashflowAccountsGrid } from './CashflowAccountsGrid';
 import { CashflowAccountsLoadingBar } from './CashFlowAccountsLoadingBar';
-
+import { CashflowAccountsPlaidLink } from './CashflowAccountsPlaidLink';
+import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';
+import type { WithCashflowAccountsProps } from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
+import type { WithCashflowAccountsTableActionsProps } from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
+import { DashboardPageContent } from '@/components';
 import { withCashflowAccounts } from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
 import { withCashflowAccountsTableActions } from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
+import { CashFlowDrawers } from '@/containers/CashFlow/CashFlowDrawers';
+
+interface CashFlowAccountsListInnerProps
+  extends Pick<WithCashflowAccountsProps, 'cashflowAccountsTableState'>,
+    Pick<
+      WithCashflowAccountsTableActionsProps,
+      'resetCashflowAccountsTableState'
+    > {}
 
 /**
  * Cashflow accounts list.
  */
-function CashFlowAccountsList({
+function CashFlowAccountsListInner({
   // #withCashflowAccounts
   cashflowAccountsTableState,
 
   // #withCashflowAccountsTableActions
   resetCashflowAccountsTableState,
-}) {
+}: CashFlowAccountsListInnerProps) {
   // Resets the cashflow accounts table state.
   useEffect(
     () => () => {
@@ -35,6 +40,7 @@ function CashFlowAccountsList({
 
   return (
     <CashFlowAccountsProvider tableState={cashflowAccountsTableState}>
+      <CashFlowDrawers />
       <CashFlowAccountsActionsBar />
       <CashflowAccountsLoadingBar />
 
@@ -47,9 +53,10 @@ function CashFlowAccountsList({
   );
 }
 
-export default compose(
+export const CashFlowAccountsList = FF.pipe(
+  CashFlowAccountsListInner,
+  withCashflowAccountsTableActions,
   withCashflowAccounts(({ cashflowAccountsTableState }) => ({
     cashflowAccountsTableState,
   })),
-  withCashflowAccountsTableActions,
-)(CashFlowAccountsList);
+);

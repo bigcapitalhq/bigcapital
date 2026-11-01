@@ -91,8 +91,8 @@ export interface IBankRuleCommonDTO {
   assignMemo?: string;
 }
 
-export interface ICreateBankRuleDTO extends IBankRuleCommonDTO {}
-export interface IEditBankRuleDTO extends IBankRuleCommonDTO {}
+export type ICreateBankRuleDTO = IBankRuleCommonDTO;
+export type IEditBankRuleDTO = IBankRuleCommonDTO;
 
 export interface IBankRuleEventCreatingPayload {
   createRuleDTO: CreateBankRuleDto;

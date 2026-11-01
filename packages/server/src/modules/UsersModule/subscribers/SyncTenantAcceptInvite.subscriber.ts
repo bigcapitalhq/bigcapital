@@ -1,5 +1,4 @@
 import { pick } from 'lodash';
-import * as moment from 'moment';
 import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -28,7 +27,7 @@ export class SyncTenantAcceptInviteSubscriber {
       .where('systemUserId', inviteToken.userId)
       .update({
         ...pick(user, ['firstName', 'lastName', 'email', 'active']),
-        inviteAcceptedAt: moment().format('YYYY-MM-DD'),
+        inviteAcceptedAt: new Date(),
       });
   }
 }

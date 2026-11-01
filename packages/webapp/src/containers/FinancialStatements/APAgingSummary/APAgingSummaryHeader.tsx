@@ -1,65 +1,66 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import { FormattedMessage as T } from '@/components';
-import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-
-import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
-import APAgingSummaryHeaderGeneral from './APAgingSummaryHeaderGeneral';
-import APAgingSummaryHeaderDimensions from './APAgingSummaryHeaderDimensions';
-
-import { withAPAgingSummary } from './withAPAgingSummary';
-import { withAPAgingSummaryActions } from './withAPAgingSummaryActions';
-
-import { transformToForm, compose } from '@/utils';
-import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
+import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
+import styled from 'styled-components';
+import { APAgingSummaryHeaderDimensions } from './APAgingSummaryHeaderDimensions';
+import { APAgingSummaryHeaderGeneral } from './APAgingSummaryHeaderGeneral';
 import {
   getAPAgingSummaryQuerySchema,
   getDefaultAPAgingSummaryQuery,
 } from './common';
+import { withAPAgingSummary } from './withAPAgingSummary';
+import {
+  withAPAgingSummaryActions,
+  WithAPAgingSummaryActionsProps,
+} from './withAPAgingSummaryActions';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
+import { Features } from '@/constants';
+import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
+import { useFeatureCan } from '@/hooks/state';
+import { transformToForm } from '@/utils';
 
-/**
- * AP Aging Summary Report - Drawer Header.
- */
-function APAgingSummaryHeader({
-  // #ownProps
+type APAgingSummaryFormValues = ReturnType<
+  typeof getDefaultAPAgingSummaryQuery
+>;
+
+interface APAgingSummaryHeaderOwnProps {
+  pageFilter: APAgingSummaryFormValues;
+  onSubmitFilter: (values: APAgingSummaryFormValues) => void;
+}
+
+type APAgingSummaryHeaderProps = APAgingSummaryHeaderOwnProps & {
+  isFilterDrawerOpen: boolean;
+} & Pick<WithAPAgingSummaryActionsProps, 'toggleAPAgingSummaryFilterDrawer'>;
+
+function APAgingSummaryHeaderInner({
   pageFilter,
   onSubmitFilter,
-
-  // #withAPAgingSummaryActions
   toggleAPAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
-
-  // #withAPAgingSummary
   isFilterDrawerOpen,
-}) {
-  // Validation schema.
+}: APAgingSummaryHeaderProps) {
   const validationSchema = getAPAgingSummaryQuerySchema();
-
-  // Initial values.
   const defaultValues = getDefaultAPAgingSummaryQuery();
-
-  // Formik initial values.
   const initialValues = transformToForm(
     { ...defaultValues, ...pageFilter },
     defaultValues,
-  );
-  // Handle form submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  ) as APAgingSummaryFormValues;
+
+  const handleSubmit = (
+    values: APAgingSummaryFormValues,
+    { setSubmitting }: FormikHelpers<APAgingSummaryFormValues>,
+  ) => {
     onSubmitFilter(values);
     toggleFilterDrawerDisplay(false);
     setSubmitting(false);
   };
-  // Handle cancel button click.
   const handleCancelClick = () => {
     toggleFilterDrawerDisplay(false);
   };
-  // Handle the drawer closing.
   const handleDrawerClose = () => {
     toggleFilterDrawerDisplay(false);
   };
-  // Detarmines whether the feature is enabled.
+
   const { featureCan } = useFeatureCan();
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
@@ -102,12 +103,13 @@ function APAgingSummaryHeader({
   );
 }
 
-export default compose(
-  withAPAgingSummaryActions,
+export const APAgingSummaryHeader = FF.pipe(
+  APAgingSummaryHeaderInner,
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
-)(APAgingSummaryHeader);
+  withAPAgingSummaryActions,
+);
 
 const APAgingDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

@@ -1,10 +1,17 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
-
 import { ButtonLink } from '../Button';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+
+interface VendorDrawerLinkComponentProps extends WithDrawerActionsProps {
+  children?: React.ReactNode;
+  vendorId?: number;
+  className?: string;
+}
 
 function VendorDrawerLinkComponent({
   // #ownProps
@@ -14,9 +21,9 @@ function VendorDrawerLinkComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: VendorDrawerLinkComponentProps) {
   // Handle view customer drawer.
-  const handleVendorDrawer = (event) => {
+  const handleVendorDrawer = (event: React.MouseEvent) => {
     openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId });
     event.preventDefault();
   };
@@ -28,6 +35,7 @@ function VendorDrawerLinkComponent({
   );
 }
 
-export const VendorDrawerLink = R.compose(withDrawerActions)(
+export const VendorDrawerLink = FF.pipe(
   VendorDrawerLinkComponent,
+  withDrawerActions,
 );

@@ -1,7 +1,7 @@
-// @ts-nocheck
 import React from 'react';
-import { CommercialDocFooter, DetailsMenu, DetailItem, T } from '@/components';
+import intl from 'react-intl-universal';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
+import { CommercialDocFooter, DetailsMenu, DetailItem } from '@/components';
 
 export function CashflowTransactionDrawerFooter() {
   const { cashflowTransaction } = useCashflowTransactionDrawerContext();
@@ -10,10 +10,10 @@ export function CashflowTransactionDrawerFooter() {
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <DetailItem
-          label={<T id={'cash_flow.drawer.label.statement'} />}
+          label={intl.get('cash_flow.drawer.label.statement')}
           multiline
         >
-          {cashflowTransaction.description}
+          {cashflowTransaction?.description}
         </DetailItem>
       </DetailsMenu>
     </CommercialDocFooter>

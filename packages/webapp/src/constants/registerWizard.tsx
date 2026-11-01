@@ -1,10 +1,6 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 
-export const getSetupWizardSteps = () => [
-  {
-    label: intl.get('setup.plan.plans'),
-  },
+export const getSetupWizardSteps = (): Array<{ label: string }> => [
   {
     label: intl.get('setup.plan.getting_started'),
   },

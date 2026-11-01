@@ -1,4 +1,3 @@
-
 import { TaxType } from '@/interfaces/TaxRates';
 
 export const InclusiveTaxOptions = [

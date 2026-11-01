@@ -1,36 +1,51 @@
-// @ts-nocheck
+import { VendorsListResponse } from '@bigcapital/sdk-ts';
 import React, { createContext, useContext } from 'react';
-
-import { useVendors } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
+import { useVendors } from '@/hooks/query';
 
-const APAgingSummaryGeneralContext = createContext();
+type APAgingSummaryGeneralContextValue = {
+  vendors: VendorsListResponse['data'] | undefined;
+  isVendorsLoading: boolean;
+};
 
-/**
- * A/P aging summary provider.
- */
-function APAgingSummaryGeneralProvider({ filter, ...props }) {
-  // Retrieve the vendors list.
-  const {
-    data: { vendors },
-    isFetching: isVendorsLoading,
-  } = useVendors();
+type APAgingSummaryGeneralProviderProps = {
+  children?: React.ReactNode;
+};
 
-  const provider = {
-    vendors,
+const APAgingSummaryGeneralContext = createContext<
+  APAgingSummaryGeneralContextValue | undefined
+>(undefined);
+
+function APAgingSummaryGeneralProvider({
+  children,
+  ...props
+}: APAgingSummaryGeneralProviderProps) {
+  const { data: vendorsData, isFetching: isVendorsLoading } = useVendors();
+
+  const provider: APAgingSummaryGeneralContextValue = {
+    vendors: vendorsData?.data,
     isVendorsLoading,
   };
-  // Loading state.
+
   const loading = isVendorsLoading;
 
   return loading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <APAgingSummaryGeneralContext.Provider value={provider} {...props} />
+    <APAgingSummaryGeneralContext.Provider value={provider} {...props}>
+      {children}
+    </APAgingSummaryGeneralContext.Provider>
   );
 }
 
-const useAPAgingSummaryGeneralContext = () =>
-  useContext(APAgingSummaryGeneralContext);
+const useAPAgingSummaryGeneralContext =
+  (): APAgingSummaryGeneralContextValue => {
+    const ctx = useContext(APAgingSummaryGeneralContext);
+    if (!ctx)
+      throw new Error(
+        'useAPAgingSummaryGeneralContext must be used within APAgingSummaryGeneralProvider',
+      );
+    return ctx;
+  };
 
 export { APAgingSummaryGeneralProvider, useAPAgingSummaryGeneralContext };

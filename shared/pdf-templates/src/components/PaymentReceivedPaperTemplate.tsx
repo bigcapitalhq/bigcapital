@@ -65,9 +65,6 @@ export function PaymentReceivedPaperTemplate({
   showCompanyLogo = true,
   companyLogoUri,
 
-  // # Company name
-  companyName = 'Bigcapital Technology, Inc.',
-
   // # Customer address
   showCustomerAddress = true,
   customerAddress = DefaultPdfTemplateAddressBilledTo,
@@ -100,9 +97,14 @@ export function PaymentReceivedPaperTemplate({
   paymentReceivedDate = 'September 3, 2024',
   showPaymentReceivedDate = true,
   paymentReceivedDateLabel = 'Payment Date',
+  ...props
 }: PaymentReceivedPaperTemplateProps) {
   return (
-    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
+    <PaperTemplate
+      primaryColor={primaryColor}
+      secondaryColor={secondaryColor}
+      {...props}
+    >
       <Stack spacing={24}>
         <Group align={'start'} spacing={10}>
           <Stack flex={1}>

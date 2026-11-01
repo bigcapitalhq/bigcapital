@@ -1,31 +1,28 @@
-// @ts-nocheck
-import React from 'react';
+import { Classes, Button, Intent } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
-import {
-  Classes,
-  Button,
-  Intent,
-} from '@blueprintjs/core';
-import { FastField, ErrorMessage } from 'formik';
-import {
-  FormGroup,
-  InputGroup,
-} from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import intl from 'react-intl-universal';
-import { inputIntent } from '@/utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+
+interface ApiKeyFormValues {
+  name: string;
+}
+
+interface ApiKeysGenerateFormContentProps extends WithDialogActionsProps {
+  dialogName: string;
+}
 
 /**
  * API Keys Generate form content.
  */
-function ApiKeysGenerateFormContent({
+function ApiKeysGenerateFormContentInner({
   dialogName,
-  // #withDialogActions
   closeDialog,
-}) {
-  const { isSubmitting } = useFormikContext();
+}: ApiKeysGenerateFormContentProps): React.ReactElement {
+  const { isSubmitting } = useFormikContext<ApiKeyFormValues>();
 
   const handleClose = () => {
     closeDialog(dialogName);
@@ -35,11 +32,11 @@ function ApiKeysGenerateFormContent({
     <Form>
       <div className={Classes.DIALOG_BODY}>
         {/* ----------- Name ----------- */}
-        <FFormGroup
-          name={'name'}
-          label={<T id={'api_key.name'} />}
-        >
-          <FInputGroup name={'name'} placeholder={intl.get('api_key.name_placeholder')} />
+        <FFormGroup name={'name'} label={intl.get('api_key.name')}>
+          <FInputGroup
+            name={'name'}
+            placeholder={intl.get('api_key.name_placeholder')}
+          />
         </FFormGroup>
       </div>
 
@@ -64,4 +61,7 @@ function ApiKeysGenerateFormContent({
   );
 }
 
-export default compose(withDialogActions)(ApiKeysGenerateFormContent);
+export const ApiKeysGenerateFormContent = FF.pipe(
+  ApiKeysGenerateFormContentInner,
+  withDialogActions,
+);

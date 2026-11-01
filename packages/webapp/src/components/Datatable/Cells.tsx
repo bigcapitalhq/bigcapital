@@ -1,6 +1,10 @@
-// @ts-nocheck
 import React from 'react';
+import type { Cell } from 'react-table';
 
-export function CellTextSpan({ cell: { value } }) {
-  return (<span class="cell-text">{ value }</span>)
+interface CellTextSpanProps {
+  cell: Cell<any>;
+}
+
+export function CellTextSpan({ cell: { value } }: CellTextSpanProps) {
+  return <span className="cell-text">{value}</span>;
 }

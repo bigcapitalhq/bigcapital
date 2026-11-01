@@ -1,13 +1,3 @@
-// @ts-nocheck
-import { useMemo, useRef } from 'react';
-import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { AppToaster, If, Stack } from '@/components';
-import { Align } from '@/constants';
-import { getColumnWidth } from '@/utils';
-import { CellTextSpan } from '@/components/Datatable/Cells';
-import { useInventoryValuationContext } from './InventoryValuationProvider';
-import FinancialLoadingBar from '../FinancialLoadingBar';
 import {
   Classes,
   Intent,
@@ -16,35 +6,45 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useInventoryValuationContext } from './InventoryValuationProvider';
+import type {
+  InventoryValuationXlsxQuery,
+  InventoryValuationCsvQuery,
+} from '@bigcapital/sdk-ts';
+import { AppToaster, If, Stack } from '@/components';
+import { CellTextSpan } from '@/components/Datatable/Cells';
+import { Align } from '@/constants';
 import {
   useInventoryValuationCsvExport,
   useInventoryValuationXlsxExport,
 } from '@/hooks/query';
+import { getColumnWidth } from '@/utils';
 
-/**
- * Retrieve inventory valuation table columns.
- */
 export const useInventoryValuationTableColumns = () => {
   // inventory valuation context
-  const {
-    inventoryValuation: { tableRows },
-  } = useInventoryValuationContext();
+  const { inventoryValuation } = useInventoryValuationContext();
+  const tableRows = (inventoryValuation as any)?.tableRows ?? [];
 
   return useMemo(
     () => [
       {
         Header: intl.get('item_name'),
-        accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
+        accessor: (row: Record<string, unknown>) =>
+          row.code ? `${row.name} - ${row.code}` : row.name,
         className: 'name',
         width: 240,
         textOverview: true,
       },
       {
         Header: intl.get('quantity'),
-        accessor: 'quantity_formatted',
+        accessor: 'quantityFormatted',
         Cell: CellTextSpan,
-        className: 'quantity_formatted',
-        width: getColumnWidth(tableRows, `quantity_formatted`, {
+        className: 'quantityFormatted',
+        width: getColumnWidth(tableRows, `quantityFormatted`, {
           minWidth: 120,
         }),
         textOverview: true,
@@ -52,10 +52,10 @@ export const useInventoryValuationTableColumns = () => {
       },
       {
         Header: intl.get('asset_value'),
-        accessor: 'valuation_formatted',
+        accessor: 'valuationFormatted',
         Cell: CellTextSpan,
         className: 'valuation',
-        width: getColumnWidth(tableRows, `valuation_formatted`, {
+        width: getColumnWidth(tableRows, `valuationFormatted`, {
           minWidth: 120,
         }),
         textOverview: true,
@@ -63,10 +63,10 @@ export const useInventoryValuationTableColumns = () => {
       },
       {
         Header: intl.get('average'),
-        accessor: 'average_formatted',
+        accessor: 'averageFormatted',
         Cell: CellTextSpan,
-        className: 'average_formatted',
-        width: getColumnWidth(tableRows, `average_formatted`, {
+        className: 'averageFormatted',
+        width: getColumnWidth(tableRows, `averageFormatted`, {
           minWidth: 120,
         }),
         textOverview: true,
@@ -95,73 +95,57 @@ export function InventoryValuationLoadingBar() {
  * @returns {JSX.Element}
  */
 export const InventoryValuationExportMenu = () => {
-  const toastKey = useRef(null);
   const commonToastConfig = {
     isCloseButtonShown: true,
     timeout: 2000,
   };
   const { query } = useInventoryValuationContext();
 
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+            [Classes.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
-  // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useInventoryValuationXlsxExport(query, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Export the report to csv.
-  const { mutateAsync: csvExport } = useInventoryValuationCsvExport(query, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport();
+
+  const { mutateAsync: xlsxExport } = useInventoryValuationXlsxExport(
+    query as InventoryValuationXlsxQuery,
+  );
+  const { mutateAsync: csvExport } = useInventoryValuationCsvExport(
+    query as InventoryValuationCsvQuery,
+  );
+
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport();
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

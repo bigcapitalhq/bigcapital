@@ -1,12 +1,13 @@
-// @ts-nocheck
-import React from 'react';
 import { x } from '@xstyled/emotion';
 import { FastField } from 'formik';
-import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
+import React from 'react';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
+import type { ReceiptFormValues } from './utils';
+import type { FieldProps } from 'formik';
+import { ItemsEntriesTable } from '@/containers/Entries/ItemsEntriesTable';
 
-export default function ReceiptItemsEntriesEditor({ defaultReceipt }) {
+export function ReceiptItemsEntriesEditor() {
   const { items } = useReceiptFormContext();
 
   return (
@@ -19,8 +20,8 @@ export default function ReceiptItemsEntriesEditor({ defaultReceipt }) {
         {({
           form: { values, setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+          meta: { error },
+        }: FieldProps<any[], ReceiptFormValues>) => (
           <ItemsEntriesTable
             value={value}
             onChange={(entries) => {
@@ -29,7 +30,7 @@ export default function ReceiptItemsEntriesEditor({ defaultReceipt }) {
             items={items}
             errors={error}
             linesNumber={4}
-            currencyCode={values.currency_code}
+            currencyCode={values.currencyCode}
             enableTaxRates={false}
           />
         )}

@@ -1,23 +1,26 @@
-// @ts-nocheck
-import intl from 'react-intl-universal';
-import { ControlGroup, Divider, Icon as BlueprintIcon } from '@blueprintjs/core';
 import {
-  Hint,
-  FieldRequiredHint,
+  ControlGroup,
+  Divider,
+  Icon as BlueprintIcon,
+} from '@blueprintjs/core';
+import intl from 'react-intl-universal';
+import { VendorFormSectionTitle } from './VendorFormSectionTitle';
+import {
   SalutationList,
+  SalutationItem,
   DisplayNameList,
-  FormattedMessage as T,
+  useDisplayNameSynchronizer,
   FInputGroup,
   FFormGroup,
   Box,
   Icon,
   Stack,
 } from '@/components';
-import { VendorFormSectionTitle } from './VendorFormSectionTitle';
 import { useAutofocus } from '@/hooks';
 
-export function VendorFormBasicSection({}) {
-  const firstNameFieldRef = useAutofocus();
+export function VendorFormBasicSection() {
+  const firstNameFieldRef = useAutofocus<HTMLInputElement>();
+  const { syncDisplayName, createFieldOnChange } = useDisplayNameSynchronizer();
 
   return (
     <Box data-section-id="primary">
@@ -26,9 +29,8 @@ export function VendorFormBasicSection({}) {
       {/**----------- Contact name -----------*/}
       <FFormGroup
         name={'salutation'}
-        label={<T id={'contact_name'} />}
+        label={intl.get('contact_name')}
         inline
-        fill
         fastField
       >
         <ControlGroup fill>
@@ -36,17 +38,26 @@ export function VendorFormBasicSection({}) {
             name={'salutation'}
             popoverProps={{ minimal: true }}
             fastField
+            onItemChange={(item: SalutationItem) =>
+              syncDisplayName({ salutation: item.key })
+            }
           />
           <FInputGroup
-            name={'first_name'}
+            name={'firstName'}
             placeholder={intl.get('first_name')}
-            inputRef={(ref) => (firstNameFieldRef.current = ref)}
+            inputRef={(ref: HTMLInputElement | null) => {
+              if (ref) firstNameFieldRef.current = ref;
+            }}
+            data-testId={'vendor-first-name-input'}
+            onChange={createFieldOnChange('firstName')}
             fill
             fastField
           />
           <FInputGroup
-            name={'last_name'}
+            name={'lastName'}
             placeholder={intl.get('last_name')}
+            data-testId={'vendor-last-name-input'}
+            onChange={createFieldOnChange('lastName')}
             fill
             fastField
           />
@@ -58,37 +69,47 @@ export function VendorFormBasicSection({}) {
         label={'Vendor Code'}
         helperText="Add a unique account number to identify, reference and search for the contact."
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'code'} fill fastField />
+        <FInputGroup
+          name={'code'}
+          data-testId={'vendor-code-input'}
+          fill
+          fastField
+        />
       </FFormGroup>
 
       {/*----------- Company Name -----------*/}
       <FFormGroup
-        name={'company_name'}
-        label={<T id={'company_name'} />}
+        name={'companyName'}
+        label={intl.get('company_name')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'company_name'} fill fastField />
+        <FInputGroup
+          name={'companyName'}
+          data-testId={'vendor-company-name-input'}
+          onChange={createFieldOnChange('companyName')}
+          fill
+          fastField
+        />
       </FFormGroup>
 
       {/*----------- Display Name -----------*/}
       <FFormGroup
-        name={'display_name'}
-        label={<T id={'display_name'} />}
+        name={'displayName'}
+        label={intl.get('display_name')}
         helperText="This is the name that appears on invoices and emails."
         inline
-        fill
         fastField
       >
         <DisplayNameList
-          name={'display_name'}
+          name={'displayName'}
           popoverProps={{ minimal: true }}
-          buttonProps={{ fill: true }}
-          fastField
+          buttonProps={{
+            fill: true,
+            'data-testId': 'vendor-display-name-select',
+          }}
         />
       </FFormGroup>
 
@@ -97,7 +118,7 @@ export function VendorFormBasicSection({}) {
       {/*------------ Vendor email -----------*/}
       <FFormGroup
         name={'email'}
-        label={<T id={'vendor_email'} />}
+        label={intl.get('vendor_email')}
         inline
         fastField
       >
@@ -110,17 +131,21 @@ export function VendorFormBasicSection({}) {
 
       {/*------------ Phone number -----------*/}
       <FFormGroup
-        name={'work_phone'}
+        name={'workPhone'}
         className={'form-group--phone-number'}
-        label={<T id={'phone_number'} />}
+        label={intl.get('phone_number')}
         inline
         fastField
       >
         <Stack spacing={10}>
-          <FInputGroup name={'work_phone'} placeholder={intl.get('work')} leftIcon="phone" fastField
+          <FInputGroup
+            name={'workPhone'}
+            placeholder={intl.get('work')}
+            leftIcon="phone"
+            fastField
           />
           <FInputGroup
-            name={'personal_phone'}
+            name={'personalPhone'}
             placeholder={intl.get('mobile')}
             fastField
           />
@@ -128,7 +153,7 @@ export function VendorFormBasicSection({}) {
       </FFormGroup>
 
       {/*------------ Vendor website -----------*/}
-      <FFormGroup name={'website'} label={<T id={'website'} />} inline fastField>
+      <FFormGroup name={'website'} label={intl.get('website')} inline fastField>
         <FInputGroup
           name={'website'}
           placeholder={'http://'}

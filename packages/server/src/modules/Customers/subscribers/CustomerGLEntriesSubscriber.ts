@@ -10,7 +10,7 @@ import { CustomerGLEntriesStorage } from '../CustomerGLEntriesStorage';
 
 @Injectable()
 export class CustomerWriteGLOpeningBalanceSubscriber {
-  constructor(private readonly customerGLEntries: CustomerGLEntriesStorage) { }
+  constructor(private readonly customerGLEntries: CustomerGLEntriesStorage) {}
 
   /**
    * Handles the writing opening balance journal entries once the customer created.

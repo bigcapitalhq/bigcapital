@@ -1,30 +1,49 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
 import {
-  useEstimateSMSDetail,
   useCreateNotifyEstimateBySMS,
+  useEstimateSMSDetail,
 } from '@/hooks/query';
 
-const NotifyEstimateViaSMSContext = React.createContext();
+interface NotifyEstimateViaSMSContextValue {
+  estimateId: number | null;
+  dialogName: string;
+  estimateSMSDetail: Record<string, unknown>;
+  createNotifyEstimateBySMSMutate: ReturnType<
+    typeof useCreateNotifyEstimateBySMS
+  >['mutateAsync'];
+}
+
+const NotifyEstimateViaSMSContext =
+  createContext<NotifyEstimateViaSMSContextValue>(
+    {} as NotifyEstimateViaSMSContextValue,
+  );
+
+interface NotifyEstimateViaSMSFormProviderProps {
+  estimateId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 function NotifyEstimateViaSMSFormProvider({
   estimateId,
   dialogName,
   ...props
-}) {
-  const { data: estimateSMSDetail, isLoading: isEstimateSMSDetailLoading } =
+}: NotifyEstimateViaSMSFormProviderProps) {
+  const { data: estimateSMSDetailRaw, isLoading: isEstimateSMSDetailLoading } =
     useEstimateSMSDetail(estimateId, {
       enabled: !!estimateId,
     });
+  const estimateSMSDetail =
+    (estimateSMSDetailRaw as Record<string, unknown> | undefined) ?? {};
 
   // Create notfiy estimate by sms mutations.
   const { mutateAsync: createNotifyEstimateBySMSMutate } =
     useCreateNotifyEstimateBySMS();
 
   // State provider.
-  const provider = {
-    estimateId,
+  const provider: NotifyEstimateViaSMSContextValue = {
+    estimateId: estimateId ?? null,
     dialogName,
     estimateSMSDetail,
     createNotifyEstimateBySMSMutate,

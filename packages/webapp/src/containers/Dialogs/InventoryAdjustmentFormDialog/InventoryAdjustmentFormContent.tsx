@@ -1,13 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-import InventoryAdjustmentFormDialogFields from './InventoryAdjustmentFormDialogFields';
-import InventoryAdjustmentFloatingActions from './InventoryAdjustmentFloatingActions';
+import React from 'react';
+import { InventoryAdjustmentFloatingActions } from './InventoryAdjustmentFloatingActions';
+import { InventoryAdjustmentFormDialogFields } from './InventoryAdjustmentFormDialogFields';
 
-/**
- * Inventory adjustment form content.
- */
-export default function InventoryAdjustmentFormContent() {
+export function InventoryAdjustmentFormContent(): React.ReactElement {
   return (
     <Form>
       <InventoryAdjustmentFormDialogFields />

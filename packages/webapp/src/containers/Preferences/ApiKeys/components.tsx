@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import { FormattedMessage as T, Icon } from '@/components';
 import {
   Intent,
   Button,
@@ -11,8 +7,27 @@ import {
   Position,
   Tag,
 } from '@blueprintjs/core';
-import { safeCallback } from '@/utils';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FormattedMessage as T, Icon } from '@/components';
 import { FormatDateCell } from '@/components/Utils/FormatDate';
+import { safeCallback } from '@/utils';
+
+export interface ApiKey {
+  id: number;
+  name?: string;
+  token?: string;
+  createdAt?: string;
+}
+
+export interface ActionsMenuPayload {
+  onRevoke?: (apiKey: ApiKey) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: ApiKey };
+  payload: ActionsMenuPayload;
+}
 
 /**
  * API Keys table actions menu.
@@ -20,7 +35,7 @@ import { FormatDateCell } from '@/components/Utils/FormatDate';
 export function ActionsMenu({
   row: { original },
   payload: { onRevoke },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -37,19 +52,15 @@ export function ActionsMenu({
  * Token accessor.
  * Displays the token value in a Tag component.
  */
-function TokenAccessor(apiKey) {
-  return (
-    <Tag minimal={true}>
-      {apiKey.token || ''}
-    </Tag>
-  );
+function TokenAccessor(apiKey: ApiKey) {
+  return <Tag minimal={true}>{apiKey.token || ''}</Tag>;
 }
 
 /**
  * Permissions accessor.
  * Since permissions aren't currently stored, we show a default message.
  */
-function PermissionsAccessor(apiKey) {
+function PermissionsAccessor(_apiKey: ApiKey) {
   return (
     <Tag>
       <T id={'api_key.full_access'} />
@@ -61,14 +72,19 @@ function PermissionsAccessor(apiKey) {
  * Last Used accessor.
  * Since lastUsed isn't currently tracked, we show "Never".
  */
-function LastUsedAccessor(apiKey) {
+function LastUsedAccessor(_apiKey: ApiKey) {
   return <span>{intl.get('api_key.never')}</span>;
+}
+
+interface ActionsCellProps {
+  payload: ActionsMenuPayload;
+  row: { original: ApiKey };
 }
 
 /**
  * Actions cell.
  */
-function ActionsCell(props) {
+function ActionsCell(props: ActionsCellProps) {
   return (
     <Popover
       content={<ActionsMenu {...props} />}
@@ -88,7 +104,7 @@ export function useApiKeysTableColumns() {
       {
         id: 'name',
         Header: intl.get('api_key.name'),
-        accessor: (row) => row.name || intl.get('api_key.unnamed'),
+        accessor: (row: ApiKey) => row.name || intl.get('api_key.unnamed'),
         width: 200,
         className: 'name',
       },

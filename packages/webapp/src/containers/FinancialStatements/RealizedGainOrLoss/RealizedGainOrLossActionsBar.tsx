@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -9,40 +7,44 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { withRealizedGainOrLoss } from './withRealizedGainOrLoss';
-import { withRealizedGainOrLossActions } from './withRealizedGainOrLossActions';
+import {
+  withRealizedGainOrLossActions,
+  WithRealizedGainOrLossActionsProps,
+} from './withRealizedGainOrLossActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { saveInvoke } from '@/utils';
 
-import { compose, saveInvoke } from '@/utils';
+interface RealizedGainOrLossActionsBarOwnProps {
+  numberFormat?: Record<string, unknown>;
+  onNumberFormatSubmit?: (values: Record<string, unknown>) => void;
+}
 
-/**
- * Realized Gain or Loss actions bar.
- */
-function RealizedGainOrLossActionsBar({
-  //#withRealizedGainOrLoss
+type RealizedGainOrLossActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<
+  WithRealizedGainOrLossActionsProps,
+  'toggleRealizedGainOrLossFilterDrawer'
+> &
+  RealizedGainOrLossActionsBarOwnProps;
+
+function RealizedGainOrLossActionsBarInner({
   isFilterDrawerOpen,
-
-  //#withRealizedGainOrLossActions
   toggleRealizedGainOrLossFilterDrawer,
-
-  //#ownProps
   numberFormat,
   onNumberFormatSubmit,
-}) {
-  // Handle filter toggle click.
+}: RealizedGainOrLossActionsBarProps) {
   const handleFilterToggleClick = () => {
     toggleRealizedGainOrLossFilterDrawer();
   };
 
-  // Handle recalculate report button.
   const handleRecalculateReport = () => {};
 
-  // handle number format form submit.
-  const handleNumberFormatSubmit = (values) =>
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) =>
     saveInvoke(onNumberFormatSubmit, values);
 
   return (
@@ -108,9 +110,10 @@ function RealizedGainOrLossActionsBar({
   );
 }
 
-export default compose(
+export const RealizedGainOrLossActionsBar = FF.pipe(
+  RealizedGainOrLossActionsBarInner,
+  withRealizedGainOrLossActions,
   withRealizedGainOrLoss(({ realizedGainOrLossDrawerFilter }) => ({
     isFilterDrawerOpen: realizedGainOrLossDrawerFilter,
   })),
-  withRealizedGainOrLossActions,
-)(RealizedGainOrLossActionsBar);
+);

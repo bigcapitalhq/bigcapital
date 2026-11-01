@@ -1,18 +1,18 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import { Button, Intent, Classes } from '@blueprintjs/core';
-import * as R from 'ramda';
 import { Form, Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import * as Yup from 'yup';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster, FFormGroup, FInputGroup } from '@/components';
-import { useDisconnectBankAccount } from '@/hooks/query/bank-rules';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useDisconnectBankAccount } from '@/hooks/query/banking';
 
 interface DisconnectFormValues {
   label: string;
 }
 
-const initialValues = {
+const initialValues: DisconnectFormValues = {
   label: '',
 };
 
@@ -20,11 +20,13 @@ const Schema = Yup.object().shape({
   label: Yup.string().required().label('Confirmation'),
 });
 
-interface DisconnectBankAccountDialogContentProps {
+interface DisconnectBankAccountDialogContentProps
+  extends Pick<WithDialogActionsProps, 'closeDialog'> {
   bankAccountId: number;
+  dialogName?: string;
 }
 
-function DisconnectBankAccountDialogContent({
+function DisconnectBankAccountDialogContentInner({
   bankAccountId,
 
   // #withDialogActions
@@ -54,7 +56,7 @@ function DisconnectBankAccountDialogContent({
         });
         closeDialog(DialogsName.DisconnectBankAccountConfirmation);
       })
-      .catch((error) => {
+      .catch(() => {
         setSubmitting(false);
         AppToaster.show({
           message: 'Something went wrong.',
@@ -100,4 +102,7 @@ function DisconnectBankAccountDialogContent({
   );
 }
 
-export default R.compose(withDialogActions)(DisconnectBankAccountDialogContent);
+export const DisconnectBankAccountDialogContent = FF.pipe(
+  DisconnectBankAccountDialogContentInner,
+  withDialogActions,
+);

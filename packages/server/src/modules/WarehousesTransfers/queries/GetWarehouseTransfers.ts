@@ -1,7 +1,6 @@
 import * as R from 'ramda';
 import { Inject, Injectable } from '@nestjs/common';
 import { WarehouseTransferTransformer } from './WarehouseTransferTransfomer';
-import { IGetWarehousesTransfersFilterDTO } from '../../Warehouses/Warehouse.types';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { DynamicListService } from '../../DynamicListing/DynamicList.service';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';
@@ -61,12 +60,12 @@ export class GetWarehouseTransfers {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed warehouse transfers
-    const warehousesTransfers = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new WarehouseTransferTransformer(),
     );
     return {
-      warehousesTransfers,
+      data,
       pagination,
       filter,
     };

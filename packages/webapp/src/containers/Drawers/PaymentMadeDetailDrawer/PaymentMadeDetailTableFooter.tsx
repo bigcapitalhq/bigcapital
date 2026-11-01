@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 import {
   T,
   TotalLines,
@@ -9,13 +8,16 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
 /**
  * Payment made - Details panel - Footer.
  */
-export default function PaymentMadeDetailTableFooter() {
+export function PaymentMadeDetailTableFooter() {
   const { paymentMade } = usePaymentMadeDetailContext();
+
+  if (!paymentMade) {
+    return null;
+  }
 
   return (
     <PaymentMadeFooterRoot>
@@ -27,7 +29,7 @@ export default function PaymentMadeDetailTableFooter() {
         />
         <TotalLine
           title={<T id={'payment_made.details.total'} />}
-          value={paymentMade.formatted_amount}
+          value={paymentMade.formattedAmount}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />

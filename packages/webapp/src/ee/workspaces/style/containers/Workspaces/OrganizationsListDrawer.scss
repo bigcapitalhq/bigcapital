@@ -1,0 +1,143 @@
+@import '@/style/_base.scss';
+
+$organizations-drawer-border: rgba(255, 255, 255, 0.08);
+
+.organizations-list-table.bigcapital-datatable {
+  --color-datatable-head-background: transparent;
+  --color-datatable-head-text: rgba(255, 255, 255, 0.45);
+  --color-datatable-head-border: #{$organizations-drawer-border};
+  --color-datatable-cell-border: #{$organizations-drawer-border};
+  --color-datatable-cell-hover-background: rgba(255, 255, 255, 0.04);
+  --color-datatable-no-results-text: rgba(255, 255, 255, 0.5);
+  --color-datatable-caret: rgba(255, 255, 255, 0.35);
+  --color-datatable-caret-hover: rgba(255, 255, 255, 0.55);
+
+  .table .thead .th {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .table .tbody .tr .td.td-liabilities,
+  .table .tbody .tr .td.td-assets {
+    font-size: 15px;
+  }
+
+  .table .tbody .tr .td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .sort-icon--desc {
+    border-bottom-color: rgba(255, 255, 255, 0.45) !important;
+  }
+
+  .sort-icon--asc {
+    border-top-color: rgba(255, 255, 255, 0.45) !important;
+  }
+
+  .th.align-right,
+  .td.align-right {
+    justify-content: flex-end;
+  }
+
+  .th.align-right .cell-inner {
+    text-align: right;
+    width: 100%;
+  }
+
+  .td.align-right .cell-inner {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  // Use full BEM class names: `&__foo` under a compound parent would compile to
+  // `.organizations-list-table.bigcapital-datatable__foo`, which never matches the DOM.
+  // Workspace name row (avatar + label) is styled via @xstyled/emotion in OrganizationsListTable.
+
+  .organizations-list-table__current-indicator {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(17, 131, 218, 0.95);
+    letter-spacing: 0.02em;
+  }
+
+  .organizations-list-table__numeric {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: right;
+    width: 100%;
+  }
+
+  .organizations-list-table__numeric-amount {
+    color: rgba(255, 255, 255, 0.78);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .organizations-list-table__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .organizations-list-table__row-menu-popover {
+    .bp4-popover-content {
+      padding: 0;
+    }
+  }
+
+  .organizations-list-table__row-menu {
+    min-width: 200px;
+  }
+}
+
+// Workspace Delete Dialog Styles
+.workspace-delete-dialog {
+  &__details {
+
+    p {
+      margin: 0 0 8px 0;
+    }
+
+    ul {
+      margin: 8px 0;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  &__warning {
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba($red4, 0.1);
+    border-left: 3px solid $red4;
+    border-radius: 3px;
+    font-size: 13px;
+    color: $red3 !important;
+  }
+}
+
+// Workspace Inactivate Dialog Styles
+.workspace-inactivate-dialog {
+  &__details {
+    ul {
+      margin: 8px 0;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 4px;
+      }
+    }
+  }
+}

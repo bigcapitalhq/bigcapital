@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app } from './init-app-test';
 
@@ -11,7 +11,7 @@ describe('Organization (e2e)', () => {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
       email: faker.internet.email(),
-      password: '123123123',
+      password: '1231231230',
     };
     signupResponse = await request(app.getHttpServer())
       .post('/auth/signup')
@@ -25,7 +25,7 @@ describe('Organization (e2e)', () => {
       });
   });
 
-  it('/organization (POST)', async () => {    
+  it('/organization (POST)', async () => {
     return request(app.getHttpServer())
       .post('/organization/build')
       .set('Accept', 'application/json')
@@ -45,13 +45,13 @@ describe('Organization (e2e)', () => {
 
   it('/organization (GET)', () => {
     return request(app.getHttpServer())
-    .get('/organization/current')
-    .set('Accept', 'application/json')
-    .set('Content-Type', 'application/json')
-    .set('Authorization', `Bearer ${signinResponse.body.access_token}`)
-    .set('organization-id', signupResponse.body.organization_id)
-    .send()
-    .expect(200);
+      .get('/organization/current')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${signinResponse.body.access_token}`)
+      .set('organization-id', signupResponse.body.organization_id)
+      .send()
+      .expect(200);
   });
 
   it('/organization (PUT)', () => {

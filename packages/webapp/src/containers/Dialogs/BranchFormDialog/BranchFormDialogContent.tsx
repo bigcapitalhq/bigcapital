@@ -1,19 +1,20 @@
-// @ts-nocheck
 import React from 'react';
-
 import '@/style/pages/Branches/BranchFormDialog.scss';
-
+import { BranchForm } from './BranchForm';
 import { BranchFormProvider } from './BranchFormProvider';
-import BranchForm from './BranchForm';
+
+interface BranchFormDialogContentProps {
+  dialogName: string;
+  branchId?: number | null;
+}
 
 /**
  * Branch form dialog content.
  */
-export default function BranchFormDialogContent({
-  // #ownProps
+export function BranchFormDialogContent({
   dialogName,
   branchId,
-}) {
+}: BranchFormDialogContentProps): React.ReactElement {
   return (
     <BranchFormProvider branchId={branchId} dialogName={dialogName}>
       <BranchForm />

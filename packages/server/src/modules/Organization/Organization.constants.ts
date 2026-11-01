@@ -1,5 +1,3 @@
-import currencies from 'js-money/lib/currency';
-
 export const DATE_FORMATS = [
   'MM/DD/YY',
   'DD/MM/YY',
@@ -36,5 +34,5 @@ export const ERRORS = {
   TENANT_DB_NOT_BUILT: 'tenant_db_not_built',
   TENANT_IS_BUILDING: 'TENANT_IS_BUILDING',
   BASE_CURRENCY_MUTATE_LOCKED: 'BASE_CURRENCY_MUTATE_LOCKED',
-  TENANT_UPGRADE_IS_RUNNING: 'TENANT_UPGRADE_IS_RUNNING'
+  TENANT_UPGRADE_IS_RUNNING: 'TENANT_UPGRADE_IS_RUNNING',
 };

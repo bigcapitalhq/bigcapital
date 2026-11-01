@@ -53,7 +53,7 @@ export class ImportFileProcess {
     const [sheetData, sheetColumns] = parseSheetData(buffer);
 
     const resource = importFile.resource;
-    const resourceFields = this.resource.getResourceFields2(resource);
+    const resourceFields = await this.resource.getResourceFields2(resource);
 
     // Runs the importing operation with ability to return errors that will happen.
     const [successedImport, failedImport, allData] =

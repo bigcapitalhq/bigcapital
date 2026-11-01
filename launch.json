@@ -9,7 +9,7 @@
         "runtimeExecutable": "npm",
         "runtimeArgs": [
           "run",
-          "start:debug",
+          "dev:debug",
           "--",
           "--inspect-brk"
         ],

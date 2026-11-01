@@ -1,26 +1,23 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
+import { getReportRowTestId } from '../reportTestIds';
+import { useCashFlowStatementContext } from './CashFlowStatementProvider';
+import { useCashFlowStatementColumns } from './components';
 import { DataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
-import { useCashFlowStatementColumns } from './components';
-import { useCashFlowStatementContext } from './CashFlowStatementProvider';
+interface CashFlowStatementTableProps {
+  companyName: string;
+}
 
-/**
- * Cash flow statement table.
- */
-export default function CashFlowStatementTable({
-  // #ownProps
+export function CashFlowStatementTable({
   companyName,
-}) {
-  const {
-    cashFlowStatement: { tableRows, meta },
-    query,
-  } = useCashFlowStatementContext();
+}: CashFlowStatementTableProps) {
+  const { cashFlowStatement, query } = useCashFlowStatementContext();
+  const tableRows = cashFlowStatement?.tableRows ?? [];
+  const meta = cashFlowStatement?.meta;
 
   const columns = useCashFlowStatementColumns();
 
@@ -32,13 +29,14 @@ export default function CashFlowStatementTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('statement_of_cash_flow')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      basis={query.basis}
+      dateText={meta?.formattedDateRange}
+      basis={query.basis as 'cash' | 'accrual' | undefined}
     >
       <CashflowStatementDataTable
         columns={columns}
         data={tableRows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('cash-flow')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}

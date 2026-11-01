@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { useFormikContext } from 'formik';
 import {
   Intent,
   Button,
@@ -12,6 +8,12 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import { useCreditNoteFormBrandingTemplatesOptions } from './utils';
+import type { CreditNoteFormValues } from './utils';
 import {
   If,
   Icon,
@@ -20,71 +22,78 @@ import {
   FSelect,
   PageForm,
 } from '@/components';
-import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import { DRAWERS } from '@/constants/drawers';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
-import { useCreditNoteFormBrandingTemplatesOptions } from './utils';
-import { MoreIcon } from '@/icons/More';
 import { useDrawerActions } from '@/hooks/state';
-import { DRAWERS } from '@/constants/drawers';
+import { MoreIcon } from '@/icons/More';
 
 /**
  * Credit note floating actions.
  */
-export default function CreditNoteFloatingActions() {
+export function CreditNoteFloatingActions() {
   const history = useHistory();
   const { openDrawer } = useDrawerActions();
 
   // Formik context.
-  const { resetForm, submitForm, isSubmitting } = useFormikContext();
+  const { resetForm, submitForm, isSubmitting } =
+    useFormikContext<CreditNoteFormValues>();
 
   // Credit note form context.
   const { setSubmitPayload, creditNote } = useCreditNoteFormContext();
 
   // Handle submit as open button click.
-  const handleSubmitOpenBtnClick = (event) => {
+  const handleSubmitOpenBtnClick = (event: React.MouseEvent<HTMLElement>) => {
     setSubmitPayload({ redirect: true, open: true });
     submitForm();
   };
 
   // Handle submit, open and another new button click.
-  const handleSubmitOpenAndNewBtnClick = (event) => {
+  const handleSubmitOpenAndNewBtnClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setSubmitPayload({ redirect: false, open: true, resetForm: true });
     submitForm();
   };
 
   // Handle submit as open & continue editing button click.
-  const handleSubmitOpenContinueEditingBtnClick = (event) => {
+  const handleSubmitOpenContinueEditingBtnClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setSubmitPayload({ redirect: false, open: true });
     submitForm();
   };
   // Handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = (event: React.MouseEvent<HTMLElement>) => {
     setSubmitPayload({ redirect: true, open: false });
     submitForm();
   };
 
   // handle submit as draft & new button click.
-  const handleSubmitDraftAndNewBtnClick = (event) => {
+  const handleSubmitDraftAndNewBtnClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setSubmitPayload({ redirect: false, open: false, resetForm: true });
     submitForm();
   };
 
   // Handle submit as draft & continue editing button click.
-  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+  const handleSubmitDraftContinueEditingBtnClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setSubmitPayload({ redirect: false, open: false });
     submitForm();
   };
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = (event: React.MouseEvent<HTMLElement>) => {
     history.goBack();
   };
 
   // Handle clear button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = (event: React.MouseEvent<HTMLElement>) => {
     resetForm();
   };
 
@@ -99,7 +108,7 @@ export default function CreditNoteFloatingActions() {
     <PageForm.FooterActions position={'apart'} spacing={20}>
       <Group spacing={10}>
         {/* ----------- Save And Open  ----------- */}
-        <If condition={!creditNote || !creditNote?.is_open}>
+        <If condition={!creditNote || !creditNote?.isOpen}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}
@@ -165,7 +174,7 @@ export default function CreditNoteFloatingActions() {
           </ButtonGroup>
         </If>
         {/* ----------- Save and New ----------- */}
-        <If condition={creditNote && creditNote?.is_open}>
+        <If condition={Boolean(creditNote && creditNote?.isOpen)}>
           <ButtonGroup>
             <Button
               loading={isSubmitting}
@@ -214,16 +223,16 @@ export default function CreditNoteFloatingActions() {
       <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
-          name={'pdf_template_id'}
+          name={'pdfTemplateId'}
           label={'Branding'}
           inline
           fastField
           style={{ marginLeft: 20 }}
         >
           <FSelect
-            name={'pdf_template_id'}
+            name={'pdfTemplateId'}
             items={brandingTemplatesOptions}
-            input={({ activeItem, text, label, value }) => (
+            input={({ text }: { text?: string }) => (
               <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
             )}
             filterable={false}

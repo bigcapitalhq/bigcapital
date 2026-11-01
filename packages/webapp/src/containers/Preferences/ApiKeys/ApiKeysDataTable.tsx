@@ -1,24 +1,33 @@
-// @ts-nocheck
-import React, { useCallback } from 'react';
-import { compose } from '@/utils';
-import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
-import { useApiKeys, useRevokeApiKey } from '@/hooks/query';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { ActionsMenu, useApiKeysTableColumns } from './components';
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
+import { ActionsMenu, useApiKeysTableColumns } from './components';
+import type { ApiKey } from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { DataTable, TableSkeletonRows, AppToaster } from '@/components';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useApiKeys, useRevokeApiKey } from '@/hooks/query';
+
+type ApiKeysDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
+  Pick<WithAlertActionsProps, 'openAlert'>;
+
+interface RevokeApiKeyError {
+  response?: { data?: { message?: string } };
+}
 
 /**
  * API Keys datatable.
  */
-function ApiKeysDataTable({
+function ApiKeysDataTableInner({
   // #withDialogActions
-  openDialog,
+  openDialog: _openDialog,
 
   // #withAlertActions
-  openAlert,
-}) {
+  openAlert: _openAlert,
+}: ApiKeysDataTableInnerProps) {
   const { data: apiKeys, isLoading, isFetching } = useApiKeys();
   const { mutateAsync: revokeApiKey } = useRevokeApiKey();
 
@@ -27,7 +36,7 @@ function ApiKeysDataTable({
 
   // Handle revoke API key action.
   const handleRevokeApiKey = useCallback(
-    (apiKey) => {
+    (apiKey: ApiKey) => {
       revokeApiKey(apiKey.id)
         .then(() => {
           AppToaster.show({
@@ -35,9 +44,11 @@ function ApiKeysDataTable({
             intent: Intent.SUCCESS,
           });
         })
-        .catch((error) => {
+        .catch((error: RevokeApiKeyError) => {
           AppToaster.show({
-            message: error?.response?.data?.message || intl.get('something_went_wrong'),
+            message:
+              error?.response?.data?.message ||
+              intl.get('something_went_wrong'),
             intent: Intent.DANGER,
           });
         });
@@ -62,4 +73,8 @@ function ApiKeysDataTable({
   );
 }
 
-export default compose(withDialogActions, withAlertActions)(ApiKeysDataTable);
+export const ApiKeysDataTable = FF.pipe(
+  ApiKeysDataTableInner,
+  withAlertActions,
+  withDialogActions,
+);

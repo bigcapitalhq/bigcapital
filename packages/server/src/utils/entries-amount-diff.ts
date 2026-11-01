@@ -25,6 +25,5 @@ export const entriesAmountDiff = (
       [amountAttribute]: value,
     }))
     .filter((entry) => entry[amountAttribute] != 0)
-    .values()
     .value();
 };

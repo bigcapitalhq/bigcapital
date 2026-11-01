@@ -6,7 +6,7 @@ import { DeleteAccount } from './DeleteAccount.service';
 
 @Injectable()
 export class BulkDeleteAccountsService {
-  constructor(private readonly deleteAccountService: DeleteAccount) { }
+  constructor(private readonly deleteAccountService: DeleteAccount) {}
 
   /**
    * Deletes multiple accounts.
@@ -16,7 +16,7 @@ export class BulkDeleteAccountsService {
   async bulkDeleteAccounts(
     accountIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const accountsIds = uniq(castArray(accountIds));
@@ -38,4 +38,3 @@ export class BulkDeleteAccountsService {
     }
   }
 }
-

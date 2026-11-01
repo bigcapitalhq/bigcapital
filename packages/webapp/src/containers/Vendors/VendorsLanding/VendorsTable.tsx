@@ -1,40 +1,51 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router';
-
-import { TABLES } from '@/constants/tables';
+import * as FF from 'fp-ts/function';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
+import { ActionsMenu, useVendorsTableColumns } from './components';
+import { VendorsEmptyStatus } from './VendorsEmptyStatus';
+import { useVendorsListContext } from './VendorsListProvider';
+import { withVendors } from './withVendors';
+import { withVendorsActions } from './withVendorsActions';
+import type { WithVendorsProps } from './withVendors';
+import type { WithVendorsActionsProps } from './withVendorsActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { Vendor } from '@bigcapital/sdk-ts';
 import {
   DataTable,
   TableSkeletonRows,
   TableSkeletonHeader,
   DashboardContentTable,
 } from '@/components';
-
-import VendorsEmptyStatus from './VendorsEmptyStatus';
-import { useVendorsListContext } from './VendorsListProvider';
-import { useMemorizedColumnsWidths } from '@/hooks';
-import { ActionsMenu, useVendorsTableColumns } from './components';
-
-import { withVendors } from './withVendors';
-import { withVendorsActions } from './withVendorsActions';
+import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
-import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+interface VendorsTableInnerProps
+  extends Pick<WithVendorsProps, 'vendorsTableState' | 'vendorsSelectedRows'>,
+    WithVendorsActionsProps,
+    WithAlertActionsProps,
+    WithDialogActionsProps,
+    WithDrawerActionsProps {}
+
+type VendorRow = Pick<Vendor, 'id'>;
+type SortBy = Array<{ id: string; desc: boolean }>;
 
 /**
  * Vendors table.
  */
-function VendorsTable({
+function VendorsTableInner({
   // #withVendorsActions
   setVendorsTableState,
   setVendorsSelectedRows,
 
   // #withVendors
   vendorsTableState,
+  vendorsSelectedRows,
 
   // #withAlertActions
   openAlert,
@@ -44,10 +55,7 @@ function VendorsTable({
 
   // #withDialogActions
   openDialog,
-
-  // #withSettings
-  vendorsTableSize,
-}) {
+}: VendorsTableInnerProps) {
   // Vendors list context.
   const {
     vendors,
@@ -55,7 +63,9 @@ function VendorsTable({
     isVendorsFetching,
     isVendorsLoading,
     isEmptyStatus,
+    vendorsSettings,
   } = useVendorsListContext();
+  const vendorsTableSize = vendorsSettings?.tableSize as string | undefined;
 
   // Vendors table columns.
   const columns = useVendorsTableColumns();
@@ -64,42 +74,44 @@ function VendorsTable({
   const history = useHistory();
 
   // Handle edit vendor data table
-  const handleEditVendor = (vendor) => {
+  const handleEditVendor = (vendor: VendorRow) => {
     history.push(`/vendors/${vendor.id}/edit`);
   };
 
   // Handle cancel/confirm inactive.
-  const handleInactiveVendor = ({ id, contact_service }) => {
+  const handleInactiveVendor = ({ id }: VendorRow) => {
     openAlert('vendor-inactivate', {
       vendorId: id,
-      service: contact_service,
     });
   };
 
   // Handle cancel/confirm activate.
-  const handleActivateVendor = ({ id, contact_service }) => {
-    openAlert('vendor-activate', { vendorId: id, service: contact_service });
+  const handleActivateVendor = ({ id }: VendorRow) => {
+    openAlert('vendor-activate', { vendorId: id });
   };
 
   // Handle click delete vendor.
-  const handleDeleteVendor = ({ id }) => {
+  const handleDeleteVendor = ({ id }: VendorRow) => {
     openAlert('vendor-delete', { contactId: id });
   };
 
   // Handle contact duplicate .
-  const handleContactDuplicate = ({ id }) => {
+  const handleContactDuplicate = ({ id }: VendorRow) => {
     openDialog('contact-duplicate', {
       contactId: id,
     });
   };
 
   // Handle view detail item.
-  const handleViewDetailVendor = ({ id }) => {
+  const handleViewDetailVendor = ({ id }: VendorRow) => {
     openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId: id });
   };
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (
+    cell: { row: { original: VendorRow } },
+    _event: React.MouseEvent,
+  ) => {
     openDrawer(DRAWERS.VENDOR_DETAILS, { vendorId: cell.row.original.id });
   };
 
@@ -108,8 +120,16 @@ function VendorsTable({
     useMemorizedColumnsWidths(TABLES.VENDORS);
 
   // Handle fetch data once the page index, size or sort by of the table change.
-  const handleFetchData = React.useCallback(
-    ({ pageSize, pageIndex, sortBy }) => {
+  const handleFetchData = useCallback(
+    ({
+      pageSize,
+      pageIndex,
+      sortBy,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      sortBy: SortBy;
+    }) => {
       setVendorsTableState({
         pageIndex,
         pageSize,
@@ -119,8 +139,8 @@ function VendorsTable({
     [setVendorsTableState],
   );
 
-  const handleSelectedRowsChange = React.useCallback(
-    (selectedFlatRows) => {
+  const handleSelectedRowsChange = useCallback(
+    (selectedFlatRows: Array<{ original: VendorRow }>) => {
       const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
       setVendorsSelectedRows(selectedIds);
     },
@@ -137,7 +157,7 @@ function VendorsTable({
       <DataTable
         noInitialFetch={true}
         columns={columns}
-        data={vendors}
+        data={vendors ?? []}
         loading={isVendorsLoading}
         headerLoading={isVendorsLoading}
         progressBarLoading={isVendorsFetching}
@@ -146,12 +166,14 @@ function VendorsTable({
         expandable={false}
         sticky={true}
         pagination={true}
-        initialPageSize={vendorsTableState.pageSize}
+        rowTestId={'vendor-row'}
+        initialPageSize={vendorsTableState?.pageSize ?? 10}
         manualSortBy={true}
-        pagesCount={pagination.pagesCount}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={vendorsSelectedRows}
         autoResetSelectedRows={false}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
@@ -173,14 +195,14 @@ function VendorsTable({
   );
 }
 
-export default compose(
-  withVendorsActions,
-  withAlertActions,
-  withDialogActions,
-  withDrawerActions,
-
-  withVendors(({ vendorsTableState }) => ({ vendorsTableState })),
-  withSettings(({ vendorsSettings }) => ({
-    vendorsTableSize: vendorsSettings?.tableSize,
+export const VendorsTable = FF.pipe(
+  VendorsTableInner,
+  withVendors(({ vendorsTableState, vendorsSelectedRows }) => ({
+    vendorsTableState,
+    vendorsSelectedRows,
   })),
-)(VendorsTable);
+  withDrawerActions,
+  withDialogActions,
+  withAlertActions,
+  withVendorsActions,
+);

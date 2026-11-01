@@ -1,10 +1,14 @@
-import { IFinancialSheetCommonMeta, INumberFormatQuery } from "../../types/Report.types";
-import { IFinancialTable } from "../../types/Table.types";
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from '../../types/Report.types';
+import { IFinancialTable } from '../../types/Table.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export interface IGeneralLedgerSheetQuery {
   fromDate: Date | string;
   toDate: Date | string;
-  basis: string;
+  basis: AccountingBasis;
   numberFormat: IGeneralLedgerNumberFormat;
   dateFormat?: string;
   noneTransactions: boolean;
@@ -12,8 +16,7 @@ export interface IGeneralLedgerSheetQuery {
   branchesIds?: number[];
 }
 
-export interface IGeneralLedgerNumberFormat extends INumberFormatQuery{
-}
+export type IGeneralLedgerNumberFormat = INumberFormatQuery;
 
 export interface IGeneralLedgerSheetAccountTransaction {
   id: number;

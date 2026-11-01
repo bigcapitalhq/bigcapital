@@ -1,14 +1,9 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
 import { castArray } from 'lodash';
-
-import { transformToForm } from '@/utils';
+import moment from 'moment';
+import React from 'react';
 import { useAppQueryString } from '@/hooks';
+import { transformToForm } from '@/utils';
 
-/**
- * Retrieves the default cashflow sheet query.
- */
 export const getDefaultCashFlowSheetQuery = () => {
   return {
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
@@ -21,10 +16,7 @@ export const getDefaultCashFlowSheetQuery = () => {
   };
 };
 
-/**
- * Parses the cashflow query from browser location.
- */
-const parseCashflowQuery = (query) => {
+const parseCashflowQuery = (query: Record<string, unknown>) => {
   const defaultQuery = getDefaultCashFlowSheetQuery();
 
   const transformed = {

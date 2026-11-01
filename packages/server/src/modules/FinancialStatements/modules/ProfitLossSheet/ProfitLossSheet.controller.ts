@@ -1,15 +1,24 @@
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
 import { AcceptType } from '@/constants/accept-type';
 import {
   ApiExtraModels,
   ApiOperation,
   ApiProduces,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { ProfitLossSheetQueryDto } from './ProfitLossSheetQuery.dto';
 import { ProfitLossSheetResponseExample } from './ProfitLossSheet.swagger';
 import {
@@ -27,7 +36,11 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
-@ApiExtraModels(ProfitLossSheetResponseDto, ProfitLossSheetTableResponseDto)
+@ApiExtraModels(
+  ProfitLossSheetResponseDto,
+  ProfitLossSheetTableResponseDto,
+  NumberFormatQueryDto,
+)
 export class ProfitLossSheetController {
   constructor(
     private readonly profitLossSheetApp: ProfitLossSheetApplication,
@@ -55,6 +68,13 @@ export class ProfitLossSheetController {
     },
   })
   @ApiOperation({ summary: 'Get profit/loss statement report' })
+  @ApiQuery({
+    name: 'numberFormat',
+    required: false,
+    description:
+      'Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)',
+    schema: { $ref: getSchemaPath(NumberFormatQueryDto) },
+  })
   @ApiProduces(
     AcceptType.ApplicationJson,
     AcceptType.ApplicationJsonTable,

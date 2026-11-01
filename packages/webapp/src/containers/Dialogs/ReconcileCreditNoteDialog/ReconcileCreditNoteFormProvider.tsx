@@ -1,14 +1,27 @@
-// @ts-nocheck
-import React from 'react';
+import { isEmpty } from 'lodash';
+import React, { createContext } from 'react';
+import type {
+  ReconcileCreditNote,
+  ReconcileCreditNoteContextValue,
+  ReconcileCreditNoteFormEntry,
+} from './types';
 import { DialogContent } from '@/components';
 import {
+  useCreateReconcileCreditNote,
   useCreditNote,
   useReconcileCreditNote,
-  useCreateReconcileCreditNote,
 } from '@/hooks/query';
-import { isEmpty } from 'lodash';
 
-const ReconcileCreditNoteDialogContext = React.createContext();
+const ReconcileCreditNoteDialogContext =
+  createContext<ReconcileCreditNoteContextValue>(
+    {} as ReconcileCreditNoteContextValue,
+  );
+
+interface ReconcileCreditNoteFormProviderProps {
+  creditNoteId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Reconcile credit note provider.
@@ -17,14 +30,18 @@ function ReconcileCreditNoteFormProvider({
   creditNoteId,
   dialogName,
   ...props
-}) {
+}: ReconcileCreditNoteFormProviderProps) {
   // Handle fetch reconcile credit note details.
-  const { isLoading: isReconcileCreditLoading, data: reconcileCreditNotes } =
+  // `useReconcileCreditNote` returns `unknown` from the SDK; cast narrow.
+  const { isLoading: isReconcileCreditLoading, data: reconcileCreditNotesRaw } =
     useReconcileCreditNote(creditNoteId, {
       enabled: !!creditNoteId,
     });
+  const reconcileCreditNotes =
+    (reconcileCreditNotesRaw as ReconcileCreditNoteFormEntry[] | undefined) ??
+    [];
 
-  // Handle fetch vendor credit details.
+  // Handle fetch credit note details.
   const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(
     creditNoteId,
     {
@@ -40,13 +57,13 @@ function ReconcileCreditNoteFormProvider({
   const isEmptyStatus = isEmpty(reconcileCreditNotes);
 
   // provider payload.
-  const provider = {
+  const provider: ReconcileCreditNoteContextValue = {
     dialogName,
     reconcileCreditNotes,
     createReconcileCreditNoteMutate,
     isEmptyStatus,
-    creditNote,
-    creditNoteId,
+    creditNote: creditNote as ReconcileCreditNote | undefined,
+    creditNoteId: creditNoteId ?? null,
   };
 
   return (

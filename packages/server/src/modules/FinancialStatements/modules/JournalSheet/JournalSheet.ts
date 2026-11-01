@@ -11,7 +11,10 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 import { JournalSheetRepository } from './JournalSheetRepository';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class JournalSheet extends FinancialSheet {
   readonly query: IJournalReportQuery;
@@ -128,7 +131,7 @@ export class JournalSheet extends FinancialSheet {
   entriesWalker(entries: ILedgerEntry[]): IJournalReportEntriesGroup[] {
     return chain(entries)
       .groupBy((entry) => `${entry.transactionId}-${entry.transactionType}`)
-      .map((entriesGroup: ILedgerEntry[], key: string) => {
+      .map((entriesGroup: ILedgerEntry[], _key: string) => {
         const headEntry = head(entriesGroup);
         return this.entriesGroupsMapper(entriesGroup, headEntry);
       })

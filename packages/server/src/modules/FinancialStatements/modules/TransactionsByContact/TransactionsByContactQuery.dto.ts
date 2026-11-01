@@ -30,17 +30,6 @@ export class TransactionsByContactQueryDto {
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
   @IsOptional()
-  @ApiPropertyOptional({
-    description: 'Number format configuration for the report',
-    type: NumberFormatQueryDto,
-    example: {
-      precision: 2,
-      divideOn1000: false,
-      showZero: true,
-      formatMoney: 'total',
-      negativeFormat: 'parentheses',
-    },
-  })
   numberFormat: INumberFormatQuery;
 
   @Transform(({ value }) => parseBoolean(value, false))

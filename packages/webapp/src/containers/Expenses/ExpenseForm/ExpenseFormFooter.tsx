@@ -1,12 +1,11 @@
-// @ts-nocheck
-import React from 'react';
 import { x } from '@xstyled/emotion';
-import { Row, Col, Paper } from '@/components';
+import React from 'react';
 import { ExpenseFormFooterLeft } from './ExpenseFormFooterLeft';
 import { ExpenseFormFooterRight } from './ExpenseFormFooterRight';
+import { Row, Col, Paper } from '@/components';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
-export default function ExpenseFormFooter() {
+export function ExpenseFormFooter() {
   return (
     <x.div mt={'20px'} px={'32px'} pb={'20px'} flex={1}>
       <Paper p={'20px'}>

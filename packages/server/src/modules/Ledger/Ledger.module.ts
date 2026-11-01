@@ -3,25 +3,29 @@ import { LedgerStorageService } from './LedgerStorage.service';
 import { LedgerEntriesStorageService } from './LedgerEntriesStorage.service';
 import { LedgerRevertService } from './LedgerStorageRevert.service';
 import { LedgerContactsBalanceStorage } from './LedgerContactStorage.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { LedegrAccountsStorage } from './LedgetAccountStorage.service';
 import { AccountsModule } from '../Accounts/Accounts.module';
+import { AnalyticsModule } from '../Analytics/Analytics.module';
+import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
+import { AccountTransactionTrackingCategory } from '../TrackingCategories/models/AccountTransactionTrackingCategory';
+
+const models = [RegisterTenancyModel(AccountTransactionTrackingCategory)];
 
 @Module({
-  imports: [AccountsModule],
+  imports: [TenancyModule, AccountsModule, AnalyticsModule, ...models],
   providers: [
     LedgerStorageService,
     LedgerEntriesStorageService,
     LedgerRevertService,
     LedgerContactsBalanceStorage,
     LedegrAccountsStorage,
-    TenancyContext
   ],
   exports: [
     LedgerStorageService,
     LedgerEntriesStorageService,
     LedgerRevertService,
-    LedegrAccountsStorage
+    LedegrAccountsStorage,
   ],
 })
 export class LedgerModule {}

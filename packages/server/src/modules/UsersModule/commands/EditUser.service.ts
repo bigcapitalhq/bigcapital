@@ -18,7 +18,7 @@ export class EditUserService {
     private readonly tenantUserModel: TenantModelProxy<typeof TenantUser>,
     private readonly eventEmitter: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
-  ) { }
+  ) {}
 
   /**
    * Creates a new user.

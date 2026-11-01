@@ -6,7 +6,16 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { castArray } from 'lodash';
 import { BankingMatchingApplication } from './BankingMatchingApplication';
 import { MatchBankTransactionDto } from './dtos/MatchBankTransaction.dto';
 import { GetMatchedTransactionsQueryDto } from './dtos/GetMatchedTransactionsQuery.dto';
@@ -40,8 +49,12 @@ export class BankingMatchingController {
     @Query('uncategorizedTransactionIds') uncategorizedTransactionIds: number[],
     @Query() filter: GetMatchedTransactionsQueryDto,
   ) {
+    const ids = castArray(uncategorizedTransactionIds ?? []).map((id) =>
+      Number(id),
+    );
+
     return this.bankingMatchingApplication.getMatchedTransactions(
-      uncategorizedTransactionIds ?? [],
+      ids,
       filter as any,
     );
   }

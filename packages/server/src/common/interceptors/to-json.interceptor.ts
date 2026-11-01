@@ -16,7 +16,11 @@ export class ToJsonInterceptor implements NestInterceptor {
           return data;
         }
         return mapValuesDeep(data, (value) => {
-          if (value !== null && value !== undefined && typeof value.toJSON === 'function') {
+          if (
+            value !== null &&
+            value !== undefined &&
+            typeof value.toJSON === 'function'
+          ) {
             return value.toJSON();
           }
           return value;

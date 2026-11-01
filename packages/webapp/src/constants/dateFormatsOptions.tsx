@@ -1,8 +1,12 @@
-// @ts-nocheck
 import moment from 'moment';
 import intl from 'react-intl-universal';
 
-export const getDateFormats =()=> [
+export const getDateFormats = (): Array<{
+  id: number;
+  name: string;
+  label: string;
+  value: string;
+}> => [
   {
     id: 1,
     name: intl.get('mm_dd_yy'),

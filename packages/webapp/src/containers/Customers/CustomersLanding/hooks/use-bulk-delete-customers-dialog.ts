@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { DialogsName } from '@/constants/dialogs';
-import { useValidateBulkDeleteCustomers } from '@/hooks/query/customers';
 import { useBulkDeleteDialog } from '@/hooks/dialogs/useBulkDeleteDialog';
+import { useValidateBulkDeleteCustomers } from '@/hooks/query/customers';
 
 export const useBulkDeleteCustomersDialog = () => {
   const validateBulkDeleteMutation = useValidateBulkDeleteCustomers();
@@ -11,4 +10,3 @@ export const useBulkDeleteCustomersDialog = () => {
     validateBulkDeleteMutation,
   );
 };
-

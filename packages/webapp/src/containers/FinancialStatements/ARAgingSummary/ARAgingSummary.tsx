@@ -1,48 +1,45 @@
-// @ts-nocheck
-import { useCallback, useEffect } from 'react';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
-
-import ARAgingSummaryHeader from './ARAgingSummaryHeader';
-import ARAgingSummaryActionsBar from './ARAgingSummaryActionsBar';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-import { ARAgingSummaryProvider } from './ARAgingSummaryProvider';
-import { ARAgingSummarySheetLoadingBar } from './components';
+import { useCallback, useEffect } from 'react';
+import { ARAgingSummaryActionsBar } from './ARAgingSummaryActionsBar';
 import { ARAgingSummaryBody } from './ARAgingSummaryBody';
-
-import { withARAgingSummaryActions } from './withARAgingSummaryActions';
-
+import { ARAgingSummaryHeader } from './ARAgingSummaryHeader';
+import { ARAgingSummaryProvider } from './ARAgingSummaryProvider';
 import { useARAgingSummaryQuery } from './common';
+import { ARAgingSummarySheetLoadingBar } from './components';
 import { ARAgingSummaryPdfDialog } from './dialogs/ARAgingSummaryPdfDialog';
+import {
+  withARAgingSummaryActions,
+  WithARAgingSummaryActionsProps,
+} from './withARAgingSummaryActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
 
-/**
- * A/R aging summary report.
- */
-function ReceivableAgingSummarySheet({
-  // #withARAgingSummaryActions
+type ReceivableAgingSummarySheetProps = Pick<
+  WithARAgingSummaryActionsProps,
+  'toggleARAgingSummaryFilterDrawer'
+>;
+
+function ARAgingSummaryInner({
   toggleARAgingSummaryFilterDrawer: toggleDisplayFilterDrawer,
-}) {
+}: ReceivableAgingSummarySheetProps) {
   const { query, setLocationQuery } = useARAgingSummaryQuery();
 
-  // Handle filter submit.
   const handleFilterSubmit = useCallback(
-    (filter) => {
+    (filter: Record<string, unknown>) => {
       const _filter = {
         ...filter,
-        asDate: moment(filter.asDate).format('YYYY-MM-DD'),
+        asDate: moment(filter.asDate as string).format('YYYY-MM-DD'),
       };
       setLocationQuery(_filter);
     },
     [setLocationQuery],
   );
 
-  // Handle number format submit.
-  const handleNumberFormatSubmit = (numberFormat) => {
+  const handleNumberFormatSubmit = (numberFormat: Record<string, unknown>) => {
     setLocationQuery({ ...query, numberFormat });
   };
-  // Hide the filter drawer once the page unmount.
+
   useEffect(
     () => () => toggleDisplayFilterDrawer(false),
     [toggleDisplayFilterDrawer],
@@ -73,4 +70,7 @@ function ReceivableAgingSummarySheet({
   );
 }
 
-export default compose(withARAgingSummaryActions)(ReceivableAgingSummarySheet);
+export const ARAgingSummary = FF.pipe(
+  ARAgingSummaryInner,
+  withARAgingSummaryActions,
+);

@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-import * as R from 'ramda';
 import { IGeneralLedgerSheetQuery } from './GeneralLedger.types';
 import { flatten, isEmpty, uniq } from 'lodash';
 import { ModelObject } from 'objection';
@@ -13,6 +12,8 @@ import { transformToMap } from '@/utils/transform-to-key';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { TenantModel } from '@/modules/System/models/TenantModel';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class GeneralLedgerRepository {
@@ -52,6 +53,15 @@ export class GeneralLedgerRepository {
   @Inject(TenancyContext)
   private readonly tenancyContext: TenancyContext;
 
+  @Inject(AccountingBasisService)
+  private readonly accountingBasisService: AccountingBasisService;
+
+  /**
+   * The report accounting basis.
+   * @param {AccountingBasis}
+   */
+  public basis: AccountingBasis;
+
   /**
    * Set the filter.
    * @param {IGeneralLedgerSheetQuery} filter - The filter.
@@ -65,6 +75,7 @@ export class GeneralLedgerRepository {
    */
   public async asyncInitialize() {
     await this.initTenant();
+    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsGraph();
     await this.initContacts();
@@ -82,11 +93,19 @@ export class GeneralLedgerRepository {
   }
 
   /**
+   * Initialize the report accounting basis.
+   */
+  public async initBasis() {
+    this.basis = await this.accountingBasisService.resolve(this.filter.basis);
+  }
+
+  /**
    * Initialize the accounts.
    */
   public async initAccounts() {
-    // @ts-ignore
-    this.accounts = await this.accountRepository.all().orderBy('name', 'ASC');
+    this.accounts = (await this.accountRepository
+      .all()
+      .orderBy('name', 'ASC')) as Account[];
   }
 
   /**
@@ -119,6 +138,7 @@ export class GeneralLedgerRepository {
         if (!isEmpty(this.filter.branchesIds)) {
           query.modify('filterByBranches', this.filter.branchesIds);
         }
+        query.modify('filterByBasis', this.basis);
         query.orderBy('date', 'ASC');
 
         if (this.filter.accountsIds?.length > 0) {
@@ -146,6 +166,7 @@ export class GeneralLedgerRepository {
         if (!isEmpty(this.filter.branchesIds)) {
           query.modify('filterByBranches', this.filter.branchesIds);
         }
+        query.modify('filterByBasis', this.basis);
         query.withGraphFetched('account');
       });
     // Accounts opening transactions.
@@ -167,7 +188,7 @@ export class GeneralLedgerRepository {
         return this.accountsGraph.dependenciesOf(accountId);
       },
     );
-    const nodeIds = R.concat(this.filter.accountsIds, childrenNodeIds);
+    const nodeIds = [...this.filter.accountsIds, ...childrenNodeIds];
 
     this.accountNodesIncludeTransactions = uniq(flatten(nodeIds));
   }
@@ -185,13 +206,10 @@ export class GeneralLedgerRepository {
       const childrenIds = this.accountsGraph.dependenciesOf(accountId);
       const parentIds = this.accountsGraph.dependantsOf(accountId);
 
-      return R.concat(childrenIds, parentIds);
+      return [...childrenIds, ...parentIds];
     });
-    // @ts-ignore\
-    this.accountNodeInclude = R.compose(
-      R.uniq,
-      R.flatten,
-      R.concat(this.filter.accountsIds),
-    )(nodeIds);
+    this.accountNodeInclude = uniq(
+      flatten([...this.filter.accountsIds, ...nodeIds]),
+    );
   }
 }

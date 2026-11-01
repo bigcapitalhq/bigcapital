@@ -3,7 +3,10 @@ import { SaleReceipt } from '../models/SaleReceipt';
 import { CommonMailOptionsDTO } from '@/modules/MailNotification/MailNotification.types';
 import { CommonMailOptions } from '@/modules/MailNotification/MailNotification.types';
 import { TenantJobPayload } from '@/interfaces/Tenant';
-import { CreateSaleReceiptDto, EditSaleReceiptDto } from '../dtos/SaleReceipt.dto';
+import {
+  CreateSaleReceiptDto,
+  EditSaleReceiptDto,
+} from '../dtos/SaleReceipt.dto';
 
 export interface ISalesReceiptsFilter {
   filterQuery?: (query: any) => void;
@@ -89,7 +92,7 @@ export interface ISaleReceiptBrandingTemplateAttributes {
   primaryColor: string;
   secondaryColor: string;
   showCompanyLogo: boolean;
-  companyLogo: string;
+  companyLogoUri: string;
   companyName: string;
 
   // Customer Address
@@ -100,6 +103,12 @@ export interface ISaleReceiptBrandingTemplateAttributes {
   showCompanyAddress: boolean;
   companyAddress: string;
   billedToLabel: string;
+
+  // Entries
+  lineItemLabel: string;
+  lineQuantityLabel: string;
+  lineRateLabel: string;
+  lineTotalLabel: string;
 
   // Total
   total: string;
@@ -139,6 +148,13 @@ export interface ISaleReceiptBrandingTemplateAttributes {
   receiptDate: string;
   showReceiptDate: boolean;
   receiptDateLabel: string;
+
+  // Discount
+  discount?: string;
+  discountLabel?: string;
+
+  // Adjustment
+  adjustment?: string;
 }
 
 export interface ISaleReceiptState {

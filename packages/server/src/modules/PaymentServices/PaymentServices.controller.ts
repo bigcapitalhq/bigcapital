@@ -7,11 +7,29 @@ import {
   Body,
   HttpCode,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiExtraModels,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { PaymentServicesApplication } from './PaymentServicesApplication';
-import { EditPaymentMethodDTO } from './types';
+import {
+  EditPaymentMethodDTO,
+  GetPaymentMethodsStateDto,
+  PaymentIntegrationDto,
+  PaymentMethodMutationResponseDto,
+} from './types';
 
 @ApiTags('Payment Services')
+@ApiExtraModels(GetPaymentMethodsStateDto)
+@ApiExtraModels(PaymentMethodMutationResponseDto)
+@ApiExtraModels(PaymentIntegrationDto)
+@ApiCommonHeaders()
 @Controller('payment-services')
 export class PaymentServicesController {
   constructor(
@@ -19,31 +37,65 @@ export class PaymentServicesController {
   ) {}
 
   @Get('/')
+  @ApiOperation({ summary: 'Retrieves the payment services for the invoice.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Payment services have been successfully retrieved.',
+    schema: {
+      type: 'array',
+      items: { $ref: getSchemaPath(PaymentIntegrationDto) },
+    },
+  })
   async getPaymentServicesSpecificInvoice() {
-    const paymentServices =
-      await this.paymentServicesApp.getPaymentServicesForInvoice();
-
-    return { paymentServices };
+    return this.paymentServicesApp.getPaymentServicesForInvoice();
   }
 
   @Get('/state')
+  @ApiOperation({
+    summary: 'Retrieves the payment methods state (Stripe, etc.).',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Payment methods state has been successfully retrieved.',
+    schema: { $ref: getSchemaPath(GetPaymentMethodsStateDto) },
+  })
   async getPaymentMethodsState() {
-    const paymentMethodsState =
-      await this.paymentServicesApp.getPaymentMethodsState();
-
-    return { data: paymentMethodsState };
+    return this.paymentServicesApp.getPaymentMethodsState();
   }
 
   @Get('/:paymentServiceId')
+  @ApiOperation({ summary: 'Retrieves a specific payment service details.' })
+  @ApiParam({
+    name: 'paymentServiceId',
+    type: Number,
+    description: 'Payment service id.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Payment service details have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(PaymentIntegrationDto) },
+  })
   async getPaymentService(@Param('paymentServiceId') paymentServiceId: number) {
-    const paymentService =
-      await this.paymentServicesApp.getPaymentService(paymentServiceId);
-
-    return { data: paymentService };
+    return this.paymentServicesApp.getPaymentService(paymentServiceId);
   }
 
   @Post('/:paymentMethodId')
   @HttpCode(200)
+  @ApiOperation({ summary: 'Updates the given payment method.' })
+  @ApiParam({
+    name: 'paymentMethodId',
+    type: Number,
+    description: 'Payment method id.',
+  })
+  @ApiBody({
+    type: EditPaymentMethodDTO,
+    description: 'Payment method update payload.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The payment method has been successfully updated.',
+    schema: { $ref: getSchemaPath(PaymentMethodMutationResponseDto) },
+  })
   async updatePaymentMethod(
     @Param('paymentMethodId') paymentMethodId: number,
     @Body() updatePaymentMethodDTO: EditPaymentMethodDTO,
@@ -60,6 +112,17 @@ export class PaymentServicesController {
 
   @Delete('/:paymentMethodId')
   @HttpCode(200)
+  @ApiOperation({ summary: 'Deletes the given payment method.' })
+  @ApiParam({
+    name: 'paymentMethodId',
+    type: Number,
+    description: 'Payment method id.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The payment method has been successfully deleted.',
+    schema: { $ref: getSchemaPath(PaymentMethodMutationResponseDto) },
+  })
   async deletePaymentMethod(@Param('paymentMethodId') paymentMethodId: number) {
     await this.paymentServicesApp.deletePaymentMethod(paymentMethodId);
 

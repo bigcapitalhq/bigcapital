@@ -1,42 +1,41 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
-import intl from 'react-intl-universal';
-import classNames from 'classnames';
-import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
-import { isEmpty } from 'lodash';
-import { CLASSES } from '@/constants/classes';
 import { css } from '@emotion/css';
-
+import { Formik, Form, type FormikHelpers } from 'formik';
+import { isEmpty } from 'lodash';
+import { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import { useHistory } from 'react-router-dom';
+import { BillFloatingActions } from './BillFloatingActions';
 import { EditBillFormSchema, CreateBillFormSchema } from './BillForm.schema';
-import BillFormHeader from './BillFormHeader';
-import BillFloatingActions from './BillFloatingActions';
-import BillFormFooter from './BillFormFooter';
-import BillItemsEntriesEditor from './BillItemsEntriesEditor';
-import BillFormTopBar from './BillFormTopBar';
-
-import { AppToaster, Box } from '@/components';
-import { PageForm } from '@/components/PageForm';
+import { BillFormEntriesActions } from './BillFormEntriesActions';
+import { BillFormFooter } from './BillFormFooter';
+import { BillFormHeader } from './BillFormHeader';
 import { useBillFormContext } from './BillFormProvider';
-import { compose, safeSumBy } from '@/utils';
+import { BillFormTopBar } from './BillFormTopBar';
+import { BillFormBody as BillItemsEntriesEditor } from './BillItemsEntriesEditor';
 import {
   defaultBill,
   filterNonZeroEntries,
   transformToEditForm,
   transformFormValuesToRequest,
   handleErrors,
+  type BillFormValues,
 } from './utils';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { BillFormEntriesActions } from './BillFormEntriesActions';
+import { AppToaster, Box } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { safeSumBy } from '@/utils';
+
+type BillSubmitError = {
+  data?: { errors?: { type: string }[] };
+};
 
 /**
  * Bill form.
  */
-function BillForm({
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
+function BillFormInner() {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+
   const history = useHistory();
 
   // Bill form context.
@@ -44,24 +43,22 @@ function BillForm({
     useBillFormContext();
 
   // Initial values in create and edit mode.
-  const initialValues = useMemo(
+  const initialValues = useMemo<BillFormValues>(
     () => ({
       ...(!isEmpty(bill)
-        ? {
-            ...transformToEditForm(bill),
-          }
+        ? transformToEditForm(bill!)
         : {
             ...defaultBill,
-            currency_code: base_currency,
+            currencyCode: baseCurrency ?? '',
           }),
     }),
-    [bill, base_currency],
+    [bill, baseCurrency],
   );
 
   // Handles form submit.
   const handleFormSubmit = (
-    values,
-    { setSubmitting, setErrors, resetForm },
+    values: BillFormValues,
+    { setSubmitting, setErrors, resetForm }: FormikHelpers<BillFormValues>,
   ) => {
     const entries = filterNonZeroEntries(values.entries);
     const totalQuantity = safeSumBy(entries, 'quantity');
@@ -79,7 +76,7 @@ function BillForm({
       open: submitPayload.status,
     };
     // Handle the request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -98,18 +95,14 @@ function BillForm({
       }
     };
     // Handle the request error.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
-      handleErrors(errors, { setErrors });
+    const onError = (error: BillSubmitError) => {
+      handleErrors(error?.data?.errors ?? [], { setErrors });
       setSubmitting(false);
     };
     if (isNewMode) {
       createBillMutate(form).then(onSuccess).catch(onError);
     } else {
-      editBillMutate([bill.id, form]).then(onSuccess).catch(onError);
+      editBillMutate([bill!.id, form]).then(onSuccess).catch(onError);
     }
   };
 
@@ -147,4 +140,4 @@ function BillForm({
     </Formik>
   );
 }
-export default compose(withCurrentOrganization())(BillForm);
+export const BillForm = BillFormInner;

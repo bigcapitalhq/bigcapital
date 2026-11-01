@@ -1,16 +1,15 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, EmptyStatus } from '@/components';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { EmptyStatus, FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose } from '@/utils';
+interface WarehousesEmptyStatusProps extends WithDialogActionsProps {}
 
-function WarehousesEmptyStatus({
-  // #withDialogActions
+function WarehousesEmptyStatusInner({
   openDialog,
-}) {
-  // Handle activate action warehouse.
+}: WarehousesEmptyStatusProps): React.ReactElement {
   const handleActivateWarehouse = () => {
     openDialog('warehouse-activate', {});
   };
@@ -38,4 +37,7 @@ function WarehousesEmptyStatus({
   );
 }
 
-export default compose(withDialogActions)(WarehousesEmptyStatus);
+export const WarehousesEmptyStatus = FF.pipe(
+  WarehousesEmptyStatusInner,
+  withDialogActions,
+);

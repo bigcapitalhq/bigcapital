@@ -1,5 +1,6 @@
 import * as moment from 'moment';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { includes, isFunction, isObject, isUndefined, omit } from 'lodash';
 // import { EXPORT_DTE_FORMAT } from '@/services/Export/constants';
 import { formatNumber } from '@/utils/format-number';
@@ -7,7 +8,8 @@ import { TransformerContext } from './Transformer.types';
 
 const EXPORT_DTE_FORMAT = 'YYYY-MM-DD';
 
-export class Transformer<T = {}, ExtraContext = {}> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export class Transformer<T = object, ExtraContext = object> {
   public context: ExtraContext & TransformerContext;
   public options: Record<string, any>;
 
@@ -84,11 +86,10 @@ export class Transformer<T = {}, ExtraContext = {}> {
   protected getTransformation = (item) => {
     const normlizedItem = this.normalizeModelItem(item);
 
-    return R.compose(
-      // sortObjectKeysAlphabetically,
-      this.transform,
-      R.when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
+    return flow(
       this.includeAttributesTransformed,
+      when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
+      this.transform,
     )(normlizedItem);
   };
 
@@ -202,7 +203,7 @@ export class Transformer<T = {}, ExtraContext = {}> {
    */
   protected formatMoney(money, options?) {
     return formatNumber(money, {
-      currencyCode: this.context.organization.baseCurrency,
+      currencyCode: this.context.organization?.baseCurrency,
       money: true,
       ...options,
     });

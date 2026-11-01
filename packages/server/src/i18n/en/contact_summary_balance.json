@@ -1,4 +1,6 @@
 {
+  "customer_sheet_name": "Customer Balance Summary",
+  "vendor_sheet_name": "Vendor Balance Summary",
   "account_name": "Account name",
   "total": "Total",
   "percentage_column": "% of Column"

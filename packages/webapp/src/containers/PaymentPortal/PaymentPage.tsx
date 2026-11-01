@@ -1,9 +1,9 @@
 import { Text, Classes, Button, Intent, ButtonProps } from '@blueprintjs/core';
-import clsx from 'classnames';
 import { css } from '@emotion/css';
+import clsx from 'classnames';
 import { lighten } from 'polished';
-import { Box, Group, Stack } from '@/components';
 import styles from './PaymentPortal.module.scss';
+import { Box, Group, Stack } from '@/components';
 
 export interface PaymentPageProps {
   // # Company name
@@ -60,7 +60,7 @@ export interface PaymentPageProps {
   // # Copyright
   copyrightText?: string;
 
-  classNames?: Record<string, string>
+  classNames?: Record<string, string>;
 }
 
 export function InvoicePaymentPage({

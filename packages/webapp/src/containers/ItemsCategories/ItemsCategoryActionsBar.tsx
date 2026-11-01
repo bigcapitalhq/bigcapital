@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   NavbarGroup,
   NavbarDivider,
@@ -6,31 +5,44 @@ import {
   Classes,
   Intent,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import { useHistory } from 'react-router-dom';
+import { useBulkDeleteItemCategoriesDialog } from './hooks/use-bulk-delete-item-categories-dialog';
+import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
+import { withItemCategories } from './withItemCategories';
+import { withItemCategoriesActions } from './withItemCategoriesActions';
+import type { WithItemCategoriesActionsProps } from './withItemCategoriesActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
-  If,
   Icon,
   FormattedMessage as T,
   AdvancedFilterPopover,
   DashboardFilterButton,
   DashboardActionsBar,
+  DashboardRowsHeightButton,
 } from '@/components';
-
-import { withItemCategories } from './withItemCategories';
-import { withItemCategoriesActions } from './withItemCategoriesActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
-import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
-import { useHistory } from 'react-router-dom';
 import { DialogsName } from '@/constants/dialogs';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
+
+interface ItemsCategoryActionsBarInnerProps
+  extends WithItemCategoriesActionsProps,
+    WithDialogActionsProps,
+    WithAlertActionsProps {
+  itemsCategoriesSelectedRows: number[];
+  categoriesFilterConditions: IFilterRole[];
+}
 
 /**
  * Items categories actions bar.
  */
-function ItemsCategoryActionsBar({
+function ItemsCategoryActionsBarInner({
   // #withItemCategories
-  itemCategoriesSelectedRows = [],
+  itemsCategoriesSelectedRows,
+
   categoriesFilterConditions,
 
   //
@@ -41,9 +53,16 @@ function ItemsCategoryActionsBar({
 
   // #withAlertActions
   openAlert,
-}) {
-  const { fields } = useItemsCategoriesContext();
+}: ItemsCategoryActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
+  const { fields, itemsCategoriesSettings } = useItemsCategoriesContext();
+  const itemsCategoriesTableSize = itemsCategoriesSettings?.tableSize as
+    | string
+    | undefined;
   const history = useHistory();
+
+  const bulkDelete = useBulkDeleteItemCategoriesDialog();
+  const { openBulkDeleteDialog } = bulkDelete;
 
   const onClickNewCategory = () => {
     openDialog('item-category-form', {});
@@ -54,15 +73,35 @@ function ItemsCategoryActionsBar({
   };
 
   // Handle the items categories bulk delete.
-  const handelBulkDelete = () => {
-    openAlert('item-categories-bulk-delete', {
-      itemCategoriesIds: itemCategoriesSelectedRows,
-    });
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(itemsCategoriesSelectedRows as number[]);
   };
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'item_category' });
   };
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size: string) => {
+    saveSettings({
+      options: [{ group: 'item_categories', key: 'table_size', value: size }],
+    });
+  };
+
+  if (itemsCategoriesSelectedRows?.length) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -80,7 +119,7 @@ function ItemsCategoryActionsBar({
             conditions: categoriesFilterConditions,
             defaultFieldKey: 'name',
             fields: fields,
-            onFilterChange: (filterConditions) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setItemsCategoriesTableState({ filterRoles: filterConditions });
             },
           }}
@@ -89,16 +128,6 @@ function ItemsCategoryActionsBar({
             conditionsCount={categoriesFilterConditions.length}
           />
         </AdvancedFilterPopover>
-
-        <If condition={itemCategoriesSelectedRows.length}>
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-            text={<T id={'delete'} />}
-            intent={Intent.DANGER}
-            onClick={handelBulkDelete}
-          />
-        </If>
 
         <Button
           className={Classes.MINIMAL}
@@ -112,19 +141,25 @@ function ItemsCategoryActionsBar({
           text={<T id={'export'} />}
           onClick={handleExportBtnClick}
         />
+        <NavbarDivider />
+        <DashboardRowsHeightButton
+          initialValue={itemsCategoriesTableSize}
+          onChange={handleTableRowSizeChange}
+        />
       </NavbarGroup>
     </DashboardActionsBar>
   );
 }
 
-export default compose(
-  withDialogActions,
+export const ItemsCategoryActionsBar = FF.pipe(
+  ItemsCategoryActionsBarInner,
+  withItemCategoriesActions,
+  withAlertActions,
   withItemCategories(
-    ({ itemCategoriesSelectedRows, itemsCategoriesTableState }) => ({
-      itemCategoriesSelectedRows,
+    ({ itemsCategoriesTableState, itemsCategoriesSelectedRows }) => ({
+      itemsCategoriesSelectedRows,
       categoriesFilterConditions: itemsCategoriesTableState.filterRoles,
     }),
   ),
-  withAlertActions,
-  withItemCategoriesActions,
-)(ItemsCategoryActionsBar);
+  withDialogActions,
+);

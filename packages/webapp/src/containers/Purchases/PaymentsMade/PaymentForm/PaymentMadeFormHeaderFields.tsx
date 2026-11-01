@@ -1,31 +1,21 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
-import styled from 'styled-components';
-import classNames from 'classnames';
-import { isEmpty, toSafeInteger } from 'lodash';
-import {
-  FormGroup,
-  InputGroup,
-  Position,
-  Classes,
-  ControlGroup,
-  Button,
-} from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
-import { FastField, useFormikContext, ErrorMessage } from 'formik';
+import { Button, ControlGroup, Position } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-import { Theme, useTheme } from '@emotion/react';
-
+import { useTheme } from '@emotion/react';
+import { useFormikContext } from 'formik';
+import { isEmpty, toSafeInteger } from 'lodash';
+import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { PaymentMadeExchangeRateInputField } from './components';
+import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import {
-  FDateInput,
-  FInputGroup,
-  FMoneyInputGroup,
-  Stack,
-  FormattedMessage as T,
-  VendorsSelect,
-} from '@/components';
-import { CLASSES } from '@/constants/classes';
-
+  accountsFieldShouldUpdate,
+  vendorsFieldShouldUpdate,
+  amountPaymentEntries,
+  fullAmountPaymentEntries,
+  type PaymentMadeFormValues,
+} from './utils';
+import type { Theme } from '@xstyled/emotion';
 import {
   FFormGroup,
   AccountsSelect,
@@ -36,21 +26,23 @@ import {
   Icon,
   VendorDrawerLink,
 } from '@/components';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
-import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { PaymentMadeExchangeRateInputField } from './components';
 import {
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  inputIntent,
-  compose,
-  safeSumBy,
-  fullAmountPaymentEntries,
-  amountPaymentEntries,
-} from '@/utils';
-import { accountsFieldShouldUpdate, vendorsFieldShouldUpdate } from './utils';
+  FDateInput,
+  FInputGroup,
+  FMoneyInputGroup,
+  Stack,
+  FormattedMessage as T,
+  VendorsSelect,
+} from '@/components';
+import { ACCOUNT_TYPE } from '@/constants/accountTypes';
+import { useDateInputFormatter } from '@/hooks';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { safeSumBy } from '@/utils';
+
+type VendorContact = {
+  id: string | number;
+  currencyCode?: string;
+};
 
 const getFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -72,36 +64,34 @@ const getFieldsStyle = (theme: Theme) => css`
 /**
  * Payment made form header fields.
  */
-function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
-  // Formik form context.
-  const {
-    values: { entries, currency_code },
-    setFieldValue,
-  } = useFormikContext();
+function PaymentMadeFormHeaderFieldsInner() {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  const theme = useTheme();
+  const {
+    values: { entries, currencyCode },
+    setFieldValue,
+  } = useFormikContext<PaymentMadeFormValues>();
+
+  const theme = useTheme() as Theme;
+  const dateInputFormatter = useDateInputFormatter();
   const fieldsClassName = getFieldsStyle(theme);
 
-  // Payment made form context.
   const { accounts } = usePaymentMadeFormContext();
 
-  // Sumation of payable full-amount.
   const payableFullAmount = useMemo(
-    () => safeSumBy(entries, 'due_amount'),
+    () => safeSumBy(entries, 'dueAmount'),
     [entries],
   );
 
-  // Handle receive full-amount click.
   const handleReceiveFullAmountClick = () => {
     const newEntries = fullAmountPaymentEntries(entries);
-    const fullAmount = safeSumBy(newEntries, 'payment_amount');
+    const fullAmount = safeSumBy(newEntries, 'paymentAmount');
 
     setFieldValue('entries', newEntries);
     setFieldValue('amount', fullAmount);
   };
 
-  // Handles the full-amount field blur.
-  const onFullAmountBlur = (value) => {
+  const onFullAmountBlur = (value: string | number) => {
     const newEntries = amountPaymentEntries(toSafeInteger(value), entries);
     setFieldValue('entries', newEntries);
   };
@@ -113,22 +103,21 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
 
       {/* ----------- Exchange rate ----------- */}
       <PaymentMadeExchangeRateInputField
-        name={'exchange_rate'}
+        name={'exchangeRate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
 
       {/* ------------ Payment date ------------ */}
       <FFormGroup
-        name={'payment_date'}
-        label={<T id={'payment_date'} />}
+        name={'paymentDate'}
+        label={intl.get('payment_date')}
         labelInfo={<FieldRequiredHint />}
         inline
-        fill
         fastField
       >
         <FDateInput
-          name={'payment_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          name={'paymentDate'}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
           fill
@@ -139,56 +128,58 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       {/* ------------ Full amount ------------ */}
       <FFormGroup
         name={'amount'}
-        label={<T id={'full_amount'} />}
+        label={intl.get('full_amount')}
         inline={true}
         labelInfo={<Hint />}
         fastField
       >
-        <ControlGroup>
-          <InputPrependText text={currency_code} />
-          <FMoneyInputGroup
-            fastField
-            name={'amount'}
-            onBlurValue={onFullAmountBlur}
-          />
-        </ControlGroup>
+        <>
+          <ControlGroup>
+            <InputPrependText text={currencyCode}>{null}</InputPrependText>
+            <FMoneyInputGroup
+              fastField
+              name={'amount'}
+              onBlurValue={onFullAmountBlur}
+            />
+          </ControlGroup>
 
-        {!isEmpty(entries) && (
-          <Button
-            onClick={handleReceiveFullAmountClick}
-            className={'receive-full-amount'}
-            small={true}
-            minimal={true}
-          >
-            <T id={'receive_full_amount'} /> (
-            <Money amount={payableFullAmount} currency={currency_code} />)
-          </Button>
-        )}
+          {!isEmpty(entries) && (
+            <Button
+              onClick={handleReceiveFullAmountClick}
+              className={'receive-full-amount'}
+              small={true}
+              minimal={true}
+            >
+              <T id={'receive_full_amount'} /> (
+              <Money amount={payableFullAmount} currency={currencyCode} />)
+            </Button>
+          )}
+        </>
       </FFormGroup>
 
       {/* ------------ Payment number ------------ */}
       <FFormGroup
-        name={'payment_number'}
-        label={<T id={'payment_no'} />}
+        name={'paymentNumber'}
+        label={intl.get('payment_no')}
         inline={true}
         fastField
       >
-        <FInputGroup name={'payment_number'} minimal={true} fastField />
+        <FInputGroup name={'paymentNumber'} fastField />
       </FFormGroup>
 
       {/* ------------ Payment account ------------ */}
       <FFormGroup
-        name={'payment_account_id'}
-        label={<T id={'payment_account'} />}
+        name={'paymentAccountId'}
+        label={intl.get('payment_account')}
         labelInfo={<FieldRequiredHint />}
-        items={accounts}
+        // @ts-expect-error shouldUpdate is forwarded to FastField at runtime; FormGroupProps type doesn't expose it
         shouldUpdate={accountsFieldShouldUpdate}
         inline={true}
         fastField={true}
       >
         <AccountsSelect
-          name={'payment_account_id'}
-          items={accounts}
+          name={'paymentAccountId'}
+          items={accounts ?? []}
           placeholder={<T id={'select_payment_account'} />}
           labelInfo={<FieldRequiredHint />}
           filterByTypes={[
@@ -205,63 +196,63 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       {/* ------------ Reference ------------ */}
       <FFormGroup
         name={'reference'}
-        label={<T id={'reference'} />}
+        label={intl.get('reference')}
         inline={true}
         fastField
       >
-        <FInputGroup name={'reference'} minimal={true} fastField />
+        <FInputGroup name={'reference'} fastField />
       </FFormGroup>
     </Stack>
   );
 }
 
 /**
- * Vendor select field of payment receive form.
- * @returns {React.ReactNode}
+ * Vendor select field of payment made form.
  */
 function PaymentFormVendorSelect() {
-  // Formik form context.
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<PaymentMadeFormValues>();
 
-  // Payment made form context.
   const { vendors, isNewMode, setPaymentVendorId } =
     usePaymentMadeFormContext();
 
   return (
     <FFormGroup
-      name={'vendor_id'}
-      label={<T id={'vendor_name'} />}
+      name={'vendorId'}
+      label={intl.get('vendor_name')}
       labelInfo={<FieldRequiredHint />}
       inline={true}
       fastField={true}
+      // @ts-expect-error shouldUpdate/shouldUpdateDeps are forwarded to FastField at runtime; FormGroupProps type doesn't expose them
       shouldUpdate={vendorsFieldShouldUpdate}
       shouldUpdateDeps={{ items: vendors }}
     >
-      <VendorsSelect
-        name={'vendor_id'}
-        items={vendors}
-        placeholder={<T id={'select_vender_account'} />}
-        onItemChange={(contact) => {
-          setFieldValue('vendor_id', contact.id);
-          setFieldValue('currency_code', contact?.currency_code);
-          setPaymentVendorId(contact.id);
-        }}
-        disabled={!isNewMode}
-        allowCreate={true}
-        fastField={true}
-        shouldUpdate={vendorsFieldShouldUpdate}
-        shouldUpdateDeps={{ items: vendors }}
-      />
-      {values.vendor_id && (
-        <VendorButtonLink vendorId={values.vendor_id}>
-          <T id={'view_vendor_details'} />
-        </VendorButtonLink>
-      )}
+      <>
+        <VendorsSelect
+          name={'vendorId'}
+          items={vendors}
+          placeholder={<T id={'select_vender_account'} />}
+          onItemChange={(contact: VendorContact) => {
+            setFieldValue('vendorId', contact.id);
+            setFieldValue('currencyCode', contact?.currencyCode);
+            setPaymentVendorId(Number(contact.id));
+          }}
+          disabled={!isNewMode}
+          allowCreate={true}
+          fastField={true}
+          shouldUpdate={vendorsFieldShouldUpdate}
+          shouldUpdateDeps={{ items: vendors }}
+        />
+        {values.vendorId && (
+          <VendorButtonLink vendorId={Number(values.vendorId)}>
+            <T id={'view_vendor_details'} />
+          </VendorButtonLink>
+        )}
+      </>
     </FFormGroup>
   );
 }
 
-export default compose(withCurrentOrganization())(PaymentMadeFormHeaderFields);
+export const PaymentMadeFormHeaderFields = PaymentMadeFormHeaderFieldsInner;
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;

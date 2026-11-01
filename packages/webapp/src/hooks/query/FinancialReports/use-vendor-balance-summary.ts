@@ -1,72 +1,78 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchVendorBalanceTable,
+  fetchVendorBalanceXlsx,
+  fetchVendorBalanceCsv,
+  fetchVendorBalancePdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  VendorBalanceTableQuery,
+  VendorBalanceTableResponse,
+  VendorBalancePdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve vendors balance summary report.
- */
-export function useVendorsBalanceSummaryReport(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.VENDORS_BALANCE_SUMMARY, query],
-    {
-      method: 'get',
-      url: '/reports/vendor-balance-summary',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => ({
-        query: res.data.query,
-        table: res.data.table,
-        meta: res.data.meta,
-      }),
-      defaultData: {
-        table: {},
-        query: {},
-        meta: {},
-      },
-      ...props,
-    },
-  );
+interface VendorsBalanceSummaryReport {
+  query: VendorBalanceTableResponse['query'];
+  table: VendorBalanceTableResponse['table'];
+  meta: VendorBalanceTableResponse['meta'];
 }
 
-export const useVendorBalanceSummaryXlsxExport = (args) => {
-  const url = '/reports/vendor-balance-summary';
-  const config = {
-    headers: {
-      accept: 'application/xlsx',
-    },
-  };
-  const filename = 'vendor_balance_summary.xlsx';
+export function useVendorsBalanceSummaryReport(
+  query: VendorBalanceTableQuery,
+  props?: Omit<
+    UseQueryOptions<VendorsBalanceSummaryReport, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.vendorBalanceSummary(query),
+    queryFn: () =>
+      fetchVendorBalanceTable(fetcher, query).then((data) => ({
+        query: data.query,
+        table: data.table,
+        meta: data.meta,
+      })),
+  });
+}
 
-  return useDownloadFile({
-    url,
-    config,
-    filename,
+export function useVendorBalanceSummaryXlsxExport(
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchVendorBalanceXlsx(fetcher, {}).then((blob) =>
+        downloadFile(blob, 'vendor_balance_summary.xlsx'),
+      ),
   });
-};
+}
 
-export const useVendorBalanceSummaryCsvExport = (args) => {
-  return useDownloadFile({
-    url: '/reports/vendor-balance-summary',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-    },
-    filename: 'vendor_balance_summary.csv',
+export function useVendorBalanceSummaryCsvExport(
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchVendorBalanceCsv(fetcher, {}).then((blob) =>
+        downloadFile(blob, 'vendor_balance_summary.csv'),
+      ),
   });
-};
+}
 
-export const useVendorBalanceSummaryPdfExport = (query = {}) => {
-  return useRequestPdf({
-    url: 'reports/vendor-balance-summary',
-    params: query,
-  });
-};
+export function useVendorBalanceSummaryPdfExport(query: VendorBalancePdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchVendorBalancePdf(fetcher, query));
+}

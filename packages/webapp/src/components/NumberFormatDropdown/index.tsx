@@ -1,9 +1,7 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
 import { Formik, Form } from 'formik';
-
+import React, { useCallback } from 'react';
 import '@/style/pages/FinancialStatements/NumberFormatDropdown.scss';
-
 import NumberFormatFields from './NumberFormatFields';
 import NumberFormatFooter from './NumberFormatFooter';
 
@@ -22,7 +20,7 @@ export default function NumberFormatDropdown({
     divideOn1000: false,
     negativeFormat: 'mines',
     precision: 2,
-    ...numberFormat
+    ...numberFormat,
   };
   // Handle cancel button click.
   const handleCancelClick = useCallback(() => {}, []);

@@ -1,5 +1,3 @@
-
-
 export const runningBalance = (amount: number) => {
   let runningBalance = amount;
 

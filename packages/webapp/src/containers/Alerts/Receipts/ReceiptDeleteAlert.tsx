@@ -1,46 +1,45 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useDeleteReceipt } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+interface ReceiptDeleteAlertPayload {
+  receiptId: number;
+}
 
-import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+interface ReceiptDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ReceiptDeleteAlertPayload;
+}
 
 /**
- * Invoice  alert.
+ * Receipt delete alert.
  */
 function NameDeleteAlert({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { receiptId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteReceiptMutate, isLoading } = useDeleteReceipt();
+}: ReceiptDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteReceiptMutate, isPending: isLoading } =
+    useDeleteReceipt();
 
-  // Handle cancel delete  alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete receipt
   const handleConfirmReceiptDelete = () => {
     deleteReceiptMutate(receiptId)
       .then(() => {
@@ -50,7 +49,13 @@ function NameDeleteAlert({
         });
         closeDrawer(DRAWERS.RECEIPT_DETAILS);
       })
-      .catch(() => {})
+      .catch((error: Error) => {
+        // Bugfix: the original had an empty `.catch(() => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -58,8 +63,8 @@ function NameDeleteAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -76,8 +81,9 @@ function NameDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const ReceiptDeleteAlert = FF.pipe(
+  NameDeleteAlert,
   withDrawerActions,
-)(NameDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

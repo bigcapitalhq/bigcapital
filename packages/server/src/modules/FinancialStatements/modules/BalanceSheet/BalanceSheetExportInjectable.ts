@@ -30,9 +30,7 @@ export class BalanceSheetExportInjectable {
    * @param {ITrialBalanceSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    query: IBalanceSheetQuery,
-  ): Promise<string> {
+  public async csv(query: IBalanceSheetQuery): Promise<string> {
     const table = await this.balanceSheetTable.table(query);
 
     const tableSheet = new TableSheet(table.table);
@@ -46,9 +44,7 @@ export class BalanceSheetExportInjectable {
    * @param {IBalanceSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    query: IBalanceSheetQuery,
-  ): Promise<Buffer> {
+  public async pdf(query: IBalanceSheetQuery): Promise<Buffer> {
     return this.balanceSheetPdf.pdf(query);
   }
 }

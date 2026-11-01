@@ -1,8 +1,8 @@
 import { useFormikContext } from 'formik';
 import { SendViewPreviewHeader } from '../SendMailViewDrawer/SendMailViewPreviewHeader';
+import { EstimateSendMailFormValues } from './_interfaces';
 import { useEstimateSendMailBoot } from './EstimateSendMailBoot';
 import { useSendEstimateMailSubject } from './hooks';
-import { EstimateSendMailFormValues } from './_interfaces';
 
 export function EstimateSendMailPreviewHeader() {
   const subject = useSendEstimateMailSubject();

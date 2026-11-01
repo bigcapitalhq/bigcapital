@@ -1,10 +1,11 @@
-// @ts-nocheck
-import React from 'react';
-import clsx from 'classnames';
 import { Navbar } from '@blueprintjs/core';
+import clsx from 'classnames';
+import React from 'react';
 
 interface DashboardActionsBarProps {
   children?: React.ReactNode;
+  className?: string;
+  name?: string;
 }
 
 export function DashboardActionsBar({

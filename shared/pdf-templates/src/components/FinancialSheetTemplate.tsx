@@ -33,7 +33,6 @@ export function FinancialSheetTemplate({
   sheetName,
   sheetDate,
   table,
-  customCSS,
 }: FinancialSheetTemplateProps) {
   return (
     <Box fontSize="14px">

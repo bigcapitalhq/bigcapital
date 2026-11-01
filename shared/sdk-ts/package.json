@@ -23,6 +23,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@rollup/rollup-darwin-arm64": "^4.59.0",
     "openapi-typescript-fetch": "^2.2.1"
   },
   "devDependencies": {

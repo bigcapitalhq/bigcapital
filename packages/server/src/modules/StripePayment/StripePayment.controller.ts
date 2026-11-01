@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Injectable, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { StripePaymentApplication } from './StripePaymentApplication';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetStripeConnectLinkResponseDto } from './dtos/GetStripeConnectLinkResponse.dto';
@@ -109,11 +109,10 @@ export class StripeIntegrationController {
     description: 'Successfully created account link',
     type: CreateStripeAccountLinkResponseDto,
   })
-  public async createAccountLink(
-    @Body() body: CreateStripeAccountLinkBodyDto,
-  ) {
-    const clientSecret =
-      await this.stripePaymentApp.createAccountLink(body.stripeAccountId);
+  public async createAccountLink(@Body() body: CreateStripeAccountLinkBodyDto) {
+    const clientSecret = await this.stripePaymentApp.createAccountLink(
+      body.stripeAccountId,
+    );
 
     return { clientSecret };
   }

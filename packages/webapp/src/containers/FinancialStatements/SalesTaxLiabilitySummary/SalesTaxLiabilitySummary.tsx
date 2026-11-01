@@ -1,31 +1,33 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
-
+import React, { useEffect } from 'react';
 import { SalesTaxLiabilitySummaryLoadingBar } from './components';
-import { FinancialStatement, DashboardPageContent } from '@/components';
-
-import SalesTaxLiabilitySummaryHeader from './SalesTaxLiabilitySummaryHeader';
-import SalesTaxLiabilitySummaryActionsBar from './SalesTaxLiabilitySummaryActionsBar';
-import { SalesTaxLiabilitySummaryBoot } from './SalesTaxLiabilitySummaryBoot';
-import { SalesTaxLiabilitySummaryBody } from './SalesTaxLiabilitySummaryBody';
-import { useSalesTaxLiabilitySummaryQuery } from './utils';
 import { SalesTaxLiabiltiyPdfDialog } from './SalesTaxLiabilityPdfDialog';
-import { withSalesTaxLiabilitySummaryActions } from './withSalesTaxLiabilitySummaryActions';
-import { compose } from '@/utils';
+import { SalesTaxLiabilitySummaryActionsBar } from './SalesTaxLiabilitySummaryActionsBar';
+import { SalesTaxLiabilitySummaryBody } from './SalesTaxLiabilitySummaryBody';
+import { SalesTaxLiabilitySummaryBoot } from './SalesTaxLiabilitySummaryBoot';
+import { SalesTaxLiabilitySummaryHeader } from './SalesTaxLiabilitySummaryHeader';
+import { useSalesTaxLiabilitySummaryQuery } from './utils';
+import {
+  withSalesTaxLiabilitySummaryActions,
+  WithSalesTaxLiabilitySummaryActionsProps,
+} from './withSalesTaxLiabilitySummaryActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+
+interface SalesTaxLiabilitySummaryProps
+  extends WithSalesTaxLiabilitySummaryActionsProps {}
 
 /**
  * Sales tax liability summary.
- * @returns {React.JSX}
  */
-function SalesTaxLiabilitySummary({
+function SalesTaxLiabilitySummaryInner({
   // #withSalesTaxLiabilitySummaryActions
   toggleSalesTaxLiabilitySummaryFilterDrawer,
-}) {
+}: SalesTaxLiabilitySummaryProps) {
   const [query, setQuery] = useSalesTaxLiabilitySummaryQuery();
 
-  const handleFilterSubmit = (filter) => {
+  const handleFilterSubmit = (filter: Record<string, any>) => {
     const newFilter = {
       ...filter,
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
@@ -34,7 +36,7 @@ function SalesTaxLiabilitySummary({
     setQuery({ ...newFilter });
   };
   // Handle number format submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     setQuery({
       ...query,
       numberFormat: values,
@@ -51,7 +53,7 @@ function SalesTaxLiabilitySummary({
   return (
     <SalesTaxLiabilitySummaryBoot filter={query}>
       <SalesTaxLiabilitySummaryActionsBar
-        numberFormat={query.numberFormat}
+        numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <SalesTaxLiabilitySummaryLoadingBar />
@@ -73,6 +75,7 @@ function SalesTaxLiabilitySummary({
   );
 }
 
-export default compose(withSalesTaxLiabilitySummaryActions)(
-  SalesTaxLiabilitySummary,
+export const SalesTaxLiabilitySummary = FF.pipe(
+  SalesTaxLiabilitySummaryInner,
+  withSalesTaxLiabilitySummaryActions,
 );

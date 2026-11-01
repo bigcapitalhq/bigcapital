@@ -1,13 +1,26 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
-const BillNumberDialogContent = lazy(() => import('./BillNumberDialogContent'));
+const BillNumberDialogContent = lazy(() =>
+  import('./BillNumberDialogContent').then((m) => ({
+    default: m.BillNumberDialogContent,
+  })),
+);
 
-function BillNumberDialog({ dialogName, payload = { id: null }, isOpen }) {
+interface BillNumberDialogProps {
+  dialogName: string;
+  payload?: { id?: number | null; [key: string]: unknown };
+  isOpen: boolean | undefined;
+}
+
+function BillNumberDialog({
+  dialogName,
+  payload = { id: null },
+  isOpen,
+}: BillNumberDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -24,4 +37,4 @@ function BillNumberDialog({ dialogName, payload = { id: null }, isOpen }) {
   );
 }
 
-export default compose(withDialogRedux())(BillNumberDialog);
+export const index = FF.pipe(BillNumberDialog, withDialogRedux());

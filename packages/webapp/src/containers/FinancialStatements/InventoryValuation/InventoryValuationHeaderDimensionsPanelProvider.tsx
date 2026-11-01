@@ -1,18 +1,35 @@
-// @ts-nocheck
-import React from 'react';
-
-import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
-import { useWarehouses, useBranches } from '@/hooks/query';
+import {
+  BranchesListResponse,
+  WarehousesListResponse,
+} from '@bigcapital/sdk-ts';
+import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
+import { Features } from '@/constants';
+import { useWarehouses, useBranches } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-const InventoryValuationHeaderDimensionsPanelContext = React.createContext();
+interface InventoryValuationHeaderDimensionsPanelContextValue {
+  warehouses: WarehousesListResponse | undefined;
+  branches: BranchesListResponse | undefined;
+  isWarehouesLoading: boolean;
+  isBranchLoading: boolean;
+}
+
+interface InventoryValuationHeaderDimensionsProviderProps {
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+}
+
+const InventoryValuationHeaderDimensionsPanelContext = createContext<
+  InventoryValuationHeaderDimensionsPanelContextValue | undefined
+>(undefined);
 
 /**
  * Inventory valuation header provider.
- * @returns
  */
-function InventoryValuationHeaderDimensionsProvider({ ...props }) {
+function InventoryValuationHeaderDimensionsProvider({
+  ...props
+}: InventoryValuationHeaderDimensionsProviderProps) {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -24,18 +41,19 @@ function InventoryValuationHeaderDimensionsProvider({ ...props }) {
 
   // Fetches the warehouses list.
   const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
-    null,
-    { enabled: isWarehouseFeatureCan, keepPreviousData: true },
+    {},
+    { enabled: isWarehouseFeatureCan },
+  );
+  // Fetches the branches list.
+  const { data: branches, isLoading: isBranchLoading } = useBranches(
+    {},
+    {
+      enabled: isBranchFeatureCan,
+    },
   );
 
-  // Fetches the branches list.
-  const { data: branches, isLoading: isBranchLoading } = useBranches(null, {
-    enabled: isBranchFeatureCan,
-    keepPreviousData: true,
-  });
-
   // Provider
-  const provider = {
+  const provider: InventoryValuationHeaderDimensionsPanelContextValue = {
     warehouses,
     branches,
     isWarehouesLoading,
@@ -52,8 +70,16 @@ function InventoryValuationHeaderDimensionsProvider({ ...props }) {
   );
 }
 
-const useInventoryValuationHeaderDimensionsPanelContext = () =>
-  React.useContext(InventoryValuationHeaderDimensionsPanelContext);
+const useInventoryValuationHeaderDimensionsPanelContext =
+  (): InventoryValuationHeaderDimensionsPanelContextValue => {
+    const ctx = useContext(InventoryValuationHeaderDimensionsPanelContext);
+    if (!ctx) {
+      throw new Error(
+        'useInventoryValuationHeaderDimensionsPanelContext must be used within InventoryValuationHeaderDimensionsProvider',
+      );
+    }
+    return ctx;
+  };
 
 export {
   InventoryValuationHeaderDimensionsProvider,

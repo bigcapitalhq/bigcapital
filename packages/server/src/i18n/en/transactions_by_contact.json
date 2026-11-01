@@ -1,4 +1,14 @@
 {
+  "customer_name": "Customer name",
+  "vendor_name": "Vendor name",
+  "account_name": "Account Name",
+  "reference_type": "Reference Type",
+  "transaction_type": "Transaction Type",
+  "credit": "Credit",
+  "debit": "Debit",
+  "running_balance": "Running Balance",
+  "customers_sheet_name": "Transactions By Customers",
+  "vendors_sheet_name": "Transactions By Vendor",
   "opening_balance": "Opening balance",
   "closing_balance": "Closing balance"
 }

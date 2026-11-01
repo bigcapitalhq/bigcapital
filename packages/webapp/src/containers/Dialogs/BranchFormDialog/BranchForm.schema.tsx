@@ -1,6 +1,5 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
@@ -10,7 +9,7 @@ const Schema = Yup.object().shape({
   city: Yup.string().trim(),
   country: Yup.string().trim(),
   website: Yup.string().url().nullable(),
-  phone_number: Yup.number(),
+  phoneNumber: Yup.number(),
   email: Yup.string().email().nullable(),
 });
 

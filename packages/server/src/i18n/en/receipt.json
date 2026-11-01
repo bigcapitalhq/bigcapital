@@ -26,5 +26,13 @@
   "field.status": "Status",
   "field.status.draft": "Draft",
   "field.status.closed": "Closed",
-  "field.created_at": "Created At"
+  "field.created_at": "Created At",
+
+  "mail.date": "Date",
+  "mail.total": "Total",
+  "mail.subtotal": "Subtotal",
+  "mail.discount": "Discount",
+  "mail.discount_with_percentage": "Discount [{percentage}]",
+  "mail.adjustment": "Adjustment",
+  "mail.receipt_number": "Receipt # {receiptNumber}"
 }

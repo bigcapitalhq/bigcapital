@@ -9,10 +9,10 @@ import { InventoryItemDetailsRepository } from './InventoryItemDetailsRepository
 import { InventoryDetailsMetaInjectable } from './InventoryItemDetailsMeta';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
 import { InventoryCostModule } from '@/modules/InventoryCost/InventoryCost.module';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 
 @Module({
-  imports: [FinancialSheetCommonModule, InventoryCostModule],
+  imports: [TenancyModule, FinancialSheetCommonModule, InventoryCostModule],
   providers: [
     InventoryItemDetailsApplication,
     InventoryItemDetailsExportInjectable,
@@ -21,7 +21,6 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
     InventoryDetailsTablePdf,
     InventoryItemDetailsRepository,
     InventoryDetailsMetaInjectable,
-    TenancyContext,
   ],
   controllers: [InventoryItemDetailsController],
 })

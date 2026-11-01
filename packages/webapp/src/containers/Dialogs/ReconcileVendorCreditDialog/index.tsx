@@ -1,21 +1,29 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
+import type { ReconcileVendorCreditDialogPayload } from './types';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ReconcileVendorCreditDialogContent = React.lazy(() =>
-  import('./ReconcileVendorCreditDialogContent'),
+  import('./ReconcileVendorCreditDialogContent').then((m) => ({
+    default: m.ReconcileVendorCreditDialogContent,
+  })),
 );
+
+interface ReconcileVendorCreditDialogProps {
+  dialogName: string;
+  payload: ReconcileVendorCreditDialogPayload;
+  isOpen: boolean | undefined;
+}
 
 /**
  * Reconcile vendor credit dialog.
  */
 function ReconcileVendorCreditDialog({
   dialogName,
-  payload: { vendorCreditId },
+  payload: { vendorCreditId } = {},
   isOpen,
-}) {
+}: ReconcileVendorCreditDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -26,7 +34,7 @@ function ReconcileVendorCreditDialog({
     >
       <DialogSuspense>
         <ReconcileVendorCreditDialogContent
-          vendorCreditId={vendorCreditId}
+          vendorCreditId={vendorCreditId ?? null}
           dialogName={dialogName}
         />
       </DialogSuspense>
@@ -34,4 +42,4 @@ function ReconcileVendorCreditDialog({
   );
 }
 
-export default compose(withDialogRedux())(ReconcileVendorCreditDialog);
+export const index = FF.pipe(ReconcileVendorCreditDialog, withDialogRedux());

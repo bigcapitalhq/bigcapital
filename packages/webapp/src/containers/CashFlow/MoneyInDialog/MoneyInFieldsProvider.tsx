@@ -1,15 +1,25 @@
-// @ts-nocheck
 import React from 'react';
+import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import type { Account } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { useAccount } from '@/hooks/query';
-import { useMoneyInDailogContext } from './MoneyInDialogProvider';
 
-const MoneyInFieldsContext = React.createContext();
+interface MoneyInFieldsContextValue {
+  account?: Account;
+}
+
+interface MoneyInFieldsProviderProps {
+  children?: React.ReactNode;
+}
+
+const MoneyInFieldsContext = React.createContext<MoneyInFieldsContextValue>(
+  {} as MoneyInFieldsContextValue,
+);
 
 /**
  * Money in dialog provider.
  */
-function MoneyInFieldsProvider({ ...props }) {
+function MoneyInFieldsProvider({ children }: MoneyInFieldsProviderProps) {
   const { accountId } = useMoneyInDailogContext();
 
   // Fetches the specific account details.
@@ -17,14 +27,16 @@ function MoneyInFieldsProvider({ ...props }) {
     enabled: !!accountId,
   });
   // Provider data.
-  const provider = {
+  const provider: MoneyInFieldsContextValue = {
     account,
   };
   const isLoading = isAccountLoading;
 
   return (
     <DialogContent isLoading={isLoading}>
-      <MoneyInFieldsContext.Provider value={provider} {...props} />
+      <MoneyInFieldsContext.Provider value={provider}>
+        {children}
+      </MoneyInFieldsContext.Provider>
     </DialogContent>
   );
 }

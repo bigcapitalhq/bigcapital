@@ -1,6 +1,3 @@
-import type { Multer } from 'multer';
-import * as multerS3 from 'multer-s3';
-
 export const multerExceptions = {
   // from https://github.com/expressjs/multer/blob/master/lib/multer-error.js
   LIMIT_PART_COUNT: 'Too many parts',
@@ -20,5 +17,3 @@ export const busboyExceptions = {
   MULTIPART_UNEXPECTED_END_OF_FORM: 'Unexpected end of form',
   MULTIPART_UNEXPECTED_END_OF_FILE: 'Unexpected end of file',
 };
-
-

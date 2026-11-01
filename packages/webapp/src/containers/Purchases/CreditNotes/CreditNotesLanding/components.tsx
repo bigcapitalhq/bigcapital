@@ -1,21 +1,51 @@
-// @ts-nocheck
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-
-import { CLASSES } from '@/constants/classes';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { VendorCreditsListResponse } from '@bigcapital/sdk-ts';
 import { FormattedMessage as T, Choose, If, Icon, Can } from '@/components';
-import { safeCallback } from '@/utils';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
+import { safeCallback } from '@/utils';
 
-/**
- * Actions menu.
- */
+// Backend Vendor Credits list response DTO is not yet declared in the OpenAPI
+// schema, so the SDK envelope resolves to `unknown`. This intersection keeps
+// the SDK reference while supplying the row fields locally; switch to
+// `NonNullable<VendorCreditsListResponse['data']>[number]` once the backend
+// declares the response DTO.
+export type VendorCreditTableRow = VendorCreditsListResponse & {
+  id: number;
+  vendorCreditNumber?: string;
+  formattedVendorCreditDate?: string;
+  formattedAmount?: string;
+  formattedCreditsRemaining?: string;
+  referenceNo?: string;
+  vendor?: { displayName?: string };
+  isDraft?: boolean;
+  isOpen?: boolean;
+  isClosed?: boolean;
+  isPublished?: boolean;
+};
+
+interface VendorCreditActionsPayload {
+  onEdit: (credit: VendorCreditTableRow) => void;
+  onDelete: (credit: VendorCreditTableRow) => void;
+  onOpen: (credit: VendorCreditTableRow) => void;
+  onRefund: (credit: VendorCreditTableRow) => void;
+  onReconcile: (credit: VendorCreditTableRow) => void;
+  onViewDetails: (credit: VendorCreditTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: VendorCreditTableRow };
+  payload: VendorCreditActionsPayload;
+}
+
 export function ActionsMenu({
   payload: { onEdit, onDelete, onOpen, onRefund, onReconcile, onViewDetails },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -30,7 +60,7 @@ export function ActionsMenu({
           text={intl.get('vendor_credits.action.edit_vendor_credit')}
           onClick={safeCallback(onEdit, original)}
         />
-        <If condition={original.is_draft}>
+        <If condition={!!original.isDraft}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
             text={intl.get('vendor_credits.action.mark_as_open')}
@@ -39,7 +69,7 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={VendorCreditAction.Refund} a={AbilitySubject.VendorCredit}>
-        <If condition={!original.is_closed && original.is_published}>
+        <If condition={!!(!original.isClosed && original.isPublished)}>
           <MenuItem
             icon={<Icon icon="quick-payment-16" />}
             text={intl.get('vendor_credits.action.refund_vendor_credit')}
@@ -50,7 +80,7 @@ export function ActionsMenu({
       <Can I={VendorCreditAction.Edit} a={AbilitySubject.VendorCredit}>
         <If
           condition={
-            !original.is_draft && !original.is_closed && original.is_published
+            !!(!original.isDraft && !original.isClosed && original.isPublished)
           }
         >
           <MenuItem
@@ -73,26 +103,23 @@ export function ActionsMenu({
   );
 }
 
-/**
- * Status accessor.
- */
-export function StatusAccessor(creditNote) {
+export function StatusAccessor(creditNote: VendorCreditTableRow) {
   return (
     <div>
       <Choose>
-        <Choose.When condition={creditNote.is_open}>
+        <Choose.When condition={!!creditNote.isOpen}>
           <Tag intent={Intent.WARNING} round minimal>
             <T id={'open'} />
           </Tag>
         </Choose.When>
 
-        <Choose.When condition={creditNote.is_closed}>
+        <Choose.When condition={!!creditNote.isClosed}>
           <Tag intent={Intent.SUCCESS} round minimal>
             <T id={'closed'} />
           </Tag>
         </Choose.When>
 
-        <Choose.When condition={creditNote.is_draft}>
+        <Choose.When condition={!!creditNote.isDraft}>
           <Tag round minimal>
             <T id={'draft'} />
           </Tag>
@@ -102,79 +129,77 @@ export function StatusAccessor(creditNote) {
   );
 }
 
-/**
- * Retrieve vendors credit note table columns.
- */
-export function useVendorsCreditNoteTableColumns() {
+export function useVendorsCreditNoteTableColumns(): DataTableColumn<VendorCreditTableRow>[] {
   return React.useMemo(
-    () => [
-      {
-        id: 'credit_date',
-        Header: intl.get('date'),
-        accessor: 'formatted_vendor_credit_date',
-        width: 110,
-        className: 'credit_date',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'vendor',
-        Header: intl.get('vendor_name'),
-        accessor: 'vendor.display_name',
-        width: 180,
-        className: 'vendor_id',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'credit_number',
-        Header: intl.get('vendor_credits.column.vendor_credit_no'),
-        accessor: 'vendor_credit_number',
-        width: 100,
-        className: 'credit_number',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'amount',
-        Header: intl.get('amount'),
-        accessor: 'formatted_amount',
-        width: 120,
-        align: 'right',
-        clickable: true,
-        textOverview: true,
-        className: clsx(CLASSES.FONT_BOLD),
-      },
-      {
-        id: 'balance',
-        Header: intl.get('balance'),
-        accessor: 'formatted_credits_remaining',
-        width: 120,
-        align: 'right',
-        clickable: true,
-        textOverview: true,
-        disableSortBy: true,
-        money: true,
-        className: clsx(CLASSES.FONT_BOLD),
-      },
-      {
-        id: 'status',
-        Header: intl.get('status'),
-        accessor: StatusAccessor,
-        width: 160,
-        className: 'status',
-        clickable: true,
-      },
-      {
-        id: 'reference_no',
-        Header: intl.get('reference_no'),
-        accessor: 'reference_no',
-        width: 90,
-        className: 'reference_no',
-        clickable: true,
-        textOverview: true,
-      },
-    ],
+    () =>
+      [
+        {
+          id: 'credit_date',
+          Header: intl.get('date'),
+          accessor: 'formattedVendorCreditDate',
+          width: 110,
+          className: 'credit_date',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'vendor',
+          Header: intl.get('vendor_name'),
+          accessor: 'vendor.displayName',
+          width: 180,
+          className: 'vendor_id',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'credit_number',
+          Header: intl.get('vendor_credits.column.vendor_credit_no'),
+          accessor: 'vendorCreditNumber',
+          width: 100,
+          className: 'credit_number',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'amount',
+          Header: intl.get('amount'),
+          accessor: 'formattedAmount',
+          width: 120,
+          align: 'right',
+          clickable: true,
+          textOverview: true,
+          className: clsx(CLASSES.FONT_BOLD),
+        },
+        {
+          id: 'balance',
+          Header: intl.get('balance'),
+          accessor: 'formattedCreditsRemaining',
+          width: 120,
+          align: 'right',
+          clickable: true,
+          textOverview: true,
+          disableSortBy: true,
+          money: true,
+          className: clsx(CLASSES.FONT_BOLD),
+        },
+        {
+          id: 'status',
+          Header: intl.get('status'),
+          accessor: StatusAccessor,
+          width: 160,
+          className: 'status',
+          clickable: true,
+        },
+        {
+          id: 'reference_no',
+          Header: intl.get('reference_no'),
+          accessor: 'referenceNo',
+          width: 90,
+          className: 'reference_no',
+          clickable: true,
+          textOverview: true,
+        },
+      ] as DataTableColumn<VendorCreditTableRow>[],
     [],
   );
 }

@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { assoc, when } from '@/common/fp';
 import {
   IBalanceSheetDataNode,
   IBalanceSheetNetIncomeNode,
@@ -16,7 +16,7 @@ import { GConstructor } from '@/common/types/Constructor';
 export const BalanceSheetNetIncomePP = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(
+  class extends flow(
     BalanceSheetNetIncomeDatePeriodsPP,
     BalanceSheetComparsionPreviousPeriod,
     FinancialPreviousPeriod,
@@ -50,7 +50,7 @@ export const BalanceSheetNetIncomePP = <T extends GConstructor<FinancialSheet>>(
     ): IBalanceSheetDataNode => {
       const total = this.getPreviousPeriodNetIncome();
 
-      return R.assoc('previousPeriod', this.getAmountMeta(total), node);
+      return assoc('previousPeriod', this.getAmountMeta(total), node);
     };
 
     /**
@@ -61,20 +61,20 @@ export const BalanceSheetNetIncomePP = <T extends GConstructor<FinancialSheet>>(
     public previousPeriodNetIncomeNodeCompose = (
       node: IBalanceSheetNetIncomeNode,
     ): IBalanceSheetNetIncomeNode => {
-      return R.compose(
-        R.when(
-          this.isNodeHasHorizTotals,
-          this.assocPreviousPeriodNetIncomeHorizNode,
-        ),
-        R.when(
-          this.query.isPreviousPeriodPercentageActive,
-          this.assocPreviousPeriodPercentageNode,
-        ),
-        R.when(
+      return flow(
+        this.assocPreviousPeriodNetIncomeNode,
+        when(
           this.query.isPreviousPeriodChangeActive,
           this.assocPreviousPeriodChangeNode,
         ),
-        this.assocPreviousPeriodNetIncomeNode,
+        when(
+          this.query.isPreviousPeriodPercentageActive,
+          this.assocPreviousPeriodPercentageNode,
+        ),
+        when(
+          this.isNodeHasHorizTotals,
+          this.assocPreviousPeriodNetIncomeHorizNode,
+        ),
       )(node);
     };
   };

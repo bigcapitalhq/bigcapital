@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  INVENTORY_ITEM_DETAILS_COLUMN_KEYS,
+  InventoryItemDetailsColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class InventoryItemTransactionDto {
   @ApiProperty({ description: 'Transaction date' })
@@ -54,7 +59,10 @@ export class InventoryItemDetailDto {
   @ApiProperty({ description: 'Closing quantity', type: Number })
   closingQuantity: number;
 
-  @ApiProperty({ description: 'Item transactions', type: [InventoryItemTransactionDto] })
+  @ApiProperty({
+    description: 'Item transactions',
+    type: [InventoryItemTransactionDto],
+  })
   transactions: InventoryItemTransactionDto[];
 }
 
@@ -76,7 +84,10 @@ export class InventoryItemDetailsQueryResponseDto {
   @ApiProperty({ description: 'End date' })
   toDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Item IDs to include', type: [Number] })
@@ -84,13 +95,22 @@ export class InventoryItemDetailsQueryResponseDto {
 }
 
 export class InventoryItemDetailsResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: InventoryItemDetailsQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: InventoryItemDetailsQueryResponseDto,
+  })
   query: InventoryItemDetailsQueryResponseDto;
 
-  @ApiProperty({ description: 'Inventory items with details', type: [InventoryItemDetailDto] })
+  @ApiProperty({
+    description: 'Inventory items with details',
+    type: [InventoryItemDetailDto],
+  })
   data: InventoryItemDetailDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: InventoryItemDetailsMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: InventoryItemDetailsMetaDto,
+  })
   meta: InventoryItemDetailsMetaDto;
 }
 
@@ -98,17 +118,40 @@ export class InventoryItemDetailsResponseDto {
 export {
   FinancialTableCellDto as InventoryItemDetailsTableCellDto,
   FinancialTableRowDto as InventoryItemDetailsTableRowDto,
-  FinancialTableColumnDto as InventoryItemDetailsTableColumnDto,
-  FinancialTableDataDto as InventoryItemDetailsTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
 
-export class InventoryItemDetailsTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
-  table: FinancialTableDataDto;
+export class InventoryItemDetailsTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(INVENTORY_ITEM_DETAILS_COLUMN_KEYS),
+  })
+  key: InventoryItemDetailsColumnKey;
+}
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: InventoryItemDetailsQueryResponseDto })
+export class InventoryItemDetailsTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [InventoryItemDetailsTableColumnDto],
+  })
+  columns: InventoryItemDetailsTableColumnDto[];
+}
+
+export class InventoryItemDetailsTableResponseDto {
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => InventoryItemDetailsTableDataDto,
+  })
+  table: InventoryItemDetailsTableDataDto;
+
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: InventoryItemDetailsQueryResponseDto,
+  })
   query: InventoryItemDetailsQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: InventoryItemDetailsMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: InventoryItemDetailsMetaDto,
+  })
   meta: InventoryItemDetailsMetaDto;
 }

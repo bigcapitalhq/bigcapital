@@ -12,6 +12,7 @@ export class CashflowAccountTransformer extends Transformer {
       'lastFeedsUpdatedAt',
       'lastFeedsUpdatedAtFormatted',
       'lastFeedsUpdatedFromNow',
+      'uncategorizedTransactionsCount',
     ];
   };
 
@@ -62,5 +63,14 @@ export class CashflowAccountTransformer extends Transformer {
     return account.lastFeedsUpdatedAt
       ? this.formatDateFromNow(account.lastFeedsUpdatedAt)
       : '';
+  }
+
+  /**
+   * Retrieves the uncategorized transactions count of the account.
+   * @param {IAccount} account
+   * @returns {number}
+   */
+  protected uncategorizedTransactionsCount(account: Account): number {
+    return account['uncategorizedTransactions'] || 0;
   }
 }

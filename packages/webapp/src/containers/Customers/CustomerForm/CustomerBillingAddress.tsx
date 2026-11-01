@@ -1,5 +1,5 @@
-// @ts-nocheck
-import React from 'react';
+import intl from 'react-intl-universal';
+import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
 import { Box } from '@/components';
 import {
   FormattedMessage as T,
@@ -7,7 +7,6 @@ import {
   FInputGroup,
   FTextArea,
 } from '@/components';
-import { CustomerFormSectionTitle } from './CustomerFormSectionTitle';
 
 export function CustomerBillingAddress() {
   return (
@@ -16,66 +15,51 @@ export function CustomerBillingAddress() {
         <T id={'billing_address'} />
       </CustomerFormSectionTitle>
       <FFormGroup
-        name={'billing_address_country'}
-        label={<T id={'country'} />}
+        name={'billingAddressCountry'}
+        label={intl.get('country')}
         inline
-        fill
       >
-        <FInputGroup name={'billing_address_country'} fill />
+        <FInputGroup name={'billingAddressCountry'} fill />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address1'}
-        label={<T id={'address_line_1'} />}
+        name={'billingAddress1'}
+        label={intl.get('address_line_1')}
         inline
-        fill
       >
-        <FTextArea name={'billing_address1'} fill />
+        <FTextArea name={'billingAddress1'} fill />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address2'}
-        label={<T id={'address_line_2'} />}
+        name={'billingAddress2'}
+        label={intl.get('address_line_2')}
         inline
-        fill
       >
-        <FTextArea name={'billing_address2'} fill />
+        <FTextArea name={'billingAddress2'} fill />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address_city'}
-        label={<T id={'city_town'} />}
+        name={'billingAddressCity'}
+        label={intl.get('city_town')}
         inline
-        fill
       >
-        <FInputGroup name={'billing_address_city'} fill />
+        <FInputGroup name={'billingAddressCity'} fill />
+      </FFormGroup>
+
+      <FFormGroup name={'billingAddressState'} label={intl.get('state')} inline>
+        <FInputGroup name={'billingAddressState'} fill />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address_state'}
-        label={<T id={'state'} />}
+        name={'billingAddressPostcode'}
+        label={intl.get('zip_code')}
         inline
-        fill
       >
-        <FInputGroup name={'billing_address_state'} fill />
+        <FInputGroup name={'billingAddressPostcode'} fill />
       </FFormGroup>
 
-      <FFormGroup
-        name={'billing_address_postcode'}
-        label={<T id={'zip_code'} />}
-        inline
-        fill
-      >
-        <FInputGroup name={'billing_address_postcode'} fill />
-      </FFormGroup>
-
-      <FFormGroup
-        name={'billing_address_phone'}
-        label={<T id={'phone'} />}
-        inline
-        fill
-      >
-        <FInputGroup name={'billing_address_phone'} fill />
+      <FFormGroup name={'billingAddressPhone'} label={intl.get('phone')} inline>
+        <FInputGroup name={'billingAddressPhone'} fill />
       </FFormGroup>
     </Box>
   );

@@ -12,11 +12,10 @@ export interface ICustomerBalanceSummaryQuery
   customersIds: number[];
 }
 
-export interface ICustomerBalanceSummaryAmount
-  extends IContactBalanceSummaryAmount {}
+export type ICustomerBalanceSummaryAmount = IContactBalanceSummaryAmount;
 
-export interface ICustomerBalanceSummaryPercentage
-  extends IContactBalanceSummaryPercentage {}
+export type ICustomerBalanceSummaryPercentage =
+  IContactBalanceSummaryPercentage;
 
 export interface ICustomerBalanceSummaryCustomer {
   id: number;
@@ -50,7 +49,7 @@ export interface ICustomerBalanceSummaryStatement {
 export interface ICustomerBalanceSummaryService {
   customerBalanceSummary(
     tenantId: number,
-    query: ICustomerBalanceSummaryQuery
+    query: ICustomerBalanceSummaryQuery,
   ): Promise<ICustomerBalanceSummaryStatement>;
 }
 

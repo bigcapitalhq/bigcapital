@@ -1,4 +1,5 @@
-// @ts-nocheck
+import { SelectOptionProps } from '@blueprintjs-formik/select';
+import styled from 'styled-components';
 import {
   Box,
   FFormGroup,
@@ -6,20 +7,20 @@ import {
   FMultiSelect,
   FRichEditor,
 } from '@/components';
-import styled from 'styled-components';
-import { SelectOptionProps } from '@blueprintjs-formik/select';
+
+type MailOption = SelectOptionProps & { mail?: string };
 
 interface MailNotificationFormProps {
-  fromAddresses: SelectOptionProps[];
-  toAddresses: SelectOptionProps[];
+  fromAddresses: MailOption[];
+  toAddresses: MailOption[];
 }
 
 const commonAddressSelect = {
   placeholder: '',
-  labelAccessor: '',
+  labelAccessor: 'label',
   valueAccessor: 'mail',
-  tagAccessor: (item) => `<${item.label}> (${item.mail})`,
-  textAccessor: (item) => `<${item.label}> (${item.mail})`,
+  tagAccessor: 'mail',
+  textAccessor: 'mail',
 };
 
 export function MailNotificationForm({
@@ -46,7 +47,6 @@ export function MailNotificationForm({
           <FMultiSelect
             items={toAddresses}
             name={'to'}
-            placeholder=""
             popoverProps={{ minimal: true, fill: true }}
             tagInputProps={{
               tagProps: { round: true, minimal: true, large: true },

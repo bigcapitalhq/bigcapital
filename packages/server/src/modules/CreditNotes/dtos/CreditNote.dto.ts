@@ -14,7 +14,6 @@ import {
   IsOptional,
   IsPositive,
   IsString,
-  Min,
   ValidateNested,
 } from 'class-validator';
 

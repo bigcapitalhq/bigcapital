@@ -1,7 +1,8 @@
 import { UncategorizedBankTransaction } from '../BankingTransactions/models/UncategorizedBankTransaction';
 import { ServiceError } from '../Items/ServiceError';
 
-const ERRORS = {  TRANSACTION_ALREADY_CATEGORIZED: 'TRANSACTION_ALREADY_CATEGORIZED',
+const ERRORS = {
+  TRANSACTION_ALREADY_CATEGORIZED: 'TRANSACTION_ALREADY_CATEGORIZED',
   TRANSACTION_ALREADY_EXCLUDED: 'TRANSACTION_ALREADY_EXCLUDED',
   TRANSACTION_NOT_EXCLUDED: 'TRANSACTION_NOT_EXCLUDED',
 };

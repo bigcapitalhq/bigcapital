@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarDivider,
   NavbarGroup,
@@ -9,56 +7,56 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
-import { withARAgingSummaryActions } from './withARAgingSummaryActions';
-import { withARAgingSummary } from './withARAgingSummary';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose, safeInvoke } from '@/utils';
 import { ARAgingSummaryExportMenu } from './components';
+import { withARAgingSummary } from './withARAgingSummary';
+import {
+  withARAgingSummaryActions,
+  WithARAgingSummaryActionsProps,
+} from './withARAgingSummaryActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { safeInvoke } from '@/utils';
 
-/**
- * A/R Aging summary sheet - Actions bar.
- */
-function ARAgingSummaryActionsBar({
-  // #withReceivableAging
+interface ARAgingSummaryActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (numberFormat: Record<string, unknown>) => void;
+}
+
+type ARAgingSummaryActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<WithARAgingSummaryActionsProps, 'toggleARAgingSummaryFilterDrawer'> &
+  WithDialogActionsProps &
+  ARAgingSummaryActionsBarOwnProps;
+
+function ARAgingSummaryActionsBarInner({
   isFilterDrawerOpen,
-
-  // #withReceivableAgingActions
   toggleARAgingSummaryFilterDrawer: toggleDisplayFilterDrawer,
-
-  // #withDialogActions
   openDialog,
-
-  // #ownProps
   numberFormat,
   onNumberFormatSubmit,
-}) {
+}: ARAgingSummaryActionsBarProps) {
   const { isARAgingFetching, refetch } = useARAgingSummaryContext();
 
   const handleFilterToggleClick = () => {
     toggleDisplayFilterDrawer();
   };
-
-  // Handles re-calculate report button.
   const handleRecalcReport = () => {
     refetch();
   };
-
-  // Handle number format submit.
-  const handleNumberFormatSubmit = (numberFormat) => {
+  const handleNumberFormatSubmit = (numberFormat: Record<string, unknown>) => {
     safeInvoke(onNumberFormatSubmit, numberFormat);
   };
-
-  // Handles the print button click.
   const handlePrintBtnClick = () => {
-    openDialog(DialogsName.ARAgingSummaryPdfPreview)
+    openDialog(DialogsName.ARAgingSummaryPdfPreview);
   };
 
   return (
@@ -131,10 +129,11 @@ function ARAgingSummaryActionsBar({
   );
 }
 
-export default compose(
-  withARAgingSummaryActions,
+export const ARAgingSummaryActionsBar = FF.pipe(
+  ARAgingSummaryActionsBarInner,
+  withDialogActions,
   withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
   })),
-  withDialogActions,
-)(ARAgingSummaryActionsBar);
+  withARAgingSummaryActions,
+);

@@ -1,16 +1,21 @@
-// @ts-nocheck
-import * as R from 'ramda';
-import { DataTable, TableSkeletonRows } from '@/components';
-import { useBrandingTemplatesBoot } from './BrandingTemplatesBoot';
+import * as FF from 'fp-ts/function';
 import { ActionsMenu } from './_components';
+import { useBrandingTemplatesColumns } from './_hooks';
+import { getCustomizeDrawerNameFromResource } from './_utils';
+import { useBrandingTemplatesBoot } from './BrandingTemplatesBoot';
+import styles from './BrandTemplates.module.scss';
+import type { BrandingTemplateRow } from './_components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { MouseEvent } from 'react';
+import { DataTable, TableSkeletonRows } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { getCustomizeDrawerNameFromResource } from './_utils';
-import { useBrandingTemplatesColumns } from './_hooks';
-import styles from './BrandTemplates.module.scss';
 
-interface BrandingTemplatesTableProps {}
+interface BrandingTemplatesTableProps
+  extends WithDrawerActionsProps,
+    WithAlertActionsProps {}
 
 function BrandingTemplateTableRoot({
   openAlert,
@@ -20,18 +25,21 @@ function BrandingTemplateTableRoot({
   const columns = useBrandingTemplatesColumns();
   const { isPdfTemplatesLoading, pdfTemplates } = useBrandingTemplatesBoot();
 
-  const handleEditTemplate = (template) => {
+  const handleEditTemplate = (template: BrandingTemplateRow) => {
     openDrawer(DRAWERS.INVOICE_CUSTOMIZE, {
       templateId: template.id,
       resource: template.resource,
     });
   };
 
-  const handleDeleteTemplate = (template) => {
+  const handleDeleteTemplate = (template: BrandingTemplateRow) => {
     openAlert('branding-template-delete', { templateId: template.id });
   };
 
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (
+    cell: { row: { original: BrandingTemplateRow } },
+    _event: MouseEvent,
+  ) => {
     const templateId = cell.row.original.id;
     const resource = cell.row.original.resource;
 
@@ -42,7 +50,7 @@ function BrandingTemplateTableRoot({
   };
 
   // Handle mark as default button click.
-  const handleMarkDefaultTemplate = (template) => {
+  const handleMarkDefaultTemplate = (template: BrandingTemplateRow) => {
     openAlert('branding-template-mark-default', { templateId: template.id });
   };
 
@@ -67,7 +75,8 @@ function BrandingTemplateTableRoot({
   );
 }
 
-export const BrandingTemplatesTable = R.compose(
-  withAlertActions,
+export const BrandingTemplatesTable = FF.pipe(
+  BrandingTemplateTableRoot,
   withDrawerActions,
-)(BrandingTemplateTableRoot);
+  withAlertActions,
+);

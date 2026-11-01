@@ -32,18 +32,15 @@ export class PublishInventoryAdjustmentService {
   public async publishInventoryAdjustment(
     inventoryAdjustmentId: number,
   ): Promise<void> {
-    // Retrieve the inventory adjustment or throw not found service error.
-    const oldInventoryAdjustment = await this.inventoryAdjustmentModel()
-      .query()
-      .findById(inventoryAdjustmentId)
-      .throwIfNotFound();
-
-    // Validate adjustment not already published.
-    this.validateAdjustmentTransactionsNotPublished(oldInventoryAdjustment);
-
     // Publishes inventory adjustment with associated inventory transactions
     // under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the publish operation against the locked adjustment row.
+      const oldInventoryAdjustment = await this.validate(
+        inventoryAdjustmentId,
+        trx,
+      );
+
       await this.eventEmitter.emitAsync(
         events.inventoryAdjustment.onPublishing,
         {
@@ -54,14 +51,14 @@ export class PublishInventoryAdjustmentService {
 
       // Publish the inventory adjustment transaction.
       await this.inventoryAdjustmentModel()
-        .query()
+        .query(trx)
         .findById(inventoryAdjustmentId)
         .patch({
           publishedAt: moment().toMySqlDateTime(),
         });
       // Retrieve the inventory adjustment after the modification.
       const inventoryAdjustment = await this.inventoryAdjustmentModel()
-        .query()
+        .query(trx)
         .findById(inventoryAdjustmentId)
         .withGraphFetched('entries');
 
@@ -76,6 +73,29 @@ export class PublishInventoryAdjustmentService {
         } as IInventoryAdjustmentEventPublishedPayload,
       );
     });
+  }
+
+  /**
+   * Validates the publish inventory adjustment operation against the locked
+   * adjustment row: existence and not already published.
+   * @param {number} inventoryAdjustmentId - Inventory adjustment ID.
+   * @param {Knex.Transaction} trx - Locks the adjustment row (FOR UPDATE).
+   * @returns {Promise<InventoryAdjustment>} The locked adjustment.
+   */
+  async validate(
+    inventoryAdjustmentId: number,
+    trx: Knex.Transaction,
+  ): Promise<InventoryAdjustment> {
+    // Re-read the adjustment with a row lock to validate against current state.
+    const oldInventoryAdjustment = await this.inventoryAdjustmentModel()
+      .query(trx)
+      .findById(inventoryAdjustmentId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate adjustment not already published against the locked row.
+    this.validateAdjustmentTransactionsNotPublished(oldInventoryAdjustment);
+    return oldInventoryAdjustment;
   }
 
   /**

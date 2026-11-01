@@ -115,7 +115,7 @@ export class InventoryComputeCostService {
     const userId = this.clsService.get('userId');
 
     // Add the new job with a delay (debounce period)
-    const job = await this.computeItemCostProcessor.add(
+    const _job = await this.computeItemCostProcessor.add(
       ComputeItemCostQueueJob,
       { itemId, startingDate, jobId, organizationId, userId },
       {

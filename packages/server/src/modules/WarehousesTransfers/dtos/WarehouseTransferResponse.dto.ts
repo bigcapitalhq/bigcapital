@@ -96,13 +96,13 @@ export class WarehouseTransferResponseDto {
 
   @ApiProperty({
     description: 'The date when the transfer was initiated',
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
   })
   transferInitiatedAt: Date;
 
   @ApiProperty({
     description: 'The date when the transfer was delivered',
-    example: '2024-03-21T15:00:00Z',
+    example: '2024-03-21',
   })
   transferDeliveredAt: Date;
 

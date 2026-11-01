@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "dist/esm",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/components/**/*.ts",
+    "src/components/**/*.tsx",
+    "src/lib/**/*.ts",
+    "src/lib/**/*.tsx",
+    "src/constants.ts"
+  ]
+}

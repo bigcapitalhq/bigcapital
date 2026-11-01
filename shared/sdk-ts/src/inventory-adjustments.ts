@@ -12,6 +12,7 @@ export const INVENTORY_ADJUSTMENTS_ROUTES = {
 export type InventoryAdjustmentsListResponse = OpResponseBody<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.LIST, 'get'>>;
 export type InventoryAdjustment = OpResponseBody<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.BY_ID, 'get'>>;
 export type CreateQuickInventoryAdjustmentBody = OpRequestBody<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.QUICK, 'post'>>;
+export type EditQuickInventoryAdjustmentBody = OpRequestBody<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.BY_ID, 'put'>>;
 export type GetInventoryAdjustmentsQuery = OpQueryParams<OpForPath<typeof INVENTORY_ADJUSTMENTS_ROUTES.LIST, 'get'>>;
 
 export async function fetchInventoryAdjustments(
@@ -37,6 +38,15 @@ export async function createQuickInventoryAdjustment(
 ): Promise<void> {
   const post = fetcher.path(INVENTORY_ADJUSTMENTS_ROUTES.QUICK).method('post').create();
   await post(values);
+}
+
+export async function editQuickInventoryAdjustment(
+  fetcher: ApiFetcher,
+  id: number,
+  values: EditQuickInventoryAdjustmentBody
+): Promise<void> {
+  const put = fetcher.path(INVENTORY_ADJUSTMENTS_ROUTES.BY_ID).method('put').create();
+  await put({ id, ...values });
 }
 
 export async function deleteInventoryAdjustment(fetcher: ApiFetcher, id: number): Promise<void> {

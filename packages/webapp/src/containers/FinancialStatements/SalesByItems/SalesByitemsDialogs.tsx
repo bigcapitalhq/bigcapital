@@ -1,5 +1,5 @@
-import { DialogsName } from '@/constants/dialogs';
 import { SalesByItemsPdfDialog } from './dialogs/SalesByItemsPdfDialog';
+import { DialogsName } from '@/constants/dialogs';
 
 export function SalesByItemsDialogs() {
   return (

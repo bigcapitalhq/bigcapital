@@ -1,10 +1,10 @@
-// @ts-nocheck
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
+import { TransactionsByVendorsTableQuery } from '@bigcapital/sdk-ts';
 import moment from 'moment';
 import { useMemo } from 'react';
-import { transformToForm } from '@/utils';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { useAppQueryString } from '@/hooks';
+import { transformToForm } from '@/utils';
 
 /**
  * The validation schema of vendors transactions.
@@ -25,13 +25,17 @@ export const getVendorTransactionsQuerySchema = () => {
 export const getVendorsTransactionsDefaultQuery = () => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
-  vendorsIds: [],
+  vendorsIds: [] as string[],
+  filterByOption: 'with-transactions',
+  numberFormat: {},
 });
 
 /**
  * Parses the query of vendors transactions.
  */
-const parseVendorsTransactionsQuery = (query) => {
+const parseVendorsTransactionsQuery = (
+  query: Record<string, unknown>,
+): TransactionsByVendorsTableQuery => {
   const defaultQuery = getVendorsTransactionsDefaultQuery();
   const transformed = {
     ...defaultQuery,
@@ -53,5 +57,5 @@ export const useVendorsTransactionsQuery = () => {
     () => parseVendorsTransactionsQuery(locationQuery),
     [locationQuery],
   );
-  return [query, setLocationQuery];
+  return [query, setLocationQuery] as const;
 };

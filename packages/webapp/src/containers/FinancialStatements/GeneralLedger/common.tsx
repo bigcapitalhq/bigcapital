@@ -1,10 +1,8 @@
-// @ts-nocheck
+import { castArray } from 'lodash';
+import moment from 'moment';
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
 import * as Yup from 'yup';
-import { castArray } from 'lodash';
-
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -32,8 +30,8 @@ export const getDefaultGeneralLedgerQuery = () => ({
   toDate: moment().format('YYYY-MM-DD'),
   basis: 'accrual',
   filterByOption: 'with-transactions',
-  branchesIds: [],
-  accountsIds: [],
+  branchesIds: [] as string[],
+  accountsIds: [] as string[],
 });
 
 /**
@@ -51,7 +49,7 @@ export const getGeneralLedgerQuerySchema = () => {
 /**
  * Parses general ledger query of browser location.
  */
-const parseGeneralLedgerQuery = (locationQuery) => {
+const parseGeneralLedgerQuery = (locationQuery: Record<string, unknown>) => {
   const defaultQuery = getDefaultGeneralLedgerQuery();
 
   const transformed = {

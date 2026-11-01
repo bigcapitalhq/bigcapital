@@ -1,18 +1,21 @@
-// @ts-nocheck
 import React from 'react';
-
 import '@/style/pages/BadDebt/BadDebtDialog.scss';
+import { BadDebtForm } from './BadDebtForm';
 import { BadDebtFormProvider } from './BadDebtFormProvider';
-import BadDebtForm from './BadDebtForm';
+
+interface BadDebtDialogContentProps {
+  dialogName: string;
+  invoice?: number | null;
+}
 
 /**
  * Bad debt  dialog content.
  */
-export default function BadDebtDialogContent({
+export function BadDebtDialogContent({
   // #ownProps
   dialogName,
   invoice,
-}) {
+}: BadDebtDialogContentProps): React.ReactElement {
   return (
     <BadDebtFormProvider invoiceId={invoice} dialogName={dialogName}>
       <BadDebtForm />

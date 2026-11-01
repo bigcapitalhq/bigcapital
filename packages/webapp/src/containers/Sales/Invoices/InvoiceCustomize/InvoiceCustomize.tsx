@@ -1,11 +1,10 @@
-// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { InvoiceCustomizeContent } from './InvoiceCustomizeContent';
-import { BrandingTemplateBoot } from '@/containers/BrandingTemplates/BrandingTemplateBoot';
 import { Box } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { BrandingTemplateBoot } from '@/containers/BrandingTemplates/BrandingTemplateBoot';
 
-export default function InvoiceCustomize() {
+export function InvoiceCustomize() {
   const { payload } = useDrawerContext();
   const templateId = payload.templateId;
 

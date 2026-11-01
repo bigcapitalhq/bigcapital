@@ -1,31 +1,32 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { DataTable, Card } from '@/components';
-
-import { TableStyle } from '@/constants';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
 import {
   useRefundCreditTransactionsTableColumns,
   ActionsMenu,
 } from './components';
+import { DataTable, Card } from '@/components';
+import { TableStyle } from '@/constants';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
 
-import { compose } from '@/utils';
+interface RefundVendorCreditTransactionsTableInnerProps
+  extends WithAlertActionsProps {}
 
 /**
  * Refund vendor transactions table.
  */
-function RefundVendorCreditTransactionsTable({
+function RefundVendorCreditTransactionsTableInner({
   // #withAlertActions
   openAlert,
-}) {
+}: RefundVendorCreditTransactionsTableInnerProps) {
   const { refundVendorCredit } = useVendorCreditDetailDrawerContext();
-
   const columns = useRefundCreditTransactionsTableColumns();
 
   // Handle delete refund vendor credit.
-  const handleDeleteRefundVendorCredit = ({ id }) => {
+  const handleDeleteRefundVendorCredit = ({ id }: { id: number }) => {
     openAlert('refund-vendor-delete', { vendorCreditId: id });
   };
 
@@ -44,4 +45,7 @@ function RefundVendorCreditTransactionsTable({
   );
 }
 
-export default compose(withAlertActions)(RefundVendorCreditTransactionsTable);
+export const RefundVendorCreditTransactionsTable = FF.pipe(
+  RefundVendorCreditTransactionsTableInner,
+  withAlertActions,
+);

@@ -1,32 +1,37 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useInactivateAccount } from '@/hooks/query';
+
+interface AccountInactivateAlertPayload {
+  accountId: number;
+}
+
+interface AccountInactivateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: AccountInactivateAlertPayload;
+}
 
 /**
  * Account inactivate alert.
  */
-function AccountInactivateAlert({
+function AccountInactivateAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { accountId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: inactivateAccount, isLoading } = useInactivateAccount();
+}: AccountInactivateAlertProps): React.ReactElement {
+  const { mutateAsync: inactivateAccount, isPending: isLoading } =
+    useInactivateAccount();
 
   const handleCancelInactiveAccount = () => {
-    closeAlert('account-inactivate');
+    closeAlert(name);
   };
 
   const handleConfirmAccountActive = () => {
@@ -37,16 +42,22 @@ function AccountInactivateAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(() => {})
+      .catch((error: Error) => {
+        // Bugfix: the original hid an empty `.catch(() => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
-        closeAlert('account-inactivate');
+        closeAlert(name);
       });
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'inactivate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('inactivate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelInactiveAccount}
@@ -60,7 +71,8 @@ function AccountInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const AccountInactivateAlert = FF.pipe(
+  AccountInactivateAlertInner,
   withAlertActions,
-)(AccountInactivateAlert);
+  withAlertStoreConnect(),
+);

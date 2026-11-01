@@ -1,14 +1,11 @@
-// @ts-nocheck
 import React from 'react';
-
+import { RefundCreditNoteDetailHeader } from './RefundCreditNoteDetailHeader';
 import { CommercialDocBox } from '@/components';
-import RefundCreditNoteDetailHeader from './RefundCreditNoteDetailHeader';
 
 /**
  * Refund credit note detail tab.
- * @returns
  */
-export default function RefundCreditNoteDetailTab() {
+export function RefundCreditNoteDetailTab() {
   return (
     <CommercialDocBox>
       <RefundCreditNoteDetailHeader />

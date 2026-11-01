@@ -37,7 +37,7 @@ export default function getMergedConfig(config, currentConfig) {
     mergedConfig.migrationSource = new FsMigrations(
       mergedConfig.directory,
       mergedConfig.sortDirsSeparately,
-      mergedConfig.loadExtensions
+      mergedConfig.loadExtensions,
     );
   }
   return mergedConfig;

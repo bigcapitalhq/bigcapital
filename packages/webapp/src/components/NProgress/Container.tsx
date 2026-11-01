@@ -1,6 +1,6 @@
 // @ts-nocheck
-import PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types';
+import * as React from 'react';
 
 const Container = ({ children, isFinished, animationDuration }) => (
   <div
@@ -12,12 +12,12 @@ const Container = ({ children, isFinished, animationDuration }) => (
   >
     {children}
   </div>
-)
+);
 
 Container.propTypes = {
   animationDuration: PropTypes.number.isRequired,
   children: PropTypes.node.isRequired,
   isFinished: PropTypes.bool.isRequired,
-}
+};
 
 export default Container;

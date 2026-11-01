@@ -35,7 +35,7 @@ export class CreditNoteInvoiceToApplyResponseDto {
   formattedDueDate: string;
 
   @ApiProperty({ example: '$500.00' })
-  formatted_amount: string;
+  formattedAmount: string;
 
   @ApiProperty({ example: '$500.00' })
   formattedDueAmount: string;

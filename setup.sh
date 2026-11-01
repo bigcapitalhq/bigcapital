@@ -75,6 +75,21 @@ setup_env() {
         cp "$CURRENT/.env.example" "$DOCKER_ENV_PATH"
     fi
 
+    # Generate a strong JWT signing secret when the .env does not define one.
+    # The server refuses to boot without it.
+    if ! grep -qE '^APP_JWT_SECRET=.+$' "$DOCKER_ENV_PATH" 2>/dev/null;
+    then
+        if command -v openssl &> /dev/null;
+        then
+            GENERATED_JWT_SECRET=$(openssl rand -base64 48 | tr -d '\n')
+        else
+            GENERATED_JWT_SECRET=$(head -c 48 /dev/urandom | base64 | tr -d '\n')
+        fi
+        # Remove any empty APP_JWT_SECRET line, then append the generated value.
+        sed -i.bak '/^APP_JWT_SECRET=/d' "$DOCKER_ENV_PATH" && rm -f "${DOCKER_ENV_PATH}.bak"
+        printf '\n# Auto-generated JWT signing secret (see APP_JWT_SECRET docs)\nAPP_JWT_SECRET=%s\n' "$GENERATED_JWT_SECRET" >> "$DOCKER_ENV_PATH"
+        echo "A random APP_JWT_SECRET has been generated in $DOCKER_ENV_PATH"
+    fi
 }
 # Prints the main actions men.
 function askForAction() {

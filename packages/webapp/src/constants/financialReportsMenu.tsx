@@ -1,9 +1,14 @@
-// @ts-nocheck
 import React from 'react';
+import type { FinancialSection } from '@/containers/FinancialStatements/FilterFinancialReports';
 import { FormattedMessage as T } from '@/components';
-import { ReportsAction, AbilitySubject } from '@/constants/abilityOption';
+import {
+  ReportsAction,
+  AbilitySubject,
+  AuditLogAction,
+} from '@/constants/abilityOption';
+import { Features } from '@/constants/features';
 
-export const financialReportMenus = [
+export const financialReportMenus: FinancialSection[] = [
   {
     sectionTitle: <T id={'financial_accounting'} />,
     reports: [
@@ -173,9 +178,7 @@ export const financialReportMenus = [
       },
       {
         title: <T id={'inventory_valuation'} />,
-        desc: (
-          <T id={'summerize_your_transactions_for_each_inventory_item'} />
-        ),
+        desc: <T id={'summerize_your_transactions_for_each_inventory_item'} />,
         link: '/financial-reports/inventory-valuation',
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
@@ -191,6 +194,19 @@ export const financialReportMenus = [
         link: '/financial-reports/sales-tax-liability-summary',
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+        feature: Features.SalesTax,
+      },
+    ],
+  },
+  {
+    sectionTitle: <T id={'system_reports'} />,
+    reports: [
+      {
+        title: <T id={'audit_log_report'} />,
+        desc: <T id={'audit_log_report_desc'} />,
+        link: '/financial-reports/audit-log',
+        subject: AbilitySubject.AuditLog,
+        ability: AuditLogAction.View,
       },
     ],
   },

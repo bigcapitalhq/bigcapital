@@ -1,20 +1,34 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 import styled from 'styled-components';
-import { CLASSES } from '@/constants/classes';
-import { useSettings } from '@/hooks/query';
-import PreferencesPageLoader from '../PreferencesPageLoader';
+import { PreferencesPageLoader } from '../PreferencesPageLoader';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
+import { CLASSES } from '@/constants/classes';
+import { useSettingsReceipts } from '@/hooks/query';
 
-const PreferencesReceiptsFormContext = React.createContext();
+export interface PreferencesReceiptsBootContextValue {
+  receiptSettings?: SettingsGroup;
+  isSettingsLoading: boolean;
+}
 
-function PreferencesReceiptsBoot({ ...props }) {
+const PreferencesReceiptsFormContext =
+  React.createContext<PreferencesReceiptsBootContextValue>(
+    {} as PreferencesReceiptsBootContextValue,
+  );
+
+export interface PreferencesReceiptsBootProps {
+  children?: React.ReactNode;
+}
+
+function PreferencesReceiptsBoot({ children }: PreferencesReceiptsBootProps) {
   // Fetches organization settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  const { data: receiptSettings, isLoading: isSettingsLoading } =
+    useSettingsReceipts();
 
   // Provider state.
-  const provider = {
+  const provider: PreferencesReceiptsBootContextValue = {
+    receiptSettings,
     isSettingsLoading,
   };
 
@@ -32,10 +46,9 @@ function PreferencesReceiptsBoot({ ...props }) {
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesReceiptsFormContext.Provider
-            value={provider}
-            {...props}
-          />
+          <PreferencesReceiptsFormContext.Provider value={provider}>
+            {children}
+          </PreferencesReceiptsFormContext.Provider>
         )}
       </PreferencesReceiptsCard>
     </div>

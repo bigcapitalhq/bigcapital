@@ -1,13 +1,11 @@
-// @ts-nocheck
 import React from 'react';
-
+import { RefundVendorCreditDetailHeader } from './RefundVendorCreditDetailHeader';
 import { CommercialDocBox } from '@/components';
-import RefundVendorCreditDetailHeader from './RefundVendorCreditDetailHeader';
 
 /**
  * Refund vendor credit detail tab.
  */
-export default function RefundVendorCreditDetailTab() {
+export function RefundVendorCreditDetailTab() {
   return (
     <CommercialDocBox>
       <RefundVendorCreditDetailHeader />

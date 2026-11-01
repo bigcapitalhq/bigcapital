@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { ModelObject } from 'objection';
 import { I18nService } from 'nestjs-i18n';
 import {
@@ -28,20 +28,25 @@ import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
+import { sortProfitLossSheetAccountsNodes } from './_utils';
 
-export default class ProfitLossSheet extends R.pipe(
-  ProfitLossSheetPreviousYear,
-  ProfitLossSheetPreviousPeriod,
-  ProfitLossSheetPercentage,
-  ProfitLossSheetDatePeriods,
-  ProfitLossSheetFilter,
-  ProfitLossShema,
-  ProfitLossSheetBase,
-  FinancialDateRanges,
-  FinancialEvaluateEquation,
-  FinancialSheetStructure,
-)(FinancialSheet) {
+export default class ProfitLossSheet extends ProfitLossSheetPreviousYear(
+  flow(
+    ProfitLossSheetPreviousPeriod,
+    ProfitLossSheetPercentage,
+    ProfitLossSheetDatePeriods,
+    ProfitLossSheetFilter,
+    ProfitLossShema,
+    ProfitLossSheetBase,
+    FinancialDateRanges,
+    FinancialEvaluateEquation,
+    FinancialSheetStructure,
+  )(FinancialSheet),
+) {
   /**
    * Profit/Loss sheet query.
    * @param {ProfitLossSheetQuery}
@@ -101,12 +106,10 @@ export default class ProfitLossSheet extends R.pipe(
   private accountNodeMapper = (
     account: ModelObject<Account>,
   ): IProfitLossSheetAccountNode => {
-    // Retrieves the children account ids of the given account id.
-    const childrenAccountIds = this.repository.accountsGraph.dependenciesOf(
+    // Retrieves the account ids including its children account ids.
+    const accountIds = this.repository.getAccountsIdsIncludingChildren(
       account.id,
     );
-    // Concat the children and the given account id.
-    const accountIds = R.uniq(R.append(account.id, childrenAccountIds));
 
     // Retrieves the closing balance of the account included children accounts.
     const total = this.repository.totalAccountsLedger
@@ -129,20 +132,20 @@ export default class ProfitLossSheet extends R.pipe(
   private accountNodeCompose = (
     account: ModelObject<Account>,
   ): IProfitLossSheetAccountNode => {
-    return R.compose(
-      R.when(
-        this.query.isPreviousPeriodActive,
-        this.previousPeriodAccountNodeCompose,
-      ),
-      R.when(
-        this.query.isPreviousYearActive,
-        this.previousYearAccountNodeCompose,
-      ),
-      R.when(
+    return flow(
+      this.accountNodeMapper,
+      when(
         this.query.isDatePeriodsColumnsType,
         this.assocAccountNodeDatePeriod,
       ),
-      this.accountNodeMapper,
+      when(
+        this.query.isPreviousYearActive,
+        this.previousYearAccountNodeCompose,
+      ),
+      when(
+        this.query.isPreviousPeriodActive,
+        this.previousPeriodAccountNodeCompose,
+      ),
     )(account);
   };
 
@@ -169,7 +172,7 @@ export default class ProfitLossSheet extends R.pipe(
    */
   private accountsSchemaNodeMapper = (
     node: IProfitLossAccountsSchemaNode,
-  ): IProfitLossSheetNode => {
+  ): IProfitLossSheetAccountsNode => {
     // Retrieve accounts node by the given types.
     const children = this.getAccountsNodesByTypes(node.accountsTypes);
 
@@ -193,21 +196,21 @@ export default class ProfitLossSheet extends R.pipe(
   private accountsSchemaNodeCompose = (
     node: IProfitLossSchemaNode,
   ): IProfitLossSheetAccountsNode => {
-    return R.compose(
-      R.when(
-        this.query.isPreviousPeriodActive,
-        this.previousPeriodAggregateNodeCompose,
-      ),
-      R.when(
+    return flow(
+      (aggregateNode: IProfitLossSchemaNode) =>
+        this.accountsSchemaNodeMapper(
+          aggregateNode as IProfitLossAccountsSchemaNode,
+        ),
+      when(this.query.isDatePeriodsColumnsType, this.assocAggregateDatePeriod),
+      when(
         this.query.isPreviousYearActive,
         this.previousYearAggregateNodeCompose,
       ),
-      R.when(
-        this.query.isDatePeriodsColumnsType,
-        this.assocAggregateDatePeriod,
+      when(
+        this.query.isPreviousPeriodActive,
+        this.previousPeriodAggregateNodeCompose,
       ),
-      this.accountsSchemaNodeMapper,
-    )(node);
+    )(node) as IProfitLossSheetAccountsNode;
   };
 
   /**
@@ -216,11 +219,9 @@ export default class ProfitLossSheet extends R.pipe(
    * @param {IProfitLossEquationSchemaNode} node -
    * @param {IProfitLossSheetEquationNode}
    */
-  private equationSchemaNodeParser = R.curry(
-    (
-      accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[],
-      node: IProfitLossEquationSchemaNode,
-    ): IProfitLossSheetEquationNode => {
+  private equationSchemaNodeParser =
+    (accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[]) =>
+    (node: IProfitLossEquationSchemaNode): IProfitLossSheetEquationNode => {
       const tableNodes = this.getNodesTableForEvaluating(
         'total.amount',
         accNodes,
@@ -234,8 +235,7 @@ export default class ProfitLossSheet extends R.pipe(
         nodeType: ProfitLossNodeType.EQUATION,
         total: this.getTotalAmountMeta(total),
       };
-    },
-  );
+    };
 
   /**
    * Equation schema node composer.
@@ -243,28 +243,25 @@ export default class ProfitLossSheet extends R.pipe(
    * @param {IProfitLossSchemaNode} node -
    * @returns {IProfitLossSheetEquationNode}
    */
-  private equationSchemaNodeCompose = R.curry(
-    (
-      accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[],
-      node: IProfitLossEquationSchemaNode,
-    ): IProfitLossSheetEquationNode => {
-      return R.compose(
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.previousPeriodEquationNodeCompose(accNodes, node.equation),
-        ),
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearEquationNodeCompose(accNodes, node.equation),
-        ),
-        R.when(
+  private equationSchemaNodeCompose =
+    (accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[]) =>
+    (node: IProfitLossEquationSchemaNode): IProfitLossSheetEquationNode => {
+      return flow(
+        this.equationSchemaNodeParser(accNodes),
+        when(
           this.query.isDatePeriodsColumnsType,
           this.assocEquationNodeDatePeriod(accNodes, node.equation),
         ),
-        this.equationSchemaNodeParser(accNodes),
-      )(node);
-    },
-  );
+        when(
+          this.query.isPreviousYearActive,
+          this.previousYearEquationNodeCompose(accNodes, node.equation),
+        ),
+        when(
+          this.query.isPreviousPeriodActive,
+          this.previousPeriodEquationNodeCompose(accNodes, node.equation),
+        ),
+      )(node) as IProfitLossSheetEquationNode;
+    };
 
   /**
    * Parses accounts schema node to report node.
@@ -274,11 +271,9 @@ export default class ProfitLossSheet extends R.pipe(
   private accountsSchemaNodeMap = (
     schemaNode: IProfitLossSchemaNode,
   ): IProfitLossSheetNode | IProfitLossSchemaNode => {
-    return R.compose(
-      R.when(
-        this.isNodeType(ProfitLossNodeType.ACCOUNTS),
-        this.accountsSchemaNodeCompose,
-      ),
+    return when<IProfitLossSheetNode | IProfitLossSchemaNode>(
+      this.isNodeType(ProfitLossNodeType.ACCOUNTS),
+      this.accountsSchemaNodeCompose,
     )(schemaNode);
   };
 
@@ -296,14 +291,12 @@ export default class ProfitLossSheet extends R.pipe(
     key: number,
     parentValue: IProfitLossSheetNode | IProfitLossSchemaNode,
     accNodes: (IProfitLossSheetNode | IProfitLossSchemaNode)[],
-    context,
+    _context,
   ): IProfitLossSheetEquationNode => {
-    return R.compose(
-      R.when(
-        this.isNodeType(ProfitLossNodeType.EQUATION),
-        this.equationSchemaNodeCompose(accNodes),
-      ),
-    )(node);
+    return when<IProfitLossSheetNode | IProfitLossSchemaNode>(
+      this.isNodeType(ProfitLossNodeType.EQUATION),
+      this.equationSchemaNodeCompose(accNodes),
+    )(node) as IProfitLossSheetEquationNode;
   };
 
   /**
@@ -320,12 +313,27 @@ export default class ProfitLossSheet extends R.pipe(
   /**
    * Parses schema equation nodes.
    * @param {(IProfitLossSheetNode | IProfitLossSchemaNode)[]} nodes
-   * @returns {(IProfitLossSheetNode | IProfitLossSchemaNode)[]}
+   * @returns {IProfitLossSheetNode[]}
    */
   private reportSchemaEquationNodesCompose = (
     nodes: (IProfitLossSheetNode | IProfitLossSchemaNode)[],
-  ): (IProfitLossSheetNode | IProfitLossSchemaNode)[] => {
+  ): IProfitLossSheetNode[] => {
     return this.mapAccNodesDeep(nodes, this.reportSchemaEquationNodeCompose);
+  };
+
+  /**
+   * Sorts the report account nodes by the query column sorting.
+   * @param {IProfitLossSheetNode[]} nodes
+   * @returns {IProfitLossSheetNode[]}
+   */
+  private sortAccountsNodes = (
+    nodes: IProfitLossSheetNode[],
+  ): IProfitLossSheetNode[] => {
+    return sortProfitLossSheetAccountsNodes(
+      nodes,
+      this.query.query.columnSortBy,
+      this.query.query.sortOrder,
+    );
   };
 
   /**
@@ -335,12 +343,13 @@ export default class ProfitLossSheet extends R.pipe(
   public reportData = (): Array<IProfitLossSheetNode> => {
     const schema = this.getSchema();
 
-    return R.compose(
-      this.reportFilterPlugin,
-      this.reportRowsPercentageCompose,
-      this.reportColumnsPerentageCompose,
-      this.reportSchemaEquationNodesCompose,
+    return flow(
       this.reportSchemaAccountsNodesCompose,
+      this.reportSchemaEquationNodesCompose,
+      this.reportColumnsPerentageCompose,
+      this.reportRowsPercentageCompose,
+      this.sortAccountsNodes,
+      this.reportFilterPlugin,
     )(schema);
   };
 }

@@ -8,7 +8,7 @@ import { SaleInvoice } from '../models/SaleInvoice';
 
 @Injectable()
 @ExportableService({ name: SaleInvoice.name })
-export class SaleInvoicesExportable extends Exportable{
+export class SaleInvoicesExportable extends Exportable {
   constructor(
     private readonly saleInvoicesApplication: SaleInvoiceApplication,
   ) {
@@ -34,6 +34,6 @@ export class SaleInvoicesExportable extends Exportable{
 
     return this.saleInvoicesApplication
       .getSaleInvoices(parsedQuery)
-      .then((output) => output.salesInvoices);
+      .then((output) => output.data);
   }
 }

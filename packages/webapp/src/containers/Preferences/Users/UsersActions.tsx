@@ -1,19 +1,18 @@
-// @ts-nocheck
+import { Button, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { Button, Intent } from '@blueprintjs/core';
 import { Icon, FormattedMessage as T } from '@/components';
+import {
+  withDialogActions,
+  type WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
 
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
-
-function UsersActions({ openDialog, closeDialog }) {
+function UsersActionsInner({ openDialog }: WithDialogActionsProps) {
   const history = useHistory();
   const onClickNewUser = () => {
     openDialog('invite-user');
   };
-
   const onClickNewRole = () => {
     history.push('/preferences/roles');
   };
@@ -38,4 +37,4 @@ function UsersActions({ openDialog, closeDialog }) {
   );
 }
 
-export default compose(withDialogActions)(UsersActions);
+export const UsersActions = FF.pipe(UsersActionsInner, withDialogActions);

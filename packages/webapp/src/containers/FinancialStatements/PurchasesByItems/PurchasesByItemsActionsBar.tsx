@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -10,19 +8,39 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
-import { withPurchasesByItems } from './withPurchasesByItems';
-import { withPurchasesByItemsActions } from './withPurchasesByItemsActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
-import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { PurchasesByItemsExportMenu } from './components';
+import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
+import { withPurchasesByItems } from './withPurchasesByItems';
+import {
+  withPurchasesByItemsActions,
+  WithPurchasesByItemsActionsProps,
+} from './withPurchasesByItemsActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { saveInvoke } from '@/utils';
 
-function PurchasesByItemsActionsBar({
+interface PurchasesByItemsActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
+
+type PurchasesByItemsActionsBarProps = {
+  purchasesByItemsDrawerFilter: boolean;
+} & Pick<
+  WithPurchasesByItemsActionsProps,
+  'togglePurchasesByItemsFilterDrawer'
+> &
+  WithDialogActionsProps &
+  PurchasesByItemsActionsBarOwnProps;
+
+function PurchasesByItemsActionsBarInner({
   // #withPurchasesByItems
   purchasesByItemsDrawerFilter,
 
@@ -35,7 +53,7 @@ function PurchasesByItemsActionsBar({
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
-}) {
+}: PurchasesByItemsActionsBarProps) {
   const { refetchSheet, isLoading } = usePurchaseByItemsContext();
 
   // Handle re-calc button click.
@@ -49,7 +67,7 @@ function PurchasesByItemsActionsBar({
   };
 
   // Handle number format submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
 
@@ -124,10 +142,11 @@ function PurchasesByItemsActionsBar({
   );
 }
 
-export default compose(
+export const PurchasesByItemsActionsBar = FF.pipe(
+  PurchasesByItemsActionsBarInner,
+  withDialogActions,
+  withPurchasesByItemsActions,
   withPurchasesByItems(({ purchasesByItemsDrawerFilter }) => ({
     purchasesByItemsDrawerFilter,
   })),
-  withPurchasesByItemsActions,
-  withDialogActions,
-)(PurchasesByItemsActionsBar);
+);

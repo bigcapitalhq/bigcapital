@@ -1,7 +1,6 @@
 import {
   CanActivate,
   ExecutionContext,
-  Inject,
   Injectable,
   SetMetadata,
   UnauthorizedException,
@@ -20,7 +19,7 @@ export class EnsureTenantIsSeededGuard implements CanActivate {
   constructor(
     private readonly tenancyContext: TenancyContext,
     private reflector: Reflector,
-  ) { }
+  ) {}
 
   /**
    * Validate the tenant of the current request is seeded.

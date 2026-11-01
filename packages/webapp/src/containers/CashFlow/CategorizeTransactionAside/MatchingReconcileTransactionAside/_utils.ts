@@ -1,25 +1,29 @@
 import { MatchingReconcileTransactionValues } from './_types';
+import type { CreateCashflowTransactionBody } from '@bigcapital/sdk-ts';
+
+const toNumber = (value: string | number): number =>
+  typeof value === 'number' ? value : Number(value) || 0;
 
 export const transformToReq = (
   values: MatchingReconcileTransactionValues,
   bankAccountId: number,
-) => {
+): CreateCashflowTransactionBody => {
   return {
     date: values.date,
-    reference_no: values.referenceNo,
-    transaction_type:
+    referenceNo: values.referenceNo,
+    transactionType:
       values.type === 'deposit' ? 'other_income' : 'other_expense',
     description: values.memo,
-    amount: values.amount,
-    credit_account_id: values.category,
-    cashflow_account_id: bankAccountId,
-    branch_id: values.branchId,
+    amount: toNumber(values.amount),
+    exchangeRate: 1,
+    creditAccountId: toNumber(values.category),
+    cashflowAccountId: bankAccountId,
     publish: true,
+    branchId: values.branchId ? toNumber(values.branchId) : undefined,
   };
 };
 
-
-export const initialValues = {
+export const initialValues: MatchingReconcileTransactionValues = {
   type: 'deposit',
   date: '',
   amount: '',

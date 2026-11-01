@@ -16,8 +16,10 @@ export * from './branches';
 export * from './warehouses';
 export * from './exchange-rates';
 export * from './expenses';
+export * from './export';
 export * from './import';
 export * from './manual-journals';
+export * from './tracking-categories';
 export * from './roles';
 export * from './users';
 export * from './dashboard';
@@ -53,6 +55,8 @@ export * from './bank-rules';
 export * from './misc';
 export * from './notifications';
 export * from './reports';
+export * from './workspaces';
+export * from './audit-logs';
 
 /**
  * Utility types for request/response types from schema paths.

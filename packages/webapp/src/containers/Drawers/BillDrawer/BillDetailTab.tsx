@@ -1,16 +1,14 @@
-// @ts-nocheck
 import React from 'react';
-
-import BillDetailHeader from './BillDetailHeader';
-import BillDetailTable from './BillDetailTable';
-import BillDetailFooter from './BillDetailFooter';
-import { CommercialDocBox } from '@/components';
+import { BillDetailFooter } from './BillDetailFooter';
+import { BillDetailHeader } from './BillDetailHeader';
+import { BillDetailTable } from './BillDetailTable';
 import { BillDetailTableFooter } from './BillDetailTableFooter';
+import { CommercialDocBox } from '@/components';
 
 /**
  * Bill detail panel tab.
  */
-export default function BillDetailTab() {
+export function BillDetailTab() {
   return (
     <CommercialDocBox>
       <BillDetailHeader />

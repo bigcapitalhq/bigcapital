@@ -1,13 +1,25 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from 'redux';
 
 const MoneyOutDialogContent = React.lazy(() =>
-  import('./MoneyOutDialogContent'),
+  import('./MoneyOutDialogContent').then((m) => ({
+    default: m.MoneyOutDialogContent,
+  })),
 );
+
+interface MoneyOutDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
+
+interface DialogPayload {
+  account_type?: string | null;
+  account_id?: number | null;
+  account_name?: string;
+}
 
 /**
  * Money out dialog.
@@ -15,14 +27,14 @@ const MoneyOutDialogContent = React.lazy(() =>
 function MoneyOutDialog({
   dialogName,
   payload = { account_type: null, account_id: null, account_name: '' },
-
   isOpen,
-}) {
+}: MoneyOutDialogProps) {
+  const typedPayload = payload as DialogPayload;
   return (
     <Dialog
       name={dialogName}
       title={intl.get('cash_flow_transaction.money_out', {
-        value: payload.account_name,
+        value: typedPayload.account_name,
       })}
       isOpen={isOpen}
       canEscapeJeyClose={true}
@@ -32,12 +44,12 @@ function MoneyOutDialog({
       <DialogSuspense>
         <MoneyOutDialogContent
           dialogName={dialogName}
-          accountId={payload.account_id}
-          accountType={payload.account_type}
+          accountId={typedPayload.account_id}
+          accountType={typedPayload.account_type}
         />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export default compose(withDialogRedux())(MoneyOutDialog);
+export const index = FF.pipe(MoneyOutDialog, withDialogRedux());

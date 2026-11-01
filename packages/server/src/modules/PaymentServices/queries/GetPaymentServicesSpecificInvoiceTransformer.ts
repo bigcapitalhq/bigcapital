@@ -13,7 +13,7 @@ export class GetPaymentServicesSpecificInvoiceTransformer extends Transformer {
     return ['serviceFormatted'];
   };
 
-  public serviceFormatted(method) {
+  public serviceFormatted(_method) {
     return 'Stripe';
   }
 }

@@ -6,7 +6,7 @@ import { SalesByItemsReportService } from './SalesByItemsService';
 import { SalesByItemsExport } from './SalesByItemsExport';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
 import { SalesByItemsMeta } from './SalesByItemsMeta';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 import { InventoryCostModule } from '@/modules/InventoryCost/InventoryCost.module';
 import { SalesByItemsController } from './SalesByItems.controller';
 
@@ -18,12 +18,8 @@ import { SalesByItemsController } from './SalesByItems.controller';
     SalesByItemsReportService,
     SalesByItemsExport,
     SalesByItemsMeta,
-    TenancyContext
   ],
   controllers: [SalesByItemsController],
-  imports: [
-    FinancialSheetCommonModule,
-    InventoryCostModule
-  ],
+  imports: [TenancyModule, FinancialSheetCommonModule, InventoryCostModule],
 })
 export class SalesByItemsModule {}

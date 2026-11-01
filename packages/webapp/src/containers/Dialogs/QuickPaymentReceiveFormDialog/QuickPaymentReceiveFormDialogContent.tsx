@@ -1,19 +1,21 @@
-// @ts-nocheck
 import React from 'react';
-
 import '@/style/pages/PaymentReceive/QuickPaymentReceiveDialog.scss';
-
+import { QuickPaymentReceiveForm } from './QuickPaymentReceiveForm';
 import { QuickPaymentReceiveFormProvider } from './QuickPaymentReceiveFormProvider';
-import QuickPaymentReceiveForm from './QuickPaymentReceiveForm';
+
+interface QuickPaymentReceiveFormDialogContentProps {
+  dialogName: string;
+  invoice?: number | null;
+}
 
 /**
  * Quick payment receive form dialog content.
  */
-export default function QuickPaymentReceiveFormDialogContent({
+export function QuickPaymentReceiveFormDialogContent({
   // #ownProps
   dialogName,
   invoice,
-}) {
+}: QuickPaymentReceiveFormDialogContentProps): React.ReactElement {
   return (
     <QuickPaymentReceiveFormProvider
       invoiceId={invoice}

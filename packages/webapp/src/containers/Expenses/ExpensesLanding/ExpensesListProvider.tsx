@@ -1,27 +1,68 @@
-// @ts-nocheck
-import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
-
+import React, { createContext } from 'react';
+import type {
+  ExpensesListResponse,
+  GetExpensesQuery,
+  ResourceMetaResponse,
+  ResourceViewResponse,
+  SettingsGroup,
+} from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
-import { useExpenses, useResourceMeta, useResourceViews } from '@/hooks/query';
+import {
+  useExpenses,
+  useResourceMeta,
+  useResourceViews,
+  useSettingsExpenses,
+} from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
-const ExpensesListContext = createContext();
+type ExpensesListContextValue = {
+  expenses: ExpensesListResponse['data'] | undefined;
+  pagination: ExpensesListResponse['pagination'] | undefined;
+  expensesViews: ResourceViewResponse | undefined;
+  resourceMeta: ResourceMetaResponse | undefined;
+  fields: any[];
+  isExpensesLoading: boolean;
+  isExpensesFetching: boolean;
+  isResourceMetaLoading: boolean;
+  isResourceMetaFetching: boolean;
+  isViewsLoading: boolean;
+  isEmptyStatus: boolean;
+
+  expenseSettings: SettingsGroup | undefined;
+};
+
+const ExpensesListContext = createContext<ExpensesListContextValue | undefined>(
+  undefined,
+);
+
+type ExpensesListProviderProps = {
+  query?: GetExpensesQuery;
+  tableStateChanged?: boolean;
+  children?: React.ReactNode;
+};
 
 /**
- * Accounts chart data provider.
+ * Expenses list data provider.
  */
-function ExpensesListProvider({ query, tableStateChanged, ...props }) {
-  // Fetch accounts resource views and fields.
+function ExpensesListProvider({
+  query,
+  tableStateChanged,
+  ...props
+}: ExpensesListProviderProps) {
+  // Fetch expenses resource views and fields.
   const { data: expensesViews, isLoading: isViewsLoading } =
     useResourceViews('expenses');
 
+  // Expense settings.
+  const { data: expenseSettings } = useSettingsExpenses();
+
   // Fetches the expenses with pagination meta.
   const {
-    data: { expenses, pagination, filterMeta },
+    data: expensesData,
     isLoading: isExpensesLoading,
     isFetching: isExpensesFetching,
-  } = useExpenses(query, { keepPreviousData: true });
+  } = useExpenses(query, { keepPreviousData: true } as any);
 
   // Fetch the expenses resource fields.
   const {
@@ -30,17 +71,19 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isResourceMetaFetching,
   } = useResourceMeta('expenses');
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
-    isEmpty(expenses) && !isExpensesLoading && !tableStateChanged;
+    isEmpty(expensesData?.data) && !isExpensesLoading && !tableStateChanged;
 
   // Provider payload.
-  const provider = {
+  const provider: ExpensesListContextValue = {
     expensesViews,
-    expenses,
-    pagination,
+    expenses: expensesData?.data,
+    pagination: expensesData?.pagination,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields
+      ? getFieldsFromResourceMeta(resourceMeta.fields)
+      : [],
     resourceMeta,
     isResourceMetaLoading,
     isResourceMetaFetching,
@@ -50,6 +93,8 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
     isExpensesFetching,
 
     isEmptyStatus,
+
+    expenseSettings,
   };
 
   return (
@@ -62,6 +107,14 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
   );
 }
 
-const useExpensesListContext = () => React.useContext(ExpensesListContext);
+const useExpensesListContext = (): ExpensesListContextValue => {
+  const ctx = React.useContext(ExpensesListContext);
+  if (!ctx) {
+    throw new Error(
+      'useExpensesListContext must be used within an ExpensesListProvider',
+    );
+  }
+  return ctx;
+};
 
 export { ExpensesListProvider, useExpensesListContext };

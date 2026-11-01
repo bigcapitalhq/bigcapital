@@ -1,12 +1,19 @@
-// @ts-nocheck
+import { isEmpty, pick } from 'lodash';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { isEmpty, pick } from 'lodash';
-import { DashboardInsider } from '@/components/Dashboard';
-import { transformToEditForm } from './utils';
+import { transformToEditForm, type CreditNoteFormValues } from './utils';
+import type {
+  CreditNote,
+  CreateCreditNoteBody,
+  EditCreditNoteBody,
+  CreditNoteStateResponse,
+  Item,
+  Customer,
+  Warehouse,
+  Branch,
+  PdfTemplateResponse,
+} from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
-
 import {
   useCreditNote,
   useCreateCreditNote,
@@ -18,25 +25,68 @@ import {
   useSettingsCreditNotes,
   useInvoice,
   useGetCreditNoteState,
-  CreditNoteStateResponse,
 } from '@/hooks/query';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { useFeatureCan } from '@/hooks/state';
 
-interface CreditNoteFormProviderValue {
-  creditNoteState: CreditNoteStateResponse;
+type CreditNoteFormSubmitPayload = {
+  redirect?: boolean;
+  open?: boolean;
+  resetForm?: boolean;
+};
+
+type CreditNoteFormContextValue = {
+  creditNote: CreditNote | undefined;
+  items: Item[];
+  customers: Customer[];
+  branches: Branch[];
+  warehouses: Warehouse[];
+  newCreditNote: CreditNoteFormValues | [];
+  submitPayload: CreditNoteFormSubmitPayload | undefined;
+  brandingTemplates: PdfTemplateResponse[];
+  isNewMode: boolean;
+
+  isItemsLoading: boolean;
+  isCustomersLoading: boolean;
+  isCreditNoteLoading: boolean;
+  isInvoiceLoading: boolean;
+  isWarehouesLoading: boolean;
+  isBranchesLoading: boolean;
+  isFeatureLoading: boolean;
+  isBranchesSuccess: boolean;
+  isWarehousesSuccess: boolean;
+  isBrandingTemplatesLoading: boolean;
   isCreditNoteStateLoading: boolean;
-}
+  creditNoteSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
+  isBootLoading: boolean;
 
-const CreditNoteFormContext = React.createContext<CreditNoteFormProviderValue>(
-  {} as CreditNoteFormProviderValue,
-);
+  createCreditNoteMutate: (values: CreateCreditNoteBody) => Promise<void>;
+  editCreditNoteMutate: (args: [number, EditCreditNoteBody]) => Promise<void>;
+  setSubmitPayload: React.Dispatch<
+    React.SetStateAction<CreditNoteFormSubmitPayload | undefined>
+  >;
+
+  creditNoteState: CreditNoteStateResponse | undefined;
+};
+
+const CreditNoteFormContext = React.createContext<
+  CreditNoteFormContextValue | undefined
+>(undefined);
+
+type CreditNoteFormProviderProps = {
+  creditNoteId?: number;
+  children?: React.ReactNode;
+};
 
 /**
  * Credit note data provider.
  */
-function CreditNoteFormProvider({ creditNoteId, ...props }) {
+function CreditNoteFormProvider({
+  creditNoteId,
+  ...props
+}: CreditNoteFormProviderProps) {
   const { state } = useLocation();
-  const invoiceId = state?.invoiceId;
+  const invoiceId = (state as { invoiceId?: number } | null)?.invoiceId;
 
   // Features guard.
   const { featureCan } = useFeatureCan();
@@ -44,19 +94,13 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch customers data table or list
-  const {
-    data: { customers },
-    isLoading: isCustomersLoading,
-  } = useCustomers({ page_size: 10000 });
-
-  // Handle fetching the items table based on the given query.
-  const {
-    data: { items },
-    isLoading: isItemsLoading,
-  } = useItems({
+  const { data: customersData, isLoading: isCustomersLoading } = useCustomers({
     page_size: 10000,
   });
-
+  // Handle fetching the items table based on the given query.
+  const { data: itemsData, isLoading: isItemsLoading } = useItems({
+    page_size: 10000,
+  });
   // Handle fetch  credit details.
   const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(
     creditNoteId,
@@ -65,9 +109,7 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     },
   );
   // Handle fetch invoice detail.
-  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
-    enabled: !!invoiceId,
-  });
+  const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId);
 
   // Fetch warehouses list.
   const {
@@ -92,14 +134,16 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     useGetCreditNoteState();
 
   // Handle fetching settings.
-  useSettingsCreditNotes();
+  const { data: creditNoteSettings } = useSettingsCreditNotes();
 
   // Create and edit credit note mutations.
   const { mutateAsync: createCreditNoteMutate } = useCreateCreditNote();
   const { mutateAsync: editCreditNoteMutate } = useEditCreditNote();
 
   // Form submit payload.
-  const [submitPayload, setSubmitPayload] = React.useState();
+  const [submitPayload, setSubmitPayload] = React.useState<
+    CreditNoteFormSubmitPayload | undefined
+  >();
 
   // Determines whether the form in new mode.
   const isNewMode = !creditNoteId;
@@ -109,9 +153,9 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
 
   const newCreditNote = !isEmpty(invoice)
     ? transformToEditForm({
-        ...pick(invoice, ['customer_id', 'currency_code', 'entries']),
+        ...pick(invoice, ['customerId', 'currencyCode', 'entries']),
       })
-    : [];
+    : ([] as []);
 
   const isBootLoading =
     isItemsLoading ||
@@ -121,41 +165,54 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     isBrandingTemplatesLoading;
 
   // Provider payload.
-  const provider = {
-    items,
-    customers,
+  const provider: CreditNoteFormContextValue = {
     creditNote,
-    branches,
-    warehouses,
-    submitPayload,
-    isNewMode,
+    items: itemsData?.data ?? [],
+    customers: customersData?.data ?? [],
+    branches: branches ?? [],
+    warehouses: warehouses ?? [],
     newCreditNote,
+    submitPayload,
+    brandingTemplates:
+      brandingTemplates?.templates ?? ([] as PdfTemplateResponse[]),
+    isNewMode,
 
     isItemsLoading,
     isCustomersLoading,
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+    isCreditNoteLoading,
+    isInvoiceLoading,
+    isWarehouesLoading,
+    isBranchesLoading,
+    isBrandingTemplatesLoading,
+    isCreditNoteStateLoading,
+    creditNoteSettings,
+    isBootLoading,
 
-    createCreditNoteMutate,
-    editCreditNoteMutate,
+    createCreditNoteMutate: createCreditNoteMutate as (
+      values: CreateCreditNoteBody,
+    ) => Promise<void>,
+    editCreditNoteMutate: editCreditNoteMutate as (
+      args: [number, EditCreditNoteBody],
+    ) => Promise<void>,
     setSubmitPayload,
 
-    // Branding templates.
-    brandingTemplates,
-    isBrandingTemplatesLoading,
-
-    // Credit note state
     creditNoteState,
-    isCreditNoteStateLoading,
-
-    isBootLoading,
   };
 
   return <CreditNoteFormContext.Provider value={provider} {...props} />;
 }
 
-const useCreditNoteFormContext = () =>
-  React.useContext<CreditNoteFormProviderValue>(CreditNoteFormContext);
+const useCreditNoteFormContext = (): CreditNoteFormContextValue => {
+  const ctx = React.useContext(CreditNoteFormContext);
+  if (!ctx) {
+    throw new Error(
+      'useCreditNoteFormContext must be used within a CreditNoteFormProvider',
+    );
+  }
+  return ctx;
+};
 
 export { CreditNoteFormProvider, useCreditNoteFormContext };

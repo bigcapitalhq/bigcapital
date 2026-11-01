@@ -1,22 +1,32 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 // Lazy loading the content.
-const JournalPdfDialogContent = lazy(
-  () => import('./JournalPdfDialogContent'),
+const JournalPdfDialogContent = lazy(() =>
+  import('./JournalPdfDialogContent').then((m) => ({
+    default: m.JournalPdfDialogContent,
+  })),
 );
+
+interface JournalPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
 
 /**
  * Journal sheet pdf preview dialog.
  * @returns {React.ReactNode}
  */
-function JournalPdfDialogRoot({ dialogName, payload, isOpen }) {
+function JournalPdfDialogRoot({
+  dialogName,
+  payload,
+  isOpen,
+}: JournalPdfDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -34,6 +44,7 @@ function JournalPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const JournalPdfDialog = compose(withDialogRedux())(
+export const JournalPdfDialog = FF.pipe(
   JournalPdfDialogRoot,
+  withDialogRedux(),
 );

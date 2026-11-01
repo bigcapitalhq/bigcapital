@@ -1,5 +1,6 @@
 import type { OpArgType } from 'openapi-typescript-fetch';
 import type { ApiFetcher } from '../fetch-utils';
+import { withNestedQuery } from "../fetch-utils";
 import type { paths } from '../schema';
 import {
   OpForPath,
@@ -22,7 +23,11 @@ export async function fetchProfitLossTable(
   query: ProfitLossTableQuery
 ): Promise<ProfitLossTableResponse> {
   const get = fetcher.path(PROFIT_LOSS_ROUTE).method('get').create();
-  const { data } = await get(query as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: 'application/json+table' },
+  });
   return data as unknown as ProfitLossTableResponse;
 }
 
@@ -36,7 +41,8 @@ export async function fetchProfitLossJson(
   query: ProfitLossJsonQuery
 ): Promise<ProfitLossJsonResponse> {
   const get = fetcher.path(PROFIT_LOSS_ROUTE).method('get').create();
-  const { data } = await get(query as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as Arg, init);
   return data as unknown as ProfitLossJsonResponse;
 }
 
@@ -49,7 +55,11 @@ export async function fetchProfitLossCsv(
   query: ProfitLossCsvQuery
 ): Promise<ProfitLossCsvResponse> {
   const get = fetcher.path(PROFIT_LOSS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/csv' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as ProfitLossCsvResponse;
 }
 
@@ -62,7 +72,11 @@ export async function fetchProfitLossXlsx(
   query: ProfitLossXlsxQuery
 ): Promise<ProfitLossXlsxResponse> {
   const get = fetcher.path(PROFIT_LOSS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/xlsx' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as ProfitLossXlsxResponse;
 }
 
@@ -75,6 +89,10 @@ export async function fetchProfitLossPdf(
   query: ProfitLossPdfQuery
 ): Promise<ProfitLossPdfResponse> {
   const get = fetcher.path(PROFIT_LOSS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/pdf' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as ProfitLossPdfResponse;
 }

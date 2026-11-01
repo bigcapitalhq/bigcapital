@@ -1,15 +1,42 @@
-// @ts-nocheck
-import React, { createContext, useContext, useEffect } from 'react';
+import { createContext, ReactNode, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useInviteMetaByToken, useAuthInviteAccept } from '@/hooks/query';
 import { InviteAcceptLoading } from './components';
+import { useInviteMetaByToken, useAuthInviteAccept } from '@/hooks/query';
 
-const InviteAcceptContext = createContext();
+export interface InviteAcceptMeta {
+  email?: string;
+  organizationName?: string;
+}
+
+export interface InviteAcceptContextState {
+  token: string;
+  inviteMeta: InviteAcceptMeta | null;
+  inviteMetaError: Error | null;
+  isInviteMetaError: boolean;
+  isInviteMetaLoading: boolean;
+  inviteAcceptMutate: (
+    values: [Record<string, unknown>, string],
+  ) => Promise<unknown>;
+}
+
+export interface InviteAcceptProviderProps {
+  token: string;
+  children?: ReactNode;
+}
+
+interface InviteMetaResponse {
+  inviteToken?: { email?: string };
+  orgName?: string;
+}
+
+const InviteAcceptContext = createContext<InviteAcceptContextState | undefined>(
+  undefined,
+);
 
 /**
  * Invite accept provider.
  */
-function InviteAcceptProvider({ token, ...props }) {
+function InviteAcceptProvider({ token, ...props }: InviteAcceptProviderProps) {
   // Invite meta by token.
   const {
     data: inviteMeta,
@@ -26,19 +53,22 @@ function InviteAcceptProvider({ token, ...props }) {
   const history = useHistory();
 
   useEffect(() => {
-    if (inviteMetaError) { history.push('/auth/login'); }
+    if (inviteMetaError) {
+      history.push('/auth/login');
+    }
   }, [history, inviteMetaError]);
 
   // Transform the backend response to match frontend expectations.
-  const transformedInviteMeta = inviteMeta
+  const inviteMetaData = inviteMeta as InviteMetaResponse | undefined;
+  const transformedInviteMeta: InviteAcceptMeta | null = inviteMetaData
     ? {
-        email: inviteMeta.inviteToken?.email,
-        organizationName: inviteMeta.orgName,
+        email: inviteMetaData.inviteToken?.email,
+        organizationName: inviteMetaData.orgName,
       }
     : null;
 
   // Provider payload.
-  const provider = {
+  const provider: InviteAcceptContextState = {
     token,
     inviteMeta: transformedInviteMeta,
     inviteMetaError,
@@ -58,6 +88,14 @@ function InviteAcceptProvider({ token, ...props }) {
   );
 }
 
-const useInviteAcceptContext = () => useContext(InviteAcceptContext);
+const useInviteAcceptContext = (): InviteAcceptContextState => {
+  const context = useContext(InviteAcceptContext);
+  if (!context) {
+    throw new Error(
+      'useInviteAcceptContext must be used within an InviteAcceptProvider.',
+    );
+  }
+  return context;
+};
 
 export { InviteAcceptProvider, useInviteAcceptContext };

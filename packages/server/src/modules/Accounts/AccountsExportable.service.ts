@@ -11,7 +11,7 @@ import { Account } from './models/Account.model';
 @Global()
 export class AccountsExportable extends Exportable {
   /**
-   * @param {AccountsApplication} accountsApplication  
+   * @param {AccountsApplication} accountsApplication
    */
   constructor(private readonly accountsApplication: AccountsApplication) {
     super();

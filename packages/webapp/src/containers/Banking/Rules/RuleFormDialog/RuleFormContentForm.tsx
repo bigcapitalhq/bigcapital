@@ -1,10 +1,23 @@
-// @ts-nocheck
-import { useCallback, useMemo } from 'react';
-import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
-import { get } from 'lodash';
 import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
-import * as R from 'ramda';
+import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import { get } from 'lodash';
+import { useCallback, useMemo } from 'react';
+import intl from 'react-intl-universal';
+import {
+  Fields,
+  RuleFormValues,
+  TransactionTypeOptions,
+  getAccountRootFromMoneyCategory,
+  getDefaultFieldConditionByFieldKey,
+  getFieldConditionsByFieldKey,
+  initialValues,
+} from './_utils';
+import { useRuleFormDialogBoot } from './RuleFormBoot';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
+import type { AccountSelectModel } from '@/components';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { BankRuleResponse } from '@bigcapital/sdk-ts';
 import {
   AccountsSelect,
   AppToaster,
@@ -16,44 +29,73 @@ import {
   Group,
   Stack,
 } from '@/components';
-import { useCreateBankRule, useEditBankRule } from '@/hooks/query/bank-rules';
+import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
+import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useCreateBankRule, useEditBankRule } from '@/hooks/query/banking';
 import {
-  Fields,
-  RuleFormValues,
-  TransactionTypeOptions,
-  getAccountRootFromMoneyCategory,
-  getDefaultFieldConditionByFieldKey,
-  getFieldConditionsByFieldKey,
-  initialValues,
-} from './_utils';
-import { useRuleFormDialogBoot } from './RuleFormBoot';
-import {
+  filterAccountsByQuery,
+  nestedArrayToflatten,
   transformToCamelCase,
   transformToForm,
   transfromToSnakeCase,
 } from '@/utils';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
-import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();
 const MoneyOutOptions = getAddMoneyOutOptions();
 
+/**
+ * The rule-form boot context's public type omits `accounts`/`bankRule` (they
+ * are only present on the runtime provider value), so re-declare the fields
+ * this form consumes and narrow the context at this boundary.
+ */
+interface RuleFormBootData
+  extends Omit<
+    ReturnType<typeof useRuleFormDialogBoot>,
+    'accounts' | 'bankRule' | 'bankRuleId'
+  > {
+  accounts?: AccountSelectModel[];
+  bankRule?: BankRuleResponse | null;
+  bankRuleId?: number;
+}
+
+const useRuleFormDialogBootData = () =>
+  useRuleFormDialogBoot() as RuleFormBootData;
+
 function RuleFormContentFormRoot({
   // #withDialogActions
   closeDialog,
-}) {
+}: WithDialogActionsProps) {
   const { accounts, bankRule, isEditMode, bankRuleId } =
-    useRuleFormDialogBoot();
+    useRuleFormDialogBootData();
   const { mutateAsync: createBankRule } = useCreateBankRule();
   const { mutateAsync: editBankRule } = useEditBankRule();
+
+  // A rule applies to cash/bank accounts only, plus an "All accounts" option
+  // whose `null` id tells the API the rule applies to every account. The
+  // option is prepended after filtering so it is always kept in the list.
+  const applyIfAccountItems = useMemo(
+    () => [
+      { id: null, name: intl.get('all_accounts'), code: '', accountLevel: 1 },
+      ...filterAccountsByQuery(nestedArrayToflatten(accounts ?? []), {
+        filterByTypes: ['cash', 'bank'],
+      }),
+    ],
+    [accounts],
+  );
 
   const validationSchema = CreateRuleFormSchema;
 
   const _initialValues = {
     ...initialValues,
     ...transformToForm(transformToCamelCase(bankRule), initialValues),
+    // A null `applyIfAccountId` means the rule applies to all accounts. The
+    // `transformToForm` helper drops null values, so restore it explicitly to
+    // keep the "All accounts" option selected while editing.
+    ...(isEditMode && bankRule?.applyIfAccountId == null
+      ? { applyIfAccountId: null }
+      : {}),
   };
   // Handles the form submitting.
   const handleSubmit = (
@@ -71,7 +113,7 @@ function RuleFormContentFormRoot({
         message: 'The bank rule has been created successfully.',
       });
     };
-    const handleError = (error) => {
+    const handleError = (error: unknown) => {
       setSubmitting(false);
       AppToaster.show({
         intent: Intent.DANGER,
@@ -79,7 +121,7 @@ function RuleFormContentFormRoot({
       });
     };
     if (isEditMode) {
-      editBankRule({ id: bankRuleId, value: _values })
+      editBankRule({ id: bankRuleId as number, value: _values })
         .then(handleSuccess)
         .catch(handleError);
     } else {
@@ -101,7 +143,11 @@ function RuleFormContentFormRoot({
           style={{ maxWidth: 300 }}
           fastField
         >
-          <FInputGroup name={'name'} fastField />
+          <FInputGroup
+            name={'name'}
+            fastField
+            data-testId={'rule-name-input'}
+          />
         </FFormGroup>
 
         <FFormGroup
@@ -113,9 +159,9 @@ function RuleFormContentFormRoot({
         >
           <AccountsSelect
             name={'applyIfAccountId'}
-            items={accounts}
-            filterByTypes={['cash', 'bank']}
+            items={applyIfAccountItems}
             fastField
+            buttonProps={{ 'data-testId': 'rule-apply-account-select' }}
           />
         </FFormGroup>
 
@@ -158,8 +204,9 @@ function RuleFormContentFormRoot({
   );
 }
 
-export const RuleFormContentForm = R.compose(withDialogActions)(
+export const RuleFormContentForm = FF.pipe(
   RuleFormContentFormRoot,
+  withDialogActions,
 );
 
 /**
@@ -177,12 +224,13 @@ function RuleFormConditions() {
     setFieldValue('conditions', _conditions);
   };
 
-  const handleConditionFieldChange = R.curry((index, item) => {
-    const defaultComparator = getDefaultFieldConditionByFieldKey(item.value);
+  const handleConditionFieldChange =
+    (index: number) => (item: { value: string }) => {
+      const defaultComparator = getDefaultFieldConditionByFieldKey(item.value);
 
-    setFieldValue(`conditions[${index}].field`, item.value);
-    setFieldValue(`conditions[${index}].comparator`, defaultComparator);
-  });
+      setFieldValue(`conditions[${index}].field`, item.value);
+      setFieldValue(`conditions[${index}].comparator`, defaultComparator);
+    };
 
   return (
     <Box style={{ marginBottom: 15 }}>
@@ -229,7 +277,11 @@ function RuleFormConditions() {
               style={{ marginBottom: 0, flex: '1 0 ', width: '40%' }}
               fastField
             >
-              <FInputGroup name={`conditions[${index}].value`} fastField />
+              <FInputGroup
+                name={`conditions[${index}].value`}
+                fastField
+                data-testId={'rule-condition-value-input'}
+              />
             </FFormGroup>
           </Group>
         ))}
@@ -256,7 +308,7 @@ function RuleFormConditions() {
 function RuleFormActionsRoot({
   // #withDialogActions
   closeDialog,
-}) {
+}: WithDialogActionsProps) {
   const { isSubmitting, submitForm } = useFormikContext<RuleFormValues>();
 
   const handleSaveBtnClick = () => {
@@ -284,13 +336,13 @@ function RuleFormActionsRoot({
   );
 }
 
-const RuleFormActions = R.compose(withDialogActions)(RuleFormActionsRoot);
+const RuleFormActions = FF.pipe(RuleFormActionsRoot, withDialogActions);
 
 function RuleApplyIfTransactionTypeField() {
   const { setFieldValue } = useFormikContext<RuleFormValues>();
 
   const handleItemChange = useCallback(
-    (item: any) => {
+    (item: { value: string }) => {
       setFieldValue('applyIfTransactionType', item.value);
       setFieldValue('assignCategory', '');
       setFieldValue('assignAccountId', '');
@@ -311,6 +363,7 @@ function RuleApplyIfTransactionTypeField() {
         popoverProps={{ minimal: true, inline: false }}
         onItemChange={handleItemChange}
         fastField
+        buttonProps={{ 'data-testId': 'rule-apply-type-select' }}
       />
     </FFormGroup>
   );
@@ -330,7 +383,7 @@ function RuleAssignCategoryField() {
 
   // Handles the select item change.
   const handleItemChange = useCallback(
-    (item: any) => {
+    (item: { value: string }) => {
       setFieldValue('assignCategory', item.value);
       setFieldValue('assignAccountId', '');
     },
@@ -353,6 +406,7 @@ function RuleAssignCategoryField() {
         textAccessor={'name'}
         onItemChange={handleItemChange}
         fastField
+        buttonProps={{ 'data-testId': 'rule-assign-category-select' }}
       />
     </FFormGroup>
   );
@@ -360,7 +414,7 @@ function RuleAssignCategoryField() {
 
 function RuleAssignCategoryAccountField() {
   const { values } = useFormikContext<RuleFormValues>();
-  const { accounts } = useRuleFormDialogBoot();
+  const { accounts } = useRuleFormDialogBootData();
 
   const accountRoot = useMemo(
     () => getAccountRootFromMoneyCategory(values.assignCategory),
@@ -374,14 +428,16 @@ function RuleAssignCategoryAccountField() {
       labelInfo={<Tag minimal>Required</Tag>}
       style={{ maxWidth: 300 }}
       fastField
+      // @ts-expect-error shouldUpdateDeps is forwarded to FastField at runtime; FormGroupProps type doesn't expose it
       shouldUpdateDeps={{ accountRoot }}
     >
       <AccountsSelect
         name={'assignAccountId'}
-        items={accounts}
+        items={accounts as AccountSelectModel[]}
         filterByRootTypes={accountRoot}
         shouldUpdateDeps={{ accountRoot }}
         fastField
+        buttonProps={{ 'data-testId': 'rule-assign-account-select' }}
       />
     </FFormGroup>
   );

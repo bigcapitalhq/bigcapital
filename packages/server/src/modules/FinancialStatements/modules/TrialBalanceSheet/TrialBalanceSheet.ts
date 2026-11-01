@@ -1,5 +1,5 @@
 import { sumBy } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import {
   ITrialBalanceSheetQuery,
   ITrialBalanceAccount,
@@ -12,7 +12,11 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { ModelObject } from 'objection';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
+import { sortTrialBalanceAccounts } from './_utils';
 
 export class TrialBalanceSheet extends FinancialSheet {
   /**
@@ -99,9 +103,7 @@ export class TrialBalanceSheet extends FinancialSheet {
    * @param {IAccount} account
    * @return {ITrialBalanceAccount}
    */
-  private accountTransformer = (
-    account: Account
-  ): ITrialBalanceAccount => {
+  private accountTransformer = (account: Account): ITrialBalanceAccount => {
     const debit = this.getClosingAccountDebit(account.id);
     const credit = this.getClosingAccountCredit(account.id);
     const balance = this.getClosingAccountTotal(account.id);
@@ -150,7 +152,7 @@ export class TrialBalanceSheet extends FinancialSheet {
    * @returns {ITrialBalanceAccount[]}
    */
   private accountsFilter = (
-    accountsNodes: ITrialBalanceAccount[]
+    accountsNodes: ITrialBalanceAccount[],
   ): ITrialBalanceAccount[] => {
     return accountsNodes.filter(this.accountFilter);
   };
@@ -161,7 +163,7 @@ export class TrialBalanceSheet extends FinancialSheet {
    * @returns {ITrialBalanceAccount[]}
    */
   private accountsMapper = (
-    accountsNodes: ModelObject<Account>[]
+    accountsNodes: ModelObject<Account>[],
   ): ITrialBalanceAccount[] => {
     return accountsNodes.map(this.accountTransformer);
   };
@@ -172,14 +174,16 @@ export class TrialBalanceSheet extends FinancialSheet {
    * @returns {boolean}
    */
   private filterNoneTransactions = (
-    accountNode: ITrialBalanceAccount
+    accountNode: ITrialBalanceAccount,
   ): boolean => {
-    const depsAccountsIds =
-      this.repository.accountsDepGraph.dependenciesOf(accountNode.id);
-
-    const accountLedger = this.repository.totalAccountsLedger.whereAccountsIds(
-      [accountNode.id, ...depsAccountsIds]
+    const depsAccountsIds = this.repository.accountsDepGraph.dependenciesOf(
+      accountNode.id,
     );
+
+    const accountLedger = this.repository.totalAccountsLedger.whereAccountsIds([
+      accountNode.id,
+      ...depsAccountsIds,
+    ]);
     return !accountLedger.isEmpty();
   };
 
@@ -207,7 +211,7 @@ export class TrialBalanceSheet extends FinancialSheet {
    * @returns {ITrialBalanceAccount[]}
    */
   private nestedAccountsNode = (
-    flattenAccounts: ITrialBalanceAccount[]
+    flattenAccounts: ITrialBalanceAccount[],
   ): ITrialBalanceAccount[] => {
     return flatToNestedArray(flattenAccounts, {
       id: 'id',
@@ -221,7 +225,7 @@ export class TrialBalanceSheet extends FinancialSheet {
    * @return {ITrialBalanceTotal}
    */
   private tatalSection(
-    accountsBalances: ITrialBalanceAccount[]
+    accountsBalances: ITrialBalanceAccount[],
   ): ITrialBalanceTotal {
     const credit = sumBy(accountsBalances, 'credit');
     const debit = sumBy(accountsBalances, 'debit');
@@ -240,15 +244,29 @@ export class TrialBalanceSheet extends FinancialSheet {
   }
 
   /**
+   * Sort accounts nodes.
+   * @param {ITrialBalanceAccount[]}
+   * @returns {ITrialBalanceAccount[]}
+   */
+  private sortAccounts = (accountsNodes: ITrialBalanceAccount[]) => {
+    return sortTrialBalanceAccounts(
+      accountsNodes,
+      this.query.columnSortBy,
+      this.query.sortOrder,
+    );
+  };
+
+  /**
    * Retrieve accounts section of trial balance report.
    * @param {IAccount[]} accounts
    * @returns {ITrialBalanceAccount[]}
    */
   private accountsSection(accounts: ModelObject<Account>[]) {
-    return R.compose(
-      this.accountsFilter,
+    return flow(
+      this.accountsMapper,
+      this.sortAccounts,
       this.nestedAccountsNode,
-      this.accountsMapper
+      this.accountsFilter,
     )(accounts);
   }
 

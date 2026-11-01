@@ -1,20 +1,15 @@
-// @ts-nocheck
+import { Tab } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Tab } from '@blueprintjs/core';
-
+import { PaymentMadeDetailActionsBar } from './PaymentMadeDetailActionsBar';
+import { PaymentMadeDetailTab } from './PaymentMadeDetailTab';
+import { PaymentMadeGLEntriesPanel } from './PaymentMadeGLEntriesPanel';
 import { DrawerMainTabs } from '@/components';
 
-import PaymentMadeDetailActionsBar from './PaymentMadeDetailActionsBar';
-import PaymentMadeDetailTab from './PaymentMadeDetailTab';
-import PaymentMadeGLEntriesPanel from './PaymentMadeGLEntriesPanel';
-
 /**
- * Payment made - view detail.
- * @returns {React.JSX}
+ * Payment made details tabs.
  */
-
 function PaymentMadeDetailsTabs() {
   return (
     <DrawerMainTabs defaultSelectedTabId="details">
@@ -34,9 +29,8 @@ function PaymentMadeDetailsTabs() {
 
 /**
  * Payment made view detail.
- * @returns {React.JSX}
  */
-export default function PaymentMadeDetail() {
+export function PaymentMadeDetail() {
   return (
     <PaymentMadeDetailsRoot>
       <PaymentMadeDetailActionsBar />

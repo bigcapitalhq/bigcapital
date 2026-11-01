@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import { ConfigService } from '@nestjs/config';
 import { Inject, Injectable } from '@nestjs/common';
 import { SystemUser } from '@/modules/System/models/SystemUser';
@@ -44,7 +45,9 @@ export class AuthResetPasswordService {
     if (!tokenModel) {
       throw new ServiceError(ERRORS.TOKEN_INVALID);
     }
-    const resetPasswordSeconds = this.configService.get('resetPasswordSeconds');
+    const resetPasswordSeconds = this.configService.get<number>(
+      'auth.resetPasswordSeconds',
+    );
 
     // Different between tokne creation datetime and current time.
     if (moment().diff(tokenModel.createdAt, 'seconds') > resetPasswordSeconds) {

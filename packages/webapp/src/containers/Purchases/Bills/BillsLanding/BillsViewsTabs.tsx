@@ -1,30 +1,29 @@
-// @ts-nocheck
-import React from 'react';
-
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-import { DashboardViewsTabs } from '@/components';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useBillsListContext } from './BillsListProvider';
-
 import { withBills } from './withBills';
 import { withBillsActions } from './withBillsActions';
+import type { WithBillsProps } from './withBills';
+import { DashboardViewsTabs } from '@/components';
+import { transfromViewsToTabs } from '@/utils';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+interface WithBillsActionsProps {
+  setBillsTableState: (state: Record<string, any>) => void;
+}
 
-/**
- * Bills view tabs.
- */
+interface BillViewTabsProps {
+  setBillsTableState: WithBillsActionsProps['setBillsTableState'];
+  billsCurrentView: string;
+}
+
 function BillViewTabs({
-  // #withBillsActions
   setBillsTableState,
-
-  // #withBills
   billsCurrentView,
-}) {
-  // Bills list context.
+}: BillViewTabsProps) {
   const { billsViews } = useBillsListContext();
 
-  // Handle tab chaging.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string | null) => {
     setBillsTableState({
       viewSlug: viewSlug || null,
     });
@@ -46,9 +45,10 @@ function BillViewTabs({
   );
 }
 
-export default compose(
-  withBillsActions,
-  withBills(({ billsTableState }) => ({
+export const BillsViewsTabs = FF.pipe(
+  BillViewTabs,
+  withBills(({ billsTableState }: WithBillsProps) => ({
     billsCurrentView: billsTableState.viewSlug,
   })),
-)(BillViewTabs);
+  withBillsActions,
+);

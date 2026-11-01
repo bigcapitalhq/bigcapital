@@ -42,7 +42,7 @@ export class GetPaymentReceivedMailTemplate {
 
   /**
    * Retrieves the mail template html content.
-   * @param {number} paymentReceivedId 
+   * @param {number} paymentReceivedId
    * @param {Partial<PaymentReceivedEmailTemplateProps>} overrideAttributes
    * @returns
    */

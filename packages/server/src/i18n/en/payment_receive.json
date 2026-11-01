@@ -12,6 +12,10 @@
   "field.entries.payment_amount": "Payment Amount",
   "field.created_at": "Created At",
   "field.payment_no_hint": "The payment number should be unique.",
-  "field.invoice_hint": "Matches the invoice number."
+  "field.invoice_hint": "Matches the invoice number.",
+
+  "mail.total": "Total",
+  "mail.subtotal": "Subtotal",
+  "mail.payment_number": "Payment # {paymentNumber}"
 }
 

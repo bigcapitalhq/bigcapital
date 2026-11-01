@@ -1,12 +1,13 @@
-// @ts-nocheck
-import React, { useCallback, useContext } from 'react';
-import { If, Pagination } from '@/components';
+import { useCallback, useContext } from 'react';
 import TableContext from './TableContext';
+import { Pagination } from '@/components';
 import { saveInvoke } from '@/utils';
 
-/**
- * Table pagination.
- */
+interface PaginationChangePayload {
+  page: number;
+  pageSize: number;
+}
+
 export default function TablePagination() {
   const {
     table: {
@@ -15,55 +16,60 @@ export default function TablePagination() {
       pageCount,
       state: { pageIndex, pageSize },
     },
-    props: { pagination, loading, onPaginationChange, hidePaginationNoPages },
+    props: {
+      pagination,
+      loading,
+      onPaginationChange,
+      hidePaginationNoPages,
+      rowsCount,
+    },
   } = useContext(TableContext);
 
   const triggerOnPaginationChange = useCallback(
-    (payload) => {
+    (payload: { pageIndex: number; pageSize: number }) => {
       saveInvoke(onPaginationChange, payload);
     },
     [onPaginationChange],
   );
 
-  // Handles the page changing.
   const handlePageChange = useCallback(
-    ({ page, pageSize }) => {
-      const pageIndex = page - 1;
+    ({ page, pageSize }: PaginationChangePayload) => {
+      const newPageIndex = page - 1;
 
-      gotoPage(pageIndex);
-      triggerOnPaginationChange({ pageIndex, pageSize });
+      gotoPage(newPageIndex);
+      triggerOnPaginationChange({ pageIndex: newPageIndex, pageSize });
     },
     [gotoPage, triggerOnPaginationChange],
   );
 
-  // Handles the page size changing.
   const handlePageSizeChange = useCallback(
-    ({ pageSize, page }) => {
-      const pageIndex = 0;
+    ({ pageSize }: PaginationChangePayload) => {
+      const newPageIndex = 0;
 
-      gotoPage(pageIndex);
+      gotoPage(newPageIndex);
       setPageSize(pageSize);
 
-      triggerOnPaginationChange({ pageIndex, pageSize });
+      triggerOnPaginationChange({ pageIndex: newPageIndex, pageSize });
     },
     [gotoPage, setPageSize, triggerOnPaginationChange],
   );
 
-  // Detarmines when display the pagination.
   const showPagination =
-    pagination &&
+    !!pagination &&
     ((hidePaginationNoPages && pageCount > 1) || !hidePaginationNoPages) &&
     !loading;
 
+  if (!showPagination) {
+    return null;
+  }
+
   return (
-    showPagination && (
-      <Pagination
-        currentPage={pageIndex + 1}
-        total={pageSize * pageCount}
-        size={pageSize}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
-      />
-    )
+    <Pagination
+      currentPage={pageIndex + 1}
+      total={rowsCount ?? pageSize * pageCount}
+      size={pageSize}
+      onPageChange={handlePageChange}
+      onPageSizeChange={handlePageSizeChange}
+    />
   );
 }

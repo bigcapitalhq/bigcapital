@@ -1,13 +1,13 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
 import { FastField } from 'formik';
-import { CLASSES } from '@/constants/classes';
-import { entriesFieldShouldUpdate } from './utils';
+import React from 'react';
+import { entriesFieldShouldUpdate, type VendorCreditFormValues } from './utils';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
-import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
+import type { FieldProps } from 'formik';
+import { CLASSES } from '@/constants/classes';
+import { ItemsEntriesTable } from '@/containers/Entries/ItemsEntriesTable';
 
-export default function VendorCreditNoteItemsEntriesEditor() {
+export function VendorCreditNoteItemsEntriesEditor() {
   const { items } = useVendorCreditNoteFormContext();
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
@@ -19,8 +19,8 @@ export default function VendorCreditNoteItemsEntriesEditor() {
         {({
           form: { values, setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+          meta: { error },
+        }: FieldProps<any[], VendorCreditFormValues>) => (
           <ItemsEntriesTable
             value={value}
             onChange={(entries) => {
@@ -29,7 +29,7 @@ export default function VendorCreditNoteItemsEntriesEditor() {
             items={items}
             errors={error}
             linesNumber={4}
-            currencyCode={values.currency_code}
+            currencyCode={values.currencyCode}
             enableTaxRates={false}
           />
         )}

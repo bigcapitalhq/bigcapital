@@ -1,15 +1,13 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
-
-import BillForm from './BillForm';
+import { BillForm } from './BillForm';
 import { BillFormProvider } from './BillFormProvider';
 
 import '@/style/pages/Bills/PageForm.scss';
 
-export default function BillFormPage() {
-  const { id } = useParams();
-  const billId = parseInt(id, 10);
+export function BillFormPage() {
+  const { id } = useParams<{ id?: string }>();
+  const billId = id ? parseInt(id, 10) : undefined;
 
   return (
     <BillFormProvider billId={billId}>

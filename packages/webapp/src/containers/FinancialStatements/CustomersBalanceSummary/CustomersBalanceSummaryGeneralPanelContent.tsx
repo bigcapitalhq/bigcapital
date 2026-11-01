@@ -1,7 +1,9 @@
-// @ts-nocheck
 import { Position } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
+import { filterCustomersOptions } from '../constants';
+import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
+import { useCustomersBalanceSummaryGeneralContext } from './CustomersBalanceSummaryGeneralProvider';
 import {
-  FormattedMessage as T,
   Row,
   Col,
   FieldHint,
@@ -10,16 +12,14 @@ import {
   FDateInput,
   FCheckbox,
 } from '@/components';
-import { momentFormatter } from '@/utils';
-import { filterCustomersOptions } from '../constants';
-import { useCustomersBalanceSummaryGeneralContext } from './CustomersBalanceSummaryGeneralProvider';
-import FinancialStatementsFilter from '../FinancialStatementsFilter';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Customers balance header - General panel - Content
  */
-export default function CustomersBalanceSummaryGeneralPanelContent() {
+export function CustomersBalanceSummaryGeneralPanelContent() {
   const { customers } = useCustomersBalanceSummaryGeneralContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
@@ -27,16 +27,14 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
         <Col xs={5}>
           <FFormGroup
             name={'asDate'}
-            label={<T id={'as_date'} />}
+            label={intl.get('as_date')}
             labelInfo={<FieldHint />}
-            fill
             fastField
           >
             <FDateInput
               name={'asDate'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              minimal={true}
               fill={true}
               fastField
             />
@@ -47,15 +45,14 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
       <Row>
         <Col xs={5}>
           <FFormGroup
-            name={'percentage_column'}
+            name={'percentageColumn'}
             labelInfo={<FieldHint />}
             fastField
           >
             <FCheckbox
-              name={'percentage_column'}
+              name={'percentageColumn'}
               inline={true}
-              small={true}
-              label={<T id={'percentage_of_column'} />}
+              label={intl.get('percentage_of_column')}
               fastField
             />
           </FFormGroup>
@@ -66,7 +63,7 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
         <Col xs={5}>
           <FinancialStatementsFilter
             items={filterCustomersOptions}
-            label={<T id={'customers.label_filter_customers'} />}
+            label={intl.get('customers.label_filter_customers')}
             initialSelectedItem={'with-transactions'}
           />
         </Col>
@@ -76,9 +73,12 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
         <Col xs={5}>
           <FFormGroup
             name={'customersIds'}
-            label={<T id={'specific_customers'} />}
+            label={intl.get('specific_customers')}
           >
-            <CustomersMultiSelect name={'customersIds'} items={customers} />
+            <CustomersMultiSelect
+              name={'customersIds'}
+              items={customers ?? []}
+            />
           </FFormGroup>
         </Col>
       </Row>

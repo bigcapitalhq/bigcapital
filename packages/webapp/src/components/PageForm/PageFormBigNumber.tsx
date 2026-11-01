@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import clsx from 'classnames';
+import React from 'react';
 import { CLASSES } from '@/constants/classes';
 import styles from '@/style/components/BigAmount.module.scss';
 

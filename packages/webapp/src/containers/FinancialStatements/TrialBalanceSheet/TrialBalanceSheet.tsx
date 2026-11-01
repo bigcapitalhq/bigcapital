@@ -1,46 +1,50 @@
-// @ts-nocheck
-import React, { useCallback, useEffect } from 'react';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-import { TrialBalanceSheetBody } from './TrialBalanceSheetBody';
-import { TrialBalanceSheetProvider } from './TrialBalanceProvider';
-import { useTrialBalanceSheetQuery } from './utils';
-import TrialBalanceActionsBar from './TrialBalanceActionsBar';
-import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
-
+import React, { useCallback, useEffect } from 'react';
 import {
   TrialBalanceSheetAlerts,
   TrialBalanceSheetLoadingBar,
 } from './components';
-
-import { withTrialBalanceActions } from './withTrialBalanceActions';
-import { compose } from '@/utils';
+import { TrialBalanceActionsBar } from './TrialBalanceActionsBar';
+import { TrialBalanceSheetProvider } from './TrialBalanceProvider';
+import { TrialBalanceSheetBody } from './TrialBalanceSheetBody';
 import { TrialBalanceSheetDialogs } from './TrialBalanceSheetDialogs';
+import { TrialBalanceSheetHeader } from './TrialBalanceSheetHeader';
+import { useTrialBalanceSheetQuery } from './utils';
+import {
+  withTrialBalanceActions,
+  WithTrialBalanceActionsProps,
+} from './withTrialBalanceActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+
+type TrialBalanceSheetProps = Pick<
+  WithTrialBalanceActionsProps,
+  'toggleTrialBalanceFilterDrawer'
+>;
 
 /**
  * Trial balance sheet.
  */
-function TrialBalanceSheet({
+function TrialBalanceSheetInner({
   // #withTrialBalanceSheetActions
   toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
-}) {
+}: TrialBalanceSheetProps) {
   const { query, setLocationQuery } = useTrialBalanceSheetQuery();
 
   // Handle filter form submit.
   const handleFilterSubmit = useCallback(
-    (filter) => {
+    (filter: Record<string, unknown>) => {
       const parsedFilter = {
         ...filter,
-        fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
-        toDate: moment(filter.toDate).format('YYYY-MM-DD'),
+        fromDate: moment(filter.fromDate as Date).format('YYYY-MM-DD'),
+        toDate: moment(filter.toDate as Date).format('YYYY-MM-DD'),
       };
       setLocationQuery(parsedFilter);
     },
     [setLocationQuery],
   );
-  // Handle numebr format form submit.
-  const handleNumberFormatSubmit = (numberFormat) => {
+  // Handle number format form submit.
+  const handleNumberFormatSubmit = (numberFormat: Record<string, unknown>) => {
     setLocationQuery({
       ...query,
       numberFormat,
@@ -55,9 +59,9 @@ function TrialBalanceSheet({
   );
 
   return (
-    <TrialBalanceSheetProvider query={query}>
+    <TrialBalanceSheetProvider query={query} setQuery={setLocationQuery}>
       <TrialBalanceActionsBar
-        numberFormat={query.numberFormat}
+        numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <TrialBalanceSheetLoadingBar />
@@ -78,4 +82,7 @@ function TrialBalanceSheet({
   );
 }
 
-export default compose(withTrialBalanceActions)(TrialBalanceSheet);
+export const TrialBalanceSheet = FF.pipe(
+  TrialBalanceSheetInner,
+  withTrialBalanceActions,
+);

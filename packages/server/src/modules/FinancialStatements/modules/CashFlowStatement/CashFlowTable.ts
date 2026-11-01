@@ -1,18 +1,23 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow, constant } from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import * as moment from 'moment';
 import { I18nService } from 'nestjs-i18n';
+import { when } from '@/common/fp';
 import {
   ICashFlowStatementSection,
   ICashFlowStatementSectionType,
   IDateRange,
   ICashFlowStatementDOO,
 } from './Cashflow.types';
-import { ITableRow, ITableColumn } from '../../types/Table.types';
+import {
+  ITableColumn,
+  ITableColumnAccessor,
+  ITableRow,
+} from '../../types/Table.types';
 import { dateRangeFromToCollection } from '@/utils/date-range-collection';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { mapValuesDeep } from '@/utils/deepdash';
+import { CASH_FLOW_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 enum IROW_TYPE {
   AGGREGATE = 'AGGREGATE',
@@ -51,7 +56,7 @@ export class CashFlowTable {
     this.dateRangeSet = dateRangeFromToCollection(
       this.report.query.fromDate,
       this.report.query.toDate,
-      this.report.query.displayColumnsBy,
+      this.report.query.displayColumnsBy as moment.unitOfTime.StartOf,
     );
   }
 
@@ -69,20 +74,31 @@ export class CashFlowTable {
    * Retrieve the total column accessor.
    */
   private totalColumnAccessor = () => {
-    return [{ key: 'total', accessor: 'total.formattedAmount' }];
+    return [
+      { key: CASH_FLOW_COLUMN_KEYS.TOTAL, accessor: 'total.formattedAmount' },
+    ];
   };
 
   /**
    * Retrieve the common columns for all report nodes.
    */
   private commonColumns = () => {
-    return R.compose(
-      R.concat([{ key: 'name', accessor: 'label' }]),
-      R.when(
-        R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
-        R.concat(this.datePeriodsColumnsAccessors()),
+    return flow(
+      (columns: ITableColumnAccessor[]) => [
+        ...this.totalColumnAccessor(),
+        ...columns,
+      ],
+      when(
+        constant(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
+        (columns: ITableColumnAccessor[]) => [
+          ...this.datePeriodsColumnsAccessors(),
+          ...columns,
+        ],
       ),
-      R.concat(this.totalColumnAccessor()),
+      (columns: ITableColumnAccessor[]) => [
+        { key: CASH_FLOW_COLUMN_KEYS.NAME, accessor: 'label' },
+        ...columns,
+      ],
     )([]);
   };
 
@@ -172,10 +188,7 @@ export class CashFlowTable {
    * @param {ICashFlowSchemaSection} section
    * @returns {boolean}
    */
-  private isSectionHasType = (
-    type: string,
-    section: ICashFlowStatementSection,
-  ): boolean => {
+  private isSectionHasType = (type: string, section): boolean => {
     return type === section.sectionType;
   };
 
@@ -186,34 +199,50 @@ export class CashFlowTable {
    */
   private sectionMapper = (
     section: ICashFlowStatementSection,
-    key: string,
-    parentSection: ICashFlowStatementSection,
+    _key: string,
+    _parentSection: ICashFlowStatementSection,
   ): ITableRow => {
-    const isSectionHasType = R.curry(this.isSectionHasType);
-
-    return R.pipe(
-      R.when(
-        isSectionHasType(ICashFlowStatementSectionType.AGGREGATE),
+    return flow(
+      when(
+        (section: any) =>
+          this.isSectionHasType(
+            ICashFlowStatementSectionType.AGGREGATE,
+            section,
+          ),
         this.regularSectionMapper,
       ),
-      R.when(
-        isSectionHasType(ICashFlowStatementSectionType.CASH_AT_BEGINNING),
+      when(
+        (section: any) =>
+          this.isSectionHasType(
+            ICashFlowStatementSectionType.CASH_AT_BEGINNING,
+            section,
+          ),
         this.regularSectionMapper,
       ),
-      R.when(
-        isSectionHasType(ICashFlowStatementSectionType.NET_INCOME),
+      when(
+        (section: any) =>
+          this.isSectionHasType(
+            ICashFlowStatementSectionType.NET_INCOME,
+            section,
+          ),
         this.netIncomeSectionMapper,
       ),
-      R.when(
-        isSectionHasType(ICashFlowStatementSectionType.ACCOUNTS),
+      when(
+        (section: any) =>
+          this.isSectionHasType(
+            ICashFlowStatementSectionType.ACCOUNTS,
+            section,
+          ),
         this.accountsSectionMapper,
       ),
-      R.when(
-        isSectionHasType(ICashFlowStatementSectionType.ACCOUNT),
+      when(
+        (section: any) =>
+          this.isSectionHasType(ICashFlowStatementSectionType.ACCOUNT, section),
         this.accountSectionMapper,
       ),
-      R.when(
-        isSectionHasType(ICashFlowStatementSectionType.TOTAL),
+      when(
+        (section: any) =>
+          this.isSectionHasType(ICashFlowStatementSectionType.TOTAL, section),
         this.totalSectionMapper,
       ),
     )(section);
@@ -236,7 +265,7 @@ export class CashFlowTable {
    * @returns {ICashFlowStatementSection}
    */
   private appendTotalToSectionChildren = (
-    section: ICashFlowStatementSection,
+    section,
   ): ICashFlowStatementSection => {
     const label = section.footerLabel
       ? this.i18n.t(section.footerLabel)
@@ -262,11 +291,9 @@ export class CashFlowTable {
   ): ICashFlowStatementSection => {
     const isSectionHasChildren = (section) => !isEmpty(section.children);
 
-    return R.compose(
-      R.when(
-        isSectionHasChildren,
-        this.appendTotalToSectionChildren.bind(this),
-      ),
+    return when(
+      isSectionHasChildren,
+      this.appendTotalToSectionChildren.bind(this),
     )(section);
   };
 
@@ -275,7 +302,7 @@ export class CashFlowTable {
    * @param {ICashFlowStatementSection[]} sections
    * @returns {ICashFlowStatementSection[]}
    */
-  private appendTotalToChildren = (sections: ICashFlowStatementSection[]) => {
+  private appendTotalToChildren = (sections) => {
     return mapValuesDeep(
       sections,
       this.mapSectionsToAppendTotalChildren.bind(this),
@@ -291,7 +318,7 @@ export class CashFlowTable {
   public tableRows = (): ITableRow[] => {
     const sections = this.report.data;
 
-    return R.pipe(
+    return flow(
       this.appendTotalToChildren,
       this.mapSectionsToTableRows,
     )(sections);
@@ -302,34 +329,35 @@ export class CashFlowTable {
    * @returns {ITableColumn}
    */
   private totalColumns = (): ITableColumn[] => {
-    return [{ key: 'total', label: this.i18n.t('cash_flow_statement.total') }];
+    return [
+      {
+        key: CASH_FLOW_COLUMN_KEYS.TOTAL,
+        label: this.i18n.t('cash_flow_statement.total'),
+      },
+    ];
   };
 
   /**
    * Retrieve the formatted column label from the given date range.
-   * @param {ICashFlowDateRange} dateRange -
+   * @param {IDateRange} dateRange -
    * @return {string}
    */
-  private formatColumnLabel = (dateRange: ICashFlowDateRange) => {
+  private formatColumnLabel = (dateRange: IDateRange): string => {
     const monthFormat = (range) => moment(range.toDate).format('YYYY-MM');
     const yearFormat = (range) => moment(range.toDate).format('YYYY');
     const dayFormat = (range) => moment(range.toDate).format('YYYY-MM-DD');
 
-    const conditions = [
-      ['month', monthFormat],
-      ['year', yearFormat],
-      ['day', dayFormat],
-      ['quarter', monthFormat],
-      ['week', dayFormat],
-    ];
-    const conditionsPairs = R.map(
-      ([type, formatFn]) => [
-        R.always(this.isDisplayColumnsType(type)),
-        formatFn,
-      ],
-      conditions,
-    );
-    return R.compose(R.cond(conditionsPairs))(dateRange);
+    if (this.isDisplayColumnsType('month')) {
+      return monthFormat(dateRange);
+    } else if (this.isDisplayColumnsType('year')) {
+      return yearFormat(dateRange);
+    } else if (this.isDisplayColumnsType('day')) {
+      return dayFormat(dateRange);
+    } else if (this.isDisplayColumnsType('quarter')) {
+      return monthFormat(dateRange);
+    } else if (this.isDisplayColumnsType('week')) {
+      return dayFormat(dateRange);
+    }
   };
 
   /**
@@ -347,7 +375,7 @@ export class CashFlowTable {
    * Determines the given column type is the current.
    * @reutrns {boolean}
    */
-  private isDisplayColumnsBy = (displayColumnsType: string): Boolean => {
+  private isDisplayColumnsBy = (displayColumnsType: string): boolean => {
     return this.report.query.displayColumnsType === displayColumnsType;
   };
 
@@ -356,7 +384,7 @@ export class CashFlowTable {
    * @param {string} displayColumnsBy
    * @returns {boolean}
    */
-  private isDisplayColumnsType = (displayColumnsBy: string): Boolean => {
+  private isDisplayColumnsType = (displayColumnsBy: string): boolean => {
     return this.report.query.displayColumnsBy === displayColumnsBy;
   };
 
@@ -365,13 +393,19 @@ export class CashFlowTable {
    * @return {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
-    return R.compose(
-      R.concat([{ key: 'name', label: this.i18n.t('cash_flow_statement.account_name') }]),
-      R.when(
-        R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
-        R.concat(this.datePeriodsColumns()),
+    return flow(
+      (columns: ITableColumn[]) => [...this.totalColumns(), ...columns],
+      when(
+        constant(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
+        (columns: ITableColumn[]) => [...this.datePeriodsColumns(), ...columns],
       ),
-      R.concat(this.totalColumns()),
+      (columns: ITableColumn[]) => [
+        {
+          key: CASH_FLOW_COLUMN_KEYS.NAME,
+          label: this.i18n.t('cash_flow_statement.account_name'),
+        },
+        ...columns,
+      ],
     )([]);
   };
 }

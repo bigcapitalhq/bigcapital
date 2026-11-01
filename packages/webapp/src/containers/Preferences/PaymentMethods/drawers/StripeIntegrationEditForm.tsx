@@ -1,13 +1,13 @@
+import { Intent } from '@blueprintjs/core';
+import { Formik, FormikHelpers } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
-import { Formik, FormikHelpers } from 'formik';
-import { useUpdatePaymentMethod } from '@/hooks/query/payment-services';
-import { AppToaster } from '@/components';
-import { Intent } from '@blueprintjs/core';
 import { usePaymentMethodsBoot } from '../PreferencesPaymentMethodsBoot';
-import { useDrawerActions } from '@/hooks/state';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useStripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
+import { AppToaster } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useUpdatePaymentMethod } from '@/hooks/query/payment-services';
+import { useDrawerActions } from '@/hooks/state';
 import { transformToForm } from '@/utils';
 
 interface StripeIntegrationFormValues {
@@ -45,10 +45,21 @@ export function StripeIntegrationEditForm({
     values: StripeIntegrationFormValues,
     { setSubmitting }: FormikHelpers<StripeIntegrationFormValues>,
   ) => {
-    const _values = { options: { ...values } };
-
+    if (!paymentMethodId) {
+      AppToaster.show({
+        message: 'Payment method ID is missing.',
+        intent: Intent.DANGER,
+      });
+      return;
+    }
     setSubmitting(true);
-    updatePaymentMethod({ paymentMethodId, values: _values })
+    updatePaymentMethod({
+      paymentMethodId,
+      values: {
+        bankAccountId: Number(values.bankAccountId),
+        clearingAccountId: Number(values.clearingAccountId),
+      },
+    })
       .then(() => {
         AppToaster.show({
           message: 'The Stripe settings have been updated.',
@@ -61,7 +72,7 @@ export function StripeIntegrationEditForm({
         setSubmitting(false);
         AppToaster.show({
           message: 'Something went wrong.',
-          intent: Intent.SUCCESS,
+          intent: Intent.DANGER,
         });
       });
   };

@@ -6,9 +6,10 @@ import { PublishManualJournal } from './commands/PublishManualJournal.service';
 import { CommandManualJournalValidators } from './commands/CommandManualJournalValidators.service';
 import { AutoIncrementManualJournal } from './commands/AutoIncrementManualJournal.service';
 import { ManualJournalBranchesDTOTransformer } from '../Branches/integrations/ManualJournals/ManualJournalDTOTransformer.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { AutoIncrementOrdersService } from '../AutoIncrementOrders/AutoIncrementOrders.service';
 import { BranchesModule } from '../Branches/Branches.module';
+import { TrackingCategoriesModule } from '../TrackingCategories/TrackingCategories.module';
 import { ManualJournalsController } from './ManualJournals.controller';
 import { ManualJournalsApplication } from './ManualJournalsApplication.service';
 import { GetManualJournal } from './queries/GetManualJournal.service';
@@ -23,10 +24,15 @@ import { BulkDeleteManualJournalsService } from './BulkDeleteManualJournals.serv
 import { ValidateBulkDeleteManualJournalsService } from './ValidateBulkDeleteManualJournals.service';
 
 @Module({
-  imports: [BranchesModule, LedgerModule, DynamicListModule],
+  imports: [
+    TenancyModule,
+    BranchesModule,
+    TrackingCategoriesModule,
+    LedgerModule,
+    DynamicListModule,
+  ],
   controllers: [ManualJournalsController],
   providers: [
-    TenancyContext,
     CreateManualJournalService,
     EditManualJournal,
     DeleteManualJournalService,

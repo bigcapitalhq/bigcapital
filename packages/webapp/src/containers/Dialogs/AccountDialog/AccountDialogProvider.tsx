@@ -1,5 +1,6 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
+import { AccountDialogAction, getDisabledFormFields } from './utils';
+import type { AccountDialogContextValue, AccountDialogPayload } from './types';
 import { DialogContent } from '@/components';
 import {
   useCreateAccount,
@@ -9,14 +10,25 @@ import {
   useAccounts,
   useEditAccount,
 } from '@/hooks/query';
-import { AccountDialogAction, getDisabledFormFields } from './utils';
 
-const AccountDialogContext = createContext();
+const AccountDialogContext = createContext<AccountDialogContextValue>(
+  {} as AccountDialogContextValue,
+);
+
+interface AccountDialogProviderProps {
+  dialogName: string;
+  payload: AccountDialogPayload;
+  children?: React.ReactNode;
+}
 
 /**
  * Account form provider.
  */
-function AccountDialogProvider({ dialogName, payload, ...props }) {
+function AccountDialogProvider({
+  dialogName,
+  payload,
+  ...props
+}: AccountDialogProviderProps) {
   // Create and edit account mutations.
   const { mutateAsync: createAccountMutate } = useCreateAccount();
   const { mutateAsync: editAccountMutate } = useEditAccount();
@@ -39,7 +51,6 @@ function AccountDialogProvider({ dialogName, payload, ...props }) {
 
   // Handle fetch Currencies data table
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
-
   const isNewMode = !payload?.action;
 
   // Retrieves the disabled fields of the form.
@@ -49,7 +60,7 @@ function AccountDialogProvider({ dialogName, payload, ...props }) {
   );
 
   // Provider payload.
-  const provider = {
+  const provider: AccountDialogContextValue = {
     dialogName,
     payload,
     fieldsDisabled,

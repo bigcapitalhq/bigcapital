@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { useFormikContext } from 'formik';
 import {
   Intent,
   Button,
@@ -12,70 +8,83 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
+import type { VendorCreditFormValues } from './utils';
 import { If, Icon, FormattedMessage as T } from '@/components';
 import { PageForm } from '@/components/PageForm';
-import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
 /**
  * Purchases Credit note floating actions.
  */
-export default function VendorCreditNoteFloatingActions() {
+export function VendorCreditNoteFloatingActions() {
   const history = useHistory();
 
   // Formik context.
-  const { resetForm, submitForm, isSubmitting } = useFormikContext();
+  const { resetForm, submitForm, isSubmitting } =
+    useFormikContext<VendorCreditFormValues>();
 
   // Credit note form context.
   const { setSubmitPayload, vendorCredit } = useVendorCreditNoteFormContext();
 
   // Handle submit as open button click.
-  const handleSubmitOpenBtnClick = (event) => {
+  const handleSubmitOpenBtnClick = (event: React.MouseEvent<HTMLElement>) => {
     setSubmitPayload({ redirect: true, open: true });
     submitForm();
   };
 
   // Handle submit, open and another new button click.
-  const handleSubmitOpenAndNewBtnClick = (event) => {
+  const handleSubmitOpenAndNewBtnClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setSubmitPayload({ redirect: false, open: true, resetForm: true });
     submitForm();
   };
 
   // Handle submit as open & continue editing button click.
-  const handleSubmitOpenContinueEditingBtnClick = (event) => {
+  const handleSubmitOpenContinueEditingBtnClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setSubmitPayload({ redirect: false, open: true });
     submitForm();
   };
   // Handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = (event: React.MouseEvent<HTMLElement>) => {
     setSubmitPayload({ redirect: true, open: false });
     submitForm();
   };
 
   // handle submit as draft & new button click.
-  const handleSubmitDraftAndNewBtnClick = (event) => {
+  const handleSubmitDraftAndNewBtnClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setSubmitPayload({ redirect: false, open: false, resetForm: true });
     submitForm();
   };
 
   // Handle submit as draft & continue editing button click.
-  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+  const handleSubmitDraftContinueEditingBtnClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     setSubmitPayload({ redirect: false, open: false });
     submitForm();
   };
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = (event: React.MouseEvent<HTMLElement>) => {
     history.goBack();
   };
 
   // Handle the clear button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = (event: React.MouseEvent<HTMLElement>) => {
     resetForm();
   };
   return (
     <PageForm.FooterActions spacing={10}>
       {/* ----------- Save And Open  ----------- */}
-      <If condition={!vendorCredit || !vendorCredit?.is_open}>
+      <If condition={!vendorCredit || !vendorCredit?.isOpen}>
         <ButtonGroup>
           <Button
             disabled={isSubmitting}
@@ -141,7 +150,7 @@ export default function VendorCreditNoteFloatingActions() {
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={vendorCredit && vendorCredit?.is_open}>
+      <If condition={Boolean(vendorCredit && vendorCredit?.isOpen)}>
         <ButtonGroup>
           <Button
             loading={isSubmitting}

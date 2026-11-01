@@ -1,5 +1,5 @@
-import React, { cloneElement } from 'react';
 import { upperFirst } from 'lodash';
+import React, { cloneElement } from 'react';
 import { DropzoneContextValue, useDropzoneContext } from './DropzoneProvider';
 import { isElement } from '@/utils/is-element';
 

@@ -1,37 +1,39 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useCloseReceipt } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface ReceiptCloseAlertPayload {
+  receiptId: number;
+}
 
-import { compose } from '@/utils';
+interface ReceiptCloseAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ReceiptCloseAlertPayload;
+}
 
 /**
  * Receipt close alert.
  */
-function ReceiptCloseAlert({
+function ReceiptCloseAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { receiptId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: closeReceiptMutate, isLoading } = useCloseReceipt();
+}: ReceiptCloseAlertProps): React.ReactElement {
+  const { mutateAsync: closeReceiptMutate, isPending: isLoading } =
+    useCloseReceipt();
 
-  // handle cancel delete alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm receipt close.
   const handleConfirmReceiptClose = () => {
     closeReceiptMutate(receiptId)
       .then(() => {
@@ -40,7 +42,13 @@ function ReceiptCloseAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: the original had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -48,8 +56,8 @@ function ReceiptCloseAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'close'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('close')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelDeleteAlert}
@@ -63,7 +71,8 @@ function ReceiptCloseAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const ReceiptCloseAlert = FF.pipe(
+  ReceiptCloseAlertInner,
   withAlertActions,
-)(ReceiptCloseAlert);
+  withAlertStoreConnect(),
+);

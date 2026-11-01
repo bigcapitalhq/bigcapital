@@ -1,11 +1,11 @@
-// @ts-nocheck
+import { FormGroup, Radio, Button, Intent } from '@blueprintjs/core';
+import { Form, useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Form, useFormikContext } from 'formik';
-import styled from 'styled-components';
-import { FormGroup, Radio, Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
-
+import styled from 'styled-components';
+import { useAccountantFormContext } from './AccountantFormProvider';
+import type { AccountantFormValues } from './types';
 import {
   FormattedMessage as T,
   AccountsSelect,
@@ -16,15 +16,18 @@ import {
   FRadioGroup,
 } from '@/components';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { useAccountantFormContext } from './AccountantFormProvider';
+
+// AccountsSelect expects a typed array; the SDK AccountsList is a wider list
+// response — bridge with a loose cast at the boundary.
+const accountsForSelect = (accounts: unknown) => accounts as never;
 
 /**
  * Accountant form.
  */
-export default function AccountantForm() {
+export function AccountantForm() {
   const history = useHistory();
   const { accounts } = useAccountantFormContext();
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<AccountantFormValues>();
 
   const handleCloseClick = () => {
     history.go(-1);
@@ -45,7 +48,7 @@ export default function AccountantForm() {
         <FFormGroup inline={true} name={'accounts.accountCodeRequired'}>
           <FCheckbox
             inline={true}
-            label={
+            labelElement={
               <T id={'make_account_code_required_when_create_a_new_accounts'} />
             }
             name={'accounts.accountCodeRequired'}
@@ -53,14 +56,10 @@ export default function AccountantForm() {
         </FFormGroup>
 
         {/*------------ Account Code (unique) -----------*/}
-        <FFormGroup
-          name={'accounts.accountCodeUnique'}
-          type={'checkbox'}
-          inline={true}
-        >
+        <FFormGroup name={'accounts.accountCodeUnique'} inline={true}>
           <FCheckbox
             inline={true}
-            label={
+            labelElement={
               <T
                 id={'should_account_code_be_unique_when_create_a_new_account'}
               />
@@ -72,7 +71,6 @@ export default function AccountantForm() {
 
       {/* ----------- Accounting Basis ----------- */}
       <FormGroup
-        name={'organization.accountingBasis'}
         labelInfo={<FieldRequiredHint />}
         label={
           <strong>
@@ -106,7 +104,7 @@ export default function AccountantForm() {
       >
         <AccountsSelect
           name={'paymentReceives.preferredDepositAccount'}
-          items={accounts}
+          items={accountsForSelect(accounts)}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[
             ACCOUNT_TYPE.CASH,
@@ -137,7 +135,7 @@ export default function AccountantForm() {
       >
         <AccountsSelect
           name={'billPayments.withdrawalAccount'}
-          items={accounts}
+          items={accountsForSelect(accounts)}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[
             ACCOUNT_TYPE.CASH,
@@ -168,7 +166,7 @@ export default function AccountantForm() {
       >
         <AccountsSelect
           name={'paymentReceives.preferredAdvanceDeposit'}
-          items={accounts}
+          items={accountsForSelect(accounts)}
           placeholder={<T id={'select_payment_account'} />}
           filterByParentTypes={[ACCOUNT_PARENT_TYPE.CURRENT_ASSET]}
           fastField={true}

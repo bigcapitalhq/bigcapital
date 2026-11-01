@@ -1,23 +1,49 @@
-// @ts-nocheck
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
+import type { ApplicationState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 import {
   getBillsTableStateFactory,
   billsTableStateChangedFactory,
   getBillsSelectedRowsFactory,
-} from '@/store/Bills/bills.selectors';
+} from '@/store/bills/bills.selectors';
 
-export const withBills = (mapState) => {
+export interface WithBillsProps {
+  billsTableState: ReturnType<ReturnType<typeof getBillsTableStateFactory>>;
+  billsTableStateChanged: ReturnType<
+    ReturnType<typeof billsTableStateChangedFactory>
+  >;
+  billsSelectedRows: ReturnType<ReturnType<typeof getBillsSelectedRowsFactory>>;
+}
+
+export function withBills<
+  Props = unknown,
+  Mapped extends object = WithBillsProps,
+>(mapState?: MapState<WithBillsProps, Props, Mapped>) {
   const getBillsTableState = getBillsTableStateFactory();
   const billsTableStateChanged = billsTableStateChangedFactory();
   const getBillsSelectedRows = getBillsSelectedRowsFactory();
 
-  const mapStateToProps = (state, props) => {
-    const mapped = {
-      billsTableState: getBillsTableState(state, props),
-      billsTableStateChanged: billsTableStateChanged(state, props),
-      billsSelectedRows: getBillsSelectedRows(state, props),
+  const mapStateToProps: MapStateToProps<
+    WithBillsProps,
+    Props,
+    ApplicationState
+  > = (state, props) => {
+    const mapped: WithBillsProps = {
+      billsTableState: getBillsTableState(state, props as never),
+      billsTableStateChanged: billsTableStateChanged(state),
+      billsSelectedRows: getBillsSelectedRows(state),
     };
-    return mapState ? mapState(mapped, state, props) : mapped;
+    return mapState
+      ? (mapState(mapped, state, props) as WithBillsProps)
+      : mapped;
   };
-  return connect(mapStateToProps);
-};
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
+}

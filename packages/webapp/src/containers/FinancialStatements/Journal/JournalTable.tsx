@@ -1,34 +1,50 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
+import { getReportRowTestId } from '../reportTestIds';
+import { useJournalSheetColumns } from './dynamicColumns';
+import { useJournalSheetContext } from './JournalProvider';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   ReportDataTable,
   FinancialSheet,
   TableFastCell,
   TableVirtualizedListRows,
 } from '@/components';
-
-import { useJournalSheetContext } from './JournalProvider';
-
+import { TableStyle } from '@/constants';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { handleViewTransactionDetail } from '@/containers/FinancialStatements/utils/transactionDrawer';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
-import { useJournalSheetColumns } from './dynamicColumns';
+
+interface JournalTableProps extends WithDrawerActionsProps {
+  companyName: string;
+}
 
 /**
  * Journal sheet table.
  * @returns {JSX.Element}
  */
-export function JournalTable({ companyName }) {
+function JournalTableInner({
+  companyName,
+
+  // #withDrawerActions
+  openDrawer,
+}: JournalTableProps) {
   // Journal sheet context.
-  const {
-    journalSheet: { table, query, meta },
-    isLoading,
-  } = useJournalSheetContext();
+  const { journalSheet } = useJournalSheetContext();
+
+  const table = (journalSheet as any)?.table;
+  const meta = (journalSheet as any)?.meta;
+  const query = journalSheet?.query;
+
+  // Opens the detail drawer of the given transaction reference.
+  const handleViewDetail = (referenceType: string, referenceId: number) => {
+    handleViewTransactionDetail({ referenceType, referenceId }, openDrawer);
+  };
 
   // Retrieves the journal table columns.
-  const columns = useJournalSheetColumns();
+  const columns = useJournalSheetColumns(handleViewDetail);
 
   // Default expanded rows of general journal table.
   const expandedRows = useMemo(() => defaultExpanderReducer([], 1), []);
@@ -37,15 +53,15 @@ export function JournalTable({ companyName }) {
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('journal_sheet')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      loading={isLoading}
+      dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
+      basis={query?.basis}
       fullWidth={true}
-      name="journal"
     >
       <JournalDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('journal')}
         noResults={intl.get(
           'this_report_does_not_contain_any_data_between_date_period',
         )}
@@ -62,6 +78,8 @@ export function JournalTable({ companyName }) {
     </FinancialSheet>
   );
 }
+
+export const JournalTable = FF.pipe(JournalTableInner, withDrawerActions);
 
 const JournalDataTable = styled(ReportDataTable)`
   --color-table-text-color: var(--color-light-gray1);
@@ -88,7 +106,7 @@ const JournalDataTable = styled(ReportDataTable)`
           border-bottom: 1px solid var(--color-table-total-border-color);
         }
       }
-      .tr.row_type--TOTAL{
+      .tr.row_type--TOTAL {
         font-weight: 600;
         color: var(--color-table-total-text-color);
       }

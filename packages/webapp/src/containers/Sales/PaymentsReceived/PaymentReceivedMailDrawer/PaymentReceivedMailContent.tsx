@@ -1,11 +1,11 @@
-import { Stack } from '@/components';
 import { Classes } from '@blueprintjs/core';
-import { PaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
-import { PaymentReceivedSendMailForm } from './PaymentReceivedMailForm';
-import { PaymentReceivedSendMailPreview } from './PaymentReceivedMailPreviewTabs';
 import { SendMailViewHeader } from '../../Estimates/SendMailViewDrawer/SendMailViewHeader';
 import { SendMailViewLayout } from '../../Estimates/SendMailViewDrawer/SendMailViewLayout';
+import { PaymentReceivedSendMailBoot } from './PaymentReceivedMailBoot';
 import { PaymentReceivedSendMailFields } from './PaymentReceivedMailFields';
+import { PaymentReceivedSendMailForm } from './PaymentReceivedMailForm';
+import { PaymentReceivedSendMailPreview } from './PaymentReceivedMailPreviewTabs';
+import { Stack } from '@/components';
 
 export function PaymentReceivedSendMailContent() {
   return (

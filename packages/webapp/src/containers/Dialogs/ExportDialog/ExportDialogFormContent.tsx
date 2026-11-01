@@ -1,18 +1,25 @@
-// @ts-nocheck
-import { FFormGroup, FRadioGroup, FSelect, Group } from '@/components';
 import { Button, Intent, Radio } from '@blueprintjs/core';
-import { Form, useFormikContext } from 'formik';
 import { x } from '@xstyled/emotion';
+import { Form, useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { ExportResources } from './constants';
-import { compose } from '@/utils';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FFormGroup, FRadioGroup, FSelect, Group } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+
+interface ExportDialogFormContentValues {
+  resource: string;
+  format: string;
+}
+
+interface ExportDialogFormContentProps extends WithDialogActionsProps {}
 
 function ExportDialogFormContentRoot({
-  // #withDialogActions
   closeDialog,
-}) {
-  const { isSubmitting } = useFormikContext();
+}: ExportDialogFormContentProps): React.ReactElement {
+  const { isSubmitting } = useFormikContext<ExportDialogFormContentValues>();
   const handleCancelBtnClick = () => {
     closeDialog(DialogsName.Export);
   };
@@ -24,10 +31,7 @@ function ExportDialogFormContentRoot({
           You can export data from Bigcapital in CSV or XLSX format
         </x.p>
 
-        <FFormGroup
-          name={'resource'}
-          label={'Select Resource'}
-        >
+        <FFormGroup name={'resource'} label={'Select Resource'}>
           <x.div maxWidth="280px">
             <FSelect
               name={'resource'}
@@ -61,6 +65,7 @@ function ExportDialogFormContentRoot({
   );
 }
 
-export const ExportDialogFormContent = compose(withDialogActions)(
+export const ExportDialogFormContent = FF.pipe(
   ExportDialogFormContentRoot,
+  withDialogActions,
 );

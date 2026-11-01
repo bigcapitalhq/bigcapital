@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -8,11 +8,12 @@ let itemId;
 const makeEstimateRequest = ({ ...props } = {}) => ({
   customerId: customerId,
   estimateDate: '2022-02-02',
-  expirationDate: '2020-03-02',
+  expirationDate: '2022-03-02',
   delivered: false,
   estimateNumber: faker.string.uuid(),
   discount: 100,
   discountType: 'amount',
+  branchId: 1,
   entries: [
     {
       index: 1,
@@ -31,7 +32,11 @@ describe('Sale Estimates (e2e)', () => {
       .post('/customers')
       .set('Authorization', AuthorizationHeader)
       .set('organization-id', orgainzationId)
-      .send({ displayName: 'Test Customer' });
+      .send({
+        displayName: 'Test Customer',
+        customerType: 'business',
+        currencyCode: 'USD',
+      });
 
     customerId = customer.body.id;
 
@@ -40,8 +45,8 @@ describe('Sale Estimates (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
-        type: 'inventory',
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'service',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,
@@ -59,6 +64,59 @@ describe('Sale Estimates (e2e)', () => {
       .set('organization-id', orgainzationId)
       .send(makeEstimateRequest())
       .expect(201);
+  });
+
+  it('/sale-estimates (POST) applies amount-type line discounts to totals', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
+      .set('organization-id', orgainzationId)
+      .send(
+        makeEstimateRequest({
+          discount: 0,
+          entries: [
+            {
+              index: 1,
+              itemId: itemId,
+              quantity: 2,
+              rate: 1000,
+              discount: 100,
+              discountType: 'amount',
+              description: 'Item description...',
+            },
+          ],
+        }),
+      )
+      .expect(201);
+
+    const estimateId = response.body.id;
+
+    const estimate = await request(app.getHttpServer())
+      .get(`/sale-estimates/${estimateId}`)
+      .set('Authorization', AuthorizationHeader)
+      .set('organization-id', orgainzationId)
+      .expect(200);
+
+    expect(Number(estimate.body.subtotal)).toBe(1900);
+    expect(Number(estimate.body.total)).toBe(1900);
+  });
+
+  it('/sale-estimates (POST) should reject expiration date before estimate date', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/sale-estimates')
+      .set('Authorization', AuthorizationHeader)
+      .set('organization-id', orgainzationId)
+      .send(
+        makeEstimateRequest({
+          estimateDate: '2022-02-02',
+          expirationDate: '2022-01-01',
+        }),
+      )
+      .expect(400);
+
+    expect(response.body.errors[0].type).toBe(
+      'SALE_ESTIMATE_EXPIRATION_DATE_INVALID',
+    );
   });
 
   it('/sale-estimates (DELETE)', async () => {

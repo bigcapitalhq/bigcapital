@@ -1,15 +1,15 @@
-import { useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import BodyClassName from 'react-body-classname';
-import { PaymentPortal } from './PaymentPortal';
-import { PaymentPortalBoot, usePaymentPortalBoot } from './PaymentPortalBoot';
-import { PaymentInvoicePreviewDrawer } from './drawers/PaymentInvoicePreviewDrawer/PaymentInvoicePreviewDrawer';
-import { DRAWERS } from '@/constants/drawers';
-import styles from './PaymentPortal.module.scss';
-import { useEffect } from 'react';
 import { hsl, lighten, parseToHsl } from 'polished';
+import { useEffect } from 'react';
+import BodyClassName from 'react-body-classname';
+import { Helmet } from 'react-helmet';
+import { useParams } from 'react-router-dom';
+import { PaymentInvoicePreviewDrawer } from './drawers/PaymentInvoicePreviewDrawer/PaymentInvoicePreviewDrawer';
+import { PaymentPortal } from './PaymentPortal';
+import styles from './PaymentPortal.module.scss';
+import { PaymentPortalBoot, usePaymentPortalBoot } from './PaymentPortalBoot';
+import { DRAWERS } from '@/constants/drawers';
 
-export default function PaymentPortalPage() {
+export function PaymentPortalPage() {
   const { linkId } = useParams<{ linkId: string }>();
 
   return (

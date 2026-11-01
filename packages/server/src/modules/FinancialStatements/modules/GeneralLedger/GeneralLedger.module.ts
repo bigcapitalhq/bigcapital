@@ -9,13 +9,10 @@ import { GeneralLedgerController } from './GeneralLedger.controller';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
 import { GeneralLedgerMeta } from './GeneralLedgerMeta';
 import { AccountsModule } from '@/modules/Accounts/Accounts.module';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 
 @Module({
-  imports: [
-    FinancialSheetCommonModule,
-    AccountsModule
-  ],
+  imports: [TenancyModule, FinancialSheetCommonModule, AccountsModule],
   providers: [
     GeneralLedgerRepository,
     GeneralLedgerApplication,
@@ -24,7 +21,6 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
     GeneralLedgerTableInjectable,
     GeneralLedgerService,
     GeneralLedgerMeta,
-    TenancyContext
   ],
   controllers: [GeneralLedgerController],
 })

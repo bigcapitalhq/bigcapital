@@ -1,21 +1,16 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-
 import '@/style/pages/Preferences/warehousesList.scss';
-
-import WarehousesGrid from './WarehousesGrid';
+import { WarehousesGrid } from './WarehousesGrid';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { compose } from '@/utils';
 
-/**
- * Warehouses.
- * @returns
- */
-function Warehouses({
-  // #withDashboardActions
+interface WarehousesProps extends WithDashboardActionsProps {}
+
+function WarehousesInner({
   changePreferencesPageTitle,
-}) {
+}: WarehousesProps): React.ReactElement {
   React.useEffect(() => {
     changePreferencesPageTitle(intl.get('warehouses.label'));
   }, [changePreferencesPageTitle]);
@@ -26,4 +21,4 @@ function Warehouses({
     </React.Fragment>
   );
 }
-export default compose(withDashboardActions)(Warehouses);
+export const Warehouses = FF.pipe(WarehousesInner, withDashboardActions);

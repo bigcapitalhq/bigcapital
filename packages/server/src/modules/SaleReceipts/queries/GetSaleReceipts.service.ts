@@ -8,9 +8,6 @@ import { GetSaleReceiptsQueryDto } from '../dtos/GetSaleReceiptsQuery.dto';
 import { SaleReceipt } from '../models/SaleReceipt';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
-interface GetSaleReceiptsSettings {
-  fetchEntriesGraph?: boolean;
-}
 @Injectable()
 export class GetSaleReceiptsService {
   constructor(
@@ -53,7 +50,9 @@ export class GetSaleReceiptsService {
         builder.withGraphFetched('entries.item');
 
         dynamicFilter.buildQuery()(builder);
-        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
+        if (_filterDto?.filterQuery) {
+          _filterDto?.filterQuery(builder);
+        }
       })
       .pagination(filter.page - 1, filter.pageSize);
 

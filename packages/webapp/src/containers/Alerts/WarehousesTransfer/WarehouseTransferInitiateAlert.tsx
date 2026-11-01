@@ -1,39 +1,32 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useInitiateWarehouseTransfer } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface WarehouseTransferInitiateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { warehouseTransferId: number };
+}
 
-import { compose } from '@/utils';
-
-/**
- * warehouse transfer initiate alert.
- * @returns
- */
-function WarehouseTransferInitiateAlert({
+function WarehouseTransferInitiateAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { warehouseTransferId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: initialWarehouseTransferMutate, isLoading } =
+}: WarehouseTransferInitiateAlertProps): React.ReactElement {
+  const { mutateAsync: initialWarehouseTransferMutate, isPending } =
     useInitiateWarehouseTransfer();
 
-  // handle cancel alert.
   const handleCancelAlert = () => {
     closeAlert(name);
   };
 
-  // Handle confirm alert.
   const handleConfirmInitiated = () => {
     initialWarehouseTransferMutate(warehouseTransferId)
       .then(() => {
@@ -42,7 +35,7 @@ function WarehouseTransferInitiateAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -50,13 +43,13 @@ function WarehouseTransferInitiateAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'warehouse_transfer.label.initiate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('warehouse_transfer.label.initiate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelAlert}
       onConfirm={handleConfirmInitiated}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         <T id={'warehouse_transfer.alert.are_you_sure_you_want_to_initate'} />
@@ -65,7 +58,8 @@ function WarehouseTransferInitiateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const WarehouseTransferInitiateAlert = FF.pipe(
+  WarehouseTransferInitiateAlertInner,
   withAlertActions,
-)(WarehouseTransferInitiateAlert);
+  withAlertStoreConnect(),
+);

@@ -18,6 +18,7 @@ import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
 import { SaleReceiptMeta } from './SaleReceipt.meta';
+import { sanitizeSortDirection } from '@/modules/DynamicListing/DynamicFilter/sanitizeSortDirection';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { SaleReceiptDefaultViews } from '../constants';
 
@@ -238,7 +239,8 @@ export class SaleReceipt extends ExtendedModel {
        * Sorting the receipts order by status.
        */
       sortByStatus(query, order) {
-        query.orderByRaw(`CLOSED_AT IS NULL ${order}`);
+        const dir = sanitizeSortDirection(order);
+        query.orderByRaw(`CLOSED_AT IS NULL ${dir}`);
       },
 
       /**

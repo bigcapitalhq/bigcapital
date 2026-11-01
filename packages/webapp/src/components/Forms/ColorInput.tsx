@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import clsx from 'classnames';
 import {
+  HTMLInputProps,
   IInputGroupProps,
   InputGroup,
   IPopoverProps,
@@ -8,18 +7,20 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
+import clsx from 'classnames';
+import { useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { useUncontrolled } from '@/hooks/useUncontrolled';
-import { Box, BoxProps } from '@/components';
-import { sanitizeToHexColor } from '@/utils/sanitize-hex-color';
 import styles from './ColorInput.module.scss';
+import { Box, BoxProps } from '@/components';
+import { useUncontrolled } from '@/hooks/useUncontrolled';
+import { sanitizeToHexColor } from '@/utils/sanitize-hex-color';
 
 export interface ColorInputProps {
   value?: string;
   initialValue?: string;
   onChange?: (value: string) => void;
   popoverProps?: Partial<IPopoverProps>;
-  inputProps?: Partial<IInputGroupProps>;
+  inputProps?: Partial<IInputGroupProps & HTMLInputProps>;
   pickerProps?: Partial<BoxProps>;
   pickerWrapProps?: Partial<BoxProps>;
 }

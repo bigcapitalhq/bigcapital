@@ -51,11 +51,10 @@ export class TriggerRecognizedTransactionsSubscriber {
    */
   @OnEvent(events.bankRules.onEdited)
   async recognizedTransactionsOnRuleEdited({
-    editRuleDTO,
+    editRuleDTO: _editRuleDTO,
     oldBankRule,
     bankRule,
   }: IBankRuleEventEditedPayload) {
-    
     // Cannot continue if the new and old bank rule values are the same,
     // after excluding `createdAt` and `updatedAt` dates.
     if (
@@ -109,7 +108,7 @@ export class TriggerRecognizedTransactionsSubscriber {
    */
   @OnEvent(events.import.onImportCommitted)
   async triggerRecognizeTransactionsOnImportCommitted({
-    importId,
+    importId: _importId,
 
     // @ts-ignore
   }: IImportFileCommitedEventPayload) {

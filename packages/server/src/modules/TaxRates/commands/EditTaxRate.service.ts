@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { omit } from 'lodash';
 import {
-  IEditTaxRateDTO,
   ITaxRateEditedPayload,
   ITaxRateEditingPayload,
 } from '../TaxRates.types';

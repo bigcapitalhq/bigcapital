@@ -30,7 +30,7 @@ export class DeletePaymentReceivedService {
     private paymentReceiveEntryModel: TenantModelProxy<
       typeof PaymentReceivedEntry
     >,
-  ) { }
+  ) {}
 
   /**
    * Deletes the given payment receive with associated entries

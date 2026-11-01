@@ -15,6 +15,7 @@ import {
   EditPaymentReceivedDto,
 } from './dtos/PaymentReceived.dto';
 import { PaymentsReceivedPagesService } from './queries/PaymentsReceivedPages.service';
+import { PaymentReceivedSmsNotification } from './PaymentReceivedSmsNotification';
 import { GetPaymentReceivedMailState } from './queries/GetPaymentReceivedMailState.service';
 import { BulkDeletePaymentReceivedService } from './BulkDeletePaymentReceived.service';
 import { ValidateBulkDeletePaymentReceivedService } from './ValidateBulkDeletePaymentReceived.service';
@@ -33,9 +34,10 @@ export class PaymentReceivesApplication {
     private getPaymentReceivePdfService: GetPaymentReceivedPdfService,
     private getPaymentReceivedStateService: GetPaymentReceivedStateService,
     private paymentsReceivedPagesService: PaymentsReceivedPagesService,
+    private paymentReceivedSmsNotificationService: PaymentReceivedSmsNotification,
     private bulkDeletePaymentReceivedService: BulkDeletePaymentReceivedService,
     private validateBulkDeletePaymentReceivedService: ValidateBulkDeletePaymentReceivedService,
-  ) { }
+  ) {}
 
   /**
    * Creates a new payment receive.
@@ -94,8 +96,9 @@ export class PaymentReceivesApplication {
    * @param {number[]} paymentReceiveIds
    */
   public validateBulkDeletePaymentReceives(paymentReceiveIds: number[]) {
-    return this.validateBulkDeletePaymentReceivedService
-      .validateBulkDeletePaymentReceived(paymentReceiveIds);
+    return this.validateBulkDeletePaymentReceivedService.validateBulkDeletePaymentReceived(
+      paymentReceiveIds,
+    );
   }
 
   /**
@@ -104,9 +107,7 @@ export class PaymentReceivesApplication {
    * @param {GetPaymentsReceivedQueryDto} filterDTO
    * @returns
    */
-  public async getPaymentsReceived(
-    filterDTO: GetPaymentsReceivedQueryDto,
-  ) {
+  public async getPaymentsReceived(filterDTO: GetPaymentsReceivedQueryDto) {
     return this.getPaymentsReceivedService.getPaymentReceives(filterDTO);
   }
 
@@ -171,7 +172,7 @@ export class PaymentReceivesApplication {
 
   /**
    * Retrieves html content of the given payment receive.
-   * @param {number} paymentReceivedId 
+   * @param {number} paymentReceivedId
    * @returns {Promise<string>}
    */
   public getPaymentReceivedHtml(paymentReceivedId: number) {
@@ -186,6 +187,28 @@ export class PaymentReceivesApplication {
    */
   public getPaymentReceivedState() {
     return this.getPaymentReceivedStateService.getPaymentReceivedState();
+  }
+
+  /**
+   * Notify the customer of the given payment received by SMS.
+   * @param {number} paymentReceiveId - Payment receive id.
+   * @returns {Promise<PaymentReceived>}
+   */
+  public notifyPaymentReceiveBySms(paymentReceiveId: number) {
+    return this.paymentReceivedSmsNotificationService.triggerSms(
+      paymentReceiveId,
+    );
+  }
+
+  /**
+   * Retrieve the SMS details of the given payment received.
+   * @param {number} paymentReceiveId - Payment receive id.
+   * @returns {Promise<Record<string, string>>}
+   */
+  public getPaymentReceiveSmsDetails(paymentReceiveId: number) {
+    return this.paymentReceivedSmsNotificationService.getSmsDetails(
+      paymentReceiveId,
+    );
   }
 
   /**

@@ -1,34 +1,29 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import {
+  AmountDisplayedBaseCurrencyMessage,
+  JournalEntriesTable,
+} from '../../JournalEntriesTable/JournalEntriesTable';
+import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { Card } from '@/components';
 import { useTransactionsByReference } from '@/hooks/query';
-import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
-
-import JournalEntriesTable, {
-  AmountDisplayedBaseCurrencyMessage,
-} from '../../JournalEntriesTable/JournalEntriesTable';
 
 /**
  * Receipt details GL entries panel.
- * @returns {React.JSX}
  */
 export function ReceiptDetailsGLEntriesPanel() {
   // Receipt details drawer context.
   const { receiptId } = useReceiptDetailDrawerContext();
 
   // Handle fetch transaction by reference.
-  const {
-    data: { transactions },
-    isLoading: isTransactionLoading,
-  } = useTransactionsByReference(
+  const { data, isLoading: isTransactionLoading } = useTransactionsByReference(
     {
-      reference_id: receiptId,
-      reference_type: 'SaleReceipt',
+      referenceId: receiptId as number,
+      referenceType: 'SaleReceipt',
     },
     { enabled: !!receiptId },
   );
+  const transactions = data?.transactions ?? [];
 
   return (
     <ReceiptGLEntriesRoot>

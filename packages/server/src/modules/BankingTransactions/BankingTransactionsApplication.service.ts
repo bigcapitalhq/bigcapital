@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DeleteCashflowTransaction } from './commands/DeleteCashflowTransaction.service';
 import { CreateBankTransactionService } from './commands/CreateBankTransaction.service';
 import { GetBankTransactionService } from './queries/GetBankTransaction.service';
-import {
-  IBankAccountsFilter,
-  ICashflowAccountTransactionsQuery,
-} from './types/BankingTransactions.types';
+import { IBankAccountsFilter } from './types/BankingTransactions.types';
 import { GetBankAccountsService } from './queries/GetBankAccounts.service';
 import { CreateBankTransactionDto } from './dtos/CreateBankTransaction.dto';
 import { GetBankAccountTransactionsService } from './queries/GetBankAccountTransactions/GetBankAccountTransactions.service';

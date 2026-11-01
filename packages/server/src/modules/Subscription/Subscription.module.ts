@@ -17,22 +17,23 @@ import { MarkSubscriptionPlanChanged } from './commands/MarkSubscriptionChanged.
 import { MarkSubscriptionResumedService } from './commands/MarkSubscriptionResumed.sevice';
 import { Plan } from './models/Plan';
 import { SubscriptionApplication } from './SubscriptionApplication';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { NewSubscriptionService } from './commands/NewSubscription.service';
 import { GetSubscriptionsService } from './queries/GetSubscriptions.service';
 import { GetLemonSqueezyCheckoutService } from './queries/GetLemonSqueezyCheckout.service';
+import { GetLemonSubscriptionsService } from './queries/GetLemonSubscriptions.service';
 import { PlanSubscriptionRepository } from './repositories/PlanSubscription.repository';
 
 const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
 
 @Module({
-  imports: [SocketModule],
+  imports: [TenancyModule, SocketModule],
   providers: [
     ...models,
-    TenancyContext,
     PlanSubscriptionRepository,
     NewSubscriptionService,
     GetSubscriptionsService,
+    GetLemonSubscriptionsService,
     CancelLemonSubscription,
     ChangeLemonSubscription,
     ResumeLemonSubscription,
@@ -50,4 +51,4 @@ const models = [InjectSystemModel(Plan), InjectSystemModel(PlanSubscription)];
   controllers: [SubscriptionsController, SubscriptionsLemonWebhook],
   exports: [...models],
 })
-export class SubscriptionModule { }
+export class SubscriptionModule {}

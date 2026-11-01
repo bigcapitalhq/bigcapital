@@ -1,43 +1,61 @@
-// @ts-nocheck
-import React, { useCallback } from 'react';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import React, { useCallback } from 'react';
+import { usePaymentMadeEntriesTableColumns } from './components';
+import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
+import type { PaymentMadeEntry, PaymentMadeFormValues } from './utils';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTableEditable,
   CloudLoadingIndicator,
   FormattedMessage as T,
 } from '@/components';
-
 import { CLASSES } from '@/constants/classes';
-import { usePaymentMadeEntriesTableColumns } from './components';
-import { usePaymentMadeInnerContext } from './PaymentMadeInnerProvider';
-import { compose, updateTableCell } from '@/utils';
-import { useFormikContext } from 'formik';
+import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { updateTableCell } from '@/utils';
+
+type PaymentMadeEntriesTableProps = WithDrawerActionsProps & {
+  onUpdateData: (entries: PaymentMadeEntry[]) => void;
+  entries: PaymentMadeEntry[];
+  currencyCode: string;
+};
 
 /**
  * Payment made items table.
  */
-export default function PaymentMadeEntriesTable({
+function PaymentMadeEntriesTableInner({
   onUpdateData,
   entries,
   currencyCode,
-}) {
+
+  // #withDrawerActions
+  openDrawer,
+}: PaymentMadeEntriesTableProps) {
   // Payment made inner context.
   const { isNewEntriesFetching } = usePaymentMadeInnerContext();
 
+  // Opens the bill detail drawer of the given bill.
+  const handleViewBillDetail = (billId: number) => {
+    openDrawer(DRAWERS.BILL_DETAILS, { billId });
+  };
+
   // Payment entries table columns.
-  const columns = usePaymentMadeEntriesTableColumns();
+  const columns = usePaymentMadeEntriesTableColumns(handleViewBillDetail);
 
   // Formik context.
   const {
-    values: { vendor_id },
+    values: { vendorId },
     errors,
-  } = useFormikContext();
+  } = useFormikContext<PaymentMadeFormValues>();
 
   // Handle update data.
   const handleUpdateData = useCallback(
-    (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+    (rowIndex: number, columnId: string, value: unknown) => {
+      const newRows = FF.pipe(
         entries,
+        updateTableCell(rowIndex, columnId, value),
       );
       onUpdateData(newRows);
     },
@@ -45,7 +63,7 @@ export default function PaymentMadeEntriesTable({
   );
   // Detarmines the right no results message before selecting vendor and after
   // selecting vendor id.
-  const noResultsMessage = vendor_id ? (
+  const noResultsMessage = vendorId ? (
     <T
       id={
         'there_is_no_payable_bills_for_this_vendor_that_can_be_applied_for_this_payment'
@@ -62,9 +80,8 @@ export default function PaymentMadeEntriesTable({
         className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
         columns={columns}
         data={entries}
-        spinnerProps={false}
         payload={{
-          errors: errors?.entries || [],
+          errors: (errors?.entries || []) as unknown[],
           updateData: handleUpdateData,
           currencyCode,
         }}
@@ -73,3 +90,8 @@ export default function PaymentMadeEntriesTable({
     </CloudLoadingIndicator>
   );
 }
+
+export const PaymentMadeEntriesTable = FF.pipe(
+  PaymentMadeEntriesTableInner,
+  withDrawerActions,
+);

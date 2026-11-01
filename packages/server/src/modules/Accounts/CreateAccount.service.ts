@@ -49,7 +49,7 @@ export class CreateAccountService {
       await this.accountsSettings.getAccountsSettings();
 
     // Validate account code required when setting is enabled.
-    if (accountCodeRequired) {
+    if (accountCodeRequired && !params?.ignoreAccountCode) {
       this.validator.validateAccountCodeRequiredOrThrow(accountDTO.code);
     }
     // Validate the account code uniquiness when setting is enabled.

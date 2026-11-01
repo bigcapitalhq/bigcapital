@@ -9,5 +9,8 @@ node_modules/
 test-results/
 .qodo
 
+# Playwright shared auth state (regenerated per run by globalSetup)
+e2e/.auth/
+
 
 .pnpm-store

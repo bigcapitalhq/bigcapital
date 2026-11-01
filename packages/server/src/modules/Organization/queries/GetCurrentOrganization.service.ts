@@ -27,8 +27,11 @@ export class GetCurrentOrganizationService {
 
     throwIfTenantNotExists(tenant);
 
-    const logoUri = tenant.metadata?.logoKey ?
-      await this.getPresignedUrlService.getPresignedUrl(tenant.metadata.logoKey) : null;
+    const logoUri = tenant.metadata?.logoKey
+      ? await this.getPresignedUrlService.getPresignedUrl(
+          tenant.metadata.logoKey,
+        )
+      : null;
 
     return await this.transformer.transform(
       tenant,

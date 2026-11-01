@@ -32,6 +32,6 @@ export class CreditNotesExportable extends Exportable {
 
     return this.creditNotesApp
       .getCreditNotes(parsedQuery)
-      .then((output) => output.creditNotes);
+      .then((output) => output.data);
   }
 }

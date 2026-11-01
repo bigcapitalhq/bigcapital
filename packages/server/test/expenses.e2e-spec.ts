@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -11,6 +11,7 @@ const makeExpenseRequest = () => ({
   paymentDate: faker.date.recent(),
   categories: [
     {
+      index: 1,
       expenseAccountId: 1021,
       amount: faker.number.float({ min: 10, max: 1000, precision: 0.01 }),
       description: faker.lorem.sentence(),
@@ -76,5 +77,17 @@ describe('Expenses (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+  });
+
+  it('/expenses (GET) honors page and pageSize query params', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/expenses?page=2&pageSize=5')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(response.body.pagination).toBeDefined();
+    expect(response.body.pagination.page).toBe(2);
+    expect(response.body.pagination.page_size).toBe(5);
   });
 });

@@ -11,7 +11,7 @@ import { events } from '@/common/events/events';
 export class PaymentReceiveBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on estimate creating.

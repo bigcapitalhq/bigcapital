@@ -1,24 +1,19 @@
-// @ts-nocheck
+import { Intent, Tag } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Tag } from '@blueprintjs/core';
-import { getColumnWidth } from '@/utils';
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
-
+import type { WarehouseTransfer } from '@bigcapital/sdk-ts';
 import {
-  FormattedMessage as T,
+  Choose,
   FormatNumberCell,
   TextOverviewTooltipCell,
-  Choose,
 } from '@/components';
+import { getColumnWidth } from '@/utils';
 
-/**
- * Retrieves the readonly warehouse transfer entries columns.
- */
 export const useWarehouseTransferReadOnlyEntriesColumns = () => {
-  const {
-    warehouseTransfer: { entries },
-  } = useWarehouseDetailDrawerContext();
+  const { warehouseTransfer } = useWarehouseDetailDrawerContext();
+
+  const entries = warehouseTransfer?.entries ?? [];
 
   return React.useMemo(
     () => [
@@ -51,38 +46,38 @@ export const useWarehouseTransferReadOnlyEntriesColumns = () => {
         disableSortBy: true,
       },
     ],
-    [],
+    [entries],
   );
 };
 
-/**
- * Warehouses transfer details status.
- * @returns {React.JSX}
- */
-export function WarehouseTransferDetailsStatus({ warehouseTransfer }) {
+export function WarehouseTransferDetailsStatus({
+  warehouseTransfer,
+}: {
+  warehouseTransfer: WarehouseTransfer | undefined;
+}): React.ReactElement {
   return (
     <Choose>
       <Choose.When
-        condition={
-          warehouseTransfer.is_initiated && warehouseTransfer.is_transferred
-        }
+        condition={Boolean(
+          warehouseTransfer?.isInitiated && warehouseTransfer?.isTransferred,
+        )}
       >
         <Tag minimal={false} intent={Intent.SUCCESS} round={true}>
-          <T id={'warehouse_transfer.label.transferred'} />
+          {intl.get('warehouse_transfer.label.transferred')}
         </Tag>
       </Choose.When>
       <Choose.When
-        condition={
-          warehouseTransfer.is_initiated && !warehouseTransfer.is_transferred
-        }
+        condition={Boolean(
+          warehouseTransfer?.isInitiated && !warehouseTransfer?.isTransferred,
+        )}
       >
         <Tag minimal={false} intent={Intent.WARNING} round={true}>
-          <T id={'warehouse_transfer.label.transfer_initiated'} />
+          {intl.get('warehouse_transfer.label.transfer_initiated')}
         </Tag>
       </Choose.When>
       <Choose.Otherwise>
         <Tag minimal={false} intent={Intent.NONE} round={true}>
-          <T id={'draft'} />
+          {intl.get('draft')}
         </Tag>
       </Choose.Otherwise>
     </Choose>

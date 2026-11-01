@@ -1,47 +1,46 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { handleDeleteErrors } from '@/containers/Sales/Invoices/InvoicesLanding/components';
 import { useDeleteInvoice } from '@/hooks/query';
 
-import { handleDeleteErrors } from '@/containers/Sales/Invoices/InvoicesLanding/components';
+interface InvoiceDeleteAlertPayload {
+  invoiceId: number;
+}
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+interface InvoiceDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: InvoiceDeleteAlertPayload;
+}
 
 /**
  * Invoice delete alert.
  */
-function InvoiceDeleteAlert({
+function InvoiceDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { invoiceId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: deleteInvoiceMutate, isLoading } = useDeleteInvoice();
+}: InvoiceDeleteAlertProps): React.ReactElement {
+  const { mutateAsync: deleteInvoiceMutate, isPending: isLoading } =
+    useDeleteInvoice();
 
-  // handle cancel delete invoice alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
 
-  // handleConfirm delete invoice
   const handleConfirmInvoiceDelete = () => {
     deleteInvoiceMutate(invoiceId)
       .then(() => {
@@ -52,11 +51,7 @@ function InvoiceDeleteAlert({
         closeDrawer(DRAWERS.INVOICE_DETAILS);
       })
       .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
           handleDeleteErrors(errors);
         },
       )
@@ -67,8 +62,8 @@ function InvoiceDeleteAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -76,7 +71,7 @@ function InvoiceDeleteAlert({
       onConfirm={handleConfirmInvoiceDelete}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'invoice-delete-alert'}>
         <FormattedHTMLMessage
           id={'once_delete_this_invoice_you_will_able_to_restore_it'}
         />
@@ -85,8 +80,9 @@ function InvoiceDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const InvoiceDeleteAlert = FF.pipe(
+  InvoiceDeleteAlertInner,
   withDrawerActions,
-)(InvoiceDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

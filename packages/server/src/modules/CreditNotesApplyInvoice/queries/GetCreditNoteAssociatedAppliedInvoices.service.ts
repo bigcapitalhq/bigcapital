@@ -16,7 +16,9 @@ export class GetCreditNoteAssociatedAppliedInvoices {
     private readonly transformer: TransformerInjectable,
 
     @Inject(CreditNoteAppliedInvoice.name)
-    private readonly creditNoteAppliedInvoiceModel: TenantModelProxy<typeof CreditNoteAppliedInvoice>,
+    private readonly creditNoteAppliedInvoiceModel: TenantModelProxy<
+      typeof CreditNoteAppliedInvoice
+    >,
 
     @Inject(CreditNote.name)
     private readonly creditNoteModel: TenantModelProxy<typeof CreditNote>,
@@ -31,7 +33,7 @@ export class GetCreditNoteAssociatedAppliedInvoices {
     creditNoteId: number,
   ): Promise<CreditNoteAppliedInvoice[]> {
     // Retrieve credit note or throw not found service error.
-    const creditNote = await this.creditNoteModel()
+    const _creditNote = await this.creditNoteModel()
       .query()
       .findById(creditNoteId)
       .throwIfNotFound();

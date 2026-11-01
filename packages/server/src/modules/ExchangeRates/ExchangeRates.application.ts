@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ExchangeRatesService } from './ExchangeRates.service';
-import { ExchangeRateLatestDTO, EchangeRateLatestPOJO } from './ExchangeRates.types';
+import {
+  ExchangeRateLatestDTO,
+  EchangeRateLatestPOJO,
+} from './ExchangeRates.types';
 
 @Injectable()
 export class ExchangeRateApplication {
@@ -8,14 +11,12 @@ export class ExchangeRateApplication {
 
   /**
    * Gets the latest exchange rate.
-   * @param {number} tenantId
    * @param {ExchangeRateLatestDTO} exchangeRateLatestDTO
    * @returns {Promise<EchangeRateLatestPOJO>}
    */
   public latest(
-    tenantId: number,
     exchangeRateLatestDTO: ExchangeRateLatestDTO,
   ): Promise<EchangeRateLatestPOJO> {
-    return this.exchangeRateService.latest(tenantId, exchangeRateLatestDTO);
+    return this.exchangeRateService.latest(exchangeRateLatestDTO);
   }
 }

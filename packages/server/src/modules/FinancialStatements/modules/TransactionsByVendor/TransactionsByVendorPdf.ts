@@ -9,7 +9,7 @@ export class TransactionsByVendorsPdf {
   constructor(
     private readonly transactionsByVendorTable: TransactionsByVendorTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) { }
+  ) {}
 
   /**
    * Converts the given balance sheet table to pdf.

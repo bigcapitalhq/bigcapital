@@ -1,6 +1,5 @@
-// @ts-nocheck
-import { Suspense, lazy } from 'react';
 import { Spinner } from '@blueprintjs/core';
+import { Suspense, lazy } from 'react';
 import { AppContentShell } from '@/components/AppShell';
 
 const CategorizeTransactionAside = lazy(() =>

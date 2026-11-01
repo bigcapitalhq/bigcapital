@@ -8,6 +8,7 @@ import {
   Body,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateRoleDto, EditRoleDto } from './dtos/Role.dto';
 import { RolesApplication } from './Roles.application';
@@ -22,15 +23,21 @@ import {
 } from '@nestjs/swagger';
 import { RoleResponseDto } from './dtos/RoleResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from './RequirePermission.decorator';
+import { PermissionGuard } from './Permission.guard';
+import { AuthorizationGuard } from './Authorization.guard';
+import { AbilitySubject, RoleAction } from './Roles.types';
 
 @ApiTags('Roles')
 @Controller('roles')
 @ApiExtraModels(RoleResponseDto)
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class RolesController {
-  constructor(private readonly rolesApp: RolesApplication) { }
+  constructor(private readonly rolesApp: RolesApplication) {}
 
   @Post()
+  @RequirePermission(RoleAction.Create, AbilitySubject.Role)
   @ApiOperation({ summary: 'Create a new role' })
   @ApiBody({ type: CreateRoleDto })
   @ApiResponse({
@@ -47,6 +54,7 @@ export class RolesController {
   }
 
   @Put(':id')
+  @RequirePermission(RoleAction.Edit, AbilitySubject.Role)
   @ApiOperation({ summary: 'Edit an existing role' })
   @ApiParam({ name: 'id', description: 'Role ID' })
   @ApiBody({ type: EditRoleDto })
@@ -67,6 +75,7 @@ export class RolesController {
   }
 
   @Delete(':id')
+  @RequirePermission(RoleAction.Delete, AbilitySubject.Role)
   @ApiOperation({ summary: 'Delete a role' })
   @ApiParam({ name: 'id', description: 'Role ID' })
   @ApiResponse({
@@ -83,6 +92,7 @@ export class RolesController {
   }
 
   @Get('permissions/schema')
+  @RequirePermission(RoleAction.View, AbilitySubject.Role)
   @ApiOperation({ summary: 'Get role permissions schema' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -95,6 +105,7 @@ export class RolesController {
   }
 
   @Get()
+  @RequirePermission(RoleAction.View, AbilitySubject.Role)
   @ApiOperation({ summary: 'Get all roles' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -111,6 +122,7 @@ export class RolesController {
   }
 
   @Get(':id')
+  @RequirePermission(RoleAction.View, AbilitySubject.Role)
   @ApiOperation({ summary: 'Get a specific role by ID' })
   @ApiParam({ name: 'id', description: 'Role ID' })
   @ApiResponse({

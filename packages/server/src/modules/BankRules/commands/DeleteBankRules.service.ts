@@ -19,7 +19,7 @@ export class DeleteBankRulesService {
   ) {
     const bankRulesIds = uniq(castArray(bankRuleId));
 
-    const results = await PromisePool.withConcurrency(1)
+    const _results = await PromisePool.withConcurrency(1)
       .for(bankRulesIds)
       .process(async (bankRuleId: number) => {
         await this.deleteBankRuleService.deleteBankRule(bankRuleId, trx);

@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Intent,
   Button,
@@ -10,59 +8,58 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
-import { FSelect, Group, Icon, FormattedMessage as T } from '@/components';
-import { useDrawerActions } from '@/hooks/state';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+import { usePaymentReceivedFormBrandingTemplatesOptions } from './utils';
+import { FSelect, Group, Icon, FormattedMessage as T } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { DRAWERS } from '@/constants/drawers';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
-import { usePaymentReceivedFormBrandingTemplatesOptions } from './utils';
-import { PageForm } from '@/components/PageForm';
+import { useDrawerActions } from '@/hooks/state';
 import { MoreIcon } from '@/icons/More';
-import { DRAWERS } from '@/constants/drawers';
+
+type BrandingSelectInputRenderArgs = {
+  activeItem?: { value: string | number; label: string };
+  text?: string;
+  label?: string;
+  value?: string | number;
+};
 
 /**
  * Payment receive floating actions bar.
  */
-export default function PaymentReceiveFormFloatingActions() {
-  // Payment receive form context.
+export function PaymentReceiveFormFloatingActions() {
   const { setSubmitPayload, isNewMode } = usePaymentReceiveFormContext();
 
-  // Formik form context.
   const { isSubmitting, submitForm, resetForm } = useFormikContext();
 
-  // History context.
   const history = useHistory();
 
   const { openDrawer } = useDrawerActions();
 
-  // Handle submit button click.
-  const handleSubmitBtnClick = (event) => {
+  const handleSubmitBtnClick = () => {
     setSubmitPayload({ redirect: true });
   };
-  // Handle clear button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = () => {
     resetForm();
   };
-  // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = () => {
     history.goBack();
   };
-  // Handle submit & new button click.
-  const handleSubmitAndNewClick = (event) => {
+  const handleSubmitAndNewClick = () => {
     setSubmitPayload({ redirect: false, resetForm: true });
     submitForm();
   };
-  // Handle submit & continue editing button click.
-  const handleSubmitContinueEditingBtnClick = (event) => {
+  const handleSubmitContinueEditingBtnClick = () => {
     setSubmitPayload({ redirect: false, publish: true });
     submitForm();
   };
 
-  // Handles the invoice customize button click.
   const handleCustomizeBtnClick = () => {
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'PaymentReceive' });
   };
@@ -128,16 +125,16 @@ export default function PaymentReceiveFormFloatingActions() {
       <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
-          name={'pdf_template_id'}
+          name={'pdfTemplateId'}
           label={'Branding'}
           inline
           fastField
           style={{ marginLeft: 20 }}
         >
           <FSelect
-            name={'pdf_template_id'}
+            name={'pdfTemplateId'}
             items={brandingTemplatesOpts}
-            input={({ activeItem, text, label, value }) => (
+            input={({ text }: BrandingSelectInputRenderArgs) => (
               <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
             )}
             filterable={false}

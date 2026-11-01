@@ -1,40 +1,43 @@
-// @ts-nocheck
-import React from 'react';
-import { Intent, Button, Classes } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
+import type { InventoryAdjustmentFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
-/**
- * Inventory adjustment floating actions.
- */
-function InventoryAdjustmentFloatingActions({
-  // #withDialogActions
+interface InventoryAdjustmentFloatingActionsProps
+  extends WithDialogActionsProps {}
+
+function InventoryAdjustmentFloatingActionsInner({
   closeDialog,
-}) {
-  // Formik context.
-  const { isSubmitting, submitForm } = useFormikContext();
+}: InventoryAdjustmentFloatingActionsProps): React.ReactElement {
+  const { isSubmitting, submitForm } =
+    useFormikContext<InventoryAdjustmentFormValues>();
 
-  // Inventory adjustment dialog context.
-  const { dialogName, setSubmitPayload, submitPayload } =
-    useInventoryAdjContext();
+  const {
+    dialogName,
+    setSubmitPayload,
+    submitPayload,
+    isEditMode,
+    inventoryAdjustment,
+  } = useInventoryAdjContext();
 
-  // handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  // Published adjustments can't be reverted to draft.
+  const isPublished = isEditMode && !!inventoryAdjustment?.isPublished;
+
+  const handleSubmitDraftBtnClick = () => {
     setSubmitPayload({ publish: false });
     submitForm();
   };
 
-  // Handle submit make adjustment button click.
-  const handleSubmitMakeAdjustmentBtnClick = (event) => {
+  const handleSubmitMakeAdjustmentBtnClick = () => {
     setSubmitPayload({ publish: true });
   };
 
-  // Handle close button click.
-  const handleCloseBtnClick = (event) => {
+  const handleCloseBtnClick = () => {
     closeDialog(dialogName);
   };
 
@@ -49,26 +52,43 @@ function InventoryAdjustmentFloatingActions({
           <T id={'close'} />
         </Button>
 
-        <Button
-          loading={isSubmitting && !submitPayload.publish}
-          style={{ minWidth: '75px' }}
-          onClick={handleSubmitDraftBtnClick}
-        >
-          {<T id={'save_as_draft'} />}
-        </Button>
+        {!isPublished && (
+          <Button
+            loading={isSubmitting && !submitPayload.publish}
+            style={{ minWidth: '75px' }}
+            onClick={handleSubmitDraftBtnClick}
+          >
+            <T id={'save_as_draft'} />
+          </Button>
+        )}
 
-        <Button
-          intent={Intent.PRIMARY}
-          loading={isSubmitting && submitPayload.publish}
-          style={{ minWidth: '75px' }}
-          type="submit"
-          onClick={handleSubmitMakeAdjustmentBtnClick}
-        >
-          {<T id={'make_adjustment'} />}
-        </Button>
+        {isPublished ? (
+          <Button
+            intent={Intent.PRIMARY}
+            loading={isSubmitting}
+            style={{ minWidth: '75px' }}
+            type="submit"
+            onClick={handleSubmitMakeAdjustmentBtnClick}
+          >
+            <T id={'save_changes'} />
+          </Button>
+        ) : (
+          <Button
+            intent={Intent.PRIMARY}
+            loading={isSubmitting && submitPayload.publish}
+            style={{ minWidth: '75px' }}
+            type="submit"
+            onClick={handleSubmitMakeAdjustmentBtnClick}
+          >
+            <T id={'make_adjustment'} />
+          </Button>
+        )}
       </div>
     </div>
   );
 }
 
-export default compose(withDialogActions)(InventoryAdjustmentFloatingActions);
+export const InventoryAdjustmentFloatingActions = FF.pipe(
+  InventoryAdjustmentFloatingActionsInner,
+  withDialogActions,
+);

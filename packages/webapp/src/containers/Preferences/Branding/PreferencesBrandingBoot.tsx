@@ -1,5 +1,5 @@
-import { useCurrentOrganization } from '@/hooks/query';
 import React, { createContext, useContext, ReactNode } from 'react';
+import { useCurrentOrganization } from '@/hooks/query';
 
 interface PreferencesBrandingContextType {
   isOrganizationLoading: boolean;

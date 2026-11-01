@@ -52,40 +52,19 @@ export class CreditNoteApplyToInvoices {
     creditNoteId: number,
     applyCreditToInvoicesDTO: ApplyCreditNoteToInvoicesDto,
   ): Promise<CreditNoteAppliedInvoice[]> {
-    // Saves the credit note or throw not found service error.
-    const creditNote = await this.creditNoteModel()
-      .query()
-      .findById(creditNoteId)
-      .throwIfNotFound();
-
-    // Retrieve the applied invoices that associated to the credit note customer.
-    const appliedInvoicesEntries =
-      await this.paymentReceiveValidators.validateInvoicesIDsExistance(
-        creditNote.customerId,
-        applyCreditToInvoicesDTO.entries,
-      );
-
-    // Transformes apply DTO to model.
-    const creditNoteAppliedModel = this.transformApplyDTOToModel(
-      applyCreditToInvoicesDTO,
-      creditNote,
-    );
-    // Validate invoices has remaining amount to apply.
-    this.validateInvoicesRemainingAmount(
-      appliedInvoicesEntries,
-      creditNoteAppliedModel.entries,
-    );
-    // Validate the credit note remaining amount.
-    this.creditNoteDTOTransform.validateCreditRemainingAmount(
-      creditNote,
-      creditNoteAppliedModel.amount,
-    );
     // Creates credit note apply to invoice transaction.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the apply operation against the locked credit note
+      // and invoices rows.
+      const { creditNote, creditNoteAppliedModel } = await this.validate(
+        creditNoteId,
+        applyCreditToInvoicesDTO,
+        trx,
+      );
       // Saves the credit note apply to invoice graph to the storage layer.
       const creditNoteAppliedInvoices =
         await this.creditNoteAppliedInvoiceModel()
-          .query()
+          .query(trx)
           .insertGraph(creditNoteAppliedModel.entries);
 
       // Triggers `onCreditNoteApplyToInvoiceCreated` event.
@@ -100,6 +79,55 @@ export class CreditNoteApplyToInvoices {
 
       return creditNoteAppliedInvoices;
     });
+  }
+
+  /**
+   * Validates the apply credit note to invoices operation against the locked
+   * credit note and invoices rows.
+   * @param {number} creditNoteId - The credit note id.
+   * @param {ApplyCreditNoteToInvoicesDto} applyCreditToInvoicesDTO - Apply DTO.
+   * @param {Knex.Transaction} trx - Locks the credit note and invoice rows (FOR UPDATE).
+   * @returns {Promise<{ creditNote: CreditNote, creditNoteAppliedModel: ICreditNoteAppliedToInvoiceModel }>}
+   */
+  async validate(
+    creditNoteId: number,
+    applyCreditToInvoicesDTO: ApplyCreditNoteToInvoicesDto,
+    trx: Knex.Transaction,
+  ): Promise<{
+    creditNote: CreditNote;
+    creditNoteAppliedModel: ICreditNoteAppliedToInvoiceModel;
+  }> {
+    // Retrieves the credit note with a row lock or throw not found service error.
+    const creditNote = await this.creditNoteModel()
+      .query(trx)
+      .findById(creditNoteId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Retrieve the applied invoices (locked) that associated to the credit note customer.
+    const appliedInvoicesEntries =
+      await this.paymentReceiveValidators.validateInvoicesIDsExistance(
+        creditNote.customerId,
+        applyCreditToInvoicesDTO.entries,
+        trx,
+      );
+
+    // Transformes apply DTO to model.
+    const creditNoteAppliedModel = this.transformApplyDTOToModel(
+      applyCreditToInvoicesDTO,
+      creditNote,
+    );
+    // Validate invoices has remaining amount to apply.
+    this.validateInvoicesRemainingAmount(
+      appliedInvoicesEntries,
+      creditNoteAppliedModel.entries,
+    );
+    // Validate the credit note remaining amount against the locked row.
+    this.creditNoteDTOTransform.validateCreditRemainingAmount(
+      creditNote,
+      creditNoteAppliedModel.amount,
+    );
+    return { creditNote, creditNoteAppliedModel };
   }
 
   /**

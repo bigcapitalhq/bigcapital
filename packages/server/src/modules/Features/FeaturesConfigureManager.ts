@@ -13,9 +13,9 @@ export class FeaturesConfigureManager {
    * @returns {IFeatureConfiugration}
    */
   getFeatureConfigure = (featureName: string, accessor?: string) => {
-    const meta = this.featuresConfigure.getConfigure().find(
-      (feature) => feature.name === featureName
-    );
+    const meta = this.featuresConfigure
+      .getConfigure()
+      .find((feature) => feature.name === featureName);
     return accessor ? get(meta, accessor) : meta;
   };
 }

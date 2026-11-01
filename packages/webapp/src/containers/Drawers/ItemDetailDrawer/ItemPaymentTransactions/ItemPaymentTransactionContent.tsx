@@ -1,13 +1,18 @@
-// @ts-nocheck
 import React from 'react';
-import InvoicePaymentTransactions from './InvoicePaymentTransactions';
-import EstimatePaymentTransactions from './EstimatePaymentTransactions';
-import ReceiptPaymentTransactions from './ReceiptPaymentTransactions';
-import BillPaymentTransactions from './BillPaymentTransactions';
+import { index as BillPaymentTransactions } from './BillPaymentTransactions';
+import { index as EstimatePaymentTransactions } from './EstimatePaymentTransactions';
+import { index as InvoicePaymentTransactions } from './InvoicePaymentTransactions';
+import { index as ReceiptPaymentTransactions } from './ReceiptPaymentTransactions';
 
-export default function ItemPaymentTransactionsContent({ tansactionType }) {
+interface ItemPaymentTransactionsContentProps {
+  transactionType: string;
+}
+
+export function ItemPaymentTransactionsContent({
+  transactionType,
+}: ItemPaymentTransactionsContentProps) {
   const handleType = () => {
-    switch (tansactionType) {
+    switch (transactionType) {
       case 'invoices':
       default:
         return <InvoicePaymentTransactions />;

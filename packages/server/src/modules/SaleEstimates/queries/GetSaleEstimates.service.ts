@@ -25,7 +25,7 @@ export class GetSaleEstimatesService {
   public async getEstimates(
     filterDTO: Partial<ISalesEstimatesFilter>,
   ): Promise<{
-    salesEstimates: SaleEstimate[];
+    data: SaleEstimate[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -52,7 +52,9 @@ export class GetSaleEstimatesService {
         builder.withGraphFetched('entries.item');
 
         dynamicFilter.buildQuery()(builder);
-        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
+        if (_filterDto?.filterQuery) {
+          _filterDto?.filterQuery(builder);
+        }
       })
       .pagination(filter.page - 1, filter.pageSize);
 
@@ -61,7 +63,7 @@ export class GetSaleEstimatesService {
       new SaleEstimateTransfromer(),
     );
     return {
-      salesEstimates: transformedEstimates,
+      data: transformedEstimates,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

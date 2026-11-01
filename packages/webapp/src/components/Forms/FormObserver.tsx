@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
 export function FormObserver({ onChange, values }) {
   useEffect(() => {

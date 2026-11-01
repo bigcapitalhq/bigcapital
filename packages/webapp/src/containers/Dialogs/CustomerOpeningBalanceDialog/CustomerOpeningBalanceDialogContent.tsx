@@ -1,20 +1,20 @@
-// @ts-nocheck
-import React from 'react';
-
 import '@/style/pages/CustomerOpeningBalance/CustomerOpeningBalance.scss';
 
-import CustomerOpeningBalanceForm from './CustomerOpeningBalanceForm';
+import { CustomerOpeningBalanceForm } from './CustomerOpeningBalanceForm';
 import { CustomerOpeningBalanceFormProvider } from './CustomerOpeningBalanceFormProvider';
+
+interface CustomerOpeningBalanceDialogContentProps {
+  dialogName: string;
+  customerId: number | undefined;
+}
 
 /**
  * Customer opening balance dialog content.
- * @returns
  */
-export default function CustomerOpeningBalanceDialogContent({
-  // #ownProps
+export function CustomerOpeningBalanceDialogContent({
   dialogName,
   customerId,
-}) {
+}: CustomerOpeningBalanceDialogContentProps) {
   return (
     <CustomerOpeningBalanceFormProvider
       customerId={customerId}

@@ -1,7 +1,4 @@
-import {
-  IAccountsTransactionsFilter,
-  IGetAccountTransactionPOJO,
-} from './Accounts.types';
+import { IAccountsTransactionsFilter } from './Accounts.types';
 import { AccountTransactionTransformer } from './AccountTransaction.transformer';
 import { AccountTransaction } from './models/AccountTransaction.model';
 import { Account } from './models/Account.model';

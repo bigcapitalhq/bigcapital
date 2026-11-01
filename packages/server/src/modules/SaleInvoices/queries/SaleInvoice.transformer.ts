@@ -70,7 +70,7 @@ export class SaleInvoiceTransformer extends Transformer {
   protected dueAmountFormatted = (invoice: SaleInvoice): string => {
     return this.formatNumber(invoice.dueAmount, {
       currencyCode: invoice.currencyCode,
-      money: true
+      money: true,
     });
   };
 
@@ -156,7 +156,9 @@ export class SaleInvoiceTransformer extends Transformer {
    * @param invoice
    * @returns {string}
    */
-  protected taxAmountWithheldLocalFormatted = (invoice: SaleInvoice): string => {
+  protected taxAmountWithheldLocalFormatted = (
+    invoice: SaleInvoice,
+  ): string => {
     return this.formatNumber(invoice.taxAmountWithheldLocal, {
       currencyCode: this.context.organization.baseCurrency,
     });
@@ -170,7 +172,7 @@ export class SaleInvoiceTransformer extends Transformer {
   protected totalFormatted = (invoice: SaleInvoice): string => {
     return this.formatNumber(invoice.total, {
       currencyCode: invoice.currencyCode,
-      money: true
+      money: true,
     });
   };
 
@@ -209,14 +211,14 @@ export class SaleInvoiceTransformer extends Transformer {
 
   /**
    * Retrieves formatted adjustment amount.
-   * @param invoice 
+   * @param invoice
    * @returns {string}
    */
   protected adjustmentFormatted = (invoice: SaleInvoice): string => {
     return this.formatNumber(invoice.adjustment, {
       currencyCode: invoice.currencyCode,
-    })
-  }
+    });
+  };
 
   /**
    * Retrieve the taxes lines of sale invoice.

@@ -1,14 +1,14 @@
-// @ts-nocheck
-import * as R from 'ramda';
 import { Button, Classes, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import { BrandingTemplateActionsBar } from './BrandingTemplatesActionsBar';
 import { BrandingTemplatesBoot } from './BrandingTemplatesBoot';
+import { BrandingTemplatesTable } from './BrandingTemplatesTable';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { Box, Card, DrawerHeaderContent, Group } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { BrandingTemplatesTable } from './BrandingTemplatesTable';
-import { BrandingTemplateActionsBar } from './BrandingTemplatesActionsBar';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-export default function BrandingTemplateContent() {
+export function BrandingTemplateContent() {
   return (
     <Box>
       <DrawerHeaderContent
@@ -28,8 +28,8 @@ export default function BrandingTemplateContent() {
   );
 }
 
-const BrandingTemplateHeader = R.compose(withDrawerActions)(
-  ({ openDrawer }) => {
+const BrandingTemplateHeader = FF.pipe(
+  ({ openDrawer }: WithDrawerActionsProps) => {
     const handleCreateBtnClick = () => {
       openDrawer(DRAWERS.INVOICE_CUSTOMIZE);
     };
@@ -41,6 +41,7 @@ const BrandingTemplateHeader = R.compose(withDrawerActions)(
       </Group>
     );
   },
+  withDrawerActions,
 );
 
 BrandingTemplateHeader.displayName = 'BrandingTemplateHeader';

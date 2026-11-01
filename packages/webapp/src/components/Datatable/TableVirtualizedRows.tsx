@@ -1,13 +1,20 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import { WindowScroller, AutoSizer, List } from 'react-virtualized';
-import { CLASSES } from '@/constants/classes';
 import TableContext from './TableContext';
+import type { ListRowRendererParams } from 'react-virtualized';
+import { CLASSES } from '@/constants/classes';
 
-/**
- * Table virtualized list row.
- */
-function TableVirtualizedListRow({ index, isScrolling, isVisible, style }) {
+interface TableVirtualizedListRowProps {
+  index: number;
+  isScrolling?: boolean;
+  isVisible?: boolean;
+  style?: React.CSSProperties;
+}
+
+function TableVirtualizedListRow({
+  index,
+  style,
+}: TableVirtualizedListRowProps) {
   const {
     table: { page, prepareRow },
     props: { TableRowRenderer },
@@ -19,27 +26,25 @@ function TableVirtualizedListRow({ index, isScrolling, isVisible, style }) {
   return <TableRowRenderer row={row} style={style} />;
 }
 
-/**
- * Table virtualized list rows.
- */
 export function TableVirtualizedListRows() {
   const {
     table: { page },
-    props: { vListrowHeight, vListOverscanRowCount, windowScrollerProps },
+    props: { vListrowHeight = 0, vListOverscanRowCount, windowScrollerProps },
   } = useContext(TableContext);
 
-  // Dashboard content pane.
   const scrollElement =
     windowScrollerProps?.scrollElement ||
     document.querySelector(`.${CLASSES.DASHBOARD_CONTENT_PANE}`);
 
   const rowRenderer = React.useCallback(
-    ({ key, ...args }) => <TableVirtualizedListRow {...args} key={key} />,
+    ({ key, ...args }: ListRowRendererParams) => (
+      <TableVirtualizedListRow {...args} key={key} />
+    ),
     [],
   );
 
   return (
-    <WindowScroller scrollElement={scrollElement}>
+    <WindowScroller scrollElement={scrollElement as HTMLElement}>
       {({ height, isScrolling, onChildScroll, scrollTop }) => (
         <AutoSizer disableHeight>
           {({ width }) => (

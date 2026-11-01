@@ -1,0 +1,69 @@
+.workspace-switching-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  &__card {
+    position: relative;
+    z-index: 1;
+    background: #151521;
+    border-radius: 16px;
+    padding: 48px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 20px 50px rgba(0, 0, 0, 0.4);
+    animation: workspace-switching-fade-in 0.25s ease-out;
+  }
+
+  &__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  &__subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+  }
+
+  &__title {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 500;
+  }
+}
+
+@keyframes workspace-switching-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

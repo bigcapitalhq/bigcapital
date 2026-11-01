@@ -1,33 +1,26 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import { compose } from 'ramda';
-
-import { TableStyle } from '@/constants';
-import { ReportDataTable, FinancialSheet } from '@/components';
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { getReportRowTestId } from '../reportTestIds';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { useSalesTaxLiabilitySummaryColumns } from './utils';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
+import { useCurrentOrganizationName } from '@/hooks/query';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
-/**
- * Balance sheet table.
- */
-function SalesTaxLiabilitySummaryTableRoot({
-  // #ownProps
-  organizationName,
-}) {
-  // Balance sheet context.
-  const {
-    salesTaxLiabilitySummary: { table, query, meta },
-  } = useSalesTaxLiabilitySummaryContext();
+function SalesTaxLiabilitySummaryTableRoot() {
+  const organizationName = useCurrentOrganizationName();
+  const { salesTaxLiabilitySummary } = useSalesTaxLiabilitySummaryContext();
+
+  const table = salesTaxLiabilitySummary?.table;
+  const meta = salesTaxLiabilitySummary?.meta;
 
   // Retrieve the database columns.
   const columns = useSalesTaxLiabilitySummaryColumns();
 
   // Retrieve default expanded rows of balance sheet.
   const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(table.rows, 3),
+    () => defaultExpanderReducer(table?.rows, 3),
     [table],
   );
 
@@ -35,13 +28,13 @@ function SalesTaxLiabilitySummaryTableRoot({
     <FinancialSheet
       companyName={organizationName}
       sheetType={'Sales Tax Liability Summary'}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      basis={''}
+      dateText={meta?.formattedDateRange}
     >
       <SalesTaxLiabilitySummaryDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('sales-tax-liability')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}
@@ -56,6 +49,15 @@ function SalesTaxLiabilitySummaryTableRoot({
 }
 
 const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
+  --color-table-total-border-top: #bbb;
+  --color-table-total-border-bottom: #333;
+  --color-table-tax-rate-text-color: #444;
+
+  .bp4-dark & {
+    --color-table-total-border-top: var(--color-dark-gray5);
+    --color-table-total-border-bottom: var(--color-dark-gray5);
+    --color-table-tax-rate-text-color: var(--color-light-gray2);
+  }
   .table {
     .tbody .tr {
       .td {
@@ -76,8 +78,8 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
           font-weight: 500;
 
           .td {
-            border-top: 1px solid #bbb;
-            border-bottom: 3px double #333;
+            border-top: 1px solid var(--color-table-total-border-top);
+            border-bottom: 3px double var(--color-table-total-border-bottom);
           }
         }
         &.row_type--TaxRate {
@@ -86,7 +88,7 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
             &.td-taxableAmount,
             &.td-collectedTax,
             &.td-taxRate {
-              color: #444;
+              color: var(--color-table-tax-rate-text-color);
             }
           }
         }
@@ -95,8 +97,4 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
   }
 `;
 
-export const SalesTaxLiabilitySummaryTable = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(SalesTaxLiabilitySummaryTableRoot);
+export const SalesTaxLiabilitySummaryTable = SalesTaxLiabilitySummaryTableRoot;

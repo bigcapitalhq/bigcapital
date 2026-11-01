@@ -1,26 +1,24 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
-import { Card, DataTable, If } from '@/components';
-import { AccountDrawerTableOptionsProvider } from './AccountDrawerTableOptionsProvider';
-import { AccountDrawerTableHeader } from './AccountDrawerTableHeader';
-
-import { useAccountReadEntriesColumns } from './utils';
-import { useAppIntlContext } from '@/components/AppIntlProvider';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { compose } from '@/utils';
+import { AccountDrawerTableHeader } from './AccountDrawerTableHeader';
+import { AccountDrawerTableOptionsProvider } from './AccountDrawerTableOptionsProvider';
+import { useAccountReadEntriesColumns } from './utils';
+import { Card, DataTable, If } from '@/components';
+import { useAppIntlContext } from '@/components/AppIntlProvider';
+import { TableStyle } from '@/constants';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 
 /**
  * account drawer table.
  */
-function AccountDrawerTable({ closeDrawer }) {
+function AccountDrawerTableInner({ closeDrawer }: WithDrawerActionsProps) {
   const { accounts, drawerName } = useAccountDrawerContext();
 
   // Handle view more link click.
@@ -36,7 +34,7 @@ function AccountDrawerTable({ closeDrawer }) {
         <AccountDrawerTableHeader />
         <AccountDrawerDataTable />
 
-        <If condition={accounts.length > 0}>
+        <If condition={(accounts?.length ?? 0) > 0}>
           <TableFooter>
             <Link
               to={`/financial-reports/general-ledger`}
@@ -60,14 +58,17 @@ function AccountDrawerDataTable() {
   return (
     <DataTable
       columns={columns}
-      data={accounts}
+      data={accounts ?? []}
       payload={{ account }}
       styleName={TableStyle.Constrant}
     />
   );
 }
 
-export default compose(withDrawerActions)(AccountDrawerTable);
+export const AccountDrawerTable = FF.pipe(
+  AccountDrawerTableInner,
+  withDrawerActions,
+);
 
 const TableFooter = styled.div`
   --x-border-color: #d2dde2;

@@ -1,27 +1,42 @@
-// @ts-nocheck
-import React from 'react';
 import { Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-import classNames from 'classnames';
-
-import { CLASSES } from '@/constants/classes';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { useCurrencyFormContext } from './CurrencyFormProvider';
-import { FieldRequiredHint, FFormGroup, FInputGroup, FSelect } from '@/components';
-
+import type { CurrencyFormValues } from './types';
+import {
+  FieldRequiredHint,
+  FFormGroup,
+  FInputGroup,
+  FSelect,
+  FormattedMessage as T,
+} from '@/components';
 import { useAutofocus } from '@/hooks';
 import { currenciesOptions } from '@/utils';
+
+interface CurrencyOption {
+  currency_code: string;
+  name: string;
+  symbol?: string;
+  formatted_name?: string;
+  [key: string]: unknown;
+}
 
 /**
  * Currency form fields.
  */
-export default function CurrencyFormFields() {
+export function CurrencyFormFields(): React.ReactElement {
   const currencyNameFieldRef = useAutofocus();
   const { isEditMode } = useCurrencyFormContext();
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<CurrencyFormValues>();
 
   // Filter currency code
-  const filterCurrencyCode = (query, currency, _index, exactMatch) => {
+  const filterCurrencyCode = (
+    query: string,
+    currency: CurrencyOption,
+    _index: number,
+    exactMatch: boolean,
+  ) => {
     const normalizedTitle = currency.name.toLowerCase();
     const normalizedQuery = query.toLowerCase();
     if (exactMatch) {
@@ -33,46 +48,45 @@ export default function CurrencyFormFields() {
 
   return (
     <div className={Classes.DIALOG_BODY}>
-      <FFormGroup
-        name={'currency_code'}
-        label={<T id={'currency_code'} />}
-      >
+      <FFormGroup name={'currencyCode'} label={intl.get('currency_code')}>
         <FSelect
-          name={'currency_code'}
+          name={'currencyCode'}
           items={currenciesOptions}
           valueAccessor={'currency_code'}
           textAccessor={'formatted_name'}
           placeholder={<T id={'select_currency_code'} />}
-          onItemSelect={(currency) => {
-            setFieldValue('currency_code', currency.currency_code);
-            setFieldValue('currency_name', currency.name);
-            setFieldValue('currency_sign', currency.symbol);
+          onItemSelect={(currency: CurrencyOption) => {
+            setFieldValue('currencyCode', currency.currency_code);
+            setFieldValue('currencyName', currency.name);
+            setFieldValue('currencySign', currency.symbol);
           }}
           itemPredicate={filterCurrencyCode}
-          disabled={isEditMode}
+          disabled={!!isEditMode}
           popoverProps={{ minimal: true }}
         />
       </FFormGroup>
 
       {/* ----------- Currency name ----------- */}
       <FFormGroup
-        name={'currency_name'}
-        label={<T id={'currency_name'} />}
+        name={'currencyName'}
+        label={intl.get('currency_name')}
         labelInfo={<FieldRequiredHint />}
       >
         <FInputGroup
-          name={'currency_name'}
-          inputRef={(ref) => (currencyNameFieldRef.current = ref)}
+          name={'currencyName'}
+          inputRef={(ref: HTMLInputElement | null) =>
+            (currencyNameFieldRef.current = ref)
+          }
         />
       </FFormGroup>
 
       {/* ----------- Currency Code ----------- */}
       <FFormGroup
-        name={'currency_sign'}
-        label={<T id={'currency_sign'} />}
+        name={'currencySign'}
+        label={intl.get('currency_sign')}
         labelInfo={<FieldRequiredHint />}
       >
-        <FInputGroup name={'currency_sign'} />
+        <FInputGroup name={'currencySign'} />
       </FFormGroup>
     </div>
   );

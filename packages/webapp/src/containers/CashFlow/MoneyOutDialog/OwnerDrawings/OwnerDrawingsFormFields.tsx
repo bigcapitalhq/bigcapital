@@ -1,9 +1,13 @@
-// @ts-nocheck
-import React from 'react';
 import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
-import classNames from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { MoneyInOutTransactionNoField } from '../../_components';
+import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
+import { MoneyOutExchangeRateField } from '../MoneyOutExchangeRateField';
+import { useMoneyOutFieldsContext } from '../MoneyOutFieldsProvider';
+import { useSetPrimaryBranchToForm, BranchRowDivider } from '../utils';
+import type { Account } from '@bigcapital/sdk-ts';
 import {
-  FormattedMessage as T,
   FAccountsSuggestField,
   InputPrependText,
   FieldRequiredHint,
@@ -17,36 +21,27 @@ import {
   FMoneyInputGroup,
   FDateInput,
 } from '@/components';
-import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
-import { momentFormatter } from '@/utils';
-import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
-import {
-  useSetPrimaryBranchToForm,
-  BranchRowDivider,
-} from '../../MoneyOutDialog/utils';
-import { MoneyInOutTransactionNoField } from '../../_components';
-import { useMoneyOutFieldsContext } from '../MoneyOutFieldsProvider';
-import { MoneyOutExchangeRateField } from '../MoneyOutExchangeRateField';
+import { Features, ACCOUNT_TYPE } from '@/constants';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Owner drawings form fields.
  */
-export default function OwnerDrawingsFormFields() {
-  // Money out dialog context.
+export function OwnerDrawingsFormFields() {
   const { accounts, branches } = useMoneyOutDialogContext();
   const { account } = useMoneyOutFieldsContext();
 
-  // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <React.Fragment>
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FFormGroup label={<T id={'branch'} />} name={'branch_id'}>
+            <FFormGroup label={intl.get('branch')} name={'branchId'}>
               <BranchSelect
-                name={'branch_id'}
+                name={'branchId'}
                 branches={branches}
                 popoverProps={{ minimal: true }}
               />
@@ -61,13 +56,12 @@ export default function OwnerDrawingsFormFields() {
           {/*------------ Date -----------*/}
           <FFormGroup
             name={'date'}
-            label={<T id={'date'} />}
+            label={intl.get('date')}
             labelInfo={<FieldRequiredHint />}
-            fill
           >
             <FDateInput
               name={'date'}
-              {...momentFormatter('YYYY/MM/DD')}
+              {...dateInputFormatter}
               popoverProps={{
                 position: Position.BOTTOM_LEFT,
                 minimal: true,
@@ -85,13 +79,14 @@ export default function OwnerDrawingsFormFields() {
       <Row>
         <Col xs={10}>
           <FormGroup
-            name={'amount'}
-            label={<T id={'amount'} />}
+            label={intl.get('amount')}
             labelInfo={<FieldRequiredHint />}
           >
             <ControlGroup>
-              <InputPrependText text={account.currency_code} />
-              <FMoneyInputGroup name={'amount'} minimal={true} />
+              <InputPrependText
+                text={(account as Account | undefined)?.currencyCode}
+              />
+              <FMoneyInputGroup name={'amount'} minimal={true} fastField />
             </ControlGroup>
           </FormGroup>
         </Col>
@@ -104,28 +99,28 @@ export default function OwnerDrawingsFormFields() {
         <Col xs={5}>
           {/*------------ equitty account -----------*/}
           <FFormGroup
-            name={'credit_account_id'}
-            label={<T id={'cash_flow_transaction.label_equity_account'} />}
+            name={'creditAccountId'}
+            label={intl.get('cash_flow_transaction.label_equity_account')}
             labelInfo={<FieldRequiredHint />}
           >
             <FAccountsSuggestField
-              name={'credit_account_id'}
+              name={'creditAccountId'}
               items={accounts}
-              filterByTypes={ACCOUNT_TYPE.EQUITY}
+              filterByTypes={[ACCOUNT_TYPE.EQUITY]}
             />
           </FFormGroup>
         </Col>
 
         <Col xs={5}>
           {/*------------ Reference -----------*/}
-          <FFormGroup name={'reference_no'} label={<T id={'reference_no'} />}>
-            <FInputGroup name={'reference_no'} />
+          <FFormGroup name={'referenceNo'} label={intl.get('reference_no')}>
+            <FInputGroup name={'referenceNo'} />
           </FFormGroup>
         </Col>
       </Row>
 
       {/*------------ description -----------*/}
-      <FFormGroup name={'description'} label={<T id={'description'} />}>
+      <FFormGroup name={'description'} label={intl.get('description')}>
         <FTextArea
           name={'description'}
           growVertically={true}

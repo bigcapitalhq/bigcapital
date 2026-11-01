@@ -67,6 +67,8 @@ export interface IAccountEventDeletePayload {
 
 export interface IAccountEventActivatedPayload {
   accountId: number;
+  activate: boolean;
+  account: Account;
   trx: Knex.Transaction;
 }
 
@@ -87,6 +89,7 @@ export enum TaxRateAction {
 
 export interface CreateAccountParams {
   ignoreUniqueName: boolean;
+  ignoreAccountCode?: boolean;
 }
 
-export interface IGetAccountTransactionPOJO {}
+export type IGetAccountTransactionPOJO = object;

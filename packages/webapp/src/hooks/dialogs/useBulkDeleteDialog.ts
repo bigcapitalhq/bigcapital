@@ -1,14 +1,21 @@
-// @ts-nocheck
 import { useCallback } from 'react';
 import { DialogsName } from '@/constants/dialogs';
 import { useDialogActions } from '@/hooks/state';
 
+interface BulkDeleteValidationMutation {
+  mutateAsync: (ids: number[]) => Promise<{
+    deletableCount?: number;
+    nonDeletableCount?: number;
+  }>;
+  isPending: boolean;
+}
+
 export const useBulkDeleteDialog = (
   dialogName: DialogsName,
-  validateBulkDeleteMutation,
+  validateBulkDeleteMutation: BulkDeleteValidationMutation,
 ) => {
   const { openDialog, closeDialog } = useDialogActions();
-  const { mutateAsync: validateBulkDelete, isLoading } =
+  const { mutateAsync: validateBulkDelete, isPending } =
     validateBulkDeleteMutation;
 
   const openBulkDeleteDialog = useCallback(
@@ -39,6 +46,6 @@ export const useBulkDeleteDialog = (
   return {
     openBulkDeleteDialog,
     closeBulkDeleteDialog,
-    isValidatingBulkDelete: isLoading,
+    isValidatingBulkDelete: isPending,
   };
 };

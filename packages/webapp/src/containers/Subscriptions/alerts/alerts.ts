@@ -1,11 +1,14 @@
-// @ts-nocheck
 import React from 'react';
 
-const CancelMainSubscriptionAlert = React.lazy(
-  () => import('./CancelMainSubscriptionAlert'),
+const CancelMainSubscriptionAlert = React.lazy(() =>
+  import('./CancelMainSubscriptionAlert').then((m) => ({
+    default: m.CancelMainSubscriptionAlert,
+  })),
 );
-const ResumeMainSubscriptionAlert = React.lazy(
-  () => import('./ResumeMainSubscriptionAlert'),
+const ResumeMainSubscriptionAlert = React.lazy(() =>
+  import('./ResumeMainSubscriptionAlert').then((m) => ({
+    default: m.ResumeMainSubscriptionAlert,
+  })),
 );
 
 /**

@@ -1,58 +1,84 @@
-// @ts-nocheck
-import React from 'react';
 import { isEmpty } from 'lodash';
-
+import React from 'react';
+import type { CreditNoteTableRow } from './components';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
   useResourceMeta,
   useCreditNotes,
   useRefreshCreditNotes,
+  useSettingsCreditNotes,
 } from '@/hooks/query';
-
 import { getFieldsFromResourceMeta } from '@/utils';
 
-const CreditNoteListContext = React.createContext();
+interface CreditNotesListProviderProps {
+  query?: any;
+  tableStateChanged?: boolean;
+  children?: React.ReactNode;
+}
 
-/**
- * Credit note data provider.
- */
-function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
-  // Credit notes refresh action.
+export interface CreditNotesListContextValue {
+  creditNotes: CreditNoteTableRow[] | undefined;
+  pagination: { total?: number; [key: string]: any } | undefined;
+  CreditNotesView: any;
+  refresh: () => void;
+  resourceMeta: any;
+  fields: IResourceField[];
+  isResourceLoading: boolean;
+  isResourceFetching: boolean;
+  isCreditNotesFetching: boolean;
+  isCreditNotesLoading: boolean;
+  isViewsLoading: boolean;
+  isEmptyStatus: boolean;
+  creditNoteSettings: SettingsGroup | undefined;
+}
+
+const CreditNoteListContext = React.createContext<CreditNotesListContextValue>(
+  {} as CreditNotesListContextValue,
+);
+
+function CreditNotesListProvider({
+  query,
+  tableStateChanged,
+  ...props
+}: CreditNotesListProviderProps) {
   const { refresh } = useRefreshCreditNotes();
 
-  // Fetch create notes resource views and fields.
   const { data: CreditNotesView, isLoading: isViewsLoading } =
     useResourceViews('credit_notes');
 
-  // Fetch the accounts resource fields.
   const {
     data: resourceMeta,
     isLoading: isResourceLoading,
     isFetching: isResourceFetching,
   } = useResourceMeta('credit_notes');
 
-  // Fetch credit note list.
   const {
-    data: { creditNotes, pagination, filterMeta },
+    data: creditNotesData,
     isFetching: isCreditNotesFetching,
     isLoading: isCreditNotesLoading,
-  } = useCreditNotes(query, { keepPreviousData: true });
+  } = useCreditNotes(query);
 
-  // Detarmines the datatable empty status.S
+  const { data: creditNoteSettings } = useSettingsCreditNotes();
+
   const isEmptyStatus =
-    isEmpty(creditNotes) && !isCreditNotesLoading && !tableStateChanged;
+    isEmpty(creditNotesData?.data) &&
+    !isCreditNotesLoading &&
+    !tableStateChanged;
 
-  // Provider payload.
-  const provider = {
-    creditNotes,
-    pagination,
+  const provider: CreditNotesListContextValue = {
+    creditNotes: creditNotesData?.data,
+    pagination: creditNotesData?.pagination,
 
     CreditNotesView,
     refresh,
 
     resourceMeta,
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields
+      ? getFieldsFromResourceMeta(resourceMeta.fields)
+      : [],
     isResourceLoading,
     isResourceFetching,
 
@@ -60,6 +86,8 @@ function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
     isCreditNotesLoading,
     isViewsLoading,
     isEmptyStatus,
+
+    creditNoteSettings,
   };
 
   return (

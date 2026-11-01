@@ -7,11 +7,15 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { AccountNormal } from '@/interfaces/Account';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
+import { RefundCreditNoteCashGL } from './RefundCreditNoteCashGL';
 
 @Injectable()
 export class RefundCreditNoteGLEntries {
   constructor(
     private readonly ledgerStorage: LedgerStorageService,
+    private readonly accountRepository: AccountRepository,
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
@@ -49,6 +53,8 @@ export class RefundCreditNoteGLEntries {
 
       note: refundCreditNote.description,
       branchId: refundCreditNote.branchId,
+
+      basis: AccountingBasis.Accrual,
     };
   };
 
@@ -114,6 +120,45 @@ export class RefundCreditNoteGLEntries {
   }
 
   /**
+   * Retrieves the refund credit note general ledger.
+   * The ledger contains both the accrual basis entries (A/R/payment) and
+   * the cash basis entries (withdrawal/income) flagged by the basis.
+   * @param {RefundCreditNote} refundCreditNote - Refund credit note.
+   * @param {number} ARAccountId - A/R account id.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<Ledger>}
+   */
+  public getRefundCreditNoteGLedger = async (
+    refundCreditNote: RefundCreditNote,
+    ARAccountId: number,
+    trx?: Knex.Transaction,
+  ): Promise<Ledger> => {
+    // Accrual basis ledger entries.
+    const accrualLedger = new Ledger(
+      this.getRefundCreditGLEntries(refundCreditNote, ARAccountId),
+    );
+
+    // Find or create the discount account.
+    const discountAccount =
+      await this.accountRepository.findOrCreateDiscountAccount({}, trx);
+    // Find or create the other charges (adjustment) account.
+    const adjustmentAccount =
+      await this.accountRepository.findOrCreateOtherChargesAccount({}, trx);
+
+    const refundCreditNoteCashGL = new RefundCreditNoteCashGL(refundCreditNote)
+      .setDiscountAccountId(discountAccount.id)
+      .setAdjustmentAccountId(adjustmentAccount.id);
+
+    // Cash basis ledger entries.
+    const cashLedger = refundCreditNoteCashGL.getLedger();
+
+    return new Ledger([
+      ...accrualLedger.getEntries(),
+      ...cashLedger.getEntries(),
+    ]);
+  };
+
+  /**
    * Creates refund credit GL entries.
    * @param {IRefundCreditNote} refundCreditNote
    * @param {Knex.Transaction} trx
@@ -122,22 +167,23 @@ export class RefundCreditNoteGLEntries {
     refundCreditNoteId: number,
     trx?: Knex.Transaction,
   ) => {
-    // Retrieve the refund with associated credit note.
-    const refundCreditNote = await this.refundCreditNoteModel().query(trx)
+    // Retrieve the refund with associated credit note and items.
+    const refundCreditNote = await this.refundCreditNoteModel()
+      .query(trx)
       .findById(refundCreditNoteId)
-      .withGraphFetched('creditNote');
+      .withGraphFetched('creditNote.entries.item');
 
     // Receivable account A/R.
-    const receivableAccount = await this.accountModel().query().findOne(
-      'slug',
-      'accounts-receivable',
-    );
-    // Retrieve refund credit GL entries.
-    const refundGLEntries = this.getRefundCreditGLEntries(
+    const receivableAccount = await this.accountModel()
+      .query()
+      .findOne('slug', 'accounts-receivable');
+
+    // Retrieve refund credit ledger entries.
+    const ledger = await this.getRefundCreditNoteGLedger(
       refundCreditNote,
       receivableAccount.id,
+      trx,
     );
-    const ledger = new Ledger(refundGLEntries);
 
     // Saves refund ledger entries.
     await this.ledgerStorage.commit(ledger, trx);

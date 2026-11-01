@@ -5,6 +5,12 @@ import {
   INumberFormatQuery,
 } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { ProfitLossColumnKey } from '../../common/constants/tableColumnKeys';
+import { FinancialReportSortOrder } from '../../utils/Sorting.utils';
+
+// Profit & loss sheet sorting order.
+export type ProfitLossSheetSortOrder = FinancialReportSortOrder;
 
 export enum ProfitLossAggregateNodeId {
   INCOME = 'INCOME',
@@ -41,8 +47,8 @@ export interface IFinancialNodeWithPreviousPeriod {
 }
 
 export interface IFinancialNodeWithPreviousYear {
-  previousYearFromDate: FinancialDateMeta;
-  previousYearToDate: FinancialDateMeta;
+  previousYearFromDate?: FinancialDateMeta;
+  previousYearToDate?: FinancialDateMeta;
 
   previousYear?: IProfitLossSheetTotal;
   previousYearChange?: IProfitLossSheetTotal;
@@ -60,7 +66,7 @@ export interface IFinancialCommonHorizDatePeriodNode {
 }
 
 export interface IProfitLossSheetQuery extends IFinancialSheetBranchesQuery {
-  basis: string;
+  basis: AccountingBasis;
 
   fromDate: moment.MomentInput;
   toDate: moment.MomentInput;
@@ -86,6 +92,9 @@ export interface IProfitLossSheetQuery extends IFinancialSheetBranchesQuery {
   previousYear: boolean;
   previousYearAmountChange: boolean;
   previousYearPercentageChange: boolean;
+
+  columnSortBy?: ProfitLossColumnKey;
+  sortOrder?: ProfitLossSheetSortOrder;
 }
 
 export interface IProfitLossSheetTotal {
@@ -114,7 +123,7 @@ export interface IProfitLossHorizontalDatePeriodNode
 export interface IProfitLossSheetCommonNode
   extends IFinancialNodeWithPreviousYear,
     IFinancialNodeWithPreviousPeriod {
-  id: ProfitLossAggregateNodeId;
+  id: ProfitLossAggregateNodeId | number;
   name: string;
 
   children?: IProfitLossSheetNode[];
@@ -124,6 +133,8 @@ export interface IProfitLossSheetCommonNode
 
   percentageRow?: IProfitLossSheetPercentage;
   percentageColumn?: IProfitLossSheetPercentage;
+  percentageIncome?: IProfitLossSheetPercentage;
+  percentageExpense?: IProfitLossSheetPercentage;
 }
 export interface IProfitLossSheetAccountNode
   extends IProfitLossSheetCommonNode {

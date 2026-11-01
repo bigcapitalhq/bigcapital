@@ -8,7 +8,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 export class VendorCreditBranchesActivateSubscriber {
   constructor(
     private readonly vendorCreditActivateBranches: VendorCreditActivateBranches,
-  ) { }
+  ) {}
 
   /**
    * Updates vendor credits transactions with the primary branch once

@@ -1,8 +1,7 @@
-// @ts-nocheck
-import React from 'react';
 import { Classes, Intent, Tag } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import { x } from '@xstyled/emotion';
+import React from 'react';
+import { FormattedMessage as T } from '@/components';
 
 interface BulkDeleteDialogContentProps {
   totalSelected: number;
@@ -12,7 +11,7 @@ interface BulkDeleteDialogContentProps {
   resourcePluralLabel: string;
 }
 
-function BulkDeleteDialogContent({
+export function BulkDeleteDialogContent({
   totalSelected,
   deletableCount,
   undeletableCount,
@@ -41,7 +40,9 @@ function BulkDeleteDialogContent({
       </x.div>
 
       <x.div display="flex" alignItems="center" gap={'12px'} mt={'8px'}>
-        <Tag intent={Intent.INFO} minimal>
+        {/* `Intent.INFO` was removed in Blueprint v5; using PRIMARY as the
+            nearest equivalent for the "cannot be deleted" tag. */}
+        <Tag intent={Intent.PRIMARY} minimal>
           {undeletableCount}
         </Tag>
         <x.div>
@@ -78,6 +79,3 @@ function BulkDeleteDialogContent({
     </div>
   );
 }
-
-export default BulkDeleteDialogContent;
-

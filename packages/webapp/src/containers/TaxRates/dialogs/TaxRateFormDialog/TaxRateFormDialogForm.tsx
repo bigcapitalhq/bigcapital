@@ -1,40 +1,45 @@
-// @ts-nocheck
-import React from 'react';
 import { Classes, Intent } from '@blueprintjs/core';
-import { Form, Formik } from 'formik';
-import { AppToaster } from '@/components';
-
-import TaxRateFormDialogFormContent from './TaxRateFormDialogFormContent';
-
+import { Form, Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import {
   CreateTaxRateFormSchema,
   EditTaxRateFormSchema,
 } from './TaxRateForm.schema';
+import { useTaxRateFormDialogContext } from './TaxRateFormDialogBoot';
+import { TaxRateFormDialogContent as TaxRateFormDialogFormContent } from './TaxRateFormDialogFormContent';
+import { TaxRateFormDialogFormErrors } from './TaxRateFormDialogFormErrors';
+import { TaxRateFormDialogFormFooter } from './TaxRateFormDialogFormFooter';
 import {
   isTaxRateChange,
   transformApiErrors,
   transformFormToReq,
   transformTaxRateToForm,
+  TaxRateFormValues,
 } from './utils';
-import { useCreateTaxRate, useEditTaxRate } from '@/hooks/query/taxRates';
-import { useTaxRateFormDialogContext } from './TaxRateFormDialogBoot';
-import { TaxRateFormDialogFormFooter } from './TaxRateFormDialogFormFooter';
-import { TaxRateFormDialogFormErrors } from './TaxRateFormDialogFormErrors';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { ApiError } from 'openapi-typescript-fetch';
+import { AppToaster } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { compose } from '@/utils';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { useCreateTaxRate, useEditTaxRate } from '@/hooks/query/tax-rates';
+
+interface TaxRateFormDialogFormProps
+  extends Pick<WithDialogActionsProps, 'closeDialog'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'> {}
 
 /**
  * Tax rate form dialog content.
  */
-function TaxRateFormDialogForm({
-  // #withDialogActions
+function TaxRateFormDialogFormInner({
   closeDialog,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
+}: TaxRateFormDialogFormProps) {
   // Account form context.
   const { taxRate, taxRateId, isNewMode, dialogName } =
     useTaxRateFormDialogContext();
@@ -51,14 +56,17 @@ function TaxRateFormDialogForm({
   const initialValues = transformTaxRateToForm(taxRate);
 
   // Callbacks handles form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: TaxRateFormValues,
+    { setSubmitting, setErrors }: FormikHelpers<TaxRateFormValues>,
+  ) => {
     const isTaxChanged = isTaxRateChange(initialValues, values);
 
     // Detarmines whether in edit mode and tax rate has been changed
     // and confirm box is not checked.
-    if (!isNewMode && isTaxChanged && !values.confirm_edit) {
+    if (!isNewMode && isTaxChanged && !values.confirmEdit) {
       setErrors({
-        confirm_edit:
+        confirmEdit:
           'Please review the terms and conditions below before proceeding',
       });
       setSubmitting(false);
@@ -67,10 +75,8 @@ function TaxRateFormDialogForm({
     const form = transformFormToReq(values);
 
     // Handle request success on edit.
-    const handleSuccessOnEdit = (response) => {
-      if (response?.data?.data?.id !== taxRateId) {
-        closeDrawer(DRAWERS.TAX_RATE_DETAILS);
-      }
+    const handleSuccessOnEdit = () => {
+      closeDrawer(DRAWERS.TAX_RATE_DETAILS);
     };
     // Handle request success.
     const handleSuccess = () => {
@@ -81,23 +87,18 @@ function TaxRateFormDialogForm({
       });
     };
     // Handle request error.
-    const handleError = (error) => {
-      const {
-        response: {
-          data: { errors },
-        },
-      } = error;
+    const handleError = (error: ApiError) => {
+      const errors =
+        (error.data?.errors as Array<{ type?: string }> | undefined) ?? [];
 
       const errorsTransformed = transformApiErrors(errors);
       setErrors({ ...errorsTransformed });
       setSubmitting(false);
     };
     if (isNewMode) {
-      createTaxRateMutate({ ...form })
-        .then(handleSuccess)
-        .catch(handleError);
+      createTaxRateMutate(form).then(handleSuccess).catch(handleError);
     } else {
-      editTaxRateMutate([taxRateId, { ...form }])
+      editTaxRateMutate([String(taxRateId), form])
         .then(handleSuccessOnEdit)
         .then(handleSuccess)
         .catch(handleError);
@@ -121,7 +122,8 @@ function TaxRateFormDialogForm({
   );
 }
 
-export default compose(
-  withDialogActions,
+export const TaxRateFormDialogForm = FF.pipe(
+  TaxRateFormDialogFormInner,
   withDrawerActions,
-)(TaxRateFormDialogForm);
+  withDialogActions,
+);

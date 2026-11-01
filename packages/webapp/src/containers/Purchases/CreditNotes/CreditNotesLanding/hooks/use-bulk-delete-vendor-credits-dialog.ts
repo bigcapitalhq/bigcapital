@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { DialogsName } from '@/constants/dialogs';
-import { useValidateBulkDeleteVendorCredits } from '@/hooks/query/vendorCredit';
 import { useBulkDeleteDialog } from '@/hooks/dialogs/useBulkDeleteDialog';
+import { useValidateBulkDeleteVendorCredits } from '@/hooks/query/vendor-credit';
 
 export const useBulkDeleteVendorCreditsDialog = () => {
   const validateBulkDeleteMutation = useValidateBulkDeleteVendorCredits();
@@ -9,7 +8,10 @@ export const useBulkDeleteVendorCreditsDialog = () => {
     openBulkDeleteDialog,
     closeBulkDeleteDialog,
     isValidatingBulkDelete,
-  } = useBulkDeleteDialog(DialogsName.VendorCreditBulkDelete, validateBulkDeleteMutation);
+  } = useBulkDeleteDialog(
+    DialogsName.VendorCreditBulkDelete,
+    validateBulkDeleteMutation,
+  );
 
   return {
     openBulkDeleteDialog,
@@ -17,4 +19,3 @@ export const useBulkDeleteVendorCreditsDialog = () => {
     isValidatingBulkDeleteVendorCredits: isValidatingBulkDelete,
   };
 };
-

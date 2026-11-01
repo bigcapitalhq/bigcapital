@@ -1,18 +1,28 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster, FormattedMessage as T } from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useCancelMainSubscription } from '@/hooks/query/subscription';
+
+/** Error shape rejected by the SDK fetcher on failed requests. */
+interface SubscriptionAlertError {
+  data: { errors: Array<{ type: string }> };
+}
+
+interface CancelMainSubscriptionAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { module?: string };
+}
 
 /**
  * Cancel Unlocking partial transactions alerts.
  */
-function CancelMainSubscriptionAlert({
+function CancelMainSubscriptionAlertInner({
   name,
 
   // #withAlertStoreConnect
@@ -21,8 +31,8 @@ function CancelMainSubscriptionAlert({
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: cancelSubscription, isLoading } =
+}: CancelMainSubscriptionAlertProps): React.ReactElement {
+  const { mutateAsync: cancelSubscription, isPending: isLoading } =
     useCancelMainSubscription();
 
   // Handle cancel.
@@ -41,13 +51,7 @@ function CancelMainSubscriptionAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {},
-      )
+      .catch(({ data: { errors } }: SubscriptionAlertError) => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -55,7 +59,7 @@ function CancelMainSubscriptionAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Cancel Subscription'}
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -75,7 +79,8 @@ function CancelMainSubscriptionAlert({
   );
 }
 
-export default R.compose(
-  withAlertStoreConnect(),
+export const CancelMainSubscriptionAlert = FF.pipe(
+  CancelMainSubscriptionAlertInner,
   withAlertActions,
-)(CancelMainSubscriptionAlert);
+  withAlertStoreConnect(),
+);

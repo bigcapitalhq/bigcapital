@@ -8,12 +8,12 @@ import { TransactionsByVendorExportInjectable } from './TransactionsByVendorExpo
 import { TransactionsByVendorsPdf } from './TransactionsByVendorPdf';
 import { TransactionsByVendorApplication } from './TransactionsByVendorApplication';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 import { AccountsModule } from '@/modules/Accounts/Accounts.module';
 
 @Module({
-  imports: [FinancialSheetCommonModule, AccountsModule],
-  controllers: [TransactionsByVendorController,],
+  imports: [TenancyModule, FinancialSheetCommonModule, AccountsModule],
+  controllers: [TransactionsByVendorController],
   providers: [
     TransactionsByVendorsInjectable,
     TransactionsByVendorRepository,
@@ -22,7 +22,6 @@ import { AccountsModule } from '@/modules/Accounts/Accounts.module';
     TransactionsByVendorExportInjectable,
     TransactionsByVendorsPdf,
     TransactionsByVendorApplication,
-    TenancyContext
   ],
   exports: [TransactionsByVendorApplication],
 })

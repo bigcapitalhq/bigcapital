@@ -13,11 +13,11 @@ export const actions = [
 export const subjects = ['Article', 'all'] as const;
 
 export type Abilities = [
-  typeof actions[number],
+  (typeof actions)[number],
   (
-    | typeof subjects[number]
-    | ForcedSubject<Exclude<typeof subjects[number], 'all'>>
-  )
+    | (typeof subjects)[number]
+    | ForcedSubject<Exclude<(typeof subjects)[number], 'all'>>
+  ),
 ];
 
 export type AppAbility = Ability<Abilities>;
@@ -25,6 +25,12 @@ export type AppAbility = Ability<Abilities>;
 export const createAbility = (rules: RawRuleOf<AppAbility>[]) =>
   new Ability<Abilities>(rules);
 
+export enum RoleAction {
+  View = 'View',
+  Create = 'Create',
+  Edit = 'Edit',
+  Delete = 'Delete',
+}
 
 export interface ISubjectAbilitySchema {
   key: string;
@@ -57,10 +63,15 @@ export enum AbilitySubject {
   Cashflow = 'Cashflow',
   ManualJournal = 'ManualJournal',
   Preferences = 'Preferences',
-  CreditNote = 'CreditNode',
+  CreditNote = 'CreditNote',
   VendorCredit = 'VendorCredit',
   Project = 'Project',
-  TaxRate = 'TaxRate'
+  TaxRate = 'TaxRate',
+  AuditLog = 'AuditLog',
+  Role = 'Role',
+  Warehouse = 'Warehouse',
+  Branch = 'Branch',
+  Attachment = 'Attachment',
 }
 
 export interface IRoleCreatedPayload {

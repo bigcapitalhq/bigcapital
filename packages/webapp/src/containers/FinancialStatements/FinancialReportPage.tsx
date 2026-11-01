@@ -1,14 +1,16 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 import styled from 'styled-components';
 import { DashboardInsider } from '@/components';
 import { CLASSES } from '@/constants/classes';
 
-/**
- * Financial report page.
- */
-export default function FinancialReportPage(props) {
+interface FinancialReportPageProps {
+  name?: string;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export function FinancialReportPage(props: FinancialReportPageProps) {
   return (
     <FinancialReportPageRoot
       {...props}

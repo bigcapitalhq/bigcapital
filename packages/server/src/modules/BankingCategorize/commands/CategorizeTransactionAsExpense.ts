@@ -32,9 +32,9 @@ export class CategorizeTransactionAsExpense {
    */
   public async categorize(
     cashflowTransactionId: number,
-    transactionDTO: ICategorizeCashflowTransactioDTO,
+    _transactionDTO: ICategorizeCashflowTransactioDTO,
   ) {
-    const transaction = await this.bankTransactionModel()
+    const _transaction = await this.bankTransactionModel()
       .query()
       .findById(cashflowTransactionId)
       .throwIfNotFound();

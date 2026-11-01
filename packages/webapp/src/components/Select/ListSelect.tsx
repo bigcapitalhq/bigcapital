@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useState, useMemo, useEffect } from 'react';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { FormattedMessage as T } from '../FormattedMessage';
 import classNames from 'classnames';
+import React, { useState, useMemo, useEffect } from 'react';
+import { FormattedMessage as T } from '../FormattedMessage';
 import { CLASSES } from '@/constants/classes';
 
 export function ListSelect({

@@ -1,5 +1,11 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsObject, IsString } from "class-validator";
-import { AddressItem } from "../MailNotification.types";
+import {
+  ArrayMinSize,
+  IsArray,
+  IsNotEmpty,
+  IsObject,
+  IsString,
+} from 'class-validator';
+import { AddressItem } from '../MailNotification.types';
 
 export class CommonMailOptionsDto {
   @IsArray()

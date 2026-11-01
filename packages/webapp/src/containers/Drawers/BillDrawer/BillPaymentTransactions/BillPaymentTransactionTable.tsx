@@ -1,33 +1,39 @@
-// @ts-nocheck
-import React from 'react';
+import * as FF from 'fp-ts/function';
 import { useHistory } from 'react-router-dom';
-import { DataTable, Card, TableSkeletonRows } from '@/components';
-
-import { TableStyle } from '@/constants';
-import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from '../BillDrawerProvider';
+import { useBillPaymentTransactionsColumns, ActionsMenu } from './components';
+import type { BillPaymentTransactionsResponse } from '@bigcapital/sdk-ts';
+import { DataTable, Card, TableSkeletonRows } from '@/components';
+import { TableStyle } from '@/constants';
+import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 import { useBillPaymentTransactions } from '@/hooks/query';
 
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+type BillPaymentTransaction = BillPaymentTransactionsResponse[number];
 
-import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+interface BillPaymentTransactionTableInnerProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Bill payment transactions datatable.
  */
-function BillPaymentTransactionTable({
+function BillPaymentTransactionTableInner({
   // #withAlertActions
   openAlert,
 
   // #withDrawerActions
   closeDrawer,
-}) {
+}: BillPaymentTransactionTableInnerProps) {
   const history = useHistory();
-
   const columns = useBillPaymentTransactionsColumns();
-
   const { billId } = useBillDrawerContext();
 
   // Handle fetch bill payment transaction.
@@ -40,15 +46,19 @@ function BillPaymentTransactionTable({
   });
 
   // Handles delete bill payment transactions.
-  const handleDeleteBillPaymentTransactons = ({ bill_payment_id }) => {
+  const handleDeleteBillPaymentTransactons = (
+    row: Pick<BillPaymentTransaction, 'billPaymentId'>,
+  ) => {
     openAlert('payment-made-delete', {
-      paymentMadeId: bill_payment_id,
+      paymentMadeId: row.billPaymentId,
     });
   };
 
   // Handles edit  bill payment transactions.
-  const handleEditBillPaymentTransactions = ({ bill_payment_id }) => {
-    history.push(`/payments-made/${bill_payment_id}/edit`);
+  const handleEditBillPaymentTransactions = (
+    row: Pick<BillPaymentTransaction, 'billPaymentId'>,
+  ) => {
+    history.push(`/payments-made/${row.billPaymentId}/edit`);
     closeDrawer(DRAWERS.BILL_DETAILS);
   };
 
@@ -56,7 +66,7 @@ function BillPaymentTransactionTable({
     <Card>
       <DataTable
         columns={columns}
-        data={paymentTransactions}
+        data={paymentTransactions ?? []}
         loading={isPaymentTransactionsLoading}
         headerLoading={isPaymentTransactionsLoading}
         progressBarLoading={isPaymentTransactionFetching}
@@ -72,7 +82,8 @@ function BillPaymentTransactionTable({
   );
 }
 
-export default compose(
-  withAlertActions,
+export const BillPaymentTransactionTable = FF.pipe(
+  BillPaymentTransactionTableInner,
   withDrawerActions,
-)(BillPaymentTransactionTable);
+  withAlertActions,
+);

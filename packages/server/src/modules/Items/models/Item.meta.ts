@@ -1,4 +1,3 @@
-
 export const ItemMeta = {
   importable: true,
   exportable: true,
@@ -96,6 +95,11 @@ export const ItemMeta = {
     quantity_on_hand: {
       name: 'item.field.quantity_on_hand',
       column: 'quantity_on_hand',
+      fieldType: 'number',
+    },
+    reorder_point: {
+      name: 'item.field.reorder_point',
+      column: 'reorder_point',
       fieldType: 'number',
     },
     note: {
@@ -202,6 +206,11 @@ export const ItemMeta = {
       type: 'number',
       exportable: true,
     },
+    reorderPoint: {
+      name: 'item.field.reorder_point',
+      type: 'number',
+      exportable: true,
+    },
     note: {
       name: 'item.field.note',
       type: 'text',
@@ -282,6 +291,10 @@ export const ItemMeta = {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       importHint: 'account.field.account_hint',
+    },
+    reorderPoint: {
+      name: 'item.field.reorder_point',
+      fieldType: 'number',
     },
     sellDescription: {
       name: 'item.field.sell_description',

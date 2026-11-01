@@ -1,45 +1,58 @@
-// @ts-nocheck
-import React from 'react';
-
-import styled from 'styled-components';
-import moment from 'moment';
-import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
+import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import { CustomersBalanceSummaryGeneralPanel } from './CustomersBalanceSummaryGeneralPanel';
+import {
+  getCustomersBalanceQuerySchema,
+  getDefaultCustomersBalanceQuery,
+} from './utils';
+import {
+  withCustomersBalanceSummary,
+  WithCustomersBalanceSummaryProps,
+} from './withCustomersBalanceSummary';
+import {
+  withCustomersBalanceSummaryActions,
+  WithCustomersBalanceSummaryActionsProps,
+} from './withCustomersBalanceSummaryActions';
+import type { FormikHelpers } from 'formik';
 import { FormattedMessage as T } from '@/components';
+import { transformToForm } from '@/utils';
 
-import FinancialStatementHeader from '../FinancialStatementHeader';
-import { withCustomersBalanceSummary } from './withCustomersBalanceSummary';
-import { withCustomersBalanceSummaryActions } from './withCustomersBalanceSummaryActions';
-import CustomersBalanceSummaryGeneralPanel from './CustomersBalanceSummaryGeneralPanel';
+type CustomerBalanceFormValues = ReturnType<
+  typeof getDefaultCustomersBalanceQuery
+>;
 
-import { compose, transformToForm } from '@/utils';
-import { getCustomersBalanceQuerySchema } from './utils';
+interface CustomersBalanceSummaryHeaderOwnProps {
+  onSubmitFilter: (values: CustomerBalanceFormValues) => void;
+  pageFilter: CustomerBalanceFormValues;
+}
 
-/**
- * Customers balance summary.
- */
-function CustomersBalanceSummaryHeader({
-  // #ownProps
+type CustomersBalanceSummaryHeaderProps =
+  CustomersBalanceSummaryHeaderOwnProps &
+    Pick<WithCustomersBalanceSummaryProps, 'customersBalanceDrawerFilter'> &
+    Pick<
+      WithCustomersBalanceSummaryActionsProps,
+      'toggleCustomerBalanceFilterDrawer'
+    >;
+
+function CustomersBalanceSummaryHeaderInner({
   onSubmitFilter,
   pageFilter,
-
-  // #withCustomersBalanceSummary
   customersBalanceDrawerFilter,
-
-  // #withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
-}) {
-  // validation schema.
+}: CustomersBalanceSummaryHeaderProps) {
   const validationSchema = getCustomersBalanceQuerySchema();
 
-  // Default form values.
   const defaultValues = {
     ...pageFilter,
     asDate: moment().toDate(),
     customersIds: [],
   };
 
-  // Filter form initial values.
   const initialValues = transformToForm(
     {
       ...defaultValues,
@@ -47,14 +60,17 @@ function CustomersBalanceSummaryHeader({
       asDate: moment(pageFilter.asDate).toDate(),
     },
     defaultValues,
-  );
-  // handle form submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  ) as CustomerBalanceFormValues;
+
+  const handleSubmit = (
+    values: CustomerBalanceFormValues,
+    { setSubmitting }: FormikHelpers<CustomerBalanceFormValues>,
+  ) => {
     onSubmitFilter(values);
     toggleCustomerBalanceFilterDrawer(false);
     setSubmitting(false);
   };
-  // handle close drawer.
+
   const handleDrawerClose = () => {
     toggleCustomerBalanceFilterDrawer(false);
   };
@@ -78,7 +94,7 @@ function CustomersBalanceSummaryHeader({
             />
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -92,12 +108,13 @@ function CustomersBalanceSummaryHeader({
   );
 }
 
-export default compose(
+export const CustomersBalanceSummaryHeader = FF.pipe(
+  CustomersBalanceSummaryHeaderInner,
+  withCustomersBalanceSummaryActions,
   withCustomersBalanceSummary(({ customersBalanceDrawerFilter }) => ({
     customersBalanceDrawerFilter,
   })),
-  withCustomersBalanceSummaryActions,
-)(CustomersBalanceSummaryHeader);
+);
 
 const CustomerBalanceDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Intent,
   Button,
@@ -10,24 +8,25 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { If, Icon, FormattedMessage as T, Group, FSelect } from '@/components';
-import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { useEstimateFormBrandingTemplatesOptions } from './utils';
-import { useDrawerActions } from '@/hooks/state';
+import { If, Icon, FormattedMessage as T, Group, FSelect } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { DRAWERS } from '@/constants/drawers';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
-import { PageForm } from '@/components/PageForm';
+import { useDrawerActions } from '@/hooks/state';
 import { MoreIcon } from '@/icons/More';
-import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Estimate floating actions bar.
  */
-export default function EstimateFloatingActions() {
+export function EstimateFloatingActions() {
   const history = useHistory();
   const { openDrawer } = useDrawerActions();
   const { resetForm, submitForm, isSubmitting } = useFormikContext();
@@ -36,52 +35,52 @@ export default function EstimateFloatingActions() {
   const { estimate, setSubmitPayload } = useEstimateFormContext();
 
   // Handle submit & deliver button click.
-  const handleSubmitDeliverBtnClick = (event) => {
+  const handleSubmitDeliverBtnClick = () => {
     setSubmitPayload({ redirect: true, deliver: true });
     submitForm();
   };
 
   // Handle submit, deliver & new button click.
-  const handleSubmitDeliverAndNewBtnClick = (event) => {
+  const handleSubmitDeliverAndNewBtnClick = () => {
     setSubmitPayload({ redirect: false, deliver: true, resetForm: true });
     submitForm();
   };
 
   // Handle submit, deliver & continue editing button click.
-  const handleSubmitDeliverContinueEditingBtnClick = (event) => {
+  const handleSubmitDeliverContinueEditingBtnClick = () => {
     setSubmitPayload({ redirect: false, deliver: true });
     submitForm();
   };
 
   // Handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = () => {
     setSubmitPayload({ redirect: true, deliver: false });
     submitForm();
   };
 
   // Handle submit as draft & new button click.
-  const handleSubmitDraftAndNewBtnClick = (event) => {
+  const handleSubmitDraftAndNewBtnClick = () => {
     setSubmitPayload({ redirect: false, deliver: false, resetForm: true });
     submitForm();
   };
 
   // Handle submit as draft & continue editing button click.
-  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+  const handleSubmitDraftContinueEditingBtnClick = () => {
     setSubmitPayload({ redirect: false, deliver: false });
     submitForm();
   };
 
   // Handle the cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = () => {
     history.goBack();
   };
 
   // Handle the clear button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = () => {
     resetForm();
   };
 
-  // Handles the invoice customize button click.
+  // Handles the estimate customize button click.
   const handleCustomizeBtnClick = () => {
     openDrawer(DRAWERS.BRANDING_TEMPLATES, { resource: 'SaleEstimate' });
   };
@@ -92,7 +91,7 @@ export default function EstimateFloatingActions() {
     <PageForm.FooterActions position={'apart'} spacing={10}>
       <Group spacing={10}>
         {/* ----------- Save And Deliver ----------- */}
-        <If condition={!estimate || !estimate?.is_delivered}>
+        <If condition={!estimate || !estimate?.deliveredAt}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}
@@ -160,7 +159,7 @@ export default function EstimateFloatingActions() {
         </If>
 
         {/* ----------- Save and New ----------- */}
-        <If condition={estimate && estimate?.is_delivered}>
+        <If condition={!!estimate && !!estimate?.deliveredAt}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}
@@ -211,16 +210,26 @@ export default function EstimateFloatingActions() {
       <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
-          name={'pdf_template_id'}
+          name={'pdfTemplateId'}
           label={'Branding'}
           inline
           fastField
           style={{ marginLeft: 20 }}
         >
           <FSelect
-            name={'pdf_template_id'}
+            name={'pdfTemplateId'}
             items={brandingTemplatesOptions}
-            input={({ activeItem, text, label, value }) => (
+            input={({
+              activeItem,
+              text,
+              label,
+              value,
+            }: {
+              activeItem?: unknown;
+              text?: string;
+              label?: string;
+              value?: unknown;
+            }) => (
               <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
             )}
             filterable={false}

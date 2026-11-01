@@ -1,8 +1,11 @@
-// @ts-nocheck
-import React from 'react';
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useReceiptFormContext } from './ReceiptFormProvider';
+import type { ReceiptFormValues } from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   FFormGroup,
   FieldRequiredHint,
@@ -11,38 +14,38 @@ import {
   FormattedMessage as T,
   FInputGroup,
 } from '@/components';
-
-import { withSettings } from '@/containers/Settings/withSettings';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+
+type ReceiptFormReceiptNumberFieldProps = {
+  openDialog: WithDialogActionsProps['openDialog'];
+};
 
 /**
  * Receipt number field of receipt form.
  */
-export const ReceiptFormReceiptNumberField = R.compose(
-  withDialogActions,
-  withSettings(({ receiptSettings }) => ({
-    receiptAutoIncrement: receiptSettings?.autoIncrement,
-  })),
-)(
+export const ReceiptFormReceiptNumberField = FF.pipe(
   ({
     // #withDialogActions
     openDialog,
-
-    // #withSettings
-    receiptAutoIncrement,
-  }) => {
-    const { values, setFieldValue } = useFormikContext();
+  }: ReceiptFormReceiptNumberFieldProps) => {
+    const { values, setFieldValue } = useFormikContext<ReceiptFormValues>();
+    const { receiptSettings } = useReceiptFormContext();
+    const receiptAutoIncrement = receiptSettings?.autoIncrement as
+      | boolean
+      | undefined;
 
     const handleReceiptNumberChange = () => {
       openDialog('receipt-number-form', {});
     };
 
-    const handleReceiptNoBlur = (event) => {
+    const handleReceiptNoBlur: React.FocusEventHandler<HTMLInputElement> = (
+      event,
+    ) => {
       const newValue = event.target.value;
 
       // Show the confirmation dialog if the value has changed and auto-increment
       // mode is enabled.
-      if (values.receipt_number !== newValue && receiptAutoIncrement) {
+      if (values.receiptNumber !== newValue && receiptAutoIncrement) {
         openDialog('receipt-number-form', {
           initialFormValues: {
             onceManualNumber: newValue,
@@ -53,24 +56,22 @@ export const ReceiptFormReceiptNumberField = R.compose(
       // Setting the receipt number to the form will be manually in case
       // auto-increment is disable.
       if (!receiptAutoIncrement) {
-        setFieldValue('receipt_number', newValue);
-        setFieldValue('receipt_number_manually', newValue);
+        setFieldValue('receiptNumber', newValue);
+        setFieldValue('receiptNumberManually', newValue);
       }
     };
 
     return (
       <FFormGroup
-        name={'receipt_number'}
-        label={<T id={'receipt'} />}
+        name={'receiptNumber'}
+        label={intl.get('receipt')}
         inline={true}
         labelInfo={<FieldRequiredHint />}
       >
         <ControlGroup fill={true}>
           <FInputGroup
-            name={'receipt_number'}
-            minimal={true}
-            value={values.receipt_number}
-            asyncControl={true}
+            name={'receiptNumber'}
+            value={values.receiptNumber}
             onBlur={handleReceiptNoBlur}
             onChange={() => {}}
           />
@@ -86,14 +87,12 @@ export const ReceiptFormReceiptNumberField = R.compose(
               ),
               position: Position.BOTTOM_LEFT,
             }}
-            inputProps={{
-              leftIcon: <Icon icon={'date-range'} />,
-            }}
           />
         </ControlGroup>
       </FFormGroup>
     );
   },
+  withDialogActions,
 );
 
 ReceiptFormReceiptNumberField.displayName = 'ReceiptFormReceiptNumberField';

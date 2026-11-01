@@ -1,52 +1,58 @@
-// @ts-nocheck
 import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
-import {
-  ReportDataTable,
-  FinancialSheet,
-  FormattedMessage as T,
-} from '@/components';
-
+import { getReportRowTestId } from '../reportTestIds';
+import { useFinancialReportSorting } from '../useReportSorting';
 import { useProfitLossSheetColumns } from './hooks';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
 import { tableRowTypesToClassnames, defaultExpanderReducer } from '@/utils';
 
-export default function ProfitLossSheetTable({
-  // #ownProps
-  companyName,
-}) {
-  // Profit/Loss sheet context.
-  const {
-    profitLossSheet: { table, query, meta },
-  } = useProfitLossSheetContext();
+interface ProfitLossSheetTableProps {
+  companyName: string;
+}
 
-  // Retrieves the profit/loss table columns.
+export function ProfitLossSheetTable({
+  companyName,
+}: ProfitLossSheetTableProps) {
+  const { profitLossSheet, pageQuery, setPageQuery } =
+    useProfitLossSheetContext();
+  const table = profitLossSheet?.table;
+  const query = profitLossSheet?.query;
+  const meta = profitLossSheet?.meta;
+
   const columns = useProfitLossSheetColumns();
 
-  // Retrieve default expanded rows of balance sheet.
   const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(table?.rows || [], 3),
+    () => defaultExpanderReducer(table?.rows ?? [], 3),
     [table],
   );
+
+  // Profit/loss sheet backend columns sorting.
+  const { sortableTableProps } = useFinancialReportSorting({
+    pageQuery,
+    setPageQuery,
+  });
 
   return (
     <FinancialSheet
       companyName={companyName}
-      sheetType={<T id={'profit_loss_sheet'} />}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      basis={query.basis}
+      sheetType={intl.get('profit_loss_sheet')}
+      dateText={meta?.formattedDateRange}
+      basis={query?.basis}
     >
       <ProfitLossDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows ?? []}
         noInitialFetch={true}
         expanded={expandedRows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('profit-loss')}
         expandable={true}
         expandToggleColumn={1}
         sticky={true}
+        {...sortableTableProps}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>

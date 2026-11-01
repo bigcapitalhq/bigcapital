@@ -1,28 +1,28 @@
 import { Text, Classes, Button, Intent } from '@blueprintjs/core';
-import clsx from 'classnames';
 import { css } from '@emotion/css';
-import { AppToaster, Box, Group, Stack } from '@/components';
+import clsx from 'classnames';
+import styles from './PaymentPortal.module.scss';
 import { usePaymentPortalBoot } from './PaymentPortalBoot';
-import { useDrawerActions } from '@/hooks/state';
+import { AppToaster, Box, Group, Stack } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 import {
   useCreateStripeCheckoutSession,
   useGeneratePaymentLinkInvoicePdf,
 } from '@/hooks/query/payment-link';
-import { DRAWERS } from '@/constants/drawers';
+import { useDrawerActions } from '@/hooks/state';
 import { downloadFile } from '@/hooks/useDownloadFile';
-import styles from './PaymentPortal.module.scss';
 
 export function PaymentPortal() {
   const { openDrawer } = useDrawerActions();
   const { sharableLinkMeta, linkId } = usePaymentPortalBoot();
   const {
     mutateAsync: createStripeCheckoutSession,
-    isLoading: isStripeCheckoutLoading,
+    isPending: isStripeCheckoutLoading,
   } = useCreateStripeCheckoutSession();
 
   const {
     mutateAsync: generatePaymentLinkInvoice,
-    isLoading: isInvoiceGenerating,
+    isPending: isInvoiceGenerating,
   } = useGeneratePaymentLinkInvoicePdf();
 
   // Handles invoice preview button click.

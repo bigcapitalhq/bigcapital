@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
 import { x } from '@xstyled/emotion';
-import { Box, Group, Stack } from '@/components';
+import React, { useMemo } from 'react';
 import { useSendInvoiceMailForm, useSendInvoiceMailSubject } from './_hooks';
 import { useInvoiceSendMailBoot } from './InvoiceSendMailContentBoot';
+import { Box, Group, Stack } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 export function InvoiceSendMailHeaderPreview() {
@@ -48,10 +48,15 @@ export function InvoiceSendMailHeaderPreview() {
           <Stack spacing={2}>
             <Group spacing={2}>
               <Box fontWeight={600}>{invoiceMailState?.companyName} </Box>
-              <Box color={isDarkmode ? 'rgba(255, 255, 255, 0.6)' : '#738091'}>{fromAddresses}</Box>
+              <Box color={isDarkmode ? 'rgba(255, 255, 255, 0.6)' : '#738091'}>
+                {fromAddresses}
+              </Box>
             </Group>
 
-            <Box fontSize={'sm'} color={isDarkmode ? 'rgba(255, 255, 255, 0.6)' : '#738091'}>
+            <Box
+              fontSize={'sm'}
+              color={isDarkmode ? 'rgba(255, 255, 255, 0.6)' : '#738091'}
+            >
               Send to: {invoiceMailState?.customerName} {toAddresses};
             </Box>
           </Stack>

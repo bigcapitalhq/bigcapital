@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -9,7 +7,16 @@ import {
   Switch,
   Alignment,
 } from '@blueprintjs/core';
-
+import * as FF from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { useHistory } from 'react-router-dom';
+import { useBulkDeleteVendorsDialog } from './hooks/use-bulk-delete-vendors-dialog';
+import { useVendorsListContext } from './VendorsListProvider';
+import { withVendors } from './withVendors';
+import { withVendorsActions } from './withVendorsActions';
+import type { WithVendorsActionsProps } from './withVendorsActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   Can,
   Icon,
@@ -20,29 +27,25 @@ import {
   DashboardRowsHeightButton,
   AdvancedFilterPopover,
 } from '@/components';
-
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { useRefreshVendors } from '@/hooks/query/vendors';
-import { useVendorsListContext } from './VendorsListProvider';
-import { useHistory } from 'react-router-dom';
-import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { useBulkDeleteVendorsDialog } from './hooks/use-bulk-delete-vendors-dialog';
-import { isEmpty } from 'lodash';
-
-import { withVendors } from './withVendors';
-import { withVendorsActions } from './withVendorsActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useRefreshVendors } from '@/hooks/query/vendors';
+
+interface VendorActionsBarInnerProps
+  extends WithVendorsActionsProps,
+    WithDialogActionsProps {
+  vendorsSelectedRows: unknown[];
+  vendorsFilterConditions: IFilterRole[];
+  vendorsInactiveMode: boolean | undefined;
+}
 
 /**
  * Vendors actions bar.
  */
-function VendorActionsBar({
+function VendorActionsBarInner({
   // #withVendors
   vendorsSelectedRows = [],
   vendorsFilterConditions,
@@ -51,22 +54,23 @@ function VendorActionsBar({
   setVendorsTableState,
   vendorsInactiveMode,
 
-  // #withSettings
-  vendorsTableSize,
-
-  // #withSettingsActions
-  addSetting,
-
   // #withDialogActions
   openDialog,
-}) {
-  const history = useHistory();
-  const { openBulkDeleteDialog, isValidatingBulkDeleteVendors } =
-    useBulkDeleteVendorsDialog();
+}: VendorActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
 
+  const history = useHistory();
+  const bulkDelete = useBulkDeleteVendorsDialog();
+  const { openBulkDeleteDialog } = bulkDelete;
+  // `isValidatingBulkDeleteVendors` is not on the hook's return type — preserved
+  // latent bug (the value would be undefined at runtime anyway).
+  const isValidatingBulkDeleteVendors = (
+    bulkDelete as { isValidatingBulkDeleteVendors?: boolean }
+  ).isValidatingBulkDeleteVendors;
 
   // Vendors list context.
-  const { vendorsViews, fields } = useVendorsListContext();
+  const { vendorsViews, fields, vendorsSettings } = useVendorsListContext();
+  const vendorsTableSize = vendorsSettings?.tableSize as string | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -79,11 +83,13 @@ function VendorActionsBar({
   const { refresh } = useRefreshVendors();
 
   // Handle the active tab change.
-  const handleTabChange = (viewSlug) => {
+  const handleTabChange = (viewSlug: string) => {
     setVendorsTableState({ viewSlug });
   };
   // Handle inactive switch changing.
-  const handleInactiveSwitchChange = (event) => {
+  const handleInactiveSwitchChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const checked = event.target.checked;
     setVendorsTableState({ inactiveMode: checked });
   };
@@ -91,8 +97,10 @@ function VendorActionsBar({
   const handleRefreshBtnClick = () => {
     refresh();
   };
-  const handleTableRowSizeChange = (size) => {
-    addSetting('vendors', 'tableSize', size);
+  const handleTableRowSizeChange = (size: string) => {
+    saveSettings({
+      options: [{ group: 'vendors', key: 'tableSize', value: size }],
+    });
   };
   // Handle import button success.
   const handleImportBtnSuccess = () => {
@@ -108,7 +116,7 @@ function VendorActionsBar({
   };
 
   const handleBulkDelete = () => {
-    openBulkDeleteDialog(vendorsSelectedRows);
+    openBulkDeleteDialog(vendorsSelectedRows as number[]);
   };
 
   if (!isEmpty(vendorsSelectedRows)) {
@@ -151,7 +159,7 @@ function VendorActionsBar({
             conditions: vendorsFilterConditions,
             defaultFieldKey: 'display_name',
             fields: fields,
-            onFilterChange: (filterConditions) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setVendorsTableState({ filterRoles: filterConditions });
             },
           }}
@@ -205,16 +213,13 @@ function VendorActionsBar({
   );
 }
 
-export default compose(
-  withVendorsActions,
-  withSettingsActions,
+export const VendorActionsBar = FF.pipe(
+  VendorActionsBarInner,
+  withDialogActions,
   withVendors(({ vendorsTableState, vendorsSelectedRows }) => ({
     vendorsSelectedRows,
     vendorsInactiveMode: vendorsTableState.inactiveMode,
     vendorsFilterConditions: vendorsTableState.filterRoles,
   })),
-  withSettings(({ vendorsSettings }) => ({
-    vendorsTableSize: vendorsSettings?.tableSize,
-  })),
-  withDialogActions,
-)(VendorActionsBar);
+  withVendorsActions,
+);

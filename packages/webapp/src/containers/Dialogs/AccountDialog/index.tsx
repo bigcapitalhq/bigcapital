@@ -1,20 +1,28 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
+import type { AccountDialogPayload } from './types';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
-import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
+import withDialogRedux, {
+  DialogBaseProps,
+} from '@/components/DialogReduxConnect';
 
-const AccountDialogContent = lazy(() => import('./AccountDialogContent'));
+const AccountDialogContent = lazy(() =>
+  import('./AccountDialogContent').then((m) => ({
+    default: m.AccountDialogContent,
+  })),
+);
 
-/**
- * Account form dialog.
- */
+interface AccountFormDialogProps extends DialogBaseProps {
+  dialogName: string;
+  payload: AccountDialogPayload;
+}
+
 function AccountFormDialog({
   dialogName,
-  payload = { action: '', id: null },
+  payload = { action: '', accountId: null },
   isOpen,
-}) {
+}: AccountFormDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -30,11 +38,11 @@ function AccountFormDialog({
       canEscapeKeyClose={true}
       isOpen={isOpen}
     >
-      <DialogSuspense>
+      <DialogSuspense testId={'account-form-dialog'}>
         <AccountDialogContent dialogName={dialogName} payload={payload} />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export default compose(withDialogRedux())(AccountFormDialog);
+export const index = FF.pipe(AccountFormDialog, withDialogRedux());

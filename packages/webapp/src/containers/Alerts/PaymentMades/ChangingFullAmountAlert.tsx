@@ -1,41 +1,47 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { saveInvoke } from '@/utils';
 
-import { compose, saveInvoke } from '@/utils';
+interface ChangingFullAmountAlertPayload {
+  // Empty payload — alert reads no payload field.
+  [key: string]: unknown;
+}
+
+interface ChangingFullAmountAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ChangingFullAmountAlertPayload;
+  onConfirm?: (event: React.SyntheticEvent<HTMLElement>) => void;
+}
 
 /**
  * Changing full-amount alert in payment made form.
  */
-function ChangingFullAmountAlert({
+function ChangingFullAmountAlertInner({
   name,
   onConfirm,
-
-  // #withAlertStoreConnect
   isOpen,
-  payload: {},
-
-  // #withAlertActions
+  payload,
   closeAlert,
-}) {
-  // Handle the alert cancel.
+}: ChangingFullAmountAlertProps): React.ReactElement {
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm delete manual journal.
-  const handleConfirm = (event) => {
+  const handleConfirm = (event: React.SyntheticEvent<HTMLElement>) => {
     closeAlert(name);
     saveInvoke(onConfirm, event);
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'ok'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('ok')}
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancel}
@@ -49,7 +55,8 @@ function ChangingFullAmountAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const ChangingFullAmountAlert = FF.pipe(
+  ChangingFullAmountAlertInner,
   withAlertActions,
-)(ChangingFullAmountAlert);
+  withAlertStoreConnect(),
+);

@@ -1,8 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 
-const DeleteBankRuleAlert = React.lazy(
-  () => import('./alerts/DeleteBankRuleAlert'),
+const DeleteBankRuleAlert = React.lazy(() =>
+  import('./alerts/DeleteBankRuleAlert').then((m) => ({
+    default: m.DeleteBankRuleAlert,
+  })),
 );
 
 /**

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { TaxRatesController } from './TaxRate.controller';
 import { CreateTaxRate } from './commands/CreateTaxRate.service';
 import { InactivateTaxRateService } from './commands/InactivateTaxRate';
@@ -8,7 +7,7 @@ import { GetTaxRateService } from './queries/GetTaxRate.service';
 import { DeleteTaxRateService } from './commands/DeleteTaxRate.service';
 import { EditTaxRateService } from './commands/EditTaxRate.service';
 import { CommandTaxRatesValidators } from './commands/CommandTaxRatesValidator.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { TaxRatesApplication } from './TaxRate.application';
 import { ItemEntriesTaxTransactions } from './ItemEntriesTaxTransactions.service';
 import { GetTaxRatesService } from './queries/GetTaxRates.service';
@@ -23,11 +22,13 @@ import { RegisterTenancyModel } from '../Tenancy/TenancyModels/Tenancy.module';
 import { TaxRateTransaction } from './models/TaxRateTransaction.model';
 import { TaxRatesExportable } from './TaxRatesExportable';
 import { TaxRatesImportable } from './TaxRatesImportable';
+import { FeaturesModule } from '../Features/Features.module';
+import { SalesTaxFeatureGuard } from './SalesTaxFeatureGuard';
 
 const models = [RegisterTenancyModel(TaxRateTransaction)];
 
 @Module({
-  imports: [...models],
+  imports: [TenancyModule, FeaturesModule, ...models],
   controllers: [TaxRatesController],
   providers: [
     CreateTaxRate,
@@ -38,8 +39,6 @@ const models = [RegisterTenancyModel(TaxRateTransaction)];
     ActivateTaxRateService,
     InactivateTaxRateService,
     CommandTaxRatesValidators,
-    TransformerInjectable,
-    TenancyContext,
     TaxRatesApplication,
     ItemEntriesTaxTransactions,
     WriteBillTaxTransactionsSubscriber,
@@ -50,7 +49,8 @@ const models = [RegisterTenancyModel(TaxRateTransaction)];
     WriteTaxTransactionsItemEntries,
     SyncItemTaxRateOnEditTaxRate,
     TaxRatesExportable,
-    TaxRatesImportable
+    TaxRatesImportable,
+    SalesTaxFeatureGuard,
   ],
   exports: [ItemEntriesTaxTransactions, ...models],
 })

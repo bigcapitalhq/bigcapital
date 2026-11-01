@@ -12,6 +12,8 @@ export class TenantModel extends BaseModel {
   public readonly buildJobId: string;
   public readonly upgradeJobId: string;
   public readonly databaseBatch: string;
+  public readonly isDeleting: boolean;
+  public readonly isInactive: boolean;
   public readonly subscriptions: Array<PlanSubscription>;
 
   /**
@@ -24,7 +26,7 @@ export class TenantModel extends BaseModel {
    * @returns {string[]}
    */
   static get virtualAttributes() {
-    return ['isReady', 'isBuildRunning', 'isUpgradeRunning'];
+    return ['isReady', 'isBuildRunning', 'isUpgradeRunning', 'isActive'];
   }
 
   /**
@@ -49,6 +51,14 @@ export class TenantModel extends BaseModel {
    */
   get isUpgradeRunning() {
     return !!this.upgradeJobId;
+  }
+
+  /**
+   * Determines if the tenant is active (not inactive and not deleting).
+   * @returns {boolean}
+   */
+  get isActive() {
+    return !this.isInactive && !this.isDeleting;
   }
 
   /**

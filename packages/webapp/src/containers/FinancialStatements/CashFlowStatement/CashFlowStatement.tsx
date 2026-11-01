@@ -1,46 +1,42 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
+import React, { useEffect } from 'react';
+import { CashflowSheetDialogs } from './CashflowSheetDialogs';
+import { CashFlowStatementActionsBar } from './CashFlowStatementActionsBar';
 import { CashFlowStatementBody } from './CashFlowStatementBody';
+import { CashFlowStatementHeader } from './CashFlowStatementHeader';
 import { CashFlowStatementProvider } from './CashFlowStatementProvider';
-
-import CashFlowStatementHeader from './CashFlowStatementHeader';
-import CashFlowStatementActionsBar from './CashFlowStatementActionsBar';
-
-import { withCashFlowStatementActions } from './withCashFlowStatementActions';
 import {
   CashFlowStatementLoadingBar,
   CashFlowStatementAlerts,
 } from './components';
-
 import { useCashflowStatementQuery } from './utils';
-import { compose } from '@/utils';
-import { CashflowSheetDialogs } from './CashflowSheetDialogs';
+import {
+  withCashFlowStatementActions,
+  WithCashFlowStatementActionsProps,
+} from './withCashFlowStatementActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
-/**
- * Cash flow statement.
- * @returns {JSX.Element}
- */
-function CashFlowStatement({
-  // # withCashStatementActions
+type CashFlowStatementProps = Pick<
+  WithCashFlowStatementActionsProps,
+  'toggleCashFlowStatementFilterDrawer'
+>;
+
+function CashFlowStatementInner({
   toggleCashFlowStatementFilterDrawer,
-}) {
-  // Cashflow statement query.
+}: CashFlowStatementProps) {
   const { query, setLocationQuery } = useCashflowStatementQuery();
 
-  // Handle refetch cash flow after filter change.
-  const handleFilterSubmit = (filter) => {
+  const handleFilterSubmit = (filter: Record<string, unknown>) => {
     const newFilter = {
       ...filter,
-      fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
-      toDate: moment(filter.toDate).format('YYYY-MM-DD'),
+      fromDate: moment(filter.fromDate as string).format('YYYY-MM-DD'),
+      toDate: moment(filter.toDate as string).format('YYYY-MM-DD'),
     };
     setLocationQuery({ ...newFilter });
   };
-  // Handle format number submit.
-  const handleNumberFormatSubmit = (values) => {
+
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     setLocationQuery({
       ...query,
       numberFormat: values,
@@ -78,4 +74,7 @@ function CashFlowStatement({
   );
 }
 
-export default compose(withCashFlowStatementActions)(CashFlowStatement);
+export const CashFlowStatement = FF.pipe(
+  CashFlowStatementInner,
+  withCashFlowStatementActions,
+);

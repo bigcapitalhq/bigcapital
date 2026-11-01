@@ -64,7 +64,7 @@ class CommandBranchDto {
   })
   @IsOptional()
   @IsString()
-  phone_number?: string;
+  phoneNumber?: string;
 
   @ApiPropertyOptional({
     description: 'Branch email',

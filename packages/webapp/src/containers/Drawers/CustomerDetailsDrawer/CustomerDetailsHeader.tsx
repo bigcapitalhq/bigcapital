@@ -1,18 +1,14 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { defaultTo } from 'lodash';
-
-import { DetailsMenu, DetailItem, T } from '@/components';
-import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
-
+import intl from 'react-intl-universal';
 import Style from './CustomerDetailsDrawer.module.scss';
+import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
+import { DetailsMenu, DetailItem, T } from '@/components';
 
 /**
  * Customer details header.
  */
-export default function CustomerDetailsHeader() {
+export function CustomerDetailsHeader() {
   const { customer } = useCustomerDetailsDrawerContext();
 
   return (
@@ -23,60 +19,60 @@ export default function CustomerDetailsHeader() {
       >
         <DetailItem
           name={'outstanding-receivable'}
-          label={<T id={'customer.drawer.label.outstanding_receivable'} />}
+          label={intl.get('customer.drawer.label.outstanding_receivable')}
         >
-          <h3 class="big-number">{customer.formatted_balance}</h3>
+          <h3 className="big-number">{customer?.formattedBalance}</h3>
         </DetailItem>
 
         <DetailItem
-          label={<T id={'customer.drawer.label.customer_type'} />}
+          label={intl.get('customer.drawer.label.customer_type')}
           name={'type'}
-          children={customer?.formatted_customer_type }
+          children={customer?.formattedCustomerType}
         />
-        <DetailItem label={<T id={'customer.drawer.label.unused_credits'} />}>
+        <DetailItem label={intl.get('customer.drawer.label.unused_credits')}>
           0
         </DetailItem>
       </DetailsMenu>
 
       <DetailsMenu direction={'horizantal'} minLabelSize={'175px'}>
         <DetailItem
-          label={<T id={'customer.drawer.label.customer_name'} />}
+          label={intl.get('customer.drawer.label.customer_name')}
           name={'name'}
         >
-          <strong>{customer?.display_name}</strong>
+          <strong>{customer?.displayName}</strong>
         </DetailItem>
 
         <DetailItem
-          label={<T id={'customer.drawer.label.company_name'} />}
-          children={defaultTo(customer?.company_name, '--')}
+          label={intl.get('customer.drawer.label.company_name')}
+          children={defaultTo(customer?.companyName, '--')}
         />
         <DetailItem
-          label={<T id={'customer.drawer.label.email'} />}
+          label={intl.get('customer.drawer.label.email')}
           children={defaultTo(customer?.email, '--')}
         />
-        <DetailItem label={<T id={'customer.drawer.label.phone_number'} />}>
-          <div>{customer?.personal_phone} </div>
-          <div>{customer?.work_phone} </div>
+        <DetailItem label={intl.get('customer.drawer.label.phone_number')}>
+          <div>{customer?.personalPhone} </div>
+          <div>{customer?.workPhone} </div>
         </DetailItem>
 
         <DetailItem
-          label={<T id={'customer.drawer.label.website'} />}
+          label={intl.get('customer.drawer.label.website')}
           children={defaultTo(customer?.website, '--')}
         />
         <DetailItem
-          label={<T id={'customer.drawer.label.opening_balance'} />}
-          children={customer?.formatted_opening_balance}
+          label={intl.get('customer.drawer.label.opening_balance')}
+          children={customer?.formattedOpeningBalance}
         />
         <DetailItem
-          label={<T id={'customer.drawer.label.opening_balance_at'} />}
-          children={customer?.formatted_opening_balance_at}
+          label={intl.get('customer.drawer.label.opening_balance_at')}
+          children={customer?.formattedOpeningBalanceAt}
         />
         <DetailItem
-          label={<T id={'customer.drawer.label.currency'} />}
-          children={customer?.currency_code}
+          label={intl.get('customer.drawer.label.currency')}
+          children={customer?.currencyCode}
         />
         <DetailItem
-          label={<T id={'customer.drawer.label.note'} />}
+          label={intl.get('customer.drawer.label.note')}
           children={defaultTo(customer?.note, '--')}
         />
       </DetailsMenu>

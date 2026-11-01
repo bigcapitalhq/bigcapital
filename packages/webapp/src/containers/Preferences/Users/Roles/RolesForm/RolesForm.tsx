@@ -1,40 +1,49 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import { isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import { Formik } from 'formik';
-import { isEmpty } from 'lodash';
-import { Intent } from '@blueprintjs/core';
-
 import '@/style/pages/Preferences/Roles/Form.scss';
-
-import { AppToaster, FormattedMessage as T } from '@/components';
+import { handleDeleteErrors } from '../utils';
 import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
+import { RolesFormContent } from './RolesFormContent';
 import { useRolesFormContext } from './RolesFormProvider';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import RolesFormContent from './RolesFormContent';
 import {
   getNewRoleInitialValues,
   transformToArray,
   transformToObject,
 } from './utils';
-import { handleDeleteErrors } from '../utils';
-import { compose, transformToForm } from '@/utils';
+import type { RolesFormValues } from './types';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { transformToForm } from '@/utils';
 
-const defaultValues = {
-  role_name: '',
-  role_description: '',
+const defaultValues: RolesFormValues = {
+  roleName: '',
+  roleDescription: '',
   permissions: {},
   serviceFullAccess: {},
 };
 
+interface RoleErrorPayload {
+  data: { errors: Array<{ type: string }> };
+}
+
+type RolesFormInnerProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
+
 /**
  *  Preferences - Roles Form.
  */
-function RolesForm({
+function RolesFormInner({
   // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: RolesFormInnerProps) {
   // History context.
   const history = useHistory();
 
@@ -49,21 +58,30 @@ function RolesForm({
   } = useRolesFormContext();
 
   // Initial values.
-  const initialValues = {
+  const initialValues: RolesFormValues = {
     ...defaultValues,
     ...(!isEmpty(role)
-      ? transformToForm(transformToObject(role), defaultValues)
-      : getNewRoleInitialValues(permissionsSchema)),
+      ? (transformToForm(
+          transformToObject(role as never),
+          defaultValues,
+        ) as Partial<RolesFormValues>)
+      : (getNewRoleInitialValues(
+          (permissionsSchema as never) || [],
+        ) as Partial<RolesFormValues>)),
   };
   React.useEffect(() => {
-    changePreferencesPageTitle(<T id={'roles.label'} />);
+    changePreferencesPageTitle(intl.get('roles.label'));
   }, [changePreferencesPageTitle]);
 
   // Handle the form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
-    const permission = transformToArray(values);
+  const handleFormSubmit = (
+    values: RolesFormValues,
+    { setSubmitting }: FormikHelpers<RolesFormValues>,
+  ) => {
+    const permission = transformToArray(values, role);
     const form = {
-      ...values,
+      roleName: values.roleName,
+      roleDescription: values.roleDescription,
       permissions: permission,
     };
     setSubmitting(true);
@@ -80,23 +98,23 @@ function RolesForm({
       history.push('/preferences/users');
     };
 
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = ({ data: { errors } }: RoleErrorPayload) => {
       setSubmitting(false);
       handleDeleteErrors(errors);
     };
     if (isNewMode) {
-      createRolePermissionMutate(form).then(onSuccess).catch(onError);
+      createRolePermissionMutate(form as never)
+        .then(onSuccess)
+        .catch(onError);
     } else {
-      editRolePermissionMutate([roleId, form]).then(onSuccess).catch(onError);
+      editRolePermissionMutate([roleId, form] as never)
+        .then(onSuccess)
+        .catch(onError);
     }
   };
 
   return (
-    <Formik
+    <Formik<RolesFormValues>
       initialValues={initialValues}
       validationSchema={isNewMode ? CreateRolesFormSchema : EditRolesFormSchema}
       onSubmit={handleFormSubmit}
@@ -106,4 +124,4 @@ function RolesForm({
   );
 }
 
-export default compose(withDashboardActions)(RolesForm);
+export const RolesForm = FF.pipe(RolesFormInner, withDashboardActions);

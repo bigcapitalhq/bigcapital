@@ -65,7 +65,9 @@ export class BankingRecognizedTransactionsController {
           properties: {
             data: {
               type: 'array',
-              items: { $ref: getSchemaPath(GetRecognizedTransactionResponseDto) },
+              items: {
+                $ref: getSchemaPath(GetRecognizedTransactionResponseDto),
+              },
             },
           },
         },

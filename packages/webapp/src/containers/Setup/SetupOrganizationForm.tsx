@@ -1,11 +1,9 @@
-// @ts-nocheck
-import React from 'react';
-import { FastField, Form, ErrorMessage } from 'formik';
-import { Button, Intent, FormGroup, Classes } from '@blueprintjs/core';
-import classNames from 'classnames';
-import { TimezonePicker } from '@blueprintjs/timezone';
 import { getAllCountries } from '@bigcapital/utils';
+import { Button, Intent, Classes } from '@blueprintjs/core';
 import { x } from '@xstyled/emotion';
+import { Form, FormikProps } from 'formik';
+import intl from 'react-intl-universal';
+import type { SetupOrganizationFormValues } from './SetupOrganization.schema';
 import {
   FFormGroup,
   FInputGroup,
@@ -13,21 +11,20 @@ import {
   FTimezoneSelect,
   FormattedMessage as T,
 } from '@/components';
-
 import { Col, Row } from '@/components';
-import { inputIntent } from '@/utils';
-import { useIsDarkMode } from '@/hooks/useDarkMode';
-
+import { getAllCurrenciesOptions } from '@/constants/currencies';
 import { getFiscalYear } from '@/constants/fiscalYearOptions';
 import { getLanguages } from '@/constants/languagesOptions';
-import { getAllCurrenciesOptions } from '@/constants/currencies';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 const countries = getAllCountries();
 
 /**
  * Setup organization form.
  */
-export default function SetupOrganizationForm({ isSubmitting, values }) {
+export function SetupOrganizationForm({
+  isSubmitting,
+}: FormikProps<SetupOrganizationFormValues>) {
   const FiscalYear = getFiscalYear();
   const Languages = getLanguages();
   const currencies = getAllCurrenciesOptions();
@@ -45,7 +42,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       {/* ---------- Organization name ----------  */}
       <FFormGroup
         name={'name'}
-        label={<T id={'legal_organization_name'} />}
+        label={intl.get('legal_organization_name')}
         fastField
       >
         <FInputGroup name={'name'} large fastField />
@@ -54,7 +51,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       {/* ---------- Location ---------- */}
       <FFormGroup
         name={'location'}
-        label={<T id={'business_location'} />}
+        label={intl.get('business_location')}
         fastField={true}
       >
         <FSelect
@@ -74,7 +71,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
           {/* ----------  Base currency ----------  */}
           <FFormGroup
             name={'baseCurrency'}
-            label={<T id={'base_currency'} />}
+            label={intl.get('base_currency')}
             fastField={true}
           >
             <FSelect
@@ -92,7 +89,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
 
         {/* ---------- Language ---------- */}
         <Col xs={6}>
-          <FFormGroup name={'language'} label={<T id={'language'} />} fastField>
+          <FFormGroup name={'language'} label={intl.get('language')} fastField>
             <FSelect
               name={'language'}
               items={Languages}
@@ -108,11 +105,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </Row>
 
       {/* --------- Fiscal Year ----------- */}
-      <FFormGroup
-        name={'fiscalYear'}
-        label={<T id={'fiscal_year'} />}
-        fastField
-      >
+      <FFormGroup name={'fiscalYear'} label={intl.get('fiscal_year')} fastField>
         <FSelect
           name={'fiscalYear'}
           items={FiscalYear}
@@ -126,12 +119,12 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </FFormGroup>
 
       {/* ----------  Time zone ----------  */}
-      <FFormGroup name={'timezone'} label={<T id={'time_zone'} />}>
+      <FFormGroup name={'timezone'} label={intl.get('time_zone')}>
         <FTimezoneSelect
           name={'timezone'}
           valueDisplayFormat="composite"
           showLocalTimezone={true}
-          placeholder={<T id={'select_time_zone'} />}
+          placeholder={intl.get('select_time_zone')}
           popoverProps={{ minimal: true }}
           buttonProps={{
             alignText: 'left',

@@ -1,20 +1,21 @@
-// @ts-nocheck
+import { css } from '@emotion/css';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { css } from '@emotion/css';
+import { PaymentReceivedForm } from './PaymentReceiveForm';
 import {
   PaymentReceiveFormProvider,
   usePaymentReceiveFormContext,
 } from './PaymentReceiveFormProvider';
-import { PaymentReceivedForm } from './PaymentReceiveForm';
 import { DashboardInsider } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
+import { index as InvoiceDetailDrawer } from '@/containers/Drawers/InvoiceDetailDrawer';
 
 /**
  * Payment received form page.
  */
-export default function PaymentReceiveFormPage() {
-  const { id } = useParams();
-  const paymentReceivedId = parseInt(id, 10);
+export function PaymentReceiveFormPage() {
+  const { id } = useParams<{ id?: string }>();
+  const paymentReceivedId = id ? parseInt(id, 10) : undefined;
 
   return (
     <PaymentReceiveFormProvider paymentReceiveId={paymentReceivedId}>
@@ -35,6 +36,7 @@ function PaymentReceivedFormPageContent() {
       `}
     >
       <PaymentReceivedForm />
+      <InvoiceDetailDrawer name={DRAWERS.INVOICE_DETAILS} />
     </DashboardInsider>
   );
 }

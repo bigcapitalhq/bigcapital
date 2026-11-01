@@ -1,26 +1,46 @@
-// @ts-nocheck
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
-import { omit } from 'lodash';
+import type { TaxRate } from '@bigcapital/sdk-ts';
 import { transformToForm } from '@/utils';
 
+export interface TaxRateFormValues {
+  name: string;
+  code: string;
+  rate: string;
+  description: string;
+  isCompound: boolean;
+  isNonRecoverable: boolean;
+  confirmEdit: boolean;
+}
+
+export interface TaxRateFormRequestBody {
+  name: string;
+  code: string;
+  rate: number;
+  description: string;
+  isCompound: boolean;
+  isNonRecoverable: boolean;
+  active: boolean;
+}
+
 // Default initial form values.
-export const defaultInitialValues = {
+export const defaultInitialValues: TaxRateFormValues = {
   name: '',
   code: '',
   rate: '',
   description: '',
-  is_compound: false,
-  is_non_recoverable: false,
-  confirm_edit: false,
+  isCompound: false,
+  isNonRecoverable: false,
+  confirmEdit: false,
 };
 
 /**
  * Transformers response errors to form errors.
  * @returns {Record<string, string>}
  */
-export const transformApiErrors = (errors) => {
-  const fields = {};
+export const transformApiErrors = (
+  errors: Array<{ type?: string }>,
+): Record<string, string> => {
+  const fields: Record<string, string> = {};
 
   if (errors.find((e) => e.type === 'TAX_CODE_NOT_UNIQUE')) {
     fields.code = 'The tax rate is not unique.';
@@ -31,17 +51,30 @@ export const transformApiErrors = (errors) => {
 /**
  * Tranformes form values to request values.
  */
-export const transformFormToReq = (form) => {
-  return omit({ ...form }, ['confirm_edit']);
+export const transformFormToReq = (
+  form: TaxRateFormValues,
+): TaxRateFormRequestBody => {
+  return {
+    name: form.name,
+    code: form.code,
+    rate: Number(form.rate),
+    description: form.description,
+    isCompound: form.isCompound,
+    isNonRecoverable: form.isNonRecoverable,
+    active: true,
+  };
 };
 
 /**
  * Detarmines whether the tax rate changed.
- * @param initialValues 
- * @param formValues 
+ * @param initialValues
+ * @param formValues
  * @returns {boolean}
  */
-export const isTaxRateChange = (initialValues, formValues) => {
+export const isTaxRateChange = (
+  initialValues: TaxRateFormValues,
+  formValues: TaxRateFormValues,
+): boolean => {
   return initialValues.rate !== formValues.rate;
 };
 
@@ -49,33 +82,34 @@ export const isTaxRateChange = (initialValues, formValues) => {
  * Detarmines whether the tax rate changed.
  * @returns {boolean}
  */
-export const useIsTaxRateChanged = () => {
-  const { initialValues, values } = useFormikContext();
+export const useIsTaxRateChanged = (): boolean => {
+  const { initialValues, values } = useFormikContext<TaxRateFormValues>();
 
   return isTaxRateChange(initialValues, values);
 };
 
-const convertFormAttrsToBoolean = (form) => {
+const convertFormAttrsToBoolean = (
+  form: TaxRateFormValues,
+): TaxRateFormValues => {
   return {
     ...form,
-    is_compound: !!form.is_compound,
-    is_non_recoverable: !!form.is_non_recoverable,
+    isCompound: !!form.isCompound,
+    isNonRecoverable: !!form.isNonRecoverable,
   };
 };
 
-export const transformTaxRateToForm = (taxRate) => {
-  return R.compose(convertFormAttrsToBoolean)({
+export const transformTaxRateToForm = (
+  taxRate?: TaxRate,
+): TaxRateFormValues => {
+  return convertFormAttrsToBoolean({
     ...defaultInitialValues,
-    /**
-     * We only care about the fields in the form. Previously unfilled optional
-     * values such as `notes` come back from the API as null, so remove those
-     * as well.
-     */
     ...transformToForm(taxRate, defaultInitialValues),
+    rate:
+      taxRate?.rate != null ? String(taxRate.rate) : defaultInitialValues.rate,
   });
 };
 
-export const transformTaxRateCodeValue = (input: string) => {
+export const transformTaxRateCodeValue = (input: string): string => {
   // Remove non-alphanumeric characters and spaces using a regular expression
   const cleanedString = input.replace(/\s+/g, '');
 

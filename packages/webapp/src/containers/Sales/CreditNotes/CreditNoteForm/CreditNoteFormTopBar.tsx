@@ -1,18 +1,15 @@
-// @ts-nocheck
-import React from 'react';
-
 import {
   Alignment,
   NavbarGroup,
   NavbarDivider,
   Classes,
 } from '@blueprintjs/core';
+import React from 'react';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
-import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import {
   BranchSelect,
   FeatureCan,
@@ -22,13 +19,13 @@ import {
   FormWarehouseSelectButton,
   FormBranchSelectButton,
 } from '@/components';
-import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Credit note form topbar .
- * @returns {JSX.Element}
  */
-export default function CreditNoteFormTopbar() {
+export function CreditNoteFormTopbar() {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -68,7 +65,7 @@ function CreditNoteFormSelectBranch() {
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <BranchSelect
-      name={'branch_id'}
+      name={'branchId'}
       branches={branches}
       input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
@@ -85,7 +82,7 @@ function CreditFormSelectWarehouse() {
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <WarehouseSelect
-      name={'warehouse_id'}
+      name={'warehouseId'}
       warehouses={warehouses}
       input={FormWarehouseSelectButton}
       popoverProps={{ minimal: true }}

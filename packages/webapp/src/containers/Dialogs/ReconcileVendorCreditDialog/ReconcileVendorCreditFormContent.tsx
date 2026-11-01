@@ -1,14 +1,12 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
+import React from 'react';
+import { ReconcileVendorCreditFloatingActions } from './ReconcileVendorCreditFloatingActions';
+import { ReconcileVendorCreditFormFields } from './ReconcileVendorCreditFormFields';
+import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
+import { EmptyStatuCallout } from './utils';
 import { Choose } from '@/components';
 
-import { EmptyStatuCallout } from './utils';
-import ReconcileVendorCreditFormFields from './ReconcileVendorCreditFormFields';
-import ReconcileVendorCreditFloatingActions from './ReconcileVendorCreditFloatingActions';
-import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
-
-export default function ReconcileVendorCreditFormContent() {
+export function ReconcileVendorCreditFormContent(): React.ReactElement {
   const { isEmptyStatus } = useReconcileVendorCreditContext();
 
   return (

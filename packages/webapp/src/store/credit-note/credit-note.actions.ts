@@ -1,0 +1,33 @@
+import type { TableQuery } from '@/store/store.types';
+import {
+  CREDIT_NOTES_TABLE_STATE_RESET,
+  CREDIT_NOTES_TABLE_STATE_SET,
+  CREDIT_NOTES_SET_SELECTED_ROWS,
+  CREDIT_NOTES_RESET_SELECTED_ROWS,
+} from '@/store/types';
+
+export const setCreditNoteTableState = (queries: Partial<TableQuery>) => {
+  return {
+    type: CREDIT_NOTES_TABLE_STATE_SET,
+    payload: { queries },
+  };
+};
+
+export const resetCreditNoteTableState = () => {
+  return {
+    type: CREDIT_NOTES_TABLE_STATE_RESET,
+  };
+};
+
+export const setCreditNotesSelectedRows = (selectedRows: Array<unknown>) => {
+  return {
+    type: CREDIT_NOTES_SET_SELECTED_ROWS,
+    payload: selectedRows,
+  };
+};
+
+export const resetCreditNotesSelectedRows = () => {
+  return {
+    type: CREDIT_NOTES_RESET_SELECTED_ROWS,
+  };
+};

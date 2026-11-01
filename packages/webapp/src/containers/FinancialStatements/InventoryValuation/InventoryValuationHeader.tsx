@@ -1,40 +1,63 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
-import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-
-import { FormattedMessage as T } from '@/components';
-
-import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
-import InventoryValuationHeaderGeneralPanel from './InventoryValuationHeaderGeneralPanel';
-import InventoryValuationHeaderDimensionsPanel from './InventoryValuationHeaderDimensionsPanel';
-import { withInventoryValuation } from './withInventoryValuation';
-import { withInventoryValuationActions } from './withInventoryValuationActions';
-
-import { compose, transformToForm } from '@/utils';
-import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
+import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
+import { InventoryValuationHeaderDimensionsPanel } from './InventoryValuationHeaderDimensionsPanel';
+import { InventoryValuationHeaderGeneralPanel } from './InventoryValuationHeaderGeneralPanel';
 import {
   getInventoryValuationQuery,
   getInventoryValuationQuerySchema,
 } from './utils';
+import {
+  withInventoryValuation,
+  WithInventoryValuationProps,
+} from './withInventoryValuation';
+import {
+  withInventoryValuationActions,
+  WithInventoryValuationActionsProps,
+} from './withInventoryValuationActions';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
+import { Features } from '@/constants';
+import { FinancialStatementHeader } from '@/containers/FinancialStatements/FinancialStatementHeader';
+import { useFeatureCan } from '@/hooks/state';
+import { transformToForm } from '@/utils';
+
+type InventoryValuationFormValues = Omit<
+  ReturnType<typeof getInventoryValuationQuery>,
+  'asDate'
+> & {
+  asDate: Date;
+};
+
+interface InventoryValuationHeaderOwnProps {
+  onSubmitFilter: (values: InventoryValuationFormValues) => void;
+  pageFilter: ReturnType<typeof getInventoryValuationQuery>;
+}
+
+type InventoryValuationHeaderProps = InventoryValuationHeaderOwnProps &
+  Pick<WithInventoryValuationProps, 'inventoryValuationDrawerFilter'> &
+  Pick<
+    WithInventoryValuationActionsProps,
+    'toggleInventoryValuationFilterDrawer'
+  >;
 
 /**
  * inventory valuation header.
  */
-function InventoryValuationHeader({
+function InventoryValuationHeaderInner({
   // #ownProps
   pageFilter,
   onSubmitFilter,
 
   // #withInventoryValuation
-  isFilterDrawerOpen,
+  inventoryValuationDrawerFilter,
 
   // #withInventoryValuationActions
   toggleInventoryValuationFilterDrawer,
-}) {
+}: InventoryValuationHeaderProps) {
   // Form validation schema.
   const validationSchema = getInventoryValuationQuerySchema();
   const defaultQuery = getInventoryValuationQuery();
@@ -47,13 +70,16 @@ function InventoryValuationHeader({
       asDate: moment(pageFilter.asDate).toDate(),
     },
     defaultQuery,
-  );
+  ) as InventoryValuationFormValues;
 
   // Handle the form of header submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: InventoryValuationFormValues,
+    actions: FormikHelpers<InventoryValuationFormValues>,
+  ) => {
     onSubmitFilter(values);
     toggleInventoryValuationFilterDrawer(false);
-    setSubmitting(false);
+    actions.setSubmitting(false);
   };
   // Handle drawer close action.
   const handleDrawerClose = () => {
@@ -72,7 +98,7 @@ function InventoryValuationHeader({
 
   return (
     <InventoryValuationDrawerHeader
-      isOpen={isFilterDrawerOpen}
+      isOpen={!!inventoryValuationDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
       <Formik
@@ -95,7 +121,7 @@ function InventoryValuationHeader({
               />
             )}
           </Tabs>
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -109,12 +135,13 @@ function InventoryValuationHeader({
   );
 }
 
-export default compose(
-  withInventoryValuation(({ inventoryValuationDrawerFilter }) => ({
-    isFilterDrawerOpen: inventoryValuationDrawerFilter,
-  })),
+export const InventoryValuationHeader = FF.pipe(
+  InventoryValuationHeaderInner,
   withInventoryValuationActions,
-)(InventoryValuationHeader);
+  withInventoryValuation(({ inventoryValuationDrawerFilter }) => ({
+    inventoryValuationDrawerFilter,
+  })),
+);
 
 const InventoryValuationDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

@@ -7,5 +7,5 @@ export const BranchMeta = {
     },
   },
   columns: {},
-  fields: {}
+  fields: {},
 };

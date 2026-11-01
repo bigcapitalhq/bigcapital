@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useState, useEffect, useMemo } from 'react';
 import { Spinner } from '@blueprintjs/core';
+import React, { useState, useEffect, useMemo } from 'react';
 
 export function LoadingIndicator({
   loading,

@@ -1,12 +1,12 @@
-// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
-import { DrawerBody, DrawerHeaderContent } from '@/components';
-import { StripeIntegrationEditForm } from './StripeIntegrationEditForm';
+import React from 'react';
 import { StripeIntegrationEditBoot } from './StripeIntegrationEditBoot';
+import { StripeIntegrationEditForm } from './StripeIntegrationEditForm';
 import {
   StripeIntegrationEditFormContent,
   StripeIntegrationEditFormFooter,
 } from './StripeIntegrationEditFormContent';
+import { DrawerBody, DrawerHeaderContent } from '@/components';
 
 export function StripeIntegrationEditContent() {
   return (

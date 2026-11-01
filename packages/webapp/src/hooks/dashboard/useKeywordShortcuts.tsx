@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React from 'react';
-import { KeyboardShortcutsOptions } from '@/constants/keyboardShortcutsOptions';
 import { useAbilitiesFilter } from '../utils/useAbilityContext';
+import { KeyboardShortcutsOptions } from '@/constants/keyboardShortcutsOptions';
 
 /**
  * Retrieve the filtered keyword shortcuts.

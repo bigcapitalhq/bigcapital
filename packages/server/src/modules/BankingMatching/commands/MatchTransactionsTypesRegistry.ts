@@ -28,7 +28,7 @@ export class MatchTransactionsTypesRegistry {
    */
   public register(
     resource: string,
-    importable: GetMatchedTransactionsByType
+    importable: GetMatchedTransactionsByType,
   ): void {
     const _resource = this.sanitizeResourceName(resource);
     this.importables[_resource] = importable;

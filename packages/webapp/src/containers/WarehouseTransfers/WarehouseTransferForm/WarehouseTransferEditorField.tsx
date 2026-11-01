@@ -1,20 +1,32 @@
-// @ts-nocheck
-import React from 'react';
-import { FastField } from 'formik';
 import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
-import WarehouseTransferFormEntriesTable from './WarehouseTransferFormEntriesTable';
+import { FastField } from 'formik';
+import React from 'react';
 import {
   entriesFieldShouldUpdate,
   defaultWarehouseTransferEntry,
-  useWatchItemsCostSetCostEntries
+  useWatchItemsCostSetCostEntries,
 } from './utils';
+import { WarehouseTransferFormEntriesTable } from './WarehouseTransferFormEntriesTable';
+import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
+import type {
+  WarehouseTransferEntry,
+  WarehouseTransferFormValues,
+} from './types';
+import { CLASSES } from '@/constants/classes';
+
+interface EntriesFieldRenderProps {
+  form: {
+    values: WarehouseTransferFormValues;
+    setFieldValue: (field: string, value: unknown) => void;
+  };
+  field: { value: WarehouseTransferEntry[] };
+  meta: { error?: unknown; touched?: boolean };
+}
 
 /**
  * Warehouse transafer editor field.
  */
-export default function WarehouseTransferEditorField() {
+export function WarehouseTransferEditorField() {
   const { items } = useWarehouseTransferFormContext();
 
   // Watches inventory items cost and sets cost to form entries.
@@ -30,8 +42,8 @@ export default function WarehouseTransferEditorField() {
         {({
           form: { values, setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+          meta: { error },
+        }: EntriesFieldRenderProps) => (
           <WarehouseTransferFormEntriesTable
             entries={value}
             onUpdateData={(entries) => {
@@ -40,8 +52,8 @@ export default function WarehouseTransferEditorField() {
             items={items}
             defaultEntry={defaultWarehouseTransferEntry}
             errors={error}
-            sourceWarehouseId={values.from_warehouse_id}
-            destinationWarehouseId={values.to_warehouse_id}
+            sourceWarehouseId={values.fromWarehouseId}
+            destinationWarehouseId={values.toWarehouseId}
           />
         )}
       </FastField>

@@ -1,52 +1,50 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Intent } from '@blueprintjs/core';
-
+import { useBranchesContext } from './BranchesProvider';
+import { useBranchesTableColumns, ActionsMenu } from './components';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { Branch } from '@bigcapital/sdk-ts';
+import { DataTable, Card, AppToaster, TableSkeletonRows } from '@/components';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useMarkBranchAsPrimary } from '@/hooks/query';
 import '@/style/pages/Preferences/branchesList.scss';
 
-import { DataTable, Card, AppToaster, TableSkeletonRows } from '@/components';
-import { useBranchesTableColumns, ActionsMenu } from './components';
-import { useBranchesContext } from './BranchesProvider';
-import { useMarkBranchAsPrimary } from '@/hooks/query';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+type BranchesDataTableInnerProps = Pick<WithDialogActionsProps, 'openDialog'> &
+  Pick<WithAlertActionsProps, 'openAlert'>;
 
 /**
  * Branches data table.
  */
-function BranchesDataTable({
+function BranchesDataTableInner({
   // #withDialogAction
   openDialog,
 
   // #withAlertActions
   openAlert,
-}) {
-  // Table columns.
+}: BranchesDataTableInnerProps) {
   const columns = useBranchesTableColumns();
-
-  // MarkBranchAsPrimary
   const { mutateAsync: markBranchAsPrimaryMutate } = useMarkBranchAsPrimary();
 
   const { branches, isBranchesLoading, isBranchesFetching } =
     useBranchesContext();
 
   // Handle edit branch.
-  const handleEditBranch = ({ id }) => {
+  const handleEditBranch = ({ id }: Branch) => {
     openDialog('branch-form', { branchId: id, action: 'edit' });
   };
 
   // Handle delete branch.
-  const handleDeleteBranch = ({ id }) => {
+  const handleDeleteBranch = ({ id }: Branch) => {
     openAlert('branch-delete', { branchId: id });
   };
 
   // Handle mark  branch as primary.
-  const handleMarkBranchAsPrimary = ({ id }) => {
+  const handleMarkBranchAsPrimary = ({ id }: Branch) => {
     markBranchAsPrimaryMutate(id).then(() => {
       AppToaster.show({
         message: intl.get('branch.alert.mark_primary_message'),
@@ -59,10 +57,11 @@ function BranchesDataTable({
     <BranchesTableCard>
       <BranchesTable
         columns={columns}
-        data={branches}
+        data={branches ?? []}
         loading={isBranchesLoading}
         headerLoading={isBranchesLoading}
         progressBarLoading={isBranchesFetching}
+        rowTestId={'branch-row'}
         TableLoadingRenderer={TableSkeletonRows}
         noInitialFetch={true}
         ContextMenu={ActionsMenu}
@@ -76,7 +75,11 @@ function BranchesDataTable({
   );
 }
 
-export default compose(withDialogActions, withAlertActions)(BranchesDataTable);
+export const BranchesDataTable = FF.pipe(
+  BranchesDataTableInner,
+  withAlertActions,
+  withDialogActions,
+);
 
 const BranchesTableCard = styled(Card)`
   padding: 0;

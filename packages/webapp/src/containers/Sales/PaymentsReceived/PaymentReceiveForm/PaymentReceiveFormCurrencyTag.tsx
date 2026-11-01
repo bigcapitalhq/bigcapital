@@ -1,14 +1,18 @@
-// @ts-nocheck
+import { useFormikContext } from 'formik';
 import React from 'react';
+import {
+  useEstimateIsForeignCustomer,
+  type PaymentReceiveFormValues,
+} from './utils';
 import { BaseCurrency, BaseCurrencyRoot } from '@/components';
-import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 
 /**
- * Payment reecevie form currnecy tag.
- * @returns
+ * Payment receive form currency tag — renders the customer's currency badge
+ * when the customer uses a foreign currency.
  */
-export default function PaymentReceiveFormCurrencyTag() {
-  const { isForeignCustomer, selectCustomer } = usePaymentReceiveFormContext();
+export function PaymentReceiveFormCurrencyTag() {
+  const isForeignCustomer = useEstimateIsForeignCustomer();
+  const { values } = useFormikContext<PaymentReceiveFormValues>();
 
   if (!isForeignCustomer) {
     return null;
@@ -16,7 +20,7 @@ export default function PaymentReceiveFormCurrencyTag() {
 
   return (
     <BaseCurrencyRoot>
-      <BaseCurrency currency={selectCustomer?.currency_code} />
+      <BaseCurrency currency={values.currencyCode} />
     </BaseCurrencyRoot>
   );
 }

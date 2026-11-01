@@ -9,10 +9,10 @@ import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.mo
 import { InventoryValuationSheetRepository } from './InventoryValuationSheetRepository';
 import { InventoryValuationSheetExportable } from './InventoryValuationSheetExportable';
 import { InventoryCostModule } from '@/modules/InventoryCost/InventoryCost.module';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 
 @Module({
-  imports: [FinancialSheetCommonModule, InventoryCostModule],
+  imports: [TenancyModule, FinancialSheetCommonModule, InventoryCostModule],
   providers: [
     InventoryValuationSheetPdf,
     InventoryValuationSheetTableInjectable,
@@ -21,7 +21,6 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
     InventoryValuationSheetApplication,
     InventoryValuationSheetRepository,
     InventoryValuationSheetExportable,
-    TenancyContext
   ],
   controllers: [InventoryValuationController],
   exports: [InventoryValuationSheetApplication],

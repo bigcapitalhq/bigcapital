@@ -15,9 +15,9 @@ export class CreateCurrencyService {
   async createCurrency(currencyDTO: CreateCurrencyDto) {
     // Validate currency code uniquiness.
     await this.validateCurrencyCodeUniquiness(currencyDTO.currencyCode);
-    await this.currencyModel()
+    return this.currencyModel()
       .query()
-      .insert({ ...currencyDTO });
+      .insertAndFetch({ ...currencyDTO });
   }
 
   /**

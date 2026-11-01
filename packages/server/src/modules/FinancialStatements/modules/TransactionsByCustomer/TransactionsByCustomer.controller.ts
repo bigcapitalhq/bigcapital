@@ -1,27 +1,63 @@
-import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiQuery,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import {
   TransactionsByCustomerResponseDto,
   TransactionsByCustomerTableResponseDto,
 } from './TransactionsByCustomerResponse.dto';
-import { ITransactionsByCustomersFilter } from './TransactionsByCustomer.types';
 import { TransactionsByCustomerApplication } from './TransactionsByCustomersApplication';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { TransactionsByCustomerQueryDto } from './TransactionsByCustomerQuery.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('/reports/transactions-by-customers')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(TransactionsByCustomerResponseDto, TransactionsByCustomerTableResponseDto)
+@ApiExtraModels(
+  TransactionsByCustomerResponseDto,
+  TransactionsByCustomerTableResponseDto,
+  NumberFormatQueryDto,
+)
+// Restrict this financial report to authenticated users granted the customers-transactions read permission.
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class TransactionsByCustomerController {
   constructor(
     private readonly transactionsByCustomersApp: TransactionsByCustomerApplication,
   ) {}
 
   @Get()
+  @RequirePermission(
+    ReportsAction.READ_CUSTOMERS_TRANSACTIONS,
+    AbilitySubject.Report,
+  )
   @ApiOperation({ summary: 'Get transactions by customer' })
+  @ApiQuery({
+    name: 'numberFormat',
+    required: false,
+    description:
+      'Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)',
+    schema: { $ref: getSchemaPath(NumberFormatQueryDto) },
+  })
   @ApiResponse({
     status: 200,
     description: 'Transactions by customer',

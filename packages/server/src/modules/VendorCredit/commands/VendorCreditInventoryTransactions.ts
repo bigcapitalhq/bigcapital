@@ -1,7 +1,7 @@
-// @ts-nocheck
 import { Knex } from 'knex';
 import { Injectable } from '@nestjs/common';
 import { VendorCredit } from '../models/VendorCredit';
+import { IInventoryTransactionFromItemsEntries } from '@/modules/InventoryCost/types/InventoryCost.types';
 import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 
@@ -9,7 +9,7 @@ import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 export class VendorCreditInventoryTransactions {
   constructor(
     private readonly inventoryService: InventoryTransactionsService,
-    private readonly itemsEntriesService: ItemsEntriesService
+    private readonly itemsEntriesService: ItemsEntriesService,
   ) {}
 
   /**
@@ -19,15 +19,16 @@ export class VendorCreditInventoryTransactions {
    */
   public createInventoryTransactions = async (
     vendorCredit: VendorCredit,
-    trx: Knex.Transaction
+    trx: Knex.Transaction,
+    override: boolean = false,
   ): Promise<void> => {
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(
-        vendorCredit.entries
+        vendorCredit.entries,
       );
 
-    const transaction = {
+    const transaction: IInventoryTransactionFromItemsEntries = {
       transactionId: vendorCredit.id,
       transactionType: 'VendorCredit',
       transactionNumber: vendorCredit.vendorCreditNumber,
@@ -41,8 +42,8 @@ export class VendorCreditInventoryTransactions {
     // Writes inventory tranactions.
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       transaction,
-      false,
-      trx
+      override,
+      trx,
     );
   };
 
@@ -53,16 +54,14 @@ export class VendorCreditInventoryTransactions {
    * @param {Knex.Transactions} trx - Knex transaction.
    */
   public async editInventoryTransactions(
-    vendorCreditId: number,
+    _vendorCreditId: number,
     vendorCredit: VendorCredit,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
-    // Deletes inventory transactions.
-    await this.deleteInventoryTransactions(vendorCreditId, trx);
-
-    // Re-write inventory transactions.
-    await this.createInventoryTransactions(vendorCredit, trx);
-  };
+    // Re-write the inventory transactions and validate the net effect of
+    // replacing the old transactions with the new ones.
+    await this.createInventoryTransactions(vendorCredit, trx, true);
+  }
 
   /**
    * Deletes credit note associated inventory transactions.
@@ -71,13 +70,13 @@ export class VendorCreditInventoryTransactions {
    */
   public async deleteInventoryTransactions(
     vendorCreditId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     // Deletes the inventory transactions by the given reference id and type.
     await this.inventoryService.deleteInventoryTransactions(
       vendorCreditId,
       'VendorCredit',
-      trx
+      trx,
     );
-  };
+  }
 }

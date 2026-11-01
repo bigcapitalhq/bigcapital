@@ -1,4 +1,4 @@
-import { ContactTransfromer } from "../../Contacts/Contact.transformer";
+import { ContactTransfromer } from '../../Contacts/Contact.transformer';
 
 export class CustomerTransfromer extends ContactTransfromer {
   /**

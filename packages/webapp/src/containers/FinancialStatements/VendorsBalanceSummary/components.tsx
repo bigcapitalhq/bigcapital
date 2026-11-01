@@ -1,30 +1,36 @@
-// @ts-nocheck
-import React, { useRef } from 'react';
-import intl from 'react-intl-universal';
-import * as R from 'ramda';
+import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import classNames from 'classnames';
-
+import * as FA from 'fp-ts/Array';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
+import type { VendorsBalanceColumnKey } from '@bigcapital/sdk-ts';
 import { AppToaster, If, Stack } from '@/components';
 import { Align, CLASSES } from '@/constants';
-import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
-import FinancialLoadingBar from '../FinancialLoadingBar';
-import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import {
   useVendorBalanceSummaryCsvExport,
   useVendorBalanceSummaryXlsxExport,
 } from '@/hooks/query';
+import { firstMatch, when } from '@/utils/fp';
+
+interface ColumnDef {
+  key: string;
+  [prop: string]: unknown;
+}
 
 /**
  * Retrieve vendors balance summary columns.
  */
 export const useVendorsBalanceColumns = () => {
-  const {
-    VendorBalanceSummary: { table },
-  } = useVendorsBalanceSummaryContext();
+  const { VendorBalanceSummary } = useVendorsBalanceSummaryContext();
+  const table = (VendorBalanceSummary as any)?.table;
 
   return React.useMemo(() => {
-    return dynamicColumns(table.columns || []);
-  }, [table.columns]);
+    return dynamicColumns(table?.columns || []);
+  }, [table?.columns]);
 };
 
 /**
@@ -49,7 +55,7 @@ const percentageColumnAccessor = () => ({
   width: 140,
   textOverview: true,
   align: Align.Right,
-  money: true
+  money: true,
 });
 
 /**
@@ -62,23 +68,32 @@ const totalColumnAccessor = () => ({
   width: 140,
   textOverview: true,
   align: Align.Right,
-  money: true
+  money: true,
 });
+
+const isColumnKey =
+  (key: VendorsBalanceColumnKey): FF.Predicate<ColumnDef> =>
+  (column) =>
+    column.key === key;
 
 /**
  * Composes the response columns to table component columns.
  */
-const dynamicColumns = (columns) => {
-  return R.map(
-    R.compose(
-      R.when(R.pathEq(['key'], 'name'), vendorColumnAccessor),
-      R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
-      R.when(
-        R.pathEq(['key'], 'percentage_of_column'),
-        percentageColumnAccessor,
+const dynamicColumns = (columns: ColumnDef[]) => {
+  return FF.pipe(
+    columns,
+    FA.map((column) =>
+      FF.pipe(
+        column,
+        firstMatch<ColumnDef, unknown>([
+          when(isColumnKey('name'), vendorColumnAccessor),
+          when(isColumnKey('total'), totalColumnAccessor),
+          when(isColumnKey('percentage_of_column'), percentageColumnAccessor),
+        ]),
+        FO.match(() => column, FF.identity),
       ),
     ),
-  )(columns);
+  );
 };
 
 /**
@@ -98,72 +113,51 @@ export function VendorsSummarySheetLoadingBar() {
  * @returns {JSX.Element}
  */
 export function VendorSummarySheetExportMenu() {
-  const toastKey = useRef(null);
   const commonToastConfig = {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [CLASSES.PROGRESS_NO_STRIPES]: amount >= 100,
+            [CLASSES.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
 
-  // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useVendorBalanceSummaryXlsxExport({
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Export the report to csv.
-  const { mutateAsync: csvExport } = useVendorBalanceSummaryCsvExport({
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport().then(() => {});
+  const { mutateAsync: xlsxExport } = useVendorBalanceSummaryXlsxExport();
+  const { mutateAsync: csvExport } = useVendorBalanceSummaryCsvExport();
+
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport().then(() => {});
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

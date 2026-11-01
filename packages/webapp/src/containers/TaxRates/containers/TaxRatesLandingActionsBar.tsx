@@ -1,6 +1,6 @@
-// @ts-nocheck
-import React from 'react';
 import { NavbarGroup, NavbarDivider, Button, Classes } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import { useHistory } from 'react-router-dom';
 import {
   DashboardActionsBar,
   FormattedMessage as T,
@@ -8,20 +8,18 @@ import {
   Icon,
 } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
 import { DialogsName } from '@/constants/dialogs';
-import { compose } from '@/utils';
-import { useHistory } from 'react-router-dom';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
 
 /**
  * Tax rates actions bar.
  */
 function TaxRatesActionsBar({
-  // #withDialogActions
   openDialog,
-}) {
+}: Pick<WithDialogActionsProps, 'openDialog'>) {
   const history = useHistory();
 
   // Handle `new item` button click.
@@ -67,4 +65,7 @@ function TaxRatesActionsBar({
   );
 }
 
-export default compose(withDialogActions)(TaxRatesActionsBar);
+export const TaxRatesLandingActionsBar = FF.pipe(
+  TaxRatesActionsBar,
+  withDialogActions,
+);

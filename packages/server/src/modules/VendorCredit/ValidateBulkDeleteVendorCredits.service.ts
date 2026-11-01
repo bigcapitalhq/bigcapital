@@ -9,7 +9,7 @@ export class ValidateBulkDeleteVendorCreditsService {
     private readonly deleteVendorCreditService: DeleteVendorCreditService,
     @Inject(TENANCY_DB_CONNECTION)
     private readonly tenantKnex: () => Knex,
-  ) { }
+  ) {}
 
   public async validateBulkDeleteVendorCredits(
     vendorCreditIds: number[],
@@ -34,7 +34,7 @@ export class ValidateBulkDeleteVendorCreditsService {
             trx,
           );
           deletableIds.push(vendorCreditId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(vendorCreditId);
         }
       }
@@ -53,4 +53,3 @@ export class ValidateBulkDeleteVendorCreditsService {
     }
   }
 }
-

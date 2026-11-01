@@ -1,7 +1,7 @@
-import { Global } from "@nestjs/common";
+import { Global } from '@nestjs/common';
 
 const importableModels = new Map<string, boolean>();
-const importableService = new Map<string, any>()
+const importableService = new Map<string, any>();
 
 /**
  * Decorator that marks a model as exportable and registers its metadata.
@@ -30,7 +30,6 @@ export function ImportableService({ name }: { name: string }) {
 export function getImportableModelMeta(modelName: string): boolean | undefined {
   return importableModels.get(modelName);
 }
-
 
 export function getImportableService(modelName: string) {
   return importableService.get(modelName);

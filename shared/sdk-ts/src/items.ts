@@ -24,6 +24,12 @@ export type BulkDeleteItemsBody = OpRequestBody<OpForPath<typeof ITEMS_ROUTES.BU
 export type ValidateBulkDeleteItemsResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 export type GetItemsQuery = OpQueryParams<OpForPath<typeof ITEMS_ROUTES.LIST, 'get'>>;
 
+export type ItemAssociatedInvoicesResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.INVOICES, 'get'>>;
+export type ItemAssociatedBillsResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.BILLS, 'get'>>;
+export type ItemAssociatedEstimatesResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.ESTIMATES, 'get'>>;
+export type ItemAssociatedReceiptsResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.RECEIPTS, 'get'>>;
+export type ItemWarehousesResponse = OpResponseBody<OpForPath<typeof ITEMS_ROUTES.WAREHOUSES, 'get'>>;
+
 export async function fetchItems(
   fetcher: ApiFetcher,
   query?: GetItemsQuery
@@ -90,32 +96,47 @@ export async function bulkDeleteItems(
   await post(body);
 }
 
-export async function fetchItemInvoices(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+export async function fetchItemInvoices(
+  fetcher: ApiFetcher,
+  id: number,
+): Promise<ItemAssociatedInvoicesResponse> {
   const get = fetcher.path(ITEMS_ROUTES.INVOICES).method('get').create();
   const { data } = await get({ id });
-  return (data as { data?: unknown[] })?.data ?? [];
+  return data;
 }
 
-export async function fetchItemBills(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+export async function fetchItemBills(
+  fetcher: ApiFetcher,
+  id: number,
+): Promise<ItemAssociatedBillsResponse> {
   const get = fetcher.path(ITEMS_ROUTES.BILLS).method('get').create();
   const { data } = await get({ id });
-  return (data as { data?: unknown[] })?.data ?? [];
+  return data;
 }
 
-export async function fetchItemEstimates(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+export async function fetchItemEstimates(
+  fetcher: ApiFetcher,
+  id: number,
+): Promise<ItemAssociatedEstimatesResponse> {
   const get = fetcher.path(ITEMS_ROUTES.ESTIMATES).method('get').create();
   const { data } = await get({ id });
-  return (data as { data?: unknown[] })?.data ?? [];
+  return data;
 }
 
-export async function fetchItemReceipts(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+export async function fetchItemReceipts(
+  fetcher: ApiFetcher,
+  id: number,
+): Promise<ItemAssociatedReceiptsResponse> {
   const get = fetcher.path(ITEMS_ROUTES.RECEIPTS).method('get').create();
   const { data } = await get({ id });
-  return (data as { data?: unknown[] })?.data ?? [];
+  return data;
 }
 
-export async function fetchItemWarehouses(fetcher: ApiFetcher, id: number): Promise<unknown[]> {
+export async function fetchItemWarehouses(
+  fetcher: ApiFetcher,
+  id: number,
+): Promise<ItemWarehousesResponse> {
   const get = fetcher.path(ITEMS_ROUTES.WAREHOUSES).method('get').create();
   const { data } = await get({ id });
-  return (data as { item_warehouses?: unknown[] })?.item_warehouses ?? [];
+  return data;
 }

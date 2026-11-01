@@ -13,7 +13,7 @@ export class BillPaymentBillSyncSubscriber {
   /**
    * @param {BillPaymentBillSync} billPaymentBillSync - Bill payment bill sync service.
    */
-  constructor(private readonly billPaymentBillSync: BillPaymentBillSync) { }
+  constructor(private readonly billPaymentBillSync: BillPaymentBillSync) {}
 
   /**
    * Handle bill increment/decrement payment amount

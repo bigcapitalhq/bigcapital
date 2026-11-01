@@ -1,64 +1,79 @@
-// @ts-nocheck
-import { useMemo } from 'react';
-import * as R from 'ramda';
-import { useAppQueryString } from '@/hooks';
-import { Group, Stack, } from '@/components';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { TagsControl } from '@/components/TagsControl';
-import { AccountUncategorizedDateFilter } from './UncategorizedTransactions/AccountUncategorizedDateFilter';
 import { Divider } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import * as FO from 'fp-ts/Option';
+import React, { useMemo } from 'react';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { AccountUncategorizedDateFilter } from './UncategorizedTransactions/AccountUncategorizedDateFilter';
+import { Group } from '@/components';
+import { TagsControl } from '@/components/TagsControl';
+import { useAppQueryString } from '@/hooks';
+import { when } from '@/utils/fp';
+
+interface TagsControlOption {
+  value: string;
+  label: React.ReactNode;
+}
 
 export function AccountTransactionsUncategorizeFilter() {
   const { bankAccountMetaSummary } = useAccountTransactionsContext();
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   const totalUncategorized =
-    bankAccountMetaSummary?.totalUncategorizedTransactions;
-  const totalRecognized = bankAccountMetaSummary?.totalRecognizedTransactions;
+    bankAccountMetaSummary?.totalUncategorizedTransactions ?? 0;
+  const totalRecognized =
+    bankAccountMetaSummary?.totalRecognizedTransactions ?? 0;
 
-  const totalPending = bankAccountMetaSummary?.totalPendingTransactions;
+  const totalPending = bankAccountMetaSummary?.totalPendingTransactions ?? 0;
 
-  const handleTabsChange = (value) => {
+  const handleTabsChange = (value: string) => {
     setLocationQuery({ uncategorizedFilter: value });
   };
 
-  const options = useMemo(
-    () =>
-      R.when(
+  const options = useMemo<TagsControlOption[]>(() => {
+    const baseOptions: TagsControlOption[] = [
+      {
+        value: 'all',
+        label: (
+          <>
+            All <strong>({totalUncategorized})</strong>
+          </>
+        ),
+      },
+      {
+        value: 'recognized',
+        label: (
+          <>
+            Recognized <strong>({totalRecognized})</strong>
+          </>
+        ),
+      },
+    ];
+
+    return FF.pipe(
+      baseOptions,
+      when(
         () => totalPending > 0,
-        R.append({
-          value: 'pending',
-          label: (
-            <>
-              Pending <strong>({totalPending})</strong>
-            </>
-          ),
-        }),
-      )([
-        {
-          value: 'all',
-          label: (
-            <>
-              All <strong>({totalUncategorized})</strong>
-            </>
-          ),
-        },
-        {
-          value: 'recognized',
-          label: (
-            <>
-              Recognized <strong>({totalRecognized})</strong>
-            </>
-          ),
-        },
-      ]),
-    [totalPending, totalRecognized, totalUncategorized],
-  );
+        (tags: TagsControlOption[]) => [
+          ...tags,
+          {
+            value: 'pending',
+            label: (
+              <>
+                Pending <strong>({totalPending})</strong>
+              </>
+            ),
+          },
+        ],
+      ),
+      FO.match(() => baseOptions, FF.identity),
+    );
+  }, [totalPending, totalRecognized, totalUncategorized]);
 
   return (
     <Group position={'apart'} style={{ marginBottom: 14 }}>
       <Group align={'stretch'} spacing={10}>
         <TagsControl
+          // @ts-expect-error TagsControl types label as string but renders JSX at runtime
           options={options}
           value={locationQuery?.uncategorizedFilter || 'all'}
           onValueChange={handleTabsChange}

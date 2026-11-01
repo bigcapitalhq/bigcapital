@@ -6,7 +6,6 @@ export default class SeedRolesAndPermissions extends TenantSeeder {
    * @param knex
    * @returns
    */
-  // eslint-disable-next-line class-methods-use-this
   async up(knex) {
     return knex('roles').insert([
       {

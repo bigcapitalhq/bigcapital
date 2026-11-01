@@ -1,17 +1,12 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import intl from 'react-intl-universal';
 import { Tab } from '@blueprintjs/core';
-
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { EstimateDetailActionsBar } from './EstimateDetailActionsBar';
+import { EstimateDetailTab as EstimateDetailPanel } from './EstimateDetailPanel';
 import { DrawerMainTabs } from '@/components';
-
-import EstimateDetailActionsBar from './EstimateDetailActionsBar';
-import EstimateDetailPanel from './EstimateDetailPanel';
 
 /**
  * Estimate details tabs.
- * @returns {React.JSX}
  */
 function EstimateDetailsTabs() {
   return (
@@ -28,7 +23,7 @@ function EstimateDetailsTabs() {
 /**
  * Estimate view detail
  */
-export default function EstimateDetail() {
+export function EstimateDetail() {
   return (
     <EstimateDetailsRoot>
       <EstimateDetailActionsBar />

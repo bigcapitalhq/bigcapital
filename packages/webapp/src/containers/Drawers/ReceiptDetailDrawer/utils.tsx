@@ -1,15 +1,14 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { getColumnWidth } from '@/utils';
-import { FormatNumberCell, TextOverviewTooltipCell } from '@/components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
+import { FormatNumberCell, TextOverviewTooltipCell } from '@/components';
+import { getColumnWidth } from '@/utils';
 
 export const useReceiptReadonlyEntriesTableColumns = () => {
   // Receipt details drawer context.
-  const {
-    receipt: { entries },
-  } = useReceiptDetailDrawerContext();
+  const { receipt } = useReceiptDetailDrawerContext();
+  const entries = receipt?.entries ?? [];
+
   return React.useMemo(
     () => [
       {
@@ -31,8 +30,8 @@ export const useReceiptReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('quantity'),
-        accessor: 'quantity_formatted',
-        width: getColumnWidth(entries, 'quantity_formatted', {
+        accessor: 'quantityFormatted',
+        width: getColumnWidth(entries, 'quantityFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -42,7 +41,7 @@ export const useReceiptReadonlyEntriesTableColumns = () => {
       {
         Header: intl.get('rate'),
         accessor: 'rate',
-        width: getColumnWidth(entries, 'rate_formatted', {
+        width: getColumnWidth(entries, 'rate', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -53,19 +52,19 @@ export const useReceiptReadonlyEntriesTableColumns = () => {
       {
         id: 'discount',
         Header: 'Discount',
-        accessor: 'discount_formatted',
+        accessor: 'discountFormatted',
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'discount_formatted', {
+        width: getColumnWidth(entries, 'discountFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
       },
       {
         Header: intl.get('amount'),
-        accessor: 'amount',
-        width: getColumnWidth(entries, 'total_formatted', {
+        accessor: 'totalFormatted',
+        width: getColumnWidth(entries, 'totalFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -74,6 +73,6 @@ export const useReceiptReadonlyEntriesTableColumns = () => {
         textOverview: true,
       },
     ],
-    [],
+    [entries],
   );
 };

@@ -45,7 +45,12 @@ export const ManualJournalDefaultViews = [
     slug: 'published',
     rolesLogicExpression: '1',
     roles: [
-      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'published' },
+      {
+        index: 1,
+        fieldKey: 'status',
+        comparator: 'equals',
+        value: 'published',
+      },
     ],
     columns: DEFAULT_VIEW_COLUMNS,
   },

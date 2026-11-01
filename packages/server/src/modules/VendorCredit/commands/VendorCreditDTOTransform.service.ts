@@ -31,7 +31,7 @@ export class VendorCreditDTOTransformService {
     private branchDTOTransform: BranchTransactionDTOTransformer,
     private warehouseDTOTransform: WarehouseTransactionDTOTransform,
     private vendorCreditAutoIncrement: VendorCreditAutoIncrementService,
-  ) { }
+  ) {}
 
   /**
    * Transforms the credit/edit vendor credit DTO to model.
@@ -71,10 +71,9 @@ export class VendorCreditDTOTransformService {
       autoNextNumber;
 
     const initialDTO = {
-      ...formatDateFields(
-        omit(vendorCreditDTO, ['open', 'attachments']),
-        ['vendorCreditDate'],
-      ),
+      ...formatDateFields(omit(vendorCreditDTO, ['open', 'attachments']), [
+        'vendorCreditDate',
+      ]),
       amount,
       currencyCode: vendorCurrencyCode,
       exchangeRate: vendorCreditDTO.exchangeRate || 1,
@@ -82,8 +81,8 @@ export class VendorCreditDTOTransformService {
       entries,
       ...(vendorCreditDTO.open &&
         !oldVendorCredit?.openedAt && {
-        openedAt: moment().toMySqlDateTime(),
-      }),
+          openedAt: moment().toMySqlDateTime(),
+        }),
     };
     return composeAsync(
       this.branchDTOTransform.transformDTO<VendorCredit>,
@@ -102,6 +101,24 @@ export class VendorCreditDTOTransformService {
   ) => {
     if (vendorCredit.creditsRemaining < amount) {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_HAS_NO_REMAINING_AMOUNT);
+    }
+  };
+
+  /**
+   * Validates the new vendor credit amount is not smaller than the already
+   * refunded and applied-to-bills amounts.
+   * @param {VendorCredit} vendorCredit
+   * @param {number} newAmount
+   */
+  public validateCreditAmountNotBelowUsed = (
+    vendorCredit: VendorCredit,
+    newAmount: number,
+  ) => {
+    const usedAmount =
+      vendorCredit.refundedAmount + vendorCredit.invoicedAmount;
+
+    if (newAmount < usedAmount) {
+      throw new ServiceError(ERRORS.VENDOR_CREDIT_AMOUNT_SMALLER_THAN_USED);
     }
   };
 }

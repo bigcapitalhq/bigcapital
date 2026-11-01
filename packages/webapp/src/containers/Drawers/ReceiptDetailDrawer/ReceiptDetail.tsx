@@ -1,19 +1,16 @@
-// @ts-nocheck
+import { Tab } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Tab } from '@blueprintjs/core';
-
-import { DrawerMainTabs } from '@/components';
-import ReceiptDetailTab from './ReceiptDetailTab';
-import ReceiptDetailActionBar from './ReceiptDetailActionBar';
+import { ReceiptDetailActionBar } from './ReceiptDetailActionBar';
 import { ReceiptDetailsGLEntriesPanel } from './ReceiptDetailsGLEntriesPanel';
+import { ReceiptDetailTab } from './ReceiptDetailTab';
+import { DrawerMainTabs } from '@/components';
 
 /**
  * Receipt view detail.
- * @returns {React.JSX}
  */
-export default function ReceiptDetail() {
+export function ReceiptDetail() {
   return (
     <ReceiptDetailsRoot>
       <ReceiptDetailActionBar />
@@ -24,7 +21,6 @@ export default function ReceiptDetail() {
 
 /**
  * Receipt details tabs bar.
- * @returns {React.JSX}
  */
 function ReceiptDetailsTabs() {
   return (

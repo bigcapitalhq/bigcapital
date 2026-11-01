@@ -52,7 +52,10 @@ export class FinancialTableCellDto {
 }
 
 export class FinancialTableRowDto {
-  @ApiProperty({ description: 'Cell data for this row', type: [FinancialTableCellDto] })
+  @ApiProperty({
+    description: 'Cell data for this row',
+    type: [FinancialTableCellDto],
+  })
   cells: FinancialTableCellDto[];
 
   @ApiProperty({ description: 'Row type classifications', type: [String] })
@@ -61,7 +64,15 @@ export class FinancialTableRowDto {
   @ApiProperty({ description: 'Row identifier' })
   id: string | number;
 
-  @ApiPropertyOptional({ description: 'Child rows', type: () => [FinancialTableRowDto] })
+  @ApiPropertyOptional({
+    description: 'Row-level metadata (e.g. transaction reference link)',
+  })
+  meta?: Record<string, unknown>;
+
+  @ApiPropertyOptional({
+    description: 'Child rows',
+    type: () => [FinancialTableRowDto],
+  })
   children?: FinancialTableRowDto[];
 }
 
@@ -75,12 +86,18 @@ export class FinancialTableColumnDto {
   @ApiPropertyOptional({ description: 'Cell position index', type: Number })
   cellIndex?: number;
 
-  @ApiPropertyOptional({ description: 'Nested column definitions', type: () => [FinancialTableColumnDto] })
+  @ApiPropertyOptional({
+    description: 'Nested column definitions',
+    type: () => [FinancialTableColumnDto],
+  })
   children?: FinancialTableColumnDto[];
 }
 
 export class FinancialTableDataDto {
-  @ApiProperty({ description: 'Table column definitions', type: [FinancialTableColumnDto] })
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [FinancialTableColumnDto],
+  })
   columns: FinancialTableColumnDto[];
 
   @ApiProperty({ description: 'Table row data', type: [FinancialTableRowDto] })
@@ -95,7 +112,10 @@ export class BaseFinancialReportResponseDto {
 }
 
 export class BaseFinancialTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
   @ApiProperty({ description: 'Report metadata', type: FinancialReportMetaDto })

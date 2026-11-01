@@ -1,6 +1,6 @@
 // @ts-nocheck
-import PropTypes from 'prop-types'
-import * as React from 'react'
+import PropTypes from 'prop-types';
+import * as React from 'react';
 
 const Bar = ({ progress, animationDuration }) => (
   <div
@@ -29,11 +29,11 @@ const Bar = ({ progress, animationDuration }) => (
       }}
     />
   </div>
-)
+);
 
 Bar.propTypes = {
   animationDuration: PropTypes.number.isRequired,
   progress: PropTypes.number.isRequired,
-}
+};
 
 export default Bar;

@@ -1,14 +1,23 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
   FinancialReportTotalDto,
   FinancialReportPercentageDto,
   FinancialReportMetaDto,
+  FinancialTableColumnDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  BALANCE_SHEET_COLUMN_KEYS,
+  BalanceSheetColumnKey,
+} from '../../common/constants/tableColumnKeys';
+import { BalanceSheetSortOrder } from './BalanceSheet.types';
 
 export class BalanceSheetDataNodeDto {
-  @ApiProperty({ description: 'Node identifier (string for aggregates, number for accounts)' })
+  @ApiProperty({
+    description: 'Node identifier (string for aggregates, number for accounts)',
+  })
   id: string | number;
 
   @ApiProperty({ description: 'Account or category name' })
@@ -23,34 +32,64 @@ export class BalanceSheetDataNodeDto {
   @ApiPropertyOptional({ description: 'Node type alias' })
   type?: string;
 
-  @ApiProperty({ description: 'Total amount information', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Total amount information',
+    type: FinancialReportTotalDto,
+  })
   total: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Horizontal totals for date periods', type: [FinancialReportTotalDto] })
+  @ApiPropertyOptional({
+    description: 'Horizontal totals for date periods',
+    type: [FinancialReportTotalDto],
+  })
   horizontalTotals?: FinancialReportTotalDto[];
 
-  @ApiPropertyOptional({ description: 'Percentage of row', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Percentage of row',
+    type: FinancialReportPercentageDto,
+  })
   percentageRow?: FinancialReportPercentageDto;
 
-  @ApiPropertyOptional({ description: 'Percentage of column', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Percentage of column',
+    type: FinancialReportPercentageDto,
+  })
   percentageColumn?: FinancialReportPercentageDto;
 
-  @ApiPropertyOptional({ description: 'Previous period total', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Previous period total',
+    type: FinancialReportTotalDto,
+  })
   previousPeriod?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Previous period change', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Previous period change',
+    type: FinancialReportTotalDto,
+  })
   previousPeriodChange?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Previous period percentage', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Previous period percentage',
+    type: FinancialReportPercentageDto,
+  })
   previousPeriodPercentage?: FinancialReportPercentageDto;
 
-  @ApiPropertyOptional({ description: 'Previous year total', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Previous year total',
+    type: FinancialReportTotalDto,
+  })
   previousYear?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Previous year change', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Previous year change',
+    type: FinancialReportTotalDto,
+  })
   previousYearChange?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Previous year percentage', type: FinancialReportPercentageDto })
+  @ApiPropertyOptional({
+    description: 'Previous year percentage',
+    type: FinancialReportPercentageDto,
+  })
   previousYearPercentage?: FinancialReportPercentageDto;
 
   @ApiPropertyOptional({ description: 'Account code' })
@@ -62,7 +101,10 @@ export class BalanceSheetDataNodeDto {
   @ApiPropertyOptional({ description: 'Parent account ID', type: Number })
   parentAccountId?: number;
 
-  @ApiPropertyOptional({ description: 'Child nodes', type: () => [BalanceSheetDataNodeDto] })
+  @ApiPropertyOptional({
+    description: 'Child nodes',
+    type: () => [BalanceSheetDataNodeDto],
+  })
   children?: BalanceSheetDataNodeDto[];
 }
 
@@ -75,10 +117,16 @@ export class BalanceSheetMetaDto extends FinancialReportMetaDto {
 }
 
 export class BalanceSheetQueryResponseDto {
-  @ApiProperty({ description: 'Column display type', enum: ['total', 'date_periods'] })
+  @ApiProperty({
+    description: 'Column display type',
+    enum: ['total', 'date_periods'],
+  })
   displayColumnsType: string;
 
-  @ApiProperty({ description: 'Column grouping', enum: ['day', 'month', 'year', 'quarter'] })
+  @ApiProperty({
+    description: 'Column grouping',
+    enum: ['day', 'month', 'year', 'quarter'],
+  })
   displayColumnsBy: string;
 
   @ApiProperty({ description: 'Start date' })
@@ -87,7 +135,10 @@ export class BalanceSheetQueryResponseDto {
   @ApiProperty({ description: 'End date' })
   toDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Exclude zero balance accounts' })
@@ -96,8 +147,8 @@ export class BalanceSheetQueryResponseDto {
   @ApiProperty({ description: 'Exclude accounts with no transactions' })
   noneTransactions: boolean;
 
-  @ApiProperty({ description: 'Accounting basis', enum: ['cash', 'accrual'] })
-  basis: string;
+  @ApiProperty({ description: 'Accounting basis', enum: AccountingBasis })
+  basis: AccountingBasis;
 
   @ApiProperty({ description: 'Account IDs to include', type: [Number] })
   accountIds: number[];
@@ -125,13 +176,31 @@ export class BalanceSheetQueryResponseDto {
 
   @ApiProperty({ description: 'Show previous year percentage change' })
   previousYearPercentageChange: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Column the accounts are sorted by',
+    enum: Object.values(BALANCE_SHEET_COLUMN_KEYS),
+  })
+  columnSortBy?: BalanceSheetColumnKey;
+
+  @ApiPropertyOptional({
+    description: 'Sort order of the accounts',
+    enum: ['asc', 'desc'],
+  })
+  sortOrder?: BalanceSheetSortOrder;
 }
 
 export class BalanceSheetResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: BalanceSheetQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: BalanceSheetQueryResponseDto,
+  })
   query: BalanceSheetQueryResponseDto;
 
-  @ApiProperty({ description: 'Hierarchical balance sheet data', type: [BalanceSheetDataNodeDto] })
+  @ApiProperty({
+    description: 'Hierarchical balance sheet data',
+    type: [BalanceSheetDataNodeDto],
+  })
   data: BalanceSheetDataNodeDto[];
 
   @ApiProperty({ description: 'Report metadata', type: BalanceSheetMetaDto })
@@ -142,15 +211,35 @@ export class BalanceSheetResponseDto {
 export {
   FinancialTableCellDto as BalanceSheetTableCellDto,
   FinancialTableRowDto as BalanceSheetTableRowDto,
-  FinancialTableColumnDto as BalanceSheetTableColumnDto,
-  FinancialTableDataDto as BalanceSheetTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
 
-export class BalanceSheetTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
-  table: FinancialTableDataDto;
+export class BalanceSheetTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(BALANCE_SHEET_COLUMN_KEYS),
+  })
+  key: BalanceSheetColumnKey;
+}
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: BalanceSheetQueryResponseDto })
+export class BalanceSheetTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [BalanceSheetTableColumnDto],
+  })
+  columns: BalanceSheetTableColumnDto[];
+}
+
+export class BalanceSheetTableResponseDto {
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => BalanceSheetTableDataDto,
+  })
+  table: BalanceSheetTableDataDto;
+
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: BalanceSheetQueryResponseDto,
+  })
   query: BalanceSheetQueryResponseDto;
 
   @ApiProperty({ description: 'Report metadata', type: BalanceSheetMetaDto })

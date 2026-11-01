@@ -1,20 +1,19 @@
-// @ts-nocheck
+import { FormGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormGroup, Classes } from '@blueprintjs/core';
-import { BranchMultiSelect, Row, Col } from '@/components';
 import {
   ProfitLossSheetHeaderDimensionsProvider,
   useProfitLossSheetPanelContext,
 } from './ProfitLossSheetHeaderDimensionsProvider';
-import { useFeatureCan } from '@/hooks/state';
+import { BranchMultiSelect, Row, Col } from '@/components';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * profit loss Sheet Header dimensions panel.
  * @returns {JSX.Element}
  */
-export default function ProfitLossSheetHeaderDimensionsPanel() {
+export function ProfitLossSheetHeaderDimensionsPanel() {
   return (
     <ProfitLossSheetHeaderDimensionsProvider>
       <ProfitLossSheetHeaderDimensionsPanelContent />

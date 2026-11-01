@@ -22,7 +22,7 @@ export class GetBillsService {
    * @param {GetBillsQueryDto} filterDTO -
    */
   public async getBills(filterDTO: GetBillsQueryDto): Promise<{
-    bills: Bill[];
+    data: Bill[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
@@ -49,17 +49,19 @@ export class GetBillsService {
         dynamicFilter.buildQuery()(builder);
 
         // Filter query.
-        _filterDto?.filterQuery && _filterDto?.filterQuery(builder);
+        if (_filterDto?.filterQuery) {
+          _filterDto?.filterQuery(builder);
+        }
       })
       .pagination(filter.page - 1, filter.pageSize);
 
     // Tranform the bills to POJO.
-    const bills = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new BillTransformer(),
     );
     return {
-      bills,
+      data,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

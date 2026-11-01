@@ -1,12 +1,11 @@
-// @ts-nocheck
 import React from 'react';
-import AccountantFormPage from './AccountantFormPage';
+import { AccountantFormPage } from './AccountantFormPage';
 import { AccountantFormProvider } from './AccountantFormProvider';
 
 /**
  * Accountant preferences.
  */
-export default function AccountantPreferences() {
+export function AccountantPreferences() {
   return (
     <AccountantFormProvider>
       <AccountantFormPage />

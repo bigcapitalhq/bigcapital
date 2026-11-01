@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
+import { DATE_ONLY_COLUMNS_OPTIONS } from '@/common/constants/database.constants';
 
 @Injectable()
 export abstract class BaseCommand extends CommandRunner {
@@ -15,10 +16,12 @@ export abstract class BaseCommand extends CommandRunner {
       client: this.configService.get('systemDatabase.client'),
       connection: {
         host: this.configService.get('systemDatabase.host'),
+        port: this.configService.get('systemDatabase.port'),
         user: this.configService.get('systemDatabase.user'),
         password: this.configService.get('systemDatabase.password'),
         database: this.configService.get('systemDatabase.databaseName'),
         charset: 'utf8',
+        ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       migrations: {
         directory: this.configService.get('systemDatabase.migrationDir'),
@@ -37,17 +40,23 @@ export abstract class BaseCommand extends CommandRunner {
       client: this.configService.get('tenantDatabase.client'),
       connection: {
         host: this.configService.get('tenantDatabase.host'),
+        port: this.configService.get('tenantDatabase.port'),
         user: this.configService.get('tenantDatabase.user'),
         password: this.configService.get('tenantDatabase.password'),
         database: `${this.configService.get('tenantDatabase.dbNamePrefix')}${organizationId}`,
         charset: 'utf8',
+        ...DATE_ONLY_COLUMNS_OPTIONS,
       },
       migrations: {
-        directory: this.configService.get('tenantDatabase.migrationsDir') || './src/database/migrations',
+        directory:
+          this.configService.get('tenantDatabase.migrationsDir') ||
+          './src/database/migrations',
         loadExtensions: ['.js'],
       },
       seeds: {
-        directory: this.configService.get('tenantDatabase.seedsDir') || './src/database/seeds/core',
+        directory:
+          this.configService.get('tenantDatabase.seedsDir') ||
+          './src/database/seeds/core',
       },
       pool: {
         min: 0,

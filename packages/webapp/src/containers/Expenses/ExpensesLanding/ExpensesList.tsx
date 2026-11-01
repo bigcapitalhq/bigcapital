@@ -1,36 +1,47 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
-
 import '@/style/pages/Expense/List.scss';
-
-import { DashboardPageContent } from '@/components';
-
-import ExpenseActionsBar from './ExpenseActionsBar';
-import ExpenseDataTable from './ExpenseDataTable';
-
+import { ExpenseActionsBar } from './ExpenseActionsBar';
+import { ExpenseDataTable } from './ExpenseDataTable';
+import { ExpensesListDialogs } from './ExpensesListDialogs';
+import { ExpensesListDrawers } from './ExpensesListDrawers';
+import { ExpensesListProvider } from './ExpensesListProvider';
 import { withExpenses } from './withExpenses';
 import { withExpensesActions } from './withExpensesActions';
+import type { WithExpensesProps } from './withExpenses';
+import type { WithExpensesActionsProps } from './withExpensesActions';
+import { DashboardPageContent } from '@/components';
+import { transformTableStateToQuery } from '@/utils';
 
-import { compose, transformTableStateToQuery } from '@/utils';
-import { ExpensesListProvider } from './ExpensesListProvider';
+interface ExpensesListInnerProps
+  extends Pick<
+      WithExpensesProps,
+      'expensesTableState' | 'expensesTableStateChanged'
+    >,
+    Pick<
+      WithExpensesActionsProps,
+      'resetExpensesTableState' | 'resetExpensesSelectedRows'
+    > {}
 
 /**
  * Expenses list.
  */
-function ExpensesList({
+function ExpensesListInner({
   // #withExpenses
   expensesTableState,
   expensesTableStateChanged,
 
   // #withExpensesActions
   resetExpensesTableState,
-}) {
-  // Resets the accounts table state once the page unmount.
+  resetExpensesSelectedRows,
+}: ExpensesListInnerProps) {
+  // Resets the expenses table state and selected rows once the page unmount.
   useEffect(
     () => () => {
       resetExpensesTableState();
+      resetExpensesSelectedRows();
     },
-    [resetExpensesTableState],
+    [resetExpensesSelectedRows, resetExpensesTableState],
   );
 
   return (
@@ -39,6 +50,8 @@ function ExpensesList({
       tableStateChanged={expensesTableStateChanged}
     >
       <ExpenseActionsBar />
+      <ExpensesListDrawers />
+      <ExpensesListDialogs />
 
       <DashboardPageContent>
         <ExpenseDataTable />
@@ -47,10 +60,11 @@ function ExpensesList({
   );
 }
 
-export default compose(
+export const ExpensesList = FF.pipe(
+  ExpensesListInner,
+  withExpensesActions,
   withExpenses(({ expensesTableState, expensesTableStateChanged }) => ({
     expensesTableState,
     expensesTableStateChanged,
   })),
-  withExpensesActions,
-)(ExpensesList);
+);

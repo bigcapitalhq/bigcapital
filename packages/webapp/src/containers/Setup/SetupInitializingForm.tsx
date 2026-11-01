@@ -1,46 +1,52 @@
-// @ts-nocheck
-import React from 'react';
 import { ProgressBar, Intent } from '@blueprintjs/core';
-import * as R from 'ramda';
-import { x } from '@xstyled/emotion';
 import { css } from '@emotion/css';
-import { useIsDarkMode } from '@/hooks/useDarkMode';
-
-import { useJob, useCurrentOrganization } from '@/hooks/query';
+import { x } from '@xstyled/emotion';
+import { useState, useEffect } from 'react';
+import type { OrganizationCurrent } from '@bigcapital/sdk-ts';
 import { FormattedMessage as T } from '@/components';
-
-import { withOrganizationActions } from '@/containers/Organization/withOrganizationActions';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { withOrganization } from '../Organization/withOrganization';
+import {
+  withOrganizationActions,
+  WithOrganizationActionsProps,
+} from '@/containers/Organization/withOrganizationActions';
+import { useJob, useCurrentOrganization } from '@/hooks/query';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 /**
  * Setup initializing step form.
  */
-function SetupInitializingForm({
+function SetupInitializingFormInner({
   setOrganizationSetupCompleted,
-  organization,
-}) {
-  const { refetch, isSuccess } = useCurrentOrganization({ enabled: false });
+}: WithOrganizationActionsProps) {
+  const {
+    data: organization,
+    refetch,
+    isSuccess,
+  } = useCurrentOrganization({ enabled: false });
 
   // Job done state.
-  const [isJobDone, setIsJobDone] = React.useState(false);
+  const [isJobDone, setIsJobDone] = useState(false);
 
-  const {
-    data: { isRunning, isWaiting, isFailed, isCompleted },
-    isFetching: isJobFetching,
-  } = useJob(organization?.build_job_id, {
+  const buildJobId = (
+    organization as (OrganizationCurrent & { buildJobId?: string }) | undefined
+  )?.buildJobId;
+
+  const { data: jobState, isFetching: isJobFetching } = useJob(buildJobId, {
     refetchInterval: 2000,
-    enabled: !!organization?.build_job_id,
+    enabled: !!buildJobId,
   });
+  const isRunning = Boolean(jobState?.isRunning);
+  const isWaiting = Boolean(jobState?.isWaiting);
+  const isFailed = Boolean(jobState?.isFailed);
+  const isCompleted = Boolean(jobState?.isCompleted);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isCompleted) {
       refetch();
       setIsJobDone(true);
     }
   }, [refetch, isCompleted, setOrganizationSetupCompleted]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isSuccess && isJobDone) {
       setOrganizationSetupCompleted(true);
       setIsJobDone(false);
@@ -62,13 +68,9 @@ function SetupInitializingForm({
   );
 }
 
-export default R.compose(
-  withOrganizationActions,
-  withCurrentOrganization(({ organizationTenantId }) => ({
-    organizationId: organizationTenantId,
-  })),
-  withOrganization(({ organization }) => ({ organization })),
-)(SetupInitializingForm);
+export const SetupInitializingForm = withOrganizationActions(
+  SetupInitializingFormInner,
+);
 
 /**
  * State initializing failed state.
@@ -125,7 +127,7 @@ function SetupInitializingRunning() {
   return (
     <x.div>
       <x.div className={progressBarStyles}>
-        <ProgressBar intent={Intent.NONE} value={null} />
+        <ProgressBar intent={Intent.NONE} value={undefined} />
       </x.div>
 
       <x.div textAlign="center" mt={35}>

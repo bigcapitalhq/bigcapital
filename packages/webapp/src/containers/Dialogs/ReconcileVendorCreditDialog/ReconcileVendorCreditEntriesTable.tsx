@@ -1,42 +1,49 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
+import { defaultTo } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import * as R from 'ramda';
-import { defaultTo } from 'lodash';
-
-import { useDeepCompareEffect } from '@/hooks/utils';
-
-import { DataTableEditable } from '@/components';
-import { compose, updateTableCell } from '@/utils';
-import {
-  useReconcileVendorCreditTableColumns,
-  maxAmountCreditFromRemaining,
-} from './utils';
-import { maxCreditNoteAmountEntries } from '@/containers/Dialogs/ReconcileCreditNoteDialog/utils';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
+import {
+  maxAmountCreditFromRemaining,
+  useReconcileVendorCreditTableColumns,
+} from './utils';
+import type { ReconcileVendorCreditFormEntry } from './types';
+// FIXME: cross-dialog coupling — this util lives in the credit-note sibling.
+// Should be extracted to a shared module; left as-is for the TS slice.
+import type { ReconcileCreditNoteFormEntry } from '@/containers/Dialogs/ReconcileCreditNoteDialog/types';
+import { DataTableEditable } from '@/components';
+import { maxCreditNoteAmountEntries } from '@/containers/Dialogs/ReconcileCreditNoteDialog/utils';
+import { useDeepCompareEffect } from '@/hooks/utils';
+import { updateTableCell } from '@/utils';
+
+interface ReconcileVendorCreditEntriesTableProps {
+  onUpdateData: (entries: ReconcileVendorCreditFormEntry[]) => void;
+  entries: ReconcileVendorCreditFormEntry[];
+  errors?: unknown;
+}
 
 /**
  * Reconcile vendor credit entries table.
  */
-export default function ReconcileVendorCreditEntriesTable({
+export function ReconcileVendorCreditEntriesTable({
   onUpdateData,
   entries,
   errors,
-}) {
+}: ReconcileVendorCreditEntriesTableProps): React.ReactElement {
   // Reconcile vendor credit table columns.
   const columns = useReconcileVendorCreditTableColumns();
 
   // Reconcile vendor credit context.
-  const {
-    vendorCredit: { credits_remaining },
-  } = useReconcileVendorCreditContext();
+  const { vendorCredit } = useReconcileVendorCreditContext();
+  const creditsRemaining = vendorCredit?.creditsRemaining;
 
   // Handle update data.
   const handleUpdateData = React.useCallback(
-    (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
+    (rowIndex: number, columnId: string, value: unknown) => {
+      const newRows = FF.pipe(
         entries,
-      );
+        updateTableCell(rowIndex, columnId, value),
+      ) as ReconcileVendorCreditFormEntry[];
       onUpdateData(newRows);
     },
     [onUpdateData, entries],
@@ -44,10 +51,11 @@ export default function ReconcileVendorCreditEntriesTable({
 
   // Watches deeply entries to compose a new entries.
   useDeepCompareEffect(() => {
-    const newEntries = R.compose(
-      maxCreditNoteAmountEntries(defaultTo(credits_remaining, 0)),
-      maxAmountCreditFromRemaining,
-    )(entries);
+    const newEntries = FF.pipe(entries, maxAmountCreditFromRemaining, (rows) =>
+      maxCreditNoteAmountEntries(defaultTo(creditsRemaining, 0))(
+        rows as unknown as ReconcileCreditNoteFormEntry[],
+      ),
+    ) as unknown as ReconcileVendorCreditFormEntry[];
 
     onUpdateData(newEntries);
   }, [entries]);

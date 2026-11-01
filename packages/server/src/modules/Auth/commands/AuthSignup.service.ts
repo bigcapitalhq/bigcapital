@@ -33,7 +33,7 @@ export class AuthSignupService {
 
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
-  ) { }
+  ) {}
 
   /**
    * Registers a new tenant with user from user input.
@@ -53,7 +53,7 @@ export class AuthSignupService {
     const verifiedEnabed = signupConfirmation.enabled ?? false;
     const verifyToken = verifiedEnabed ? verifyTokenCrypto : '';
     const verified = !verifiedEnabed;
-    
+
     const inviteAcceptedAt = moment().format('YYYY-MM-DD');
 
     // Triggers signin up event.
@@ -72,7 +72,6 @@ export class AuthSignupService {
       inviteAcceptedAt,
     });
     // Set the user in the cls service.
-    this.clsService.set('tenantId', user.tenantId);
     this.clsService.set('userId', user.id);
     this.clsService.set('organizationId', tenant.organizationId);
 

@@ -8,11 +8,11 @@ import { JournalSheetTableInjectable } from './JournalSheetTableInjectable';
 import { JournalSheetRepository } from './JournalSheetRepository';
 import { JournalSheetMeta } from './JournalSheetMeta';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 import { AccountsModule } from '@/modules/Accounts/Accounts.module';
 
 @Module({
-  imports: [FinancialSheetCommonModule, AccountsModule],
+  imports: [TenancyModule, FinancialSheetCommonModule, AccountsModule],
   controllers: [JournalSheetController],
   providers: [
     JournalSheetApplication,
@@ -22,7 +22,6 @@ import { AccountsModule } from '@/modules/Accounts/Accounts.module';
     JournalSheetPdfInjectable,
     JournalSheetRepository,
     JournalSheetMeta,
-    TenancyContext,
   ],
 })
 export class JournalSheetModule {}

@@ -1,7 +1,11 @@
-// @ts-nocheck
 import styled from 'styled-components';
 
-export const FinancialSheetRoot = styled.div`
+interface FinancialSheetRootProps {
+  $minimal?: boolean;
+  $fullWidth?: boolean;
+}
+
+export const FinancialSheetRoot = styled.div<FinancialSheetRootProps>`
   border: 2px solid var(--color-financial-sheet-card-border);
   border-radius: 10px;
   min-width: 640px;
@@ -12,15 +16,16 @@ export const FinancialSheetRoot = styled.div`
   min-height: 400px;
   display: flex;
   flex-direction: column;
+  gap: 24px;
 
   ${(props) =>
-    props.fullWidth &&
+    props.$fullWidth &&
     `
     width: 100%;
     margin-top: 25px;`}
 
   ${(props) =>
-    props.minimal &&
+    props.$minimal &&
     `
     border: 0;
     padding: 0;
@@ -35,7 +40,7 @@ export const FinancialSheetRoot = styled.div`
   }
   ${FinancialSheetDate} {
     margin-top: 20px;
-  }  
+  }
 `}
 `;
 
@@ -73,9 +78,7 @@ export const FinancialSheetFooter = styled.div`
     padding-left: 10px;
   }
 `;
-export const FinancialSheetTable = styled.div`
-  margin-top: 24px;
-`;
+export const FinancialSheetTable = styled.div``;
 export const FinancialSheetFooterBasis = styled.span``;
 export const FinancialSheetFooterCurrentTime = styled.span``;
 

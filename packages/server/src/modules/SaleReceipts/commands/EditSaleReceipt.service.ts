@@ -10,7 +10,6 @@ import { SaleReceipt } from '../models/SaleReceipt';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
-import { Contact } from '@/modules/Contacts/models/Contact';
 import { events } from '@/common/events/events';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';

@@ -1,16 +1,13 @@
-// @ts-nocheck
 import React from 'react';
-
-import { CommercialDocEntriesTable } from '@/components';
-import { useManualJournalEntriesColumns } from './utils';
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
-
+import { useManualJournalEntriesColumns } from './utils';
+import { CommercialDocEntriesTable } from '@/components';
 import { TableStyle } from '@/constants';
 
 /**
  * Manual journal drawer table.
  */
-export default function ManualJournalDrawerTable() {
+export function ManualJournalDrawerTable() {
   // Retrieves the readonly manual journal entries columns.
   const columns = useManualJournalEntriesColumns();
 
@@ -20,7 +17,7 @@ export default function ManualJournalDrawerTable() {
   return (
     <CommercialDocEntriesTable
       columns={columns}
-      data={manualJournal.entries}
+      data={manualJournal?.entries ?? []}
       styleName={TableStyle.Constrant}
     />
   );

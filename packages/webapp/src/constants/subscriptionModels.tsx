@@ -1,10 +1,11 @@
-interface SubscriptionPlanFeature {
+export interface SubscriptionPlanFeature {
   text: string;
   hint?: string;
+  hintLabel?: string;
   label?: string;
   style?: Record<string, string>;
 }
-interface SubscriptionPlan {
+export interface SubscriptionPlan {
   name: string;
   slug: string;
   description: string;

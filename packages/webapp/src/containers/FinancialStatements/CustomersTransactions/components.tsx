@@ -1,11 +1,3 @@
-// @ts-nocheck
-import React, { useRef } from 'react';
-import intl from 'react-intl-universal';
-import { AppToaster, If, Stack } from '@/components';
-import { Align } from '@/constants';
-import { getColumnWidth } from '@/utils';
-import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
-import FinancialLoadingBar from '../FinancialLoadingBar';
 import {
   Classes,
   Intent,
@@ -14,19 +6,29 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
+import type {
+  TransactionsByCustomersXlsxQuery,
+  TransactionsByCustomersCsvQuery,
+} from '@bigcapital/sdk-ts';
+import { AppToaster, If, Stack } from '@/components';
+import { Align } from '@/constants';
 import {
   useCustomersTransactionsCsvExport,
   useCustomersTransactionsXlsxExport,
 } from '@/hooks/query';
-import classNames from 'classnames';
+import { getColumnWidth } from '@/utils';
 
 /**
  * Retrieve customers transactions columns.
  */
 export const useCustomersTransactionsColumns = () => {
-  const {
-    customersTransactions: { tableRows },
-  } = useCustomersTransactionsContext();
+  const { customersTransactions } = useCustomersTransactionsContext();
+  const tableRows = (customersTransactions as any)?.tableRows;
 
   return React.useMemo(
     () => [
@@ -110,80 +112,59 @@ export function CustomersTransactionsLoadingBar() {
 
 /**
  * Customers transactions export menu.
- * @returns {JSX.Element}
  */
 export function CustomersTransactionsExportMenu() {
-  const toastKey = useRef(null);
   const commonToastConfig = {
     isCloseButtonShown: true,
     timeout: 2000,
   };
   const { query } = useCustomersTransactionsContext();
 
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+            [Classes.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
 
-  // Export the report to xlsx.
   const { mutateAsync: xlsxExport } = useCustomersTransactionsXlsxExport(
-    query,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
-    },
+    query as TransactionsByCustomersXlsxQuery,
   );
-  // Export the report to csv.
-  const { mutateAsync: csvExport } = useCustomersTransactionsCsvExport(query, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport();
+  const { mutateAsync: csvExport } = useCustomersTransactionsCsvExport(
+    query as TransactionsByCustomersCsvQuery,
+  );
+
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport();
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

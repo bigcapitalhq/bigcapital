@@ -1,26 +1,32 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
+import * as FF from 'fp-ts/function';
 import { useCustomersListContext } from './CustomersListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
-
 import { withCustomers } from './withCustomers';
 import { withCustomersActions } from './withCustomersActions';
+import type { WithCustomersProps } from './withCustomers';
+import type { WithCustomersActionsProps } from './withCustomersActions';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import { DashboardViewsTabs } from '@/components';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { transfromViewsToTabs } from '@/utils';
 
+interface CustomersViewsTabsInnerProps
+  extends Pick<WithCustomersProps, 'customersTableState'>,
+    WithCustomersActionsProps,
+    WithDashboardActionsProps {
+  customersCurrentView: string | null | undefined;
+}
 
 /**
  * Customers views tabs.
  */
-function CustomersViewsTabs({
+function CustomersViewsTabsInner({
   // #withCustomersActions
   setCustomersTableState,
 
   // #withCustomers
   customersCurrentView,
-}) {
+}: CustomersViewsTabsInnerProps) {
   // Customers list context.
   const { customersViews } = useCustomersListContext();
 
@@ -28,7 +34,7 @@ function CustomersViewsTabs({
   const tabs = transfromViewsToTabs(customersViews);
 
   // Handle tabs change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string) => {
     setCustomersTableState({ viewSlug: viewSlug || null });
   };
 
@@ -46,10 +52,11 @@ function CustomersViewsTabs({
   );
 }
 
-export default compose(
-  withDashboardActions,
-  withCustomersActions,
+export const CustomersViewsTabs = FF.pipe(
+  CustomersViewsTabsInner,
   withCustomers(({ customersTableState }) => ({
     customersCurrentView: customersTableState.viewSlug,
   })),
-)(CustomersViewsTabs);
+  withCustomersActions,
+  withDashboardActions,
+);

@@ -1,7 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Scope } from '@nestjs/common';
-import { SendSaleReceiptMailQueue, SendSaleReceiptMailJob } from '../constants';
+import { SendSaleReceiptMailQueue } from '../constants';
 import { SaleReceiptMailNotification } from '../commands/SaleReceiptMailNotification';
 import { ClsService, UseCls } from 'nestjs-cls';
 
@@ -19,8 +19,7 @@ export class SendSaleReceiptMailProcess extends WorkerHost {
 
   @UseCls()
   async process(job: Job) {
-    const { messageOpts, saleReceiptId, organizationId, userId } =
-      job.data;
+    const { messageOpts, saleReceiptId, organizationId, userId } = job.data;
 
     this.clsService.set('organizationId', organizationId);
     this.clsService.set('userId', userId);

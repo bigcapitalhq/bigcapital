@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow, constant } from 'fp-ts/function';
+import { ifElse, when } from '@/common/fp';
 import { get } from 'lodash';
 import {
   IBalanceSheetDataNode,
@@ -15,7 +15,7 @@ import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(
+  class extends flow(
     FinancialFilter,
     FinancialSheetStructure,
     BalanceSheetBase,
@@ -24,6 +24,8 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
      * @description Repository.
      */
     readonly repository: BalanceSheetRepository;
+
+    protected getSchemaNodeById: (id: string | number) => any;
 
     // -----------------------
     // # Account
@@ -36,25 +38,43 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
     private accountNoneZeroNodesFilterDetarminer = (
       node: IBalanceSheetDataNode,
     ): boolean => {
-      return R.ifElse(
+      return ifElse(
         this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNT),
         this.isNodeNoneZero,
-        R.always(true),
+        constant(true),
       )(node);
     };
 
     /**
-     * Detarmines account none-transactions node.
+     * Keeps an account when it or a descendant account has ledger entries.
+     * Parents stay so children that have transactions are not removed with them.
+     * @param   {IBalanceSheetDataNode} node
+     * @returns {boolean}
+     */
+    private isAccountNodeHasTransactions = (
+      node: IBalanceSheetDataNode,
+    ): boolean => {
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
+        node.id as number,
+      );
+
+      return !this.repository.totalAccountsLedger
+        .whereAccountsIds(accountIds)
+        .isEmpty();
+    };
+
+    /**
+     * Determines account none-transactions node.
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
     private accountNoneTransFilterDetarminer = (
       node: IBalanceSheetDataNode,
     ): boolean => {
-      return R.ifElse(
+      return ifElse(
         this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNT),
-        this.isNodeNoneZero,
-        R.always(true),
+        this.isAccountNodeHasTransactions,
+        constant(true),
       )(node);
     };
 
@@ -96,8 +116,8 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
     ): boolean => {
       // Detarmines whether the given node is aggregate or accounts node.
       const isAggregateOrAccounts =
-        this.isNodeType(BALANCE_SHEET_NODE_TYPE.AGGREGATE, node) ||
-        this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNTS, node);
+        this.isNodeType(BALANCE_SHEET_NODE_TYPE.AGGREGATE)(node) ||
+        this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNTS)(node);
 
       // Retrieve the schema node of the given id.
       const schemaNode = this.getSchemaNodeById(node.id);
@@ -106,7 +126,7 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
       const isSchemaAlwaysShow = get(schemaNode, 'alwaysShow', false);
 
       return isAggregateOrAccounts && !isSchemaAlwaysShow
-        ? this.isNodeHasChildren(node)
+        ? this.isNodeHasChildren(node as any)
         : true;
     };
 
@@ -135,9 +155,9 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
     private filterNoneZeroNodesCompose = (
       nodes: IBalanceSheetDataNode[],
     ): IBalanceSheetDataNode[] => {
-      return R.compose(
-        this.aggregateNoneChildrenFilter,
+      return flow(
         this.accountsNoneZeroNodesFilter,
+        this.aggregateNoneChildrenFilter,
       )(nodes);
     };
 
@@ -149,9 +169,9 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
     private filterNoneTransNodesCompose = (
       nodes: IBalanceSheetDataNode[],
     ): IBalanceSheetDataNode[] => {
-      return R.compose(
-        this.aggregateNoneChildrenFilter,
+      return flow(
         this.accountsNoneTransactionsNodesFilter,
+        this.aggregateNoneChildrenFilter,
       )(nodes);
     };
 
@@ -172,13 +192,13 @@ export const BalanceSheetFiltering = <T extends GConstructor<FinancialSheet>>(
      * @returns {IBalanceSheetDataNode[]}
      */
     protected reportFilterPlugin = (nodes: IBalanceSheetDataNode[]) => {
-      return R.compose(
-        this.supressNodesWhenAccountsTransactionsEmpty,
-        R.when(R.always(this.query.noneZero), this.filterNoneZeroNodesCompose),
-        R.when(
-          R.always(this.query.noneTransactions),
+      return flow(
+        when(
+          constant(this.query.noneTransactions),
           this.filterNoneTransNodesCompose,
         ),
+        when(constant(this.query.noneZero), this.filterNoneZeroNodesCompose),
+        this.supressNodesWhenAccountsTransactionsEmpty,
       )(nodes);
     };
   };

@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { useState, createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
 
 interface AlertsManagerContextValue {
   alerts: (string | number)[];
@@ -22,7 +22,7 @@ export function AlertsManager({ children }: { children: ReactNode }) {
     setAlerts([...alerts, type]);
   };
   const hideAlert = (type: string | number): void => {
-    alerts.filter((t) => t !== type);
+    setAlerts(alerts.filter((t) => t !== type));
   };
   const hideAlerts = (): void => {
     setAlerts([]);

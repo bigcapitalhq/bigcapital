@@ -1,20 +1,36 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { Bill, BillLandedCostTransaction } from '@bigcapital/sdk-ts';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { useBill, useBillLocatedLandedCost } from '@/hooks/query';
-import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import { DRAWERS } from '@/constants/drawers';
+import { useBill, useBillLocatedLandedCost } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-const BillDrawerContext = React.createContext();
+export interface BillDrawerContextValue {
+  billId: number | undefined;
+  bill: Bill | undefined;
+  transactions: BillLandedCostTransaction[] | undefined;
+}
+
+interface BillDrawerProviderProps {
+  billId: number | undefined;
+}
+
+const BillDrawerContext = React.createContext<
+  BillDrawerContextValue | undefined
+>(undefined);
 
 /**
  * Bill drawer provider.
  */
-function BillDrawerProvider({ billId, ...props }) {
+function BillDrawerProvider({
+  billId,
+  ...props
+}: BillDrawerProviderProps & { children?: React.ReactNode }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
+  const isLandedCostEnabled = featureCan(Features.LandedCost);
 
   // Handle fetch bill details.
   const { isLoading: isBillLoading, data: bill } = useBill(billId, {
@@ -24,13 +40,11 @@ function BillDrawerProvider({ billId, ...props }) {
   // Handle fetch bill located landed cost transaction.
   const { isLoading: isLandedCostLoading, data: transactions } =
     useBillLocatedLandedCost(billId, {
-      enabled: !!billId,
+      enabled: !!billId && isLandedCostEnabled,
     });
 
-    console.log(transactions, 'ahmed');
-
   //provider.
-  const provider = {
+  const provider: BillDrawerContextValue = {
     billId,
     transactions,
     bill,
@@ -43,12 +57,12 @@ function BillDrawerProvider({ billId, ...props }) {
       <DrawerHeaderContent
         name={DRAWERS.BILL_DETAILS}
         title={intl.get('bill.drawer.title', {
-          number: bill.bill_number ? `(${bill.bill_number})` : null,
+          number: bill?.billNumber ? `(${bill.billNumber})` : null,
         })}
         subTitle={
           featureCan(Features.Branches)
             ? intl.get('bill.drawer.subtitle', {
-                value: bill.branch?.name,
+                value: bill?.branch?.name,
               })
             : null
         }
@@ -58,6 +72,14 @@ function BillDrawerProvider({ billId, ...props }) {
   );
 }
 
-const useBillDrawerContext = () => React.useContext(BillDrawerContext);
+const useBillDrawerContext = (): BillDrawerContextValue => {
+  const ctx = React.useContext(BillDrawerContext);
+  if (ctx === undefined) {
+    throw new Error(
+      'useBillDrawerContext must be used within a BillDrawerProvider',
+    );
+  }
+  return ctx;
+};
 
 export { BillDrawerProvider, useBillDrawerContext };

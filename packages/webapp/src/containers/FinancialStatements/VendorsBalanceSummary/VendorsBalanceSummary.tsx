@@ -1,44 +1,45 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-
-import VendorsBalanceSummaryHeader from './VendorsBalanceSummaryHeader';
-import VendorsBalanceSummaryActionsBar from './VendorsBalanceSummaryActionsBar';
-
-import { VendorsBalanceSummaryProvider } from './VendorsBalanceSummaryProvider';
+import React, { useEffect } from 'react';
 import { VendorsSummarySheetLoadingBar } from './components';
-import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
-
-import { withVendorsBalanceSummaryActions } from './withVendorsBalanceSummaryActions';
-
 import { useVendorsBalanceSummaryQuery } from './utils';
 import { VendorBalanceDialogs } from './VendorBalanceDialogs';
-import { compose } from '@/utils';
+import { VendorsBalanceSummaryActionsBar } from './VendorsBalanceSummaryActionsBar';
+import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
+import { VendorsBalanceSummaryHeader } from './VendorsBalanceSummaryHeader';
+import { VendorsBalanceSummaryProvider } from './VendorsBalanceSummaryProvider';
+import {
+  withVendorsBalanceSummaryActions,
+  WithVendorsBalanceSummaryActionsProps,
+} from './withVendorsBalanceSummaryActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
+
+interface VendorsBalanceSummaryProps {
+  toggleVendorSummaryFilterDrawer: WithVendorsBalanceSummaryActionsProps['toggleVendorSummaryFilterDrawer'];
+}
 
 /**
  * Vendors Balance summary.
  */
-function VendorsBalanceSummary({
+function VendorsBalanceSummaryInner({
   // #withVendorsBalanceSummaryActions
   toggleVendorSummaryFilterDrawer,
-}) {
+}: VendorsBalanceSummaryProps) {
   const { query, setLocationQuery } = useVendorsBalanceSummaryQuery();
 
   // Handle refetch vendors balance summary.
-  const handleFilterSubmit = (filter) => {
+  const handleFilterSubmit = (filter: Record<string, unknown>) => {
     const _filter = {
       ...filter,
-      asDate: moment(filter.asDate).format('YYYY-MM-DD'),
+      asDate: moment(filter.asDate as string).format('YYYY-MM-DD'),
     };
     setLocationQuery(_filter);
   };
 
   // Handle number format submit.
-  const handleNumberFormatSubmit = (format) => {
+  const handleNumberFormatSubmit = (format: Record<string, unknown>) => {
     setLocationQuery({
-      ...filter,
+      ...query,
       numberFormat: format,
     });
   };
@@ -51,7 +52,7 @@ function VendorsBalanceSummary({
   return (
     <VendorsBalanceSummaryProvider filter={query}>
       <VendorsBalanceSummaryActionsBar
-        numberFormat={query?.numberFormat}
+        numberFormat={query?.numberFormat as Record<string, unknown>}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <VendorsSummarySheetLoadingBar />
@@ -71,4 +72,7 @@ function VendorsBalanceSummary({
   );
 }
 
-export default compose(withVendorsBalanceSummaryActions)(VendorsBalanceSummary);
+export const VendorsBalanceSummary = FF.pipe(
+  VendorsBalanceSummaryInner,
+  withVendorsBalanceSummaryActions,
+);

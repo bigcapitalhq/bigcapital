@@ -1,9 +1,8 @@
-// @ts-nocheck
 import { useHistory } from 'react-router-dom';
 import { DashboardInsider } from '@/components';
 import { ImportView } from '@/containers/Import';
 
-export default function EstimatesImport() {
+export function EstimatesImport() {
   const history = useHistory();
 
   const handleCancelBtnClick = () => {

@@ -23,10 +23,7 @@ export class AccountsImportable extends Importable {
     createAccountDTO: CreateAccountDTO,
     trx?: Knex.Transaction,
   ) {
-    return this.createAccountService.createAccount(
-      createAccountDTO,
-      trx,
-    );
+    return this.createAccountService.createAccount(createAccountDTO, trx);
   }
 
   /**

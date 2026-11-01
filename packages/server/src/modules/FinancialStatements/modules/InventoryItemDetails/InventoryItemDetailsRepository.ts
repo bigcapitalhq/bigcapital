@@ -144,13 +144,15 @@ export class InventoryItemDetailsRepository {
   public async getInventoryItems(
     itemsIds?: number[],
   ): Promise<ModelObject<Item>[]> {
-    return this.itemModel().query().onBuild((q) => {
-      q.where('type', 'inventory');
+    return this.itemModel()
+      .query()
+      .onBuild((q) => {
+        q.where('type', 'inventory');
 
-      if (!isEmpty(itemsIds)) {
-        q.whereIn('id', itemsIds);
-      }
-    });
+        if (!isEmpty(itemsIds)) {
+          q.whereIn('id', itemsIds);
+        }
+      });
   }
 
   /**

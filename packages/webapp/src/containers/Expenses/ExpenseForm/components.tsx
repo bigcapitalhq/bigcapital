@@ -1,10 +1,10 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useExpensesIsForeign } from './utils';
+import type { ExpenseFormValues } from './types';
 import {
   Icon,
   Hint,
@@ -15,13 +15,18 @@ import {
   InputGroupCell,
   MoneyFieldCell,
   AccountsListFieldCell,
-  ProjectsListFieldCell,
   CheckBoxFieldCell,
 } from '@/components/DataTableCells';
-import { CellType, Features, Align } from '@/constants';
+import { CellType, Align } from '@/constants';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
-import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
-import { useExpensesIsForeign } from './utils';
+type ActionsCellRendererProps = {
+  row: { index: number };
+  column: { id: string };
+  cell: { value: unknown };
+  data: unknown;
+  payload: { removeRow: (index: number) => void };
+};
 
 /**
  * Expense category header cell.
@@ -38,15 +43,11 @@ const ExpenseCategoryHeaderCell = () => {
 /**
  * Actions cell renderer.
  */
-const ActionsCellRenderer = ({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  data,
-  payload,
-}) => {
+const ActionsCellRenderer: React.FC<ActionsCellRendererProps> & {
+  cellType?: any;
+} = ({ row: { index }, payload: { removeRow } }) => {
   const handleClickRemoveRole = () => {
-    payload.removeRow(index);
+    removeRow(index);
   };
   const exampleMenu = (
     <Menu>
@@ -61,6 +62,7 @@ const ActionsCellRenderer = ({
     <Popover2 content={exampleMenu} placement="left-start">
       <Button
         icon={<Icon icon={'more-13'} iconSize={13} />}
+        // @ts-expect-error BP4 Button does not declare `iconSize`; runtime accepts it
         iconSize={14}
         className="m12"
         minimal={true}
@@ -82,25 +84,33 @@ const LandedCostHeaderCell = () => {
   );
 };
 
+type ExpenseAmountHeaderCellProps = {
+  payload: { currencyCode: string };
+};
+
 /**
  * Expense amount header cell.
  */
-export function ExpenseAmountHeaderCell({ payload: { currencyCode } }) {
+export function ExpenseAmountHeaderCell({
+  payload: { currencyCode },
+}: ExpenseAmountHeaderCellProps) {
   return intl.get('amount_currency', { currency: currencyCode });
 }
 
 /**
  * Retrieve expense form table entries columns.
  */
-export function useExpenseFormTableColumns({ landedCost }) {
-  const { featureCan } = useFeatureCan();
-
+export function useExpenseFormTableColumns({
+  landedCost,
+}: {
+  landedCost: boolean;
+}) {
   return React.useMemo(
     () => [
       {
         Header: ExpenseCategoryHeaderCell,
-        id: 'expense_account_id',
-        accessor: 'expense_account_id',
+        id: 'expenseAccountId',
+        accessor: 'expenseAccountId',
         Cell: AccountsListFieldCell,
         className: 'expense_account_id',
         disableSortBy: true,
@@ -115,6 +125,7 @@ export function useExpenseFormTableColumns({ landedCost }) {
         disableSortBy: true,
         width: 40,
         align: Align.Right,
+        moneyInputGroupProps: { 'data-testId': 'expense-entry-amount-input' },
       },
       {
         Header: intl.get('description'),
@@ -123,25 +134,11 @@ export function useExpenseFormTableColumns({ landedCost }) {
         disableSortBy: true,
         width: 100,
       },
-      ...(featureCan(Features.Projects)
-        ? [
-            {
-              Header: intl.get('project'),
-              id: 'project_id',
-              accessor: 'project_id',
-              Cell: ProjectsListFieldCell,
-              className: 'project_id',
-              disableSortBy: true,
-              width: 40,
-            },
-          ]
-        : []),
-
       ...(landedCost
         ? [
             {
               Header: LandedCostHeaderCell,
-              accessor: 'landed_cost',
+              accessor: 'landedCost',
               Cell: CheckBoxFieldCell,
               disableSortBy: true,
               disableResizing: true,
@@ -167,22 +164,26 @@ export function useExpenseFormTableColumns({ landedCost }) {
  * Expense exchange rate input field.
  * @returns {JSX.Element}
  */
-export function ExpensesExchangeRateInputField({ ...props }) {
-  const currentOrganization = useCurrentOrganization();
-  const { values } = useFormikContext();
+export function ExpensesExchangeRateInputField(props: Record<string, any>) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<ExpenseFormValues>();
 
   const isForeignJouranl = useExpensesIsForeign();
 
-  // Can't continue if the customer is not foreign.
   if (!isForeignJouranl) {
     return null;
   }
   return (
     <ExchangeRateInputGroup
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
+      name={'exchangeRate'}
+      fromCurrency={values.currencyCode ?? ''}
+      toCurrency={baseCurrency ?? ''}
       {...props}
     />
   );
 }
-ExpensesExchangeRateInputField.cellType = CellType.Field;
+(
+  ExpensesExchangeRateInputField as React.FC & {
+    cellType?: any;
+  }
+).cellType = CellType.Field;

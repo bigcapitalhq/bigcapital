@@ -1,5 +1,5 @@
-import { Box } from '@/components';
 import styled from 'styled-components';
+import { Box } from '@/components';
 
 export const EntriesActionsBar = styled(Box)`
   padding-bottom: 12px;

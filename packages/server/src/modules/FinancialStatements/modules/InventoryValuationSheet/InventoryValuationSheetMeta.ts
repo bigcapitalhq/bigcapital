@@ -5,10 +5,14 @@ import {
   IInventoryValuationReportQuery,
 } from './InventoryValuationSheet.types';
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class InventoryValuationMetaInjectable {
-  constructor(private readonly financialSheetMeta: FinancialSheetMeta) {}
+  constructor(
+    private readonly financialSheetMeta: FinancialSheetMeta,
+    private readonly i18n: I18nService,
+  ) {}
 
   /**
    * Retrieve the balance sheet meta.
@@ -19,11 +23,12 @@ export class InventoryValuationMetaInjectable {
   ): Promise<IInventoryValuationSheetMeta> {
     const commonMeta = await this.financialSheetMeta.meta();
     const formattedAsDate = moment(query.asDate).format(commonMeta.dateFormat);
-    const formattedDateRange = `As ${formattedAsDate}`;
+    const asLabel = this.i18n.t('financial_sheet.as_date');
+    const formattedDateRange = `${asLabel} ${formattedAsDate}`;
 
     return {
       ...commonMeta,
-      sheetName: 'Inventory Valuation Sheet',
+      sheetName: this.i18n.t('inventory_valuation.sheet_name'),
       formattedAsDate,
       formattedDateRange,
     };

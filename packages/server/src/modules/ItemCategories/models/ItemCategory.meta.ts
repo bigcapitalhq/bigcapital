@@ -1,5 +1,3 @@
-
-
 export const ItemCategoryMeta = {
   defaultFilterField: 'name',
   defaultSort: {

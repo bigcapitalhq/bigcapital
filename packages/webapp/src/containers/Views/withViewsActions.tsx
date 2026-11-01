@@ -1,5 +1,8 @@
-// @ts-nocheck
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import type { RootState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 import {
   fetchView,
   submitView,
@@ -7,17 +10,37 @@ import {
   editView,
   fetchViewResource,
   fetchResourceViews,
-} from '@/store/customViews/customViews.actions';
+} from '@/store/custom-views/custom-views.actions';
 
+export interface WithViewsActionsProps {
+  requestFetchView: (id: string | number) => Promise<unknown>;
+  requestSubmitView: (form: unknown) => Promise<unknown>;
+  requestEditView: (id: string | number, form: unknown) => Promise<unknown>;
+  requestDeleteView: (id: string | number) => Promise<unknown>;
+  requestFetchResourceViews: (resourceSlug: string) => Promise<unknown>;
+  requestFetchViewResource: (id: string | number) => Promise<unknown>;
+}
 
-export const mapDispatchToProps = (dispatch) => ({
+export const mapDispatchToProps = (
+  dispatch: ThunkDispatch<RootState, unknown, AnyAction>,
+): WithViewsActionsProps => ({
   requestFetchView: (id) => dispatch(fetchView({ id })),
   requestSubmitView: (form) => dispatch(submitView({ form })),
   requestEditView: (id, form) => dispatch(editView({ id, form })),
   requestDeleteView: (id) => dispatch(deleteView({ id })),
-
-  requestFetchResourceViews: (resourceSlug) => dispatch(fetchResourceViews({ resourceSlug })),
+  requestFetchResourceViews: (resourceSlug) =>
+    dispatch(fetchResourceViews({ resourceSlug })),
   requestFetchViewResource: (id) => dispatch(fetchViewResource({ id })),
 });
 
-export const withViewsActions = connect(null, mapDispatchToProps);
+export function withViewsActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithViewsActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithViewsActionsProps>
+  >;
+}

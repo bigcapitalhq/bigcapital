@@ -1,50 +1,78 @@
-// @ts-nocheck
-import React, { createContext, useContext } from 'react';
 import { isEmpty } from 'lodash';
-
+import React, { createContext, useContext } from 'react';
+import type { PaymentReceiveTableRow } from './components';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
   useResourceMeta,
   usePaymentReceives,
+  useSettingsPaymentReceives,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
-const PaymentsReceivedListContext = createContext();
+interface PaymentsReceivedListProviderProps {
+  query?: any;
+  tableStateChanged?: boolean;
+  children?: React.ReactNode;
+}
 
-/**
- * Payment receives list data provider.
- */
-function PaymentsReceivedListProvider({ query, tableStateChanged, ...props }) {
-  // Fetch payment receives resource views and fields.
+export interface PaymentsReceivedListContextValue {
+  paymentReceives: PaymentReceiveTableRow[] | undefined;
+  pagination: { total?: number; [key: string]: any } | undefined;
+  resourceMeta: any;
+  fields: IResourceField[];
+  paymentReceivesViews: any;
+  isPaymentReceivesLoading: boolean;
+  isPaymentReceivesFetching: boolean;
+  isResourceFetching: boolean;
+  isResourceLoading: boolean;
+  isViewsLoading: boolean;
+  isEmptyStatus: boolean;
+  paymentReceiveSettings: SettingsGroup | undefined;
+}
+
+const PaymentsReceivedListContext =
+  createContext<PaymentsReceivedListContextValue>(
+    {} as PaymentsReceivedListContextValue,
+  );
+
+function PaymentsReceivedListProvider({
+  query,
+  tableStateChanged,
+  ...props
+}: PaymentsReceivedListProviderProps) {
   const { data: paymentReceivesViews, isLoading: isViewsLoading } =
     useResourceViews('payment-received');
 
-  // Fetch the payment receives resource fields.
   const {
     data: resourceMeta,
     isLoading: isResourceLoading,
     isFetching: isResourceFetching,
   } = useResourceMeta('payment-received');
 
-  // Fetch payment receives list according to the given custom view id.
   const {
-    data: { paymentReceives, pagination, filterMeta },
+    data: paymentReceivesData,
     isLoading: isPaymentReceivesLoading,
     isFetching: isPaymentReceivesFetching,
   } = usePaymentReceives(query);
 
-  // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(paymentReceives) && !isPaymentReceivesLoading && !tableStateChanged;
+  const { data: paymentReceiveSettings } = useSettingsPaymentReceives();
 
-  // Provider payload.
-  const state = {
-    paymentReceives,
-    pagination,
+  const isEmptyStatus =
+    isEmpty(paymentReceivesData?.data) &&
+    !isPaymentReceivesLoading &&
+    !tableStateChanged;
+
+  const state: PaymentsReceivedListContextValue = {
+    paymentReceives: paymentReceivesData?.data,
+    pagination: paymentReceivesData?.pagination,
 
     resourceMeta,
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields
+      ? getFieldsFromResourceMeta(resourceMeta.fields)
+      : [],
 
     paymentReceivesViews,
 
@@ -54,6 +82,8 @@ function PaymentsReceivedListProvider({ query, tableStateChanged, ...props }) {
     isResourceLoading,
     isViewsLoading,
     isEmptyStatus,
+
+    paymentReceiveSettings,
   };
 
   return (

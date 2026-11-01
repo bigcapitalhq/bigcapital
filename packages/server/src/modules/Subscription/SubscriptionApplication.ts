@@ -10,6 +10,7 @@ import { SubscriptionPayload } from '@/interfaces/SubscriptionPlan';
 import { MarkSubscriptionPlanChanged } from './commands/MarkSubscriptionChanged.service';
 import { GetLemonSqueezyCheckoutService } from './queries/GetLemonSqueezyCheckout.service';
 import { GetSubscriptionsService } from './queries/GetSubscriptions.service';
+import { GetLemonSubscriptionsService } from './queries/GetLemonSubscriptions.service';
 import { MarkSubscriptionResumedService } from './commands/MarkSubscriptionResumed.sevice';
 
 @Injectable()
@@ -26,6 +27,7 @@ export class SubscriptionApplication {
     private readonly createNewSubscriptionService: NewSubscriptionService,
     private readonly getSubscriptionsService: GetSubscriptionsService,
     private readonly getLemonSqueezyCheckoutService: GetLemonSqueezyCheckoutService,
+    private readonly getLemonSubscriptionsService: GetLemonSubscriptionsService,
   ) {}
 
   /**
@@ -34,6 +36,13 @@ export class SubscriptionApplication {
    */
   getSubscriptions() {
     return this.getSubscriptionsService.getSubscriptions();
+  }
+
+  /**
+   * Lemon Squeezy subscription details (urls) for the current tenant.
+   */
+  getLemonSubscriptions() {
+    return this.getLemonSubscriptionsService.getLemonSubscriptions();
   }
 
   /**

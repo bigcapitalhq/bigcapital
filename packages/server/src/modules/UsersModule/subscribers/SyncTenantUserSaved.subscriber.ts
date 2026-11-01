@@ -1,10 +1,9 @@
-import { pick } from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   ITenantUserActivatedPayload,
   ITenantUserEditedPayload,
   ITenantUserInactivatedPayload,
-} from '../Users.types'
+} from '../Users.types';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SystemUser } from '@/modules/System/models/SystemUser';
 import { events } from '@/common/events/events';
@@ -25,13 +24,10 @@ export class SyncTenantUserMutateSubscriber {
       .query()
       .where('id', tenantUser.systemUserId)
       .patch({
-        ...pick(tenantUser, [
-          'firstName',
-          'lastName',
-          'email',
-          'active',
-          'phoneNumber',
-        ]),
+        firstName: tenantUser.firstName,
+        lastName: tenantUser.lastName,
+        email: tenantUser.email,
+        active: tenantUser.active,
       });
   }
 

@@ -62,13 +62,13 @@ export class GetCreditNotesService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transforomes the credit notes to POJO.
-    const creditNotes = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new CreditNoteTransformer(),
     );
 
     return {
-      creditNotes,
+      data,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

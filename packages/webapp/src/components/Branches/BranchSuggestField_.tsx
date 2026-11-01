@@ -1,11 +1,11 @@
-// @ts-nocheck
+import React from 'react';
 import { FSuggest } from '../Forms';
 
-interface BranchSuggestFieldProps {
-  items: any[];
-}
+type BranchSuggestFieldProps = React.ComponentProps<typeof FSuggest> & {
+  items: unknown[];
+};
 
-export function BranchSuggestField({ ...props }: BranchSuggestFieldProps) {
+export function BranchSuggestField(props: BranchSuggestFieldProps) {
   return (
     <FSuggest
       valueAccessor={'id'}

@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
+import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const PAYMENT_SERVICES_ROUTES = {
   LIST: '/api/payment-services',
@@ -9,55 +10,24 @@ export const PAYMENT_SERVICES_ROUTES = {
   DELETE_METHOD: '/api/payment-services/{paymentMethodId}',
 } as const satisfies Record<string, keyof paths>;
 
-export interface GetPaymentServicesResponse {
-  payment_services?: unknown;
-}
-
-export interface GetPaymentServicesStateResponse {
-  stripe: {
-    is_stripe_account_created: boolean;
-    is_stripe_payment_enabled: boolean;
-    is_stripe_payout_enabled: boolean;
-    is_stripe_enabled: boolean;
-    is_stripe_server_configured: boolean;
-    stripe_account_id: string | null;
-    stripe_payment_method_id: number | null;
-    stripe_currencies: string[];
-    stripe_publishable_key: string;
-    stripe_auth_link: string;
-    stripe_redirect_url: string;
-  };
-}
-
-export interface GetPaymentServiceResponse {
-  data?: unknown;
-}
-
-export interface EditPaymentMethodOptionsBody {
-  bankAccountId?: number;
-  clearningAccountId?: number;
-  showVisa?: boolean;
-  showMasterCard?: boolean;
-  showDiscover?: boolean;
-  showAmer?: boolean;
-  showJcb?: boolean;
-  showDiners?: boolean;
-}
-
-export interface UpdatePaymentMethodBody {
-  name?: string;
-  options?: EditPaymentMethodOptionsBody;
-}
-
-export interface UpdatePaymentMethodResponse {
-  id: number;
-  message: string;
-}
-
-export interface DeletePaymentMethodResponse {
-  id: number;
-  message: string;
-}
+export type GetPaymentServicesResponse = OpResponseBody<
+  OpForPath<typeof PAYMENT_SERVICES_ROUTES.LIST, 'get'>
+>;
+export type GetPaymentServicesStateResponse = OpResponseBody<
+  OpForPath<typeof PAYMENT_SERVICES_ROUTES.STATE, 'get'>
+>;
+export type GetPaymentServiceResponse = OpResponseBody<
+  OpForPath<typeof PAYMENT_SERVICES_ROUTES.BY_ID, 'get'>
+>;
+export type UpdatePaymentMethodBody = OpRequestBody<
+  OpForPath<typeof PAYMENT_SERVICES_ROUTES.UPDATE_METHOD, 'post'>
+>;
+export type UpdatePaymentMethodResponse = OpResponseBody<
+  OpForPath<typeof PAYMENT_SERVICES_ROUTES.UPDATE_METHOD, 'post'>
+>;
+export type DeletePaymentMethodResponse = OpResponseBody<
+  OpForPath<typeof PAYMENT_SERVICES_ROUTES.DELETE_METHOD, 'delete'>
+>;
 
 export async function fetchGetPaymentServices(
   fetcher: ApiFetcher,
@@ -67,7 +37,7 @@ export async function fetchGetPaymentServices(
     .method('get')
     .create();
   const { data } = await get({});
-  return data as GetPaymentServicesResponse;
+  return data;
 }
 
 export async function fetchGetPaymentServicesState(
@@ -78,8 +48,7 @@ export async function fetchGetPaymentServicesState(
     .method('get')
     .create();
   const { data } = await get({});
-  const wrapped = data as { data?: GetPaymentServicesStateResponse };
-  return wrapped?.data ?? (data as GetPaymentServicesStateResponse);
+  return data;
 }
 
 export async function fetchGetPaymentService(
@@ -91,7 +60,7 @@ export async function fetchGetPaymentService(
     .method('get')
     .create();
   const { data } = await get({ paymentServiceId });
-  return data as GetPaymentServiceResponse;
+  return data;
 }
 
 export async function fetchUpdatePaymentMethod(
@@ -103,8 +72,8 @@ export async function fetchUpdatePaymentMethod(
     .path(PAYMENT_SERVICES_ROUTES.UPDATE_METHOD)
     .method('post')
     .create();
-  const { data } = await post({ paymentMethodId, ...body } as never);
-  return data as UpdatePaymentMethodResponse;
+  const { data } = await post({ paymentMethodId, ...body });
+  return data;
 }
 
 export async function fetchDeletePaymentMethod(
@@ -116,5 +85,5 @@ export async function fetchDeletePaymentMethod(
     .method('delete')
     .create();
   const { data } = await del({ paymentMethodId });
-  return data as DeletePaymentMethodResponse;
+  return data;
 }

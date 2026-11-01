@@ -1,9 +1,30 @@
-// @ts-nocheck
-import { connect } from 'react-redux';
-import { getCustomerById } from '@/store/customers/customers.reducer';
+import { connect, MapStateToProps } from 'react-redux';
+import type { ApplicationState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 
-const mapStateToProps = (state, props) => ({
-  customer: getCustomerById(state, props.customerId),
+interface OwnProps {
+  customerId: number | string;
+}
+
+export interface WithCustomerDetailProps {
+  customer: unknown;
+}
+
+const mapStateToProps: MapStateToProps<
+  WithCustomerDetailProps,
+  OwnProps,
+  ApplicationState
+> = (_state, _props) => ({
+  customer: undefined,
 });
 
-export const withCustomerDetail = connect(mapStateToProps);
+export function withCustomerDetail<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithCustomerDetailProps>> {
+  const Connected = connect(mapStateToProps)(
+    WrappedComponent as ComponentType<any>,
+  );
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithCustomerDetailProps>
+  >;
+}

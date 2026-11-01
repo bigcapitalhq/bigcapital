@@ -1,33 +1,38 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
+import * as FF from 'fp-ts/function';
 import moment from 'moment';
-
+import { useEffect } from 'react';
+import { BalanceSheetActionsBar } from './BalanceSheetActionsBar';
+import { BalanceSheetBody } from './BalanceSheetBody';
+import { BalanceSheetDialogs } from './BalanceSheetDialogs';
+import { BalanceSheetHeader } from './BalanceSheetHeader';
+import { BalanceSheetProvider } from './BalanceSheetProvider';
 import { BalanceSheetAlerts, BalanceSheetLoadingBar } from './components';
+import { useBalanceSheetQuery } from './utils';
+import {
+  withBalanceSheetActions,
+  WithBalanceSheetActionsProps,
+} from './withBalanceSheetActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 
-import BalanceSheetHeader from './BalanceSheetHeader';
-import BalanceSheetActionsBar from './BalanceSheetActionsBar';
-import { BalanceSheetProvider } from './BalanceSheetProvider';
-import { BalanceSheetBody } from './BalanceSheetBody';
-import { useBalanceSheetQuery } from './utils';
-import { compose } from '@/utils';
-
-import { withBalanceSheetActions } from './withBalanceSheetActions';
-import { BalanceSheetDialogs } from './BalanceSheetDialogs';
+interface BalanceSheetFilterValues {
+  fromDate: Date | string;
+  toDate: Date | string;
+  [key: string]: unknown;
+}
 
 /**
  * Balance sheet.
  * @returns {React.JSX}
  */
-function BalanceSheet({
+function BalanceSheetInner({
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer,
-}) {
+}: WithBalanceSheetActionsProps) {
   // Balance sheet query.
   const { query, setLocationQuery } = useBalanceSheetQuery();
 
   // Handle re-fetch balance sheet after filter change.
-  const handleFilterSubmit = (filter) => {
+  const handleFilterSubmit = (filter: BalanceSheetFilterValues) => {
     const newFilter = {
       ...filter,
       fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
@@ -36,7 +41,7 @@ function BalanceSheet({
     setLocationQuery({ ...newFilter });
   };
   // Handle number format submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     setLocationQuery({
       ...query,
       numberFormat: values,
@@ -51,9 +56,9 @@ function BalanceSheet({
   );
 
   return (
-    <BalanceSheetProvider filter={query}>
+    <BalanceSheetProvider filter={query} setQuery={setLocationQuery}>
       <BalanceSheetActionsBar
-        numberFormat={query.numberFormat}
+        numberFormat={query.numberFormat ?? {}}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <BalanceSheetLoadingBar />
@@ -74,4 +79,4 @@ function BalanceSheet({
   );
 }
 
-export default compose(withBalanceSheetActions)(BalanceSheet);
+export const BalanceSheet = FF.pipe(BalanceSheetInner, withBalanceSheetActions);

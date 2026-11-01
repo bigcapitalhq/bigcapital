@@ -1,15 +1,26 @@
-// @ts-nocheck
-import React from 'react';
-
+import React, { createContext } from 'react';
+import type { BadDebtContextValue } from './types';
 import { DialogContent } from '@/components';
 import { useAccounts, useInvoice, useCreateBadDebt } from '@/hooks/query';
 
-const BadDebtContext = React.createContext();
+const BadDebtContext = createContext<BadDebtContextValue>(
+  {} as BadDebtContextValue,
+);
+
+interface BadDebtFormProviderProps {
+  invoiceId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Bad debt provider.
  */
-function BadDebtFormProvider({ invoiceId, dialogName, ...props }) {
+function BadDebtFormProvider({
+  invoiceId,
+  dialogName,
+  ...props
+}: BadDebtFormProviderProps) {
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
@@ -22,7 +33,7 @@ function BadDebtFormProvider({ invoiceId, dialogName, ...props }) {
   const { mutateAsync: createBadDebtMutate } = useCreateBadDebt();
 
   // State provider.
-  const provider = {
+  const provider: BadDebtContextValue = {
     accounts,
     invoice,
     invoiceId,

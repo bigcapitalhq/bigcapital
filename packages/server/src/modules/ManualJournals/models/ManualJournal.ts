@@ -1,14 +1,16 @@
-import { Model, mixin } from 'objection';
+import { Model } from 'objection';
 import { ManualJournalEntry } from './ManualJournalEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ManualJournalMeta } from './ManualJournal.meta';
+import { sanitizeSortDirection } from '@/modules/DynamicListing/DynamicFilter/sanitizeSortDirection';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
 import { ManualJournalDefaultViews } from '../constants';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 @InjectAttachable()
 @ExportableModel()
@@ -19,6 +21,7 @@ export class ManualJournal extends TenantBaseModel {
   date: Date;
   journalNumber: string;
   journalType: string;
+  basis: AccountingBasis | null;
   reference: string;
   amount: number;
   currencyCode: string;
@@ -80,7 +83,8 @@ export class ManualJournal extends TenantBaseModel {
        * Sort by status query.
        */
       sortByStatus(query, order) {
-        query.orderByRaw(`PUBLISHED_AT IS NULL ${order}`);
+        const dir = sanitizeSortDirection(order);
+        query.orderByRaw(`PUBLISHED_AT IS NULL ${dir}`);
       },
 
       /**

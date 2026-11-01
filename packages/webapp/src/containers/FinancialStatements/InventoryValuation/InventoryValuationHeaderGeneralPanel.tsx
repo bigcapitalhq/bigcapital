@@ -1,34 +1,25 @@
-// @ts-nocheck
-import React from 'react';
-import { FastField, Field } from 'formik';
-import { DateInput } from '@blueprintjs/datetime';
-import { FormGroup, Position } from '@blueprintjs/core';
-
-import {
-  FormattedMessage as T,
-  ItemsMultiSelect,
-  Row,
-  Col,
-  FieldHint,
-  FFormGroup,
-} from '@/components';
+import { Position } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 import { filterInventoryValuationOptions } from '../constants';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
 import {
   InventoryValuationGeneralPanelProvider,
   useInventoryValuationGeneralPanelContext,
 } from './InventoryValuationHeaderGeneralPanelProvider';
-import FinancialStatementsFilter from '../FinancialStatementsFilter';
+import {
+  FItemsMultiSelect,
+  Row,
+  Col,
+  FieldHint,
+  FFormGroup,
+  FDateInput,
+} from '@/components';
+import { useDateInputFormatter } from '@/hooks';
 
 /**
  * Inventory valuation - Drawer Header - General panel.
  */
-export default function InventoryValuationHeaderGeneralPanel() {
+export function InventoryValuationHeaderGeneralPanel() {
   return (
     <InventoryValuationGeneralPanelProvider>
       <InventoryValuationHeaderGeneralPanelContent />
@@ -41,32 +32,26 @@ export default function InventoryValuationHeaderGeneralPanel() {
  */
 function InventoryValuationHeaderGeneralPanelContent() {
   const { items } = useInventoryValuationGeneralPanelContext();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <div>
       <Row>
         <Col xs={4}>
-          <FastField name={'asDate'}>
-            {({ form, field: { value }, meta: { error } }) => (
-              <FormGroup
-                label={<T id={'as_date'} />}
-                labelInfo={<FieldHint />}
-                fill={true}
-                intent={inputIntent({ error })}
-              >
-                <DateInput
-                  {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
-                  onChange={handleDateChange((selectedDate) => {
-                    form.setFieldValue('asDate', selectedDate);
-                  })}
-                  popoverProps={{ position: Position.BOTTOM, minimal: true }}
-                  minimal={true}
-                  fill={true}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'asDate'}
+            label={intl.get('as_date')}
+            labelInfo={<FieldHint />}
+            fastField
+          >
+            <FDateInput
+              name={'asDate'}
+              {...dateInputFormatter}
+              popoverProps={{ position: Position.BOTTOM_LEFT, minimal: true }}
+              fill
+              fastField
+            />
+          </FFormGroup>
         </Col>
       </Row>
 
@@ -74,7 +59,7 @@ function InventoryValuationHeaderGeneralPanelContent() {
         <Col xs={4}>
           <FinancialStatementsFilter
             items={filterInventoryValuationOptions}
-            label={<T id={'items.label_filter_items'} />}
+            label={intl.get('items.label_filter_items')}
             initialSelectedItem={'all-items'}
           />
         </Col>
@@ -82,8 +67,8 @@ function InventoryValuationHeaderGeneralPanelContent() {
 
       <Row>
         <Col xs={4}>
-          <FFormGroup name={'itemsIds'} label={<T id={'Specific items'} />}>
-            <ItemsMultiSelect name={'itemsIds'} items={items} />
+          <FFormGroup name={'itemsIds'} label={intl.get('Specific items')}>
+            <FItemsMultiSelect name={'itemsIds'} items={items} />
           </FFormGroup>
         </Col>
       </Row>

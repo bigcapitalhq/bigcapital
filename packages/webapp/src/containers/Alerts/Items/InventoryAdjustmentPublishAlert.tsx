@@ -1,38 +1,32 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { usePublishInventoryAdjustment } from '@/hooks/query';
-
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { usePublishInventoryAdjustment } from '@/hooks/query';
 
-import { compose } from '@/utils';
+interface InventoryAdjustmentPublishAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { inventoryId: number };
+}
 
-/**
- * Inventory Adjustment publish alert.
- */
-
-function InventoryAdjustmentPublishAlert({
+function InventoryAdjustmentPublishAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { inventoryId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: publishInventoryAdjustmentMutate, isLoading } =
+}: InventoryAdjustmentPublishAlertProps): React.ReactElement {
+  const { mutateAsync: publishInventoryAdjustmentMutate, isPending } =
     usePublishInventoryAdjustment();
 
-  // Handle cancel inventory adjustment alert.
   const handleCancelPublish = () => {
     closeAlert(name);
   };
 
-  // Handle publish inventory adjustment confirm.
   const handleConfirmPublish = () => {
     publishInventoryAdjustmentMutate(inventoryId)
       .then(() => {
@@ -42,20 +36,20 @@ function InventoryAdjustmentPublishAlert({
         });
         closeAlert(name);
       })
-      .catch((error) => {
+      .catch(() => {
         closeAlert(name);
       });
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'publish'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('publish')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelPublish}
       onConfirm={handleConfirmPublish}
-      loading={isLoading}
+      loading={isPending}
     >
       <p>
         <T id={'inventory_adjustment.publish.alert_message'} />
@@ -64,7 +58,8 @@ function InventoryAdjustmentPublishAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const InventoryAdjustmentPublishAlert = FF.pipe(
+  InventoryAdjustmentPublishAlertInner,
   withAlertActions,
-)(InventoryAdjustmentPublishAlert);
+  withAlertStoreConnect(),
+);

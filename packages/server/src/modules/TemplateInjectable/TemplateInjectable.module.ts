@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TemplateInjectable } from './TemplateInjectable.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 
 @Module({
-  providers: [TemplateInjectable, TenancyContext],
-  exports: [TemplateInjectable]
+  imports: [TenancyModule],
+  providers: [TemplateInjectable],
+  exports: [TemplateInjectable],
 })
 export class TemplateInjectableModule {}

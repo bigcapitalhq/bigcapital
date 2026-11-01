@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Intent,
   Button,
@@ -11,67 +9,63 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T, PageForm, Group } from '@/components';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { Icon, If } from '@/components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
+import type { ExpenseFormValues } from './types';
+import { FormattedMessage as T, PageForm, Group } from '@/components';
+import { Icon, If } from '@/components';
 
 /**
  * Expense form floating actions.
  */
-export default function ExpenseFloatingFooter() {
+export function ExpenseFloatingFooter() {
   const history = useHistory();
 
-  // Formik context.
-  const { isSubmitting, submitForm, resetForm } = useFormikContext();
+  const { isSubmitting, submitForm, resetForm } =
+    useFormikContext<ExpenseFormValues>();
 
-  // Expense form context.
   const { setSubmitPayload, isNewMode } = useExpenseFormContext();
 
-  // Handle submit & publish button click.
-  const handleSubmitPublishBtnClick = (event) => {
+  const handleSubmitPublishBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ redirect: true, publish: true });
     submitForm();
   };
 
-  // Handle submit, publish & new button click.
-  const handleSubmitPublishAndNewBtnClick = (event) => {
+  const handleSubmitPublishAndNewBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ redirect: false, publish: true, resetForm: true });
     submitForm();
   };
 
-  // Handle submit, publish & continue editing button click.
-  const handleSubmitPublishContinueEditingBtnClick = (event) => {
+  const handleSubmitPublishContinueEditingBtnClick = (
+    _event: React.MouseEvent,
+  ) => {
     setSubmitPayload({ redirect: false, publish: true });
     submitForm();
   };
 
-  // Handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ redirect: true, publish: false });
     submitForm();
   };
 
-  // Handle submit as draft & new button click.
-  const handleSubmitDraftAndNewBtnClick = (event) => {
+  const handleSubmitDraftAndNewBtnClick = (_event: React.MouseEvent) => {
     setSubmitPayload({ redirect: false, publish: false, resetForm: true });
     submitForm();
   };
 
-  // Handles submit as draft & continue editing button click.
-  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+  const handleSubmitDraftContinueEditingBtnClick = (
+    _event: React.MouseEvent,
+  ) => {
     setSubmitPayload({ redirect: false, publish: false });
     submitForm();
   };
 
-  // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = (_event: React.MouseEvent) => {
     history.goBack();
   };
 
-  // Handles clear form button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = (_event: React.MouseEvent) => {
     resetForm();
   };
 

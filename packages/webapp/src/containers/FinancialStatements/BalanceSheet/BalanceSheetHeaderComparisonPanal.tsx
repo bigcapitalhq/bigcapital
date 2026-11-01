@@ -1,15 +1,7 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import {
-  Flex,
-  FlexItem,
-  FieldHint,
-  FormattedMessage as T,
-  FFormGroup,
-  FCheckbox,
-} from '@/components';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import {
   handlePreviousYearCheckBoxChange,
   handlePreviousYearChangeCheckboxChange,
@@ -18,6 +10,7 @@ import {
   handlePreviousYearPercentageCheckboxChange,
   handlePreviousPeriodChangeCheckboxChange,
 } from './utils';
+import { Flex, FlexItem, FieldHint, FFormGroup, FCheckbox } from '@/components';
 
 /**
  * Balance sheet header - Comparison panal - Comparisons fields.
@@ -31,13 +24,13 @@ function BalanceSheetHeaderComparisonPanalFields() {
       <FFormGroup name={'previousYear'} labelInfo={<FieldHint />}>
         <FCheckbox
           inline={true}
-          label={<T id={'balance_sheet.previous_year'} />}
+          label={intl.get('balance_sheet.previous_year')}
           name={'previousYear'}
           onChange={handlePreviousYearCheckBoxChange(form)}
         />
       </FFormGroup>
 
-      <FlexSubFields align={'left'}>
+      <FlexSubFields align={'flex-start'}>
         <FlexItem col={6}>
           <FFormGroup
             name={'previousYearAmountChange'}
@@ -45,8 +38,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
           >
             <FCheckbox
               inline={true}
-              small={true}
-              label={<T id={'balance_sheet.total_change'} />}
+              label={intl.get('balance_sheet.total_change')}
               name={'previousYearAmountChange'}
               onChange={handlePreviousYearChangeCheckboxChange(form)}
             />
@@ -60,7 +52,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
           >
             <FCheckbox
               inline={true}
-              label={<T id={'balance_sheet.change'} />}
+              label={intl.get('balance_sheet.change')}
               name={'previousYearPercentageChange'}
               onChange={handlePreviousYearPercentageCheckboxChange(form)}
             />
@@ -72,8 +64,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
       <FFormGroup name={'previousPeriod'} labelInfo={<FieldHint />}>
         <FCheckbox
           inline={true}
-          small={true}
-          label={<T id={'balance_sheet.previous_period'} />}
+          label={intl.get('balance_sheet.previous_period')}
           name={'previousPeriod'}
           onChange={handlePreviousPeriodCheckBoxChange(form)}
         />
@@ -87,8 +78,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
           >
             <FCheckbox
               inline={true}
-              small={true}
-              label={<T id={'balance_sheet.total_change'} />}
+              label={intl.get('balance_sheet.total_change')}
               name={'previousPeriodAmountChange'}
               onChange={handlePreviousPeriodChangeCheckboxChange(form)}
             />
@@ -102,7 +92,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
           >
             <FCheckbox
               inline={true}
-              label={<T id={'balance_sheet.change'} />}
+              label={intl.get('balance_sheet.change')}
               name={'previousPeriodPercentageChange'}
               onChange={handlePreivousPeriodPercentageCheckboxChange(form)}
             />
@@ -114,8 +104,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
       <FFormGroup name={'percentageOfColumn'} labelInfo={<FieldHint />}>
         <FCheckbox
           inline={true}
-          small={true}
-          label={<T id={'balance_sheet.percentage_of_column'} />}
+          label={intl.get('balance_sheet.percentage_of_column')}
           name={'percentageOfColumn'}
         />
       </FFormGroup>
@@ -124,8 +113,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
       <FFormGroup name={'percentageOfRow'} labelInfo={<FieldHint />}>
         <FCheckbox
           inline={true}
-          small={true}
-          label={<T id={'balance_sheet.percentage_of_row'} />}
+          label={intl.get('balance_sheet.percentage_of_row')}
           name={'percentageOfRow'}
         />
       </FFormGroup>
@@ -136,7 +124,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
 /**
  * Balance sheet header - Comparison panal.
  */
-export default function BalanceSheetHeaderComparisonPanal() {
+export function BalanceSheetHeaderComparisonPanal() {
   return (
     <BalanceSheetComparisonWrap>
       <BalanceSheetComparisonFieldsWrap>

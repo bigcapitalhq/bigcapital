@@ -1,11 +1,11 @@
 import { ComponentType, useMemo } from 'react';
+import { defaultReceiptMailProps } from './_constants';
+import { useSendReceiptMailMessage } from './_hooks';
+import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
 import {
   ReceiptSendMailReceipt,
   ReceiptSendMailReceiptProps,
 } from './ReceiptSendMailReceipt';
-import { useSendReceiptMailMessage } from './_hooks';
-import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
-import { defaultReceiptMailProps } from './_constants';
 
 /**
  * Injects props from receipt mail state into the `ReceiptMailPreviewConnected` component.
@@ -21,11 +21,17 @@ export const withReceiptMailReceiptPreviewProps = <
 
     const items = useMemo(
       () =>
-        receiptMailState?.entries?.map((entry: any) => ({
-          quantity: entry.quantity,
-          total: entry.totalFormatted,
-          label: entry.name,
-        })),
+        receiptMailState?.entries?.map(
+          (entry: {
+            quantity?: number;
+            totalFormatted?: string;
+            name?: string;
+          }) => ({
+            quantity: entry.quantity,
+            total: entry.totalFormatted,
+            label: entry.name,
+          }),
+        ),
       [receiptMailState?.entries],
     );
 

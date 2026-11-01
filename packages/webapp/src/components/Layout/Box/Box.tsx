@@ -1,6 +1,6 @@
-import React, { forwardRef, Ref } from 'react';
 import { HTMLDivProps, Props } from '@blueprintjs/core';
 import { SystemProps, x } from '@xstyled/emotion';
+import React, { forwardRef, Ref } from 'react';
 
 export interface BoxProps
   extends SystemProps,

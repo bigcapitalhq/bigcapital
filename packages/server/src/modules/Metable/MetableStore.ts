@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import { omit, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { IMetadata, IMetaQuery, IMetableStore } from './types';
 import { itemsStartWith } from '@/utils/items-start-with';
 
@@ -23,7 +23,7 @@ export class MetableStore implements IMetableStore {
    */
   setExtraColumns(columns: string[]): void {
     this.extraColumns = columns;
-}
+  }
 
   /**
    * Find the given metadata key.
@@ -31,12 +31,13 @@ export class MetableStore implements IMetableStore {
    * @returns {IMetadata} - Metadata object.
    */
   find(query: string | IMetaQuery): IMetadata {
-    const { key, value, ...extraColumns } = this.parseQuery(query);
+    const { key, value: _value, ...extraColumns } = this.parseQuery(query);
 
     return this.metadata.find((meta: IMetadata) => {
       const isSameKey = meta.key === key;
       const sameExtraColumns = this.extraColumns.some(
-        (extraColumn: string) => extraColumns[extraColumn] === meta[extraColumn]
+        (extraColumn: string) =>
+          extraColumns[extraColumn] === meta[extraColumn],
       );
       const isSameExtraColumns = sameExtraColumns || isEmpty(extraColumns);
 
@@ -49,11 +50,28 @@ export class MetableStore implements IMetableStore {
    * @returns {IMetadata[]}
    */
   all(): IMetadata[] {
+    const stripInternalKeys = (meta: IMetadata): IMetadata => {
+      const keysToOmit = itemsStartWith(Object.keys(meta), '_');
+      const result: IMetadata = {
+        key: meta.key,
+        value: meta.value,
+        group: meta.group,
+      };
+      for (const [k, v] of Object.entries(meta)) {
+        if (
+          !keysToOmit.includes(k) &&
+          k !== 'key' &&
+          k !== 'value' &&
+          k !== 'group'
+        ) {
+          result[k] = v;
+        }
+      }
+      return result;
+    };
     return this.metadata
       .filter((meta: IMetadata) => !meta._markAsDeleted)
-      .map((meta: IMetadata) =>
-        omit(meta, itemsStartWith(Object.keys(meta), '_'))
-      );
+      .map(stripInternalKeys);
   }
 
   /**
@@ -66,8 +84,8 @@ export class MetableStore implements IMetableStore {
     return metadata
       ? metadata.value
       : typeof defaultValue !== 'undefined'
-      ? defaultValue
-      : null;
+        ? defaultValue
+        : null;
   }
 
   /**
@@ -86,7 +104,7 @@ export class MetableStore implements IMetableStore {
    * Remove all meta data of the given group.
    * @param {string} group
    */
-  removeAll(group: string = 'default'): void {
+  removeAll(_group: string = 'default'): void {
     this.metadata = this.metadata.map((meta) => ({
       ...meta,
       _markAsDeleted: true,
@@ -142,7 +160,7 @@ export class MetableStore implements IMetableStore {
    */
   static formatMetaValue(
     value: string | boolean | number,
-    valueType: string
+    valueType: string,
   ): string | number | boolean {
     let parsedValue;
 

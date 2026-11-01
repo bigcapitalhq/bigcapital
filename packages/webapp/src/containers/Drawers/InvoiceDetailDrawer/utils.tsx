@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import styled from 'styled-components';
 import {
   Button,
   Popover,
@@ -12,27 +8,47 @@ import {
   Intent,
   Tag,
 } from '@blueprintjs/core';
-import { getColumnWidth } from '@/utils';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
+import type { SaleInvoice } from '@bigcapital/sdk-ts';
 import {
-  FormatNumberCell,
   Icon,
   FormattedMessage as T,
   Choose,
   Can,
   If,
   TextOverviewTooltipCell,
+  FeatureCan,
 } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
-import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
+import { Features } from '@/constants/features';
+import { getColumnWidth } from '@/utils';
+
+interface InvoiceDetailsStatusProps {
+  invoice: SaleInvoice;
+}
+
+interface BadDebtMenuItemPayload {
+  onCancelBadDebt: () => void;
+  onBadDebt: () => void;
+  onNotifyViaSMS: () => void;
+  onConvert: () => void;
+  onDeliver: () => void;
+}
+
+interface BadDebtMenuItemProps {
+  payload: BadDebtMenuItemPayload;
+}
 
 /**
  * Retrieve invoice readonly details table columns.
  */
 export const useInvoiceReadonlyEntriesColumns = () => {
   // Invoice details drawer context.
-  const {
-    invoice: { entries },
-  } = useInvoiceDetailDrawerContext();
+  const { invoice } = useInvoiceDetailDrawerContext();
+  const entries = invoice?.entries ?? [];
 
   return React.useMemo(
     () => [
@@ -53,22 +69,22 @@ export const useInvoiceReadonlyEntriesColumns = () => {
       },
       {
         Header: intl.get('quantity'),
-        accessor: 'quantity',
+        accessor: 'quantityFormatted',
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'quantity_formatted', {
+        width: getColumnWidth(entries, 'quantityFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
       },
       {
         Header: intl.get('rate'),
-        accessor: 'rate_formatted',
+        accessor: 'rate',
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'rate_formatted', {
+        width: getColumnWidth(entries, 'rate', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -76,28 +92,28 @@ export const useInvoiceReadonlyEntriesColumns = () => {
       {
         id: 'discount',
         Header: 'Discount',
-        accessor: 'discount_formatted',
+        accessor: 'discountFormatted',
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'discount_formatted', {
+        width: getColumnWidth(entries, 'discountFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
       },
       {
         Header: intl.get('amount'),
-        accessor: 'total_formatted',
+        accessor: 'totalFormatted',
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'total_formatted', {
+        width: getColumnWidth(entries, 'totalFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
       },
     ],
-    [],
+    [entries],
   );
 };
 
@@ -105,10 +121,15 @@ export const useInvoiceReadonlyEntriesColumns = () => {
  * Invoice details more actions menu.
  * @returns {React.JSX}
  */
-export const BadDebtMenuItem = ({
-  payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS, onConvert, onDeliver },
-}) => {
+export const BadDebtMenuItem = ({ payload }: BadDebtMenuItemProps) => {
   const { invoice } = useInvoiceDetailDrawerContext();
+
+  if (!invoice) {
+    return null;
+  }
+
+  const { onCancelBadDebt, onBadDebt, onNotifyViaSMS, onConvert, onDeliver } =
+    payload;
 
   return (
     <Popover
@@ -120,20 +141,20 @@ export const BadDebtMenuItem = ({
       }}
       content={
         <Menu>
-          <If condition={!invoice.is_delivered}>
+          <If condition={!invoice.isDelivered}>
             <MenuItem
               onClick={onDeliver}
               text={<T id={'mark_as_delivered'} />}
             />
           </If>
           <Choose>
-            <Choose.When condition={!invoice.is_writtenoff}>
+            <Choose.When condition={!invoice.isWrittenoff}>
               <MenuItem
                 text={<T id={'bad_debt.dialog.bad_debt'} />}
                 onClick={onBadDebt}
               />
             </Choose.When>
-            <Choose.When condition={invoice.is_writtenoff}>
+            <Choose.When condition={!!invoice.isWrittenoff}>
               <MenuItem
                 onClick={onCancelBadDebt}
                 text={<T id={'bad_debt.dialog.cancel_bad_debt'} />}
@@ -147,10 +168,12 @@ export const BadDebtMenuItem = ({
             />
           </Can>
           <Can I={SaleInvoiceAction.NotifyBySms} a={AbilitySubject.Invoice}>
-            <MenuItem
-              onClick={onNotifyViaSMS}
-              text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-            />
+            <FeatureCan feature={Features.SmsNotifications}>
+              <MenuItem
+                onClick={onNotifyViaSMS}
+                text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
+              />
+            </FeatureCan>
           </Can>
         </Menu>
       }
@@ -164,18 +187,18 @@ export const BadDebtMenuItem = ({
  * Invoice details status.
  * @returns {React.JSX}
  */
-export function InvoiceDetailsStatus({ invoice }) {
+export function InvoiceDetailsStatus({ invoice }: InvoiceDetailsStatusProps) {
   return (
     <Choose>
-      <Choose.When condition={invoice.is_fully_paid && invoice.is_delivered}>
+      <Choose.When condition={!!invoice.isFullyPaid && !!invoice.isDelivered}>
         <StatusTag intent={Intent.SUCCESS} round={true}>
           <T id={'paid'} />
         </StatusTag>
       </Choose.When>
 
-      <Choose.When condition={invoice.is_delivered}>
+      <Choose.When condition={!!invoice.isDelivered}>
         <Choose>
-          <Choose.When condition={invoice.is_overdue}>
+          <Choose.When condition={!!invoice.isOverdue}>
             <StatusTag intent={Intent.WARNING} round={true}>
               <T id={'overdue'} />
             </StatusTag>

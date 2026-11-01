@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
 import { useFormikContext } from 'formik';
 import { round } from 'lodash';
-import { MatchingTransactionFormValues } from './types';
+import { useMemo } from 'react';
 import { useMatchingTransactionBoot } from './MatchingTransactionBoot';
+import { MatchingTransactionFormValues } from './types';
 
 export const transformToReq = (
   values: MatchingTransactionFormValues,
@@ -11,9 +11,9 @@ export const transformToReq = (
   const matchedTransactions = Object.entries(values.matched)
     .filter(([key, value]) => value)
     .map(([key]) => {
-      const [reference_type, reference_id] = key.split('-');
+      const [referenceType, referenceId] = key.split('-');
 
-      return { reference_type, reference_id: parseInt(reference_id, 10) };
+      return { referenceType, referenceId: parseInt(referenceId, 10) };
     });
   return { matchedTransactions, uncategorizedTransactions };
 };

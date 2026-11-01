@@ -1,11 +1,13 @@
-// @ts-nocheck
+import {
+  Button,
+  NavbarGroup,
+  Classes,
+  NavbarDivider,
+  Intent,
+} from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
-
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
 import {
   Icon,
   DrawerActionsBar,
@@ -16,30 +18,69 @@ import {
   InventoryAdjustmentAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 
-import { compose } from '@/utils';
+interface InventoryAdjustmentDetailActionsBarInnerProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    WithDialogActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Inventory adjustment detail actions bar.
  */
-function InventoryAdjustmentDetailActionsBar({
-  // #withAlertActions
+function InventoryAdjustmentDetailActionsBarInner({
   openAlert,
-}) {
+  openDialog,
+  closeDrawer,
+}: InventoryAdjustmentDetailActionsBarInnerProps) {
   const { inventoryId } = useInventoryAdjustmentDrawerContext();
 
-  // Handle delete inventory adjustment.
+  // Handle edit inventory adjustment.
+  const handleEditInventoryAdjustment = () => {
+    openDialog(DialogsName.InventoryAdjustmentForm, {
+      action: 'edit',
+      inventoryId,
+    });
+    closeDrawer(DRAWERS.INVENTORY_ADJUSTMENT_DETAILS);
+  };
+
   const handleDeleteInventoryAdjustment = () => {
     openAlert('inventory-adjustment-delete', { inventoryId });
   };
 
   return (
-    <Can
-      I={InventoryAdjustmentAction.Delete}
-      a={AbilitySubject.InventoryAdjustment}
-    >
-      <DrawerActionsBar>
-        <NavbarGroup>
+    <DrawerActionsBar>
+      <NavbarGroup>
+        <Can
+          I={InventoryAdjustmentAction.Edit}
+          a={AbilitySubject.InventoryAdjustment}
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="pen-18" />}
+            text={<T id={'edit'} />}
+            onClick={handleEditInventoryAdjustment}
+          />
+        </Can>
+
+        <Can
+          I={InventoryAdjustmentAction.Delete}
+          a={AbilitySubject.InventoryAdjustment}
+        >
+          <NavbarDivider />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon={'trash-16'} iconSize={16} />}
@@ -47,10 +88,15 @@ function InventoryAdjustmentDetailActionsBar({
             intent={Intent.DANGER}
             onClick={handleDeleteInventoryAdjustment}
           />
-        </NavbarGroup>
-      </DrawerActionsBar>
-    </Can>
+        </Can>
+      </NavbarGroup>
+    </DrawerActionsBar>
   );
 }
 
-export default compose(withAlertActions)(InventoryAdjustmentDetailActionsBar);
+export const InventoryAdjustmentDetailActionsBar = FF.pipe(
+  InventoryAdjustmentDetailActionsBarInner,
+  withAlertActions,
+  withDrawerActions,
+  withDialogActions,
+);

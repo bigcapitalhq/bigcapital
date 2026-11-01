@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
-import { useBankRule } from '@/hooks/query/bank-rules';
 import { useAccounts } from '@/hooks/query';
+import { useBankRule } from '@/hooks/query/banking';
 
 interface RuleFormBootValues {
   bankRule?: null;

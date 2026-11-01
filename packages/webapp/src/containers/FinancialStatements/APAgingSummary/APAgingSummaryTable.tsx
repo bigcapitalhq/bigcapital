@@ -1,43 +1,37 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
-import { ReportDataTable, FinancialSheet } from '@/components';
-
+import { getReportRowTestId } from '../reportTestIds';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { useAPAgingSummaryColumns } from './components';
-
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
 import { tableRowTypesToClassnames } from '@/utils';
 
-/**
- * AP aging summary table sheet.
- */
-export default function APAgingSummaryTable({
-  //#ownProps
-  organizationName,
-}) {
-  // AP aging summary report content.
-  const {
-    APAgingSummary: { table, query, meta },
-    isAPAgingLoading,
-  } = useAPAgingSummaryContext();
+interface APAgingSummaryTableProps {
+  organizationName: string;
+}
 
-  // AP aging summary columns.
+export function APAgingSummaryTable({
+  organizationName,
+}: APAgingSummaryTableProps) {
+  const { APAgingSummary } = useAPAgingSummaryContext();
+
   const columns = useAPAgingSummaryColumns();
+  const table = (APAgingSummary as any)?.table;
+  const meta = (APAgingSummary as any)?.meta;
 
   return (
     <FinancialSheet
       companyName={organizationName}
       sheetType={intl.get('payable_aging_summary')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      loading={isAPAgingLoading}
+      dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
     >
       <APAgingSummaryDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('ap-aging')}
         noInitialFetch={true}
         sticky={true}
         styleName={TableStyle.Constrant}

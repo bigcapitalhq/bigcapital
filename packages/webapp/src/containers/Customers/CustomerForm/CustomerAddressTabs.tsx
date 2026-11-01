@@ -1,11 +1,8 @@
-// @ts-nocheck
-import React from 'react';
+import { CustomerBillingAddress } from './CustomerBillingAddress';
+import { CustomerShippingAddress } from './CustomerShippingAddress';
 import { Row } from '@/components';
 
-import CustomerBillingAddress from './CustomerBillingAddress';
-import CustomerShippingAddress from './CustomerShippingAddress';
-
-export default function CustomerAddressTabs() {
+export function CustomerAddressTabs() {
   return (
     <div className={'tab-panel--address'}>
       <Row>

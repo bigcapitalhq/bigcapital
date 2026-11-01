@@ -1,22 +1,31 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 // Lazy loading the content.
-const InventoryItemDetailsPdfDialogContent = lazy(
-  () => import('./InventoryItemDetailsPdfDialogContent'),
+const InventoryItemDetailsPdfDialogContent = lazy(() =>
+  import('./InventoryItemDetailsPdfDialogContent').then((m) => ({
+    default: m.InventoryItemDetailsPdfDialogContent,
+  })),
 );
+
+interface InventoryItemDetailsPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
 
 /**
  * Inventory item details sheet pdf preview dialog.
  * @returns {React.ReactNode}
  */
-function InventoryItemDetailsPdfDialogRoot({ dialogName, payload, isOpen }) {
+function InventoryItemDetailsPdfDialogRoot({
+  dialogName,
+  isOpen,
+}: InventoryItemDetailsPdfDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -34,6 +43,7 @@ function InventoryItemDetailsPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const InventoryItemDetailsPdfDialog = compose(withDialogRedux())(
+export const InventoryItemDetailsPdfDialog = FF.pipe(
   InventoryItemDetailsPdfDialogRoot,
+  withDialogRedux(),
 );

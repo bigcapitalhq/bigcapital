@@ -56,7 +56,7 @@ export const DEFAULT_STRATEGY = {
 
 @Injectable()
 export class SerializeInterceptor implements NestInterceptor<any, any> {
-  constructor(@Optional() readonly strategy = DEFAULT_STRATEGY) { }
+  constructor(@Optional() readonly strategy = DEFAULT_STRATEGY) {}
 
   intercept(
     context: ExecutionContext,

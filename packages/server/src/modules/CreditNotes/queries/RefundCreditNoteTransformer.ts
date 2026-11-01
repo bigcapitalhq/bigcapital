@@ -1,19 +1,19 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
-export class RefundCreditNoteTransformer extends Transformer{
+export class RefundCreditNoteTransformer extends Transformer {
   /**
    * Includeded attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
-    return ['formttedAmount', 'formattedDate'];
+    return ['formattedAmount', 'formattedDate'];
   };
 
   /**
    * Formatted amount.
    * @returns {string}
    */
-  protected formttedAmount = (item) => {
+  protected formattedAmount = (item) => {
     return this.formatNumber(item.amount, {
       currencyCode: item.currencyCode,
     });

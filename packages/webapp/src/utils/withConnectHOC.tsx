@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
-import { Dispatch } from 'redux';
 import { connect, MapStateToProps } from 'react-redux';
+import { Dispatch } from 'redux';
 
 /**
  * Creates a simple dispatch HOC that injects action props into a component.
@@ -25,9 +25,10 @@ export function createActionHOC<TInjectedProps extends object>(
   return function withHOC<P extends TInjectedProps>(
     WrappedComponent: ComponentType<P>,
   ): ComponentType<Omit<P, keyof TInjectedProps>> {
-    const Connected = connect(null, mapDispatchToProps)(
-      WrappedComponent as ComponentType<any>,
-    );
+    const Connected = connect(
+      null,
+      mapDispatchToProps,
+    )(WrappedComponent as ComponentType<any>);
     return Connected as unknown as ComponentType<Omit<P, keyof TInjectedProps>>;
   };
 }
@@ -52,7 +53,11 @@ export function createActionHOC<TInjectedProps extends object>(
 export function createStateFactoryHOC<TInjectedProps extends object>(
   createMapState: () => (state: any, props: any) => TInjectedProps,
 ) {
-  type MapStateFn<T> = (mapped: TInjectedProps, state?: unknown, props?: unknown) => T;
+  type MapStateFn<T> = (
+    mapped: TInjectedProps,
+    state?: unknown,
+    props?: unknown,
+  ) => T;
 
   return function withHOC<P, T = TInjectedProps>(mapState?: MapStateFn<T>) {
     const mapStateToProps = createMapState();
@@ -62,7 +67,9 @@ export function createStateFactoryHOC<TInjectedProps extends object>(
     };
 
     return function <C extends ComponentType<P>>(WrappedComponent: C) {
-      return connect(wrappedMapState)(WrappedComponent as ComponentType<any>) as unknown as ComponentType<
+      return connect(wrappedMapState)(
+        WrappedComponent as ComponentType<any>,
+      ) as unknown as ComponentType<
         Omit<P, keyof (T extends TInjectedProps ? T : TInjectedProps)>
       >;
     };
@@ -75,13 +82,15 @@ export function createStateFactoryHOC<TInjectedProps extends object>(
  *
  * @example
  * ```tsx
- * export interface WithCurrencyDetailProps {
- *   currency: Record<string, unknown> | null;
+ * export interface WithItemDetailProps {
+ *   item: Record<string, unknown> | null;
  * }
  *
- * export const withCurrencyDetail = createStateHOC<WithCurrencyDetailProps>((state, props) => ({
- *   currency: getCurrencyByCode(state, props),
- * }));
+ * export const withItemDetail = createStateHOC<WithItemDetailProps>(
+ *   (state, props) => ({
+ *     item: getItemById(state, props),
+ *   }),
+ * );
  * ```
  */
 export function createStateHOC<TInjectedProps extends object>(

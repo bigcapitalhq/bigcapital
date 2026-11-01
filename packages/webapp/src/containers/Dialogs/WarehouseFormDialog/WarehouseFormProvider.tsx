@@ -1,5 +1,5 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext } from 'react';
+import type { WarehouseFormContextValue } from './types';
 import { DialogContent } from '@/components';
 import {
   useCreateWarehouse,
@@ -7,17 +7,24 @@ import {
   useWarehouse,
 } from '@/hooks/query';
 
-const WarehouseFormContext = React.createContext();
+const WarehouseFormContext = createContext<WarehouseFormContextValue>(
+  {} as WarehouseFormContextValue,
+);
 
-/**
- * Warehouse form provider.
- */
-function WarehouseFormProvider({ dialogName, warehouseId, ...props }) {
-  // Create and edit warehouse mutations.
+interface WarehouseFormProviderProps {
+  dialogName: string;
+  warehouseId?: number | null;
+  children?: React.ReactNode;
+}
+
+function WarehouseFormProvider({
+  dialogName,
+  warehouseId,
+  ...props
+}: WarehouseFormProviderProps) {
   const { mutateAsync: createWarehouseMutate } = useCreateWarehouse();
   const { mutateAsync: editWarehouseMutate } = useEditWarehouse();
 
-  // Handle fetch invoice detail.
   const { data: warehouse, isLoading: isWarehouseLoading } = useWarehouse(
     warehouseId,
     {
@@ -25,8 +32,7 @@ function WarehouseFormProvider({ dialogName, warehouseId, ...props }) {
     },
   );
 
-  // State provider.
-  const provider = {
+  const provider: WarehouseFormContextValue = {
     dialogName,
     warehouse,
     warehouseId,

@@ -1,8 +1,7 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
-import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
-
+import classNames from 'classnames';
+import React, { useCallback } from 'react';
 import { PaymentReceiveListField } from '@/components';
 import { CellType } from '@/constants';
 function PaymentReceiveListFieldCell({

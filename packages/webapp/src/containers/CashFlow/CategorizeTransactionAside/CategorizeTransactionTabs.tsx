@@ -1,8 +1,8 @@
-// @ts-nocheck
 import { Tab, Tabs } from '@blueprintjs/core';
-import { MatchingBankTransaction } from './MatchingTransaction';
+import React from 'react';
 import { CategorizeTransactionContent } from '../CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionContent';
 import styles from './CategorizeTransactionTabs.module.scss';
+import { MatchingBankTransaction } from './MatchingTransaction';
 
 export function CategorizeTransactionTabs() {
   const defaultSelectedTabId = 'categorize';

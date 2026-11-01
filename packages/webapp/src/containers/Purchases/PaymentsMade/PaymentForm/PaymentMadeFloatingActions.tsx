@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import classNames from 'classnames';
 import {
   Intent,
   Button,
@@ -11,49 +8,53 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+import type { PaymentMadeFormValues } from './utils';
 import { Group, Icon, FormattedMessage as T } from '@/components';
 import { PageForm } from '@/components/PageForm';
-import { useHistory } from 'react-router-dom';
-import { useFormikContext } from 'formik';
-import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { CLASSES } from '@/constants/classes';
 
 /**
  * Payment made floating actions bar.
  */
-export default function PaymentMadeFloatingActions() {
+export function PaymentMadeFloatingActions() {
   // History context.
   const history = useHistory();
 
   // Formik context.
-  const { isSubmitting, resetForm, submitForm } = useFormikContext();
+  const { isSubmitting, resetForm, submitForm } =
+    useFormikContext<PaymentMadeFormValues>();
 
   // Payment made form context.
   const { setSubmitPayload, paymentMadeId } = usePaymentMadeFormContext();
 
   // Handle submit button click.
-  const handleSubmitBtnClick = (event) => {
+  const handleSubmitBtnClick = () => {
     setSubmitPayload({ redirect: true });
   };
 
   // Handle clear button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = () => {
     resetForm();
   };
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = () => {
     history.goBack();
   };
 
   // Handle submit & new button click.
-  const handleSubmitAndNewClick = (event) => {
+  const handleSubmitAndNewClick = () => {
     setSubmitPayload({ redirect: false, resetForm: true });
     submitForm();
   };
 
   // Handle submit & continue editing button click.
-  const handleSubmitContinueEditingBtnClick = (event) => {
+  const handleSubmitContinueEditingBtnClick = () => {
     setSubmitPayload({ redirect: false, publish: true });
     submitForm();
   };

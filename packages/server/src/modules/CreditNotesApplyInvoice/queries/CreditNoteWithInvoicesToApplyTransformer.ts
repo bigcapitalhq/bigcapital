@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class CreditNoteWithInvoicesToApplyTransformer extends Transformer {
   /**

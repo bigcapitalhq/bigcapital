@@ -1,29 +1,46 @@
-// @ts-nocheck
-import React from 'react';
-import * as Yup from 'yup';
-import styled from 'styled-components';
-import moment from 'moment';
-import { Formik, Form } from 'formik';
-import intl from 'react-intl-universal';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-
+import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import * as Yup from 'yup';
+import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import { TrialBalanceSheetHeaderDimensionsPanel } from './TrialBalanceSheetHeaderDimensionsPanel';
+import { TrialBalanceSheetHeaderGeneralPanel } from './TrialBalanceSheetHeaderGeneralPanel';
+import { withTrialBalance, WithTrialBalanceProps } from './withTrialBalance';
+import {
+  withTrialBalanceActions,
+  WithTrialBalanceActionsProps,
+} from './withTrialBalanceActions';
 import { FormattedMessage as T } from '@/components';
-
-import FinancialStatementHeader from '../FinancialStatementHeader';
-import TrialBalanceSheetHeaderGeneralPanel from './TrialBalanceSheetHeaderGeneralPanel';
-import TrialBalanceSheetHeaderDimensionsPanel from './TrialBalanceSheetHeaderDimensionsPanel';
-
-import { withTrialBalance } from './withTrialBalance';
-import { withTrialBalanceActions } from './withTrialBalanceActions';
-
-import { compose, transformToForm } from '@/utils';
-import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
+import { transformToForm } from '@/utils';
+
+interface TrialBalanceFormValues {
+  fromDate: Date;
+  toDate: Date;
+  basis: 'cash' | 'accrual';
+  branchesIds: string[];
+  filterByOption: string;
+  [key: string]: unknown;
+}
+
+interface TrialBalanceSheetHeaderOwnProps {
+  pageFilter: Record<string, unknown>;
+  onSubmitFilter: (values: Record<string, unknown>) => void;
+}
+
+type TrialBalanceSheetHeaderProps = TrialBalanceSheetHeaderOwnProps &
+  WithTrialBalanceProps &
+  Pick<WithTrialBalanceActionsProps, 'toggleTrialBalanceFilterDrawer'>;
 
 /**
  * Trial balance sheet header.
  */
-function TrialBalanceSheetHeader({
+function TrialBalanceSheetHeaderInner({
   // #ownProps
   pageFilter,
   onSubmitFilter,
@@ -33,7 +50,7 @@ function TrialBalanceSheetHeader({
 
   // #withTrialBalanceActions
   toggleTrialBalanceFilterDrawer: toggleFilterDrawer,
-}) {
+}: TrialBalanceSheetHeaderProps) {
   // Form validation schema.
   const validationSchema = Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('from_date')),
@@ -42,15 +59,17 @@ function TrialBalanceSheetHeader({
       .required()
       .label(intl.get('to_date')),
   });
-  // Detarmines whether the feature is enabled.
+  // Determines whether the feature is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   // Default values.
-  const defaultValues = {
+  const defaultValues: TrialBalanceFormValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
+    // Must match the report default basis in `getDefaultTrialBalanceQuery`.
+    basis: 'accrual',
     branchesIds: [],
     filterByOption: 'with-transactions',
   };
@@ -59,13 +78,16 @@ function TrialBalanceSheetHeader({
   const initialValues = transformToForm(
     {
       ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
+      fromDate: moment(pageFilter.fromDate as string).toDate(),
+      toDate: moment(pageFilter.toDate as string).toDate(),
     },
     defaultValues,
-  );
+  ) as TrialBalanceFormValues;
   // Handle form submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: TrialBalanceFormValues,
+    { setSubmitting }: FormikHelpers<TrialBalanceFormValues>,
+  ) => {
     onSubmitFilter(values);
     setSubmitting(false);
     toggleFilterDrawer(false);
@@ -85,7 +107,7 @@ function TrialBalanceSheetHeader({
       isOpen={trialBalanceDrawerFilter}
       drawerProps={{ onClose: handleDrawerClose }}
     >
-      <Formik
+      <Formik<TrialBalanceFormValues>
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -106,7 +128,7 @@ function TrialBalanceSheetHeader({
             )}
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -120,12 +142,13 @@ function TrialBalanceSheetHeader({
   );
 }
 
-export default compose(
+export const TrialBalanceSheetHeader = FF.pipe(
+  TrialBalanceSheetHeaderInner,
+  withTrialBalanceActions,
   withTrialBalance(({ trialBalanceDrawerFilter }) => ({
     trialBalanceDrawerFilter,
   })),
-  withTrialBalanceActions,
-)(TrialBalanceSheetHeader);
+);
 
 const TrialBalanceSheetDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

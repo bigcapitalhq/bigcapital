@@ -1,45 +1,57 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import intl from 'react-intl-universal';
-import { first, pick } from 'lodash';
 import { Intent } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { first, pick } from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
+import type {
+  QuickPaymentReceiveFormValues,
+  QuickPaymentReceiveInvoice,
+} from './types';
 import { AppToaster } from '@/components';
 
-import { useFormikContext } from 'formik';
-import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
+interface ResponseError {
+  type: string;
+}
 
-export const defaultInitialValues = {
-  invoice_id: '',
-  customer_id: '',
-  deposit_account_id: '',
-  payment_receive_no: '',
-  payment_date: moment(new Date()).format('YYYY-MM-DD'),
-  reference_no: '',
+interface TransformErrorsArgs {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setFieldError: any;
+}
+
+export const defaultInitialValues: QuickPaymentReceiveFormValues = {
+  invoiceId: '',
+  customerId: '',
+  depositAccountId: '',
+  paymentReceiveNo: '',
+  paymentDate: moment(new Date()).format('YYYY-MM-DD'),
+  referenceNo: '',
   amount: '',
   // statement: '',
-  exchange_rate: 1,
-  branch_id: '',
+  exchangeRate: 1,
+  branchId: '',
 };
 
-export const transformErrors = (errors, { setFieldError }) => {
-  const getError = (errorType) => errors.find((e) => e.type === errorType);
+export const transformErrors = (
+  errors: ResponseError[],
+  { setFieldError }: TransformErrorsArgs,
+) => {
+  const getError = (errorType: string) =>
+    errors.find((e) => e.type === errorType);
 
   if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
-    setFieldError(
-      'payment_receive_no',
-      intl.get('payment_number_is_not_unique'),
-    );
+    setFieldError('paymentReceiveNo', intl.get('payment_number_is_not_unique'));
   }
   if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
     setFieldError(
-      'payment_receive_no',
+      'paymentReceiveNo',
       intl.get('payment_received_number_required'),
     );
   }
   if (getError('INVALID_PAYMENT_AMOUNT')) {
     setFieldError(
-      'payment_amount',
+      'paymentAmount',
       intl.get('the_payment_amount_bigger_than_invoice_due_amount'),
     );
   }
@@ -54,24 +66,26 @@ export const transformErrors = (errors, { setFieldError }) => {
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<QuickPaymentReceiveFormValues>();
   const { branches, isBranchesSuccess } = useQuickPaymentReceiveContext();
 
   React.useEffect(() => {
     if (isBranchesSuccess) {
-      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+      const primaryBranch = branches?.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
 
-export const transformInvoiceToForm = (invoice) => {
+export const transformInvoiceToForm = (
+  invoice: QuickPaymentReceiveInvoice | undefined,
+) => {
   return {
-    ...pick(invoice, ['customer_id', 'currency_code']),
-    amount: invoice.due_amount,
-    invoice_id: invoice.id,
+    ...pick(invoice, ['customerId', 'currencyCode']),
+    amount: invoice?.dueAmount,
+    invoiceId: invoice?.id,
   };
 };

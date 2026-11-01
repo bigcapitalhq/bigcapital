@@ -1,18 +1,14 @@
-// @ts-nocheck
 import React from 'react';
-
-import { CommercialDocBox } from '@/components';
-
-import PaymentMadeDetailHeader from './PaymentMadeDetailHeader';
-import PaymentMadeDetailTable from './PaymentMadeDetailTable';
-import PaymentMadeDetailTableFooter from './PaymentMadeDetailTableFooter';
 import { PaymentMadeDetailFooter } from './PaymentMadeDetailFooter';
+import { PaymentMadeDetailHeader } from './PaymentMadeDetailHeader';
+import { PaymentMadeDetailTable } from './PaymentMadeDetailTable';
+import { PaymentMadeDetailTableFooter } from './PaymentMadeDetailTableFooter';
+import { CommercialDocBox } from '@/components';
 
 /**
  * Payment made detail tab.
- * @returns {React.JSX}
  */
-export default function PaymentMadeDetailTab() {
+export function PaymentMadeDetailTab() {
   return (
     <CommercialDocBox>
       <PaymentMadeDetailHeader />

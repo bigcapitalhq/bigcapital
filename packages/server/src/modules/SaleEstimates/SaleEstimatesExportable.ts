@@ -36,6 +36,6 @@ export class SaleEstimatesExportable extends Exportable {
 
     return this.saleEstimatesApplication
       .getSaleEstimates(parsedQuery)
-      .then((output) => output.salesEstimates);
+      .then((output) => output.data);
   }
 }

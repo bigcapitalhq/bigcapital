@@ -1,13 +1,13 @@
-import * as R from 'ramda';
-import { useFormikContext } from 'formik';
 import { css } from '@emotion/css';
+import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import { InvoiceCustomizeFormValues } from './types';
+import { Box } from '@/components';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
 import {
   InvoicePaymentPagePreview,
   InvoicePaymentPagePreviewProps,
 } from '@/containers/PaymentPortal/InvoicePaymentPagePreview';
-import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
-import { InvoiceCustomizeFormValues } from './types';
-import { Box } from '@/components';
 
 const withInvoicePaymentPreviewPageProps = <P extends Object>(
   Component: React.ComponentType<P>,
@@ -47,6 +47,7 @@ const withInvoicePaymentPreviewPageProps = <P extends Object>(
   };
 };
 
-export const InvoiceCustomizePaymentPreview = R.compose(
+export const InvoiceCustomizePaymentPreview = FF.pipe(
+  InvoicePaymentPagePreview,
   withInvoicePaymentPreviewPageProps,
-)(InvoicePaymentPagePreview);
+);

@@ -1,24 +1,47 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 
-interface DrawerContextValue {
+export interface DrawerContextValue<TPayload = Record<string, any>> {
   name: string;
-  payload: Record<string, any>;
+  payload: TPayload;
 }
 
-const DrawerContext = createContext<DrawerContextValue>(
-  {} as DrawerContextValue,
+const DrawerContext = createContext<DrawerContextValue<any> | undefined>(
+  undefined,
 );
 
-/**
- * Account form provider.
- */
-function DrawerProvider({ ...props }) {
-  const provider = { ...props };
-
-  return <DrawerContext.Provider value={provider} {...props} />;
+export interface DrawerProviderProps<TPayload = Record<string, any>> {
+  name: string;
+  payload?: TPayload;
+  children?: React.ReactNode;
 }
 
-const useDrawerContext = () => useContext(DrawerContext);
+/**
+ * Drawer provider.
+ */
+function DrawerProvider<TPayload = Record<string, any>>({
+  name,
+  payload,
+  children,
+}: DrawerProviderProps<TPayload>) {
+  const provider: DrawerContextValue<TPayload> = {
+    name,
+    payload: payload as TPayload,
+  };
+
+  return (
+    <DrawerContext.Provider value={provider}>{children}</DrawerContext.Provider>
+  );
+}
+
+const useDrawerContext = <
+  TPayload = Record<string, any>,
+>(): DrawerContextValue<TPayload> => {
+  const context = useContext(DrawerContext);
+
+  if (!context) {
+    throw new Error('useDrawerContext must be used within a DrawerProvider');
+  }
+  return context as DrawerContextValue<TPayload>;
+};
 
 export { DrawerProvider, useDrawerContext };

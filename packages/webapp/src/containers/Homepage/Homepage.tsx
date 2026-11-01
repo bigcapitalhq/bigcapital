@@ -1,13 +1,11 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
+import { HomepageContent } from './HomepageContent';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { DashboardInsider } from '@/components/Dashboard';
-
-import HomepageContent from './HomepageContent';
-
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
-import { compose } from '@/utils';
+type DashboardHomepageProps = WithDashboardActionsProps;
 
 /**
  * Dashboard homepage.
@@ -15,13 +13,12 @@ import { compose } from '@/utils';
 function DashboardHomepage({
   // #withDashboardActions
   changePageTitle,
+}: DashboardHomepageProps) {
+  const organizationName = useCurrentOrganizationName();
 
-  // #withCurrentOrganization
-  organization,
-}) {
   useEffect(() => {
-    changePageTitle(organization.name);
-  }, [organization.name, changePageTitle]);
+    changePageTitle(organizationName);
+  }, [organizationName, changePageTitle]);
 
   return (
     <DashboardInsider name="homepage">
@@ -30,7 +27,4 @@ function DashboardHomepage({
   );
 }
 
-export default compose(
-  withDashboardActions,
-  withCurrentOrganization(({ organization }) => ({ organization })),
-)(DashboardHomepage);
+export const Homepage = withDashboardActions(DashboardHomepage);

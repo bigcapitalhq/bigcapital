@@ -6,6 +6,12 @@ export const createItemSchema = z
     name: z.string().max(DATATYPES_LENGTH.STRING),
     type: z.enum(['service', 'non-inventory', 'inventory']),
     code: z.string().max(DATATYPES_LENGTH.STRING).nullable().optional(),
+    reorder_point: z
+      .number()
+      .min(0)
+      .max(DATATYPES_LENGTH.DECIMAL_13_3)
+      .nullable()
+      .optional(),
     purchasable: z.boolean().optional(),
     cost_price: z
       .number()
@@ -106,7 +112,6 @@ export const createItemSchema = z
       path: ['inventory_account_id'],
     },
   );
-
 
 export type createItemDTO = z.infer<typeof createItemSchema>;
 export type editItemDTOSchema = z.infer<typeof createItemSchema>;

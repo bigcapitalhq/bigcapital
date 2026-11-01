@@ -1,7 +1,6 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 
-export const getFiscalYear = () => [
+export const getFiscalYear = (): Array<{ name: string; key: string }> => [
   {
     name: `${intl.get('january')} - ${intl.get('december')}`,
     key: 'january',
@@ -50,4 +49,4 @@ export const getFiscalYear = () => [
     name: `${intl.get('december')} - ${intl.get('november')}`,
     key: 'december',
   },
-]
+];

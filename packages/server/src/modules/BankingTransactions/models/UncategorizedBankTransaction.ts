@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 import * as moment from 'moment';
 import { Model } from 'objection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
@@ -20,6 +19,7 @@ export class UncategorizedBankTransaction extends TenantBaseModel {
   readonly pending: boolean;
   readonly categorizeRefId!: number;
   readonly categorizeRefType!: string;
+  readonly currencyCode!: string;
 
   /**
    * Table name.

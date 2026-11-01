@@ -33,7 +33,7 @@ export class GetManualJournals {
   public getManualJournals = async (
     filterDTO: GetManualJournalsQueryDto,
   ): Promise<{
-    manualJournals: ManualJournal[];
+    data: ManualJournal[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> => {
@@ -61,13 +61,13 @@ export class GetManualJournals {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the manual journals models to POJO.
-    const manualJournals = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new ManualJournalTransfromer(),
     );
 
     return {
-      manualJournals,
+      data,
       pagination,
       filterMeta: dynamicService.getResponseMeta(),
     };

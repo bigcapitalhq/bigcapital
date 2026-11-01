@@ -1,6 +1,6 @@
 // @ts-nocheck
-import _ from 'lodash';
 import Deepdash from 'deepdash';
+import _ from 'lodash';
 
 export const deepdash = Deepdash(_);
 

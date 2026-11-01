@@ -1,23 +1,31 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { T, Dialog, DialogSuspense } from '@/components';
-
 import withDialogRedux from '@/components/DialogReduxConnect';
-
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 // Lazy loading the content.
 const PdfPreviewDialogContent = lazy(() =>
-  import('./InvoicePdfPreviewDialogContent'),
+  import('./InvoicePdfPreviewDialogContent').then((m) => ({
+    default: m.InvoicePdfPreviewDialogContent,
+  })),
 );
+
+interface InvoicePdfPreviewDialogProps {
+  dialogName: string;
+  payload: { invoiceId: number | null };
+  isOpen: boolean | undefined;
+}
 
 /**
  * Invoice PDF preview dialog.
  */
-function InvoicePdfPreviewDialog({ dialogName, payload, isOpen }) {
+function InvoicePdfPreviewDialog({
+  dialogName,
+  payload,
+  isOpen,
+}: InvoicePdfPreviewDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -38,4 +46,4 @@ function InvoicePdfPreviewDialog({ dialogName, payload, isOpen }) {
   );
 }
 
-export default compose(withDialogRedux())(InvoicePdfPreviewDialog);
+export const index = FF.pipe(InvoicePdfPreviewDialog, withDialogRedux());

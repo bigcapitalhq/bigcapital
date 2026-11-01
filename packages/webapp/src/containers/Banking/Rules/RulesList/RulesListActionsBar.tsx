@@ -1,15 +1,15 @@
-// @ts-nocheck
 import { Button, Classes, NavbarGroup } from '@blueprintjs/core';
-import * as R from 'ramda';
+import * as FF from 'fp-ts/function';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { Can, DashboardActionsBar, Icon } from '@/components';
 import { AbilitySubject, BankRuleAction } from '@/constants/abilityOption';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
 function RulesListActionsBarRoot({
   // #withDialogActions
   openDialog,
-}) {
+}: WithDialogActionsProps) {
   const handleCreateBtnClick = () => {
     openDialog(DialogsName.BankRuleForm);
   };
@@ -30,6 +30,7 @@ function RulesListActionsBarRoot({
   );
 }
 
-export const RulesListActionsBar = R.compose(withDialogActions)(
+export const RulesListActionsBar = FF.pipe(
   RulesListActionsBarRoot,
+  withDialogActions,
 );

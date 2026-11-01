@@ -12,7 +12,7 @@ export class GetSaleReceiptMailStateService {
     private readonly receiptMail: SaleReceiptMailNotification,
 
     @Inject(SaleReceipt.name)
-    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>
+    private readonly saleReceiptModel: TenantModelProxy<typeof SaleReceipt>,
   ) {}
 
   /**
@@ -20,7 +20,8 @@ export class GetSaleReceiptMailStateService {
    * @param {number} saleReceiptId
    */
   public async getMailState(saleReceiptId: number) {
-    const saleReceipt = await this.saleReceiptModel().query()
+    const saleReceipt = await this.saleReceiptModel()
+      .query()
       .findById(saleReceiptId)
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')

@@ -9,7 +9,7 @@ export class ValidateBulkDeleteSaleEstimatesService {
     private readonly deleteSaleEstimateService: DeleteSaleEstimate,
     @Inject(TENANCY_DB_CONNECTION)
     private readonly tenantKnex: () => Knex,
-  ) { }
+  ) {}
 
   public async validateBulkDeleteSaleEstimates(
     saleEstimateIds: number[],
@@ -34,7 +34,7 @@ export class ValidateBulkDeleteSaleEstimatesService {
             trx,
           );
           deletableIds.push(saleEstimateId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(saleEstimateId);
         }
       }

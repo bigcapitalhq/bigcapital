@@ -1,25 +1,42 @@
-// @ts-nocheck
-import {connect} from 'react-redux';
-import {compose} from '@/utils';
-
+import * as FF from 'fp-ts/function';
+import { connect } from 'react-redux';
+import type { ApplicationState } from '@/store/reducers';
+import type { ComponentType } from 'react';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withResourceDetail } from '@/containers/Resources/withResourceDetails';
+import { withResourceDetails } from '@/containers/Resources/withResourceDetails';
+import { withViewDetails } from '@/containers/Views/withViewDetails';
 import { withViewsActions } from '@/containers/Views/withViewsActions';
-import { withViewsDetails } from '@/containers/Views/withViewDetails';
 
-const mapStateToProps = (state, ownProps) => {
+interface ViewFormOwnProps {
+  viewId?: string | number;
+  viewMeta?: { resource?: { name?: string } } | null;
+  resourceName?: string;
+}
+
+const mapStateToProps = (
+  _state: ApplicationState,
+  ownProps: ViewFormOwnProps,
+) => {
   return {
-    resourceName: ownProps.viewId ?
-      ownProps.viewMeta.resource?.name : ownProps.resourceName,
+    resourceName: ownProps.viewId
+      ? ownProps.viewMeta?.resource?.name
+      : ownProps.resourceName,
   };
 };
 
-const viewFormConnect = connect(mapStateToProps);
+function withViewFormResourceName<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<P> {
+  const Connected = connect(mapStateToProps)(
+    WrappedComponent as ComponentType<any>,
+  );
+  return Connected as unknown as ComponentType<P>;
+}
 
-export default compose(
-  withDashboardActions,
+export const ViewFormContainer = FF.flow(
+  withResourceDetails(),
+  withViewFormResourceName,
+  withViewDetails(),
   withViewsActions,
-  withViewsDetails,
-  viewFormConnect,
-  withResourceDetail(),
+  withDashboardActions,
 );

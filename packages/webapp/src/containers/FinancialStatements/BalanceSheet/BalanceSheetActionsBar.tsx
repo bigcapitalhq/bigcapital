@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   NavbarGroup,
   Button,
@@ -9,22 +8,37 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-import { BalanceSheetExportMenu } from './components';
-
+import * as FF from 'fp-ts/function';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
-import { withBalanceSheet } from './withBalanceSheet';
-import { withBalanceSheetActions } from './withBalanceSheetActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
+import { BalanceSheetExportMenu } from './components';
+import { withBalanceSheet, WithBalanceSheetProps } from './withBalanceSheet';
+import {
+  withBalanceSheetActions,
+  WithBalanceSheetActionsProps,
+} from './withBalanceSheetActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { saveInvoke } from '@/utils';
+
+interface BalanceSheetActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
+
+type BalanceSheetActionsBarProps = WithBalanceSheetProps &
+  Pick<WithBalanceSheetActionsProps, 'toggleBalanceSheetFilterDrawer'> &
+  WithDialogActionsProps &
+  BalanceSheetActionsBarOwnProps;
 
 /**
  * Balance sheet - actions bar.
  */
-function BalanceSheetActionsBar({
+function BalanceSheetActionsBarInner({
   // #withBalanceSheet
   balanceSheetDrawerFilter,
 
@@ -37,7 +51,7 @@ function BalanceSheetActionsBar({
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
-}) {
+}: BalanceSheetActionsBarProps) {
   const { isLoading, refetchBalanceSheet } = useBalanceSheetContext();
 
   // Handle filter toggle click.
@@ -51,14 +65,14 @@ function BalanceSheetActionsBar({
   };
 
   // Handle number format form submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
 
   // Handles the pdf print button click.
   const handlePdfPrintBtnSubmit = () => {
-    openDialog(DialogsName.BalanceSheetPdfPreview)
-  }
+    openDialog(DialogsName.BalanceSheetPdfPreview);
+  };
 
   return (
     <DashboardActionsBar>
@@ -128,10 +142,11 @@ function BalanceSheetActionsBar({
   );
 }
 
-export default compose(
+export const BalanceSheetActionsBar = FF.pipe(
+  BalanceSheetActionsBarInner,
+  withDialogActions,
+  withBalanceSheetActions,
   withBalanceSheet(({ balanceSheetDrawerFilter }) => ({
     balanceSheetDrawerFilter,
   })),
-  withBalanceSheetActions,
-  withDialogActions
-)(BalanceSheetActionsBar);
+);

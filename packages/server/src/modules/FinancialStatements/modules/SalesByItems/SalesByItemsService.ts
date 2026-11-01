@@ -75,7 +75,10 @@ export class SalesByItemsReportService {
       filter,
       inventoryItems,
       inventoryTransactions,
-      { baseCurrency: tenantMetadata.baseCurrency, dateFormat: meta.dateFormat },
+      {
+        baseCurrency: tenantMetadata.baseCurrency,
+        dateFormat: meta.dateFormat,
+      },
     );
     const salesByItemsData = sheet.reportData();
 

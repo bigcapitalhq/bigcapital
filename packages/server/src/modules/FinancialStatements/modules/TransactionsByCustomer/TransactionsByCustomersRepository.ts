@@ -1,6 +1,6 @@
 import { ModelObject } from 'objection';
 import * as moment from 'moment';
-import * as R from 'ramda';
+import { assoc } from '@/common/fp';
 import { ACCOUNT_TYPE } from '@/constants/accounts';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
@@ -153,11 +153,11 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
         openingDate,
         customersIds,
       );
-    // @ts-ignore
-    return R.compose(
-      R.map(R.assoc('date', openingDate)),
-      R.map(R.assoc('accountNormal', 'debit')),
-    )(openingTransactions);
+    return openingTransactions
+      .map((trans) => assoc('accountNormal', 'debit', trans))
+      .map((trans) =>
+        assoc('date', openingDate, trans),
+      ) as unknown as ILedgerEntry[];
   }
 
   /**
@@ -176,16 +176,13 @@ export class TransactionsByCustomersRepository extends TransactionsByContactRepo
       toDate,
     );
 
-    // @ts-ignore
-    return R.pipe(
-      R.map(R.assoc('accountNormal', 'debit')),
-      R.map((trans) => ({
+    return transactions
+      .map((trans) => assoc('accountNormal', 'debit', trans))
+      .map((trans) => ({
         ...trans,
-        // @ts-ignore
-        referenceTypeFormatted: '',
+        referenceTypeFormatted: '' as string,
         // referenceTypeFormatted: trans.referenceTypeFormatted,
-      })),
-    )(transactions);
+      })) as unknown as ILedgerEntry[];
   }
 
   /**

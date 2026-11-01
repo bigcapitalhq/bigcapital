@@ -1,14 +1,19 @@
-// @ts-nocheck
+import { useFormikContext } from 'formik';
 import React from 'react';
-import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import { useCreditNoteIsForeignCustomer } from './utils';
+import type { CreditNoteFormValues } from './utils';
+import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 
 /**
  * Credit note from currency tag.
- * @returns
  */
-export default function CreditNotetFormCurrencyTag() {
-  const { isForeignCustomer, selectCustomer } = useCreditNoteFormContext();
+export function CreditNotetFormCurrencyTag() {
+  const { customers } = useCreditNoteFormContext();
+  const { values } = useFormikContext<CreditNoteFormValues>();
+  const isForeignCustomer = useCreditNoteIsForeignCustomer();
+
+  const selectCustomer = customers.find((c) => c.id === values.customerId);
 
   if (!isForeignCustomer) {
     return null;
@@ -16,7 +21,7 @@ export default function CreditNotetFormCurrencyTag() {
 
   return (
     <BaseCurrencyRoot>
-      <BaseCurrency currency={selectCustomer?.currency_code} />
+      <BaseCurrency currency={selectCustomer?.currencyCode} />
     </BaseCurrencyRoot>
   );
 }

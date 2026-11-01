@@ -1,7 +1,7 @@
-// @ts-nocheck
 import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import type { RootState } from '@/store/reducers';
+import type { AnyAction } from 'redux';
 import {
   splashStopLoading,
   splashStartLoading,
@@ -16,13 +16,16 @@ import {
   closeAlert,
   changePreferencesPageTitle,
 } from '@/store/dashboard/dashboard.actions';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
-export const useDispatchAction = (action) => {
-  const dispatch = useDispatch();
+export const useDispatchAction = <P extends unknown[], A extends AnyAction>(
+  action: (...args: P) => A,
+) => {
+  const dispatch = useAppDispatch();
 
   return useCallback(
-    (payload) => {
-      dispatch(action(payload));
+    (...args: P) => {
+      dispatch(action(...args));
     },
     [dispatch, action],
   );
@@ -57,7 +60,7 @@ export const useSidebarSubmnuActions = () => {
  * Retrieves the sidebar submenu selector.
  */
 const sidebarSubmenuSelector = createSelector(
-  (state) => state.dashboard.sidebarSubmenu,
+  (state: RootState) => state.dashboard.sidebarSubmenu,
   (sidebarSubmenu) => sidebarSubmenu,
 );
 
@@ -65,7 +68,7 @@ const sidebarSubmenuSelector = createSelector(
  * Retrieves the sidebar submenu selector.
  */
 export const useSidebarSubmenu = () => {
-  const sidebarSubmenu = useSelector(sidebarSubmenuSelector);
+  const sidebarSubmenu = useAppSelector(sidebarSubmenuSelector);
 
   return {
     isOpen: sidebarSubmenu?.isOpen || false,
@@ -77,12 +80,12 @@ export const useSidebarSubmenu = () => {
  * Dialogs actions.
  */
 export const useDialogActions = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return {
-    openDialog: (name: string, payload?: {}) =>
+    openDialog: (name: string, payload?: Record<string, unknown>) =>
       dispatch(openDialog(name, payload)),
-    closeDialog: (name: string, payload?: {}) =>
+    closeDialog: (name: string, payload?: Record<string, unknown>) =>
       dispatch(closeDialog(name, payload)),
   };
 };
@@ -92,11 +95,13 @@ export const useDialogActions = () => {
  * @returns
  */
 export const useDrawerActions = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return {
-    openDrawer: (name, payload?: {}) => dispatch(openDrawer(name, payload)),
-    closeDrawer: (name, payload?: {}) => dispatch(closeDrawer(name, payload)),
+    openDrawer: (name: string, payload?: Record<string, unknown>) =>
+      dispatch(openDrawer(name, payload)),
+    closeDrawer: (name: string, payload?: Record<string, unknown>) =>
+      dispatch(closeDrawer(name, payload)),
   };
 };
 
@@ -105,11 +110,13 @@ export const useDrawerActions = () => {
  * @returns
  */
 export const useAlertActions = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return {
-    openAlert: (name, payload?: {}) => dispatch(openAlert(name, payload)),
-    closeAlert: (name, payload?: {}) => dispatch(closeAlert(name, payload)),
+    openAlert: (name: string, payload?: Record<string, unknown>) =>
+      dispatch(openAlert(name, payload)),
+    closeAlert: (name: string, payload?: Record<string, unknown>) =>
+      dispatch(closeAlert(name, payload)),
   };
 };
 

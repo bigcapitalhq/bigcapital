@@ -1,18 +1,15 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { ManualJournalDrawerActionBar } from './ManualJournalDrawerActionBar';
+import { ManualJournalDrawerFooter } from './ManualJournalDrawerFooter';
+import { ManualJournalDrawerHeader } from './ManualJournalDrawerHeader';
+import { ManualJournalDrawerTable } from './ManualJournalDrawerTable';
 import { CommercialDocBox } from '@/components';
-
-import ManualJournalDrawerActionBar from './ManualJournalDrawerActionBar';
-import ManualJournalDrawerHeader from './ManualJournalDrawerHeader';
-import ManualJournalDrawerTable from './ManualJournalDrawerTable';
-import ManualJournalDrawerFooter from './ManualJournalDrawerFooter';
 
 /**
  * Manual journal view details.
  */
-export default function ManualJournalDrawerDetails() {
+export function ManualJournalDrawerDetails() {
   return (
     <ManualJournalDetailsRoot>
       <ManualJournalDrawerActionBar />

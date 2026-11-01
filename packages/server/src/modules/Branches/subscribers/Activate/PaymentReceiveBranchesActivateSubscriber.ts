@@ -22,7 +22,7 @@ export class PaymentReceiveActivateBranchesSubscriber {
   }: IBranchesActivatedPayload) {
     await this.paymentsActivateBranches.updatePaymentsWithBranch(
       primaryBranch.id,
-      trx
+      trx,
     );
-  };
+  }
 }

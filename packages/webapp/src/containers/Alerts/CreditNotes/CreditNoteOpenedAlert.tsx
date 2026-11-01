@@ -1,37 +1,39 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useOpenCreditNote } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface CreditNoteOpenedAlertPayload {
+  creditNoteId: number;
+}
 
-import { compose } from '@/utils';
+interface CreditNoteOpenedAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: CreditNoteOpenedAlertPayload;
+}
 
 /**
  * Credit note opened alert.
  */
-function CreditNoteOpenedAlert({
+function CreditNoteOpenedAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { creditNoteId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: openCreditNoteMutate, isLoading } = useOpenCreditNote();
+}: CreditNoteOpenedAlertProps): React.ReactElement {
+  const { mutateAsync: openCreditNoteMutate, isPending: isLoading } =
+    useOpenCreditNote();
 
-  // Handle cancel opened credit note alert.
   const handleAlertCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm credit note opened.
   const handleAlertConfirm = () => {
     openCreditNoteMutate(creditNoteId)
       .then(() => {
@@ -40,7 +42,13 @@ function CreditNoteOpenedAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: the original had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -48,8 +56,8 @@ function CreditNoteOpenedAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'open'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('open')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleAlertCancel}
@@ -62,7 +70,9 @@ function CreditNoteOpenedAlert({
     </Alert>
   );
 }
-export default compose(
-  withAlertStoreConnect(),
+
+export const CreditNoteOpenedAlert = FF.pipe(
+  CreditNoteOpenedAlertInner,
   withAlertActions,
-)(CreditNoteOpenedAlert);
+  withAlertStoreConnect(),
+);

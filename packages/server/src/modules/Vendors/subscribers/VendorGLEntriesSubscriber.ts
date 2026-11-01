@@ -41,10 +41,7 @@ export class VendorsWriteGLOpeningSubscriber {
     vendorId,
     trx,
   }: IVendorEventDeletedPayload) {
-    await this.vendorGLEntriesStorage.revertVendorOpeningBalance(
-      vendorId,
-      trx,
-    );
+    await this.vendorGLEntriesStorage.revertVendorOpeningBalance(vendorId, trx);
   }
 
   /**

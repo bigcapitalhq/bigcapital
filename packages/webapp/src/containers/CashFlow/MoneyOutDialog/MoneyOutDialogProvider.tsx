@@ -1,8 +1,13 @@
-// @ts-nocheck
+import { keepPreviousData } from '@tanstack/react-query';
 import React, { useState } from 'react';
+import type {
+  AccountsList,
+  BankingAccountsListResponse,
+  BranchesListResponse,
+  CreateCashflowTransactionBody,
+} from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import {
   useAccounts,
   useBranches,
@@ -10,8 +15,42 @@ import {
   useCashflowAccounts,
   useSettingCashFlow,
 } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-const MoneyInDialogContent = React.createContext();
+interface SubmitPayload {
+  publish?: boolean;
+  [key: string]: unknown;
+}
+
+export interface MoneyOutDialogContentValue {
+  accounts: AccountsList;
+  branches: BranchesListResponse;
+  accountId: number | null;
+  defaultAccountId?: number | null;
+  setAccountId: React.Dispatch<React.SetStateAction<number | null>>;
+  accountType?: string | null;
+  isAccountsLoading: boolean;
+  isBranchesSuccess: boolean;
+  cashflowAccounts: BankingAccountsListResponse;
+  submitPayload: SubmitPayload;
+  dialogName?: string;
+  createCashflowTransactionMutate: (
+    body: CreateCashflowTransactionBody,
+  ) => Promise<void>;
+  setSubmitPayload: React.Dispatch<React.SetStateAction<SubmitPayload>>;
+}
+
+interface MoneyOutProviderProps {
+  accountId?: number | null;
+  accountType?: string | null;
+  dialogName?: string;
+  children?: React.ReactNode;
+}
+
+const MoneyOutDialogContentContext =
+  React.createContext<MoneyOutDialogContentValue>(
+    {} as MoneyOutDialogContentValue,
+  );
 
 /**
  * Money out dialog provider.
@@ -20,10 +59,12 @@ function MoneyOutProvider({
   accountId: defaultAccountId,
   accountType,
   dialogName,
-  ...props
-}) {
+  children,
+}: MoneyOutProviderProps) {
   // Holds the selected account id of the dialog.
-  const [accountId, setAccountId] = useState<number | null>(defaultAccountId);
+  const [accountId, setAccountId] = useState<number | null>(
+    defaultAccountId ?? null,
+  );
 
   // Features guard.
   const { featureCan } = useFeatureCan();
@@ -39,9 +80,9 @@ function MoneyOutProvider({
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
-  // Fetch cash flow list .
+  // Fetch cash flow list.
   const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
-    useCashflowAccounts({}, { keepPreviousData: true });
+    useCashflowAccounts({}, { placeholderData: keepPreviousData });
 
   // Mutation to create a new cashflow account.
   const { mutateAsync: createCashflowTransactionMutate } =
@@ -51,21 +92,21 @@ function MoneyOutProvider({
   const { isLoading: isSettingsLoading } = useSettingCashFlow();
 
   // Submit payload.
-  const [submitPayload, setSubmitPayload] = React.useState({});
+  const [submitPayload, setSubmitPayload] = useState<SubmitPayload>({});
 
   // Provider data.
-  const provider = {
+  const provider: MoneyOutDialogContentValue = {
     accountId,
     setAccountId,
     defaultAccountId,
 
-    accounts,
+    accounts: (accounts ?? []) as AccountsList,
     accountType,
-    branches,
+    branches: (branches ?? []) as BranchesListResponse,
     isAccountsLoading,
     isBranchesSuccess,
 
-    cashflowAccounts,
+    cashflowAccounts: (cashflowAccounts ?? []) as BankingAccountsListResponse,
 
     submitPayload,
     dialogName,
@@ -82,10 +123,14 @@ function MoneyOutProvider({
 
   return (
     <DialogContent isLoading={isLoading}>
-      <MoneyInDialogContent.Provider value={provider} {...props} />
+      <MoneyOutDialogContentContext.Provider value={provider}>
+        {children}
+      </MoneyOutDialogContentContext.Provider>
     </DialogContent>
   );
 }
 
-const useMoneyOutDialogContext = () => React.useContext(MoneyInDialogContent);
+const useMoneyOutDialogContext = () =>
+  React.useContext(MoneyOutDialogContentContext);
+
 export { MoneyOutProvider, useMoneyOutDialogContext };

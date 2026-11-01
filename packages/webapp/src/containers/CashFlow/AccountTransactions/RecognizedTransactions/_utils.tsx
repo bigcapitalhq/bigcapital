@@ -1,49 +1,58 @@
-// @ts-nocheck
-import React from 'react';
-import clsx from 'classnames';
 import { Classes } from '@blueprintjs/core';
-import { Group, Icon } from '@/components';
-import { getColumnWidth } from '@/utils';
+import clsx from 'classnames';
+import React from 'react';
 import { useRecognizedTransactionsBoot } from './RecognizedTransactionsTableBoot';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { BankTransactionsListPage } from '@bigcapital/sdk-ts';
+import { Icon } from '@/components';
+import { getColumnWidth } from '@/utils';
 
-const getReportColWidth = (data, accessor, headerText) => {
+export type RecognizedTransactionRow = NonNullable<
+  BankTransactionsListPage['data']
+>[number];
+
+const getReportColWidth = (
+  data: RecognizedTransactionRow[] | undefined,
+  accessor: string,
+  headerText: string,
+) => {
   return getColumnWidth(
-    data,
+    data ?? [],
     accessor,
     { magicSpacing: 10, minWidth: 100 },
     headerText,
   );
 };
 
-const recognizeAccessor = (transaction) => {
+const recognizeAccessor = (transaction: RecognizedTransactionRow) => {
   return (
     <>
-      <span>{transaction.assigned_category_formatted}</span>
+      <span>{transaction.assignedCategoryFormatted}</span>
       <Icon
         icon={'arrowRight'}
         color={'#8F99A8'}
         iconSize={12}
         style={{ marginLeft: 8, marginRight: 8 }}
       />
-      <span>{transaction.assigned_account_name}</span>
+      <span>{transaction.assignedAccountName}</span>
     </>
   );
 };
 
 /**
- * Retrieve uncategorized transactions columns table.
+ * Retrieve recognized transactions columns table.
  */
-export function useUncategorizedTransactionsColumns() {
+export function useUncategorizedTransactionsColumns(): DataTableColumn<RecognizedTransactionRow>[] {
   const { recognizedTransactions: data } = useRecognizedTransactionsBoot();
 
   const withdrawalWidth = getReportColWidth(
     data,
-    'formatted_withdrawal_amount',
+    'formattedWithdrawalAmount',
     'Withdrawal',
   );
   const depositWidth = getReportColWidth(
     data,
-    'formatted_deposit_amount',
+    'formattedDepositAmount',
     'Deposit',
   );
 
@@ -51,14 +60,14 @@ export function useUncategorizedTransactionsColumns() {
     () => [
       {
         Header: 'Date',
-        accessor: 'formatted_date',
+        accessor: 'formattedDate',
         width: 110,
         textOverview: true,
       },
       {
         Header: 'Description',
         accessor: 'description',
-        className: clsx(Classes.TEXT_MUTED),        
+        className: clsx(Classes.TEXT_MUTED),
         textOverview: true,
       },
       {
@@ -73,24 +82,24 @@ export function useUncategorizedTransactionsColumns() {
       },
       {
         Header: 'Rule',
-        accessor: 'bank_rule_name',
+        accessor: 'bankRuleName',
         textOverview: true,
       },
       {
         Header: 'Deposit',
-        accessor: 'formatted_deposit_amount',
+        accessor: 'formattedDepositAmount',
         align: 'right',
         width: depositWidth,
-        money: true
+        money: true,
       },
       {
         Header: 'Withdrawal',
-        accessor: 'formatted_withdrawal_amount',
+        accessor: 'formattedWithdrawalAmount',
         align: 'right',
         width: withdrawalWidth,
-        money: true
+        money: true,
       },
     ],
-    [],
+    [depositWidth, withdrawalWidth],
   );
 }

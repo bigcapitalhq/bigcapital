@@ -1,4 +1,4 @@
-import { Features } from "@/common/types/Features";
+import { Features } from '@/common/types/Features';
 
 function StatusFieldFilterQuery(query, role) {
   query.modify('filterByStatus', role.value);

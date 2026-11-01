@@ -1,17 +1,30 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
+import type { ContactDuplicateDialogPayload } from './types';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ContactDialogContent = lazy(() =>
-  import('./ContactDuplicateDialogContent'),
+  import('./ContactDuplicateDialogContent').then((m) => ({
+    default: m.ContactDuplicateDialogContent,
+  })),
 );
+
+interface ContactDuplicateDialogProps extends DialogBaseProps {
+  dialogName: string;
+  payload: ContactDuplicateDialogPayload;
+}
+
 /**
  * Contact duplicate dialog.
  */
-function ContactDuplicateDialog({ dialogName, payload, isOpen }) {
+function ContactDuplicateDialog({
+  dialogName,
+  payload,
+  isOpen,
+}: ContactDuplicateDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -31,4 +44,4 @@ function ContactDuplicateDialog({ dialogName, payload, isOpen }) {
   );
 }
 
-export default compose(withDialogRedux())(ContactDuplicateDialog);
+export const index = FF.pipe(ContactDuplicateDialog, withDialogRedux());

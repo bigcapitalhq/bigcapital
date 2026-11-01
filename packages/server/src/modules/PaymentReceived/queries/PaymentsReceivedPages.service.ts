@@ -18,7 +18,7 @@ export class PaymentsReceivedPagesService {
 
     @Inject(PaymentReceived.name)
     private readonly paymentReceived: TenantModelProxy<typeof PaymentReceived>,
-  ) { }
+  ) {}
 
   /**
    * Retrive page invoices entries from the given sale invoices models.

@@ -1,11 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
+import React from 'react';
+import { CurrencyFormFields } from './CurrencyFormFields';
+import { CurrencyFormFooter } from './CurrencyFormFooter';
 
-import CurrencyFormFields from './CurrencyFormFields';
-import CurrencyFormFooter from './CurrencyFormFooter';
-
-export default function CurrencyFormContent() {
+export function CurrencyFormContent(): React.ReactElement {
   return (
     <Form>
       <CurrencyFormFields />

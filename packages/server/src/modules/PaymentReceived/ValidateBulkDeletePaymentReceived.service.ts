@@ -9,7 +9,7 @@ export class ValidateBulkDeletePaymentReceivedService {
     private readonly deletePaymentReceivedService: DeletePaymentReceivedService,
     @Inject(TENANCY_DB_CONNECTION)
     private readonly tenantKnex: () => Knex,
-  ) { }
+  ) {}
 
   public async validateBulkDeletePaymentReceived(
     paymentReceiveIds: number[],
@@ -34,7 +34,7 @@ export class ValidateBulkDeletePaymentReceivedService {
             trx,
           );
           deletableIds.push(paymentReceiveId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(paymentReceiveId);
         }
       }
@@ -53,4 +53,3 @@ export class ValidateBulkDeletePaymentReceivedService {
     }
   }
 }
-

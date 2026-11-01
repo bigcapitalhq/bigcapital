@@ -46,6 +46,16 @@ export const events = {
   },
 
   /**
+   * Workspace service.
+   */
+  workspace: {
+    created: 'onWorkspaceCreated',
+    deleting: 'onWorkspaceDeleting',
+    deleted: 'onWorkspaceDeleted',
+    setDefault: 'onWorkspaceSetDefault',
+  },
+
+  /**
    * Organization subscription.
    */
   subscription: {
@@ -93,6 +103,14 @@ export const events = {
     onBulkActivated: 'onAccountBulkActivated',
 
     onActivated: 'onAccountActivated',
+  },
+
+  /**
+   * Contacts service.
+   */
+  contacts: {
+    onActivated: 'onContactActivated',
+    onInactivated: 'onContactInactivated',
   },
 
   /**
@@ -410,21 +428,14 @@ export const events = {
 
     onCreated: 'onInventoryAdjustmentCreated',
 
+    onEditing: 'onInventoryAdjustmentEditing',
+    onEdited: 'onInventoryAdjustmentEdited',
+
     onDeleting: 'onInventoryAdjustmentDeleting',
     onDeleted: 'onInventoryAdjustmentDeleted',
 
     onPublishing: 'onInventoryAdjustmentPublishing',
     onPublished: 'onInventoryAdjustmentPublished',
-  },
-
-  /**
-   * Bill landed cost.
-   */
-  billLandedCost: {
-    onCreate: 'onBillLandedCostCreate',
-    onCreated: 'onBillLandedCostCreated',
-    onDelete: 'onBillLandedCostDelete',
-    onDeleted: 'onBillLandedCostDeleted',
   },
 
   cashflow: {
@@ -505,6 +516,10 @@ export const events = {
     onApplyToInvoicesCreated: 'onCreditNoteApplyToInvoiceCreated',
     onApplyToInvoicesCreate: 'onCreditNoteApplyToInvoiceCreate',
     onApplyToInvoicesDeleted: 'onCreditNoteApplyToInvoiceDeleted',
+
+    onPreMailSend: 'onCreditNotePreMailSend',
+    onMailSend: 'onCreditNoteMailSend',
+    onMailSent: 'onCreditNoteMailSent',
   },
 
   /**
@@ -524,6 +539,7 @@ export const events = {
     onDeleted: 'onVendorCreditDeleted',
 
     onOpen: 'onVendorCreditOpen',
+    onOpening: 'onVendorCreditOpening',
     onOpened: 'onVendorCreditOpened',
 
     onRefundCreating: 'onVendorCreditRefundCreating',
@@ -666,6 +682,7 @@ export const events = {
   plaid: {
     onItemCreated: 'onPlaidItemCreated',
     onTransactionsSynced: 'onPlaidTransactionsSynced',
+    onWebhookReceived: 'onPlaidWebhookReceived',
   },
 
   // Bank rules.
@@ -703,6 +720,12 @@ export const events = {
   bankAccount: {
     onDisconnecting: 'onBankAccountDisconnecting',
     onDisconnected: 'onBankAccountDisconnected',
+  },
+
+  // Bank transactions recognize.
+  bankRecognize: {
+    onRecognized: 'onBankTransactionsRecognized',
+    onReverted: 'onBankTransactionsReverted',
   },
 
   // Import files.

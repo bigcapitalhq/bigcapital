@@ -6,7 +6,9 @@ import { withDrawers } from '@/containers/Drawer/withDrawers';
 import { Position } from '@blueprintjs/core';
 import { DRAWERS } from '@/constants/drawers';
 
-const NotificationsDrawerContent = lazy(() => import('./NotificationsDrawerContent'));
+const NotificationsDrawerContent = lazy(
+  () => import('./NotificationsDrawerContent'),
+);
 
 /**
  * Notifications drawer.

@@ -5,10 +5,14 @@ import {
 import { GeneralLedgerService } from './GeneralLedgerService';
 import { GeneralLedgerTable } from './GeneralLedgerTable';
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class GeneralLedgerTableInjectable {
-  constructor(private readonly GLSheet: GeneralLedgerService) {}
+  constructor(
+    private readonly GLSheet: GeneralLedgerService,
+    private readonly i18n: I18nService,
+  ) {}
 
   /**
    * Retrieves the G/L table.
@@ -24,7 +28,12 @@ export class GeneralLedgerTableInjectable {
       meta: sheetMeta,
     } = await this.GLSheet.generalLedger(query);
 
-    const table = new GeneralLedgerTable(sheetData, sheetQuery, sheetMeta);
+    const table = new GeneralLedgerTable(
+      sheetData,
+      sheetQuery,
+      sheetMeta,
+      this.i18n,
+    );
 
     return {
       table: {

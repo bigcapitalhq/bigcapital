@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import { ModelObject } from 'objection';
 import { Account } from '@/modules/Accounts/models/Account.model';
@@ -8,6 +7,8 @@ import { ITrialBalanceSheetQuery } from './TrialBalanceSheet.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountRepository } from '@/modules/Accounts/repositories/Account.repository';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class TrialBalanceSheetRepository {
@@ -21,6 +22,14 @@ export class TrialBalanceSheetRepository {
 
   @Inject(AccountRepository)
   private accountRepository: AccountRepository;
+
+  @Inject(AccountingBasisService)
+  private accountingBasisService: AccountingBasisService;
+
+  /**
+   * The report accounting basis.
+   */
+  public basis: AccountingBasis;
 
   public accountsDepGraph: any;
   public accounts: Array<ModelObject<Account>>;
@@ -44,8 +53,16 @@ export class TrialBalanceSheetRepository {
    * @returns {Promise<void>}
    */
   public asyncInitialize = async () => {
+    await this.initBasis();
     await this.initAccounts();
     await this.initAccountsClosingTotalLedger();
+  };
+
+  /**
+   * Initialize the report accounting basis.
+   */
+  public initBasis = async () => {
+    this.basis = await this.accountingBasisService.resolve(this.query.basis);
   };
 
   // ----------------------------
@@ -97,8 +114,8 @@ export class TrialBalanceSheetRepository {
         query.modify('filterDateRange', null, openingDate);
         query.withGraphFetched('account');
 
-        // @ts-ignore
         this.commonFilterBranchesQuery(query);
+        query.modify('filterByBasis', this.basis);
       });
   };
 
@@ -106,9 +123,8 @@ export class TrialBalanceSheetRepository {
    * Common branches filter query.
    * @param {Knex.QueryBuilder} query
    */
-  private commonFilterBranchesQuery = (query: Knex.QueryBuilder) => {
+  private commonFilterBranchesQuery = (query) => {
     if (!isEmpty(this.query.branchesIds)) {
-      // @ts-ignore
       query.modify('filterByBranches', this.query.branchesIds);
     }
   };

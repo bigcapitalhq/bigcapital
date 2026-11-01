@@ -1,27 +1,21 @@
-// @ts-nocheck
 import React from 'react';
-
-import ProfitLossSheetTable from './ProfitLossSheetTable';
-import { FinancialSheetSkeleton } from '@/components';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
+import { ProfitLossSheetTable } from './ProfitLossSheetTable';
+import { FinancialSheetSkeleton } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+function ProfitLossBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
+  const { isLoading, profitLossSheet } = useProfitLossSheetContext();
 
-import { compose } from '@/utils';
-
-/**
- * @returns {React.JSX}
- */
-function ProfitLossBodyJSX({
-  // #withPreferences
-  organizationName,
-}) {
-  const { isLoading } = useProfitLossSheetContext();
+  // Shows the skeleton only on the initial load. Refetches (e.g. sorting)
+  // keep the current report rendered while the request is in flight.
+  const isInitialLoading = isLoading && !profitLossSheet;
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
+      {isInitialLoading ? (
         <FinancialSheetSkeleton />
       ) : (
         <ProfitLossSheetTable companyName={organizationName} />
@@ -30,8 +24,4 @@ function ProfitLossBodyJSX({
   );
 }
 
-export const ProfitLossBody = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(ProfitLossBodyJSX);
+export const ProfitLossBody = ProfitLossBodyJSX;

@@ -1,7 +1,6 @@
-// @ts-nocheck
 import { DialogsName } from '@/constants/dialogs';
-import { useValidateBulkDeletePaymentReceives } from '@/hooks/query/paymentReceives';
 import { useBulkDeleteDialog } from '@/hooks/dialogs/useBulkDeleteDialog';
+import { useValidateBulkDeletePaymentReceives } from '@/hooks/query/payment-receives';
 
 export const useBulkDeletePaymentReceivesDialog = () => {
   const validateBulkDeleteMutation = useValidateBulkDeletePaymentReceives();
@@ -9,7 +8,10 @@ export const useBulkDeletePaymentReceivesDialog = () => {
     openBulkDeleteDialog,
     closeBulkDeleteDialog,
     isValidatingBulkDelete,
-  } = useBulkDeleteDialog(DialogsName.PaymentReceivedBulkDelete, validateBulkDeleteMutation);
+  } = useBulkDeleteDialog(
+    DialogsName.PaymentReceivedBulkDelete,
+    validateBulkDeleteMutation,
+  );
 
   return {
     openBulkDeleteDialog,
@@ -17,4 +19,3 @@ export const useBulkDeletePaymentReceivesDialog = () => {
     isValidatingBulkDeletePaymentReceives: isValidatingBulkDelete,
   };
 };
-

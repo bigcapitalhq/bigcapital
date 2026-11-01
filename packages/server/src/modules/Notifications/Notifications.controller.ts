@@ -34,7 +34,10 @@ class MarkAsReadDto {
 }
 
 class GetNotificationsQueryDto {
-  @ApiPropertyOptional({ description: 'Number of notifications per page', example: 20 })
+  @ApiPropertyOptional({
+    description: 'Number of notifications per page',
+    example: 20,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
@@ -104,8 +107,7 @@ export class NotificationsController {
   })
   @ApiResponse({
     status: 200,
-    description:
-      'The notifications list has been successfully retrieved.',
+    description: 'The notifications list has been successfully retrieved.',
   })
   async getNotifications(@Query() query: GetNotificationsQueryDto) {
     const user = await this.tenancyContext.getSystemUser();
@@ -125,8 +127,7 @@ export class NotificationsController {
    */
   @Get('unread-count')
   @ApiOperation({
-    summary:
-      'Gets the count of unread notifications for the current user.',
+    summary: 'Gets the count of unread notifications for the current user.',
   })
   @ApiResponse({
     status: 200,
@@ -172,13 +173,11 @@ export class NotificationsController {
   @Post('read-all')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary:
-      'Marks all notifications as read for the current user.',
+    summary: 'Marks all notifications as read for the current user.',
   })
   @ApiResponse({
     status: 200,
-    description:
-      'All notifications have been successfully marked as read.',
+    description: 'All notifications have been successfully marked as read.',
   })
   async markAllAsRead() {
     const user = await this.tenancyContext.getSystemUser();

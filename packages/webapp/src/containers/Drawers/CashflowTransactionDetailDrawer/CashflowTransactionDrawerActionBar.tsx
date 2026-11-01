@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Button,
   Classes,
@@ -7,6 +5,9 @@ import {
   Intent,
   NavbarDivider,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import {
   Can,
   FormattedMessage as T,
@@ -14,18 +15,21 @@ import {
   Icon,
   If,
 } from '@/components';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
-import { compose } from '@/utils';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+
+type CashflowTransactionDrawerActionBarInnerProps = WithAlertActionsProps;
 
 /**
  * Cashflow transaction drawer action bar.
  */
-function CashflowTransactionDrawerActionBar({
+function CashflowTransactionDrawerActionBarInner({
   // #withAlertsDialog
   openAlert,
-}) {
+}: CashflowTransactionDrawerActionBarInnerProps) {
   const { referenceId, cashflowTransaction } =
     useCashflowTransactionDrawerContext();
 
@@ -38,7 +42,7 @@ function CashflowTransactionDrawerActionBar({
   const handleUncategorizeBtnClick = () => {
     openAlert('cashflow-tranaction-uncategorize', {
       uncategorizedTransactionId:
-        cashflowTransaction.uncategorized_transaction_id,
+        cashflowTransaction?.uncategorizedTransactionId,
     });
   };
 
@@ -53,7 +57,7 @@ function CashflowTransactionDrawerActionBar({
             intent={Intent.DANGER}
             onClick={handleDeleteCashflowTransaction}
           />
-          <If condition={cashflowTransaction.uncategorized_transaction_id}>
+          <If condition={!!cashflowTransaction?.uncategorizedTransactionId}>
             <NavbarDivider />
             <Button
               text={'Uncategorize'}
@@ -67,4 +71,7 @@ function CashflowTransactionDrawerActionBar({
   );
 }
 
-export default compose(withAlertActions)(CashflowTransactionDrawerActionBar);
+export const CashflowTransactionDrawerActionBar = FF.pipe(
+  CashflowTransactionDrawerActionBarInner,
+  withAlertActions,
+);

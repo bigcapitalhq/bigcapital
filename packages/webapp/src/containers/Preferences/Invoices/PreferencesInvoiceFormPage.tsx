@@ -1,35 +1,37 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
-import intl from 'react-intl-universal';
-import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import * as R from 'ramda';
-
-import { AppToaster } from '@/components';
-import { PreferencesInvoiceFormSchema } from './PreferencesInvoiceForm.schema';
-import { PreferencesInvoicesForm } from './PreferencesInvoicesForm';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
+import { Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import { useEffect } from 'react';
+import intl from 'react-intl-universal';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
+import { PreferencesInvoiceFormSchema } from './PreferencesInvoiceForm.schema';
+import { usePreferencesInvoiceFormContext } from './PreferencesInvoiceFormBoot';
+import { PreferencesInvoicesForm } from './PreferencesInvoicesForm';
+import type { InvoicesPreferencesFormValues } from './types';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import { AppToaster } from '@/components';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useSaveSettings } from '@/hooks/query';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 
-const defaultValues = {
+const defaultValues: InvoicesPreferencesFormValues = {
   termsConditions: '',
   customerNotes: '',
 };
 
+type PreferencesInvoiceFormPageInnerProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
+
 /**
  * Preferences - Invoices.
  */
-function PreferencesInvoiceFormPage({
+function PreferencesInvoiceFormPageInner({
   // #withDashboardActions
   changePreferencesPageTitle,
-
-  // #withSettings
-  invoiceSettings,
-}) {
+}: PreferencesInvoiceFormPageInnerProps) {
+  const { invoiceSettings } = usePreferencesInvoiceFormContext();
   // Save settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
@@ -43,11 +45,15 @@ function PreferencesInvoiceFormPage({
     ...transformToForm(invoiceSettings, defaultValues),
   };
   // Handle the form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
+  const handleFormSubmit = (
+    values: InvoicesPreferencesFormValues,
+    { setSubmitting }: FormikHelpers<InvoicesPreferencesFormValues>,
+  ) => {
+    const options = FF.pipe(
+      { salesInvoices: { ...values } },
       transfromToSnakeCase,
-    )({ salesInvoices: { ...values } });
+      transferObjectOptionsToArray,
+    );
 
     // Handle request success.
     const onSuccess = () => {
@@ -65,7 +71,7 @@ function PreferencesInvoiceFormPage({
   };
 
   return (
-    <Formik
+    <Formik<InvoicesPreferencesFormValues>
       initialValues={initialValues}
       validationSchema={PreferencesInvoiceFormSchema}
       onSubmit={handleFormSubmit}
@@ -74,9 +80,7 @@ function PreferencesInvoiceFormPage({
   );
 }
 
-export default compose(
+export const PreferencesInvoiceFormPage = FF.pipe(
+  PreferencesInvoiceFormPageInner,
   withDashboardActions,
-  withSettings(({ invoiceSettings }) => ({
-    invoiceSettings: invoiceSettings,
-  })),
-)(PreferencesInvoiceFormPage);
+);

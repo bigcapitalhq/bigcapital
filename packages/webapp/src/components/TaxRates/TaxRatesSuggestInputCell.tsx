@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
-import { Suggest } from '@blueprintjs-formik/select';
 import { FormGroup } from '@blueprintjs/core';
+import { Suggest } from '@blueprintjs-formik/select';
+import React, { useCallback } from 'react';
 import { CellType } from '@/constants';
 
 export function TaxRatesSuggestInputCell({
@@ -27,7 +27,7 @@ export function TaxRatesSuggestInputCell({
         items={taxRates}
         valueAccessor={'id'}
         labelAccessor={'code'}
-        textAccessor={'name_formatted'}
+        textAccessor={'nameFormatted'}
         popoverProps={{ minimal: true, boundary: 'window' }}
         inputProps={{ placeholder: '' }}
         fill={true}

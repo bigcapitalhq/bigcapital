@@ -22,6 +22,7 @@ export type ValidateBulkDeleteBillsResponse = OpResponseBody<
   OpForPath<typeof BILLS_ROUTES.VALIDATE_BULK_DELETE, 'post'>
 >;
 export type GetDueBillsQuery = OpQueryParams<OpForPath<typeof BILLS_ROUTES.DUE, 'get'>>;
+export type BillPaymentTransactionsResponse = OpResponseBody<OpForPath<typeof BILLS_ROUTES.PAYMENT_TRANSACTIONS, 'get'>>;
 
 export async function fetchBills(
   fetcher: ApiFetcher,
@@ -101,11 +102,11 @@ export async function fetchDueBills(
 export async function fetchBillPaymentTransactions(
   fetcher: ApiFetcher,
   id: number
-): Promise<unknown[]> {
+): Promise<BillPaymentTransactionsResponse> {
   const get = fetcher
     .path(BILLS_ROUTES.PAYMENT_TRANSACTIONS)
     .method('get')
     .create();
   const { data } = await get({ id });
-  return (data as unknown[]) ?? [];
+  return data;
 }

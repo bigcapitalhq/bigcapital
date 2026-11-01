@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { useExpenseSubtotalFormatted, useExpenseTotalFormatted } from './utils';
 import {
   T,
   TotalLines,
@@ -8,7 +8,6 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useExpenseSubtotalFormatted, useExpenseTotalFormatted } from './utils';
 
 export function ExpenseFormFooterRight() {
   const totalFormatted = useExpenseTotalFormatted();

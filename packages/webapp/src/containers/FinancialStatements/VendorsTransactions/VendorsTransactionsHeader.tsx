@@ -1,27 +1,42 @@
-// @ts-nocheck
-import React from 'react';
-
-import moment from 'moment';
-import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-
-import FinancialStatementHeader from '../FinancialStatementHeader';
-import VendorsTransactionsHeaderGeneralPanel from './VendorsTransactionsHeaderGeneralPanel';
-
-import { withVendorsTransaction } from './withVendorsTransaction';
-import { withVendorsTransactionsActions } from './withVendorsTransactionsActions';
-
-import { compose, transformToForm } from '@/utils';
+import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React from 'react';
+import { FinancialStatementHeader } from '../FinancialStatementHeader';
 import {
   getVendorTransactionsQuerySchema,
   getVendorsTransactionsDefaultQuery,
 } from './_utils';
+import { VendorsTransactionsHeaderGeneralPanel } from './VendorsTransactionsHeaderGeneralPanel';
+import { withVendorsTransaction } from './withVendorsTransaction';
+import {
+  withVendorsTransactionsActions,
+  WithVendorsTransactionsActionsProps,
+} from './withVendorsTransactionsActions';
+import { FormattedMessage as T } from '@/components';
+import { transformToForm } from '@/utils';
+
+interface VendorsTransactionsHeaderOwnProps {
+  onSubmitFilter: (values: Record<string, unknown>) => void;
+  pageFilter: Record<string, unknown>;
+}
+
+interface FormValues {
+  fromDate: Date;
+  toDate: Date;
+  vendorsIds: string[];
+  [key: string]: unknown;
+}
+
+type VendorsTransactionsHeaderProps = VendorsTransactionsHeaderOwnProps & {
+  isFilterDrawerOpen: boolean;
+} & WithVendorsTransactionsActionsProps;
 
 /**
  * Vendors transactions header.
  */
-function VendorsTransactionsHeader({
+function VendorsTransactionsHeaderInner({
   // #ownProps
   onSubmitFilter,
   pageFilter,
@@ -31,7 +46,7 @@ function VendorsTransactionsHeader({
 
   //#withVendorsTransactionsActions
   toggleVendorsTransactionsFilterDrawer: toggleFilterDrawer,
-}) {
+}: VendorsTransactionsHeaderProps) {
   // Default form values.
   const defaultValues = getVendorsTransactionsDefaultQuery();
 
@@ -40,16 +55,19 @@ function VendorsTransactionsHeader({
     {
       ...defaultValues,
       ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
+      fromDate: moment(pageFilter.fromDate as string).toDate(),
+      toDate: moment(pageFilter.toDate as string).toDate(),
     },
     defaultValues,
-  );
+  ) as FormValues;
   // Validation schema.
   const validationSchema = getVendorTransactionsQuerySchema();
 
   // Handle form submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: FormValues,
+    { setSubmitting }: FormikHelpers<FormValues>,
+  ) => {
     onSubmitFilter(values);
     toggleFilterDrawer(false);
     setSubmitting(false);
@@ -78,7 +96,7 @@ function VendorsTransactionsHeader({
             />
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -91,9 +109,10 @@ function VendorsTransactionsHeader({
     </FinancialStatementHeader>
   );
 }
-export default compose(
-  withVendorsTransactionsActions,
+export const VendorsTransactionsHeader = FF.pipe(
+  VendorsTransactionsHeaderInner,
   withVendorsTransaction(({ vendorsTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: vendorsTransactionsDrawerFilter,
   })),
-)(VendorsTransactionsHeader);
+  withVendorsTransactionsActions,
+);

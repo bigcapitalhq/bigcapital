@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { GetPaymentMethodsPOJO } from '../types';
 import { PaymentIntegration } from '../models/PaymentIntegration.model';
 import { ModelObject } from 'objection';
 

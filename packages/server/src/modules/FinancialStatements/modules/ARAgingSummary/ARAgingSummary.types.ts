@@ -12,7 +12,7 @@ export interface IARAgingSummaryCustomer extends IAgingSummaryContact {
   customerName: string;
 }
 
-export interface IARAgingSummaryTotal extends IAgingSummaryTotal {}
+export type IARAgingSummaryTotal = IAgingSummaryTotal;
 
 export interface IARAgingSummaryData extends IAgingSummaryData {
   customers: IARAgingSummaryCustomer[];

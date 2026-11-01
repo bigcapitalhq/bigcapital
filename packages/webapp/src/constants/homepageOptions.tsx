@@ -1,6 +1,4 @@
-// @ts-nocheck
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
 import {
   SaleInvoiceAction,
   SaleEstimateAction,
@@ -17,8 +15,10 @@ import {
   ItemAction,
   ReportsAction,
 } from './abilityOption';
+import type { HomepageSectionOption } from './types';
+import { FormattedMessage as T } from '@/components';
 
-export const accountsReceivable = [
+export const accountsReceivable: HomepageSectionOption[] = [
   {
     sectionTitle: <T id={'accounts_receivable_a_r'} />,
     shortcuts: [
@@ -63,7 +63,7 @@ export const accountsReceivable = [
   },
 ];
 
-export const accountsPayable = [
+export const accountsPayable: HomepageSectionOption[] = [
   {
     sectionTitle: <T id={'accounts_payable_a_p'} />,
     shortcuts: [
@@ -96,7 +96,7 @@ export const accountsPayable = [
   },
 ];
 
-export const financialAccounting = [
+export const financialAccounting: HomepageSectionOption[] = [
   {
     sectionTitle: <T id={'financial_accounting'} />,
     shortcuts: [
@@ -144,7 +144,7 @@ export const financialAccounting = [
   },
 ];
 
-export const productsServices = [
+export const productsServices: HomepageSectionOption[] = [
   {
     sectionTitle: <T id={'products_services_inventory'} />,
     shortcuts: [

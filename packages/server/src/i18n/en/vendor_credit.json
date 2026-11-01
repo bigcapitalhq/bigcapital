@@ -15,5 +15,15 @@
   "field.item": "Item",
   "field.rate": "Rate",
   "field.quantity": "Quantity",
-  "field.description": "Description"
+  "field.description": "Description",
+  "field.amount": "Amount",
+  "field.created_at": "Created At",
+  "field.credit_date": "Credit Date",
+  "field.credit_number": "Credit Number",
+  "field.currency_code": "Currency Code",
+  "field.status": "Status",
+  "field.status.draft": "Draft",
+  "field.status.published": "Published",
+  "field.status.open": "Open",
+  "field.status.closed": "Closed"
 }

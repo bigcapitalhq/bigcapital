@@ -8,7 +8,7 @@ import { ICommandCashflowCreatingPayload } from '@/modules/BankingTransactions/t
 export class CashflowBranchDTOValidatorSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance once cashflow transaction creating.

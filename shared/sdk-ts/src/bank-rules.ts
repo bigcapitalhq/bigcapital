@@ -1,4 +1,5 @@
 import type { ApiFetcher } from './fetch-utils';
+import { withNestedQuery } from './fetch-utils';
 import { paths } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
@@ -160,7 +161,11 @@ export async function fetchMatchedTransactions(
     .method('get')
     .create();
   const ids = uncategorizedTransactionIds.map(String);
-  const { data } = await get({ uncategorizedTransactionIds: ids, ...query });
+  const { payload, init } = withNestedQuery({
+    uncategorizedTransactionIds: ids,
+    ...query,
+  });
+  const { data } = await get(payload, init);
   return data;
 }
 

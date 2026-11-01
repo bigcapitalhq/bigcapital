@@ -1,9 +1,9 @@
 import { Spinner } from '@blueprintjs/core';
-import { Stack } from '@/components';
-import { InvoiceSendMailPreviewWithHeader } from './InvoiceSendMailHeaderPreview';
-import { useInvoiceHtml } from '@/hooks/query';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { SendMailViewPreviewPdfIframe } from '../../Estimates/SendMailViewDrawer/SendMailViewPreviewPdfIframe';
+import { InvoiceSendMailPreviewWithHeader } from './InvoiceSendMailHeaderPreview';
+import { Stack } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { useInvoiceHtml } from '@/hooks/query';
 
 export function InvoiceSendPdfPreviewConnected() {
   return (
@@ -22,7 +22,7 @@ function InvoiceSendPdfPreviewIframe() {
   if (isLoading && data) {
     return <Spinner size={20} />;
   }
-  const iframeSrcDoc = data?.htmlContent;
+  const iframeSrcDoc = data;
 
   return <SendMailViewPreviewPdfIframe srcDoc={iframeSrcDoc} />;
 }

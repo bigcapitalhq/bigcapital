@@ -3,7 +3,6 @@ import { Expense } from './models/Expense.model';
 import { SystemUser } from '../System/models/SystemUser';
 import { IFilterRole } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
 import { CreateExpenseDto, EditExpenseDto } from './dtos/Expense.dto';
-import { CreateExpense } from './commands/CreateExpense.service';
 
 export interface IPaginationMeta {
   total: number;

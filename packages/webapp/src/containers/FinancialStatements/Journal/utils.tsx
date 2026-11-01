@@ -1,7 +1,5 @@
-// @ts-nocheck
-import React from 'react';
 import moment from 'moment';
-
+import React from 'react';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
@@ -19,7 +17,7 @@ export const getDefaultJournalQuery = () => {
 /**
  * Parses balance sheet query.
  */
-const parseJournalQuery = (locationQuery) => {
+const parseJournalQuery = (locationQuery: Record<string, unknown>) => {
   const defaultQuery = getDefaultJournalQuery();
 
   return {
@@ -29,7 +27,7 @@ const parseJournalQuery = (locationQuery) => {
 };
 
 /**
- * Retrieves the jorunal sheet query.
+ * Retrieves the journal sheet query.
  */
 export const useJournalQuery = () => {
   // Retrieves location query.

@@ -57,7 +57,7 @@ export interface IVendorsFilter extends IDynamicListFilter {
 }
 
 export interface GetVendorsResponse {
-  vendors: Vendor[];
+  data: Vendor[];
   pagination: IPaginationMeta;
   filterMeta: IFilterMeta;
 }

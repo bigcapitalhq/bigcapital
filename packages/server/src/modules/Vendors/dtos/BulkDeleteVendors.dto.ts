@@ -22,7 +22,9 @@ export class BulkDeleteVendorsDto {
 
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value, obj }) => parseBoolean(value ?? obj?.skip_undeletable, false))
+  @Transform(({ value, obj }) =>
+    parseBoolean(value ?? obj?.skip_undeletable, false),
+  )
   @ApiPropertyOptional({
     description:
       'When true, undeletable vendors will be skipped and only deletable ones removed.',
@@ -59,4 +61,3 @@ export class ValidateBulkDeleteVendorsResponseDto {
   })
   nonDeletableIds: number[];
 }
-

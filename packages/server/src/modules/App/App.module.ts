@@ -22,7 +22,9 @@ import { ClsModule, ClsService } from 'nestjs-cls';
 import { AppController } from './App.controller';
 import { AppService } from './App.service';
 import { ItemsModule } from '../Items/Items.module';
+import { ItemReorderPointsModule } from '../ItemReorderPoints/ItemReorderPoints.module';
 import { config } from '../../common/config';
+import { ENV_FILE_PATHS } from '../../common/config/env';
 import { SystemDatabaseModule } from '../System/SystemDB/SystemDB.module';
 import { SystemModelsModule } from '../System/SystemModels/SystemModels.module';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
@@ -37,6 +39,7 @@ import { ItemCategoryModule } from '../ItemCategories/ItemCategory.module';
 import { TaxRatesModule } from '../TaxRates/TaxRate.module';
 import { PdfTemplatesModule } from '../PdfTemplate/PdfTemplates.module';
 import { BranchesModule } from '../Branches/Branches.module';
+import { TrackingCategoriesModule } from '../TrackingCategories/TrackingCategories.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { SerializeInterceptor } from '@/common/interceptors/serialize.interceptor';
 import { ToJsonInterceptor } from '@/common/interceptors/to-json.interceptor';
@@ -81,6 +84,7 @@ import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
 import { RolesModule } from '../Roles/Roles.module';
 import { SubscriptionModule } from '../Subscription/Subscription.module';
 import { OrganizationModule } from '../Organization/Organization.module';
+import { WorkspacesModule } from '../ee/Workspaces/Workspaces.module';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 import { PaymentServicesModule } from '../PaymentServices/PaymentServices.module';
 import { AuthModule } from '../Auth/Auth.module';
@@ -101,9 +105,10 @@ import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
-import { BillLandedCostsModule } from '../BillLandedCosts/BillLandedCosts.module';
 import { SocketModule } from '../Socket/Socket.module';
 import { NotificationsModule } from '../Notifications/Notifications.module';
+import { EEModule } from '../EE/EE.module';
+import { AnalyticsModule } from '../Analytics/Analytics.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppThrottleModule } from './AppThrottle.module';
 
@@ -113,9 +118,9 @@ import { AppThrottleModule } from './AppThrottle.module';
       rootPath: join(__dirname, '../../..', 'public'),
       serveRoot: '/public',
     }),
-    
+
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: ENV_FILE_PATHS,
       load: config,
       isGlobal: true,
     }),
@@ -170,10 +175,10 @@ import { AppThrottleModule } from './AppThrottle.module';
     ClsModule.forRoot({
       global: true,
       middleware: {
-        mount: true,
-        setup: (cls: ClsService, req: Request, res: Response) => {
+        setup: (cls: ClsService, req: Request, _res: Response) => {
           cls.set('organizationId', req.headers['organization-id']);
         },
+        mount: true,
         generateId: true,
         saveReq: true,
       },
@@ -198,12 +203,14 @@ import { AppThrottleModule } from './AppThrottle.module';
     TransformerModule,
     MailModule,
     ItemsModule,
+    ItemReorderPointsModule,
     ItemCategoryModule,
     AccountsModule,
     ExpensesModule,
     TaxRatesModule,
     PdfTemplatesModule,
     BranchesModule,
+    TrackingCategoriesModule,
     WarehousesModule,
     WarehousesTransfersModule,
     CustomersModule,
@@ -212,7 +219,6 @@ import { AppThrottleModule } from './AppThrottle.module';
     SaleEstimatesModule,
     SaleReceiptsModule,
     BillsModule,
-    BillLandedCostsModule,
     ManualJournalsModule,
     CreditNotesModule,
     VendorCreditsModule,
@@ -245,6 +251,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     RolesModule,
     SubscriptionModule,
     OrganizationModule,
+    WorkspacesModule,
     TenantDBManagerModule,
     PaymentServicesModule,
     LoopsModule,
@@ -260,6 +267,8 @@ import { AppThrottleModule } from './AppThrottle.module';
     ContactsModule,
     SocketModule,
     NotificationsModule,
+    EEModule,
+    AnalyticsModule,
     ExchangeRatesModule,
   ],
   controllers: [AppController],

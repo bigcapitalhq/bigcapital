@@ -1,89 +1,82 @@
-// @ts-nocheck
-import React from 'react';
+import {
+  Intent,
+  Button,
+  ButtonGroup,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Menu,
+  MenuItem,
+} from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
 import styled from 'styled-components';
-import classNames from 'classnames';
-import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
-import { FastField, useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
 import { useItemFormContext } from './ItemFormProvider';
-import { Group, FormattedMessage as T } from '@/components';
-import { saveInvoke } from '@/utils';
+import type { ItemFormValues } from './types';
+import { Group, Icon, FormattedMessage as T } from '@/components';
 
 /**
- * Item form floating actions.
+ * Item form floating actions bar.
  */
-export default function ItemFormFloatingActions({ onCancel }) {
-  // Item form context.
-  const { setSubmitPayload, isNewMode } = useItemFormContext();
-
+export function ItemFormFloatingActions() {
   // Formik context.
-  const { isSubmitting, submitForm } = useFormikContext();
+  const { isSubmitting, submitForm } = useFormikContext<ItemFormValues>();
 
-  // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
-    saveInvoke(onCancel, event);
-  };
+  // Item form context.
+  const { isNewMode, setSubmitPayload } = useItemFormContext();
 
-  // Handle submit button click.
-  const handleSubmitBtnClick = (event) => {
+  // Handle the submit button.
+  const handleSubmitBtnClick = () => {
     setSubmitPayload({ redirect: true });
   };
 
-  // Handle submit & new button click.
-  const handleSubmitAndNewBtnClick = (event) => {
-    setSubmitPayload({ redirect: false });
+  // Handle the submit & new button click.
+  const handleSubmitAndNewClick = () => {
     submitForm();
+    setSubmitPayload({ redirect: false });
   };
 
   return (
-    <Group
-      spacing={10}
-      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
-    >
-      <SaveButton
-        intent={Intent.PRIMARY}
-        disabled={isSubmitting}
-        loading={isSubmitting}
-        onClick={handleSubmitBtnClick}
-        type="submit"
-        className={'btn--submit'}
-      >
-        {isNewMode ? <T id={'save'} /> : <T id={'edit'} />}
-      </SaveButton>
-
-      <Button
-        className={classNames('ml1', 'btn--submit-new')}
-        disabled={isSubmitting}
-        onClick={handleSubmitAndNewBtnClick}
-      >
-        <T id={'save_new'} />
-      </Button>
-
-      <Button
-        disabled={isSubmitting}
-        className={'ml1'}
-        onClick={handleCancelBtnClick}
-      >
-        <T id={'close'} />
-      </Button>
-
-      {/*----------- Active ----------*/}
-      <FastField name={'active'} type={'checkbox'}>
-        {({ field }) => (
-          <FormGroup inline={true} className={'form-group--active'}>
-            <Checkbox
-              inline={true}
-              label={<T id={'active'} />}
-              name={'active'}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
-    </Group>
+    <FloatingActionsGroup spacing={10}>
+      <ButtonGroup>
+        {/* ----------- Save and New ----------- */}
+        <Button
+          disabled={isSubmitting}
+          loading={isSubmitting}
+          intent={Intent.PRIMARY}
+          type="submit"
+          onClick={handleSubmitBtnClick}
+          text={!isNewMode ? <T id={'edit'} /> : <T id={'save'} />}
+        />
+        <Popover
+          content={
+            <Menu>
+              <MenuItem
+                text={<T id={'save_and_new'} />}
+                onClick={handleSubmitAndNewClick}
+              />
+            </Menu>
+          }
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          minimal
+        >
+          <Button
+            disabled={isSubmitting}
+            intent={Intent.PRIMARY}
+            rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
+          />
+        </Popover>
+      </ButtonGroup>
+    </FloatingActionsGroup>
   );
 }
 
-const SaveButton = styled(Button)`
-  min-width: 100px;
+const FloatingActionsGroup = styled(Group)`
+  padding: 10px 0;
+  padding-left: 165px;
+  border-top: 1px solid #50555a;
+  position: sticky;
+  bottom: 0;
+  background: var(--color-card-background);
+  z-index: 1;
 `;

@@ -3,7 +3,7 @@ import { omit, concat } from 'lodash';
 export const nestedArrayToFlatten = (
   collection,
   property = 'children',
-  parseItem = (a, level) => a,
+  parseItem = (a, _level) => a,
   level = 1,
 ) => {
   const parseObject = (obj) =>
@@ -14,7 +14,7 @@ export const nestedArrayToFlatten = (
       level,
     );
 
-  return collection.reduce((items, currentValue, index) => {
+  return collection.reduce((items, currentValue, _index) => {
     let localItems = [...items];
     const parsedItem = parseObject(currentValue);
     localItems.push(parsedItem);

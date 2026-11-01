@@ -1,13 +1,13 @@
-// @ts-nocheck
-import React, { useContext } from 'react';
 import clsx from 'classnames';
+import React, { useContext } from 'react';
 import { ScrollSync } from 'react-scroll-sync';
 import TableContext from './TableContext';
 
-/**
- * Table wrapper.
- */
-export default function TableWrapper({ children }) {
+interface TableWrapperProps {
+  children?: React.ReactNode;
+}
+
+export default function TableWrapper({ children }: TableWrapperProps) {
   const {
     table: { getTableProps },
     props: {

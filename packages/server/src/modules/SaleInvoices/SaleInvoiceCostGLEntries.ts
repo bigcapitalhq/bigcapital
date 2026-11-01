@@ -8,6 +8,7 @@ import { groupInventoryTransactionsByTypeId } from '../InventoryCost/utils';
 import { Ledger } from '../Ledger/Ledger';
 import { AccountNormal } from '@/interfaces/Account';
 import { ILedgerEntry } from '../Ledger/types/Ledger.types';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { increment } from '@/utils/increment';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class SaleInvoiceCostGLEntries {
     private readonly inventoryCostLotTracker: TenantModelProxy<
       typeof InventoryCostLotTracker
     >,
-  ) { }
+  ) {}
 
   /**
    * Writes journal entries from sales invoices.
@@ -86,6 +87,10 @@ export class SaleInvoiceCostGLEntries {
       date: inventoryCostLot.date,
       indexGroup: 20,
       costable: true,
+      // The invoice cost entries are recorded on the accrual basis,
+      // recognized once the invoice is delivered. The cash basis cost
+      // entries are recognized once the invoice payment is received.
+      basis: AccountingBasis.Accrual,
       createdAt: inventoryCostLot.createdAt,
 
       debit: 0,

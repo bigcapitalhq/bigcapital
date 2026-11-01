@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 import { Model } from 'objection';
 import { castArray } from 'lodash';
 import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';

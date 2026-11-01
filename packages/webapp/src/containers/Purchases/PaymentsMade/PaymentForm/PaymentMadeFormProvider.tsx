@@ -1,28 +1,100 @@
-// @ts-nocheck
 import React, { createContext, useContext, useState } from 'react';
+import type { BillPaymentEditPageResponse } from '@bigcapital/sdk-ts';
+import { DashboardInsider } from '@/components';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import {
   useAccounts,
   useVendors,
   useItems,
   useBranches,
   usePaymentMadeEditPage,
-  useSettings,
+  useSettingsBillPayments,
   useCreatePaymentMade,
   useEditPaymentMade,
 } from '@/hooks/query';
-import { DashboardInsider } from '@/components';
+import { useFeatureCan } from '@/hooks/state';
 
-// Payment made form context.
-const PaymentMadeFormContext = createContext();
+type UseAccountsResult = ReturnType<typeof useAccounts>;
+type UseVendorsResult = ReturnType<typeof useVendors>;
+type UseItemsResult = ReturnType<typeof useItems>;
+type UseBranchesResult = ReturnType<typeof useBranches>;
+type UseCreatePaymentMadeResult = ReturnType<typeof useCreatePaymentMade>;
+type UseEditPaymentMadeResult = ReturnType<typeof useEditPaymentMade>;
+
+type PaymentMadeEditPageData =
+  | BillPaymentEditPageResponse['billPayment']
+  | undefined;
+type PaymentMadeEditPageEntries =
+  | BillPaymentEditPageResponse['entries']
+  | undefined;
+
+type PaymentMadeSubmitPayload = {
+  redirect?: boolean;
+  resetForm?: boolean;
+  publish?: boolean;
+};
+
+interface PaymentMadeFormContextValue {
+  paymentMadeId?: number;
+  paymentMadeEditPage: PaymentMadeEditPageData;
+  paymentEntriesEditPage: PaymentMadeEditPageEntries;
+
+  accounts: UseAccountsResult['data'];
+  vendors: NonNullable<UseVendorsResult['data']>['data'];
+  items: NonNullable<UseItemsResult['data']>['data'];
+  branches: UseBranchesResult['data'];
+
+  paymentVendorId: number | null;
+  setPaymentVendorId: React.Dispatch<React.SetStateAction<number | null>>;
+
+  isNewMode: boolean;
+  isAccountsLoading: boolean;
+  isItemsFetching: boolean;
+  isItemsLoading: boolean;
+  isVendorsLoading: boolean;
+  isPaymentFetching: boolean;
+  isPaymentLoading: boolean;
+  isFeatureLoading: boolean;
+  isBranchesLoading: boolean;
+  isBranchesSuccess: boolean;
+
+  submitPayload: PaymentMadeSubmitPayload;
+  setSubmitPayload: React.Dispatch<
+    React.SetStateAction<PaymentMadeSubmitPayload>
+  >;
+
+  createPaymentMadeMutate: UseCreatePaymentMadeResult['mutateAsync'];
+  editPaymentMadeMutate: UseEditPaymentMadeResult['mutateAsync'];
+
+  isExcessConfirmed: boolean;
+  setIsExcessConfirmed: React.Dispatch<React.SetStateAction<boolean>>;
+
+  billPaymentSettings: import('@bigcapital/sdk-ts').SettingsGroup | undefined;
+}
+
+type PaymentMadeFormProviderProps = {
+  query?: Record<string, unknown>;
+  paymentMadeId?: number;
+  children?: React.ReactNode;
+};
+
+const PaymentMadeFormContext = createContext<
+  PaymentMadeFormContextValue | undefined
+>(undefined);
 
 /**
  * Payment made form provider.
  */
-function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
-  const [submitPayload, setSubmitPayload] = React.useState({});
-  const [paymentVendorId, setPaymentVendorId] = React.useState(null);
+function PaymentMadeFormProvider({
+  query,
+  paymentMadeId,
+  ...props
+}: PaymentMadeFormProviderProps) {
+  const [submitPayload, setSubmitPayload] =
+    React.useState<PaymentMadeSubmitPayload>({});
+  const [paymentVendorId, setPaymentVendorId] = React.useState<number | null>(
+    null,
+  );
 
   // Features guard.
   const { featureCan } = useFeatureCan();
@@ -33,16 +105,15 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
 
   // Handle fetch Items data table or list.
   const {
-    data: { items },
+    data: itemsData,
     isFetching: isItemsFetching,
     isLoading: isItemsLoading,
   } = useItems({ page_size: 10000 });
 
   // Handle fetch venders data table or list.
-  const {
-    data: { vendors },
-    isLoading: isVendorsLoading,
-  } = useVendors({ page_size: 10000 });
+  const { data: vendorsData, isLoading: isVendorsLoading } = useVendors({
+    page_size: 10000,
+  });
 
   // Handle fetch specific payment made details.
   const {
@@ -52,7 +123,7 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
   } = usePaymentMadeEditPage(paymentMadeId, {
     enabled: !!paymentMadeId,
   });
-  const paymentMadeEditPage = paymentMadeEditData?.bill_payment;
+  const paymentMadeEditPage = paymentMadeEditData?.billPayment;
   const paymentEntriesEditPage = paymentMadeEditData?.entries;
 
   // Fetches the branches list.
@@ -63,7 +134,7 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Fetch payment made settings.
-  useSettings();
+  const { data: billPaymentSettings } = useSettingsBillPayments();
 
   // Create and edit payment made mutations.
   const { mutateAsync: createPaymentMadeMutate } = useCreatePaymentMade();
@@ -75,15 +146,14 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
 
   const [isExcessConfirmed, setIsExcessConfirmed] = useState<boolean>(false);
 
-  // Provider payload.
-  const provider = {
+  const provider: PaymentMadeFormContextValue = {
     paymentMadeId,
-    accounts,
+    accounts: accounts ?? [],
     paymentEntriesEditPage,
     paymentMadeEditPage,
-    vendors,
-    items,
-    branches,
+    vendors: vendorsData?.data ?? [],
+    items: itemsData?.data ?? [],
+    branches: branches ?? [],
     submitPayload,
     paymentVendorId,
 
@@ -95,6 +165,7 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
     isPaymentFetching,
     isPaymentLoading,
     isFeatureLoading,
+    isBranchesLoading,
     isBranchesSuccess,
 
     createPaymentMadeMutate,
@@ -105,6 +176,8 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
 
     isExcessConfirmed,
     setIsExcessConfirmed,
+
+    billPaymentSettings,
   };
 
   return (
@@ -122,6 +195,14 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
   );
 }
 
-const usePaymentMadeFormContext = () => useContext(PaymentMadeFormContext);
+const usePaymentMadeFormContext = (): PaymentMadeFormContextValue => {
+  const ctx = useContext(PaymentMadeFormContext);
+  if (!ctx) {
+    throw new Error(
+      'usePaymentMadeFormContext must be used within a PaymentMadeFormProvider',
+    );
+  }
+  return ctx;
+};
 
 export { PaymentMadeFormProvider, usePaymentMadeFormContext };

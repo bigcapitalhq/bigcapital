@@ -1,7 +1,7 @@
+import { isEmpty } from 'lodash';
 import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
-import { useBankRules } from '@/hooks/query/bank-rules';
-import { isEmpty } from 'lodash';
+import { useBankRules } from '@/hooks/query/banking';
 
 interface RulesListBootValues {
   bankRules: any;
@@ -23,7 +23,11 @@ function RulesListBoot({ ...props }: RulesListBootProps) {
   const isEmptyState = !isBankRulesLoading && isEmpty(bankRules);
   const isLoading = isBankRulesLoading;
 
-  const provider = { bankRules, isBankRulesLoading, isEmptyState } as RulesListBootValues;
+  const provider = {
+    bankRules,
+    isBankRulesLoading,
+    isEmptyState,
+  } as RulesListBootValues;
 
   return (
     <DialogContent isLoading={isLoading}>

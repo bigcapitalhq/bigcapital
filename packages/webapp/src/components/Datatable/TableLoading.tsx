@@ -1,15 +1,13 @@
-// @ts-nocheck
-import React from 'react';
 import { Spinner } from '@blueprintjs/core';
+import React from 'react';
 
-/**
- * Table loading component.
- */
-export default function TableLoading({
-  spinnerProps
-}) {
+interface TableLoadingProps {
+  spinnerProps?: Record<string, any>;
+}
+
+export default function TableLoading({ spinnerProps }: TableLoadingProps) {
   return (
-    <div class="loading">
+    <div className="loading">
       <Spinner {...spinnerProps} />
     </div>
   );

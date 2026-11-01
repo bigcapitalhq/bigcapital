@@ -1,12 +1,19 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
-const PaymentReceivedCustomize = React.lazy(
-  () => import('./PaymentReceivedCustomize'),
+const PaymentReceivedCustomize = React.lazy(() =>
+  import('./PaymentReceivedCustomize').then((m) => ({
+    default: m.PaymentReceivedCustomize,
+  })),
 );
+
+interface PaymentReceivedCustomizeDrawerProps {
+  name: string;
+  isOpen?: boolean;
+  payload?: Record<string, any>;
+}
 
 /**
  * PaymentReceived customize drawer.
@@ -16,8 +23,8 @@ function PaymentReceivedCustomizeDrawerRoot({
   name,
   // #withDrawer
   isOpen,
-  payload
-}) {
+  payload,
+}: PaymentReceivedCustomizeDrawerProps) {
   return (
     <Drawer isOpen={isOpen} name={name} size={'100%'} payload={payload}>
       <DrawerSuspense>
@@ -27,6 +34,7 @@ function PaymentReceivedCustomizeDrawerRoot({
   );
 }
 
-export const PaymentReceivedCustomizeDrawer = R.compose(withDrawers())(
+export const PaymentReceivedCustomizeDrawer = FF.pipe(
   PaymentReceivedCustomizeDrawerRoot,
+  withDrawers(),
 );

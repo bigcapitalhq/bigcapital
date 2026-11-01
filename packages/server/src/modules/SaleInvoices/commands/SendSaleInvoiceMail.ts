@@ -33,7 +33,7 @@ export class SendSaleInvoiceMail {
     private readonly tenancyContect: TenancyContext,
 
     @InjectQueue(SendSaleInvoiceQueue) private readonly sendInvoiceQueue: Queue,
-  ) { }
+  ) {}
 
   /**
    * Sends the invoice mail of the given sale invoice.

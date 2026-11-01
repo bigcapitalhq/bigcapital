@@ -1,25 +1,29 @@
+import {
+  PaymentReceivedPaperTemplate,
+  PaymentReceivedPaperTemplateProps,
+} from '@bigcapital/pdf-templates';
 import { useFormikContext } from 'formik';
 import {
   ElementCustomize,
   ElementCustomizeContent,
 } from '../../../ElementCustomize/ElementCustomize';
-import { PaymentReceivedCustomizeGeneralField } from './PaymentReceivedCustomizeFieldsGeneral';
+import { initialValues } from './constants';
 import { PaymentReceivedCustomizeContentFields } from './PaymentReceivedCustomizeFieldsContent';
+import { PaymentReceivedCustomizeGeneralField } from './PaymentReceivedCustomizeFieldsGeneral';
 import {
   PaymentReceivedCustomizeValues,
   PaymentReceivedPreviewState,
 } from './types';
-import {
-  PaymentReceivedPaperTemplate,
-  PaymentReceivedPaperTemplateProps,
-} from './PaymentReceivedPaperTemplate';
-import { initialValues } from './constants';
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useDrawerActions } from '@/hooks/state';
-import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
-import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
-import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 import { Box } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
+import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import {
+  paperTemplatePreviewStyle,
+  pickPaperTemplateProps,
+} from '@/containers/ElementCustomize/paperTemplatePreview';
+import { useDrawerActions } from '@/hooks/state';
 
 export function PaymentReceivedCustomizeContent() {
   const { payload, name } = useDrawerContext();
@@ -76,10 +80,16 @@ function PaymentReceivedPaperTemplateFormConnected() {
   const { values } = useFormikContext<PaymentReceivedCustomizeValues>();
   const { brandingState } = useElementCustomizeContext();
 
-  const paperTemplateProps: PaymentReceivedPaperTemplateProps = {
-    ...brandingState,
-    ...values,
-  };
+  const paperTemplateProps =
+    pickPaperTemplateProps<PaymentReceivedPaperTemplateProps>(
+      { ...brandingState, ...values },
+      initialValues,
+    );
 
-  return <PaymentReceivedPaperTemplate {...paperTemplateProps} />;
+  return (
+    <PaymentReceivedPaperTemplate
+      {...paperTemplateProps}
+      style={paperTemplatePreviewStyle}
+    />
+  );
 }

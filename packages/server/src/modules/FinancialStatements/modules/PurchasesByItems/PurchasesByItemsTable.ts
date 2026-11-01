@@ -1,29 +1,40 @@
-import * as R from 'ramda';
+import { constant, flow } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
+import { when } from '@/common/fp';
 import { ROW_TYPE } from './_types';
 import {
   IPurchasesByItemsItem,
   IPurchasesByItemsSheetData,
   IPurchasesByItemsTotal,
 } from './types/PurchasesByItems.types';
-import { ITableColumn, ITableColumnAccessor, ITableRow } from '../../types/Table.types';
+import {
+  ITableColumn,
+  ITableColumnAccessor,
+  ITableRow,
+} from '../../types/Table.types';
 import { FinancialTable } from '../../common/FinancialTable';
 import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { tableRowMapper } from '../../utils/Table.utils';
+import { PURCHASES_BY_ITEMS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class PurchasesByItemsTable extends R.compose(
+export class PurchasesByItemsTable extends flow(
+  FinancialSheetStructure,
   FinancialTable,
-  FinancialSheetStructure
 )(FinancialSheet) {
   private data: IPurchasesByItemsSheetData;
+  readonly i18n: I18nService;
 
   /**
    * Constructor method.
    * @param data
+   * @param {I18nService} i18n
    */
-  constructor(data: IPurchasesByItemsSheetData) {
+  constructor(data: IPurchasesByItemsSheetData, i18n: I18nService) {
     super();
     this.data = data;
+    this.i18n = i18n;
   }
 
   /**
@@ -32,10 +43,19 @@ export class PurchasesByItemsTable extends R.compose(
    */
   private commonTableAccessors(): ITableColumnAccessor[] {
     return [
-      { key: 'item_name', accessor: 'name' },
-      { key: 'quantity_purchases', accessor: 'quantityPurchasedFormatted' },
-      { key: 'purchase_amount', accessor: 'purchaseCostFormatted' },
-      { key: 'average_cost', accessor: 'averageCostPriceFormatted' },
+      { key: PURCHASES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME, accessor: 'name' },
+      {
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.QUANTITY_PURCHASES,
+        accessor: 'quantityPurchasedFormatted',
+      },
+      {
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.PURCHASE_AMOUNT,
+        accessor: 'purchaseCostFormatted',
+      },
+      {
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.AVERAGE_COST,
+        accessor: 'averageCostPriceFormatted',
+      },
     ];
   }
 
@@ -45,10 +65,22 @@ export class PurchasesByItemsTable extends R.compose(
    */
   private commonTableColumns(): ITableColumn[] {
     return [
-      { label: 'Item name', key: 'item_name' },
-      { label: 'Quantity Purchased', key: 'quantity_purchases' },
-      { label: 'Purchase Amount', key: 'purchase_amount' },
-      { label: 'Average Price', key: 'average_cost' },
+      {
+        label: this.i18n.t('purchases_by_items.item_name'),
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME,
+      },
+      {
+        label: this.i18n.t('purchases_by_items.quantity_purchased'),
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.QUANTITY_PURCHASES,
+      },
+      {
+        label: this.i18n.t('purchases_by_items.purchase_amount'),
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.PURCHASE_AMOUNT,
+      },
+      {
+        label: this.i18n.t('purchases_by_items.average_price'),
+        key: PURCHASES_BY_ITEMS_COLUMN_KEYS.AVERAGE_COST,
+      },
     ];
   }
 
@@ -71,7 +103,7 @@ export class PurchasesByItemsTable extends R.compose(
    * @returns {ITableRow[]}
    */
   private itemsMap = (items: IPurchasesByItemsItem[]): ITableRow[] => {
-    return R.map(this.itemMap)(items);
+    return items.map(this.itemMap);
   };
 
   /**
@@ -93,7 +125,7 @@ export class PurchasesByItemsTable extends R.compose(
    */
   public tableColumns(): ITableColumn[] {
     const columns = this.commonTableColumns();
-    return R.compose(this.tableColumnsCellIndexing)(columns);
+    return this.tableColumnsCellIndexing(columns);
   }
 
   /**
@@ -104,8 +136,9 @@ export class PurchasesByItemsTable extends R.compose(
     const itemsRows = this.itemsMap(this.data.items);
     const totalRow = this.totalNodeMap(this.data.total);
 
-    return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow))
-    )(itemsRows) as ITableRow[];
+    return when(constant(!isEmpty(itemsRows)), (rows: ITableRow[]) => [
+      ...rows,
+      totalRow,
+    ])(itemsRows);
   }
 }

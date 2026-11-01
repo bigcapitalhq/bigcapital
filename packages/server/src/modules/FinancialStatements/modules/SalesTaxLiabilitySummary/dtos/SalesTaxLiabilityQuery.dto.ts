@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class SalesTaxLiabilitySummaryQueryDto {
   @ApiProperty({
@@ -20,10 +29,15 @@ export class SalesTaxLiabilitySummaryQueryDto {
 
   @ApiProperty({
     description: 'Accounting basis for the summary',
-    enum: ['cash', 'accrual'],
+    enum: AccountingBasis,
     example: 'accrual',
   })
-  @IsEnum(['cash', 'accrual'])
+  @IsEnum(AccountingBasis)
   @IsNotEmpty()
-  basis: 'cash' | 'accrual';
+  basis: AccountingBasis;
+
+  @ValidateNested()
+  @Type(() => NumberFormatQueryDto)
+  @IsOptional()
+  numberFormat: NumberFormatQueryDto;
 }

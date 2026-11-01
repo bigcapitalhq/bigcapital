@@ -1,27 +1,29 @@
-// @ts-nocheck
-import React from 'react';
 import { AnchorButton } from '@blueprintjs/core';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfEstimate } from '@/hooks/query';
 
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+interface EstimatePdfPreviewDialogContentProps extends WithDialogActionsProps {
+  subscriptionForm: { estimateId: number | null };
+  dialogName?: string;
+}
 
-function EstimatePdfPreviewDialogContent({
+function EstimatePdfPreviewDialogContentInner({
   subscriptionForm: { estimateId },
-  dialogName,
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { isLoading, pdfUrl, filename } = usePdfEstimate(estimateId);
+}: EstimatePdfPreviewDialogContentProps): React.ReactElement {
+  const { isLoading, isError, pdfUrl, filename } = usePdfEstimate(
+    estimateId as number,
+  );
 
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -42,10 +44,14 @@ function EstimatePdfPreviewDialogContent({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>
   );
 }
 
-export default compose(withDialogActions)(EstimatePdfPreviewDialogContent);
+export const EstimatePdfPreviewDialogContent = FF.pipe(
+  EstimatePdfPreviewDialogContentInner,
+  withDialogActions,
+);

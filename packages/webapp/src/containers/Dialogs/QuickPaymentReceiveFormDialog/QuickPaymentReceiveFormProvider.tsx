@@ -1,9 +1,9 @@
-// @ts-nocheck
-import React, { useContext, createContext, useMemo } from 'react';
 import { pick } from 'lodash';
+import React, { useContext, createContext, useMemo } from 'react';
+import type { QuickPaymentReceiveContextValue } from './types';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import {
   useAccounts,
   useInvoice,
@@ -11,8 +11,20 @@ import {
   useSettingsPaymentReceives,
   useCreatePaymentReceive,
 } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-const QuickPaymentReceiveContext = createContext();
+const QuickPaymentReceiveContext =
+  createContext<QuickPaymentReceiveContextValue>(
+    {} as QuickPaymentReceiveContextValue,
+  );
+
+interface QuickPaymentReceiveFormProviderProps {
+  query?: Record<string, unknown>;
+  invoiceId?: number | null;
+  dialogName: string;
+  baseCurrency?: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Quick payment receive dialog provider.
@@ -23,7 +35,7 @@ function QuickPaymentReceiveFormProvider({
   dialogName,
   baseCurrency,
   ...props
-}) {
+}: QuickPaymentReceiveFormProviderProps) {
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
@@ -38,7 +50,8 @@ function QuickPaymentReceiveFormProvider({
   const { mutateAsync: createPaymentReceiveMutate } = useCreatePaymentReceive();
 
   // Fetch payment made settings.
-  const { isLoading: isSettingsLoading } = useSettingsPaymentReceives();
+  const { isLoading: isSettingsLoading, data: paymentReceiveSettings } =
+    useSettingsPaymentReceives();
 
   // Fetches the branches list.
   const {
@@ -48,12 +61,18 @@ function QuickPaymentReceiveFormProvider({
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   const invoicePayment = useMemo(
-    () => pick(invoice, ['id', 'due_amount', 'customer_id', 'currency_code']),
+    () =>
+      pick(invoice, [
+        'id',
+        'dueAmount',
+        'customerId',
+        'currencyCode',
+      ]) as QuickPaymentReceiveContextValue['invoice'],
     [invoice],
   );
 
   // State provider.
-  const provider = {
+  const provider: QuickPaymentReceiveContextValue = {
     accounts,
     branches,
     invoice: invoicePayment,
@@ -62,6 +81,7 @@ function QuickPaymentReceiveFormProvider({
     isBranchesSuccess,
     dialogName,
     baseCurrency,
+    paymentReceiveSettings: paymentReceiveSettings as SettingsGroup | undefined,
     createPaymentReceiveMutate,
   };
 

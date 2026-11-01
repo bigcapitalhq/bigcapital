@@ -1,27 +1,26 @@
-// @ts-nocheck
 import { useMemo } from 'react';
 import styled from 'styled-components';
-import { ContentTabs } from '@/components/ContentTabs/ContentTabs';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import { ContentTabs } from '@/components/ContentTabs/ContentTabs';
 
 const AccountContentTabs = styled(ContentTabs)`
   margin: 15px 15px 0 15px;
 `;
 
 export function AccountTransactionsFilterTabs() {
-  const { filterTab, setFilterTab, bankAccountMetaSummary, currentAccount } =
+  const { filterTab, setFilterTab, bankAccountMetaSummary } =
     useAccountTransactionsContext();
 
-  const handleChange = (value) => {
+  const handleChange = (value: string) => {
     setFilterTab(value);
   };
 
   // Detarmines whether show the uncategorized transactions tab.
   const hasUncategorizedTransx = useMemo(
     () =>
-      bankAccountMetaSummary?.totalUncategorizedTransactions > 0 ||
-      bankAccountMetaSummary?.totalExcludedTransactions > 0 ||
-      bankAccountMetaSummary?.totalPendingTransactions > 0,
+      (bankAccountMetaSummary?.totalUncategorizedTransactions ?? 0) > 0 ||
+      (bankAccountMetaSummary?.totalExcludedTransactions ?? 0) > 0 ||
+      (bankAccountMetaSummary?.totalPendingTransactions ?? 0) > 0,
     [bankAccountMetaSummary],
   );
 
@@ -38,7 +37,7 @@ export function AccountTransactionsFilterTabs() {
           title={
             <>
               <span style={{ color: 'var(--color-danger)' }}>
-                {currentAccount.uncategorized_transactions}
+                {bankAccountMetaSummary?.totalUncategorizedTransactions ?? 0}
               </span>{' '}
               Uncategorized Transactions
             </>

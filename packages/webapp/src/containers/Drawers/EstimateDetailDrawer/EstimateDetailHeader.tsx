@@ -1,14 +1,12 @@
-// @ts-nocheck
+import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { defaultTo } from 'lodash';
-
+import { EstimateDetailsStatus } from './components';
+import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import {
   CommercialDocHeader,
   CommercialDocTopHeader,
-  FormatDate,
-  T,
   DetailsMenu,
   DetailItem,
   Row,
@@ -16,21 +14,23 @@ import {
   CustomerDrawerLink,
   ExchangeRateDetailItem,
 } from '@/components';
-import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
-import { EstimateDetailsStatus } from './components';
 
 /**
  * Estimate read-only details drawer header.
  */
-export default function EstimateDetailHeader() {
+export function EstimateDetailHeader() {
   const { estimate } = useEstimateDetailDrawerContext();
+
+  if (!estimate) {
+    return null;
+  }
 
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountEstimateDetail label={intl.get('amount')}>
-            <span class="big-number">{estimate.total_formatted}</span>
+            <span className="big-number">{estimate.totalFormatted}</span>
           </AmountEstimateDetail>
 
           <EstimateStatusDetail>
@@ -44,27 +44,27 @@ export default function EstimateDetailHeader() {
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('estimate.details.estimate_number')}
-              children={defaultTo(estimate.estimate_number, '-')}
+              children={defaultTo(estimate.estimateNumber, '-')}
             />
 
             <DetailItem label={intl.get('customer_name')}>
-              <CustomerDrawerLink customerId={estimate.customer_id}>
-                {estimate.customer?.display_name}
+              <CustomerDrawerLink customerId={estimate.customerId}>
+                {estimate.customer?.displayName}
               </CustomerDrawerLink>
             </DetailItem>
 
             <DetailItem
               label={intl.get('estimate_date')}
-              children={estimate.formatted_estimate_date}
+              children={estimate.formattedEstimateDate}
             />
 
             <DetailItem
               label={intl.get('expiration_date')}
-              children={estimate.formatted_expiration_date}
+              children={estimate.formattedExpirationDate}
             />
             <ExchangeRateDetailItem
-              exchangeRate={estimate?.exchange_rate}
-              toCurrency={estimate?.currency_code}
+              exchangeRate={estimate?.exchangeRate}
+              toCurrency={estimate?.currencyCode}
             />
           </DetailsMenu>
         </Col>
@@ -80,8 +80,8 @@ export default function EstimateDetailHeader() {
               children={defaultTo(estimate.reference, '-')}
             />
             <DetailItem
-              label={<T id={'estimate.details.created_at'} />}
-              children={estimate.formatted_created_at}
+              label={intl.get('estimate.details.created_at')}
+              children={estimate.formattedCreatedAt}
             />
           </DetailsMenu>
         </Col>

@@ -11,6 +11,7 @@ import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberF
 import { Transform, Type } from 'class-transformer';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { ApiProperty } from '@nestjs/swagger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
@@ -34,13 +35,13 @@ export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({
     description: 'Display columns by time period',
     required: false,
-    enum: ['day', 'month', 'year', 'quarter'],
+    enum: ['day', 'week', 'month', 'quarter', 'year'],
     default: 'year',
   })
   @IsString()
   @IsOptional()
-  @IsEnum(['day', 'month', 'year', 'quarter'])
-  displayColumnsBy: 'day' | 'month' | 'year' | 'quarter' = 'year';
+  @IsEnum(['day', 'week', 'month', 'quarter', 'year'])
+  displayColumnsBy: 'day' | 'week' | 'month' | 'quarter' | 'year' = 'year';
 
   @ApiProperty({
     description: 'Type of column display',
@@ -74,11 +75,6 @@ export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
   @IsOptional()
   noneTransactions: boolean;
 
-  @ApiProperty({
-    description: 'Number format configuration',
-    required: true,
-    type: NumberFormatQueryDto,
-  })
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
   @IsOptional()
@@ -89,7 +85,7 @@ export class CashFlowStatementQueryDto extends FinancialSheetBranchesQueryDto {
     required: false,
     type: String,
   })
-  @IsString()
+  @IsEnum(AccountingBasis)
   @IsOptional()
-  basis: string;
+  basis: AccountingBasis;
 }

@@ -19,6 +19,7 @@ import { UsersApplication } from './Users.application';
 import { GetUsersService } from './queries/GetUsers.service';
 import { AcceptInviteUserService } from './commands/AcceptInviteUser.service';
 import { InviteTenantUserService } from './commands/InviteUser.service';
+import { UserTenant } from '../System/models/UserTenant.model';
 import { UsersInviteController } from './UsersInvite.controller';
 import { UsersInvitePublicController } from './UsersInvitePublic.controller';
 import { InjectSystemModel } from '../System/SystemModels/SystemModels.module';
@@ -26,9 +27,10 @@ import { SendInviteUserMailQueue } from './Users.constants';
 import InviteSendMainNotificationSubscribe from './subscribers/InviteSendMailNotification.subscriber';
 import { SendInviteUserMailProcessor } from './processors/SendInviteUserMail.processor';
 import { SendInviteUsersMailMessage } from './commands/SendInviteUsersMailMessage.service';
+import { SendBulkInvitesService } from './commands/SendBulkInvites.service';
 import { MailModule } from '../Mail/Mail.module';
 
-const models = [InjectSystemModel(UserInvite)];
+const models = [InjectSystemModel(UserInvite), InjectSystemModel(UserTenant)];
 
 @Module({
   imports: [
@@ -51,6 +53,7 @@ const models = [InjectSystemModel(UserInvite)];
     GetUsersService,
     AcceptInviteUserService,
     InviteTenantUserService,
+    SendBulkInvitesService,
     PurgeUserAbilityCacheSubscriber,
     SyncTenantUserDeleteSubscriber,
     SyncTenantUserMutateSubscriber,
@@ -59,8 +62,12 @@ const models = [InjectSystemModel(UserInvite)];
     InviteSendMainNotificationSubscribe,
     SendInviteUserMailProcessor,
     SendInviteUsersMailMessage,
-    UsersApplication
+    UsersApplication,
   ],
-  controllers: [UsersController, UsersInviteController, UsersInvitePublicController],
+  controllers: [
+    UsersController,
+    UsersInviteController,
+    UsersInvitePublicController,
+  ],
 })
 export class UsersModule {}

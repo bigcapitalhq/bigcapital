@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ICreateInvoicePdfTemplateDTO, IEditPdfTemplateDTO } from './types';
+import {
+  CreatePdfTemplateDto,
+  EditPdfTemplateDto,
+} from './dtos/PdfTemplate.dto';
 import { CreatePdfTemplateService } from './commands/CreatePdfTemplate.service';
 import { DeletePdfTemplateService } from './commands/DeletePdfTemplate.service';
 import { GetPdfTemplateService } from './queries/GetPdfTemplate.service';
@@ -24,21 +27,11 @@ export class PdfTemplateApplication {
 
   /**
    * Creates a new PDF template.
-   * @param {string} templateName - The name of the PDF template to create.
-   * @param {string} resource - The resource type associated with the PDF template.
-   * @param {ICreateInvoicePdfTemplateDTO} invoiceTemplateDTO - The data transfer object containing the details for the new PDF template.
+   * @param {CreatePdfTemplateDto} createDTO - The data transfer object containing the details for the new PDF template.
    * @returns {Promise<any>}
    */
-  public createPdfTemplate(
-    templateName: string,
-    resource: string,
-    invoiceTemplateDTO: ICreateInvoicePdfTemplateDTO,
-  ) {
-    return this.createPdfTemplateService.createPdfTemplate(
-      templateName,
-      resource,
-      invoiceTemplateDTO,
-    );
+  public createPdfTemplate(createDTO: CreatePdfTemplateDto) {
+    return this.createPdfTemplateService.createPdfTemplate(createDTO);
   }
 
   /**
@@ -68,12 +61,9 @@ export class PdfTemplateApplication {
   /**
    * Edits an existing PDF template.
    * @param {number} templateId - The ID of the template to edit.
-   * @param {IEditPdfTemplateDTO} editDTO - The data transfer object containing the updates.
+   * @param {EditPdfTemplateDto} editDTO - The data transfer object containing the updates.
    */
-  public editPdfTemplate(
-    templateId: number,
-    editDTO: IEditPdfTemplateDTO,
-  ) {
+  public editPdfTemplate(templateId: number, editDTO: EditPdfTemplateDto) {
     return this.editPdfTemplateService.editPdfTemplate(templateId, editDTO);
   }
 

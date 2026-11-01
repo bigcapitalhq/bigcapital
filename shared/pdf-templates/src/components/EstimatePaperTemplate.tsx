@@ -106,8 +106,6 @@ export function EstimatePaperTemplate({
   showCompanyLogo = true,
   companyLogoUri = '',
 
-  companyName,
-
   // # Company address
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
   showCompanyAddress = true,
@@ -181,9 +179,14 @@ export function EstimatePaperTemplate({
   // # Line Discount
   lineDiscountLabel = 'Discount',
   showLineDiscount = false,
+  ...props
 }: EstimatePaperTemplateProps) {
   return (
-    <PaperTemplate primaryColor={primaryColor} secondaryColor={secondaryColor}>
+    <PaperTemplate
+      primaryColor={primaryColor}
+      secondaryColor={secondaryColor}
+      {...props}
+    >
       <Stack spacing={24}>
         <Group align={'start'} spacing={10}>
           <Stack flex={1}>

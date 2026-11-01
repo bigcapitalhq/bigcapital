@@ -28,12 +28,17 @@ export interface IPlaidItemCreatedEventPayload {
   plaidInstitutionId: string;
 }
 
+export interface IPlaidWebhookReceivedEventPayload {
+  plaidItemId: string;
+  webhookType: string;
+  webhookCode: string;
+}
+
 export const UpdateBankingPlaidTransitionsJob =
   'update-banking-plaid-transitions-job';
 
-  export const UpdateBankingPlaidTransitionsQueueJob =
+export const UpdateBankingPlaidTransitionsQueueJob =
   'update-banking-plaid-transitions-query';
-
 
 export interface PlaidFetchTransitonsEventPayload {
   plaidItemId: string;

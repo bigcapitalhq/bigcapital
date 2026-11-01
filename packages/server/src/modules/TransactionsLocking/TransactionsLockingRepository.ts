@@ -8,7 +8,6 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { SettingsStore } from '../Settings/SettingsStore';
 import { SETTINGS_PROVIDER } from '../Settings/Settings.types';
-import { SettingsApplicationService } from '../Settings/SettingsApplication.service';
 
 @Injectable()
 export class TransactionsLockingRepository {
@@ -96,7 +95,7 @@ export class TransactionsLockingRepository {
       group,
       key: `${lockingGroup}.active`,
     });
-    const lockFromDate = settingsStore.get({
+    const _lockFromDate = settingsStore.get({
       group,
       key: `${lockingGroup}.lock_from_date`,
     });

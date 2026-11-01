@@ -134,7 +134,7 @@ export class GetCurrentOrganizationResponseDto {
 
   @ApiProperty({
     description: 'Organization metadata',
-    type: () => [OrganizationMetadataResponseDto],
+    type: () => OrganizationMetadataResponseDto,
   })
   metadata: OrganizationMetadataResponseDto;
 

@@ -1,36 +1,40 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useInactivateContact } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface ContactInactivateAlertPayload {
+  contactId: number;
+  service: string;
+}
 
-import { compose } from '@/utils';
+interface ContactInactivateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ContactInactivateAlertPayload;
+}
 
 /**
  * Contact inactivate alert.
  */
-function ContactInactivateAlert({
+function ContactInactivateAlertInner({
   name,
-  // #withAlertStoreConnect
   isOpen,
   payload: { contactId, service },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: inactivateContact, isLoading } = useInactivateContact();
+}: ContactInactivateAlertProps): React.ReactElement {
+  const { mutateAsync: inactivateContact, isPending: isLoading } =
+    useInactivateContact();
 
-  // Handle cancel inactivate alert.
   const handleCancelInactivateContact = () => {
     closeAlert(name);
   };
 
-  // Handle confirm contact Inactive.
   const handleConfirmContactInactive = () => {
     inactivateContact(contactId)
       .then(() => {
@@ -39,7 +43,13 @@ function ContactInactivateAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: the original had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -47,8 +57,8 @@ function ContactInactivateAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'inactivate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('inactivate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelInactivateContact}
@@ -64,7 +74,8 @@ function ContactInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const ContactInactivateAlert = FF.pipe(
+  ContactInactivateAlertInner,
   withAlertActions,
-)(ContactInactivateAlert);
+  withAlertStoreConnect(),
+);

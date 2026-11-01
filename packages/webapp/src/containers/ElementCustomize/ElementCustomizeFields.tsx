@@ -1,16 +1,16 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { Box, Group, Stack } from '@/components';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import styles from './ElementCustomize.module.scss';
 import { ElementCustomizeHeader } from './ElementCustomizeHeader';
+import { useElementCustomizeContext } from './ElementCustomizeProvider';
 import { ElementCustomizeTabs } from './ElementCustomizeTabs';
 import { useElementCustomizeTabsController } from './ElementCustomizeTabsController';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { Box, Group, Stack } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useElementCustomizeContext } from './ElementCustomizeProvider';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import styles from './ElementCustomize.module.scss';
 
 export function ElementCustomizeFields() {
   return (
@@ -28,8 +28,11 @@ export function ElementCustomizeFieldsMain() {
   const CustomizeTabPanel = React.useMemo(
     () =>
       React.Children.map(CustomizeTabs, (tab) => {
-        return tab.props.id === currentTabId ? tab : null;
-      }).filter(Boolean),
+        if (React.isValidElement(tab) && tab.props.id === currentTabId) {
+          return tab;
+        }
+        return null;
+      })?.filter(Boolean),
     [CustomizeTabs, currentTabId],
   );
 
@@ -47,7 +50,9 @@ export function ElementCustomizeFieldsMain() {
   );
 }
 
-function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
+function ElementCustomizeFooterActionsRoot({
+  closeDrawer,
+}: WithDrawerActionsProps) {
   const { name } = useDrawerContext();
   const { submitForm, isSubmitting } = useFormikContext();
 
@@ -74,6 +79,7 @@ function ElementCustomizeFooterActionsRoot({ closeDrawer }) {
   );
 }
 
-const ElementCustomizeFooterActions = R.compose(withDrawerActions)(
+const ElementCustomizeFooterActions = FF.pipe(
   ElementCustomizeFooterActionsRoot,
+  withDrawerActions,
 );
