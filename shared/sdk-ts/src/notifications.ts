@@ -1,5 +1,6 @@
 import type { ApiFetcher } from './fetch-utils';
-import { rawRequest } from './fetch-utils';
+import { paths } from './schema';
+import { OpForPath, OpQueryParams, OpResponseBody } from './utils';
 
 export const NOTIFICATIONS_ROUTES = {
   LIST: '/api/notifications',
@@ -7,52 +8,76 @@ export const NOTIFICATIONS_ROUTES = {
   MARK_AS_READ: '/api/notifications/{id}/read',
   MARK_ALL_AS_READ: '/api/notifications/read-all',
   DELETE: '/api/notifications/{id}/delete',
-} as const;
+} as const satisfies Record<string, keyof paths>;
 
-export interface GetNotificationsQuery {
-  limit?: number;
-  offset?: number;
-  unreadOnly?: boolean;
-  category?: string;
-}
+type ListOp = OpForPath<typeof NOTIFICATIONS_ROUTES.LIST, 'get'>;
+type UnreadCountOp = OpForPath<typeof NOTIFICATIONS_ROUTES.UNREAD_COUNT, 'get'>;
+type MarkAsReadOp = OpForPath<typeof NOTIFICATIONS_ROUTES.MARK_AS_READ, 'post'>;
+type MarkAllAsReadOp = OpForPath<
+  typeof NOTIFICATIONS_ROUTES.MARK_ALL_AS_READ,
+  'post'
+>;
+type DeleteOp = OpForPath<typeof NOTIFICATIONS_ROUTES.DELETE, 'post'>;
+
+export type NotificationsListResponse = OpResponseBody<ListOp>;
+export type Notification = NotificationsListResponse['notifications'][number];
+export type GetNotificationsQuery = OpQueryParams<ListOp>;
+export type UnreadNotificationsCountResponse = OpResponseBody<UnreadCountOp>;
+export type MarkNotificationAsReadResponse = OpResponseBody<MarkAsReadOp>;
+export type MarkAllNotificationsAsReadResponse = OpResponseBody<MarkAllAsReadOp>;
+export type DeleteNotificationResponse = OpResponseBody<DeleteOp>;
 
 export async function fetchNotifications(
   fetcher: ApiFetcher,
-  query?: GetNotificationsQuery
-): Promise<unknown> {
-  const params = new URLSearchParams();
-  if (query?.limit !== undefined) params.set('limit', String(query.limit));
-  if (query?.offset !== undefined) params.set('offset', String(query.offset));
-  if (query?.unreadOnly !== undefined) params.set('unreadOnly', String(query.unreadOnly));
-  if (query?.category) params.set('category', query.category);
-
-  const qs = params.toString();
-  const path = qs ? `${NOTIFICATIONS_ROUTES.LIST}?${qs}` : NOTIFICATIONS_ROUTES.LIST;
-  return rawRequest(fetcher, 'GET', path);
+  query?: GetNotificationsQuery,
+): Promise<NotificationsListResponse> {
+  const get = fetcher.path(NOTIFICATIONS_ROUTES.LIST).method('get').create();
+  const { data } = await get((query ?? {}) as never);
+  return data;
 }
 
 export async function fetchUnreadNotificationsCount(
-  fetcher: ApiFetcher
-): Promise<unknown> {
-  return rawRequest(fetcher, 'GET', NOTIFICATIONS_ROUTES.UNREAD_COUNT);
+  fetcher: ApiFetcher,
+): Promise<UnreadNotificationsCountResponse> {
+  const get = fetcher
+    .path(NOTIFICATIONS_ROUTES.UNREAD_COUNT)
+    .method('get')
+    .create();
+  const { data } = await get({} as never);
+  return data;
 }
 
 export async function markNotificationAsRead(
   fetcher: ApiFetcher,
-  id: number
-): Promise<unknown> {
-  return rawRequest(fetcher, 'POST', `/api/notifications/${id}/read`);
+  id: number,
+): Promise<MarkNotificationAsReadResponse> {
+  const post = fetcher
+    .path(NOTIFICATIONS_ROUTES.MARK_AS_READ)
+    .method('post')
+    .create();
+  const { data } = await post({ id });
+  return data;
 }
 
 export async function markAllNotificationsAsRead(
-  fetcher: ApiFetcher
-): Promise<unknown> {
-  return rawRequest(fetcher, 'POST', NOTIFICATIONS_ROUTES.MARK_ALL_AS_READ);
+  fetcher: ApiFetcher,
+): Promise<MarkAllNotificationsAsReadResponse> {
+  const post = fetcher
+    .path(NOTIFICATIONS_ROUTES.MARK_ALL_AS_READ)
+    .method('post')
+    .create();
+  const { data } = await post({});
+  return data;
 }
 
 export async function deleteNotification(
   fetcher: ApiFetcher,
-  id: number
-): Promise<unknown> {
-  return rawRequest(fetcher, 'POST', `/api/notifications/${id}/delete`);
+  id: number,
+): Promise<DeleteNotificationResponse> {
+  const post = fetcher
+    .path(NOTIFICATIONS_ROUTES.DELETE)
+    .method('post')
+    .create();
+  const { data } = await post({ id });
+  return data;
 }

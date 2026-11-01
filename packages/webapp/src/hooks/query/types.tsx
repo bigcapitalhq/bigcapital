@@ -14,11 +14,6 @@ export const API_KEYS = {
   API_KEYS: 'API_KEYS',
 };
 
-export const NOTIFICATIONS = {
-  NOTIFICATIONS: 'NOTIFICATIONS',
-  NOTIFICATIONS_UNREAD_COUNT: 'NOTIFICATIONS_UNREAD_COUNT',
-};
-
 export { AuthenticationQueryKeys } from './authentication';
 export { AccountsQueryKeys } from './accounts';
 export { BillsQueryKeys } from './bills';

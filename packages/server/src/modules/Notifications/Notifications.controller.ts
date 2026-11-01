@@ -9,51 +9,26 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { IsNumber, IsString, IsIn } from 'class-validator';
-import { Type } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetNotificationsService } from './queries/GetNotifications.service';
 import { CreateNotificationService } from './commands/CreateNotification.service';
+import { GetNotificationsQueryDto } from './dtos/GetNotificationsQuery.dto';
+import {
+  DeleteNotificationResponseDto,
+  MarkAllNotificationsAsReadResponseDto,
+  MarkNotificationAsReadResponseDto,
+  NotificationsListResponseDto,
+  UnreadNotificationsCountResponseDto,
+} from './dtos/NotificationResponse.dto';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiQuery,
-} from '@nestjs/swagger';
-import { IsOptional } from '@/common/decorators/Validators';
-
-class GetNotificationsQueryDto {
-  @ApiPropertyOptional({
-    description: 'Number of notifications per page',
-    example: 20,
-  })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  limit?: number;
-
-  @ApiPropertyOptional({ description: 'Offset for pagination', example: 0 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  offset?: number;
-
-  @ApiPropertyOptional({ description: 'Filter to only unread notifications' })
-  @IsOptional()
-  @IsString()
-  @IsIn(['true', 'false'])
-  unreadOnly?: string;
-
-  @ApiPropertyOptional({ description: 'Filter by notification category' })
-  @IsOptional()
-  @IsString()
-  category?: string;
-}
 
 @Controller('notifications')
 @ApiTags('Notifications')
@@ -75,40 +50,16 @@ export class NotificationsController {
   @ApiOperation({
     summary: 'Retrieves the list of notifications for the current user.',
   })
-  @ApiQuery({
-    name: 'limit',
-    required: false,
-    type: Number,
-    description: 'Number of notifications per page',
-  })
-  @ApiQuery({
-    name: 'offset',
-    required: false,
-    type: Number,
-    description: 'Offset for pagination',
-  })
-  @ApiQuery({
-    name: 'unreadOnly',
-    required: false,
-    type: Boolean,
-    description: 'Filter to only unread notifications',
-  })
-  @ApiQuery({
-    name: 'category',
-    required: false,
-    type: String,
-    description: 'Filter by notification category',
-  })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'The notifications list has been successfully retrieved.',
+    type: NotificationsListResponseDto,
   })
   async getNotifications(@Query() query: GetNotificationsQueryDto) {
     const user = await this.tenancyContext.getSystemUser();
     const options = {
       limit: query.limit ?? 20,
       offset: query.offset ?? 0,
-      unreadOnly: query.unreadOnly === 'true',
+      unreadOnly: query.unreadOnly ?? false,
       category: query.category,
     };
 
@@ -123,10 +74,10 @@ export class NotificationsController {
   @ApiOperation({
     summary: 'Gets the count of unread notifications for the current user.',
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description:
       'The unread notifications count has been successfully retrieved.',
+    type: UnreadNotificationsCountResponseDto,
   })
   async getUnreadCount() {
     const user = await this.tenancyContext.getSystemUser();
@@ -147,9 +98,9 @@ export class NotificationsController {
     type: Number,
     description: 'The notification id',
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'The notification has been successfully marked as read.',
+    type: MarkNotificationAsReadResponseDto,
   })
   async markAsRead(@Param('id', ParseIntPipe) notificationId: number) {
     const user = await this.tenancyContext.getSystemUser();
@@ -169,9 +120,9 @@ export class NotificationsController {
   @ApiOperation({
     summary: 'Marks all notifications as read for the current user.',
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'All notifications have been successfully marked as read.',
+    type: MarkAllNotificationsAsReadResponseDto,
   })
   async markAllAsRead() {
     const user = await this.tenancyContext.getSystemUser();
@@ -194,9 +145,9 @@ export class NotificationsController {
     type: Number,
     description: 'The notification id',
   })
-  @ApiResponse({
-    status: 200,
+  @ApiOkResponse({
     description: 'The notification has been successfully deleted.',
+    type: DeleteNotificationResponseDto,
   })
   async deleteNotification(@Param('id', ParseIntPipe) notificationId: number) {
     const user = await this.tenancyContext.getSystemUser();

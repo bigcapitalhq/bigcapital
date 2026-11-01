@@ -24977,6 +24977,274 @@
         ]
       }
     },
+    "/api/notifications": {
+      "get": {
+        "operationId": "NotificationsController_getNotifications",
+        "summary": "Retrieves the list of notifications for the current user.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of notifications per page",
+            "schema": {
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Offset for pagination",
+            "schema": {
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "unreadOnly",
+            "required": false,
+            "in": "query",
+            "description": "Filter to only unread notifications",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "Filter by notification category",
+            "schema": {
+              "example": "inventory",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The notifications list has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/api/notifications/unread-count": {
+      "get": {
+        "operationId": "NotificationsController_getUnreadCount",
+        "summary": "Gets the count of unread notifications for the current user.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The unread notifications count has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnreadNotificationsCountResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/api/notifications/{id}/read": {
+      "post": {
+        "operationId": "NotificationsController_markAsRead",
+        "summary": "Marks a notification as read.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The notification id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The notification has been successfully marked as read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarkNotificationAsReadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/api/notifications/read-all": {
+      "post": {
+        "operationId": "NotificationsController_markAllAsRead",
+        "summary": "Marks all notifications as read for the current user.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All notifications have been successfully marked as read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarkAllNotificationsAsReadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/api/notifications/{id}/delete": {
+      "post": {
+        "operationId": "NotificationsController_deleteNotification",
+        "summary": "Deletes a notification.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The notification id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The notification has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteNotificationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
     "/api/audit-logs/filter-options": {
       "get": {
         "operationId": "AuditLogsController_getAuditLogFilterOptions",
@@ -26413,6 +26681,12 @@
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
           },
+          "reorderPoint": {
+            "type": "number",
+            "description": "Stock level at which the item should be reordered (inventory items only)",
+            "minimum": 0,
+            "example": 10
+          },
           "unit": {
             "type": "string",
             "description": "Unit of measure the item is measured in",
@@ -26580,6 +26854,37 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
+          },
+          "reorderPoint": {
+            "type": "number",
+            "description": "Stock level at which the item should be reordered (inventory items only)",
+            "minimum": 0,
+            "example": 10
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure the item is measured in",
+            "enum": [
+              "piece",
+              "dozen",
+              "pair",
+              "set",
+              "pack",
+              "box",
+              "kg",
+              "g",
+              "lb",
+              "oz",
+              "l",
+              "ml",
+              "m",
+              "cm",
+              "m2",
+              "m3",
+              "hour",
+              "day"
+            ],
+            "example": "kg"
           },
           "purchasable": {
             "type": "boolean",
@@ -47273,6 +47578,162 @@
           "balance",
           "currencyCode",
           "active"
+        ]
+      },
+      "NotificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "userId": {
+            "type": "number",
+            "example": 1,
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "example": "Inventory cost calculation completed"
+          },
+          "message": {
+            "type": "string",
+            "example": "The inventory cost for 12 items has been calculated."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "success",
+              "info",
+              "warning",
+              "error"
+            ],
+            "example": "info"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "inventory",
+              "billing",
+              "system",
+              "export",
+              "report"
+            ],
+            "example": "inventory"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional notification metadata",
+            "additionalProperties": true,
+            "example": {
+              "itemId": 1
+            },
+            "nullable": true
+          },
+          "readAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date the notification was read",
+            "example": "2024-03-20T10:00:00Z",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-03-20T10:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-03-20T10:00:00Z"
+          },
+          "isRead": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "message",
+          "type",
+          "category",
+          "createdAt",
+          "updatedAt",
+          "isRead"
+        ]
+      },
+      "NotificationsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "notifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationResponseDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 25
+          },
+          "unreadCount": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "notifications",
+          "total",
+          "unreadCount"
+        ]
+      },
+      "UnreadNotificationsCountResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "count"
+        ]
+      },
+      "MarkNotificationAsReadResponseDto": {
+        "type": "object",
+        "properties": {
+          "notification": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NotificationResponseDto"
+              }
+            ]
+          }
+        }
+      },
+      "MarkAllNotificationsAsReadResponseDto": {
+        "type": "object",
+        "properties": {
+          "markedAsRead": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "markedAsRead"
+        ]
+      },
+      "DeleteNotificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "deleted": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "deleted"
         ]
       },
       "AuditLogFilterOptionDto": {

@@ -81,7 +81,7 @@ export default function NotificationsDrawerContent() {
             small
             intent={Intent.PRIMARY}
             onClick={handleMarkAllAsRead}
-            loading={markAllAsRead.isLoading}
+            loading={markAllAsRead.isPending}
           >
             Mark all as read
           </Button>

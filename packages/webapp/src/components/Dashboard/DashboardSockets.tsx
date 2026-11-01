@@ -6,7 +6,7 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { workspacesKeys } from '@/ee/workspaces/hooks/query';
 import { AccountsQueryKeys } from '@/hooks/query/accounts';
 import { CashflowAccountsQueryKeys } from '@/hooks/query/cashflow-accounts';
-import { NOTIFICATIONS } from '@/hooks/query/types';
+import { notificationsKeys } from '@/hooks/query/notifications';
 import { useAuthUserId } from '@/hooks/state';
 
 export function DashboardSockets() {
@@ -53,10 +53,8 @@ export function DashboardSockets() {
     // Listen for real-time notifications
     socket.current.on('NOTIFICATION', (notification: any) => {
       // Invalidate notification queries to refresh counts and lists
-      client.invalidateQueries({ queryKey: [NOTIFICATIONS.NOTIFICATIONS] });
-      client.invalidateQueries({
-        queryKey: [NOTIFICATIONS.NOTIFICATIONS_UNREAD_COUNT],
-      });
+      client.invalidateQueries({ queryKey: notificationsKeys.all() });
+      client.invalidateQueries({ queryKey: notificationsKeys.unreadCount() });
 
       // Show toast notification
       AppToaster.show({

@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { Position } from '@blueprintjs/core';
-import * as R from 'ramda';
 import React, { lazy } from 'react';
 import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
@@ -36,4 +35,4 @@ function NotificationsDrawer({
   );
 }
 
-export default R.compose(withDrawers())(NotificationsDrawer);
+export default withDrawers()(NotificationsDrawer);
