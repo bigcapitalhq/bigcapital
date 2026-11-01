@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import { Icon, Intent, Tooltip, Position } from '@blueprintjs/core';
 import { formatDistanceToNow } from 'date-fns';
-import { Notification } from '@/hooks/query/notifications';
+import React from 'react';
 import styles from './NotificationsDrawer.module.scss';
+import { Notification } from '@/hooks/query/notifications';
 
 interface NotificationItemProps {
   notification: Notification;

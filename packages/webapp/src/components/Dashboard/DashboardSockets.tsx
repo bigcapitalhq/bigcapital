@@ -1,5 +1,4 @@
 import { Intent } from '@blueprintjs/core';
-import { useAuthUserId } from '@/hooks/state';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
@@ -7,6 +6,8 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { workspacesKeys } from '@/ee/workspaces/hooks/query';
 import { AccountsQueryKeys } from '@/hooks/query/accounts';
 import { CashflowAccountsQueryKeys } from '@/hooks/query/cashflow-accounts';
+import { NOTIFICATIONS } from '@/hooks/query/types';
+import { useAuthUserId } from '@/hooks/state';
 
 export function DashboardSockets() {
   const socket = useRef<any>();
@@ -52,8 +53,10 @@ export function DashboardSockets() {
     // Listen for real-time notifications
     socket.current.on('NOTIFICATION', (notification: any) => {
       // Invalidate notification queries to refresh counts and lists
-      client.invalidateQueries(t.NOTIFICATIONS);
-      client.invalidateQueries(t.NOTIFICATIONS_UNREAD_COUNT);
+      client.invalidateQueries({ queryKey: [NOTIFICATIONS.NOTIFICATIONS] });
+      client.invalidateQueries({
+        queryKey: [NOTIFICATIONS.NOTIFICATIONS_UNREAD_COUNT],
+      });
 
       // Show toast notification
       AppToaster.show({

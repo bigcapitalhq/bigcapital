@@ -71,7 +71,7 @@ export const useAuthUser = () => {
  * Retrieve the authentication user ID.
  */
 export const useAuthUserId = () => {
-  return useSelector((state) => state.authentication.userId);
+  return useAppSelector((state) => state.authentication.userId);
 };
 
 /**

@@ -3,13 +3,11 @@ import {
   Get,
   Post,
   Param,
-  Body,
   Query,
   UseGuards,
   ParseIntPipe,
   HttpCode,
   HttpStatus,
-  Inject,
 } from '@nestjs/common';
 import { IsNumber, IsString, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -28,10 +26,6 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { IsOptional } from '@/common/decorators/Validators';
-
-class MarkAsReadDto {
-  notificationId: number;
-}
 
 class GetNotificationsQueryDto {
   @ApiPropertyOptional({

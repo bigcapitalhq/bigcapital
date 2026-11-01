@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React, { useState } from 'react';
 import {
   Button,
   NonIdealState,
@@ -8,7 +7,9 @@ import {
   Tab,
   Tabs,
 } from '@blueprintjs/core';
+import React, { useState } from 'react';
 import { NotificationItem } from './NotificationItem';
+import styles from './NotificationsDrawer.module.scss';
 import {
   useNotifications,
   useMarkNotificationAsRead,
@@ -16,7 +17,6 @@ import {
   useDeleteNotification,
   Notification,
 } from '@/hooks/query/notifications';
-import styles from './NotificationsDrawer.module.scss';
 
 /**
  * Notifications drawer content.

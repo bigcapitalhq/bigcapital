@@ -2,8 +2,8 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
-import { transformToCamelCase } from '@/utils';
 import t from './types';
+import { transformToCamelCase } from '@/utils';
 
 /**
  * Interface for notification response from API.
