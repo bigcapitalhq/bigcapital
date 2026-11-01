@@ -106,6 +106,7 @@ import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.
 import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { SocketModule } from '../Socket/Socket.module';
+import { NotificationsModule } from '../Notifications/Notifications.module';
 import { EEModule } from '../EE/EE.module';
 import { AnalyticsModule } from '../Analytics/Analytics.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -117,6 +118,7 @@ import { AppThrottleModule } from './AppThrottle.module';
       rootPath: join(__dirname, '../../..', 'public'),
       serveRoot: '/public',
     }),
+
     ConfigModule.forRoot({
       envFilePath: ENV_FILE_PATHS,
       load: config,
@@ -264,6 +266,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     UsersModule,
     ContactsModule,
     SocketModule,
+    NotificationsModule,
     EEModule,
     AnalyticsModule,
     ExchangeRatesModule,

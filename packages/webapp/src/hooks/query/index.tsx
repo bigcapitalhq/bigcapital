@@ -59,4 +59,5 @@ export * from './base';
 // Subdirectories (already in nested structure)
 export * from './UniversalSearch/universal-search';
 export * from './FinancialReports';
+export * from './notifications';
 export * from './audit-logs';

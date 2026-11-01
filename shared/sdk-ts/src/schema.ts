@@ -5063,6 +5063,91 @@ export interface paths {
         patch: operations["ContactsController_inactivateContact"];
         trace?: never;
     };
+    "/api/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the list of notifications for the current user. */
+        get: operations["NotificationsController_getNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/unread-count": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gets the count of unread notifications for the current user. */
+        get: operations["NotificationsController_getUnreadCount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Marks a notification as read. */
+        post: operations["NotificationsController_markAsRead"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Marks all notifications as read for the current user. */
+        post: operations["NotificationsController_markAllAsRead"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/{id}/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Deletes a notification. */
+        post: operations["NotificationsController_deleteNotification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/audit-logs/filter-options": {
         parameters: {
             query?: never;
@@ -5875,6 +5960,11 @@ export interface components {
              */
             code?: string;
             /**
+             * @description Stock level at which the item should be reordered (inventory items only)
+             * @example 10
+             */
+            reorderPoint?: number;
+            /**
              * @description Unit of measure the item is measured in
              * @example kg
              * @enum {string}
@@ -5994,6 +6084,17 @@ export interface components {
              * @example CHAIR-X2000
              */
             code?: string;
+            /**
+             * @description Stock level at which the item should be reordered (inventory items only)
+             * @example 10
+             */
+            reorderPoint?: number;
+            /**
+             * @description Unit of measure the item is measured in
+             * @example kg
+             * @enum {string}
+             */
+            unit?: "piece" | "dozen" | "pair" | "set" | "pack" | "box" | "kg" | "g" | "lb" | "oz" | "l" | "ml" | "m" | "cm" | "m2" | "m3" | "hour" | "day";
             /**
              * @description Whether the item can be purchased
              * @example true
@@ -17815,6 +17916,75 @@ export interface components {
              * @example 2024-01-15T00:00:00Z
              */
             updatedAt?: string;
+        };
+        NotificationResponseDto: {
+            /** @example 1 */
+            id: number;
+            /** @example 1 */
+            userId?: number | null;
+            /** @example Inventory cost calculation completed */
+            title: string;
+            /** @example The inventory cost for 12 items has been calculated. */
+            message: string;
+            /**
+             * @example info
+             * @enum {string}
+             */
+            type: "success" | "info" | "warning" | "error";
+            /**
+             * @example inventory
+             * @enum {string}
+             */
+            category: "inventory" | "billing" | "system" | "export" | "report";
+            /**
+             * @description Additional notification metadata
+             * @example {
+             *       "itemId": 1
+             *     }
+             */
+            metadata?: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * Format: date-time
+             * @description Date the notification was read
+             * @example 2024-03-20T10:00:00Z
+             */
+            readAt?: string | null;
+            /**
+             * Format: date-time
+             * @example 2024-03-20T10:00:00Z
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @example 2024-03-20T10:00:00Z
+             */
+            updatedAt: string;
+            /** @example false */
+            isRead: boolean;
+        };
+        NotificationsListResponseDto: {
+            notifications: components["schemas"]["NotificationResponseDto"][];
+            /** @example 25 */
+            total: number;
+            /** @example 3 */
+            unreadCount: number;
+        };
+        UnreadNotificationsCountResponseDto: {
+            /** @example 3 */
+            count: number;
+        };
+        MarkNotificationAsReadResponseDto: {
+            notification?: components["schemas"]["NotificationResponseDto"] | null;
+        };
+        MarkAllNotificationsAsReadResponseDto: {
+            /** @example 3 */
+            markedAsRead: number;
+        };
+        DeleteNotificationResponseDto: {
+            /** @example true */
+            deleted: boolean;
         };
         AuditLogFilterOptionDto: {
             /** @example SaleInvoice */
@@ -33637,6 +33807,146 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    NotificationsController_getNotifications: {
+        parameters: {
+            query?: {
+                /** @description Number of notifications per page */
+                limit?: number;
+                /** @description Offset for pagination */
+                offset?: number;
+                /** @description Filter to only unread notifications */
+                unreadOnly?: boolean;
+                /** @description Filter by notification category */
+                category?: string;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The notifications list has been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationsListResponseDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_getUnreadCount: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The unread notifications count has been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UnreadNotificationsCountResponseDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_markAsRead: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The notification id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The notification has been successfully marked as read. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MarkNotificationAsReadResponseDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_markAllAsRead: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description All notifications have been successfully marked as read. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MarkAllNotificationsAsReadResponseDto"];
+                };
+            };
+        };
+    };
+    NotificationsController_deleteNotification: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                /** @description The notification id */
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The notification has been successfully deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeleteNotificationResponseDto"];
+                };
             };
         };
     };
