@@ -6,7 +6,8 @@
 }
 
 .colorPicker{
-  background-color: rgb(103, 114, 229);
+  // No background color here; the swatch is painted from the field value so an
+  // empty value doesn't show a color the input doesn't hold.
   border-radius: 3px;
   height: 16px;
   width: 16px;
