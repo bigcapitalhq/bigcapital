@@ -29,11 +29,107 @@
         },
         "responses": {
           "200": {
-            "description": "Sign-in successful. Returns access token and tenant/organization IDs.",
+            "description": "Sign-in successful. Returns access token and tenant/organization IDs. When the user has two-factor authentication (or the organization requires it and the user has none yet), returns two_factor_required (or two_factor_setup_required) and a challenge_token instead of the access token.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AuthSigninResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/signin/2fa": {
+      "post": {
+        "operationId": "AuthController_signinTwoFactor",
+        "summary": "Second sign-in step: a code from the authenticator app or a recovery code",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TwoFactorSigninDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The same response as a sign-in without two-factor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSigninResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/signin/2fa/setup": {
+      "post": {
+        "operationId": "AuthController_signinTwoFactorSetup",
+        "summary": "Required two-factor setup during sign-in: returns a new secret and its otpauth URI",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TwoFactorSigninSetupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorSetupResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/signin/2fa/setup/confirm": {
+      "post": {
+        "operationId": "AuthController_signinTwoFactorSetupConfirm",
+        "summary": "Confirm the required setup with a code: turns two-factor on and signs in",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TwoFactorSigninSetupConfirmDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The sign-in response plus recovery_codes (shown once).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSigninSetupConfirmResponseDto"
                 }
               }
             }
@@ -378,6 +474,231 @@
         },
         "tags": [
           "Api keys"
+        ]
+      }
+    },
+    "/api/auth/two-factor": {
+      "get": {
+        "operationId": "TwoFactorController_status",
+        "summary": "Two-factor status of the signed-in user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorStatusResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/two-factor/setup": {
+      "post": {
+        "operationId": "TwoFactorController_startSetup",
+        "summary": "Start the setup: returns a new secret and its otpauth URI (pending until confirmed)",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorSetupResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/two-factor/setup/confirm": {
+      "post": {
+        "operationId": "TwoFactorController_confirmSetup",
+        "summary": "Confirm the setup with a code: turns two-factor on and returns the recovery codes",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TwoFactorConfirmSetupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorRecoveryCodesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/two-factor/recovery-codes": {
+      "post": {
+        "operationId": "TwoFactorController_regenerateRecoveryCodes",
+        "summary": "Replace the recovery codes (password and a code required)",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TwoFactorVerifyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorRecoveryCodesResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/two-factor/disable": {
+      "post": {
+        "operationId": "TwoFactorController_disable",
+        "summary": "Turn two-factor off (password and a code required)",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TwoFactorVerifyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/organization/two-factor": {
+      "get": {
+        "operationId": "OrganizationTwoFactorController_get",
+        "summary": "Whether the organization requires two-factor authentication",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationTwoFactorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Organization"
+        ]
+      },
+      "put": {
+        "operationId": "OrganizationTwoFactorController_update",
+        "summary": "Require two-factor authentication for all users (administrators only)",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationTwoFactorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationTwoFactorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Organization"
         ]
       }
     },
@@ -25391,7 +25712,7 @@
         "properties": {
           "accessToken": {
             "type": "string",
-            "description": "JWT access token"
+            "description": "JWT access token. Missing when a second step is needed (two_factor_required or two_factor_setup_required)."
           },
           "organizationId": {
             "type": "string",
@@ -25404,13 +25725,70 @@
           "userId": {
             "type": "number",
             "description": "User ID"
+          },
+          "twoFactorRequired": {
+            "type": "boolean",
+            "description": "The user has two-factor authentication: send a code with the challenge token to POST /auth/signin/2fa."
+          },
+          "twoFactorSetupRequired": {
+            "type": "boolean",
+            "description": "The organization requires two-factor authentication and the user has not set it up: set it up with POST /auth/signin/2fa/setup and /auth/signin/2fa/setup/confirm."
+          },
+          "challengeToken": {
+            "type": "string",
+            "description": "Single-use token of the second step."
+          },
+          "challengeExpiresIn": {
+            "type": "number",
+            "description": "Seconds until the challenge token expires."
+          }
+        }
+      },
+      "AuthSigninSetupConfirmResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token. Missing when a second step is needed (two_factor_required or two_factor_setup_required)."
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "Organization ID"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "Tenant ID"
+          },
+          "userId": {
+            "type": "number",
+            "description": "User ID"
+          },
+          "twoFactorRequired": {
+            "type": "boolean",
+            "description": "The user has two-factor authentication: send a code with the challenge token to POST /auth/signin/2fa."
+          },
+          "twoFactorSetupRequired": {
+            "type": "boolean",
+            "description": "The organization requires two-factor authentication and the user has not set it up: set it up with POST /auth/signin/2fa/setup and /auth/signin/2fa/setup/confirm."
+          },
+          "challengeToken": {
+            "type": "string",
+            "description": "Single-use token of the second step."
+          },
+          "challengeExpiresIn": {
+            "type": "number",
+            "description": "Seconds until the challenge token expires."
+          },
+          "recoveryCodes": {
+            "description": "The new single-use recovery codes. Shown once.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
-          "accessToken",
-          "organizationId",
-          "tenantId",
-          "userId"
+          "recoveryCodes"
         ]
       },
       "AuthMetaResponseDto": {
@@ -25423,6 +25801,25 @@
         },
         "required": [
           "signupDisabled"
+        ]
+      },
+      "TwoFactorSetupResponseDto": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string",
+            "description": "The new secret, base32, for entering it by hand.",
+            "example": "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP"
+          },
+          "otpauthUrl": {
+            "type": "string",
+            "description": "otpauth:// URI to show as a QR code.",
+            "example": "otpauth://totp/Bigcapital:user%40example.com?secret=JBSWY3DPEHPK3PXP&issuer=Bigcapital&algorithm=SHA1&digits=6&period=30"
+          }
+        },
+        "required": [
+          "secret",
+          "otpauthUrl"
         ]
       },
       "AuthSigninDto": {
@@ -25447,6 +25844,58 @@
         "required": [
           "password",
           "email"
+        ]
+      },
+      "TwoFactorSigninDto": {
+        "type": "object",
+        "properties": {
+          "challengeToken": {
+            "type": "string",
+            "description": "The challenge token returned by POST /auth/signin."
+          },
+          "code": {
+            "type": "string",
+            "description": "6-digit code from the authenticator app.",
+            "example": "123456"
+          },
+          "recoveryCode": {
+            "type": "string",
+            "description": "One of the recovery codes, instead of `code`.",
+            "example": "k7m2-q9xd-3fha-p8tw"
+          }
+        },
+        "required": [
+          "challengeToken"
+        ]
+      },
+      "TwoFactorSigninSetupDto": {
+        "type": "object",
+        "properties": {
+          "challengeToken": {
+            "type": "string",
+            "description": "The challenge token returned by POST /auth/signin with two_factor_setup_required."
+          }
+        },
+        "required": [
+          "challengeToken"
+        ]
+      },
+      "TwoFactorSigninSetupConfirmDto": {
+        "type": "object",
+        "properties": {
+          "challengeToken": {
+            "type": "string",
+            "description": "The challenge token returned by POST /auth/signin with two_factor_setup_required."
+          },
+          "code": {
+            "type": "string",
+            "description": "6-digit code from the authenticator app.",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "challengeToken",
+          "code"
         ]
       },
       "AuthSignupDto": {
@@ -25676,6 +26125,109 @@
             "example": "My API Key"
           }
         }
+      },
+      "TwoFactorStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether two-factor authentication is on."
+          },
+          "enabledAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When it was turned on.",
+            "nullable": true
+          },
+          "recoveryCodesRemaining": {
+            "type": "number",
+            "description": "Unused recovery codes left."
+          },
+          "pendingSetup": {
+            "type": "boolean",
+            "description": "A setup was started and not confirmed yet."
+          }
+        },
+        "required": [
+          "enabled",
+          "enabledAt",
+          "recoveryCodesRemaining",
+          "pendingSetup"
+        ]
+      },
+      "TwoFactorRecoveryCodesResponseDto": {
+        "type": "object",
+        "properties": {
+          "recoveryCodes": {
+            "description": "New single-use recovery codes. Shown once.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "recoveryCodes"
+        ]
+      },
+      "TwoFactorConfirmSetupDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "6-digit code from the authenticator app.",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "TwoFactorVerifyDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "The current password of the user."
+          },
+          "code": {
+            "type": "string",
+            "description": "6-digit code from the authenticator app.",
+            "example": "123456"
+          },
+          "recoveryCode": {
+            "type": "string",
+            "description": "One of the recovery codes, instead of `code`."
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "OrganizationTwoFactorResponseDto": {
+        "type": "object",
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "description": "Whether the organization requires two-factor authentication."
+          }
+        },
+        "required": [
+          "required"
+        ]
+      },
+      "OrganizationTwoFactorDto": {
+        "type": "object",
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "description": "Require two-factor authentication for every user of the organization.",
+            "example": true
+          }
+        },
+        "required": [
+          "required"
+        ]
       },
       "ItemErrorResponseDto": {
         "type": "object",
