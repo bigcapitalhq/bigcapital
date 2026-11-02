@@ -49,12 +49,24 @@ export default function DashboardContentRoute() {
   const ability = useAbilityContext();
   const { enabledIds } = useExtensions();
 
-  const routes = (
-    [
-      ...getCoreDashboardRoutes(),
-      ...extensionRegistry.getRoutes(enabledIds),
-    ] as DashboardRoute[]
-  )
+  const coreRoutes = getCoreDashboardRoutes() as DashboardRoute[];
+  const extensionRoutes = extensionRegistry.getRoutes(enabledIds);
+  const fallbackRouteIndex = coreRoutes.findIndex(
+    (route) => route.path === '/',
+  );
+
+  // The homepage is a catch-all fallback. Extension routes must be inserted
+  // before it, otherwise they would never match.
+  const routeCandidates =
+    fallbackRouteIndex === -1
+      ? [...coreRoutes, ...extensionRoutes]
+      : [
+          ...coreRoutes.slice(0, fallbackRouteIndex),
+          ...extensionRoutes,
+          ...coreRoutes.slice(fallbackRouteIndex),
+        ];
+
+  const routes = routeCandidates
     .filter((route) => !route.feature || featureCan(route.feature))
     .filter(
       (route) =>
