@@ -4,6 +4,7 @@ import {
   EXTENSION_CONTROLLER_METADATA_KEY,
   type ExtensionControllerMetadata,
 } from '@bigcapital/extension-sdk/server';
+import { EXTENSION_HOST_CONTROLLER_KEY } from './extension-host.decorators';
 import type { ValidatedExtension } from './extension.types';
 
 export interface DiscoveredController {
@@ -47,6 +48,10 @@ export function validateExtensionControllers(
     ) as ExtensionControllerMetadata | undefined;
 
     if (!metadata) {
+      if (Reflect.getMetadata(EXTENSION_HOST_CONTROLLER_KEY, metatype)) {
+        continue;
+      }
+
       if (paths.some((path) => path === 'ext' || path.startsWith('ext/'))) {
         throw new Error(
           `Controller "${metatype.name}" is mounted under "ext/..." but does not use @ExtensionController. Use the decorator so the host can enforce the extension namespace and enablement.`,

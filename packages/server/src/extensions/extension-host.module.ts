@@ -1,6 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
 import { SystemModelsModule } from '../modules/System/SystemModels/SystemModels.module';
+import { TenancyModelsModule } from '../modules/Tenancy/TenancyModels/Tenancy.module';
+import { TenancyDatabaseModule } from '../modules/Tenancy/TenancyDB/TenancyDB.module';
 import {
   ApprovalRegistry,
   ExtensionBridgeRegistries,
@@ -8,6 +10,7 @@ import {
   ReportRegistry,
   TaxRegistry,
 } from './bridges';
+import { ExtensionAccountingQueryService } from './bridges/reports/accounting-query.service';
 import {
   EXTENSION_OPTIONS_TOKEN,
   EXTENSIONS_TOKEN,
@@ -47,7 +50,12 @@ export class ExtensionHostModule {
     return {
       module: ExtensionHostModule,
       global: true,
-      imports: [DiscoveryModule, SystemModelsModule],
+      imports: [
+        DiscoveryModule,
+        SystemModelsModule,
+        TenancyDatabaseModule,
+        TenancyModelsModule,
+      ],
       providers: [
         { provide: EXTENSIONS_TOKEN, useValue: extensions },
         { provide: EXTENSION_OPTIONS_TOKEN, useValue: options },
@@ -57,6 +65,7 @@ export class ExtensionHostModule {
         { provide: ApprovalRegistry, useValue: bridges.approvals },
         { provide: PaymentRegistry, useValue: bridges.payments },
         { provide: TaxRegistry, useValue: bridges.tax },
+        ExtensionAccountingQueryService,
         ExtensionManager,
         ExtensionContextFactory,
         ExtensionEventBridge,
@@ -71,6 +80,7 @@ export class ExtensionHostModule {
         ApprovalRegistry,
         PaymentRegistry,
         TaxRegistry,
+        ExtensionAccountingQueryService,
         ExtensionManager,
         ExtensionContextFactory,
         ExtensionEventBridge,

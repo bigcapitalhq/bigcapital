@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import { ExtensionComponentHost } from '../host/ExtensionComponentHost';
 import { useExtensions } from '../hooks/useExtensions';
 import { ExtensionSlotErrorBoundary } from './ExtensionSlotErrorBoundary';
 import { ExtensionSlotGuard } from './ExtensionSlotGuard';
@@ -47,7 +48,11 @@ export function ExtensionSlot<K extends ExtensionSlotName>({
               permission={contribution.permission}
             >
               <Suspense fallback={fallback}>
-                <Component {...context} />
+                <ExtensionComponentHost
+                  extensionId={contribution.extensionId}
+                  component={Component}
+                  props={context as unknown as Record<string, unknown>}
+                />
               </Suspense>
             </ExtensionSlotGuard>
           </ExtensionSlotErrorBoundary>

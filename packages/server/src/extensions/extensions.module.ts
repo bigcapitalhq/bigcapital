@@ -7,6 +7,7 @@ import { StaticExtensionContextFactory } from './extension.context';
 import { ExtensionEnabledGuard } from './extension.guard';
 import { validateExtensions } from './extension.loader';
 import { ExtensionContributionRegistry } from './extension.registry';
+import { ExtensionReportsController } from './reports/extension-reports.controller';
 import type { ExtensionsModuleOptions } from './extension.types';
 import { ExtensionFeatureGuard } from './feature.guard';
 
@@ -60,6 +61,7 @@ export class ExtensionsModule {
         FeaturesModule,
         ...extensionModules,
       ],
+      controllers: [ExtensionReportsController],
       providers: [
         ExtensionEnabledGuard,
         ExtensionFeatureGuard,

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@bigcapital/email-components": "workspace:*",
+    "@bigcapital/example-reports": "workspace:*",
     "@bigcapital/extension-sdk": "workspace:*",
     "@bigcapital/pdf-templates": "workspace:*",
     "@bigcapital/sdk-ts": "workspace:*",

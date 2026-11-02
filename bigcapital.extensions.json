@@ -1,3 +1,12 @@
 {
-  "extensions": []
+  "extensions": [
+    {
+      "id": "bigcapital.example-reports",
+      "package": "@bigcapital/example-reports",
+      "version": "1.0.0",
+      "manifestHash": "sha256:f10eed690ce244d1b12cb762d0f37f174ea48772473420c2b633d9632cd22365",
+      "capabilities": ["tenant.db.read", "ui.routes", "ui.slots"],
+      "enabledByDefault": false
+    }
+  ]
 }

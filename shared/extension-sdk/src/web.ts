@@ -100,6 +100,18 @@ export interface ExtensionApiClient {
   delete<T>(path: string): Promise<T>;
 }
 
+/**
+ * Host context passed as the `host` prop to extension route and slot
+ * components.
+ */
+export interface ExtensionComponentContext {
+  extensionId: string;
+  extensionVersion: string;
+  settings: Record<string, unknown>;
+  api: ExtensionApiClient;
+  navigate: (path: string) => void;
+}
+
 export interface WebExtensionContext {
   readonly extensionId: string;
   readonly extensionVersion: string;

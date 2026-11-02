@@ -6,6 +6,7 @@ import {
   ExtensionController,
 } from '@bigcapital/extension-sdk/server';
 import { validateExtensionControllers } from './extension.routes';
+import { ExtensionHostController } from './extension-host.decorators';
 import type { ValidatedExtension } from './extension.types';
 
 const extensions = [
@@ -36,6 +37,10 @@ class EscapingController {}
 
 @Controller('ext/acme.reports/reports')
 class UndecoratedExtensionController {}
+
+@ExtensionHostController()
+@Controller('ext/:extensionId/reports')
+class HostReportController {}
 
 describe('validateExtensionControllers', () => {
   it('accepts controllers mounted under the extension namespace', () => {
@@ -81,5 +86,14 @@ describe('validateExtensionControllers', () => {
         extensions,
       ),
     ).toThrow(/does not use @ExtensionController/);
+  });
+
+  it('allows core host controllers mounted under ext/...', () => {
+    expect(() =>
+      validateExtensionControllers(
+        [{ metatype: HostReportController }],
+        extensions,
+      ),
+    ).not.toThrow();
   });
 });

@@ -12,6 +12,9 @@ importers:
         specifier: ^8.3.0
         version: 8.3.0(@microsoft/api-extractor@7.47.11(@types/node@20.5.1))(jiti@1.21.0)(postcss@8.4.47)(typescript@5.6.3)(yaml@2.4.2)
     devDependencies:
+      '@bigcapital/example-reports':
+        specifier: workspace:*
+        version: link:plugins/example-reports
       '@commitlint/cli':
         specifier: ^17.4.2
         version: 17.8.1
@@ -79,6 +82,9 @@ importers:
       '@bigcapital/email-components':
         specifier: workspace:*
         version: link:../../shared/email-components
+      '@bigcapital/example-reports':
+        specifier: workspace:*
+        version: link:../../plugins/example-reports
       '@bigcapital/extension-sdk':
         specifier: workspace:*
         version: link:../../shared/extension-sdk
@@ -467,6 +473,9 @@ importers:
       '@bigcapital/email-components':
         specifier: workspace:*
         version: link:../../shared/email-components
+      '@bigcapital/example-reports':
+        specifier: workspace:*
+        version: link:../../plugins/example-reports
       '@bigcapital/extension-sdk':
         specifier: workspace:*
         version: link:../../shared/extension-sdk
@@ -870,6 +879,37 @@ importers:
       vite:
         specifier: ^5.1.6
         version: 5.4.10(@types/node@20.19.25)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
+
+  plugins/example-reports:
+    dependencies:
+      '@bigcapital/extension-sdk':
+        specifier: workspace:*
+        version: link:../../shared/extension-sdk
+    devDependencies:
+      '@nestjs/common':
+        specifier: ^10.0.0
+        version: 10.4.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@types/node':
+        specifier: ^20.3.1
+        version: 20.19.25
+      '@types/react':
+        specifier: ^18.3.4
+        version: 18.3.4
+      knex:
+        specifier: ^3.1.0
+        version: 3.1.0(mysql2@3.11.4)(mysql@2.18.1)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      tsup:
+        specifier: ^8.3.0
+        version: 8.3.0(@microsoft/api-extractor@7.47.11(@types/node@20.19.25))(jiti@1.21.0)(postcss@8.4.47)(typescript@5.6.3)(yaml@2.4.2)
+      typescript:
+        specifier: ^5.1.3
+        version: 5.6.3
+      vitest:
+        specifier: ^2.1.3
+        version: 2.1.3(@types/node@20.19.25)(less@4.2.0)(sass@1.77.2)(terser@5.31.0)
 
   shared/bigcapital-utils: {}
 

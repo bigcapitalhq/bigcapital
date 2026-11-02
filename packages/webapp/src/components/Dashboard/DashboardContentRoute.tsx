@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import DashboardPage from './DashboardPage';
+import { ExtensionComponentHost } from '@/extensions/host/ExtensionComponentHost';
 import { useExtensions } from '@/extensions/hooks/useExtensions';
 import { extensionRegistry } from '@/extensions/registry';
 import { useAbilityContext } from '@/hooks';
@@ -10,6 +11,7 @@ import { getCoreDashboardRoutes } from '@/routes/dashboard';
 export interface DashboardRoute {
   path: string;
   component: React.ComponentType;
+  extensionId?: string;
   name?: string;
   pageTitle?: string;
   hint?: string;
@@ -28,10 +30,19 @@ export interface DashboardRoute {
  * Dashboard inner route content.
  */
 function DashboardContentRouteContent({ route }: { route: DashboardRoute }) {
+  const Component = route.extensionId
+    ? () => (
+        <ExtensionComponentHost
+          extensionId={route.extensionId!}
+          component={route.component}
+        />
+      )
+    : route.component;
+
   return (
     <DashboardPage
       name={route.name}
-      Component={route.component}
+      Component={Component}
       pageTitle={route.pageTitle}
       backLink={route.backLink}
       hint={route.hint}

@@ -25,10 +25,10 @@ describe('lockfile', () => {
     expect(readLockfile(createRoot())).toEqual({ extensions: [] });
   });
 
-  it('writes and reads a sorted lockfile', () => {
+  it('writes and reads a sorted lockfile', async () => {
     const rootDir = createRoot();
 
-    writeLockfile(rootDir, {
+    await writeLockfile(rootDir, {
       extensions: [
         {
           id: 'b.extension',

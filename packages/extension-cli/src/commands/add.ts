@@ -43,7 +43,7 @@ export async function addExtension(
   const previous = existingById ?? existingByPackage;
   const nextLockfile = upsertLockEntry(lockfile, entry);
 
-  writeLockfile(rootDir, nextLockfile);
+  await writeLockfile(rootDir, nextLockfile);
 
   if (previous) {
     console.log(

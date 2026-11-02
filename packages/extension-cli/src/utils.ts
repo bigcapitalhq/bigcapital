@@ -51,11 +51,6 @@ export function readTextFileOrUndefined(filePath: string): string | undefined {
   return fs.readFileSync(filePath, 'utf8');
 }
 
-export function writeJsonFile(filePath: string, value: unknown): void {
-  ensureDir(path.dirname(filePath));
-  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
-}
-
 export function writeTextFile(filePath: string, content: string): void {
   ensureDir(path.dirname(filePath));
   fs.writeFileSync(filePath, content, 'utf8');

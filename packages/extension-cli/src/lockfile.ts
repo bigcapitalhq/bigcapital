@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import * as prettier from 'prettier';
 import { z } from 'zod';
 import { CliError } from './errors';
 import type { ExtensionLockEntry, ExtensionLockfile } from './types';
-import { readJsonFile, writeJsonFile } from './utils';
+import { readJsonFile, writeTextFile } from './utils';
 
 export const LOCKFILE_NAME = 'bigcapital.extensions.json';
 
@@ -66,11 +67,16 @@ export function readLockfile(rootDir: string): ExtensionLockfile {
   return result.data;
 }
 
-export function writeLockfile(
+export async function writeLockfile(
   rootDir: string,
   lockfile: ExtensionLockfile,
-): void {
-  writeJsonFile(getLockfilePath(rootDir), sortLockfile(lockfile));
+): Promise<void> {
+  const content = await prettier.format(
+    JSON.stringify(sortLockfile(lockfile), null, 2),
+    { parser: 'json' },
+  );
+
+  writeTextFile(getLockfilePath(rootDir), content);
 }
 
 export function sortLockfile(lockfile: ExtensionLockfile): ExtensionLockfile {

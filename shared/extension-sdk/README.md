@@ -124,6 +124,20 @@ The host wraps each contribution in feature/permission guards, an error
 boundary, and a suspense boundary. A crashing extension renders nothing (or a
 compact message in development) without affecting the rest of the page.
 
+Route and slot components receive a `host` prop:
+
+```ts
+import type { ExtensionComponentContext } from '@bigcapital/extension-sdk/web';
+
+interface Props {
+  host: ExtensionComponentContext;
+}
+
+function MyWidget({ host }: Props) {
+  // host.api, host.settings, host.extensionId, host.navigate
+}
+```
+
 ## Manifest defaults
 
 Use `defineServerExtension` instead of constructing the object manually. It

@@ -28,6 +28,9 @@ export const useExtensions = () => {
       isEnabled: (extensionId: string) => enabledIds.has(extensionId),
       getSettings: (extensionId: string) =>
         extensions.find((extension) => extension.id === extensionId)?.settings,
+      getVersion: (extensionId: string) =>
+        extensions.find((extension) => extension.id === extensionId)?.version ??
+        '',
     };
   }, [extensions]);
 };

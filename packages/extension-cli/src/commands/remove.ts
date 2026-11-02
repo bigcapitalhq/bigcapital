@@ -23,7 +23,7 @@ export async function removeExtension(
     );
   }
 
-  writeLockfile(rootDir, result.lockfile);
+  await writeLockfile(rootDir, result.lockfile);
   console.log(`Removed ${result.removed.id}@${result.removed.version}.`);
 
   if (options.sync) {
