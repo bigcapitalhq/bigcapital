@@ -1,3 +1,9 @@
+import type {
+  ApprovalPolicy,
+  PaymentProvider,
+  ReportProvider,
+  TaxProvider,
+} from './bridges';
 import type { ExtensionCapability } from './capabilities';
 import type {
   ExtensionEventBus,
@@ -50,6 +56,12 @@ export interface ExtensionTestHarness {
   readonly abilities: AbilityDefinition[];
   readonly settings: SettingDefinition[];
   readonly jobs: ExtensionJobDefinition[];
+  readonly bridges: {
+    reports: ReportProvider[];
+    approvals: ApprovalPolicy[];
+    payments: PaymentProvider[];
+    tax: TaxProvider[];
+  };
   createContext(overrides?: Partial<ExtensionContext>): ExtensionContext;
   dispatch(event: string, payload: unknown): Promise<void>;
 }
@@ -73,6 +85,10 @@ export function createExtensionTestHarness(
   const abilities: AbilityDefinition[] = [];
   const settings: SettingDefinition[] = [];
   const jobs: ExtensionJobDefinition[] = [];
+  const reports: ReportProvider[] = [];
+  const approvals: ApprovalPolicy[] = [];
+  const payments: PaymentProvider[] = [];
+  const tax: TaxProvider[] = [];
 
   const handlers = new Map<string, Set<ExtensionEventHandler>>();
 
@@ -183,6 +199,28 @@ export function createExtensionTestHarness(
           jobs.push(definition as ExtensionJobDefinition);
         },
       },
+      bridges: {
+        reports: {
+          register: (provider) => {
+            reports.push(provider);
+          },
+        },
+        approvals: {
+          register: (provider) => {
+            approvals.push(provider);
+          },
+        },
+        payments: {
+          register: (provider) => {
+            payments.push(provider);
+          },
+        },
+        tax: {
+          register: (provider) => {
+            tax.push(provider);
+          },
+        },
+      },
       tenancy: {
         current: () => currentTenant,
         async runAs<T>(
@@ -240,6 +278,7 @@ export function createExtensionTestHarness(
     abilities,
     settings,
     jobs,
+    bridges: { reports, approvals, payments, tax },
     createContext,
     dispatch,
   };

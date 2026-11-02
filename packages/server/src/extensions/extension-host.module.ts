@@ -2,6 +2,13 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
 import { SystemModelsModule } from '../modules/System/SystemModels/SystemModels.module';
 import {
+  ApprovalRegistry,
+  ExtensionBridgeRegistries,
+  PaymentRegistry,
+  ReportRegistry,
+  TaxRegistry,
+} from './bridges';
+import {
   EXTENSION_OPTIONS_TOKEN,
   EXTENSIONS_TOKEN,
 } from './extension.constants';
@@ -18,6 +25,7 @@ import type {
 export interface ExtensionHostModuleOptions {
   extensions: ValidatedExtension[];
   registry: ExtensionContributionRegistry;
+  bridges: ExtensionBridgeRegistries;
   options: ExtensionsModuleOptions;
 }
 
@@ -33,6 +41,7 @@ export class ExtensionHostModule {
   static forRoot({
     extensions,
     registry,
+    bridges,
     options,
   }: ExtensionHostModuleOptions): DynamicModule {
     return {
@@ -43,6 +52,11 @@ export class ExtensionHostModule {
         { provide: EXTENSIONS_TOKEN, useValue: extensions },
         { provide: EXTENSION_OPTIONS_TOKEN, useValue: options },
         { provide: ExtensionContributionRegistry, useValue: registry },
+        { provide: ExtensionBridgeRegistries, useValue: bridges },
+        { provide: ReportRegistry, useValue: bridges.reports },
+        { provide: ApprovalRegistry, useValue: bridges.approvals },
+        { provide: PaymentRegistry, useValue: bridges.payments },
+        { provide: TaxRegistry, useValue: bridges.tax },
         ExtensionManager,
         ExtensionContextFactory,
         ExtensionEventBridge,
@@ -52,6 +66,11 @@ export class ExtensionHostModule {
         EXTENSIONS_TOKEN,
         EXTENSION_OPTIONS_TOKEN,
         ExtensionContributionRegistry,
+        ExtensionBridgeRegistries,
+        ReportRegistry,
+        ApprovalRegistry,
+        PaymentRegistry,
+        TaxRegistry,
         ExtensionManager,
         ExtensionContextFactory,
         ExtensionEventBridge,

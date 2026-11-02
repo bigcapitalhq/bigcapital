@@ -5,6 +5,7 @@ export default defineConfig({
     index: 'src/index.ts',
     manifest: 'src/manifest.ts',
     server: 'src/server.ts',
+    bridges: 'src/bridges.ts',
     web: 'src/web.ts',
     testing: 'src/testing.ts',
   },

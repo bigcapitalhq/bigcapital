@@ -53,6 +53,39 @@ bootstrap that every extension controller is mounted under
 for feature gating (the host applies the guard globally). Event handlers are
 isolated and never propagate errors into the core request.
 
+## Domain bridges
+
+Extensions can register typed providers through `ctx.bridges`:
+
+```ts
+import { defineServerExtension } from '@bigcapital/extension-sdk/server';
+
+export const extension = defineServerExtension({
+  manifest: {
+    id: 'acme.payments',
+    name: 'Acme Payments',
+    version: '1.0.0',
+    trust: 'partner',
+    capabilities: ['http.outbound', 'secrets.read'],
+  },
+  createModule: (ctx) => {
+    ctx.bridges.payments.register({
+      key: 'acme',
+      createPaymentLink: async () => ({ ... }),
+      handleWebhook: async () => ({ ... }),
+      refund: async () => ({ ... }),
+      getStatus: async () => ({ ... }),
+    });
+
+    return { module: PaymentsModule };
+  },
+});
+```
+
+Available bridges: `reports`, `approvals`, `payments`, and `tax`. Contracts are
+exported from `@bigcapital/extension-sdk/bridges`. Provider keys are local to the
+extension; the host namespaces them as `ext:<extensionId>:<key>`.
+
 ## UI slots
 
 Web extensions can contribute React components to host slots:

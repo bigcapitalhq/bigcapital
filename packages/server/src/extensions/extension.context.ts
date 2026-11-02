@@ -19,10 +19,12 @@ import type {
   TenancyApi,
 } from '@bigcapital/extension-sdk/server';
 import { TENANCY_DB_CONNECTION } from '../modules/Tenancy/TenancyDB/TenancyDB.constants';
+import { ExtensionBridgeRegistries } from './bridges';
 import { ExtensionContributionRegistry } from './extension.registry';
 
 export interface ExtensionContextAdapters {
   registry: ExtensionContributionRegistry;
+  bridges: ExtensionBridgeRegistries;
   logger: ExtensionLogger;
   config: ExtensionConfig;
   emitEvent: (event: string, payload: unknown) => Promise<void>;
@@ -102,6 +104,28 @@ export function buildExtensionContext(
         registry.registerJob(manifest.id, definition);
       },
     },
+    bridges: {
+      reports: {
+        register: (provider) => {
+          adapters.bridges.reports.register(manifest.id, provider);
+        },
+      },
+      approvals: {
+        register: (policy) => {
+          adapters.bridges.approvals.register(manifest.id, policy);
+        },
+      },
+      payments: {
+        register: (provider) => {
+          adapters.bridges.payments.register(manifest.id, provider);
+        },
+      },
+      tax: {
+        register: (provider) => {
+          adapters.bridges.tax.register(manifest.id, provider);
+        },
+      },
+    },
     storage: adapters.storage,
     mail: adapters.mail,
     pdf: adapters.pdf,
@@ -169,7 +193,10 @@ export function createExtensionConfig(extensionId: string): ExtensionConfig {
  * `createModule`.
  */
 export class StaticExtensionContextFactory {
-  constructor(private readonly registry: ExtensionContributionRegistry) {}
+  constructor(
+    private readonly registry: ExtensionContributionRegistry,
+    private readonly bridges: ExtensionBridgeRegistries,
+  ) {}
 
   create(manifest: ExtensionManifest): ExtensionContext {
     const hasTenantDb =
@@ -178,6 +205,7 @@ export class StaticExtensionContextFactory {
 
     return buildExtensionContext(manifest, {
       registry: this.registry,
+      bridges: this.bridges,
       logger: createExtensionLogger(manifest.id),
       config: createExtensionConfig(manifest.id),
       emitEvent: async () => {
@@ -217,6 +245,10 @@ export class StaticExtensionContextFactory {
 export class ExtensionContextFactory {
   constructor(
     private readonly registry: ExtensionContributionRegistry,
+
+    @Inject(ExtensionBridgeRegistries)
+    private readonly bridges: ExtensionBridgeRegistries,
+
     private readonly eventEmitter: EventEmitter2,
     private readonly cls: ClsService,
 
@@ -232,6 +264,7 @@ export class ExtensionContextFactory {
 
     return buildExtensionContext(manifest, {
       registry: this.registry,
+      bridges: this.bridges,
       logger: createExtensionLogger(manifest.id),
       config: createExtensionConfig(manifest.id),
       emitEvent: async (event, payload) => {

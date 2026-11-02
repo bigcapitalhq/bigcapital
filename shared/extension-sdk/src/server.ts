@@ -1,5 +1,12 @@
 import { applyDecorators, Controller, SetMetadata } from '@nestjs/common';
 import { assertValidExtensionId } from './namespaces';
+import type {
+  ApprovalPolicy,
+  BridgeRegistryApi,
+  PaymentProvider,
+  ReportProvider,
+  TaxProvider,
+} from './bridges';
 import type { ExtensionCapability } from './capabilities';
 import type { ExtensionEventBus } from './events';
 import {
@@ -119,6 +126,13 @@ export interface PdfRegistryApi {
  * Optional services (`db`, `storage`, `mail`, `pdf`) are present only when the
  * extension declared and was granted the corresponding capability.
  */
+export interface ExtensionBridgeApis {
+  readonly reports: BridgeRegistryApi<ReportProvider>;
+  readonly approvals: BridgeRegistryApi<ApprovalPolicy>;
+  readonly payments: BridgeRegistryApi<PaymentProvider>;
+  readonly tax: BridgeRegistryApi<TaxProvider>;
+}
+
 export interface ExtensionContext<TTenantDatabase = unknown> {
   readonly id: string;
   readonly version: string;
@@ -131,6 +145,7 @@ export interface ExtensionContext<TTenantDatabase = unknown> {
   readonly settings: SettingsRegistryApi;
   readonly events: ExtensionEventBus;
   readonly jobs: JobRegistryApi;
+  readonly bridges: ExtensionBridgeApis;
   readonly storage?: ScopedStorage;
   readonly mail?: ScopedMail;
   readonly pdf?: PdfRegistryApi;

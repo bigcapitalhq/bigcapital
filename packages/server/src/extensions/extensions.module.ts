@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { FeaturesModule } from '../modules/Features/Features.module';
+import { ExtensionBridgeRegistries } from './bridges';
 import { ExtensionHostModule } from './extension-host.module';
 import { StaticExtensionContextFactory } from './extension.context';
 import { ExtensionEnabledGuard } from './extension.guard';
@@ -21,6 +22,7 @@ export class ExtensionsModule {
   static forRoot(options: ExtensionsModuleOptions = {}): DynamicModule {
     const extensions = validateExtensions(options.extensions ?? []);
     const registry = new ExtensionContributionRegistry();
+    const bridges = new ExtensionBridgeRegistries();
 
     // Manifest-declared definitions are registered before extension modules are
     // created, so module-time registrations are idempotent.
@@ -28,7 +30,10 @@ export class ExtensionsModule {
       registry.registerManifest(extension.manifest);
     });
 
-    const staticContextFactory = new StaticExtensionContextFactory(registry);
+    const staticContextFactory = new StaticExtensionContextFactory(
+      registry,
+      bridges,
+    );
     const extensionModules = extensions.map((extension) => {
       const definition = extension.createModule(
         staticContextFactory.create(extension.manifest),
@@ -49,6 +54,7 @@ export class ExtensionsModule {
         ExtensionHostModule.forRoot({
           extensions,
           registry,
+          bridges,
           options,
         }),
         FeaturesModule,

@@ -22,6 +22,11 @@
       "require": "./dist/server.js",
       "import": "./dist/server.mjs"
     },
+    "./bridges": {
+      "types": "./dist/bridges.d.ts",
+      "require": "./dist/bridges.js",
+      "import": "./dist/bridges.mjs"
+    },
     "./web": {
       "types": "./dist/web.d.ts",
       "require": "./dist/web.js",
@@ -43,6 +48,9 @@
       ],
       "server": [
         "dist/server.d.ts"
+      ],
+      "bridges": [
+        "dist/bridges.d.ts"
       ],
       "web": [
         "dist/web.d.ts"
