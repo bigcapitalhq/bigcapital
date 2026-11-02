@@ -21,24 +21,11 @@ export class UnitOfWork {
     trx?: Transaction,
     isolationLevel: IsolationLevel = IsolationLevel.READ_UNCOMMITTED,
   ): Promise<T> => {
-    const knex = this.tenantKex();
-    let _trx = trx;
-
-    if (!_trx) {
-      _trx = await knex.transaction({ isolationLevel });
+    if (trx) {
+      return work(trx);
     }
-    try {
-      const result = await work(_trx);
-
-      if (!trx) {
-        _trx.commit();
-      }
-      return result;
-    } catch (error) {
-      if (!trx) {
-        _trx.rollback();
-      }
-      throw error;
-    }
+    return this.tenantKex().transaction(async (ownedTrx) => work(ownedTrx), {
+      isolationLevel,
+    });
   };
 }
