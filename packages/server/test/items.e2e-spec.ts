@@ -239,4 +239,107 @@ describe.only('Items (e2e)', () => {
       })
       .expect(200);
   });
+
+  it('/items (POST) without unit defaults to piece', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ name: faker.commerce.productName(), type: 'service' })
+      .expect(201);
+
+    const itemResponse = await request(app.getHttpServer())
+      .get(`/items/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(itemResponse.body.unit).toEqual('piece');
+  });
+
+  it.each([[''], [null]])(
+    '/items (POST) with unit %p defaults to piece',
+    async (unit) => {
+      const response = await request(app.getHttpServer())
+        .post('/items')
+        .set('organization-id', orgainzationId)
+        .set('Authorization', AuthorizationHeader)
+        .send({ name: faker.commerce.productName(), type: 'service', unit })
+        .expect(201);
+
+      const itemResponse = await request(app.getHttpServer())
+        .get(`/items/${response.body.id}`)
+        .set('organization-id', orgainzationId)
+        .set('Authorization', AuthorizationHeader)
+        .expect(200);
+
+      expect(itemResponse.body.unit).toEqual('piece');
+    },
+  );
+
+  it('/items (POST) with an invalid unit is rejected', () => {
+    return request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        name: faker.commerce.productName(),
+        type: 'service',
+        unit: 'banana',
+      })
+      .expect(400);
+  });
+
+  it('/items/:id (PUT) without unit keeps the existing unit', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(makeItemRequest())
+      .expect(201);
+    const itemId = response.body.id;
+
+    await request(app.getHttpServer())
+      .put(`/items/${itemId}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({ name: faker.commerce.productName(), type: 'service' })
+      .expect(200);
+
+    const itemResponse = await request(app.getHttpServer())
+      .get(`/items/${itemId}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(itemResponse.body.unit).toEqual('kg');
+  });
+
+  it.each([[''], [null]])(
+    '/items/:id (PUT) with unit %p keeps the existing unit',
+    async (unit) => {
+      const response = await request(app.getHttpServer())
+        .post('/items')
+        .set('organization-id', orgainzationId)
+        .set('Authorization', AuthorizationHeader)
+        .send(makeItemRequest())
+        .expect(201);
+      const itemId = response.body.id;
+
+      await request(app.getHttpServer())
+        .put(`/items/${itemId}`)
+        .set('organization-id', orgainzationId)
+        .set('Authorization', AuthorizationHeader)
+        .send({ name: faker.commerce.productName(), type: 'service', unit })
+        .expect(200);
+
+      const itemResponse = await request(app.getHttpServer())
+        .get(`/items/${itemId}`)
+        .set('organization-id', orgainzationId)
+        .set('Authorization', AuthorizationHeader)
+        .expect(200);
+
+      expect(itemResponse.body.unit).toEqual('kg');
+    },
+  );
 });
