@@ -1,19 +1,28 @@
 import { Features } from '@/common/types/Features';
 import { IFeatureConfiugration } from '@/common/types/Features';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ExtensionContributionRegistry } from '@/extensions/extension.registry';
 
 @Injectable()
 export class FeaturesConfigure {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+
+    @Optional()
+    private readonly extensionRegistry?: ExtensionContributionRegistry,
+  ) {}
 
   /**
    * Get the feature configure.
+   *
+   * Core features come first; extension features are appended with their
+   * namespaced `ext:<extensionId>:<key>` identifiers.
+   *
    * @returns {IFeatureConfiugration[]}
    */
-
   getConfigure(): IFeatureConfiugration[] {
-    return [
+    const coreFeatures: IFeatureConfiugration[] = [
       {
         name: Features.BRANCHES,
         defaultValue: false,
@@ -43,5 +52,14 @@ export class FeaturesConfigure {
         defaultValue: false,
       },
     ];
+
+    const extensionFeatures: IFeatureConfiugration[] = (
+      this.extensionRegistry?.getFeatures() ?? []
+    ).map((contribution) => ({
+      name: contribution.id,
+      defaultValue: contribution.definition.defaultValue,
+    }));
+
+    return [...coreFeatures, ...extensionFeatures];
   }
 }

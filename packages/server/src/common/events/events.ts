@@ -779,6 +779,14 @@ export const events = {
     onAccountUpdated: 'onStripeAccountUpdated',
   },
 
+  // Extensions lifecycle.
+  extensions: {
+    onInstalled: 'onExtensionInstalled',
+    onEnabled: 'onExtensionEnabled',
+    onDisabled: 'onExtensionDisabled',
+    onCatalogSynced: 'onExtensionCatalogSynced',
+  },
+
   // Reports
   reports: {
     onBalanceSheetViewed: 'onBalanceSheetViewed',

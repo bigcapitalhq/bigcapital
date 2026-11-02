@@ -45694,6 +45694,30 @@
           "defaultAccessible"
         ]
       },
+      "DashboardExtensionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The extension identifier",
+            "example": "acme.reports"
+          },
+          "version": {
+            "type": "string",
+            "description": "The installed extension version",
+            "example": "1.0.0"
+          },
+          "settings": {
+            "type": "object",
+            "description": "Public extension settings exposed to the webapp",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ]
+      },
       "GetDashboardBootMetaResponseDto": {
         "type": "object",
         "properties": {
@@ -45733,6 +45757,22 @@
               "$ref": "#/components/schemas/DashboardFeatureResponseDto"
             }
           },
+          "extensions": {
+            "description": "Extensions enabled for the current organization",
+            "example": [
+              {
+                "id": "acme.reports",
+                "version": "1.0.0",
+                "settings": {
+                  "theme": "dark"
+                }
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DashboardExtensionResponseDto"
+            }
+          },
           "isBigcapitalCloud": {
             "type": "boolean",
             "description": "Whether the app is running on Bigcapital Cloud",
@@ -45742,6 +45782,7 @@
         "required": [
           "abilities",
           "features",
+          "extensions",
           "isBigcapitalCloud"
         ]
       },

@@ -34,7 +34,33 @@ class DashboardFeatureResponseDto {
   defaultAccessible: boolean;
 }
 
-@ApiExtraModels(RoleAbilityResponseDto, DashboardFeatureResponseDto)
+class DashboardExtensionResponseDto {
+  @ApiProperty({
+    description: 'The extension identifier',
+    example: 'acme.reports',
+  })
+  id: string;
+
+  @ApiProperty({
+    description: 'The installed extension version',
+    example: '1.0.0',
+  })
+  version: string;
+
+  @ApiProperty({
+    description: 'Public extension settings exposed to the webapp',
+    required: false,
+    type: Object,
+    additionalProperties: true,
+  })
+  settings?: Record<string, unknown>;
+}
+
+@ApiExtraModels(
+  RoleAbilityResponseDto,
+  DashboardFeatureResponseDto,
+  DashboardExtensionResponseDto,
+)
 export class GetDashboardBootMetaResponseDto {
   @ApiProperty({
     description: 'List of abilities for the current user',
@@ -55,6 +81,15 @@ export class GetDashboardBootMetaResponseDto {
     ],
   })
   features: DashboardFeatureResponseDto[];
+
+  @ApiProperty({
+    description: 'Extensions enabled for the current organization',
+    type: [DashboardExtensionResponseDto],
+    example: [
+      { id: 'acme.reports', version: '1.0.0', settings: { theme: 'dark' } },
+    ],
+  })
+  extensions: DashboardExtensionResponseDto[];
 
   @ApiProperty({
     description: 'Whether the app is running on Bigcapital Cloud',
