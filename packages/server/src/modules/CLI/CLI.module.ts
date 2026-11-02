@@ -14,6 +14,11 @@ import { SystemSeedLatestCommand } from './commands/SystemSeedLatest.command';
 import { TenantsSeedLatestCommand } from './commands/TenantsSeedLatest.command';
 import { OpenApiExportCommand } from './commands/OpenApiExport.command';
 import { AnalyticsBackfillCommand } from './commands/AnalyticsBackfill.command';
+import { ExtensionsListCommand } from './commands/extensions/ExtensionsList.command';
+import { ExtensionsEnableCommand } from './commands/extensions/ExtensionsEnable.command';
+import { ExtensionsDisableCommand } from './commands/extensions/ExtensionsDisable.command';
+import { ExtensionsMigrateCommand } from './commands/extensions/ExtensionsMigrate.command';
+import { ExtensionsMigrateAllCommand } from './commands/extensions/ExtensionsMigrateAll.command';
 import { AnalyticsCoreModule } from '../Analytics/AnalyticsCore.module';
 
 @Module({
@@ -38,6 +43,11 @@ import { AnalyticsCoreModule } from '../Analytics/AnalyticsCore.module';
     TenantsSeedLatestCommand,
     OpenApiExportCommand,
     AnalyticsBackfillCommand,
+    ExtensionsListCommand,
+    ExtensionsEnableCommand,
+    ExtensionsDisableCommand,
+    ExtensionsMigrateCommand,
+    ExtensionsMigrateAllCommand,
   ],
 })
 export class CLIModule {}

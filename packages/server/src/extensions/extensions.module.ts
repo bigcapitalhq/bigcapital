@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { FeaturesModule } from '../modules/Features/Features.module';
+import { ExtensionsController } from './admin/extensions.controller';
 import { ExtensionBridgeRegistries } from './bridges';
 import { ExtensionHostModule } from './extension-host.module';
 import { StaticExtensionContextFactory } from './extension.context';
@@ -61,7 +62,7 @@ export class ExtensionsModule {
         FeaturesModule,
         ...extensionModules,
       ],
-      controllers: [ExtensionReportsController],
+      controllers: [ExtensionReportsController, ExtensionsController],
       providers: [
         ExtensionEnabledGuard,
         ExtensionFeatureGuard,

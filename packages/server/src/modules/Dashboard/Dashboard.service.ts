@@ -8,6 +8,7 @@ import { IFeatureAllItem } from '@/common/types/Features';
 import { TenantUser } from '../Tenancy/TenancyModels/models/TenantUser.model';
 import { ExtensionManager } from '@/extensions/extension.manager';
 import { ExtensionContributionRegistry } from '@/extensions/extension.registry';
+import { ExtensionSettingsService } from '@/extensions/settings/extension-settings.service';
 
 interface IRoleAbility {
   subject: string;
@@ -43,6 +44,9 @@ export class DashboardService {
 
     @Optional()
     private readonly extensionRegistry?: ExtensionContributionRegistry,
+
+    @Optional()
+    private readonly extensionSettings?: ExtensionSettingsService,
   ) {}
 
   /**
@@ -102,6 +106,10 @@ export class DashboardService {
     extensionId: string,
     settings?: Record<string, unknown>,
   ): Record<string, unknown> | undefined {
+    if (this.extensionSettings) {
+      return this.extensionSettings.getPublicSettings(extensionId, settings);
+    }
+
     if (!settings) {
       return undefined;
     }
@@ -110,7 +118,9 @@ export class DashboardService {
 
     const publicKeys = new Set(
       definitions
-        .filter(({ definition }) => definition.public)
+        .filter(
+          ({ definition }) => definition.public && definition.type !== 'secret',
+        )
         .map(({ key }) => key),
     );
 

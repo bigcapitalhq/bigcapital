@@ -271,6 +271,130 @@ export class ExtensionManager {
   }
 
   /**
+   * Ensures a tenant row exists without changing enablement.
+   *
+   * Used before the first migration/enable so the tenant can carry migration
+   * status and errors even when it starts from a disabled state.
+   */
+  async ensureTenantRecord(
+    extensionId: string,
+    organizationId: string,
+  ): Promise<ExtensionTenant> {
+    const extension = await this.getExtension(extensionId);
+    const existing = await this.getTenantRecord(extensionId, organizationId);
+
+    if (existing) {
+      return existing;
+    }
+
+    const now = moment().format('YYYY-MM-DD HH:mm:ss');
+
+    try {
+      await this.extensionTenantModel.query().insert({
+        extensionId,
+        organizationId,
+        version: extension.version,
+        status: 'disabled',
+        createdAt: now,
+        updatedAt: now,
+      });
+    } catch (error) {
+      if (!isDuplicateEntryError(error)) {
+        throw error;
+      }
+    }
+
+    return this.getTenantRecordOrThrow(extensionId, organizationId);
+  }
+
+  /**
+   * Replaces the stored settings for a tenant extension.
+   */
+  async updateSettings(
+    extensionId: string,
+    organizationId: string,
+    settings: Record<string, unknown>,
+  ): Promise<ExtensionTenant> {
+    const existing = await this.getTenantRecordOrThrow(
+      extensionId,
+      organizationId,
+    );
+
+    await this.extensionTenantModel
+      .query()
+      .findById(existing.id)
+      .patch({ settings });
+
+    this.invalidate(extensionId, organizationId);
+
+    return this.getTenantRecordOrThrow(extensionId, organizationId);
+  }
+
+  /**
+   * Records that a tenant migration is in progress.
+   */
+  async markMigrating(
+    extensionId: string,
+    organizationId: string,
+  ): Promise<void> {
+    const existing = await this.getTenantRecordOrThrow(
+      extensionId,
+      organizationId,
+    );
+
+    await this.extensionTenantModel
+      .query()
+      .findById(existing.id)
+      .patch({ status: 'migrating', lastError: null });
+  }
+
+  /**
+   * Records a successful migration and the version the tenant is now on.
+   */
+  async completeMigration(
+    extensionId: string,
+    organizationId: string,
+    version: string,
+    status: 'enabled' | 'disabled',
+  ): Promise<void> {
+    const existing = await this.getTenantRecordOrThrow(
+      extensionId,
+      organizationId,
+    );
+
+    await this.extensionTenantModel
+      .query()
+      .findById(existing.id)
+      .patch({ version, status, lastError: null });
+
+    this.invalidate(extensionId, organizationId);
+  }
+
+  /**
+   * Records a migration failure and disables the extension until it is fixed.
+   */
+  async markMigrationFailed(
+    extensionId: string,
+    organizationId: string,
+    error: unknown,
+  ): Promise<void> {
+    const existing = await this.getTenantRecordOrThrow(
+      extensionId,
+      organizationId,
+    );
+
+    await this.extensionTenantModel
+      .query()
+      .findById(existing.id)
+      .patch({
+        status: 'failed',
+        lastError: error instanceof Error ? error.message : String(error),
+      });
+
+    this.invalidate(extensionId, organizationId);
+  }
+
+  /**
    * Determines whether an extension is enabled for the given organization.
    *
    * Results are cached briefly because this runs on every extension HTTP

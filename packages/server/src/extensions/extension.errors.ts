@@ -1,3 +1,5 @@
+import { NotFoundException } from '@nestjs/common';
+
 /**
  * Raised when one or more extension manifests fail validation.
  */
@@ -13,14 +15,14 @@ export class ExtensionValidationError extends Error {
   }
 }
 
-export class ExtensionNotFoundError extends Error {
+export class ExtensionNotFoundError extends NotFoundException {
   constructor(public readonly extensionId: string) {
     super(`Extension "${extensionId}" is not installed.`);
     this.name = 'ExtensionNotFoundError';
   }
 }
 
-export class ExtensionTenantNotFoundError extends Error {
+export class ExtensionTenantNotFoundError extends NotFoundException {
   constructor(
     public readonly extensionId: string,
     public readonly organizationId: string,

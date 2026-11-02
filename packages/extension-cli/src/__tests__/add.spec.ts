@@ -135,4 +135,28 @@ describe('extension CLI integration', () => {
       addExtension('@acme/reports@2.0.0', { root: rootDir }),
     ).rejects.toThrow(/not "2.0.0"/);
   });
+
+  it('requires the package.json export for extensions with migrations', async () => {
+    const { rootDir, packageDir, packageJson } = buildFixture();
+
+    fs.mkdirSync(path.join(packageDir, 'migrations'), {
+      recursive: true,
+    });
+    writeJson(path.join(packageDir, 'package.json'), {
+      ...packageJson,
+      exports: {
+        '.': './server.js',
+        './server': './server.js',
+        './web': './web.js',
+      },
+      bigcapital: {
+        ...packageJson.bigcapital,
+        migrations: './migrations',
+      },
+    });
+
+    await expect(
+      addExtension('@acme/reports@1.0.0', { root: rootDir }),
+    ).rejects.toThrow(/must export "\.\/package\.json"/);
+  });
 });

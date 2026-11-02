@@ -223,6 +223,8 @@ function resolveExtensionByPackage(
   }
 
   if (manifest.migrations) {
+    assertSubpathExport(packageJson, 'package.json', packageName);
+
     const migrationsDir = path.resolve(packageDir, manifest.migrations);
 
     if (!fs.existsSync(migrationsDir)) {
@@ -264,7 +266,7 @@ function assertEntryFile(
  */
 function assertSubpathExport(
   packageJson: PackageJson,
-  subpath: 'server' | 'web',
+  subpath: 'server' | 'web' | 'package.json',
   packageName: string,
 ): void {
   const exportsField = packageJson.exports;

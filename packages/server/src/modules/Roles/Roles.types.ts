@@ -72,6 +72,12 @@ export enum AbilitySubject {
   Warehouse = 'Warehouse',
   Branch = 'Branch',
   Attachment = 'Attachment',
+  Extensions = 'Extensions',
+}
+
+export enum ExtensionsAction {
+  View = 'View',
+  Manage = 'Manage',
 }
 
 export interface IRoleCreatedPayload {

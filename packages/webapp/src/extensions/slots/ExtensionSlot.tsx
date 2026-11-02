@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
-import { ExtensionComponentHost } from '../host/ExtensionComponentHost';
 import { useExtensions } from '../hooks/useExtensions';
+import { ExtensionComponentHost } from '../host/ExtensionComponentHost';
 import { ExtensionSlotErrorBoundary } from './ExtensionSlotErrorBoundary';
 import { ExtensionSlotGuard } from './ExtensionSlotGuard';
 import { getSlotContributions } from './slot.registry';

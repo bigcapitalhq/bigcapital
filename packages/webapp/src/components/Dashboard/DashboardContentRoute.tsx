@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import DashboardPage from './DashboardPage';
-import { ExtensionComponentHost } from '@/extensions/host/ExtensionComponentHost';
 import { useExtensions } from '@/extensions/hooks/useExtensions';
+import { ExtensionComponentHost } from '@/extensions/host/ExtensionComponentHost';
 import { extensionRegistry } from '@/extensions/registry';
 import { useAbilityContext } from '@/hooks';
 import { useFeatureCan } from '@/hooks/state';

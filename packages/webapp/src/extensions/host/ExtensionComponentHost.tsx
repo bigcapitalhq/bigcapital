@@ -1,11 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useExtensions } from '../hooks/useExtensions';
 import type {
   ExtensionApiClient,
   ExtensionComponentContext,
 } from '@bigcapital/extension-sdk/web';
 import { useAuthOrganizationId, useAuthToken } from '@/hooks/state';
-import { useExtensions } from '../hooks/useExtensions';
 
 interface ExtensionComponentHostProps {
   extensionId: string;

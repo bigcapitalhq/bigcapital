@@ -20,6 +20,8 @@ import { ExtensionContributionRegistry } from './extension.registry';
 import { ExtensionEventBridge } from './extension.event-bridge';
 import { ExtensionLifecycleService } from './extension.lifecycle.service';
 import { ExtensionManager } from './extension.manager';
+import { ExtensionMigrationService } from './migrations/extension-migration.service';
+import { ExtensionSettingsService } from './settings/extension-settings.service';
 import type {
   ExtensionsModuleOptions,
   ValidatedExtension,
@@ -67,6 +69,8 @@ export class ExtensionHostModule {
         { provide: TaxRegistry, useValue: bridges.tax },
         ExtensionAccountingQueryService,
         ExtensionManager,
+        ExtensionSettingsService,
+        ExtensionMigrationService,
         ExtensionContextFactory,
         ExtensionEventBridge,
         ExtensionLifecycleService,
@@ -82,6 +86,8 @@ export class ExtensionHostModule {
         TaxRegistry,
         ExtensionAccountingQueryService,
         ExtensionManager,
+        ExtensionSettingsService,
+        ExtensionMigrationService,
         ExtensionContextFactory,
         ExtensionEventBridge,
         ExtensionLifecycleService,

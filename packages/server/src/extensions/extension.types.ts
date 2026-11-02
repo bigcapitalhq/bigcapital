@@ -22,9 +22,17 @@ export type ValidatedExtension<TTenantDatabase = unknown> =
 
 export interface ExtensionsModuleOptions {
   /**
-   * Extensions compiled into the deployment. PR-7 will generate this list.
+   * Extensions compiled into the deployment.
    */
   extensions?: BigcapitalExtension[];
+
+  /**
+   * Absolute tenant-migration directories keyed by extension id.
+   *
+   * The extension CLI generates this map from each package's manifest so the
+   * host does not have to resolve package internals at runtime.
+   */
+  migrationDirectories?: Record<string, string>;
 
   /**
    * Overrides the tenant enablement cache TTL.

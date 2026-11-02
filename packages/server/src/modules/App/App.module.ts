@@ -109,7 +109,10 @@ import { SocketModule } from '../Socket/Socket.module';
 import { NotificationsModule } from '../Notifications/Notifications.module';
 import { EEModule } from '../EE/EE.module';
 import { ExtensionsModule } from '../../extensions/extensions.module';
-import { nativeExtensions } from '../../extensions/generated/extensions.generated';
+import {
+  extensionMigrationDirectories,
+  nativeExtensions,
+} from '../../extensions/generated/extensions.generated';
 import { AnalyticsModule } from '../Analytics/Analytics.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AppThrottleModule } from './AppThrottle.module';
@@ -270,7 +273,10 @@ import { AppThrottleModule } from './AppThrottle.module';
     SocketModule,
     NotificationsModule,
     EEModule,
-    ExtensionsModule.forRoot({ extensions: nativeExtensions }),
+    ExtensionsModule.forRoot({
+      extensions: nativeExtensions,
+      migrationDirectories: extensionMigrationDirectories,
+    }),
     AnalyticsModule,
     ExchangeRatesModule,
   ],

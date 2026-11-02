@@ -72,6 +72,9 @@ An extension package must:
    }
    ```
 
+   `./package.json` is required when the manifest declares `migrations`; the
+   generated code resolves the package root from it.
+
 4. Export a named `extension` from the server and web entries:
 
    ```ts
@@ -117,6 +120,27 @@ packages/webapp/src/extensions/generated/plugins.generated.ts
 
 Do not edit these files by hand. Change the lockfile and run
 `pnpm extensions:sync`.
+
+The generated server file also exports `extensionMigrationDirectories`, an
+absolute-path map keyed by extension id. The host uses it for tenant-scoped
+extension migrations. Extensions without migrations are omitted.
+
+## Tenant lifecycle
+
+The deploy-time CLI only manages the lockfile and generated imports. Tenant
+enablement and migrations are server CLI commands:
+
+```bash
+pnpm extensions:list
+pnpm extensions:enable -- --id <extensionId> --tenant_id <organizationId>
+pnpm extensions:disable -- --id <extensionId> --tenant_id <organizationId>
+pnpm extensions:migrate -- --id <extensionId> --tenant_id <organizationId>
+pnpm extensions:migrate:all
+```
+
+Migrations are tracked in a per-extension table
+(`ext_migrations_<slug>_<hash>`), guarded by a MySQL advisory lock, and are not
+run automatically on server boot.
 
 ## Development
 
