@@ -1,0 +1,36 @@
+{
+  "name": "@bigcapital/extension-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deploy-time extension lockfile and generated-import tooling for Bigcapital.",
+  "license": "AGPL-3.0",
+  "main": "./dist/cli.js",
+  "bin": {
+    "bigcapital-extensions": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "start": "ts-node src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.ts\" \"*.{json,md}\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"*.{json,md}\"",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@bigcapital/extension-sdk": "workspace:*",
+    "commander": "^11.1.0",
+    "prettier": "^3.3.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.1",
+    "ts-node": "^10.9.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.1.3",
+    "vitest": "^2.1.3"
+  }
+}

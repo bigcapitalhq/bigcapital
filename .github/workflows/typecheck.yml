@@ -60,3 +60,6 @@ jobs:
 
       - name: Run TypeScript type check
         run: pnpm run typecheck
+
+      - name: Verify extension lockfile and generated imports
+        run: pnpm extensions:check
