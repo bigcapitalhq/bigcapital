@@ -9,6 +9,18 @@ import type { ExtensionManifest } from './manifest';
  */
 export type ExtensionComponent<P = any> = ComponentType<P>;
 
+export const EXTENSION_SLOT_NAMES = [
+  'dashboard.widgets',
+  'invoice.detail.actions',
+  'invoice.detail.sidebar',
+  'contact.form.fields',
+  'settings.tabs',
+  'app.header.actions',
+  'commandPalette.commands',
+] as const;
+
+export type ExtensionSlotName = (typeof EXTENSION_SLOT_NAMES)[number];
+
 export interface ContributionGuard {
   feature?: string;
   permission?: {
@@ -44,7 +56,11 @@ export interface MenuContribution extends ContributionGuard {
 
 export interface SlotContribution<P = any> extends ContributionGuard {
   id: string;
-  slot: string;
+  /**
+   * One of the host slot names. The `string & {}` branch keeps autocomplete
+   * while allowing future/custom slots without a breaking SDK release.
+   */
+  slot: ExtensionSlotName | (string & {});
   component: ExtensionComponent<P>;
   order?: number;
 }

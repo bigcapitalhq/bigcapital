@@ -53,6 +53,44 @@ bootstrap that every extension controller is mounted under
 for feature gating (the host applies the guard globally). Event handlers are
 isolated and never propagate errors into the core request.
 
+## UI slots
+
+Web extensions can contribute React components to host slots:
+
+```ts
+import { EXTENSION_SLOT_NAMES } from '@bigcapital/extension-sdk/web';
+
+export const extension = {
+  manifest: {
+    id: 'acme.reports',
+    name: 'Acme Reports',
+    version: '1.0.0',
+    trust: 'partner',
+  },
+  slots: [
+    {
+      id: 'approval-button',
+      slot: 'invoice.detail.actions',
+      component: ApprovalButton,
+    },
+  ],
+};
+```
+
+Available Phase 1 slots:
+
+- `dashboard.widgets`
+- `invoice.detail.actions`
+- `invoice.detail.sidebar`
+- `contact.form.fields`
+- `settings.tabs`
+- `app.header.actions`
+- `commandPalette.commands`
+
+The host wraps each contribution in feature/permission guards, an error
+boundary, and a suspense boundary. A crashing extension renders nothing (or a
+compact message in development) without affecting the rest of the page.
+
 ## Manifest defaults
 
 Use `defineServerExtension` instead of constructing the object manually. It

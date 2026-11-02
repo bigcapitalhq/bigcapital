@@ -36,6 +36,7 @@ import { withDashboardActions } from '@/containers/Dashboard/withDashboardAction
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { QuickNewDropdown } from '@/containers/QuickNewDropdown/QuickNewDropdown';
 import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { ExtensionSlot } from '@/extensions/slots/ExtensionSlot';
 import { useNotificationsUnreadCount } from '@/hooks/query/notifications';
 import { useDrawerActions } from '@/hooks/state/dashboard';
 
@@ -131,6 +132,9 @@ function DashboardTopbar({
           <NavbarGroup>
             <DashboardQuickSearchButton onClick={() => openGlobalSearch()} />
             <QuickNewDropdown />
+
+            <ExtensionSlot name="app.header.actions" context={{}} />
+
             <Tooltip
               content={<T id={'notifications'} />}
               position={Position.BOTTOM}

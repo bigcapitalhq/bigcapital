@@ -1,13 +1,19 @@
 import { Tab } from '@blueprintjs/core';
 import { Tabs } from '@blueprintjs/core';
 import { css } from '@emotion/css';
+import { useFormikContext } from 'formik';
 import { useState } from 'react';
 import { CustomerFloatingActions } from './CustomerFloatingActions';
 import { CustomerFormSections } from './CustomerFormFields';
+import { useCustomerFormContext } from './CustomerFormProvider';
+import type { CustomerFormValues } from './utils';
 import { Card, Group } from '@/components';
+import { ExtensionSlot } from '@/extensions/slots/ExtensionSlot';
 
 export function CustomerFormContent() {
   const [selectedTabId, setSelectedTabId] = useState('primary');
+  const form = useFormikContext<CustomerFormValues>();
+  const { customer } = useCustomerFormContext();
 
   const handleTabChange = (tabId: string) => {
     const sectionId = String(tabId);
@@ -46,7 +52,14 @@ export function CustomerFormContent() {
           <Tab id={'notes'} title={'Notes'} />
         </Tabs>
 
-        <CustomerFormSections />
+        <div>
+          <CustomerFormSections />
+
+          <ExtensionSlot
+            name="contact.form.fields"
+            context={{ contact: customer, form }}
+          />
+        </div>
       </Group>
       <CustomerFloatingActions />
     </Card>

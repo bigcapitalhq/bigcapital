@@ -4,6 +4,7 @@ import type {
   MenuContribution,
   RouteContribution,
   SettingsTabContribution,
+  SlotContribution,
 } from '@bigcapital/extension-sdk/web';
 
 export interface RegisteredRoute extends RouteContribution {
@@ -18,11 +19,15 @@ export interface RegisteredSettingsTab extends SettingsTabContribution {
   extensionId: string;
 }
 
+export interface RegisteredSlot extends SlotContribution {
+  extensionId: string;
+}
+
 export interface RegisteredDialog extends DialogContribution {
   extensionId: string;
 }
 
-type ContributionKind = 'route' | 'menu' | 'settings tab' | 'dialog';
+type ContributionKind = 'route' | 'menu' | 'settings tab' | 'slot' | 'dialog';
 
 /**
  * Resolves an extension route to its namespaced web path.
@@ -107,6 +112,7 @@ export class WebExtensionRegistry {
   private readonly menuIds = new Map<string, string>();
   private readonly settingsTabIds = new Map<string, string>();
   private readonly settingsTabPaths = new Map<string, string>();
+  private readonly slotIds = new Map<string, string>();
   private readonly dialogIds = new Map<string, string>();
 
   register(extension: BigcapitalWebExtension): void {
@@ -134,6 +140,12 @@ export class WebExtensionRegistry {
       extension.settingsTabs,
       'settings tab',
       this.settingsTabIds,
+      extensionId,
+    );
+    this.assertUniqueContributions(
+      extension.slots,
+      'slot',
+      this.slotIds,
       extensionId,
     );
     this.assertUniqueContributions(
@@ -189,7 +201,9 @@ export class WebExtensionRegistry {
         extensionId: extension.manifest.id,
         path: resolveExtensionRoutePath(extension.manifest.id, route.path),
       }),
-    ).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    ).sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.id.localeCompare(b.id),
+    );
   }
 
   getMenu(enabledIds: ReadonlySet<string>): RegisteredMenuItem[] {
@@ -200,7 +214,9 @@ export class WebExtensionRegistry {
         ...item,
         extensionId: extension.manifest.id,
       }),
-    ).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    ).sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.id.localeCompare(b.id),
+    );
   }
 
   getSettingsTabs(enabledIds: ReadonlySet<string>): RegisteredSettingsTab[] {
@@ -212,7 +228,22 @@ export class WebExtensionRegistry {
         extensionId: extension.manifest.id,
         path: resolveExtensionSettingsPath(extension.manifest.id, tab.path),
       }),
-    ).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    ).sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.id.localeCompare(b.id),
+    );
+  }
+
+  getSlots(enabledIds: ReadonlySet<string>): RegisteredSlot[] {
+    return this.collect(
+      enabledIds,
+      (extension) => extension.slots,
+      (extension, slot) => ({
+        ...slot,
+        extensionId: extension.manifest.id,
+      }),
+    ).sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.id.localeCompare(b.id),
+    );
   }
 
   getDialogs(enabledIds: ReadonlySet<string>): RegisteredDialog[] {
@@ -223,7 +254,7 @@ export class WebExtensionRegistry {
         ...dialog,
         extensionId: extension.manifest.id,
       }),
-    );
+    ).sort((a, b) => a.id.localeCompare(b.id));
   }
 
   /**
