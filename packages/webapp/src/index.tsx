@@ -1,6 +1,7 @@
 // @ts-nocheck
 import 'regenerator-runtime/runtime';
 import './wdyr';
+import '@/extensions/bootstrap';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';

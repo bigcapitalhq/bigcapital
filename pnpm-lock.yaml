@@ -436,6 +436,9 @@ importers:
       '@bigcapital/email-components':
         specifier: workspace:*
         version: link:../../shared/email-components
+      '@bigcapital/extension-sdk':
+        specifier: workspace:*
+        version: link:../../shared/extension-sdk
       '@bigcapital/pdf-templates':
         specifier: workspace:*
         version: link:../../shared/pdf-templates

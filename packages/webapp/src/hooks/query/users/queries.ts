@@ -29,6 +29,7 @@ import type {
   GetDashboardBootMetaResponse,
   AuthedAccount,
 } from '@bigcapital/sdk-ts';
+import { useSetExtensionsDashboardMeta } from '@/extensions/hooks/useExtensions';
 
 const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
@@ -164,6 +165,7 @@ export const useDashboardMeta = (
   >,
 ) => {
   const setFeatureDashboardMeta = useSetFeatureDashboardMeta();
+  const setExtensionsDashboardMeta = useSetExtensionsDashboardMeta();
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   const state = useQuery({
@@ -174,7 +176,13 @@ export const useDashboardMeta = (
   useEffect(() => {
     if (state.isSuccess && state.data) {
       setFeatureDashboardMeta(state.data);
+      setExtensionsDashboardMeta(state.data);
     }
-  }, [state.isSuccess, state.data, setFeatureDashboardMeta]);
+  }, [
+    state.isSuccess,
+    state.data,
+    setFeatureDashboardMeta,
+    setExtensionsDashboardMeta,
+  ]);
   return state;
 };

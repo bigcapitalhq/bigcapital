@@ -7,7 +7,7 @@ import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 const SUBSCRIPTION_TYPE = {
   MAIN: 'main',
 };
-export const getDashboardRoutes = () => [
+export const getCoreDashboardRoutes = () => [
   // Accounts.
   {
     path: '/accounts/import',
@@ -1328,3 +1328,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 ];
+
+/**
+ * Core dashboard routes.
+ *
+ * Extension routes are appended in `DashboardContentRoute` because they depend
+ * on the tenant's enabled-extension metadata.
+ */
+export const getDashboardRoutes = () => getCoreDashboardRoutes();

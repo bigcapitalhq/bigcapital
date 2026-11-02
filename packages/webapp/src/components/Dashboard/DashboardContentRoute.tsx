@@ -1,8 +1,11 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import DashboardPage from './DashboardPage';
+import { useExtensions } from '@/extensions/hooks/useExtensions';
+import { extensionRegistry } from '@/extensions/registry';
+import { useAbilityContext } from '@/hooks';
 import { useFeatureCan } from '@/hooks/state';
-import { getDashboardRoutes } from '@/routes/dashboard';
+import { getCoreDashboardRoutes } from '@/routes/dashboard';
 
 export interface DashboardRoute {
   path: string;
@@ -15,6 +18,10 @@ export interface DashboardRoute {
   defaultSearchResource?: string;
   exact?: boolean;
   feature?: string;
+  permission?: {
+    subject: string;
+    action: string;
+  };
 }
 
 /**
@@ -39,9 +46,21 @@ function DashboardContentRouteContent({ route }: { route: DashboardRoute }) {
  */
 export default function DashboardContentRoute() {
   const { featureCan } = useFeatureCan();
-  const routes = (getDashboardRoutes() as DashboardRoute[]).filter(
-    (route) => !route.feature || featureCan(route.feature),
-  );
+  const ability = useAbilityContext();
+  const { enabledIds } = useExtensions();
+
+  const routes = (
+    [
+      ...getCoreDashboardRoutes(),
+      ...extensionRegistry.getRoutes(enabledIds),
+    ] as DashboardRoute[]
+  )
+    .filter((route) => !route.feature || featureCan(route.feature))
+    .filter(
+      (route) =>
+        !route.permission ||
+        ability.can(route.permission.action, route.permission.subject),
+    );
 
   return (
     <Route path="/">
