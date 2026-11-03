@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import * as moment from 'moment';
-import { first, sumBy } from 'lodash';
+import { first, sumBy, uniq } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
 import { Inject, Injectable } from '@nestjs/common';
 import {
@@ -62,6 +62,11 @@ export class GetMatchedTransactions {
 
     const totalPending = sumBy(uncategorizedTransactions, 'amount');
 
+    // Candidates must post to the bank account of the transactions being
+    // matched, read from the transactions themselves, never from the client.
+    const accountIds = uniq(
+      uncategorizedTransactions.map((transaction) => transaction.accountId),
+    );
     const filtered = filter.transactionType
       ? this.registered.filter((item) => item.type === filter.transactionType)
       : this.registered;
@@ -69,7 +74,7 @@ export class GetMatchedTransactions {
     const matchedTransactions = await PromisePool.withConcurrency(2)
       .for(filtered)
       .process(async ({ type: _type, service }) => {
-        return service.getMatchedTransactions(filter);
+        return service.getMatchedTransactions({ ...filter, accountIds });
       });
     const { perfectMatches, possibleMatches } = this.groupMatchedResults(
       uncategorizedTransactions,

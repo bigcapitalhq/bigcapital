@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { GetMatchedTransactionManualJournalsTransformer } from './GetMatchedTransactionManualJournalsTransformer';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
-import { GetMatchedTransactionsFilter } from '../types';
+import { GetMatchedTransactionsByTypeFilter } from '../types';
 import { ManualJournal } from '@/modules/ManualJournals/models/ManualJournal';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -19,23 +19,21 @@ export class GetMatchedTransactionsByManualJournals extends GetMatchedTransactio
 
   /**
    * Retrieve the matched transactions of manual journals.
-   * @param {GetMatchedTransactionsFilter} filter
+   * @param {GetMatchedTransactionsByTypeFilter} filter
    * @returns
    */
   async getMatchedTransactions(
-    filter: Omit<GetMatchedTransactionsFilter, 'transactionType'>,
+    filter: Omit<GetMatchedTransactionsByTypeFilter, 'transactionType'>,
   ) {
-    // @todo: get the account id from the filter
-    const accountId = 1000;
-
     const manualJournals = await this.manualJournalModel()
       .query()
       .onBuild((query) => {
         query.withGraphJoined('matchedBankTransaction');
         query.whereNull('matchedBankTransaction.id');
 
+        // Only journals with an entry on the bank transactions' accounts.
         query.withGraphJoined('entries');
-        query.where('entries.accountId', accountId);
+        query.whereIn('entries.accountId', filter.accountIds);
         query.modify('filterByPublished');
 
         if (filter.fromDate) {

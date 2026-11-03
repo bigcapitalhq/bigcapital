@@ -71,3 +71,13 @@ export const ERRORS = {
   CANNOT_MATCH_EXCLUDED_TRANSACTION: 'CANNOT_MATCH_EXCLUDED_TRANSACTION',
   CANNOT_DELETE_TRANSACTION_MATCHED: 'CANNOT_DELETE_TRANSACTION_MATCHED',
 };
+
+/**
+ * The filter each matched-transactions type service receives: the client's
+ * filter plus the accounts of the bank transactions being matched, which the
+ * server reads from the bank transactions themselves.
+ */
+export interface GetMatchedTransactionsByTypeFilter
+  extends GetMatchedTransactionsFilter {
+  accountIds: Array<number>;
+}
