@@ -7,6 +7,9 @@ export const AUTH_ROUTES = {
   ACCOUNT: '/api/auth/account',
   RESEND_SIGNUP: '/api/auth/signup/verify/resend',
   SIGNIN: '/api/auth/signin',
+  SIGNIN_TWO_FACTOR: '/api/auth/signin/2fa',
+  SIGNIN_TWO_FACTOR_SETUP: '/api/auth/signin/2fa/setup',
+  SIGNIN_TWO_FACTOR_SETUP_CONFIRM: '/api/auth/signin/2fa/setup/confirm',
   SIGNUP: '/api/auth/signup',
   SIGNUP_VERIFY: '/api/auth/signup/verify',
   SEND_RESET_PASSWORD: '/api/auth/send_reset_password',
@@ -28,6 +31,22 @@ export type AuthSigninBody = OpRequestBody<
 >;
 export type AuthSigninResponse = OpResponseBody<
   OpForPath<typeof AUTH_ROUTES.SIGNIN, 'post'>
+>;
+
+export type AuthSigninTwoFactorBody = OpRequestBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_TWO_FACTOR, 'post'>
+>;
+export type AuthSigninTwoFactorSetupBody = OpRequestBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_TWO_FACTOR_SETUP, 'post'>
+>;
+export type AuthSigninTwoFactorSetupResponse = OpResponseBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_TWO_FACTOR_SETUP, 'post'>
+>;
+export type AuthSigninTwoFactorSetupConfirmBody = OpRequestBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_TWO_FACTOR_SETUP_CONFIRM, 'post'>
+>;
+export type AuthSigninTwoFactorSetupConfirmResponse = OpResponseBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_TWO_FACTOR_SETUP_CONFIRM, 'post'>
 >;
 
 export type AuthSignupBody = OpRequestBody<
@@ -82,6 +101,52 @@ export async function signin(
   const post = fetcher.path(AUTH_ROUTES.SIGNIN).method('post').create();
   const { data } = await post(body as never);
   return data as AuthSigninResponse;
+}
+
+/**
+ * Second sign-in step: a code from the authenticator app or a recovery code,
+ * with the challenge token returned by `signin`.
+ */
+export async function signinTwoFactor(
+  fetcher: ApiFetcher,
+  body: AuthSigninTwoFactorBody
+): Promise<AuthSigninResponse> {
+  const post = fetcher
+    .path(AUTH_ROUTES.SIGNIN_TWO_FACTOR)
+    .method('post')
+    .create();
+  const { data } = await post(body as never);
+  return data as AuthSigninResponse;
+}
+
+/**
+ * Starts the two-factor setup the organization requires, during sign-in.
+ */
+export async function signinTwoFactorSetup(
+  fetcher: ApiFetcher,
+  body: AuthSigninTwoFactorSetupBody
+): Promise<AuthSigninTwoFactorSetupResponse> {
+  const post = fetcher
+    .path(AUTH_ROUTES.SIGNIN_TWO_FACTOR_SETUP)
+    .method('post')
+    .create();
+  const { data } = await post(body as never);
+  return data as AuthSigninTwoFactorSetupResponse;
+}
+
+/**
+ * Confirms the required two-factor setup with a code and signs in.
+ */
+export async function signinTwoFactorSetupConfirm(
+  fetcher: ApiFetcher,
+  body: AuthSigninTwoFactorSetupConfirmBody
+): Promise<AuthSigninTwoFactorSetupConfirmResponse> {
+  const post = fetcher
+    .path(AUTH_ROUTES.SIGNIN_TWO_FACTOR_SETUP_CONFIRM)
+    .method('post')
+    .create();
+  const { data } = await post(body as never);
+  return data as AuthSigninTwoFactorSetupConfirmResponse;
 }
 
 /**

@@ -19,6 +19,7 @@ export class TenantMetadata extends BaseModel {
   public logoKey!: string;
   public logoUri!: string;
   public address!: Record<string, any>;
+  public requireTwoFactor!: boolean;
 
   /**
    * Json schema.

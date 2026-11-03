@@ -33,6 +33,15 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/security`,
+    component: lazy(() =>
+      import('@/containers/Preferences/Security/Security').then((m) => ({
+        default: m.Security,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/invoices`,
     component: lazy(() =>
       import('../containers/Preferences/Invoices/PreferencesInvoices').then(

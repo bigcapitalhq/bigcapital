@@ -1,5 +1,8 @@
 import {
   signin,
+  signinTwoFactor,
+  signinTwoFactorSetup,
+  signinTwoFactorSetupConfirm,
   signup,
   signupConfirm,
   sendResetPassword,
@@ -8,6 +11,11 @@ import {
   resendSignupConfirm,
   type AuthSigninResponse,
   type AuthSigninBody,
+  type AuthSigninTwoFactorBody,
+  type AuthSigninTwoFactorSetupBody,
+  type AuthSigninTwoFactorSetupResponse,
+  type AuthSigninTwoFactorSetupConfirmBody,
+  type AuthSigninTwoFactorSetupConfirmResponse,
   type AuthSignupBody,
   type AuthSignupVerifyBody,
   type AuthSendResetPasswordBody,
@@ -20,6 +28,7 @@ import {
   UseMutationOptions,
   UseQueryOptions,
 } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import { batch } from 'react-redux';
 import { setCookie } from '../../../utils';
 import {
@@ -48,19 +57,17 @@ export function setAuthLoginCookies(
   setCookie('tenant_id', String(data.tenant_id ?? ''), expiry);
 }
 
-export function useAuthLogin(
-  props?: UseMutationOptions<AuthSigninResponse, Error, AuthSigninBody>,
-) {
-  const fetcher = useAuthApiFetcher();
+/**
+ * Stores a sign-in response (cookies and auth state): the user is signed in.
+ */
+export function useApplyAuthLogin() {
   const setAuthToken = useSetAuthToken();
   const setOrganizationId = useSetOrganizationId();
   const setUserId = useSetAuthUserId();
 
-  return useMutation({
-    ...props,
-    mutationFn: (values: AuthSigninBody) => signin(fetcher, values),
-    onSuccess: (data, variables, context, mutation) => {
-      setAuthLoginCookies(data, variables?.rememberMe);
+  return useCallback(
+    (data: AuthSigninResponse, rememberMe = false) => {
+      setAuthLoginCookies(data, rememberMe);
       batch(() => {
         // @ts-ignore
         setAuthToken(data.access_token ?? '');
@@ -69,8 +76,96 @@ export function useAuthLogin(
         // @ts-ignore
         setUserId(String(data.user_id ?? ''));
       });
+    },
+    [setAuthToken, setOrganizationId, setUserId],
+  );
+}
+
+/**
+ * Whether a sign-in response is final (has a token) or asks for a second
+ * step (two_factor_required / two_factor_setup_required).
+ */
+export function isAuthSigninComplete(data: AuthSigninResponse): boolean {
+  // @ts-ignore
+  return !!data?.access_token;
+}
+
+export function useAuthLogin(
+  props?: UseMutationOptions<AuthSigninResponse, Error, AuthSigninBody>,
+) {
+  const fetcher = useAuthApiFetcher();
+  const applyAuthLogin = useApplyAuthLogin();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: AuthSigninBody) => signin(fetcher, values),
+    onSuccess: (data, variables, context, mutation) => {
+      // A two-factor step follows: nothing is stored until it is done.
+      if (isAuthSigninComplete(data)) {
+        applyAuthLogin(data, variables?.rememberMe);
+      }
       props?.onSuccess?.(data, variables, context, mutation);
     },
+  });
+}
+
+/**
+ * Second sign-in step: a code or a recovery code with the challenge token.
+ * The caller stores the response with `useApplyAuthLogin`.
+ */
+export function useAuthLoginTwoFactor(
+  props?: UseMutationOptions<
+    AuthSigninResponse,
+    Error,
+    AuthSigninTwoFactorBody
+  >,
+) {
+  const fetcher = useAuthApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: AuthSigninTwoFactorBody) =>
+      signinTwoFactor(fetcher, values),
+  });
+}
+
+/**
+ * Starts the two-factor setup the organization requires, during sign-in.
+ */
+export function useAuthTwoFactorSetupStart(
+  props?: UseMutationOptions<
+    AuthSigninTwoFactorSetupResponse,
+    Error,
+    AuthSigninTwoFactorSetupBody
+  >,
+) {
+  const fetcher = useAuthApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: AuthSigninTwoFactorSetupBody) =>
+      signinTwoFactorSetup(fetcher, values),
+  });
+}
+
+/**
+ * Confirms the required setup with a code: returns the sign-in response
+ * plus the recovery codes. The caller stores it with `useApplyAuthLogin`
+ * once the recovery codes were shown.
+ */
+export function useAuthTwoFactorSetupConfirm(
+  props?: UseMutationOptions<
+    AuthSigninTwoFactorSetupConfirmResponse,
+    Error,
+    AuthSigninTwoFactorSetupConfirmBody
+  >,
+) {
+  const fetcher = useAuthApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: AuthSigninTwoFactorSetupConfirmBody) =>
+      signinTwoFactorSetupConfirm(fetcher, values),
   });
 }
 

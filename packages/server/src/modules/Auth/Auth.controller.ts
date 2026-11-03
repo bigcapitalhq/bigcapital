@@ -5,7 +5,6 @@ import {
   Param,
   Post,
   Request,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
@@ -25,21 +24,38 @@ import { AuthSigninDto } from './dtos/AuthSignin.dto';
 import { AuthSignupVerifyDto } from './dtos/AuthSignupVerify.dto';
 import { AuthSendResetPasswordDto } from './dtos/AuthSendResetPassword.dto';
 import { AuthResetPasswordDto } from './dtos/AuthResetPassword.dto';
-import { AuthSigninResponseDto } from './dtos/AuthSigninResponse.dto';
+import {
+  AuthSigninResponseDto,
+  AuthSigninSetupConfirmResponseDto,
+} from './dtos/AuthSigninResponse.dto';
 import { AuthMetaResponseDto } from './dtos/AuthMetaResponse.dto';
 import { LocalAuthGuard } from './guards/Local.guard';
 import { AuthSigninService } from './commands/AuthSignin.service';
 import { SystemUser } from '../System/models/SystemUser';
+import { NoActiveWorkspaceException } from './exceptions/NoActiveWorkspace.exception';
+import { TwoFactorSigninService } from './two-factor/TwoFactorSignin.service';
+import {
+  TwoFactorSigninDto,
+  TwoFactorSigninSetupConfirmDto,
+  TwoFactorSigninSetupDto,
+} from './two-factor/dtos/TwoFactorSignin.dto';
+import { TwoFactorSetupResponseDto } from './two-factor/dtos/TwoFactor.dto';
 
 @Controller('/auth')
 @ApiTags('Auth')
-@ApiExtraModels(AuthSigninResponseDto, AuthMetaResponseDto)
+@ApiExtraModels(
+  AuthSigninResponseDto,
+  AuthSigninSetupConfirmResponseDto,
+  AuthMetaResponseDto,
+  TwoFactorSetupResponseDto,
+)
 @PublicRoute()
 @Throttle({ auth: {} })
 export class AuthController {
   constructor(
     private readonly authApp: AuthenticationApplication,
     private readonly authSignin: AuthSigninService,
+    private readonly twoFactorSignin: TwoFactorSigninService,
   ) {}
 
   @Post('/signin')
@@ -49,7 +65,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description:
-      'Sign-in successful. Returns access token and tenant/organization IDs.',
+      'Sign-in successful. Returns access token and tenant/organization IDs. When the user has two-factor authentication (or the organization requires it and the user has none yet), returns two_factor_required (or two_factor_setup_required) and a challenge_token instead of the access token.',
     schema: { $ref: getSchemaPath(AuthSigninResponseDto) },
   })
   async signin(
@@ -60,19 +76,78 @@ export class AuthController {
     const tenant = await this.authSignin.resolveSigninTenant(user);
 
     if (!tenant) {
-      throw new UnauthorizedException({
-        message:
-          'No active workspace available. Please contact the administrator.',
-        errors: [{ type: 'ORGANIZATION.INACTIVE' }],
-      });
+      throw new NoActiveWorkspaceException();
     }
+    const challenge = await this.twoFactorSignin.begin(
+      user,
+      tenant,
+      signinDto?.rememberMe,
+    );
+    if (challenge) {
+      return challenge;
+    }
+    return this.authSignin.issueSigninResponse(user, signinDto?.rememberMe);
+  }
 
-    return {
-      accessToken: this.authSignin.signToken(user, signinDto?.rememberMe),
-      organizationId: tenant.organizationId,
-      tenantId: tenant.id,
-      userId: user.id,
-    };
+  @Post('/signin/2fa')
+  @ApiOperation({
+    summary:
+      'Second sign-in step: a code from the authenticator app or a recovery code',
+  })
+  @ApiBody({ type: TwoFactorSigninDto })
+  @ApiResponse({
+    status: 200,
+    description: 'The same response as a sign-in without two-factor.',
+    schema: { $ref: getSchemaPath(AuthSigninResponseDto) },
+  })
+  async signinTwoFactor(
+    @Body() body: TwoFactorSigninDto,
+  ): Promise<AuthSigninResponseDto> {
+    const { user, rememberMe } = await this.twoFactorSignin.complete(
+      body.challengeToken,
+      body.code,
+      body.recoveryCode,
+    );
+    return this.authSignin.issueSigninResponse(user, rememberMe);
+  }
+
+  @Post('/signin/2fa/setup')
+  @ApiOperation({
+    summary:
+      'Required two-factor setup during sign-in: returns a new secret and its otpauth URI',
+  })
+  @ApiBody({ type: TwoFactorSigninSetupDto })
+  @ApiResponse({
+    status: 200,
+    schema: { $ref: getSchemaPath(TwoFactorSetupResponseDto) },
+  })
+  signinTwoFactorSetup(
+    @Body() body: TwoFactorSigninSetupDto,
+  ): Promise<TwoFactorSetupResponseDto> {
+    return this.twoFactorSignin.startSetup(body.challengeToken);
+  }
+
+  @Post('/signin/2fa/setup/confirm')
+  @ApiOperation({
+    summary:
+      'Confirm the required setup with a code: turns two-factor on and signs in',
+  })
+  @ApiBody({ type: TwoFactorSigninSetupConfirmDto })
+  @ApiResponse({
+    status: 200,
+    description: 'The sign-in response plus recovery_codes (shown once).',
+    schema: { $ref: getSchemaPath(AuthSigninSetupConfirmResponseDto) },
+  })
+  async signinTwoFactorSetupConfirm(
+    @Body() body: TwoFactorSigninSetupConfirmDto,
+  ): Promise<AuthSigninSetupConfirmResponseDto> {
+    const { user, rememberMe, recoveryCodes } =
+      await this.twoFactorSignin.confirmSetup(body.challengeToken, body.code);
+    const response = await this.authSignin.issueSigninResponse(
+      user,
+      rememberMe,
+    );
+    return { ...response, recoveryCodes };
   }
 
   @Post('/signup')

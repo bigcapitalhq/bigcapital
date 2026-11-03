@@ -32,6 +32,7 @@ export * from './attachments';
 export * from './pdf-templates';
 export * from './invite';
 export * from './authentication';
+export * from './two-factor';
 export * from './contacts';
 export * from './items-categories';
 export * from './views';
