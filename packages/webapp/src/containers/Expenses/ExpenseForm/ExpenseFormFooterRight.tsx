@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styles from './ExpenseForm.module.scss';
 import { useExpenseSubtotalFormatted, useExpenseTotalFormatted } from './utils';
 import {
   T,
@@ -14,7 +14,7 @@ export function ExpenseFormFooterRight() {
   const subtotalFormatted = useExpenseSubtotalFormatted();
 
   return (
-    <ExpensesTotalLines>
+    <TotalLines className={styles.totalLines}>
       <TotalLine
         title={<T id={'expense.label.subtotal'} />}
         value={subtotalFormatted}
@@ -25,16 +25,6 @@ export function ExpenseFormFooterRight() {
         value={totalFormatted}
         textStyle={TotalLineTextStyle.Bold}
       />
-    </ExpensesTotalLines>
+    </TotalLines>
   );
 }
-
-const ExpensesTotalLines = styled(TotalLines)`
-  --x-color-text: #555555;
-
-  .bp4-dark & {
-    --x-color-text: var(--color-light-gray4);
-  }
-  width: 100%;
-  color: var(--x-color-text);
-`;

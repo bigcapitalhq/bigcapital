@@ -1,14 +1,14 @@
-import { x } from '@xstyled/emotion';
 import React from 'react';
+import styles from './ExpenseForm.module.scss';
 import { ExpenseFormFooterLeft } from './ExpenseFormFooterLeft';
 import { ExpenseFormFooterRight } from './ExpenseFormFooterRight';
-import { Row, Col, Paper } from '@/components';
+import { Row, Col } from '@/components';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 export function ExpenseFormFooter() {
   return (
-    <x.div mt={'20px'} px={'32px'} pb={'20px'} flex={1}>
-      <Paper p={'20px'}>
+    <div className={styles.attachmentsFooter}>
+      <div className={styles.attachmentsPaper}>
         <Row>
           <Col md={8}>
             <ExpenseFormFooterLeft />
@@ -19,7 +19,7 @@ export function ExpenseFormFooter() {
             <ExpenseFormFooterRight />
           </Col>
         </Row>
-      </Paper>
-    </x.div>
+      </div>
+    </div>
   );
 }

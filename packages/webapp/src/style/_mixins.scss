@@ -1,0 +1,43 @@
+@use './breakpoints' as *;
+
+/// Dark-mode rules for CSS Modules.
+///
+/// Blueprint toggles `.bp4-dark` on `<html>` or `<body>`. `:global` keeps the
+/// class from being hashed by CSS Modules.
+///
+/// @example
+///   .paper {
+///     background: #fff;
+///     @include dark-mode { background: var(--color-dark-gray1); }
+///   }
+@mixin dark-mode {
+  :global(.bp4-dark) & {
+    @content;
+  }
+}
+
+/// Truncate text to a single line.
+@mixin truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/// Hide an element visually while keeping it available to screen readers.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/// Consistent keyboard focus ring.
+@mixin focus-ring($color: var(--color-primary), $offset: 2px) {
+  outline: 2px solid $color;
+  outline-offset: $offset;
+}
