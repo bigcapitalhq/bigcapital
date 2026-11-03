@@ -3681,6 +3681,54 @@
         ]
       }
     },
+    "/api/sale-invoices/{id}/duplicate": {
+      "post": {
+        "operationId": "SaleInvoicesController_duplicateSaleInvoice",
+        "summary": "Duplicate the given sale invoice.",
+        "description": "Creates a draft copy of the sale invoice with the same customer, line items, message, terms and conditions, discount, adjustment and payment options, dated today, due 7 days later and numbered with the next unused invoice number. Payments and attachments are not copied.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The id of the sale invoice to duplicate",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The sale invoice has been successfully duplicated."
+          },
+          "404": {
+            "description": "The sale invoice not found."
+          }
+        },
+        "tags": [
+          "Sale Invoices"
+        ]
+      }
+    },
     "/api/sale-invoices/{id}/writeoff": {
       "post": {
         "operationId": "SaleInvoicesController_writeOff",

@@ -4,6 +4,7 @@ import { DeleteSaleInvoice } from './commands/DeleteSaleInvoice.service';
 import { GetSaleInvoice } from './queries/GetSaleInvoice.service';
 import { EditSaleInvoice } from './commands/EditSaleInvoice.service';
 import { DeliverSaleInvoice } from './commands/DeliverSaleInvoice.service';
+import { DuplicateSaleInvoice } from './commands/DuplicateSaleInvoice.service';
 import { GetSaleInvoicesPayable } from './queries/GetSaleInvoicesPayable.service';
 import { WriteoffSaleInvoice } from './commands/WriteoffSaleInvoice.service';
 import { SaleInvoicePdf } from './queries/SaleInvoicePdf.service';
@@ -36,6 +37,7 @@ export class SaleInvoiceApplication {
     private getSaleInvoicesService: GetSaleInvoicesService,
     private editSaleInvoiceService: EditSaleInvoice,
     private deliverSaleInvoiceService: DeliverSaleInvoice,
+    private duplicateSaleInvoiceService: DuplicateSaleInvoice,
     private getReceivableSaleInvoicesService: GetSaleInvoicesPayable,
     private writeoffInvoiceService: WriteoffSaleInvoice,
     private getInvoicePaymentsService: GetInvoicePaymentsService,
@@ -146,6 +148,15 @@ export class SaleInvoiceApplication {
    */
   public deliverSaleInvoice(saleInvoiceId: number) {
     return this.deliverSaleInvoiceService.deliverSaleInvoice(saleInvoiceId);
+  }
+
+  /**
+   * Duplicates the given sale invoice as a new draft invoice.
+   * @param {number} saleInvoiceId - The original sale invoice id.
+   * @returns {Promise<SaleInvoice>}
+   */
+  public duplicateSaleInvoice(saleInvoiceId: number) {
+    return this.duplicateSaleInvoiceService.duplicateSaleInvoice(saleInvoiceId);
   }
 
   /**

@@ -7,15 +7,26 @@ import {
   Position,
   Menu,
   MenuItem,
+  Tooltip,
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
+import { useDuplicateInvoiceAction } from '../hooks/use-duplicate-invoice';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { useInvoiceFormBrandingTemplatesOptions } from './utils';
 import type { InvoiceFormValues } from './utils';
-import { If, Icon, FormattedMessage as T, Group, FSelect } from '@/components';
+import {
+  If,
+  Can,
+  Icon,
+  FormattedMessage as T,
+  Group,
+  FSelect,
+} from '@/components';
 import { PageForm } from '@/components/PageForm';
+import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
 import {
   BrandingThemeFormGroup,
@@ -34,11 +45,20 @@ export function InvoiceFloatingActions() {
   const { openDrawer } = useDrawerActions();
 
   // Formik context.
-  const { resetForm, submitForm, isSubmitting } =
+  const { resetForm, submitForm, isSubmitting, dirty } =
     useFormikContext<InvoiceFormValues>();
 
   // Invoice form context.
   const { setSubmitPayload, invoice } = useInvoiceFormContext();
+
+  const { duplicateInvoice, isDuplicating } = useDuplicateInvoiceAction();
+
+  // Duplicates the saved invoice and opens the duplicate in edit mode. The
+  // duplicate is made from the saved invoice, so it is offered only while
+  // the form has no unsaved changes.
+  const handleDuplicateBtnClick = () => {
+    if (invoice) duplicateInvoice(invoice.id);
+  };
 
   // Handle submit & deliver button click.
   const handleSubmitDeliverBtnClick = () => {
@@ -210,6 +230,24 @@ export function InvoiceFloatingActions() {
           onClick={handleCancelBtnClick}
           text={<T id={'cancel'} />}
         />
+        {/* ----------- Duplicate ----------- */}
+        <If condition={!!invoice}>
+          <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
+            <Tooltip
+              content={intl.get('save_invoice_changes_before_duplicating')}
+              disabled={!dirty}
+              position={Position.TOP}
+            >
+              <Button
+                className={'ml1'}
+                icon={<Icon icon="content-copy" iconSize={16} />}
+                onClick={handleDuplicateBtnClick}
+                disabled={dirty || isSubmitting || isDuplicating}
+                text={<T id={'duplicate'} />}
+              />
+            </Tooltip>
+          </Can>
+        </If>
       </Group>
 
       <Group spacing={0}>
