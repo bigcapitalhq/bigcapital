@@ -11,6 +11,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { BranchTransactionDTOTransformer } from '@/modules/Branches/integrations/BranchTransactionDTOTransform';
 import { events } from '@/common/events/events';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import { Contact } from '@/modules/Contacts/models/Contact';
 import { BankTransaction } from '../models/BankTransaction';
 import {
   ICommandCashflowCreatedPayload,
@@ -34,6 +35,9 @@ export class CreateBankTransactionService {
 
     @Inject(Account.name)
     private accountModel: TenantModelProxy<typeof Account>,
+
+    @Inject(Contact.name)
+    private contactModel: TenantModelProxy<typeof Contact>,
   ) {}
 
   /**
@@ -77,6 +81,7 @@ export class CreateBankTransactionService {
       'exchangeRate',
       'cashflowAccountId',
       'creditAccountId',
+      'contactId',
       'branchId',
       'plaidTransactionId',
       'uncategorizedTransactionId',
@@ -130,6 +135,16 @@ export class CreateBankTransactionService {
       .query()
       .findById(newTransactionDTO.creditAccountId)
       .throwIfNotFound();
+
+    // Retrieves the contact of the transaction payee or throw not found error.
+    // The column carries no foreign key, so an unknown id would otherwise be
+    // written silently and only surface as an orphan on the GL entries.
+    if (newTransactionDTO.contactId) {
+      await this.contactModel()
+        .query()
+        .findById(newTransactionDTO.contactId)
+        .throwIfNotFound();
+    }
 
     // Authorize before creating cashflow transaction.
     await this.authorize(newTransactionDTO, creditAccount);
