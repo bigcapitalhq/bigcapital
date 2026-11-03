@@ -64,7 +64,8 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
    * @returns {string}
    */
   protected amountFormatted(manualJournal) {
-    return this.formatNumber(manualJournal.amount, {
+    // The amount on the bank account, the one the journal is matched by.
+    return this.formatNumber(this.amount(manualJournal), {
       currencyCode: manualJournal.currencyCode,
       money: true,
     });
