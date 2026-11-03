@@ -27,11 +27,10 @@ export class ItemEntriesTaxTransactions {
     const entries = model.entries.map((entry) =>
       this.itemEntryModel().fromJson(entry),
     );
-    const taxAmountWithheld = sumBy(entries, 'taxAmount');
+    // Always assign the sum, even when zero, so editing a document whose taxes
+    // were all removed overwrites the previously stored amount.
+    model.taxAmountWithheld = sumBy(entries, 'taxAmount');
 
-    if (taxAmountWithheld) {
-      model.taxAmountWithheld = taxAmountWithheld;
-    }
     return model;
   };
 
