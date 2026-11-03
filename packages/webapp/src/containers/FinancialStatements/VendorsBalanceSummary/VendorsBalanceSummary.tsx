@@ -58,7 +58,9 @@ function VendorsBalanceSummaryInner({
       <VendorsSummarySheetLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement
+          numberFormat={query?.numberFormat as Record<string, unknown>}
+        >
           <VendorsBalanceSummaryHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

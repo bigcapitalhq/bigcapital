@@ -65,7 +65,7 @@ function BalanceSheetInner({
       <BalanceSheetAlerts />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat ?? {}}>
           <BalanceSheetHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

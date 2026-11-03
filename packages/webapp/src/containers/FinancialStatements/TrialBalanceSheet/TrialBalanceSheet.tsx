@@ -68,7 +68,7 @@ function TrialBalanceSheetInner({
       <TrialBalanceSheetAlerts />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat ?? {}}>
           <TrialBalanceSheetHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

@@ -59,7 +59,7 @@ function SalesTaxLiabilitySummaryInner({
       <SalesTaxLiabilitySummaryLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat ?? {}}>
           <SalesTaxLiabilitySummaryHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

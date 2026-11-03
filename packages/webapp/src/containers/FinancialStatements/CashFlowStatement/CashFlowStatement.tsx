@@ -60,7 +60,7 @@ function CashFlowStatementInner({
       <CashFlowStatementAlerts />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query.numberFormat}>
           <CashFlowStatementHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
