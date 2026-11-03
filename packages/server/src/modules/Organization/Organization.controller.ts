@@ -7,15 +7,7 @@ import {
   getSchemaPath,
   ApiParam,
 } from '@nestjs/swagger';
-import {
-  Controller,
-  Post,
-  Put,
-  Get,
-  Body,
-  HttpCode,
-  Param,
-} from '@nestjs/common';
+import { Controller, Post, Put, Get, HttpCode, Param } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { BuildOrganizationService } from './commands/BuildOrganization.service';
 import {
@@ -37,6 +29,7 @@ import {
 import { GetCurrentOrganizationResponseDto } from './dtos/GetCurrentOrganizationResponse.dto';
 import { OrganizationBuildJobResponseDto } from './dtos/OrganizationBuildJobResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { SnakeCaseBody } from '@/common/decorators/SnakeCaseBody';
 import { OrgBaseCurrencyMutateAbilitiesResponseDto } from './dtos/OrgBaseCurrencyMutateAbilitiesResponse.dto';
 
 @ApiTags('Organization')
@@ -70,7 +63,7 @@ export class OrganizationController {
     status: 500,
     example: OrganizationBuiltResponseExample,
   })
-  async build(@Body() buildDTO: BuildOrganizationDto) {
+  async build(@SnakeCaseBody() buildDTO: BuildOrganizationDto) {
     const result = await this.buildOrganizationService.buildRunJob(buildDTO);
 
     return {
@@ -144,7 +137,7 @@ export class OrganizationController {
     status: 200,
     description: 'Organization information has been updated successfully',
   })
-  async updateOrganization(@Body() updateDTO: UpdateOrganizationDto) {
+  async updateOrganization(@SnakeCaseBody() updateDTO: UpdateOrganizationDto) {
     await this.updateOrganizationService.execute(updateDTO);
 
     return {
