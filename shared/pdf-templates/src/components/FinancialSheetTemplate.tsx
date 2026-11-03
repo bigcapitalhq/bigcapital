@@ -33,6 +33,7 @@ export function FinancialSheetTemplate({
   sheetName,
   sheetDate,
   table,
+  customCSS,
 }: FinancialSheetTemplateProps) {
   return (
     <Box fontSize="14px">
@@ -89,6 +90,10 @@ export function FinancialSheetTemplate({
             ))}
           </x.tbody>
         </x.table>
+
+        {customCSS && (
+          <x.style dangerouslySetInnerHTML={{ __html: customCSS }} />
+        )}
       </Box>
     </Box>
   );

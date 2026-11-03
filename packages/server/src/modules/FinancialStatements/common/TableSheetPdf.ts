@@ -46,7 +46,7 @@ export class TableSheetPdf {
         })),
         rows: rows.map((row) => ({
           cells: row.cells,
-          classNames: (row as any).classNames,
+          classNames: row.classNames.join(' '),
         })),
       },
       customCSS,
@@ -70,9 +70,11 @@ export class TableSheetPdf {
   /**
    * Converts the table rows to pdf rows.
    * @param {ITableRow[]} rows - The table rows to be converted.
-   * @returns {ITableRow[]} - The converted table rows.
+   * @returns {Array<ITableRow & { classNames: string[] }>} - The converted table rows.
    */
-  private tablePdfRows = (rows: ITableRow[]): ITableRow[] => {
+  private tablePdfRows = (
+    rows: ITableRow[],
+  ): Array<ITableRow & { classNames: string[] }> => {
     const flatNestedTreeRows = (rows: ITableRow[]): ITableRow[] =>
       FinancialTableStructure.flatNestedTree(rows, {
         nestedPrefix: '<span style="padding-left: 15px;"></span>',
