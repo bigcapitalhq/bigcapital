@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  GetMatchedTransactionsFilter,
+  GetMatchedTransactionsByTypeFilter,
   MatchedTransactionPOJO,
   MatchedTransactionsPOJO,
 } from '../types';
@@ -31,11 +31,11 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
 
   /**
    * Retrieves the matched transactions of expenses.
-   * @param {GetMatchedTransactionsFilter} filter
+   * @param {GetMatchedTransactionsByTypeFilter} filter
    * @returns
    */
   async getMatchedTransactions(
-    filter: GetMatchedTransactionsFilter,
+    filter: GetMatchedTransactionsByTypeFilter,
   ): Promise<MatchedTransactionsPOJO> {
     // await this.tenantModelsInit();
     // Retrieve the expense matches.
@@ -48,6 +48,9 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
 
         // Filter the published onyl
         query.modify('filterByPublished');
+
+        // Only expenses paid from the bank transactions' accounts.
+        query.whereIn('paymentAccountId', filter.accountIds);
 
         if (filter.fromDate) {
           query.where('paymentDate', '>=', filter.fromDate);

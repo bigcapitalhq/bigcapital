@@ -1,6 +1,6 @@
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionCashflowTransformer } from './GetMatchedTransactionCashflowTransformer';
-import { GetMatchedTransactionsFilter } from '../types';
+import { GetMatchedTransactionsByTypeFilter } from '../types';
 import { BankTransaction } from '@/modules/BankingTransactions/models/BankTransaction';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Inject, Injectable } from '@nestjs/common';
@@ -22,11 +22,11 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
   /**
    * Retrieve the matched transactions of cash flow.
    * @param {number} tenantId
-   * @param {GetMatchedTransactionsFilter} filter
+   * @param {GetMatchedTransactionsByTypeFilter} filter
    * @returns
    */
   async getMatchedTransactions(
-    filter: Omit<GetMatchedTransactionsFilter, 'transactionType'>,
+    filter: Omit<GetMatchedTransactionsByTypeFilter, 'transactionType'>,
   ) {
     const transactions = await this.bankTransactionModel()
       .query()
@@ -40,6 +40,9 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
 
         // Published.
         q.modify('published');
+
+        // Only transactions recorded on the bank transactions' accounts.
+        q.whereIn('cashflowAccountId', filter.accountIds);
 
         if (filter.fromDate) {
           q.where('date', '>=', filter.fromDate);
