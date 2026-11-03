@@ -15,6 +15,7 @@ export * from './sales-by-items';
 export * from './purchases-by-items';
 export * from './inventory-valuation';
 export * from './inventory-details';
+export * from './inventory-turnover-by-amount';
 export * from './sales-tax-liability';
 export * from './transactions-reference';
 export * from './table-column-keys';

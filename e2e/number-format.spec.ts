@@ -107,6 +107,11 @@ const REPORTS: ReportConfig[] = [
     rowPrefix: 'inventory-item-details',
   },
   {
+    title: 'Inventory Turnover By Amount',
+    path: '/financial-reports/inventory-turnover-by-amount',
+    rowPrefix: 'inventory-turnover-by-amount',
+  },
+  {
     title: 'Sales Tax Liability Summary',
     // The seeded invoice is not paid, so tax is only recognised on the
     // accrual basis (the report page defaults to cash).

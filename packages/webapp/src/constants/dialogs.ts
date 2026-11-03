@@ -71,6 +71,7 @@ export enum DialogsName {
   CashflowSheetPdfPreview = 'CashflowSheetPdfPreview',
   ProfitLossSheetPdfPreview = 'ProfitLossSheetPdfPreview',
   InventoryValuationPdfPreview = 'InventoryValuationPdfPreview',
+  InventoryTurnoverByAmountPdfPreview = 'InventoryTurnoverByAmountPdfPreview',
   APAgingSummaryPdfPreview = 'APAgingSummaryPdfPreview',
   ARAgingSummaryPdfPreview = 'ARAgingSummaryPdfPreview',
   JournalPdfPreview = 'JournalPdfPreview',

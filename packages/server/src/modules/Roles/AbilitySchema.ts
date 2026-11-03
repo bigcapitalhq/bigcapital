@@ -309,6 +309,10 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
         label: 'ability.inventory_items_details',
       },
       {
+        key: ReportsAction.READ_INVENTORY_TURNOVER_BY_AMOUNT,
+        label: 'ability.inventory_turnover_by_amount',
+      },
+      {
         key: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
         label: 'ability.cashflow_account_transactions',
       },

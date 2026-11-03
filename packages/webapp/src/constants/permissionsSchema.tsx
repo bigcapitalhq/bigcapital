@@ -657,6 +657,10 @@ export const getPermissionsSchema = (): PermissionModule[] => [
             key: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
           },
           {
+            label: intl.get('permissions.inventory_turnover_by_amount'),
+            key: ReportsAction.READ_INVENTORY_TURNOVER_BY_AMOUNT,
+          },
+          {
             label: intl.get('permissions.cashflow_account_transactions'),
             key: ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
           },

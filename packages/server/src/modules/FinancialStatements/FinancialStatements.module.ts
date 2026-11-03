@@ -11,6 +11,7 @@ import { ARAgingSummaryModule } from './modules/ARAgingSummary/ARAgingSummary.mo
 import { APAgingSummaryModule } from './modules/APAgingSummary/APAgingSummary.module';
 import { InventoryItemDetailsModule } from './modules/InventoryItemDetails/InventoryItemDetails.module';
 import { InventoryValuationSheetModule } from './modules/InventoryValuationSheet/InventoryValuationSheet.module';
+import { InventoryTurnoverByAmountModule } from './modules/InventoryTurnoverByAmount/InventoryTurnoverByAmount.module';
 import { SalesTaxLiabilityModule } from './modules/SalesTaxLiabilitySummary/SalesTaxLiability.module';
 import { JournalSheetModule } from './modules/JournalSheet/JournalSheet.module';
 import { ProfitLossSheetModule } from './modules/ProfitLossSheet/ProfitLossSheet.module';
@@ -34,6 +35,7 @@ import { BalanceSheetModule } from './modules/BalanceSheet/BalanceSheet.module';
     APAgingSummaryModule,
     InventoryItemDetailsModule,
     InventoryValuationSheetModule,
+    InventoryTurnoverByAmountModule,
     SalesTaxLiabilityModule,
     JournalSheetModule,
     ProfitLossSheetModule,

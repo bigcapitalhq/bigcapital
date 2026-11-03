@@ -163,6 +163,7 @@ export const ReportsAction = {
   READ_VENDORS_SUMMARY_BALANCE: 'read-vendors-summary-balance',
   READ_INVENTORY_VALUATION_SUMMARY: 'read-inventory-valuation-summary',
   READ_INVENTORY_ITEM_DETAILS: 'read-inventory-item-details',
+  READ_INVENTORY_TURNOVER_BY_AMOUNT: 'read-inventory-turnover-by-amount',
   READ_CASHFLOW_ACCOUNT_TRANSACTION: 'read-cashflow-account-transactions',
   READ_SALES_TAX_LIABILITY_SUMMARY: 'read-sales-tax-liability-summary',
 } as const;

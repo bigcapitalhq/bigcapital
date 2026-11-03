@@ -8,6 +8,7 @@ import {
   DISPLAY_FILTER_DRAWER_TOGGLE,
   GENERAL_LEDGER,
   INVENTORY_ITEM_DETAILS,
+  INVENTORY_TURNOVER_BY_AMOUNT,
   INVENTORY_VALUATION,
   JOURNAL,
   PROFIT_LOSS,
@@ -114,6 +115,12 @@ export function toggleCashFlowStatementFilterDrawer(toggle?: boolean) {
 export function toggleInventoryItemDetailsFilterDrawer(toggle?: boolean) {
   return {
     type: `${INVENTORY_ITEM_DETAILS}/${DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: { toggle },
+  };
+}
+export function toggleInventoryTurnoverByAmountFilterDrawer(toggle?: boolean) {
+  return {
+    type: `${INVENTORY_TURNOVER_BY_AMOUNT}/${DISPLAY_FILTER_DRAWER_TOGGLE}`,
     payload: { toggle },
   };
 }

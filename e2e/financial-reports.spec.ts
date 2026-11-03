@@ -271,6 +271,14 @@ test.describe('financial reports', () => {
     await waitForReportRows(page, 'inventory-item-details');
   });
 
+  test('should render the Inventory Turnover By Amount report.', async ({
+    page,
+  }) => {
+    await page.goto('/financial-reports/inventory-turnover-by-amount');
+    await waitForReportPage(page, 'Inventory Turnover By Amount');
+    await waitForReportRows(page, 'inventory-turnover-by-amount');
+  });
+
   test('should render the Sales Tax Liability Summary report.', async ({
     page,
   }) => {
