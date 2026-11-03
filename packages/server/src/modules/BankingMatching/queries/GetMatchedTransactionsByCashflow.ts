@@ -22,7 +22,6 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
 
   /**
    * Retrieve the matched transactions of cash flow.
-   * @param {number} tenantId
    * @param {GetMatchedTransactionsByTypeFilter} filter
    * @returns
    */

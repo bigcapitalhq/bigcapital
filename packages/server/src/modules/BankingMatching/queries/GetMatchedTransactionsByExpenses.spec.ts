@@ -1,5 +1,6 @@
 import { GetMatchedTransactionsByExpenses } from './GetMatchedTransactionsByExpenses';
 import { ERRORS } from '../types';
+import { Expense } from '@/modules/Expenses/models/Expense.model';
 
 describe('GetMatchedTransactionsByExpenses', () => {
   let qb: Record<string, jest.Mock>;
@@ -66,10 +67,17 @@ describe('GetMatchedTransactionsByExpenses', () => {
   });
 
   it('looks up only published expenses that are not matched yet', async () => {
+    const matchedQuery = { kind: 'matched bank transactions of the expense' };
+    const relatedQuery = jest
+      .spyOn(Expense, 'relatedQuery')
+      .mockReturnValue(matchedQuery as any);
+
     await service.getMatchedTransaction(3, [7]);
 
     expect(lookupChain.modify).toHaveBeenCalledWith('filterByPublished');
-    expect(lookupChain.whereNotExists).toHaveBeenCalled();
+    expect(relatedQuery).toHaveBeenCalledWith('matchedBankTransaction');
+    expect(lookupChain.whereNotExists).toHaveBeenCalledWith(matchedQuery);
+    relatedQuery.mockRestore();
   });
 
   it('returns the expense when it is paid from the bank account', async () => {

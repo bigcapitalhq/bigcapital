@@ -138,4 +138,17 @@ describe('MatchBankTransactions', () => {
     });
     expect(matchedService.createMatchedTransaction).not.toHaveBeenCalled();
   });
+
+  it("keeps wrapping a lookup error that isn't a ServiceError", async () => {
+    const rawError = new Error('record not found');
+    matchedService.getMatchedTransaction.mockRejectedValue(rawError);
+
+    const rejection = service.matchTransaction(
+      [1],
+      [{ referenceType: 'Expense', referenceId: 5 }],
+    );
+
+    await expect(rejection).rejects.toBeInstanceOf(ServiceError);
+    await expect(rejection).rejects.toMatchObject({ errorType: rawError });
+  });
 });
