@@ -71,7 +71,7 @@ function BillDeleteAlertInner({
       onConfirm={handleConfirmBillDelete}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'bill-delete-alert'}>
         <T id={'once_delete_this_bill_you_will_able_to_restore_it'} />
       </p>
     </Alert>
