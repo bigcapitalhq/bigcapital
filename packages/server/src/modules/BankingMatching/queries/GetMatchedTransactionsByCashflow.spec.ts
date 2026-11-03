@@ -1,4 +1,5 @@
 import { GetMatchedTransactionsByCashflow } from './GetMatchedTransactionsByCashflow';
+import { ERRORS } from '../types';
 
 describe('GetMatchedTransactionsByCashflow', () => {
   let qb: Record<string, jest.Mock>;
@@ -12,6 +13,22 @@ describe('GetMatchedTransactionsByCashflow', () => {
     }
     return target;
   };
+  // The single-transaction lookup: a thenable chain resolving the given row.
+  const buildLookupChain = (row: any) => {
+    const chain = chainable(Object.assign(Promise.resolve(row), {}), [
+      'findById',
+      'withGraphJoined',
+      'whereNull',
+      'whereNotExists',
+      'modify',
+      'throwIfNotFound',
+    ]);
+    chain.onBuild = jest.fn((callback: (query: any) => void) => {
+      callback(qb);
+      return Promise.resolve([]);
+    });
+    return chain;
+  };
 
   beforeEach(() => {
     // Records the conditions the candidate (list) query is built with.
@@ -24,22 +41,7 @@ describe('GetMatchedTransactionsByCashflow', () => {
       'modify',
       'orderBy',
     ]);
-    // The single-transaction lookup: a thenable chain resolving the row.
-    lookupChain = chainable(
-      Object.assign(Promise.resolve({ id: 3, cashflowAccountId: 7 }), {}),
-      [
-        'findById',
-        'withGraphJoined',
-        'whereNull',
-        'whereNotExists',
-        'modify',
-        'throwIfNotFound',
-      ],
-    );
-    lookupChain.onBuild = jest.fn((callback: (query: any) => void) => {
-      callback(qb);
-      return Promise.resolve([]);
-    });
+    lookupChain = buildLookupChain({ id: 3, cashflowAccountId: 7 });
     const bankTransactionModel = jest.fn(() => ({
       query: jest.fn(() => lookupChain),
     }));
@@ -89,8 +91,16 @@ describe('GetMatchedTransactionsByCashflow', () => {
   });
 
   it('refuses to look up a cash-flow transaction that is already matched', async () => {
-    await service.getMatchedTransaction(3);
+    await service.getMatchedTransaction(3, [7]);
 
     expect(lookupChain.whereNotExists).toHaveBeenCalledWith(subQb);
+  });
+
+  it('refuses a cash-flow transaction recorded on another account', async () => {
+    lookupChain = buildLookupChain({ id: 3, cashflowAccountId: 9 });
+
+    await expect(service.getMatchedTransaction(3, [7])).rejects.toMatchObject({
+      errorType: ERRORS.MATCHING_TRANSACTION_ACCOUNT_INVALID,
+    });
   });
 });

@@ -29,12 +29,13 @@ export abstract class GetMatchedTransactionsByType {
 
   /**
    * Retrieves the matched transaction details.
-   * @param {number} tenantId -
    * @param {number} transactionId -
+   * @param {Array<number>} accountIds - Accounts of the bank transactions being matched.
    * @returns {Promise<MatchedTransactionPOJO>}
    */
   public async getMatchedTransaction(
     _transactionId: number,
+    _accountIds: Array<number>,
   ): Promise<MatchedTransactionPOJO> {
     throw new Error(
       'The `getMatchedTransaction` method is not defined for the transaction type.',

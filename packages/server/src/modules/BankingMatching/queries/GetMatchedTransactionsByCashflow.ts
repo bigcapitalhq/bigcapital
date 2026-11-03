@@ -1,6 +1,7 @@
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionCashflowTransformer } from './GetMatchedTransactionCashflowTransformer';
-import { GetMatchedTransactionsByTypeFilter } from '../types';
+import { ERRORS, GetMatchedTransactionsByTypeFilter } from '../types';
+import { ServiceError } from '@/modules/Items/ServiceError';
 import { BankTransaction } from '@/modules/BankingTransactions/models/BankTransaction';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Inject, Injectable } from '@nestjs/common';
@@ -59,12 +60,16 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
   }
 
   /**
-   * Retrieves the matched transaction of cash flow.
-   * @param {number} tenantId
+   * Retrieves the matched transaction of cash flow, only when it's recorded on
+   * one of the given bank accounts.
    * @param {number} transactionId
+   * @param {Array<number>} accountIds - Accounts of the bank transactions being matched.
    * @returns
    */
-  async getMatchedTransaction(transactionId: number) {
+  async getMatchedTransaction(
+    transactionId: number,
+    accountIds: Array<number>,
+  ) {
     const transactions = await this.bankTransactionModel()
       .query()
       .findById(transactionId)
@@ -73,6 +78,9 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
       .modify('published')
       .throwIfNotFound();
 
+    if (!accountIds.includes(transactions.cashflowAccountId)) {
+      throw new ServiceError(ERRORS.MATCHING_TRANSACTION_ACCOUNT_INVALID);
+    }
     return this.transformer.transform(
       transactions,
       new GetMatchedTransactionCashflowTransformer(),

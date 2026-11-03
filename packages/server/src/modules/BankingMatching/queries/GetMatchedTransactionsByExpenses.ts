@@ -1,9 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
+  ERRORS,
   GetMatchedTransactionsByTypeFilter,
   MatchedTransactionPOJO,
   MatchedTransactionsPOJO,
 } from '../types';
+import { ServiceError } from '@/modules/Items/ServiceError';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 import { GetMatchedTransactionExpensesTransformer } from './GetMatchedTransactionExpensesTransformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
@@ -74,19 +76,27 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
   }
 
   /**
-   * Retrieves the given matched expense transaction.
-   * @param {number} tenantId
+   * Retrieves the given matched expense transaction, only when it would be
+   * offered as a candidate: published, not matched yet, and paid from one of
+   * the given bank accounts.
    * @param {number} transactionId
+   * @param {Array<number>} accountIds - Accounts of the bank transactions being matched.
    * @returns {GetMatchedTransactionExpensesTransformer-}
    */
   public async getMatchedTransaction(
     transactionId: number,
+    accountIds: Array<number>,
   ): Promise<MatchedTransactionPOJO> {
     const expense = await this.expenseModel()
       .query()
       .findById(transactionId)
+      .modify('filterByPublished')
+      .whereNotExists(Expense.relatedQuery('matchedBankTransaction'))
       .throwIfNotFound();
 
+    if (!accountIds.includes(expense.paymentAccountId)) {
+      throw new ServiceError(ERRORS.MATCHING_TRANSACTION_ACCOUNT_INVALID);
+    }
     return this.transformer.transform(
       expense,
       new GetMatchedTransactionExpensesTransformer(),
