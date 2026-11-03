@@ -25,6 +25,7 @@ export class ProfitLossTablePdfInjectable {
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,
+      query.numberFormat?.showInRed,
     );
   }
 }
