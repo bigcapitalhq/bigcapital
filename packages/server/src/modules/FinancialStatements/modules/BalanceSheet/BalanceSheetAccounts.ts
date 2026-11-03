@@ -25,6 +25,7 @@ import { GConstructor } from '@/common/types/Constructor';
 import { INumberFormatQuery } from '../../types/Report.types';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
+import { sortAccountsByCode } from '@/utils/sort-accounts-by-code';
 import { FinancialSheet } from '../../common/FinancialSheet';
 
 export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
@@ -145,8 +146,11 @@ export const BalanceSheetAccounts = <T extends GConstructor<FinancialSheet>>(
     private getAccountsNodesByAccountTypes = (
       accountsTypes: string[],
     ): IBalanceSheetAccountNode[] => {
-      // Retrieves accounts from the given defined node account types.
-      const accounts = this.getAccountsByAccountTypes(accountsTypes);
+      // Retrieves accounts from the given defined node account types, in
+      // chart order.
+      const accounts = sortAccountsByCode(
+        this.getAccountsByAccountTypes(accountsTypes),
+      );
 
       // Converts the flatten accounts to tree.
       const accountsTree = flatToNestedArray(accounts, {
