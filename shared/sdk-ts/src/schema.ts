@@ -14109,6 +14109,11 @@ export interface components {
              */
             showZero?: boolean;
             /**
+             * @description Whether to show negative amounts in red
+             * @example false
+             */
+            showInRed?: boolean;
+            /**
              * @description How to format money values
              * @example total
              * @enum {string}

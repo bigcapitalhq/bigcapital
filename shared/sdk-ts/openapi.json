@@ -38772,6 +38772,11 @@
             "description": "Whether to show zero values",
             "example": true
           },
+          "showInRed": {
+            "type": "boolean",
+            "description": "Whether to show negative amounts in red",
+            "example": false
+          },
           "formatMoney": {
             "type": "string",
             "description": "How to format money values",

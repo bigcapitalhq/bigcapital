@@ -108,4 +108,16 @@ describe('Financial statement PDFs (e2e)', () => {
     expect(html).toMatch(/<tr class="row-type--total row-id--assets[ "]/);
     expect(html).not.toMatch(/<tr class="[^"]*,/);
   });
+
+  it('echoes numberFormat.showInRed in the report query', async () => {
+    // The webapp sends snake_case query keys; the serializer converts them.
+    const res = await request(app.getHttpServer())
+      .get('/reports/balance-sheet')
+      .query({ 'number_format[show_in_red]': 'true' })
+      .set(authHeaders())
+      .set('Accept', 'application/json')
+      .expect(200);
+
+    expect(res.body.query.number_format.show_in_red).toBe(true);
+  });
 });

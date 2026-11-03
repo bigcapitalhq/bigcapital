@@ -4,6 +4,7 @@ export interface INumberFormatQuery {
   showZero: boolean;
   formatMoney: 'total' | 'always' | 'none';
   negativeFormat: 'parentheses' | 'mines';
+  showInRed?: boolean;
 }
 
 export interface IFormatNumberSettings {
