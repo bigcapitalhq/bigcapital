@@ -1,7 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { TableSheetPdf } from '../../common/TableSheetPdf';
 import { ITransactionsByCustomersFilter } from './TransactionsByCustomer.types';
 import { TransactionsByCustomersTableInjectable } from './TransactionsByCustomersTableInjectable';
 
+@Injectable()
 export class TransactionsByCustomersPdf {
   constructor(
     private readonly transactionsByCustomersTable: TransactionsByCustomersTableInjectable,
