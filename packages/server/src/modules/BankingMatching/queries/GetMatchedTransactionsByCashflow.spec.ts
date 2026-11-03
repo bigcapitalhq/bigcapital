@@ -2,12 +2,20 @@ import { GetMatchedTransactionsByCashflow } from './GetMatchedTransactionsByCash
 
 describe('GetMatchedTransactionsByCashflow', () => {
   let qb: Record<string, jest.Mock>;
+  let lookupChain: any;
+  let subQb: Record<string, jest.Mock>;
   let service: GetMatchedTransactionsByCashflow;
 
+  const chainable = (target: any, methods: string[]) => {
+    for (const method of methods) {
+      target[method] = jest.fn(() => target);
+    }
+    return target;
+  };
+
   beforeEach(() => {
-    // Records the conditions the candidate query is built with.
-    qb = {};
-    for (const method of [
+    // Records the conditions the candidate (list) query is built with.
+    qb = chainable({}, [
       'withGraphJoined',
       'whereNull',
       'whereNotExists',
@@ -15,16 +23,25 @@ describe('GetMatchedTransactionsByCashflow', () => {
       'whereIn',
       'modify',
       'orderBy',
-    ]) {
-      qb[method] = jest.fn(() => qb);
-    }
+    ]);
+    // The single-transaction lookup: a thenable chain resolving the row.
+    lookupChain = chainable(
+      Object.assign(Promise.resolve({ id: 3, cashflowAccountId: 7 }), {}),
+      [
+        'findById',
+        'withGraphJoined',
+        'whereNull',
+        'whereNotExists',
+        'modify',
+        'throwIfNotFound',
+      ],
+    );
+    lookupChain.onBuild = jest.fn((callback: (query: any) => void) => {
+      callback(qb);
+      return Promise.resolve([]);
+    });
     const bankTransactionModel = jest.fn(() => ({
-      query: jest.fn(() => ({
-        onBuild: jest.fn((callback: (query: any) => void) => {
-          callback(qb);
-          return Promise.resolve([]);
-        }),
-      })),
+      query: jest.fn(() => lookupChain),
     }));
     const transformer = { transform: jest.fn((items) => items) };
 
@@ -32,6 +49,11 @@ describe('GetMatchedTransactionsByCashflow', () => {
       transformer as any,
       bankTransactionModel as any,
     );
+    // The matched bank transactions subquery.
+    subQb = chainable({}, ['where', 'whereColumn']);
+    service.matchedBankTransactionModel = jest.fn(() => ({
+      query: jest.fn(() => subQb),
+    })) as any;
   });
 
   it("lists cash-flow transactions recorded on the bank transactions' accounts", async () => {
@@ -47,5 +69,28 @@ describe('GetMatchedTransactionsByCashflow', () => {
       'creditAccountId',
       expect.anything(),
     );
+  });
+
+  it('excludes cash-flow transactions already matched as CashflowTransaction', async () => {
+    await service.getMatchedTransactions({ accountIds: [7] } as any);
+
+    expect(qb.whereNotExists).toHaveBeenCalledWith(subQb);
+    expect(subQb.where).toHaveBeenCalledWith(
+      'referenceType',
+      'CashflowTransaction',
+    );
+    expect(subQb.whereColumn).toHaveBeenCalledWith(
+      'referenceId',
+      'cashflowTransactions.id',
+    );
+    expect(qb.withGraphJoined).not.toHaveBeenCalledWith(
+      'matchedBankTransaction',
+    );
+  });
+
+  it('refuses to look up a cash-flow transaction that is already matched', async () => {
+    await service.getMatchedTransaction(3);
+
+    expect(lookupChain.whereNotExists).toHaveBeenCalledWith(subQb);
   });
 });

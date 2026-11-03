@@ -32,8 +32,7 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
       .query()
       .onBuild((q) => {
         // Not matched to bank transaction.
-        q.withGraphJoined('matchedBankTransaction');
-        q.whereNull('matchedBankTransaction.id');
+        q.whereNotExists(this.matchedAsCashflowTransactionQuery());
 
         // Not categorized.
         q.modify('notCategorized');
@@ -69,8 +68,7 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
     const transactions = await this.bankTransactionModel()
       .query()
       .findById(transactionId)
-      .withGraphJoined('matchedBankTransaction')
-      .whereNull('matchedBankTransaction.id')
+      .whereNotExists(this.matchedAsCashflowTransactionQuery())
       .modify('notCategorized')
       .modify('published')
       .throwIfNotFound();
@@ -79,5 +77,17 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
       transactions,
       new GetMatchedTransactionCashflowTransformer(),
     );
+  }
+
+  /**
+   * Subquery of the bank matches of the outer cash flow transaction.
+   * Matches are stored with the `CashflowTransaction` reference type, which
+   * the `BankTransaction.matchedBankTransaction` relation doesn't filter by.
+   */
+  private matchedAsCashflowTransactionQuery() {
+    return this.matchedBankTransactionModel()
+      .query()
+      .where('referenceType', 'CashflowTransaction')
+      .whereColumn('referenceId', 'cashflowTransactions.id');
   }
 }
