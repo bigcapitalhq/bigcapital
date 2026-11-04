@@ -247,6 +247,34 @@ PaperTemplate.Address = ({ children }: { children: React.ReactNode }) => {
   return <Box>{children}</Box>;
 };
 
+export interface PaperTemplateCompanyTaxNumberProps {
+  taxNumber?: string;
+}
+
+/**
+ * The organization tax number, printed as plain text under the company
+ * address, one line per line of the value. Renders nothing when it's blank.
+ */
+PaperTemplate.CompanyTaxNumber = ({
+  taxNumber,
+}: PaperTemplateCompanyTaxNumberProps) => {
+  const text = (taxNumber ?? '').replace(/\r\n?/g, '\n').trim();
+
+  if (!text) {
+    return null;
+  }
+  return (
+    <Box
+      className={css`
+        white-space: pre-line;
+        overflow-wrap: anywhere;
+      `}
+    >
+      {text}
+    </Box>
+  );
+};
+
 PaperTemplate.Statement = ({
   label,
   children,

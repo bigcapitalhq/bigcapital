@@ -49,6 +49,8 @@ export interface CreditNotePaperTemplateProps extends PaperTemplateProps {
 
   showCompanyAddress?: boolean;
   companyAddress?: string;
+  showCompanyTaxNumber?: boolean;
+  companyTaxNumber?: string;
 
   billedToLabel?: string;
 
@@ -105,6 +107,8 @@ export function CreditNotePaperTemplate({
 
   showCompanyAddress = true,
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
+  showCompanyTaxNumber = true,
+  companyTaxNumber = '',
 
   billedToLabel = 'Billed To',
 
@@ -179,6 +183,9 @@ export function CreditNotePaperTemplate({
           {showCompanyAddress && (
             <PaperTemplate.Address>
               <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
+              {showCompanyTaxNumber && (
+                <PaperTemplate.CompanyTaxNumber taxNumber={companyTaxNumber} />
+              )}
             </PaperTemplate.Address>
           )}
           {showCustomerAddress && (
