@@ -6,6 +6,7 @@ import {
   IsISO4217CurrencyCode,
   IsOptional,
   IsString,
+  MaxLength,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -197,6 +198,7 @@ export class UpdateOrganizationDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   @ApiPropertyOptional({
     description: 'Organization tax identification number',
     example: '12-3456789',

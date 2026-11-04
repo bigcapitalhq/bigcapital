@@ -5,6 +5,7 @@ const Schema = Yup.object().shape({
   name: Yup.string().required().label(intl.get('organization_name_')),
   taxNumber: Yup.string()
     .nullable()
+    .max(255)
     .label(intl.get('organization_tax_number_')),
   industry: Yup.string().nullable().label(intl.get('organization_industry_')),
   location: Yup.string().nullable().label(intl.get('location')),
