@@ -67,4 +67,5 @@ export interface CommonOrganizationBrandingAttributes {
   companyLogoKey?: string;
   companyLogoUri?: string;
   companyAddress?: string;
+  companyTaxNumber?: string;
 }
