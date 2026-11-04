@@ -54,7 +54,7 @@ function CustomersBalanceSummaryInner({
       <CustomersBalanceLoadingBar />
 
       <DashboardPageContent>
-        <FinancialStatement>
+        <FinancialStatement numberFormat={query?.numberFormat}>
           <CustomersBalanceSummaryHeader
             pageFilter={query}
             onSubmitFilter={handleFilterSubmit}

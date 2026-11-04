@@ -1,3 +1,4 @@
+import { isNegativeAmount } from '@bigcapital/utils';
 import classNames from 'classnames';
 import { camelCase } from 'lodash';
 import React, { useContext } from 'react';
@@ -73,6 +74,8 @@ export default function TableCell({ cell, row, index }: TableCellProps) {
           'align-center': cell.column.align === 'center',
           [`td-${cell.column.id}`]: cell.column.id,
           [`td-${cellType}-type`]: !!cellType,
+          'is-negative-amount':
+            !!cell.column.money && isNegativeAmount(cell.value),
         }),
         ...(cellTestId ? { 'data-testId': cellTestId(row, cell) } : {}),
       })}
