@@ -190,6 +190,8 @@ export const defaultInvoicePdfTemplateAttributes = {
   // # Company address
   showCompanyAddress: true,
   companyAddress: '',
+  showCompanyTaxNumber: true,
+  companyTaxNumber: '',
   billedToLabel: 'Billed To',
 
   // Entries

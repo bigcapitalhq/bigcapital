@@ -86,6 +86,8 @@ export const defaultSaleReceiptBrandingAttributes = {
   // # Company address
   showCompanyAddress: true,
   companyAddress: '',
+  showCompanyTaxNumber: true,
+  companyTaxNumber: '',
   billedToLabel: 'Billed To',
 
   // Entries

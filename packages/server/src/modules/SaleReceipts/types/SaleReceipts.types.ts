@@ -102,6 +102,8 @@ export interface ISaleReceiptBrandingTemplateAttributes {
   // Company address
   showCompanyAddress: boolean;
   companyAddress: string;
+  showCompanyTaxNumber: boolean;
+  companyTaxNumber: string;
   billedToLabel: string;
 
   // Entries
