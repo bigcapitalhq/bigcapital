@@ -16,6 +16,7 @@ export interface CreditNoteCustomizeValues extends BrandingTemplateValues {
   // Addresses
   showCustomerAddress?: boolean;
   showCompanyAddress?: boolean;
+  showCompanyTaxNumber?: boolean;
   billedToLabel?: string;
 
   // Entries

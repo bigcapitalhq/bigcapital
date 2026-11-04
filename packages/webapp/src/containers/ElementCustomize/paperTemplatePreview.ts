@@ -25,6 +25,7 @@ export function pickPaperTemplateProps<T extends object>(
   const keys = [
     ...Object.keys(initialValues).filter((key) => !excludedKeys.has(key)),
     'companyAddress',
+    'companyTaxNumber',
   ];
 
   return pick(source, keys) as T;

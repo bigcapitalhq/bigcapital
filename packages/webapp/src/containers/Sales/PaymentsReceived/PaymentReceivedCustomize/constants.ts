@@ -20,6 +20,7 @@ export const initialValues = {
 
   // Company address
   showCompanyAddress: true,
+  showCompanyTaxNumber: true,
 
   // Customer address
   showCustomerAddress: true,
@@ -56,6 +57,10 @@ export const fieldsGroups = [
       {
         enableKey: 'showCompanyAddress',
         label: 'Billed From',
+      },
+      {
+        enableKey: 'showCompanyTaxNumber',
+        label: 'Tax number',
       },
     ],
   },
