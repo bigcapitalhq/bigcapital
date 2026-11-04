@@ -2,6 +2,7 @@ import { castArray } from 'lodash';
 import moment from 'moment';
 import { useMemo } from 'react';
 import * as Yup from 'yup';
+import { withRememberedPeriod } from '../reportingPeriod';
 import { useAppQueryString } from '@/hooks';
 import { transformToCamelCase, flatObject, transformToForm } from '@/utils';
 
@@ -44,7 +45,7 @@ export const getARAgingSummaryQuerySchema = () => {
 const parseARAgingSummaryQuery = (locationQuery: Record<string, unknown>) => {
   const defaultQuery = getDefaultARAgingSummaryQuery();
   const transformed = {
-    ...defaultQuery,
+    ...withRememberedPeriod(defaultQuery),
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {

@@ -1,6 +1,7 @@
 import * as FF from 'fp-ts/function';
 import moment from 'moment';
 import React, { useEffect } from 'react';
+import { writeReportingPeriod } from '../reportingPeriod';
 import { CustomersBalanceLoadingBar } from './components';
 import { CustomerBalanceSummaryPdfDialog } from './CustomerBalancePdfDialog';
 import { CustomerBalanceSummaryBody } from './CustomerBalanceSummaryBody';
@@ -30,6 +31,7 @@ function CustomersBalanceSummaryInner({
       ...filter,
       asDate: moment(filter.asDate as string).format('YYYY-MM-DD'),
     };
+    writeReportingPeriod({ toDate: _filter.asDate });
     setLocationQuery({ ..._filter });
   };
 
