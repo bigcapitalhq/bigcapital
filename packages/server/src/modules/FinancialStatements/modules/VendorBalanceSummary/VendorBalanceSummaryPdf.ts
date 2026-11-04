@@ -25,6 +25,7 @@ export class VendorBalanceSummaryPdf {
       table.meta.sheetName,
       table.meta.formattedAsDate,
       HtmlTableCustomCss,
+      query.numberFormat?.showInRed,
     );
   }
 }
