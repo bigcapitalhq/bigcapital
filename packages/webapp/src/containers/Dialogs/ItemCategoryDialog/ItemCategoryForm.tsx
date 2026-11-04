@@ -9,7 +9,11 @@ import {
 } from './itemCategoryForm.schema';
 import { ItemCategoryForm as ItemCategoryFormContent } from './ItemCategoryFormContent';
 import { useItemCategoryContext } from './ItemCategoryProvider';
-import type { ItemCategoryFormValues } from './types';
+import {
+  DEFAULT_ITEM_COST_METHOD,
+  normalizeItemCostMethod,
+  type ItemCategoryFormValues,
+} from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import type {
   CreateItemCategoryBody,
@@ -25,7 +29,7 @@ const defaultInitialValues: ItemCategoryFormValues = {
   costAccountId: '',
   sellAccountId: '',
   inventoryAccountId: '',
-  costMethod: '',
+  costMethod: DEFAULT_ITEM_COST_METHOD,
 };
 
 // Coerce form-friendly string|number fields to the strict SDK body shape.
@@ -47,7 +51,7 @@ const transformFormToCreateBody = (
     costAccountId: toAccountId(values.costAccountId),
     sellAccountId: toAccountId(values.sellAccountId),
     inventoryAccountId: toAccountId(values.inventoryAccountId),
-    costMethod: values.costMethod,
+    costMethod: normalizeItemCostMethod(values.costMethod),
   }) as CreateItemCategoryBody;
 
 const transformFormToEditBody = (
@@ -72,13 +76,18 @@ function ItemCategoryFormInner({
     editItemCategoryMutate,
   } = useItemCategoryContext();
 
-  const initialValues = useMemo<ItemCategoryFormValues>(
-    () => ({
+  const initialValues = useMemo<ItemCategoryFormValues>(() => {
+    const formValues = transformToForm(
+      itemCategory,
+      defaultInitialValues,
+    ) as Partial<ItemCategoryFormValues>;
+
+    return {
       ...defaultInitialValues,
-      ...transformToForm(itemCategory, defaultInitialValues),
-    }),
-    [itemCategory],
-  );
+      ...formValues,
+      costMethod: normalizeItemCostMethod(formValues.costMethod),
+    };
+  }, [itemCategory]);
 
   const transformErrors = (
     errors: ResponseError[],

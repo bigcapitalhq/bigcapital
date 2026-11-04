@@ -1,5 +1,6 @@
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import type { ItemCategory } from '@/modules/ItemCategories/models/ItemCategory.model';
 import { Model } from 'objection';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
@@ -42,6 +43,7 @@ export class Item extends TenantBaseModel {
   public readonly purchaseTaxRateId: number;
 
   public readonly warehouse!: Warehouse;
+  public readonly category?: ItemCategory;
 
   static get tableName() {
     return 'items';

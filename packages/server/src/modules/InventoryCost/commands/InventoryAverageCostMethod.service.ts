@@ -35,9 +35,7 @@ export class InventoryAverageCostMethodService {
     const afterInvTransactions = await this.inventoryTransactionModel()
       .query()
       .modify('filterDateRange', startingDate)
-      .orderBy('date', 'ASC')
-      .orderByRaw("FIELD(direction, 'IN', 'OUT')")
-      .orderBy('createdAt', 'ASC')
+      .modify('ordered')
       .where('item_id', itemId)
       .withGraphFetched('item');
 

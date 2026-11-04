@@ -80,6 +80,21 @@ export function useItemsCategoriesTableColumns(): DataTableColumn<ItemCategoryTa
           width: 220,
         },
         {
+          id: 'cost_method',
+          Header: intl.get('cost_method'),
+          accessor: 'costMethod',
+          Cell: ({ value }: { value?: string }) => {
+            const costMethod = String(value || 'AVG').toUpperCase();
+            const translationKey =
+              costMethod === 'AVG'
+                ? 'cost_method_average'
+                : `cost_method_${costMethod.toLowerCase()}`;
+
+            return intl.get(translationKey);
+          },
+          width: 180,
+        },
+        {
           id: 'count',
           Header: intl.get('count'),
           accessor: 'count',

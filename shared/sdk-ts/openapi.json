@@ -31249,7 +31249,12 @@
           "costMethod": {
             "type": "string",
             "example": "FIFO",
-            "description": "The cost method"
+            "description": "The cost method",
+            "enum": [
+              "AVG",
+              "FIFO",
+              "LIFO"
+            ]
           },
           "userId": {
             "type": "number",
@@ -31314,7 +31319,12 @@
           "costMethod": {
             "type": "string",
             "example": "FIFO",
-            "description": "The cost method"
+            "description": "The cost method",
+            "enum": [
+              "AVG",
+              "FIFO",
+              "LIFO"
+            ]
           }
         },
         "required": [
@@ -31322,8 +31332,7 @@
           "description",
           "costAccountId",
           "sellAccountId",
-          "inventoryAccountId",
-          "costMethod"
+          "inventoryAccountId"
         ]
       },
       "EditItemCategoryDto": {
@@ -31357,7 +31366,12 @@
           "costMethod": {
             "type": "string",
             "example": "FIFO",
-            "description": "The cost method"
+            "description": "The cost method",
+            "enum": [
+              "AVG",
+              "FIFO",
+              "LIFO"
+            ]
           }
         },
         "required": [
@@ -31365,8 +31379,7 @@
           "description",
           "costAccountId",
           "sellAccountId",
-          "inventoryAccountId",
-          "costMethod"
+          "inventoryAccountId"
         ]
       },
       "BulkDeleteItemCategoriesDto": {
