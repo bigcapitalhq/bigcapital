@@ -96,13 +96,18 @@ export class PlaidUpdateTransactions {
     });
     // Sync bank accounts.
     await this.plaidSync.syncBankAccounts(accounts, institution, item, trx);
+    const removedIds = removed?.map((r) => r.transaction_id) ?? [];
+
     // Sync removed transactions.
-    await this.plaidSync.syncRemoveTransactions(
-      removed?.map((r) => r.transaction_id),
+    await this.plaidSync.syncRemoveTransactions(removedIds, trx);
+    // Sync bank account transactions, new and modified ones; a transaction
+    // removed in the same update stays deleted.
+    await this.plaidSync.syncAccountsTransactions(
+      added
+        .concat(modified)
+        .filter((t) => !removedIds.includes(t.transaction_id)),
       trx,
     );
-    // Sync bank account transactions.
-    await this.plaidSync.syncAccountsTransactions(added.concat(modified), trx);
     // Sync transactions cursor.
     await this.plaidSync.syncTransactionsCursor(plaidItemId, cursor, trx);
     // Update the last feeds updated at of the updated accounts.
