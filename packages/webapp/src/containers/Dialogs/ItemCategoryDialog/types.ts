@@ -4,6 +4,22 @@ import type {
   ItemCategory,
 } from '@bigcapital/sdk-ts';
 
+export const ITEM_COST_METHODS = ['AVG', 'FIFO', 'LIFO'] as const;
+
+export type ItemCostMethod = (typeof ITEM_COST_METHODS)[number];
+
+export const DEFAULT_ITEM_COST_METHOD: ItemCostMethod = 'AVG';
+
+export function normalizeItemCostMethod(value?: string | null): ItemCostMethod {
+  const normalizedValue = String(value ?? '')
+    .trim()
+    .toUpperCase();
+
+  return (ITEM_COST_METHODS as readonly string[]).includes(normalizedValue)
+    ? (normalizedValue as ItemCostMethod)
+    : DEFAULT_ITEM_COST_METHOD;
+}
+
 export interface ItemCategoryFormValues {
   name: string;
   description: string;
@@ -13,7 +29,7 @@ export interface ItemCategoryFormValues {
   costAccountId: string | number;
   sellAccountId: string | number;
   inventoryAccountId: string | number;
-  costMethod: string;
+  costMethod: ItemCostMethod;
 }
 
 export type ItemCategoryDialogPayload = {

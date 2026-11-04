@@ -8995,8 +8995,9 @@ export interface components {
             /**
              * @description The cost method
              * @example FIFO
+             * @enum {string}
              */
-            costMethod?: string;
+            costMethod?: "AVG" | "FIFO" | "LIFO";
             /**
              * @description The user ID who created the category
              * @example 1
@@ -9049,8 +9050,9 @@ export interface components {
             /**
              * @description The cost method
              * @example FIFO
+             * @enum {string}
              */
-            costMethod: string;
+            costMethod?: "AVG" | "FIFO" | "LIFO";
         };
         EditItemCategoryDto: {
             /**
@@ -9081,8 +9083,9 @@ export interface components {
             /**
              * @description The cost method
              * @example FIFO
+             * @enum {string}
              */
-            costMethod: string;
+            costMethod?: "AVG" | "FIFO" | "LIFO";
         };
         BulkDeleteItemCategoriesDto: {
             /**

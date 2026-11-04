@@ -1,4 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  COST_METHODS,
+  TCostMethod,
+} from '@/common/constants/inventory.constants';
 
 export class ItemCategoryResponseDto {
   @ApiProperty({
@@ -44,9 +48,10 @@ export class ItemCategoryResponseDto {
   @ApiProperty({
     example: 'FIFO',
     description: 'The cost method',
+    enum: COST_METHODS,
     required: false,
   })
-  costMethod?: string;
+  costMethod?: TCostMethod;
 
   @ApiProperty({
     example: 1,

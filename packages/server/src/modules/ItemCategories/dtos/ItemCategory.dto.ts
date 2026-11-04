@@ -1,8 +1,13 @@
+import { Transform } from 'class-transformer';
 import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsIn, IsNumber } from 'class-validator';
 import { IsString } from 'class-validator';
 import { IsNotEmpty } from 'class-validator';
+import {
+  COST_METHODS,
+  TCostMethod,
+} from '@/common/constants/inventory.constants';
 
 class CommandItemCategoryDto {
   @IsString()
@@ -36,10 +41,22 @@ class CommandItemCategoryDto {
   @ApiProperty({ example: 1, description: 'The inventory account ID' })
   inventoryAccountId?: number;
 
+  @Transform(({ value }) => {
+    if (value === null || value === undefined || value === '') {
+      return undefined;
+    }
+    return String(value).toUpperCase();
+  })
   @IsString()
   @IsOptional()
-  @ApiProperty({ example: 'FIFO', description: 'The cost method' })
-  costMethod?: string;
+  @IsIn(COST_METHODS)
+  @ApiProperty({
+    example: 'FIFO',
+    description: 'The cost method',
+    enum: COST_METHODS,
+    required: false,
+  })
+  costMethod?: TCostMethod;
 }
 
 export class CreateItemCategoryDto extends CommandItemCategoryDto {}

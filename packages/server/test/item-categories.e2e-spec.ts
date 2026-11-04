@@ -15,6 +15,34 @@ describe('Item Categories(e2e)', () => {
       .expect(201);
   });
 
+  it('/item-categories (POST) with a FIFO cost method', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/item-categories')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        name: faker.person.fullName(),
+        description: faker.lorem.sentence(),
+        costMethod: 'FIFO',
+      })
+      .expect(201);
+
+    expect(response.body.cost_method).toBe('FIFO');
+  });
+
+  it('/item-categories (POST) rejects an invalid cost method', () => {
+    return request(app.getHttpServer())
+      .post('/item-categories')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        name: faker.person.fullName(),
+        description: faker.lorem.sentence(),
+        costMethod: 'INVALID',
+      })
+      .expect(400);
+  });
+
   it('/item-categories/:id (GET)', async () => {
     const response = await request(app.getHttpServer())
       .post('/item-categories')

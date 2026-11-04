@@ -68,6 +68,17 @@ export class InventoryTransaction extends TenantBaseModel {
         }
       },
 
+      /**
+       * Orders the inventory transactions by the cost computation order.
+       */
+      ordered(query) {
+        query
+          .orderBy('date', 'ASC')
+          .orderByRaw("FIELD(direction, 'IN', 'OUT')")
+          .orderBy('createdAt', 'ASC')
+          .orderBy('id', 'ASC');
+      },
+
       itemsTotals(builder) {
         builder.select('itemId');
         builder.sum('rate as rate');

@@ -7,6 +7,7 @@ import { CommandItemCategoryValidatorService } from './CommandItemCategoryValida
 import { ItemCategory } from '../models/ItemCategory.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { CreateItemCategoryDto } from '../dtos/ItemCategory.dto';
+import { normalizeCostMethod } from '@/common/constants/inventory.constants';
 
 @Injectable()
 export class CreateItemCategoryService {
@@ -35,6 +36,7 @@ export class CreateItemCategoryService {
   ): Partial<ItemCategory> {
     return {
       ...itemCategoryOTD,
+      costMethod: normalizeCostMethod(itemCategoryOTD.costMethod),
       // userId: authorizedUser.id
     };
   }
