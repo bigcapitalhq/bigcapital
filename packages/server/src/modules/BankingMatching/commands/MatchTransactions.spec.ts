@@ -48,6 +48,7 @@ describe('MatchBankTransactions', () => {
       buildUncategorizedQuery([
         {
           id: 1,
+          accountId: 7,
           amount: 100,
           excluded: false,
           matchedBankTransactions: [],
@@ -111,5 +112,43 @@ describe('MatchBankTransactions', () => {
 
     expect(matchedService.createMatchedTransaction).not.toHaveBeenCalled();
     expect(eventPublisher.emitAsync).not.toHaveBeenCalled();
+  });
+
+  it('passes the accounts of the bank transactions to the matched transaction lookup', async () => {
+    await service.matchTransaction(
+      [1],
+      [{ referenceType: 'Expense', referenceId: 5 }],
+    );
+
+    expect(matchedService.getMatchedTransaction).toHaveBeenCalledWith(5, [7]);
+  });
+
+  it('rejects with the lookup error code when the record is on another account', async () => {
+    matchedService.getMatchedTransaction.mockRejectedValue(
+      new ServiceError('MATCHING_TRANSACTION_ACCOUNT_INVALID'),
+    );
+
+    await expect(
+      service.matchTransaction(
+        [1],
+        [{ referenceType: 'Expense', referenceId: 5 }],
+      ),
+    ).rejects.toMatchObject({
+      errorType: 'MATCHING_TRANSACTION_ACCOUNT_INVALID',
+    });
+    expect(matchedService.createMatchedTransaction).not.toHaveBeenCalled();
+  });
+
+  it("keeps wrapping a lookup error that isn't a ServiceError", async () => {
+    const rawError = new Error('record not found');
+    matchedService.getMatchedTransaction.mockRejectedValue(rawError);
+
+    const rejection = service.matchTransaction(
+      [1],
+      [{ referenceType: 'Expense', referenceId: 5 }],
+    );
+
+    await expect(rejection).rejects.toBeInstanceOf(ServiceError);
+    await expect(rejection).rejects.toMatchObject({ errorType: rawError });
   });
 });

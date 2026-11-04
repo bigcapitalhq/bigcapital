@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import {
-  GetMatchedTransactionsFilter,
+  GetMatchedTransactionsByTypeFilter,
   IMatchTransactionDTO,
   MatchedTransactionPOJO,
   MatchedTransactionsPOJO,
@@ -16,12 +16,11 @@ export abstract class GetMatchedTransactionsByType {
 
   /**
    * Retrieves the matched transactions.
-   * @param {number} tenantId -
-   * @param {GetMatchedTransactionsFilter} filter -
+   * @param {GetMatchedTransactionsByTypeFilter} filter - Includes the accounts of the bank transactions.
    * @returns {Promise<MatchedTransactionsPOJO>}
    */
   public async getMatchedTransactions(
-    _filter: GetMatchedTransactionsFilter,
+    _filter: GetMatchedTransactionsByTypeFilter,
   ): Promise<MatchedTransactionsPOJO> {
     throw new Error(
       'The `getMatchedTransactions` method is not defined for the transaction type.',
@@ -30,12 +29,13 @@ export abstract class GetMatchedTransactionsByType {
 
   /**
    * Retrieves the matched transaction details.
-   * @param {number} tenantId -
    * @param {number} transactionId -
+   * @param {Array<number>} accountIds - Accounts of the bank transactions being matched.
    * @returns {Promise<MatchedTransactionPOJO>}
    */
   public async getMatchedTransaction(
     _transactionId: number,
+    _accountIds: Array<number>,
   ): Promise<MatchedTransactionPOJO> {
     throw new Error(
       'The `getMatchedTransaction` method is not defined for the transaction type.',
