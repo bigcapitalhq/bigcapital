@@ -141,7 +141,7 @@ export function useImportFileProcess(
   props?: UseMutationOptions<ImportProcessResponse, Error, string>,
 ) {
   const queryClient = useQueryClient();
-  const fetcher = useApiFetcher();
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
   return useMutation({
     ...props,

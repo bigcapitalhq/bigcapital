@@ -11,6 +11,15 @@ import { CreateUncategorizedTransactionDTO } from '../types/BankingCategorize.ty
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { ImportableService } from '../../Import/decorators/Import.decorator';
 import { UncategorizedBankTransaction } from '../../BankingTransactions/models/UncategorizedBankTransaction';
+import { ImportRowSkip } from '../../Import/interfaces';
+import { ImportModelShape } from '../../Import/models/Import';
+import {
+  BANK_IMPORT_DUPLICATE_ERROR_CODE,
+  findDuplicateRowIndexes,
+  formatDuplicateRowMessage,
+  parseBankRowDate,
+} from '../utils/bankImportDuplicates';
+
 @Injectable()
 @ImportableService({ name: UncategorizedBankTransaction.name })
 export class UncategorizedTransactionsImportable extends Importable {
@@ -19,6 +28,11 @@ export class UncategorizedTransactionsImportable extends Importable {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
+
+    @Inject(UncategorizedBankTransaction.name)
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {
     super();
   }
@@ -33,6 +47,40 @@ export class UncategorizedTransactionsImportable extends Importable {
     trx?: Knex.Transaction,
   ) {
     return this.createUncategorizedTransaction.create(createDTO, trx);
+  }
+
+  /**
+   * Skips the file rows already in the bank account, counting occurrences so
+   * identical rows in one file still import.
+   * @param {Record<string, any>[]} parsedData - Parsed rows, in file order.
+   * @param {ImportModelShape} importFile
+   * @returns {Promise<ImportRowSkip[]>}
+   */
+  public async getSkippedRows(
+    parsedData: Record<string, any>[],
+    importFile: ImportModelShape,
+  ): Promise<ImportRowSkip[]> {
+    const dates = parsedData
+      .map((row) => parseBankRowDate(row.date))
+      .filter(Boolean)
+      .sort();
+
+    if (dates.length === 0) return [];
+
+    // Read committed rows only, outside the import's read-uncommitted
+    // transaction, so rows a concurrent preview inserts then rolls back
+    // never count as already imported.
+    const existingRows = await this.uncategorizedBankTransactionModel()
+      .query()
+      .where('accountId', importFile.paramsParsed.accountId)
+      .whereBetween('date', [dates[0], dates[dates.length - 1]])
+      .select('date', 'amount', 'payee', 'description', 'referenceNo');
+
+    return findDuplicateRowIndexes(parsedData, existingRows).map((index) => ({
+      index,
+      errorCode: BANK_IMPORT_DUPLICATE_ERROR_CODE,
+      errorMessage: formatDuplicateRowMessage(parsedData[index]),
+    }));
   }
 
   /**

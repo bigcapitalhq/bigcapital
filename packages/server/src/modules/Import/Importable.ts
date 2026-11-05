@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import * as Yup from 'yup';
-import { ImportableContext } from './interfaces';
+import { ImportableContext, ImportRowSkip } from './interfaces';
+import { ImportModelShape } from './models/Import';
 
 export abstract class Importable {
   /**
@@ -26,6 +27,21 @@ export abstract class Importable {
     _context: ImportableContext,
   ) {
     return createDTO;
+  }
+
+  /**
+   * Retrieves the rows to skip before importing, with the reason for each.
+   * Runs once per import with all parsed rows; skipped rows are reported as
+   * skipped, not as errors. No rows are skipped by default.
+   * @param {Record<string, any>[]} _parsedData - Parsed rows, in file order.
+   * @param {ImportModelShape} _importFile - The import being run.
+   * @returns {Promise<ImportRowSkip[]>}
+   */
+  public async getSkippedRows(
+    _parsedData: Record<string, any>[],
+    _importFile: ImportModelShape,
+  ): Promise<ImportRowSkip[]> {
+    return [];
   }
 
   /**

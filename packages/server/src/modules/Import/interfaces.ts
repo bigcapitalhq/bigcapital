@@ -62,6 +62,19 @@ export interface ImportOperSuccess {
 export interface ImportOperError {
   error: ImportInsertError[];
   index: number;
+  /**
+   * True when the importable chose to skip the row (not an error).
+   */
+  skipped?: boolean;
+}
+
+/**
+ * A row the importable asks to skip before importing, with the reason.
+ */
+export interface ImportRowSkip {
+  index: number;
+  errorCode: string;
+  errorMessage: string;
 }
 
 export interface ImportableContext {

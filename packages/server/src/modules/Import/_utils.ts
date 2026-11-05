@@ -19,7 +19,11 @@ import {
   last,
 } from 'lodash';
 import * as pluralize from 'pluralize';
-import { ResourceMetaFieldsMap } from './interfaces';
+import {
+  ImportOperError,
+  ImportOperSuccess,
+  ResourceMetaFieldsMap,
+} from './interfaces';
 import { multiNumberParse } from '@/utils/multi-number-parse';
 import { ServiceError } from '../Items/ServiceError';
 import { IModelMetaField, IModelMetaField2 } from '@/interfaces/Model';
@@ -182,6 +186,21 @@ export const getUniqueImportableValue = (
 
   return defaultTo(objectDTO[uniqueImportableKey], '');
 };
+
+/**
+ * Retrieves the import result counters. Rows the importable chose to skip
+ * count as skipped but not as errors.
+ * @param {ImportOperSuccess[]} success
+ * @param {ImportOperError[]} failed
+ */
+export const getImportResultCounts = (
+  success: ImportOperSuccess[],
+  failed: ImportOperError[],
+) => ({
+  createdCount: success.length,
+  skippedCount: failed.length,
+  errorsCount: failed.filter((oper) => !oper.skipped).length,
+});
 
 /**
  * Throws service error the given sheet is empty.

@@ -1,4 +1,34 @@
-import { aggregate } from './_utils';
+import { aggregate, getImportResultCounts } from './_utils';
+
+describe('getImportResultCounts', () => {
+  const success = [
+    { index: 0, data: {} },
+    { index: 1, data: {} },
+  ];
+
+  it('counts skipped rows as skipped but not as errors', () => {
+    const failed = [
+      { index: 2, error: [] },
+      { index: 3, skipped: true, error: [] },
+    ];
+
+    expect(getImportResultCounts(success, failed)).toEqual({
+      createdCount: 2,
+      skippedCount: 2,
+      errorsCount: 1,
+    });
+  });
+
+  it('keeps skipped equal to errors when nothing is pre-skipped', () => {
+    const failed = [{ index: 2, error: [] }];
+
+    expect(getImportResultCounts(success, failed)).toEqual({
+      createdCount: 2,
+      skippedCount: 1,
+      errorsCount: 1,
+    });
+  });
+});
 
 describe('aggregate', () => {
   describe('basic aggregation', () => {
