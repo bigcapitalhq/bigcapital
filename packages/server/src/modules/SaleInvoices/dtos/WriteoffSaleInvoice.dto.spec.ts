@@ -28,6 +28,21 @@ describe('WriteoffSaleInvoiceDto', () => {
     await expect(invalidProperties({})).resolves.toEqual(['expenseAccountId']);
   });
 
+  it('rejects an ISO-shaped date that is not a real day', async () => {
+    await expect(
+      invalidProperties({ expenseAccountId: 1024, date: '2023-02-30' }),
+    ).resolves.toEqual(['date']);
+  });
+
+  it('accepts an ISO datetime with an offset', async () => {
+    await expect(
+      invalidProperties({
+        expenseAccountId: 1024,
+        date: '2023-03-15T23:30:00-05:00',
+      }),
+    ).resolves.toEqual([]);
+  });
+
   it('rejects a date that is not a date', async () => {
     await expect(
       invalidProperties({ expenseAccountId: 1024, date: 'yesterday' }),

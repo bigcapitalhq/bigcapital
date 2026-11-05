@@ -17,7 +17,7 @@ export class WriteoffSaleInvoiceDto {
   expenseAccountId: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsDateString({ strict: true })
   @ApiPropertyOptional({
     description:
       'The write-off date. Defaults to today, or to the invoice date when the invoice is dated after today.',
