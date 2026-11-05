@@ -27,7 +27,12 @@ export class ExchangeRatesService {
     const fromCurrency = exchangeRateLatestDTO.fromCurrency || baseCurrency;
     const toCurrency = exchangeRateLatestDTO.toCurrency || baseCurrency;
 
-    const exchange = new ExchangeRate(ExchangeRateServiceType.OpenExchangeRate);
+    const serviceType =
+      process.env.EXCHANGE_RATE_SERVICE === 'fxmacrodata'
+        ? ExchangeRateServiceType.FXMacroData
+        : ExchangeRateServiceType.OpenExchangeRate;
+
+    const exchange = new ExchangeRate(serviceType);
     const exchangeRate = await exchange.latest(fromCurrency, toCurrency);
 
     return {
