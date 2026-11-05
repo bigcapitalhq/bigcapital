@@ -10,6 +10,7 @@ import {
   Min,
   IsNotEmpty,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, ToNumber } from '@/common/decorators/Validators';
 import { ITEM_UNITS, ItemUnit } from '../Items.constants';
@@ -57,6 +58,10 @@ export class CommandItemDto {
   })
   reorderPoint?: number;
 
+  @IsOptional()
+  @Transform(({ value }) =>
+    value === '' || value === null ? undefined : value,
+  )
   @IsString()
   @IsIn([...ITEM_UNITS])
   @MaxLength(20)
