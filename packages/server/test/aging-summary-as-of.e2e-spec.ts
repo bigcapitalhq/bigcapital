@@ -5,6 +5,7 @@ import {
   authHeaders,
   cancelTransactionsLock,
   createCustomer,
+  createTaxRate,
   createVendor,
   getBaseCurrency,
 } from './_utils/gl';
@@ -21,6 +22,7 @@ describe('Aging summaries as of the report date (e2e)', () => {
   let mainCustomerId: number;
   let adjustmentCustomerId: number;
   let creditCustomerId: number;
+  let taxCustomerId: number;
   let mainVendorId: number;
   let noDueVendorId: number;
   let creditVendorId: number;
@@ -57,8 +59,9 @@ describe('Aging summaries as of the report date (e2e)', () => {
     rate: number;
     delivered?: boolean;
     adjustment?: number;
+    taxRateId?: number;
   }): Promise<number> => {
-    const { rate, delivered = true, ...rest } = data;
+    const { rate, delivered = true, taxRateId, ...rest } = data;
     const res = await request(app.getHttpServer())
       .post('/sale-invoices')
       .set(authHeaders())
@@ -66,7 +69,8 @@ describe('Aging summaries as of the report date (e2e)', () => {
         ...rest,
         invoiceNo: unique(),
         delivered,
-        entries: [{ index: 1, itemId, quantity: 1, rate }],
+        ...(taxRateId ? { isInclusiveTax: false } : {}),
+        entries: [{ index: 1, itemId, quantity: 1, rate, taxRateId }],
       })
       .expect(201);
     return res.body.id;
@@ -303,6 +307,21 @@ describe('Aging summaries as of the report date (e2e)', () => {
       { invoiceId: adjustedInvoice, paymentAmount: 100 },
     ]);
 
+    // Tax customer: 100 plus 15% tax added on top (a total of 115), with
+    // 100 paid, so the line subtotal is covered but the tax isn't.
+    taxCustomerId = await createCustomer(currencyCode);
+    const taxRateId = await createTaxRate(15);
+    const taxedInvoice = await createInvoice({
+      customerId: taxCustomerId,
+      invoiceDate: '2025-12-01',
+      dueDate: '2025-12-31',
+      rate: 100,
+      taxRateId,
+    });
+    await receivePayment(taxCustomerId, '2025-12-20', [
+      { invoiceId: taxedInvoice, paymentAmount: 100 },
+    ]);
+
     // Credit customer: invoice G with a credit note dated before the as-of
     // date and one dated after it, both applied.
     creditCustomerId = await createCustomer(currencyCode);
@@ -409,6 +428,14 @@ describe('Aging summaries as of the report date (e2e)', () => {
     const row = await aging('customer', '2025-12-31', adjustmentCustomerId);
 
     expect(row.current).toBe(20);
+  });
+
+  it('A/R keeps an invoice with tax on top that is paid up to its line subtotal', async () => {
+    const row = await aging('customer', '2025-12-31', taxCustomerId);
+
+    expect(row.current).toBe(15);
+    expect(row.total).toBe(15);
+    expect(await balance('customer', '2025-12-31', taxCustomerId)).toBe(15);
   });
 
   it('A/R counts credit notes from their own date', async () => {
