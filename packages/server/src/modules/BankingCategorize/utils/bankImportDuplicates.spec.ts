@@ -1,8 +1,10 @@
+import * as moment from 'moment';
 import {
   BankRowKeyFields,
   bankRowKey,
   findDuplicateRowIndexes,
   formatDuplicateRowMessage,
+  parseBankRowDate,
 } from './bankImportDuplicates';
 
 const X: BankRowKeyFields = {
@@ -76,6 +78,36 @@ describe('findDuplicateRowIndexes', () => {
 
   it('skips all occurrences when the account has the same number', () => {
     expect(findDuplicateRowIndexes([X, X], [X, X])).toEqual([0, 1]);
+  });
+
+  it('never skips a row without a date, nor lets it use up a match', () => {
+    const today: BankRowKeyFields = {
+      ...X,
+      date: moment().format('YYYY-MM-DD'),
+    };
+    expect(
+      findDuplicateRowIndexes([{ ...today, date: undefined }, today], [today]),
+    ).toEqual([1]);
+  });
+
+  it('never skips a row whose date is not YYYY-MM-DD', () => {
+    expect(
+      findDuplicateRowIndexes([{ ...X, date: '2026/01/08' }, X], [X]),
+    ).toEqual([1]);
+  });
+});
+
+describe('parseBankRowDate', () => {
+  it('reads YYYY-MM-DD strings and Date objects', () => {
+    expect(parseBankRowDate('2026-01-08')).toBe('2026-01-08');
+    expect(parseBankRowDate(new Date(2026, 0, 8))).toBe('2026-01-08');
+  });
+
+  it('rejects missing and non YYYY-MM-DD dates', () => {
+    expect(parseBankRowDate(undefined)).toBeNull();
+    expect(parseBankRowDate('')).toBeNull();
+    expect(parseBankRowDate('2026/01/08')).toBeNull();
+    expect(parseBankRowDate('not a date')).toBeNull();
   });
 });
 

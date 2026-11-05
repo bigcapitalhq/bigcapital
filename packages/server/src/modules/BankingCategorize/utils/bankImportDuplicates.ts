@@ -15,8 +15,20 @@ export interface BankRowKeyFields {
   referenceNo?: string | null;
 }
 
-const normalizeDate = (date: BankRowKeyFields['date']): string =>
-  moment(date).format('YYYY-MM-DD');
+/**
+ * Retrieves the date as YYYY-MM-DD, or null when it's missing or not a
+ * YYYY-MM-DD date (the import validator rejects those rows anyway).
+ * @param {unknown} date
+ * @returns {string | null}
+ */
+export const parseBankRowDate = (date: unknown): string | null => {
+  const parsed =
+    date instanceof Date
+      ? moment(date)
+      : moment(date as string, 'YYYY-MM-DD', true);
+
+  return parsed.isValid() ? parsed.format('YYYY-MM-DD') : null;
+};
 
 const normalizeAmount = (amount: BankRowKeyFields['amount']): string =>
   Number(amount).toFixed(2);
@@ -38,7 +50,7 @@ const normalizeText = (text: string | null | undefined): string =>
  */
 export const bankRowKey = (row: BankRowKeyFields): string =>
   [
-    normalizeDate(row.date),
+    parseBankRowDate(row.date) ?? '',
     normalizeAmount(row.amount),
     normalizeText(row.payee),
     normalizeText(row.description),
@@ -49,7 +61,8 @@ export const bankRowKey = (row: BankRowKeyFields): string =>
  * Retrieves the indexes of the file rows that are already in the account.
  * For each key, the first N occurrences in file order are duplicates, where
  * N is how many rows with that key the account already has; the rest are new.
- * So identical rows in one file still import.
+ * So identical rows in one file still import. A file row without a valid
+ * date is never a duplicate; it fails validation later instead.
  * @param {BankRowKeyFields[]} fileRows - Rows of the imported file, in order.
  * @param {BankRowKeyFields[]} existingRows - Rows already in the account.
  * @returns {number[]}
@@ -67,6 +80,8 @@ export const findDuplicateRowIndexes = (
   const duplicateIndexes: number[] = [];
 
   fileRows.forEach((row, index) => {
+    if (!parseBankRowDate(row.date)) return;
+
     const key = bankRowKey(row);
     const count = remaining.get(key) || 0;
 
@@ -86,7 +101,7 @@ export const findDuplicateRowIndexes = (
  */
 export const formatDuplicateRowMessage = (row: BankRowKeyFields): string => {
   const text = row.payee || row.description;
-  const parts = [normalizeDate(row.date), text, normalizeAmount(row.amount)];
+  const parts = [parseBankRowDate(row.date), text, normalizeAmount(row.amount)];
 
   return `Already in this bank account: ${parts.filter(Boolean).join(', ')}`;
 };

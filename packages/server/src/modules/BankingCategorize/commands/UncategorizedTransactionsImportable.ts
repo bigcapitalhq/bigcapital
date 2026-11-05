@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import * as yup from 'yup';
 import * as uniqid from 'uniqid';
-import * as moment from 'moment';
 import { Importable } from '../../Import/Importable';
 import { CreateUncategorizedTransactionService } from './CreateUncategorizedTransaction.service';
 import { ImportableContext } from '../../Import/interfaces';
@@ -18,19 +17,8 @@ import {
   BANK_IMPORT_DUPLICATE_ERROR_CODE,
   findDuplicateRowIndexes,
   formatDuplicateRowMessage,
+  parseBankRowDate,
 } from '../utils/bankImportDuplicates';
-
-/**
- * Retrieves the imported date as YYYY-MM-DD, or null when it isn't a date.
- * @param {unknown} date
- * @returns {string | null}
- */
-const parseImportedDate = (date: unknown): string | null => {
-  const parsed =
-    date instanceof Date ? moment(date) : moment(date, 'YYYY-MM-DD', true);
-
-  return parsed.isValid() ? parsed.format('YYYY-MM-DD') : null;
-};
 
 @Injectable()
 @ImportableService({ name: UncategorizedBankTransaction.name })
@@ -73,7 +61,7 @@ export class UncategorizedTransactionsImportable extends Importable {
     importFile: ImportModelShape,
   ): Promise<ImportRowSkip[]> {
     const dates = parsedData
-      .map((row) => parseImportedDate(row.date))
+      .map((row) => parseBankRowDate(row.date))
       .filter(Boolean)
       .sort();
 
