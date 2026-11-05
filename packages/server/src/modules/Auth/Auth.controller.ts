@@ -8,7 +8,6 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
 import {
   ApiTags,
   ApiOperation,
@@ -30,12 +29,13 @@ import { AuthMetaResponseDto } from './dtos/AuthMetaResponse.dto';
 import { LocalAuthGuard } from './guards/Local.guard';
 import { AuthSigninService } from './commands/AuthSignin.service';
 import { SystemUser } from '../System/models/SystemUser';
+import { AuthThrottle } from '../App/AppThrottle.throttlers';
 
 @Controller('/auth')
 @ApiTags('Auth')
 @ApiExtraModels(AuthSigninResponseDto, AuthMetaResponseDto)
 @PublicRoute()
-@Throttle({ auth: {} })
+@AuthThrottle()
 export class AuthController {
   constructor(
     private readonly authApp: AuthenticationApplication,
