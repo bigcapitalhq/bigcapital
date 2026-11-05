@@ -99,16 +99,15 @@ export class SalesTransactionLockingGuardSubscriber {
   }
 
   /**
-   * Transaction locking guard on invoice writingoff.
+   * Transaction locking guard on invoice writingoff, on the write-off date
+   * the journal entry is posted on.
    * @param {ISaleInvoiceWriteoffCreatePayload} payload
    */
   @OnEvent(events.saleInvoice.onWriteoff, { suppressErrors: false })
   public async transactionLockinGuardOnInvoiceWritingoff({
-    saleInvoice,
+    writeoffDate,
   }: ISaleInvoiceWriteoffCreatePayload) {
-    await this.salesLockingGuard.transactionLockingGuard(
-      saleInvoice.invoiceDate,
-    );
+    await this.salesLockingGuard.transactionLockingGuard(writeoffDate);
   }
 
   /**

@@ -3,11 +3,15 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject, Injectable } from '@nestjs/common';
 import {
   ISaleInvoiceWriteoffCreatePayload,
-  ISaleInvoiceWriteoffDTO,
   ISaleInvoiceWrittenOffCanceledPayload,
   ISaleInvoiceWrittenOffCancelPayload,
 } from '../SaleInvoice.types';
+import { WriteoffSaleInvoiceDto } from '../dtos/WriteoffSaleInvoice.dto';
 import { ERRORS } from '../constants';
+import {
+  isWriteoffDateBeforeInvoiceDate,
+  resolveWriteoffDate,
+} from './writeoff/writeoffDate';
 import { UnitOfWork } from '../../Tenancy/TenancyDB/UnitOfWork.service';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators.service';
 import { SaleInvoice } from '../models/SaleInvoice';
@@ -35,12 +39,12 @@ export class WriteoffSaleInvoice {
   /**
    * Writes-off the sale invoice on bad debt expense account.
    * @param {number} saleInvoiceId
-   * @param {ISaleInvoiceWriteoffDTO} writeoffDTO
+   * @param {WriteoffSaleInvoiceDto} writeoffDTO
    * @return {Promise<ISaleInvoice>}
    */
   public writeOff = async (
     saleInvoiceId: number,
-    writeoffDTO: ISaleInvoiceWriteoffDTO,
+    writeoffDTO: WriteoffSaleInvoiceDto,
   ): Promise<SaleInvoice> => {
     // Saves the invoice write-off transaction with associated transactions
     // under unit-of-work envirmenet.
@@ -48,11 +52,24 @@ export class WriteoffSaleInvoice {
       // Validates the write-off operation against the locked invoice row.
       const saleInvoice = await this.validate(saleInvoiceId, trx, false);
 
+      // The write-off is posted on its own date, not on the invoice date.
+      const writeoffDate = resolveWriteoffDate(
+        writeoffDTO.date,
+        saleInvoice.invoiceDate,
+      );
+      if (
+        isWriteoffDateBeforeInvoiceDate(writeoffDate, saleInvoice.invoiceDate)
+      ) {
+        throw new ServiceError(
+          ERRORS.SALE_INVOICE_WRITEOFF_DATE_BEFORE_INVOICE_DATE,
+        );
+      }
       const eventPayload = {
         // tenantId,
         saleInvoiceId,
         saleInvoice,
         writeoffDTO,
+        writeoffDate,
         trx,
       } as ISaleInvoiceWriteoffCreatePayload;
 
@@ -67,7 +84,7 @@ export class WriteoffSaleInvoice {
         .patch({
           writtenoffExpenseAccountId: writeoffDTO.expenseAccountId,
           writtenoffAmount: saleInvoice.dueAmount,
-          writtenoffAt: new Date(),
+          writtenoffAt: writeoffDate,
         })
         .findById(saleInvoiceId);
 

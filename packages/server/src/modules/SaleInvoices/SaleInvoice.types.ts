@@ -12,6 +12,7 @@ import {
   CreateSaleInvoiceDto,
   EditSaleInvoiceDto,
 } from './dtos/SaleInvoice.dto';
+import { WriteoffSaleInvoiceDto } from './dtos/WriteoffSaleInvoice.dto';
 
 export interface PaymentIntegrationTransactionLink {
   id: number;
@@ -76,12 +77,6 @@ export interface ISalesInvoicesFilter extends IDynamicListFilter {
   filterQuery?: (q: Knex.QueryBuilder) => void;
 }
 
-export interface ISaleInvoiceWriteoffDTO {
-  expenseAccountId: number;
-  date: Date;
-  reason: string;
-}
-
 export type InvoiceNotificationType = 'details' | 'reminder';
 
 export interface ISaleInvoiceCreatedPayload {
@@ -133,7 +128,9 @@ export interface ISaleInvoiceDeletedPayload {
 export interface ISaleInvoiceWriteoffCreatePayload {
   saleInvoiceId: number;
   saleInvoice: SaleInvoice;
-  writeoffDTO: ISaleInvoiceWriteoffDTO;
+  writeoffDTO: WriteoffSaleInvoiceDto;
+  // The date the write-off is posted on (YYYY-MM-DD).
+  writeoffDate: string;
   trx: Knex.Transaction;
 }
 
