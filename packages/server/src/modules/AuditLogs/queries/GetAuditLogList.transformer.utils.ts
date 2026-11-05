@@ -479,6 +479,34 @@ export function formatMetadataSummary(
       }
       return t('audit_log.metadata.bank_plain');
     },
+    SimpleFinTransactions: (m) => {
+      if (m.accountId != null) {
+        return m.batch
+          ? t('audit_log.metadata.simplefin_with_batch', {
+              args: {
+                accountId: String(m.accountId),
+                batch: String(m.batch),
+              },
+            })
+          : t('audit_log.metadata.simplefin', {
+              args: { accountId: String(m.accountId) },
+            });
+      }
+      return t('audit_log.metadata.simplefin_plain');
+    },
+    SimpleFinItem: (m) => {
+      if (m.connectionName) {
+        return t('audit_log.metadata.simplefin_item_with_connection', {
+          args: {
+            connectionName: String(m.connectionName),
+            count: String(
+              Array.isArray(m.accountIds) ? m.accountIds.length : 0,
+            ),
+          },
+        });
+      }
+      return t('audit_log.metadata.simplefin_item_plain');
+    },
     PlaidItem: (m) => {
       if (m.plaidItemId) {
         return m.plaidInstitutionId

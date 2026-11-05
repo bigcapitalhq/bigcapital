@@ -144,6 +144,10 @@ import {
   IPlaidWebhookReceivedEventPayload,
 } from '@/modules/BankingPlaid/types/BankingPlaid.types';
 import {
+  ISimpleFinItemLinkedEventPayload,
+  ISimpleFinTransactionsSyncedEventPayload,
+} from '@/modules/BankingSimpleFin/types/BankingSimpleFin.types';
+import {
   IBankTransactionExcludedEventPayload,
   IBankTransactionUnexcludedEventPayload,
 } from '@/modules/BankingTransactionsExclude/types/BankTransactionsExclude.types';
@@ -1329,6 +1333,35 @@ export class FinancialAuditLogSubscriber {
     await this.write(trx, 'synced', 'PlaidTransactions', null, {
       plaidAccountId,
       batch,
+    });
+  }
+
+  // --- SimpleFIN Sync Events ---
+  @OnEvent(events.simplefin.onTransactionsSynced)
+  async onSimpleFinTransactionsSynced({
+    accountId,
+    simplefinAccountId,
+    batch,
+    trx,
+  }: ISimpleFinTransactionsSyncedEventPayload) {
+    await this.write(trx, 'synced', 'SimpleFinTransactions', accountId, {
+      accountId,
+      simplefinAccountId,
+      batch,
+    });
+  }
+
+  // --- SimpleFIN item linked ---
+  @OnEvent(events.simplefin.onItemLinked)
+  async onSimpleFinItemLinked({
+    simplefinItemId,
+    connectionName,
+    accountIds,
+  }: ISimpleFinItemLinkedEventPayload) {
+    await this.write(undefined, 'linked', 'SimpleFinItem', null, {
+      simplefinItemId,
+      connectionName,
+      accountIds,
     });
   }
 

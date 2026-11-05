@@ -17,6 +17,7 @@ export class BankAccount extends TenantBaseModel {
   public lastFeedsUpdatedAt!: string | null;
   public amount!: number;
   public plaidItemId!: number;
+  public simplefinItemId!: string | null;
 
   public plaidItem!: PlaidItem;
 

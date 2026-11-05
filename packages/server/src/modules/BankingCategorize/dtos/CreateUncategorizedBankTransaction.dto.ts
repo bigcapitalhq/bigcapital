@@ -32,5 +32,8 @@ export class UncategorizedBankTransactionDto {
   pendingPlaidTransactionId?: string | null;
 
   @IsString()
+  simplefinTransactionId?: string | null;
+
+  @IsString()
   batch?: string;
 }

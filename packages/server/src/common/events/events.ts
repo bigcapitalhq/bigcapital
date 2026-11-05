@@ -685,6 +685,11 @@ export const events = {
     onWebhookReceived: 'onPlaidWebhookReceived',
   },
 
+  simplefin: {
+    onItemLinked: 'onSimpleFinItemLinked',
+    onTransactionsSynced: 'onSimpleFinTransactionsSynced',
+  },
+
   // Bank rules.
   bankRules: {
     onCreating: 'onBankRuleCreating',

@@ -27,7 +27,7 @@ export class AccountTransformer extends Transformer {
    * @returns {string[]}
    */
   public excludeAttributes = (): string[] => {
-    return ['plaidItem'];
+    return ['plaidItem', 'simplefinItem'];
   };
 
   /**
@@ -85,7 +85,9 @@ export class AccountTransformer extends Transformer {
    * @returns {boolean}
    */
   protected isFeedsPaused = (account: Account): boolean => {
-    return account.plaidItem?.isPaused || false;
+    return (
+      account.plaidItem?.isPaused || account.simplefinItem?.isPaused || false
+    );
   };
 
   /**

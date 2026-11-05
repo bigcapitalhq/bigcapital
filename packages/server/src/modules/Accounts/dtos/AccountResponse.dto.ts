@@ -116,6 +116,20 @@ export class AccountResponseDto {
   plaidAccountId: string | null;
 
   @ApiProperty({
+    description: 'The SimpleFIN item ID',
+    example: 'f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70',
+    nullable: true,
+  })
+  simplefinItemId: string | null;
+
+  @ApiProperty({
+    description: 'The SimpleFIN account ID',
+    example: 'ACT-1a2b3c',
+    nullable: true,
+  })
+  simplefinAccountId: string | null;
+
+  @ApiProperty({
     description: 'Whether the feeds are active',
     example: true,
   })

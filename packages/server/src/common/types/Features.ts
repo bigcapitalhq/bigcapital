@@ -2,6 +2,8 @@ export enum Features {
   WAREHOUSES = 'warehouses',
   BRANCHES = 'branches',
   BankSyncing = 'BankSyncing',
+  BankSyncingPlaid = 'BankSyncingPlaid',
+  BankSyncingSimpleFin = 'BankSyncingSimpleFin',
   LANDED_COST = 'landed_cost',
   SMS_NOTIFICATIONS = 'sms_notifications',
   SALES_TAX = 'sales_tax',
