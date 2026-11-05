@@ -9,6 +9,7 @@ export interface BrandingTemplateValues {
 export interface BrandingState extends ElementPreviewState {
   companyName: string;
   companyAddress: string;
+  companyTaxNumber?: string;
 
   companyLogoKey: string;
   companyLogoUri: string;

@@ -22,6 +22,7 @@ export class GetOrganizationBrandingAttributesService {
     const primaryColor = tenantMetadata?.primaryColor;
     const companyLogoKey = tenantMetadata?.logoKey;
     const companyAddress = tenantMetadata?.addressTextFormatted;
+    const companyTaxNumber = tenantMetadata?.taxNumber ?? '';
 
     let companyLogoUri: string | null = null;
     if (companyLogoKey) {
@@ -36,6 +37,7 @@ export class GetOrganizationBrandingAttributesService {
     return {
       companyName,
       companyAddress,
+      companyTaxNumber,
       companyLogoUri: companyLogoUri ?? undefined,
       companyLogoKey,
       primaryColor,

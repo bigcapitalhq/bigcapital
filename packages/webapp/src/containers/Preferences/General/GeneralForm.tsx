@@ -16,6 +16,7 @@ import {
   FFormGroup,
   FInputGroup,
   FSelect,
+  FTextArea,
   Stack,
   Group,
 } from '@/components';
@@ -74,7 +75,7 @@ export function PreferencesGeneralForm({
         helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
         fastField={true}
       >
-        <FInputGroup name={'taxNumber'} fastField={true} />
+        <FTextArea name={'taxNumber'} rows={3} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Industry ----------  */}

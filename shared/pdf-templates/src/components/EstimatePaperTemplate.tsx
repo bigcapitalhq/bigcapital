@@ -47,6 +47,8 @@ export interface EstimatePaperTemplateProps extends PaperTemplateProps {
 
   showCompanyAddress?: boolean;
   companyAddress?: string;
+  showCompanyTaxNumber?: boolean;
+  companyTaxNumber?: string;
   billedToLabel?: string;
 
   // Total
@@ -108,6 +110,8 @@ export function EstimatePaperTemplate({
 
   // # Company address
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
+  showCompanyTaxNumber = true,
+  companyTaxNumber = '',
   showCompanyAddress = true,
 
   // # Customer address
@@ -220,6 +224,9 @@ export function EstimatePaperTemplate({
           {showCompanyAddress && (
             <PaperTemplate.Address>
               <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
+              {showCompanyTaxNumber && (
+                <PaperTemplate.CompanyTaxNumber taxNumber={companyTaxNumber} />
+              )}
             </PaperTemplate.Address>
           )}
           {showCustomerAddress && (

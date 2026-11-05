@@ -188,6 +188,8 @@ export const defaultEstimatePdfBrandingAttributes = {
 
   customerAddress: '',
   companyAddress: '',
+  showCompanyTaxNumber: true,
+  companyTaxNumber: '',
   showCustomerAddress: true,
   showCompanyAddress: true,
   billedToLabel: 'Billed To',
@@ -260,6 +262,8 @@ export interface EstimatePdfBrandingAttributes {
   // Company Address
   showCompanyAddress: boolean;
   companyAddress: string;
+  showCompanyTaxNumber: boolean;
+  companyTaxNumber: string;
   billedToLabel: string;
 
   // Entries
