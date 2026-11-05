@@ -381,8 +381,8 @@ export class Bill extends TenantBaseModel {
       /**
        * Filters the overdue bills.
        */
-      overdue(query) {
-        query.where('due_date', '<', moment().format('YYYY-MM-DD'));
+      overdue(query, asDate = moment().format('YYYY-MM-DD')) {
+        query.where('due_date', '<', asDate);
       },
       /**
        * Filters the not overdue invoices.
@@ -456,7 +456,7 @@ export class Bill extends TenantBaseModel {
 
       dueBillsFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
         query.modify('dueBills');
-        query.modify('notOverdue');
+        query.modify('notOverdue', asDate);
         query.modify('fromDate', asDate);
       },
 
@@ -464,6 +464,37 @@ export class Bill extends TenantBaseModel {
         query.modify('dueBills');
         query.modify('overdue', asDate);
         query.modify('fromDate', asDate);
+      },
+
+      /**
+       * Filters the opened bills dated on or before the given date that could
+       * still be open on it: either not settled today (compared with an upper
+       * bound of the bill total), or settled by a payment or vendor credit
+       * dated after the date. The exact open amount on the date is worked out
+       * by the caller.
+       */
+      agingCandidatesAsOf(query, asDate: string) {
+        query.modify('opened');
+        query.modify('fromDate', asDate);
+        query.where((builder) => {
+          builder
+            .whereRaw(
+              `COALESCE(PAYMENT_AMOUNT, 0) + COALESCE(CREDITED_AMOUNT, 0)
+                < AMOUNT + ABS(COALESCE(ADJUSTMENT, 0)) + COALESCE(TAX_AMOUNT_WITHHELD, 0)`,
+            )
+            .orWhereRaw(
+              `EXISTS (SELECT 1 FROM BILLS_PAYMENTS_ENTRIES AS E
+                JOIN BILLS_PAYMENTS AS P ON P.ID = E.BILL_PAYMENT_ID
+                WHERE E.BILL_ID = BILLS.ID AND P.PAYMENT_DATE > ?)`,
+              [asDate],
+            )
+            .orWhereRaw(
+              `EXISTS (SELECT 1 FROM VENDOR_CREDIT_APPLIED_BILL AS A
+                JOIN VENDOR_CREDITS AS V ON V.ID = A.VENDOR_CREDIT_ID
+                WHERE A.BILL_ID = BILLS.ID AND V.VENDOR_CREDIT_DATE > ?)`,
+              [asDate],
+            );
+        });
       },
 
       /**
