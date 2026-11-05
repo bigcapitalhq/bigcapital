@@ -14993,6 +14993,94 @@
         ]
       }
     },
+    "/api/banking/simplefin/claim-token": {
+      "post": {
+        "operationId": "BankingSimpleFinController_claimToken",
+        "summary": "Claim a SimpleFIN setup token and list the accounts available to link.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimpleFinClaimTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleFinClaimTokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking SimpleFIN"
+        ]
+      }
+    },
+    "/api/banking/simplefin/link-accounts": {
+      "post": {
+        "operationId": "BankingSimpleFinController_linkAccounts",
+        "summary": "Link the selected SimpleFIN accounts as bank/credit card accounts.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimpleFinLinkAccountsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimpleFinLinkAccountsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking SimpleFIN"
+        ]
+      }
+    },
+    "/api/banking/simplefin/items/{itemId}": {
+      "delete": {
+        "operationId": "BankingSimpleFinController_removeItem",
+        "summary": "Remove a claimed SimpleFIN connection that has no linked accounts.",
+        "parameters": [
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SimpleFIN connection removed."
+          }
+        },
+        "tags": [
+          "Banking SimpleFIN"
+        ]
+      }
+    },
     "/api/banking/exclude/bulk": {
       "put": {
         "operationId": "BankingTransactionsExcludeController_excludeBankTransactions",
@@ -28024,6 +28112,18 @@
             "description": "The Plaid account ID",
             "example": "plaid-account-456"
           },
+          "simplefinItemId": {
+            "type": "string",
+            "description": "The SimpleFIN item ID",
+            "example": "f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70",
+            "nullable": true
+          },
+          "simplefinAccountId": {
+            "type": "string",
+            "description": "The SimpleFIN account ID",
+            "example": "ACT-1a2b3c",
+            "nullable": true
+          },
           "isFeedsActive": {
             "type": "boolean",
             "description": "Whether the feeds are active",
@@ -28092,6 +28192,8 @@
           "formattedAmount",
           "plaidItemId",
           "plaidAccountId",
+          "simplefinItemId",
+          "simplefinAccountId",
           "isFeedsActive",
           "isSyncingOwner",
           "isFeedsPaused",
@@ -28203,6 +28305,16 @@
             "type": "string",
             "description": "Plaid item ID for syncing",
             "example": "plaid_item_123456"
+          },
+          "simplefinAccountId": {
+            "type": "string",
+            "description": "SimpleFIN account ID for syncing",
+            "example": "ACT-1a2b3c"
+          },
+          "simplefinItemId": {
+            "type": "string",
+            "description": "SimpleFIN item ID for syncing",
+            "example": "f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70"
           }
         },
         "required": [
@@ -38289,6 +38401,18 @@
             "description": "The Plaid account ID",
             "example": "plaid-account-456"
           },
+          "simplefinItemId": {
+            "type": "string",
+            "description": "The SimpleFIN item ID",
+            "example": "f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70",
+            "nullable": true
+          },
+          "simplefinAccountId": {
+            "type": "string",
+            "description": "The SimpleFIN account ID",
+            "example": "ACT-1a2b3c",
+            "nullable": true
+          },
           "isFeedsActive": {
             "type": "boolean",
             "description": "Whether the feeds are active",
@@ -38356,6 +38480,8 @@
           "uncategorizedTransactionsCount",
           "plaidItemId",
           "plaidAccountId",
+          "simplefinItemId",
+          "simplefinAccountId",
           "isFeedsActive",
           "isSyncingOwner",
           "isFeedsPaused",
@@ -39518,6 +39644,153 @@
           "assignAccountId",
           "assignPayee",
           "assignMemo"
+        ]
+      },
+      "SimpleFinClaimTokenDto": {
+        "type": "object",
+        "properties": {
+          "setupToken": {
+            "type": "string",
+            "example": "aHR0cHM6Ly9iZXRhLWJyaWRnZS5zaW1wbGVmaW4ub3JnL3NpbXBsZWZpbi9jbGFpbS9ERU1P",
+            "description": "The SimpleFIN setup token (base64 encoded claim URL) created in SimpleFIN Bridge."
+          }
+        },
+        "required": [
+          "setupToken"
+        ]
+      },
+      "SimpleFinClaimedAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "ACT-1a2b3c",
+            "description": "SimpleFIN account id."
+          },
+          "name": {
+            "type": "string",
+            "example": "Everyday Checking",
+            "description": "Account name."
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD",
+            "description": "Account currency."
+          },
+          "balance": {
+            "type": "number",
+            "example": 1250.5,
+            "description": "Current balance."
+          },
+          "availableBalance": {
+            "type": "number",
+            "example": 1200.5,
+            "nullable": true,
+            "description": "Available balance, when reported."
+          },
+          "balanceDate": {
+            "type": "string",
+            "example": "2026-11-04",
+            "nullable": true,
+            "description": "The date the balance was reported."
+          },
+          "connectionName": {
+            "type": "string",
+            "example": "Example Bank",
+            "description": "The institution/connection name."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "currency",
+          "balance",
+          "availableBalance",
+          "balanceDate",
+          "connectionName"
+        ]
+      },
+      "SimpleFinClaimTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "example": "f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70",
+            "description": "The SimpleFIN item id to use when linking accounts."
+          },
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimpleFinClaimedAccountResponseDto"
+            }
+          }
+        },
+        "required": [
+          "itemId",
+          "accounts"
+        ]
+      },
+      "SimpleFinLinkAccountDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "example": "ACT-1a2b3c",
+            "description": "The SimpleFIN account id to link."
+          },
+          "accountType": {
+            "type": "string",
+            "example": "bank",
+            "enum": [
+              "bank",
+              "credit-card"
+            ],
+            "description": "The system account type to create for the SimpleFIN account."
+          }
+        },
+        "required": [
+          "accountId",
+          "accountType"
+        ]
+      },
+      "SimpleFinLinkAccountsDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "example": "f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70",
+            "description": "The SimpleFIN item id returned when claiming the setup token."
+          },
+          "accounts": {
+            "description": "The SimpleFIN accounts to link as bank/credit card accounts.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimpleFinLinkAccountDto"
+            }
+          }
+        },
+        "required": [
+          "itemId",
+          "accounts"
+        ]
+      },
+      "SimpleFinLinkAccountsResponseDto": {
+        "type": "object",
+        "properties": {
+          "accountIds": {
+            "example": [
+              1001,
+              1002
+            ],
+            "description": "The ids of the created bank/credit card accounts.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "accountIds"
         ]
       },
       "GetExcludedBankTransactionResponseDto": {

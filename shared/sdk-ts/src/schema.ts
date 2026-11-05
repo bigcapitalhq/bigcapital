@@ -3691,6 +3691,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/banking/simplefin/claim-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Claim a SimpleFIN setup token and list the accounts available to link. */
+        post: operations["BankingSimpleFinController_claimToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/banking/simplefin/link-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Link the selected SimpleFIN accounts as bank/credit card accounts. */
+        post: operations["BankingSimpleFinController_linkAccounts"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/banking/simplefin/items/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a claimed SimpleFIN connection that has no linked accounts. */
+        delete: operations["BankingSimpleFinController_removeItem"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/banking/exclude/bulk": {
         parameters: {
             query?: never;
@@ -6889,6 +6940,16 @@ export interface components {
              */
             plaidAccountId: string;
             /**
+             * @description The SimpleFIN item ID
+             * @example f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70
+             */
+            simplefinItemId: string | null;
+            /**
+             * @description The SimpleFIN account ID
+             * @example ACT-1a2b3c
+             */
+            simplefinAccountId: string | null;
+            /**
              * @description Whether the feeds are active
              * @example true
              */
@@ -7010,6 +7071,16 @@ export interface components {
              * @example plaid_item_123456
              */
             plaidItemId?: string;
+            /**
+             * @description SimpleFIN account ID for syncing
+             * @example ACT-1a2b3c
+             */
+            simplefinAccountId?: string;
+            /**
+             * @description SimpleFIN item ID for syncing
+             * @example f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70
+             */
+            simplefinItemId?: string;
         };
         EditAccountDTO: {
             /**
@@ -13804,6 +13875,16 @@ export interface components {
              */
             plaidAccountId: string;
             /**
+             * @description The SimpleFIN item ID
+             * @example f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70
+             */
+            simplefinItemId: string | null;
+            /**
+             * @description The SimpleFIN account ID
+             * @example ACT-1a2b3c
+             */
+            simplefinAccountId: string | null;
+            /**
              * @description Whether the feeds are active
              * @example true
              */
@@ -14647,6 +14728,90 @@ export interface components {
              * @example Monthly Salary
              */
             assignMemo: string;
+        };
+        SimpleFinClaimTokenDto: {
+            /**
+             * @description The SimpleFIN setup token (base64 encoded claim URL) created in SimpleFIN Bridge.
+             * @example aHR0cHM6Ly9iZXRhLWJyaWRnZS5zaW1wbGVmaW4ub3JnL3NpbXBsZWZpbi9jbGFpbS9ERU1P
+             */
+            setupToken: string;
+        };
+        SimpleFinClaimedAccountResponseDto: {
+            /**
+             * @description SimpleFIN account id.
+             * @example ACT-1a2b3c
+             */
+            id: string;
+            /**
+             * @description Account name.
+             * @example Everyday Checking
+             */
+            name: string;
+            /**
+             * @description Account currency.
+             * @example USD
+             */
+            currency: string;
+            /**
+             * @description Current balance.
+             * @example 1250.5
+             */
+            balance: number;
+            /**
+             * @description Available balance, when reported.
+             * @example 1200.5
+             */
+            availableBalance: number | null;
+            /**
+             * @description The date the balance was reported.
+             * @example 2026-11-04
+             */
+            balanceDate: string | null;
+            /**
+             * @description The institution/connection name.
+             * @example Example Bank
+             */
+            connectionName: string;
+        };
+        SimpleFinClaimTokenResponseDto: {
+            /**
+             * @description The SimpleFIN item id to use when linking accounts.
+             * @example f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70
+             */
+            itemId: string;
+            accounts: components["schemas"]["SimpleFinClaimedAccountResponseDto"][];
+        };
+        SimpleFinLinkAccountDto: {
+            /**
+             * @description The SimpleFIN account id to link.
+             * @example ACT-1a2b3c
+             */
+            accountId: string;
+            /**
+             * @description The system account type to create for the SimpleFIN account.
+             * @example bank
+             * @enum {string}
+             */
+            accountType: "bank" | "credit-card";
+        };
+        SimpleFinLinkAccountsDto: {
+            /**
+             * @description The SimpleFIN item id returned when claiming the setup token.
+             * @example f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70
+             */
+            itemId: string;
+            /** @description The SimpleFIN accounts to link as bank/credit card accounts. */
+            accounts: components["schemas"]["SimpleFinLinkAccountDto"][];
+        };
+        SimpleFinLinkAccountsResponseDto: {
+            /**
+             * @description The ids of the created bank/credit card accounts.
+             * @example [
+             *       1001,
+             *       1002
+             *     ]
+             */
+            accountIds: string[];
         };
         GetExcludedBankTransactionResponseDto: {
             /** @description Transaction amount (positive for deposit, negative for withdrawal) */
@@ -26690,6 +26855,72 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description The bank rule has been successfully deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BankingSimpleFinController_claimToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimpleFinClaimTokenDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimpleFinClaimTokenResponseDto"];
+                };
+            };
+        };
+    };
+    BankingSimpleFinController_linkAccounts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimpleFinLinkAccountsDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimpleFinLinkAccountsResponseDto"];
+                };
+            };
+        };
+    };
+    BankingSimpleFinController_removeItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description SimpleFIN connection removed. */
             200: {
                 headers: {
                     [name: string]: unknown;

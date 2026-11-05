@@ -44,6 +44,7 @@ export * from './payment-mades';
 export * from './payment-links';
 export * from './payment-services';
 export * from './plaid';
+export * from './simplefin';
 export * from './stripe-integration';
 export * from './inventory-adjustments';
 export * from './inventory-cost';
