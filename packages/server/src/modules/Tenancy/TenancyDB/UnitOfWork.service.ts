@@ -12,33 +12,30 @@ export class UnitOfWork {
   ) {}
 
   /**
+   * Runs the work in a new transaction, and settles once its COMMIT or
+   * ROLLBACK has finished: with the work's result, with the work's error, or
+   * with the error of a COMMIT that failed. Given the caller's transaction,
+   * runs the work in it, and the caller commits or rolls back.
    * @param {function} work - The work to be done in the transaction.
+   * @param {Transaction} trx - The caller's transaction, if any.
    * @param {IsolationLevel} isolationLevel
-   * @returns {}
+   * @returns {Promise<T>}
    */
   public withTransaction = async <T>(
     work: (knex: Knex.Transaction) => Promise<T> | T,
     trx?: Transaction,
     isolationLevel: IsolationLevel = IsolationLevel.READ_UNCOMMITTED,
   ): Promise<T> => {
-    const knex = this.tenantKex();
-    let _trx = trx;
-
-    if (!_trx) {
-      _trx = await knex.transaction({ isolationLevel });
+    if (trx) {
+      return work(trx);
     }
-    try {
-      const result = await work(_trx);
-
-      if (!trx) {
-        _trx.commit();
-      }
-      return result;
-    } catch (error) {
-      if (!trx) {
-        _trx.rollback();
-      }
-      throw error;
-    }
+    // knex commits when the handler resolves and rolls back when it rejects.
+    // The handler is async because knex commits only a returned promise.
+    // `doNotRejectOnRollback: false`: a work that rejects without an error
+    // still rejects, instead of resolving once rolled back.
+    return this.tenantKex().transaction(async (_trx) => work(_trx), {
+      isolationLevel,
+      doNotRejectOnRollback: false,
+    });
   };
 }
