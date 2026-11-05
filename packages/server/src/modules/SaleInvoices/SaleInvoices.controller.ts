@@ -14,11 +14,8 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ISaleInvoiceWriteoffDTO,
-  SaleInvoiceMailState,
-  SendInvoiceMailDTO,
-} from './SaleInvoice.types';
+import { SaleInvoiceMailState, SendInvoiceMailDTO } from './SaleInvoice.types';
+import { WriteoffSaleInvoiceDto } from './dtos/WriteoffSaleInvoice.dto';
 import { SaleInvoiceApplication } from './SaleInvoices.application';
 import {
   ApiBody,
@@ -318,7 +315,7 @@ export class SaleInvoicesController {
   })
   writeOff(
     @Param('id', ParseIntPipe) id: number,
-    @Body() writeoffDTO: ISaleInvoiceWriteoffDTO,
+    @Body() writeoffDTO: WriteoffSaleInvoiceDto,
   ) {
     return this.saleInvoiceApplication.writeOff(id, writeoffDTO);
   }

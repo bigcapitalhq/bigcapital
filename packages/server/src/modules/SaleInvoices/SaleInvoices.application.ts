@@ -10,11 +10,8 @@ import { SaleInvoicePdf } from './queries/SaleInvoicePdf.service';
 import { GetInvoicePaymentsService } from './queries/GetInvoicePayments.service';
 import { GetSaleInvoiceState } from './queries/GetSaleInvoiceState.service';
 import { GetSaleInvoiceMailState } from './queries/GetSaleInvoiceMailState.service';
-import {
-  ISaleInvoiceWriteoffDTO,
-  SaleInvoiceMailState,
-  SendInvoiceMailDTO,
-} from './SaleInvoice.types';
+import { SaleInvoiceMailState, SendInvoiceMailDTO } from './SaleInvoice.types';
+import { WriteoffSaleInvoiceDto } from './dtos/WriteoffSaleInvoice.dto';
 import { GetSaleInvoicesQueryDto } from './dtos/GetSaleInvoicesQuery.dto';
 import { GetSaleInvoicesService } from './queries/GetSaleInvoices';
 import { SendSaleInvoiceMail } from './commands/SendSaleInvoiceMail';
@@ -161,12 +158,12 @@ export class SaleInvoiceApplication {
   /**
    * Writes-off the sale invoice on bad debt expense account.
    * @param {number} saleInvoiceId - Sale invoice id.
-   * @param {ISaleInvoiceWriteoffDTO} writeoffDTO - Writeoff data.
+   * @param {WriteoffSaleInvoiceDto} writeoffDTO - Writeoff data.
    * @return {Promise<ISaleInvoice>}
    */
   public async writeOff(
     saleInvoiceId: number,
-    writeoffDTO: ISaleInvoiceWriteoffDTO,
+    writeoffDTO: WriteoffSaleInvoiceDto,
   ) {
     return this.writeoffInvoiceService.writeOff(saleInvoiceId, writeoffDTO);
   }

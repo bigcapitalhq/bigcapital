@@ -32,7 +32,7 @@ export class SaleInvoiceWriteoffGL {
    */
   private get invoiceWriteoffGLCommonEntry() {
     return {
-      date: this.saleInvoiceModel.invoiceDate,
+      date: this.saleInvoiceModel.writtenoffAt,
 
       currencyCode: this.saleInvoiceModel.currencyCode,
       exchangeRate: this.saleInvoiceModel.exchangeRate,

@@ -635,13 +635,15 @@ describe('GL entries — Sales transactions (e2e)', () => {
         .set(authHeaders())
         .send({
           expenseAccountId: 1024,
-          date: '2023-01-01',
+          date: '2023-03-15',
           reason: 'Write off reason',
         })
         .expect(200);
 
       const legs = await fetchLegs('InvoiceWriteOff', invoiceRes.body.id);
 
+      // The write-off is posted on the write-off date, not the invoice date.
+      expect(legs.every((leg) => leg.date === '2023-03-15')).toBe(true);
       expectBalanced(legs);
       expectLegs(
         legs,

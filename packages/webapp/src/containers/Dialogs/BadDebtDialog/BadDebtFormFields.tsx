@@ -1,18 +1,27 @@
-import { Classes, ControlGroup, Callout, Intent } from '@blueprintjs/core';
+import {
+  Classes,
+  ControlGroup,
+  Callout,
+  Intent,
+  Position,
+} from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useBadDebtContext } from './BadDebtFormProvider';
+import { getLatestWriteoffDate, parseCalendarDate } from './utils';
 import {
   FTextArea,
   FormattedMessage as T,
   FFormGroup,
   FMoneyInputGroup,
   FAccountsSuggestField,
+  FDateInput,
+  Icon,
   InputPrependText,
   FieldRequiredHint,
 } from '@/components';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import { useAutofocus } from '@/hooks';
+import { useAutofocus, useDateInputFormatter } from '@/hooks';
 
 /**
  * Bad debt form fields.
@@ -20,6 +29,14 @@ import { useAutofocus } from '@/hooks';
 export function BadDebtFormFields(): React.ReactElement {
   const amountfieldRef = useAutofocus<HTMLInputElement>();
   const { accounts, invoice } = useBadDebtContext();
+  const dateInputFormatter = useDateInputFormatter();
+
+  // The write-off can be dated from the invoice date up to today, or on the
+  // invoice date when the invoice is dated after today.
+  const minWriteoffDate = parseCalendarDate(invoice?.invoiceDate);
+  const maxWriteoffDate = parseCalendarDate(
+    getLatestWriteoffDate(invoice?.invoiceDate),
+  );
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -45,6 +62,25 @@ export function BadDebtFormFields(): React.ReactElement {
             }}
           />
         </ControlGroup>
+      </FFormGroup>
+
+      {/*------------ Write-off date -----------*/}
+      <FFormGroup
+        name={'date'}
+        label={intl.get('bad_debt.dialog.written_off_date')}
+        labelInfo={<FieldRequiredHint />}
+      >
+        <FDateInput
+          name={'date'}
+          {...dateInputFormatter}
+          minDate={minWriteoffDate}
+          maxDate={maxWriteoffDate}
+          popoverProps={{ position: Position.BOTTOM, minimal: true }}
+          inputProps={{
+            leftIcon: <Icon icon={'date-range'} />,
+          }}
+          fill
+        />
       </FFormGroup>
 
       {/*------------ Expense account ----------- */}

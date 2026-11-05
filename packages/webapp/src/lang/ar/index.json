@@ -1510,6 +1510,8 @@
   "cash_flow_transaction.switch_item": " {value} معاملة علي حساب",
   "cash_flow_transaction.balance_in_bigcapital": "الرصيد في Bigcapital",
   "bad_debt.dialog.written_off_amount": "المبلغ المشطوب",
+  "bad_debt.dialog.written_off_date": "تاريخ الشطب",
+  "bad_debt.dialog.date_before_invoice_date": "لا يمكن أن يكون تاريخ الشطب قبل تاريخ الفاتورة.",
   "bad_debt.dialog.bad_debt": "دين معدوم",
   "bad_debt.dialog.cancel_bad_debt": "إلغاء الدين المعدوم",
   "bad_debt.dialog.header_note": "يمكن للبائع تحميل مبلغ الفاتورة على حساب مصروفات الديون المعدومة عندما يكون من المؤكد أن الفاتورة لن يتم دفعها.",
