@@ -7,7 +7,7 @@ import intl from 'react-intl-universal';
 import { CreateBadDebtFormSchema } from './BadDebtForm.schema';
 import { BadDebtFormContent } from './BadDebtFormContent';
 import { useBadDebtContext } from './BadDebtFormProvider';
-import { transformErrors } from './utils';
+import { getLatestWriteoffDate, transformErrors } from './utils';
 import type { BadDebtFormValues } from './types';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { AppToaster } from '@/components';
@@ -18,6 +18,7 @@ const defaultInitialValues: BadDebtFormValues = {
   expenseAccountId: '',
   reason: '',
   amount: '',
+  date: '',
 };
 
 interface BadDebtFormProps extends WithDialogActionsProps {}
@@ -31,6 +32,7 @@ function BadDebtFormInner({
   const initialValues: BadDebtFormValues = {
     ...defaultInitialValues,
     amount: invoice?.dueAmount || '',
+    date: getLatestWriteoffDate(invoice?.invoiceDate),
   };
 
   // Handles the form submit.

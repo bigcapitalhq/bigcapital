@@ -7,6 +7,9 @@ const Schema = Yup.object().shape({
     .required()
     .label(intl.get('expense_account_id')),
   amount: Yup.number().required().label(intl.get('amount')),
+  date: Yup.date()
+    .required()
+    .label(intl.get('bad_debt.dialog.written_off_date')),
   reason: Yup.string()
     .required()
     .min(3)
