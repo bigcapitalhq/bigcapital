@@ -111,16 +111,15 @@ export class SalesTransactionLockingGuardSubscriber {
   }
 
   /**
-   * Transaciton locking guard on canceling written-off invoice.
+   * Transaciton locking guard on canceling written-off invoice, on the date
+   * of the write-off GL entries the cancel removes.
    * @param {ISaleInvoiceWrittenOffCancelPayload} payload
    */
   @OnEvent(events.saleInvoice.onWrittenoffCancel, { suppressErrors: false })
   public async transactionLockinGuardOnInvoiceWritingoffCanceling({
-    saleInvoice,
+    writeoffEntryDate,
   }: ISaleInvoiceWrittenOffCancelPayload) {
-    await this.salesLockingGuard.transactionLockingGuard(
-      saleInvoice.invoiceDate,
-    );
+    await this.salesLockingGuard.transactionLockingGuard(writeoffEntryDate);
   }
 
   /**

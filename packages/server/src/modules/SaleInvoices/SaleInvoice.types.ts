@@ -142,6 +142,8 @@ export interface ISaleInvoiceWriteoffCreatedPayload {
 
 export interface ISaleInvoiceWrittenOffCancelPayload {
   saleInvoice: SaleInvoice;
+  // The date of the write-off GL entries the cancel removes (YYYY-MM-DD).
+  writeoffEntryDate: string;
   trx: Knex.Transaction;
 }
 

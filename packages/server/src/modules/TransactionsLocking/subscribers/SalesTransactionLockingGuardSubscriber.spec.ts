@@ -24,5 +24,31 @@ describe('SalesTransactionLockingGuardSubscriber', () => {
         '2023-03-15',
       );
     });
+
+    it('checks the removed entry date when cancelling an old write-off', async () => {
+      const { subscriber, salesLockingGuard } = buildSubscriber();
+
+      await subscriber.transactionLockinGuardOnInvoiceWritingoffCanceling({
+        saleInvoice: { invoiceDate: '2023-01-01', writtenoffAt: '2026-11-05' },
+        writeoffEntryDate: '2023-01-01',
+      } as any);
+
+      expect(salesLockingGuard.transactionLockingGuard).toHaveBeenCalledWith(
+        '2023-01-01',
+      );
+    });
+
+    it('checks the removed entry date when cancelling a write-off posted after the invoice date', async () => {
+      const { subscriber, salesLockingGuard } = buildSubscriber();
+
+      await subscriber.transactionLockinGuardOnInvoiceWritingoffCanceling({
+        saleInvoice: { invoiceDate: '2023-01-01', writtenoffAt: '2026-11-05' },
+        writeoffEntryDate: '2026-11-05',
+      } as any);
+
+      expect(salesLockingGuard.transactionLockingGuard).toHaveBeenCalledWith(
+        '2026-11-05',
+      );
+    });
   });
 });
