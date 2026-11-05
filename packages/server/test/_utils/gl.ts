@@ -18,6 +18,8 @@ export interface GLTestLeg {
   referenceType: string;
   referenceId: number;
   basis: string;
+  // The transaction date (YYYY-MM-DD).
+  date: string;
 }
 
 export interface RawGLTestLeg {
@@ -31,6 +33,7 @@ export interface RawGLTestLeg {
   reference_type?: string;
   reference_id?: number;
   basis?: string;
+  date?: { date?: string };
 }
 
 export const authHeaders = () => ({
@@ -88,6 +91,7 @@ export const fetchLegs = async (
     referenceType: t.reference_type,
     referenceId: t.reference_id,
     basis: t.basis,
+    date: String(t.date?.date ?? '').slice(0, 10),
   }));
 };
 
