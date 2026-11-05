@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
+import { getAppThrottlers } from './AppThrottle.throttlers';
 
 @Module({
   imports: [
@@ -16,18 +17,13 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
 
         if (isTest) {
           return {
-            throttlers: [
-              {
-                name: 'default',
-                ttl: 60000,
-                limit: 1000000, // Effectively disable throttling in tests
-              },
-              {
-                name: 'auth',
-                ttl: 60000,
-                limit: 1000000, // Effectively disable throttling in tests
-              },
-            ],
+            // Very high limits effectively disable throttling in tests.
+            throttlers: getAppThrottlers({
+              globalTtl: 60000,
+              globalLimit: 1000000,
+              authTtl: 60000,
+              authLimit: 1000000,
+            }),
             // No storage specified = uses in-memory storage
           };
         }
@@ -43,18 +39,12 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
         const authLimit = configService.get<number>('throttle.auth.limit');
 
         return {
-          throttlers: [
-            {
-              name: 'default',
-              ttl: globalTtl,
-              limit: globalLimit,
-            },
-            {
-              name: 'auth',
-              ttl: authTtl,
-              limit: authLimit,
-            },
-          ],
+          throttlers: getAppThrottlers({
+            globalTtl,
+            globalLimit,
+            authTtl,
+            authLimit,
+          }),
           storage: new ThrottlerStorageRedisService({
             host,
             port,
