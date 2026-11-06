@@ -16,7 +16,6 @@ import { financialStatementsReducer as financialStatements } from './financial-s
 import { globalErrorsReducer as globalErrors } from './global-errors/global-errors.reducer';
 import { inventoryAdjustmentsPersistReducer as inventoryAdjustments } from './inventory-adjustments/inventory-adjustment.reducer';
 import { salesInvoicesPersistReducer as salesInvoices } from './invoice/invoices.reducer';
-import { recurringInvoicesPersistReducer as recurringInvoices } from './recurring-invoices/recurring-invoices.reducer';
 import { itemsCategoriesPersistReducer as itemsCategories } from './item-categories/items-category.reducer';
 import { itemsPersistReducer as items } from './items/items.reducer';
 import { manualJournalsPersistReducer as manualJournals } from './manual-journals/manual-journals.reducers';
@@ -25,6 +24,7 @@ import { paymentMadesPersistReducer as paymentMades } from './payment-mades/paym
 import { paymentReceivesPersistReducer as paymentReceives } from './payment-receives/payment-receives.reducer';
 import { SubscriptionPlansSlice } from './plans/plans.reducer';
 import { salesReceiptsPersistReducer as salesReceipts } from './receipts/receipts.reducer';
+import { recurringInvoicesPersistReducer as recurringInvoices } from './recurring-invoices/recurring-invoices.reducer';
 import { resourcesReducer as resources } from './resources/resources.reducer';
 import { searchReducer as globalSearch } from './search/search.reducer';
 import { RESET } from './types';
@@ -32,6 +32,7 @@ import { usersReducer as users } from './users/users.reducer';
 import { vendorCreditPersistReducer as vendorCredit } from './vendor-credit/vendor-credit.reducer';
 import { vendorsPersistReducer as vendors } from './vendors/vendors.reducer';
 import { warehouseTransfersPersistReducer as warehouseTransfers } from './warehouse-transfer/warehouse-transfer.reducer';
+import { recurringJournalsPersistReducer as recurringJournals } from '@/ee/recurring-journals/store/recurring-journals.reducer';
 
 const appReducer = combineReducers({
   authentication,
@@ -55,6 +56,7 @@ const appReducer = combineReducers({
   salesEstimates,
   salesInvoices,
   recurringInvoices,
+  recurringJournals,
   salesReceipts,
   bills,
   vendors,

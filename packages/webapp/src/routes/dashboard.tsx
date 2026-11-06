@@ -897,6 +897,50 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
+  // Recurring Journals.
+  {
+    path: `/recurring-journals/:id/edit`,
+    component: lazy(() =>
+      import(
+        '@/ee/recurring-journals/containers/RecurringJournalForm/RecurringJournalFormPage'
+      ).then((m) => ({ default: m.RecurringJournalFormPage })),
+    ),
+    name: 'recurring-journal-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_recurring_journal'),
+    sidebarExpand: false,
+    backLink: true,
+    feature: Features.RecurringJournals,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/recurring-journals/new`,
+    component: lazy(() =>
+      import(
+        '@/ee/recurring-journals/containers/RecurringJournalForm/RecurringJournalFormPage'
+      ).then((m) => ({ default: m.RecurringJournalFormPage })),
+    ),
+    name: 'recurring-journal-new',
+    breadcrumb: intl.get('new_recurring_journal'),
+    pageTitle: intl.get('new_recurring_journal'),
+    sidebarExpand: false,
+    backLink: true,
+    feature: Features.RecurringJournals,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/recurring-journals`,
+    component: lazy(() =>
+      import(
+        '@/ee/recurring-journals/containers/RecurringJournalsLanding/RecurringJournalsList'
+      ).then((m) => ({ default: m.RecurringJournalsList })),
+    ),
+    breadcrumb: intl.get('recurring_journals'),
+    pageTitle: intl.get('recurring_journals'),
+    feature: Features.RecurringJournals,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
   // Sales Receipts.
   {
     path: `/receipts/import`,

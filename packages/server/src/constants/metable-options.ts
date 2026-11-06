@@ -315,5 +315,8 @@ export const SettingsOptions = {
     tracking_categories: {
       type: 'boolean',
     },
+    recurring_journals: {
+      type: 'boolean',
+    },
   },
 };

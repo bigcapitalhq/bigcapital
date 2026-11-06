@@ -21,6 +21,7 @@ import {
   AbilitySubject,
   ISubjectAbilitiesSchema,
   ISubjectAbilitySchema,
+  RecurringJournalAction,
   RoleAction,
 } from './Roles.types';
 import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.types';
@@ -168,6 +169,32 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       },
       {
         key: RecurringInvoiceAction.Delete,
+        label: 'ability.delete',
+        default: true,
+      },
+    ],
+  },
+  {
+    subject: AbilitySubject.RecurringJournal,
+    subjectLabel: 'ability.recurring_journals',
+    abilities: [
+      {
+        key: RecurringJournalAction.View,
+        label: 'ability.view',
+        default: true,
+      },
+      {
+        key: RecurringJournalAction.Create,
+        label: 'ability.create',
+        default: true,
+      },
+      {
+        key: RecurringJournalAction.Edit,
+        label: 'ability.edit',
+        default: true,
+      },
+      {
+        key: RecurringJournalAction.Delete,
         label: 'ability.delete',
         default: true,
       },
