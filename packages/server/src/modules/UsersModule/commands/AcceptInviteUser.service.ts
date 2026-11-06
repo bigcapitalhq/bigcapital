@@ -81,11 +81,15 @@ export class AcceptInviteUserService {
           .findById(inviteToken.tenantId);
 
         // Link the invited user to the tenant as a member so they can sign in.
-        await this.userTenantModel.query(trx).insert({
-          userId: systemUser.id,
-          tenantId: inviteToken.tenantId,
-          role: 'member',
-        });
+        await this.userTenantModel
+          .query(trx)
+          .insert({
+            userId: systemUser.id,
+            tenantId: inviteToken.tenantId,
+            role: 'member',
+          })
+          .onConflict(['userId', 'tenantId'])
+          .ignore();
         return { systemUser, tenant, inviteToken };
       });
     // Set CLS values for tenant context before triggering sync events.

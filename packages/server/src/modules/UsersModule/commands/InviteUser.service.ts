@@ -41,9 +41,43 @@ export class InviteTenantUserService {
     // Get the given role or throw not found service error.
     const _role = await this.roleModel().query().findById(sendInviteDTO.roleId);
 
-    // Validates the given email not exists on the storage.
-    await this.validateUserEmailNotExists(sendInviteDTO.email);
+    // Retrieve the existing tenant user with the given email, if any.
+    const existingUser = await this.tenantUserModel()
+      .query()
+      .findOne('email', sendInviteDTO.email);
 
+    // Retrieves the authorized user (inviting user).
+    const authorizedUser = await this.tenancyContext.getSystemUser();
+    const invitingUser = await this.tenantUserModel()
+      .query()
+      .findOne({ systemUserId: authorizedUser.id });
+
+    // Re-invite the user when the previous invite was never accepted
+    // (e.g. the previous invite email failed to send) instead of failing.
+    if (existingUser && !existingUser.inviteAcceptedAt) {
+      const inviteToken = crypto.randomBytes(32).toString('hex');
+
+      await this.tenantUserModel().query().findById(existingUser.id).patch({
+        roleId: sendInviteDTO.roleId,
+        invitedAt: new Date(),
+      });
+      const user = await this.tenantUserModel()
+        .query()
+        .findById(existingUser.id);
+
+      // Triggers `onUserSendInvite` event.
+      await this.eventEmitter.emitAsync(events.inviteUser.sendInvite, {
+        inviteToken,
+        user,
+        invitingUser,
+      } as IUserInvitedEventPayload);
+
+      return { invitedUser: user };
+    }
+    // Validates the given email not exists on the storage.
+    if (existingUser) {
+      throw new ServiceError(ERRORS.EMAIL_EXISTS);
+    }
     // Generates a new invite token.
     const inviteToken = crypto.randomBytes(32).toString('hex');
 
@@ -54,12 +88,6 @@ export class InviteTenantUserService {
       active: true,
       invitedAt: new Date(),
     });
-
-    // Retrieves the authorized user (inviting user).
-    const authorizedUser = await this.tenancyContext.getSystemUser();
-    const invitingUser = await this.tenantUserModel()
-      .query()
-      .findOne({ systemUserId: authorizedUser.id });
 
     // Triggers `onUserSendInvite` event.
     await this.eventEmitter.emitAsync(events.inviteUser.sendInvite, {
@@ -142,19 +170,4 @@ export class InviteTenantUserService {
     }
     return user;
   };
-
-  /**
-   * Throws error in case the given user email not exists on the storage.
-   * @param {string} email
-   * @throws {ServiceError}
-   */
-  private async validateUserEmailNotExists(email: string): Promise<void> {
-    const foundUser = await this.tenantUserModel()
-      .query()
-      .findOne('email', email);
-
-    if (foundUser) {
-      throw new ServiceError(ERRORS.EMAIL_EXISTS);
-    }
-  }
 }
