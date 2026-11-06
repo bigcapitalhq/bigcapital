@@ -3,6 +3,7 @@ export const AbilitySubject = {
   InventoryAdjustment: 'InventoryAdjustment',
   Estimate: 'SaleEstimate',
   Invoice: 'SaleInvoice',
+  RecurringInvoice: 'RecurringInvoice',
   Receipt: 'SaleReceipt',
   PaymentReceive: 'PaymentReceive',
   Bill: 'Bill',
@@ -53,6 +54,13 @@ export const SaleInvoiceAction = {
   Delete: 'Delete',
   Writeoff: 'bad-debt',
   NotifyBySms: 'NotifyBySms',
+} as const;
+
+export const RecurringInvoiceAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
 } as const;
 
 export const SaleReceiptAction = {

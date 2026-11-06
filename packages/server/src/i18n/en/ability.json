@@ -7,6 +7,7 @@
   "vendors": "vendors",
   "sale_estimates": "Sale estimates",
   "sale_invoices": "Sale invoices",
+  "recurring_invoices": "Recurring invoices",
   "sale_receipts": "Sale receipts",
   "expenses": "Expenses",
   "payments_receive": "Payments receive",
