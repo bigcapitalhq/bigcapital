@@ -1,3 +1,4 @@
+import type { DashboardExtensionMeta } from './dashboard.types';
 import {
   ADD_AUTOFILL_REF,
   APP_INTL_IS_LOADING,
@@ -12,6 +13,7 @@ import {
   OPEN_DRAWER,
   REMOVE_AUTOFILL_REF,
   RESET_AUTOFILL_REF,
+  SET_EXTENSIONS_DASHBOARD_META,
   SET_FEATURE_DASHBOARD_META,
   SIDEBAR_EXPEND_TOGGLE,
   SIDEBAR_SUBMENU_CLOSE,
@@ -64,6 +66,12 @@ export const setFeatureDashboardMeta = ({
 }: {
   features: Array<{ name: string; isAccessible: boolean }>;
 }) => ({ type: SET_FEATURE_DASHBOARD_META, payload: { features } });
+
+export const setExtensionsDashboardMeta = ({
+  extensions,
+}: {
+  extensions: DashboardExtensionMeta[];
+}) => ({ type: SET_EXTENSIONS_DASHBOARD_META, payload: { extensions } });
 
 export function openSidebarSubmenu({ submenuId }: { submenuId: unknown }) {
   return { type: SIDEBAR_SUBMENU_OPEN, payload: { submenuId } };

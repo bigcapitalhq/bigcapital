@@ -22,10 +22,12 @@ export interface HomepageSectionOption {
 }
 
 export interface PreferencesMenuItem {
+  id?: string;
   text: ReactNode;
   disabled?: boolean;
   href: string;
   feature?: string;
+  permission?: PermissionOption;
 }
 
 export interface QuickNewActionOption {

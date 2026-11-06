@@ -33,6 +33,9 @@ export interface SidebarMenuItemPermission {
 }
 
 export interface SidebarMenuItem {
+  id?: string;
+  parentId?: string;
+  afterId?: string;
   text: React.ReactNode;
   type: ISidebarMenuItemType;
   disabled?: boolean;
@@ -51,6 +54,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Homepage
   // ---------------
   {
+    id: 'home',
     text: <T id={'sidebar.homepage'} />,
     type: ISidebarMenuItemType.Link,
     disabled: false,
@@ -61,6 +65,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Sales & Inventory
   // ---------------
   {
+    id: 'sales-inventory',
     text: <T id={'sidebar.sales_inventory'} />,
     type: ISidebarMenuItemType.Group,
     children: [
@@ -156,6 +161,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Sales
   // ---------------
   {
+    id: 'sales',
     text: <T id={'sidebar.sales'} />,
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Sales,
@@ -174,6 +180,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
             },
           },
           {
+            id: 'sales.invoices',
             text: <T id={'sidebar.invoices'} />,
             href: '/invoices',
             type: ISidebarMenuItemType.Link,
@@ -260,6 +267,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Purchases
   // ---------------
   {
+    id: 'purchases',
     text: <T id={'sidebar.purchases'} />,
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Purchases,
@@ -269,6 +277,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
         type: ISidebarMenuItemType.Group,
         children: [
           {
+            id: 'purchases.bills',
             text: <T id={'bills'} />,
             href: '/bills',
             type: ISidebarMenuItemType.Link,
@@ -332,6 +341,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Contacts
   // ---------------
   {
+    id: 'contacts',
     text: <T id={'sidebar.contacts'} />,
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Contacts,
@@ -341,6 +351,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
         type: ISidebarMenuItemType.Group,
         children: [
           {
+            id: 'contacts.customers',
             text: <T id={'sidebar.customers'} />,
             href: '/customers',
             type: ISidebarMenuItemType.Link,
@@ -390,6 +401,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Accounting
   // ---------------
   {
+    id: 'accounting',
     text: <T id={'sidebar.accounting'} />,
     type: ISidebarMenuItemType.Group,
     children: [
@@ -403,6 +415,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
             type: ISidebarMenuItemType.Group,
             children: [
               {
+                id: 'accounting.accounts',
                 text: <T id={'sidebar.accounts_chart'} />,
                 href: '/accounts',
                 type: ISidebarMenuItemType.Link,
@@ -460,6 +473,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Cashflow
   // ---------------
   {
+    id: 'cashflow',
     text: <T id={'sidebar.banking'} />,
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Cashflow,
@@ -537,6 +551,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Expenses
   // ---------------
   {
+    id: 'expenses',
     text: <T id={'sidebar.expenses'} />,
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Expenses,
@@ -577,6 +592,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
   // # Reports
   // ---------------
   {
+    id: 'reports',
     text: <T id={'sidebar.reports'} />,
     type: ISidebarMenuItemType.Overlay,
     overlayId: ISidebarMenuOverlayIds.Reports,
@@ -586,6 +602,7 @@ export const SidebarMenu: SidebarMenuItem[] = [
         type: ISidebarMenuItemType.Group,
         children: [
           {
+            id: 'reports.all',
             text: <T id={'all_reports'} />,
             href: '/financial-reports',
             type: ISidebarMenuItemType.Link,
@@ -777,10 +794,12 @@ export const SidebarMenu: SidebarMenuItem[] = [
     ],
   },
   {
+    id: 'system',
     text: <T id={'sidebar.system'} />,
     type: ISidebarMenuItemType.Group,
     children: [
       {
+        id: 'system.preferences',
         text: <T id={'sidebar.preferences'} />,
         href: '/preferences',
         type: ISidebarMenuItemType.Link,

@@ -3,6 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { InvoiceDetailActionsBar } from './InvoiceDetailActionsBar';
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 import { InvoiceDetailTab } from './InvoiceDetailTab';
 import { InvoiceGLEntriesTable } from './InvoiceGLEntriesTable';
 import { InvoicePaymentTransactionsTable } from './InvoicePaymentTransactions/InvoicePaymentTransactionsTable';
@@ -11,6 +12,7 @@ import {
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+import { ExtensionSlot } from '@/extensions/slots/ExtensionSlot';
 import { useAbilityContext } from '@/hooks/utils';
 
 /**
@@ -54,10 +56,19 @@ function InvoiceDetailsTabs() {
  * @returns {React.JSX}
  */
 export function InvoiceDetail() {
+  const { invoice, invoiceId } = useInvoiceDetailDrawerContext();
+
   return (
     <InvoiceDetailsRoot>
       <InvoiceDetailActionsBar />
       <InvoiceDetailsTabs />
+
+      {invoice && (
+        <ExtensionSlot
+          name="invoice.detail.sidebar"
+          context={{ invoice, invoiceId }}
+        />
+      )}
     </InvoiceDetailsRoot>
   );
 }

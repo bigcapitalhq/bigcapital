@@ -1,0 +1,96 @@
+{
+  "name": "@bigcapital/extension-sdk",
+  "version": "0.1.0",
+  "description": "Versioned contracts, manifest schema, and test harness for Bigcapital extensions.",
+  "license": "AGPL-3.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./manifest": {
+      "types": "./dist/manifest.d.ts",
+      "require": "./dist/manifest.js",
+      "import": "./dist/manifest.mjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "require": "./dist/server.js",
+      "import": "./dist/server.mjs"
+    },
+    "./bridges": {
+      "types": "./dist/bridges.d.ts",
+      "require": "./dist/bridges.js",
+      "import": "./dist/bridges.mjs"
+    },
+    "./web": {
+      "types": "./dist/web.d.ts",
+      "require": "./dist/web.js",
+      "import": "./dist/web.mjs"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "require": "./dist/testing.js",
+      "import": "./dist/testing.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "typesVersions": {
+    "*": {
+      "manifest": [
+        "dist/manifest.d.ts"
+      ],
+      "server": [
+        "dist/server.d.ts"
+      ],
+      "bridges": [
+        "dist/bridges.d.ts"
+      ],
+      "web": [
+        "dist/web.d.ts"
+      ],
+      "testing": [
+        "dist/testing.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "semver": "^7.6.3",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "@nestjs/common": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@types/react": "^18.3.4",
+    "@types/semver": "^7.5.8",
+    "react": "^18.2.0",
+    "reflect-metadata": "^0.2.2",
+    "tsup": "^8.3.0",
+    "typescript": "^5.1.3",
+    "vitest": "^2.1.3"
+  }
+}

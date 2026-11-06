@@ -16800,6 +16800,22 @@ export interface components {
              */
             defaultAccessible: boolean;
         };
+        DashboardExtensionResponseDto: {
+            /**
+             * @description The extension identifier
+             * @example acme.reports
+             */
+            id: string;
+            /**
+             * @description The installed extension version
+             * @example 1.0.0
+             */
+            version: string;
+            /** @description Public extension settings exposed to the webapp */
+            settings?: {
+                [key: string]: unknown;
+            };
+        };
         GetDashboardBootMetaResponseDto: {
             /**
              * @description List of abilities for the current user
@@ -16831,6 +16847,19 @@ export interface components {
              *     ]
              */
             features: components["schemas"]["DashboardFeatureResponseDto"][];
+            /**
+             * @description Extensions enabled for the current organization
+             * @example [
+             *       {
+             *         "id": "acme.reports",
+             *         "version": "1.0.0",
+             *         "settings": {
+             *           "theme": "dark"
+             *         }
+             *       }
+             *     ]
+             */
+            extensions: components["schemas"]["DashboardExtensionResponseDto"][];
             /**
              * @description Whether the app is running on Bigcapital Cloud
              * @example true

@@ -38,6 +38,7 @@ import {
   withDrawerActions,
   WithDrawerActionsProps,
 } from '@/containers/Drawer/withDrawerActions';
+import { ExtensionSlot } from '@/extensions/slots/ExtensionSlot';
 import { ArrowBottomLeft } from '@/icons/ArrowBottomLeft';
 
 interface InvoiceDetailActionsBarInnerProps
@@ -196,6 +197,11 @@ function InvoiceDetailActionsBarInner({
             }}
           />
         </Can>
+
+        <ExtensionSlot
+          name="invoice.detail.actions"
+          context={{ invoice, invoiceId }}
+        />
       </NavbarGroup>
     </DrawerActionsBar>
   );

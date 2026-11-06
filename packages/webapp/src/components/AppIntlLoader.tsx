@@ -9,6 +9,7 @@ import { setLocale } from 'yup';
 import { useWatchImmediate } from '../hooks';
 import { AppIntlProvider } from './AppIntlProvider';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { extensionRegistry } from '@/extensions/registry';
 import { useSplashLoading } from '@/hooks/state';
 
 const SUPPORTED_LOCALES = [
@@ -91,7 +92,10 @@ function useAppLoadLocales(currentLocale) {
         return intl.init({
           currentLocale,
           locales: {
-            [currentLocale]: results,
+            [currentLocale]: {
+              ...results,
+              ...extensionRegistry.getI18n(currentLocale),
+            },
           },
         });
       })

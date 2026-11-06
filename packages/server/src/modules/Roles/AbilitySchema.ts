@@ -18,6 +18,7 @@ import { SaleReceiptAction } from '../SaleReceipts/types/SaleReceipts.types';
 import { BillAction } from '../Bills/Bills.types';
 import {
   AbilitySubject,
+  ExtensionsAction,
   ISubjectAbilitiesSchema,
   ISubjectAbilitySchema,
   RoleAction,
@@ -375,6 +376,22 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
         key: WarehouseTransferAction.DELETE,
         label: 'ability.delete',
         default: true,
+      },
+    ],
+  },
+  {
+    subject: AbilitySubject.Extensions,
+    subjectLabel: 'ability.extensions',
+    abilities: [
+      {
+        key: ExtensionsAction.View,
+        label: 'ability.view',
+        default: false,
+      },
+      {
+        key: ExtensionsAction.Manage,
+        label: 'ability.manage',
+        default: false,
       },
     ],
   },

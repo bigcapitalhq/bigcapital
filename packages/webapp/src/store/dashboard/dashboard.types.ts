@@ -26,6 +26,15 @@ export const SET_DASHBOARD_BACK_LINK = 'SET_DASHBOARD_BACK_LINK' as const;
 export const SPLASH_START_LOADING = 'SPLASH_START_LOADING' as const;
 export const SPLASH_STOP_LOADING = 'SPLASH_STOP_LOADING' as const;
 export const SET_FEATURE_DASHBOARD_META = 'SET_FEATURE_DASHBOARD_META' as const;
+export const SET_EXTENSIONS_DASHBOARD_META =
+  'SET_EXTENSIONS_DASHBOARD_META' as const;
+
+export interface DashboardExtensionMeta {
+  id: string;
+  version: string;
+  settings?: Record<string, unknown>;
+}
+
 export const ADD_AUTOFILL_REF = 'ADD_AUTOFILL_REF' as const;
 export const REMOVE_AUTOFILL_REF = 'REMOVE_AUTOFILL_REF' as const;
 export const RESET_AUTOFILL_REF = 'RESET_AUTOFILL_REF' as const;

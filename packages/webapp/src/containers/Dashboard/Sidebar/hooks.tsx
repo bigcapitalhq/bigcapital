@@ -12,6 +12,13 @@ import {
 } from './interfaces';
 import type { SidebarMenuItem } from '@/constants/sidebarMenu';
 import { SidebarMenu } from '@/constants/sidebarMenu';
+import {
+  mergeSidebarMenu,
+  toSidebarMenuItem,
+  type ExtensionSidebarMenuItem,
+} from '@/extensions/adapters/menu';
+import { useExtensions } from '@/extensions/hooks/useExtensions';
+import { extensionRegistry } from '@/extensions/registry';
 import { useAbilityContext } from '@/hooks';
 import { useSubscription } from '@/hooks/query';
 import {
@@ -301,12 +308,29 @@ const findSubmenuBySubmenuId =
   };
 
 /**
+ * Merges extension menu contributions into the core menu.
+ */
+function useMergedSidebarMenu(): SidebarMenuItem[] {
+  const { enabledIds } = useExtensions();
+
+  return React.useMemo(() => {
+    const extensionMenu: ExtensionSidebarMenuItem[] = extensionRegistry
+      .getMenu(enabledIds)
+      .map(toSidebarMenuItem);
+
+    return mergeSidebarMenu(SidebarMenu, extensionMenu);
+  }, [enabledIds]);
+}
+
+/**
  * Retrieves the main sidebar post-menu.
  * @returns {ISidebarMenuItem[]}
  */
 export function useMainSidebarMenu(): ISidebarMenuItem[] {
+  const menu = useMergedSidebarMenu();
+
   return FF.pipe(
-    SidebarMenu,
+    menu,
     useFilterSidebarMenuAbility,
     filterSidebarItemHasNoChildren,
     useAssocSidebarItemHasChildren,
@@ -342,10 +366,12 @@ function useAssocSidebarItemHasChildren(
  * @returns {ISidebarMenuItem[]}
  */
 export function useSubSidebarMenu(submenuId: unknown): ISidebarMenuItem[] {
+  const menu = useMergedSidebarMenu();
+
   if (!submenuId) return [];
 
   return FF.pipe(
-    SidebarMenu,
+    menu,
     findSubmenuBySubmenuId(submenuId),
     useFilterSidebarMenuAbility,
     filterSidebarItemHasNoChildren,

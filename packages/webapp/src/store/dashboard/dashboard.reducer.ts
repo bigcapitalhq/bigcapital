@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { isUndefined, isNumber, omit } from 'lodash';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import type { DashboardExtensionMeta } from './dashboard.types';
 import {
   ADD_AUTOFILL_REF,
   ALTER_DASHBOARD_PAGE_SUBTITLE,
@@ -19,6 +20,7 @@ import {
   RESET,
   RESET_AUTOFILL_REF,
   SET_DASHBOARD_BACK_LINK,
+  SET_EXTENSIONS_DASHBOARD_META,
   SET_FEATURE_DASHBOARD_META,
   SET_TOPBAR_EDIT_VIEW,
   SIDEBAR_EXPEND_TOGGLE,
@@ -50,6 +52,7 @@ export interface DashboardState {
   appIntlIsLoading: boolean;
   sidebarSubmenu: { isOpen: boolean; submenuId: unknown };
   features: Record<string, boolean>;
+  extensions: DashboardExtensionMeta[];
   autofill: Record<string, unknown>;
 }
 
@@ -70,6 +73,7 @@ const initialState: DashboardState = {
   appIntlIsLoading: true,
   sidebarSubmenu: { isOpen: false, submenuId: null },
   features: {},
+  extensions: [],
   autofill: {},
 };
 
@@ -179,6 +183,15 @@ const reducerInstance = createReducer(initialState, {
       _data[feature.name] = feature.isAccessible;
     });
     state.features = _data;
+  },
+  [SET_EXTENSIONS_DASHBOARD_META]: (
+    state: DashboardState,
+    action: DashboardAction,
+  ) => {
+    const { extensions } = (action.payload || {}) as {
+      extensions: DashboardExtensionMeta[];
+    };
+    state.extensions = extensions;
   },
   [SPLASH_STOP_LOADING]: (state: DashboardState) => {
     state.splashScreenLoading = Math.max(

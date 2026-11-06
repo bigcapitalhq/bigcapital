@@ -27,6 +27,11 @@
     "cli:tenants:migrate:latest": "ts-node -r tsconfig-paths/register src/cli.ts tenants:migrate:latest",
     "cli:tenants:migrate:rollback": "ts-node -r tsconfig-paths/register src/cli.ts tenants:migrate:rollback",
     "cli:tenants:migrate:make": "ts-node -r tsconfig-paths/register src/cli.ts tenants:migrate:make",
+    "cli:extensions:list": "ts-node -r tsconfig-paths/register src/cli.ts extensions:list",
+    "cli:extensions:enable": "ts-node -r tsconfig-paths/register src/cli.ts extensions:enable",
+    "cli:extensions:disable": "ts-node -r tsconfig-paths/register src/cli.ts extensions:disable",
+    "cli:extensions:migrate": "ts-node -r tsconfig-paths/register src/cli.ts extensions:migrate",
+    "cli:extensions:migrate:all": "ts-node -r tsconfig-paths/register src/cli.ts extensions:migrate:all",
     "cli:tenants:list": "ts-node -r tsconfig-paths/register src/cli.ts tenants:list",
     "openapi:export": "ts-node -r tsconfig-paths/register src/cli.ts openapi:export",
     "cli:system:seed:latest": "ts-node -r tsconfig-paths/register src/cli.ts system:seed:latest",
@@ -36,6 +41,8 @@
     "@aws-sdk/client-s3": "^3.576.0",
     "@aws-sdk/s3-request-presigner": "^3.583.0",
     "@bigcapital/email-components": "workspace:*",
+    "@bigcapital/example-reports": "workspace:*",
+    "@bigcapital/extension-sdk": "workspace:*",
     "@bigcapital/pdf-templates": "workspace:*",
     "@bigcapital/sdk-ts": "workspace:*",
     "@bigcapital/utils": "workspace:*",
@@ -176,6 +183,10 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "/node_modules/",
+      "/shared/extension-sdk/"
+    ],
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { Knex } from 'knex';
 import { I18nService } from 'nestjs-i18n';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -14,6 +14,7 @@ import { SeedMigration } from '@/libs/migration-seed/SeedMigration';
 import { TenantRepository } from '../System/repositories/Tenant.repository';
 import { TenancyContext } from '../Tenancy/TenancyContext.service';
 import { TENANCY_DB_CONNECTION } from '../Tenancy/TenancyDB/TenancyDB.constants';
+import { ExtensionMigrationService } from '@/extensions/migrations/extension-migration.service';
 
 @Injectable()
 export class TenantsManagerService {
@@ -26,6 +27,9 @@ export class TenantsManagerService {
 
     @Inject(TENANCY_DB_CONNECTION)
     private readonly tenantKnex: () => Knex,
+
+    @Optional()
+    private readonly extensionMigrations?: ExtensionMigrationService,
   ) {}
 
   /**
@@ -77,6 +81,9 @@ export class TenantsManagerService {
 
     // Migrate the database tenant.
     await this.tenantDbManager.migrate();
+
+    // Provision extensions that are enabled by default for new tenants.
+    await this.extensionMigrations?.enableDefaults(tenant.organizationId);
 
     // Mark the tenant as initialized.
     await this.tenantRepository.markAsInitialized().findById(tenant.id);
