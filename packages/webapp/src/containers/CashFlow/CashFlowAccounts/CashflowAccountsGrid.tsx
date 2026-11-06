@@ -4,7 +4,7 @@ import * as FF from 'fp-ts/function';
 import { isEmpty } from 'lodash';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
 import type { CashflowAccountRow } from './components';
@@ -44,6 +44,7 @@ interface CashflowAccountContextMenuProps {
   onDeleteClick: () => void;
   onMoneyInClick: (transactionType: string) => void;
   onMoneyOutClick: (transactionType: string) => void;
+  onReconcileClick: () => void;
 }
 
 interface CashflowBankAccountProps
@@ -125,6 +126,13 @@ function CashflowBankAccount({
       account_id: account.id,
     });
   };
+  // Handle reconcile account action.
+  const history = useHistory();
+  const handleReconcileClick = () => {
+    history.push(
+      `/cashflow-accounts/${account.id}/transactions?filter=reconciliation`,
+    );
+  };
 
   return (
     <ContextMenu2
@@ -138,6 +146,7 @@ function CashflowBankAccount({
           onEditClick={handleEditAccount}
           onMoneyInClick={handleMoneyInClick}
           onMoneyOutClick={handleMoneyOutClick}
+          onReconcileClick={handleReconcileClick}
         />
       }
     >
@@ -273,6 +282,7 @@ function CashflowAccountContextMenu({
   onDeleteClick,
   onMoneyInClick,
   onMoneyOutClick,
+  onReconcileClick,
 }: CashflowAccountContextMenuProps) {
   return (
     <Menu>
@@ -281,6 +291,15 @@ function CashflowAccountContextMenu({
         text={intl.get('view_details')}
         onClick={safeCallback(onViewClick)}
       />
+      {account.accountType === 'bank' && (
+        <Can I={CashflowAction.Reconcile} a={AbilitySubject.Cashflow}>
+          <MenuItem
+            icon={<Icon icon="tick-circle" />}
+            text={intl.get('banking.reconciliation.action')}
+            onClick={safeCallback(onReconcileClick)}
+          />
+        </Can>
+      )}
       <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
         <MenuDivider />
         <MenuItem

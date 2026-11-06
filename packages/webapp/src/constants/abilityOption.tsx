@@ -143,6 +143,8 @@ export const CashflowAction = {
   View: 'View',
   Create: 'Create',
   Delete: 'Delete',
+  Reconcile: 'Reconcile',
+  UndoReconciliation: 'UndoReconciliation',
 } as const;
 
 export const ReportsAction = {

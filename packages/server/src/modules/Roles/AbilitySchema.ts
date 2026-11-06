@@ -63,6 +63,13 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: CashflowAction.Create, label: 'ability.create' },
       { key: CashflowAction.Delete, label: 'ability.delete' },
     ],
+    extraAbilities: [
+      { key: CashflowAction.Reconcile, label: 'ability.reconcile' },
+      {
+        key: CashflowAction.UndoReconciliation,
+        label: 'ability.undo_reconciliation',
+      },
+    ],
   },
   {
     subject: AbilitySubject.Item,
