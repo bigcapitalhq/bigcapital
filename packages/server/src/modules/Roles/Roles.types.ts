@@ -32,6 +32,14 @@ export enum RoleAction {
   Delete = 'Delete',
 }
 
+export enum UserAction {
+  View = 'View',
+  Invite = 'Invite',
+  Edit = 'Edit',
+  Delete = 'Delete',
+  Activate = 'Activate',
+}
+
 export interface ISubjectAbilitySchema {
   key: string;
   label: string;
@@ -69,6 +77,7 @@ export enum AbilitySubject {
   TaxRate = 'TaxRate',
   AuditLog = 'AuditLog',
   Role = 'Role',
+  User = 'User',
   Warehouse = 'Warehouse',
   Branch = 'Branch',
   Attachment = 'Attachment',

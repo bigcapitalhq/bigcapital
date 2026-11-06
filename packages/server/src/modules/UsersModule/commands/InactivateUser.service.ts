@@ -8,6 +8,7 @@ import { ERRORS } from '../Users.constants';
 import { ITenantUserInactivatedPayload } from '../Users.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { events } from '@/common/events/events';
+import { RolesPolicy } from '@/modules/Roles/RolesPolicy.service';
 
 @Injectable()
 export class InactivateUserService {
@@ -17,6 +18,7 @@ export class InactivateUserService {
 
     private readonly eventEmitter: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
+    private readonly rolesPolicy: RolesPolicy,
   ) {}
 
   /**
@@ -42,6 +44,9 @@ export class InactivateUserService {
 
     // Throw serivce error if the user is already inactivated.
     this.throwErrorIfUserInactive(tenantUser);
+
+    // Validate the user is not the last active admin.
+    await this.rolesPolicy.validateNotLastAdmin(userId);
 
     // Marks the tenant user as inactive.
     await this.tenantUserModel()

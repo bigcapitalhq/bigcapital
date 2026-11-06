@@ -4,6 +4,40 @@ import { CommandRolePermissionDto } from './dtos/Role.dto';
 import { AbilitySchema } from './AbilitySchema';
 import { ServiceError } from '../Items/ServiceError';
 import { ERRORS } from './constants';
+import { Role } from './models/Role.model';
+import { getAbilityForRole } from './TenantAbilities';
+
+/**
+ * Detarmines whether the given role is the predefined admin role.
+ */
+export function isAdminRole(role: Pick<Role, 'slug'> | undefined): boolean {
+  return role?.slug === 'admin';
+}
+
+/**
+ * Detarmines whether the given actor role can grant the target role.
+ * The admin role can grant any role, otherwise the target role permissions
+ * should be a subset of the actor role permissions.
+ */
+export function canRoleGrantRole(
+  actorRole: Pick<Role, 'slug' | 'permissions'>,
+  targetRole: Pick<Role, 'slug' | 'permissions'>,
+): boolean {
+  if (isAdminRole(actorRole)) {
+    return true;
+  }
+  if (isAdminRole(targetRole)) {
+    return false;
+  }
+  const actorAbility = getAbilityForRole(actorRole);
+  const targetPermissions = (targetRole.permissions || []).filter(
+    (permission) => permission.value,
+  );
+
+  return targetPermissions.every((permission) =>
+    actorAbility.can(permission.ability, permission.subject),
+  );
+}
 
 /**
  * Transformes ability schema to map.

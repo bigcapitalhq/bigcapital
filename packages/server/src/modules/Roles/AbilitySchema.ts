@@ -21,6 +21,7 @@ import {
   ISubjectAbilitiesSchema,
   ISubjectAbilitySchema,
   RoleAction,
+  UserAction,
 } from './Roles.types';
 import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.types';
 import { PreferencesAction } from '../Settings/Settings.types';
@@ -350,6 +351,17 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: RoleAction.Create, label: 'ability.create', default: false },
       { key: RoleAction.Edit, label: 'ability.edit', default: false },
       { key: RoleAction.Delete, label: 'ability.delete', default: false },
+    ],
+  },
+  {
+    subject: AbilitySubject.User,
+    subjectLabel: 'ability.users',
+    abilities: [
+      { key: UserAction.View, label: 'ability.view', default: false },
+      { key: UserAction.Invite, label: 'ability.invite', default: false },
+      { key: UserAction.Edit, label: 'ability.edit', default: false },
+      { key: UserAction.Delete, label: 'ability.delete', default: false },
+      { key: UserAction.Activate, label: 'ability.activate', default: false },
     ],
   },
   {
