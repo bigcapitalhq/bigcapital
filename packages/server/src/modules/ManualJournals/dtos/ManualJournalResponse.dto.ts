@@ -109,6 +109,18 @@ export class ManualJournalResponseDto {
   @ApiPropertyOptional({ description: 'Branch ID', example: 1 })
   branchId?: number;
 
+  @ApiPropertyOptional({
+    description: 'Recurring journal profile ID',
+    example: 1,
+  })
+  recurringJournalId?: number;
+
+  @ApiPropertyOptional({
+    description: 'Recurring journal occurrence date',
+    example: '2026-11-06',
+  })
+  recurringJournalDate?: Date | string;
+
   @ApiProperty({ description: 'Formatted amount', example: '$1,000.00' })
   formattedAmount: string;
 

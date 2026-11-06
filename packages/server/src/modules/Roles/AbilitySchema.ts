@@ -13,6 +13,7 @@ import {
 } from '../Customers/types/Customers.types';
 import { SaleEstimateAction } from '../SaleEstimates/types/SaleEstimates.types';
 import { SaleInvoiceAction } from '../SaleInvoices/SaleInvoice.types';
+import { RecurringInvoiceAction } from '../RecurringInvoices/RecurringInvoice.types';
 import { CreditNoteAction } from '../CreditNotes/types/CreditNotes.types';
 import { SaleReceiptAction } from '../SaleReceipts/types/SaleReceipts.types';
 import { BillAction } from '../Bills/Bills.types';
@@ -20,6 +21,7 @@ import {
   AbilitySubject,
   ISubjectAbilitiesSchema,
   ISubjectAbilitySchema,
+  RecurringJournalAction,
   RoleAction,
 } from './Roles.types';
 import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.types';
@@ -145,6 +147,58 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: SaleInvoiceAction.Delete, label: 'ability.delete', default: true },
     ],
     extraAbilities: [{ key: 'bad-debt', label: 'Due amount to bad debit' }],
+  },
+  {
+    subject: AbilitySubject.RecurringInvoice,
+    subjectLabel: 'ability.recurring_invoices',
+    abilities: [
+      {
+        key: RecurringInvoiceAction.View,
+        label: 'ability.view',
+        default: true,
+      },
+      {
+        key: RecurringInvoiceAction.Create,
+        label: 'ability.create',
+        default: true,
+      },
+      {
+        key: RecurringInvoiceAction.Edit,
+        label: 'ability.edit',
+        default: true,
+      },
+      {
+        key: RecurringInvoiceAction.Delete,
+        label: 'ability.delete',
+        default: true,
+      },
+    ],
+  },
+  {
+    subject: AbilitySubject.RecurringJournal,
+    subjectLabel: 'ability.recurring_journals',
+    abilities: [
+      {
+        key: RecurringJournalAction.View,
+        label: 'ability.view',
+        default: true,
+      },
+      {
+        key: RecurringJournalAction.Create,
+        label: 'ability.create',
+        default: true,
+      },
+      {
+        key: RecurringJournalAction.Edit,
+        label: 'ability.edit',
+        default: true,
+      },
+      {
+        key: RecurringJournalAction.Delete,
+        label: 'ability.delete',
+        default: true,
+      },
+    ],
   },
   {
     subject: AbilitySubject.SaleReceipt,

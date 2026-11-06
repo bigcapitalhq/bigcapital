@@ -14,6 +14,8 @@ import {
   ReportsAction,
   SaleEstimateAction,
   SaleInvoiceAction,
+  RecurringInvoiceAction,
+  RecurringJournalAction,
   SaleReceiptAction,
   VendorAction,
   VendorCreditAction,
@@ -245,6 +247,64 @@ export const getPermissionsSchema = (): PermissionModule[] => [
             label: intl.get('permissions.column.written_off_invoice'),
             key: SaleInvoiceAction.Writeoff,
             depend: [{ key: SaleInvoiceAction.Edit }],
+          },
+        ],
+      },
+      {
+        label: intl.get('permissions.recurring_invoices'),
+        subject: AbilitySubject.RecurringInvoice,
+        permissions: [
+          {
+            label: intl.get('permissions.column.view'),
+            key: RecurringInvoiceAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: intl.get('permissions.column.create'),
+            key: RecurringInvoiceAction.Create,
+            relatedColumn: PermissionColumn.Create,
+            depend: [{ key: RecurringInvoiceAction.View }],
+          },
+          {
+            label: intl.get('permissions.column.edit'),
+            key: RecurringInvoiceAction.Edit,
+            relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: RecurringInvoiceAction.Create }],
+          },
+          {
+            label: intl.get('permissions.column.delete'),
+            key: RecurringInvoiceAction.Delete,
+            relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: RecurringInvoiceAction.Edit }],
+          },
+        ],
+      },
+      {
+        label: intl.get('permissions.recurring_journals'),
+        subject: AbilitySubject.RecurringJournal,
+        permissions: [
+          {
+            label: intl.get('permissions.column.view'),
+            key: RecurringJournalAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: intl.get('permissions.column.create'),
+            key: RecurringJournalAction.Create,
+            relatedColumn: PermissionColumn.Create,
+            depend: [{ key: RecurringJournalAction.View }],
+          },
+          {
+            label: intl.get('permissions.column.edit'),
+            key: RecurringJournalAction.Edit,
+            relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: RecurringJournalAction.Create }],
+          },
+          {
+            label: intl.get('permissions.column.delete'),
+            key: RecurringJournalAction.Delete,
+            relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: RecurringJournalAction.Edit }],
           },
         ],
       },
