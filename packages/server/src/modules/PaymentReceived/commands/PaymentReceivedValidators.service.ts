@@ -137,7 +137,9 @@ export class PaymentReceivedValidators {
 
     const storedInvoicesMap = new Map(
       storedInvoices.map((invoice: SaleInvoice) => {
-        const oldEntries = oldPaymentEntries.filter((entry) => entry.invoiceId);
+        const oldEntries = oldPaymentEntries.filter(
+          (entry) => entry.invoiceId === invoice.id,
+        );
         const oldPaymentAmount = sumBy(oldEntries, 'paymentAmount') || 0;
 
         return [
