@@ -44,5 +44,9 @@ export class OpenApiExportCommand extends CommandRunner {
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, JSON.stringify(document, null, 2), 'utf-8');
     console.log(`OpenAPI spec written to ${outputPath}`);
+
+    // Nested services (Redis/BullMQ) may emit a shutdown error after the app
+    // closes. The document is already written at this point, so exit cleanly.
+    process.exit(0);
   }
 }

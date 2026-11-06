@@ -15481,6 +15481,377 @@
         ]
       }
     },
+    "/api/banking/reconciliations": {
+      "get": {
+        "operationId": "BankingReconciliationController_getBankReconciliations",
+        "summary": "Retrieve the bank account reconciliations.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountId",
+            "required": true,
+            "in": "query",
+            "description": "Bank account ID",
+            "schema": {
+              "example": 1000,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reconciliations retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankReconciliationsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking Reconciliation"
+        ]
+      },
+      "post": {
+        "operationId": "BankingReconciliationController_createBankReconciliation",
+        "summary": "Start a new bank reconciliation.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBankReconciliationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reconciliation created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankReconciliationDetailResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking Reconciliation"
+        ]
+      }
+    },
+    "/api/banking/reconciliations/{id}": {
+      "get": {
+        "operationId": "BankingReconciliationController_getBankReconciliation",
+        "summary": "Retrieve the given bank reconciliation.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reconciliation retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankReconciliationDetailResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking Reconciliation"
+        ]
+      },
+      "put": {
+        "operationId": "BankingReconciliationController_updateBankReconciliation",
+        "summary": "Update the given bank reconciliation draft.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBankReconciliationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reconciliation updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankReconciliationDetailResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking Reconciliation"
+        ]
+      },
+      "delete": {
+        "operationId": "BankingReconciliationController_deleteBankReconciliation",
+        "summary": "Delete the given draft/voided reconciliation.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reconciliation deleted successfully."
+          }
+        },
+        "tags": [
+          "Banking Reconciliation"
+        ]
+      }
+    },
+    "/api/banking/reconciliations/{id}/finish": {
+      "post": {
+        "operationId": "BankingReconciliationController_finishBankReconciliation",
+        "summary": "Finish the given bank reconciliation.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinishBankReconciliationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reconciliation completed successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankReconciliationDetailResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking Reconciliation"
+        ]
+      }
+    },
+    "/api/banking/reconciliations/{id}/undo": {
+      "post": {
+        "operationId": "BankingReconciliationController_undoBankReconciliation",
+        "summary": "Undo the given bank reconciliation.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UndoBankReconciliationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reconciliation undone successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankReconciliationDetailResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Banking Reconciliation"
+        ]
+      }
+    },
     "/api/transactions-locking/lock": {
       "put": {
         "operationId": "TransactionsLockingController_commandTransactionsLocking",
@@ -39786,6 +40157,599 @@
           "uncategorizedTransactions",
           "matchedTransactions"
         ]
+      },
+      "BankReconciliationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Reconciliation id",
+            "example": 1
+          },
+          "accountId": {
+            "type": "number",
+            "description": "Bank account id",
+            "example": 1000
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Period start date",
+            "example": "2026-11-01"
+          },
+          "formattedStartDate": {
+            "type": "string",
+            "description": "Formatted period start date"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Period end date",
+            "example": "2026-11-30"
+          },
+          "formattedEndDate": {
+            "type": "string",
+            "description": "Formatted period end date"
+          },
+          "beginningBalance": {
+            "type": "number",
+            "description": "Beginning balance",
+            "example": 1000
+          },
+          "formattedBeginningBalance": {
+            "type": "string",
+            "description": "Formatted beginning balance"
+          },
+          "endingBalance": {
+            "type": "number",
+            "description": "Statement ending balance",
+            "example": 12500.75,
+            "nullable": true
+          },
+          "formattedEndingBalance": {
+            "type": "string",
+            "description": "Formatted statement ending balance"
+          },
+          "clearedBalance": {
+            "type": "number",
+            "description": "Cleared balance",
+            "example": 12500.75
+          },
+          "formattedClearedBalance": {
+            "type": "string",
+            "description": "Formatted cleared balance"
+          },
+          "difference": {
+            "type": "number",
+            "description": "Difference",
+            "example": 0
+          },
+          "formattedDifference": {
+            "type": "string",
+            "description": "Formatted difference"
+          },
+          "status": {
+            "type": "string",
+            "description": "Reconciliation status",
+            "enum": [
+              "in_progress",
+              "reconciled",
+              "voided"
+            ],
+            "example": "reconciled"
+          },
+          "statusLabel": {
+            "type": "string",
+            "description": "Status label",
+            "example": "Reconciled"
+          },
+          "transactionsCount": {
+            "type": "number",
+            "description": "Number of reconciliation transactions",
+            "example": 12
+          },
+          "isInProgress": {
+            "type": "boolean",
+            "description": "Whether the reconciliation is in progress"
+          },
+          "isReconciled": {
+            "type": "boolean",
+            "description": "Whether the reconciliation is completed"
+          },
+          "isVoided": {
+            "type": "boolean",
+            "description": "Whether the reconciliation is voided"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional notes",
+            "nullable": true
+          },
+          "reconciledAt": {
+            "type": "string",
+            "description": "Completion date",
+            "nullable": true
+          },
+          "voidedAt": {
+            "type": "string",
+            "description": "Void date",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update date"
+          }
+        },
+        "required": [
+          "id",
+          "accountId",
+          "startDate",
+          "formattedStartDate",
+          "endDate",
+          "formattedEndDate",
+          "beginningBalance",
+          "formattedBeginningBalance",
+          "endingBalance",
+          "formattedEndingBalance",
+          "clearedBalance",
+          "formattedClearedBalance",
+          "difference",
+          "formattedDifference",
+          "status",
+          "statusLabel",
+          "transactionsCount",
+          "isInProgress",
+          "isReconciled",
+          "isVoided",
+          "notes",
+          "reconciledAt",
+          "voidedAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "BankReconciliationListMetaDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "number"
+          },
+          "accountName": {
+            "type": "string"
+          },
+          "currencyCode": {
+            "type": "string"
+          },
+          "accountAmount": {
+            "type": "number"
+          },
+          "formattedAccountAmount": {
+            "type": "string"
+          },
+          "bankBalance": {
+            "type": "number",
+            "nullable": true
+          },
+          "formattedBankBalance": {
+            "type": "string"
+          },
+          "isSupported": {
+            "type": "boolean"
+          },
+          "unsupportedReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasInProgress": {
+            "type": "boolean"
+          },
+          "inProgressId": {
+            "type": "number",
+            "nullable": true
+          },
+          "lastReconciledEndDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstTransactionDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "suggestedStartDate": {
+            "type": "string"
+          },
+          "suggestedEndDate": {
+            "type": "string"
+          },
+          "uncategorizedTransactionsCount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "accountId",
+          "accountName",
+          "currencyCode",
+          "accountAmount",
+          "formattedAccountAmount",
+          "bankBalance",
+          "formattedBankBalance",
+          "isSupported",
+          "unsupportedReason",
+          "hasInProgress",
+          "inProgressId",
+          "lastReconciledEndDate",
+          "firstTransactionDate",
+          "suggestedStartDate",
+          "suggestedEndDate",
+          "uncategorizedTransactionsCount"
+        ]
+      },
+      "BankReconciliationsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankReconciliationResponseDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/BankReconciliationListMetaDto"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ]
+      },
+      "CreateBankReconciliationDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "number",
+            "description": "Bank account ID",
+            "example": 1000
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Reconciliation period start date",
+            "example": "2026-11-01"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Reconciliation period end date",
+            "example": "2026-11-30"
+          },
+          "endingBalance": {
+            "type": "number",
+            "description": "Statement ending balance",
+            "example": 12500.75
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional reconciliation notes",
+            "example": "November statement"
+          }
+        },
+        "required": [
+          "accountId",
+          "startDate",
+          "endDate",
+          "endingBalance"
+        ]
+      },
+      "BankReconciliationTransactionResponseDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Stable transaction key"
+          },
+          "accountTransactionId": {
+            "type": "number",
+            "description": "Account transaction id",
+            "nullable": true
+          },
+          "referenceType": {
+            "type": "string",
+            "description": "Ledger reference type"
+          },
+          "referenceId": {
+            "type": "number",
+            "description": "Ledger reference id"
+          },
+          "index": {
+            "type": "number",
+            "description": "Ledger line index"
+          },
+          "date": {
+            "type": "string",
+            "description": "Transaction date"
+          },
+          "formattedDate": {
+            "type": "string",
+            "description": "Formatted transaction date"
+          },
+          "transactionType": {
+            "type": "string",
+            "description": "Transaction type",
+            "nullable": true
+          },
+          "transactionNumber": {
+            "type": "string",
+            "description": "Transaction number",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "description": "Reference number",
+            "nullable": true
+          },
+          "note": {
+            "type": "string",
+            "description": "Transaction note",
+            "nullable": true
+          },
+          "credit": {
+            "type": "number",
+            "description": "Credit amount"
+          },
+          "formattedCredit": {
+            "type": "string",
+            "description": "Formatted credit amount"
+          },
+          "debit": {
+            "type": "number",
+            "description": "Debit amount"
+          },
+          "formattedDebit": {
+            "type": "string",
+            "description": "Formatted debit amount"
+          },
+          "status": {
+            "type": "string",
+            "description": "Transaction status",
+            "enum": [
+              "categorized",
+              "matched",
+              "manual"
+            ]
+          },
+          "isBankFeed": {
+            "type": "boolean",
+            "description": "Whether the transaction came from a bank feed"
+          },
+          "isPreviousOutstanding": {
+            "type": "boolean",
+            "description": "Whether the transaction is from a previous period"
+          },
+          "isChecked": {
+            "type": "boolean",
+            "description": "Whether the transaction is checked/cleared"
+          },
+          "isReconciled": {
+            "type": "boolean",
+            "description": "Whether the transaction is reconciled"
+          },
+          "uncategorizedTransactionIds": {
+            "description": "Related uncategorized bank transaction ids",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "accountTransactionId",
+          "referenceType",
+          "referenceId",
+          "index",
+          "date",
+          "formattedDate",
+          "transactionType",
+          "transactionNumber",
+          "referenceNumber",
+          "note",
+          "credit",
+          "formattedCredit",
+          "debit",
+          "formattedDebit",
+          "status",
+          "isBankFeed",
+          "isPreviousOutstanding",
+          "isChecked",
+          "isReconciled",
+          "uncategorizedTransactionIds"
+        ]
+      },
+      "BankReconciliationChangedTransactionDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "referenceType": {
+            "type": "string"
+          },
+          "referenceId": {
+            "type": "number"
+          },
+          "index": {
+            "type": "number"
+          },
+          "snapshotCredit": {
+            "type": "number"
+          },
+          "snapshotDebit": {
+            "type": "number"
+          },
+          "currentCredit": {
+            "type": "number",
+            "nullable": true
+          },
+          "currentDebit": {
+            "type": "number",
+            "nullable": true
+          },
+          "difference": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "key",
+          "referenceType",
+          "referenceId",
+          "index",
+          "snapshotCredit",
+          "snapshotDebit",
+          "currentCredit",
+          "currentDebit",
+          "difference"
+        ]
+      },
+      "BankReconciliationDetailMetaDto": {
+        "type": "object",
+        "properties": {
+          "isLatest": {
+            "type": "boolean"
+          },
+          "canUndo": {
+            "type": "boolean"
+          },
+          "canDelete": {
+            "type": "boolean"
+          },
+          "uncategorizedTransactionsCount": {
+            "type": "number"
+          },
+          "changedTransactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankReconciliationChangedTransactionDto"
+            }
+          }
+        },
+        "required": [
+          "isLatest",
+          "canUndo",
+          "canDelete",
+          "uncategorizedTransactionsCount",
+          "changedTransactions"
+        ]
+      },
+      "BankReconciliationDetailResponseDto": {
+        "type": "object",
+        "properties": {
+          "reconciliation": {
+            "$ref": "#/components/schemas/BankReconciliationResponseDto"
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankReconciliationTransactionResponseDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/BankReconciliationDetailMetaDto"
+          }
+        },
+        "required": [
+          "reconciliation",
+          "transactions",
+          "meta"
+        ]
+      },
+      "BankReconciliationTransactionKeyDto": {
+        "type": "object",
+        "properties": {
+          "referenceType": {
+            "type": "string",
+            "description": "Ledger reference type",
+            "example": "CashflowTransaction"
+          },
+          "referenceId": {
+            "type": "number",
+            "description": "Ledger reference id",
+            "example": 1001
+          },
+          "index": {
+            "type": "number",
+            "description": "Ledger line index within the reference",
+            "example": 1,
+            "default": 0
+          }
+        },
+        "required": [
+          "referenceType",
+          "referenceId"
+        ]
+      },
+      "UpdateBankReconciliationDto": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "description": "Reconciliation period start date",
+            "example": "2026-11-01"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Reconciliation period end date",
+            "example": "2026-11-30"
+          },
+          "endingBalance": {
+            "type": "number",
+            "description": "Statement ending balance",
+            "example": 12500.75
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional reconciliation notes",
+            "example": "November statement"
+          },
+          "transactions": {
+            "description": "Checked/cleared transaction keys",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankReconciliationTransactionKeyDto"
+            }
+          }
+        }
+      },
+      "FinishBankReconciliationDto": {
+        "type": "object",
+        "properties": {
+          "endingBalance": {
+            "type": "number",
+            "description": "Final statement ending balance",
+            "example": 12500.75
+          },
+          "transactions": {
+            "description": "Final checked/cleared transaction keys",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BankReconciliationTransactionKeyDto"
+            }
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional reconciliation notes"
+          }
+        }
+      },
+      "UndoBankReconciliationDto": {
+        "type": "object",
+        "properties": {
+          "cascade": {
+            "type": "boolean",
+            "description": "Also void later reconciliations when this is not the latest one",
+            "example": true,
+            "default": false
+          }
+        }
       },
       "TransactionLockingResponseDto": {
         "type": "object",

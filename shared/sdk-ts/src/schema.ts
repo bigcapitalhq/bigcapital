@@ -3795,6 +3795,77 @@ export interface paths {
         patch: operations["BankingMatchingController_unmatchMatchedTransaction"];
         trace?: never;
     };
+    "/api/banking/reconciliations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve the bank account reconciliations. */
+        get: operations["BankingReconciliationController_getBankReconciliations"];
+        put?: never;
+        /** Start a new bank reconciliation. */
+        post: operations["BankingReconciliationController_createBankReconciliation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/banking/reconciliations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieve the given bank reconciliation. */
+        get: operations["BankingReconciliationController_getBankReconciliation"];
+        /** Update the given bank reconciliation draft. */
+        put: operations["BankingReconciliationController_updateBankReconciliation"];
+        post?: never;
+        /** Delete the given draft/voided reconciliation. */
+        delete: operations["BankingReconciliationController_deleteBankReconciliation"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/banking/reconciliations/{id}/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Finish the given bank reconciliation. */
+        post: operations["BankingReconciliationController_finishBankReconciliation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/banking/reconciliations/{id}/undo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Undo the given bank reconciliation. */
+        post: operations["BankingReconciliationController_undoBankReconciliation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/transactions-locking/lock": {
         parameters: {
             query?: never;
@@ -14795,6 +14866,272 @@ export interface components {
              *     ]
              */
             matchedTransactions: string[];
+        };
+        BankReconciliationResponseDto: {
+            /**
+             * @description Reconciliation id
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Bank account id
+             * @example 1000
+             */
+            accountId: number;
+            /**
+             * @description Period start date
+             * @example 2026-11-01
+             */
+            startDate: string;
+            /** @description Formatted period start date */
+            formattedStartDate: string;
+            /**
+             * @description Period end date
+             * @example 2026-11-30
+             */
+            endDate: string;
+            /** @description Formatted period end date */
+            formattedEndDate: string;
+            /**
+             * @description Beginning balance
+             * @example 1000
+             */
+            beginningBalance: number;
+            /** @description Formatted beginning balance */
+            formattedBeginningBalance: string;
+            /**
+             * @description Statement ending balance
+             * @example 12500.75
+             */
+            endingBalance: number | null;
+            /** @description Formatted statement ending balance */
+            formattedEndingBalance: string;
+            /**
+             * @description Cleared balance
+             * @example 12500.75
+             */
+            clearedBalance: number;
+            /** @description Formatted cleared balance */
+            formattedClearedBalance: string;
+            /**
+             * @description Difference
+             * @example 0
+             */
+            difference: number;
+            /** @description Formatted difference */
+            formattedDifference: string;
+            /**
+             * @description Reconciliation status
+             * @example reconciled
+             * @enum {string}
+             */
+            status: "in_progress" | "reconciled" | "voided";
+            /**
+             * @description Status label
+             * @example Reconciled
+             */
+            statusLabel: string;
+            /**
+             * @description Number of reconciliation transactions
+             * @example 12
+             */
+            transactionsCount: number;
+            /** @description Whether the reconciliation is in progress */
+            isInProgress: boolean;
+            /** @description Whether the reconciliation is completed */
+            isReconciled: boolean;
+            /** @description Whether the reconciliation is voided */
+            isVoided: boolean;
+            /** @description Optional notes */
+            notes: string | null;
+            /** @description Completion date */
+            reconciledAt: string | null;
+            /** @description Void date */
+            voidedAt: string | null;
+            /** @description Creation date */
+            createdAt: string;
+            /** @description Last update date */
+            updatedAt: string;
+        };
+        BankReconciliationListMetaDto: {
+            accountId: number;
+            accountName: string;
+            currencyCode: string;
+            accountAmount: number;
+            formattedAccountAmount: string;
+            bankBalance: number | null;
+            formattedBankBalance: string;
+            isSupported: boolean;
+            unsupportedReason: string | null;
+            hasInProgress: boolean;
+            inProgressId: number | null;
+            lastReconciledEndDate: string | null;
+            firstTransactionDate: string | null;
+            suggestedStartDate: string;
+            suggestedEndDate: string;
+            uncategorizedTransactionsCount: number;
+        };
+        BankReconciliationsListResponseDto: {
+            data: components["schemas"]["BankReconciliationResponseDto"][];
+            meta: components["schemas"]["BankReconciliationListMetaDto"];
+        };
+        CreateBankReconciliationDto: {
+            /**
+             * @description Bank account ID
+             * @example 1000
+             */
+            accountId: number;
+            /**
+             * @description Reconciliation period start date
+             * @example 2026-11-01
+             */
+            startDate: string;
+            /**
+             * @description Reconciliation period end date
+             * @example 2026-11-30
+             */
+            endDate: string;
+            /**
+             * @description Statement ending balance
+             * @example 12500.75
+             */
+            endingBalance: number;
+            /**
+             * @description Optional reconciliation notes
+             * @example November statement
+             */
+            notes?: string;
+        };
+        BankReconciliationTransactionResponseDto: {
+            /** @description Stable transaction key */
+            key: string;
+            /** @description Account transaction id */
+            accountTransactionId: number | null;
+            /** @description Ledger reference type */
+            referenceType: string;
+            /** @description Ledger reference id */
+            referenceId: number;
+            /** @description Ledger line index */
+            index: number;
+            /** @description Transaction date */
+            date: string;
+            /** @description Formatted transaction date */
+            formattedDate: string;
+            /** @description Transaction type */
+            transactionType: string | null;
+            /** @description Transaction number */
+            transactionNumber: string | null;
+            /** @description Reference number */
+            referenceNumber: string | null;
+            /** @description Transaction note */
+            note: string | null;
+            /** @description Credit amount */
+            credit: number;
+            /** @description Formatted credit amount */
+            formattedCredit: string;
+            /** @description Debit amount */
+            debit: number;
+            /** @description Formatted debit amount */
+            formattedDebit: string;
+            /**
+             * @description Transaction status
+             * @enum {string}
+             */
+            status: "categorized" | "matched" | "manual";
+            /** @description Whether the transaction came from a bank feed */
+            isBankFeed: boolean;
+            /** @description Whether the transaction is from a previous period */
+            isPreviousOutstanding: boolean;
+            /** @description Whether the transaction is checked/cleared */
+            isChecked: boolean;
+            /** @description Whether the transaction is reconciled */
+            isReconciled: boolean;
+            /** @description Related uncategorized bank transaction ids */
+            uncategorizedTransactionIds: number[];
+        };
+        BankReconciliationChangedTransactionDto: {
+            key: string;
+            referenceType: string;
+            referenceId: number;
+            index: number;
+            snapshotCredit: number;
+            snapshotDebit: number;
+            currentCredit: number | null;
+            currentDebit: number | null;
+            difference: number;
+        };
+        BankReconciliationDetailMetaDto: {
+            isLatest: boolean;
+            canUndo: boolean;
+            canDelete: boolean;
+            uncategorizedTransactionsCount: number;
+            changedTransactions: components["schemas"]["BankReconciliationChangedTransactionDto"][];
+        };
+        BankReconciliationDetailResponseDto: {
+            reconciliation: components["schemas"]["BankReconciliationResponseDto"];
+            transactions: components["schemas"]["BankReconciliationTransactionResponseDto"][];
+            meta: components["schemas"]["BankReconciliationDetailMetaDto"];
+        };
+        BankReconciliationTransactionKeyDto: {
+            /**
+             * @description Ledger reference type
+             * @example CashflowTransaction
+             */
+            referenceType: string;
+            /**
+             * @description Ledger reference id
+             * @example 1001
+             */
+            referenceId: number;
+            /**
+             * @description Ledger line index within the reference
+             * @default 0
+             * @example 1
+             */
+            index: number;
+        };
+        UpdateBankReconciliationDto: {
+            /**
+             * @description Reconciliation period start date
+             * @example 2026-11-01
+             */
+            startDate?: string;
+            /**
+             * @description Reconciliation period end date
+             * @example 2026-11-30
+             */
+            endDate?: string;
+            /**
+             * @description Statement ending balance
+             * @example 12500.75
+             */
+            endingBalance?: number;
+            /**
+             * @description Optional reconciliation notes
+             * @example November statement
+             */
+            notes?: string;
+            /** @description Checked/cleared transaction keys */
+            transactions?: components["schemas"]["BankReconciliationTransactionKeyDto"][];
+        };
+        FinishBankReconciliationDto: {
+            /**
+             * @description Final statement ending balance
+             * @example 12500.75
+             */
+            endingBalance?: number;
+            /** @description Final checked/cleared transaction keys */
+            transactions?: components["schemas"]["BankReconciliationTransactionKeyDto"][];
+            /** @description Optional reconciliation notes */
+            notes?: string;
+        };
+        UndoBankReconciliationDto: {
+            /**
+             * @description Also void later reconciliations when this is not the latest one
+             * @default false
+             * @example true
+             */
+            cascade: boolean;
         };
         TransactionLockingResponseDto: {
             /**
@@ -26927,6 +27264,208 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    BankingReconciliationController_getBankReconciliations: {
+        parameters: {
+            query: {
+                /** @description Bank account ID */
+                accountId: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reconciliations retrieved successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankReconciliationsListResponseDto"];
+                };
+            };
+        };
+    };
+    BankingReconciliationController_createBankReconciliation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBankReconciliationDto"];
+            };
+        };
+        responses: {
+            /** @description Reconciliation created successfully. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankReconciliationDetailResponseDto"];
+                };
+            };
+        };
+    };
+    BankingReconciliationController_getBankReconciliation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reconciliation retrieved successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankReconciliationDetailResponseDto"];
+                };
+            };
+        };
+    };
+    BankingReconciliationController_updateBankReconciliation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBankReconciliationDto"];
+            };
+        };
+        responses: {
+            /** @description Reconciliation updated successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankReconciliationDetailResponseDto"];
+                };
+            };
+        };
+    };
+    BankingReconciliationController_deleteBankReconciliation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Reconciliation deleted successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BankingReconciliationController_finishBankReconciliation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinishBankReconciliationDto"];
+            };
+        };
+        responses: {
+            /** @description Reconciliation completed successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankReconciliationDetailResponseDto"];
+                };
+            };
+        };
+    };
+    BankingReconciliationController_undoBankReconciliation: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UndoBankReconciliationDto"];
+            };
+        };
+        responses: {
+            /** @description Reconciliation undone successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankReconciliationDetailResponseDto"];
+                };
             };
         };
     };

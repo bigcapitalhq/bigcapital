@@ -465,6 +465,17 @@ export const events = {
   },
 
   /**
+   * Bank reconciliation service events.
+   */
+  bankReconciliation: {
+    onCreated: 'onBankReconciliationCreated',
+    onUpdated: 'onBankReconciliationUpdated',
+    onFinished: 'onBankReconciliationFinished',
+    onUndone: 'onBankReconciliationUndone',
+    onDeleted: 'onBankReconciliationDeleted',
+  },
+
+  /**
    * Roles service events.
    */
   roles: {

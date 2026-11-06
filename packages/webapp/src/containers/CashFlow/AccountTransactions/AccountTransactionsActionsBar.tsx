@@ -34,8 +34,10 @@ import {
   FormattedMessage as T,
   AppToaster,
   If,
+  Can,
 } from '@/components';
 import { useAppShellContext } from '@/components/AppShell/AppContentShell/AppContentShellProvider';
+import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import {
   getAddMoneyOutOptions,
   getAddMoneyInOptions,
@@ -132,6 +134,12 @@ function AccountTransactionsActionsBarInner({
   // Handle bank rules click.
   const handleBankRulesClick = () => {
     history.push(`/bank-rules?accountId=${accountId}`);
+  };
+  // Handle reconciliation click.
+  const handleReconcileClick = () => {
+    history.push(
+      `/cashflow-accounts/${accountId}/transactions?filter=reconciliation`,
+    );
   };
 
   // Handles the bank account disconnect click.
@@ -431,6 +439,14 @@ function AccountTransactionsActionsBarInner({
                 <MenuDivider />
               </If>
 
+              {currentAccount?.accountType === 'bank' && (
+                <Can I={CashflowAction.Reconcile} a={AbilitySubject.Cashflow}>
+                  <MenuItem
+                    onClick={handleReconcileClick}
+                    text={'Reconcile account'}
+                  />
+                </Can>
+              )}
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
               <MenuDivider />
               <If condition={isSyncingOwner && isFeedsActive}>
