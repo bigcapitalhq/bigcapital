@@ -4,6 +4,7 @@ import { sumBy } from 'lodash';
 import {
   IVendorCreditApplyToBillsCreatedPayload,
   IVendorCreditApplyToInvoicesDTO,
+  IVendorCreditApplyToInvoiceModel,
   IVendorCreditApplyToInvoicesModel,
 } from '../types/VendorCreditApplyBills.types';
 import { ERRORS } from '../VendorCreditsApplyBills.constants';
@@ -117,7 +118,7 @@ export class ApplyVendorCreditToBillsService {
     // Validate bills has remaining amount to apply.
     this.validateBillsRemainingAmount(
       appliedBills,
-      vendorCreditAppliedModel.amount,
+      vendorCreditAppliedModel.entries,
     );
     // Validate vendor credit remaining credit amount against the locked row.
     this.vendorCreditDTOTransform.validateCreditRemainingAmount(
@@ -151,12 +152,19 @@ export class ApplyVendorCreditToBillsService {
   };
 
   /**
-   * Validate bills remaining amount.
-   * @param {IBill[]} bills
-   * @param {number} amount
+   * Validate each bill has sufficient remaining amount for the credit
+   * applied to it.
+   * @param {Bill[]} bills
+   * @param {IVendorCreditApplyToInvoiceModel[]} entries
    */
-  private validateBillsRemainingAmount = (bills: Bill[], amount: number) => {
-    const invalidBills = bills.filter((bill) => bill.dueAmount < amount);
+  private validateBillsRemainingAmount = (
+    bills: Bill[],
+    entries: IVendorCreditApplyToInvoiceModel[],
+  ) => {
+    const invalidBills = bills.filter((bill) => {
+      const billEntries = entries.filter((entry) => entry.billId === bill.id);
+      return bill.dueAmount < sumBy(billEntries, 'amount');
+    });
     if (invalidBills.length > 0) {
       throw new ServiceError(ERRORS.BILLS_HAS_NO_REMAINING_AMOUNT);
     }
