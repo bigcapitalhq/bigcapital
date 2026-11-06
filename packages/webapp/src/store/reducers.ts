@@ -16,6 +16,7 @@ import { financialStatementsReducer as financialStatements } from './financial-s
 import { globalErrorsReducer as globalErrors } from './global-errors/global-errors.reducer';
 import { inventoryAdjustmentsPersistReducer as inventoryAdjustments } from './inventory-adjustments/inventory-adjustment.reducer';
 import { salesInvoicesPersistReducer as salesInvoices } from './invoice/invoices.reducer';
+import { recurringInvoicesPersistReducer as recurringInvoices } from './recurring-invoices/recurring-invoices.reducer';
 import { itemsCategoriesPersistReducer as itemsCategories } from './item-categories/items-category.reducer';
 import { itemsPersistReducer as items } from './items/items.reducer';
 import { manualJournalsPersistReducer as manualJournals } from './manual-journals/manual-journals.reducers';
@@ -53,6 +54,7 @@ const appReducer = combineReducers({
   customers,
   salesEstimates,
   salesInvoices,
+  recurringInvoices,
   salesReceipts,
   bills,
   vendors,

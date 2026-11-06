@@ -147,6 +147,8 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
   ],
   exports: [
     GetSaleInvoice,
+    CreateSaleInvoice,
+    SendSaleInvoiceMail,
     SaleInvoicesCost,
     SaleInvoicePdf,
     SaleInvoicesExportable,
