@@ -8,6 +8,7 @@ import { ItemMeta } from './Item.meta';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { PreventMutateBaseCurrency } from '@/common/decorators/LockMutateBaseCurrency.decorator';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import type { TCostMethod } from '@/common/constants/inventory.constants';
 import { ItemDefaultViews } from '../Items.constants';
 
 @ExportableModel()
@@ -32,6 +33,8 @@ export class Item extends TenantBaseModel {
   public readonly costAccountId: number;
   public readonly inventoryAccountId: number;
   public readonly categoryId: number;
+  public readonly costMethod: TCostMethod | null;
+  public readonly costMethodLockedAt: Date | null;
   public readonly pictureUri: string;
   public readonly sellAccountId: number;
   public readonly sellDescription: string;

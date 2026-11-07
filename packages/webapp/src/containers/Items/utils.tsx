@@ -24,6 +24,7 @@ type ItemError = { type: string };
 export const ItemErrorType = {
   ItemNameExists: 'ITEM_NAME_EXISTS',
   InventoryAccountCannotModified: 'INVENTORY_ACCOUNT_CANNOT_MODIFIED',
+  ItemCostMethodCannotModified: 'ITEM_COST_METHOD_CANNOT_MODIFIED',
   TypeCannotChangeWithItemHasTransactions:
     'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
   ItemHasAssociatedTransactions: 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
@@ -46,6 +47,7 @@ const defaultInitialValues: ItemFormValues = {
   sellTaxRateId: '',
   inventoryAccountId: '',
   categoryId: '',
+  costMethod: '',
   sellable: true,
   purchasable: true,
   sellDescription: '',
@@ -303,6 +305,14 @@ export const transformSubmitRequestErrors = (error: {
       message: intl.get(
         'item.error.type_cannot_change_with_item_has_transactions',
       ),
+      intent: Intent.DANGER,
+    });
+  }
+  if (
+    errors.find((e) => e.type === ItemErrorType.ItemCostMethodCannotModified)
+  ) {
+    AppToaster.show({
+      message: intl.get('the_item_cost_method_cannot_be_modified'),
       intent: Intent.DANGER,
     });
   }

@@ -10,6 +10,7 @@ import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { CreateItemDto } from './dtos/Item.dto';
 import { DEFAULT_ITEM_UNIT } from './Items.constants';
+import { normalizeNullableCostMethod } from '@/common/constants/inventory.constants';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CreateItemService {
@@ -90,6 +91,10 @@ export class CreateItemService {
       reorderPoint:
         itemDTO.type === 'inventory' ? (itemDTO.reorderPoint ?? null) : null,
       reorderPointNotified: false,
+      costMethod:
+        itemDTO.type === 'inventory'
+          ? normalizeNullableCostMethod(itemDTO.costMethod)
+          : null,
     };
   }
 

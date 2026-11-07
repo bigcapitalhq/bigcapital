@@ -66,7 +66,11 @@ export function ItemFormFormik({
     form: FormikHelpers<ItemFormValues>,
   ) => {
     const { setSubmitting, resetForm, setErrors } = form;
-    const formValues = { ...values };
+    const formValues = {
+      ...values,
+      // Empty option means inherit the cost method from the category.
+      costMethod: values.costMethod || null,
+    };
 
     setSubmitting(true);
 

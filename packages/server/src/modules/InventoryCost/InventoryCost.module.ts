@@ -25,7 +25,8 @@ import { InventoryLotCostMethodService } from './commands/InventoryLotCostMethod
 import { InventoryItemCostService } from './commands/InventoryCosts.service';
 import { InventoryItemOpeningAvgCostService } from './commands/InventoryItemOpeningAvgCost.service';
 import { InventoryCostSubscriber } from './subscribers/InventoryCost.subscriber';
-import { ItemCostMethodSyncSubscriber } from './subscribers/ItemCostMethodSync.subscriber';
+import { ItemCostMethodResolverService } from './commands/ItemCostMethodResolver.service';
+import { InventoryItemCostMethodLockService } from './commands/InventoryItemCostMethodLock.service';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
 import { ImportModule } from '../Import/Import.module';
 import { GetItemsInventoryValuationListService } from './queries/GetItemsInventoryValuationList.service';
@@ -71,7 +72,8 @@ const models = [
     InventoryItemCostService,
     InventoryItemOpeningAvgCostService,
     InventoryCostSubscriber,
-    ItemCostMethodSyncSubscriber,
+    ItemCostMethodResolverService,
+    InventoryItemCostMethodLockService,
     GetItemsInventoryValuationListService,
   ],
   exports: [

@@ -18,7 +18,7 @@ import { InventoryLotCostMethodService } from './InventoryLotCostMethod.service'
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { InjectQueue } from '@nestjs/bullmq';
 import { RedisService } from '@liaoliaots/nestjs-redis';
-import { normalizeCostMethod } from '@/common/constants/inventory.constants';
+import { ItemCostMethodResolverService } from './ItemCostMethodResolver.service';
 
 @Injectable()
 export class InventoryComputeCostService {
@@ -32,6 +32,7 @@ export class InventoryComputeCostService {
    * @param {ClsService} clsService - Cls service.
    * @param {Queue} computeItemCostProcessor - Compute item cost processor.
    * @param {TenantModelProxy<typeof Item>} itemModel - Item model.
+   * @param {ItemCostMethodResolverService} costMethodResolver - Cost method resolver.
    * @param {() => SettingsStore} settingsStore - Settings store.
    */
   constructor(
@@ -46,6 +47,8 @@ export class InventoryComputeCostService {
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
+
+    private readonly costMethodResolver: ItemCostMethodResolverService,
 
     @Inject(SETTINGS_PROVIDER)
     private readonly settingsStore: () => SettingsStore,
@@ -88,7 +91,8 @@ export class InventoryComputeCostService {
     if (!item || item.type !== 'inventory') {
       throw new Error('You could not compute item cost has no inventory type.');
     }
-    const costMethod = normalizeCostMethod(item.category?.costMethod);
+    const costMethod =
+      await this.costMethodResolver.resolveItemCostMethod(item);
 
     if (costMethod === 'AVG') {
       return this.inventoryAverageCostMethod.computeItemCost(

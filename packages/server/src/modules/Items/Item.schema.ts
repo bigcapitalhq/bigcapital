@@ -1,4 +1,5 @@
 import { DATATYPES_LENGTH } from '@/constants/data-types';
+import { COST_METHODS } from '@/common/constants/inventory.constants';
 import z from 'zod';
 
 export const createItemSchema = z
@@ -66,6 +67,7 @@ export const createItemSchema = z
       .max(DATATYPES_LENGTH.INT_10)
       .nullable()
       .optional(),
+    cost_method: z.enum(COST_METHODS).nullable().optional(),
     note: z.string().max(DATATYPES_LENGTH.TEXT).optional(),
     active: z.boolean().optional(),
     media_ids: z.array(z.number().int()).optional(),

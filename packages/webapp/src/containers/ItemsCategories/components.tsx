@@ -12,6 +12,7 @@ import intl from 'react-intl-universal';
 import type { DataTableColumn } from '@/components/Datatable/types';
 import type { ItemCategory } from '@bigcapital/sdk-ts';
 import { Icon } from '@/components';
+import { getItemCostMethodLabel } from '@/constants/costMethods';
 import { safeCallback } from '@/utils';
 
 // `count` is returned by the server at runtime but not declared on the SDK type.
@@ -69,7 +70,9 @@ export function TableActionsCell(props: ActionMenuListProps) {
 /**
  * Retrieve the items categories table columns.
  */
-export function useItemsCategoriesTableColumns(): DataTableColumn<ItemCategoryTableRow>[] {
+export function useItemsCategoriesTableColumns(
+  defaultCostMethod: string = 'AVG',
+): DataTableColumn<ItemCategoryTableRow>[] {
   return React.useMemo(
     () =>
       [
@@ -83,15 +86,12 @@ export function useItemsCategoriesTableColumns(): DataTableColumn<ItemCategoryTa
           id: 'cost_method',
           Header: intl.get('cost_method'),
           accessor: 'costMethod',
-          Cell: ({ value }: { value?: string }) => {
-            const costMethod = String(value || 'AVG').toUpperCase();
-            const translationKey =
-              costMethod === 'AVG'
-                ? 'cost_method_average'
-                : `cost_method_${costMethod.toLowerCase()}`;
-
-            return intl.get(translationKey);
-          },
+          Cell: ({ value }: { value?: string | null }) =>
+            value
+              ? getItemCostMethodLabel(value)
+              : intl.get('cost_method_inherited', {
+                  method: getItemCostMethodLabel(defaultCostMethod),
+                }),
           width: 180,
         },
         {
@@ -109,6 +109,6 @@ export function useItemsCategoriesTableColumns(): DataTableColumn<ItemCategoryTa
           width: 220,
         },
       ] as DataTableColumn<ItemCategoryTableRow>[],
-    [],
+    [defaultCostMethod],
   );
 }

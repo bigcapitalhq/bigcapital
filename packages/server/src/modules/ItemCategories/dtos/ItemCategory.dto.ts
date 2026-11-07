@@ -42,8 +42,11 @@ class CommandItemCategoryDto {
   inventoryAccountId?: number;
 
   @Transform(({ value }) => {
-    if (value === null || value === undefined || value === '') {
-      return undefined;
+    if (value === null || value === undefined) {
+      return value;
+    }
+    if (value === '') {
+      return null;
     }
     return String(value).toUpperCase();
   })
@@ -52,11 +55,13 @@ class CommandItemCategoryDto {
   @IsIn(COST_METHODS)
   @ApiProperty({
     example: 'FIFO',
-    description: 'The cost method',
+    description:
+      'The cost method. Null means inherit from the items default cost method preference.',
     enum: COST_METHODS,
     required: false,
+    nullable: true,
   })
-  costMethod?: TCostMethod;
+  costMethod?: TCostMethod | null;
 }
 
 export class CreateItemCategoryDto extends CommandItemCategoryDto {}

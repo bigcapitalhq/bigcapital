@@ -15,6 +15,10 @@ import { AccountTransaction } from '../Accounts/models/AccountTransaction.model'
 import { InventoryAdjustment } from '../InventoryAdjutments/models/InventoryAdjustment';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
+import {
+  normalizeNullableCostMethod,
+  parseCostMethod,
+} from '@/common/constants/inventory.constants';
 
 @Injectable()
 export class ItemsValidators {
@@ -246,6 +250,33 @@ export class ItemsValidators {
     if (itemTransactionsCount.transactions > 0) {
       throw new ServiceError(
         ERRORS.TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS,
+      );
+    }
+  }
+
+  /**
+   * Validates the item cost method cannot be modified once the item has
+   * inventory transactions. The cost method is frozen on the first inventory
+   * transaction and stored on the item row.
+   * @param {CreateItemDto | EditItemDto} newItemDTO - New item DTO.
+   * @param {Item} oldItem - Old item.
+   * @throws {ServiceError(ERRORS.ITEM_COST_METHOD_CANNOT_MODIFIED)}
+   */
+  public validateCostMethodModification(
+    newItemDTO: CreateItemDto | EditItemDto,
+    oldItem: Item,
+  ): void {
+    // The cost method is not frozen yet, or was not provided in the payload.
+    if (!oldItem.costMethodLockedAt || newItemDTO.costMethod === undefined) {
+      return;
+    }
+    const currentCostMethod = parseCostMethod(oldItem.costMethod);
+    const nextCostMethod = normalizeNullableCostMethod(newItemDTO.costMethod);
+
+    if (currentCostMethod !== nextCostMethod) {
+      throw new ServiceError(
+        ERRORS.ITEM_COST_METHOD_CANNOT_MODIFIED,
+        'The item cost method cannot be modified after the first inventory transaction.',
       );
     }
   }

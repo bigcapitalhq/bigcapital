@@ -16,7 +16,7 @@ export class ItemCategory extends TenantBaseModel {
   costAccountId!: number;
   sellAccountId!: number;
   inventoryAccountId!: number;
-  costMethod?: TCostMethod;
+  costMethod?: TCostMethod | null;
 
   userId!: number;
 

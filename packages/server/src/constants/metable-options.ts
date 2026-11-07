@@ -162,6 +162,9 @@ export const SettingsOptions = {
     prevent_stock_from_going_below_zero: {
       type: 'boolean',
     },
+    default_cost_method: {
+      type: 'string',
+    },
   },
   item_categories: {
     table_size: {

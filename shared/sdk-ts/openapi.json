@@ -25971,6 +25971,7 @@
               "ITEM_CANNOT_CHANGE_INVENTORY_TYPE",
               "TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS",
               "INVENTORY_ACCOUNT_CANNOT_MODIFIED",
+              "ITEM_COST_METHOD_CANNOT_MODIFIED",
               "PURCHASE_TAX_RATE_NOT_FOUND",
               "SELL_TAX_RATE_NOT_FOUND",
               "INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM",
@@ -26449,6 +26450,36 @@
           "pagination"
         ]
       },
+      "ItemCategorySummaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The category ID",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "The category name",
+            "example": "Electronics"
+          },
+          "costMethod": {
+            "type": "string",
+            "description": "The category cost method. Null means inherit from the default cost method preference.",
+            "enum": [
+              "AVG",
+              "FIFO",
+              "LIFO"
+            ],
+            "nullable": true,
+            "example": "FIFO"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
       "ItemResponseDto": {
         "type": "object",
         "properties": {
@@ -26576,8 +26607,30 @@
             "example": 5
           },
           "category": {
-            "type": "object",
-            "description": "The category details"
+            "description": "The category details",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ItemCategorySummaryResponseDto"
+              }
+            ]
+          },
+          "costMethod": {
+            "type": "string",
+            "description": "The inventory cost method. Null means inherit from the item category.",
+            "enum": [
+              "AVG",
+              "FIFO",
+              "LIFO"
+            ],
+            "nullable": true,
+            "example": "FIFO"
+          },
+          "costMethodLockedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "The date when the cost method was frozen by the first inventory transaction",
+            "nullable": true,
+            "example": "2024-03-20T10:00:00Z"
           },
           "sellDescription": {
             "type": "string",
@@ -26778,6 +26831,17 @@
             "minimum": 0,
             "example": 5
           },
+          "costMethod": {
+            "type": "string",
+            "description": "Inventory cost method. Null means inherit from the item category.",
+            "enum": [
+              "AVG",
+              "FIFO",
+              "LIFO"
+            ],
+            "nullable": true,
+            "example": "FIFO"
+          },
           "note": {
             "type": "string",
             "description": "Additional notes about the item",
@@ -26951,6 +27015,17 @@
             "description": "ID of the item category",
             "minimum": 0,
             "example": 5
+          },
+          "costMethod": {
+            "type": "string",
+            "description": "Inventory cost method. Null means inherit from the item category.",
+            "enum": [
+              "AVG",
+              "FIFO",
+              "LIFO"
+            ],
+            "nullable": true,
+            "example": "FIFO"
           },
           "note": {
             "type": "string",
@@ -31249,12 +31324,13 @@
           "costMethod": {
             "type": "string",
             "example": "FIFO",
-            "description": "The cost method",
+            "description": "The cost method. Null means inherit from the items default cost method preference.",
             "enum": [
               "AVG",
               "FIFO",
               "LIFO"
-            ]
+            ],
+            "nullable": true
           },
           "userId": {
             "type": "number",
@@ -31319,12 +31395,13 @@
           "costMethod": {
             "type": "string",
             "example": "FIFO",
-            "description": "The cost method",
+            "description": "The cost method. Null means inherit from the items default cost method preference.",
             "enum": [
               "AVG",
               "FIFO",
               "LIFO"
-            ]
+            ],
+            "nullable": true
           }
         },
         "required": [
@@ -31366,12 +31443,13 @@
           "costMethod": {
             "type": "string",
             "example": "FIFO",
-            "description": "The cost method",
+            "description": "The cost method. Null means inherit from the items default cost method preference.",
             "enum": [
               "AVG",
               "FIFO",
               "LIFO"
-            ]
+            ],
+            "nullable": true
           }
         },
         "required": [

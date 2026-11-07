@@ -4,6 +4,10 @@ import * as Yup from 'yup';
 import { ITEM_UNITS } from './constants';
 import type { ItemFormValues } from './types';
 import type { Item } from '@bigcapital/sdk-ts';
+import {
+  ITEM_COST_METHOD_INHERIT,
+  ITEM_COST_METHODS,
+} from '@/constants/costMethods';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
@@ -74,6 +78,9 @@ const Schema = Yup.object().shape({
     })
     .label(intl.get('inventory_account')),
   categoryId: Yup.number().positive().nullable(),
+  costMethod: Yup.string()
+    .oneOf([ITEM_COST_METHOD_INHERIT, ...ITEM_COST_METHODS])
+    .nullable(),
   stock: Yup.string() || Yup.boolean(),
   sellable: Yup.boolean().required(),
   purchasable: Yup.boolean().required(),
@@ -86,6 +93,8 @@ export const transformItemFormData = (
   return {
     ...defaultValue,
     ...item,
+    // Null means "inherit"; the form uses an empty string for that option.
+    costMethod: item?.costMethod ?? defaultValue.costMethod,
     sellable: !!defaultTo(item?.sellable, defaultValue.sellable),
     purchasable: !!defaultTo(item?.purchasable, defaultValue.purchasable),
     active: !!defaultTo(item?.active, defaultValue.active),

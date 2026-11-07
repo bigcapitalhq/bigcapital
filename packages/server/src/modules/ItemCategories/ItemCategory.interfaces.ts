@@ -15,7 +15,7 @@ export interface IItemCategoryOTD {
   sellAccountId?: number;
   inventoryAccountId?: number;
 
-  costMethod?: TCostMethod;
+  costMethod?: TCostMethod | null;
 }
 
 // export interface IItemCategoriesFilter extends IDynamicListFilterDTO {

@@ -10,8 +10,13 @@ import {
   Min,
   IsNotEmpty,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, ToNumber } from '@/common/decorators/Validators';
+import {
+  COST_METHODS,
+  TCostMethod,
+} from '@/common/constants/inventory.constants';
 import { ITEM_UNITS, ItemUnit } from '../Items.constants';
 
 export class CommandItemDto {
@@ -203,6 +208,27 @@ export class CommandItemDto {
     example: 5,
   })
   categoryId?: number;
+
+  @Transform(({ value }) => {
+    if (value === null || value === undefined) {
+      return value;
+    }
+    if (value === '') {
+      return null;
+    }
+    return String(value).toUpperCase();
+  })
+  @IsOptional()
+  @IsIn(COST_METHODS)
+  @ApiProperty({
+    description:
+      'Inventory cost method. Null means inherit from the item category.',
+    enum: COST_METHODS,
+    required: false,
+    nullable: true,
+    example: 'FIFO',
+  })
+  costMethod?: TCostMethod | null;
 
   @IsOptional()
   @IsString()

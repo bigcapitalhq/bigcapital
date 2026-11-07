@@ -14,17 +14,42 @@ export type TCostMethod = (typeof COST_METHODS)[number];
 export const DEFAULT_COST_METHOD: TCostMethod = 'AVG';
 
 /**
- * Normalizes the given cost method value and falls back to the default
- * cost method when the value is missing or unknown.
+ * Parses the given cost method value and returns null when the value is
+ * missing or unknown. Useful for nullable/inherited cost method values.
  * @param {string|null|undefined} value - The cost method value.
- * @returns {TCostMethod}
+ * @returns {TCostMethod|null}
  */
-export function normalizeCostMethod(value?: string | null): TCostMethod {
+export function parseCostMethod(value?: string | null): TCostMethod | null {
   const normalizedValue = String(value ?? '')
     .trim()
     .toUpperCase();
 
   return (COST_METHODS as readonly string[]).includes(normalizedValue)
     ? (normalizedValue as TCostMethod)
-    : DEFAULT_COST_METHOD;
+    : null;
+}
+
+/**
+ * Normalizes the given cost method value and falls back to the default
+ * cost method when the value is missing or unknown.
+ * @param {string|null|undefined} value - The cost method value.
+ * @returns {TCostMethod}
+ */
+export function normalizeCostMethod(value?: string | null): TCostMethod {
+  return parseCostMethod(value) ?? DEFAULT_COST_METHOD;
+}
+
+/**
+ * Normalizes a nullable cost method value. Missing/empty values are preserved
+ * as null so the caller can inherit the cost method from a higher level.
+ * @param {string|null|undefined} value - The cost method value.
+ * @returns {TCostMethod|null}
+ */
+export function normalizeNullableCostMethod(
+  value?: string | null,
+): TCostMethod | null {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+  return parseCostMethod(value);
 }

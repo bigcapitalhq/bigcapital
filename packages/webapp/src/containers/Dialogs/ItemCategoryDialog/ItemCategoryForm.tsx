@@ -51,7 +51,8 @@ const transformFormToCreateBody = (
     costAccountId: toAccountId(values.costAccountId),
     sellAccountId: toAccountId(values.sellAccountId),
     inventoryAccountId: toAccountId(values.inventoryAccountId),
-    costMethod: normalizeItemCostMethod(values.costMethod),
+    // Empty means "inherit from the items preference" and is sent as null.
+    costMethod: normalizeItemCostMethod(values.costMethod) || null,
   }) as CreateItemCategoryBody;
 
 const transformFormToEditBody = (

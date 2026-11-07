@@ -47,11 +47,13 @@ export class ItemCategoryResponseDto {
 
   @ApiProperty({
     example: 'FIFO',
-    description: 'The cost method',
+    description:
+      'The cost method. Null means inherit from the items default cost method preference.',
     enum: COST_METHODS,
     required: false,
+    nullable: true,
   })
-  costMethod?: TCostMethod;
+  costMethod?: TCostMethod | null;
 
   @ApiProperty({
     example: 1,

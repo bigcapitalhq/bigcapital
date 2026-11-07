@@ -7,7 +7,7 @@ import { CommandItemCategoryValidatorService } from './CommandItemCategoryValida
 import { ItemCategory } from '../models/ItemCategory.model';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { CreateItemCategoryDto } from '../dtos/ItemCategory.dto';
-import { normalizeCostMethod } from '@/common/constants/inventory.constants';
+import { normalizeNullableCostMethod } from '@/common/constants/inventory.constants';
 
 @Injectable()
 export class CreateItemCategoryService {
@@ -34,9 +34,11 @@ export class CreateItemCategoryService {
   private transformOTDToObject(
     itemCategoryOTD: CreateItemCategoryDto,
   ): Partial<ItemCategory> {
+    const { costMethod, ...itemCategoryObj } = itemCategoryOTD;
+
     return {
-      ...itemCategoryOTD,
-      costMethod: normalizeCostMethod(itemCategoryOTD.costMethod),
+      ...itemCategoryObj,
+      costMethod: normalizeNullableCostMethod(costMethod),
       // userId: authorizedUser.id
     };
   }

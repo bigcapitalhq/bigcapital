@@ -3,6 +3,12 @@ import { InventoryComputeCostService } from './InventoryComputeCost.service';
 const createService = (item: Record<string, any>) => {
   const averageCostMethod = { computeItemCost: jest.fn() };
   const lotCostMethod = { computeItemCost: jest.fn() };
+  const costMethodResolver = {
+    resolveItemCostMethod: jest.fn(async (item: Record<string, any>) => {
+      const method = item.costMethod ?? item.category?.costMethod ?? 'AVG';
+      return ['AVG', 'FIFO', 'LIFO'].includes(method) ? method : 'AVG';
+    }),
+  };
   const itemModel = jest.fn(() => ({
     query: () => ({
       withGraphFetched: () => ({
@@ -18,6 +24,7 @@ const createService = (item: Record<string, any>) => {
     { getOrThrow: () => ({}) } as any,
     {} as any,
     itemModel as any,
+    costMethodResolver as any,
     (() => ({})) as any,
   );
   return { service, averageCostMethod, lotCostMethod };
@@ -66,6 +73,24 @@ describe('InventoryComputeCostService', () => {
       id: 1,
       type: 'inventory',
       category: { costMethod: 'LIFO' },
+    });
+
+    await service.computeInventoryItemCost(fromDate, 1);
+
+    expect(lotCostMethod.computeItemCost).toHaveBeenCalledWith(
+      fromDate,
+      1,
+      'LIFO',
+      undefined,
+    );
+  });
+
+  it('should prefer the item-level cost method over the category method', async () => {
+    const { service, lotCostMethod } = createService({
+      id: 1,
+      type: 'inventory',
+      costMethod: 'LIFO',
+      category: { costMethod: 'FIFO' },
     });
 
     await service.computeInventoryItemCost(fromDate, 1);

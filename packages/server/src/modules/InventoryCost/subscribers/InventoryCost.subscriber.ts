@@ -12,6 +12,7 @@ import { events } from '@/common/events/events';
 import { runAfterTransaction } from '@/modules/Tenancy/TenancyDB/TransactionsHooks';
 import { Injectable } from '@nestjs/common';
 import { InventoryComputeCostService } from '../commands/InventoryComputeCost.service';
+import { InventoryItemCostMethodLockService } from '../commands/InventoryItemCostMethodLock.service';
 
 @Injectable()
 export class InventoryCostSubscriber {
@@ -19,8 +20,26 @@ export class InventoryCostSubscriber {
     private readonly saleInvoicesCost: SaleInvoicesCost,
     private readonly itemsQuantitySync: InventoryItemsQuantitySyncService,
     private readonly inventoryService: InventoryComputeCostService,
+    private readonly itemCostMethodLock: InventoryItemCostMethodLockService,
     private readonly importAls: ImportAls,
   ) {}
+
+  /**
+   * Freezes the item cost method on the first inventory transaction. The lock
+   * is persisted in the item row inside the same database transaction, so a
+   * rolled-back inventory transaction does not lock the item.
+   * @param {IInventoryTransactionsCreatedPayload} payload - The event payload.
+   */
+  @OnEvent(events.inventory.onInventoryTransactionsCreated)
+  async lockItemsCostMethodOnceInventoryTransactionsCreated({
+    inventoryTransactions,
+    trx,
+  }: IInventoryTransactionsCreatedPayload) {
+    await this.itemCostMethodLock.lockItemsCostMethod(
+      inventoryTransactions.map((transaction) => transaction.itemId),
+      trx,
+    );
+  }
 
   /**
    * Sync inventory items quantity once inventory transactions created.
