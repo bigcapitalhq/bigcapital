@@ -54,6 +54,8 @@ export type VendorFormValues = {
   openingBalanceAt: string;
   openingBalanceExchangeRate: string | number;
   openingBalanceBranchId: string | number;
+
+  customFields: Record<string, unknown>;
 };
 
 export const defaultInitialValues: VendorFormValues = {
@@ -94,6 +96,7 @@ export const defaultInitialValues: VendorFormValues = {
   openingBalanceAt: moment(new Date()).format('YYYY-MM-DD'),
   openingBalanceBranchId: '',
   openingBalanceExchangeRate: '',
+  customFields: {},
 };
 
 const toNumber = (value: string | number): number | undefined => {
@@ -164,6 +167,7 @@ export const transformFormToCreateRequest = (
   openingBalance: toNumber(values.openingBalance),
   openingBalanceAt: values.openingBalanceAt,
   openingBalanceBranchId: toNumber(values.openingBalanceBranchId),
+  customFields: values.customFields,
 });
 
 /**
@@ -201,6 +205,8 @@ export const transformFormToEditRequest = (
   shippingAddressPostcode: values.shippingAddressPostcode,
   shippingAddressPhone: values.shippingAddressPhone,
   shippingAddressState: values.shippingAddressState,
+
+  customFields: values.customFields,
 });
 
 export const useSetPrimaryBranchToForm = () => {

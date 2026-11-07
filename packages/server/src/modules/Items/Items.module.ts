@@ -19,6 +19,7 @@ import { ItemsExportable } from './ItemsExportable.service';
 import { ItemsImportable } from './ItemsImportable.service';
 import { BulkDeleteItemsService } from './BulkDeleteItems.service';
 import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.service';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
     TenancyDatabaseModule,
     DynamicListModule,
     InventoryAdjustmentsModule,
+    CustomFieldsModule,
   ],
   controllers: [ItemsController],
   providers: [

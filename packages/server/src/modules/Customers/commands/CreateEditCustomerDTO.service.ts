@@ -23,7 +23,7 @@ export class CreateEditCustomerDTO {
     const { code, ...rest } = customerDTO;
 
     return {
-      ...omit(rest, ['customerType']),
+      ...omit(rest, ['customerType', 'customFields']),
       contactType: customerDTO.customerType,
       // Blank codes are stored as NULL to avoid `CONTACTS_CODE_UNIQUE` collisions.
       ...(typeof code === 'string'

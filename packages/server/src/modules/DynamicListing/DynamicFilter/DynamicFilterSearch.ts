@@ -1,4 +1,4 @@
-import { IFilterRole } from './DynamicFilter.types';
+import { IFilterRole, ISearchRole } from './DynamicFilter.types';
 import { DynamicFilterFilterRoles } from './DynamicFilterFilterRoles';
 
 export interface IDynamicFilterSearchResponseMeta {
@@ -7,14 +7,17 @@ export interface IDynamicFilterSearchResponseMeta {
 
 export class DynamicFilterSearch extends DynamicFilterFilterRoles {
   private searchKeyword: string;
+  private extraSearchRoles: ISearchRole[];
 
   /**
    * Constructor method.
    * @param {string} searchKeyword - Search keyword.
+   * @param {ISearchRole[]} extraSearchRoles - Additional search roles.
    */
-  constructor(searchKeyword: string) {
+  constructor(searchKeyword: string, extraSearchRoles: ISearchRole[] = []) {
     super();
     this.searchKeyword = searchKeyword;
+    this.extraSearchRoles = extraSearchRoles;
   }
 
   /**
@@ -32,8 +35,9 @@ export class DynamicFilterSearch extends DynamicFilterFilterRoles {
    */
   private getModelSearchFilterRoles(searchKeyword: string): IFilterRole[] {
     const model = this.getModel();
+    const searchRoles = [...model.searchRoles, ...this.extraSearchRoles];
 
-    return model.searchRoles.map((searchRole, index) => ({
+    return searchRoles.map((searchRole, index) => ({
       ...searchRole,
       value: searchKeyword,
       index: index + 1,

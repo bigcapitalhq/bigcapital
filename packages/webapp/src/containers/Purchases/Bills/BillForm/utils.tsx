@@ -68,6 +68,7 @@ export type BillFormValues = {
   adjustment: string | number;
   discount: string | number;
   discountType: 'amount' | 'percentage';
+  customFields: Record<string, unknown>;
 };
 
 // Default bill entry.
@@ -108,6 +109,7 @@ export const defaultBill: BillFormValues = {
   // Discount
   discount: '',
   discountType: 'amount',
+  customFields: {},
 };
 
 export const ERRORS = {
@@ -499,7 +501,7 @@ export const useBillTotalFormatted = (): string => {
  * @returns {number}
  */
 export const useBillPaidAmount = (): number => {
-  const { values } = useFormikContext<BillFormValues>();
+  useFormikContext<BillFormValues>();
 
   return toSafeNumber(0);
 };

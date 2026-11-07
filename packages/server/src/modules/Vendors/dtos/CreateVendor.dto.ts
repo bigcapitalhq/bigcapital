@@ -4,6 +4,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   Min,
   IsBoolean,
   IsEmail,
@@ -127,4 +128,15 @@ export class CreateVendorDto extends ContactAddressDto {
   @IsOptional()
   @IsString()
   code?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    example: { cf_priority: 'High' },
+  })
+  @IsOptional()
+  @IsObject()
+  customFields?: Record<string, unknown>;
 }

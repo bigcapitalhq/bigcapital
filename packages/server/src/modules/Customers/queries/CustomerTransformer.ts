@@ -12,7 +12,15 @@ export class CustomerTransfromer extends ContactTransfromer {
       'formattedOpeningBalanceAt',
       'customerType',
       'formattedCustomerType',
+      'customFields',
     ];
+  };
+
+  /**
+   * Retrieve the custom fields values.
+   */
+  public customFields = (): Record<string, unknown> => {
+    return this.options?.customFields ?? {};
   };
 
   /**

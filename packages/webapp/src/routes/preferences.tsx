@@ -160,6 +160,15 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/custom-fields`,
+    component: lazy(() =>
+      import('@/containers/Preferences/CustomFields').then((m) => ({
+        default: m.CustomFieldsPreferences,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/features`,
     component: lazy(() =>
       import('@/containers/Preferences/Features/Features').then((m) => ({

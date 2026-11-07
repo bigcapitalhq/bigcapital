@@ -22,6 +22,10 @@ import {
   type BillFormValues,
 } from './utils';
 import { AppToaster, Box } from '@/components';
+import {
+  CustomFieldsFormSection,
+  useCustomFieldsValidationSchema,
+} from '@/components/CustomFields';
 import { PageForm } from '@/components/PageForm';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { safeSumBy } from '@/utils';
@@ -54,6 +58,10 @@ function BillFormInner() {
     }),
     [bill, baseCurrency],
   );
+  const customFieldsSchema = useCustomFieldsValidationSchema('Bill');
+  const validationSchema = (
+    isNewMode ? CreateBillFormSchema : EditBillFormSchema
+  ).concat(customFieldsSchema as any);
 
   // Handles form submit.
   const handleFormSubmit = (
@@ -108,7 +116,7 @@ function BillFormInner() {
 
   return (
     <Formik
-      validationSchema={isNewMode ? CreateBillFormSchema : EditBillFormSchema}
+      validationSchema={validationSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
     >
@@ -128,6 +136,12 @@ function BillFormInner() {
             <Box p="18px 32px 0">
               <BillFormEntriesActions />
               <BillItemsEntriesEditor />
+              <Box mt={'20px'}>
+                <CustomFieldsFormSection
+                  resource={'Bill'}
+                  title={intl.get('custom_fields.form.section_title')}
+                />
+              </Box>
             </Box>
             <BillFormFooter />
           </PageForm.Body>

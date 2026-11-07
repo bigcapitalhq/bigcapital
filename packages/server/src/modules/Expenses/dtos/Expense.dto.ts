@@ -10,6 +10,7 @@ import {
   IsISO4217CurrencyCode,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   MaxLength,
@@ -183,6 +184,17 @@ export class CommandExpenseDto {
     ],
   })
   attachments?: AttachmentDto[];
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  @IsOptional()
+  @IsObject()
+  customFields?: Record<string, unknown>;
 }
 
 export class CreateExpenseDto extends CommandExpenseDto {}

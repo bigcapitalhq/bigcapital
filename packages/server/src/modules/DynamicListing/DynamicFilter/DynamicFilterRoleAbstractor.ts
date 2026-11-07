@@ -15,6 +15,21 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
   public model: MetableModel;
   public responseMeta: { [key: string]: any } = {};
   public relationFields = [];
+  public customFields: Record<string, any> = {};
+
+  /**
+   * Sets the custom fields map.
+   */
+  public setCustomFields(customFields: Record<string, any>): void {
+    this.customFields = customFields ?? {};
+  }
+
+  /**
+   * Resolves a model field or a custom field by key.
+   */
+  protected getField(key: string): any {
+    return this.customFields?.[key] ?? this.model?.getField(key);
+  }
 
   /**
    * Sets model the dynamic filter service.
@@ -126,15 +141,16 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
    * @param {Object} role -
    */
   protected buildRoleQuery = (model: MetableModel, role: IFilterRole) => {
-    const field = model.getField(role.fieldKey);
-    const comparatorColumn = this.getFieldComparatorColumn(field);
+    const field = this.getField(role.fieldKey);
 
-    // Field relation custom query.
-    if (typeof field.filterCustomQuery !== 'undefined') {
+    // Field custom query.
+    if (typeof field?.filterCustomQuery !== 'undefined') {
       return (builder) => {
         field.filterCustomQuery(builder, role);
       };
     }
+    const comparatorColumn = this.getFieldComparatorColumn(field);
+
     switch (field.fieldType) {
       case FIELD_TYPE.BOOLEAN:
       case FIELD_TYPE.ENUMERATION:
@@ -355,7 +371,7 @@ export abstract class DynamicFilterRoleAbstractor implements IDynamicFilter {
    * @param {string} fieldKey - Field key.
    */
   protected setRelationIfRelationField = (fieldKey: string): void => {
-    const field = this.model.getField(fieldKey);
+    const field = this.getField(fieldKey);
     const isAlreadyRegistered = this.relationFields.some(
       (field) => field === fieldKey,
     );

@@ -1,5 +1,4 @@
 // @ts-nocheck
-// import AccountsCustomFields from "containers/Preferences/AccountsCustomFields";
 import { RolesListPrefernces as RolesList } from '../containers/Preferences/Users/Roles/RolesLanding/RolesList';
 import { UsersList } from '../containers/Preferences/Users/UsersList';
 

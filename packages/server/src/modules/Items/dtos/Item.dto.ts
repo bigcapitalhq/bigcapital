@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsNumber,
   IsInt,
+  IsObject,
   IsArray,
   ValidateIf,
   MaxLength,
@@ -234,6 +235,17 @@ export class CommandItemDto {
     example: [1, 2, 3],
   })
   mediaIds?: number[];
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, unknown>;
 }
 
 export class CreateItemDto extends CommandItemDto {}

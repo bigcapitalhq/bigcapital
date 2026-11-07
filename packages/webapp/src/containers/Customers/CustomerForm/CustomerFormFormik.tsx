@@ -15,6 +15,7 @@ import {
   transformValuesToForm,
 } from './utils';
 import { AppToaster } from '@/components';
+import { useCustomFieldsValidationSchema } from '@/components/CustomFields';
 import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { saveInvoke } from '@/utils';
@@ -61,6 +62,15 @@ function CustomerFormFormikRoot({
     createCustomerMutate,
     isNewMode,
   } = useCustomerFormContext();
+
+  const customFieldsSchema = useCustomFieldsValidationSchema('Customer');
+  const validationSchema = useMemo(
+    () =>
+      (isNewMode ? CreateCustomerForm : EditCustomerForm).concat(
+        customFieldsSchema as any,
+      ),
+    [isNewMode, customFieldsSchema],
+  );
 
   const initialValues = useMemo<CustomerFormValues>(() => {
     const merged: CustomerFormValues = {
@@ -122,7 +132,7 @@ function CustomerFormFormikRoot({
 
   return (
     <Formik<CustomerFormValues>
-      validationSchema={isNewMode ? CreateCustomerForm : EditCustomerForm}
+      validationSchema={validationSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
     >

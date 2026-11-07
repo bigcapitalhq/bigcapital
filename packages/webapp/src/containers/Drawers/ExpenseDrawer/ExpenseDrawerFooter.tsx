@@ -13,6 +13,7 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
+import { CustomFieldsDetailItems } from '@/components/CustomFields';
 
 /**
  * Footer details of expense readonly details.
@@ -42,6 +43,10 @@ export function ExpenseDrawerFooter() {
               {expense?.description}
             </DetailItem>
           </If>
+          <CustomFieldsDetailItems
+            resource={'Expense'}
+            values={expense?.customFields}
+          />
         </DetailsMenu>
       </CommercialDocFooter>
     </ExpenseDetailsFooterRoot>

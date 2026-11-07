@@ -373,4 +373,13 @@ export class BillResponseDto {
     nullable: true,
   })
   remainingDays: number;
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, unknown>;
 }

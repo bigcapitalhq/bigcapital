@@ -16,6 +16,7 @@ import { Customer } from '@/modules/Customers/models/Customer';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class CreateSaleInvoice {
@@ -37,6 +38,7 @@ export class CreateSaleInvoice {
     private readonly eventPublisher: EventEmitter2,
     private readonly commandEstimateValidators: SaleEstimateValidators,
     private readonly uow: UnitOfWork,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
@@ -108,6 +110,15 @@ export class CreateSaleInvoice {
       const saleInvoice = await this.saleInvoiceModel()
         .query(trx)
         .upsertGraph(saleInvoiceObj);
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'SaleInvoice',
+        saleInvoice.id,
+        saleInvoiceDTO.customFields,
+        trx,
+        { isCreate: true },
+      );
 
       const eventPayload: ISaleInvoiceCreatedPayload = {
         saleInvoice,

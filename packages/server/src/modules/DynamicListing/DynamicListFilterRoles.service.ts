@@ -40,9 +40,16 @@ export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
   private getFilterRolesFieldsNotExist = (
     model: MetableModel,
     filterRoles: IFilterRole[],
+    customFields: Record<string, any> = {},
   ): string[] => {
     return filterRoles
-      .filter((filterRole) => !model.getField(filterRole.fieldKey))
+      .filter(
+        (filterRole) =>
+          !(
+            customFields?.[filterRole.fieldKey] ??
+            model.getField(filterRole.fieldKey)
+          ),
+      )
       .map((filterRole) => filterRole.fieldKey);
   };
 
@@ -55,10 +62,12 @@ export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
   private validateFilterRolesFieldsExistance = (
     model: MetableModel,
     filterRoles: IFilterRole[],
+    customFields: Record<string, any> = {},
   ) => {
     const invalidFieldsKeys = this.getFilterRolesFieldsNotExist(
       model,
       filterRoles,
+      customFields,
     );
     if (invalidFieldsKeys.length > 0) {
       throw new ServiceError(ERRORS.FILTER_ROLES_FIELDS_NOT_FOUND);
@@ -88,13 +97,14 @@ export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
   public dynamicList = (
     model: MetableModel,
     filterRoles: IFilterRole[],
+    customFields: Record<string, any> = {},
   ): DynamicFilterAdvancedFilter => {
     const filterRolesParsed = this.incrementFilterRolesIndex(filterRoles);
     // Validate filter roles json schema.
     this.validateFilterRolesSchema(filterRolesParsed);
 
     // Validate the model resource fields.
-    this.validateFilterRolesFieldsExistance(model, filterRoles);
+    this.validateFilterRolesFieldsExistance(model, filterRoles, customFields);
 
     return new DynamicFilterAdvancedFilter(filterRolesParsed);
   };

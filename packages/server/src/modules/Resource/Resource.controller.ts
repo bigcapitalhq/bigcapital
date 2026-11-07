@@ -33,11 +33,9 @@ export class ResourceController {
   })
   getResourceMeta(
     @Param('resourceModel') resourceModel: string,
-  ): ResourceMetaResponseDto {
-    const resourceMeta = this.resourcesService.getResourceMeta(resourceModel);
-
-    return this.resourcesService.localizeResourceMeta(
-      resourceMeta,
-    ) as ResourceMetaResponseDto;
+  ): Promise<ResourceMetaResponseDto> {
+    return this.resourcesService.getResourceMetaWithCustomFields(
+      resourceModel,
+    ) as Promise<ResourceMetaResponseDto>;
   }
 }

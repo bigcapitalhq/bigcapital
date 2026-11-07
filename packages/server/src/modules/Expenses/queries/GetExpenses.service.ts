@@ -8,12 +8,14 @@ import { GetExpensesQueryDto } from '../dtos/GetExpensesQuery.dto';
 import { Expense } from '../models/Expense.model';
 import { IFilterMeta } from '@/interfaces/Model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetExpensesService {
   constructor(
     private readonly transformer: TransformerInjectable,
     private readonly dynamicListService: DynamicListService,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Expense.name)
     private readonly expense: TenantModelProxy<typeof Expense>,
@@ -63,6 +65,16 @@ export class GetExpensesService {
       results,
       new ExpenseTransfromer(),
     );
+
+    // Attach the custom field values.
+    const customFieldsMap = await this.customFieldValuesService.getValuesBulk(
+      'Expense',
+      data.map((expense) => expense.id),
+    );
+    data.forEach((expense) => {
+      expense.customFields = customFieldsMap[expense.id] ?? {};
+    });
+
     return {
       data,
       pagination,

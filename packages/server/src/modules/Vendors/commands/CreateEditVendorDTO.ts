@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { defaultTo, isEmpty } from 'lodash';
+import { defaultTo, isEmpty, omit } from 'lodash';
 import { Injectable } from '@nestjs/common';
 import { IVendorEditDTO, IVendorNewDTO } from '../types/Vendors.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
@@ -23,7 +23,7 @@ export class CreateEditVendorDTOService {
     const { code, ...rest } = vendorDTO;
 
     return {
-      ...rest,
+      ...omit(rest, ['customFields']),
       // Blank codes are stored as NULL to avoid `CONTACTS_CODE_UNIQUE` collisions.
       ...(typeof code === 'string'
         ? { code: code.trim() ? code.trim() : null }

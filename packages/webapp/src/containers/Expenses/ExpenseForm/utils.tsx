@@ -54,6 +54,7 @@ export const defaultExpense: ExpenseFormValues = {
   exchangeRate: 1,
   categories: [...repeatValue(defaultExpenseEntry, MIN_LINES_NUMBER)],
   attachments: [],
+  customFields: {},
 };
 
 /**

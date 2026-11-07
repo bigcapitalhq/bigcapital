@@ -58,6 +58,7 @@ import { InvoiceCostGLEntriesSubscriber } from './subscribers/InvoiceCostGLEntri
 import { InvoicePaymentGLRewriteSubscriber } from './subscribers/InvoicePaymentGLRewriteSubscriber';
 import { SaleInvoiceWriteInventoryTransactionsSubscriber } from './subscribers/InvoiceWriteInventoryTransactions';
 import { SaleInvoiceAutoIncrementSubscriber } from './subscribers/SaleInvoiceAutoIncrementSubscriber';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 import { SaleInvoiceSmsNotificationSubscriber } from './subscribers/SaleInvoiceSmsNotificationSubscriber';
 import { SaleInvoiceCostGLEntries } from './SaleInvoiceCostGLEntries';
 import { InvoicePaymentsGLEntriesRewrite } from './InvoicePaymentsGLRewrite';
@@ -90,6 +91,7 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
     forwardRef(() => InventoryCostModule),
     forwardRef(() => PaymentLinksModule),
     DynamicListModule,
+    CustomFieldsModule,
     BullModule.registerQueue({ name: SendSaleInvoiceQueue }),
     BullBoardModule.forFeature({
       name: SendSaleInvoiceQueue,

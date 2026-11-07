@@ -82,10 +82,10 @@ export class BillDTOTransformer {
     )(asyncEntries);
 
     const initialDTO = {
-      ...formatDateFields(omit(billDTO, ['open', 'entries', 'attachments']), [
-        'billDate',
-        'dueDate',
-      ]),
+      ...formatDateFields(
+        omit(billDTO, ['open', 'entries', 'attachments', 'customFields']),
+        ['billDate', 'dueDate'],
+      ),
       amount,
       landedCostAmount: 0,
       currencyCode: vendor.currencyCode,

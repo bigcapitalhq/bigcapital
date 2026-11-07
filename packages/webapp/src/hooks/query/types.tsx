@@ -37,6 +37,7 @@ export { ExpensesQueryKeys } from './expenses';
 export { ManualJournalsQueryKeys } from './manual-journals';
 export { LandedCostQueryKeys } from './landed-cost';
 export { ContactsQueryKeys } from './contacts';
+export { CustomFieldsQueryKeys } from './custom-fields';
 export { CashflowAccountsQueryKeys } from './cashflow-accounts';
 export { TransactionsLockingQueryKeys } from './transactions-locking';
 export { WarehousesQueryKeys } from './warehouses';

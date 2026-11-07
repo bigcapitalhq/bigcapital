@@ -4,6 +4,21 @@ import { MetableModel } from '../types/DynamicList.types';
 export class DynamicFilterAbstractor {
   public model: MetableModel;
   public dynamicFilters: IDynamicFilter[];
+  public customFields: Record<string, any> = {};
+
+  /**
+   * Sets the custom fields map.
+   */
+  public setCustomFields(customFields: Record<string, any>): void {
+    this.customFields = customFields ?? {};
+  }
+
+  /**
+   * Resolves a model field or a custom field by key.
+   */
+  protected getField(key: string): any {
+    return this.customFields?.[key] ?? this.model?.getField(key);
+  }
 
   /**
    * Extract relation table name from relation.

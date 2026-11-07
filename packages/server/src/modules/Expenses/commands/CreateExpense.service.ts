@@ -13,6 +13,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateExpenseDto } from '../dtos/Expense.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class CreateExpense {
@@ -29,6 +30,7 @@ export class CreateExpense {
     private readonly uow: UnitOfWork,
     private readonly validator: CommandExpenseValidator,
     private readonly transformDTO: ExpenseDTOTransformer,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
@@ -108,6 +110,16 @@ export class CreateExpense {
       const expense = await this.expenseModel()
         .query(trx)
         .upsertGraph(expenseObj);
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'Expense',
+        expense.id,
+        expenseDTO.customFields,
+        trx,
+        { isCreate: true },
+      );
+
       // Triggers `onExpenseCreated` event.
       await this.eventEmitter.emitAsync(events.expenses.onCreated, {
         expenseId: expense.id,

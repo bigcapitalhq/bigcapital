@@ -32,7 +32,15 @@ export class BillTransformer extends Transformer {
       'entries',
       'attachments',
       'branch',
+      'customFields',
     ];
+  };
+
+  /**
+   * Retrieve the custom fields values.
+   */
+  public customFields = (): Record<string, unknown> => {
+    return this.options?.customFields ?? {};
   };
 
   /**

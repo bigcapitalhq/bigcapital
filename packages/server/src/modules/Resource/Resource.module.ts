@@ -4,9 +4,15 @@ import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
 import { AccountsModule } from '../Accounts/Accounts.module';
 import { ResourceController } from './Resource.controller';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 
 @Module({
-  imports: [BranchesModule, WarehousesModule, AccountsModule],
+  imports: [
+    BranchesModule,
+    WarehousesModule,
+    AccountsModule,
+    CustomFieldsModule,
+  ],
   providers: [ResourceService],
   exports: [ResourceService],
   controllers: [ResourceController],

@@ -24,6 +24,7 @@ export class DynamicFilter<R extends object> extends DynamicFilterAbstractor {
    * @param {IDynamicFilter} filterRole - Filter role.
    */
   public setFilter = (dynamicFilter: DynamicFilterRoleAbstractor) => {
+    dynamicFilter.setCustomFields(this.customFields);
     dynamicFilter.setModel(this.model);
     dynamicFilter.onInitialize();
 

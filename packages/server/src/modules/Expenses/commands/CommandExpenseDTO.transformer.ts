@@ -61,7 +61,7 @@ export class ExpenseDTOTransformer {
     )(expenseDTO.categories || []);
 
     const initialDTO = {
-      ...omit(expenseDTO, ['publish', 'attachments']),
+      ...omit(expenseDTO, ['publish', 'attachments', 'customFields']),
       categories,
       totalAmount,
       landedCostAmount,

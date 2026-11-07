@@ -4,6 +4,7 @@ import { BillTransformer } from './Bill.transformer';
 import { Bill } from '../models/Bill';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetBill {
@@ -12,6 +13,7 @@ export class GetBill {
 
     private transformer: TransformerInjectable,
     private validators: BillsValidators,
+    private customFieldValuesService: CustomFieldValuesService,
   ) {}
 
   /**
@@ -32,6 +34,12 @@ export class GetBill {
     // Validates the bill existence.
     this.validators.validateBillExistance(bill);
 
-    return this.transformer.transform(bill, new BillTransformer());
+    const customFields = await this.customFieldValuesService.getValues(
+      'Bill',
+      billId,
+    );
+    return this.transformer.transform(bill, new BillTransformer(), {
+      customFields,
+    });
   }
 }

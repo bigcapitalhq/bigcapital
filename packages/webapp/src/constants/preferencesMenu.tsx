@@ -74,6 +74,11 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     disabled: false,
     href: '/preferences/items',
   },
+  {
+    text: <T id={'custom_fields'} />,
+    disabled: false,
+    href: '/preferences/custom-fields',
+  },
   // {
   //   text: 'Integrations',
   //   disabled: false,

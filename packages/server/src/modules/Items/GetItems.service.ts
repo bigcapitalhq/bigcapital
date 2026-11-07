@@ -8,12 +8,14 @@ import { ItemTransformer } from './Item.transformer';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { ISortOrder } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetItemsService {
   constructor(
     private readonly dynamicListService: DynamicListService,
     private readonly transformer: TransformerInjectable,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
@@ -66,6 +68,16 @@ export class GetItemsService {
 
     // Retrieves the transformed items.
     const data = await this.transformer.transform(items, new ItemTransformer());
+
+    // Attach the custom field values.
+    const customFieldsMap = await this.customFieldValuesService.getValuesBulk(
+      'Item',
+      data.map((item) => item.id),
+    );
+    data.forEach((item) => {
+      item.customFields = customFieldsMap[item.id] ?? {};
+    });
+
     return {
       data,
       pagination,

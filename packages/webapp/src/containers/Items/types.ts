@@ -21,6 +21,7 @@ export interface ItemFormValues {
   sellDescription: string;
   purchaseDescription: string;
   purchaseTaxRateId: number | string;
+  customFields: Record<string, unknown>;
 }
 
 export type ItemFormType = 'service' | 'non-inventory' | 'inventory';

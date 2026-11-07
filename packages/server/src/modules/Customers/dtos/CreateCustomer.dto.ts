@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsString,
   ValidateIf,
 } from 'class-validator';
@@ -167,4 +168,15 @@ export class CreateCustomerDto extends ContactAddressDto {
   @IsOptional()
   @IsString()
   code?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    example: { cf_priority: 'High' },
+  })
+  @IsOptional()
+  @IsObject()
+  customFields?: Record<string, unknown>;
 }

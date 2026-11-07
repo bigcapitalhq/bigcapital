@@ -1,5 +1,5 @@
 import { ContactAddressDto } from '@/modules/Customers/dtos/ContactAddress.dto';
-import { IsEmail, IsString, IsBoolean } from 'class-validator';
+import { IsEmail, IsObject, IsString, IsBoolean } from 'class-validator';
 import { IsOptional } from '@/common/decorators/Validators';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -66,4 +66,15 @@ export class EditVendorDto extends ContactAddressDto {
   @IsOptional()
   @IsString()
   code?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    example: { cf_priority: 'High' },
+  })
+  @IsOptional()
+  @IsObject()
+  customFields?: Record<string, unknown>;
 }

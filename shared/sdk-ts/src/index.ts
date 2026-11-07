@@ -33,6 +33,7 @@ export * from './pdf-templates';
 export * from './invite';
 export * from './authentication';
 export * from './contacts';
+export * from './custom-fields';
 export * from './items-categories';
 export * from './views';
 export * from './transactions-locking';

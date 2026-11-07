@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { useBillDrawerContext } from './BillDrawerProvider';
 import { BillDetailsStatus } from './utils';
 import {
-  FormatDate,
   DetailsMenu,
   DetailItem,
   Row,
@@ -15,6 +14,7 @@ import {
   VendorDrawerLink,
   ExchangeRateDetailItem,
 } from '@/components';
+import { CustomFieldsDetailItems } from '@/components/CustomFields';
 
 /**
  * Bill detail header.
@@ -81,6 +81,17 @@ export function BillDetailHeader() {
             <DetailItem
               label={intl.get('bill.details.created_at')}
               children={bill.formattedCreatedAt}
+            />
+          </DetailsMenu>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={12}>
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+            <CustomFieldsDetailItems
+              resource={'Bill'}
+              values={bill.customFields}
             />
           </DetailsMenu>
         </Col>

@@ -11,6 +11,7 @@ import { Vendor } from '../models/Vendor';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditVendorDto } from '../dtos/EditVendor.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class EditVendorService {
@@ -18,6 +19,7 @@ export class EditVendorService {
     private readonly eventPublisher: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly transformDTO: CreateEditVendorDTOService,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Vendor.name)
     private readonly vendorModel: TenantModelProxy<typeof Vendor>,
@@ -53,6 +55,14 @@ export class EditVendorService {
         .updateAndFetchById(vendorId, {
           ...vendorObj,
         });
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'Vendor',
+        vendorId,
+        vendorDTO.customFields,
+        trx,
+      );
 
       // Triggers `onVendorEdited` event.
       await this.eventPublisher.emitAsync(events.vendors.onEdited, {

@@ -11,6 +11,7 @@ import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateBillDto } from '../dtos/Bill.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class CreateBill {
@@ -20,6 +21,7 @@ export class CreateBill {
     private validators: BillsValidators,
     private itemsEntriesService: ItemsEntriesService,
     private transformerDTO: BillDTOTransformer,
+    private customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Bill.name)
     private billModel: TenantModelProxy<typeof Bill>,
@@ -81,6 +83,15 @@ export class CreateBill {
       const bill = await this.billModel()
         .query(trx)
         .upsertGraphAndFetch(billObj);
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'Bill',
+        bill.id,
+        billDTO.customFields,
+        trx,
+        { isCreate: true },
+      );
 
       // Triggers `onBillCreated` event.
       await this.eventPublisher.emitAsync(events.bill.onCreated, {

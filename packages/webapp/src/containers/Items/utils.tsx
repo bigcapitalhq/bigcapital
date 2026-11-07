@@ -51,6 +51,7 @@ const defaultInitialValues: ItemFormValues = {
   sellDescription: '',
   purchaseDescription: '',
   purchaseTaxRateId: '',
+  customFields: {},
 };
 
 type ItemsSettings = {

@@ -13,6 +13,7 @@ export * from './inventory-adjustments';
 export * from './customers';
 export * from './vendors';
 export * from './contacts';
+export * from './custom-fields';
 export * from './users';
 export * from './roles';
 export * from './invite';

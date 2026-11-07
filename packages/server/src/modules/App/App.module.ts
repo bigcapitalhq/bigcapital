@@ -96,6 +96,7 @@ import { ExportModule } from '../Export/Export.module';
 import { ImportModule } from '../Import/Import.module';
 import { CreditNotesApplyInvoiceModule } from '../CreditNotesApplyInvoice/CreditNotesApplyInvoice.module';
 import { ResourceModule } from '../Resource/Resource.module';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 import { ViewsModule } from '../Views/Views.module';
 import { CurrenciesModule } from '../Currencies/Currencies.module';
 import { MiscellaneousModule } from '../Miscellaneous/Miscellaneous.module';
@@ -260,6 +261,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     ExportModule,
     ImportModule,
     ResourceModule,
+    CustomFieldsModule,
     ViewsModule,
     CurrenciesModule,
     MiscellaneousModule,

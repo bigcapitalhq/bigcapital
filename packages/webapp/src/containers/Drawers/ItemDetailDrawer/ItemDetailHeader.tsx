@@ -4,6 +4,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import { If, DetailsMenu, DetailItem, Card } from '@/components';
+import { CustomFieldsDetailItems } from '@/components/CustomFields';
 
 /**
  * Item header drawer of readonly details.
@@ -112,6 +113,10 @@ export function ItemDetailHeader() {
           <DetailItem
             label={intl.get('item.purchase_description')}
             children={defaultTo(item?.purchaseDescription, '-')}
+          />
+          <CustomFieldsDetailItems
+            resource={'Item'}
+            values={item?.customFields}
           />
         </DetailsMenu>
       </div>

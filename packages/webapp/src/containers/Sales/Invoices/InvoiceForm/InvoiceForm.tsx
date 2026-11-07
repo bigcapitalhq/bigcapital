@@ -31,6 +31,10 @@ import {
 } from './utils';
 import type { InvoiceFormValues } from './utils';
 import { AppToaster, Box } from '@/components';
+import {
+  CustomFieldsFormSection,
+  useCustomFieldsValidationSchema,
+} from '@/components/CustomFields';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
@@ -167,12 +171,14 @@ function InvoiceFormRoot({}: InvoiceFormRootProps) {
 
   // Edit invoice form schema.
   const EditInvoiceFormSchema = getEditInvoiceFormSchema();
+  const customFieldsSchema = useCustomFieldsValidationSchema('SaleInvoice');
+  const validationSchema = (
+    isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
+  ).concat(customFieldsSchema as any);
 
   return (
     <Formik<InvoiceFormValues>
-      validationSchema={
-        isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
-      }
+      validationSchema={validationSchema}
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >
@@ -192,6 +198,12 @@ function InvoiceFormRoot({}: InvoiceFormRootProps) {
             <Box p="18px 32px 0">
               <InvoiceFormActions />
               <InvoiceItemsEntriesEditorField />
+              <Box mt={'20px'}>
+                <CustomFieldsFormSection
+                  resource={'SaleInvoice'}
+                  title={intl.get('custom_fields.form.section_title')}
+                />
+              </Box>
             </Box>
             <InvoiceFormFooter />
           </PageForm.Body>

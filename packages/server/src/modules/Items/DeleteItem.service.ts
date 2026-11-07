@@ -10,6 +10,7 @@ import { Item } from './models/Item';
 import { ERRORS } from './Items.constants';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class DeleteItemService {
@@ -22,6 +23,7 @@ export class DeleteItemService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
@@ -54,6 +56,10 @@ export class DeleteItemService {
       await this.itemModel().query(trx).findById(itemId).deleteIfNoRelations({
         type: ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTINS,
       });
+
+      // Delete the custom field values.
+      await this.customFieldValuesService.deleteValues('Item', itemId, trx);
+
       // Triggers `onItemDeleted` event.
       await this.eventEmitter.emitAsync(events.item.onDeleted, {
         itemId,

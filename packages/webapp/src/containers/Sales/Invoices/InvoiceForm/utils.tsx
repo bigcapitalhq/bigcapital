@@ -73,6 +73,7 @@ export type InvoiceFormValues = {
   discount: string;
   discountType: 'amount' | 'percentage';
   adjustment: string;
+  customFields: Record<string, unknown>;
 };
 
 export type AggregatedTaxRate = {
@@ -121,6 +122,7 @@ export const defaultInvoice: InvoiceFormValues = {
   discount: '',
   discountType: 'amount',
   adjustment: '',
+  customFields: {},
 };
 
 // Invoice entry request schema.
