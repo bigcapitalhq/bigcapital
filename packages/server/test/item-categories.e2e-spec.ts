@@ -28,6 +28,14 @@ describe('Item Categories(e2e)', () => {
       .expect(201);
 
     expect(response.body.cost_method).toBe('FIFO');
+
+    const getResponse = await request(app.getHttpServer())
+      .get(`/item-categories/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(getResponse.body.cost_method).toBe('FIFO');
   });
 
   it('/item-categories (POST) rejects an invalid cost method', () => {

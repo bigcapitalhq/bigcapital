@@ -59,6 +59,7 @@ export function ItemCategoryFormFields(): React.ReactElement {
       <FFormGroup
         name={'costMethod'}
         label={intl.get('cost_method')}
+        helperText={intl.get('cost_method_change_hint')}
         inline
         fastField
       >

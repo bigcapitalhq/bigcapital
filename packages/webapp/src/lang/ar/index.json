@@ -83,6 +83,7 @@
   "cost_method_average": "متوسط التكلفة",
   "cost_method_fifo": "الوارد أولاً صادر أولاً (FIFO)",
   "cost_method_lifo": "الوارد أخيراً صادر أولاً (LIFO)",
+  "cost_method_change_hint": "تغيير طريقة التكلفة يعيد حساب تكلفة الأصناف في هذا التصنيف.",
   "parent_category": "التصنيف الرئيسي",
   "new": "جديد",
   "invite_user": "دعوة مستخدم",

@@ -83,6 +83,7 @@
   "cost_method_average": "Costo promedio",
   "cost_method_fifo": "Primero en entrar, primero en salir (FIFO)",
   "cost_method_lifo": "Último en entrar, primero en salir (LIFO)",
+  "cost_method_change_hint": "Cambiar el método de costo recalcula el costo de los artículos de esta categoría.",
   "parent_category": "Categoría principal",
   "new": "Nuevo",
   "invite_user": "Invitar usuario",

@@ -115,6 +115,35 @@ describe('InventoryLotCostMethod', () => {
     });
   });
 
+  it('should support decimal quantities', () => {
+    const transactions = [
+      makeTransaction({ id: 1, quantity: 1.5, rate: 10 }),
+      makeTransaction({
+        id: 2,
+        date: '2026-01-02',
+        quantity: 1.5,
+        rate: 20,
+      }),
+      makeTransaction({
+        id: 3,
+        date: '2026-01-03',
+        direction: 'OUT',
+        quantity: 2,
+        rate: 30,
+      }),
+    ];
+    const fifoCostMethod = new InventoryFIFOCostMethod();
+    const lifoCostMethod = new InventoryLIFOCostMethod();
+
+    const fifoCostTransactions =
+      fifoCostMethod.trackingCostTransactions(transactions);
+    const lifoCostTransactions =
+      lifoCostMethod.trackingCostTransactions(transactions);
+
+    expect(fifoCostTransactions[2]).toMatchObject({ quantity: 2, cost: 25 });
+    expect(lifoCostTransactions[2]).toMatchObject({ quantity: 2, cost: 35 });
+  });
+
   it('should reconstruct the remaining FIFO lots before the starting date', () => {
     const costMethod = new InventoryFIFOCostMethod();
 

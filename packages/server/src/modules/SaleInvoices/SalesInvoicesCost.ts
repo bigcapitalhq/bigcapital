@@ -29,24 +29,10 @@ export class SaleInvoicesCost {
     inventoryItemsIds: number[],
     startingDate: Date,
   ): Promise<void> {
-    const mutex = new Mutex();
-    const asyncOpers = inventoryItemsIds.map(
-      async (inventoryItemId: number) => {
-        // @todo refactor the lock acquire to be distrbuted using Redis
-        // and run the cost schedule job after running invoice transaction.
-        const release = await mutex.acquire();
-
-        try {
-          await this.inventoryService.scheduleComputeItemCost(
-            inventoryItemId,
-            startingDate,
-          );
-        } finally {
-          release();
-        }
-      },
+    return this.inventoryService.scheduleComputeCostByItemsIds(
+      inventoryItemsIds,
+      startingDate,
     );
-    await Promise.all(asyncOpers);
   }
 
   /**
