@@ -770,6 +770,15 @@ export const SidebarMenu: SidebarMenuItem[] = [
                   ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
                 },
               },
+              {
+                text: <T id={'sidebar.inventory_summary'} />,
+                href: '/financial-reports/inventory-summary',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.Report,
+                  ability: ReportsAction.READ_INVENTORY_SUMMARY,
+                },
+              },
             ],
           },
         ],

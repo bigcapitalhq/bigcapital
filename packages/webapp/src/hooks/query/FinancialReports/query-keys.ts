@@ -13,6 +13,7 @@ export const CUSTOMERS_BALANCE_SUMMARY = 'CUSTOMERS_BALANCE_SUMMARY';
 export const SALES_BY_ITEMS = 'SALES_BY_ITEMS';
 export const PURCHASES_BY_ITEMS = 'PURCHASES_BY_ITEMS';
 export const INVENTORY_VALUATION = 'INVENTORY_VALUATION';
+export const INVENTORY_SUMMARY = 'INVENTORY_SUMMARY';
 export const CASH_FLOW_STATEMENT = 'CASH_FLOW_STATEMENT';
 export const INVENTORY_ITEM_DETAILS = 'INVENTORY_ITEM_DETAILS';
 export const TRANSACTIONS_BY_REFERENCE = 'TRANSACTIONS_BY_REFERENCE';
@@ -51,6 +52,8 @@ export const financialReportsKeys = {
     [FINANCIAL_REPORT, PURCHASES_BY_ITEMS, query] as const,
   inventoryValuation: (query?: Record<string, unknown>) =>
     [FINANCIAL_REPORT, INVENTORY_VALUATION, query] as const,
+  inventorySummary: (query?: Record<string, unknown>) =>
+    [FINANCIAL_REPORT, INVENTORY_SUMMARY, query] as const,
   cashFlowStatement: (query?: Record<string, unknown>) =>
     [FINANCIAL_REPORT, CASH_FLOW_STATEMENT, query] as const,
   inventoryItemDetails: (query?: Record<string, unknown>) =>
@@ -82,6 +85,7 @@ export const FinancialReportsQueryKeys = {
   SALES_BY_ITEMS,
   PURCHASES_BY_ITEMS,
   INVENTORY_VALUATION,
+  INVENTORY_SUMMARY,
   CASH_FLOW_STATEMENT,
   INVENTORY_ITEM_DETAILS,
   TRANSACTIONS_BY_REFERENCE,

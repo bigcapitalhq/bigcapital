@@ -4207,6 +4207,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/inventory-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the inventory summary report */
+        get: operations["InventorySummaryController_getInventorySummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/sales-tax-liability-summary": {
         parameters: {
             query?: never;
@@ -16317,6 +16334,123 @@ export interface components {
             query: components["schemas"]["InventoryValuationQueryResponseDto"];
             /** @description Report metadata */
             meta: components["schemas"]["InventoryValuationMetaDto"];
+        };
+        InventorySummaryQueryResponseDto: {
+            /** @description From date */
+            fromDate: string;
+            /** @description To date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Exclude items without transactions */
+            noneTransactions: boolean;
+            /** @description Item IDs to include */
+            itemsIds: number[];
+            /** @description Warehouse IDs to include */
+            warehousesIds?: number[];
+            /** @description Branch IDs to include */
+            branchesIds?: number[];
+        };
+        InventorySummaryItemDto: {
+            /** @description Item ID */
+            id: number;
+            /** @description Item name */
+            name: string;
+            /** @description Item code */
+            code: string;
+            /** @description Opening stock quantity */
+            openingStock: number;
+            /** @description Quantity received in the period */
+            quantityIn: number;
+            /** @description Quantity issued out in the period */
+            quantityOut: number;
+            /** @description Closing stock quantity */
+            closingStock: number;
+            /** @description Formatted opening stock quantity */
+            openingStockFormatted: string;
+            /** @description Formatted quantity in */
+            quantityInFormatted: string;
+            /** @description Formatted quantity out */
+            quantityOutFormatted: string;
+            /** @description Formatted closing stock quantity */
+            closingStockFormatted: string;
+        };
+        InventorySummaryTotalDto: {
+            /** @description Total opening stock quantity */
+            openingStock: number;
+            /** @description Total quantity in */
+            quantityIn: number;
+            /** @description Total quantity out */
+            quantityOut: number;
+            /** @description Total closing stock quantity */
+            closingStock: number;
+            /** @description Formatted total opening stock quantity */
+            openingStockFormatted: string;
+            /** @description Formatted total quantity in */
+            quantityInFormatted: string;
+            /** @description Formatted total quantity out */
+            quantityOutFormatted: string;
+            /** @description Formatted total closing stock quantity */
+            closingStockFormatted: string;
+        };
+        InventorySummaryDataDto: {
+            /** @description Inventory summary items */
+            items: components["schemas"]["InventorySummaryItemDto"][];
+            /** @description Inventory summary totals */
+            total: components["schemas"]["InventorySummaryTotalDto"];
+        };
+        InventorySummaryMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        InventorySummaryResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventorySummaryQueryResponseDto"];
+            /** @description Inventory summary data */
+            data: components["schemas"]["InventorySummaryDataDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventorySummaryMetaDto"];
+        };
+        InventorySummaryTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "item_name" | "opening_stock" | "quantity_in" | "quantity_out" | "closing_stock";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        InventorySummaryTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["InventorySummaryTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
+        InventorySummaryTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["InventorySummaryTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventorySummaryQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventorySummaryMetaDto"];
         };
         SalesTaxLiabilitySummaryQueryResponseDto: {
             /** @description Start date */
@@ -31301,6 +31435,44 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["InventoryValuationResponseDto"];
                     "application/json+table": components["schemas"]["InventoryValuationTableResponseDto"];
+                };
+            };
+        };
+    };
+    InventorySummaryController_getInventorySummary: {
+        parameters: {
+            query?: {
+                /** @description Whether to exclude items without transactions */
+                noneTransactions?: boolean;
+                /** @description Items IDs for the inventory summary */
+                itemsIds?: string[];
+                /** @description Warehouses IDs for the inventory summary */
+                warehousesIds?: string[];
+                /** @description Branches IDs for the inventory summary */
+                branchesIds?: string[];
+                /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
+                numberFormat?: components["schemas"]["NumberFormatQueryDto"];
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+                accept: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The inventory summary report */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InventorySummaryResponseDto"];
+                    "application/json+table": components["schemas"]["InventorySummaryTableResponseDto"];
                 };
             };
         };
