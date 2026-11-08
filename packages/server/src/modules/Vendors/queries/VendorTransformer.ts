@@ -10,6 +10,14 @@ export class VendorTransfromer extends ContactTransfromer {
       'formattedBalance',
       'formattedOpeningBalance',
       'formattedOpeningBalanceAt',
+      'customFields',
     ];
+  };
+
+  /**
+   * Retrieve the custom fields values.
+   */
+  public customFields = (): Record<string, unknown> => {
+    return this.options?.customFields ?? {};
   };
 }

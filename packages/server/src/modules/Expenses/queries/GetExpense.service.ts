@@ -3,11 +3,13 @@ import { ExpenseTransfromer } from './Expense.transformer';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { Expense } from '../models/Expense.model';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetExpenseService {
   constructor(
     private readonly transformerService: TransformerInjectable,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Expense.name)
     private readonly expenseModel: TenantModelProxy<typeof Expense>,
@@ -28,6 +30,15 @@ export class GetExpenseService {
       .withGraphFetched('attachments')
       .throwIfNotFound();
 
-    return this.transformerService.transform(expense, new ExpenseTransfromer());
+    return this.transformerService.transform(
+      expense,
+      new ExpenseTransfromer(),
+      {
+        customFields: await this.customFieldValuesService.getValues(
+          'Expense',
+          expenseId,
+        ),
+      },
+    );
   }
 }

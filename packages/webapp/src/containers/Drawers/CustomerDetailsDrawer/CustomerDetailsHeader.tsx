@@ -3,7 +3,8 @@ import { defaultTo } from 'lodash';
 import intl from 'react-intl-universal';
 import Style from './CustomerDetailsDrawer.module.scss';
 import { useCustomerDetailsDrawerContext } from './CustomerDetailsDrawerProvider';
-import { DetailsMenu, DetailItem, T } from '@/components';
+import { DetailsMenu, DetailItem } from '@/components';
+import { CustomFieldsDetailItems } from '@/components/CustomFields';
 
 /**
  * Customer details header.
@@ -74,6 +75,10 @@ export function CustomerDetailsHeader() {
         <DetailItem
           label={intl.get('customer.drawer.label.note')}
           children={defaultTo(customer?.note, '--')}
+        />
+        <CustomFieldsDetailItems
+          resource={'Customer'}
+          values={customer?.customFields}
         />
       </DetailsMenu>
     </div>

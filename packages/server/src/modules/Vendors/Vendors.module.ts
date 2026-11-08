@@ -22,6 +22,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
 import { VendorGLEntries } from './VendorGLEntries';
 import { VendorGLEntriesStorage } from './VendorGLEntriesStorage';
 import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSubscriber';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSu
     DynamicListModule,
     LedgerModule,
     AccountsModule,
+    CustomFieldsModule,
   ],
   controllers: [VendorsController],
   providers: [

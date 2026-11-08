@@ -12,6 +12,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsPositive,
   IsString,
@@ -210,6 +211,17 @@ export class CommandBillDto {
   @ToNumber()
   @IsNumber()
   adjustment?: number;
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  @IsOptional()
+  @IsObject()
+  customFields?: Record<string, unknown>;
 }
 
 export class CreateBillDto extends CommandBillDto {}

@@ -20,9 +20,16 @@ import { ExpensesExportable } from './ExpensesExportable';
 import { ExpensesImportable } from './ExpensesImportable';
 import { BulkDeleteExpensesService } from './BulkDeleteExpenses.service';
 import { ValidateBulkDeleteExpensesService } from './ValidateBulkDeleteExpenses.service';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 
 @Module({
-  imports: [TenancyModule, LedgerModule, BranchesModule, DynamicListModule],
+  imports: [
+    TenancyModule,
+    LedgerModule,
+    BranchesModule,
+    DynamicListModule,
+    CustomFieldsModule,
+  ],
   controllers: [ExpensesController],
   exports: [CreateExpense, ExpensesExportable, ExpensesImportable],
   providers: [

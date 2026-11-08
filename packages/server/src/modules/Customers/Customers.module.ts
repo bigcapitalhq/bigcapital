@@ -22,6 +22,7 @@ import { AccountsModule } from '../Accounts/Accounts.module';
 import { CustomerGLEntries } from './CustomerGLEntries';
 import { CustomerGLEntriesStorage } from './CustomerGLEntriesStorage';
 import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerGLEntriesSubscriber';
+import { CustomFieldsModule } from '../CustomFields/CustomFields.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerG
     DynamicListModule,
     LedgerModule,
     AccountsModule,
+    CustomFieldsModule,
   ],
   controllers: [CustomersController],
   providers: [

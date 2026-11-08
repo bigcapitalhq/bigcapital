@@ -6,6 +6,7 @@ import { TransformerInjectable } from '../Transformer/TransformerInjectable.serv
 import { ItemTransformer } from './Item.transformer';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { ClsService } from 'nestjs-cls';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetItemService {
@@ -15,6 +16,7 @@ export class GetItemService {
     private readonly eventEmitter2: EventEmitter2,
     private readonly transformerInjectable: TransformerInjectable,
     private readonly clsService: ClsService,
+    private readonly customFieldValuesService: CustomFieldValuesService,
   ) {}
 
   /**
@@ -39,6 +41,12 @@ export class GetItemService {
       item,
       new ItemTransformer(),
     );
+    const customFields = await this.customFieldValuesService.getValues(
+      'Item',
+      itemId,
+    );
+    transformed.customFields = customFields;
+
     const eventPayload = { itemId };
 
     // Triggers the `onItemViewed` event.

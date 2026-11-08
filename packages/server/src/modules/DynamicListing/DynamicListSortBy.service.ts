@@ -19,8 +19,9 @@ export class DynamicListSortBy extends DynamicFilterAbstractor {
     model: MetableModel,
     columnSortBy: string,
     sortOrder: ISortOrder,
+    customFields: Record<string, any> = {},
   ) {
-    this.validateSortColumnExistance(model, columnSortBy);
+    this.validateSortColumnExistance(model, columnSortBy, customFields);
 
     return new DynamicFilterSortBy(columnSortBy, sortOrder);
   }
@@ -31,8 +32,12 @@ export class DynamicListSortBy extends DynamicFilterAbstractor {
    * @param {string} columnSortBy - Sort column
    * @throws {ServiceError}
    */
-  private validateSortColumnExistance(model: any, columnSortBy: string) {
-    const field = model.getField(columnSortBy);
+  private validateSortColumnExistance(
+    model: any,
+    columnSortBy: string,
+    customFields: Record<string, any> = {},
+  ) {
+    const field = customFields?.[columnSortBy] ?? model.getField(columnSortBy);
 
     if (!field) {
       throw new ServiceError(ERRORS.SORT_COLUMN_NOT_FOUND);

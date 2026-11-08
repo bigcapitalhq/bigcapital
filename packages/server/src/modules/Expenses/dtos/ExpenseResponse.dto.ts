@@ -282,4 +282,13 @@ export class ExpenseResponseDto {
   @ValidateNested({ each: true })
   @Type(() => ExpenseCategoryResponseDto)
   categories: ExpenseCategoryResponseDto[];
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, unknown>;
 }

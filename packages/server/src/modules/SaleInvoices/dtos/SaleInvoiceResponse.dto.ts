@@ -379,4 +379,13 @@ export class SaleInvoiceResponseDto {
     example: 15,
   })
   remainingDays: number;
+
+  @ApiProperty({
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, unknown>;
 }

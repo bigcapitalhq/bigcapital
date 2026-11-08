@@ -14,6 +14,7 @@ import {
   CustomerDrawerLink,
   ExchangeRateDetailItem,
 } from '@/components';
+import { CustomFieldsDetailItems } from '@/components/CustomFields';
 
 export function InvoiceDetailHeader() {
   const { invoice } = useInvoiceDetailDrawerContext();
@@ -84,6 +85,17 @@ export function InvoiceDetailHeader() {
             <DetailItem
               label={intl.get('invoice.details.created_at')}
               children={invoice.createdAtFormatted}
+            />
+          </DetailsMenu>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={12}>
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+            <CustomFieldsDetailItems
+              resource={'SaleInvoice'}
+              values={invoice.customFields}
             />
           </DetailsMenu>
         </Col>

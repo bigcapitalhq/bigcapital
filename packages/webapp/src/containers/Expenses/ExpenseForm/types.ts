@@ -26,6 +26,7 @@ export type ExpenseFormValues = {
   exchangeRate: number;
   categories: ExpenseEntry[];
   attachments: unknown[];
+  customFields: Record<string, unknown>;
 };
 
 export type ExpenseSubmitPayload = {

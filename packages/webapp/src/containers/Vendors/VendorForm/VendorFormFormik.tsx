@@ -19,6 +19,7 @@ import { VendorFormContent } from './VendorFormContent';
 import { useVendorFormContext } from './VendorFormProvider';
 import type { VendorFormSubmitPayload } from './VendorFormProvider';
 import { AppToaster } from '@/components';
+import { useCustomFieldsValidationSchema } from '@/components/CustomFields';
 import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import { saveInvoke } from '@/utils';
@@ -60,6 +61,15 @@ function VendorFormFormikBase({
     submitPayload,
     isNewMode,
   } = useVendorFormContext();
+
+  const customFieldsSchema = useCustomFieldsValidationSchema('Vendor');
+  const validationSchema = useMemo(
+    () =>
+      (isNewMode ? CreateVendorFormSchema : EditVendorFormSchema).concat(
+        customFieldsSchema as any,
+      ),
+    [isNewMode, customFieldsSchema],
+  );
 
   const initialFormValues = useMemo<VendorFormValues>(() => {
     const merged: VendorFormValues = {
@@ -121,9 +131,7 @@ function VendorFormFormikBase({
 
   return (
     <Formik<VendorFormValues>
-      validationSchema={
-        isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
-      }
+      validationSchema={validationSchema}
       initialValues={initialFormValues}
       onSubmit={handleFormSubmit}
     >

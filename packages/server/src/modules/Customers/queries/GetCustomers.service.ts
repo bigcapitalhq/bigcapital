@@ -7,12 +7,14 @@ import { CustomerTransfromer } from './CustomerTransformer';
 import { GetCustomersResponse } from '../types/Customers.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GetCustomersQueryDto } from '../dtos/GetCustomersQuery.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetCustomers {
   constructor(
     private dynamicListService: DynamicListService,
     private transformer: TransformerInjectable,
+    private customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Customer.name)
     private customerModel: TenantModelProxy<typeof Customer>,
@@ -62,6 +64,16 @@ export class GetCustomers {
       results,
       new CustomerTransfromer(),
     );
+
+    // Attach the custom field values.
+    const customFieldsMap = await this.customFieldValuesService.getValuesBulk(
+      'Customer',
+      data.map((customer) => customer.id),
+    );
+    data.forEach((customer) => {
+      customer.customFields = customFieldsMap[customer.id] ?? {};
+    });
+
     return {
       data,
       pagination,

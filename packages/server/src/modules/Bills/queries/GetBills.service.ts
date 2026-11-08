@@ -7,12 +7,14 @@ import { IFilterMeta, IPaginationMeta } from '@/interfaces/Model';
 import { BillTransformer } from './Bill.transformer';
 import { GetBillsQueryDto } from '../dtos/GetBillsQuery.dto';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetBillsService {
   constructor(
     private transformer: TransformerInjectable,
     private dynamicListService: DynamicListService,
+    private customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
   ) {}
@@ -60,6 +62,16 @@ export class GetBillsService {
       results,
       new BillTransformer(),
     );
+
+    // Attach the custom field values.
+    const customFieldsMap = await this.customFieldValuesService.getValuesBulk(
+      'Bill',
+      data.map((bill) => bill.id),
+    );
+    data.forEach((bill) => {
+      bill.customFields = customFieldsMap[bill.id] ?? {};
+    });
+
     return {
       data,
       pagination,

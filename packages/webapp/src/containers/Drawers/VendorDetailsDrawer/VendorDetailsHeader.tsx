@@ -3,7 +3,8 @@ import { defaultTo } from 'lodash';
 import intl from 'react-intl-universal';
 import Style from './VendorDetailsDrawer.module.scss';
 import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
-import { T, DetailsMenu, DetailItem } from '@/components';
+import { DetailsMenu, DetailItem } from '@/components';
+import { CustomFieldsDetailItems } from '@/components/CustomFields';
 
 /**
  * Vendor details header.
@@ -69,6 +70,10 @@ export function VendorDetailsHeader() {
         <DetailItem
           label={intl.get('vendor.drawer.label.note')}
           children={defaultTo(vendor?.note, '--')}
+        />
+        <CustomFieldsDetailItems
+          resource={'Vendor'}
+          values={vendor?.customFields}
         />
       </DetailsMenu>
     </div>

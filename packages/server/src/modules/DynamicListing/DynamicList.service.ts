@@ -8,6 +8,7 @@ import { DynamicListFilterRoles } from './DynamicListFilterRoles.service';
 import { DynamicFilter } from './DynamicFilter';
 import { MetableModel } from './types/DynamicList.types';
 import { IFilterMeta } from '@/interfaces/Model';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class DynamicListService {
@@ -16,6 +17,7 @@ export class DynamicListService {
     private dynamicListSearch: DynamicListSearch,
     private dynamicListSortBy: DynamicListSortBy,
     private dynamicListView: DynamicListCustomView,
+    private customFieldValuesService: CustomFieldValuesService,
   ) {}
 
   /**
@@ -50,6 +52,14 @@ export class DynamicListService {
   ) => {
     const dynamicFilter = new DynamicFilter<IFilterMeta>(model);
 
+    // Load the custom fields attached to the model resource.
+    const customFields =
+      await this.customFieldValuesService.buildDynamicListFields(
+        model.name,
+        model.tableName,
+      );
+    dynamicFilter.setCustomFields(customFields);
+
     // Parses the filter object.
     const parsedFilter = this.parseFilterObject(model, filter);
 
@@ -57,6 +67,7 @@ export class DynamicListService {
     if (filter.searchKeyword) {
       const dynamicListSearch = this.dynamicListSearch.dynamicSearch(
         filter.searchKeyword,
+        this.customFieldValuesService.getSearchRoles(customFields),
       );
       dynamicFilter.setFilter(dynamicListSearch);
     }
@@ -75,6 +86,7 @@ export class DynamicListService {
         model,
         parsedFilter.columnSortBy,
         parsedFilter.sortOrder,
+        customFields,
       );
       dynamicFilter.setFilter(dynmaicListSortBy);
     }
@@ -83,6 +95,7 @@ export class DynamicListService {
       const dynamicFilterRoles = this.dynamicListFilterRoles.dynamicList(
         model,
         parsedFilter.filterRoles,
+        customFields,
       );
       dynamicFilter.setFilter(dynamicFilterRoles);
     }

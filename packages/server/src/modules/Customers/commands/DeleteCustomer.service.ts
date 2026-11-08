@@ -10,6 +10,7 @@ import { Customer } from '../models/Customer';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { ERRORS } from '../constants';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class DeleteCustomer {
@@ -21,6 +22,7 @@ export class DeleteCustomer {
   constructor(
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
+    private customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Customer.name)
     private customerModel: TenantModelProxy<typeof Customer>,
@@ -55,6 +57,14 @@ export class DeleteCustomer {
           type: ERRORS.CUSTOMER_HAS_TRANSACTIONS,
           message: 'Customer has associated transactions',
         });
+
+      // Delete the custom field values.
+      await this.customFieldValuesService.deleteValues(
+        'Customer',
+        customerId,
+        transaction,
+      );
+
       // Throws `onCustomerDeleted` event.
       await this.eventPublisher.emitAsync(events.customers.onDeleted, {
         customerId,

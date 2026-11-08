@@ -11,6 +11,7 @@ import {
   IExpenseDeletingPayload,
 } from '../interfaces/Expenses.interface';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class DeleteExpense {
@@ -25,6 +26,7 @@ export class DeleteExpense {
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly validator: CommandExpenseValidator,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Expense.name)
     private expenseModel: TenantModelProxy<typeof Expense>,
@@ -62,6 +64,13 @@ export class DeleteExpense {
 
       // Deletes expense transactions.
       await this.expenseModel().query(trx).findById(expenseId).delete();
+
+      // Delete the custom field values.
+      await this.customFieldValuesService.deleteValues(
+        'Expense',
+        expenseId,
+        trx,
+      );
 
       // Triggers `onExpenseDeleted` event.
       await this.eventEmitter.emitAsync(events.expenses.onDeleted, {

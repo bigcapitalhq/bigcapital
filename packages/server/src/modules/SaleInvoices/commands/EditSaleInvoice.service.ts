@@ -14,6 +14,7 @@ import { SaleInvoice } from '../models/SaleInvoice';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class EditSaleInvoice {
@@ -32,6 +33,7 @@ export class EditSaleInvoice {
     private readonly validators: CommandSaleInvoiceValidators,
     private readonly transformerDTO: CommandSaleInvoiceDTOTransformer,
     private readonly uow: UnitOfWork,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
@@ -73,6 +75,15 @@ export class EditSaleInvoice {
           id: saleInvoiceId,
           ...saleInvoiceObj,
         });
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'SaleInvoice',
+        saleInvoiceId,
+        saleInvoiceDTO.customFields,
+        trx,
+      );
+
       // Edit event payload.
       const editEventPayload: ISaleInvoiceEditedPayload = {
         saleInvoiceId,

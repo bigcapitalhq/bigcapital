@@ -3,11 +3,13 @@ import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectab
 import { Vendor } from '../models/Vendor';
 import { VendorTransfromer } from './VendorTransformer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetVendorService {
   constructor(
     private readonly transformer: TransformerInjectable,
+    private readonly customFieldValuesService: CustomFieldValuesService,
     @Inject(Vendor.name)
     private readonly vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
@@ -23,6 +25,12 @@ export class GetVendorService {
       .throwIfNotFound();
 
     // Transformes the vendor.
-    return this.transformer.transform(vendor, new VendorTransfromer());
+    const customFields = await this.customFieldValuesService.getValues(
+      'Vendor',
+      vendorId,
+    );
+    return this.transformer.transform(vendor, new VendorTransfromer(), {
+      customFields,
+    });
   }
 }

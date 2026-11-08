@@ -13,6 +13,7 @@ import { Expense } from '../models/Expense.model';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditExpenseDto } from '../dtos/Expense.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class EditExpense {
@@ -29,6 +30,7 @@ export class EditExpense {
     private uow: UnitOfWork,
     private validator: CommandExpenseValidator,
     private transformDTO: ExpenseDTOTransformer,
+    private customFieldValuesService: CustomFieldValuesService,
     @Inject(Expense.name)
     private expenseModel: TenantModelProxy<typeof Expense>,
 
@@ -131,6 +133,14 @@ export class EditExpense {
           id: expenseId,
           ...expenseObj,
         });
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'Expense',
+        expenseId,
+        expenseDTO.customFields,
+        trx,
+      );
 
       // Triggers `onExpenseCreated` event.
       await this.eventEmitter.emitAsync(events.expenses.onEdited, {

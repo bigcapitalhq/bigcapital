@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { defaultTo } from 'lodash';
+import { defaultTo, omit } from 'lodash';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { IItemEventCreatedPayload } from '@/interfaces/Item';
@@ -10,6 +10,7 @@ import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { CreateItemDto } from './dtos/Item.dto';
 import { DEFAULT_ITEM_UNIT } from './Items.constants';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CreateItemService {
@@ -24,6 +25,7 @@ export class CreateItemService {
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly validators: ItemsValidators,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
@@ -83,7 +85,7 @@ export class CreateItemService {
    */
   private transformNewItemDTOToModel(itemDTO: CreateItemDto) {
     return {
-      ...itemDTO,
+      ...omit(itemDTO, ['customFields']),
       unit: defaultTo(itemDTO.unit, DEFAULT_ITEM_UNIT),
       active: Boolean(defaultTo(itemDTO.active, true)),
       quantityOnHand: itemDTO.type === 'inventory' ? 0 : null,
@@ -115,6 +117,16 @@ export class CreateItemService {
         .insertAndFetch({
           ...itemInsert,
         });
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'Item',
+        item.id,
+        itemDTO.customFields,
+        trx,
+        { isCreate: true },
+      );
+
       // Triggers `onItemCreated` event.
       await this.eventEmitter.emitAsync(events.item.onCreated, {
         item,

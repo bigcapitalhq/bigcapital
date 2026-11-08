@@ -14,6 +14,7 @@ import {
 import type { ItemFormValues, ItemFormSubmitPayload } from './types';
 import type { CreateItemBody, EditItemBody } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
+import { useCustomFieldsValidationSchema } from '@/components/CustomFields';
 import { CLASSES } from '@/constants/classes';
 import { safeInvoke } from '@/utils';
 
@@ -59,6 +60,10 @@ export function ItemFormFormik({
 
   // Initial values in create and edit mode.
   const initialValues = useItemFormInitialValues(item, initialValuesComponent);
+  const customFieldsSchema = useCustomFieldsValidationSchema('Item');
+  const validationSchema = (
+    isNewMode ? CreateItemFormSchema : EditItemFormSchema
+  ).concat(customFieldsSchema as any);
 
   // Handles the form submit.
   const handleFormSubmit = (
@@ -121,7 +126,7 @@ export function ItemFormFormik({
     >
       <Formik<ItemFormValues>
         enableReinitialize={true}
-        validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
+        validationSchema={validationSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >

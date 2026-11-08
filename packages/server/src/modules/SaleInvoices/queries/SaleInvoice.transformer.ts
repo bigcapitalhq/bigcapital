@@ -32,7 +32,15 @@ export class SaleInvoiceTransformer extends Transformer {
       'taxes',
       'entries',
       'attachments',
+      'customFields',
     ];
+  };
+
+  /**
+   * Retrieve the custom fields values.
+   */
+  public customFields = (): Record<string, unknown> => {
+    return this.options?.customFields ?? {};
   };
 
   /**

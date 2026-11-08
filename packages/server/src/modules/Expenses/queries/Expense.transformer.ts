@@ -20,7 +20,15 @@ export class ExpenseTransfromer extends Transformer {
       'categories',
       'attachments',
       'branch',
+      'customFields',
     ];
+  };
+
+  /**
+   * Retrieve the custom fields values.
+   */
+  public customFields = (): Record<string, unknown> => {
+    return this.options?.customFields ?? {};
   };
 
   /**

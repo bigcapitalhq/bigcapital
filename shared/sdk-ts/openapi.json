@@ -1210,6 +1210,409 @@
         ]
       }
     },
+    "/api/custom-fields": {
+      "post": {
+        "operationId": "CustomFieldsController_createCustomField",
+        "summary": "Creates a new custom field.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomFieldDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The custom field has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFieldResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Custom Fields"
+        ]
+      },
+      "get": {
+        "operationId": "CustomFieldsController_getCustomFields",
+        "summary": "Retrieves the custom fields list.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resourceName",
+            "required": false,
+            "in": "query",
+            "description": "Filter by resource/module.",
+            "schema": {
+              "enum": [
+                "Customer",
+                "Vendor",
+                "Item",
+                "SaleInvoice",
+                "Bill",
+                "Expense"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeInactive",
+            "required": false,
+            "in": "query",
+            "description": "Include inactive custom fields.",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The custom fields have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFieldsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Custom Fields"
+        ]
+      }
+    },
+    "/api/custom-fields/{id}": {
+      "get": {
+        "operationId": "CustomFieldsController_getCustomField",
+        "summary": "Retrieves the given custom field details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Custom field id.",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The custom field has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFieldResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Custom Fields"
+        ]
+      },
+      "put": {
+        "operationId": "CustomFieldsController_editCustomField",
+        "summary": "Edits the given custom field.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Custom field id.",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditCustomFieldDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The custom field has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFieldResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Custom Fields"
+        ]
+      },
+      "delete": {
+        "operationId": "CustomFieldsController_deleteCustomField",
+        "summary": "Deletes the given custom field.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Custom field id.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "force",
+            "required": false,
+            "in": "query",
+            "description": "Force delete the field and all stored values.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The custom field has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFieldResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Custom Fields"
+        ]
+      }
+    },
+    "/api/custom-fields/{id}/status": {
+      "put": {
+        "operationId": "CustomFieldsController_updateCustomFieldStatus",
+        "summary": "Activates or deactivates the given custom field.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Custom field id.",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomFieldStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The custom field status has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomFieldResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Custom Fields"
+        ]
+      }
+    },
+    "/api/custom-fields/reorder": {
+      "post": {
+        "operationId": "CustomFieldsController_reorderCustomFields",
+        "summary": "Reorders custom fields.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderCustomFieldsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The custom fields have been successfully reordered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomFieldResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Custom Fields"
+        ]
+      }
+    },
     "/api/inventory-adjustments/quick": {
       "post": {
         "operationId": "InventoryAdjustmentsController_createQuickInventoryAdjustment",
@@ -26786,6 +27189,14 @@
             "type": "string",
             "description": "The date when the item was last updated",
             "example": "2024-03-20T10:00:00Z"
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -26943,6 +27354,14 @@
             "type": "array",
             "items": {
               "type": "number"
+            }
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
             }
           }
         },
@@ -27118,11 +27537,407 @@
             "items": {
               "type": "number"
             }
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
           "name",
           "type"
+        ]
+      },
+      "CustomFieldResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Custom field ID."
+          },
+          "resourceName": {
+            "type": "string",
+            "description": "Resource/module name.",
+            "example": "Customer",
+            "enum": [
+              "Customer",
+              "Vendor",
+              "Item",
+              "SaleInvoice",
+              "Bill",
+              "Expense"
+            ]
+          },
+          "fieldName": {
+            "type": "string",
+            "description": "API field name.",
+            "example": "cf_priority"
+          },
+          "label": {
+            "type": "string",
+            "description": "Display label.",
+            "example": "Priority"
+          },
+          "dataType": {
+            "type": "string",
+            "description": "Data type.",
+            "example": "text",
+            "enum": [
+              "text",
+              "textarea",
+              "number",
+              "decimal",
+              "date",
+              "checkbox",
+              "email",
+              "url",
+              "phone",
+              "dropdown",
+              "multiselect"
+            ]
+          },
+          "helpText": {
+            "type": "string",
+            "description": "Help text."
+          },
+          "placeholder": {
+            "type": "string",
+            "description": "Placeholder text."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether the field is required."
+          },
+          "unique": {
+            "type": "boolean",
+            "description": "Whether the field value is unique."
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the field is active."
+          },
+          "defaultValue": {
+            "type": "object",
+            "description": "Default value."
+          },
+          "options": {
+            "description": "Options for dropdown and multi-select fields.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "inputFormat": {
+            "type": "string",
+            "description": "Regex input format."
+          },
+          "minLength": {
+            "type": "number",
+            "description": "Minimum text length."
+          },
+          "maxLength": {
+            "type": "number",
+            "description": "Maximum text length."
+          },
+          "minValue": {
+            "type": "number",
+            "description": "Minimum numeric value."
+          },
+          "maxValue": {
+            "type": "number",
+            "description": "Maximum numeric value."
+          },
+          "sortOrder": {
+            "type": "number",
+            "description": "Display order."
+          },
+          "valuesCount": {
+            "type": "number",
+            "description": "Number of stored values.",
+            "example": 12
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Created at timestamp."
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Updated at timestamp."
+          }
+        },
+        "required": [
+          "id",
+          "resourceName",
+          "fieldName",
+          "label",
+          "dataType",
+          "required",
+          "unique",
+          "active",
+          "sortOrder",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CustomFieldsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Custom fields list.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomFieldResponseDto"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateCustomFieldDto": {
+        "type": "object",
+        "properties": {
+          "resourceName": {
+            "type": "string",
+            "description": "The resource/module the custom field belongs to.",
+            "example": "Customer",
+            "enum": [
+              "Customer",
+              "Vendor",
+              "Item",
+              "SaleInvoice",
+              "Bill",
+              "Expense"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Display label of the custom field.",
+            "example": "Priority"
+          },
+          "dataType": {
+            "type": "string",
+            "description": "The data type of the custom field.",
+            "example": "text",
+            "enum": [
+              "text",
+              "textarea",
+              "number",
+              "decimal",
+              "date",
+              "checkbox",
+              "email",
+              "url",
+              "phone",
+              "dropdown",
+              "multiselect"
+            ]
+          },
+          "helpText": {
+            "type": "string",
+            "description": "Help text displayed with the field."
+          },
+          "placeholder": {
+            "type": "string",
+            "description": "Placeholder text displayed in the field."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether the field is required.",
+            "default": false
+          },
+          "unique": {
+            "type": "boolean",
+            "description": "Whether the field value must be unique.",
+            "default": false
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the field is active.",
+            "default": true
+          },
+          "defaultValue": {
+            "description": "Default value of the field.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "array",
+                "items": {}
+              }
+            ]
+          },
+          "options": {
+            "description": "Options for dropdown and multi-select fields.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "inputFormat": {
+            "type": "string",
+            "description": "A regular expression used to validate text values."
+          },
+          "minLength": {
+            "type": "number",
+            "description": "Minimum text length."
+          },
+          "maxLength": {
+            "type": "number",
+            "description": "Maximum text length."
+          },
+          "minValue": {
+            "type": "number",
+            "description": "Minimum numeric value."
+          },
+          "maxValue": {
+            "type": "number",
+            "description": "Maximum numeric value."
+          },
+          "sortOrder": {
+            "type": "number",
+            "description": "Display order."
+          }
+        },
+        "required": [
+          "resourceName",
+          "label",
+          "dataType"
+        ]
+      },
+      "EditCustomFieldDto": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Display label."
+          },
+          "helpText": {
+            "type": "string",
+            "description": "Help text."
+          },
+          "placeholder": {
+            "type": "string",
+            "description": "Placeholder text."
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether the field is required."
+          },
+          "unique": {
+            "type": "boolean",
+            "description": "Whether the value is unique."
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the field is active."
+          },
+          "defaultValue": {
+            "description": "Default value.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "array",
+                "items": {}
+              }
+            ]
+          },
+          "options": {
+            "description": "Options for dropdown and multi-select fields.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "inputFormat": {
+            "type": "string",
+            "description": "Regex input format."
+          },
+          "minLength": {
+            "type": "number",
+            "description": "Minimum text length."
+          },
+          "maxLength": {
+            "type": "number",
+            "description": "Maximum text length."
+          },
+          "minValue": {
+            "type": "number",
+            "description": "Minimum numeric value."
+          },
+          "maxValue": {
+            "type": "number",
+            "description": "Maximum numeric value."
+          },
+          "sortOrder": {
+            "type": "number",
+            "description": "Display order."
+          }
+        }
+      },
+      "UpdateCustomFieldStatusDto": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "description": "Whether the field is active."
+          }
+        },
+        "required": [
+          "active"
+        ]
+      },
+      "ReorderCustomFieldItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Custom field ID."
+          },
+          "sortOrder": {
+            "type": "number",
+            "description": "Display order."
+          }
+        },
+        "required": [
+          "id",
+          "sortOrder"
+        ]
+      },
+      "ReorderCustomFieldsDto": {
+        "type": "object",
+        "properties": {
+          "orders": {
+            "description": "Custom field order items.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReorderCustomFieldItemDto"
+            }
+          }
+        },
+        "required": [
+          "orders"
         ]
       },
       "ItemLinkDto": {
@@ -28970,6 +29785,14 @@
           "closingBalance": {
             "type": "number",
             "example": 1500
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -29308,6 +30131,14 @@
             "type": "number",
             "description": "Number of days remaining until the invoice is due",
             "example": 15
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -29475,6 +30306,14 @@
             "items": {
               "type": "string"
             }
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -29610,6 +30449,14 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
             }
           }
         },
@@ -31764,6 +32611,14 @@
             "items": {
               "$ref": "#/components/schemas/ExpenseCategoryResponseDto"
             }
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -31868,6 +32723,14 @@
             "items": {
               "type": "string"
             }
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -31960,6 +32823,14 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
             }
           }
         },
@@ -32711,6 +33582,14 @@
             "type": "string",
             "description": "Customer code",
             "example": "CUST-001"
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -32837,6 +33716,14 @@
           "code": {
             "type": "string",
             "description": "Customer code"
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -33055,6 +33942,14 @@
           "closingBalance": {
             "type": "number",
             "example": 1500
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -33293,6 +34188,14 @@
             "type": "string",
             "description": "Vendor code",
             "example": "VEND-001"
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -33413,6 +34316,14 @@
           "code": {
             "type": "string",
             "description": "Vendor code"
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         }
       },
@@ -35152,6 +36063,14 @@
             "description": "Number of days remaining until the bill is due",
             "example": 15,
             "nullable": true
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -35426,6 +36345,14 @@
             "type": "number",
             "description": "Adjustment value",
             "example": 50
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [
@@ -35531,6 +36458,14 @@
             "type": "number",
             "description": "Adjustment value",
             "example": 50
+          },
+          "customFields": {
+            "type": "object",
+            "description": "Custom fields values",
+            "additionalProperties": true,
+            "example": {
+              "cf_priority": "High"
+            }
           }
         },
         "required": [

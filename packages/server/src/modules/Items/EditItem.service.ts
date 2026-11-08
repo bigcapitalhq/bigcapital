@@ -8,6 +8,8 @@ import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { EditItemDto } from './dtos/Item.dto';
+import { omit } from 'lodash';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class EditItemService {
@@ -22,6 +24,7 @@ export class EditItemService {
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
     private readonly validators: ItemsValidators,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Item.name)
     private readonly itemModel: TenantModelProxy<typeof Item>,
@@ -111,7 +114,7 @@ export class EditItemService {
         : {};
 
     return {
-      ...itemDTO,
+      ...omit(itemDTO, ['customFields']),
       ...(itemDTO.type === 'inventory' && oldItem.type !== 'inventory'
         ? {
             quantityOnHand: 0,
@@ -165,6 +168,14 @@ export class EditItemService {
       const newItem = await this.itemModel()
         .query(trx)
         .patchAndFetchById(itemId, itemModel);
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'Item',
+        itemId,
+        itemDTO.customFields,
+        trx,
+      );
 
       // Edit event payload.
       const eventPayload: IItemEventEditedPayload = {

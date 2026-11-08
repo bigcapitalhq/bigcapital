@@ -55,6 +55,8 @@ export type CustomerFormValues = {
   openingBalanceAt: string;
   openingBalanceExchangeRate: string | number;
   openingBalanceBranchId: string | number;
+
+  customFields: Record<string, unknown>;
 };
 
 export const defaultInitialValues: CustomerFormValues = {
@@ -96,6 +98,8 @@ export const defaultInitialValues: CustomerFormValues = {
   openingBalanceAt: moment(new Date()).format('YYYY-MM-DD'),
   openingBalanceExchangeRate: '',
   openingBalanceBranchId: '',
+
+  customFields: {},
 };
 
 const toNumber = (value: string | number): number | undefined => {
@@ -166,6 +170,7 @@ export const transformFormToCreateRequest = (
   openingBalanceAt: values.openingBalanceAt,
   openingBalanceExchangeRate: toNumber(values.openingBalanceExchangeRate),
   openingBalanceBranchId: toNumber(values.openingBalanceBranchId),
+  customFields: values.customFields,
 });
 
 /**
@@ -204,6 +209,8 @@ export const transformFormToEditRequest = (
   shippingAddressPostcode: values.shippingAddressPostcode,
   shippingAddressPhone: values.shippingAddressPhone,
   shippingAddressState: values.shippingAddressState,
+
+  customFields: values.customFields,
 });
 
 export const useSetPrimaryBranchToForm = () => {

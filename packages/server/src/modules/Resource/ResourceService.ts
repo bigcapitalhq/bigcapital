@@ -10,6 +10,7 @@ import { IModelMeta } from '@/interfaces/Model';
 import { IModelMetaField } from '@/interfaces/Model';
 import { Features } from '@/common/types/Features';
 import { resourceToModelName } from './_utils';
+import { CustomFieldValuesService } from '../CustomFields/CustomFieldValues.service';
 
 const ERRORS = {
   RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND',
@@ -22,6 +23,7 @@ export class ResourceService {
     private readonly warehousesSettings: WarehousesSettings,
     private readonly moduleRef: ModuleRef,
     private readonly i18nService: I18nService,
+    private readonly customFieldValuesService: CustomFieldValuesService,
   ) {}
 
   /**
@@ -52,6 +54,59 @@ export class ResourceService {
 
     // Localization the fields names.
     return resourceMeta;
+  }
+
+  /**
+   * Retrieves the resource meta merged with the active custom fields.
+   *
+   * This method is used by the UI resource-meta endpoint only; import/export
+   * continue to use the static `getResourceMeta` method.
+   */
+  public async getResourceMetaWithCustomFields(
+    modelName: string,
+  ): Promise<IModelMeta> {
+    const meta = this.localizeResourceMeta(this.getResourceMeta(modelName));
+    const canonicalModelName = resourceToModelName(modelName);
+    const customFields = await this.customFieldValuesService.getDefinitions(
+      canonicalModelName,
+      { activeOnly: true },
+    );
+    const fields = { ...meta.fields };
+    const fields2 = { ...meta.fields2 };
+
+    for (const customField of customFields) {
+      const fieldType = this.customFieldValuesService.getFilterFieldType(
+        customField.dataType,
+      );
+      const options =
+        fieldType === 'enumeration'
+          ? {
+              options: (customField.options ?? []).map((option) => ({
+                key: String(option),
+                label: String(option),
+              })),
+            }
+          : {};
+
+      fields[customField.fieldName] = {
+        name: customField.label,
+        column: customField.fieldName,
+        fieldType,
+        ...(customField.required ? { required: true } : {}),
+        ...options,
+      } as IModelMetaField;
+      fields2[customField.fieldName] = {
+        name: customField.label,
+        fieldType,
+        ...(customField.required ? { required: true } : {}),
+        ...options,
+      } as IModelMetaField2;
+    }
+    return {
+      ...meta,
+      fields,
+      fields2,
+    };
   }
 
   /**

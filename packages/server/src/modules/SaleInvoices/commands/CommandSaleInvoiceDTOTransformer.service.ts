@@ -102,6 +102,7 @@ export class CommandSaleInvoiceDTOTransformer {
           'entries',
           'fromEstimateId',
           'attachments',
+          'customFields',
         ]),
         ['invoiceDate', 'dueDate'],
       ),

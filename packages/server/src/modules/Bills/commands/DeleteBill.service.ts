@@ -11,6 +11,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Bill } from '../models/Bill';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class DeleteBill {
@@ -18,6 +19,7 @@ export class DeleteBill {
     private readonly validators: BillsValidators,
     private readonly uow: UnitOfWork,
     private readonly eventPublisher: EventEmitter2,
+    private readonly customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Bill.name)
     private readonly billModel: TenantModelProxy<typeof Bill>,
@@ -54,6 +56,9 @@ export class DeleteBill {
 
       // Delete the bill transaction.
       await this.billModel().query(trx).findById(billId).delete();
+
+      // Delete the custom field values.
+      await this.customFieldValuesService.deleteValues('Bill', billId, trx);
 
       // Triggers `onBillDeleted` event.
       await this.eventPublisher.emitAsync(events.bill.onDeleted, {

@@ -11,6 +11,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsString,
   Min,
   ValidateNested,
@@ -216,6 +217,17 @@ class CommandSaleInvoiceDto {
     example: [{ key: '123456' }],
   })
   attachments?: AttachmentDto[];
+
+  @IsOptional()
+  @IsObject()
+  @ApiProperty({
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    required: false,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, unknown>;
 }
 
 export class CreateSaleInvoiceDto extends CommandSaleInvoiceDto {}

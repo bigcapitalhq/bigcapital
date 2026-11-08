@@ -10,6 +10,7 @@ import {
 } from '../types/Vendors.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { ERRORS } from '../constants';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class DeleteVendorService {
@@ -21,6 +22,7 @@ export class DeleteVendorService {
   constructor(
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
+    private customFieldValuesService: CustomFieldValuesService,
     @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
 
@@ -50,6 +52,14 @@ export class DeleteVendorService {
           type: ERRORS.VENDOR_HAS_TRANSACTIONS,
           message: 'Vendor has associated transactions',
         });
+
+      // Delete the custom field values.
+      await this.customFieldValuesService.deleteValues(
+        'Vendor',
+        vendorId,
+        transaction,
+      );
+
       // Triggers `onVendorDeleted` event.
       await this.eventPublisher.emitAsync(events.vendors.onDeleted, {
         vendorId,

@@ -66,16 +66,16 @@ export class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
    * Builds database query of sort by column on the given direction.
    */
   public buildQuery = () => {
-    const field = this.model.getField(this.sortRole.fieldKey);
-    const comparatorColumn = this.getFieldComparatorColumn(field);
+    const field = this.getField(this.sortRole.fieldKey);
     const safeOrder = sanitizeSortDirection(this.sortRole.order);
 
     // Sort custom query.
-    if (typeof field.sortCustomQuery !== 'undefined') {
+    if (field && typeof field.sortCustomQuery !== 'undefined') {
       return (builder) => {
         field.sortCustomQuery(builder, { ...this.sortRole, order: safeOrder });
       };
     }
+    const comparatorColumn = this.getFieldComparatorColumn(field);
 
     return (builder) => {
       if (this.sortRole.fieldKey) {

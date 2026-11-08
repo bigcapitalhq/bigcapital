@@ -25,6 +25,10 @@ import {
 import type { ExpenseErrorResponse, ExpenseFormValues } from './types';
 import type { CreateExpenseBody, EditExpenseBody } from '@bigcapital/sdk-ts';
 import { AppToaster, Box } from '@/components';
+import {
+  CustomFieldsFormSection,
+  useCustomFieldsValidationSchema,
+} from '@/components/CustomFields';
 import { PageForm } from '@/components/PageForm';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
@@ -67,6 +71,10 @@ function ExpenseFormInner() {
     }),
     [expense, baseCurrency, preferredPaymentAccount],
   );
+  const customFieldsSchema = useCustomFieldsValidationSchema('Expense');
+  const validationSchema = (
+    isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema
+  ).concat(customFieldsSchema as any);
 
   const handleSubmit = (
     values: ExpenseFormValues,
@@ -131,9 +139,7 @@ function ExpenseFormInner() {
 
   return (
     <Formik
-      validationSchema={
-        isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema
-      }
+      validationSchema={validationSchema}
       initialValues={initialValues}
       onSubmit={handleSubmit}
     >
@@ -152,6 +158,12 @@ function ExpenseFormInner() {
 
             <Box p="18px 32px 0">
               <ExpenseFormBody />
+              <Box mt={'20px'}>
+                <CustomFieldsFormSection
+                  resource={'Expense'}
+                  title={intl.get('custom_fields.form.section_title')}
+                />
+              </Box>
             </Box>
             <ExpenseFormFooter />
           </PageForm.Body>

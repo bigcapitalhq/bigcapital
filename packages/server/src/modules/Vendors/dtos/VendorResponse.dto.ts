@@ -118,4 +118,13 @@ export class VendorResponseDto {
 
   @ApiProperty({ example: 1500.0 })
   closingBalance: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'Custom fields values',
+    type: 'object',
+    additionalProperties: true,
+    example: { cf_priority: 'High' },
+  })
+  customFields?: Record<string, unknown>;
 }

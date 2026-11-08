@@ -7,6 +7,7 @@ import { VendorTransfromer } from './VendorTransformer';
 import { GetVendorsResponse } from '../types/Vendors.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GetVendorsQueryDto } from '../dtos/GetVendorsQuery.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class GetVendorsService {
@@ -19,6 +20,7 @@ export class GetVendorsService {
   constructor(
     private dynamicListService: DynamicListService,
     private transformer: TransformerInjectable,
+    private customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
   ) {}
@@ -63,6 +65,16 @@ export class GetVendorsService {
       results,
       new VendorTransfromer(),
     );
+
+    // Attach the custom field values.
+    const customFieldsMap = await this.customFieldValuesService.getValuesBulk(
+      'Vendor',
+      data.map((vendor) => vendor.id),
+    );
+    data.forEach((vendor) => {
+      vendor.customFields = customFieldsMap[vendor.id] ?? {};
+    });
+
     return {
       data,
       pagination,

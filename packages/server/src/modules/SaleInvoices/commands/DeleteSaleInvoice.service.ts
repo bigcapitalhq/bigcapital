@@ -16,6 +16,7 @@ import { events } from '@/common/events/events';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
 import { CreditNoteAppliedInvoice } from '@/modules/CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class DeleteSaleInvoice {
@@ -31,6 +32,7 @@ export class DeleteSaleInvoice {
     private unlockEstimateFromInvoice: UnlinkConvertedSaleEstimate,
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
+    private customFieldValuesService: CustomFieldValuesService,
 
     @Inject(PaymentReceivedEntry.name)
     private paymentReceivedEntryModel: TenantModelProxy<
@@ -157,6 +159,13 @@ export class DeleteSaleInvoice {
         .delete();
 
       await this.saleInvoiceModel().query(trx).findById(saleInvoiceId).delete();
+
+      // Delete the custom field values.
+      await this.customFieldValuesService.deleteValues(
+        'SaleInvoice',
+        saleInvoiceId,
+        trx,
+      );
 
       // Triggers `onSaleInvoiceDeleted` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onDeleted, {

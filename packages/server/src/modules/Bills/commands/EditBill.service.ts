@@ -12,6 +12,7 @@ import { Knex } from 'knex';
 import { BillLandedCostsBridge } from '../integrations/BillLandedCostsBridge';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditBillDto } from '../dtos/Bill.dto';
+import { CustomFieldValuesService } from '@/modules/CustomFields/CustomFieldValues.service';
 
 @Injectable()
 export class EditBillService {
@@ -22,6 +23,7 @@ export class EditBillService {
     private eventPublisher: EventEmitter2,
     private landedCostsBridge: BillLandedCostsBridge,
     private transformerDTO: BillDTOTransformer,
+    private customFieldValuesService: CustomFieldValuesService,
 
     @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
     @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
@@ -62,6 +64,15 @@ export class EditBillService {
           id: billId,
           ...billObj,
         });
+
+      // Save the custom field values.
+      await this.customFieldValuesService.saveValues(
+        'Bill',
+        billId,
+        billDTO.customFields,
+        trx,
+      );
+
       // Triggers event `onBillEdited`.
       await this.eventPublisher.emitAsync(events.bill.onEdited, {
         oldBill,
