@@ -17,6 +17,7 @@ export * from './users';
 export * from './roles';
 export * from './invite';
 export * from './invoices';
+export * from './recurring-invoices';
 export * from './bills';
 export * from './estimates';
 export * from './receipts';

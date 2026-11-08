@@ -3,6 +3,7 @@ export const TABLES = {
   INVENTORY_ADJUSTMENTS: 'inventory_adjustment',
   ESTIMATES: 'estimates',
   INVOICES: 'invoices',
+  RECURRING_INVOICES: 'recurring_invoices',
   RECEIPTS: 'receipts',
   PAYMENT_RECEIVES: 'payment_receives',
   BILLS: 'bills',

@@ -52,6 +52,7 @@ export enum AbilitySubject {
   Report = 'Report',
   Account = 'Account',
   SaleInvoice = 'SaleInvoice',
+  RecurringInvoice = 'RecurringInvoice',
   SaleEstimate = 'SaleEstimate',
   SaleReceipt = 'SaleReceipt',
   PaymentReceive = 'PaymentReceive',

@@ -13,6 +13,7 @@ import {
 } from '../Customers/types/Customers.types';
 import { SaleEstimateAction } from '../SaleEstimates/types/SaleEstimates.types';
 import { SaleInvoiceAction } from '../SaleInvoices/SaleInvoice.types';
+import { RecurringInvoiceAction } from '../RecurringInvoices/RecurringInvoice.types';
 import { CreditNoteAction } from '../CreditNotes/types/CreditNotes.types';
 import { SaleReceiptAction } from '../SaleReceipts/types/SaleReceipts.types';
 import { BillAction } from '../Bills/Bills.types';
@@ -145,6 +146,32 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: SaleInvoiceAction.Delete, label: 'ability.delete', default: true },
     ],
     extraAbilities: [{ key: 'bad-debt', label: 'Due amount to bad debit' }],
+  },
+  {
+    subject: AbilitySubject.RecurringInvoice,
+    subjectLabel: 'ability.recurring_invoices',
+    abilities: [
+      {
+        key: RecurringInvoiceAction.View,
+        label: 'ability.view',
+        default: true,
+      },
+      {
+        key: RecurringInvoiceAction.Create,
+        label: 'ability.create',
+        default: true,
+      },
+      {
+        key: RecurringInvoiceAction.Edit,
+        label: 'ability.edit',
+        default: true,
+      },
+      {
+        key: RecurringInvoiceAction.Delete,
+        label: 'ability.delete',
+        default: true,
+      },
+    ],
   },
   {
     subject: AbilitySubject.SaleReceipt,

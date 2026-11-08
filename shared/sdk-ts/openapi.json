@@ -8994,6 +8994,619 @@
         ]
       }
     },
+    "/api/recurring-invoices": {
+      "post": {
+        "operationId": "RecurringInvoicesController_createRecurringInvoice",
+        "summary": "Creates a new recurring invoice profile.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecurringInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The recurring invoice has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      },
+      "get": {
+        "operationId": "RecurringInvoicesController_getRecurringInvoices",
+        "summary": "Retrieves recurring invoice profiles.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoices have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/state": {
+      "get": {
+        "operationId": "RecurringInvoicesController_getRecurringInvoiceState",
+        "summary": "Retrieves the recurring invoice form state.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice state has been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceStateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}": {
+      "get": {
+        "operationId": "RecurringInvoicesController_getRecurringInvoice",
+        "summary": "Retrieves the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      },
+      "put": {
+        "operationId": "RecurringInvoicesController_editRecurringInvoice",
+        "summary": "Edits the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditRecurringInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      },
+      "delete": {
+        "operationId": "RecurringInvoicesController_deleteRecurringInvoice",
+        "summary": "Deletes the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been deleted."
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}/pause": {
+      "post": {
+        "operationId": "RecurringInvoicesController_pauseRecurringInvoice",
+        "summary": "Pauses the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been paused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}/resume": {
+      "post": {
+        "operationId": "RecurringInvoicesController_resumeRecurringInvoice",
+        "summary": "Resumes the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been resumed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}/generate": {
+      "post": {
+        "operationId": "RecurringInvoicesController_generateRecurringInvoice",
+        "summary": "Generates an extra invoice immediately without rescheduling.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The invoice has been generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}/invoices": {
+      "get": {
+        "operationId": "RecurringInvoicesController_getRecurringInvoiceInvoices",
+        "summary": "Retrieves the invoices generated by the recurring profile.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The generated invoices have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SaleInvoiceResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
     "/api/sale-estimates/validate-bulk-delete": {
       "post": {
         "operationId": "SaleEstimatesController_validateBulkDeleteSaleEstimates",
@@ -33467,6 +34080,586 @@
         },
         "required": [
           "ids"
+        ]
+      },
+      "RecurringInvoiceStateResponseDto": {
+        "type": "object",
+        "properties": {
+          "defaultTemplateId": {
+            "type": "number",
+            "description": "The ID of the default PDF template for sale invoices",
+            "example": 1,
+            "nullable": true
+          }
+        },
+        "required": [
+          "defaultTemplateId"
+        ]
+      },
+      "RecurringInvoiceResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Recurring invoice ID",
+            "example": 1
+          },
+          "customerId": {
+            "type": "number",
+            "description": "Customer ID",
+            "example": 1
+          },
+          "customer": {
+            "description": "The customer of the recurring invoice profile",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerResponseDto"
+              }
+            ]
+          },
+          "branch": {
+            "description": "The branch of the recurring invoice profile",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BranchLinkDto"
+              }
+            ]
+          },
+          "profileName": {
+            "type": "string",
+            "description": "Profile name",
+            "example": "Monthly retainer"
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "Reference number"
+          },
+          "invoiceMessage": {
+            "type": "string",
+            "description": "Invoice message"
+          },
+          "termsConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Currency code",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "discount": {
+            "type": "number",
+            "description": "Discount value"
+          },
+          "discountType": {
+            "type": "string",
+            "description": "Discount type"
+          },
+          "adjustment": {
+            "type": "number",
+            "description": "Adjustment amount"
+          },
+          "isInclusiveTax": {
+            "type": "boolean",
+            "description": "Whether tax is inclusive"
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "warehouseId": {
+            "type": "number",
+            "description": "Warehouse ID"
+          },
+          "pdfTemplateId": {
+            "type": "number",
+            "description": "PDF template ID"
+          },
+          "status": {
+            "type": "string",
+            "description": "Profile status",
+            "enum": [
+              "active",
+              "paused",
+              "completed"
+            ]
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ]
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat interval",
+            "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date",
+            "example": "2026-11-05"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date",
+            "example": "2027-11-05"
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Maximum occurrences",
+            "example": 12
+          },
+          "occurrencesCount": {
+            "type": "number",
+            "description": "Generated occurrences count",
+            "example": 3
+          },
+          "nextInvoiceDate": {
+            "type": "string",
+            "description": "Next invoice date",
+            "example": "2026-12-05"
+          },
+          "lastInvoiceDate": {
+            "type": "string",
+            "description": "Last generated invoice date",
+            "example": "2026-11-05"
+          },
+          "dueDays": {
+            "type": "number",
+            "description": "Due date offset in days",
+            "example": 15
+          },
+          "deliveryMode": {
+            "type": "string",
+            "description": "Delivery mode",
+            "enum": [
+              "draft",
+              "email"
+            ]
+          },
+          "emailSubject": {
+            "type": "string",
+            "description": "Email subject override"
+          },
+          "emailMessage": {
+            "type": "string",
+            "description": "Email message override"
+          },
+          "emailCc": {
+            "description": "Email CC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emailBcc": {
+            "description": "Email BCC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attachInvoice": {
+            "type": "boolean",
+            "description": "Whether the PDF is attached"
+          },
+          "lastError": {
+            "type": "string",
+            "description": "Last generation error"
+          },
+          "failureCount": {
+            "type": "number",
+            "description": "Consecutive failure count"
+          },
+          "entries": {
+            "description": "Recurring invoice line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryDto"
+            }
+          },
+          "subtotal": {
+            "type": "number",
+            "description": "Subtotal amount"
+          },
+          "taxAmount": {
+            "type": "number",
+            "description": "Tax amount"
+          },
+          "discountAmount": {
+            "type": "number",
+            "description": "Discount amount"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total amount"
+          },
+          "startDateFormatted": {
+            "type": "string",
+            "description": "Formatted start date"
+          },
+          "endDateFormatted": {
+            "type": "string",
+            "description": "Formatted end date"
+          },
+          "nextInvoiceDateFormatted": {
+            "type": "string",
+            "description": "Formatted next invoice date"
+          },
+          "lastInvoiceDateFormatted": {
+            "type": "string",
+            "description": "Formatted last invoice date"
+          },
+          "createdAtFormatted": {
+            "type": "string",
+            "description": "Formatted created date"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total"
+          },
+          "subtotalFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal"
+          },
+          "taxAmountFormatted": {
+            "type": "string",
+            "description": "Formatted tax amount"
+          },
+          "discountAmountFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount"
+          },
+          "adjustmentFormatted": {
+            "type": "string",
+            "description": "Formatted adjustment amount"
+          }
+        },
+        "required": [
+          "id",
+          "customerId",
+          "profileName",
+          "status",
+          "frequency",
+          "repeatInterval",
+          "startDate",
+          "occurrencesCount",
+          "dueDays",
+          "deliveryMode"
+        ]
+      },
+      "CreateRecurringInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "number",
+            "description": "Customer ID",
+            "example": 1
+          },
+          "profileName": {
+            "type": "string",
+            "description": "Recurring invoice profile name",
+            "example": "Monthly retainer"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The first invoice date",
+            "example": "2026-11-05"
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ],
+            "example": "month"
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat every N periods",
+            "example": 1,
+            "default": 1
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Optional end date",
+            "example": "2027-11-05"
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Optional maximum number of generated invoices",
+            "example": 12
+          },
+          "dueDays": {
+            "type": "number",
+            "description": "Due date offset in days from the invoice date",
+            "example": 15,
+            "default": 0
+          },
+          "deliveryMode": {
+            "type": "string",
+            "description": "What to do with generated invoices",
+            "enum": [
+              "draft",
+              "email"
+            ],
+            "default": "draft"
+          },
+          "emailSubject": {
+            "type": "string",
+            "description": "Email subject override"
+          },
+          "emailMessage": {
+            "type": "string",
+            "description": "Email message override"
+          },
+          "emailCc": {
+            "description": "Email CC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emailBcc": {
+            "description": "Email BCC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attachInvoice": {
+            "type": "boolean",
+            "description": "Whether the generated invoice PDF is attached",
+            "default": true
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "Reference number"
+          },
+          "invoiceMessage": {
+            "type": "string",
+            "description": "Invoice message"
+          },
+          "termsConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "warehouseId": {
+            "type": "number",
+            "description": "Warehouse ID"
+          },
+          "pdfTemplateId": {
+            "type": "number",
+            "description": "PDF template ID"
+          },
+          "isInclusiveTax": {
+            "type": "boolean",
+            "description": "Whether tax is inclusive"
+          },
+          "discount": {
+            "type": "number",
+            "description": "Discount value"
+          },
+          "discountType": {
+            "type": "string",
+            "description": "Discount type",
+            "enum": [
+              "percentage",
+              "amount"
+            ]
+          },
+          "adjustment": {
+            "type": "number",
+            "description": "Adjustment amount"
+          },
+          "entries": {
+            "description": "Recurring invoice line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryDto"
+            }
+          }
+        },
+        "required": [
+          "customerId",
+          "profileName",
+          "startDate",
+          "frequency",
+          "entries"
+        ]
+      },
+      "EditRecurringInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "number",
+            "description": "Customer ID",
+            "example": 1
+          },
+          "profileName": {
+            "type": "string",
+            "description": "Recurring invoice profile name",
+            "example": "Monthly retainer"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The first invoice date",
+            "example": "2026-11-05"
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ],
+            "example": "month"
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat every N periods",
+            "example": 1,
+            "default": 1
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Optional end date",
+            "example": "2027-11-05"
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Optional maximum number of generated invoices",
+            "example": 12
+          },
+          "dueDays": {
+            "type": "number",
+            "description": "Due date offset in days from the invoice date",
+            "example": 15,
+            "default": 0
+          },
+          "deliveryMode": {
+            "type": "string",
+            "description": "What to do with generated invoices",
+            "enum": [
+              "draft",
+              "email"
+            ],
+            "default": "draft"
+          },
+          "emailSubject": {
+            "type": "string",
+            "description": "Email subject override"
+          },
+          "emailMessage": {
+            "type": "string",
+            "description": "Email message override"
+          },
+          "emailCc": {
+            "description": "Email CC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emailBcc": {
+            "description": "Email BCC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attachInvoice": {
+            "type": "boolean",
+            "description": "Whether the generated invoice PDF is attached",
+            "default": true
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "Reference number"
+          },
+          "invoiceMessage": {
+            "type": "string",
+            "description": "Invoice message"
+          },
+          "termsConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "warehouseId": {
+            "type": "number",
+            "description": "Warehouse ID"
+          },
+          "pdfTemplateId": {
+            "type": "number",
+            "description": "PDF template ID"
+          },
+          "isInclusiveTax": {
+            "type": "boolean",
+            "description": "Whether tax is inclusive"
+          },
+          "discount": {
+            "type": "number",
+            "description": "Discount value"
+          },
+          "discountType": {
+            "type": "string",
+            "description": "Discount type",
+            "enum": [
+              "percentage",
+              "amount"
+            ]
+          },
+          "adjustment": {
+            "type": "number",
+            "description": "Adjustment amount"
+          },
+          "entries": {
+            "description": "Recurring invoice line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryDto"
+            }
+          }
+        },
+        "required": [
+          "customerId",
+          "profileName",
+          "startDate",
+          "frequency",
+          "entries"
         ]
       },
       "SaleEstimateResponseDto": {

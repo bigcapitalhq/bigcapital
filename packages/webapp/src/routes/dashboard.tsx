@@ -870,6 +870,47 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.INVOICE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+  // Recurring Invoices.
+  {
+    path: `/recurring-invoices/:id/edit`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/RecurringInvoices/RecurringInvoiceForm/RecurringInvoiceFormPage'
+      ).then((m) => ({ default: m.RecurringInvoiceFormPage })),
+    ),
+    name: 'recurring-invoice-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: intl.get('edit_recurring_invoice'),
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/recurring-invoices/new`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/RecurringInvoices/RecurringInvoiceForm/RecurringInvoiceFormPage'
+      ).then((m) => ({ default: m.RecurringInvoiceFormPage })),
+    ),
+    name: 'recurring-invoice-new',
+    breadcrumb: intl.get('new_recurring_invoice'),
+    pageTitle: intl.get('new_recurring_invoice'),
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: `/recurring-invoices`,
+    component: lazy(() =>
+      import(
+        '@/containers/Sales/RecurringInvoices/RecurringInvoicesLanding/RecurringInvoicesList'
+      ).then((m) => ({ default: m.RecurringInvoicesList })),
+    ),
+    breadcrumb: intl.get('recurring_invoices'),
+    pageTitle: intl.get('recurring_invoices'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+
   // Sales Receipts.
   {
     path: `/receipts/import`,
