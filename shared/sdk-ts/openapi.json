@@ -21230,6 +21230,115 @@
         ]
       }
     },
+    "/api/reports/inventory-summary": {
+      "get": {
+        "operationId": "InventorySummaryController_getInventorySummary",
+        "summary": "Retrieves the inventory summary report",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "noneTransactions",
+            "required": false,
+            "in": "query",
+            "description": "Whether to exclude items without transactions",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "itemsIds",
+            "required": false,
+            "in": "query",
+            "description": "Items IDs for the inventory summary",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "warehousesIds",
+            "required": false,
+            "in": "query",
+            "description": "Warehouses IDs for the inventory summary",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "branchesIds",
+            "required": false,
+            "in": "query",
+            "description": "Branches IDs for the inventory summary",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "accept",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numberFormat",
+            "required": false,
+            "in": "query",
+            "description": "Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)",
+            "schema": {
+              "$ref": "#/components/schemas/NumberFormatQueryDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The inventory summary report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventorySummaryResponseDto"
+                }
+              },
+              "application/json+table": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventorySummaryTableResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/api/reports/sales-tax-liability-summary": {
       "get": {
         "operationId": "SalesTaxLiabilitySummaryController_getSalesTaxLiabilitySummary",
@@ -44278,6 +44387,365 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/InventoryValuationMetaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "table",
+          "query",
+          "meta"
+        ]
+      },
+      "InventorySummaryQueryResponseDto": {
+        "type": "object",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "description": "From date"
+          },
+          "toDate": {
+            "type": "string",
+            "description": "To date"
+          },
+          "numberFormat": {
+            "description": "Number format settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumberFormatQueryDto"
+              }
+            ]
+          },
+          "noneTransactions": {
+            "type": "boolean",
+            "description": "Exclude items without transactions"
+          },
+          "itemsIds": {
+            "description": "Item IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "warehousesIds": {
+            "description": "Warehouse IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "branchesIds": {
+            "description": "Branch IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "fromDate",
+          "toDate",
+          "numberFormat",
+          "noneTransactions",
+          "itemsIds"
+        ]
+      },
+      "InventorySummaryItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Item ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Item name"
+          },
+          "code": {
+            "type": "string",
+            "description": "Item code"
+          },
+          "openingStock": {
+            "type": "number",
+            "description": "Opening stock quantity"
+          },
+          "quantityIn": {
+            "type": "number",
+            "description": "Quantity received in the period"
+          },
+          "quantityOut": {
+            "type": "number",
+            "description": "Quantity issued out in the period"
+          },
+          "closingStock": {
+            "type": "number",
+            "description": "Closing stock quantity"
+          },
+          "openingStockFormatted": {
+            "type": "string",
+            "description": "Formatted opening stock quantity"
+          },
+          "quantityInFormatted": {
+            "type": "string",
+            "description": "Formatted quantity in"
+          },
+          "quantityOutFormatted": {
+            "type": "string",
+            "description": "Formatted quantity out"
+          },
+          "closingStockFormatted": {
+            "type": "string",
+            "description": "Formatted closing stock quantity"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "code",
+          "openingStock",
+          "quantityIn",
+          "quantityOut",
+          "closingStock",
+          "openingStockFormatted",
+          "quantityInFormatted",
+          "quantityOutFormatted",
+          "closingStockFormatted"
+        ]
+      },
+      "InventorySummaryTotalDto": {
+        "type": "object",
+        "properties": {
+          "openingStock": {
+            "type": "number",
+            "description": "Total opening stock quantity"
+          },
+          "quantityIn": {
+            "type": "number",
+            "description": "Total quantity in"
+          },
+          "quantityOut": {
+            "type": "number",
+            "description": "Total quantity out"
+          },
+          "closingStock": {
+            "type": "number",
+            "description": "Total closing stock quantity"
+          },
+          "openingStockFormatted": {
+            "type": "string",
+            "description": "Formatted total opening stock quantity"
+          },
+          "quantityInFormatted": {
+            "type": "string",
+            "description": "Formatted total quantity in"
+          },
+          "quantityOutFormatted": {
+            "type": "string",
+            "description": "Formatted total quantity out"
+          },
+          "closingStockFormatted": {
+            "type": "string",
+            "description": "Formatted total closing stock quantity"
+          }
+        },
+        "required": [
+          "openingStock",
+          "quantityIn",
+          "quantityOut",
+          "closingStock",
+          "openingStockFormatted",
+          "quantityInFormatted",
+          "quantityOutFormatted",
+          "closingStockFormatted"
+        ]
+      },
+      "InventorySummaryDataDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Inventory summary items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventorySummaryItemDto"
+            }
+          },
+          "total": {
+            "description": "Inventory summary totals",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryTotalDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ]
+      },
+      "InventorySummaryMetaDto": {
+        "type": "object",
+        "properties": {
+          "organizationName": {
+            "type": "string",
+            "description": "Organization name"
+          },
+          "baseCurrency": {
+            "type": "string",
+            "description": "Base currency code"
+          },
+          "dateFormat": {
+            "type": "string",
+            "description": "Date format string"
+          },
+          "isCostComputeRunning": {
+            "type": "boolean",
+            "description": "Whether cost computation is running"
+          },
+          "sheetName": {
+            "type": "string",
+            "description": "Sheet name"
+          },
+          "formattedFromDate": {
+            "type": "string",
+            "description": "Formatted from date"
+          },
+          "formattedToDate": {
+            "type": "string",
+            "description": "Formatted to date"
+          },
+          "formattedDateRange": {
+            "type": "string",
+            "description": "Formatted date range"
+          }
+        },
+        "required": [
+          "organizationName",
+          "baseCurrency",
+          "dateFormat",
+          "isCostComputeRunning",
+          "sheetName",
+          "formattedFromDate",
+          "formattedToDate",
+          "formattedDateRange"
+        ]
+      },
+      "InventorySummaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "Query parameters used to generate the report",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryQueryResponseDto"
+              }
+            ]
+          },
+          "data": {
+            "description": "Inventory summary data",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryDataDto"
+              }
+            ]
+          },
+          "meta": {
+            "description": "Report metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryMetaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "query",
+          "data",
+          "meta"
+        ]
+      },
+      "InventorySummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "opening_stock",
+              "quantity_in",
+              "quantity_out",
+              "closing_stock"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "InventorySummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventorySummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
+      "InventorySummaryTableResponseDto": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "description": "Table data structure",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryTableDataDto"
+              }
+            ]
+          },
+          "query": {
+            "description": "Query parameters used to generate the report",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryQueryResponseDto"
+              }
+            ]
+          },
+          "meta": {
+            "description": "Report metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryMetaDto"
               }
             ]
           }

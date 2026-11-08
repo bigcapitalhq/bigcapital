@@ -305,6 +305,10 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
         label: 'ability.inventory_valuation_summary',
       },
       {
+        key: ReportsAction.READ_INVENTORY_SUMMARY,
+        label: 'ability.inventory_summary',
+      },
+      {
         key: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
         label: 'ability.inventory_items_details',
       },
