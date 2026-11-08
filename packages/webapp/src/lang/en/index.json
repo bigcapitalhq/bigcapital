@@ -2404,6 +2404,19 @@
 
   "recurring_invoice.delivery.draft": "Save as draft",
   "recurring_invoice.delivery.email": "Create and email",
+  "recurring_invoice.delivery_mode.draft": "Draft",
+  "recurring_invoice.delivery_mode.email": "Email",
+
+  "recurring_invoice.details.subtotal": "Subtotal",
+  "recurring_invoice.details.tax": "Tax",
+  "recurring_invoice.details.discount": "Discount",
+  "recurring_invoice.details.adjustment": "Adjustment",
+  "recurring_invoice.details.total": "TOTAL",
+  "recurring_invoice.details.occurrences_count": "Invoices Generated",
+
+  "recurring_invoice_details": "Recurring Invoice Details",
+  "recurring_invoice_details.drawer.title": "Recurring Invoice Details ({profileName})",
+  "recurring_invoice_details.drawer.subtitle": "Customer: {customerName}",
 
   "recurring_invoice.view_generated_invoices": "View Generated Invoices",
   "recurring_invoice.generated_invoices": "Generated Invoices",

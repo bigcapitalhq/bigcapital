@@ -9,6 +9,8 @@ export const recurringInvoicesKeys = {
     [RECURRING_INVOICES, query] as const,
   detail: (id: number | null | undefined) => [RECURRING_INVOICE, id] as const,
   invoices: (id: number | null | undefined, query?: Record<string, unknown>) =>
-    [RECURRING_INVOICE_INVOICES, id, query] as const,
+    query
+      ? ([RECURRING_INVOICE_INVOICES, id, query] as const)
+      : ([RECURRING_INVOICE_INVOICES, id] as const),
   state: () => [RECURRING_INVOICE_STATE] as const,
 };

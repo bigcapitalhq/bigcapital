@@ -33965,6 +33965,22 @@
             "description": "Customer ID",
             "example": 1
           },
+          "customer": {
+            "description": "The customer of the recurring invoice profile",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerResponseDto"
+              }
+            ]
+          },
+          "branch": {
+            "description": "The branch of the recurring invoice profile",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BranchLinkDto"
+              }
+            ]
+          },
           "profileName": {
             "type": "string",
             "description": "Profile name",
@@ -34128,9 +34144,29 @@
               "$ref": "#/components/schemas/ItemEntryDto"
             }
           },
+          "subtotal": {
+            "type": "number",
+            "description": "Subtotal amount"
+          },
+          "taxAmount": {
+            "type": "number",
+            "description": "Tax amount"
+          },
+          "discountAmount": {
+            "type": "number",
+            "description": "Discount amount"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total amount"
+          },
           "startDateFormatted": {
             "type": "string",
             "description": "Formatted start date"
+          },
+          "endDateFormatted": {
+            "type": "string",
+            "description": "Formatted end date"
           },
           "nextInvoiceDateFormatted": {
             "type": "string",
@@ -34140,6 +34176,10 @@
             "type": "string",
             "description": "Formatted last invoice date"
           },
+          "createdAtFormatted": {
+            "type": "string",
+            "description": "Formatted created date"
+          },
           "totalFormatted": {
             "type": "string",
             "description": "Formatted total"
@@ -34147,6 +34187,18 @@
           "subtotalFormatted": {
             "type": "string",
             "description": "Formatted subtotal"
+          },
+          "taxAmountFormatted": {
+            "type": "string",
+            "description": "Formatted tax amount"
+          },
+          "discountAmountFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount"
+          },
+          "adjustmentFormatted": {
+            "type": "string",
+            "description": "Formatted adjustment amount"
           }
         },
         "required": [

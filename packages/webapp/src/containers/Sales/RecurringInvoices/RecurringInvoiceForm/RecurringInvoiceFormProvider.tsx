@@ -4,7 +4,6 @@ import type {
   EditRecurringInvoiceBody,
 } from '@bigcapital/sdk-ts';
 import type { ReactNode } from 'react';
-import { DashboardInsider } from '@/components';
 import { Features } from '@/constants';
 import {
   useCreateRecurringInvoice,
@@ -84,11 +83,9 @@ export function RecurringInvoiceFormProvider({
   };
 
   return (
-    <DashboardInsider loading={isLoading} name={'recurring-invoice-form'}>
-      <RecurringInvoiceFormContext.Provider value={value}>
-        {children}
-      </RecurringInvoiceFormContext.Provider>
-    </DashboardInsider>
+    <RecurringInvoiceFormContext.Provider value={value}>
+      {children}
+    </RecurringInvoiceFormContext.Provider>
   );
 }
 

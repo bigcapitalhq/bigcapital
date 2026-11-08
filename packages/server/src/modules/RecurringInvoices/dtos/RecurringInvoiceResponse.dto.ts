@@ -1,5 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { ItemEntryDto } from '@/modules/TransactionItemEntry/dto/ItemEntry.dto';
+import { CustomerResponseDto } from '@/modules/Customers/dtos/CustomerResponse.dto';
+import { BranchLinkDto } from '@/modules/Branches/dtos/BranchLink.dto';
 
 export class RecurringInvoiceResponseDto {
   @ApiProperty({ description: 'Recurring invoice ID', example: 1 })
@@ -7,6 +10,20 @@ export class RecurringInvoiceResponseDto {
 
   @ApiProperty({ description: 'Customer ID', example: 1 })
   customerId: number;
+
+  @ApiPropertyOptional({
+    description: 'The customer of the recurring invoice profile',
+    type: () => CustomerResponseDto,
+  })
+  @Type(() => CustomerResponseDto)
+  customer?: CustomerResponseDto;
+
+  @ApiPropertyOptional({
+    description: 'The branch of the recurring invoice profile',
+    type: () => BranchLinkDto,
+  })
+  @Type(() => BranchLinkDto)
+  branch?: BranchLinkDto;
 
   @ApiProperty({ description: 'Profile name', example: 'Monthly retainer' })
   profileName: string;
@@ -122,8 +139,23 @@ export class RecurringInvoiceResponseDto {
   })
   entries?: ItemEntryDto[];
 
+  @ApiPropertyOptional({ description: 'Subtotal amount' })
+  subtotal?: number;
+
+  @ApiPropertyOptional({ description: 'Tax amount' })
+  taxAmount?: number;
+
+  @ApiPropertyOptional({ description: 'Discount amount' })
+  discountAmount?: number;
+
+  @ApiPropertyOptional({ description: 'Total amount' })
+  total?: number;
+
   @ApiPropertyOptional({ description: 'Formatted start date' })
   startDateFormatted?: string;
+
+  @ApiPropertyOptional({ description: 'Formatted end date' })
+  endDateFormatted?: string;
 
   @ApiPropertyOptional({ description: 'Formatted next invoice date' })
   nextInvoiceDateFormatted?: string;
@@ -131,9 +163,21 @@ export class RecurringInvoiceResponseDto {
   @ApiPropertyOptional({ description: 'Formatted last invoice date' })
   lastInvoiceDateFormatted?: string;
 
+  @ApiPropertyOptional({ description: 'Formatted created date' })
+  createdAtFormatted?: string;
+
   @ApiPropertyOptional({ description: 'Formatted total' })
   totalFormatted?: string;
 
   @ApiPropertyOptional({ description: 'Formatted subtotal' })
   subtotalFormatted?: string;
+
+  @ApiPropertyOptional({ description: 'Formatted tax amount' })
+  taxAmountFormatted?: string;
+
+  @ApiPropertyOptional({ description: 'Formatted discount amount' })
+  discountAmountFormatted?: string;
+
+  @ApiPropertyOptional({ description: 'Formatted adjustment amount' })
+  adjustmentFormatted?: string;
 }

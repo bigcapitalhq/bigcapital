@@ -1,20 +1,27 @@
 import { Position } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Theme, useTheme } from '@emotion/react';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
+import styled from 'styled-components';
 import { useRecurringInvoiceFormContext } from './RecurringInvoiceFormProvider';
 import type { RecurringInvoiceFormValues } from './utils';
 import {
+  CustomerDrawerLink,
   CustomersSelect,
+  ExchangeRateInputGroup,
   FDateInput,
   FFormGroup,
   FInputGroup,
   FSelect,
   FieldRequiredHint,
+  FormattedMessage as T,
   Icon,
   Stack,
 } from '@/components';
 import { useDateInputFormatter } from '@/hooks';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 const FREQUENCY_OPTIONS = [
   { key: 'day', label: intl.get('recurring_invoice.frequency.day') },
@@ -28,27 +35,48 @@ const DELIVERY_OPTIONS = [
   { key: 'email', label: intl.get('recurring_invoice.delivery.email') },
 ];
 
+const getRecurringInvoiceFieldsStyle = (
+  theme: Theme & { bpPrefix?: string },
+) => css`
+  .${theme.bpPrefix}-form-group {
+    margin-bottom: 0;
+
+    &.${theme.bpPrefix}-inline {
+      width: 500px;
+      max-width: 100%;
+    }
+    .${theme.bpPrefix}-label {
+      min-width: 175px;
+      font-weight: 500;
+    }
+    .${theme.bpPrefix}-form-content {
+      width: 100%;
+    }
+  }
+`;
+
 export function RecurringInvoiceFormFields() {
+  const theme = useTheme();
+  const fieldsClassName = getRecurringInvoiceFieldsStyle(theme);
   const dateInputFormatter = useDateInputFormatter();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
   const { values } = useFormikContext<RecurringInvoiceFormValues>();
 
+  // The exchange rate field is only relevant for foreign customers.
+  const isForeignCustomer = values.currencyCode !== baseCurrency;
+
   return (
-    <Stack spacing={18} flex={1}>
+    <Stack spacing={18} flex={1} className={fieldsClassName}>
       <RecurringInvoiceCustomerSelect />
 
-      <FFormGroup
-        name={'exchangeRate'}
-        label={intl.get('exchange_rate')}
-        inline
-        fastField
-      >
-        <FInputGroup
+      {isForeignCustomer && (
+        <ExchangeRateInputGroup
           name={'exchangeRate'}
-          type="number"
-          min={0}
-          step="0.000001"
+          fromCurrency={values.currencyCode}
+          toCurrency={baseCurrency ?? ''}
+          formGroupProps={{ label: ' ', inline: true }}
         />
-      </FFormGroup>
+      )}
 
       <FFormGroup
         name={'profileName'}
@@ -72,51 +100,53 @@ export function RecurringInvoiceFormFields() {
         <FInputGroup name={'referenceNo'} />
       </FFormGroup>
 
-      <FFormGroup
-        name={'startDate'}
-        label={intl.get('recurring_invoice.field.start_date')}
-        labelInfo={<FieldRequiredHint />}
-        inline
-        fastField
-      >
-        <FDateInput
+      <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+        <FFormGroup
           name={'startDate'}
-          {...dateInputFormatter}
-          popoverProps={{
-            position: Position.BOTTOM_LEFT,
-            minimal: true,
-            fill: true,
-          }}
-          inputProps={{
-            leftIcon: <Icon icon={'date-range'} />,
-          }}
-          fill
+          label={intl.get('recurring_invoice.field.start_date')}
+          labelInfo={<FieldRequiredHint />}
+          inline
           fastField
-        />
-      </FFormGroup>
+        >
+          <FDateInput
+            name={'startDate'}
+            {...dateInputFormatter}
+            popoverProps={{
+              position: Position.BOTTOM_LEFT,
+              minimal: true,
+              fill: true,
+            }}
+            inputProps={{
+              leftIcon: <Icon icon={'date-range'} />,
+            }}
+            fill
+            fastField
+          />
+        </FFormGroup>
 
-      <FFormGroup
-        name={'endDate'}
-        label={intl.get('recurring_invoice.field.end_date')}
-        inline
-        fastField
-      >
-        <FDateInput
+        <FFormGroup
           name={'endDate'}
-          {...dateInputFormatter}
-          canClearSelection={true}
-          popoverProps={{
-            position: Position.BOTTOM_LEFT,
-            minimal: true,
-            fill: true,
-          }}
-          inputProps={{
-            leftIcon: <Icon icon={'date-range'} />,
-          }}
-          fill
+          label={intl.get('recurring_invoice.field.end_date')}
+          inline
           fastField
-        />
-      </FFormGroup>
+        >
+          <FDateInput
+            name={'endDate'}
+            {...dateInputFormatter}
+            canClearSelection={true}
+            popoverProps={{
+              position: Position.BOTTOM_LEFT,
+              minimal: true,
+              fill: true,
+            }}
+            inputProps={{
+              leftIcon: <Icon icon={'date-range'} />,
+            }}
+            fill
+            fastField
+          />
+        </FFormGroup>
+      </div>
 
       <FFormGroup
         name={'repeatInterval'}
@@ -130,15 +160,20 @@ export function RecurringInvoiceFormFields() {
             name={'repeatInterval'}
             type="number"
             min={1}
-            style={{ maxWidth: 90 }}
+            className={css`
+              flex: 1;
+              min-width: 0;
+            `}
           />
-          <FSelect
-            name={'frequency'}
-            items={FREQUENCY_OPTIONS}
-            valueAccessor={'key'}
-            textAccessor={'label'}
-            popoverProps={{ minimal: true }}
-          />
+          <div style={{ flex: '0 0 150px' }}>
+            <FSelect
+              name={'frequency'}
+              items={FREQUENCY_OPTIONS}
+              valueAccessor={'key'}
+              textAccessor={'label'}
+              popoverProps={{ minimal: true }}
+            />
+          </div>
         </div>
       </FFormGroup>
 
@@ -239,14 +274,27 @@ function RecurringInvoiceCustomerSelect() {
       inline
       fastField
     >
-      <CustomersSelect
-        name={'customerId'}
-        items={customers}
-        placeholder={intl.get('select_customer_account')}
-        onItemChange={handleItemChange}
-        allowCreate={true}
-        fastField={true}
-      />
+      <>
+        <CustomersSelect
+          name={'customerId'}
+          items={customers}
+          placeholder={intl.get('select_customer_account')}
+          onItemChange={handleItemChange}
+          allowCreate={true}
+          fastField={true}
+          buttonProps={{ 'data-testId': 'recurring-invoice-customer-select' }}
+        />
+        {values.customerId && (
+          <CustomerButtonLink customerId={values.customerId}>
+            <T id={'view_customer_details'} />
+          </CustomerButtonLink>
+        )}
+      </>
     </FFormGroup>
   );
 }
+
+const CustomerButtonLink = styled(CustomerDrawerLink)`
+  font-size: 11px;
+  margin-top: 6px;
+`;

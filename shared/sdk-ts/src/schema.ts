@@ -10488,6 +10488,10 @@ export interface components {
              * @example 1
              */
             customerId: number;
+            /** @description The customer of the recurring invoice profile */
+            customer?: components["schemas"]["CustomerResponseDto"];
+            /** @description The branch of the recurring invoice profile */
+            branch?: components["schemas"]["BranchLinkDto"];
             /**
              * @description Profile name
              * @example Monthly retainer
@@ -10594,16 +10598,34 @@ export interface components {
             failureCount?: number;
             /** @description Recurring invoice line items */
             entries?: components["schemas"]["ItemEntryDto"][];
+            /** @description Subtotal amount */
+            subtotal?: number;
+            /** @description Tax amount */
+            taxAmount?: number;
+            /** @description Discount amount */
+            discountAmount?: number;
+            /** @description Total amount */
+            total?: number;
             /** @description Formatted start date */
             startDateFormatted?: string;
+            /** @description Formatted end date */
+            endDateFormatted?: string;
             /** @description Formatted next invoice date */
             nextInvoiceDateFormatted?: string;
             /** @description Formatted last invoice date */
             lastInvoiceDateFormatted?: string;
+            /** @description Formatted created date */
+            createdAtFormatted?: string;
             /** @description Formatted total */
             totalFormatted?: string;
             /** @description Formatted subtotal */
             subtotalFormatted?: string;
+            /** @description Formatted tax amount */
+            taxAmountFormatted?: string;
+            /** @description Formatted discount amount */
+            discountAmountFormatted?: string;
+            /** @description Formatted adjustment amount */
+            adjustmentFormatted?: string;
         };
         CreateRecurringInvoiceDto: {
             /**

@@ -10,6 +10,7 @@ import { withRecurringInvoicesActions } from './withRecurringInvoicesActions';
 import type { RecurringInvoiceTableRow } from './components';
 import type { WithRecurringInvoicesProps } from './withRecurringInvoices';
 import type { WithRecurringInvoiceActionsProps } from './withRecurringInvoicesActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   AppToaster,
   DataTable,
@@ -17,7 +18,9 @@ import {
   TableSkeletonHeader,
   TableSkeletonRows,
 } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import {
   useDeleteRecurringInvoice,
@@ -31,13 +34,16 @@ interface RecurringInvoicesDataTableProps
       WithRecurringInvoicesProps,
       'recurringInvoicesTableState' | 'recurringInvoicesSelectedRows'
     >,
-    WithRecurringInvoiceActionsProps {}
+    WithRecurringInvoiceActionsProps,
+    WithDrawerActionsProps {}
 
 function RecurringInvoicesDataTableInner({
   setRecurringInvoicesTableState,
   setRecurringInvoicesSelectedRows,
   recurringInvoicesTableState,
   recurringInvoicesSelectedRows,
+  // #withDrawerActions
+  openDrawer,
 }: RecurringInvoicesDataTableProps) {
   const history = useHistory();
   const {
@@ -63,9 +69,17 @@ function RecurringInvoicesDataTableInner({
     history.push(`/recurring-invoices/${recurringInvoice.id}/edit`);
   };
 
+  const handleViewDetails = (recurringInvoice: RecurringInvoiceTableRow) => {
+    openDrawer(DRAWERS.RECURRING_INVOICE_DETAILS, {
+      recurringInvoiceId: recurringInvoice.id,
+      tab: 'details',
+    });
+  };
+
   const handleViewInvoices = (recurringInvoice: RecurringInvoiceTableRow) => {
-    history.push(`/recurring-invoices/${recurringInvoice.id}/edit`, {
-      openGeneratedInvoices: true,
+    openDrawer(DRAWERS.RECURRING_INVOICE_DETAILS, {
+      recurringInvoiceId: recurringInvoice.id,
+      tab: 'invoices',
     });
   };
 
@@ -161,7 +175,10 @@ function RecurringInvoicesDataTableInner({
   );
 
   const handleCellClick = (cell: any) => {
-    history.push(`/recurring-invoices/${cell.row.original.id}/edit`);
+    openDrawer(DRAWERS.RECURRING_INVOICE_DETAILS, {
+      recurringInvoiceId: cell.row.original.id,
+      tab: 'details',
+    });
   };
 
   if (isEmptyStatus) {
@@ -198,6 +215,7 @@ function RecurringInvoicesDataTableInner({
         size={invoicesSettings?.tableSize as string | undefined}
         payload={{
           onEdit: handleEdit,
+          onViewDetails: handleViewDetails,
           onViewInvoices: handleViewInvoices,
           onPause: handlePause,
           onResume: handleResume,
@@ -230,4 +248,5 @@ export const RecurringInvoicesDataTable = FF.pipe(
     }),
   ),
   withRecurringInvoicesActions,
+  withDrawerActions,
 );

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { RecurringInvoicesActionsBar } from './RecurringInvoicesActionsBar';
 import { RecurringInvoicesDataTable } from './RecurringInvoicesDataTable';
 import { RecurringInvoicesEmptyStatus } from './RecurringInvoicesEmptyStatus';
+import { RecurringInvoicesListDrawers } from './RecurringInvoicesListDrawers';
 import { RecurringInvoicesListProvider } from './RecurringInvoicesListProvider';
 import { useRecurringInvoicesListContext } from './RecurringInvoicesListProvider';
 import { withRecurringInvoices } from './withRecurringInvoices';
@@ -55,6 +56,7 @@ function RecurringInvoicesListInner({
           recurringInvoicesTableState?.filterRoles || []
         }
       />
+      <RecurringInvoicesListDrawers />
       <RecurringInvoicesListContent />
     </RecurringInvoicesListProvider>
   );

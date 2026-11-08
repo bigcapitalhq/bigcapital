@@ -21,6 +21,7 @@ interface RecurringInvoiceActionsPayload {
   onResume: (recurringInvoice: RecurringInvoiceTableRow) => void;
   onGenerate: (recurringInvoice: RecurringInvoiceTableRow) => void;
   onViewInvoices: (recurringInvoice: RecurringInvoiceTableRow) => void;
+  onViewDetails: (recurringInvoice: RecurringInvoiceTableRow) => void;
 }
 
 interface ActionsMenuProps {
@@ -57,12 +58,25 @@ export function RecurringInvoiceStatus({
 
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDelete, onPause, onResume, onGenerate, onViewInvoices },
+  payload: {
+    onEdit,
+    onDelete,
+    onPause,
+    onResume,
+    onGenerate,
+    onViewInvoices,
+    onViewDetails,
+  },
 }: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
+        text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
+      />
+      <MenuItem
+        icon={<Icon icon="document" />}
         text={intl.get('recurring_invoice.view_generated_invoices')}
         onClick={safeCallback(onViewInvoices, original)}
       />
@@ -125,7 +139,7 @@ export const useRecurringInvoicesTableColumns = (): Array<
       {
         id: 'customer',
         Header: intl.get('recurring_invoice.field.customer'),
-        accessor: (row) => (row as any).customer?.displayName,
+        accessor: (row) => row.customer?.displayName,
         width: 170,
       },
       {

@@ -5,7 +5,7 @@ import { assignEntriesTaxAmount } from '@/containers/Entries/utils';
 import { TaxType } from '@/interfaces/TaxRates';
 import { repeatValue, toSafeNumber } from '@/utils';
 
-export const MIN_LINES_NUMBER = 4;
+export const MIN_LINES_NUMBER = 1;
 
 export type RecurringInvoiceEntry = {
   index: number;
