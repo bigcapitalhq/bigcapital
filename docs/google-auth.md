@@ -187,6 +187,7 @@ they set one; otherwise they must wait until Google sign-in is re-enabled.
 | `503 Google sign-in is not configured on this instance.` | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` are empty. |
 | Redirected to login with `error=google_auth_failed` | Consent cancelled, state expired (10-minute limit), cookies blocked, or the code exchange failed. Check the API logs. |
 | Redirected with `error=no_active_workspace` | The account has no active workspace membership. Invited users must accept their invite first. |
+| Redirected to login and the API logs show `ER_BAD_FIELD_ERROR: Unknown column 'GOOGLE_ID'` | The system migration has not been applied to the instance's system database. Run `pnpm run build:server && pnpm run system:migrate:latest` (or the `database_migration` service in Docker), then retry. |
 | `The given email address format is not allowed to signup.` | Sign-up restrictions block the Google email. Adjust `SIGNUP_ALLOWED_DOMAINS` / `SIGNUP_ALLOWED_EMAILS` or the account. |
 | `This email address is linked to a different Google account.` | The email is already linked to another Google id. Sign in with the original Google account. |
 | Accounts are created but land on an empty app | Ensure the tenant build/seed process is running; Google sign-up uses the same flow as email sign-up. |
