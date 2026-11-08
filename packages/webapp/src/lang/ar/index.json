@@ -24,6 +24,8 @@
   "sign_up": "تسجيل",
   "return_to": "عودة إلى",
   "sign_in": "صفحة الدخول",
+  "continue_with_google": "المتابعة باستخدام Google",
+  "google_auth_failed": "تعذر تسجيل الدخول باستخدام Google. يرجى المحاولة مرة أخرى.",
   "enter_the_email_address_associated_with_your_account": "قم بادخال بريدك الإلكتروني المرتبط بالحساب وسوف نرسل لك رابط لاعادة تعيين كلمة المرور.",
   "create_an_account": "إنشاء حساب",
   "need_bigcapital_account": "تحتاج إلى حساب Bigcapital؟",

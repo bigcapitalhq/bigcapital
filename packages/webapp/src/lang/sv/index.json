@@ -22,6 +22,8 @@
   "sign_up": "Registrera dig",
   "return_to": "Återgå till",
   "sign_in": "Logga in",
+  "continue_with_google": "Fortsätt med Google",
+  "google_auth_failed": "Vi kunde inte logga in dig med Google. Försök igen.",
   "enter_the_email_address_associated_with_your_account": "Ange den e-postadress som är kopplad till ditt konto så skickar vi dig en länk för att återställa ditt lösenord.",
   "create_an_account": "Skapa ett konto",
   "need_bigcapital_account": "Behöver du ett Bigcapital-konto?",

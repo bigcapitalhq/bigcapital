@@ -62,6 +62,12 @@ To get started with self-hosted with Docker and Docker Compose, take a look at t
 
 To get started locally, we have a [guide to help you](https://github.com/bigcapitalhq/bigcapital/blob/develop/CONTRIBUTING.md).
 
+### Configuration
+
+Optional integrations are documented under [`docs/`](docs/):
+
+- [Google Sign-In](docs/google-auth.md) — configure the "Continue with Google" button.
+
 ### Gitpod
 
 - Click the Gitpod button below to open this project in development mode.
@@ -79,6 +85,7 @@ You can integrate Bigcapital API with your system to organize your transactions 
 
 - [Documentation](https://docs.bigcapital.app/) - Learn how to use.
 - [API Reference](https://docs.bigcapital.app/api-reference) - API reference docs
+- [Google Sign-In Setup](docs/google-auth.md) - Configure Google authentication.
 - [Contribution](https://github.com/bigcapitalhq/bigcapital/blob/develop/CONTRIBUTING.md) - Welcome to any contributions.
 - [Discord](https://discord.com/invite/c8nPBJafeb) - Ask for help.
 - [Bug Tracker](https://github.com/bigcapitalhq/bigcapital/issues) - Notify us new bugs.

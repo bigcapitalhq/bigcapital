@@ -22,6 +22,8 @@
   "sign_up": "Sign up",
   "return_to": "Return to",
   "sign_in": "Sign In",
+  "continue_with_google": "Continue with Google",
+  "google_auth_failed": "We could not sign you in with Google. Please try again.",
   "enter_the_email_address_associated_with_your_account": "Enter the email address associated with your account and we'll send you a link to reset your password.",
   "create_an_account": "Create an account",
   "need_bigcapital_account": "Need a Bigcapital account ?",

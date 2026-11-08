@@ -23,6 +23,8 @@
   "sign_up": "Regístrate",
   "return_to": "Regresar a",
   "sign_in": "Iniciar sesión",
+  "continue_with_google": "Continuar con Google",
+  "google_auth_failed": "No pudimos iniciar sesión con Google. Inténtalo de nuevo.",
   "enter_the_email_address_associated_with_your_account": "Ingresa la dirección de correo electrónico asociada a tu cuenta y te enviaremos un enlace para restablecer tu contraseña.",
   "create_an_account": "Crear una cuenta",
   "need_bigcapital_account": "¿Necesitas una cuenta de Bigcapital?",
