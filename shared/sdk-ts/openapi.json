@@ -176,6 +176,36 @@
         ]
       }
     },
+    "/api/auth/google": {
+      "get": {
+        "operationId": "AuthController_googleAuth",
+        "summary": "Start sign-in with Google",
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "Redirects the browser to the Google consent screen."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/google/callback": {
+      "get": {
+        "operationId": "AuthController_googleAuthCallback",
+        "summary": "Google OAuth callback",
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "Redirects to the web app with a JWT access token or an error code."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/api/auth/signup/verify/resend": {
       "post": {
         "operationId": "AuthedController_resendSignupConfirm",
@@ -25796,10 +25826,15 @@
           "signupDisabled": {
             "type": "boolean",
             "description": "Whether signup is disabled"
+          },
+          "googleEnabled": {
+            "type": "boolean",
+            "description": "Whether sign-in with Google is enabled"
           }
         },
         "required": [
-          "signupDisabled"
+          "signupDisabled",
+          "googleEnabled"
         ]
       },
       "AuthSigninDto": {

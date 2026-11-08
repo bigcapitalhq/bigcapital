@@ -13,6 +13,7 @@ import stripePayment from './stripe-payment';
 import signupConfirmation from './signup-confirmation';
 import signupRestrictions from './signup-restrictions';
 import jwt from './jwt';
+import google from './google';
 import mail from './mail';
 import sms from './sms';
 import loops from './loops';
@@ -41,6 +42,7 @@ export const config = [
   signupConfirmation,
   signupRestrictions,
   jwt,
+  google,
   mail,
   sms,
   loops,

@@ -7,6 +7,8 @@ import {
   AuthFooterLink,
   AuthInsiderCard,
 } from './_components';
+import { useAuthMetaBoot } from './AuthMetaBoot';
+import { GoogleAuthSection } from './GoogleAuthButton';
 import { RegisterForm } from './RegisterForm';
 import {
   RegisterSchema,
@@ -32,6 +34,7 @@ const initialValues: RegisterValues = {
 export function RegisterUserForm() {
   const { mutateAsync: authLoginMutate } = useAuthLogin();
   const { mutateAsync: authRegisterMutate } = useAuthRegister();
+  const { googleEnabled } = useAuthMetaBoot();
 
   const handleSubmit = (
     values: RegisterValues,
@@ -72,6 +75,8 @@ export function RegisterUserForm() {
   return (
     <AuthInsider>
       <AuthInsiderCard>
+        {googleEnabled && <GoogleAuthSection />}
+
         <Formik
           initialValues={initialValues}
           validationSchema={RegisterSchema}
