@@ -195,9 +195,9 @@ export function ReconciliationStartPanel({
 const Panel = styled.div`
   margin: 16px 15px 0;
   padding: 18px;
-  border: 1px solid var(--x-border-color, #e1e8ed);
+  border: 1px solid var(--x-recon-border);
   border-radius: 4px;
-  background: var(--color-white, #fff);
+  background: var(--x-recon-surface);
 `;
 
 const PanelHeader = styled.div`
@@ -212,7 +212,7 @@ const PanelTitle = styled.h3`
 
 const PanelSubtitle = styled.div`
   font-size: 13px;
-  color: var(--x-text-color-muted, #738091);
+  color: var(--x-recon-text-muted);
 `;
 
 const BalanceRow = styled.div`
@@ -220,7 +220,7 @@ const BalanceRow = styled.div`
   gap: 28px;
   margin-bottom: 16px;
   padding-bottom: 14px;
-  border-bottom: 1px solid var(--x-border-color-light, #eef1f4);
+  border-bottom: 1px solid var(--x-recon-border-light);
 `;
 
 const BalanceItem = styled.div`
@@ -233,7 +233,7 @@ const BalanceLabel = styled.div`
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--x-text-color-muted, #738091);
+  color: var(--x-recon-text-muted);
 `;
 
 const BalanceValue = styled.div`
@@ -252,15 +252,15 @@ const ReadOnlyValue = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px;
-  border: 1px solid var(--x-border-color, #d3d8de);
+  border: 1px solid var(--color-ui-input-border);
   border-radius: 3px;
-  background: var(--x-input-disabled-background, #f6f7f9);
-  color: var(--x-text-color-muted, #738091);
+  background: var(--color-ui-input-background);
+  color: var(--x-recon-text-muted);
 `;
 
 const Hint = styled.div`
   font-size: 12px;
-  color: var(--x-text-color-muted, #738091);
+  color: var(--x-recon-text-muted);
   margin-bottom: 12px;
 `;
 

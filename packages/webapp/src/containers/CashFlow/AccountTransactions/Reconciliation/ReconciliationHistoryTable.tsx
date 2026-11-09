@@ -101,20 +101,21 @@ export function ReconciliationHistoryTable({
 const TableWrap = styled.div`
   margin: 12px 15px 0;
   overflow-x: auto;
-  border: 1px solid var(--x-border-color, #e1e8ed);
+  border: 1px solid var(--x-recon-border);
   border-radius: 4px;
-  background: var(--color-white, #fff);
+  background: var(--x-recon-surface);
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
+  color: var(--x-recon-text);
 
   th,
   td {
     padding: 8px 10px;
     font-size: 13px;
-    border-bottom: 1px solid var(--x-border-color-light, #eef1f4);
+    border-bottom: 1px solid var(--x-recon-border-light);
     text-align: left;
     vertical-align: middle;
   }
@@ -123,9 +124,9 @@ const Table = styled.table`
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--x-text-color-muted, #738091);
+    color: var(--x-recon-text-muted);
     font-weight: 600;
-    background: var(--x-table-header-background, #f6f7f9);
+    background: var(--x-recon-table-header-background);
   }
 
   tbody tr {
@@ -133,11 +134,11 @@ const Table = styled.table`
   }
 
   tbody tr:hover {
-    background: var(--x-table-row-hover-background, #f6f8fa);
+    background: var(--x-recon-table-row-hover);
   }
 
   tbody tr.is-selected {
-    background: var(--x-table-row-selected-background, #f1f8ff);
+    background: var(--x-recon-table-row-selected);
   }
 
   td.money,

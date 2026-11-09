@@ -404,9 +404,9 @@ export function ReconciliationWorkspace({
 
 const WorkspaceWrap = styled.div`
   margin: 16px 15px 0;
-  border: 1px solid var(--x-border-color, #e1e8ed);
+  border: 1px solid var(--x-recon-border);
   border-radius: 4px;
-  background: var(--color-white, #fff);
+  background: var(--x-recon-surface);
   overflow: hidden;
 `;
 
@@ -416,7 +416,7 @@ const WorkspaceHeader = styled.div`
   justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
-  border-bottom: 1px solid var(--x-border-color-light, #eef1f4);
+  border-bottom: 1px solid var(--x-recon-border-light);
 `;
 
 const WorkspaceTitle = styled.h3`
@@ -427,7 +427,7 @@ const WorkspaceTitle = styled.h3`
 
 const WorkspaceSubtitle = styled.div`
   font-size: 12px;
-  color: var(--x-text-color-muted, #738091);
+  color: var(--x-recon-text-muted);
 `;
 
 const WorkspaceActions = styled.div`
@@ -442,7 +442,7 @@ const Toolbar = styled.div`
   justify-content: space-between;
   gap: 12px;
   padding: 10px 16px;
-  border-bottom: 1px solid var(--x-border-color-light, #eef1f4);
+  border-bottom: 1px solid var(--x-recon-border-light);
 `;
 
 const FilterGroup = styled(ButtonGroup)`
@@ -464,7 +464,7 @@ function FilterButton({
 const EmptyWrap = styled.div`
   padding: 32px 16px;
   text-align: center;
-  color: var(--x-text-color-muted, #738091);
+  color: var(--x-recon-text-muted);
 `;
 
 const SummaryFooter = styled.div`
@@ -472,7 +472,7 @@ const SummaryFooter = styled.div`
   justify-content: flex-end;
   gap: 24px;
   padding: 10px 16px;
-  border-top: 1px solid var(--x-border-color-light, #eef1f4);
+  border-top: 1px solid var(--x-recon-border-light);
   font-size: 13px;
 `;
 
@@ -480,7 +480,7 @@ const FooterItem = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--x-text-color-muted, #738091);
+  color: var(--x-recon-text-muted);
 `;
 
 const LoadingWrap = styled.div`

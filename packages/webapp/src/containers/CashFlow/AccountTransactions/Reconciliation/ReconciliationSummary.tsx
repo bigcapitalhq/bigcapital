@@ -110,11 +110,11 @@ const SummaryCard = styled.div<{
     ${({ $balanced, $hasDifference }) =>
       $hasDifference
         ? $balanced
-          ? 'var(--color-success, #3dcc91)'
-          : 'var(--color-warning, #ffb366)'
-        : 'var(--x-border-color, #e1e8ed)'};
+          ? 'var(--x-recon-success)'
+          : 'var(--x-recon-warning)'
+        : 'var(--x-recon-border)'};
   border-radius: 4px;
-  background: var(--color-white, #fff);
+  background: var(--x-recon-surface);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -122,7 +122,7 @@ const SummaryCard = styled.div<{
 
 const SummaryLabel = styled.div`
   font-size: 12px;
-  color: var(--x-text-color-muted, #738091);
+  color: var(--x-recon-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.03em;
 `;
@@ -130,12 +130,12 @@ const SummaryLabel = styled.div`
 const SummaryValue = styled.div`
   font-size: 19px;
   font-weight: 600;
-  color: var(--x-text-color, #1c2127);
+  color: var(--x-recon-text);
 `;
 
 const SummaryHint = styled.div`
   font-size: 11px;
-  color: var(--x-text-color-muted, #738091);
+  color: var(--x-recon-text-muted);
 `;
 
 const EndingBalanceInput = styled.input`
@@ -143,9 +143,9 @@ const EndingBalanceInput = styled.input`
   font-weight: 600;
   width: 100%;
   padding: 4px 6px;
-  border: 1px solid var(--x-border-color, #d3d8de);
+  border: 1px solid var(--color-ui-input-border);
   border-radius: 3px;
-  background: transparent;
-  color: var(--x-text-color, #1c2127);
+  background: var(--color-ui-input-background);
+  color: var(--x-recon-text);
   outline: none;
 `;
