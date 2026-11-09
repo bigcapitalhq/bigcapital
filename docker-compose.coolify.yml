@@ -15,14 +15,6 @@
 #   3. Fill in the environment variables (see .env.example).
 #   4. Assign your FQDN to the `webapp` service, container port 80.
 
-x-server-build: &server-build
-  context: ./
-  dockerfile: packages/server/Dockerfile
-
-# Shared tag so the one-shot migration service reuses the server image
-# instead of building the same image twice.
-x-server-image: &server-image bigcapital-server:local
-
 services:
   webapp:
     build:
@@ -30,17 +22,16 @@ services:
       dockerfile: packages/webapp/Dockerfile
     image: bigcapital-webapp:local
     restart: unless-stopped
-    depends_on:
-      server:
-        condition: service_started
     expose:
       - '80'
     networks:
       - bigcapital_network
 
   server:
-    build: *server-build
-    image: *server-image
+    build:
+      context: ./
+      dockerfile: packages/server/Dockerfile
+    image: bigcapital-server:local
     restart: unless-stopped
     depends_on:
       mysql:
@@ -146,8 +137,10 @@ services:
   # One-shot: runs system + tenant migrations, then exits 0.
   # `server` waits for it via `service_completed_successfully`.
   database_migration:
-    build: *server-build
-    image: *server-image
+    build:
+      context: ./
+      dockerfile: packages/server/Dockerfile
+    image: bigcapital-server:local
     restart: 'no'
     command: >
       sh -c "node packages/server/dist/cli.js system:migrate:latest &&
