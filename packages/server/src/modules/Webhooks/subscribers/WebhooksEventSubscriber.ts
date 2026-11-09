@@ -13,7 +13,9 @@ export class WebhooksEventSubscriber implements OnModuleInit {
   onModuleInit() {
     for (const mapping of WEBHOOK_EVENT_MAPPINGS) {
       this.eventEmitter.on(mapping.internalEvent, async (payload: any) => {
-        const data = payload?.[mapping.dataKey] ?? { id: payload?.[mapping.idKey] };
+        const data = payload?.[mapping.dataKey] ?? {
+          id: payload?.[mapping.idKey],
+        };
         await this.webhookDeliverer.enqueueMatchingWebhooks(
           mapping.entity,
           mapping.action,

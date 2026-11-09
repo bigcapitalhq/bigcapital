@@ -9,7 +9,11 @@ export class GetWebhooksService {
     private readonly webhookModel: TenantModelProxy<typeof Webhook>,
   ) {}
 
-  public async getWebhooks(filterBy?: string, page: number = 1, pageSize: number = 20) {
+  public async getWebhooks(
+    filterBy?: string,
+    page: number = 1,
+    pageSize: number = 20,
+  ) {
     let query = this.webhookModel().query().orderBy('createdAt', 'desc');
 
     if (filterBy && filterBy !== 'all') {

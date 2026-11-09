@@ -12,7 +12,9 @@ export class WebhookSignatureService {
   public generateSignature(payload: string, secret: string): string {
     const timestamp = Math.floor(Date.now() / 1000);
     const signedPayload = `${timestamp}.${payload}`;
-    const signature = createHmac('sha256', secret).update(signedPayload).digest('hex');
+    const signature = createHmac('sha256', secret)
+      .update(signedPayload)
+      .digest('hex');
     return `t=${timestamp},v1=${signature}`;
   }
 
@@ -23,7 +25,11 @@ export class WebhookSignatureService {
    * @param {string} header - Signature header value.
    * @returns {boolean}
    */
-  public verifySignature(payload: string, secret: string, header: string): boolean {
+  public verifySignature(
+    payload: string,
+    secret: string,
+    header: string,
+  ): boolean {
     const expected = this.generateSignature(payload, secret);
     return expected === header;
   }

@@ -20,7 +20,9 @@ export class WebhookDeliveryProcessor extends WorkerHost {
     @Inject(Webhook.name)
     private readonly webhookModel: TenantModelProxy<typeof Webhook>,
     @Inject(WebhookDelivery.name)
-    private readonly webhookDeliveryModel: TenantModelProxy<typeof WebhookDelivery>,
+    private readonly webhookDeliveryModel: TenantModelProxy<
+      typeof WebhookDelivery
+    >,
     private readonly clsService: ClsService,
   ) {
     super();
@@ -43,7 +45,8 @@ export class WebhookDeliveryProcessor extends WorkerHost {
     };
 
     if (webhook.secret) {
-      headers['X-Webhook-Signature'] = this.webhookSignatureService.generateSignature(body, webhook.secret);
+      headers['X-Webhook-Signature'] =
+        this.webhookSignatureService.generateSignature(body, webhook.secret);
     }
 
     if (webhook.headers) {
@@ -68,13 +71,19 @@ export class WebhookDeliveryProcessor extends WorkerHost {
         maxContentLength: Infinity,
       });
       responseStatus = response.status;
-      responseBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+      responseBody =
+        typeof response.data === 'string'
+          ? response.data
+          : JSON.stringify(response.data);
       deliveredAt = new Date();
     } catch (error) {
       const axiosError = error as AxiosError;
       if (axiosError.response) {
         responseStatus = axiosError.response.status;
-        responseBody = typeof axiosError.response.data === 'string' ? axiosError.response.data : JSON.stringify(axiosError.response.data);
+        responseBody =
+          typeof axiosError.response.data === 'string'
+            ? axiosError.response.data
+            : JSON.stringify(axiosError.response.data);
       }
       errorMessage = axiosError.message;
       throw error;

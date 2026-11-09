@@ -17,7 +17,13 @@ export async function up(knex: Knex): Promise<void> {
 
   await knex.schema.createTable('webhook_deliveries', (table) => {
     table.increments('id').primary();
-    table.integer('webhook_id').unsigned().notNullable().references('id').inTable('webhooks').onDelete('CASCADE');
+    table
+      .integer('webhook_id')
+      .unsigned()
+      .notNullable()
+      .references('id')
+      .inTable('webhooks')
+      .onDelete('CASCADE');
     table.string('event_type', 255).notNullable();
     table.json('payload').notNullable();
     table.integer('response_status').nullable();

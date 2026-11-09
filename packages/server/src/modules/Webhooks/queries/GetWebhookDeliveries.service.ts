@@ -6,10 +6,16 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 export class GetWebhookDeliveriesService {
   constructor(
     @Inject(WebhookDelivery.name)
-    private readonly webhookDeliveryModel: TenantModelProxy<typeof WebhookDelivery>,
+    private readonly webhookDeliveryModel: TenantModelProxy<
+      typeof WebhookDelivery
+    >,
   ) {}
 
-  public async getDeliveries(webhookId: number, page: number = 1, pageSize: number = 20) {
+  public async getDeliveries(
+    webhookId: number,
+    page: number = 1,
+    pageSize: number = 20,
+  ) {
     const results = await this.webhookDeliveryModel()
       .query()
       .where('webhook_id', webhookId)

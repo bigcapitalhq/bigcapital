@@ -159,6 +159,10 @@ export class WebhooksController {
     @Query('page') page?: number,
     @Query('page_size') pageSize?: number,
   ) {
-    return this.webhooksApplication.getWebhookDeliveries(webhookId, page, pageSize);
+    return this.webhooksApplication.getWebhookDeliveries(
+      webhookId,
+      page,
+      pageSize,
+    );
   }
 }
