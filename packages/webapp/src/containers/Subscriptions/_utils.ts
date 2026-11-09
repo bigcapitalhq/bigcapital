@@ -7,16 +7,26 @@ export const getSubscriptionStatusText = (
 ): string => {
   if (subscription.status === 'on_trial') {
     return subscription.onTrial
-      ? `Trials ends in ${subscription.trialEndsAtFormatted}`
-      : `Trial ended ${subscription.trialEndsAtFormatted}`;
-  } else if (subscription.status === 'active') {
+      ? `Trial ends on ${subscription.trialEndsAtFormatted}`
+      : `Trial ended on ${subscription.trialEndsAtFormatted}`;
+  }
+  if (subscription.status === 'past_due') {
+    return 'Payment failed. Please update your billing information.';
+  }
+  if (subscription.status === 'active') {
+    if (subscription.cancelAtPeriodEnd) {
+      return subscription.endsAtFormatted
+        ? `Cancels on ${subscription.endsAtFormatted}`
+        : 'Scheduled for cancellation';
+    }
     return subscription.endsAtFormatted
-      ? `Renews in ${subscription.endsAtFormatted}`
+      ? `Renews on ${subscription.endsAtFormatted}`
       : 'Lifetime subscription';
-  } else if (subscription.status === 'canceled') {
+  }
+  if (subscription.status === 'canceled') {
     return subscription.ended
-      ? `Expires ${subscription.endsAtFormatted}`
-      : `Expired ${subscription.endsAtFormatted}`;
+      ? `Expired on ${subscription.endsAtFormatted}`
+      : `Expires on ${subscription.endsAtFormatted}`;
   }
   return '';
 };

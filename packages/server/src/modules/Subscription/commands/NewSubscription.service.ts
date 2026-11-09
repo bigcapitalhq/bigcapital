@@ -34,10 +34,10 @@ export class NewSubscriptionService {
       .findOne('slug', planSlug)
       .throwIfNotFound();
 
-    const isFree = plan.price === 0;
+    const isFree = Number(plan.price) === 0;
 
     // Take the invoice interval and period from the given plan.
-    const invoiceInterval = plan.invoiceInternal;
+    const invoiceInterval = plan.invoiceInterval;
     const invoicePeriod = isFree ? Infinity : plan.invoicePeriod;
 
     const subscription = await tenant

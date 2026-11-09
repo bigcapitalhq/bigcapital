@@ -1,28 +1,21 @@
 export const ERRORS = {
-  SUBSCRIPTION_ID_NOT_ASSOCIATED_TO_TENANT:
-    'SUBSCRIPTION_ID_NOT_ASSOCIATED_TO_TENANT',
+  BILLING_NOT_AVAILABLE: 'BILLING_NOT_AVAILABLE',
+  STRIPE_BILLING_NOT_CONFIGURED: 'STRIPE_BILLING_NOT_CONFIGURED',
+  STRIPE_PLAN_NOT_LINKED: 'STRIPE_PLAN_NOT_LINKED',
+  STRIPE_CUSTOMER_NOT_FOUND: 'STRIPE_CUSTOMER_NOT_FOUND',
+  STRIPE_SUBSCRIPTION_NOT_FOUND: 'STRIPE_SUBSCRIPTION_NOT_FOUND',
+  STRIPE_CHECKOUT_SESSION_FAILED: 'STRIPE_CHECKOUT_SESSION_FAILED',
+  STRIPE_SESSION_NOT_FOUND: 'STRIPE_SESSION_NOT_FOUND',
   SUBSCRIPTION_NOT_EXIST: 'SUBSCRIPTION_NOT_EXIST',
   SUBSCRIPTION_ALREADY_CANCELED: 'SUBSCRIPTION_ALREADY_CANCELED',
   SUBSCRIPTION_ALREADY_ACTIVE: 'SUBSCRIPTION_ALREADY_ACTIVE',
-  SOMETHING_WENT_WRONG_WITH_LS: 'SOMETHING_WENT_WRONG_WITH_LS',
 };
 
-export interface IOrganizationSubscriptionChanged {
-  lemonSubscriptionId: string;
-  newVariantId: number;
+export interface IStripeCheckoutSession {
+  url: string;
+  sessionId: string;
 }
 
-export interface IOrganizationSubscriptionCancel {
-  subscriptionId: number;
-}
-
-export interface IOrganizationSubscriptionCancelled {
-  subscriptionId: number;
-}
-
-export interface IOrganizationSubscriptionResume {
-  subscriptionId: number;
-}
-export interface IOrganizationSubscriptionResumed {
-  subscriptionId: number;
+export interface IStripePortalSession {
+  url: string;
 }

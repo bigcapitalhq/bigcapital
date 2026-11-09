@@ -1,26 +1,29 @@
-exports.seed = (knex) => {
-  // Deletes ALL existing entries
-  return knex('subscription_plan_subscriptions')
-    .then(async () => {
-      const tenants = await knex('tenants');
+exports.seed = async (knex) => {
+  // Cloud organizations subscribe through Stripe; never grant them the
+  // self-hosted free plan.
+  if (process.env.HOSTED_ON_BIGCAPITAL_CLOUD === 'true') return;
 
-      for (const tenant of tenants) {
-        const existingSubscription = await knex('subscription_plan_subscriptions')
-          .where('tenantId', tenant.id)
-          .first();
+  const tenants = await knex('tenants');
+  const freePlan = await knex('subscription_plans')
+    .where('slug', 'free')
+    .first();
 
-        if (!existingSubscription) {
-          const freePlan = await knex('subscription_plans').where('slug', 'free').first();
+  if (!freePlan) return;
 
-          await knex('subscription_plan_subscriptions').insert({
-            tenantId: tenant.id,
-            planId: freePlan.id,
-            slug: 'main',
-            startsAt: knex.fn.now(),
-            endsAt: null,
-            createdAt: knex.fn.now(),
-          });
-        }
-      }
-    });
+  for (const tenant of tenants) {
+    const existingSubscription = await knex('subscription_plan_subscriptions')
+      .where('tenant_id', tenant.id)
+      .first();
+
+    if (!existingSubscription) {
+      await knex('subscription_plan_subscriptions').insert({
+        tenant_id: tenant.id,
+        plan_id: freePlan.id,
+        slug: 'main',
+        starts_at: knex.fn.now(),
+        ends_at: null,
+        created_at: knex.fn.now(),
+      });
+    }
+  }
 };

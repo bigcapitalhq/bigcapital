@@ -28,4 +28,3 @@ export * from './inventory-adjustments/inventory-adjustment.type';
 export * from './credit-note/credit-note.type';
 export * from './vendor-credit/vendor-credit.type';
 export * from './warehouse-transfer/warehouse-transfer.type';
-export * from './plans/plans.types';

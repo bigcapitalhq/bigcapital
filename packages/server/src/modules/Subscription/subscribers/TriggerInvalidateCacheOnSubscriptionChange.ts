@@ -10,6 +10,9 @@ export class TriggerInvalidateCacheOnSubscriptionChange {
   @OnEvent(events.subscription.onSubscriptionCancelled)
   @OnEvent(events.subscription.onSubscriptionResumed)
   @OnEvent(events.subscription.onSubscriptionPlanChanged)
+  @OnEvent(events.subscription.onSubscriptionSubscribed)
+  @OnEvent(events.subscription.onSubscriptionPaymentSucceed)
+  @OnEvent(events.subscription.onSubscriptionPaymentFailed)
   triggerInvalidateCache() {
     // Notify the frontend to reflect the subscription changes.
     this.socketGateway.emitSubscriptionChanged();

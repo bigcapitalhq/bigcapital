@@ -27,7 +27,6 @@ function CancelMainSubscriptionAlertInner({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { module },
 
   // #withAlertActions
   closeAlert,
@@ -41,9 +40,6 @@ function CancelMainSubscriptionAlertInner({
   };
   // Handle confirm.
   const handleConfirm = () => {
-    const values = {
-      module: module,
-    };
     cancelSubscription()
       .then(() => {
         AppToaster.show({
@@ -68,12 +64,16 @@ function CancelMainSubscriptionAlertInner({
       loading={isLoading}
     >
       <p>
-        <strong>The subscription for this organization will end.</strong>
+        <strong>
+          The subscription for this organization will end at the current billing
+          period.
+        </strong>
       </p>
 
       <p>
-        It will no longer be accessible to you or any other users. Make sure any
-        data has already been exported.
+        You can resume the subscription at any time before it expires. Once it
+        ends, write access to the organization will be blocked until you
+        subscribe again.
       </p>
     </Alert>
   );

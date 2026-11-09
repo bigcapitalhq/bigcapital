@@ -1,36 +1,32 @@
 import { Button, Card, Classes, Intent, Text } from '@blueprintjs/core';
 import clsx from 'classnames';
-import * as FF from 'fp-ts/function';
 import { includes } from 'lodash';
-import { withAlertActions } from '../Alert/withAlertActions';
-import { withDrawerActions } from '../Drawer/withDrawerActions';
 import { getSubscriptionStatusText } from './_utils';
 import { useBillingPageBoot } from './BillingPageBoot';
 import styles from './BillingSubscription.module.scss';
 import { SubscriptionsDrawers } from './SubscriptionsDrawers';
-import type { WithAlertActionsProps } from '../Alert/withAlertActions';
-import type { WithDrawerActionsProps } from '../Drawer/withDrawerActions';
 import type { SubscriptionsListResponse } from '@bigcapital/sdk-ts';
-import { Box, Group, Stack } from '@/components';
+import { AppToaster, Can, Group, Stack } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { useLemonSubscription } from '@/hooks/query/subscription';
+import { useCreateStripePortalSession } from '@/hooks/query/subscription';
+import { useAlertActions, useDrawerActions } from '@/hooks/state';
 
 type MainSubscription = SubscriptionsListResponse['subscriptions'][number];
 
-interface SubscriptionRootProps
-  extends WithDrawerActionsProps,
-    WithAlertActionsProps {}
+/**
+ * Current subscription summary and actions.
+ */
+export function Subscription() {
+  const { mainSubscription, billingOverview } = useBillingPageBoot();
+  const { openAlert } = useAlertActions();
+  const { openDrawer } = useDrawerActions();
+  const { mutateAsync: createPortalSession, isPending: isPortalPending } =
+    useCreateStripePortalSession();
 
-function SubscriptionRoot({ openAlert, openDrawer }: SubscriptionRootProps) {
-  const { mainSubscription } = useBillingPageBoot() as {
-    mainSubscription?: MainSubscription;
-  };
-  const lemonSubscription = useLemonSubscription('main');
-
-  // Can't continue if the main subscription is not loaded.
   if (!mainSubscription) {
     return null;
   }
+
   const handleCancelSubBtnClick = () => {
     openAlert('cancel-main-subscription');
   };
@@ -38,14 +34,23 @@ function SubscriptionRoot({ openAlert, openDrawer }: SubscriptionRootProps) {
     openAlert('resume-main-subscription');
   };
   const handleUpdatePaymentMethod = () => {
-    window.LemonSqueezy!.Url.Open(
-      lemonSubscription?.urls?.updatePaymentMethod as string | undefined,
-    );
+    createPortalSession()
+      .then(({ url }) => {
+        window.location.assign(url);
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Unable to open the billing portal. Please try again.',
+          intent: Intent.DANGER,
+        });
+      });
   };
-  // Handle upgrade button click.
   const handleUpgradeBtnClick = () => {
     openDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
   };
+  const isActive = mainSubscription.active;
+  const isCancelScheduled = mainSubscription.cancelAtPeriodEnd;
+  const hasStripeAccount = !!billingOverview?.customer;
 
   return (
     <Card className={styles.root}>
@@ -57,7 +62,7 @@ function SubscriptionRoot({ openAlert, openDrawer }: SubscriptionRootProps) {
           spacing={0}
           className={clsx(styles.period, {
             [Classes.INTENT_DANGER]: includes(
-              ['on_trial', 'inactive'],
+              ['on_trial', 'inactive', 'past_due'],
               mainSubscription.status,
             ),
             [Classes.INTENT_SUCCESS]: includes(
@@ -79,45 +84,54 @@ function SubscriptionRoot({ openAlert, openDrawer }: SubscriptionRootProps) {
         intelligent reports for faster decision-making.
       </Text>
 
-      <Stack align="flex-start" spacing={8} className={styles.actions}>
-        <Button
-          minimal
-          small
-          intent={Intent.PRIMARY}
-          onClick={handleUpgradeBtnClick}
-        >
-          Upgrade the Plan
-        </Button>
+      {hasStripeAccount && (
+        <Can I="manage" a="all">
+          <Stack align="flex-start" spacing={8} className={styles.actions}>
+            {isActive && (
+              <Button
+                minimal
+                small
+                intent={Intent.PRIMARY}
+                onClick={handleUpgradeBtnClick}
+              >
+                Change plan
+              </Button>
+            )}
 
-        {mainSubscription.canceled && (
-          <Button
-            minimal
-            small
-            intent={Intent.PRIMARY}
-            onClick={handleResumeSubBtnClick}
-          >
-            Resume Subscription
-          </Button>
-        )}
-        {!mainSubscription.canceled && (
-          <Button
-            minimal
-            small
-            intent={Intent.PRIMARY}
-            onClick={handleCancelSubBtnClick}
-          >
-            Cancel Subscription
-          </Button>
-        )}
-        <Button
-          minimal
-          small
-          intent={Intent.PRIMARY}
-          onClick={handleUpdatePaymentMethod}
-        >
-          Change Payment Method
-        </Button>
-      </Stack>
+            {isActive && isCancelScheduled && (
+              <Button
+                minimal
+                small
+                intent={Intent.PRIMARY}
+                onClick={handleResumeSubBtnClick}
+              >
+                Resume subscription
+              </Button>
+            )}
+
+            {isActive && !isCancelScheduled && (
+              <Button
+                minimal
+                small
+                intent={Intent.PRIMARY}
+                onClick={handleCancelSubBtnClick}
+              >
+                Cancel subscription
+              </Button>
+            )}
+
+            <Button
+              minimal
+              small
+              intent={Intent.PRIMARY}
+              onClick={handleUpdatePaymentMethod}
+              loading={isPortalPending}
+            >
+              Manage billing
+            </Button>
+          </Stack>
+        </Can>
+      )}
 
       <Group position={'apart'} style={{ marginTop: 'auto' }}>
         <Group spacing={4}>
@@ -127,36 +141,14 @@ function SubscriptionRoot({ openAlert, openDrawer }: SubscriptionRootProps) {
 
           {mainSubscription.planPeriod && (
             <Text className={styles.pricePeriod}>
-              {mainSubscription.planPeriod === 'month'
-                ? 'mo'
-                : mainSubscription.planPeriod === 'year'
-                  ? 'yearly'
-                  : ''}
+              / {mainSubscription.planPeriod === 'month' ? 'month' : 'year'}
             </Text>
           )}
         </Group>
-
-        <Box>
-          {mainSubscription.canceled && (
-            <Button
-              intent={Intent.PRIMARY}
-              onClick={handleResumeSubBtnClick}
-              className={styles.subscribeButton}
-            >
-              Resume Subscription
-            </Button>
-          )}
-        </Box>
       </Group>
     </Card>
   );
 }
-
-export const Subscription = FF.pipe(
-  SubscriptionRoot,
-  withDrawerActions,
-  withAlertActions,
-);
 
 function SubscriptionStatusText({
   subscription,

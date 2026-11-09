@@ -4536,15 +4536,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/subscription/lemon": {
+    "/api/subscription/plans": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get Lemon Squeezy subscription details for the current tenant */
-        get: operations["SubscriptionsController_getLemonSubscriptions"];
+        /** Get the Bigcapital Cloud plan catalog */
+        get: operations["SubscriptionsController_getPlans"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4553,7 +4553,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/subscription/lemon/checkout_url": {
+    "/api/subscription/stripe/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Stripe billing overview for the current organization */
+        get: operations["SubscriptionsController_getBillingOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/stripe/checkout_session": {
         parameters: {
             query?: never;
             header?: never;
@@ -4562,8 +4579,59 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Get LemonSqueezy checkout URL */
-        post: operations["SubscriptionsController_getCheckoutUrl"];
+        /** Create a Stripe Checkout session for a subscription plan */
+        post: operations["SubscriptionsController_createCheckoutSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/stripe/portal_session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a Stripe Customer Portal session */
+        post: operations["SubscriptionsController_createPortalSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/stripe/sync": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Synchronize a completed Stripe Checkout session */
+        post: operations["SubscriptionsController_syncCheckoutSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/subscription/change": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Change the subscription plan of the current organization */
+        post: operations["SubscriptionsController_changeSubscriptionPlan"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4604,7 +4672,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/subscription/change": {
+    "/api/webhooks/stripe-billing": {
         parameters: {
             query?: never;
             header?: never;
@@ -4613,24 +4681,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Change the subscription plan of the current organization */
-        post: operations["SubscriptionsController_changeSubscriptionPlan"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/webhooks/lemon": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["SubscriptionsLemonWebhook_lemonWebhooks"];
+        /** Listen to Stripe Billing webhooks */
+        post: operations["StripeBillingWebhooksController_handleWebhook"];
         delete?: never;
         options?: never;
         head?: never;
@@ -17613,7 +17665,7 @@ export interface components {
              * @example active
              * @enum {string}
              */
-            status: "active" | "inactive" | "on_trial" | "canceled";
+            status: "active" | "inactive" | "on_trial" | "canceled" | "past_due";
             /** @example true */
             active: boolean;
             /** @example false */
@@ -17624,6 +17676,16 @@ export interface components {
             canceled: boolean;
             /** @example false */
             ended: boolean;
+            /**
+             * @description Whether the subscription will cancel at the period end.
+             * @example false
+             */
+            cancelAtPeriodEnd: boolean;
+            /**
+             * @description The raw Stripe subscription status.
+             * @example active
+             */
+            stripeStatus?: string | null;
             /**
              * @example succeed
              * @enum {string}
@@ -17655,6 +17717,8 @@ export interface components {
             canceledAtFormatted?: string | null;
             /** @example Jan 1, 2024 */
             endsAtFormatted?: string | null;
+            /** @example Jan 1, 2024 */
+            startsAtFormatted?: string | null;
             /** @example null */
             trialStartsAtFormatted?: string | null;
             /** @example Jan 7, 2024 */
@@ -17663,6 +17727,8 @@ export interface components {
             planName: string;
             /** @example standard */
             planSlug: string;
+            /** @example Good for service businesses that just started. */
+            planDescription?: string | null;
             /** @example 10 */
             planPrice: number;
             /** @example USD */
@@ -17675,19 +17741,142 @@ export interface components {
         SubscriptionsListResponseDto: {
             subscriptions: components["schemas"]["SubscriptionResponseDto"][];
         };
-        LemonSubscriptionUrlsDto: {
-            /** @example https://.../update-payment-method */
-            updatePaymentMethod?: string | null;
-            /** @example https://.../customer-portal */
-            customerPortal?: string | null;
+        SubscriptionPlanFeatureResponseDto: {
+            /** @example Unlimited Sale Invoices */
+            text: string;
+            /** @example Feature description */
+            hint?: string;
+            /** @example Feature label */
+            hintLabel?: string;
         };
-        LemonSubscriptionResponseDto: {
-            /** @example main */
+        SubscriptionPlanPriceResponseDto: {
+            /** @example capital-basic-monthly */
             slug: string;
-            urls: components["schemas"]["LemonSubscriptionUrlsDto"];
+            /** @example month */
+            interval: string;
+            /** @example 1 */
+            intervalCount: number;
+            /** @example 10 */
+            amount: number;
+            /** @example $10 */
+            amountFormatted: string;
+            /** @example Per month */
+            priceLabel: string;
         };
-        LemonSubscriptionsListResponseDto: {
-            lemonSubscriptions: components["schemas"]["LemonSubscriptionResponseDto"][];
+        SubscriptionPlanGroupResponseDto: {
+            /** @example capital-basic */
+            slug: string;
+            /** @example Capital Basic */
+            name: string;
+            /** @example Good for service businesses that just started. */
+            description: string;
+            features: components["schemas"]["SubscriptionPlanFeatureResponseDto"][];
+            /** @example false */
+            featured: boolean;
+            prices: components["schemas"]["SubscriptionPlanPriceResponseDto"][];
+        };
+        GetSubscriptionPlansResponseDto: {
+            plans: components["schemas"]["SubscriptionPlanGroupResponseDto"][];
+        };
+        BillingCustomerResponseDto: {
+            /** @example billing@example.com */
+            email?: string | null;
+            /** @example Acme Inc. */
+            name?: string | null;
+        };
+        BillingPaymentMethodResponseDto: {
+            /** @example visa */
+            brand: string;
+            /** @example 4242 */
+            last4: string;
+            /** @example 12 */
+            expMonth: number;
+            /** @example 2030 */
+            expYear: number;
+        };
+        BillingUpcomingInvoiceResponseDto: {
+            /** @example 1000 */
+            amountDue: number;
+            /** @example $10.00 */
+            amountDueFormatted: string;
+            /** @example USD */
+            currency: string;
+            /** @example 2026-12-01T00:00:00.000Z */
+            date: string;
+            /** @example Dec 1, 2026 */
+            dateFormatted: string;
+        };
+        BillingInvoiceResponseDto: {
+            /** @example in_xxx */
+            id: string;
+            /** @example INV-0001 */
+            number?: string | null;
+            /** @example paid */
+            status?: string | null;
+            /** @example 1000 */
+            amount: number;
+            /** @example $10.00 */
+            amountFormatted: string;
+            /** @example USD */
+            currency: string;
+            /** @example 2026-11-01T00:00:00.000Z */
+            createdAt: string;
+            /** @example Nov 1, 2026 */
+            createdAtFormatted: string;
+            /** @example https://invoice.stripe.com/xxx */
+            hostedInvoiceUrl?: string | null;
+            /** @example https://pay.stripe.com/invoice/xxx/pdf */
+            invoicePdf?: string | null;
+        };
+        BillingOverviewResponseDto: {
+            customer: components["schemas"]["BillingCustomerResponseDto"] | null;
+            paymentMethod: components["schemas"]["BillingPaymentMethodResponseDto"] | null;
+            upcomingInvoice: components["schemas"]["BillingUpcomingInvoiceResponseDto"] | null;
+            invoices: components["schemas"]["BillingInvoiceResponseDto"][];
+        };
+        StripeCheckoutSessionResponseDto: {
+            /**
+             * @description The hosted Stripe URL to redirect the user to
+             * @example https://checkout.stripe.com/c/pay/cs_test_xxx
+             */
+            url: string;
+            /**
+             * @description Stripe Checkout Session id
+             * @example cs_test_xxx
+             */
+            sessionId: string;
+        };
+        StripeSessionResponseDto: {
+            /**
+             * @description The hosted Stripe URL to redirect the user to
+             * @example https://checkout.stripe.com/c/pay/cs_test_xxx
+             */
+            url: string;
+        };
+        StripeSyncCheckoutSessionResponseDto: {
+            /** @example synced */
+            status: string;
+        };
+        CreateStripeCheckoutSessionBodyDto: {
+            /**
+             * @description The plan slug to subscribe to
+             * @example capital-basic-monthly
+             */
+            planSlug: string;
+        };
+        SyncStripeCheckoutSessionBodyDto: {
+            /**
+             * @description The Stripe Checkout Session id returned in the success URL
+             * @example cs_test_xxx
+             */
+            sessionId: string;
+        };
+        ChangeSubscriptionPlanBodyDto: {
+            /**
+             * @description The target plan slug
+             * @example capital-plus-monthly
+             */
+            planSlug: string;
         };
         OrgBaseCurrencyMutateLockDto: {
             /**
@@ -33612,7 +33801,12 @@ export interface operations {
     SubscriptionsController_getSubscriptions: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -33629,43 +33823,158 @@ export interface operations {
             };
         };
     };
-    SubscriptionsController_getLemonSubscriptions: {
+    SubscriptionsController_getPlans: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Lemon subscription details retrieved successfully */
+            /** @description Plan catalog retrieved successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["LemonSubscriptionsListResponseDto"];
+                    "application/json": components["schemas"]["GetSubscriptionPlansResponseDto"];
                 };
             };
         };
     };
-    SubscriptionsController_getCheckoutUrl: {
+    SubscriptionsController_getBillingOverview: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Billing overview retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BillingOverviewResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_createCheckoutSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
             path?: never;
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": {
-                    /** @description The variant ID for the subscription plan */
-                    variantId: string;
-                };
+                "application/json": components["schemas"]["CreateStripeCheckoutSessionBodyDto"];
             };
         };
         responses: {
-            /** @description Checkout URL retrieved successfully */
+            /** @description Checkout session created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StripeCheckoutSessionResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_createPortalSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Portal session created successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StripeSessionResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_syncCheckoutSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SyncStripeCheckoutSessionBodyDto"];
+            };
+        };
+        responses: {
+            /** @description Checkout session synchronized successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StripeSyncCheckoutSessionResponseDto"];
+                };
+            };
+        };
+    };
+    SubscriptionsController_changeSubscriptionPlan: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeSubscriptionPlanBodyDto"];
+            };
+        };
+        responses: {
+            /** @description Subscription plan changed successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -33677,7 +33986,12 @@ export interface operations {
     SubscriptionsController_cancelSubscription: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -33695,7 +34009,12 @@ export interface operations {
     SubscriptionsController_resumeSubscription: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -33710,41 +34029,18 @@ export interface operations {
             };
         };
     };
-    SubscriptionsController_changeSubscriptionPlan: {
+    StripeBillingWebhooksController_handleWebhook: {
         parameters: {
             query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    /** @description The variant ID for the new subscription plan */
-                    variant_id: number;
-                };
+            header: {
+                "stripe-signature": string;
             };
-        };
-        responses: {
-            /** @description Subscription plan changed successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SubscriptionsLemonWebhook_lemonWebhooks: {
-        parameters: {
-            query?: never;
-            header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
