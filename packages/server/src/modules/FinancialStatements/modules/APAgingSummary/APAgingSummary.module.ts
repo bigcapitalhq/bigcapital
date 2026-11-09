@@ -9,10 +9,10 @@ import { APAgingSummaryApplication } from './APAgingSummaryApplication';
 import { APAgingSummaryController } from './APAgingSummary.controller';
 import { APAgingSummaryMeta } from './APAgingSummaryMeta';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 
 @Module({
-  imports: [AgingSummaryModule, FinancialSheetCommonModule],
+  imports: [TenancyModule, AgingSummaryModule, FinancialSheetCommonModule],
   providers: [
     APAgingSummaryService,
     APAgingSummaryMeta,
@@ -21,7 +21,6 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
     APAgingSummaryPdfInjectable,
     APAgingSummaryRepository,
     APAgingSummaryApplication,
-    TenancyContext,
   ],
   controllers: [APAgingSummaryController],
 })

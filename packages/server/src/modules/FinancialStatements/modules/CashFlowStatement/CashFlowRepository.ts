@@ -1,7 +1,5 @@
-// @ts-nocheck
 import { Inject, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
-import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import { ModelObject } from 'objection';
 import { ICashFlowStatementQuery } from './Cashflow.types';
@@ -68,6 +66,7 @@ export class CashFlowRepository {
         query.modify('creditDebitSummation');
 
         query.select('accountId');
+        query.max('date as date');
         query.groupBy('accountId');
 
         query.withGraphFetched('account');
@@ -163,15 +162,16 @@ export class CashFlowRepository {
   }
 
   /**
-   * Common branches filter query.
+   * Common branches and basis filter query.
    * @param {Knex.QueryBuilder} query
    */
   private commonFilterBranchesQuery = (
     query: ICashFlowStatementQuery,
-    knexQuery: Knex.QueryBuilder,
+    knexQuery,
   ) => {
     if (!isEmpty(query.branchesIds)) {
       knexQuery.modify('filterByBranches', query.branchesIds);
     }
+    knexQuery.modify('filterByBasis', query.basis);
   };
 }

@@ -1,13 +1,17 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-import classNames from 'classnames';
-import { useFormikContext } from 'formik';
 import { Classes, Position } from '@blueprintjs/core';
 import { css } from '@emotion/css';
-
-import { FeatureCan, Stack, FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/constants/classes';
+import { useTheme } from '@emotion/react';
+import { Theme } from '@xstyled/emotion';
+import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { useBillFormContext } from './BillFormProvider';
+import { BillExchangeRateInputField } from './components';
+import { vendorsFieldShouldUpdate, type BillFormValues } from './utils';
+import { Stack, FormattedMessage as T } from '@/components';
 import {
   FFormGroup,
   FieldRequiredHint,
@@ -17,21 +21,9 @@ import {
   FDateInput,
   FInputGroup,
 } from '@/components';
-
-import { useBillFormContext } from './BillFormProvider';
-import { vendorsFieldShouldUpdate } from './utils';
-import {
-  BillExchangeRateInputField,
-  BillProjectSelectButton,
-} from './components';
-import { ProjectsSelect } from '@/containers/Projects/components';
+import { CLASSES } from '@/constants/classes';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import {
-  momentFormatter,
-  compose,
-} from '@/utils';
-import { Features } from '@/constants';
-import { useTheme } from '@emotion/react';
+import { useDateInputFormatter } from '@/hooks';
 
 const getBillFieldsStyle = (theme: Theme) => css`
   .${theme.bpPrefix}-form-group {
@@ -55,10 +47,11 @@ const getBillFieldsStyle = (theme: Theme) => css`
  */
 function BillFormHeader() {
   // Bill form context.
-  const { vendors, projects } = useBillFormContext();
+  const { vendors } = useBillFormContext();
 
   const theme = useTheme();
   const billFieldsClassName = getBillFieldsStyle(theme);
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <Stack spacing={18} flex={1} className={billFieldsClassName}>
@@ -67,22 +60,21 @@ function BillFormHeader() {
 
       {/* ----------- Exchange rate ----------- */}
       <BillExchangeRateInputField
-        name={'exchange_rate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
 
       {/* ------- Bill date ------- */}
       <FFormGroup
-        name={'bill_date'}
-        label={<T id={'bill_date'} />}
+        name={'billDate'}
+        label={intl.get('bill_date')}
         inline
         labelInfo={<FieldRequiredHint />}
         className={classNames(CLASSES.FILL)}
         fastField
       >
         <FDateInput
-          name={'bill_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          name={'billDate'}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{ leftIcon: <Icon icon={'date-range'} /> }}
           fill
@@ -92,15 +84,14 @@ function BillFormHeader() {
 
       {/* ------- Due date ------- */}
       <FFormGroup
-        name={'due_date'}
-        label={<T id={'due_date'} />}
+        name={'dueDate'}
+        label={intl.get('due_date')}
         inline
-        fill
         fastField
       >
         <FDateInput
-          name={'due_date'}
-          {...momentFormatter('YYYY/MM/DD')}
+          name={'dueDate'}
+          {...dateInputFormatter}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           inputProps={{
             leftIcon: <Icon icon={'date-range'} />,
@@ -112,87 +103,70 @@ function BillFormHeader() {
 
       {/* ------- Bill number ------- */}
       <FFormGroup
-        name={'bill_number'}
-        label={<T id={'bill_number'} />}
+        name={'billNumber'}
+        label={intl.get('bill_number')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'bill_number'} minimal={true} fastField />
+        <FInputGroup name={'billNumber'} />
       </FFormGroup>
 
       {/* ------- Reference ------- */}
       <FFormGroup
-        name={'reference_no'}
-        label={<T id={'reference'} />}
+        name={'referenceNo'}
+        label={intl.get('reference')}
         inline={true}
-        fill
         fastField
       >
-        <FInputGroup name={'reference_no'} minimal={true} fastField />
+        <FInputGroup name={'referenceNo'} />
       </FFormGroup>
-
-      {/*------------ Project name -----------*/}
-      <FeatureCan feature={Features.Projects}>
-        <FFormGroup
-          name={'project_id'}
-          label={<T id={'bill.project_name.label'} />}
-          inline={true}
-          className={classNames('form-group--select-list', Classes.FILL)}
-        >
-          <ProjectsSelect
-            name={'project_id'}
-            projects={projects}
-            input={BillProjectSelectButton}
-            popoverFill={true}
-          />
-        </FFormGroup>
-      </FeatureCan>
     </Stack>
   );
 }
+
+type VendorOption = { id: number; currencyCode?: string };
 
 /**
  * Vendor select field of bill form.
  * @returns {JSX.Element}
  */
 function BillFormVendorField() {
-  const { values, setFieldValue } = useFormikContext();
+  const { values, setFieldValue } = useFormikContext<BillFormValues>();
   const { vendors } = useBillFormContext();
 
   return (
     <FFormGroup
-      name={'vendor_id'}
-      label={<T id={'vendor_name'} />}
+      name={'vendorId'}
+      label={intl.get('vendor_name')}
       inline={true}
       labelInfo={<FieldRequiredHint />}
       fastField={true}
-      shouldUpdate={vendorsFieldShouldUpdate}
-      shouldUpdateDeps={{ items: vendors }}
     >
-      <VendorsSelect
-        name={'vendor_id'}
-        items={vendors}
-        placeholder={<T id={'select_vender_account'} />}
-        onItemChange={(contact) => {
-          setFieldValue('vendor_id', contact.id);
-          setFieldValue('currency_code', contact?.currency_code);
-        }}
-        allowCreate={true}
-        fastField={true}
-        shouldUpdate={vendorsFieldShouldUpdate}
-        shouldUpdateDeps={{ items: vendors }}
-      />
-      {values.vendor_id && (
-        <VendorButtonLink vendorId={values.vendor_id}>
-          <T id={'view_vendor_details'} />
-        </VendorButtonLink>
-      )}
+      <>
+        <VendorsSelect
+          name={'vendorId'}
+          items={vendors}
+          placeholder={<T id={'select_vender_account'} />}
+          onItemChange={(contact: VendorOption) => {
+            setFieldValue('vendorId', contact.id);
+            setFieldValue('currencyCode', contact?.currencyCode);
+          }}
+          allowCreate={true}
+          fastField={true}
+          shouldUpdate={vendorsFieldShouldUpdate}
+          shouldUpdateDeps={{ items: vendors }}
+        />
+        {values.vendorId && (
+          <VendorButtonLink vendorId={Number(values.vendorId)}>
+            <T id={'view_vendor_details'} />
+          </VendorButtonLink>
+        )}
+      </>
     </FFormGroup>
   );
 }
 
-export default compose(withDialogActions)(BillFormHeader);
+export const BillFormHeaderFields = FF.pipe(BillFormHeader, withDialogActions);
 
 const VendorButtonLink = styled(VendorDrawerLink)`
   font-size: 11px;

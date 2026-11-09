@@ -11,7 +11,7 @@ import { ValidateBranchExistance } from '../../integrations/ValidateBranchExista
 export class SaleEstimateBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on estimate creating.

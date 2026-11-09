@@ -1,21 +1,20 @@
-// @ts-nocheck
+import { css } from '@emotion/css';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { css } from '@emotion/css';
-import CreditNoteForm from './CreditNoteForm';
+import { CreditNoteForm } from './CreditNoteForm';
 import {
   CreditNoteFormProvider,
   useCreditNoteFormContext,
 } from './CreditNoteFormProvider';
-import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 import { DashboardInsider } from '@/components';
+import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 
 /**
  * Credit note form page.
  */
-export default function CreditNoteFormPage() {
-  const { id } = useParams();
-  const idAsInteger = parseInt(id, 10);
+export function CreditNoteFormPage() {
+  const { id } = useParams<{ id?: string }>();
+  const idAsInteger = id ? parseInt(id, 10) : undefined;
 
   return (
     <CreditNoteFormProvider creditNoteId={idAsInteger}>

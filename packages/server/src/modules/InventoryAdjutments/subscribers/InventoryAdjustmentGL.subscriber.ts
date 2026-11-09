@@ -3,7 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { InventoryAdjustmentsGLEntries } from '../commands/ledger/InventoryAdjustmentsGLEntries';
 import {
   IInventoryAdjustmentDeletingPayload,
-  IInventoryAdjustmentEventPublishedPayload,
+  IInventoryAdjustmentEditedPayload,
 } from '../types/InventoryAdjustments.types';
 import { IInventoryAdjustmentEventCreatedPayload } from '../types/InventoryAdjustments.types';
 import { events } from '@/common/events/events';
@@ -16,7 +16,7 @@ export class InventoryAdjustmentsGLSubscriber {
 
   /**
    * Handles writing increment inventory adjustment GL entries.
-   * @param {IInventoryAdjustmentEventCreatedPayload} payload - 
+   * @param {IInventoryAdjustmentEventCreatedPayload} payload -
    */
   @OnEvent(events.inventoryAdjustment.onQuickCreated)
   @OnEvent(events.inventoryAdjustment.onPublished)
@@ -40,6 +40,38 @@ export class InventoryAdjustmentsGLSubscriber {
   }
 
   /**
+   * Rewrites the inventory adjustment GL entries once the transaction edited.
+   * @param {IInventoryAdjustmentEditedPayload} payload -
+   */
+  @OnEvent(events.inventoryAdjustment.onEdited)
+  async rewriteAdjustmentGLEntriesOnceEdited({
+    inventoryAdjustmentId,
+    inventoryAdjustment,
+    oldInventoryAdjustment,
+    trx,
+  }: IInventoryAdjustmentEditedPayload) {
+    // Can't continue if the old inventory adjustment was not published.
+    if (oldInventoryAdjustment.isPublished) {
+      await this.inventoryAdjustmentGL.revertAdjustmentGLEntries(
+        inventoryAdjustmentId,
+        trx,
+      );
+    }
+    // Can't continue if the new inventory adjustment is not published or
+    // the direction is not `IN`.
+    if (
+      !inventoryAdjustment.isPublished ||
+      inventoryAdjustment.type !== 'increment'
+    ) {
+      return;
+    }
+    await this.inventoryAdjustmentGL.writeAdjustmentGLEntries(
+      inventoryAdjustmentId,
+      trx,
+    );
+  }
+
+  /**
    * Reverts the inventory adjustment GL entries once the transaction deleted.
    * @param {IInventoryAdjustmentDeletingPayload} payload -
    */
@@ -54,24 +86,6 @@ export class InventoryAdjustmentsGLSubscriber {
     }
     await this.inventoryAdjustmentGL.revertAdjustmentGLEntries(
       inventoryAdjustment.id,
-      trx,
-    );
-  }
-
-  /**
-   * Handles writing inventory transactions once the quick adjustment created.
-   * @param {IInventoryAdjustmentEventPublishedPayload} payload
-   * @param {IInventoryAdjustmentEventCreatedPayload} payload -
-   */
-  @OnEvent(events.inventoryAdjustment.onPublished)
-  async handleWriteInventoryTransactionsOncePublished({
-    inventoryAdjustmentId,
-    trx,
-  }:
-    | IInventoryAdjustmentEventPublishedPayload
-    | IInventoryAdjustmentEventCreatedPayload) {
-    await this.inventoryAdjustmentGL.writeAdjustmentGLEntries(
-      inventoryAdjustmentId,
       trx,
     );
   }

@@ -16,7 +16,6 @@ export class SeedInitialCurrenciesOnSetupSubsriber {
    */
   @OnEvent(events.organization.build)
   async seedInitialCurrenciesOnBuild({
-    systemUser,
     buildDTO,
   }: IOrganizationBuildEventPayload) {
     await this.seedInitialCurrencies.seedInitialCurrencies(

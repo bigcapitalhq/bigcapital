@@ -16,7 +16,7 @@ export class ItemCategoriesImportable extends Importable {
 
   /**
    * Importing to create new item category service.
-   * @param {CreateItemCategoryDto} createDTO 
+   * @param {CreateItemCategoryDto} createDTO
    * @param {Knex.Transaction} trx
    */
   public async importable(

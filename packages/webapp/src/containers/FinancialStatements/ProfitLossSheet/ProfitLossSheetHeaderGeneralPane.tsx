@@ -1,16 +1,11 @@
-// @ts-nocheck
 import React from 'react';
-
+import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
+import { FinancialStatementsFilter } from '../FinancialStatementsFilter';
+import { RadiosAccountingBasis } from '../RadiosAccountingBasis';
+import { SelectDisplayColumnsBy } from '../SelectDisplayColumnsBy';
 import { Row, Col } from '@/components';
-import FinancialStatementDateRange from '../FinancialStatementDateRange';
-import SelectDisplayColumnsBy from '../SelectDisplayColumnsBy';
-import RadiosAccountingBasis from '../RadiosAccountingBasis';
-import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
-/**
- * Profit/Loss sheet - Drawer header - General panel.
- */
-export default function ProfitLossSheetHeaderGeneralPane({}) {
+export function ProfitLossSheetHeaderGeneralPane() {
   return (
     <div>
       <FinancialStatementDateRange />

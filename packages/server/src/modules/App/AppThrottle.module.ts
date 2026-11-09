@@ -10,7 +10,9 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         // Use in-memory storage with very high limits for test environment
-        const isTest = process.env.NODE_ENV === 'test' || process.env.JEST_WORKER_ID !== undefined;
+        const isTest =
+          process.env.NODE_ENV === 'test' ||
+          process.env.JEST_WORKER_ID !== undefined;
 
         if (isTest) {
           return {
@@ -64,6 +66,4 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
     }),
   ],
 })
-export class AppThrottleModule { }
-
-
+export class AppThrottleModule {}

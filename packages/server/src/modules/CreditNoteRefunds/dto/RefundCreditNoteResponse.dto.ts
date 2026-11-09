@@ -30,12 +30,16 @@ export class RefundCreditNoteResponseDto {
   amount: number;
 
   @ApiProperty({ example: '$250.00' })
-  formttedAmount: string;
+  formattedAmount: string;
 
   @ApiProperty({ example: 'REF-001', required: false, nullable: true })
   referenceNo?: string | null;
 
-  @ApiProperty({ example: 'Refund issued to customer', required: false, nullable: true })
+  @ApiProperty({
+    example: 'Refund issued to customer',
+    required: false,
+    nullable: true,
+  })
   description?: string | null;
 
   @ApiProperty({ type: RefundCreditAccountDto })

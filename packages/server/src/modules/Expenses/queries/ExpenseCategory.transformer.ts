@@ -1,4 +1,3 @@
-
 import { Transformer } from '@/modules/Transformer/Transformer';
 import { ExpenseCategory } from '../models/ExpenseCategory.model';
 
@@ -8,7 +7,7 @@ export class ExpenseCategoryTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['amountFormatted'];
+    return ['amountFormatted', 'expenseAccount'];
   };
 
   /**

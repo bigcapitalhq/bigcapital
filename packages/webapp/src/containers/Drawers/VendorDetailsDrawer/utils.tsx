@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Button,
   Popover,
@@ -10,11 +8,20 @@ import {
 } from '@blueprintjs/core';
 import { Icon, FormattedMessage as T } from '@/components';
 
+export interface VendorMoreMenuItemPayload {
+  onEditOpeningBalance: () => void;
+}
+
+interface VendorMoreMenuItemProps {
+  payload: VendorMoreMenuItemPayload;
+}
+
 /**
  * Vendor more actions menu items.
- * @param {*} param0
  */
-export function VendorMoreMenuItem({ payload: { onEditOpeningBalance } }) {
+export function VendorMoreMenuItem({
+  payload: { onEditOpeningBalance },
+}: VendorMoreMenuItemProps) {
   return (
     <Popover
       minimal={true}

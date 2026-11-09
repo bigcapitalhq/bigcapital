@@ -1,36 +1,41 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
 import classNames from 'classnames';
+import { isEmpty } from 'lodash';
+import React, { createContext } from 'react';
+import type { Warehouse } from '@bigcapital/sdk-ts';
+import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
 import { useWarehouses } from '@/hooks/query';
-import { isEmpty } from 'lodash';
-
-import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
-const WarehousesContext = React.createContext();
+interface WarehousesContextValue {
+  warehouses: Warehouse[];
+  isWarehouesLoading: boolean;
+  isEmptyStatus: boolean;
+}
 
-/**
- * Warehouses data provider.
- */
-function WarehousesProvider({ query, ...props }) {
-  // Features guard.
+const WarehousesContext = createContext<WarehousesContextValue>(
+  {} as WarehousesContextValue,
+);
+
+interface WarehousesProviderProps {
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+}
+
+function WarehousesProvider({ query, ...props }: WarehousesProviderProps) {
   const { featureCan } = useFeatureCan();
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
-  // Fetch warehouses list.
   const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
     query,
     { enabled: isWarehouseFeatureCan },
   );
 
-  // Detarmines the datatable empty status.
-  const isEmptyStatus = isEmpty(warehouses) || !isWarehouseFeatureCan;
+  const warehousesList = (warehouses ?? []) as Warehouse[];
+  const isEmptyStatus = isEmpty(warehousesList) || !isWarehouseFeatureCan;
 
-  // Provider state.
-  const provider = {
-    warehouses,
+  const provider: WarehousesContextValue = {
+    warehouses: warehousesList,
     isWarehouesLoading,
     isEmptyStatus,
   };
@@ -52,5 +57,3 @@ function WarehousesProvider({ query, ...props }) {
 const useWarehousesContext = () => React.useContext(WarehousesContext);
 
 export { WarehousesProvider, useWarehousesContext };
-
-const WarehousePreference = styled.div``;

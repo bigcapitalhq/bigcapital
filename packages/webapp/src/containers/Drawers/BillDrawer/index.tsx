@@ -1,11 +1,15 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
-import { compose } from '@/utils';
+const BillDrawerContent = React.lazy(() =>
+  import('./BillDrawerContent').then((m) => ({ default: m.BillDrawerContent })),
+);
 
-const BillDrawerContent = React.lazy(() => import('./BillDrawerContent'));
+interface BillDrawerProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  * Bill drawer.
@@ -14,8 +18,10 @@ function BillDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { billId },
-}) {
+  payload,
+}: BillDrawerProps) {
+  const billId = payload?.billId as number | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -30,4 +36,4 @@ function BillDrawer({
   );
 }
 
-export default compose(withDrawers())(BillDrawer);
+export const index = FF.pipe(BillDrawer, withDrawers());

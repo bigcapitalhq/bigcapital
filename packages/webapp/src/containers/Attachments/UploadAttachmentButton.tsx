@@ -1,25 +1,35 @@
-// @ts-nocheck
-import clsx from 'classnames';
-import { Field, useFormikContext } from 'formik';
 import {
   Button,
   Classes,
   Popover,
   PopoverInteractionKind,
 } from '@blueprintjs/core';
-import { FFormGroup } from '@/components';
-import { UploadAttachmentsPopoverContent } from './UploadAttachmentsPopoverContent';
-import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
+import clsx from 'classnames';
+import { Field, useFormikContext } from 'formik';
 import styles from './UploadAttachmentButton.module.scss';
+import { UploadAttachmentsPopoverContent } from './UploadAttachmentsPopoverContent';
+import type { AttachmentFile } from './UploadAttachmentsPopoverContent';
+import type { FieldProps } from 'formik';
+import { FFormGroup } from '@/components';
+import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
+
+interface AttachmentFormValues {
+  attachments?: unknown[];
+}
 
 function UploadAttachmentButtonButtonContentField() {
   return (
     <Field name={'attachments'}>
-      {({ form: { setFieldValue }, field: { value } }) => (
+      {({ form: { setFieldValue }, field: { value } }: FieldProps) => (
         <UploadAttachmentsPopoverContent
-          value={transformToCamelCase(value)}
+          value={transformToCamelCase(value) as AttachmentFile[]}
           onChange={(changedValue) => {
-            setFieldValue('attachments', transfromToSnakeCase(changedValue));
+            setFieldValue(
+              'attachments',
+              transfromToSnakeCase(
+                changedValue as unknown as Record<string, unknown>,
+              ),
+            );
           }}
         />
       )}
@@ -28,7 +38,7 @@ function UploadAttachmentButtonButtonContentField() {
 }
 
 export function UploadAttachmentButton() {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<AttachmentFormValues>();
   const uploadedFiles = values?.attachments?.length || 0;
 
   return (
@@ -42,6 +52,8 @@ export function UploadAttachmentButton() {
         interactionKind={PopoverInteractionKind.CLICK}
         popoverClassName={clsx(styles.popover, Classes.POPOVER_CONTENT_SIZING)}
         placement={'top-start'}
+        enforceFocus={false}
+        autoFocus={false}
         content={<UploadAttachmentButtonButtonContentField />}
       >
         <Button className={styles.attachmentButton}>

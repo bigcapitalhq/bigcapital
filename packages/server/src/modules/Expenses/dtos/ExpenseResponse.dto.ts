@@ -1,14 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsBoolean,
-  IsDate,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { BranchResponseDto } from '@/modules/Branches/dtos/BranchResponse.dto';
+import { AccountResponseDto } from '@/modules/Accounts/dtos/AccountResponse.dto';
 
 export class ExpenseCategoryResponseDto {
   @ApiProperty({
@@ -53,6 +47,25 @@ export class ExpenseCategoryResponseDto {
     description: 'The unallocated cost amount of the expense category',
   })
   unallocatedCostAmount: number;
+
+  @ApiProperty({
+    type: () => AccountResponseDto,
+    description: 'The expense account associated with this category',
+    required: false,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AccountResponseDto)
+  expenseAccount?: AccountResponseDto;
+
+  @ApiProperty({
+    example: '$100.00',
+    description: 'The formatted amount of the expense category',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  amountFormatted?: string;
 }
 
 export class ExpenseResponseDto {
@@ -100,7 +113,7 @@ export class ExpenseResponseDto {
   referenceNo: string;
 
   @ApiProperty({
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
     description: 'The date when the expense was published',
     required: false,
   })
@@ -113,7 +126,7 @@ export class ExpenseResponseDto {
   userId: number;
 
   @ApiProperty({
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
     description: 'The payment date of the expense',
   })
   paymentDate: Date;
@@ -196,6 +209,70 @@ export class ExpenseResponseDto {
     description: 'The billable amount of the expense',
   })
   billableAmount: number;
+
+  @ApiProperty({
+    example: '$1,000.00',
+    description: 'The formatted total amount of the expense',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  formattedAmount?: string;
+
+  @ApiProperty({
+    example: '$800.00',
+    description: 'The formatted landed cost amount of the expense',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  formattedLandedCostAmount?: string;
+
+  @ApiProperty({
+    example: '$200.00',
+    description: 'The formatted allocated cost amount of the expense',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  formattedAllocatedCostAmount?: string;
+
+  @ApiProperty({
+    example: '2024-03-20',
+    description: 'The formatted payment date of the expense',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  formattedDate?: string;
+
+  @ApiProperty({
+    example: '2024-03-20',
+    description: 'The formatted creation date of the expense',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  formattedCreatedAt?: string;
+
+  @ApiProperty({
+    example: '2024-03-20',
+    description: 'The formatted publication date of the expense',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  formattedPublishedAt?: string;
+
+  @ApiProperty({
+    type: () => BranchResponseDto,
+    description: 'The branch associated with the expense',
+    required: false,
+  })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => BranchResponseDto)
+  branch?: BranchResponseDto;
 
   @ApiProperty({
     type: [ExpenseCategoryResponseDto],

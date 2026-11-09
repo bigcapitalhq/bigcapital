@@ -10,6 +10,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { ItemLinkDto } from '@/modules/Items/dtos/ItemLink.dto';
 
 export class ItemEntryDto {
   @IsInt()
@@ -27,6 +28,13 @@ export class ItemEntryDto {
     example: 1,
   })
   itemId: number;
+
+  @ApiProperty({
+    description: 'The nested item summary',
+    type: ItemLinkDto,
+    required: false,
+  })
+  item?: ItemLinkDto;
 
   @IsNotEmpty()
   @ToNumber()
@@ -153,4 +161,40 @@ export class ItemEntryDto {
     example: 1021,
   })
   costAccountId?: number;
+
+  // Formatted fields from transformer
+  @ApiProperty({
+    description: 'The computed amount of the item entry (quantity * rate)',
+    example: 100,
+    required: false,
+  })
+  amount?: number;
+
+  @ApiProperty({
+    description: 'Formatted quantity of the item entry',
+    example: '12',
+    required: false,
+  })
+  quantityFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted rate of the item entry',
+    example: '$10.00',
+    required: false,
+  })
+  rateFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted discount amount of the item entry',
+    example: '$2.00',
+    required: false,
+  })
+  discountFormatted?: string;
+
+  @ApiProperty({
+    description: 'Formatted total of the item entry',
+    example: '$118.00',
+    required: false,
+  })
+  totalFormatted?: string;
 }

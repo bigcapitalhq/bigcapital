@@ -1,21 +1,29 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
+import type { ReconcileCreditNoteDialogPayload } from './types';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ReconcileCreditNoteDialogContent = React.lazy(() =>
-  import('./ReconcileCreditNoteDialogContent'),
+  import('./ReconcileCreditNoteDialogContent').then((m) => ({
+    default: m.ReconcileCreditNoteDialogContent,
+  })),
 );
+
+interface ReconcileCreditNoteDialogProps {
+  dialogName: string;
+  payload: ReconcileCreditNoteDialogPayload;
+  isOpen: boolean | undefined;
+}
 
 /**
  * Reconcile credit note dialog.
  */
 function ReconcileCreditNoteDialog({
   dialogName,
-  payload: { creditNoteId },
+  payload: { creditNoteId } = {},
   isOpen,
-}) {
+}: ReconcileCreditNoteDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -26,7 +34,7 @@ function ReconcileCreditNoteDialog({
     >
       <DialogSuspense>
         <ReconcileCreditNoteDialogContent
-          creditNoteId={creditNoteId}
+          creditNoteId={creditNoteId ?? null}
           dialogName={dialogName}
         />
       </DialogSuspense>
@@ -34,4 +42,4 @@ function ReconcileCreditNoteDialog({
   );
 }
 
-export default compose(withDialogRedux())(ReconcileCreditNoteDialog);
+export const index = FF.pipe(ReconcileCreditNoteDialog, withDialogRedux());

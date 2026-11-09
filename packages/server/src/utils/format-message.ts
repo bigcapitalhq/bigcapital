@@ -9,7 +9,7 @@ export const formatMessage = (message: string, args: Record<string, any>) => {
 
     formattedMessage = formattedMessage.replace(
       new RegExp(variable, 'g'),
-      value
+      value,
     );
   });
   return formattedMessage;

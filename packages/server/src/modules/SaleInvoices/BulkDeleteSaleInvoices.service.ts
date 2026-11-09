@@ -6,12 +6,12 @@ import { DeleteSaleInvoice } from './commands/DeleteSaleInvoice.service';
 
 @Injectable()
 export class BulkDeleteSaleInvoicesService {
-  constructor(private readonly deleteSaleInvoiceService: DeleteSaleInvoice) { }
+  constructor(private readonly deleteSaleInvoiceService: DeleteSaleInvoice) {}
 
   async bulkDeleteSaleInvoices(
     saleInvoiceIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const invoicesIds = uniq(castArray(saleInvoiceIds));

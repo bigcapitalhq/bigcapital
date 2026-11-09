@@ -1,5 +1,4 @@
 // @ts-nocheck
 
-
 export * from './CurrencyTag';
-export * from './FlagIcon'
+export * from './FlagIcon';

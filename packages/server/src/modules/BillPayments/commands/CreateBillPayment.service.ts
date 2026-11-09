@@ -38,7 +38,7 @@ export class CreateBillPaymentService {
 
     @Inject(BillPayment.name)
     private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
-  ) { }
+  ) {}
 
   /**
    * Creates a new bill payment transcations and store it to the storage
@@ -61,41 +61,15 @@ export class CreateBillPaymentService {
   ): Promise<BillPayment> {
     const tenantMeta = await this.tenancyContext.getTenant(true);
 
-    // Retrieves the payment vendor or throw not found error.
-    const vendor = await this.vendorModel()
-      .query()
-      .findById(billPaymentDTO.vendorId)
-      .throwIfNotFound();
-
-    // Transform create DTO to model object.
-    const billPaymentObj = await this.commandTransformerDTO.transformDTOToModel(
-      billPaymentDTO,
-      vendor,
-    );
-    // Validate the payment account existance and type.
-    const paymentAccount = await this.validators.getPaymentAccountOrThrowError(
-      billPaymentObj.paymentAccountId,
-    );
-    // Validate the payment number uniquiness.
-    if (billPaymentObj.paymentNumber) {
-      await this.validators.validatePaymentNumber(billPaymentObj.paymentNumber);
-    }
-    // Validates the bills existance and associated to the given vendor.
-    await this.validators.validateBillsExistance(
-      billPaymentObj.entries,
-      billPaymentDTO.vendorId,
-    );
-    // Validates the bills due payment amount.
-    await this.validators.validateBillsDueAmount(billPaymentObj.entries);
-    // Validates the withdrawal account currency code.
-    this.validators.validateWithdrawalAccountCurrency(
-      paymentAccount.currencyCode,
-      vendor.currencyCode,
-      tenantMeta.metadata.baseCurrency,
-    );
     // Writes bill payment transacation with associated transactions
     // under unit-of-work envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the bill payment operation against the locked bills rows.
+      const { billPaymentObj } = await this.validate(
+        billPaymentDTO,
+        tenantMeta.metadata.baseCurrency,
+        trx,
+      );
       // Triggers `onBillPaymentCreating` event.
       await this.eventPublisher.emitAsync(events.billPayment.onCreating, {
         billPaymentDTO,
@@ -126,5 +100,60 @@ export class CreateBillPaymentService {
 
       return billPayment;
     }, trx);
+  }
+
+  /**
+   * Validates the create bill payment operation: vendor existence, payment
+   * account and currency, payment number uniqueness, bills existence and
+   * due amounts (locks the bill rows).
+   * @param {CreateBillPaymentDto} billPaymentDTO - Bill payment create DTO.
+   * @param {string} baseCurrency - Tenant base currency.
+   * @param {Knex.Transaction} trx - Locks the bill rows (FOR UPDATE).
+   * @returns {Promise<{ billPaymentObj: BillPayment }>}
+   */
+  async validate(
+    billPaymentDTO: CreateBillPaymentDto,
+    baseCurrency: string,
+    trx: Knex.Transaction,
+  ): Promise<{ billPaymentObj: BillPayment }> {
+    // Retrieves the payment vendor or throw not found error.
+    const vendor = await this.vendorModel()
+      .query(trx)
+      .findById(billPaymentDTO.vendorId)
+      .throwIfNotFound();
+
+    // Transform create DTO to model object.
+    const billPaymentObj = await this.commandTransformerDTO.transformDTOToModel(
+      billPaymentDTO,
+      vendor,
+    );
+    // Validate the payment account existance and type.
+    const paymentAccount = await this.validators.getPaymentAccountOrThrowError(
+      billPaymentObj.paymentAccountId,
+    );
+    // Validate the payment number uniquiness.
+    if (billPaymentObj.paymentNumber) {
+      await this.validators.validatePaymentNumber(billPaymentObj.paymentNumber);
+    }
+    // Validates the withdrawal account currency code.
+    this.validators.validateWithdrawalAccountCurrency(
+      paymentAccount.currencyCode,
+      vendor.currencyCode,
+      baseCurrency,
+    );
+    // Validates the bills existance and associated to the given vendor
+    // (locks the bill rows).
+    await this.validators.validateBillsExistance(
+      billPaymentObj.entries,
+      billPaymentDTO.vendorId,
+      trx,
+    );
+    // Validates the bills due payment amount against the locked rows.
+    await this.validators.validateBillsDueAmount(
+      billPaymentObj.entries,
+      [],
+      trx,
+    );
+    return { billPaymentObj };
   }
 }

@@ -1,12 +1,11 @@
-// @ts-nocheck
+import { FormGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormGroup, Classes } from '@blueprintjs/core';
-import { BranchMultiSelect, Row, Col } from '@/components';
 import {
   BalanceSheetHeaderDimensionsProvider,
   useBalanceSheetHeaderDimensionsPanelContext,
 } from './BalanceSheetHeaderDimensionsProvider';
+import { BranchMultiSelect, Row, Col } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
@@ -14,7 +13,7 @@ import { useFeatureCan } from '@/hooks/state';
  * Balance sheet header dismension panel.
  * @returns
  */
-export default function BalanceSheetHeaderDimensionsPanel() {
+export function BalanceSheetHeaderDimensionsPanel() {
   return (
     <BalanceSheetHeaderDimensionsProvider>
       <BalanceSheetHeaderDimensionsPanelContent />

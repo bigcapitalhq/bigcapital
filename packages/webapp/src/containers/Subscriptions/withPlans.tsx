@@ -1,4 +1,6 @@
 import { MapStateToProps, connect } from 'react-redux';
+import type { MapState } from '@/containers/hoc.types';
+import type { ComponentType } from 'react';
 import {
   getPlansPeriodSelector,
   getPlansSelector,
@@ -10,13 +12,10 @@ export interface WithPlansProps {
   plansPeriod: ReturnType<ReturnType<typeof getPlansPeriodSelector>>;
 }
 
-type MapState<Props> = (
-  mapped: WithPlansProps,
-  state: ApplicationState,
-  props: Props,
-) => any;
-
-export function withPlans<Props>(mapState?: MapState<Props>) {
+export function withPlans<
+  Props = unknown,
+  Mapped extends object = WithPlansProps,
+>(mapState?: MapState<WithPlansProps, Props, Mapped>) {
   const mapStateToProps: MapStateToProps<
     WithPlansProps,
     Props,
@@ -25,11 +24,20 @@ export function withPlans<Props>(mapState?: MapState<Props>) {
     const getPlans = getPlansSelector();
     const getPlansPeriod = getPlansPeriodSelector();
 
-    const mapped = {
+    const mapped: WithPlansProps = {
       plans: getPlans(state),
       plansPeriod: getPlansPeriod(state),
     };
-    return mapState ? mapState(mapped, state, props) : mapped;
+    return mapState
+      ? (mapState(mapped, state, props) as WithPlansProps)
+      : mapped;
   };
-  return connect(mapStateToProps);
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof Mapped>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<Omit<P, keyof Mapped>>;
+  };
 }

@@ -1,15 +1,39 @@
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { PlaidItem } from '../models/PlaidItem';
-import { PlaidUpdateTransactions } from './PlaidUpdateTransactions';
 import { Inject, Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { events } from '@/common/events/events';
+import {
+  IPlaidWebhookReceivedEventPayload,
+  UpdateBankingPlaidTransitionsJob,
+  UpdateBankingPlaidTransitionsQueueJob,
+} from '../types/BankingPlaid.types';
 
 @Injectable()
 export class PlaidWebooks {
+  /**
+   * Webhook types/codes that trigger meaningful updates and are worth
+   * recording in the audit log. Ignored/unhandled webhooks are skipped.
+   */
+  private static readonly AUDITABLE_WEBHOOKS: Record<string, Set<string>> = {
+    transactions: new Set(['SYNC_UPDATES_AVAILABLE']),
+    item: new Set([
+      'WEBHOOK_UPDATE_ACKNOWLEDGED',
+      'ERROR',
+      'PENDING_EXPIRATION',
+    ]),
+  };
+
   constructor(
-    private readonly updateTransactionsService: PlaidUpdateTransactions,
+    private readonly eventPublisher: EventEmitter2,
 
     @Inject(PlaidItem.name)
     private readonly plaidItemModel: TenantModelProxy<typeof PlaidItem>,
+
+    @InjectQueue(UpdateBankingPlaidTransitionsQueueJob)
+    private readonly updateTransitionsQueue: Queue,
   ) {}
 
   /**
@@ -35,6 +59,15 @@ export class PlaidWebooks {
       webhookHandlerMap[_webhookType] || this.unhandledWebhook;
 
     await webhookHandler(plaidItemId, webhookCode);
+
+    // Record the webhook in the audit log only when it maps to a meaningful update.
+    if (PlaidWebooks.AUDITABLE_WEBHOOKS[_webhookType]?.has(webhookCode)) {
+      await this.eventPublisher.emitAsync(events.plaid.onWebhookReceived, {
+        plaidItemId,
+        webhookType: _webhookType,
+        webhookCode,
+      } as IPlaidWebhookReceivedEventPayload);
+    }
   }
 
   /**
@@ -95,12 +128,18 @@ export class PlaidWebooks {
           );
           return;
         }
-        // Fired when new transactions data becomes available.
-        const { addedCount, modifiedCount, removedCount } =
-          await this.updateTransactionsService.updateTransactions(plaidItemId);
+        // Fired when new transactions data becomes available. Enqueue a
+        // transaction sync job deduplicated by the Plaid item id so that
+        // overlapping webhooks (or Plaid retries) coalesce into a single
+        // in-flight sync instead of running concurrently.
+        await this.updateTransitionsQueue.add(
+          UpdateBankingPlaidTransitionsJob,
+          { plaidItemId },
+          { jobId: plaidItemId },
+        );
 
         this.serverLogAndEmitSocket(
-          `Transactions: ${addedCount} added, ${modifiedCount} modified, ${removedCount} removed`,
+          'Transactions sync queued.',
           webhookCode,
           plaidItemId,
         );

@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   IBankRuleEventEditedPayload,
   IBankRuleEventEditingPayload,
-  IEditBankRuleDTO,
 } from '../types';
 import { BankRule } from '../models/BankRule';
 import { EventEmitter2 } from '@nestjs/event-emitter';

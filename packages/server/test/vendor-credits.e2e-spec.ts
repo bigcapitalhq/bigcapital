@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -13,7 +13,7 @@ const requestVendorCredit = () => ({
   entries: [
     {
       index: 1,
-      item_id: itemId,
+      itemId: itemId,
       quantity: 1,
       rate: 1000,
       description: "It's description here.",
@@ -38,7 +38,8 @@ describe('Vendor Credits (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'service',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,

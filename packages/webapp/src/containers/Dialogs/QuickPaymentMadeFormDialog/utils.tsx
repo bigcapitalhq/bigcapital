@@ -1,37 +1,50 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import intl from 'react-intl-universal';
-import { first, pick } from 'lodash';
-import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
+import { useFormikContext } from 'formik';
+import { first, pick } from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
+import type { QuickPaymentMadeBill, QuickPaymentMadeFormValues } from './types';
+import { AppToaster } from '@/components';
 import { PAYMENT_MADE_ERRORS } from '@/containers/Purchases/PaymentsMade/constants';
 
+interface ResponseError {
+  type: string;
+}
+
+interface TransformErrorsArgs {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setFieldError: any;
+}
+
 // Default initial values of payment made.
-export const defaultPaymentMade = {
-  bill_id: '',
-  vendor_id: '',
-  payment_account_id: '',
-  payment_date: moment(new Date()).format('YYYY-MM-DD'),
+export const defaultPaymentMade: QuickPaymentMadeFormValues = {
+  billId: '',
+  vendorId: '',
+  paymentAccountId: '',
+  paymentDate: moment(new Date()).format('YYYY-MM-DD'),
   reference: '',
-  payment_number: '',
+  paymentNumber: '',
   amount: '',
   // statement: '',
-  exchange_rate: 1,
-  branch_id: '',
+  exchangeRate: 1,
+  branchId: '',
 };
 
-export const transformErrors = (errors, { setFieldError }) => {
-  const getError = (errorType) => errors.find((e) => e.type === errorType);
+export const transformErrors = (
+  errors: ResponseError[],
+  { setFieldError }: TransformErrorsArgs,
+) => {
+  const getError = (errorType: string) =>
+    errors.find((e) => e.type === errorType);
 
   if (getError(PAYMENT_MADE_ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
-    setFieldError('payment_number', intl.get('payment_number_is_not_unique'));
+    setFieldError('paymentNumber', intl.get('payment_number_is_not_unique'));
   }
   if (getError(PAYMENT_MADE_ERRORS.INVALID_BILL_PAYMENT_AMOUNT)) {
     setFieldError(
-      'payment_amount',
+      'paymentAmount',
       intl.get('the_payment_amount_bigger_than_invoice_due_amount'),
     );
   }
@@ -46,24 +59,24 @@ export const transformErrors = (errors, { setFieldError }) => {
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<QuickPaymentMadeFormValues>();
   const { branches, isBranchesSuccess } = useQuickPaymentMadeContext();
 
   React.useEffect(() => {
     if (isBranchesSuccess) {
-      const primaryBranch = branches.find((b) => b.primary) || first(branches);
+      const primaryBranch = branches?.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
 
-export const transformBillToForm = (bill) => {
+export const transformBillToForm = (bill: QuickPaymentMadeBill | undefined) => {
   return {
-    ...pick(bill, ['vendor_id', 'currency_code']),
-    amount: bill.due_amount,
-    bill_id: bill.id,
+    ...pick(bill, ['vendorId', 'currencyCode']),
+    amount: bill?.dueAmount,
+    billId: bill?.id,
   };
-}
+};

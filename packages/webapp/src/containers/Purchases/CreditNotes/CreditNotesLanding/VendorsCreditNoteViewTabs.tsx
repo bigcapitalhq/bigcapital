@@ -1,30 +1,29 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 import { withVendorsCreditNotes } from './withVendorsCreditNotes';
 import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
+import type { WithVendorsCreditNotesProps } from './withVendorsCreditNotes';
+import { DashboardViewsTabs } from '@/components';
+import { transfromViewsToTabs } from '@/utils';
 
-import { compose, transfromViewsToTabs } from '@/utils';
-import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
+interface WithVendorsCreditNotesActionsProps {
+  setVendorsCreditNoteTableState: (state: Record<string, any>) => void;
+}
 
-/**
- * Vendors Credit note views tabs.
- */
-function VendorsCreditNoteViewTabs({
-  // #withVendorsCreditNotes
+interface VendorsCreditNoteViewTabsProps {
+  vendorCreditCurrentView: string;
+  setVendorsCreditNoteTableState: WithVendorsCreditNotesActionsProps['setVendorsCreditNoteTableState'];
+}
+
+function VendorsCreditNoteViewTabsInner({
   vendorCreditCurrentView,
-
-  // #withVendorsCreditNotesActions
   setVendorsCreditNoteTableState,
-}) {
-  // vendor credit list context.
+}: VendorsCreditNoteViewTabsProps) {
   const { VendorCreditsViews } = useVendorsCreditNoteListContext();
 
-  // Handle tab change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string | null) => {
     setVendorsCreditNoteTableState({ viewSlug: viewSlug || null });
   };
 
@@ -43,9 +42,12 @@ function VendorsCreditNoteViewTabs({
   );
 }
 
-export default compose(
+export const VendorsCreditNoteViewTabs = FF.pipe(
+  VendorsCreditNoteViewTabsInner,
+  withVendorsCreditNotes(
+    ({ vendorsCreditNoteTableState }: WithVendorsCreditNotesProps) => ({
+      vendorCreditCurrentView: vendorsCreditNoteTableState.viewSlug,
+    }),
+  ),
   withVendorsCreditNotesActions,
-  withVendorsCreditNotes(({ vendorsCreditNoteTableState }) => ({
-    vendorCreditCurrentView: vendorsCreditNoteTableState.viewSlug,
-  })),
-)(VendorsCreditNoteViewTabs);
+);

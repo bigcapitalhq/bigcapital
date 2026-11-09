@@ -13,12 +13,10 @@ export class SalesTransactionLockingGuard {
    * Validates the transaction locking of sales services commands.
    * @param {Date} transactionDate - The transaction date.
    */
-  public transactionLockingGuard = async (
-    transactionDate: MomentInput
-  ) => {
+  public transactionLockingGuard = async (transactionDate: MomentInput) => {
     await this.transactionLockingGuardService.transactionsLockingGuard(
       transactionDate,
-      TransactionsLockingGroup.Sales
+      TransactionsLockingGroup.Sales,
     );
   };
 }

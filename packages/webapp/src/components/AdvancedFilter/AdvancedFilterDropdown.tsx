@@ -1,9 +1,37 @@
-// @ts-nocheck
-import React from 'react';
-import { Formik, FastField, FieldArray } from 'formik';
 import { Button, Classes, InputGroup, MenuItem } from '@blueprintjs/core';
+import { Formik, FastField, FieldArray, useFormikContext } from 'formik';
 import { get, first, defaultTo, isEqual, isEmpty } from 'lodash';
+import React from 'react';
 import intl from 'react-intl-universal';
+import { getFilterDropdownSchema } from './AdvancedFilter.schema';
+import AdvancedFilterCompatatorField from './AdvancedFilterCompatatorField';
+import {
+  AdvancedFilterDropdownProvider,
+  FilterConditionProvider,
+  useFilterCondition,
+  useAdvancedFilterContext,
+} from './AdvancedFilterDropdownContext';
+import AdvancedFilterValueField from './AdvancedFilterValueField';
+import { useAdvancedFilterAutoSubmit } from './components';
+import {
+  filterConditionRoles,
+  getConditionalsOptions,
+  getConditionTypeCompatators,
+  transformFieldsToOptions,
+  shouldFilterValueFieldUpdate,
+} from './utils';
+import type {
+  IAdvancedFilterDropdown,
+  IAdvancedFilterDropdownCondition,
+  IAdvancedFilterDropdownConditionsProps,
+  IAdvancedFilterDropdownFooter,
+  IConditionOption,
+  IFilterDropdownFormikValues,
+  IFilterRole,
+  IResourceField,
+  IResourceFieldType,
+} from './interfaces';
+import type { FieldInputProps, FormikContextType, ArrayHelpers } from 'formik';
 import {
   Choose,
   Icon,
@@ -12,28 +40,20 @@ import {
   FFormGroup,
 } from '@/components';
 import { useUpdateEffect } from '@/hooks';
-import {
-  AdvancedFilterDropdownProvider,
-  FilterConditionProvider,
-  useFilterCondition,
-  useAdvancedFilterContext,
-} from './AdvancedFilterDropdownContext';
-import AdvancedFilterCompatatorField from './AdvancedFilterCompatatorField';
-import AdvancedFilterValueField from './AdvancedFilterValueField';
-import {
-  filterConditionRoles,
-  getConditionalsOptions,
-  transformFieldsToOptions,
-  shouldFilterValueFieldUpdate,
-  getConditionTypeCompatators,
-} from './utils';
-import { getFilterDropdownSchema } from './AdvancedFilter.schema';
-import { useAdvancedFilterAutoSubmit } from './components';
+
+type ConditionRenderHelpers = {
+  handleClick: (event: React.MouseEvent<HTMLElement>) => void;
+  modifiers: { active: boolean; disabled: boolean };
+  query: string;
+};
 
 /**
  * Condition item list renderer.
  */
-function ConditionItemRenderer(condition, { handleClick, modifiers, query }) {
+function ConditionItemRenderer(
+  condition: IConditionOption,
+  { handleClick }: ConditionRenderHelpers,
+) {
   return (
     <MenuItem
       text={
@@ -51,7 +71,7 @@ function ConditionItemRenderer(condition, { handleClick, modifiers, query }) {
 /**
  * Filter condition field.
  */
-function FilterConditionField() {
+function FilterConditionField(): JSX.Element {
   const conditionalsOptions = getConditionalsOptions();
   const { conditionIndex, getConditionFieldPath } = useFilterCondition();
 
@@ -89,11 +109,11 @@ function FilterConditionField() {
 /**
  * Compatator field.
  */
-function FilterCompatatorFilter() {
+function FilterCompatatorFilter(): JSX.Element {
   const { getConditionFieldPath, fieldMeta } = useFilterCondition();
 
   const comparatorFieldPath = getConditionFieldPath('comparator');
-  const fieldType = get(fieldMeta, 'fieldType');
+  const fieldType = fieldMeta?.fieldType;
 
   return (
     <FFormGroup
@@ -103,13 +123,19 @@ function FilterCompatatorFilter() {
     >
       <AdvancedFilterCompatatorField
         name={comparatorFieldPath}
-        dataType={fieldType}
+        dataType={fieldType as IResourceFieldType}
         className={Classes.FILL}
         fastField
       />
     </FFormGroup>
   );
 }
+
+type DefaultComparatorHookArgs = {
+  getConditionValue: (field: keyof IFilterRole) => unknown;
+  setConditionValue: (field: keyof IFilterRole, value: unknown) => void;
+  fieldMeta?: IResourceField;
+};
 
 /**
  * Changes default value of comparator field in the condition row once the
@@ -119,12 +145,12 @@ function useDefaultComparatorFieldValue({
   getConditionValue,
   setConditionValue,
   fieldMeta,
-}) {
+}: DefaultComparatorHookArgs) {
   const fieldKeyValue = getConditionValue('fieldKey');
 
   const comparatorsOptions = React.useMemo(
-    () => getConditionTypeCompatators(fieldMeta.fieldType),
-    [fieldMeta.fieldType],
+    () => (fieldMeta ? getConditionTypeCompatators(fieldMeta.fieldType) : []),
+    [fieldMeta],
   );
 
   useUpdateEffect(() => {
@@ -138,7 +164,7 @@ function useDefaultComparatorFieldValue({
 /**
  * Resource fields field.
  */
-function FilterFieldsField() {
+function FilterFieldsField(): JSX.Element {
   const {
     getConditionFieldPath,
     getConditionValue,
@@ -159,15 +185,22 @@ function FilterFieldsField() {
 
   return (
     <FastField name={fieldPath}>
-      {({ field, form }) => (
+      {({
+        field,
+        form,
+      }: {
+        field: FieldInputProps<IFilterRole['fieldKey']>;
+        form: FormikContextType<IFilterDropdownFormikValues>;
+      }) => (
         <FFormGroup className={'form-group--fieldKey'} name={fieldPath}>
           <FSelect
+            name={fieldPath}
             selectedItem={field.value}
             textAccessor={'label'}
             valueAccessor={'value'}
             items={transformFieldsToOptions(fields)}
             className={Classes.FILL}
-            onItemSelect={(option) => {
+            onItemSelect={(option: IConditionOption) => {
               form.setFieldValue(fieldPath, option.value);
 
               // Resets the value field to empty once the field option changing.
@@ -188,7 +221,7 @@ function FilterFieldsField() {
 /**
  * Advanced filter value field.
  */
-function FilterValueField() {
+function FilterValueField(): JSX.Element | null {
   const { conditionIndex, fieldMeta, getConditionFieldPath } =
     useFilterCondition();
 
@@ -197,9 +230,9 @@ function FilterValueField() {
     return null;
   }
   // Field meta type, name and options.
-  const fieldType = get(fieldMeta, 'fieldType');
-  const fieldName = get(fieldMeta, 'name');
-  const options = get(fieldMeta, 'options');
+  const fieldType = fieldMeta.fieldType;
+  const fieldName = fieldMeta.name;
+  const options = fieldMeta.options;
 
   const valueFieldPath = getConditionFieldPath('value');
 
@@ -209,11 +242,17 @@ function FilterValueField() {
       fieldKey={fieldType} // Pass to shouldUpdate function.
       shouldUpdate={shouldFilterValueFieldUpdate}
     >
-      {({ form: { setFieldValue }, field }) => (
+      {({
+        form: { setFieldValue },
+        field,
+      }: {
+        form: FormikContextType<IFilterDropdownFormikValues>;
+        field: FieldInputProps<unknown>;
+      }) => (
         <FFormGroup className={'form-group--value'} name={valueFieldPath}>
           <AdvancedFilterValueField
             isFocus={conditionIndex === 0}
-            value={field.value}
+            value={field.value as string | boolean | undefined}
             key={'name'}
             label={fieldName}
             fieldType={fieldType}
@@ -231,7 +270,10 @@ function FilterValueField() {
 /**
  * Advanced filter condition line.
  */
-function AdvancedFilterDropdownCondition({ conditionIndex, onRemoveClick }) {
+function AdvancedFilterDropdownCondition({
+  conditionIndex,
+  onRemoveClick,
+}: IAdvancedFilterDropdownCondition) {
   // Handle click remove condition.
   const handleClickRemoveCondition = () => {
     onRemoveClick && onRemoveClick(conditionIndex);
@@ -259,11 +301,14 @@ function AdvancedFilterDropdownCondition({ conditionIndex, onRemoveClick }) {
 /**
  * Advanced filter dropdown condition.
  */
-function AdvancedFilterDropdownConditions({ push, remove, replace, form }) {
+function AdvancedFilterDropdownConditions(
+  props: IAdvancedFilterDropdownConditionsProps,
+): JSX.Element {
+  const { push, remove, replace, form } = props;
   const { initialCondition } = useAdvancedFilterContext();
 
   // Handle remove condition.
-  const handleClickRemoveCondition = (conditionIndex) => {
+  const handleClickRemoveCondition = (conditionIndex: number) => {
     if (form.values.conditions.length > 1) {
       remove(conditionIndex);
     } else {
@@ -271,15 +316,16 @@ function AdvancedFilterDropdownConditions({ push, remove, replace, form }) {
     }
   };
   // Handle new condition button click.
-  const handleNewConditionBtnClick = (index) => {
+  const handleNewConditionBtnClick = () => {
     push({ ...initialCondition });
   };
 
   return (
     <div className="filter-dropdonw__conditions-wrap">
       <div className={'filter-dropdown__conditions'}>
-        {form.values.conditions.map((condition, index) => (
+        {form.values.conditions.map((_condition, index) => (
           <AdvancedFilterDropdownCondition
+            key={index}
             conditionIndex={index}
             onRemoveClick={handleClickRemoveCondition}
           />
@@ -293,16 +339,17 @@ function AdvancedFilterDropdownConditions({ push, remove, replace, form }) {
 /**
  * Advanced filter dropdown form.
  */
-function AdvancedFilterDropdownForm() {
+function AdvancedFilterDropdownForm(): JSX.Element {
   // Advanced filter auto-save.
   useAdvancedFilterAutoSubmit();
+  const form = useFormikContext<IFilterDropdownFormikValues>();
 
   return (
     <div className="filter-dropdown__form">
       <FieldArray
         name={'conditions'}
-        render={({ ...fieldArrayProps }) => (
-          <AdvancedFilterDropdownConditions {...fieldArrayProps} />
+        render={(arrayHelpers: ArrayHelpers) => (
+          <AdvancedFilterDropdownConditions {...arrayHelpers} form={form} />
         )}
       />
     </div>
@@ -312,14 +359,12 @@ function AdvancedFilterDropdownForm() {
 /**
  * Advanced filter dropdown footer.
  */
-function AdvancedFilterDropdownFooter({ onClick }) {
-  // Handle new filter condition button click.
-  const onClickNewFilter = (event) => {
-    onClick && onClick(event);
-  };
+function AdvancedFilterDropdownFooter({
+  onClick,
+}: IAdvancedFilterDropdownFooter): JSX.Element {
   return (
     <div className="filter-dropdown__footer">
-      <Button minimal={true} onClick={onClickNewFilter}>
+      <Button minimal={true} onClick={onClick}>
         <T id={'new_conditional'} />
       </Button>
     </div>
@@ -337,23 +382,24 @@ export function AdvancedFilterDropdown({
   defaultValue,
   defaultCondition,
   onFilterChange,
-}) {
+}: IAdvancedFilterDropdown): JSX.Element {
   // Initial condition.
-  const initialCondition = {
+  const initialCondition: IFilterRole = {
     fieldKey: defaultFieldKey,
     comparator: defaultTo(defaultComparator, 'contain'),
     condition: defaultTo(defaultCondition, 'or'),
     value: defaultTo(defaultValue, ''),
   };
   // Initial conditions.
-  const initialConditions = !isEmpty(conditions)
-    ? conditions
-    : [initialCondition, initialCondition];
+  const initialConditions: IFilterRole[] =
+    conditions && !isEmpty(conditions)
+      ? conditions
+      : [initialCondition, initialCondition];
 
   const [prevConditions, setPrevConditions] = React.useState(initialConditions);
 
   // Handle the filter dropdown form submit.
-  const handleFitlerDropdownSubmit = (values) => {
+  const handleFitlerDropdownSubmit = (values: IFilterDropdownFormikValues) => {
     const conditions = filterConditionRoles(values.conditions);
 
     // Campare the current conditions with previous conditions, if they were equal
@@ -367,7 +413,7 @@ export function AdvancedFilterDropdown({
   const validationSchema = getFilterDropdownSchema();
 
   // Initial values.
-  const initialValues = {
+  const initialValues: IFilterDropdownFormikValues = {
     conditions: initialConditions,
   };
 

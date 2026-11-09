@@ -1,5 +1,5 @@
-import React, { createContext, useContext } from 'react';
 import { Spinner } from '@blueprintjs/core';
+import React, { createContext, useContext } from 'react';
 import {
   GetPdfTemplateBrandingStateResponse,
   GetPdfTemplateResponse,
@@ -40,9 +40,8 @@ export const BrandingTemplateBoot = ({
   const { data: brandingTemplateState, isLoading: isBrandingTemplateLoading } =
     useGetPdfTemplateBrandingState();
 
-  const isLoading = isPdfTemplateLoading ||
-    isBrandingTemplateLoading ||
-    !brandingTemplateState;
+  const isLoading =
+    isPdfTemplateLoading || isBrandingTemplateLoading || !brandingTemplateState;
 
   if (isLoading) {
     return <Spinner size={20} />;

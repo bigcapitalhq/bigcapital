@@ -229,6 +229,7 @@ export const InvoicePaymentEmail: React.FC<
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const renderInvoicePaymentEmail = (props: InvoicePaymentEmailProps) => {
   return render(<InvoicePaymentEmail {...props} />);
 };

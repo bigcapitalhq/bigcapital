@@ -1,3 +1,3 @@
 export class GetSaleInvoiceMailReminder {
-  public getInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {}
+  public getInvoiceMailReminder(_tenantId: number, _saleInvoiceId: number) {}
 }

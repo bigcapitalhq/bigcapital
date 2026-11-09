@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import {
   usePlaidLink,
@@ -48,8 +47,8 @@ export function LaunchLink(props: PlaidLaunchLinkProps) {
       // regular link mode: exchange public token for access token
     } else {
       await exchangeAccessToken({
-        public_token: publicToken,
-        institution_id: metadata.institution.institution_id,
+        publicToken: publicToken,
+        institutionId: metadata.institution!.institution_id,
       });
     }
     // resetError();
@@ -62,7 +61,7 @@ export function LaunchLink(props: PlaidLaunchLinkProps) {
     metadata: PlaidLinkOnExitMetadata,
   ) => {
     // log and save error and metatdata
-    logExit(error, metadata, props.userId);
+    logExit(error, metadata);
     if (error != null) {
       // setError(error.error_code, error.display_message || error.error_message);
     }

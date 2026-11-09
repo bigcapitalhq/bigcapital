@@ -1,5 +1,3 @@
-// @ts-nocheck
-import { useFormikContext } from 'formik';
 import {
   Button,
   Classes,
@@ -11,6 +9,8 @@ import {
   Position,
   Tooltip,
 } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { useSharePaymentLink } from './SharePaymentLinkProvider';
 import {
   DialogFooterActions,
   FDateInput,
@@ -19,10 +19,10 @@ import {
   Icon,
   Stack,
 } from '@/components';
-import { useSharePaymentLink } from './SharePaymentLinkProvider';
-import { useClipboard } from '@/hooks/utils/useClipboard';
-import { useDialogActions } from '@/hooks/state';
 import { useDialogContext } from '@/components/Dialog/DialogProvider';
+import { useDateInputFormatter } from '@/hooks';
+import { useDialogActions } from '@/hooks/state';
+import { useClipboard } from '@/hooks/utils/useClipboard';
 
 export function SharePaymentLinkFormContent() {
   const { url } = useSharePaymentLink();
@@ -31,6 +31,7 @@ export function SharePaymentLinkFormContent() {
   const { isSubmitting } = useFormikContext();
 
   const clipboard = useClipboard();
+  const dateInputFormatter = useDateInputFormatter();
 
   const handleCopyBtnClick = () => {
     clipboard.copy(url);
@@ -55,7 +56,17 @@ export function SharePaymentLinkFormContent() {
                 { value: 'private', text: 'Private' },
                 { value: 'public', text: 'Public' },
               ]}
-              input={({ activeItem, text, label, value }) => (
+              input={({
+                activeItem,
+                text,
+                label,
+                value,
+              }: {
+                activeItem?: unknown;
+                text?: string;
+                label?: string;
+                value?: unknown;
+              }) => (
                 <Button
                   text={text || 'Select an item ...'}
                   rightIcon={<Icon icon={'caret-down-16'} iconSize={16} />}
@@ -84,8 +95,7 @@ export function SharePaymentLinkFormContent() {
             <FDateInput
               name={'expiryDate'}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
-              formatDate={(date) => date.toLocaleDateString()}
-              parseDate={(str) => new Date(str)}
+              {...dateInputFormatter}
               inputProps={{
                 fill: true,
                 style: { minWidth: 260 },
@@ -96,7 +106,9 @@ export function SharePaymentLinkFormContent() {
           </FFormGroup>
 
           {url && (
-            <FormGroup name={'link'} label={'Payment Link'}>
+            // `name` is not part of Blueprint's `IFormGroupProps` and was
+            // silently ignored; dropped here to satisfy the typings.
+            <FormGroup label={'Payment Link'}>
               <InputGroup
                 name={'link'}
                 value={url}

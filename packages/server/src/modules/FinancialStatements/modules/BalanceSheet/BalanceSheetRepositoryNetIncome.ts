@@ -1,5 +1,4 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import { FinancialDatePeriods } from '../../common/FinancialDatePeriods';
 import { ModelObject } from 'objection';
 import { Account } from '@/modules/Accounts/models/Account.model';
@@ -7,16 +6,41 @@ import { ILedger } from '@/modules/Ledger/types/Ledger.types';
 import { ACCOUNT_PARENT_TYPE } from '@/constants/accounts';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from '../../common/FinancialSheet';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { Ledger } from '@/modules/Ledger/Ledger';
 
 export const BalanceSheetRepositoryNetIncome = <
   T extends GConstructor<FinancialSheet>,
 >(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialDatePeriods)(Base) {
+  class extends flow(FinancialDatePeriods)(Base) {
     // -----------------------
     // # Net Income
     // -----------------------
+    public query: BalanceSheetQuery;
+
+    public accountsByType: any;
+    public accountsByParentType: any;
+
+    public totalAccountsLedger: Ledger;
+    public incomeLedger: Ledger;
+    public expensesLedger: Ledger;
+
+    public periodsAccountsLedger: Ledger;
+    public periodsOpeningAccountLedger: Ledger;
+
+    public PPTotalAccountsLedger: Ledger;
+    public PPPeriodsAccountsLedger: ILedger;
+    public PPPeriodsOpeningAccountLedger: ILedger;
+
+    public PYTotalAccountsLedger: ILedger;
+    public PYPeriodsAccountsLedger: Ledger;
+    public PYPeriodsOpeningAccountLedger: Ledger;
+
+    public initAccounts: () => Promise<void>;
+    public initAccountsTotalLedger: () => Promise<void>;
+
     public incomeAccounts: ModelObject<Account>[];
     public incomeAccountsIds: number[];
 

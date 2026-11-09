@@ -1,5 +1,3 @@
-import React from 'react';
-import styled from 'styled-components';
 import {
   Intent,
   Button,
@@ -11,8 +9,10 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { Group, Icon, FormattedMessage as T } from '@/components';
+import React from 'react';
+import styled from 'styled-components';
 import { useCustomerFormContext } from './CustomerFormProvider';
+import { Group, Icon, FormattedMessage as T } from '@/components';
 
 export function CustomerFloatingActions() {
   // Customer form context.

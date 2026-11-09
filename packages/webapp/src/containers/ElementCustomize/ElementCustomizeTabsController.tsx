@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from 'react';
 export enum ElementCustomizeTabsEnum {
   General = 'general',
   Items = 'items',
-  Totals = 'totals'
+  Totals = 'totals',
 }
 
 const DEFAULT_TAB_ID = ElementCustomizeTabsEnum.General;

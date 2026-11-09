@@ -1,14 +1,29 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
+import type { Item } from '@bigcapital/sdk-ts';
 import { useItems } from '@/hooks/query';
 
-const InventoryValuationGeneralPanelContext = React.createContext();
+interface InventoryValuationGeneralPanelContextValue {
+  items: Item[] | undefined;
+  isItemsFetching: boolean;
+  isItemsLoading: boolean;
+}
 
-function InventoryValuationGeneralPanelProvider({ query, ...props }) {
+interface InventoryValuationGeneralPanelProviderProps {
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+}
+
+const InventoryValuationGeneralPanelContext = createContext<
+  InventoryValuationGeneralPanelContextValue | undefined
+>(undefined);
+
+function InventoryValuationGeneralPanelProvider({
+  ...props
+}: InventoryValuationGeneralPanelProviderProps) {
   // Handle fetching the items based on the given query.
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
   } = useItems({
@@ -19,8 +34,8 @@ function InventoryValuationGeneralPanelProvider({ query, ...props }) {
   });
 
   // Provider data.
-  const provider = {
-    items,
+  const provider: InventoryValuationGeneralPanelContextValue = {
+    items: (itemsData as any)?.data,
     isItemsFetching,
     isItemsLoading,
   };
@@ -37,8 +52,16 @@ function InventoryValuationGeneralPanelProvider({ query, ...props }) {
   );
 }
 
-const useInventoryValuationGeneralPanelContext = () =>
-  React.useContext(InventoryValuationGeneralPanelContext);
+const useInventoryValuationGeneralPanelContext =
+  (): InventoryValuationGeneralPanelContextValue => {
+    const ctx = useContext(InventoryValuationGeneralPanelContext);
+    if (!ctx) {
+      throw new Error(
+        'useInventoryValuationGeneralPanelContext must be used within InventoryValuationGeneralPanelProvider',
+      );
+    }
+    return ctx;
+  };
 
 export {
   InventoryValuationGeneralPanelProvider,

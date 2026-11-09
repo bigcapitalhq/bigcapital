@@ -1,31 +1,25 @@
-// @ts-nocheck
 import React from 'react';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { compose } from '@/utils';
+import { useCurrentOrganization } from '@/hooks/query';
 
-import { withAuthentication } from '@/containers/Authentication/withAuthentication';
-import { withOrganization } from '@/containers/Organization/withOrganization';
+interface EnsureOrganizationIsReadyProps {
+  children: React.ReactNode;
+  redirectTo?: string;
+}
 
 function EnsureOrganizationIsReady({
   // #ownProps
   children,
   redirectTo = '/setup',
+}: EnsureOrganizationIsReadyProps) {
+  const { data: organization } = useCurrentOrganization();
+  const isOrganizationReady = !!organization?.isReady;
 
-  // #withOrganizationByOrgId
-  isOrganizationReady,
-}) {
   return isOrganizationReady ? (
-    children
+    <>{children}</>
   ) : (
     <Redirect to={{ pathname: redirectTo }} />
   );
 }
 
-export default compose(
-  withAuthentication(),
-  connect((state, props) => ({
-    organizationId: props.currentOrganizationId,
-  })),
-  withOrganization(({ isOrganizationReady }) => ({ isOrganizationReady })),
-)(EnsureOrganizationIsReady);
+export default EnsureOrganizationIsReady;

@@ -7,15 +7,16 @@ import { GetItemCategoryService } from './queries/GetItemCategory.service';
 import { ItemCategoryApplication } from './ItemCategory.application';
 import { ItemCategoryController } from './ItemCategory.controller';
 import { CommandItemCategoryValidatorService } from './commands/CommandItemCategoryValidator.service';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { GetItemCategoriesService } from './queries/GetItemCategories.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { ItemCategoriesExportable } from './ItemCategoriesExportable';
 import { ItemCategoriesImportable } from './ItemCategoriesImportable';
+import { BulkDeleteItemCategoriesService } from './BulkDeleteItemCategories.service';
+import { ValidateBulkDeleteItemCategoriesService } from './ValidateBulkDeleteItemCategories.service';
 
 @Module({
-  imports: [TenancyDatabaseModule, DynamicListModule],
+  imports: [TenancyModule, TenancyDatabaseModule, DynamicListModule],
   controllers: [ItemCategoryController],
   providers: [
     CreateItemCategoryService,
@@ -23,16 +24,13 @@ import { ItemCategoriesImportable } from './ItemCategoriesImportable';
     GetItemCategoryService,
     GetItemCategoriesService,
     DeleteItemCategoryService,
+    BulkDeleteItemCategoriesService,
+    ValidateBulkDeleteItemCategoriesService,
     ItemCategoryApplication,
     CommandItemCategoryValidatorService,
-    TransformerInjectable,
-    TenancyContext,
     ItemCategoriesExportable,
     ItemCategoriesImportable,
   ],
-  exports: [
-    ItemCategoriesExportable,
-    ItemCategoriesImportable,
-  ],
+  exports: [ItemCategoriesExportable, ItemCategoriesImportable],
 })
 export class ItemCategoryModule {}

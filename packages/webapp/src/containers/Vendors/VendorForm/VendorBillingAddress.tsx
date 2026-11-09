@@ -1,4 +1,5 @@
-// @ts-nocheck
+import intl from 'react-intl-universal';
+import { VendorFormSectionTitle } from './VendorFormSectionTitle';
 import { Box } from '@/components';
 import {
   FormattedMessage as T,
@@ -6,7 +7,6 @@ import {
   FInputGroup,
   FTextArea,
 } from '@/components';
-import { VendorFormSectionTitle } from './VendorFormSectionTitle';
 
 export function VendorBillingAddress() {
   return (
@@ -15,73 +15,66 @@ export function VendorBillingAddress() {
         <T id={'billing_address'} />
       </VendorFormSectionTitle>
       <FFormGroup
-        name={'billing_address_country'}
-        label={<T id={'country'} />}
+        name={'billingAddressCountry'}
+        label={intl.get('country')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'billing_address_country'} fill fastField />
+        <FInputGroup name={'billingAddressCountry'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address1'}
-        label={<T id={'address_line_1'} />}
+        name={'billingAddress1'}
+        label={intl.get('address_line_1')}
         inline
-        fill
         fastField
       >
-        <FTextArea name={'billing_address1'} fill fastField />
+        <FTextArea name={'billingAddress1'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address2'}
-        label={<T id={'address_line_2'} />}
+        name={'billingAddress2'}
+        label={intl.get('address_line_2')}
         inline
-        fill
         fastField
       >
-        <FTextArea name={'billing_address2'} fill fastField />
+        <FTextArea name={'billingAddress2'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address_city'}
-        label={<T id={'city_town'} />}
+        name={'billingAddressCity'}
+        label={intl.get('city_town')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'billing_address_city'} fill fastField />
+        <FInputGroup name={'billingAddressCity'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address_state'}
-        label={<T id={'state'} />}
+        name={'billingAddressState'}
+        label={intl.get('state')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'billing_address_state'} fill fastField />
+        <FInputGroup name={'billingAddressState'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address_postcode'}
-        label={<T id={'zip_code'} />}
+        name={'billingAddressPostcode'}
+        label={intl.get('zip_code')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'billing_address_postcode'} fill fastField />
+        <FInputGroup name={'billingAddressPostcode'} fill fastField />
       </FFormGroup>
 
       <FFormGroup
-        name={'billing_address_phone'}
-        label={<T id={'phone'} />}
+        name={'billingAddressPhone'}
+        label={intl.get('phone')}
         inline
-        fill
         fastField
       >
-        <FInputGroup name={'billing_address_phone'} fill fastField />
+        <FInputGroup name={'billingAddressPhone'} fill fastField />
       </FFormGroup>
     </Box>
   );

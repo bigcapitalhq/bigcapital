@@ -1,78 +1,89 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchSalesByItemsJson,
+  fetchSalesByItemsTable,
+  fetchSalesByItemsXlsx,
+  fetchSalesByItemsCsv,
+  fetchSalesByItemsPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  SalesByItemsJsonQuery,
+  SalesByItemsJsonResponse,
+  SalesByItemsTableQuery,
+  SalesByItemsTableResponse,
+  SalesByItemsXlsxQuery,
+  SalesByItemsCsvQuery,
+  SalesByItemsPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve sales by items.
- */
-export function useSalesByItems(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.SALES_BY_ITEMS, query],
-    {
-      method: 'get',
-      url: '/reports/sales-by-items',
-      params: query,
-    },
-    {
-      ...props,
-    },
-  );
+export function useSalesByItems(
+  query: SalesByItemsJsonQuery,
+  props?: Omit<
+    UseQueryOptions<SalesByItemsJsonResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.salesByItems(query),
+    queryFn: () => fetchSalesByItemsJson(fetcher, query),
+  });
 }
 
-/**
- * Retrieves sales by items table format.
- */
-export function useSalesByItemsTable(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.SALES_BY_ITEMS, query],
-    {
-      method: 'get',
-      url: '/reports/sales-by-items',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function useSalesByItemsTable(
+  query: SalesByItemsTableQuery,
+  props?: Omit<
+    UseQueryOptions<SalesByItemsTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.salesByItems(query),
+    queryFn: () => fetchSalesByItemsTable(fetcher, query),
+  });
 }
 
-export const useSalesByItemsCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/sales-by-items',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'sales_by_items.csv',
+export function useSalesByItemsCsvExport(
+  query: SalesByItemsCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchSalesByItemsCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'sales_by_items.csv'),
+      ),
   });
-};
+}
 
-export const useSalesByItemsXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/sales-by-items',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'sales_by_items.xlsx',
+export function useSalesByItemsXlsxExport(
+  query: SalesByItemsXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchSalesByItemsXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'sales_by_items.xlsx'),
+      ),
   });
-};
+}
 
-export const useSalesByItemsPdfExport = (query = {}) => {
-  return useRequestPdf({
-    url: '/reports/sales-by-items',
-    params: query,
-  });
-};
+export function useSalesByItemsPdfExport(query: SalesByItemsPdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchSalesByItemsPdf(fetcher, query));
+}

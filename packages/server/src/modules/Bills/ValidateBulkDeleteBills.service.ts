@@ -9,7 +9,7 @@ export class ValidateBulkDeleteBillsService {
     private readonly deleteBillService: DeleteBill,
     @Inject(TENANCY_DB_CONNECTION)
     private readonly tenantKnex: () => Knex,
-  ) { }
+  ) {}
 
   public async validateBulkDeleteBills(billIds: number[]): Promise<{
     deletableCount: number;
@@ -29,7 +29,7 @@ export class ValidateBulkDeleteBillsService {
         try {
           await this.deleteBillService.deleteBill(billId, trx);
           deletableIds.push(billId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(billId);
         }
       }
@@ -48,4 +48,3 @@ export class ValidateBulkDeleteBillsService {
     }
   }
 }
-

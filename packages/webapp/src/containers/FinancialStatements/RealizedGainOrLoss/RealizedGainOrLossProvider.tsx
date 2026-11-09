@@ -1,14 +1,22 @@
-// @ts-nocheck
 import React from 'react';
-import FinancialReportPage from '../FinancialReportPage';
+import { FinancialReportPage } from '../FinancialReportPage';
 
-const RealizedGainOrLossContext = React.createContext();
+type RealizedGainOrLossContextValue = Record<string, unknown>;
 
-/**
- * Realized Gain or Loss provider.
- */
-function RealizedGainOrLossProvider({ filter, ...props }) {
-  const provider = {};
+type RealizedGainOrLossProviderProps = {
+  filter?: Record<string, unknown>;
+  children?: React.ReactNode;
+};
+
+const RealizedGainOrLossContext = React.createContext<
+  RealizedGainOrLossContextValue | undefined
+>(undefined);
+
+function RealizedGainOrLossProvider({
+  filter,
+  ...props
+}: RealizedGainOrLossProviderProps) {
+  const provider: RealizedGainOrLossContextValue = {};
 
   return (
     <FinancialReportPage name="realized-gain-loss">
@@ -17,7 +25,13 @@ function RealizedGainOrLossProvider({ filter, ...props }) {
   );
 }
 
-const useRealizedGainOrLossContext = () =>
-  React.useContext(RealizedGainOrLossContext);
+const useRealizedGainOrLossContext = (): RealizedGainOrLossContextValue => {
+  const ctx = React.useContext(RealizedGainOrLossContext);
+  if (!ctx)
+    throw new Error(
+      'useRealizedGainOrLossContext must be used within RealizedGainOrLossProvider',
+    );
+  return ctx;
+};
 
 export { RealizedGainOrLossProvider, useRealizedGainOrLossContext };

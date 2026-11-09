@@ -1,14 +1,19 @@
-// @ts-nocheck
+import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem, Intent } from '@blueprintjs/core';
-
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { ItemRenderer } from '@blueprintjs/select';
 import { Choose, T, Icon, TextStatus } from '@/components';
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, SaleEstimateAction } from '@/constants/abilityOption';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+
+interface EstimateUniversalSearchItemSelectProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+}
 
 /**
  * Estimate universal search item select action.
@@ -20,7 +25,7 @@ function EstimateUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: EstimateUniversalSearchItemSelectProps) {
   if (resourceType === RESOURCES_TYPES.ESTIMATE) {
     openDrawer(DRAWERS.ESTIMATE_DETAILS, { estimateId: resourceId });
   }
@@ -31,24 +36,46 @@ export const EstimateUniversalSearchSelect = withDrawerActions(
   EstimateUniversalSearchSelectComponent,
 );
 
+interface EstimateUniversalSearchReference {
+  id: number;
+  estimateNumber: string;
+  formattedEstimateDate: string;
+  formattedAmount: string;
+  isDelivered: boolean;
+  isApproved: boolean;
+  isRejected: boolean;
+  customer?: { displayName?: string };
+}
+
+interface EstimateUniversalSearchItem {
+  id: number;
+  text: string;
+  label?: string;
+  reference: EstimateUniversalSearchReference;
+}
+
 /**
  * Status accessor.
  */
-export const EstimateStatus = ({ estimate }) => (
+interface EstimateStatusProps {
+  estimate: EstimateUniversalSearchReference;
+}
+
+export const EstimateStatus = ({ estimate }: EstimateStatusProps) => (
   <Choose>
-    <Choose.When condition={estimate.is_delivered && estimate.is_approved}>
+    <Choose.When condition={estimate.isDelivered && estimate.isApproved}>
       <TextStatus intent={Intent.SUCCESS}>
         <T id={'approved'} />
       </TextStatus>
     </Choose.When>
-    <Choose.When condition={estimate.is_delivered && estimate.is_rejected}>
+    <Choose.When condition={estimate.isDelivered && estimate.isRejected}>
       <TextStatus intent={Intent.DANGER}>
         <T id={'rejected'} />
       </TextStatus>
     </Choose.When>
     <Choose.When
       condition={
-        estimate.is_delivered && !estimate.is_rejected && !estimate.is_approved
+        estimate.isDelivered && !estimate.isRejected && !estimate.isApproved
       }
     >
       <TextStatus intent={Intent.SUCCESS}>
@@ -66,42 +93,39 @@ export const EstimateStatus = ({ estimate }) => (
 /**
  * Estimate universal search item.
  */
-export function EstimateUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export const EstimateUniversalSearchItem: ItemRenderer<
+  EstimateUniversalSearchItem
+> = (item, { handleClick, modifiers }) => {
   return (
     <MenuItem
       active={modifiers.active}
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
-            {item.reference.estimate_number}{' '}
+          <span className="bp4-text-muted">
+            {item.reference.estimateNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.formatted_estimate_date}
+            {item.reference.formattedEstimateDate}
           </span>
-        </div>
-      }
-      label={
-        <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div className="amount">{item.reference.formattedAmount}</div>
           <EstimateStatus estimate={item.reference} />
-        </>
+        </div>
       }
       onClick={handleClick}
       className={'universal-search__item--estimate'}
     />
   );
-}
+};
 
 /**
  * Transformes the estimates to search items.
  */
-const transformEstimatesToSearch = (estimate) => ({
+const transformEstimatesToSearch = (
+  estimate: EstimateUniversalSearchReference,
+): EstimateUniversalSearchItem => ({
   id: estimate.id,
-  text: estimate.customer.display_name,
-  label: estimate.formatted_balance,
+  text: estimate.customer?.displayName ?? '',
+  label: estimate.formattedAmount ?? '',
   reference: estimate,
 });
 

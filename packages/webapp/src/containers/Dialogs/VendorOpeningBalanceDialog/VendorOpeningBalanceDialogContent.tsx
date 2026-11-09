@@ -1,20 +1,20 @@
-// @ts-nocheck
-import React from 'react';
-
 import '@/style/pages/VendorOpeningBalance/VendorOpeningBalance.scss';
 
-import VendorOpeningBalanceForm from './VendorOpeningBalanceForm';
+import { VendorOpeningBalanceForm } from './VendorOpeningBalanceForm';
 import { VendorOpeningBalanceFormProvider } from './VendorOpeningBalanceFormProvider';
+
+interface VendorOpeningBalanceDialogContentProps {
+  dialogName: string;
+  vendorId: number | undefined;
+}
 
 /**
  * Vendor Opening balance dialog content.
- * @returns
  */
-export default function VendorOpeningBalanceDialogContent({
-  // #ownProps
+export function VendorOpeningBalanceDialogContent({
   dialogName,
   vendorId,
-}) {
+}: VendorOpeningBalanceDialogContentProps) {
   return (
     <VendorOpeningBalanceFormProvider
       vendorId={vendorId}

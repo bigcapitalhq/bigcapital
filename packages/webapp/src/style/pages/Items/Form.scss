@@ -1,91 +1,30 @@
-
 .page-form--item {
   $self: '.page-form';
   padding: 20px;
 
-  --x-header-border: #eaeaea;
-  --x-section-border: #eaeaea;
-  
-  .bp4-dark & {
-    --x-header-border: var(--color-dark-gray3);
-    --x-section-border: var(--color-dark-gray3);
-  }
-  
-  #{$self}__header {
-    padding: 0;
-  }
-  #{$self}__primary-section {
-    overflow: hidden;
-    padding-top: 5px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--x-header-border);
-    padding-bottom: 5px;
-    max-width: 1000px;
-  }
+  .bp4-form-group {
+    max-width: 500px;
+    margin-bottom: 14px;
 
-  #{$self}__body {
-    .bp4-form-group {
-      max-width: 500px;
-      margin-bottom: 14px;
-
-      &.bp4-inline {
-        .bp4-label {
-          min-width: 140px;
-        }
-      }
-      .bp4-form-content {
-        width: 100%;
+    &.bp4-inline {
+      .bp4-label {
+        min-width: 140px;
       }
     }
-
-    h3 {
-      font-weight: 500;
-      font-size: 14px;
-      margin-bottom: 1.4rem;
-    }
-
-    .bp4-control {
-      h3 {
-        display: inline;
-        margin-bottom: 0;
-      }
-    }
-
-    .form-group--sellable,
-    .form-group--purchasable {
-      margin-bottom: 1rem;
-    }
-
-    .form-group--purchase-description,
-    .form-group--sell-description{
-      
-      textarea{
-        width: 100%;
-      }
+    .bp4-form-content {
+      width: 100%;
     }
   }
 
-  #{$self}__section {
-    max-width: 850px;
+  .form-group--sellable,
+  .form-group--purchasable {
     margin-bottom: 1rem;
-
-    .bp4-form-group {
-      max-width: 400px;
-    }
-
-    &--selling-cost {
-      border-bottom: 1px solid var(--x-section-border);
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.25rem;
-    }
   }
 
-  #{$self}__floating-actions {
-
-    .form-group--active {
-      display: inline-block;
-      margin: 0;
-      margin-left: 20px;
+  .form-group--purchase-description,
+  .form-group--sell-description {
+    textarea {
+      width: 100%;
     }
   }
 

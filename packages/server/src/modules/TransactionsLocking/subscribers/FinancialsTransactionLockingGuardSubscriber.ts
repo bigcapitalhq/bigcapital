@@ -22,7 +22,7 @@ import { events } from '@/common/events/events';
 export class FinancialTransactionLockingGuardSubscriber {
   constructor(
     public readonly financialTransactionsLocking: FinancialTransactionLocking,
-  ) { }
+  ) {}
 
   /**
    * ---------------------------------------------

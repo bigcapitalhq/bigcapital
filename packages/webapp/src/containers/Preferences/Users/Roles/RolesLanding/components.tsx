@@ -1,18 +1,31 @@
-// @ts-nocheck
+import {
+  Intent,
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Button,
+  Popover,
+  Position,
+} from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-
-import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { safeCallback } from '@/utils';
 import { Icon } from '@/components';
+import { safeCallback } from '@/utils';
 
-/**
- * Context menu of roles.
- */
+interface ActionsMenuPayload {
+  onDeleteRole: (role: { id: number; predefined: boolean }) => void;
+  onEditRole: (role: { id: number; predefined: boolean }) => void;
+}
+
+interface ActionsMenuProps {
+  payload: ActionsMenuPayload;
+  row: { original: Record<string, any> };
+}
+
 export function ActionsMenu({
   payload: { onDeleteRole, onEditRole },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -28,6 +41,21 @@ export function ActionsMenu({
         intent={Intent.DANGER}
       />
     </Menu>
+  );
+}
+
+/**
+ * Actions cell — renders the row's contextual menu behind a "more" button,
+ * mirroring the users table so roles are actionable without a right-click.
+ */
+function ActionsCell(props: ActionsMenuProps) {
+  return (
+    <Popover
+      content={<ActionsMenu {...props} />}
+      position={Position.RIGHT_BOTTOM}
+    >
+      <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
+    </Popover>
   );
 }
 
@@ -53,6 +81,14 @@ export function useRolesTableColumns() {
         className: 'description',
         width: '180',
         textOverview: true,
+      },
+      {
+        id: 'actions',
+        Header: '',
+        Cell: ActionsCell,
+        className: 'actions',
+        width: 50,
+        disableResizing: true,
       },
     ],
     [],

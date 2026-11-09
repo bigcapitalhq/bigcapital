@@ -8,12 +8,10 @@ import { CustomerBalanceSummaryTableInjectable } from './CustomerBalanceSummaryT
 import { CustomerBalanceSummaryController } from './CustomerBalanceSummary.controller';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
 import { CustomerBalanceSummaryRepository } from './CustomerBalanceSummaryRepository';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 
 @Module({
-  imports: [
-    FinancialSheetCommonModule,
-  ],
+  imports: [TenancyModule, FinancialSheetCommonModule],
   controllers: [CustomerBalanceSummaryController],
   providers: [
     CustomerBalanceSummaryApplication,
@@ -23,7 +21,6 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
     CustomerBalanceSummaryService,
     CustomerBalanceSummaryTableInjectable,
     CustomerBalanceSummaryRepository,
-    TenancyContext
   ],
 })
 export class CustomerBalanceSummaryModule {}

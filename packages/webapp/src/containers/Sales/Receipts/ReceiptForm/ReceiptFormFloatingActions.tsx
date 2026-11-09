@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Intent,
   Button,
@@ -10,78 +8,83 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FSelect, Group, FormattedMessage as T } from '@/components';
 import { useFormikContext } from 'formik';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { If, Icon } from '@/components';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { useReceiptFormBrandingTemplatesOptions } from './utils';
-import { useDrawerActions } from '@/hooks/state';
+import type { ReceiptFormValues } from './utils';
+import { FSelect, Group, FormattedMessage as T } from '@/components';
+import { If, Icon } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { DRAWERS } from '@/constants/drawers';
 import {
   BrandingThemeFormGroup,
   BrandingThemeSelectButton,
 } from '@/containers/BrandingTemplates/BrandingTemplatesSelectFields';
-import { PageForm } from '@/components/PageForm';
+import { useDrawerActions } from '@/hooks/state';
 import { MoreIcon } from '@/icons/More';
-import { DRAWERS } from '@/constants/drawers';
+
+type ReactClickHandler = React.MouseEventHandler<HTMLElement>;
 
 /**
  * Receipt floating actions bar.
  */
-export default function ReceiptFormFloatingActions() {
+export function ReceiptFormFloatingActions() {
   // History context.
   const history = useHistory();
 
   const { openDrawer } = useDrawerActions();
 
   // Formik context.
-  const { resetForm, submitForm, isSubmitting } = useFormikContext();
+  const { resetForm, submitForm, isSubmitting } =
+    useFormikContext<ReceiptFormValues>();
 
   // Receipt form context.
   const { receipt, setSubmitPayload } = useReceiptFormContext();
 
   // Handle submit & close button click.
-  const handleSubmitCloseBtnClick = (event) => {
+  const handleSubmitCloseBtnClick: ReactClickHandler = () => {
     setSubmitPayload({ redirect: true, status: true });
     submitForm();
   };
 
   // Handle submit, close & new button click.
-  const handleSubmitCloseAndNewBtnClick = (event) => {
+  const handleSubmitCloseAndNewBtnClick: ReactClickHandler = () => {
     setSubmitPayload({ redirect: false, status: true, resetForm: true });
     submitForm();
   };
 
   // Handle submit, close & continue editing button click.
-  const handleSubmitCloseContinueEditingBtnClick = (event) => {
+  const handleSubmitCloseContinueEditingBtnClick: ReactClickHandler = () => {
     setSubmitPayload({ redirect: false, status: true });
     submitForm();
   };
 
   // Handle submit & draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick: ReactClickHandler = () => {
     setSubmitPayload({ redirect: true, status: false });
     submitForm();
   };
 
   // Handle submit, draft & new button click.
-  const handleSubmitDraftAndNewBtnClick = (event) => {
+  const handleSubmitDraftAndNewBtnClick: ReactClickHandler = () => {
     setSubmitPayload({ redirect: false, status: false, resetForm: true });
     submitForm();
   };
 
-  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+  const handleSubmitDraftContinueEditingBtnClick: ReactClickHandler = () => {
     setSubmitPayload({ redirect: false, status: false });
     submitForm();
   };
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick: ReactClickHandler = () => {
     history.goBack();
   };
 
   // Handle the clear button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick: ReactClickHandler = () => {
     resetForm();
   };
 
@@ -96,7 +99,7 @@ export default function ReceiptFormFloatingActions() {
     <PageForm.FooterActions spacing={10} position="apart">
       <Group spacing={10}>
         {/* ----------- Save And Close ----------- */}
-        <If condition={!receipt || !receipt?.is_closed}>
+        <If condition={!receipt || !receipt?.isClosed}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}
@@ -164,7 +167,7 @@ export default function ReceiptFormFloatingActions() {
         </If>
 
         {/* ----------- Save and New ----------- */}
-        <If condition={receipt && receipt?.is_closed}>
+        <If condition={Boolean(receipt && receipt?.isClosed)}>
           <ButtonGroup>
             <Button
               disabled={isSubmitting}
@@ -213,17 +216,17 @@ export default function ReceiptFormFloatingActions() {
       <Group spacing={0}>
         {/* ----------- Branding Template Select ----------- */}
         <BrandingThemeFormGroup
-          name={'pdf_template_id'}
+          name={'pdfTemplateId'}
           label={'Branding'}
           inline
           fastField
           style={{ marginLeft: 20 }}
         >
           <FSelect
-            name={'pdf_template_id'}
+            name={'pdfTemplateId'}
             items={brandingTemplatesOptions}
-            input={({ activeItem, text, label, value }) => (
-              <BrandingThemeSelectButton text={text || 'Brand Theme'} minimal />
+            input={() => (
+              <BrandingThemeSelectButton text={'Brand Theme'} minimal />
             )}
             filterable={false}
             popoverProps={{ minimal: true }}

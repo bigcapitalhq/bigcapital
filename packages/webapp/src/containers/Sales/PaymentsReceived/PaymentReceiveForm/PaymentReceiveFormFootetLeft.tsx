@@ -1,8 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
+import { FFormGroup, FEditableText } from '@/components';
 
 export function PaymentReceiveFormFootetLeft() {
   return (
@@ -10,7 +9,7 @@ export function PaymentReceiveFormFootetLeft() {
       {/* --------- Internal Note--------- */}
       <TermsConditsFormGroup
         name={'statement'}
-        label={<T id={'payment_receive_form.label.note'} />}
+        label={intl.get('payment_receive_form.label.note')}
         fastField={true}
       >
         <FEditableText

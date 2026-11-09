@@ -1,10 +1,14 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
 import { Position } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { PaymentInvoicePreviewContent } from './PaymentInvoicePreviewContent';
+import type { WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
-import { PaymentInvoicePreviewContent } from './PaymentInvoicePreviewContent';
+
+interface PaymentInvoicePreviewDrawerRootProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  *
@@ -15,7 +19,7 @@ function PaymentInvoicePreviewDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: PaymentInvoicePreviewDrawerRootProps) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -32,6 +36,7 @@ function PaymentInvoicePreviewDrawerRoot({
   );
 }
 
-export const PaymentInvoicePreviewDrawer = R.compose(withDrawers())(
+export const PaymentInvoicePreviewDrawer = FF.pipe(
   PaymentInvoicePreviewDrawerRoot,
+  withDrawers(),
 );

@@ -1,5 +1,4 @@
 import { defaultTo } from 'lodash';
-import { IOrganizationBuildDTO } from './Organization.types';
 import { BuildOrganizationDto } from './dtos/Organization.dto';
 
 /**

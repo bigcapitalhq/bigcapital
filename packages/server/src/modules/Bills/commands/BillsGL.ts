@@ -1,21 +1,34 @@
-import { sumBy } from 'lodash';
 import * as moment from 'moment';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Bill } from '../models/Bill';
 import { AccountNormal } from '@/modules/Accounts/Accounts.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
-import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
+import {
+  IBillItemAllocatedCost,
+  IBillLandedCostLedgerEntry,
+} from '../integrations/BillLandedCostsBridge';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export class BillGL {
   private bill: Bill;
+  private itemAllocatedCosts: Map<number, number>;
+  private landedCostLedgerEntries: IBillLandedCostLedgerEntry[];
   private payableAccountId: number;
   private taxPayableAccountId: number;
   private purchaseDiscountAccountId: number;
   private otherExpensesAccountId: number;
 
-  constructor(bill: Bill) {
+  constructor(
+    bill: Bill,
+    itemAllocatedCosts: IBillItemAllocatedCost[] = [],
+    landedCostLedgerEntries: IBillLandedCostLedgerEntry[] = [],
+  ) {
     this.bill = bill;
+    this.itemAllocatedCosts = new Map(
+      itemAllocatedCosts.map((item) => [item.entryId, item.amount]),
+    );
+    this.landedCostLedgerEntries = landedCostLedgerEntries;
   }
 
   setPayableAccountId(payableAccountId: number) {
@@ -44,6 +57,8 @@ export class BillGL {
    */
   private get billCommonEntry() {
     return {
+      basis: AccountingBasis.Accrual,
+
       debit: 0,
       credit: 0,
 
@@ -74,7 +89,7 @@ export class BillGL {
   private getBillItemEntry(entry: ItemEntry, index: number): ILedgerEntry {
     const commonJournalMeta = this.billCommonEntry;
     const totalLocal = this.bill.exchangeRate * entry.totalExcludingTax;
-    const landedCostAmount = sumBy(entry.allocatedCostEntries, 'cost');
+    const landedCostAmount = this.itemAllocatedCosts.get(entry.id) ?? 0;
 
     return {
       ...commonJournalMeta,
@@ -92,12 +107,12 @@ export class BillGL {
 
   /**
    * Retrieves the bill landed cost entry.
-   * @param {BillLandedCost} landedCost - Landed cost
+   * @param {IBillLandedCostLedgerEntry} landedCost - Landed cost
    * @param {number} index - Index
    */
   private getBillLandedCostEntry(
-    landedCost: BillLandedCost,
-    index: number,
+    landedCost: IBillLandedCostLedgerEntry,
+    _index: number,
   ): ILedgerEntry {
     const commonJournalMeta = this.billCommonEntry;
 
@@ -142,7 +157,7 @@ export class BillGL {
 
     return {
       ...commonJournalMeta,
-      debit: entry.taxAmount,
+      debit: entry.taxAmount * (this.bill.exchangeRate || 1),
       index,
       indexGroup: 30,
       accountId: this.taxPayableAccountId,
@@ -154,22 +169,13 @@ export class BillGL {
 
   /**
    * Retrieves the bill tax GL entries.
-   * @param {IBill} bill
-   * @param {number} taxPayableAccountId
    * @returns {ILedgerEntry[]}
    */
-  // private getBillTaxEntries = () => {
-  //   // Retrieves the non-zero tax entries.
-  //   const nonZeroTaxEntries = this.itemsEntriesService.getNonZeroEntries(
-  //     this.bill.entries,
-  //   );
-  //   const transformTaxEntry = this.getBillTaxEntry(
-  //     this.bill,
-  //     this.taxPayableAccountId,
-  //   );
-
-  //   return nonZeroTaxEntries.map(transformTaxEntry);
-  // };
+  private getBillTaxEntries = (): ILedgerEntry[] => {
+    return this.bill.entries
+      .filter((entry) => entry.taxAmount > 0)
+      .map((entry, index) => this.getBillTaxEntry(entry, index));
+  };
 
   /**
    * Retrieves the purchase discount GL entry.
@@ -217,15 +223,15 @@ export class BillGL {
     const itemsEntries = this.bill.entries.map((entry, index) =>
       this.getBillItemEntry(entry, index),
     );
-    const landedCostEntries = this.bill.locatedLandedCosts.map(
+    const landedCostEntries = this.landedCostLedgerEntries.map(
       (landedCost, index) => this.getBillLandedCostEntry(landedCost, index),
     );
 
-    // Allocate cost entries journal entries.
     return [
       payableEntry,
       ...itemsEntries,
       ...landedCostEntries,
+      ...this.getBillTaxEntries(),
       this.purchaseDiscountEntry,
       this.adjustmentEntry,
     ];

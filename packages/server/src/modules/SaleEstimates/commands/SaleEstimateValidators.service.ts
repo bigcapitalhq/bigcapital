@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import * as moment from 'moment';
 import { ERRORS } from '../constants';
 import { SaleEstimate } from '../models/SaleEstimate';
 import { ServiceError } from '@/modules/Items/ServiceError';
@@ -67,7 +68,7 @@ export class SaleEstimateValidators {
   }
 
   /**
-   * Validate the given customer has no sales estimates.
+   * Validates the given customer has no sales estimates.
    * @param {number} customerId - The customer id.
    */
   public async validateCustomerHasNoEstimates(customerId: number) {
@@ -77,6 +78,20 @@ export class SaleEstimateValidators {
 
     if (estimates.length > 0) {
       throw new ServiceError(ERRORS.CUSTOMER_HAS_SALES_ESTIMATES);
+    }
+  }
+
+  /**
+   * Validates the expiration date is not before the estimate date.
+   * @param {Date | string} estimateDate - The estimate date.
+   * @param {Date | string} expirationDate - The expiration date.
+   */
+  public validateExpirationDate(
+    estimateDate: Date | string,
+    expirationDate: Date | string,
+  ) {
+    if (moment(expirationDate).isBefore(estimateDate, 'day')) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_EXPIRATION_DATE_INVALID);
     }
   }
 }

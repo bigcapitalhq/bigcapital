@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as uniqid from 'uniqid';
+import * as crypto from 'crypto';
 import * as moment from 'moment';
 import {
-  IUserSendInviteDTO,
   IUserInvitedEventPayload,
   IUserInviteResendEventPayload,
 } from '../Users.types';
@@ -40,13 +39,13 @@ export class InviteTenantUserService {
     invitedUser: TenantUser;
   }> {
     // Get the given role or throw not found service error.
-    const role = await this.roleModel().query().findById(sendInviteDTO.roleId);
+    const _role = await this.roleModel().query().findById(sendInviteDTO.roleId);
 
     // Validates the given email not exists on the storage.
     await this.validateUserEmailNotExists(sendInviteDTO.email);
 
     // Generates a new invite token.
-    const inviteToken = uniqid();
+    const inviteToken = crypto.randomBytes(32).toString('hex');
 
     // Creates and fetches a tenant user.
     const user = await this.tenantUserModel().query().insertAndFetch({
@@ -78,7 +77,9 @@ export class InviteTenantUserService {
    * @param {string} email -
    * @return {Promise<{ invite: IUserInvite }>}
    */
-  public async resendInvite(userId: number): Promise<{ user: ModelObject<TenantUser> }> {
+  public async resendInvite(
+    userId: number,
+  ): Promise<{ user: ModelObject<TenantUser> }> {
     // Retrieve the user by id or throw not found service error.
     const user = await this.getUserByIdOrThrowError(userId);
 
@@ -89,7 +90,7 @@ export class InviteTenantUserService {
     this.validateInviteUserNotAccept(user);
 
     // Generates a new invite token.
-    const inviteToken = uniqid();
+    const inviteToken = crypto.randomBytes(32).toString('hex');
 
     // Triggers `onUserSendInvite` event.
     await this.eventEmitter.emitAsync(events.inviteUser.resendInvite, {

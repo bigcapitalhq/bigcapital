@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { useFormikContext } from 'formik';
+import React from 'react';
 import { FormattedMessage as T } from '@/components';
 
 /**
@@ -11,7 +11,7 @@ import { FormattedMessage as T } from '@/components';
 export default function NumberFormatFooter({
   // #ownProps
   onCancelClick,
-  submitDisabled
+  submitDisabled,
 }) {
   return (
     <div className={classNames('number-format-dropdown__footer')}>

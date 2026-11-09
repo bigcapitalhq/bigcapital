@@ -6,7 +6,6 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
-  IsDate,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -14,7 +13,6 @@ import {
   IsOptional,
   IsPositive,
   IsString,
-  Min,
   ValidateNested,
 } from 'class-validator';
 

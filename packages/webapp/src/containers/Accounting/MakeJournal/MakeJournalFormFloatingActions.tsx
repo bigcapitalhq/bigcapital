@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Intent,
   Button,
@@ -10,69 +8,72 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
-import { useFormikContext } from 'formik';
 import classNames from 'classnames';
-import { Group, Icon, If, FormattedMessage as T } from '@/components';
+import { useFormikContext } from 'formik';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
+import type { MakeJournalFormValues } from './utils';
+import { Icon, If, FormattedMessage as T } from '@/components';
 import { PageForm } from '@/components/PageForm';
 import { CLASSES } from '@/constants/classes';
-import { useMakeJournalFormContext } from './MakeJournalProvider';
 
 /**
  * Make Journal floating actions bar.
  */
-export default function MakeJournalFloatingAction() {
+export function MakeJournalFloatingAction() {
   const history = useHistory();
 
   // Formik context.
-  const { submitForm, resetForm, isSubmitting } = useFormikContext();
+  const { submitForm, resetForm, isSubmitting } =
+    useFormikContext<MakeJournalFormValues>();
 
   // Make journal form context.
   const { setSubmitPayload, manualJournal } = useMakeJournalFormContext();
 
   // Handle submit & publish button click.
-  const handleSubmitPublishBtnClick = (event) => {
+  const handleSubmitPublishBtnClick = () => {
     setSubmitPayload({ redirect: true, publish: true });
     submitForm();
   };
 
   // Handle submit, publish & new button click.
-  const handleSubmitPublishAndNewBtnClick = (event) => {
+  const handleSubmitPublishAndNewBtnClick = () => {
     setSubmitPayload({ redirect: false, publish: true, resetForm: true });
     submitForm();
   };
 
   // Handle submit, publish & edit button click.
-  const handleSubmitPublishContinueEditingBtnClick = (event) => {
+  const handleSubmitPublishContinueEditingBtnClick = () => {
     setSubmitPayload({ redirect: false, publish: true });
     submitForm();
   };
 
   // Handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = () => {
     setSubmitPayload({ redirect: true, publish: false });
     submitForm();
   };
 
   // Handle submit as draft & new button click.
-  const handleSubmitDraftAndNewBtnClick = (event) => {
+  const handleSubmitDraftAndNewBtnClick = () => {
     setSubmitPayload({ redirect: false, publish: false, resetForm: true });
     submitForm();
   };
 
   // Handle submit as draft & continue editing button click.
-  const handleSubmitDraftContinueEditingBtnClick = (event) => {
+  const handleSubmitDraftContinueEditingBtnClick = () => {
     setSubmitPayload({ redirect: false, publish: false });
     submitForm();
   };
 
   // Handle cancel button click.
-  const handleCancelBtnClick = (event) => {
+  const handleCancelBtnClick = () => {
     history.goBack();
   };
 
   // Handle clear button click.
-  const handleClearBtnClick = (event) => {
+  const handleClearBtnClick = () => {
     resetForm();
   };
 
@@ -82,7 +83,7 @@ export default function MakeJournalFloatingAction() {
       className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
     >
       {/* ----------- Save And Publish ----------- */}
-      <If condition={!manualJournal || !manualJournal?.is_published}>
+      <If condition={!manualJournal || !manualJournal?.isPublished}>
         <ButtonGroup>
           <Button
             loading={isSubmitting}
@@ -148,7 +149,7 @@ export default function MakeJournalFloatingAction() {
         </ButtonGroup>
       </If>
       {/* ----------- Save and New ----------- */}
-      <If condition={manualJournal && manualJournal?.is_published}>
+      <If condition={Boolean(manualJournal && manualJournal?.isPublished)}>
         <ButtonGroup>
           <Button
             loading={isSubmitting}

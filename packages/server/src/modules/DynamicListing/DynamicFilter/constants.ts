@@ -29,7 +29,7 @@ export const COMPARATOR_TYPE = {
   START_WITH: 'start_with',
 
   ENDS_WITH: 'ends_with',
-  END_WITH: 'end_with'
+  END_WITH: 'end_with',
 };
 
 export const FIELD_TYPE = {
@@ -39,5 +39,5 @@ export const FIELD_TYPE = {
   BOOLEAN: 'boolean',
   RELATION: 'relation',
   DATE: 'date',
-  COMPUTED: 'computed'
+  COMPUTED: 'computed',
 };

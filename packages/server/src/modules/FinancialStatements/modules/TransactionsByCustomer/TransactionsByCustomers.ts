@@ -1,5 +1,6 @@
-import * as R from 'ramda';
 import { isEmpty } from 'lodash';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { I18nService } from 'nestjs-i18n';
 import { ModelObject } from 'objection';
 import {
@@ -10,9 +11,13 @@ import {
 } from './TransactionsByCustomer.types';
 import { TransactionsByContact } from '../TransactionsByContact/TransactionsByContact';
 import { Customer } from '@/modules/Customers/models/Customer';
+import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { INumberFormatQuery } from '../../types/Report.types';
 import { TransactionsByCustomersRepository } from './TransactionsByCustomersRepository';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 const CUSTOMER_NORMAL = 'debit';
 
@@ -53,7 +58,7 @@ export class TransactionsByCustomers extends TransactionsByContact {
    */
   private customerTransactions(
     customerId: number,
-    openingBalance: number
+    openingBalance: number,
   ): ITransactionsByCustomersTransaction[] {
     const ledger = this.repository.ledger
       .whereContactId(customerId)
@@ -62,10 +67,16 @@ export class TransactionsByCustomers extends TransactionsByContact {
 
     const ledgerEntries = ledger.getEntries();
 
-    return R.compose(
-      R.curry(this.contactTransactionRunningBalance)(openingBalance, 'debit'),
-      R.map(this.contactTransactionMapper.bind(this))
-    ).bind(this)(ledgerEntries);
+    return flow(
+      (entries: ILedgerEntry[]) =>
+        entries.map((entry) => this.contactTransactionMapper(entry)),
+      (transactions) =>
+        this.contactTransactionRunningBalance(
+          openingBalance,
+          'debit',
+          transactions,
+        ),
+    )(ledgerEntries);
   }
 
   /**
@@ -74,13 +85,13 @@ export class TransactionsByCustomers extends TransactionsByContact {
    * @returns {ITransactionsByCustomersCustomer}
    */
   private customerMapper(
-    customer: ModelObject<Customer>
+    customer: ModelObject<Customer>,
   ): ITransactionsByCustomersCustomer {
     const openingBalance = this.getContactOpeningBalance(customer.id);
     const transactions = this.customerTransactions(customer.id, openingBalance);
     const closingBalance = this.getCustomerClosingBalance(
       transactions,
-      openingBalance
+      openingBalance,
     );
     const currencyCode = this.baseCurrency;
 
@@ -100,12 +111,12 @@ export class TransactionsByCustomers extends TransactionsByContact {
    */
   private getCustomerClosingBalance(
     customerTransactions: ITransactionsByCustomersTransaction[],
-    openingBalance: number
+    openingBalance: number,
   ): number {
     return this.getContactClosingBalance(
       customerTransactions,
       CUSTOMER_NORMAL,
-      openingBalance
+      openingBalance,
     );
   }
 
@@ -123,12 +134,13 @@ export class TransactionsByCustomers extends TransactionsByContact {
    * @returns {ITransactionsByCustomersCustomer[]}
    */
   private customersMapper(
-    customers: ModelObject<Customer>[]
+    customers: ModelObject<Customer>[],
   ): ITransactionsByCustomersCustomer[] {
-    return R.compose(
-      R.when(this.isCustomersPostFilter, this.contactsFilter),
-      R.map(this.customerMapper.bind(this))
-    ).bind(this)(customers);
+    return flow(
+      (nodes: ModelObject<Customer>[]) =>
+        nodes.map((customer) => this.customerMapper(customer)),
+      when(this.isCustomersPostFilter, this.contactsFilter),
+    )(customers) as ITransactionsByCustomersCustomer[];
   }
 
   /**

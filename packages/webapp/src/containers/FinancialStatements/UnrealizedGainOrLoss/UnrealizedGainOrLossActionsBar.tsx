@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   NavbarDivider,
@@ -9,41 +7,45 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar,FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useUnrealizedGainOrLossContext } from './UnrealizedGainOrLossProvider';
 import { withUnrealizedGainOrLoss } from './withUnrealizedGainOrLoss';
-import { withUnrealizedGainOrLossActions } from './withUnrealizedGainOrLossActions';
+import {
+  withUnrealizedGainOrLossActions,
+  WithUnrealizedGainOrLossActionsProps,
+} from './withUnrealizedGainOrLossActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { saveInvoke } from '@/utils';
 
-import { compose, saveInvoke } from '@/utils';
+interface UnrealizedGainOrLossActionsBarOwnProps {
+  numberFormat?: Record<string, unknown>;
+  onNumberFormatSubmit?: (values: Record<string, unknown>) => void;
+}
 
-/**
- * unrealized Gain or Loss actions bar.
- */
-function UnrealizedGainOrLossActionsBar({
-  //#withRealizedGainOrLoss
+type UnrealizedGainOrLossActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<
+  WithUnrealizedGainOrLossActionsProps,
+  'toggleUnrealizedGainOrLossFilterDrawer'
+> &
+  UnrealizedGainOrLossActionsBarOwnProps;
+
+function UnrealizedGainOrLossActionsBarInner({
   isFilterDrawerOpen,
-
-  //#withRealizedGainOrLossActions
   toggleUnrealizedGainOrLossFilterDrawer,
-
-  //#ownProps
   numberFormat,
   onNumberFormatSubmit,
-}) {
-  // Handle filter toggle click.
+}: UnrealizedGainOrLossActionsBarProps) {
   const handleFilterToggleClick = () => {
     toggleUnrealizedGainOrLossFilterDrawer();
   };
 
-  // Handle recalculate report button.
   const handleRecalculateReport = () => {};
 
-  // handle number format form submit.
-  const handleNumberFormatSubmit = (values) =>
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) =>
     saveInvoke(onNumberFormatSubmit, values);
 
   return (
@@ -109,9 +111,10 @@ function UnrealizedGainOrLossActionsBar({
   );
 }
 
-export default compose(
+export const UnrealizedGainOrLossActionsBar = FF.pipe(
+  UnrealizedGainOrLossActionsBarInner,
+  withUnrealizedGainOrLossActions,
   withUnrealizedGainOrLoss(({ unrealizedGainOrLossDrawerFilter }) => ({
     isFilterDrawerOpen: unrealizedGainOrLossDrawerFilter,
   })),
-  withUnrealizedGainOrLossActions,
-)(UnrealizedGainOrLossActionsBar);
+);

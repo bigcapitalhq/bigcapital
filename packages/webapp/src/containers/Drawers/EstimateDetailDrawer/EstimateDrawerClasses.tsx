@@ -1,5 +1,4 @@
-// @ts-nocheck
-const globalStateClassesMapping = {
+const globalStateClassesMapping: Record<string, string> = {
   active: 'active',
   checked: 'checked',
   completed: 'completed',
@@ -12,13 +11,16 @@ const globalStateClassesMapping = {
   selected: 'selected',
 };
 
-function generateUtilityClass(componentName, slot) {
+function generateUtilityClass(componentName: string, slot: string): string {
   const globalStateClass = globalStateClassesMapping[slot];
   return globalStateClass || `${componentName}__${slot}`;
 }
 
-function generateUtilityClasses(componentName, modifiers) {
-  const result = {
+function generateUtilityClasses(
+  componentName: string,
+  modifiers: string[],
+): Record<string, string> {
+  const result: Record<string, string> = {
     root: componentName,
   };
   modifiers.forEach((modifier) => {

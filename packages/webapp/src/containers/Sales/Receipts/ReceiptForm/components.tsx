@@ -1,32 +1,39 @@
-// @ts-nocheck
-import React, { useRef } from 'react';
-import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import * as R from 'ramda';
-
-import { ExchangeRateInputGroup } from '@/components';
-import { useCurrentOrganization } from '@/hooks/state';
+import * as FF from 'fp-ts/function';
+import React, { useRef } from 'react';
+import intl from 'react-intl-universal';
+import { useReceiptFormContext } from './ReceiptFormProvider';
 import { useReceiptIsForeignCustomer, useReceiptTotal } from './utils';
-import { useUpdateEffect } from '@/hooks';
-import { transactionNumber } from '@/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
+import type { ReceiptFormValues } from './utils';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { ExchangeRateInputGroup } from '@/components';
+import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import {
   useSyncExRateToForm,
   withExchangeRateFetchingLoading,
   withExchangeRateItemEntriesPriceRecalc,
 } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { useUpdateEffect } from '@/hooks';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { transactionNumber } from '@/utils';
+
+type ReceiptExchangeRateInputFieldRootProps = Omit<
+  React.ComponentProps<typeof ExchangeRateInputGroup>,
+  'name' | 'fromCurrency' | 'toCurrency'
+>;
 
 /**
  * Receipt exchange rate input field.
  * @returns {JSX.Element}
  */
-function ReceiptExchangeRateInputFieldRoot({ ...props }) {
-  const currentOrganization = useCurrentOrganization();
+const ReceiptExchangeRateInputFieldRoot = ({
+  ...props
+}: ReceiptExchangeRateInputFieldRootProps) => {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<ReceiptFormValues>();
   const isForeignCustomer = useReceiptIsForeignCustomer();
-  const { values } = useFormikContext();
 
   // Can't continue if the customer is not foreign.
   if (!isForeignCustomer) {
@@ -34,78 +41,79 @@ function ReceiptExchangeRateInputFieldRoot({ ...props }) {
   }
   return (
     <ExchangeRateInputGroup
-      name={'exchange_rate'}
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
+      {...props}
+      name={'exchangeRate'}
+      fromCurrency={values.currencyCode}
+      toCurrency={baseCurrency ?? ''}
       formGroupProps={{ label: ' ', inline: true }}
       withPopoverRecalcConfirm
-      {...props}
     />
   );
-}
+};
 
-export const ReceiptExchangeRateInputField = R.compose(
-  withExchangeRateFetchingLoading,
+export const ReceiptExchangeRateInputField = FF.pipe(
+  ReceiptExchangeRateInputFieldRoot,
   withExchangeRateItemEntriesPriceRecalc,
-)(ReceiptExchangeRateInputFieldRoot);
+  withExchangeRateFetchingLoading,
+);
 
-/**
- * Receipt project select.
- * @returns {JSX.Element}
- */
-export function ReceiptProjectSelectButton({ label }) {
-  return <Button text={label ?? intl.get('select_project')} />;
-}
+type ReceiptSyncIncrementSettingsToFormProps = Record<string, never>;
 
 /**
  * Syncs receipt auto-increment settings to form.
  * @return {React.ReactNode}
  */
-export const ReceiptSyncIncrementSettingsToForm = R.compose(
-  withSettings(({ receiptSettings }) => ({
-    receiptAutoIncrement: receiptSettings?.autoIncrement,
-    receiptNextNumber: receiptSettings?.nextNumber,
-    receiptNumberPrefix: receiptSettings?.numberPrefix,
-  })),
-)(({ receiptAutoIncrement, receiptNextNumber, receiptNumberPrefix }) => {
-  const { setFieldValue } = useFormikContext();
+export const ReceiptSyncIncrementSettingsToForm =
+  ({}: ReceiptSyncIncrementSettingsToFormProps) => {
+    const { receiptSettings } = useReceiptFormContext();
+    const receiptAutoIncrement = receiptSettings?.autoIncrement as
+      | boolean
+      | undefined;
+    const receiptNextNumber = receiptSettings?.nextNumber as number | undefined;
+    const receiptNumberPrefix = receiptSettings?.numberPrefix as
+      | string
+      | undefined;
+    const { setFieldValue } = useFormikContext<ReceiptFormValues>();
 
-  useUpdateEffect(() => {
-    // Do not update if the receipt auto-increment mode is disabled.
-    if (!receiptAutoIncrement) return;
+    useUpdateEffect(() => {
+      // Do not update if the receipt auto-increment mode is disabled.
+      if (!receiptAutoIncrement) return;
 
-    setFieldValue(
-      'receipt_number',
-      transactionNumber(receiptNumberPrefix, receiptNextNumber),
-    );
-  }, [
-    setFieldValue,
-    receiptNumberPrefix,
-    receiptAutoIncrement,
-    receiptNextNumber,
-  ]);
+      setFieldValue(
+        'receiptNumber',
+        transactionNumber(receiptNumberPrefix, receiptNextNumber),
+      );
+    }, [
+      setFieldValue,
+      receiptNumberPrefix,
+      receiptAutoIncrement,
+      receiptNextNumber,
+    ]);
 
-  return null;
-});
+    return null;
+  };
+
+type ReceiptSyncAutoExRateToFormProps = {
+  openDialog: WithDialogActionsProps['openDialog'];
+};
 
 /**
  * Syncs the auto exchange rate to the receipt form and shows up popup to user
  * as an indication the entries rates have been changed.
  * @returns {React.ReactNode}
  */
-export const ReceiptSyncAutoExRateToForm = R.compose(withDialogActions)(
-  ({
-    // #withDialogActions
-    openDialog,
-  }) => {
+export const ReceiptSyncAutoExRateToForm = FF.pipe(
+  ({ openDialog }: ReceiptSyncAutoExRateToFormProps) => {
     const total = useReceiptTotal();
-    const timeout = useRef();
+    const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+      undefined,
+    );
 
     useSyncExRateToForm({
       onSynced: () => {
         // If the total bigger then zero show alert to the user after adjusting entries.
         if (total > 0) {
-          clearTimeout(timeout.current);
+          if (timeout.current) clearTimeout(timeout.current);
           timeout.current = setTimeout(() => {
             openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
           }, 500);
@@ -114,4 +122,5 @@ export const ReceiptSyncAutoExRateToForm = R.compose(withDialogActions)(
     });
     return null;
   },
+  withDialogActions,
 );

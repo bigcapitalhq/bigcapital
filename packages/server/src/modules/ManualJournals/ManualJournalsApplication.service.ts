@@ -25,7 +25,7 @@ export class ManualJournalsApplication {
     private getManualJournalsService: GetManualJournals,
     private bulkDeleteManualJournalsService: BulkDeleteManualJournalsService,
     private validateBulkDeleteManualJournalsService: ValidateBulkDeleteManualJournalsService,
-  ) { }
+  ) {}
 
   /**
    * Make journal entries.

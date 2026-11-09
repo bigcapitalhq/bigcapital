@@ -1,15 +1,11 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
-import {
-  app,
-  authenticationToken,
-  AuthorizationHeader,
-  orgainzationId,
-} from './init-app-test';
+import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
 const makeItemRequest = () => ({
   name: faker.commerce.productName(),
   type: 'service',
+  unit: 'kg',
 });
 
 describe.only('Items (e2e)', () => {
@@ -20,6 +16,28 @@ describe.only('Items (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send(makeItemRequest())
       .expect(201);
+  });
+
+  it('/items (POST) with reorder point', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/items')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        name: faker.commerce.productName(),
+        type: 'inventory',
+        inventory_account_id: 1007,
+        reorder_point: 12.5,
+      })
+      .expect(201);
+
+    const itemResponse = await request(app.getHttpServer())
+      .get(`/items/${response.body.id}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    expect(Number(itemResponse.body.reorder_point)).toEqual(12.5);
   });
 
   it('/items/:id (PUT)', async () => {
@@ -55,11 +73,13 @@ describe.only('Items (e2e)', () => {
       .send(makeItemRequest());
     const itemId = response.body.id;
 
-    return request(app.getHttpServer())
+    const itemResponse = await request(app.getHttpServer())
       .get(`/items/${itemId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+
+    expect(itemResponse.body.unit).toEqual('kg');
   });
 
   it('/items/:id/inactivate (PATCH)', async () => {

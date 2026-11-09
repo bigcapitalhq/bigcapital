@@ -1,9 +1,8 @@
-// @ts-nocheck
-import React from 'react';
 import { Overlay, OverlayProps } from '@blueprintjs/core';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { SidebarOverlayContainer } from './SidebarOverlayContainer';
 import { ISidebarMenuItem, ISidebarMenuItemType } from '../Sidebar/interfaces';
+import { SidebarOverlayContainer } from './SidebarOverlayContainer';
 
 export interface ISidebarOverlayItem {
   text: string;
@@ -17,9 +16,9 @@ export interface ISidebarOverlayProps {
 }
 
 export interface ISidebarOverlayItemProps {
-  text: string | JSX.Element;
+  text: React.ReactNode;
   href: string;
-  onClick?: any;
+  onClick?: (event: React.MouseEvent) => void;
 }
 
 export interface ISidebarOverlayItemDivider {
@@ -46,7 +45,7 @@ export function SidebarOverlayItemLink({
 }
 
 export interface ISidebarOverlayItemLabel {
-  text: string;
+  text: React.ReactNode;
 }
 
 /**
@@ -84,7 +83,11 @@ function SidebarOverlayItem({ item }: SidebarOverlayItemProps) {
   ) : //
   item.type === ISidebarMenuItemType.Link ||
     item.type === ISidebarMenuItemType.Dialog ? (
-    <SidebarOverlayItemLink text={item.text} href={item.href} onClick={item.onClick} />
+    <SidebarOverlayItemLink
+      text={item.text}
+      href={item.href}
+      onClick={item.onClick}
+    />
   ) : null;
 }
 
@@ -112,6 +115,7 @@ function SidebarOverlayMenu({ items }: ISidebarOverlayMenu) {
 
 export interface SidebarOverlayProps extends OverlayProps {
   items: ISidebarMenuItem[];
+  label?: React.ReactNode;
 }
 
 /**

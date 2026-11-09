@@ -1,10 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
-
-import { CellType } from '@/constants';
+import React from 'react';
 import { BranchSuggestField } from '../Branches';
+import { CellType } from '@/constants';
 
 /**
  * Branches list field cell.

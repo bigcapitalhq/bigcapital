@@ -1,16 +1,15 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Alignment,
   NavbarGroup,
   NavbarDivider,
   Classes,
 } from '@blueprintjs/core';
+import React from 'react';
+import { useBillFormContext } from './BillFormProvider';
 import {
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
 } from './utils';
-import { useFeatureCan } from '@/hooks/state';
 import {
   BranchSelect,
   FeatureCan,
@@ -20,14 +19,14 @@ import {
   FormWarehouseSelectButton,
   FormBranchSelectButton,
 } from '@/components';
-import { useBillFormContext } from './BillFormProvider';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Bill form topbar .
  * @returns {JSX.Element}
  */
-export default function BillFormTopBar() {
+export function BillFormTopBar() {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -67,7 +66,7 @@ function BillFormSelectBranch() {
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <BranchSelect
-      name={'branch_id'}
+      name={'branchId'}
       branches={branches}
       input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
@@ -78,13 +77,13 @@ function BillFormSelectBranch() {
 
 function BillFormSelectWarehouse() {
   // Bill form context.
-  const { warehouses, isWarehouesLoading } = useBillFormContext();
+  const { warehouses, isWarehousesLoading } = useBillFormContext();
 
-  return isWarehouesLoading ? (
+  return isWarehousesLoading ? (
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <WarehouseSelect
-      name={'warehouse_id'}
+      name={'warehouseId'}
       warehouses={warehouses}
       input={FormWarehouseSelectButton}
       popoverProps={{ minimal: true }}

@@ -1,103 +1,100 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { compose } from '@/utils';
-import { TABLES } from '@/constants/tables';
+import { usePaymentReceivesColumns, ActionsMenu } from './components';
+import { PaymentsReceivedEmptyStatus as PaymentReceivesEmptyStatus } from './PaymentsReceivedEmptyStatus';
+import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
+import { withPaymentsReceived } from './withPaymentsReceived';
+import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
+import type { PaymentReceiveTableRow } from './components';
+import type { WithPaymentsReceivedProps } from './withPaymentsReceived';
+import type { WithPaymentsReceivedActionsProps } from './withPaymentsReceivedActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-
-import PaymentReceivesEmptyStatus from './PaymentsReceivedEmptyStatus';
-
-import { withPaymentsReceived } from './withPaymentsReceived';
-import { withPaymentsReceivedActions } from './withPaymentsReceivedActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { usePaymentReceivesColumns, ActionsMenu } from './components';
-import { usePaymentsReceivedListContext } from './PaymentsReceivedListProvider';
-import { useMemorizedColumnsWidths } from '@/hooks';
 import { DRAWERS } from '@/constants/drawers';
-import { DialogsName } from '@/constants/dialogs';
+import { TABLES } from '@/constants/tables';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useMemorizedColumnsWidths } from '@/hooks';
 
-/**
- * Payment receives datatable.
- */
+interface PaymentsReceivedDataTableProps
+  extends Pick<
+      WithPaymentsReceivedProps,
+      'paymentReceivesTableState' | 'paymentReceivesSelectedRows'
+    >,
+    WithPaymentsReceivedActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps,
+    WithDialogActionsProps {}
+
 function PaymentsReceivedDataTable({
-  // #withPaymentsReceivedActions
   setPaymentReceivesTableState,
   setPaymentReceivesSelectedRows,
-
-  // #withPaymentsReceived
   paymentReceivesTableState,
-
-  // #withAlertActions
+  paymentReceivesSelectedRows,
   openAlert,
-
-  // #withDrawerActions
   openDrawer,
-
-  // #withDialogActions
   openDialog,
-
-  // #withSettings
-  paymentReceivesTableSize,
-}) {
+}: PaymentsReceivedDataTableProps) {
   const history = useHistory();
 
-  // Payment receives list context.
   const {
     paymentReceives,
     pagination,
-
     isPaymentReceivesLoading,
     isPaymentReceivesFetching,
     isEmptyStatus,
+    paymentReceiveSettings,
   } = usePaymentsReceivedListContext();
+  const paymentReceivesTableSize = paymentReceiveSettings?.tableSize as
+    | string
+    | undefined;
 
-  // Payment receives columns.
   const columns = usePaymentReceivesColumns();
 
-  // Handles edit payment receive.
-  const handleEditPaymentReceive = ({ id }) => {
+  const handleEditPaymentReceive = ({ id }: PaymentReceiveTableRow) => {
     history.push(`/payments-received/${id}/edit`);
   };
 
-  // Handles delete payment receive.
-  const handleDeletePaymentReceive = ({ id }) => {
+  const handleDeletePaymentReceive = ({ id }: PaymentReceiveTableRow) => {
     openAlert('payment-received-delete', { paymentReceiveId: id });
   };
 
-  // Handle view detail  payment receive..
-  const handleViewDetailPaymentReceive = ({ id }) => {
+  const handleViewDetailPaymentReceive = ({ id }: PaymentReceiveTableRow) => {
     openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, { paymentReceiveId: id });
   };
 
-  // Handle mail send payment receive.
-  const handleSendMailPayment = ({ id }) => {
+  const handleSendMailPayment = ({ id }: PaymentReceiveTableRow) => {
     openDrawer(DRAWERS.PAYMENT_RECEIVED_SEND_MAIL, { paymentReceivedId: id });
   };
 
-  // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
     openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, {
       paymentReceiveId: cell.row.original.id,
     });
   };
 
-  // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.PAYMENT_RECEIVES);
 
-  // Handle datatable fetch once the table's state changing.
   const handleDataTableFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
+    ({
+      pageIndex,
+      pageSize,
+      sortBy,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      sortBy: Array<{ id: string; desc: boolean }>;
+    }) => {
       setPaymentReceivesTableState({
         pageIndex,
         pageSize,
@@ -107,13 +104,14 @@ function PaymentsReceivedDataTable({
     [setPaymentReceivesTableState],
   );
 
-  // Handle selected rows change.
-  const handleSelectedRowsChange = (selectedRows) => {
-    const selectedIds = selectedRows?.map((row) => row.original.id) || [];
-    setPaymentReceivesSelectedRows(selectedIds);
-  };
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows: Array<{ original: PaymentReceiveTableRow }>) => {
+      const selectedIds = selectedRows?.map((row) => row.original.id) || [];
+      setPaymentReceivesSelectedRows(selectedIds);
+    },
+    [setPaymentReceivesSelectedRows],
+  );
 
-  // Display empty status instead of the table.
   if (isEmptyStatus) {
     return <PaymentReceivesEmptyStatus />;
   }
@@ -122,11 +120,14 @@ function PaymentsReceivedDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={paymentReceives}
+        data={paymentReceives ?? []}
         loading={isPaymentReceivesLoading}
         headerLoading={isPaymentReceivesLoading}
         progressBarLoading={isPaymentReceivesFetching}
         onFetchData={handleDataTableFetchData}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={paymentReceivesSelectedRows}
+        autoResetSelectedRows={false}
         manualSortBy={true}
         selectionColumn={true}
         noInitialFetch={true}
@@ -134,9 +135,8 @@ function PaymentsReceivedDataTable({
         autoResetSortBy={false}
         autoResetPage={false}
         pagination={true}
-        onSelectedRowsChange={handleSelectedRowsChange}
-        initialPageSize={paymentReceivesTableState.pageSize}
-        pagesCount={pagination.pagesCount}
+        initialPageSize={paymentReceivesTableState?.pageSize ?? 10}
+        rowsCount={pagination?.total ?? 0}
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={ActionsMenu}
@@ -155,15 +155,16 @@ function PaymentsReceivedDataTable({
   );
 }
 
-export default compose(
-  withPaymentsReceivedActions,
-  withAlertActions,
-  withDrawerActions,
+export const PaymentsReceivedTable = FF.pipe(
+  PaymentsReceivedDataTable,
+  withPaymentsReceived(
+    ({ paymentReceivesTableState, paymentReceivesSelectedRows }) => ({
+      paymentReceivesTableState,
+      paymentReceivesSelectedRows,
+    }),
+  ),
   withDialogActions,
-  withPaymentsReceived(({ paymentReceivesTableState }) => ({
-    paymentReceivesTableState,
-  })),
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
-  })),
-)(PaymentsReceivedDataTable);
+  withDrawerActions,
+  withAlertActions,
+  withPaymentsReceivedActions,
+);

@@ -1,50 +1,36 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
 import styled from 'styled-components';
-
-import { Card, DrawerLoading } from '@/components';
-
-import ItemFormFormik from '../../Items/ItemFormFormik';
+import { ItemFormFormik } from '../../Items/ItemFormFormik';
 import {
   ItemFormProvider,
   useItemFormContext,
 } from '../../Items/ItemFormProvider';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { Card, DrawerLoading } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 
-/**
- * Quick create/edit item drawer form.
- */
-function QuickCreateItemDrawerForm({
+interface QuickCreateItemDrawerFormProps extends WithDrawerActionsProps {
+  itemId?: number;
+  itemName?: string;
+}
+
+function QuickCreateItemDrawerFormInner({
   itemId,
   itemName,
   closeDrawer,
-
-  // #withDashboardActions
-  addQuickActionEvent,
-}) {
-  // Drawer context.
-  const { payload } = useDrawerContext();
-
-  // Handle the form submit request success.
-  const handleSubmitSuccess = (values, form, submitPayload, response) => {
+}: QuickCreateItemDrawerFormProps): React.ReactElement {
+  const handleSubmitSuccess = (
+    _values: unknown,
+    _form: unknown,
+    submitPayload: { redirect?: boolean },
+  ) => {
     if (submitPayload.redirect) {
       closeDrawer(DRAWERS.QUICK_CREATE_ITEM);
     }
-    if (payload.quickActionEvent) {
-      addQuickActionEvent(payload.quickActionEvent, {
-        itemId: response.data.id,
-      });
-    }
-  };
-  // Handle the form cancel.
-  const handleFormCancel = () => {
-    closeDrawer(DRAWERS.QUICK_CREATE_ITEM);
+    // The SDK's `createItem` returns void, so no created-item id is available
+    // here and the quick-action event cannot be recorded.
   };
 
   return (
@@ -54,7 +40,6 @@ function QuickCreateItemDrawerForm({
           <ItemFormFormik
             initialValues={{ name: itemName }}
             onSubmitSuccess={handleSubmitSuccess}
-            onCancel={handleFormCancel}
           />
         </ItemFormCard>
       </DrawerItemFormLoading>
@@ -62,20 +47,20 @@ function QuickCreateItemDrawerForm({
   );
 }
 
-/**
- * Drawer item form loading.
- * @returns {JSX}
- */
-function DrawerItemFormLoading({ children }) {
+function DrawerItemFormLoading({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.ReactElement {
   const { isFormLoading } = useItemFormContext();
 
   return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
 }
 
-export default R.compose(
+export const QuickCreateItemDrawerForm = FF.pipe(
+  QuickCreateItemDrawerFormInner,
   withDrawerActions,
-  withDashboardActions,
-)(QuickCreateItemDrawerForm);
+);
 
 const ItemFormCard = styled(Card)`
   margin: 15px;

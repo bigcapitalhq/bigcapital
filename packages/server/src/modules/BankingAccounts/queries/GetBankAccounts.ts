@@ -3,7 +3,6 @@ import { ACCOUNT_TYPE } from '@/constants/accounts';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { CashflowAccountTransformer } from '@/modules/BankingTransactions/queries/BankAccountTransformer';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { ICashflowAccountsFilter } from '../types/BankAccounts.types';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { BankAccountsQueryDto } from '../dtos/BankAccountsQuery.dto';
@@ -17,7 +16,7 @@ export class GetBankAccountsService {
 
     @Inject(Account.name)
     private readonly accountModel: TenantModelProxy<typeof Account>,
-  ) { }
+  ) {}
 
   /**
    * Retrieve the cash flow accounts.
@@ -32,9 +31,10 @@ export class GetBankAccountsService {
       ...filterDTO,
     };
     // Parsees accounts list filter DTO.
-    const filter = this.dynamicListService.parseStringifiedFilter<BankAccountsQueryDto>(
-      _filterDto,
-    );
+    const filter =
+      this.dynamicListService.parseStringifiedFilter<BankAccountsQueryDto>(
+        _filterDto,
+      );
 
     // Dynamic list service.
     const dynamicList = await this.dynamicListService.dynamicList(

@@ -25,7 +25,10 @@ export const getJournalSheetDefaultQuery = () => ({
   toRange: null,
   accountsIds: [],
   numberFormat: {
-    noCents: false,
+    precision: 2,
     divideOn1000: false,
+    showZero: false,
+    formatMoney: 'total',
+    negativeFormat: 'mines',
   },
 });

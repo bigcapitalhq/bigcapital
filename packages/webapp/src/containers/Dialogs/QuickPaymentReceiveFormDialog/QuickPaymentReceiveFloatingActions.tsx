@@ -1,19 +1,21 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
+import type { QuickPaymentReceiveFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
-function QuickPaymentReceiveFloatingActions({
-  // #withDialogActions
+interface QuickPaymentReceiveFloatingActionsProps
+  extends WithDialogActionsProps {}
+
+function QuickPaymentReceiveFloatingActionsInner({
   closeDialog,
-}) {
+}: QuickPaymentReceiveFloatingActionsProps) {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<QuickPaymentReceiveFormValues>();
 
   // quick payment receive dialog context.
   const { dialogName } = useQuickPaymentReceiveContext();
@@ -40,4 +42,7 @@ function QuickPaymentReceiveFloatingActions({
     </div>
   );
 }
-export default compose(withDialogActions)(QuickPaymentReceiveFloatingActions);
+export const QuickPaymentReceiveFloatingActions = FF.pipe(
+  QuickPaymentReceiveFloatingActionsInner,
+  withDialogActions,
+);

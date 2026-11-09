@@ -3,7 +3,9 @@ import { removeInvalidChars } from '../removeInvalidChars';
 
 describe('removeInvalidChars', () => {
   it('should remove letters in string', () => {
-    expect(removeInvalidChars('1,000ab,0cd00.99', [',', '.'])).toEqual('1,000,000.99');
+    expect(removeInvalidChars('1,000ab,0cd00.99', [',', '.'])).toEqual(
+      '1,000,000.99',
+    );
   });
 
   it('should remove special characters in string', () => {

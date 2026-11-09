@@ -31,10 +31,13 @@ export class TenantRepository extends TenantBaseRepository {
 
   /**
    * Creates a new tenant with random organization id.
+   * @param {string} uniqId - Unique id.
+   * @param {Knex.Transaction} trx - Knex transaction.
    */
-  createWithUniqueOrgId(uniqId?: string) {
+  createWithUniqueOrgId(uniqId?: string, trx?: Knex.Transaction) {
     const organizationId = uniqid() || uniqId;
-    return this.model.query().insert({ organizationId });
+    const query = this.model.query(trx);
+    return query.insert({ organizationId });
   }
 
   /**
@@ -104,15 +107,20 @@ export class TenantRepository extends TenantBaseRepository {
    * Saves the metadata of the given tenant.
    * @param {number} tenantId - The tenant id.
    * @param {Record<string, any>} metadata - The metadata to save.
+   * @param {Knex.Transaction} trx - Knex transaction.
    */
-  async saveMetadata(tenantId: number, metadata: Record<string, any>) {
+  async saveMetadata(
+    tenantId: number,
+    metadata: Record<string, any>,
+    trx?: Knex.Transaction,
+  ) {
     const foundMetadata = await this.tenantMetadataModel
-      .query()
+      .query(trx)
       .findOne({ tenantId });
     const updateOrInsert = foundMetadata ? 'patch' : 'insert';
 
     return this.tenantMetadataModel
-      .query()
+      .query(trx)
       [updateOrInsert]({
         tenantId,
         ...metadata,

@@ -11,7 +11,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 export class RefundVendorCreditGLEntriesSubscriber {
   constructor(
     private readonly refundVendorCreditGLEntries: RefundVendorCreditGLEntries,
-  ) { }
+  ) {}
 
   /**
    * Writes refund vendor credit GL entries once the transaction created.
@@ -21,7 +21,7 @@ export class RefundVendorCreditGLEntriesSubscriber {
   async writeRefundVendorCreditGLEntriesOnceCreated({
     trx,
     refundVendorCredit,
-    vendorCredit,
+    vendorCredit: _vendorCredit,
   }: IRefundVendorCreditCreatedPayload) {
     await this.refundVendorCreditGLEntries.createRefundVendorCreditGLEntries(
       refundVendorCredit.id,
@@ -37,7 +37,7 @@ export class RefundVendorCreditGLEntriesSubscriber {
   async revertRefundVendorCreditGLEntriesOnceDeleted({
     trx,
     refundCreditId,
-    oldRefundCredit,
+    oldRefundCredit: _oldRefundCredit,
   }: IRefundVendorCreditDeletedPayload) {
     await this.refundVendorCreditGLEntries.revertRefundVendorCreditGLEntries(
       refundCreditId,
@@ -45,4 +45,3 @@ export class RefundVendorCreditGLEntriesSubscriber {
     );
   }
 }
-

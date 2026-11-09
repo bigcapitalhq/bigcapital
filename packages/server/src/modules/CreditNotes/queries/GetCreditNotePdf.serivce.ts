@@ -34,7 +34,7 @@ export class GetCreditNotePdf {
     private readonly pdfTemplateModel: TenantModelProxy<
       typeof PdfTemplateModel
     >,
-  ) { }
+  ) {}
 
   /**
    * Retrieves credit note html content.
@@ -45,14 +45,11 @@ export class GetCreditNotePdf {
     const brandingAttributes =
       await this.getCreditNoteBrandingAttributes(creditNoteId);
 
-    // Map attributes to match the React component props
-    // The branding template returns companyLogoUri, but type may have companyLogo
+    // The branding template returns companyLogoUri from the organization
+    // branding or the selected template.
     const props = {
       ...brandingAttributes,
-      companyLogoUri:
-        (brandingAttributes as any).companyLogoUri ||
-        (brandingAttributes as any).companyLogo ||
-        '',
+      companyLogoUri: brandingAttributes.companyLogoUri || '',
     };
 
     return renderCreditNotePaperTemplateHtml(props);

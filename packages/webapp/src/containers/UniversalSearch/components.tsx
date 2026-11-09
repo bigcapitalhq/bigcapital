@@ -1,14 +1,17 @@
-// @ts-nocheck
-import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
-
-import { highlightText } from '@/utils';
+import React from 'react';
 import { getUniversalSearchBind } from './utils';
+import type { UniversalSearchItem } from '@/components/UniversalSearch/UniversalSearch';
+import type { IItemRendererProps, ItemRenderer } from '@blueprintjs/select';
+import { highlightText } from '@/utils';
 
 /**
  * Default univesal search item component.
  */
-function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
+function UniversalSearchItemDetail(
+  item: UniversalSearchItem,
+  { handleClick, modifiers, query }: IItemRendererProps,
+) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -18,28 +21,32 @@ function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
           <div>{highlightText(item.text, query)}</div>
 
           {item.subText && (
-            <span class="bp4-text-muted">
+            <span className="bp4-text-muted">
               {highlightText(item.subText, query)}
             </span>
           )}
         </div>
       }
-      label={item.label ? highlightText(item.label, query) : ''}
+      label={
+        item.label
+          ? (highlightText(item.label, query) as unknown as string)
+          : ''
+      }
       onClick={handleClick}
     />
   );
 }
 
 /**
- *
- * @param {*} props
- * @param {*} actions
- * @returns
+ * Dashboard universal search item.
  */
-export const DashboardUniversalSearchItem = (props, actions) => {
-    const itemRenderer = getUniversalSearchBind(props._type, 'itemRenderer');
+export const DashboardUniversalSearchItem: ItemRenderer<UniversalSearchItem> = (
+  props,
+  actions,
+) => {
+  const itemRenderer = getUniversalSearchBind(props._type, 'itemRenderer');
 
-    return typeof itemRenderer !== 'undefined'
-      ? itemRenderer(props, actions)
-      : UniversalSearchItemDetail(props, actions);
-  };
+  return typeof itemRenderer !== 'undefined'
+    ? itemRenderer(props, actions)
+    : UniversalSearchItemDetail(props, actions);
+};

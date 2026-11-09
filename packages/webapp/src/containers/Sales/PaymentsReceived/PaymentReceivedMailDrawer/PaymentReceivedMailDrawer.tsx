@@ -1,6 +1,5 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
@@ -37,6 +36,7 @@ function PaymentReceivedSendMailDrawerRoot({
   );
 }
 
-export const PaymentReceivedSendMailDrawer = R.compose(withDrawers())(
+export const PaymentReceivedSendMailDrawer = FF.pipe(
   PaymentReceivedSendMailDrawerRoot,
+  withDrawers(),
 );

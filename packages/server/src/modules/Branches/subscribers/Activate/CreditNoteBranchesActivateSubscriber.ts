@@ -22,7 +22,7 @@ export class CreditNoteActivateBranchesSubscriber {
   }: IBranchesActivatedPayload) {
     await this.creditNotesActivateBranches.updateCreditsWithBranch(
       primaryBranch.id,
-      trx
+      trx,
     );
-  };
+  }
 }

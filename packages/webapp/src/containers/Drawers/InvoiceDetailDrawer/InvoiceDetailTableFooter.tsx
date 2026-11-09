@@ -1,16 +1,13 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 import {
   T,
   TotalLines,
-  FormatNumber,
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
  * Invoice details footer.
@@ -18,53 +15,57 @@ import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 export function InvoiceDetailTableFooter() {
   const { invoice } = useInvoiceDetailDrawerContext();
 
+  if (!invoice) {
+    return null;
+  }
+
   return (
     <InvoiceDetailsFooterRoot>
       <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'invoice.details.subtotal'} />}
-          value={invoice.subtotal_formatted}
+          value={invoice.subtotalFormatted}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
-        {invoice?.discount_amount > 0 && (
-          <TotalLine
-            title={
-              invoice.discount_percentage_formatted
-                ? `Discount [${invoice.discount_percentage_formatted}]`
-                : 'Discount'
-            }
-            value={invoice.discount_amount_formatted}
-            textStyle={TotalLineTextStyle.Regular}
-          />
-        )}
-        {invoice?.adjustment_formatted && (
-          <TotalLine
-            title="Adjustment"
-            value={invoice.adjustment_formatted}
-            textStyle={TotalLineTextStyle.Regular}
-          />
-        )}
-        {invoice?.taxes?.map((taxRate) => (
+        {(invoice.taxes ?? []).map((taxRate) => (
           <TotalLine
             key={taxRate.id}
-            title={`${taxRate.name} [${taxRate.tax_rate}%]`}
-            value={taxRate.tax_rate_amount_formatted}
+            title={`${taxRate.name} [${taxRate.taxRate}%]`}
+            value={taxRate.taxRateAmountFormatted}
             textStyle={TotalLineTextStyle.Regular}
           />
         ))}
+        {(invoice.discountAmount ?? 0) > 0 && (
+          <TotalLine
+            title={
+              invoice.discountPercentageFormatted
+                ? `Discount [${invoice.discountPercentageFormatted}]`
+                : 'Discount'
+            }
+            value={invoice.discountAmountFormatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
+        {invoice.adjustmentFormatted && (
+          <TotalLine
+            title="Adjustment"
+            value={invoice.adjustmentFormatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        )}
         <TotalLine
           title={<T id={'invoice.details.total'} />}
-          value={invoice.total_formatted}
+          value={invoice.totalFormatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
         <TotalLine
           title={<T id={'invoice.details.payment_amount'} />}
-          value={invoice.payment_amount_formatted}
+          value={invoice.paymentAmountFormatted}
         />
         <TotalLine
           title={<T id={'invoice.details.due_amount'} />}
-          value={invoice.due_amount_formatted}
+          value={invoice.dueAmountFormatted}
           textStyle={TotalLineTextStyle.Bold}
         />
       </InvoiceTotalLines>

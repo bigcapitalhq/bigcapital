@@ -13,8 +13,8 @@ export class MetableDBStore
   KEY_COLUMN: string;
   VALUE_COLUMN: string;
   TYPE_COLUMN: string;
-  extraQuery: Function;
-  loaded: Boolean;
+  extraQuery: (...args: any[]) => any;
+  loaded: boolean;
   config: MetableConfig;
   extraColumns: Array<string>;
 
@@ -209,16 +209,10 @@ export class MetableDBStore
    * @param {String} parseType -
    */
   mapMetadata(metadata: IMetadata) {
-    const metaType = this.config.getMetaType(
-      metadata[this.KEY_COLUMN],
-      metadata['group'],
-    );
+    const metaType = this.config.getMetaType(metadata.key, metadata.group);
     return {
-      key: metadata[this.KEY_COLUMN],
-      value: MetableDBStore.parseMetaValue(
-        metadata[this.VALUE_COLUMN],
-        metaType,
-      ),
+      key: metadata.key,
+      value: MetableDBStore.parseMetaValue(String(metadata.value), metaType),
       ...this.extraColumns.reduce((obj, extraCol: string) => {
         obj[extraCol] = metadata[extraCol] || null;
         return obj;

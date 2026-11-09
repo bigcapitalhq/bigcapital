@@ -19,7 +19,7 @@ export class CustomerGLEntriesStorage {
 
     @Inject(Customer.name)
     private readonly customerModel: TenantModelProxy<typeof Customer>,
-  ) { }
+  ) {}
 
   /**
    * Customer opening balance journals.
@@ -28,9 +28,7 @@ export class CustomerGLEntriesStorage {
     customerId: number,
     trx?: Knex.Transaction,
   ) => {
-    const customer = await this.customerModel()
-      .query(trx)
-      .findById(customerId);
+    const customer = await this.customerModel().query(trx).findById(customerId);
 
     // Finds the income account.
     const incomeAccount = await this.accountModel()

@@ -1,9 +1,8 @@
-// @ts-nocheck
 import { useHistory } from 'react-router-dom';
-import { DashboardInsider } from '@/components';
 import { ImportView } from '../Import/ImportView';
+import { DashboardInsider } from '@/components';
 
-export default function VendorsImport() {
+export function VendorsImport() {
   const history = useHistory();
 
   const handleImportSuccess = () => {
@@ -19,7 +18,7 @@ export default function VendorsImport() {
         resource={'vendors'}
         onImportSuccess={handleImportSuccess}
         onCancelClick={handleImportBtnClick}
-        exampleTitle='Vendors Example'
+        exampleTitle="Vendors Example"
       />
     </DashboardInsider>
   );

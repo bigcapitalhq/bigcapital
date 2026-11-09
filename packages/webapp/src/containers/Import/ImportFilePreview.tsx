@@ -1,18 +1,17 @@
-// @ts-nocheck
 import { Button, Callout, Intent, Text } from '@blueprintjs/core';
 import clsx from 'classnames';
+import { ImportStepperStep } from './_types';
+import { ImportFileContainer } from './ImportFileContainer';
+import styles from './ImportFilePreview.module.scss';
 import {
   ImportFilePreviewBootProvider,
   useImportFilePreviewBootContext,
 } from './ImportFilePreviewBoot';
 import { useImportFileContext } from './ImportFileProvider';
-import { useImportFileProcess } from '@/hooks/query/import';
 import { AppToaster, Box, Group, Stack } from '@/components';
-import { CLASSES } from '@/constants';
-import { ImportStepperStep } from './_types';
-import { ImportFileContainer } from './ImportFileContainer';
 import { SectionCard, Section } from '@/components/Section';
-import styles from './ImportFilePreview.module.scss';
+import { CLASSES } from '@/constants';
+import { useImportFileProcess } from '@/hooks/query/import';
 
 export function ImportFilePreview() {
   const { importId } = useImportFileContext();
@@ -56,7 +55,6 @@ function ImportFilePreviewImported() {
   return (
     <Section
       collapseProps={{ defaultIsOpen: false }}
-      defaultIsOpen={true}
       title={`(${importPreview.createdCount}) Items are ready to import`}
     >
       <SectionCard padded={true}>
@@ -82,7 +80,6 @@ function ImportFilePreviewImported() {
 function ImportFilePreviewSkipped() {
   const { importPreview } = useImportFilePreviewBootContext();
 
-  // Can't continue if there's no skipped items.
   if (importPreview.skippedCount <= 0) return null;
 
   return (
@@ -111,7 +108,6 @@ function ImportFilePreviewSkipped() {
 function ImportFilePreviewUnmapped() {
   const { importPreview } = useImportFilePreviewBootContext();
 
-  // Can't continue if there's no unmapped columns.
   if (importPreview?.unmappedColumnsCount <= 0) return null;
 
   return (
@@ -135,7 +131,7 @@ function ImportFilePreviewFloatingActions() {
   const { importId, setStep, onImportSuccess, onImportFailed } =
     useImportFileContext();
   const { importPreview } = useImportFilePreviewBootContext();
-  const { mutateAsync: importFile, isLoading: isImportFileLoading } =
+  const { mutateAsync: importFile, isPending: isImportFileLoading } =
     useImportFileProcess();
 
   const isValidToImport = importPreview?.createdCount > 0;
@@ -145,13 +141,11 @@ function ImportFilePreviewFloatingActions() {
       .then(() => {
         AppToaster.show({
           intent: Intent.SUCCESS,
-          message: `The ${
-            importPreview.createdCount
-          } of ${10} has imported successfully.`,
+          message: `The ${importPreview.createdCount} of ${importPreview.totalCount} has imported successfully.`,
         });
         onImportSuccess && onImportSuccess();
       })
-      .catch((error) => {
+      .catch(() => {
         onImportFailed && onImportFailed();
       });
   };

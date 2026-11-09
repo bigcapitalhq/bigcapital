@@ -1,30 +1,22 @@
-// @ts-nocheck
 import React from 'react';
-
+import { RealizedGainOrLossLoadingBar } from './components';
+import { RealizedGainOrLossActionsBar } from './RealizedGainOrLossActionsBar';
+import { RealizedGainOrLossHeader } from './RealizedGainOrLossHeader';
+import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
+import { WithRealizedGainOrLossActionsProps } from './withRealizedGainOrLossActions';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 
-import RealizedGainOrLossHeader from './RealizedGainOrLossHeader';
-import RealizedGainOrLossActionsBar from './RealizedGainOrLossActionsBar';
-import { RealizedGainOrLossLoadingBar } from './components';
-import { RealizedGainOrLossProvider } from './RealizedGainOrLossProvider';
+type RealizedGainOrLossProps = {
+  organizationName: string;
+} & Pick<
+  WithRealizedGainOrLossActionsProps,
+  'toggleRealizedGainOrLossFilterDrawer'
+>;
 
-import { withCurrentOrganization } from '../../Organization/withCurrentOrganization';
-import { withRealizedGainOrLossActions } from './withRealizedGainOrLossActions';
-
-import { compose } from '@/utils';
-
-/**
- * Realized Gain or Loss.
- */
 function RealizedGainOrLoss({
-  // #withPreferences
-  organizationName,
-
-  //#withRealizedGainOrLossActions
   toggleRealizedGainOrLossFilterDrawer,
-}) {
-  // Handle refetch realized Gain or Loss after filter change.
-  const handleFilterSubmit = (filter) => {};
+}: RealizedGainOrLossProps) {
+  const handleFilterSubmit = (_filter: Record<string, unknown>) => {};
 
   React.useEffect(
     () => () => {
@@ -40,7 +32,7 @@ function RealizedGainOrLoss({
       <DashboardPageContent>
         <FinancialStatement>
           <RealizedGainOrLossHeader
-            pageFilter={[]}
+            pageFilter={{}}
             onSubmitFilter={handleFilterSubmit}
           />
           <RealizedGainOrLossLoadingBar />
@@ -50,9 +42,4 @@ function RealizedGainOrLoss({
   );
 }
 
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withRealizedGainOrLossActions,
-)(RealizedGainOrLoss);
+export { RealizedGainOrLoss };

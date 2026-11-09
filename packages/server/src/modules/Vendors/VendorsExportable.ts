@@ -9,9 +9,7 @@ import { Vendor } from './models/Vendor';
 @Injectable()
 @ExportableService({ name: Vendor.name })
 export class VendorsExportable extends Exportable {
-  constructor(
-    private readonly vendorsApplication: VendorsApplication,
-  ) {
+  constructor(private readonly vendorsApplication: VendorsApplication) {
     super();
   }
 
@@ -29,6 +27,6 @@ export class VendorsExportable extends Exportable {
 
     return this.vendorsApplication
       .getVendors(parsedQuery)
-      .then((output) => output.vendors);
+      .then((output) => output.data);
   }
 }

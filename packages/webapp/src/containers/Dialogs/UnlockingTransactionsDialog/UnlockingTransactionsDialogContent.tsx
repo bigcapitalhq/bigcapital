@@ -1,16 +1,21 @@
-// @ts-nocheck
 import React from 'react';
-
-import UnlockingTransactionsForm from './UnlockingTransactionsForm';
+import { UnlockingTransactionsForm } from './UnlockingTransactionsForm';
 import { UnlockingTransactionsFormProvider } from './UnlockingTransactionsFormProvider';
 
-export default function UnlockingTransactionsDialogContent({
-  // #ownProps
+interface UnlockingTransactionsDialogContentProps {
+  moduleName: string;
+  dialogName: string;
+}
+
+export function UnlockingTransactionsDialogContent({
   moduleName,
   dialogName,
-}) {
+}: UnlockingTransactionsDialogContentProps): React.ReactElement {
   return (
-    <UnlockingTransactionsFormProvider moduleName={moduleName} dialogName={dialogName}>
+    <UnlockingTransactionsFormProvider
+      moduleName={moduleName}
+      dialogName={dialogName}
+    >
       <UnlockingTransactionsForm />
     </UnlockingTransactionsFormProvider>
   );

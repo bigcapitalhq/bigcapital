@@ -1,7 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-
 import {
   Button,
   NavbarGroup,
@@ -9,13 +5,11 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { VendorCreditMenuItem } from './utils';
-import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import {
   If,
   Icon,
@@ -23,14 +17,30 @@ import {
   DrawerActionsBar,
   Can,
 } from '@/components';
-
-import { compose } from '@/utils';
+import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+
+interface VendorCreditDetailActionsBarInnerProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Vendor credit detail actions bar.
  */
-function VendorCreditDetailActionsBar({
+function VendorCreditDetailActionsBarInner({
   // #withDialogActions
   openDialog,
 
@@ -39,7 +49,7 @@ function VendorCreditDetailActionsBar({
 
   // #withDrawerActions
   closeDrawer,
-}) {
+}: VendorCreditDetailActionsBarInnerProps) {
   const history = useHistory();
   const { vendorCreditId, vendorCredit } = useVendorCreditDetailDrawerContext();
 
@@ -62,6 +72,10 @@ function VendorCreditDetailActionsBar({
     openDialog('reconcile-vendor-credit', { vendorCreditId });
   };
 
+  if (!vendorCredit) {
+    return null;
+  }
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -75,7 +89,7 @@ function VendorCreditDetailActionsBar({
           <NavbarDivider />
         </Can>
         <Can I={VendorCreditAction.Refund} a={AbilitySubject.VendorCredit}>
-          <If condition={!vendorCredit.is_closed && !vendorCredit.is_draft}>
+          <If condition={!vendorCredit.isClosed && !vendorCredit.isDraft}>
             <Button
               className={Classes.MINIMAL}
               icon={<Icon icon="arrow-downward" iconSize={18} />}
@@ -95,7 +109,7 @@ function VendorCreditDetailActionsBar({
           />
         </Can>
         <Can I={VendorCreditAction.Edit} a={AbilitySubject.VendorCredit}>
-          <If condition={!vendorCredit.is_closed && !vendorCredit.is_draft}>
+          <If condition={!vendorCredit.isClosed && !vendorCredit.isDraft}>
             <NavbarDivider />
             <VendorCreditMenuItem
               payload={{
@@ -109,8 +123,9 @@ function VendorCreditDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertActions,
+export const VendorCreditDetailActionsBar = FF.pipe(
+  VendorCreditDetailActionsBarInner,
   withDrawerActions,
-)(VendorCreditDetailActionsBar);
+  withAlertActions,
+  withDialogActions,
+);

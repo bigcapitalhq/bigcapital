@@ -7,12 +7,12 @@ import { ProfitLossSheetMeta } from './ProfitLossSheetMeta';
 import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 import { AccountsModule } from '@/modules/Accounts/Accounts.module';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 import { ProfitLossSheetController } from './ProfitLossSheet.controller';
 import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
 
 @Module({
-  imports: [FinancialSheetCommonModule, AccountsModule],
+  imports: [TenancyModule, FinancialSheetCommonModule, AccountsModule],
   controllers: [ProfitLossSheetController],
   providers: [
     ProfitLossSheetApplication,
@@ -22,7 +22,6 @@ import { ProfitLossSheetApplication } from './ProfitLossSheetApplication';
     ProfitLossSheetTableInjectable,
     ProfitLossSheetMeta,
     ProfitLossSheetRepository,
-    TenancyContext,
   ],
 })
 export class ProfitLossSheetModule {}

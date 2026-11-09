@@ -2,7 +2,6 @@
 import ApiService from '@/services/ApiService';
 
 export default class RemoteDataBinding {
-
   execute(state) {
     return this.getData(state);
   }
@@ -12,9 +11,16 @@ export default class RemoteDataBinding {
     let sortQuery = '';
 
     if ((state.sorted || []).length) {
-      sortQuery = `&$orderby=` + (state).sorted.map((obj) => {
-        return obj.direction === 'descending' ? `${obj.name} desc` : obj.name;
-      }).reverse().join(',');
+      sortQuery =
+        `&$orderby=` +
+        state.sorted
+          .map((obj) => {
+            return obj.direction === 'descending'
+              ? `${obj.name} desc`
+              : obj.name;
+          })
+          .reverse()
+          .join(',');
     }
 
     this.ajax.url = `${this.baseUrl}?${pageQuery}${sortQuery}&$inlinecount=allpages&$format=json`;

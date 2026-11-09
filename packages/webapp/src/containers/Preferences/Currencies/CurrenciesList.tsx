@@ -1,18 +1,20 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
-
+import { CurrenciesDataTable } from './CurrenciesDataTable';
 import { CurrenciesProvider } from './CurrenciesProvider';
-import CurrenciesDataTable from './CurrenciesDataTable';
-
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
 
-import { compose } from '@/utils';
+type CurrenciesListInnerProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
 
-function CurrenciesList({
+function CurrenciesListInner({
   // #withDashboardActions
   changePreferencesPageTitle,
-}) {
+}: CurrenciesListInnerProps) {
   useEffect(() => {
     changePreferencesPageTitle(intl.get('currencies'));
   }, [changePreferencesPageTitle]);
@@ -24,4 +26,7 @@ function CurrenciesList({
   );
 }
 
-export default compose(withDashboardActions)(CurrenciesList);
+export const CurrenciesList = FF.pipe(
+  CurrenciesListInner,
+  withDashboardActions,
+);

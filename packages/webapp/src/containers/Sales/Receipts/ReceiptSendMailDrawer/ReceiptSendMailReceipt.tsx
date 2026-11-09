@@ -1,10 +1,10 @@
 import { x } from '@xstyled/emotion';
-import { Group, Stack } from '@/components';
+import { isEmpty } from 'lodash';
 import {
   SendMailReceipt,
   SendMailReceiptProps,
 } from '../../Estimates/SendMailViewDrawer/SendMailViewReceiptPreview';
-import { isEmpty } from 'lodash';
+import { Group, Stack } from '@/components';
 
 export interface ReceiptSendMailReceiptProps extends SendMailReceiptProps {
   // # Company name.

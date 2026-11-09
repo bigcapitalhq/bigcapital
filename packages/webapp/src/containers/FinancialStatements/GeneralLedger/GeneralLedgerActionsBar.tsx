@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -7,24 +5,30 @@ import {
   NavbarDivider,
   Popover,
   PopoverInteractionKind,
-  Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { GeneralLedgerSheetExportMenu } from './components';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
-import { compose } from '@/utils';
-
 import { withGeneralLedger } from './withGeneralLedger';
 import { withGeneralLedgerActions } from './withGeneralLedgerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import type { WithGeneralLedgerProps } from './withGeneralLedger';
+import type { WithGeneralLedgerActionsProps } from './withGeneralLedgerActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { DialogsName } from '@/constants/dialogs';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+
+type GeneralLedgerActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<WithGeneralLedgerActionsProps, 'toggleGeneralLedgerFilterDrawer'> &
+  WithDialogActionsProps;
 
 /**
  * General ledger - Actions bar.
  */
-function GeneralLedgerActionsBar({
+function GeneralLedgerActionsBarInner({
   // #withGeneralLedger
   isFilterDrawerOpen,
 
@@ -33,7 +37,7 @@ function GeneralLedgerActionsBar({
 
   // #withDialogActions
   openDialog,
-}) {
+}: GeneralLedgerActionsBarProps) {
   const { sheetRefresh } = useGeneralLedgerContext();
 
   // Handle customize button click.
@@ -100,10 +104,11 @@ function GeneralLedgerActionsBar({
   );
 }
 
-export default compose(
+export const GeneralLedgerActionsBar = FF.pipe(
+  GeneralLedgerActionsBarInner,
+  withDialogActions,
+  withGeneralLedgerActions,
   withGeneralLedger(({ generalLedgerFilterDrawer }) => ({
     isFilterDrawerOpen: generalLedgerFilterDrawer,
   })),
-  withGeneralLedgerActions,
-  withDialogActions,
-)(GeneralLedgerActionsBar);
+);

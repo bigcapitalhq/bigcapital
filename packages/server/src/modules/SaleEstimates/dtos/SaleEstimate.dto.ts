@@ -21,7 +21,7 @@ enum DiscountType {
   Amount = 'amount',
 }
 
-class SaleEstimateEntryDto extends ItemEntryDto { }
+class SaleEstimateEntryDto extends ItemEntryDto {}
 
 class AttachmentDto {
   @IsString()
@@ -178,5 +178,5 @@ export class CommandSaleEstimateDto {
   adjustment?: number;
 }
 
-export class CreateSaleEstimateDto extends CommandSaleEstimateDto { }
-export class EditSaleEstimateDto extends CommandSaleEstimateDto { }
+export class CreateSaleEstimateDto extends CommandSaleEstimateDto {}
+export class EditSaleEstimateDto extends CommandSaleEstimateDto {}

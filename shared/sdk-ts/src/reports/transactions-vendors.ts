@@ -1,5 +1,6 @@
 import type { OpArgType } from 'openapi-typescript-fetch';
 import type { ApiFetcher } from '../fetch-utils';
+import { withNestedQuery } from "../fetch-utils";
 import type { paths } from '../schema';
 import {
   OpForPath,
@@ -22,7 +23,11 @@ export async function fetchTransactionsByVendorsTable(
   query: TransactionsByVendorsTableQuery
 ): Promise<TransactionsByVendorsTableResponse> {
   const get = fetcher.path(TRANSACTIONS_VENDORS_ROUTE).method('get').create();
-  const { data } = await get(query as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: 'application/json+table' },
+  });
   return data as unknown as TransactionsByVendorsTableResponse;
 }
 
@@ -36,7 +41,8 @@ export async function fetchTransactionsByVendorsJson(
   query: TransactionsByVendorsJsonQuery
 ): Promise<TransactionsByVendorsJsonResponse> {
   const get = fetcher.path(TRANSACTIONS_VENDORS_ROUTE).method('get').create();
-  const { data } = await get(query as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as Arg, init);
   return data as unknown as TransactionsByVendorsJsonResponse;
 }
 
@@ -49,7 +55,11 @@ export async function fetchTransactionsByVendorsCsv(
   query: TransactionsByVendorsCsvQuery
 ): Promise<TransactionsByVendorsCsvResponse> {
   const get = fetcher.path(TRANSACTIONS_VENDORS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/csv' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as TransactionsByVendorsCsvResponse;
 }
 
@@ -62,7 +72,11 @@ export async function fetchTransactionsByVendorsXlsx(
   query: TransactionsByVendorsXlsxQuery
 ): Promise<TransactionsByVendorsXlsxResponse> {
   const get = fetcher.path(TRANSACTIONS_VENDORS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/xlsx' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as TransactionsByVendorsXlsxResponse;
 }
 
@@ -75,6 +89,10 @@ export async function fetchTransactionsByVendorsPdf(
   query: TransactionsByVendorsPdfQuery
 ): Promise<TransactionsByVendorsPdfResponse> {
   const get = fetcher.path(TRANSACTIONS_VENDORS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/pdf' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as TransactionsByVendorsPdfResponse;
 }

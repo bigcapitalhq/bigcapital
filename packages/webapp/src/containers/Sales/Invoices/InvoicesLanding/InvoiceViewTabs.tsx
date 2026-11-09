@@ -1,37 +1,32 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useInvoicesListContext } from './InvoicesListProvider';
-
-import { withInvoices } from './withInvoices';
 import { withInvoiceActions } from './withInvoiceActions';
+import { withInvoices } from './withInvoices';
+import type { WithInvoiceActionsProps } from './withInvoiceActions';
+import type { WithInvoicesProps } from './withInvoices';
+import { DashboardViewsTabs } from '@/components';
+import { transfromViewsToTabs } from '@/utils';
 
-/**
- * Invoices views tabs.
- */
-function InvoiceViewTabs({
-  // #withInvoiceActions
+interface InvoiceViewTabsProps extends WithInvoiceActionsProps {
+  invoicesCurrentView: string;
+}
+
+function InvoiceViewTabsInner({
   setInvoicesTableState,
-
-  // #withInvoices
   invoicesCurrentView,
-}) {
+}: InvoiceViewTabsProps) {
   const history = useHistory();
 
-  // Invoices list context.
   const { invoicesViews } = useInvoicesListContext();
 
   const tabs = transfromViewsToTabs(invoicesViews);
 
-  // Handle tab change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string) => {
     setInvoicesTableState({ viewSlug });
   };
-  // Handle click a new view tab.
   const handleClickNewView = () => {
     history.push('/custom_views/invoices/new');
   };
@@ -51,9 +46,10 @@ function InvoiceViewTabs({
   );
 }
 
-export default compose(
-  withInvoiceActions,
-  withInvoices(({ invoicesTableState }) => ({
+export const InvoiceViewTabs = FF.pipe(
+  InvoiceViewTabsInner,
+  withInvoices(({ invoicesTableState }: WithInvoicesProps) => ({
     invoicesCurrentView: invoicesTableState.viewSlug,
   })),
-)(InvoiceViewTabs);
+  withInvoiceActions,
+);

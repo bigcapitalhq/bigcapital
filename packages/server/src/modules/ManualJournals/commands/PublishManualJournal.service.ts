@@ -24,30 +24,38 @@ export class PublishManualJournal {
   ) {}
 
   /**
-   * Authorize the manual journal publishing.
+   * Validates the publish manual journal operation against the locked manual
+   * journal row: existence and not already published.
    * @param {number} manualJournalId - Manual journal id.
+   * @param {Knex.Transaction} trx - Locks the manual journal row (FOR UPDATE).
+   * @returns {Promise<ManualJournal>} The locked manual journal.
    */
-  private authorize = (oldManualJournal: ManualJournal) => {
-    // Validate the manual journal is not published.
+  async validate(
+    manualJournalId: number,
+    trx: Knex.Transaction,
+  ): Promise<ManualJournal> {
+    // Find the old manual journal with a row lock or throw not found error.
+    const oldManualJournal = await this.manualJournalModel()
+      .query(trx)
+      .findById(manualJournalId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate the manual journal is not published against the locked row.
     this.validator.validateManualJournalIsNotPublished(oldManualJournal);
-  };
+    return oldManualJournal;
+  }
 
   /**
    * Publish the given manual journal.
    * @param {number} manualJournalId - Manual journal id.
    */
   public async publishManualJournal(manualJournalId: number): Promise<void> {
-    // Find the old manual journal or throw not found error.
-    const oldManualJournal = await this.manualJournalModel()
-      .query()
-      .findById(manualJournalId)
-      .throwIfNotFound();
-
-    // Authorize the manual journal publishing.
-    await this.authorize(oldManualJournal);
-
     // Publishes the manual journal with associated transactions.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the publish operation against the locked manual journal row.
+      const oldManualJournal = await this.validate(manualJournalId, trx);
+
       // Triggers `onManualJournalPublishing` event.
       await this.eventPublisher.emitAsync(events.manualJournals.onPublishing, {
         oldManualJournal,
@@ -63,7 +71,7 @@ export class PublishManualJournal {
         });
       // Retrieve the manual journal with enrties after modification.
       const manualJournal = await this.manualJournalModel()
-        .query()
+        .query(trx)
         .findById(manualJournalId)
         .withGraphFetched('entries');
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 import { CLASSES } from '@/constants/classes';
 

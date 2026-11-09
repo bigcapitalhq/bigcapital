@@ -1,37 +1,37 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { getColumnWidth } from '@/utils';
-import { FormatNumberCell } from '@/components';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
+import { FormatNumberCell } from '@/components';
+import { getColumnWidth } from '@/utils';
 
+/**
+ * Retrieve payment made entries table columns.
+ */
 export const usePaymentMadeEntriesColumns = () => {
-  // Payment made details context.
-  const {
-    paymentMade: { entries },
-  } = usePaymentMadeDetailContext();
+  const { paymentMade } = usePaymentMadeDetailContext();
+  const entries = paymentMade?.entries ?? [];
 
   return React.useMemo(
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'bill.formatted_bill_date',
+        accessor: 'bill.formattedBillDate',
         width: 100,
         disableSortBy: true,
         className: 'date',
       },
       {
         Header: intl.get('bill_number'),
-        accessor: 'bill_no',
+        accessor: 'bill.billNo',
         width: 150,
         disableSortBy: true,
         className: 'bill_number',
       },
       {
         Header: intl.get('bill_amount'),
-        accessor: 'bill.amount',
+        accessor: 'bill.totalFormatted',
         Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'bill.amount', {
+        width: getColumnWidth(entries, 'bill.totalFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -39,9 +39,9 @@ export const usePaymentMadeEntriesColumns = () => {
       },
       {
         Header: intl.get('due_amount'),
-        accessor: 'bill.due_amount',
+        accessor: 'bill.dueAmountFormatted',
         Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'bill.due_amount', {
+        width: getColumnWidth(entries, 'bill.dueAmountFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -50,8 +50,8 @@ export const usePaymentMadeEntriesColumns = () => {
       },
       {
         Header: intl.get('payment_amount'),
-        accessor: 'payment_amount_formatted',
-        width: getColumnWidth(entries, 'payment_amount_formatted', {
+        accessor: 'paymentAmountFormatted',
+        width: getColumnWidth(entries, 'paymentAmountFormatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -60,6 +60,6 @@ export const usePaymentMadeEntriesColumns = () => {
         align: 'right',
       },
     ],
-    [],
+    [entries],
   );
 };

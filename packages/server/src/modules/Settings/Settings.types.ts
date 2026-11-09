@@ -1,4 +1,3 @@
-
 export interface IOptionDTO {
   key: string;
   value: string;
@@ -9,9 +8,8 @@ export interface ISettingsDTO {
   options: IOptionDTO[];
 }
 
-
 export const SETTINGS_PROVIDER = 'SETTINGS';
 
 export enum PreferencesAction {
-  Mutate = 'Mutate'
+  Mutate = 'Mutate',
 }

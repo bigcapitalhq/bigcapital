@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeletePaymentReceives } from '@/hooks/query/paymentReceives';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithPaymentsReceivedActionsProps } from '@/containers/Sales/PaymentsReceived/PaymentsLanding/withPaymentsReceivedActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withPaymentsReceivedActions } from '@/containers/Sales/PaymentsReceived/PaymentsLanding/withPaymentsReceivedActions';
-import { compose } from '@/utils';
+import { useBulkDeletePaymentReceives } from '@/hooks/query/payment-receives';
 
-function PaymentReceivedBulkDeleteDialog({
+interface PaymentReceivedBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface PaymentReceivedBulkDeleteDialogProps
+  extends WithPaymentsReceivedActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
+function PaymentReceivedBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withPaymentsReceivedActions
+  resetPaymentReceivesSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: PaymentReceivedBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: PaymentReceivedBulkDeleteDialogPayload = payload ?? {};
 
-  // #withPaymentsReceivedActions
-  setPaymentReceivesSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeletePaymentReceives, isLoading } =
+  const { mutateAsync: bulkDeletePaymentReceives, isPending: isLoading } =
     useBulkDeletePaymentReceives();
 
   const handleCancel = () => {
@@ -46,7 +62,7 @@ function PaymentReceivedBulkDeleteDialog({
           ),
           intent: Intent.SUCCESS,
         });
-        setPaymentReceivesSelectedRows([]);
+        resetPaymentReceivesSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -100,9 +116,9 @@ function PaymentReceivedBulkDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
+export const PaymentReceivedBulkDeleteDialog = FF.pipe(
+  PaymentReceivedBulkDeleteDialogInner,
   withPaymentsReceivedActions,
-)(PaymentReceivedBulkDeleteDialog);
-
+  withDialogActions,
+  withDialogRedux(),
+);

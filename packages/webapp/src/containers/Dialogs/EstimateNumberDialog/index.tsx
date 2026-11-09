@@ -1,12 +1,22 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { saveInvoke, compose } from '@/utils';
+import { saveInvoke } from '@/utils';
 
-const EstimateNumberDialogContent = lazy(
-  () => import('./EstimateNumberDialogContent'),
+const EstimateNumberDialogContent = lazy(() =>
+  import('./EstimateNumberDialogContent').then((m) => ({
+    default: m.EstimateNumberDialogContent,
+  })),
 );
+
+interface EstimateNumberDialogProps {
+  dialogName: string;
+  payload: { initialFormValues?: Partial<ReferenceNumberFormValues> };
+  isOpen: boolean | undefined;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
 
 /**
  * Estimate number dialog.
@@ -16,8 +26,8 @@ function EstimateNumberDialog({
   payload: { initialFormValues },
   isOpen,
   onConfirm,
-}) {
-  const handleConfirm = (values) => {
+}: EstimateNumberDialogProps): React.ReactElement {
+  const handleConfirm = (values: ReferenceNumberFormValues) => {
     saveInvoke(onConfirm, values);
   };
 
@@ -40,4 +50,4 @@ function EstimateNumberDialog({
   );
 }
 
-export default compose(withDialogRedux())(EstimateNumberDialog);
+export const index = FF.pipe(EstimateNumberDialog, withDialogRedux());

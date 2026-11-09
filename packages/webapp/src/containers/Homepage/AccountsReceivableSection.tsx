@@ -1,8 +1,7 @@
-// @ts-nocheck
 import React from 'react';
-import ShortcutBoxesSection from './ShortcutBoxesSection';
+import { ShortcutBoxesSection } from './ShortcutBoxesSection';
 import { accountsReceivable } from '@/constants/homepageOptions';
 
-export default function AccountsReceivableSection() {
+export function AccountsReceivableSection() {
   return <ShortcutBoxesSection section={accountsReceivable} />;
 }

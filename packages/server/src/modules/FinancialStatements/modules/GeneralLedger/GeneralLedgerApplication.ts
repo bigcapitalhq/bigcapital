@@ -41,9 +41,7 @@ export class GeneralLedgerApplication {
    * @param {IGeneralLedgerSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    query: IGeneralLedgerSheetQuery,
-  ): Promise<Buffer> {
+  public xlsx(query: IGeneralLedgerSheetQuery): Promise<Buffer> {
     return this.GLExport.xlsx(query);
   }
 
@@ -52,9 +50,7 @@ export class GeneralLedgerApplication {
    * @param {IGeneralLedgerSheetQuery} query -
    * @returns {Promise<string>}
    */
-  public csv(
-    query: IGeneralLedgerSheetQuery,
-  ): Promise<string> {
+  public csv(query: IGeneralLedgerSheetQuery): Promise<string> {
     return this.GLExport.csv(query);
   }
 
@@ -63,9 +59,7 @@ export class GeneralLedgerApplication {
    * @param {IGeneralLedgerSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public pdf(
-    query: IGeneralLedgerSheetQuery,
-  ): Promise<Buffer> {
+  public pdf(query: IGeneralLedgerSheetQuery): Promise<Buffer> {
     return this.GLPdf.pdf(query);
   }
 }

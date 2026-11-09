@@ -1,13 +1,13 @@
 import { Knex } from 'knex';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
-import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
+import { SaleEstimate } from '@/modules/SaleEstimates/models/SaleEstimate';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SaleEstimateActivateBranches {
   constructor(
-    @Inject(PaymentReceived.name)
-    private readonly paymentReceivedModel: TenantModelProxy<typeof PaymentReceived>,
+    @Inject(SaleEstimate.name)
+    private readonly saleEstimateModel: TenantModelProxy<typeof SaleEstimate>,
   ) {}
 
   /**
@@ -17,9 +17,11 @@ export class SaleEstimateActivateBranches {
    */
   public updateEstimatesWithBranch = async (
     primaryBranchId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
-    // Updates the sale invoice with primary branch.
-    await this.paymentReceivedModel().query(trx).update({ branchId: primaryBranchId });
+    // Updates the sale estimates with primary branch.
+    await this.saleEstimateModel()
+      .query(trx)
+      .update({ branchId: primaryBranchId });
   };
 }

@@ -94,7 +94,7 @@ export class BankTransactionResponseDto {
 
   @ApiProperty({
     description: 'Transaction date',
-    example: '2024-03-20T10:30:00Z',
+    example: '2024-03-20',
     type: Date,
   })
   date: Date;

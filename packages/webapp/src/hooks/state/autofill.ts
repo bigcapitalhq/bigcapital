@@ -1,14 +1,14 @@
-// @ts-nocheck
 import { useCallback, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import type { RootState } from '@/store/reducers';
 import {
   addAutofill,
   removeAutofill,
   resetAutofill,
 } from '@/store/dashboard/dashboard.actions';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
-const getAutofillPayload = (state, autofillRef) => {
+const getAutofillPayload = (state: RootState, autofillRef: number) => {
   return typeof state.dashboard.autofill[autofillRef + ''] !== 'undefined'
     ? state.dashboard.autofill[autofillRef]
     : null;
@@ -25,7 +25,9 @@ const getAutofillPayloadSelectorFactory = () =>
 const useGetAutofillPayload = (autofillRef: number) => {
   const getAutofillPayloadSelector = getAutofillPayloadSelectorFactory();
 
-  return useSelector((state) => getAutofillPayloadSelector(state, autofillRef));
+  return useAppSelector((state) =>
+    getAutofillPayloadSelector(state, autofillRef),
+  );
 };
 
 /**
@@ -33,10 +35,10 @@ const useGetAutofillPayload = (autofillRef: number) => {
  * @returns
  */
 export const useAddAutofillRef = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
-    (autofillRef: number, payload: any) => {
+    (autofillRef: number, payload: unknown) => {
       return dispatch(addAutofill(autofillRef, payload));
     },
     [dispatch],
@@ -48,7 +50,7 @@ export const useAddAutofillRef = () => {
  * @returns
  */
 export const useRemoveAutofillRef = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
     (autofillRef: number) => {
@@ -63,7 +65,7 @@ export const useRemoveAutofillRef = () => {
  * @returns
  */
 export const useResetAutofillRefs = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return () => {
     return dispatch(resetAutofill());

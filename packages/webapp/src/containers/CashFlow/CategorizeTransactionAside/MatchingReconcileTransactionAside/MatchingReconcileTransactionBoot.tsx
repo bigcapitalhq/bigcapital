@@ -1,5 +1,6 @@
-import React from 'react';
 import { Spinner } from '@blueprintjs/core';
+import React from 'react';
+import type { AccountsList, BranchesListResponse } from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
 import { useAccounts, useBranches } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
@@ -7,7 +8,13 @@ import { useFeatureCan } from '@/hooks/state';
 interface MatchingReconcileTransactionBootProps {
   children: React.ReactNode;
 }
-interface MatchingReconcileTransactionBootValue {}
+
+export interface MatchingReconcileTransactionBootValue {
+  accounts?: AccountsList;
+  branches?: BranchesListResponse;
+  isAccountsLoading: boolean;
+  isBranchesLoading: boolean;
+}
 
 const MatchingReconcileTransactionBootContext =
   React.createContext<MatchingReconcileTransactionBootValue>(
@@ -29,7 +36,7 @@ export function MatchingReconcileTransactionBoot({
     },
   );
 
-  const provider = {
+  const provider: MatchingReconcileTransactionBootValue = {
     accounts,
     branches,
     isAccountsLoading,
@@ -49,6 +56,4 @@ export function MatchingReconcileTransactionBoot({
 }
 
 export const useMatchingReconcileTransactionBoot = () =>
-  React.useContext<MatchingReconcileTransactionBootValue>(
-    MatchingReconcileTransactionBootContext,
-  );
+  React.useContext(MatchingReconcileTransactionBootContext);

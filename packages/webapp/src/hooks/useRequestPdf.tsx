@@ -1,55 +1,73 @@
-// @ts-nocheck
 import React from 'react';
-import useApiRequest from './useRequest';
-import { normalizeApiPath } from '../utils';
+import type { PdfDocument } from '@bigcapital/sdk-ts';
 
-export const useRequestPdf = (httpProps) => {
-  const apiRequest = useApiRequest();
+/**
+ * Fetches a PDF document via the given SDK fetch function and exposes it as
+ * an object URL for previewing. Replaces the legacy axios-based
+ * `useRequestPdf` hook while keeping the same state machine.
+ */
+export const usePdfDocument = (fetchFn: () => Promise<PdfDocument>) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
   const [pdfUrl, setPdfUrl] = React.useState('');
-  const [response, setResponse] = React.useState(null);
-  const [filename, setFilename] = React.useState<string>('');
+  const [filename, setFilename] = React.useState('');
 
   React.useEffect(() => {
+    let isCancelled = false;
     setIsLoading(true);
-    apiRequest
-      .http({
-        headers: { accept: 'application/pdf' },
-        responseType: 'blob',
-        ...httpProps,
-        url: `/api/${normalizeApiPath(httpProps?.url)}`,
-      })
-      .then((response) => {
-        // Create a Blob from the PDF Stream.
-        const file = new Blob([response.data], { type: 'application/pdf' });
+    setIsError(false);
 
-        // Build a URL from the file
-        const fileURL = URL.createObjectURL(file);
-
-        // Extract the filename from the Content-Disposition header
-        const contentDisposition = response.headers.get('Content-Disposition');
-        let _filename = 'default.pdf'; // Default filename if not provided by server
-
-        if (contentDisposition && contentDisposition.includes('filename=')) {
-          const matches = contentDisposition.match(/filename="(.+)"/);
-          if (matches && matches[1]) {
-            _filename = matches[1];
-          }
+    fetchFn()
+      .then((document) => {
+        if (isCancelled) {
+          return;
         }
-        setPdfUrl(fileURL);
+        // Build a URL from the PDF blob.
+        setPdfUrl(URL.createObjectURL(document.blob));
+        setFilename(document.filename);
         setIsLoading(false);
         setIsLoaded(true);
-        setResponse(response);
-        setFilename(_filename);
+      })
+      .catch(() => {
+        if (isCancelled) {
+          return;
+        }
+        setIsLoading(false);
+        setIsLoaded(false);
+        setIsError(true);
       });
+
+    return () => {
+      isCancelled = true;
+    };
+    // `fetchFn` identity changes every render; the fetch runs once on mount,
+    // matching the previous `useRequestPdf` behavior.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {
     isLoading,
     isLoaded,
+    isError,
     pdfUrl,
-    response,
-    filename
+    filename,
   };
+};
+
+export const useFetcherPdf = (fetchFn: () => Promise<Blob>) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [pdfUrl, setPdfUrl] = React.useState('');
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    fetchFn().then((blob) => {
+      setPdfUrl(URL.createObjectURL(blob));
+      setIsLoading(false);
+      setIsLoaded(true);
+    });
+  }, []);
+
+  return { isLoading, isLoaded, pdfUrl };
 };

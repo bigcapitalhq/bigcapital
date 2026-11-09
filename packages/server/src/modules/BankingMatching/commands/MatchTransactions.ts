@@ -34,27 +34,36 @@ export class MatchBankTransactions {
     private readonly uncategorizedBankTransactionModel: TenantModelProxy<
       typeof UncategorizedBankTransaction
     >,
-  ) { }
+  ) {}
 
   /**
    * Validates the match bank transactions DTO.
    * @param {number} uncategorizedTransactionId - Uncategorized transaction id.
    * @param {IMatchTransactionsDTO} matchTransactionsDTO - Match transactions DTO.
+   * @param {Knex.Transaction} trx - Locks the uncategorized transaction rows when given (FOR UPDATE).
    * @returns {Promise<void>}
    */
   async validate(
     uncategorizedTransactionId: number | Array<number>,
     matchedTransactions: Array<IMatchTransactionDTO>,
+    trx?: Knex.Transaction,
   ) {
     const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
 
-    // Validates the uncategorized transaction existance.
-    const uncategorizedTransactions =
-      await this.uncategorizedBankTransactionModel()
-        .query()
+    // Validates the uncategorized transaction existance (locks the rows
+    // when running inside a transaction).
+    const uncategorizedTransactionsQuery =
+      this.uncategorizedBankTransactionModel()
+        .query(trx)
         .whereIn('id', uncategorizedTransactionIds)
+        .orderBy('id')
         .withGraphFetched('matchedBankTransactions')
         .throwIfNotFound();
+
+    if (trx) {
+      uncategorizedTransactionsQuery.forUpdate();
+    }
+    const uncategorizedTransactions = await uncategorizedTransactionsQuery;
 
     // Validates the uncategorized transaction is not already matched.
     validateUncategorizedTransactionsNotMatched(uncategorizedTransactions);
@@ -102,7 +111,9 @@ export class MatchBankTransactions {
     // uncategorized transaction amount.
     // Use tolerance-based comparison to handle floating-point precision issues
     const tolerance = 0.01; // Allow 0.01 difference for floating-point precision
-    const difference = Math.abs(totalUncategorizedTransactions - totalMatchedTranasctions);
+    const difference = Math.abs(
+      totalUncategorizedTransactions - totalMatchedTranasctions,
+    );
     if (difference > tolerance) {
       throw new ServiceError(ERRORS.TOTAL_MATCHING_TRANSACTIONS_INVALID);
     }
@@ -115,14 +126,22 @@ export class MatchBankTransactions {
    */
   public async matchTransaction(
     uncategorizedTransactionId: number | Array<number>,
-    matchedTransactionsDto: MatchTransactionEntryDto | Array<MatchTransactionEntryDto>,
+    matchedTransactionsDto:
+      | MatchTransactionEntryDto
+      | Array<MatchTransactionEntryDto>,
   ): Promise<void> {
     const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
     const matchedTransactions = castArray(matchedTransactionsDto);
 
-    // Validates the given matching transactions DTO.
-    await this.validate(uncategorizedTransactionIds, matchedTransactions);
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the given matching transactions DTO against locked
+      // uncategorized transaction rows.
+      await this.validate(
+        uncategorizedTransactionIds,
+        matchedTransactions,
+        trx,
+      );
+
       // Triggers the event `onBankTransactionMatching`.
       await this.eventPublisher.emitAsync(events.bankMatch.onMatching, {
         uncategorizedTransactionIds,
@@ -131,7 +150,7 @@ export class MatchBankTransactions {
       } as IBankTransactionMatchingEventPayload);
 
       // Matches the given transactions under promise pool concurrency controlling.
-      await PromisePool.withConcurrency(10)
+      const matchingResult = await PromisePool.withConcurrency(10)
         .for(matchedTransactions)
         .process(async (matchedTransaction: MatchTransactionEntryDto) => {
           const getMatchedTransactionsService =
@@ -144,6 +163,11 @@ export class MatchBankTransactions {
             trx,
           );
         });
+      // Throws the first error to rollback the transaction and prevent
+      // emitting the matched event on partial failures.
+      if (matchingResult.errors?.length > 0) {
+        throw matchingResult.errors[0].raw;
+      }
       // Triggers the event `onBankTransactionMatched`.
       await this.eventPublisher.emitAsync(events.bankMatch.onMatched, {
         uncategorizedTransactionIds,

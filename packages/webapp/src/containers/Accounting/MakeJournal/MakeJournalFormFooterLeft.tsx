@@ -1,15 +1,14 @@
-// @ts-nocheck
 import React from 'react';
-import styled from 'styled-components';
 import intl from 'react-intl-universal';
-import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
+import styled from 'styled-components';
+import { FFormGroup, FEditableText } from '@/components';
 
 export function MakeJournalFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Description --------- */}
       <DescriptionFormGroup
-        label={<T id={'description'} />}
+        label={intl.get('description')}
         name={'description'}
       >
         <FEditableText

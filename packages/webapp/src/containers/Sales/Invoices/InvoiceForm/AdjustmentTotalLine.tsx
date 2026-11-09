@@ -1,13 +1,16 @@
-// @ts-nocheck
 import { css } from '@emotion/css';
 import { x } from '@xstyled/emotion';
 import clsx from 'classnames';
-import {
-  FFormGroup,
-  FInputGroup,
-  TotalLinePrimitive,
-} from '@/components';
+import type { CSSProperties } from 'react';
+import { FFormGroup, FInputGroup, TotalLinePrimitive } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
+
+const borderColorStyle = (isDarkMode: boolean): CSSProperties =>
+  ({
+    '--x-border-bottom-color': isDarkMode
+      ? 'rgba(255, 255, 255, 0.1)'
+      : 'rgb(210, 221, 226)',
+  }) as CSSProperties;
 
 const inputGroupCss = css`
   & .bp4-input {
@@ -20,7 +23,7 @@ const formGroupCss = css`
 `;
 
 interface AdjustmentTotalLineProps {
-  adjustmentAmount: number;
+  adjustmentAmount: string | number;
 }
 
 export function AdjustmentTotalLine({
@@ -34,11 +37,7 @@ export function AdjustmentTotalLine({
         display={'table-cell'}
         padding={'8px'}
         borderBottom={'1px solid var(--x-border-bottom-color)'}
-        style={{
-          '--x-border-bottom-color': isDarkMode
-            ? 'rgba(255, 255, 255, 0.1)'
-            : 'rgb(210, 221, 226)',
-        }}
+        style={borderColorStyle(isDarkMode)}
       >
         <x.div
           display={'flex'}
@@ -74,11 +73,7 @@ export function AdjustmentTotalLine({
         textAlign={'right'}
         padding={'8px'}
         borderBottom={'1px solid var(--x-border-bottom-color)'}
-        style={{
-          '--x-border-bottom-color': isDarkMode
-            ? 'rgba(255, 255, 255, 0.1)'
-            : 'rgb(210, 221, 226)',
-        }}
+        style={borderColorStyle(isDarkMode)}
       >
         {adjustmentAmount}
       </x.div>

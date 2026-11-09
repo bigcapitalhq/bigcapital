@@ -3,6 +3,8 @@ import { keyBy, sumBy } from 'lodash';
 import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { TaxRateModel } from './models/TaxRate.model';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
+import { FeaturesManager } from '../Features/FeaturesManager';
+import { Features } from '@/common/types/Features';
 
 @Injectable()
 export class ItemEntriesTaxTransactions {
@@ -12,6 +14,8 @@ export class ItemEntriesTaxTransactions {
 
     @Inject(TaxRateModel.name)
     private taxRateModel: TenantModelProxy<typeof TaxRateModel>,
+
+    private readonly featuresManager: FeaturesManager,
   ) {}
 
   /**
@@ -36,6 +40,11 @@ export class ItemEntriesTaxTransactions {
    * @param {any} entries
    */
   public assocTaxRateIdFromCodeToEntries = async (entries: any) => {
+    const isSalesTaxEnabled = await this.featuresManager.accessible(
+      Features.SALES_TAX,
+    );
+    if (!isSalesTaxEnabled) return entries;
+
     const entriesWithCode = entries.filter((entry) => entry.taxCode);
     const taxCodes = entriesWithCode.map((entry) => entry.taxCode);
     const foundTaxCodes = await this.taxRateModel()
@@ -57,6 +66,11 @@ export class ItemEntriesTaxTransactions {
    * @returns {Promise<ItemEntry[]>}
    */
   public assocTaxRateFromTaxIdToEntries = async (entries: ItemEntry[]) => {
+    const isSalesTaxEnabled = await this.featuresManager.accessible(
+      Features.SALES_TAX,
+    );
+    if (!isSalesTaxEnabled) return entries;
+
     const entriesWithId = entries.filter((e) => e.taxRateId);
     const taxRateIds = entriesWithId.map((e) => e.taxRateId);
     const foundTaxes = await this.taxRateModel()

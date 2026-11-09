@@ -1,0 +1,33 @@
+export const OPEN_DIALOG = 'OPEN_DIALOG' as const;
+export const CLOSE_DIALOG = 'CLOSE_DIALOG' as const;
+export const OPEN_ALERT = 'OPEN_ALERT' as const;
+export const CLOSE_ALERT = 'CLOSE_ALERT' as const;
+export const CLOSE_ALL_DIALOGS = 'CLOSE_ALL_DIALOGS' as const;
+export const CLOSE_ALL_ALERTS = 'CLOSE_ALL_ALERTS' as const;
+export const OPEN_DRAWER = 'OPEN_DRAWER' as const;
+export const CLOSE_DRAWER = 'CLOSE_DRAWER' as const;
+export const CHANGE_DASHBOARD_PAGE_TITLE =
+  'CHANGE_DASHBOARD_PAGE_TITLE' as const;
+export const CHANGE_DASHBOARD_PAGE_HINT = 'CHANGE_DASHBOARD_PAGE_HINT' as const;
+export const CHANGE_PREFERENCES_PAGE_TITLE =
+  'CHANGE_PREFERENCES_PAGE_TITLE' as const;
+export const ALTER_DASHBOARD_PAGE_SUBTITLE =
+  'ALTER_DASHBOARD_PAGE_SUBTITLE' as const;
+export const SET_DASHBOARD_REQUEST_LOADING =
+  'SET_DASHBOARD_REQUEST_LOADING' as const;
+export const SET_DASHBOARD_REQUEST_COMPLETED =
+  'SET_DASHBOARD_REQUEST_COMPLETED' as const;
+export const SET_TOPBAR_EDIT_VIEW = 'SET_TOPBAR_EDIT_VIEW' as const;
+export const SIDEBAR_EXPEND_TOGGLE = 'SIDEBAR_EXPEND_TOGGLE' as const;
+export const SIDEBAR_SUBMENU_OPEN = 'SIDEBAR_SUBMENU_OPEN' as const;
+export const SIDEBAR_SUBMENU_CLOSE = 'SIDEBAR_SUBMENU_CLOSE' as const;
+export const SIDEBAR_SUBMENU_TOGGLE = 'SIDEBAR_SUBMENU_TOGGLE' as const;
+export const SET_DASHBOARD_BACK_LINK = 'SET_DASHBOARD_BACK_LINK' as const;
+export const SPLASH_START_LOADING = 'SPLASH_START_LOADING' as const;
+export const SPLASH_STOP_LOADING = 'SPLASH_STOP_LOADING' as const;
+export const SET_FEATURE_DASHBOARD_META = 'SET_FEATURE_DASHBOARD_META' as const;
+export const ADD_AUTOFILL_REF = 'ADD_AUTOFILL_REF' as const;
+export const REMOVE_AUTOFILL_REF = 'REMOVE_AUTOFILL_REF' as const;
+export const RESET_AUTOFILL_REF = 'RESET_AUTOFILL_REF' as const;
+export const APP_IS_LOADING = 'APP_IS_LOADING' as const;
+export const APP_INTL_IS_LOADING = 'APP_INTL_IS_LOADING' as const;

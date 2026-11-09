@@ -1,27 +1,45 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
-import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-
-import FinancialStatementHeader from '../FinancialStatementHeader';
-import SalesByItemsHeaderGeneralPanel from './SalesByItemsHeaderGeneralPanel';
-
-import { withSalesByItems } from './withSalesByItems';
-import { withSalesByItemsActions } from './withSalesByItemsActions';
-
-import { compose, transformToForm } from '@/utils';
+import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
+import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import { SalesByItemsHeaderGeneralPanel } from './SalesByItemsHeaderGeneralPanel';
 import {
   getDefaultSalesByItemsQuery,
   getSalesByItemsQueryShema,
 } from './utils';
+import { withSalesByItems } from './withSalesByItems';
+import {
+  withSalesByItemsActions,
+  WithSalesByItemsActionsProps,
+} from './withSalesByItemsActions';
+import { FormattedMessage as T } from '@/components';
+import { transformToForm } from '@/utils';
+
+interface SalesByItemsFormValues {
+  fromDate: Date;
+  toDate: Date;
+  filterByOption: string;
+  itemsIds: string[];
+  numberFormat?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+interface SalesByItemsHeaderOwnProps {
+  pageFilter: Record<string, unknown>;
+  onSubmitFilter: (filter: Record<string, unknown>) => void;
+}
+
+type SalesByItemsHeaderProps = SalesByItemsHeaderOwnProps & {
+  salesByItemsDrawerFilter: boolean;
+} & Pick<WithSalesByItemsActionsProps, 'toggleSalesByItemsFilterDrawer'>;
 
 /**
  * Sales by items header.
  */
-function SalesByItemsHeader({
+function SalesByItemsHeaderInner({
   // #ownProps
   pageFilter,
   onSubmitFilter,
@@ -31,7 +49,7 @@ function SalesByItemsHeader({
 
   // #withSalesByItemsActions
   toggleSalesByItemsFilterDrawer,
-}) {
+}: SalesByItemsHeaderProps) {
   // Form validation schema.
   const validationSchema = getSalesByItemsQueryShema();
 
@@ -42,14 +60,17 @@ function SalesByItemsHeader({
     {
       ...defaultQuery,
       ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
+      fromDate: moment(pageFilter.fromDate as string).toDate(),
+      toDate: moment(pageFilter.toDate as string).toDate(),
     },
     defaultQuery,
-  );
+  ) as SalesByItemsFormValues;
 
   // Handle the form submitting.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: SalesByItemsFormValues,
+    { setSubmitting }: FormikHelpers<SalesByItemsFormValues>,
+  ) => {
     onSubmitFilter(values);
     setSubmitting(false);
     toggleSalesByItemsFilterDrawer(false);
@@ -83,7 +104,7 @@ function SalesByItemsHeader({
               panel={<SalesByItemsHeaderGeneralPanel />}
             />
           </Tabs>
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -97,12 +118,13 @@ function SalesByItemsHeader({
   );
 }
 
-export default compose(
+export const SalesByItemsHeader = FF.pipe(
+  SalesByItemsHeaderInner,
+  withSalesByItemsActions,
   withSalesByItems(({ salesByItemsDrawerFilter }) => ({
     salesByItemsDrawerFilter,
   })),
-  withSalesByItemsActions,
-)(SalesByItemsHeader);
+);
 
 const SalesByItemsDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

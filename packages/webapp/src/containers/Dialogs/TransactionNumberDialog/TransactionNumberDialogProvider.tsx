@@ -1,18 +1,31 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { useSettingCashFlow } from '@/hooks/query';
 
-const TransactionNumberDialogContext = React.createContext();
+interface TransactionNumberDialogContextValue {
+  isSettingsLoading: boolean;
+}
+
+const TransactionNumberDialogContext =
+  React.createContext<TransactionNumberDialogContextValue>(
+    {} as TransactionNumberDialogContextValue,
+  );
+
+interface TransactionNumberDialogProviderProps {
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+}
 
 /**
  * Transaction number dialog provider.
  */
-function TransactionNumberDialogProvider({ query, ...props }) {
+function TransactionNumberDialogProvider({
+  ...props
+}: TransactionNumberDialogProviderProps) {
   const { isLoading: isSettingsLoading } = useSettingCashFlow();
 
   // Provider payload.
-  const provider = { isSettingsLoading };
+  const provider: TransactionNumberDialogContextValue = { isSettingsLoading };
 
   return (
     <DialogContent isLoading={isSettingsLoading}>

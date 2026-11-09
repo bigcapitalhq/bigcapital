@@ -1,13 +1,19 @@
-// @ts-nocheck
+import { flow } from 'fp-ts/function';
+import * as moment from 'moment';
 import { merge } from 'lodash';
-import * as R from 'ramda';
 import { IProfitLossSheetQuery } from './ProfitLossSheet.types';
-import { FinancialDateRanges } from '../../common/FinancialDateRanges';
-import { IFinancialDatePeriodsUnit } from '../../types/Report.types';
+import {
+  IFinancialDatePeriodsUnit,
+  INumberFormatQuery,
+} from '../../types/Report.types';
 import { DISPLAY_COLUMNS_BY } from './constants';
+import { GConstructor } from '@/common/types/Constructor';
+import { FinancialSheet } from '../../common/FinancialSheet';
+import { FinancialDateRanges } from '../../common/FinancialDateRanges';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
-export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
-  class {},
+export class ProfitLossSheetQuery extends flow(FinancialDateRanges)(
+  class {} as GConstructor<FinancialSheet>,
 ) {
   /**
    * P&L query.
@@ -36,12 +42,47 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
    */
   public readonly PPFromDate: Date;
 
+  public basis: AccountingBasis;
+  public fromDate: moment.MomentInput;
+  public toDate: moment.MomentInput;
+  public numberFormat: INumberFormatQuery;
+  public noneZero: boolean;
+  public noneTransactions: boolean;
+  public accountsIds: number[];
+  public displayColumnsType: 'total' | 'date_periods';
+  public displayColumnsBy: string;
+  public percentageColumn: boolean;
+  public percentageRow: boolean;
+  public percentageIncome: boolean;
+  public percentageExpense: boolean;
+  public previousPeriod: boolean;
+  public previousPeriodAmountChange: boolean;
+  public previousPeriodPercentageChange: boolean;
+  public previousYear: boolean;
+  public previousYearAmountChange: boolean;
+  public previousYearPercentageChange: boolean;
+
   /**
    * Constructor method.
    * @param {IProfitLossSheetQuery} query
    */
   constructor(query: IProfitLossSheetQuery) {
     super();
+
+    // Enabling the percentage change requires the amount change and the
+    // previous period/year to be enabled as well.
+    if (query.previousPeriodPercentageChange) {
+      query.previousPeriodAmountChange = true;
+    }
+    if (query.previousPeriodAmountChange) {
+      query.previousPeriod = true;
+    }
+    if (query.previousYearPercentageChange) {
+      query.previousYearAmountChange = true;
+    }
+    if (query.previousYearAmountChange) {
+      query.previousYear = true;
+    }
     this.query = query;
 
     // Pervious Year (PY) Dates.

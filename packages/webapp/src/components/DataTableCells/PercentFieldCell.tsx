@@ -1,7 +1,6 @@
 // @ts-nocheck
-import React, { useCallback, useState, useEffect } from 'react';
 import { FormGroup, Intent } from '@blueprintjs/core';
-
+import React, { useCallback, useState, useEffect } from 'react';
 import { MoneyInputGroup } from '@/components';
 import { CellType } from '@/constants';
 
@@ -14,14 +13,17 @@ const PercentFieldCell = ({
   const [value, setValue] = useState(initialValue);
 
   const handleBlurChange = (newValue) => {
-    const parsedValue = newValue === '' || newValue === undefined
-      ? '' : parseInt(newValue, 10);
+    const parsedValue =
+      newValue === '' || newValue === undefined ? '' : parseInt(newValue, 10);
     updateData(index, id, parsedValue);
   };
 
-  const handleChange = useCallback((value) => {
-    setValue(value);
-  }, [setValue]);
+  const handleChange = useCallback(
+    (value) => {
+      setValue(value);
+    },
+    [setValue],
+  );
 
   useEffect(() => {
     setValue(initialValue);

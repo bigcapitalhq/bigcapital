@@ -1,11 +1,16 @@
-// @ts-nocheck
-import React, { useContext } from 'react';
 import classNames from 'classnames';
+import React, { useContext } from 'react';
 import { ScrollSyncPane } from 'react-scroll-sync';
-import { If, MaterialProgressBar } from '@/components';
 import TableContext from './TableContext';
+import type { ColumnInstance, HeaderGroup } from 'react-table';
+import { If, MaterialProgressBar } from '@/components';
 
-function TableHeaderCell({ column, index }) {
+interface TableHeaderCellProps {
+  column: ColumnInstance<any>;
+  index: number;
+}
+
+function TableHeaderCell({ column, index }: TableHeaderCellProps) {
   const {
     table: { getToggleAllRowsExpandedProps, isAllRowsExpanded },
     props: { expandable, expandToggleColumn },
@@ -19,7 +24,7 @@ function TableHeaderCell({ column, index }) {
         }),
       })}
     >
-      <If condition={expandable && index + 1 === expandToggleColumn}>
+      <If condition={!!expandable && index + 1 === expandToggleColumn}>
         <span {...getToggleAllRowsExpandedProps()} className="expand-toggle">
           <span
             className={classNames({
@@ -31,10 +36,9 @@ function TableHeaderCell({ column, index }) {
       </If>
 
       <div
-        {...column.getSortByToggleProps({
-          className: classNames('cell-inner', {
-            'text-overview': column.textOverview,
-          }),
+        {...column.getSortByToggleProps()}
+        className={classNames('cell-inner', {
+          'text-overview': column.textOverview,
         })}
       >
         {column.render('Header')}
@@ -57,14 +61,18 @@ function TableHeaderCell({ column, index }) {
           {...column.getResizerProps()}
           className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
         >
-          <div class="inner-resizer" />
+          <div className="inner-resizer" />
         </div>
       )}
     </div>
   );
 }
 
-function TableHeaderGroup({ headerGroup }) {
+interface TableHeaderGroupProps {
+  headerGroup: HeaderGroup<any>;
+}
+
+function TableHeaderGroup({ headerGroup }: TableHeaderGroupProps) {
   return (
     <div {...headerGroup.getHeaderGroupProps()} className="tr">
       {headerGroup.headers.map((column, index) => (
@@ -74,9 +82,6 @@ function TableHeaderGroup({ headerGroup }) {
   );
 }
 
-/**
- * Table header.
- */
 export default function TableHeader() {
   const {
     table: { headerGroups, page },
@@ -88,7 +93,6 @@ export default function TableHeader() {
     },
   } = useContext(TableContext);
 
-  // Can't contiunue if the thead is disabled.
   if (hideTableHeader) {
     return null;
   }
@@ -103,7 +107,7 @@ export default function TableHeader() {
           {headerGroups.map((headerGroup, index) => (
             <TableHeaderGroup key={index} headerGroup={headerGroup} />
           ))}
-          <If condition={progressBarLoading}>
+          <If condition={!!progressBarLoading}>
             <MaterialProgressBar />
           </If>
         </div>

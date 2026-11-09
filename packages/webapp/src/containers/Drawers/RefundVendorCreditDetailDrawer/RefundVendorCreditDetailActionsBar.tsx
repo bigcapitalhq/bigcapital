@@ -1,8 +1,6 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useRefundVendorCreditNoteDrawerContext } from './RefundVendorCreditDrawerProvider';
 import {
   Icon,
@@ -11,16 +9,20 @@ import {
   Can,
 } from '@/components';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
 
-import { compose } from '@/utils';
+type RefundVendorCreditDetailActionsBarInnerProps = WithAlertActionsProps;
 
 /**
  * Refund vendor credit actions bar.
  */
-function RefundVendorCreditDetailActionsBar({
+function RefundVendorCreditDetailActionsBarInner({
   // #withAlertActions
   openAlert,
-}) {
+}: RefundVendorCreditDetailActionsBarInnerProps) {
   const { refundTransactionId } = useRefundVendorCreditNoteDrawerContext();
 
   // Handle delete refund vendor credit.
@@ -45,4 +47,7 @@ function RefundVendorCreditDetailActionsBar({
   );
 }
 
-export default compose(withAlertActions)(RefundVendorCreditDetailActionsBar);
+export const RefundVendorCreditDetailActionsBar = FF.pipe(
+  RefundVendorCreditDetailActionsBarInner,
+  withAlertActions,
+);

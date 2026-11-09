@@ -1,18 +1,14 @@
-// @ts-nocheck
 import styled from 'styled-components';
-
+import { PaymentReceiveDetailFooter } from './PaymentReceiveDetailFooter';
+import { PaymentReceiveDetailHeader } from './PaymentReceiveDetailHeader';
+import { PaymentReceiveDetailTable } from './PaymentReceiveDetailTable';
+import { PaymentReceiveDetailTableFooter } from './PaymentReceiveDetailTableFooter';
 import { CommercialDocBox } from '@/components';
-
-import PaymentReceiveDetailHeader from './PaymentReceiveDetailHeader';
-import PaymentReceiveDetailTable from './PaymentReceiveDetailTable';
-import PaymentReceiveDetailTableFooter from './PaymentReceiveDetailTableFooter';
-import PaymentReceiveDetailFooter from './PaymentReceiveDetailFooter';
 
 /**
  * Payment receive - overview panel.
- * @returns {React.JSX}
  */
-export default function PaymentReceiveDetailTab() {
+export function PaymentReceiveDetailTab() {
   return (
     <PaymentReceiveDetailsTabPanelRoot>
       <CommercialDocBox>

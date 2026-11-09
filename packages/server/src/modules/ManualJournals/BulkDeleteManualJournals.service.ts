@@ -8,12 +8,12 @@ import { DeleteManualJournalService } from './commands/DeleteManualJournal.servi
 export class BulkDeleteManualJournalsService {
   constructor(
     private readonly deleteManualJournalService: DeleteManualJournalService,
-  ) { }
+  ) {}
 
   async bulkDeleteManualJournals(
     manualJournalIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const journalsIds = uniq(castArray(manualJournalIds));
@@ -37,4 +37,3 @@ export class BulkDeleteManualJournalsService {
     }
   }
 }
-

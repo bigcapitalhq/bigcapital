@@ -1,66 +1,33 @@
-// @ts-nocheck
-import React from 'react';
 import { x } from '@xstyled/emotion';
-
-import SetupWizardContent from './SetupWizardContent';
-
-import { withOrganization } from '@/containers/Organization/withOrganization';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { withSetupWizard } from '@/store/organizations/withSetupWizard';
-import { withSubscriptions } from '../Subscriptions/withSubscriptions';
-
-import { compose } from '@/utils';
+import React from 'react';
+import { SetupWizardContent } from './SetupWizardContent';
+import { useCurrentOrganization } from '@/hooks/query';
+import { useIsOrganizationSetupCompleted } from '@/hooks/state';
 
 /**
  * Wizard setup right section.
  */
-function SetupRightSection({
-  // #withOrganization
-  isOrganizationInitialized,
-  isOrganizationSeeded,
-  isOrganizationSetupCompleted,
+export function SetupRightSection() {
+  const { data: organization } = useCurrentOrganization();
+  const isOrganizationReady = !!organization?.isReady;
+  const isOrganizationBuildRunning = !!organization?.isBuildRunning;
+  const isOrganizationSetupCompleted = useIsOrganizationSetupCompleted();
 
-  // #withSetupWizard
-  setupStepId,
-  setupStepIndex,
+  const scenarios = [
+    {
+      condition: !isOrganizationReady && !isOrganizationBuildRunning,
+      step: 'organization',
+    },
+    { condition: isOrganizationBuildRunning, step: 'initializing' },
+    { condition: isOrganizationSetupCompleted, step: 'congrats' },
+  ];
+  const setupStep = scenarios.find((scenario) => scenario.condition);
+  const setupStepId = setupStep?.step ?? '';
+  const setupStepIndex = setupStep ? scenarios.indexOf(setupStep) : -1;
 
-  // #withSubscriptions
-  isSubscriptionActive,
-}) {
   return (
     <x.section w="100%" overflow="auto">
       <SetupWizardContent stepId={setupStepId} stepIndex={setupStepIndex} />
     </x.section>
   );
 }
-
-export default compose(
-  withCurrentOrganization(({ organizationTenantId }) => ({
-    organizationId: organizationTenantId,
-  })),
-  withOrganization(
-    ({
-      organization,
-      isOrganizationReady,
-      isOrganizationSeeded,
-      isOrganizationSetupCompleted,
-      isOrganizationBuildRunning,
-    }) => ({
-      organization,
-      isOrganizationReady,
-      isOrganizationSeeded,
-      isOrganizationSetupCompleted,
-      isOrganizationBuildRunning,
-    }),
-  ),
-  withSubscriptions(
-    ({ isSubscriptionActive }) => ({
-      isSubscriptionActive,
-    }),
-    'main',
-  ),
-  withSetupWizard(({ setupStepId, setupStepIndex }) => ({
-    setupStepId,
-    setupStepIndex,
-  })),
-)(SetupRightSection);

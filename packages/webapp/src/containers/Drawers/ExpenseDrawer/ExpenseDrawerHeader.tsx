@@ -1,8 +1,9 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
 import { defaultTo } from 'lodash';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import styled from 'styled-components';
+import { ExpenseDetailsStatus } from './components';
+import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import {
   CommercialDocHeader,
   CommercialDocTopHeader,
@@ -11,23 +12,20 @@ import {
   DetailItem,
   DetailsMenu,
   ExchangeRateDetailItem,
-  FormattedMessage as T,
 } from '@/components';
-import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
-import { ExpenseDetailsStatus } from './components';
 
 /**
  * Expense drawer content.
  */
-export default function ExpenseDrawerHeader() {
+export function ExpenseDrawerHeader() {
   const { expense } = useExpenseDrawerContext();
 
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
-          <DetailItem name={'amount'} label={<T id={'full_amount'} />}>
-            <h3 class="big-number">{expense.formatted_amount}</h3>
+          <DetailItem name={'amount'} label={intl.get('full_amount')}>
+            <h3 className="big-number">{expense?.formattedAmount}</h3>
           </DetailItem>
 
           <StatusDetailItem>
@@ -39,20 +37,17 @@ export default function ExpenseDrawerHeader() {
       <Row>
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-            <DetailItem name={'date'} label={<T id={'date'} />}>
-              {expense.formatted_date}
+            <DetailItem name={'date'} label={intl.get('date')}>
+              {expense?.formattedDate}
             </DetailItem>
 
-            <DetailItem name={'reference'} label={<T id={'reference_no'} />}>
-              {defaultTo(expense.reference_no, '-')}
+            <DetailItem name={'reference'} label={intl.get('reference_no')}>
+              {defaultTo(expense?.referenceNo, '-')}
             </DetailItem>
 
-            <DetailItem label={<T id={'description'} />}>
-              {defaultTo(expense.description, '—')}
-            </DetailItem>
             <ExchangeRateDetailItem
-              exchangeRate={expense?.exchange_rate}
-              toCurrency={expense?.currency_code}
+              exchangeRate={expense?.exchangeRate}
+              toCurrency={expense?.currencyCode}
             />
           </DetailsMenu>
         </Col>
@@ -63,12 +58,12 @@ export default function ExpenseDrawerHeader() {
             direction={'horizantal'}
             minLabelSize={'180px'}
           >
-            <DetailItem label={<T id={'published_at'} />}>
-              {expense.formatted_published_at || '—'}
+            <DetailItem label={intl.get('published_at')}>
+              {expense?.formattedPublishedAt || '—'}
             </DetailItem>
 
-            <DetailItem label={<T id={'created_at'} />}>
-              {expense.formatted_created_at} 
+            <DetailItem label={intl.get('created_at')}>
+              {expense?.formattedCreatedAt}
             </DetailItem>
           </DetailsMenu>
         </Col>

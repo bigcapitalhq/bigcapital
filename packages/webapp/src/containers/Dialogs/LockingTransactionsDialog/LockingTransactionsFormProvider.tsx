@@ -1,12 +1,22 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext } from 'react';
+import type { LockingTransactionsContextValue } from './types';
 import { DialogContent } from '@/components';
 import {
   useCreateLockingTransactoin,
   useEditTransactionsLocking,
 } from '@/hooks/query';
 
-const LockingTransactionsContext = React.createContext();
+const LockingTransactionsContext =
+  createContext<LockingTransactionsContextValue>(
+    {} as LockingTransactionsContextValue,
+  );
+
+interface LockingTransactionsFormProviderProps {
+  moduleName: string;
+  isEnabled: boolean;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Locking transactions form provider.
@@ -16,7 +26,7 @@ function LockingTransactionsFormProvider({
   isEnabled,
   dialogName,
   ...props
-}) {
+}: LockingTransactionsFormProviderProps) {
   // Create locking transactions mutations.
   const { mutateAsync: createLockingTransactionMutate } =
     useCreateLockingTransactoin();
@@ -27,7 +37,7 @@ function LockingTransactionsFormProvider({
     });
 
   // State provider.
-  const provider = {
+  const provider: LockingTransactionsContextValue = {
     dialogName,
     moduleName,
     createLockingTransactionMutate,

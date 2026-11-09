@@ -1,9 +1,9 @@
-// @ts-nocheck
 import React, { createContext, useContext, useState } from 'react';
+import type {
+  PaymentReceiveEditPageResponse,
+  SettingsGroup,
+} from '@bigcapital/sdk-ts';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
-import { DashboardInsider } from '@/components';
-import { useProjects } from '@/containers/Projects/hooks';
 import {
   useSettingsPaymentReceives,
   usePaymentReceiveEditPage,
@@ -13,32 +13,95 @@ import {
   useCreatePaymentReceive,
   useEditPaymentReceive,
   usePaymentReceivedState,
-  PaymentReceivedStateResponse,
 } from '@/hooks/query';
 import { useGetPdfTemplates } from '@/hooks/query/pdf-templates';
+import { useFeatureCan } from '@/hooks/state';
 
-interface PaymentReceivedFormContextValue {
+type UseAccountsResult = ReturnType<typeof useAccounts>;
+type UseBranchesResult = ReturnType<typeof useBranches>;
+type UseCustomersResult = ReturnType<typeof useCustomers>;
+type UseGetPdfTemplatesResult = ReturnType<typeof useGetPdfTemplates>;
+type UseCreatePaymentReceiveResult = ReturnType<typeof useCreatePaymentReceive>;
+type UseEditPaymentReceiveResult = ReturnType<typeof useEditPaymentReceive>;
+type UsePaymentReceivedStateResult = ReturnType<typeof usePaymentReceivedState>;
+
+type PaymentReceiveSubmitPayload = {
+  redirect?: boolean;
+  resetForm?: boolean;
+  publish?: boolean;
+};
+
+type PaymentReceiveEditPageData =
+  | PaymentReceiveEditPageResponse['data']
+  | undefined;
+type PaymentReceiveEditPageEntries =
+  | PaymentReceiveEditPageResponse['entries']
+  | undefined;
+
+interface PaymentReceiveFormContextValue {
+  paymentReceiveId?: number;
+  paymentReceiveEditPage: PaymentReceiveEditPageData;
+  paymentEntriesEditPage: PaymentReceiveEditPageEntries extends Array<infer T>
+    ? T[]
+    : PaymentReceiveEditPageEntries;
+  accounts: UseAccountsResult['data'];
+  customers: NonNullable<UseCustomersResult['data']>['data'];
+  branches: UseBranchesResult['data'];
+
+  isPaymentLoading: boolean;
+  isAccountsLoading: boolean;
+  isPaymentFetching: boolean;
+  isCustomersLoading: boolean;
+  isFeatureLoading: boolean;
+  isBranchesLoading: boolean;
+  isBranchesSuccess: boolean;
+  isNewMode: boolean;
+
+  submitPayload: PaymentReceiveSubmitPayload;
+  setSubmitPayload: React.Dispatch<
+    React.SetStateAction<PaymentReceiveSubmitPayload>
+  >;
+
+  editPaymentReceiveMutate: UseEditPaymentReceiveResult['mutateAsync'];
+  createPaymentReceiveMutate: UseCreatePaymentReceiveResult['mutateAsync'];
+
+  isExcessConfirmed: boolean;
+  setIsExcessConfirmed: React.Dispatch<React.SetStateAction<boolean>>;
+
+  brandingTemplates: UseGetPdfTemplatesResult['data'];
+  isBrandingTemplatesLoading: boolean;
+
   isPaymentReceivedStateLoading: boolean;
-  paymentReceivedState: PaymentReceivedStateResponse;
+  paymentReceivedState: UsePaymentReceivedStateResult['data'];
+
+  paymentReceiveSettings: SettingsGroup | undefined;
+  isBootLoading: boolean;
 }
 
-// Payment receive form context.
-const PaymentReceiveFormContext =
-  createContext<PaymentReceivedFormContextValue>(
-    {} as PaymentReceivedFormContextValue,
-  );
+type PaymentReceiveFormProviderProps = {
+  query?: Record<string, unknown>;
+  paymentReceiveId?: number;
+  children?: React.ReactNode;
+};
+
+const PaymentReceiveFormContext = createContext<
+  PaymentReceiveFormContextValue | undefined
+>(undefined);
 
 /**
  * Payment receive form provider.
  */
-function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
-  // Form state.
-  const [submitPayload, setSubmitPayload] = React.useState({});
+function PaymentReceiveFormProvider({
+  query,
+  paymentReceiveId,
+  ...props
+}: PaymentReceiveFormProviderProps) {
+  const [submitPayload, setSubmitPayload] =
+    React.useState<PaymentReceiveSubmitPayload>({});
 
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
-  const isProjectsFeatureCan = featureCan(Features.Projects);
 
   // Fetches payment recevie details.
   const {
@@ -49,19 +112,18 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     enabled: !!paymentReceiveId,
   });
   const paymentReceiveEditPage = paymentReceivedEditData?.data;
-  const paymentEntriesEditPage = paymentReceivedEditData?.entries
+  const paymentEntriesEditPage = paymentReceivedEditData?.entries;
 
   // Handle fetch accounts data.
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Fetch payment made settings.
-  const fetchSettings = useSettingsPaymentReceives();
+  const { data: paymentReceiveSettings } = useSettingsPaymentReceives();
 
   // Fetches customers list.
-  const {
-    data: { customers },
-    isLoading: isCustomersLoading,
-  } = useCustomers({ page_size: 10000 });
+  const { data: customersData, isLoading: isCustomersLoading } = useCustomers({
+    page_size: 10000,
+  });
 
   // Fetches the branches list.
   const {
@@ -69,12 +131,6 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     isLoading: isBranchesLoading,
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
-
-  // Fetches the projects list.
-  const {
-    data: { projects },
-    isLoading: isProjectsLoading,
-  } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
   // Fetches branding templates of payment received module.
   const { data: brandingTemplates, isLoading: isBrandingTemplatesLoading } =
@@ -86,7 +142,6 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     isLoading: isPaymentReceivedStateLoading,
   } = usePaymentReceivedState();
 
-  // Detarmines whether the new mode.
   const isNewMode = !paymentReceiveId;
 
   const isFeatureLoading = isBranchesLoading;
@@ -104,21 +159,20 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     isBrandingTemplatesLoading ||
     isPaymentReceivedStateLoading;
 
-  // Provider payload.
-  const provider = {
+  const provider: PaymentReceiveFormContextValue = {
     paymentReceiveId,
     paymentReceiveEditPage,
-    paymentEntriesEditPage,
-    accounts,
-    customers,
-    branches,
-    projects,
+    paymentEntriesEditPage: paymentEntriesEditPage ?? [],
+    accounts: accounts ?? [],
+    customers: customersData?.data ?? [],
+    branches: branches ?? [],
 
     isPaymentLoading,
     isAccountsLoading,
     isPaymentFetching,
     isCustomersLoading,
     isFeatureLoading,
+    isBranchesLoading,
     isBranchesSuccess,
     isNewMode,
 
@@ -131,13 +185,13 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
     isExcessConfirmed,
     setIsExcessConfirmed,
 
-    // Branding templates
     brandingTemplates,
     isBrandingTemplatesLoading,
 
-    // Payment received state
     isPaymentReceivedStateLoading,
     paymentReceivedState,
+
+    paymentReceiveSettings,
 
     isBootLoading,
   };
@@ -145,7 +199,14 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   return <PaymentReceiveFormContext.Provider value={provider} {...props} />;
 }
 
-const usePaymentReceiveFormContext = () =>
-  useContext<PaymentReceivedFormContextValue>(PaymentReceiveFormContext);
+const usePaymentReceiveFormContext = (): PaymentReceiveFormContextValue => {
+  const ctx = useContext(PaymentReceiveFormContext);
+  if (!ctx) {
+    throw new Error(
+      'usePaymentReceiveFormContext must be used within a PaymentReceiveFormProvider',
+    );
+  }
+  return ctx;
+};
 
 export { PaymentReceiveFormProvider, usePaymentReceiveFormContext };

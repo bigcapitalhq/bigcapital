@@ -1,15 +1,29 @@
-// @ts-nocheck
+import { Callout, Intent, Classes } from '@blueprintjs/core';
+import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import clsx from 'classnames';
-import { Callout, Intent, Classes } from '@blueprintjs/core';
-
+import type { ReconcileVendorCreditFormEntry } from './types';
+import { FormatDateCell, MoneyFieldCell, T } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import {T , MoneyFieldCell, FormatDateCell } from '@/components';
 
-export const transformErrors = (errors, { setErrors }) => {};
+interface ResponseError {
+  type: string;
+}
 
-export function EmptyStatuCallout() {
+interface TransformErrorsArgs {
+  setErrors: (errors: Partial<Record<string, string>>) => void;
+}
+
+// FIXME: latent bug — `transformErrors` is a no-op (empty body). The original
+// call site in ReconcileVendorCreditForm is also commented out. Preserved.
+export const transformErrors = (
+  _errors: ResponseError[],
+  { setErrors }: TransformErrorsArgs,
+) => {
+  void setErrors;
+};
+
+export function EmptyStatuCallout(): React.ReactElement {
   return (
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>
@@ -29,27 +43,27 @@ export const useReconcileVendorCreditTableColumns = () => {
     () => [
       {
         Header: intl.get('bill_date'),
-        accessor: 'formatted_bill_date',
+        accessor: 'formattedBillDate',
         Cell: FormatDateCell,
         disableSortBy: true,
         width: '120',
       },
       {
         Header: intl.get('reconcile_vendor_credit.column.bill_number'),
-        accessor: 'bill_number',
+        accessor: 'billNumber',
         disableSortBy: true,
         width: '100',
       },
       {
         Header: intl.get('amount'),
-        accessor: 'formatted_amount',
+        accessor: 'formattedAmount',
         disableSortBy: true,
         align: 'right',
         width: '100',
       },
       {
         Header: intl.get('reconcile_vendor_credit.column.remaining_amount'),
-        accessor: 'formatted_due_amount',
+        accessor: 'formattedDueAmount',
         disableSortBy: true,
         align: 'right',
         width: '150',
@@ -70,9 +84,13 @@ export const useReconcileVendorCreditTableColumns = () => {
 /**
  * Sets max amount credit from purchase due amount.
  */
-export const maxAmountCreditFromRemaining = (entries) => {
+export const maxAmountCreditFromRemaining = (
+  entries: ReconcileVendorCreditFormEntry[],
+): ReconcileVendorCreditFormEntry[] => {
   return entries.map((entry) => ({
     ...entry,
-    amount: entry.amount ? Math.min(entry.due_amount, entry.amount) : '',
+    amount: entry.amount
+      ? Math.min((entry.dueAmount ?? 0) as number, entry.amount as number)
+      : '',
   }));
 };

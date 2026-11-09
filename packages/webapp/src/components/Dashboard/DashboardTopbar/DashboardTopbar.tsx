@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router';
 import {
   Navbar,
   NavbarGroup,
@@ -14,31 +11,41 @@ import {
   MenuDivider,
 } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
-
-import { FormattedMessage as T, Icon, Hint, If } from '@/components';
-
-import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
-import DashboardBreadcrumbs from '@/components/Dashboard/DashboardBreadcrumbs';
-import DashboardBackLink from '@/components/Dashboard/DashboardBackLink';
-
-import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withDashboard } from '@/containers/Dashboard/withDashboard';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import QuickNewDropdown from '@/containers/QuickNewDropdown/QuickNewDropdown';
+import * as FF from 'fp-ts/function';
+import { useHistory } from 'react-router-dom';
 import {
   DashboardHamburgerButton,
   DashboardQuickSearchButton,
 } from './_components';
-
+import type { WithDashboardProps } from '@/containers/Dashboard/withDashboard';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithUniversalSearchActionsProps } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { FormattedMessage as T, Icon, Hint, If } from '@/components';
+import DashboardBackLink from '@/components/Dashboard/DashboardBackLink';
+import DashboardBreadcrumbs from '@/components/Dashboard/DashboardBreadcrumbs';
+import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
 import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
 import {
   COMMUNITY_BIGCAPITAL_LINK,
   DOCS_BIGCAPITAL_LINK,
 } from '@/constants/routes';
+import { withDashboard } from '@/containers/Dashboard/withDashboard';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { QuickNewDropdown } from '@/containers/QuickNewDropdown/QuickNewDropdown';
+import { withUniversalSearchActions } from '@/containers/UniversalSearch/withUniversalSearchActions';
+import { useNotificationsUnreadCount } from '@/hooks/query/notifications';
+import { useDrawerActions } from '@/hooks/state/dashboard';
 
-import { compose } from '@/utils';
+type DashboardTopbarProps = Pick<
+  WithDashboardProps,
+  'pageTitle' | 'pageHint' | 'editViewId' | 'sidebarExpended'
+> &
+  Pick<WithDashboardActionsProps, 'toggleSidebarExpand'> &
+  Pick<WithUniversalSearchActionsProps, 'openGlobalSearch'> &
+  Pick<WithDialogActionsProps, 'openDialog'>;
 
 /**
  * Dashboard topbar.
@@ -60,8 +67,10 @@ function DashboardTopbar({
 
   // #withDialogActions
   openDialog,
-}) {
+}: DashboardTopbarProps) {
   const history = useHistory();
+  const { openDrawer } = useDrawerActions();
+  const { data: unreadCount = 0 } = useNotificationsUnreadCount();
 
   const handlerClickEditView = () => {
     history.push(`/custom_views/${editViewId}/edit`);
@@ -71,10 +80,14 @@ function DashboardTopbar({
     toggleSidebarExpand();
   };
 
+  const handleNotificationsClick = () => {
+    openDrawer(DRAWERS.NOTIFICATIONS);
+  };
+
   return (
-    <div class="dashboard__topbar" data-testId={'dashboard-topbar'}>
-      <div class="dashboard__topbar-left">
-        <div class="dashboard__topbar-sidebar-toggle">
+    <div className="dashboard__topbar" data-testId={'dashboard-topbar'}>
+      <div className="dashboard__topbar-left">
+        <div className="dashboard__topbar-sidebar-toggle">
           <Tooltip
             content={
               !sidebarExpended ? (
@@ -89,16 +102,16 @@ function DashboardTopbar({
           </Tooltip>
         </div>
 
-        <div class="dashboard__title">
+        <div className="dashboard__title">
           <h1>{pageTitle}</h1>
 
-          <If condition={pageHint}>
-            <div class="dashboard__hint">
+          <If condition={!!pageHint}>
+            <div className="dashboard__hint">
               <Hint content={pageHint} />
             </div>
           </If>
 
-          <If condition={editViewId}>
+          <If condition={!!editViewId}>
             <Button
               className={Classes.MINIMAL + ' button--view-edit'}
               icon={<Icon icon="pen" iconSize={13} />}
@@ -107,28 +120,50 @@ function DashboardTopbar({
           </If>
         </div>
 
-        <div class="dashboard__breadcrumbs">
+        <div className="dashboard__breadcrumbs">
           <DashboardBreadcrumbs />
         </div>
         <DashboardBackLink />
       </div>
 
-      <div class="dashboard__topbar-right">
-        <Navbar class="dashboard__topbar-navbar">
+      <div className="dashboard__topbar-right">
+        <Navbar className="dashboard__topbar-navbar">
           <NavbarGroup>
-            <DashboardQuickSearchButton
-              onClick={() => openGlobalSearch(true)}
-            />
+            <DashboardQuickSearchButton onClick={() => openGlobalSearch()} />
             <QuickNewDropdown />
-
             <Tooltip
               content={<T id={'notifications'} />}
               position={Position.BOTTOM}
             >
-              <Button
-                className={Classes.MINIMAL}
-                icon={<Icon icon={'notification-24'} iconSize={20} />}
-              />
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <Button
+                  className={Classes.MINIMAL}
+                  icon={<Icon icon={'notification-24'} iconSize={20} />}
+                  onClick={handleNotificationsClick}
+                />
+                {unreadCount > 0 && (
+                  <span
+                    className="notification-badge"
+                    style={{
+                      position: 'absolute',
+                      top: 2,
+                      right: 2,
+                      minWidth: '18px',
+                      height: '18px',
+                      padding: '0 5px',
+                      fontSize: '11px',
+                      lineHeight: '18px',
+                      borderRadius: '9px',
+                      backgroundColor: '#db3737',
+                      color: 'white',
+                      textAlign: 'center',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </div>
             </Tooltip>
 
             <Popover2
@@ -163,7 +198,7 @@ function DashboardTopbar({
           </NavbarGroup>
         </Navbar>
 
-        <div class="dashboard__topbar-user">
+        <div className="dashboard__topbar-user">
           <DashboardTopbarUser />
         </div>
       </div>
@@ -171,14 +206,15 @@ function DashboardTopbar({
   );
 }
 
-export default compose(
-  withUniversalSearchActions,
+export default FF.pipe(
+  DashboardTopbar,
+  withDialogActions,
+  withDashboardActions,
   withDashboard(({ pageTitle, pageHint, editViewId, sidebarExpended }) => ({
     pageTitle,
     editViewId,
     sidebarExpended,
     pageHint,
   })),
-  withDashboardActions,
-  withDialogActions,
-)(DashboardTopbar);
+  withUniversalSearchActions,
+);

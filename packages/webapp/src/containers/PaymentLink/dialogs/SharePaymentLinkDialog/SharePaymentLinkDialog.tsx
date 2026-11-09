@@ -1,8 +1,8 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const SharePaymentLinkContent = React.lazy(() =>
   import('./SharePaymentLinkContent').then((module) => ({
@@ -10,10 +10,18 @@ const SharePaymentLinkContent = React.lazy(() =>
   })),
 );
 
+interface SharePaymentLinkDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
+
 /**
- * 
+ *
  */
-function SharePaymentLinkDialogRoot({ dialogName, payload, isOpen }) {
+function SharePaymentLinkDialogRoot({
+  dialogName,
+  payload,
+  isOpen,
+}: SharePaymentLinkDialogProps) {
   return (
     <Dialog
       name={dialogName}
@@ -31,8 +39,9 @@ function SharePaymentLinkDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const SharePaymentLinkDialog = compose(withDialogRedux())(
+export const SharePaymentLinkDialog = FF.pipe(
   SharePaymentLinkDialogRoot,
+  withDialogRedux(),
 );
 
 SharePaymentLinkDialog.displayName = 'SharePaymentLinkDialog';

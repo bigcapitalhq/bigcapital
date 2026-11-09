@@ -1,5 +1,6 @@
-import * as R from 'ramda';
 import { I18nService } from 'nestjs-i18n';
+import { constant, flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { ITransactionsByCustomersCustomer } from './TransactionsByCustomer.types';
 import { ITableRow, ITableColumn } from '../../types/Table.types';
 import { TransactionsByContactsTableRows } from '../TransactionsByContact/TransactionsByContactTableRows';
@@ -40,7 +41,7 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
   ): ITableRow => {
     const columns = [
       { key: 'customerName', accessor: 'customerName' },
-      ...R.repeat({ key: 'empty', value: '' }, 5),
+      ...Array(5).fill({ key: 'empty', value: '' }),
       {
         key: 'closingBalanceValue',
         accessor: 'closingBalance.formattedAmount',
@@ -49,15 +50,16 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
 
     return {
       ...tableRowMapper(customer, columns, { rowTypes: [ROW_TYPE.CUSTOMER] }),
-      children: R.pipe(
-        R.when(
-          R.always(customer.transactions.length > 0),
-          R.pipe(
-            R.concat(this.contactTransactions(customer)),
-            R.prepend(this.contactOpeningBalance(customer)),
-          ),
+      children: flow(
+        when(
+          constant(customer.transactions.length > 0),
+          (rows: ITableRow[]) => [
+            this.contactOpeningBalance(customer),
+            ...this.contactTransactions(customer),
+            ...rows,
+          ],
         ),
-        R.append(this.contactClosingBalance(customer)),
+        (rows: ITableRow[]) => [...rows, this.contactClosingBalance(customer)],
       )([]),
     };
   };
@@ -70,7 +72,7 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
   private customerRowsMapper = (
     customer: ITransactionsByCustomersCustomer,
   ): ITableRow => {
-    return R.pipe(this.customerDetails)(customer);
+    return this.customerDetails(customer);
   };
 
   /**
@@ -79,7 +81,7 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
    * @returns {ITableRow[]} - Table rows.
    */
   public tableRows = (): ITableRow[] => {
-    return R.map(this.customerRowsMapper)(this.customersTransactions);
+    return this.customersTransactions.map(this.customerRowsMapper);
   };
 
   /**
@@ -88,13 +90,28 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
    */
   public tableColumns = (): ITableColumn[] => {
     return [
-      { key: 'customer_name', label: 'Customer name' },
-      { key: 'account_name', label: 'Account Name' },
-      { key: 'ref_type', label: 'Reference Type' },
-      { key: 'transaction_type', label: 'Transaction Type' },
-      { key: 'credit', label: 'Credit' },
-      { key: 'debit', label: 'Debit' },
-      { key: 'running_balance', label: 'Running Balance' },
+      {
+        key: 'customer_name',
+        label: this.i18n.t('transactions_by_contact.customer_name'),
+      },
+      {
+        key: 'account_name',
+        label: this.i18n.t('transactions_by_contact.account_name'),
+      },
+      {
+        key: 'ref_type',
+        label: this.i18n.t('transactions_by_contact.reference_type'),
+      },
+      {
+        key: 'transaction_type',
+        label: this.i18n.t('transactions_by_contact.transaction_type'),
+      },
+      { key: 'credit', label: this.i18n.t('transactions_by_contact.credit') },
+      { key: 'debit', label: this.i18n.t('transactions_by_contact.debit') },
+      {
+        key: 'running_balance',
+        label: this.i18n.t('transactions_by_contact.running_balance'),
+      },
     ];
   };
 }

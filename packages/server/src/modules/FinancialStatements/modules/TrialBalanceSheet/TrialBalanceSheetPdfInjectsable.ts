@@ -9,7 +9,7 @@ export class TrialBalanceSheetPdfInjectable {
   constructor(
     private readonly trialBalanceSheetTable: TrialBalanceSheetTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) { }
+  ) {}
 
   /**
    * Converts the given trial balance sheet table to pdf.
@@ -25,6 +25,7 @@ export class TrialBalanceSheetPdfInjectable {
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,
+      query.numberFormat?.showInRed,
     );
   }
 }

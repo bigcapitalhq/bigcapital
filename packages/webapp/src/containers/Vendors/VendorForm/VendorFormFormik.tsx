@@ -1,74 +1,93 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { Formik, Form } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import classNames from 'classnames';
 import styled from 'styled-components';
-
-import { CLASSES } from '@/constants/classes';
-import { AppToaster, Box } from '@/components';
+import {
+  VendorFormValues,
+  defaultInitialValues,
+  transformFormToCreateRequest,
+  transformFormToEditRequest,
+  transformValuesToForm,
+  transformVendorToForm,
+} from './utils';
 import {
   CreateVendorFormSchema,
   EditVendorFormSchema,
 } from './VendorForm.schema';
-
 import { VendorFormContent } from './VendorFormContent';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
 import { useVendorFormContext } from './VendorFormProvider';
-import { compose, transformToForm, safeInvoke, parseBoolean } from '@/utils';
-import { defaultInitialValues } from './utils';
+import type { VendorFormSubmitPayload } from './VendorFormProvider';
+import { AppToaster } from '@/components';
+import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { saveInvoke } from '@/utils';
 
 /**
  * Vendor form.
  */
 function VendorFormFormikBase({
-  // #withCurrentOrganization
-  organization: { base_currency },
-
-  // #ownProps
   initialValues,
   onSubmitSuccess,
   onSubmitError,
   onCancel,
-  className,
+  className: _className,
+}: {
+  initialValues?: Partial<VendorFormValues>;
+  onSubmitSuccess?: (
+    values: VendorFormValues,
+    formArgs: FormikHelpers<VendorFormValues>,
+    submitPayload: VendorFormSubmitPayload,
+    responseData?: unknown,
+  ) => void;
+  onSubmitError?: (
+    values: VendorFormValues,
+    formArgs: FormikHelpers<VendorFormValues>,
+    submitPayload: VendorFormSubmitPayload,
+    errorData?: unknown,
+  ) => void;
+  onCancel?: () => void;
+  className?: string;
 }) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+
   // Vendor form context.
   const {
-    vendorId,
     vendor,
     contactDuplicate,
     createVendorMutate,
     editVendorMutate,
-    setSubmitPayload,
     submitPayload,
     isNewMode,
   } = useVendorFormContext();
 
-  const initialFormValues = useMemo(
-    () => ({
+  const initialFormValues = useMemo<VendorFormValues>(() => {
+    const merged: VendorFormValues = {
       ...defaultInitialValues,
-      ...transformToForm(initialValues, defaultInitialValues),
-      currency_code: base_currency,
-      ...transformToForm(vendor, defaultInitialValues),
-      ...transformToForm(contactDuplicate, defaultInitialValues),
-    }),
-    [vendor, contactDuplicate, base_currency, initialValues],
-  );
+      ...transformValuesToForm(initialValues ?? {}, defaultInitialValues),
+      ...transformVendorToForm(vendor, defaultInitialValues),
+      ...transformVendorToForm(contactDuplicate, defaultInitialValues),
+    };
+    if (!merged.currencyCode && baseCurrency) {
+      merged.currencyCode = baseCurrency;
+    }
+    // Infer the selected display-name format from the existing display name.
+    if (merged.displayName && !merged.displayNameFormat) {
+      merged.displayNameFormat = inferDisplayNameFormat(merged);
+    }
+    return merged;
+  }, [vendor, contactDuplicate, baseCurrency, initialValues]);
 
   // Handles the form submit.
-  const handleFormSubmit = (values, form) => {
+  const handleFormSubmit = (
+    values: VendorFormValues,
+    form: FormikHelpers<VendorFormValues>,
+  ) => {
     const { setSubmitting, resetForm } = form;
-    const requestForm = {
-      ...values,
-      active: parseBoolean(values.active, true),
-    };
 
     setSubmitting(true);
 
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -77,50 +96,52 @@ function VendorFormFormikBase({
         ),
         intent: Intent.SUCCESS,
       });
-      setSubmitPayload(false);
       setSubmitting(false);
       resetForm();
 
-      safeInvoke(onSubmitSuccess, values, form, submitPayload, response.data);
+      saveInvoke(onSubmitSuccess, values, form, submitPayload);
     };
 
     const onError = () => {
-      setSubmitPayload(false);
       setSubmitting(false);
-
-      safeInvoke(onSubmitError, values, form, submitPayload);
+      saveInvoke(onSubmitError, values, form, submitPayload);
     };
+
     if (isNewMode) {
-      createVendorMutate(requestForm).then(onSuccess).catch(onError);
+      createVendorMutate(transformFormToCreateRequest(values))
+        .then(onSuccess)
+        .catch(onError);
     } else {
-      editVendorMutate([vendor.id, requestForm]).then(onSuccess).catch(onError);
+      if (!vendor) return;
+      editVendorMutate([vendor.id, transformFormToEditRequest(values)])
+        .then(onSuccess)
+        .catch(onError);
     }
   };
 
   return (
-      <Formik
-        validationSchema={
-          isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
-        }
-        initialValues={initialFormValues}
-        onSubmit={handleFormSubmit}
-        >
-        <Form>
-          <VendorFormFields>
-            <VendorFormContent onCancel={onCancel} />
-          </VendorFormFields>
-        </Form>
-      </Formik>    
+    <Formik<VendorFormValues>
+      validationSchema={
+        isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
+      }
+      initialValues={initialFormValues}
+      onSubmit={handleFormSubmit}
+    >
+      <Form>
+        <VendorFormFields>
+          <VendorFormContent onCancel={onCancel} />
+        </VendorFormFields>
+      </Form>
+    </Formik>
   );
 }
-
 
 const VendorFormFields = styled.div`
   .bp4-form-content,
   .bp6-form-content {
     min-width: 300px;
   }
-  .bp4-form-group{
+  .bp4-form-group {
     margin-bottom: 20px;
   }
   .bp4-form-group.bp4-inline label.bp4-label {
@@ -128,4 +149,4 @@ const VendorFormFields = styled.div`
   }
 `;
 
-export const VendorFormFormik = compose(withCurrentOrganization())(VendorFormFormikBase);
+export const VendorFormFormik = VendorFormFormikBase;

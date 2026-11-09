@@ -1,8 +1,11 @@
-// @ts-nocheck
-import intl from 'react-intl-universal';
-import React from 'react';
 import { Tag, Intent } from '@blueprintjs/core';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import {
+  useManualJournalDrawerContext,
+  ManualJournalDetail,
+  ManualJournalDetailEntry,
+} from './ManualJournalDrawerProvider';
 import {
   T,
   Choose,
@@ -10,17 +13,22 @@ import {
   TextOverviewTooltipCell,
 } from '@/components';
 import { Features } from '@/constants';
-import { getColumnWidth } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
-import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
+import { getColumnWidth } from '@/utils';
+
+interface ManualJournalDetailsStatusProps {
+  manualJournal: ManualJournalDetail;
+}
 
 /**
  * Publish column accessor.
  */
-export function ManualJournalDetailsStatus({ manualJournal }) {
+export function ManualJournalDetailsStatus({
+  manualJournal,
+}: ManualJournalDetailsStatusProps) {
   return (
     <Choose>
-      <Choose.When condition={!!manualJournal.is_published}>
+      <Choose.When condition={!!manualJournal.isPublished}>
         <Tag minimal={true} round={true}>
           <T id={'published'} />
         </Tag>
@@ -42,9 +50,25 @@ export const useManualJournalEntriesColumns = () => {
   const { featureCan } = useFeatureCan();
 
   // manual journal details drawer context.
-  const {
-    manualJournal: { entries },
-  } = useManualJournalDrawerContext();
+  const { manualJournal } = useManualJournalDrawerContext();
+  const entries = React.useMemo(
+    () => manualJournal?.entries ?? [],
+    [manualJournal],
+  );
+
+  // Categories actually used by this journal, ordered as they appear.
+  const usedTrackingCategories = React.useMemo(() => {
+    const categories = new Map<number, { id: number; name: string }>();
+
+    entries.forEach((entry) => {
+      (entry.trackingCategories ?? []).forEach((assignment) => {
+        if (assignment.category) {
+          categories.set(assignment.category.id, assignment.category);
+        }
+      });
+    });
+    return [...categories.values()];
+  }, [entries]);
 
   return React.useMemo(
     () => [
@@ -82,6 +106,20 @@ export const useManualJournalEntriesColumns = () => {
             },
           ]
         : []),
+      ...(featureCan(Features.TrackingCategories)
+        ? usedTrackingCategories.map((category) => ({
+            id: `tracking-category-${category.id}`,
+            Header: category.name,
+            accessor: (entry: ManualJournalDetailEntry) =>
+              (entry.trackingCategories ?? []).find(
+                (assignment) => assignment.categoryId === category.id,
+              )?.option?.name ?? '',
+            Cell: TextOverviewTooltipCell,
+            width: 100,
+            disableSortBy: true,
+            textOverview: true,
+          }))
+        : []),
       {
         Header: intl.get('debit'),
         accessor: 'debit',
@@ -111,6 +149,6 @@ export const useManualJournalEntriesColumns = () => {
         align: 'right',
       },
     ],
-    [],
+    [featureCan, entries, usedTrackingCategories],
   );
 };

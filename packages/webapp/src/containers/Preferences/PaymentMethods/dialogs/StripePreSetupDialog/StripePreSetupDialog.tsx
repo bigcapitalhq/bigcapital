@@ -1,14 +1,26 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { Dialog, DialogSuspense } from '@/components';
-import { compose } from '@/utils';
-import withDialogRedux from '@/components/DialogReduxConnect';
 import { StripePreSetupDialogContent } from './StripePreSetupDialogContent';
+import { Dialog, DialogSuspense } from '@/components';
+import withDialogRedux, {
+  type DialogBaseProps,
+} from '@/components/DialogReduxConnect';
+
+interface StripePreSetupDialogRootProps {
+  dialogName: string;
+}
+
+type StripePreSetupDialogRootConnectedProps = StripePreSetupDialogRootProps &
+  DialogBaseProps;
 
 /**
  * Select payment methods dialogs.
  */
-function StripePreSetupDialogRoot({ dialogName, payload, isOpen }) {
+function StripePreSetupDialogRoot({
+  dialogName,
+  payload,
+  isOpen,
+}: StripePreSetupDialogRootConnectedProps) {
   return (
     <Dialog
       name={dialogName}
@@ -26,8 +38,9 @@ function StripePreSetupDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const StripePreSetupDialog = compose(withDialogRedux())(
+export const StripePreSetupDialog = FF.pipe(
   StripePreSetupDialogRoot,
+  withDialogRedux(),
 );
 
 StripePreSetupDialogRoot.displayName = 'StripePreSetupDialog';

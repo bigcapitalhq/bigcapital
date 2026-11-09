@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { AssignPdfTemplateDefaultService } from './commands/AssignPdfTemplateDefault.service';
 import { CreatePdfTemplateService } from './commands/CreatePdfTemplate.service';
 import { DeletePdfTemplateService } from './commands/DeletePdfTemplate.service';
@@ -21,7 +20,7 @@ import { AttachmentsModule } from '../Attachments/Attachment.module';
     BrandingTemplateDTOTransformer,
     GetOrganizationBrandingAttributesService,
   ],
-  imports: [TenancyDatabaseModule, AttachmentsModule],
+  imports: [TenancyModule, TenancyDatabaseModule, AttachmentsModule],
   controllers: [PdfTemplatesController],
   providers: [
     PdfTemplateApplication,
@@ -31,11 +30,9 @@ import { AttachmentsModule } from '../Attachments/Attachment.module';
     GetPdfTemplates,
     EditPdfTemplateService,
     AssignPdfTemplateDefaultService,
-    TenancyContext,
-    TransformerInjectable,
     BrandingTemplateDTOTransformer,
     GetOrganizationBrandingAttributesService,
-    GetPdfTemplateBrandingState
+    GetPdfTemplateBrandingState,
   ],
 })
 export class PdfTemplatesModule {}

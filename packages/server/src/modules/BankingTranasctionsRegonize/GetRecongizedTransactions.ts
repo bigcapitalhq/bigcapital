@@ -11,7 +11,9 @@ export class GetRecognizedTransactionsService {
     private readonly transformer: TransformerInjectable,
 
     @Inject(UncategorizedBankTransaction.name)
-    private readonly uncategorizedBankTransactionModel: TenantModelProxy<typeof UncategorizedBankTransaction>,
+    private readonly uncategorizedBankTransactionModel: TenantModelProxy<
+      typeof UncategorizedBankTransaction
+    >,
   ) {}
 
   /**
@@ -26,7 +28,8 @@ export class GetRecognizedTransactionsService {
       ...filter,
     };
     const { results, pagination } =
-      await this.uncategorizedBankTransactionModel().query()
+      await this.uncategorizedBankTransactionModel()
+        .query()
         .onBuild((q) => {
           q.withGraphFetched('recognizedTransaction.assignAccount');
           q.withGraphFetched('recognizedTransaction.bankRule');

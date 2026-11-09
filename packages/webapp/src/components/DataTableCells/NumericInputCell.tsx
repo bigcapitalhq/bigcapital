@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
 import { FormGroup, NumericInput, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
+import React, { useState, useEffect } from 'react';
 import { CellType } from '@/constants';
 import { CLASSES } from '@/constants/classes';
 

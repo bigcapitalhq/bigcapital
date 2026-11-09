@@ -21,12 +21,18 @@ export class GetExcludedBankTransactionsQueryDto {
   @IsNumber()
   accountId?: number;
 
-  @ApiPropertyOptional({ description: 'Minimum date (ISO)', example: '2024-01-01' })
+  @ApiPropertyOptional({
+    description: 'Minimum date (ISO)',
+    example: '2024-01-01',
+  })
   @IsOptional()
   @IsDateString()
   minDate?: string;
 
-  @ApiPropertyOptional({ description: 'Maximum date (ISO)', example: '2024-12-31' })
+  @ApiPropertyOptional({
+    description: 'Maximum date (ISO)',
+    example: '2024-12-31',
+  })
   @IsOptional()
   @IsDateString()
   maxDate?: string;

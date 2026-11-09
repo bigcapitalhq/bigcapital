@@ -67,6 +67,7 @@ export class PlaidSyncDb {
     }
     await this.createAccountService.createAccount(createBankAccountDTO, trx, {
       ignoreUniqueName: true,
+      ignoreAccountCode: true,
     });
   }
 
@@ -131,6 +132,7 @@ export class PlaidSyncDb {
     await this.eventPublisher.emitAsync(events.plaid.onTransactionsSynced, {
       plaidAccountId,
       batch,
+      trx,
     } as IPlaidTransactionsSyncedEventPayload);
   }
 
@@ -236,5 +238,30 @@ export class PlaidSyncDb {
       .patch({
         isFeedsActive,
       });
+  }
+
+  /**
+   * Updates the bank balance of the accounts linked to the given Plaid
+   * accounts, which is otherwise only set when the account is created.
+   * @param {PlaidAccountBase[]} plaidAccounts - Plaid accounts.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<void>}
+   */
+  public async updateAccountsBankBalance(
+    plaidAccounts: PlaidAccountBase[],
+    trx?: Knex.Transaction,
+  ): Promise<void> {
+    const balancedPlaidAccounts = plaidAccounts.filter(
+      (plaidAccount) => plaidAccount.balances.current !== null,
+    );
+    await bluebird.map(
+      balancedPlaidAccounts,
+      (plaidAccount) =>
+        this.accountModel()
+          .query(trx)
+          .where('plaid_account_id', plaidAccount.account_id)
+          .patch({ bankBalance: plaidAccount.balances.current }),
+      { concurrency: CONCURRENCY_ASYNC },
+    );
   }
 }

@@ -1,25 +1,27 @@
 // @ts-nocheck
+import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
-import UsersActions from '@/containers/Preferences/Users/UsersActions';
-import CurrenciesActions from '@/containers/Preferences/Currencies/CurrenciesActions';
-import WarehousesActions from '@/containers/Preferences/Warehouses/WarehousesActions';
-import BranchesActions from '@/containers/Preferences/Branches/BranchesActions';
-import ApiKeysActions from '@/containers/Preferences/ApiKeys/ApiKeysActions';
+import { CLASSES } from '@/constants/classes';
+import { Features } from '@/constants/features';
 import { withDashboard } from '@/containers/Dashboard/withDashboard';
-
-import { compose } from '@/utils';
-
+import { ApiKeysActions } from '@/containers/Preferences/ApiKeys/ApiKeysActions';
+import { BranchesActions } from '@/containers/Preferences/Branches/BranchesActions';
+import { CurrenciesActions } from '@/containers/Preferences/Currencies/CurrenciesActions';
+import { TrackingCategoriesActions } from '@/containers/Preferences/TrackingCategories/TrackingCategoriesActions';
+import { UsersActions } from '@/containers/Preferences/Users/UsersActions';
+import { WarehousesActions } from '@/containers/Preferences/Warehouses/WarehousesActions';
+import { useFeatureCan } from '@/hooks/state';
 import '@/style/pages/Preferences/Topbar.scss';
 
 /**
  * Preferences topbar.
  */
 function PreferencesTopbar({ preferencesPageTitle }) {
+  const { featureCan } = useFeatureCan();
+
   return (
     <div
       className={classNames(
@@ -49,6 +51,13 @@ function PreferencesTopbar({ preferencesPageTitle }) {
               path={'/preferences/branches'}
               component={BranchesActions}
             />
+            {featureCan(Features.TrackingCategories) && (
+              <Route
+                exact
+                path={'/preferences/tracking-categories'}
+                component={TrackingCategoriesActions}
+              />
+            )}
             <Route
               exact
               path={'/preferences/api-keys'}
@@ -65,6 +74,7 @@ function PreferencesTopbar({ preferencesPageTitle }) {
   );
 }
 
-export default compose(
+export default FF.pipe(
+  PreferencesTopbar,
   withDashboard(({ preferencesPageTitle }) => ({ preferencesPageTitle })),
-)(PreferencesTopbar);
+);

@@ -1,14 +1,18 @@
-// @ts-nocheck
 import React from 'react';
+import { VendorCreditDetail } from './VendorCreditDetail';
+import { VendorCreditDetailDrawerProvider } from './VendorCreditDetailDrawerProvider';
 import { DrawerBody } from '@/components';
 
-import VendorCreditDetail from './VendorCreditDetail';
-import { VendorCreditDetailDrawerProvider } from './VendorCreditDetailDrawerProvider';
+interface VendorCreditDetailDrawerContentProps {
+  vendorCreditId: number | undefined;
+}
 
 /**
  * Vendor credit detail drawer content.
  */
-export default function VendorCreditDetailDrawerContent({ vendorCreditId }) {
+export function VendorCreditDetailDrawerContent({
+  vendorCreditId,
+}: VendorCreditDetailDrawerContentProps) {
   return (
     <VendorCreditDetailDrawerProvider vendorCreditId={vendorCreditId}>
       <DrawerBody>

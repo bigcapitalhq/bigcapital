@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ERRORS } from '../constants';
 import { PaymentReceiveTransfromer } from './PaymentReceivedTransformer';
 import { PaymentReceived } from '../models/PaymentReceived';
+import { IPaymentReceivedTransformed } from '../types/PaymentReceived.types';
 import { TransformerInjectable } from '../../Transformer/TransformerInjectable.service';
 import { ServiceError } from '../../Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -24,7 +25,7 @@ export class GetPaymentReceivedService {
    */
   public async getPaymentReceive(
     paymentReceiveId: number,
-  ): Promise<PaymentReceived> {
+  ): Promise<IPaymentReceivedTransformed> {
     const paymentReceive = await this.paymentReceiveModel()
       .query()
       .withGraphFetched('customer')

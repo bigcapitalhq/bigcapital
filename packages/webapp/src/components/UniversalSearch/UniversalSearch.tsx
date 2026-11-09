@@ -1,6 +1,3 @@
-import React, { KeyboardEvent, ReactNode } from 'react';
-import intl from 'react-intl-universal';
-import { isUndefined } from 'lodash';
 import {
   Overlay,
   InputGroup,
@@ -12,28 +9,31 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { QueryList, ItemRenderer } from '@blueprintjs/select';
-import { x } from '@xstyled/emotion';
-import { css } from '@emotion/css';
-import { Icon, If, FormattedMessage as T } from '@/components';
 import { Select } from '@blueprintjs-formik/select';
+import { css } from '@emotion/css';
+import { x } from '@xstyled/emotion';
+import { isUndefined } from 'lodash';
+import React, { KeyboardEvent, ReactNode } from 'react';
+import intl from 'react-intl-universal';
 import {
   UniversalSearchProvider,
   useUniversalSearchContext,
 } from './UniversalSearchProvider';
 import { filterItemsByResourceType } from './utils';
+import { Icon, If, FormattedMessage as T } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 
 // Resource type from RESOURCES_TYPES constant
 type ResourceType = string;
 
 // Search type option item
-interface SearchTypeOption {
+export interface SearchTypeOption {
   key: ResourceType;
   label: string;
 }
 
 // Universal search item
-interface UniversalSearchItem {
+export interface UniversalSearchItem {
   id: number | string;
   _type: ResourceType;
   text: string;
@@ -411,7 +411,7 @@ export interface UniversalSearchProps {
   /** Controlled search resource type */
   searchResource?: ResourceType;
   /** Overlay props */
-  overlayProps?: OverlayProps;
+  overlayProps?: Partial<OverlayProps>;
   /** Whether the search overlay is open */
   isOpen: boolean;
   /** Whether the search is loading */

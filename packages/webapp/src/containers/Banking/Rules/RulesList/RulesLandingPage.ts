@@ -1,3 +1,3 @@
 import { RulesList } from './RulesList';
 
-export default RulesList;
+export const RulesLandingPage = RulesList;

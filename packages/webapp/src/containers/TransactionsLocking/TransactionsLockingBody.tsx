@@ -1,16 +1,19 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
 import {
   TransactionsLockingList,
   TransactionsLockingFull,
   TransactionLockingSkeletonList,
 } from './components';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
 import { useTransactionsLockingContext } from './TransactionsLockingProvider';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+
+interface TransactionsLockingBodyProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps {}
 
 /**
  * Transactions locking body.
@@ -22,42 +25,46 @@ function TransactionsLockingBodyJsx({
 
   // #withAlertActions
   openAlert,
-}) {
+}: TransactionsLockingBodyProps) {
   const { isTransactionLockingLoading, transactionLockingType } =
     useTransactionsLockingContext();
 
   // Handle locking transactions.
-  const handleLockingTransactions = (module, { }, isEnabled) => {
+  const handleLockTransactions = (module: string) => {
+    openDialog('locking-transactions', { module: module });
+  };
+  // Handle editing the locking transactions.
+  const handleEditLockTransactions = (module: string, isEnabled: boolean) => {
     openDialog('locking-transactions', {
       isEnabled: isEnabled,
       module: module,
     });
   };
   // Handle unlocking transactions
-  const handleUnlockTransactions = (module) => {
+  const handleUnlockTransactions = (module: string) => {
     openDialog('unlocking-transactions', { module: module });
   };
   // Handle unlocking transactions
-  const handleUnlockingPartial = (module) => {
+  const handleUnlockingPartial = (module: string) => {
     openDialog('unlocking-partial-transactions', { module: module });
   };
   // Handle cancel partial unlocking.
-  const handleCancelUnlockingPartail = (module) => {
+  const handleCancelUnlockingPartail = (module: string) => {
     openAlert('cancel-unlocking-partail', { module: module });
   };
 
   return !isTransactionLockingLoading ? (
     transactionLockingType === 'partial' ? (
       <TransactionsLockingList
-        onLock={handleLockingTransactions}
-        onEditLock={handleLockingTransactions}
+        onLock={handleLockTransactions}
+        onEditLock={handleEditLockTransactions}
         onCancelLock={handleUnlockTransactions}
         onUnlockPartial={handleUnlockingPartial}
         onCancelUnlockPartial={handleCancelUnlockingPartail}
       />
     ) : (
       <TransactionsLockingFull
-        onLock={handleLockingTransactions}
+        onLock={handleLockTransactions}
         onCancelLock={handleUnlockTransactions}
         onUnlockPartial={handleUnlockingPartial}
         onCancelUnlockPartial={handleCancelUnlockingPartail}
@@ -68,7 +75,8 @@ function TransactionsLockingBodyJsx({
   );
 }
 
-export const TransactionsLockingBody = R.compose(
-  withAlertActions,
+export const TransactionsLockingBody = FF.pipe(
+  TransactionsLockingBodyJsx,
   withDialogActions,
-)(TransactionsLockingBodyJsx);
+  withAlertActions,
+);

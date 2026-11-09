@@ -1,20 +1,25 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 import { Icon } from '@/components';
+import { useIsDarkMode } from '@/hooks/useDarkMode';
 
 import '@/style/components/BigcapitalLoading.scss';
-import { useIsDarkMode } from '@/hooks/useDarkMode';
+
+interface BigcapitalLoadingProps {
+  className?: string;
+}
 
 /**
  * Bigcapital logo loading.
  */
-export default function BigcapitalLoading({ className }) {
+export default function BigcapitalLoading({
+  className,
+}: BigcapitalLoadingProps) {
   const isDarkmode = useIsDarkMode();
 
   return (
     <div className={classNames('bigcapital-loading', className)}>
-      <div class="center">
+      <div className="center">
         {isDarkmode ? (
           <Icon
             icon="bigcapital-alt"

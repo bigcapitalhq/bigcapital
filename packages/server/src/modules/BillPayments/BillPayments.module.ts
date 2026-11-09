@@ -8,7 +8,7 @@ import { BillPaymentBillSync } from './commands/BillPaymentBillSync.service';
 import { GetPaymentBills } from './queries/GetPaymentBills.service';
 import { BillPaymentValidators } from './commands/BillPaymentValidators.service';
 import { CommandBillPaymentDTOTransformer } from './commands/CommandBillPaymentDTOTransformer.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { BranchTransactionDTOTransformer } from '../Branches/integrations/BranchTransactionDTOTransform';
 import { BranchesSettingsService } from '../Branches/BranchesSettings';
 import { BillPaymentsController } from './BillPayments.controller';
@@ -22,22 +22,25 @@ import { BillPaymentsImportable } from './commands/BillPaymentsImportable';
 import { GetBillPaymentsService } from './queries/GetBillPayments.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
 import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
+import { BulkDeleteBillPaymentsService } from './BulkDeleteBillPayments.service';
+import { ValidateBulkDeleteBillPaymentsService } from './ValidateBulkDeleteBillPayments.service';
 
 @Module({
-  imports: [LedgerModule, AccountsModule, DynamicListModule],
+  imports: [TenancyModule, LedgerModule, AccountsModule, DynamicListModule],
   providers: [
     BillPaymentsApplication,
     CreateBillPaymentService,
     EditBillPayment,
     GetBillPayment,
     DeleteBillPayment,
+    BulkDeleteBillPaymentsService,
+    ValidateBulkDeleteBillPaymentsService,
     BillPaymentBillSync,
     GetPaymentBills,
     BillPaymentValidators,
     CommandBillPaymentDTOTransformer,
     BranchTransactionDTOTransformer,
     BranchesSettingsService,
-    TenancyContext,
     BillPaymentGLEntries,
     BillPaymentGLEntriesSubscriber,
     BillPaymentBillSyncSubscriber,
@@ -54,4 +57,4 @@ import { BillPaymentsPages } from './commands/BillPaymentsPages.service';
   ],
   controllers: [BillPaymentsController],
 })
-export class BillPaymentsModule { }
+export class BillPaymentsModule {}

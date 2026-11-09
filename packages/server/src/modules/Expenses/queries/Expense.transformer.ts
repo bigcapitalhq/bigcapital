@@ -19,6 +19,7 @@ export class ExpenseTransfromer extends Transformer {
       'formattedPublishedAt',
       'categories',
       'attachments',
+      'branch',
     ];
   };
 

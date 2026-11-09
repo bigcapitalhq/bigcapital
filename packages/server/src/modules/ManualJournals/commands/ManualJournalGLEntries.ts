@@ -30,7 +30,8 @@ export class ManualJournalGLEntries {
     const manualJournal = await this.manualJournalModel()
       .query(trx)
       .findById(manualJournalId)
-      .withGraphFetched('entries.account');
+      .withGraphFetched('entries.account')
+      .withGraphFetched('entries.trackingCategories');
 
     // Retrieves the ledger entries of the given manual journal.
     const ledger = new ManualJournalGL(manualJournal).getManualJournalGLedger();

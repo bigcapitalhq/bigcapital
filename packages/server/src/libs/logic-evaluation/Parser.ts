@@ -38,8 +38,8 @@ export class Parser {
   }
 
   /**
-   * 
-   * @return {Node | string} =- 
+   *
+   * @return {Node | string} =-
    */
   parse() {
     let tok;
@@ -67,7 +67,9 @@ export class Parser {
         root.right = this.parseStatement();
       } else {
         if (typeof tok !== 'string') {
-          throw new Error('operation must be string, but get ' + JSON.stringify(tok));
+          throw new Error(
+            'operation must be string, but get ' + JSON.stringify(tok),
+          );
         }
         root = this.addNode(tok, this.parseStatement(), root);
       }
@@ -86,19 +88,21 @@ export class Parser {
   }
 
   /**
-   * 
-   * @param {string} operation 
-   * @param {Node|String|null} right 
-   * @param {Node} root 
+   *
+   * @param {string} operation
+   * @param {Node|String|null} right
+   * @param {Node} root
    */
   addNode(operation, right, root) {
     let pre = root;
-    
+
     if (this.compare(pre.operation, operation) < 0 && !pre.grouped) {
-      
-      while (pre.right !== null &&
+      while (
+        pre.right !== null &&
         typeof pre.right !== 'string' &&
-        this.compare(pre.right.operation, operation) < 0 && !pre.right.grouped) {
+        this.compare(pre.right.operation, operation) < 0 &&
+        !pre.right.grouped
+      ) {
         pre = pre.right;
       }
 
@@ -113,13 +117,13 @@ export class Parser {
       left: pre,
       right,
       operation,
-    }
+    };
   }
 
   /**
-   * 
-   * @param {String} a 
-   * @param {String} b 
+   *
+   * @param {String} a
+   * @param {String} b
    */
   compare(a, b) {
     if (!OPERATION.hasOwnProperty(a) || !OPERATION.hasOwnProperty(b)) {
@@ -149,12 +153,20 @@ export class Parser {
     }
 
     if (token === '!') {
-      return { left: null, operation: token, right: this.parseStatement() }
+      return { left: null, operation: token, right: this.parseStatement() };
     }
 
     // 3 > -12 or -12 + 10
-    if (token === '-' && (OPERATION[this.prevToken()] > 0 || this.prevToken() === undefined)) {
-      return { left: '0', operation: token, right: this.parseStatement(), grouped: true };
+    if (
+      token === '-' &&
+      (OPERATION[this.prevToken()] > 0 || this.prevToken() === undefined)
+    ) {
+      return {
+        left: '0',
+        operation: token,
+        right: this.parseStatement(),
+        grouped: true,
+      };
     }
 
     return token;

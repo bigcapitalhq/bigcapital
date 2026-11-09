@@ -1,12 +1,12 @@
-// @ts-nocheck
-import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
+import intl from 'react-intl-universal';
 import { AppToaster } from '@/components';
 
-/**
- * Handle delete errors.
- */
-export const handleDeleteErrors = (errors) => {
+interface WarehouseError {
+  type: string;
+}
+
+export const handleDeleteErrors = (errors: WarehouseError[]): void => {
   if (
     errors.find((error) => error.type === 'COULD_NOT_DELETE_ONLY_WAERHOUSE')
   ) {

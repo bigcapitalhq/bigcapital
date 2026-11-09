@@ -1,9 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import clsx from 'classnames';
-import { CLASSES } from '@/constants/classes';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { SaleInvoicesListResponse } from '@bigcapital/sdk-ts';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -13,38 +13,63 @@ import {
   Icon,
   Can,
 } from '@/components';
-import { formattedAmount, safeCallback } from '@/utils';
 import {
   SaleInvoiceAction,
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
+import { formattedAmount, safeCallback } from '@/utils';
 
-export function InvoiceStatus({ invoice }) {
+export type InvoiceTableRow = NonNullable<
+  SaleInvoicesListResponse['data']
+>[number];
+
+interface InvoiceActionsPayload {
+  onEdit: (invoice: InvoiceTableRow) => void;
+  onDeliver: (invoice: InvoiceTableRow) => void;
+  onDelete: (invoice: InvoiceTableRow) => void;
+  onConvert: (invoice: InvoiceTableRow) => void;
+  onQuick: (invoice: InvoiceTableRow) => void;
+  onViewDetails: (invoice: InvoiceTableRow) => void;
+  onPrint: (invoice: InvoiceTableRow) => void;
+  onSendMail: (invoice: InvoiceTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: InvoiceTableRow };
+  payload: InvoiceActionsPayload;
+}
+
+interface DeleteError {
+  type: string;
+}
+
+export function InvoiceStatus({ invoice }: { invoice: InvoiceTableRow }) {
   return (
     <Choose>
-      <Choose.When condition={invoice.is_fully_paid && invoice.is_delivered}>
+      <Choose.When condition={!!(invoice.isFullyPaid && invoice.isDelivered)}>
         <Tag intent={Intent.SUCCESS} round minimal>
           <T id={'paid'} />
         </Tag>
       </Choose.When>
 
-      <Choose.When condition={invoice.is_delivered && invoice.is_overdue}>
+      <Choose.When condition={!!(invoice.isDelivered && invoice.isOverdue)}>
         <Tag intent={Intent.DANGER} round minimal>
-          {intl.get('overdue_by', { overdue: invoice.overdue_days })}
+          {intl.get('overdue_by', { overdue: invoice.overdueDays })}
         </Tag>
       </Choose.When>
 
-      <Choose.When condition={invoice.is_delivered && !invoice.is_overdue}>
+      <Choose.When condition={!!(invoice.isDelivered && !invoice.isOverdue)}>
         <Tag intent={Intent.WARNING} round minimal>
-          {intl.get('due_in', { due: invoice.remaining_days })}
+          {intl.get('due_in', { due: invoice.remainingDays })}
         </Tag>
       </Choose.When>
 
-      <Choose.When condition={invoice.is_partially_paid}>
+      <Choose.When condition={!!invoice.isPartiallyPaid}>
         <Tag intent={Intent.PRIMARY} round minimal>
           {intl.get('day_partially_paid', {
-            due: formattedAmount(invoice.due_amount, invoice.currency_code),
+            due: formattedAmount(invoice.dueAmount, invoice.currencyCode),
           })}
         </Tag>
       </Choose.When>
@@ -58,7 +83,7 @@ export function InvoiceStatus({ invoice }) {
   );
 }
 
-export const statusAccessor = (row) => {
+export const statusAccessor = (row: InvoiceTableRow) => {
   return (
     <div className={'status-accessor'}>
       <InvoiceStatus invoice={row} />
@@ -66,7 +91,7 @@ export const statusAccessor = (row) => {
   );
 };
 
-export const handleDeleteErrors = (errors) => {
+export const handleDeleteErrors = (errors: DeleteError[]) => {
   if (
     errors.find(
       (error) => error.type === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
@@ -119,7 +144,7 @@ export function ActionsMenu({
     onSendMail,
   },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -139,7 +164,7 @@ export function ActionsMenu({
           text={intl.get('invoice.convert_to_credit_note')}
           onClick={safeCallback(onConvert, original)}
         />
-        <If condition={!original.is_delivered}>
+        <If condition={!original.isDelivered}>
           <MenuItem
             icon={<Icon icon="send" iconSize={16} />}
             text={intl.get('mark_as_delivered')}
@@ -148,7 +173,7 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
-        <If condition={original.is_delivered && !original.is_fully_paid}>
+        <If condition={!!(original.isDelivered && !original.isFullyPaid)}>
           <MenuItem
             icon={<Icon icon="quick-payment-16" iconSize={16} />}
             text={intl.get('add_payment')}
@@ -184,74 +209,74 @@ export function ActionsMenu({
 /**
  * Retrieve invoices table columns.
  */
-export function useInvoicesTableColumns() {
+export function useInvoicesTableColumns(): DataTableColumn<InvoiceTableRow>[] {
   return React.useMemo(
-    () => [
-      {
-        id: 'invoice_date',
-        Header: intl.get('invoice_date'),
-        accessor: 'invoice_date_formatted',
-        width: 110,
-        className: 'invoice_date',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'customer',
-        Header: intl.get('customer_name'),
-        accessor: 'customer.display_name',
-        width: 180,
-        className: 'customer_id',
-        clickable: true,
-        textOverview: true,
-      },
-
-      {
-        id: 'invoice_no',
-        Header: intl.get('invoice_no__'),
-        accessor: 'invoice_no',
-        width: 100,
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'amount',
-        Header: intl.get('amount'),
-        accessor: 'total_formatted',
-        width: 120,
-        align: 'right',
-        clickable: true,
-        textOverview: true,
-        money: true,
-        className: clsx(CLASSES.FONT_BOLD),
-      },
-      {
-        id: 'status',
-        Header: intl.get('status'),
-        accessor: (row) => statusAccessor(row),
-        width: 160,
-        className: 'status',
-        clickable: true,
-      },
-      {
-        id: 'due_date',
-        Header: intl.get('due_date'),
-        accessor: 'due_date',
-        Cell: FormatDateCell,
-        width: 110,
-        className: 'due_date',
-        clickable: true,
-        textOverview: true,
-      },
-      {
-        id: 'reference_no',
-        Header: intl.get('reference_no'),
-        accessor: 'reference_no',
-        width: 90,
-        clickable: true,
-        textOverview: true,
-      },
-    ],
+    () =>
+      [
+        {
+          id: 'invoice_date',
+          Header: intl.get('invoice_date'),
+          accessor: 'invoiceDateFormatted',
+          width: 110,
+          className: 'invoice_date',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'customer',
+          Header: intl.get('customer_name'),
+          accessor: 'customer.displayName',
+          width: 180,
+          className: 'customer_id',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'invoice_no',
+          Header: intl.get('invoice_no__'),
+          accessor: 'invoiceNo',
+          width: 100,
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'amount',
+          Header: intl.get('amount'),
+          accessor: 'totalFormatted',
+          width: 120,
+          align: 'right',
+          clickable: true,
+          textOverview: true,
+          money: true,
+          className: clsx(CLASSES.FONT_BOLD),
+        },
+        {
+          id: 'status',
+          Header: intl.get('status'),
+          accessor: (row: InvoiceTableRow) => statusAccessor(row),
+          width: 160,
+          className: 'status',
+          clickable: true,
+        },
+        {
+          id: 'due_date',
+          Header: intl.get('due_date'),
+          accessor: 'dueDate',
+          Cell: FormatDateCell,
+          width: 110,
+          className: 'due_date',
+          clickable: true,
+          textOverview: true,
+        },
+        {
+          id: 'reference_no',
+          Header: intl.get('reference_no'),
+          accessor: 'referenceNo',
+          width: 90,
+          clickable: true,
+          textOverview: true,
+        },
+      ] as DataTableColumn<InvoiceTableRow>[],
     [],
   );
 }

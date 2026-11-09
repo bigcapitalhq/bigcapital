@@ -1,5 +1,7 @@
-// @ts-nocheck
 import { Position } from '@blueprintjs/core';
+import React from 'react';
+import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
+import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 import {
   AccountsSelect,
   FDateInput,
@@ -8,11 +10,11 @@ import {
   FTextArea,
   Icon,
 } from '@/components';
-import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
-import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
+import { useDateInputFormatter } from '@/hooks';
 
-export default function CategorizeTransactionOtherIncome() {
+export function CategorizeTransactionOtherIncome() {
   const { accounts } = useCategorizeTransactionBoot();
+  const dateInputFormatter = useDateInputFormatter();
 
   return (
     <>
@@ -20,8 +22,7 @@ export default function CategorizeTransactionOtherIncome() {
         <FDateInput
           name={'date'}
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
+          {...dateInputFormatter}
           inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
         />
       </FFormGroup>
@@ -34,7 +35,7 @@ export default function CategorizeTransactionOtherIncome() {
       >
         <AccountsSelect
           name={'debitAccountId'}
-          items={accounts}
+          items={accounts ?? []}
           fastField
           fill
           allowCreate
@@ -50,7 +51,7 @@ export default function CategorizeTransactionOtherIncome() {
       >
         <AccountsSelect
           name={'creditAccountId'}
-          items={accounts}
+          items={accounts ?? []}
           filterByRootTypes={['income']}
           fastField
           fill

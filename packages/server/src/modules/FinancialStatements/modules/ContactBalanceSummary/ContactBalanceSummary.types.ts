@@ -1,4 +1,4 @@
-import { INumberFormatQuery } from "../../types/Report.types";
+import { INumberFormatQuery } from '../../types/Report.types';
 
 export interface IContactBalanceSummaryQuery {
   asDate: Date;
@@ -36,13 +36,13 @@ export interface ICustomerBalanceSummaryData {
 
 export interface ICustomerBalanceSummaryStatement {
   data: ICustomerBalanceSummaryData;
-  columns: {};
+  columns: object;
   query: IContactBalanceSummaryQuery;
 }
 
 export interface ICustomerBalanceSummaryService {
   customerBalanceSummary(
     tenantId: number,
-    query: IContactBalanceSummaryQuery
+    query: IContactBalanceSummaryQuery,
   ): Promise<ICustomerBalanceSummaryStatement>;
 }

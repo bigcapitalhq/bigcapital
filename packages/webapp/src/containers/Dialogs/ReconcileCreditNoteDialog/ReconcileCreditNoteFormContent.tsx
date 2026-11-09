@@ -1,17 +1,15 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-import { Choose } from '@/components';
-
-import ReconcileCreditNoteFormFields from './ReconcileCreditNoteFormFields';
-import ReconcileCreditNoteFormFloatingActions from './ReconcileCreditNoteFormFloatingActions';
-import { EmptyStatuCallout } from './utils';
+import React from 'react';
+import { ReconcileCreditNoteFormFields } from './ReconcileCreditNoteFormFields';
+import { ReconcileCreditNoteFormFloatingActions } from './ReconcileCreditNoteFormFloatingActions';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
+import { EmptyStatuCallout } from './utils';
+import { Choose } from '@/components';
 
 /**
  * Reconcile credit note form content.
  */
-export default function ReconcileCreditNoteFormContent() {
+export function ReconcileCreditNoteFormContent(): React.ReactElement {
   const { isEmptyStatus } = useReconcileCreditNoteContext();
   return (
     <Choose>

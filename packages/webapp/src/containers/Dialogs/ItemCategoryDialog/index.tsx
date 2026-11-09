@@ -1,22 +1,26 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
+import type { ItemCategoryDialogPayload } from './types';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
-
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const ItemCategoryFormDialogContent = lazy(() =>
-  import('./ItemCategoryFormDialogContent'),
+  import('./ItemCategoryFormDialogContent').then((m) => ({
+    default: m.ItemCategoryFormDialogContent,
+  })),
 );
 
-/**
- * Item Category form dialog.
- */
+interface ItemCategoryFormDialogProps extends DialogBaseProps {
+  dialogName: string;
+  payload: ItemCategoryDialogPayload;
+}
+
 function ItemCategoryFormDialog({
   dialogName,
   payload = { action: '', id: null },
   isOpen,
-}) {
+}: ItemCategoryFormDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -32,7 +36,7 @@ function ItemCategoryFormDialog({
       autoFocus={true}
       canEscapeKeyClose={true}
     >
-      <DialogSuspense>
+      <DialogSuspense testId={'category-form-dialog'}>
         <ItemCategoryFormDialogContent
           dialogName={dialogName}
           action={payload.action}
@@ -43,4 +47,4 @@ function ItemCategoryFormDialog({
   );
 }
 
-export default compose(withDialogRedux())(ItemCategoryFormDialog);
+export const index = FF.pipe(ItemCategoryFormDialog, withDialogRedux());

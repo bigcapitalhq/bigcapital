@@ -1,16 +1,34 @@
-// @ts-nocheck
+import { keepPreviousData } from '@tanstack/react-query';
 import React from 'react';
-import { DashboardInsider } from '@/components/Dashboard';
-
-import { useCashflowAccounts } from '@/hooks/query';
 import { transformAccountsStateToQuery } from './utils';
+import type { WithCashflowAccountsProps } from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
+import type { BankingAccountsListResponse } from '@bigcapital/sdk-ts';
+import { DashboardInsider } from '@/components/Dashboard';
+import { useCashflowAccounts } from '@/hooks/query';
 
-const CashFlowAccountsContext = React.createContext();
+export interface CashFlowAccountsContextValue {
+  cashflowAccounts?: BankingAccountsListResponse;
+  isCashFlowAccountsFetching: boolean;
+  isCashFlowAccountsLoading: boolean;
+}
+
+interface CashFlowAccountsProviderProps {
+  tableState: WithCashflowAccountsProps['cashflowAccountsTableState'];
+  children?: React.ReactNode;
+}
+
+const CashFlowAccountsContext =
+  React.createContext<CashFlowAccountsContextValue>(
+    {} as CashFlowAccountsContextValue,
+  );
 
 /**
  * Cash Flow data provider.
  */
-function CashFlowAccountsProvider({ tableState, ...props }) {
+function CashFlowAccountsProvider({
+  tableState,
+  children,
+}: CashFlowAccountsProviderProps) {
   const query = transformAccountsStateToQuery(tableState);
 
   // Fetch cash flow list .
@@ -18,10 +36,10 @@ function CashFlowAccountsProvider({ tableState, ...props }) {
     data: cashflowAccounts,
     isFetching: isCashFlowAccountsFetching,
     isLoading: isCashFlowAccountsLoading,
-  } = useCashflowAccounts(query, { keepPreviousData: true });
+  } = useCashflowAccounts(query, { placeholderData: keepPreviousData });
 
   // Provider payload.
-  const provider = {
+  const provider: CashFlowAccountsContextValue = {
     cashflowAccounts,
     isCashFlowAccountsFetching,
     isCashFlowAccountsLoading,
@@ -29,7 +47,9 @@ function CashFlowAccountsProvider({ tableState, ...props }) {
 
   return (
     <DashboardInsider name={'cashflow-accounts'}>
-      <CashFlowAccountsContext.Provider value={provider} {...props} />
+      <CashFlowAccountsContext.Provider value={provider}>
+        {children}
+      </CashFlowAccountsContext.Provider>
     </DashboardInsider>
   );
 }

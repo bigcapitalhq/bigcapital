@@ -1,19 +1,19 @@
-// @ts-nocheck
 import React from 'react';
-
 import '@/style/components/Drawers/ItemDrawer.scss';
-
-import { DrawerBody } from '@/components';
-import ItemContentDetails from './ItemContentDetails';
+import { ItemDetail as ItemContentDetails } from './ItemContentDetails';
 import { ItemDetailDrawerProvider } from './ItemDetailDrawerProvider';
+import { DrawerBody } from '@/components';
+
+interface ItemDetailDrawerContentProps {
+  itemId: number | undefined;
+}
 
 /**
  * Item detail drawer content.
  */
-export default function ItemDetailDrawerContent({
-  // #ownProp
+export function ItemDetailDrawerContent({
   itemId,
-}) {
+}: ItemDetailDrawerContentProps) {
   return (
     <ItemDetailDrawerProvider itemId={itemId}>
       <DrawerBody>

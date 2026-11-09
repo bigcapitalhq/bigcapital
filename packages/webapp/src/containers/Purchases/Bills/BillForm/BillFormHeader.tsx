@@ -1,15 +1,13 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { PageForm, PageFormBigNumber } from '@/components';
-
-import BillFormHeaderFields from './BillFormHeaderFields';
+import { BillFormHeaderFields } from './BillFormHeaderFields';
 import { useBillTotalFormatted } from './utils';
+import { PageForm, PageFormBigNumber } from '@/components';
 
 /**
  * Fill form header.
  */
-function BillFormHeader() {
+export function BillFormHeader() {
   return (
     <PageForm.Header>
       <BillFormHeaderFields />
@@ -25,5 +23,3 @@ function BillFormBigTotal() {
     <PageFormBigNumber label={intl.get('due_amount')} amount={totalFormatted} />
   );
 }
-
-export default BillFormHeader;

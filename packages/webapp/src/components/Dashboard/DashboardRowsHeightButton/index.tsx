@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Button,
   PopoverInteractionKind,
@@ -12,18 +10,28 @@ import {
   Position,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
+import React from 'react';
+import Style from './style.module.scss';
 import { Icon, T } from '@/components';
 
-import Style from './style.module.scss';
+interface DashboardRowsHeightButtonProps {
+  initialValue?: any;
+  value?: any;
+  onChange?: (size: any, event?: React.SyntheticEvent) => void;
+}
 
 /**
  * Dashboard rows height button control.
  */
-export function DashboardRowsHeightButton({ initialValue, value, onChange }) {
+export function DashboardRowsHeightButton({
+  initialValue = 'medium',
+  value,
+  onChange,
+}: DashboardRowsHeightButtonProps) {
   const [localSize, setLocalSize] = React.useState(initialValue);
 
   // Handle menu item click.
-  const handleItemClick = (size) => (event) => {
+  const handleItemClick = (size: string) => (event: React.SyntheticEvent) => {
     setLocalSize(size);
     onChange && onChange(size, event);
   };
@@ -65,7 +73,3 @@ export function DashboardRowsHeightButton({ initialValue, value, onChange }) {
     </Popover>
   );
 }
-
-DashboardRowsHeightButton.defaultProps = {
-  initialValue: 'medium',
-};

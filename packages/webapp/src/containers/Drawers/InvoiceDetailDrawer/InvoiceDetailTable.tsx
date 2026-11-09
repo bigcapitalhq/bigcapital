@@ -1,25 +1,19 @@
-// @ts-nocheck
 import React from 'react';
-import * as R from 'ramda';
-
-import { CommercialDocEntriesTable } from '@/components';
-
-import { useInvoiceReadonlyEntriesColumns } from './utils';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
-
+import { useInvoiceReadonlyEntriesColumns } from './utils';
+import { CommercialDocEntriesTable } from '@/components';
 import { TableStyle } from '@/constants';
 
 /**
  * Invoice readonly details entries table columns.
  */
-export default function InvoiceDetailTable() {
+export function InvoiceDetailTable() {
   // Invoice readonly entries table columns.
   const columns = useInvoiceReadonlyEntriesColumns();
 
   // Invoice details drawer context.
-  const {
-    invoice: { entries },
-  } = useInvoiceDetailDrawerContext();
+  const { invoice } = useInvoiceDetailDrawerContext();
+  const entries = invoice?.entries ?? [];
 
   return (
     <CommercialDocEntriesTable
@@ -28,7 +22,7 @@ export default function InvoiceDetailTable() {
       styleName={TableStyle.Constrant}
       initialHiddenColumns={
         // If any entry has no discount, hide the discount column.
-        entries?.some((e) => e.discount_formatted) ? [] : ['discount']
+        entries.some((e) => e.discountFormatted) ? [] : ['discount']
       }
     />
   );

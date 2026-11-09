@@ -1,45 +1,52 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { DialogContent } from '@/components';
-
-import { useSettingsReceipts, useSaveSettings } from '@/hooks/query';
-import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { compose, saveInvoke } from '@/utils';
+import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { useSettingsReceipts, useSaveSettings } from '@/hooks/query';
+import { saveInvoke } from '@/utils';
+
+interface ReceiptNumberDialogContentProps extends WithDialogActionsProps {
+  receiptId?: number;
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
 
 /**
  * Receipt number dialog's content.
  */
-function ReceiptNumberDialogContent({
-  // #ownProps
+function ReceiptNumberDialogContentInner({
   receiptId,
   onConfirm,
   initialValues,
-
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
-  // #withDialogActions
   closeDialog,
-}) {
-  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+}: ReceiptNumberDialogContentProps): React.ReactElement {
+  const [referenceFormValues, setReferenceFormValues] =
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
 
-  const { isLoading: isSettingsLoading } = useSettingsReceipts();
+  const { data: receiptSettings, isLoading: isSettingsLoading } =
+    useSettingsReceipts();
+  const nextNumber = receiptSettings?.nextNumber as string | number | undefined;
+  const numberPrefix = receiptSettings?.numberPrefix as string | undefined;
+  const autoIncrement = receiptSettings?.autoIncrement as
+    | boolean
+    | string
+    | undefined;
   const { mutateAsync: saveSettingsMutate } = useSaveSettings();
 
   // Handle the form submit.
-  const handleSubmitForm = (values, { setSubmitting }) => {
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     const handleSuccess = () => {
       setSubmitting(false);
       closeDialog('receipt-number-form');
@@ -63,7 +70,7 @@ function ReceiptNumberDialogContent({
   }, [closeDialog]);
 
   // Handle form change.
-  const handleChange = (values) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
 
@@ -93,11 +100,7 @@ function ReceiptNumberDialogContent({
   );
 }
 
-export default compose(
+export const ReceiptNumberDialogContent = FF.pipe(
+  ReceiptNumberDialogContentInner,
   withDialogActions,
-  withSettings(({ receiptSettings }) => ({
-    nextNumber: receiptSettings?.nextNumber,
-    numberPrefix: receiptSettings?.numberPrefix,
-    autoIncrement: receiptSettings?.autoIncrement,
-  })),
-)(ReceiptNumberDialogContent);
+);

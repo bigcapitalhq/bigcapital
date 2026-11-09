@@ -1,22 +1,44 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import type {
+  VendorCredit,
+  VendorCreditRefund,
+  VendorCreditAppliedBill,
+} from '@bigcapital/sdk-ts';
+import { DrawerHeaderContent, DrawerLoading } from '@/components';
+import { Features } from '@/constants';
+import { DRAWERS } from '@/constants/drawers';
 import {
   useVendorCredit,
   useRefundVendorCredit,
   useReconcileVendorCredits,
 } from '@/hooks/query';
-import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
-import { DRAWERS } from '@/constants/drawers';
 
-const VendorCreditDetailDrawerContext = React.createContext();
+export interface VendorCreditDetailDrawerContextValue {
+  vendorCreditId: number | undefined;
+  vendorCredit: VendorCredit | undefined;
+  refundVendorCredit: VendorCreditRefund[] | undefined;
+  reconcileVendorCredits: VendorCreditAppliedBill[] | undefined;
+  isRefundVendorCreditLoading: boolean;
+  isRefundVendorCreditFetching: boolean;
+}
+
+const VendorCreditDetailDrawerContext = React.createContext<
+  VendorCreditDetailDrawerContextValue | undefined
+>(undefined);
+
+interface VendorCreditDetailDrawerProviderProps {
+  vendorCreditId: number | undefined;
+}
 
 /**
  * Vendor credit drawer provider.
  */
-function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
+function VendorCreditDetailDrawerProvider({
+  vendorCreditId,
+  ...props
+}: VendorCreditDetailDrawerProviderProps & { children?: React.ReactNode }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -35,16 +57,15 @@ function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
     enabled: !!vendorCreditId,
   });
 
-  // Handle fetch refund credit note.
+  // Handle fetch reconcile credit notes.
   const {
     data: reconcileVendorCredits,
-    isFetching: isReconcileVendorCreditFetching,
     isLoading: isReconcileVendorCreditLoading,
   } = useReconcileVendorCredits(vendorCreditId, {
     enabled: !!vendorCreditId,
   });
 
-  const provider = {
+  const provider: VendorCreditDetailDrawerContextValue = {
     vendorCredit,
     refundVendorCredit,
     reconcileVendorCredits,
@@ -64,12 +85,12 @@ function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
       <DrawerHeaderContent
         name={DRAWERS.VENDOR_CREDIT_DETAILS}
         title={intl.get('vendor_credit.drawer_vendor_credit_detail', {
-          vendorNumber: vendorCredit.vendor_credit_number,
+          vendorNumber: vendorCredit?.vendorCreditNumber,
         })}
         subTitle={
           featureCan(Features.Branches)
             ? intl.get('vendor_credit.drawer.subtitle', {
-                value: vendorCredit.branch?.name,
+                value: vendorCredit?.branch?.name,
               })
             : null
         }
@@ -79,7 +100,15 @@ function VendorCreditDetailDrawerProvider({ vendorCreditId, ...props }) {
   );
 }
 
-const useVendorCreditDetailDrawerContext = () =>
-  React.useContext(VendorCreditDetailDrawerContext);
+const useVendorCreditDetailDrawerContext =
+  (): VendorCreditDetailDrawerContextValue => {
+    const ctx = React.useContext(VendorCreditDetailDrawerContext);
+    if (ctx === undefined) {
+      throw new Error(
+        'useVendorCreditDetailDrawerContext must be used within a VendorCreditDetailDrawerProvider',
+      );
+    }
+    return ctx;
+  };
 
 export { VendorCreditDetailDrawerProvider, useVendorCreditDetailDrawerContext };

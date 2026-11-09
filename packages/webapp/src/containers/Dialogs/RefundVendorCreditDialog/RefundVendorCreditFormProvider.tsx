@@ -1,24 +1,33 @@
-// @ts-nocheck
-import React from 'react';
-import { DialogContent } from '@/components';
 import { pick } from 'lodash';
+import React, { createContext } from 'react';
+import type { RefundVendorCreditContextValue } from './types';
+import { DialogContent } from '@/components';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import {
   useAccounts,
-  useVendorCredit,
   useBranches,
   useCreateRefundVendorCredit,
+  useVendorCredit,
 } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-const RefundVendorCreditContext = React.createContext();
+const RefundVendorCreditContext = createContext<RefundVendorCreditContextValue>(
+  {} as RefundVendorCreditContextValue,
+);
+
+interface RefundVendorCreditFormProviderProps {
+  vendorCreditId?: number | null;
+  dialogName: string;
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+}
 
 function RefundVendorCreditFormProvider({
   vendorCreditId,
   dialogName,
   query,
   ...props
-}) {
+}: RefundVendorCreditFormProviderProps) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -44,11 +53,26 @@ function RefundVendorCreditFormProvider({
     useCreateRefundVendorCredit();
 
   // State provider.
-  const provider = {
-    vendorCredit: {
-      ...pick(vendorCredit, ['id', 'credits_remaining', 'currency_code']),
-      amount: vendorCredit.credits_remaining,
-    },
+  // FIXME: latent bug — `vendorCredit` may be undefined before the query
+  // resolves; original code accessed `vendorCredit.creditsRemaining` directly.
+  const vendorCreditRaw = vendorCredit as
+    | (Record<string, unknown> & { creditsRemaining?: number })
+    | undefined;
+  const picked = pick(vendorCreditRaw, [
+    'id',
+    'creditsRemaining',
+    'currencyCode',
+  ]) as { id?: number; creditsRemaining?: number; currencyCode?: string };
+
+  const provider: RefundVendorCreditContextValue = {
+    vendorCredit: vendorCreditRaw
+      ? {
+          id: picked.id as number,
+          creditsRemaining: (picked.creditsRemaining as number) ?? 0,
+          currencyCode: (picked.currencyCode as string) ?? '',
+          amount: (picked.creditsRemaining as number) ?? 0,
+        }
+      : undefined,
     accounts,
     branches,
     dialogName,

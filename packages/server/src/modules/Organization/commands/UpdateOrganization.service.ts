@@ -14,7 +14,7 @@ export class UpdateOrganizationService {
     private readonly eventEmitter: EventEmitter2,
     private readonly commandOrganizationValidators: CommandOrganizationValidators,
     private readonly tenantRepository: TenantRepository,
-  ) { }
+  ) {}
 
   /**
    * Updates organization information.

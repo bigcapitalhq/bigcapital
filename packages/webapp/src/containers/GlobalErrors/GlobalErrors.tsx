@@ -1,25 +1,30 @@
-// @ts-nocheck
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-import { AppToaster } from '@/components';
-
 import { withGlobalErrors } from './withGlobalErrors';
 import { withGlobalErrorsActions } from './withGlobalErrorsActions';
-import { compose } from '@/utils';
+import type { WithGlobalErrorsProps } from './withGlobalErrors';
+import type { WithGlobalErrorsActionsProps } from './withGlobalErrorsActions';
+import { AppToaster } from '@/components';
 
-let toastKeySessionExpired;
-let toastKeySomethingWrong;
-let toastTooManyRequests;
+let toastKeySomethingWrong: string | undefined;
+let toastKeySessionExpired: string | undefined;
+let toastKeyTooManyRequests: string | undefined;
+let toastKeyAccessDenied: string | undefined;
 
-function GlobalErrors({
+interface GlobalErrorsInnerProps
+  extends WithGlobalErrorsProps,
+    WithGlobalErrorsActionsProps {}
+
+function GlobalErrorsInner({
   // #withGlobalErrors
   globalErrors,
 
   // #withGlobalErrorsActions
   globalErrorsSet,
-}) {
+}: GlobalErrorsInnerProps) {
   if (globalErrors.something_wrong) {
-    toastKeySessionExpired = AppToaster.show(
+    toastKeySomethingWrong = AppToaster.show(
       {
         message: intl.get('ops_something_went_wrong'),
         intent: Intent.DANGER,
@@ -27,11 +32,11 @@ function GlobalErrors({
           globalErrorsSet({ something_wrong: false });
         },
       },
-      toastKeySessionExpired,
+      toastKeySomethingWrong,
     );
   }
   if (globalErrors.session_expired) {
-    toastKeySomethingWrong = AppToaster.show(
+    toastKeySessionExpired = AppToaster.show(
       {
         message: intl.get('session_expired'),
         intent: Intent.DANGER,
@@ -39,11 +44,11 @@ function GlobalErrors({
           globalErrorsSet({ session_expired: false });
         },
       },
-      toastKeySomethingWrong,
+      toastKeySessionExpired,
     );
   }
   if (globalErrors.too_many_requests) {
-    toastTooManyRequests = AppToaster.show(
+    toastKeyTooManyRequests = AppToaster.show(
       {
         message: intl.get('global_error.too_many_requests'),
         intent: Intent.DANGER,
@@ -51,19 +56,21 @@ function GlobalErrors({
           globalErrorsSet({ too_many_requests: false });
         },
       },
-      toastTooManyRequests,
+      toastKeyTooManyRequests,
     );
   }
   if (globalErrors.access_denied) {
-    toastKeySomethingWrong = AppToaster.show(
+    toastKeyAccessDenied = AppToaster.show(
       {
-        message: globalErrors.access_denied.message || intl.get('global_error.you_dont_have_permissions'),
+        message:
+          globalErrors.access_denied.message ||
+          intl.get('global_error.you_dont_have_permissions'),
         intent: Intent.DANGER,
         onDismiss: () => {
-          globalErrorsSet({ access_denied: false });
+          globalErrorsSet({ access_denied: undefined });
         },
       },
-      toastKeySomethingWrong,
+      toastKeyAccessDenied,
     );
   }
   if (globalErrors.transactionsLocked) {
@@ -73,7 +80,7 @@ function GlobalErrors({
       }),
       intent: Intent.DANGER,
       onDismiss: () => {
-        globalErrorsSet({ transactionsLocked: false });
+        globalErrorsSet({ transactionsLocked: undefined });
       },
     });
   }
@@ -82,7 +89,7 @@ function GlobalErrors({
       message: `You can't add new data to Bigcapital because your subscription is inactive. Make sure your billing information is up-to-date from Preferences > Billing page.`,
       intent: Intent.DANGER,
       onDismiss: () => {
-        globalErrorsSet({ subscriptionInactive: false });
+        globalErrorsSet({ subscriptionInactive: undefined });
       },
     });
   }
@@ -91,11 +98,15 @@ function GlobalErrors({
       message: intl.get('global_error.authorized_user_inactive'),
       intent: Intent.DANGER,
       onDismiss: () => {
-        globalErrorsSet({ userInactive: false });
+        globalErrorsSet({ userInactive: undefined });
       },
     });
   }
   return null;
 }
 
-export default compose(withGlobalErrors, withGlobalErrorsActions)(GlobalErrors);
+export const GlobalErrors = FF.pipe(
+  GlobalErrorsInner,
+  withGlobalErrorsActions,
+  withGlobalErrors,
+);

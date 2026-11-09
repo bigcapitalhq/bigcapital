@@ -1,6 +1,9 @@
-// @ts-nocheck
+interface SheetItem {
+  items?: Record<string, unknown>[];
+  total?: Record<string, unknown>;
+}
 
-export const purchasesByItemsReducer = (sheet) => {
+export const purchasesByItemsReducer = (sheet: SheetItem) => {
   const results = [];
 
   if (sheet.items) {

@@ -1,16 +1,26 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
+import type { UserFormDialogPayload } from './types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
-const UserFormDialogContent = lazy(() => import('./UserFormDialogContent'));
+const UserFormDialogContent = lazy(() =>
+  import('./UserFormDialogContent').then((m) => ({
+    default: m.UserFormDialogContent,
+  })),
+);
+
+interface UserFormDialogProps {
+  dialogName: string;
+  payload: UserFormDialogPayload;
+  isOpen: boolean | undefined;
+}
 
 function UserFormDialog({
   dialogName,
   payload = { action: '', userId: null },
   isOpen,
-}) {
+}: UserFormDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -31,4 +41,4 @@ function UserFormDialog({
   );
 }
 
-export default compose(withDialogRedux())(UserFormDialog);
+export const index = FF.pipe(UserFormDialog, withDialogRedux());

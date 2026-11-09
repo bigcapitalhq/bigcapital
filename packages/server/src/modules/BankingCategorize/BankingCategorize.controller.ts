@@ -53,12 +53,8 @@ export class BankingCategorizeController {
     @Query('uncategorizedTransactionIds')
     uncategorizedTransactionIds: number[] | number,
   ) {
-    const ids = castArray(uncategorizedTransactionIds).map((id) =>
-      Number(id),
-    );
-    return this.bankingCategorizeApplication.uncategorizeTransactionsBulk(
-      ids,
-    );
+    const ids = castArray(uncategorizedTransactionIds).map((id) => Number(id));
+    return this.bankingCategorizeApplication.uncategorizeTransactionsBulk(ids);
   }
 
   @Delete('/:id')

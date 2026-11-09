@@ -1,10 +1,16 @@
-import { IFinancialSheetCommonMeta } from '../../types/Report.types';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
+import { DateInput } from '@/common/types/Date';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 
 export interface SalesTaxLiabilitySummaryQuery {
-  fromDate: Date;
-  toDate: Date;
-  basis: 'cash' | 'accrual';
+  fromDate: DateInput;
+  toDate: DateInput;
+  basis: AccountingBasis;
+  numberFormat?: Partial<INumberFormatQuery>;
 }
 
 export interface SalesTaxLiabilitySummaryAmount {

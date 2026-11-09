@@ -1,15 +1,13 @@
-// @ts-nocheck
 import React from 'react';
-
-import { Row, Col, Paper, Stack } from '@/components';
 import { CreditNoteFormFooterLeft } from './CreditNoteFormFooterLeft';
 import { CreditNoteFormFooterRight } from './CreditNoteFormFooterRight';
+import { Row, Col, Paper, Stack } from '@/components';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**
  * Credit note form footer.
  */
-export default function CreditNoteFormFooter() {
+export function CreditNoteFormFooter() {
   return (
     <Stack mt={'20px'} px={'32px'} pb={'20px'} flex={1}>
       <Paper p={'20px'}>

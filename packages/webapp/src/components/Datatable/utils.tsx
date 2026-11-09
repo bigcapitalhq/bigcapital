@@ -1,7 +1,12 @@
-// @ts-nocheck
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import type { TableState } from 'react-table';
 
-export const isCellLoading = (loading, cellsCoords, rowIndex, columnId) => {
+export const isCellLoading = (
+  loading: boolean | undefined,
+  cellsCoords: Array<[number, string]> | undefined,
+  rowIndex: number,
+  columnId: string,
+): boolean => {
   if (!loading) {
     return false;
   }
@@ -12,19 +17,22 @@ export const isCellLoading = (loading, cellsCoords, rowIndex, columnId) => {
       );
 };
 
-export const useResizeObserver = (state, callback) => {
-  // This Ref will contain the id of the column being resized or undefined
-  const columnResizeRef = React.useRef();
+export const useResizeObserver = (
+  state: TableState,
+  callback: (
+    currentColumnId: string,
+    columnWidth: number,
+    columnResizing: TableState['columnResizing'],
+  ) => void,
+) => {
+  const columnResizeRef = useRef<string | undefined>();
 
-  React.useEffect(() => {
-    // We are interested in calling the resize event only when "state.columnResizing?.isResizingColumn" changes from
-    // a string to undefined, because it indicates that it WAS resizing but it no longer is.
+  useEffect(() => {
     if (
       state.columnResizing &&
       !state.columnResizing?.isResizingColumn &&
       columnResizeRef.current
     ) {
-      // Trigger resize event
       callback(
         columnResizeRef.current,
         state.columnResizing.columnWidths[columnResizeRef.current],

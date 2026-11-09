@@ -9,6 +9,8 @@ export const ACCOUNTS_ROUTES = {
   TRANSACTIONS: '/api/accounts/transactions',
   BULK_DELETE: '/api/accounts/bulk-delete',
   VALIDATE_BULK_DELETE: '/api/accounts/validate-bulk-delete',
+  BULK_ACTIVATE: '/api/accounts/bulk-activate',
+  BULK_INACTIVATE: '/api/accounts/bulk-inactivate',
   ACTIVATE: '/api/accounts/{id}/activate',
   INACTIVATE: '/api/accounts/{id}/inactivate',
 } as const satisfies Record<string, keyof paths>;
@@ -20,6 +22,8 @@ export type AccountTransactionsList = OpResponseBody<OpForPath<typeof ACCOUNTS_R
 export type CreateAccountBody = OpRequestBody<OpForPath<typeof ACCOUNTS_ROUTES.LIST, 'post'>>;
 export type EditAccountBody = OpRequestBody<OpForPath<typeof ACCOUNTS_ROUTES.BY_ID, 'put'>>;
 export type BulkDeleteBody = OpRequestBody<OpForPath<typeof ACCOUNTS_ROUTES.BULK_DELETE, 'post'>>;
+export type BulkActivateBody = OpRequestBody<OpForPath<typeof ACCOUNTS_ROUTES.BULK_ACTIVATE, 'post'>>;
+export type BulkInactivateBody = OpRequestBody<OpForPath<typeof ACCOUNTS_ROUTES.BULK_INACTIVATE, 'post'>>;
 export type ValidateBulkDeleteResponse = OpResponseBody<OpForPath<typeof ACCOUNTS_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 export type GetAccountsQuery = OpQueryParams<OpForPath<typeof ACCOUNTS_ROUTES.LIST, 'get'>>;
 
@@ -111,6 +115,22 @@ export async function bulkDeleteAccounts(
 ): Promise<void> {
   const bulkDelete = fetcher.path(ACCOUNTS_ROUTES.BULK_DELETE).method('post').create();
   await bulkDelete(body);
+}
+
+export async function bulkActivateAccounts(
+  fetcher: ApiFetcher,
+  body: BulkActivateBody
+): Promise<void> {
+  const bulkActivate = fetcher.path(ACCOUNTS_ROUTES.BULK_ACTIVATE).method('post').create();
+  await bulkActivate(body);
+}
+
+export async function bulkInactivateAccounts(
+  fetcher: ApiFetcher,
+  body: BulkInactivateBody
+): Promise<void> {
+  const bulkInactivate = fetcher.path(ACCOUNTS_ROUTES.BULK_INACTIVATE).method('post').create();
+  await bulkInactivate(body);
 }
 
 export async function validateBulkDeleteAccounts(

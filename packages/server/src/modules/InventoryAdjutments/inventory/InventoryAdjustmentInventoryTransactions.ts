@@ -1,15 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { Knex } from "knex";
-import { InventoryAdjustment } from "../models/InventoryAdjustment";
-import { InventoryTransaction } from "@/modules/InventoryCost/models/InventoryTransaction";
-import { InventoryTransactionsService } from "@/modules/InventoryCost/commands/InventoryTransactions.service";
+import { Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { InventoryAdjustment } from '../models/InventoryAdjustment';
+import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
+import { InventoryTransactionsService } from '@/modules/InventoryCost/commands/InventoryTransactions.service';
 
 @Injectable()
 export class InventoryAdjustmentInventoryTransactions {
   constructor(
-    private readonly inventoryService: InventoryTransactionsService 
+    private readonly inventoryService: InventoryTransactionsService,
   ) {}
-  
+
   /**
    * Writes the inventory transactions from the inventory adjustment transaction.
    * @param  {number} tenantId -
@@ -21,7 +21,7 @@ export class InventoryAdjustmentInventoryTransactions {
   public async writeInventoryTransactions(
     inventoryAdjustment: InventoryAdjustment,
     override: boolean = false,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const commonTransaction = {
       direction: inventoryAdjustment.inventoryDirection,
@@ -48,7 +48,7 @@ export class InventoryAdjustmentInventoryTransactions {
     await this.inventoryService.recordInventoryTransactions(
       inventoryTransactions,
       override,
-      trx
+      trx,
     );
   }
 
@@ -58,13 +58,12 @@ export class InventoryAdjustmentInventoryTransactions {
    */
   async revertInventoryTransactions(
     inventoryAdjustmentId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<{ oldInventoryTransactions: InventoryTransaction[] }> {
     return this.inventoryService.deleteInventoryTransactions(
       inventoryAdjustmentId,
       'InventoryAdjustment',
-      trx
+      trx,
     );
   }
-
 }

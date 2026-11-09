@@ -1,29 +1,37 @@
-// @ts-nocheck
-import React from 'react';
 import { useFormikContext } from 'formik';
+import React from 'react';
+import {
+  useVendorNoteIsForeignCustomer,
+  type VendorCreditFormValues,
+} from './utils';
 import { ExchangeRateInputGroup } from '@/components';
-import { useCurrentOrganization } from '@/hooks/state';
-import { useVendorNoteIsForeignCustomer } from './utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+
+type VendorCreditNoteExchangeRateInputFieldProps = Omit<
+  React.ComponentProps<typeof ExchangeRateInputGroup>,
+  'fromCurrency' | 'toCurrency'
+>;
 
 /**
- * vendor credit note exchange rate input field.
- * @returns {JSX.Element}
+ * Vendor credit note exchange rate input field.
  */
-export function VendorCreditNoteExchangeRateInputField({ ...props }) {
-  const currentOrganization = useCurrentOrganization();
-  const { values } = useFormikContext();
+export function VendorCreditNoteExchangeRateInputField({
+  ...props
+}: VendorCreditNoteExchangeRateInputFieldProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+  const { values } = useFormikContext<VendorCreditFormValues>();
 
   const isForeignCustomer = useVendorNoteIsForeignCustomer();
 
-  // Can't continue if the customer is not foreign.
+  // Can't continue if the vendor is not foreign.
   if (!isForeignCustomer) {
     return null;
   }
   return (
     <ExchangeRateInputGroup
-      fromCurrency={values.currency_code}
-      toCurrency={currentOrganization.base_currency}
       {...props}
+      fromCurrency={values.currencyCode}
+      toCurrency={baseCurrency ?? ''}
     />
   );
 }

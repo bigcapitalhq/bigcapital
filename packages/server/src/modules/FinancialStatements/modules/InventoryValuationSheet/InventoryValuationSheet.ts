@@ -1,6 +1,7 @@
 import { ModelObject } from 'objection';
 import { sumBy, get, isEmpty } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import {
   IInventoryValuationReportQuery,
   IInventoryValuationItem,
@@ -12,7 +13,10 @@ import { InventoryCostLotTracker } from '@/modules/InventoryCost/models/Inventor
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { InventoryValuationSheetRepository } from './InventoryValuationSheetRepository';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class InventoryValuationSheet extends FinancialSheet {
   readonly query: IInventoryValuationReportQuery;
@@ -75,7 +79,10 @@ export class InventoryValuationSheet extends FinancialSheet {
     cost: number;
     quantity: number;
   } {
-    return this.getItemTransaction(this.repository.OUTInventoryCostLots, itemId);
+    return this.getItemTransaction(
+      this.repository.OUTInventoryCostLots,
+      itemId,
+    );
   }
 
   /**
@@ -197,7 +204,9 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @param {IItem[]} items
    * @returns {IInventoryValuationItem[]}
    */
-  private itemsMapper = (items: ModelObject<Item>[]): IInventoryValuationItem[] => {
+  private itemsMapper = (
+    _items: ModelObject<Item>[],
+  ): IInventoryValuationItem[] => {
     return this.repository.inventoryItems.map(this.itemMapper.bind(this));
   };
 
@@ -216,7 +225,12 @@ export class InventoryValuationSheet extends FinancialSheet {
    * Detarmines whether the items post filter is active.
    */
   private isItemsPostFilter = (): boolean => {
-    return !isEmpty(this.query.itemsIds);
+    return (
+      !isEmpty(this.query.itemsIds) ||
+      this.query.noneZero ||
+      this.query.noneTransactions ||
+      this.query.onlyActive
+    );
   };
 
   /**
@@ -224,9 +238,9 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @returns {IInventoryValuationItem[]}
    */
   private itemsSection(): IInventoryValuationItem[] {
-    return R.compose(
-      R.when(this.isItemsPostFilter, this.itemsFilter),
+    return flow(
       this.itemsMapper,
+      when(this.isItemsPostFilter, this.itemsFilter),
     )(this.repository.inventoryItems);
   }
 

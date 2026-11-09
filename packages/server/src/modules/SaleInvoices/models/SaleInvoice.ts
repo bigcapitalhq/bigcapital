@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-import * as R from 'ramda';
 import { Model, raw } from 'objection';
 import { castArray } from 'lodash';
 import { MomentInput, unitOfTime } from 'moment';
@@ -9,7 +8,10 @@ import { ItemEntry } from '@/modules/TransactionItemEntry/models/ItemEntry';
 import { Document } from '@/modules/ChromiumlyTenancy/models/Document';
 import { DiscountType } from '@/common/types/Discount';
 import { Account } from '@/modules/Accounts/models/Account.model';
+import type { Branch } from '@/modules/Branches/models/Branch.model';
+import type { Customer } from '@/modules/Customers/models/Customer';
 import { ISearchRole } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter.types';
+import { sanitizeSortDirection } from '@/modules/DynamicListing/DynamicFilter/sanitizeSortDirection';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { TransactionPaymentServiceEntry } from '@/modules/PaymentServices/models/TransactionPaymentServiceEntry.model';
 import { InjectAttachable } from '@/modules/Attachments/decorators/InjectAttachable.decorator';
@@ -58,11 +60,16 @@ export class SaleInvoice extends TenantBaseModel {
   public branchId: number;
   public warehouseId: number;
 
+  public recurringInvoiceId: number | null;
+  public recurringInvoiceDate: string | null;
+
   public taxes!: TaxRateTransaction[];
   public entries!: ItemEntry[];
   public attachments!: Document[];
   public writtenoffExpenseAccount!: Account;
   public paymentMethods!: TransactionPaymentServiceEntry[];
+  public branch?: Branch;
+  public customer?: Customer;
   /**
    * Table name
    */
@@ -208,13 +215,12 @@ export class SaleInvoice extends TenantBaseModel {
    * @returns {number}
    */
   get total() {
-    const adjustmentAmount = defaultTo(this.adjustment, 0);
+    const adjustmentAmount = defaultTo(0, this.adjustment);
+    const totalTax = this.isInclusiveTax
+      ? 0
+      : defaultTo(0, this.taxAmountWithheld);
 
-    return R.compose(
-      R.add(adjustmentAmount),
-      R.subtract(R.__, this.discountAmount),
-      R.when(R.always(this.isInclusiveTax), R.add(this.taxAmountWithheld)),
-    )(this.subtotal);
+    return this.subtotal - this.discountAmount + adjustmentAmount + totalTax;
   }
 
   /**
@@ -256,6 +262,14 @@ export class SaleInvoice extends TenantBaseModel {
    */
   get dueAmount() {
     return Math.max(this.total - this.balanceAmount, 0);
+  }
+
+  /**
+   * Retrieve the invoice due amount in base currency.
+   * @return {number}
+   */
+  get dueAmountLocal() {
+    return this.dueAmount * defaultTo(1, this.exchangeRate);
   }
 
   /**
@@ -417,14 +431,16 @@ export class SaleInvoice extends TenantBaseModel {
        * Sort the sale invoices by full-payment invoices.
        */
       sortByStatus(query, order) {
-        query.orderByRaw(`PAYMENT_AMOUNT = BALANCE ${order}`);
+        const dir = sanitizeSortDirection(order);
+        query.orderByRaw(`PAYMENT_AMOUNT = BALANCE ${dir}`);
       },
 
       /**
        * Sort the sale invoices by the due amount.
        */
       sortByDueAmount(query, order) {
-        query.orderByRaw(`BALANCE - PAYMENT_AMOUNT ${order}`);
+        const dir = sanitizeSortDirection(order);
+        query.orderByRaw(`BALANCE - PAYMENT_AMOUNT ${dir}`);
       },
 
       /**
@@ -524,8 +540,23 @@ export class SaleInvoice extends TenantBaseModel {
     const {
       PdfTemplateModel,
     } = require('../../PdfTemplate/models/PdfTemplate');
+    const {
+      RecurringInvoice,
+    } = require('../../RecurringInvoices/models/RecurringInvoice');
 
     return {
+      /**
+       * Sale invoice may belong to a recurring invoice profile.
+       */
+      recurringInvoice: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: RecurringInvoice,
+        join: {
+          from: 'sales_invoices.recurringInvoiceId',
+          to: 'recurring_invoices.id',
+        },
+      },
+
       /**
        * Sale invoice associated entries.
        */

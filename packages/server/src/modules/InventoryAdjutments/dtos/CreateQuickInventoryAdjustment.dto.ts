@@ -18,7 +18,7 @@ enum IAdjustmentTypes {
   DECREMENT = 'decrement',
 }
 
-export class CreateQuickInventoryAdjustmentDto {
+export class CommandQuickInventoryAdjustmentDto {
   @ApiProperty({ description: 'Date of the inventory adjustment' })
   @IsNotEmpty()
   @IsDateString()
@@ -91,3 +91,5 @@ export class CreateQuickInventoryAdjustmentDto {
   @IsPositive()
   branchId?: number;
 }
+
+export class CreateQuickInventoryAdjustmentDto extends CommandQuickInventoryAdjustmentDto {}

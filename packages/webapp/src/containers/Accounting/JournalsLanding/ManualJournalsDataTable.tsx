@@ -1,36 +1,41 @@
-// @ts-nocheck
-import React from 'react';
+import * as FF from 'fp-ts/function';
+import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-
+import { ActionsMenu } from './components';
+import { ManualJournalsEmptyStatus } from './ManualJournalsEmptyStatus';
+import { useManualJournalsContext } from './ManualJournalsListProvider';
+import { useManualJournalsColumns } from './utils';
+import { withManualJournals } from './withManualJournals';
+import { withManualJournalsActions } from './withManualJournalsActions';
+import type { ManualJournalTableRow } from './components';
+import type { WithManualJournalsProps } from './withManualJournals';
+import type { WithManualJournalsActionsProps } from './withManualJournalsActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
-
-import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
-
-import { ActionsMenu } from './components';
-
-import { withManualJournals } from './withManualJournals';
-import { withManualJournalsActions } from './withManualJournalsActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { useManualJournalsContext } from './ManualJournalsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { useManualJournalsColumns } from './utils';
 
-import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+interface ManualJournalsDataTableProps
+  extends Pick<WithManualJournalsProps, 'manualJournalsTableState'>,
+    WithManualJournalsActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {
+  onSelectedRowsChange?: (selectedFlatRows: unknown) => void;
+}
 
 /**
  * Manual journals data-table.
  */
-function ManualJournalsDataTable({
+function ManualJournalsDataTableInner({
   // #withManualJournalsActions
   setManualJournalsTableState,
   setManualJournalsSelectedRows,
@@ -46,10 +51,7 @@ function ManualJournalsDataTable({
 
   // #ownProps
   onSelectedRowsChange,
-
-  // #withSettings
-  manualJournalsTableSize,
-}) {
+}: ManualJournalsDataTableProps) {
   // Manual journals context.
   const {
     manualJournals,
@@ -57,7 +59,11 @@ function ManualJournalsDataTable({
     isManualJournalsLoading,
     isManualJournalsFetching,
     isEmptyStatus,
+    manualJournalsSettings,
   } = useManualJournalsContext();
+  const manualJournalsTableSize = manualJournalsSettings?.tableSize as
+    | string
+    | undefined;
 
   const history = useHistory();
 
@@ -65,25 +71,28 @@ function ManualJournalsDataTable({
   const columns = useManualJournalsColumns();
 
   // Handles the journal publish action.
-  const handlePublishJournal = ({ id }) => {
+  const handlePublishJournal = ({ id }: ManualJournalTableRow) => {
     openAlert('journal-publish', { manualJournalId: id });
   };
   // Handle the journal edit action.
-  const handleEditJournal = ({ id }) => {
+  const handleEditJournal = ({ id }: ManualJournalTableRow) => {
     history.push(`/manual-journals/${id}/edit`);
   };
   // Handle the journal delete action.
-  const handleDeleteJournal = ({ id }) => {
+  const handleDeleteJournal = ({ id }: ManualJournalTableRow) => {
     openAlert('journal-delete', { manualJournalId: id });
   };
   // Handle view detail journal.
-  const handleViewDetailJournal = ({ id }) => {
+  const handleViewDetailJournal = ({ id }: ManualJournalTableRow) => {
     openDrawer(DRAWERS.JOURNAL_DETAILS, {
       manualJournalId: id,
     });
   };
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (
+    cell: { row: { original: ManualJournalTableRow } },
+    _event: React.MouseEvent,
+  ) => {
     openDrawer(DRAWERS.JOURNAL_DETAILS, {
       manualJournalId: cell.row.original.id,
     });
@@ -93,8 +102,16 @@ function ManualJournalsDataTable({
     useMemorizedColumnsWidths(TABLES.MANUAL_JOURNALS);
 
   // Handle fetch data once the page index, size or sort by of the table change.
-  const handleFetchData = React.useCallback(
-    ({ pageSize, pageIndex, sortBy }) => {
+  const handleFetchData = useCallback(
+    ({
+      pageSize,
+      pageIndex,
+      sortBy,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      sortBy: Array<{ id: string; desc: boolean }>;
+    }) => {
       setManualJournalsTableState({
         pageIndex,
         pageSize,
@@ -104,11 +121,14 @@ function ManualJournalsDataTable({
     [setManualJournalsTableState],
   );
   // Handle selected rows change.
-  const handleSelectedRowsChange = (selectedFlatRows) => {
-    const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
-    setManualJournalsSelectedRows(selectedIds);
-  };
-
+  const handleSelectedRowsChange = useCallback(
+    (selectedFlatRows: Array<{ original: ManualJournalTableRow }>) => {
+      const selectedIds = selectedFlatRows?.map((row) => row.original.id) || [];
+      setManualJournalsSelectedRows(selectedIds);
+      onSelectedRowsChange?.(selectedFlatRows);
+    },
+    [setManualJournalsSelectedRows, onSelectedRowsChange],
+  );
 
   // Display manual journal empty status instead of the table.
   if (isEmptyStatus) {
@@ -120,7 +140,7 @@ function ManualJournalsDataTable({
       <DataTable
         noInitialFetch={true}
         columns={columns}
-        data={manualJournals}
+        data={manualJournals ?? []}
         manualSortBy={true}
         selectionColumn={true}
         sticky={true}
@@ -128,8 +148,8 @@ function ManualJournalsDataTable({
         headerLoading={isManualJournalsLoading}
         progressBarLoading={isManualJournalsFetching}
         pagination={true}
-        initialPageSize={manualJournalsTableState.pageSize}
-        pagesCount={pagination.pagesCount}
+        initialPageSize={manualJournalsTableState?.pageSize ?? 10}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         onSelectedRowsChange={handleSelectedRowsChange}
@@ -152,14 +172,12 @@ function ManualJournalsDataTable({
   );
 }
 
-export default compose(
-  withManualJournalsActions,
+export const ManualJournalsDataTable = FF.pipe(
+  ManualJournalsDataTableInner,
+  withDrawerActions,
+  withAlertActions,
   withManualJournals(({ manualJournalsTableState }) => ({
     manualJournalsTableState,
   })),
-  withAlertActions,
-  withDrawerActions,
-  withSettings(({ manualJournalsSettings }) => ({
-    manualJournalsTableSize: manualJournalsSettings?.tableSize,
-  })),
-)(ManualJournalsDataTable);
+  withManualJournalsActions,
+);

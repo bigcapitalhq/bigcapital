@@ -47,6 +47,7 @@ export class ExcludeBankTransactionService {
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
       await this.eventEmitter.emitAsync(events.bankTransactions.onExcluding, {
         uncategorizedTransactionId,
+        uncategorizedTransaction: oldUncategorizedTransaction,
         trx,
       } as IBankTransactionUnexcludingEventPayload);
 
@@ -59,6 +60,7 @@ export class ExcludeBankTransactionService {
 
       await this.eventEmitter.emitAsync(events.bankTransactions.onExcluded, {
         uncategorizedTransactionId,
+        uncategorizedTransaction: oldUncategorizedTransaction,
         trx,
       } as IBankTransactionUnexcludedEventPayload);
     });

@@ -1,12 +1,8 @@
-// @ts-nocheck
-import React from 'react';
-import { x } from '@xstyled/emotion';
 import { css } from '@emotion/css';
-
-import SetupSubscription from './SetupSubscription/SetupSubscription';
-import SetupOrganizationPage from './SetupOrganizationPage';
-import SetupInitializingForm from './SetupInitializingForm';
-import SetupCongratsPage from './SetupCongratsPage';
+import { x } from '@xstyled/emotion';
+import { SetupCongratsPage } from './SetupCongratsPage';
+import { SetupInitializingForm } from './SetupInitializingForm';
+import { SetupOrganizationPage } from './SetupOrganizationPage';
 import { Stepper } from '@/components/Stepper';
 
 interface SetupWizardContentProps {
@@ -21,7 +17,7 @@ const itemsClassName = css`
 /**
  * Setup wizard content.
  */
-export default function SetupWizardContent({
+export function SetupWizardContent({
   stepIndex,
   stepId,
 }: SetupWizardContentProps) {
@@ -33,20 +29,16 @@ export default function SetupWizardContent({
           items: itemsClassName,
         }}
       >
-        <Stepper.Step label={'Subscription'}>
-          <SetupSubscription />
-        </Stepper.Step>
-
         <Stepper.Step label={'Organization'}>
-          <SetupOrganizationPage id="organization" />
+          <SetupOrganizationPage />
         </Stepper.Step>
 
         <Stepper.Step label={'Initializing'}>
-          <SetupInitializingForm id={'initializing'} />
+          <SetupInitializingForm />
         </Stepper.Step>
 
         <Stepper.Step label={'Congrats'}>
-          <SetupCongratsPage id="congrats" />
+          <SetupCongratsPage />
         </Stepper.Step>
       </Stepper>
     </x.div>

@@ -1,45 +1,60 @@
-// @ts-nocheck
-import { useMemo } from 'react';
+import * as FF from 'fp-ts/function';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { getReportRowTestId } from '../reportTestIds';
+import { useGeneralLedgerTableColumns } from './dynamicColumns';
+import { useGeneralLedgerContext } from './GeneralLedgerProvider';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   FinancialSheet,
   ReportDataTable,
   TableFastCell,
   TableVirtualizedListRows,
 } from '@/components';
+import { TableStyle } from '@/constants';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { handleViewTransactionDetail } from '@/containers/FinancialStatements/utils/transactionDrawer';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
-import { useGeneralLedgerContext } from './GeneralLedgerProvider';
-import { useGeneralLedgerTableColumns } from './dynamicColumns';
+interface GeneralLedgerTableProps extends WithDrawerActionsProps {
+  companyName: string;
+}
 
 /**
  * General ledger table.
  */
-export default function GeneralLedgerTable({ companyName }) {
+function GeneralLedgerTableInner({
+  companyName,
+
+  // #withDrawerActions
+  openDrawer,
+}: GeneralLedgerTableProps) {
   // General ledger context.
-  const {
-    generalLedger: { query, table, meta },
-    isLoading,
-  } = useGeneralLedgerContext();
+  const { generalLedger } = useGeneralLedgerContext();
+
+  const table = (generalLedger as any)?.table;
+  const meta = (generalLedger as any)?.meta;
+
+  // Opens the detail drawer of the given transaction reference.
+  const handleViewDetail = (referenceType: string, referenceId: number) => {
+    handleViewTransactionDetail({ referenceType, referenceId }, openDrawer);
+  };
 
   // General ledger table columns.
-  const columns = useGeneralLedgerTableColumns();
+  const columns = useGeneralLedgerTableColumns(handleViewDetail);
 
   // Default expanded rows of general ledger table.
   const expandedRows = useMemo(
-    () => defaultExpanderReducer(table.rows, 1),
-    [table.rows],
+    () => defaultExpanderReducer(table?.rows ?? [], 1),
+    [table?.rows],
   );
 
   return (
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('general_ledger_sheet')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
-      loading={isLoading}
+      dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
       fullWidth={true}
     >
       <GeneralLedgerDataTable
@@ -47,8 +62,9 @@ export default function GeneralLedgerTable({ companyName }) {
           'this_report_does_not_contain_any_data_between_date_period',
         )}
         columns={columns}
-        data={table.rows}
+        data={table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('general-ledger')}
         expanded={expandedRows}
         virtualizedRows={true}
         fixedItemSize={30}
@@ -66,6 +82,11 @@ export default function GeneralLedgerTable({ companyName }) {
     </FinancialSheet>
   );
 }
+
+export const GeneralLedgerTable = FF.pipe(
+  GeneralLedgerTableInner,
+  withDrawerActions,
+);
 
 const GeneralLedgerDataTable = styled(ReportDataTable)`
   --color-table-text-color: #252a31;

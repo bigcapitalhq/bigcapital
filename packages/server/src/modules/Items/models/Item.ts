@@ -16,10 +16,13 @@ import { ItemDefaultViews } from '../Items.constants';
 @InjectModelDefaultViews(ItemDefaultViews)
 export class Item extends TenantBaseModel {
   public readonly quantityOnHand: number;
+  public readonly reorderPoint: number | null;
+  public readonly reorderPointNotified: boolean;
   public readonly name: string;
   public readonly active: boolean;
   public readonly type: string;
   public readonly code: string;
+  public readonly unit: string;
   public readonly sellable: boolean;
   public readonly purchasable: boolean;
   public readonly costPrice: number;

@@ -1,12 +1,27 @@
-// @ts-nocheck
-import { connect } from 'react-redux';
-import { getEstimateByIdFactory } from '@/store/Estimate/estimates.selectors';
+import { connect, MapStateToProps } from 'react-redux';
+import type { ComponentType } from 'react';
+import { ApplicationState } from '@/store/reducers';
 
-export const withEstimateDetail = () => {
-  const getEstimateById = getEstimateByIdFactory();
+export interface WithEstimateDetailProps {
+  estimate: unknown;
+}
 
-  const mapStateToProps = (state, props) => ({
-    estimate: getEstimateById(state, props),
+export function withEstimateDetail<Props = unknown>() {
+  const mapStateToProps: MapStateToProps<
+    WithEstimateDetailProps,
+    Props,
+    ApplicationState
+  > = () => ({
+    estimate: undefined,
   });
-  return connect(mapStateToProps);
-};
+  return function withHOC<P>(
+    WrappedComponent: ComponentType<P>,
+  ): ComponentType<Omit<P, keyof WithEstimateDetailProps>> {
+    const Connected = connect(mapStateToProps)(
+      WrappedComponent as ComponentType<any>,
+    );
+    return Connected as unknown as ComponentType<
+      Omit<P, keyof WithEstimateDetailProps>
+    >;
+  };
+}

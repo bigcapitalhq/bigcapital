@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { parseAbbrValue } from './parseAbbrValue';
-import { removeSeparators } from './removeSeparators';
-import { removeInvalidChars } from './removeInvalidChars';
 import { escapeRegExp } from './escapeRegExp';
+import { parseAbbrValue } from './parseAbbrValue';
+import { removeInvalidChars } from './removeInvalidChars';
+import { removeSeparators } from './removeSeparators';
 
 export type CleanValueOptions = {
   value: string;
@@ -31,8 +31,11 @@ export const cleanValue = ({
   const abbreviations = turnOffAbbreviations ? [] : ['k', 'm', 'b'];
   const isNegative = value.includes('-');
 
-  const [prefixWithValue, preValue] = RegExp(`(\\d+)-?${escapeRegExp(prefix)}`).exec(value) || [];
-  const withoutPrefix = prefix ? value.replace(prefixWithValue, '').concat(preValue) : value;
+  const [prefixWithValue, preValue] =
+    RegExp(`(\\d+)-?${escapeRegExp(prefix)}`).exec(value) || [];
+  const withoutPrefix = prefix
+    ? value.replace(prefixWithValue, '').concat(preValue)
+    : value;
   const withoutSeparators = removeSeparators(withoutPrefix, groupSeparator);
   const withoutInvalidChars = removeInvalidChars(withoutSeparators, [
     groupSeparator,
@@ -44,7 +47,11 @@ export const cleanValue = ({
 
   if (!turnOffAbbreviations) {
     // disallow letter without number
-    if (abbreviations.some((letter) => letter === withoutInvalidChars.toLowerCase())) {
+    if (
+      abbreviations.some(
+        (letter) => letter === withoutInvalidChars.toLowerCase(),
+      )
+    ) {
       return '';
     }
     const parsed = parseAbbrValue(withoutInvalidChars, decimalSeparator);
@@ -57,8 +64,12 @@ export const cleanValue = ({
 
   if (String(valueOnly).includes(decimalSeparator)) {
     const [int, decimals] = withoutInvalidChars.split(decimalSeparator);
-    const trimmedDecimals = decimalsLimit ? decimals.slice(0, decimalsLimit) : decimals;
-    const includeDecimals = allowDecimals ? `${decimalSeparator}${trimmedDecimals}` : '';
+    const trimmedDecimals = decimalsLimit
+      ? decimals.slice(0, decimalsLimit)
+      : decimals;
+    const includeDecimals = allowDecimals
+      ? `${decimalSeparator}${trimmedDecimals}`
+      : '';
 
     return `${includeNegative}${int}${includeDecimals}`;
   }

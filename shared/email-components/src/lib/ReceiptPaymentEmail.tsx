@@ -55,9 +55,6 @@ export const ReceiptEmailTemplate: React.FC<
   companyName = 'Bigcapital, Inc.',
   companyLogoUri,
 
-  // # Colors
-  primaryColor = 'rgb(0, 82, 204)',
-
   // # Invoice total
   total = '$1,000.00',
   totalLabel = 'Total',
@@ -176,6 +173,7 @@ export const ReceiptEmailTemplate: React.FC<
  * @param {ReceiptEmailTemplateProps} props
  * @returns {Promise<string>}
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const renderReceiptEmailTemplate = (
   props: ReceiptEmailTemplateProps
 ) => {
@@ -203,18 +201,6 @@ const invoiceCompanyNameStyle: CSSProperties = {
   fontSize: '18px',
   fontWeight: 500,
   color: '#404854',
-};
-
-const viewInvoiceButtonStyle: CSSProperties = {
-  display: 'block',
-  cursor: 'pointer',
-  textAlign: 'center',
-  fontSize: 16,
-  padding: '10px 15px',
-  lineHeight: '1',
-  backgroundColor: 'rgb(0, 82, 204)',
-  color: '#fff',
-  borderRadius: '5px',
 };
 
 const listItemLabelStyle: CSSProperties = {

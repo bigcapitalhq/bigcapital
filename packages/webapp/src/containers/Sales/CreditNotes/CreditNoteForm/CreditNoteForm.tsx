@@ -1,63 +1,45 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import { Formik, Form, FormikHelpers } from 'formik';
+import { defaultTo, isEmpty } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import { Formik, Form } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import { defaultTo, isEmpty } from 'lodash';
-import { css } from '@emotion/css';
-
-import {
-  CreateCreditNoteFormSchema,
-  EditCreditNoteFormSchema,
-} from './CreditNoteForm.schema';
-
-import CreditNoteFormHeader from './CreditNoteFormHeader';
-import CreditNoteItemsEntriesEditorField from './CreditNoteItemsEntriesEditorField';
-import CreditNoteFormFooter from './CreditNoteFormFooter';
-import CreditNoteFloatingActions from './CreditNoteFloatingActions';
-import CreditNoteFormDialogs from './CreditNoteFormDialogs';
-import CreditNoteFormTopBar from './CreditNoteFormTopBar';
-
-import { AppToaster } from '@/components';
-
-import { useCreditNoteFormContext } from './CreditNoteFormProvider';
-import {
-  filterNonZeroEntries,
-  transformToEditForm,
-  transformFormValuesToRequest,
-  defaultCreditNote,
-} from './utils';
-
-import {
-  compose,
-  orderingLinesIndexes,
-  transactionNumber,
-  safeSumBy,
-} from '@/utils';
-
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import {
   CreditNoteExchangeRateSync,
   CreditNoteSyncIncrementSettingsToForm,
 } from './components';
+import { CreditNoteFloatingActions } from './CreditNoteFloatingActions';
+import {
+  CreateCreditNoteFormSchema,
+  EditCreditNoteFormSchema,
+} from './CreditNoteForm.schema';
+import { CreditNoteFormDialogs } from './CreditNoteFormDialogs';
+import { CreditNoteFormFooter } from './CreditNoteFormFooter';
+import { CreditNoteFormHeader } from './CreditNoteFormHeader';
+import { useCreditNoteFormContext } from './CreditNoteFormProvider';
+import { CreditNoteFormTopbar as CreditNoteFormTopBar } from './CreditNoteFormTopBar';
+import { CreditNoteItemsEntriesEditorField } from './CreditNoteItemsEntriesEditorField';
+import {
+  transformToEditForm,
+  transformFormValuesToRequest,
+  defaultCreditNote,
+  type CreditNoteFormValues,
+  type CreditNoteEntry,
+} from './utils';
+import { AppToaster } from '@/components';
 import { PageForm } from '@/components/PageForm';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { orderingLinesIndexes, transactionNumber, safeSumBy } from '@/utils';
+
+type CreditNoteFormInnerProps = Record<string, never>;
 
 /**
  * Credit note form.
  */
-function CreditNoteForm({
-  // #withSettings
-  creditAutoIncrement,
-  creditNumberPrefix,
-  creditNextNumber,
-  creditCustomerNotes,
-  creditTermsConditions,
+function CreditNoteFormInner({}: CreditNoteFormInnerProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
   const history = useHistory();
 
   // Credit note form context.
@@ -69,35 +51,50 @@ function CreditNoteForm({
     createCreditNoteMutate,
     editCreditNoteMutate,
     creditNoteState,
+    creditNoteSettings,
   } = useCreditNoteFormContext();
+
+  const creditAutoIncrement = creditNoteSettings?.autoIncrement as
+    | boolean
+    | undefined;
+  const creditNextNumber = creditNoteSettings?.nextNumber as number | undefined;
+  const creditNumberPrefix = creditNoteSettings?.numberPrefix as
+    | string
+    | undefined;
+  const creditCustomerNotes = creditNoteSettings?.customerNotes as
+    | string
+    | undefined;
+  const creditTermsConditions = creditNoteSettings?.termsConditions as
+    | string
+    | undefined;
 
   // Credit number.
   const creditNumber = transactionNumber(creditNumberPrefix, creditNextNumber);
 
   // Initial values.
-  const initialValues = {
-    ...(!isEmpty(creditNote)
-      ? { ...transformToEditForm(creditNote) }
-      : {
-          ...defaultCreditNote,
-          ...(creditAutoIncrement && {
-            credit_note_number: creditNumber,
-          }),
-          entries: orderingLinesIndexes(defaultCreditNote.entries),
-          currency_code: base_currency,
-          terms_conditions: defaultTo(creditTermsConditions, ''),
-          note: defaultTo(creditCustomerNotes, ''),
-          pdf_template_id: creditNoteState?.defaultTemplateId,
-          ...newCreditNote,
+  const initialValues: CreditNoteFormValues = !isEmpty(creditNote)
+    ? transformToEditForm(creditNote)
+    : {
+        ...defaultCreditNote,
+        ...(creditAutoIncrement && {
+          creditNoteNumber: creditNumber,
         }),
-  };
+        entries: orderingLinesIndexes(defaultCreditNote.entries),
+        currencyCode: baseCurrency ?? '',
+        termsConditions: defaultTo(creditTermsConditions, ''),
+        note: defaultTo(creditCustomerNotes, ''),
+        pdfTemplateId: creditNoteState?.defaultTemplateId ?? '',
+        ...(Array.isArray(newCreditNote) ? {} : newCreditNote),
+      };
 
   // Handles form submit.
   const handleFormSubmit = (
-    values,
-    { setSubmitting, setErrors, resetForm },
+    values: CreditNoteFormValues,
+    { setSubmitting, resetForm }: FormikHelpers<CreditNoteFormValues>,
   ) => {
-    const entries = filterNonZeroEntries(values.entries);
+    const entries = values.entries.filter(
+      (item: CreditNoteEntry) => item.itemId && item.quantity,
+    );
     const totalQuantity = safeSumBy(entries, 'quantity');
 
     if (totalQuantity === 0) {
@@ -110,7 +107,7 @@ function CreditNoteForm({
     }
     const form = {
       ...transformFormValuesToRequest(values),
-      open: submitPayload.open,
+      open: submitPayload?.open ?? false,
     };
     // Handle the request success.
     const onSuccess = () => {
@@ -124,24 +121,20 @@ function CreditNoteForm({
       });
       setSubmitting(false);
 
-      if (submitPayload.redirect) {
+      if (submitPayload?.redirect) {
         history.push('/credit-notes');
       }
-      if (submitPayload.resetForm) {
+      if (submitPayload?.resetForm) {
         resetForm();
       }
     };
     // Handle the request error.
-    const onError = ({
-      response: {
-        data: { errors },
-      },
-    }) => {
+    const onError = () => {
       setSubmitting(false);
     };
     if (isNewMode) {
       createCreditNoteMutate(form).then(onSuccess).catch(onError);
-    } else {
+    } else if (creditNote) {
       editCreditNoteMutate([creditNote.id, form])
         .then(onSuccess)
         .catch(onError);
@@ -149,7 +142,7 @@ function CreditNoteForm({
   };
 
   return (
-    <Formik
+    <Formik<CreditNoteFormValues>
       validationSchema={
         isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
       }
@@ -187,13 +180,4 @@ function CreditNoteForm({
     </Formik>
   );
 }
-export default compose(
-  withSettings(({ creditNoteSettings }) => ({
-    creditAutoIncrement: creditNoteSettings?.autoIncrement,
-    creditNextNumber: creditNoteSettings?.nextNumber,
-    creditNumberPrefix: creditNoteSettings?.numberPrefix,
-    creditCustomerNotes: creditNoteSettings?.customerNotes,
-    creditTermsConditions: creditNoteSettings?.termsConditions,
-  })),
-  withCurrentOrganization(),
-)(CreditNoteForm);
+export const CreditNoteForm = CreditNoteFormInner;

@@ -1,26 +1,29 @@
-// @ts-nocheck
-import React from 'react';
 import { AnchorButton } from '@blueprintjs/core';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DialogContent, PdfDocumentPreview, T } from '@/components';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePdfReceipt } from '@/hooks/query';
 
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+interface ReceiptPdfPreviewDialogContentProps extends WithDialogActionsProps {
+  subscriptionForm: { receiptId: number | null };
+  dialogName?: string;
+}
 
-function ReceiptPdfPreviewDialogContent({
+function ReceiptPdfPreviewDialogContentInner({
   subscriptionForm: { receiptId },
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { isLoading, pdfUrl, filename } = usePdfReceipt(receiptId);
+}: ReceiptPdfPreviewDialogContentProps): React.ReactElement {
+  const { isLoading, isError, pdfUrl, filename } = usePdfReceipt(
+    receiptId as number,
+  );
 
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
-          target={'__blank'}
+          target="_blank"
           minimal={true}
           outlined={true}
         >
@@ -41,10 +44,14 @@ function ReceiptPdfPreviewDialogContent({
         height={760}
         width={1000}
         isLoading={isLoading}
+        isError={isError}
         url={pdfUrl}
       />
     </DialogContent>
   );
 }
 
-export default compose(withDialogActions)(ReceiptPdfPreviewDialogContent);
+export const ReceiptPdfPreviewDialogContent = FF.pipe(
+  ReceiptPdfPreviewDialogContentInner,
+  withDialogActions,
+);

@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  INVENTORY_VALUATION_COLUMN_KEYS,
+  InventoryValuationColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class InventoryValuationItemDto {
   @ApiProperty({ description: 'Item ID', type: Number })
@@ -25,7 +30,10 @@ export class InventoryValuationItemDto {
   @ApiPropertyOptional({ description: 'Average cost', type: Number })
   averageCost?: number;
 
-  @ApiPropertyOptional({ description: 'Total value', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Total value',
+    type: FinancialReportTotalDto,
+  })
   totalValue?: FinancialReportTotalDto;
 
   @ApiPropertyOptional({ description: 'Asset account name' })
@@ -47,7 +55,10 @@ export class InventoryValuationQueryResponseDto {
   @ApiProperty({ description: 'As-of date' })
   asDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Item IDs to include', type: [Number] })
@@ -58,13 +69,22 @@ export class InventoryValuationQueryResponseDto {
 }
 
 export class InventoryValuationResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: InventoryValuationQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: InventoryValuationQueryResponseDto,
+  })
   query: InventoryValuationQueryResponseDto;
 
-  @ApiProperty({ description: 'Inventory items valuation', type: [InventoryValuationItemDto] })
+  @ApiProperty({
+    description: 'Inventory items valuation',
+    type: [InventoryValuationItemDto],
+  })
   data: InventoryValuationItemDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: InventoryValuationMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: InventoryValuationMetaDto,
+  })
   meta: InventoryValuationMetaDto;
 }
 
@@ -72,17 +92,40 @@ export class InventoryValuationResponseDto {
 export {
   FinancialTableCellDto as InventoryValuationTableCellDto,
   FinancialTableRowDto as InventoryValuationTableRowDto,
-  FinancialTableColumnDto as InventoryValuationTableColumnDto,
-  FinancialTableDataDto as InventoryValuationTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
 
-export class InventoryValuationTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
-  table: FinancialTableDataDto;
+export class InventoryValuationTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(INVENTORY_VALUATION_COLUMN_KEYS),
+  })
+  key: InventoryValuationColumnKey;
+}
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: InventoryValuationQueryResponseDto })
+export class InventoryValuationTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [InventoryValuationTableColumnDto],
+  })
+  columns: InventoryValuationTableColumnDto[];
+}
+
+export class InventoryValuationTableResponseDto {
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => InventoryValuationTableDataDto,
+  })
+  table: InventoryValuationTableDataDto;
+
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: InventoryValuationQueryResponseDto,
+  })
   query: InventoryValuationQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: InventoryValuationMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: InventoryValuationMetaDto,
+  })
   meta: InventoryValuationMetaDto;
 }

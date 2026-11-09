@@ -6,11 +6,14 @@ import {
 } from '../Users.types';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
+import { ClsService } from 'nestjs-cls';
 import { events } from '@/common/events/events';
-import { ABILITIES_CACHE } from '@/modules/Roles/TenantAbilities';
+import { purgeUserAbility } from '@/modules/Roles/TenantAbilities';
 
 @Injectable()
 export class PurgeUserAbilityCacheSubscriber {
+  constructor(private readonly clsService: ClsService) {}
+
   /**
    * Purges authorized user ability once the user mutate.
    */
@@ -24,6 +27,11 @@ export class PurgeUserAbilityCacheSubscriber {
     | ITenantUserActivatedPayload
     | ITenantUserDeletedPayload
     | ITenantUserEditedPayload) {
-    ABILITIES_CACHE.del(tenantUser.systemUserId);
+    const organizationId = this.clsService.get<string>('organizationId');
+
+    if (organizationId == null || tenantUser.systemUserId == null) {
+      return;
+    }
+    purgeUserAbility(organizationId, tenantUser.systemUserId);
   }
 }

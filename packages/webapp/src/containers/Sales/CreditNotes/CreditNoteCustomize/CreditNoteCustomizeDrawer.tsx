@@ -1,12 +1,21 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
+import type { WithDrawersProps } from '@/containers/Drawer/withDrawers';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
-const CreditNoteCustomizeDrawerBody = React.lazy(
-  () => import('./CreditNoteCustomizeDrawerBody'),
+const CreditNoteCustomizeDrawerBody = React.lazy(() =>
+  import('./CreditNoteCustomizeDrawerBody').then((m) => ({
+    default: m.CreditNoteCustomizeDrawerBody,
+  })),
 );
+
+interface CreditNoteCustomizeDrawerRootProps {
+  name: string;
+}
+
+type CreditNoteCustomizeDrawerRootConnectedProps =
+  CreditNoteCustomizeDrawerRootProps & WithDrawersProps;
 
 /**
  * Invoice customize drawer.
@@ -17,7 +26,7 @@ function CreditNoteCustomizeDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: CreditNoteCustomizeDrawerRootConnectedProps) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -32,6 +41,7 @@ function CreditNoteCustomizeDrawerRoot({
   );
 }
 
-export const CreditNoteCustomizeDrawer = R.compose(withDrawers())(
+export const CreditNoteCustomizeDrawer = FF.pipe(
   CreditNoteCustomizeDrawerRoot,
+  withDrawers(),
 );

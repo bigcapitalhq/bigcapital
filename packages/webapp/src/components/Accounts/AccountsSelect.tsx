@@ -1,16 +1,31 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
-import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
-import { MenuItemNestedText, FSelect } from '@/components';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { accountPredicate } from './_components';
-import { DialogsName } from '@/constants/dialogs';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { usePreprocessingAccounts } from './_hooks';
+import { AccountSelectModel } from './AccountsMultiSelect';
+import type { ItemRenderer } from '@blueprintjs/select';
+import { MenuItemNestedText, FSelect } from '@/components';
+import { DialogsName } from '@/constants/dialogs';
+import { useDialogActions } from '@/hooks/state/dashboard';
+
+type FSelectProps = React.ComponentProps<typeof FSelect>;
+
+interface AccountsSelectProps extends Omit<FSelectProps, 'items'> {
+  items: AccountSelectModel[];
+  allowCreate?: boolean;
+  filterByRootTypes?: string[];
+  filterByParentTypes?: string[];
+  filterByTypes?: string[];
+  filterByNormal?: string[];
+}
 
 // Create new account renderer.
-const createNewItemRenderer = (query, active, handleClick) => {
+const createNewItemRenderer = (
+  query: string,
+  active: boolean,
+  handleClick: (event: React.MouseEvent<HTMLElement>) => void,
+): React.ReactElement => {
   return (
     <MenuItem
       icon="add"
@@ -22,13 +37,20 @@ const createNewItemRenderer = (query, active, handleClick) => {
 };
 
 // Create new item from the given query string.
-const createNewItemFromQuery = (name) => ({ name });
+const createNewItemFromQuery = (query: string): AccountSelectModel => ({
+  label: query,
+  value: query,
+  text: query,
+  id: 0,
+  name: query,
+  code: query,
+});
 
-/**
- * Default account item renderer.
- * @returns {JSX.Element}
- */
-const accountRenderer = (item, { handleClick, modifiers, query }) => {
+// Default account item renderer.
+const accountRenderer: ItemRenderer<AccountSelectModel> = (
+  item,
+  { handleClick, modifiers },
+) => {
   if (!modifiers.matchesPredicate) {
     return null;
   }
@@ -38,7 +60,7 @@ const accountRenderer = (item, { handleClick, modifiers, query }) => {
       disabled={modifiers.disabled}
       label={item.code}
       key={item.id}
-      text={<MenuItemNestedText level={item.account_level} text={item.name} />}
+      text={<MenuItemNestedText level={item.accountLevel} text={item.name} />}
       onClick={handleClick}
     />
   );
@@ -48,41 +70,42 @@ const accountRenderer = (item, { handleClick, modifiers, query }) => {
  * Accounts select field binded with Formik form.
  * @returns {JSX.Element}
  */
-function AccountsSelectRoot({
-  // #withDialogActions
-  openDialog,
-
-  // #ownProps
+export function AccountsSelect({
   items,
   allowCreate,
 
+  filterByRootTypes,
   filterByParentTypes,
   filterByTypes,
   filterByNormal,
-  filterByRootTypes,
 
-  ...restProps
-}) {
+  ...rest
+}: AccountsSelectProps): React.ReactElement {
+  const { openDialog } = useDialogActions();
+
   // Filters accounts based on filter props.
   const filteredAccounts = usePreprocessingAccounts(items, {
-    filterByParentTypes,
-    filterByTypes,
-    filterByNormal,
-    filterByRootTypes,
+    filterByParentTypes: filterByParentTypes || [],
+    filterByTypes: filterByTypes || [],
+    filterByNormal: filterByNormal || [],
+    filterByRootTypes: filterByRootTypes || [],
   });
   // Maybe inject new item props to select component.
-  const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
+  const maybeCreateNewItemRenderer = allowCreate
+    ? createNewItemRenderer
+    : undefined;
   const maybeCreateNewItemFromQuery = allowCreate
     ? createNewItemFromQuery
-    : null;
+    : undefined;
 
   // Handles the create item click.
-  const handleCreateItemClick = () => {
+  const handleCreateItemClick = (): void => {
     openDialog(DialogsName.AccountForm);
   };
 
   return (
-    <FSelect
+    <FSelect<AccountSelectModel>
+      {...rest}
       items={filteredAccounts}
       textAccessor={'name'}
       labelAccessor={'code'}
@@ -93,9 +116,6 @@ function AccountsSelectRoot({
       createNewItemRenderer={maybeCreateNewItemRenderer}
       createNewItemFromQuery={maybeCreateNewItemFromQuery}
       onCreateItemSelect={handleCreateItemClick}
-      {...restProps}
     />
   );
 }
-
-export const AccountsSelect = R.compose(withDialogActions)(AccountsSelectRoot);

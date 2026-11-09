@@ -1,21 +1,19 @@
-// @ts-nocheck
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
-
-import ExpenseFormHeaderFields from './ExpenseFormHeaderFields';
-import { PageForm, PageFormBigNumber } from '@/components';
+import intl from 'react-intl-universal';
+import { ExpenseFormHeader as ExpenseFormHeaderFields } from './ExpenseFormHeaderFields';
 import { useExpenseTotalFormatted } from './utils';
+import { PageForm, PageFormBigNumber } from '@/components';
 
 // Expense form header.
-export default function ExpenseFormHeader() {
+export function ExpenseFormHeader() {
   const totalFormatted = useExpenseTotalFormatted();
 
   return (
     <PageForm.Header>
       <ExpenseFormHeaderFields />
       <PageFormBigNumber
-        label={<T id={'expense_amount'} />}
-        amount={totalFormatted}
+        label={intl.get('expense_amount')}
+        amount={totalFormatted as unknown as number}
       />
     </PageForm.Header>
   );

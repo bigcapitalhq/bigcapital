@@ -22,9 +22,7 @@ export class SystemMigrateLatestCommand extends BaseCommand {
         this.success('Already up to date');
       }
 
-      this.success(
-        `Batch ${batchNo} run: ${log.length} migrations`
-      );
+      this.success(`Batch ${batchNo} run: ${log.length} migrations`);
     } catch (error) {
       this.exit(error);
     }

@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { assoc } from '@/common/fp';
 import {
   IBalanceSheetNetIncomeNode,
   IBalanceSheetTotalPeriod,
@@ -19,7 +19,7 @@ export const BalanceSheetNetIncomeDatePeriods = <
 >(
   Base: T,
 ) =>
-  class extends R.pipe(
+  class extends flow(
     BalanceSheetNetIncomePP,
     BalanceSheetNetIncomePY,
     BalanceSheetComparsionPreviousYear,
@@ -28,6 +28,8 @@ export const BalanceSheetNetIncomeDatePeriods = <
     FinancialHorizTotals,
   )(Base) {
     repository: BalanceSheetRepository;
+
+    protected getReportNodeDatePeriods: (node, callback) => any;
 
     // --------------------------------
     // # Date Periods
@@ -120,6 +122,6 @@ export const BalanceSheetNetIncomeDatePeriods = <
     ): IBalanceSheetNetIncomeNode => {
       const datePeriods = this.getNetIncomeDatePeriodsNode(node);
 
-      return R.assoc('horizontalTotals', datePeriods, node);
+      return assoc('horizontalTotals', datePeriods, node);
     };
   };

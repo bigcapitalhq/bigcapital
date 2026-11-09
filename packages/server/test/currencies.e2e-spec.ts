@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -47,7 +47,8 @@ describe('Currencies (e2e)', () => {
       .post('/currencies')
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
-      .send(currency);
+      .send(currency)
+      .expect(201);
     const currencyId = response.body.id;
 
     return request(app.getHttpServer())

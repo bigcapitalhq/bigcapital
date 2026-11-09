@@ -10,8 +10,8 @@ export interface MailAttachmentContent {
   content: Buffer;
 }
 
-export interface IMailable {
-  constructor(view: string, data?: { [key: string]: string | number });
+export type IMailable = {
+  new (view: string, data?: { [key: string]: string | number }): IMailable;
   send(): Promise<any>;
   build(): void;
   setData(data: { [key: string]: string | number }): IMailable;
@@ -21,7 +21,7 @@ export interface IMailable {
   setView(view: string): IMailable;
   render(data?: { [key: string]: string | number }): string;
   getViewContent(): string;
-}
+};
 
 export interface AddressItem {
   label: string;
@@ -41,4 +41,5 @@ export interface CommonMailOptions {
   fromOptions: Array<AddressItem>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- extended by other interfaces below.
 export interface CommonMailOptionsDTO extends Partial<CommonMailOptions> {}

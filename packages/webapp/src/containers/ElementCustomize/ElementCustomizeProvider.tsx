@@ -16,7 +16,10 @@ interface ElementCustomizeProviderProps {
   children: React.ReactNode;
 }
 
-export const ElementCustomizeProvider = ({ value, children }: ElementCustomizeProviderProps) => {
+export const ElementCustomizeProvider = ({
+  value,
+  children,
+}: ElementCustomizeProviderProps) => {
   return (
     <ElementCustomizeContext.Provider value={{ ...value }}>
       {children}

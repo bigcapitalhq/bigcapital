@@ -1,4 +1,7 @@
-import * as R from 'ramda';
+import { constant, flow } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
+import { when } from '@/common/fp';
 import {
   IInventoryValuationItem,
   IInventoryValuationSheetData,
@@ -14,20 +17,24 @@ import {
   ITableRow,
 } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
+import { INVENTORY_VALUATION_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class InventoryValuationSheetTable extends R.pipe(
+export class InventoryValuationSheetTable extends flow(
   FinancialTable,
   FinancialSheetStructure,
 )(FinancialSheet) {
   private readonly data: IInventoryValuationSheetData;
+  readonly i18n: I18nService;
 
   /**
    * Constructor method.
    * @param {IInventoryValuationSheetData} data
+   * @param {I18nService} i18n
    */
-  constructor(data: IInventoryValuationSheetData) {
+  constructor(data: IInventoryValuationSheetData, i18n: I18nService) {
     super();
     this.data = data;
+    this.i18n = i18n;
   }
 
   /**
@@ -36,10 +43,19 @@ export class InventoryValuationSheetTable extends R.pipe(
    */
   private commonColumnsAccessors(): ITableColumnAccessor[] {
     return [
-      { key: 'item_name', accessor: 'name' },
-      { key: 'quantity', accessor: 'quantityFormatted' },
-      { key: 'valuation', accessor: 'valuationFormatted' },
-      { key: 'average', accessor: 'averageFormatted' },
+      { key: INVENTORY_VALUATION_COLUMN_KEYS.ITEM_NAME, accessor: 'name' },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.QUANTITY,
+        accessor: 'quantityFormatted',
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.VALUATION,
+        accessor: 'valuationFormatted',
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.AVERAGE,
+        accessor: 'averageFormatted',
+      },
     ];
   }
 
@@ -75,7 +91,7 @@ export class InventoryValuationSheetTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   private itemsRowsMapper = (items: IInventoryValuationItem[]): ITableRow[] => {
-    return R.map(this.itemRowMapper)(items);
+    return items.map(this.itemRowMapper);
   };
 
   /**
@@ -86,9 +102,10 @@ export class InventoryValuationSheetTable extends R.pipe(
     const itemsRows = this.itemsRowsMapper(this.data.items);
     const totalRow = this.totalRowMapper(this.data.total);
 
-    return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow)),
-    )([...itemsRows]) as ITableRow[];
+    return when(constant(!isEmpty(itemsRows)), (rows: ITableRow[]) => [
+      ...rows,
+      totalRow,
+    ])([...itemsRows]);
   }
 
   /**
@@ -97,11 +114,23 @@ export class InventoryValuationSheetTable extends R.pipe(
    */
   public tableColumns(): ITableColumn[] {
     const columns = [
-      { key: 'item_name', label: 'Item Name' },
-      { key: 'quantity', label: 'Quantity' },
-      { key: 'valuation', label: 'Valuation' },
-      { key: 'average', label: 'Average' },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.ITEM_NAME,
+        label: this.i18n.t('inventory_valuation.item_name'),
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.QUANTITY,
+        label: this.i18n.t('inventory_valuation.quantity'),
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.VALUATION,
+        label: this.i18n.t('inventory_valuation.valuation'),
+      },
+      {
+        key: INVENTORY_VALUATION_COLUMN_KEYS.AVERAGE,
+        label: this.i18n.t('inventory_valuation.average'),
+      },
     ];
-    return R.compose(this.tableColumnsCellIndexing)(columns);
+    return this.tableColumnsCellIndexing(columns);
   }
 }

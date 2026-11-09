@@ -1,20 +1,36 @@
-// @ts-nocheck
+import classNames from 'classnames';
 import React from 'react';
 import styled from 'styled-components';
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
-import { useSettings } from '@/hooks/query';
-import PreferencesPageLoader from '../PreferencesPageLoader';
+import { PreferencesPageLoader } from '../PreferencesPageLoader';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
+import { CLASSES } from '@/constants/classes';
+import { useSettingsCreditNotes } from '@/hooks/query';
 
-const PreferencesCreditNotesFormContext = React.createContext();
+export interface PreferencesCreditNotesBootContextValue {
+  creditNoteSettings?: SettingsGroup;
+  isSettingsLoading: boolean;
+}
 
-function PreferencesCreditNotesBoot({ ...props }) {
+const PreferencesCreditNotesFormContext =
+  React.createContext<PreferencesCreditNotesBootContextValue>(
+    {} as PreferencesCreditNotesBootContextValue,
+  );
+
+export interface PreferencesCreditNotesBootProps {
+  children?: React.ReactNode;
+}
+
+function PreferencesCreditNotesBoot({
+  children,
+}: PreferencesCreditNotesBootProps) {
   // Fetches organization settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  const { data: creditNoteSettings, isLoading: isSettingsLoading } =
+    useSettingsCreditNotes();
 
   // Provider state.
-  const provider = {
+  const provider: PreferencesCreditNotesBootContextValue = {
+    creditNoteSettings,
     isSettingsLoading,
   };
   // Detarmines whether if any query is loading.
@@ -31,10 +47,9 @@ function PreferencesCreditNotesBoot({ ...props }) {
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesCreditNotesFormContext.Provider
-            value={provider}
-            {...props}
-          />
+          <PreferencesCreditNotesFormContext.Provider value={provider}>
+            {children}
+          </PreferencesCreditNotesFormContext.Provider>
         )}
       </PreferencesCreditNotesCard>
     </div>

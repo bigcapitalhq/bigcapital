@@ -1,17 +1,31 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
-import { useItems } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
+import type { Item } from '@bigcapital/sdk-ts';
+import { useItems } from '@/hooks/query';
 
-const SalesByItemGeneralPanelContext = createContext();
+interface SalesByItemGeneralPanelContextValue {
+  items: Item[] | undefined;
+  isItemsLoading: boolean;
+  isItemsFetching: boolean;
+}
+
+interface SalesByItemGeneralPanelProviderProps {
+  children?: React.ReactNode;
+}
+
+const SalesByItemGeneralPanelContext = createContext<
+  SalesByItemGeneralPanelContextValue | undefined
+>(undefined);
 
 /**
  * Sales by items - General panel - Booting.
  */
-function SalesByItemGeneralPanelProvider({ query, ...props }) {
+function SalesByItemGeneralPanelProvider({
+  ...props
+}: SalesByItemGeneralPanelProviderProps) {
   // Handle fetching the items based on the given query.
   const {
-    data: { items },
+    data: itemsData,
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
   } = useItems({
@@ -21,8 +35,8 @@ function SalesByItemGeneralPanelProvider({ query, ...props }) {
     ]),
   });
 
-  const provider = {
-    items,
+  const provider: SalesByItemGeneralPanelContextValue = {
+    items: (itemsData as any)?.data,
     isItemsLoading,
     isItemsFetching,
   };
@@ -35,7 +49,11 @@ function SalesByItemGeneralPanelProvider({ query, ...props }) {
   );
 }
 
-const useSalesByItemsGeneralPanelContext = () =>
-  useContext(SalesByItemGeneralPanelContext);
+const useSalesByItemsGeneralPanelContext =
+  (): SalesByItemGeneralPanelContextValue => {
+    const ctx = useContext(SalesByItemGeneralPanelContext);
+    if (!ctx) throw new Error('SalesByItemGeneralPanelContext is not provided');
+    return ctx;
+  };
 
 export { SalesByItemGeneralPanelProvider, useSalesByItemsGeneralPanelContext };

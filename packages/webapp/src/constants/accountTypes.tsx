@@ -1,4 +1,3 @@
-// @ts-nocheck
 export const ACCOUNT_TYPE = {
   CASH: 'cash',
   BANK: 'bank',
@@ -21,7 +20,7 @@ export const ACCOUNT_TYPE = {
   COST_OF_GOODS_SOLD: 'cost-of-goods-sold',
   EXPENSE: 'expense',
   OTHER_EXPENSE: 'other-expense',
-};
+} as const;
 
 export const ACCOUNT_PARENT_TYPE = {
   CURRENT_ASSET: 'current-asset',
@@ -35,7 +34,7 @@ export const ACCOUNT_PARENT_TYPE = {
   EQUITY: 'equity',
   EXPENSE: 'expense',
   INCOME: 'income',
-};
+} as const;
 
 export const ACCOUNT_ROOT_TYPE = {
   ASSET: 'asset',
@@ -43,13 +42,24 @@ export const ACCOUNT_ROOT_TYPE = {
   EQUITY: 'equity',
   EXPENSE: 'expense',
   INCOME: 'income',
-};
+} as const;
 
 export const ACCOUNT_NORMAL = {
   CREDIT: 'credit',
   DEBIT: 'debit',
-};
-export const ACCOUNT_TYPES = [
+} as const;
+
+export interface AccountTypeOption {
+  label: string;
+  key: (typeof ACCOUNT_TYPE)[keyof typeof ACCOUNT_TYPE];
+  normal: (typeof ACCOUNT_NORMAL)[keyof typeof ACCOUNT_NORMAL];
+  parentType: (typeof ACCOUNT_PARENT_TYPE)[keyof typeof ACCOUNT_PARENT_TYPE];
+  rootType: (typeof ACCOUNT_ROOT_TYPE)[keyof typeof ACCOUNT_ROOT_TYPE];
+  balanceSheet: boolean;
+  incomeSheet: boolean;
+}
+
+export const ACCOUNT_TYPES: AccountTypeOption[] = [
   {
     label: 'Cash',
     key: ACCOUNT_TYPE.CASH,
@@ -223,4 +233,4 @@ export const ACCOUNT_TYPES = [
   },
 ];
 
-export const FOREIGN_CURRENCY_ACCOUNTS = ['cash', 'bank'];
+export const FOREIGN_CURRENCY_ACCOUNTS: string[] = ['cash', 'bank'];

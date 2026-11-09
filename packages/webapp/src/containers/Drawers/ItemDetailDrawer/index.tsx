@@ -1,24 +1,27 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
-
-import { compose } from '@/utils';
+import {
+  withDrawers,
+  type WithDrawersProps,
+} from '@/containers/Drawer/withDrawers';
 
 const ItemDetailDrawerContent = React.lazy(() =>
-  import('./ItemDetailDrawerContent'),
+  import('./ItemDetailDrawerContent').then((m) => ({
+    default: m.ItemDetailDrawerContent,
+  })),
 );
+
+interface ItemDetailDrawerProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  * Item Detail drawer.
  */
-function ItemDetailDrawer({
-  name,
+function ItemDetailDrawer({ name, isOpen, payload }: ItemDetailDrawerProps) {
+  const itemId = payload?.itemId as number | undefined;
 
-  // #withDrawer
-  isOpen,
-  payload: { itemId },
-}) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -32,4 +35,4 @@ function ItemDetailDrawer({
     </Drawer>
   );
 }
-export default compose(withDrawers())(ItemDetailDrawer);
+export const index = FF.pipe(ItemDetailDrawer, withDrawers());

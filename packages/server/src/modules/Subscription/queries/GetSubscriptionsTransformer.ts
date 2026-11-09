@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetSubscriptionsTransformer extends Transformer {
   /**
@@ -18,7 +18,6 @@ export class GetSubscriptionsTransformer extends Transformer {
       'planPriceCurrency',
       'planPriceFormatted',
       'planPeriod',
-      'lemonUrls',
     ];
   };
 
@@ -27,7 +26,7 @@ export class GetSubscriptionsTransformer extends Transformer {
    * @returns {string[]}
    */
   public excludeAttributes = (): string[] => {
-    return ['id', 'plan'];
+    return ['id', 'plan', 'lemonSubscriptionId'];
   };
 
   /**
@@ -47,9 +46,7 @@ export class GetSubscriptionsTransformer extends Transformer {
    * @returns {string}
    */
   public endsAtFormatted = (subscription) => {
-    return subscription.cancelsAt
-      ? this.formatDate(subscription.endsAt)
-      : null;
+    return subscription.cancelsAt ? this.formatDate(subscription.endsAt) : null;
   };
 
   /**
@@ -73,30 +70,21 @@ export class GetSubscriptionsTransformer extends Transformer {
   };
 
   /**
-   * Retrieves the Lemon subscription metadata.
-   * @param subscription
-   * @returns
-   */
-  public lemonSubscription = (subscription) => {
-    return (
-      this.options.lemonSubscriptions[subscription.lemonSubscriptionId] || null
-    );
-  };
-
-  /**
    * Retrieves the formatted subscription status.
    * @param subscription
    * @returns {string}
    */
   public statusFormatted = (subscription) => {
     const pairs = {
-      canceled: 'Canceled',
-      active: 'Active',
-      inactive: 'Inactive',
-      expired: 'Expired',
-      on_trial: 'On Trial',
+      canceled: 'subscription.status.canceled',
+      active: 'subscription.status.active',
+      inactive: 'subscription.status.inactive',
+      expired: 'subscription.status.expired',
+      on_trial: 'subscription.status.on_trial',
     };
-    return pairs[subscription.status] || '';
+    const translationKey = pairs[subscription.status];
+
+    return translationKey ? this.context.i18n.t(translationKey) : '';
   };
 
   /**
@@ -119,7 +107,7 @@ export class GetSubscriptionsTransformer extends Transformer {
 
   /**
    * Retrieves the subscription plan price.
-   * @param subscription 
+   * @param subscription
    * @returns {number}
    */
   public planPrice(subscription) {
@@ -128,7 +116,7 @@ export class GetSubscriptionsTransformer extends Transformer {
 
   /**
    * Retrieves the subscription plan price currency.
-   * @param subscription 
+   * @param subscription
    * @returns {string}
    */
   public planPriceCurrency(subscription) {
@@ -137,32 +125,22 @@ export class GetSubscriptionsTransformer extends Transformer {
 
   /**
    * Retrieves the subscription plan formatted price.
-   * @param subscription 
+   * @param subscription
    * @returns {string}
    */
   public planPriceFormatted(subscription) {
     return this.formatMoney(subscription.plan?.price, {
       currencyCode: subscription.plan?.currency,
-      precision: 0
+      precision: 0,
     });
   }
 
   /**
    * Retrieves the subscription plan period.
-   * @param subscription 
+   * @param subscription
    * @returns {string}
    */
   public planPeriod(subscription) {
     return subscription?.plan?.period;
   }
-
-  /**
-   * Retrieve the subscription Lemon Urls.
-   * @param subscription
-   * @returns
-   */
-  public lemonUrls = (subscription) => {
-    const lemonSusbcription = this.lemonSubscription(subscription);
-    return lemonSusbcription?.data?.attributes?.urls;
-  };
 }

@@ -8,13 +8,13 @@
 //   tenancy: HasTenancyService;
 
 //   /**
-//    * 
-//    * @param branch 
+//    *
+//    * @param branch
 //    */
 //   throwIfBranchNotFound = (branch) => {
 //     if (!branch) {
 //       throw new ServiceError(ERRORS.BRANCH_NOT_FOUND);
-//     } 
+//     }
 //   }
 
 //   getBranchOrThrowNotFound = async (tenantId: number, branchId: number) => {
@@ -26,5 +26,5 @@
 //       throw new ServiceError(ERRORS.BRANCH_NOT_FOUND);
 //     }
 //     return foundBranch;
-//   } 
+//   }
 // }

@@ -1,20 +1,24 @@
-// @ts-nocheck
 import React from 'react';
+import { QuickCustomerFormDrawer } from './QuickCustomerFormDrawer';
 import {
   DrawerHeaderContent,
   DrawerBody,
   FormattedMessage as T,
 } from '@/components';
-import QuickCustomerFormDrawer from './QuickCustomerFormDrawer';
 import { DRAWERS } from '@/constants/drawers';
+
+interface QuickCreateCustomerDrawerContentProps {
+  displayName?: string;
+  autofillRef?: number;
+}
 
 /**
  * Quick create/edit customer drawer.
  */
-export default function QuickCreateCustomerDrawerContent({
+export function QuickCreateCustomerDrawerContent({
   displayName,
   autofillRef,
-}) {
+}: QuickCreateCustomerDrawerContentProps) {
   return (
     <React.Fragment>
       <DrawerHeaderContent

@@ -1,18 +1,28 @@
-// @ts-nocheck
-
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { flatten, map } from 'lodash';
-import * as R from 'ramda';
+import { withBanking } from '../withBanking';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
+import type { WithBankingProps } from '../withBanking';
+import type { UncategorizedTransactionResponse } from '@bigcapital/sdk-ts';
 import { IntersectionObserver } from '@/components';
 import { useAccountUncategorizedTransactionsInfinity } from '@/hooks/query';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { withBanking } from '../withBanking';
+import { useFlattenInfinityPages } from '@/hooks/utils';
 
-const AccountUncategorizedTransactionsContext = React.createContext();
-
-function flattenInfinityPagesData(data) {
-  return flatten(map(data.pages, (page) => page.data));
+export interface AccountUncategorizedTransactionsContextValue {
+  uncategorizedTransactions: UncategorizedTransactionResponse[];
+  isUncategorizedTransactionFetching: boolean;
+  isUncategorizedTransactionsLoading: boolean;
 }
+
+interface AccountUncategorizedTransactionsBootRootProps
+  extends Pick<WithBankingProps, 'uncategorizedTransactionsFilter'> {
+  children?: React.ReactNode;
+}
+
+const AccountUncategorizedTransactionsContext =
+  React.createContext<AccountUncategorizedTransactionsContextValue>(
+    {} as AccountUncategorizedTransactionsContextValue,
+  );
 
 /**
  * Account un-categorized transactions provider.
@@ -23,7 +33,7 @@ function AccountUncategorizedTransactionsBootRoot({
 
   // #ownProps
   children,
-}) {
+}: AccountUncategorizedTransactionsBootRootProps) {
   const { accountId } = useAccountTransactionsContext();
 
   // Fetches the uncategorized transactions.
@@ -32,23 +42,21 @@ function AccountUncategorizedTransactionsBootRoot({
     isFetching: isUncategorizedTransactionFetching,
     isLoading: isUncategorizedTransactionsLoading,
     isSuccess: isUncategorizedTransactionsSuccess,
-    isFetchingNextPage: isUncategorizedTransactionFetchNextPage,
-    fetchNextPage: fetchNextUncategorizedTransactionsPage,
     hasNextPage: hasUncategorizedTransactionsNextPage,
+    fetchNextPage: fetchNextUncategorizedTransactionsPage,
   } = useAccountUncategorizedTransactionsInfinity(accountId, {
-    page_size: 50,
-    min_date: uncategorizedTransactionsFilter?.fromDate || null,
-    max_date: uncategorizedTransactionsFilter?.toDate || null,
+    pageSize: 50,
+    minDate: uncategorizedTransactionsFilter?.fromDate,
+    maxDate: uncategorizedTransactionsFilter?.toDate,
   });
   // Memorized the cashflow account transactions.
-  const uncategorizedTransactions = React.useMemo(
-    () =>
-      isUncategorizedTransactionsSuccess
-        ? flattenInfinityPagesData(uncategorizedTransactionsPage)
-        : [],
-    [uncategorizedTransactionsPage, isUncategorizedTransactionsSuccess],
+  const uncategorizedTransactions = useFlattenInfinityPages(
+    isUncategorizedTransactionsSuccess
+      ? uncategorizedTransactionsPage
+      : undefined,
+    (page) => (page.data ?? []) as UncategorizedTransactionResponse[],
   );
-  // Handle the observer ineraction.
+  // Handle the observer inersection.
   const handleObserverInteract = React.useCallback(() => {
     if (
       !isUncategorizedTransactionFetching &&
@@ -62,8 +70,8 @@ function AccountUncategorizedTransactionsBootRoot({
     fetchNextUncategorizedTransactionsPage,
   ]);
   // Provider payload.
-  const provider = {
-    uncategorizedTransactions,
+  const provider: AccountUncategorizedTransactionsContextValue = {
+    uncategorizedTransactions: uncategorizedTransactions ?? [],
     isUncategorizedTransactionFetching,
     isUncategorizedTransactionsLoading,
   };
@@ -71,19 +79,17 @@ function AccountUncategorizedTransactionsBootRoot({
   return (
     <AccountUncategorizedTransactionsContext.Provider value={provider}>
       {children}
-      <IntersectionObserver
-        onIntersect={handleObserverInteract}
-        enabled={!isUncategorizedTransactionFetchNextPage}
-      />
+      <IntersectionObserver onIntersect={handleObserverInteract} />
     </AccountUncategorizedTransactionsContext.Provider>
   );
 }
 
-const AccountUncategorizedTransactionsBoot = R.compose(
+const AccountUncategorizedTransactionsBoot = FF.pipe(
+  AccountUncategorizedTransactionsBootRoot,
   withBanking(({ uncategorizedTransactionsFilter }) => ({
     uncategorizedTransactionsFilter,
   })),
-)(AccountUncategorizedTransactionsBootRoot);
+);
 
 const useAccountUncategorizedTransactionsContext = () =>
   React.useContext(AccountUncategorizedTransactionsContext);

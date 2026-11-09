@@ -1,0 +1,10 @@
+{
+  "date": "Date",
+  "transaction_type": "Transaction Type",
+  "transaction_number": "Num.",
+  "description": "Description",
+  "account_code": "Acc. Code",
+  "account_name": "Account",
+  "debit": "Debit",
+  "credit": "Credit"
+}

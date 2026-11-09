@@ -20,7 +20,7 @@ export class CashflowWithAccountSubscriber {
     oldAccount,
   }: IAccountEventDeletePayload) {
     await this.validateDeleteBankAccount.validateAccountHasNoCashflowEntries(
-      oldAccount.id
+      oldAccount.id,
     );
-  };
+  }
 }

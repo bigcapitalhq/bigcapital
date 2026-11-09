@@ -56,17 +56,19 @@ export class GetVendorCreditsService {
         dynamicFilter.buildQuery()(builder);
 
         // Gives ability to inject custom query to filter results.
-        filterDto?.filterQuery && filterDto?.filterQuery(builder);
+        if (filterDto?.filterQuery) {
+          filterDto?.filterQuery(builder);
+        }
       })
       .pagination(filterDto.page - 1, filterDto.pageSize);
 
     // Transformes the vendor credits models to POJO.
-    const vendorCredits = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new VendorCreditTransformer(),
     );
     return {
-      vendorCredits,
+      data,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

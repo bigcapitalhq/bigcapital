@@ -1,9 +1,8 @@
-// @ts-nocheck
-import { DashboardInsider } from '@/components';
-import { ImportView } from '../Import/ImportView';
 import { useHistory } from 'react-router-dom';
+import { ImportView } from '../Import/ImportView';
+import { DashboardInsider } from '@/components';
 
-export default function ItemsImportpage() {
+export function ItemsImportpage() {
   const history = useHistory();
 
   const handleImportSuccess = () => {
@@ -19,7 +18,7 @@ export default function ItemsImportpage() {
         onImportSuccess={handleImportSuccess}
         onCancelClick={handleCancelBtnClick}
         exampleTitle="Items Example"
-        />
+      />
     </DashboardInsider>
   );
 }

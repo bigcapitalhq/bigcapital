@@ -82,7 +82,7 @@ const models = [
     ...models,
     RemovePendingUncategorizedTransaction,
     CommandBankTransactionValidator,
-    CreateBankTransactionService
+    CreateBankTransactionService,
   ],
 })
-export class BankingTransactionsModule { }
+export class BankingTransactionsModule {}

@@ -1,93 +1,59 @@
-// @ts-nocheck
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
-
 import React from 'react';
 
-const DEVICE_SIZES = ['xl', 'lg', 'md', 'sm', 'xs'];
-const rowColWidth = PropTypes.oneOfType([PropTypes.number, PropTypes.string]);
+type ColWidth = number | string;
+type BreakpointValue = ColWidth | { cols: ColWidth };
 
-const rowColumns = PropTypes.oneOfType([
-  rowColWidth,
-  PropTypes.shape({
-    cols: rowColWidth,
-  }),
-]);
+const DEVICE_SIZES = ['xl', 'lg', 'md', 'sm', 'xs'] as const;
 
-const propTypes = {
-  /**
-   * @default 'row'
-   */
-  bsPrefix: PropTypes.string,
-
-  /** Removes the gutter spacing between `Col`s as well as any added negative margins. */
-  noGutters: PropTypes.bool.isRequired,
-  as: PropTypes.elementType,
-
-  /**
-   * The number of columns that will fit next to each other on extra small devices (<576px)
-   *
-   * @type {(number|{ cols: number })}
-   */
-  xs: rowColumns,
-
-  /**
-   * The number of columns that will fit next to each other on small devices (≥576px)
-   *
-   * @type {(number|{ cols: number })}
-   */
-  sm: rowColumns,
-
-  /**
-   * The number of columns that will fit next to each other on medium devices (≥768px)
-   *
-   * @type {(number|{ cols: number })}
-   */
-  md: rowColumns,
-
-  /**
-   * The number of columns that will fit next to each other on large devices (≥992px)
-   *
-   * @type {(number|{ cols: number })}
-   */
-  lg: rowColumns,
-
-  /**
-   * The number of columns that will fit next to each other on extra large devices (≥1200px)
-   *
-   * @type {(number|{ cols: number })}
-   */
-  xl: rowColumns,
+type BreakpointProps = {
+  xs?: BreakpointValue;
+  sm?: BreakpointValue;
+  md?: BreakpointValue;
+  lg?: BreakpointValue;
+  xl?: BreakpointValue;
 };
 
-const defaultProps = {
-  noGutters: false,
-};
+export type ColProps = BreakpointProps & {
+  bsPrefix?: string;
+  noGutters?: boolean;
+  as?: React.ElementType;
+  className?: string;
+} & Omit<React.HTMLAttributes<HTMLElement>, keyof BreakpointProps>;
 
-
-export function Col ({
+export function Col({
   bsPrefix,
   className,
-  noGutters,
-  // Need to define the default "as" during prop destructuring to be compatible with styled-components github.com/react-bootstrap/react-bootstrap/issues/3595
+  noGutters = false,
   as: Component = 'div',
+  xs,
+  sm,
+  md,
+  lg,
+  xl,
   ...props
-}) {
+}: ColProps) {
   const decoratedBsPrefix = '';
-  const sizePrefix = `col`;
-  const classes = [];
+  const sizePrefix = 'col';
+  const classes: string[] = [];
+
+  const breakpoints: Record<string, BreakpointValue | undefined> = {
+    xl,
+    lg,
+    md,
+    sm,
+    xs,
+  };
 
   DEVICE_SIZES.forEach((brkPoint) => {
-    const propValue = props[brkPoint];
-    delete props[brkPoint];
+    const propValue = breakpoints[brkPoint];
 
-    let cols;
+    let cols: ColWidth | undefined;
     if (propValue != null && typeof propValue === 'object') {
       ({ cols } = propValue);
     } else {
       cols = propValue;
     }
-
     const infix = `-${brkPoint}`;
 
     if (cols != null) classes.push(`${sizePrefix}${infix}-${cols}`);
@@ -106,8 +72,3 @@ export function Col ({
     />
   );
 }
-
-Col.displayName = 'Col';
-Col.propTypes = propTypes;
-Col.defaultProps = defaultProps;
-

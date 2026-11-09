@@ -4,6 +4,7 @@ export const ERRORS = {
   CREDIT_NOTE_ALREADY_OPENED: 'CREDIT_NOTE_ALREADY_OPENED',
   ACCOUNT_INVALID_TYPE: 'ACCOUNT_INVALID_TYPE',
   CREDIT_NOTE_HAS_NO_REMAINING_AMOUNT: 'CREDIT_NOTE_HAS_NO_REMAINING_AMOUNT',
+  CREDIT_NOTE_AMOUNT_SMALLER_THAN_USED: 'CREDIT_NOTE_AMOUNT_SMALLER_THAN_USED',
   INVOICES_HAS_NO_REMAINING_AMOUNT: 'INVOICES_HAS_NO_REMAINING_AMOUNT',
   CREDIT_NOTE_APPLY_TO_INVOICES_NOT_FOUND:
     'CREDIT_NOTE_APPLY_TO_INVOICES_NOT_FOUND',
@@ -11,6 +12,19 @@ export const ERRORS = {
   CREDIT_NOTE_HAS_APPLIED_INVOICES: 'CREDIT_NOTE_HAS_APPLIED_INVOICES',
   CUSTOMER_HAS_LINKED_CREDIT_NOTES: 'CUSTOMER_HAS_LINKED_CREDIT_NOTES',
 };
+
+export const DEFAULT_CREDIT_NOTE_MAIL_SUBJECT =
+  'Credit note {Credit Note Number} from {Company Name}';
+export const DEFAULT_CREDIT_NOTE_MAIL_CONTENT = `Hi {Customer Name},
+
+Please find your credit note # {Credit Note Number} for {Credit Note Amount} attached to this email.
+
+The credit has been applied to your account and can be used toward your future invoices.
+
+If you have any questions, please let us know.
+
+Thanks,
+{Company Name}`;
 
 export const DEFAULT_VIEW_COLUMNS = [];
 export const CreditNoteDefaultViews = [
@@ -88,6 +102,12 @@ export const defaultCreditNoteBrandingAttributes = {
   showCompanyAddress: true,
   companyAddress: '',
   billedToLabel: 'Billed To',
+
+  // Entries
+  lineItemLabel: 'Item',
+  lineQuantityLabel: 'Qty',
+  lineRateLabel: 'Rate',
+  lineTotalLabel: 'Total',
 
   // Total
   total: '$1000.00',

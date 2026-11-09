@@ -1,17 +1,9 @@
-// @ts-nocheck
-import { useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setOrganizations } from '@/store/organizations/organizations.actions';
-import { getCurrentOrganizationFactory } from '@/store/authentication/authentication.selectors';
+import { useSelector } from 'react-redux';
+import { selectIsOrganizationCongrats } from '@/store/organizations/organizations.selectors';
 
-export const useSetOrganizations = () => {
-  const dispatch = useDispatch();
-
-  return useCallback((organizations) => {
-    dispatch(setOrganizations(organizations))    
-  }, [dispatch]);
-};
-
-export const useCurrentOrganization = () => {
-  return useSelector(getCurrentOrganizationFactory())
-};
+/**
+ * Whether the current organization's setup "congrats" step has been reached.
+ * Client-only flag set after the build job completes (see `setOrganizationSetupCompleted`).
+ */
+export const useIsOrganizationSetupCompleted = () =>
+  useSelector(selectIsOrganizationCongrats);

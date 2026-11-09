@@ -29,7 +29,7 @@ export interface IPurchasesByItemsItem {
 
   averageCostPrice: number;
   averageCostPriceFormatted: string;
-  
+
   quantityPurchased: number;
   quantityPurchasedFormatted: string;
 

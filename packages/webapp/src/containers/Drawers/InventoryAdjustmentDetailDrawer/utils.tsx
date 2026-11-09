@@ -1,15 +1,12 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { getColumnWidth } from '@/utils';
-import { TextOverviewTooltipCell } from '@/components';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
+import { TextOverviewTooltipCell } from '@/components';
+import { getColumnWidth } from '@/utils';
 
 export const useInventoryAdjustmentEntriesColumns = () => {
-  // Inventory adjustment details drawer context.
-  const {
-    inventoryAdjustment: { entries },
-  } = useInventoryAdjustmentDrawerContext();
+  const { inventoryAdjustment } = useInventoryAdjustmentDrawerContext();
+  const entries = inventoryAdjustment?.entries ?? [];
 
   return React.useMemo(
     () => [
@@ -56,6 +53,6 @@ export const useInventoryAdjustmentEntriesColumns = () => {
         textOverview: true,
       },
     ],
-    [],
+    [entries],
   );
 };

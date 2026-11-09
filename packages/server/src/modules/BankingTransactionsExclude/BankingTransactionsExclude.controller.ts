@@ -23,7 +23,11 @@ import { GetExcludedBankTransactionsQueryDto } from './dtos/GetExcludedBankTrans
 
 @Controller('banking/exclude')
 @ApiTags('Banking Transactions')
-@ApiExtraModels(GetExcludedBankTransactionResponseDto, ExcludeBankTransactionsBulkDto, PaginatedResponseDto)
+@ApiExtraModels(
+  GetExcludedBankTransactionResponseDto,
+  ExcludeBankTransactionsBulkDto,
+  PaginatedResponseDto,
+)
 @ApiCommonHeaders()
 export class BankingTransactionsExcludeController {
   constructor(
@@ -32,7 +36,10 @@ export class BankingTransactionsExcludeController {
 
   @Put('bulk')
   @ApiOperation({ summary: 'Exclude the given bank transactions.' })
-  @ApiResponse({ status: 200, description: 'Bank transactions excluded successfully.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Bank transactions excluded successfully.',
+  })
   public excludeBankTransactions(@Body() body: ExcludeBankTransactionsBulkDto) {
     return this.excludeBankTransactionsApplication.excludeBankTransactions(
       body.ids,
@@ -41,8 +48,13 @@ export class BankingTransactionsExcludeController {
 
   @Delete('bulk')
   @ApiOperation({ summary: 'Unexclude the given bank transactions.' })
-  @ApiResponse({ status: 200, description: 'Bank transactions unexcluded successfully.' })
-  public unexcludeBankTransactions(@Body() body: ExcludeBankTransactionsBulkDto) {
+  @ApiResponse({
+    status: 200,
+    description: 'Bank transactions unexcluded successfully.',
+  })
+  public unexcludeBankTransactions(
+    @Body() body: ExcludeBankTransactionsBulkDto,
+  ) {
     return this.excludeBankTransactionsApplication.unexcludeBankTransactions(
       body.ids,
     );
@@ -61,7 +73,9 @@ export class BankingTransactionsExcludeController {
           properties: {
             data: {
               type: 'array',
-              items: { $ref: getSchemaPath(GetExcludedBankTransactionResponseDto) },
+              items: {
+                $ref: getSchemaPath(GetExcludedBankTransactionResponseDto),
+              },
             },
           },
         },

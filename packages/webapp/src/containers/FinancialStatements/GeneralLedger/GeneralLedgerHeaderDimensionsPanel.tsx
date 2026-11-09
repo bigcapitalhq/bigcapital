@@ -1,20 +1,19 @@
-// @ts-nocheck
+import { FormGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormGroup, Classes } from '@blueprintjs/core';
-import { BranchMultiSelect, Row, Col } from '@/components';
 import {
   GeneralLedgerHeaderDimensionsPanelProvider,
   useGeneralLedgerHeaderDimensionsContext,
 } from './GeneralLedgerHeaderDimensionsPanelProvider';
-import { useFeatureCan } from '@/hooks/state';
+import { BranchMultiSelect, Row, Col } from '@/components';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Gereral ledger sheet header dismension panel.
  * @returns
  */
-export default function GeneralLedgerHeaderDimensionsPanel() {
+export function GeneralLedgerHeaderDimensionsPanel() {
   return (
     <GeneralLedgerHeaderDimensionsPanelProvider>
       <GeneralLedgerHeaderDimensionsPanelContent />

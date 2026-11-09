@@ -1,52 +1,87 @@
-// @ts-nocheck
-import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
-
+import React, { createContext } from 'react';
+import type { PaymentMadeTableRow } from './components';
+import type { IResourceField } from '@/components/AdvancedFilter/interfaces';
+import type { SettingsGroup } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
 import {
   useResourceViews,
   usePaymentMades,
   useResourceMeta,
+  useSettingsBillPayments,
 } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
-const PaymentMadesListContext = createContext();
+interface PaymentMadesListProviderProps {
+  query?: any;
+  tableStateChanged?: boolean;
+  children?: React.ReactNode;
+}
 
-/**
- * Accounts chart data provider.
- */
-function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
-  // Fetch accounts resource views and fields.
+export interface PaymentMadesListContextValue {
+  paymentMades: PaymentMadeTableRow[] | undefined;
+  pagination: { total?: number; [key: string]: any } | undefined;
+  filterMeta: any;
+  paymentMadesViews: any;
+  fields: IResourceField[];
+  resourceMeta: any;
+  billPaymentSettings: SettingsGroup | undefined;
+  isResourceMetaLoading: boolean;
+  isResourceMetaFetching: boolean;
+  isPaymentsLoading: boolean;
+  isPaymentsFetching: boolean;
+  isViewsLoading: boolean;
+  isEmptyStatus: boolean;
+}
+
+const PaymentMadesListContext = createContext<PaymentMadesListContextValue>(
+  {} as PaymentMadesListContextValue,
+);
+
+function PaymentMadesListProvider({
+  query,
+  tableStateChanged,
+  ...props
+}: PaymentMadesListProviderProps) {
   const { data: paymentMadesViews, isLoading: isViewsLoading } =
     useResourceViews('bill_payments');
 
-  // Fetch the accounts resource fields.
   const {
     data: resourceMeta,
     isLoading: isResourceMetaLoading,
     isFetching: isResourceMetaFetching,
   } = useResourceMeta('bill_payments');
 
-  // Fetch accounts list according to the given custom view id.
   const {
-    data: { paymentMades, pagination, filterMeta },
+    data: paymentMadesData,
     isLoading: isPaymentsLoading,
     isFetching: isPaymentsFetching,
-  } = usePaymentMades(query, { keepPreviousData: true });
+  } = usePaymentMades(query);
 
-  // Detarmines the datatable empty status.
+  const listData = paymentMadesData as
+    | {
+        data?: PaymentMadeTableRow[];
+        pagination?: { total?: number; [key: string]: any };
+        filterMeta?: any;
+      }
+    | undefined;
+
+  const { data: billPaymentSettings } = useSettingsBillPayments();
+
   const isEmptyStatus =
-    isEmpty(paymentMades) && !isPaymentsLoading && !tableStateChanged;
+    isEmpty(listData?.data) && !isPaymentsLoading && !tableStateChanged;
 
-  // Provider payload.
-  const provider = {
-    paymentMades,
-    pagination,
-    filterMeta,
+  const provider: PaymentMadesListContextValue = {
+    paymentMades: listData?.data,
+    pagination: listData?.pagination,
+    filterMeta: listData?.filterMeta,
     paymentMadesViews,
 
-    fields: getFieldsFromResourceMeta(resourceMeta.fields),
+    fields: resourceMeta?.fields
+      ? getFieldsFromResourceMeta(resourceMeta.fields)
+      : [],
     resourceMeta,
+    billPaymentSettings,
     isResourceMetaLoading,
     isResourceMetaFetching,
 

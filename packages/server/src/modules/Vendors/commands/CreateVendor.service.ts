@@ -7,7 +7,6 @@ import { events } from '@/common/events/events';
 import {
   IVendorEventCreatedPayload,
   IVendorEventCreatingPayload,
-  IVendorNewDTO,
 } from '../types/Vendors.types';
 import { CreateEditVendorDTOService } from './CreateEditVendorDTO';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -35,7 +34,10 @@ export class CreateVendorService {
    * @param  {IVendorNewDTO} vendorDTO
    * @return {Promise<void>}
    */
-  public async createVendor(vendorDTO: CreateVendorDto, trx?: Knex.Transaction) {
+  public async createVendor(
+    vendorDTO: CreateVendorDto,
+    trx?: Knex.Transaction,
+  ) {
     // Transforms create DTO to customer object.
     const vendorObject = await this.transformDTO.transformCreateDTO(vendorDTO);
 

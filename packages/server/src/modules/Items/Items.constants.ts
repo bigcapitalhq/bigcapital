@@ -1,3 +1,32 @@
+/**
+ * Units of measure an item can be measured in.
+ * Keep in sync with the webapp `ITEM_UNITS` constant.
+ */
+export const ITEM_UNITS = [
+  'piece',
+  'dozen',
+  'pair',
+  'set',
+  'pack',
+  'box',
+  'kg',
+  'g',
+  'lb',
+  'oz',
+  'l',
+  'ml',
+  'm',
+  'cm',
+  'm2',
+  'm3',
+  'hour',
+  'day',
+] as const;
+
+export const DEFAULT_ITEM_UNIT = 'piece';
+
+export type ItemUnit = (typeof ITEM_UNITS)[number];
+
 export const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -74,6 +103,7 @@ export const ItemsSampleData = [
     'Item Type': 'Inventory',
     'Item Name': 'Hettinger, Schumm and Bartoletti',
     'Item Code': '1000',
+    'Reorder Point': '10',
     Sellable: 'T',
     Purchasable: 'T',
     'Cost Price': '10000',
@@ -91,6 +121,7 @@ export const ItemsSampleData = [
     'Item Type': 'Inventory',
     'Item Name': 'Schmitt Group',
     'Item Code': '1001',
+    'Reorder Point': '10',
     Sellable: 'T',
     Purchasable: 'T',
     'Cost Price': '10000',
@@ -108,6 +139,7 @@ export const ItemsSampleData = [
     'Item Type': 'Inventory',
     'Item Name': 'Marks - Carroll',
     'Item Code': '1002',
+    'Reorder Point': '10',
     Sellable: 'T',
     Purchasable: 'T',
     'Cost Price': '10000',
@@ -125,6 +157,7 @@ export const ItemsSampleData = [
     'Item Type': 'Inventory',
     'Item Name': 'VonRueden, Ruecker and Hettinger',
     'Item Code': '1003',
+    'Reorder Point': '10',
     Sellable: 'T',
     Purchasable: 'T',
     'Cost Price': '10000',

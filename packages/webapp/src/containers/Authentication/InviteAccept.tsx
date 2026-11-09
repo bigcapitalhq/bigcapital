@@ -1,15 +1,13 @@
-// @ts-nocheck
-import React from 'react';
 import { useParams } from 'react-router-dom';
-import InviteAcceptForm from './InviteAcceptForm';
-import AuthInsider from '@/containers/Authentication/AuthInsider';
+import { InviteAcceptForm } from './InviteAcceptForm';
 import { InviteAcceptProvider } from './InviteAcceptProvider';
+import { AuthInsider } from '@/containers/Authentication/AuthInsider';
 
 /**
  * Authentication invite page.
  */
-export default function Invite() {
-  const { token } = useParams();
+export function Invite() {
+  const { token } = useParams<{ token: string }>();
 
   return (
     <AuthInsider>

@@ -1,5 +1,6 @@
 import { sum, isEmpty } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import {
   IAPAgingSummaryData,
   IAPAgingSummaryVendor,
@@ -14,7 +15,10 @@ import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { APAgingSummaryRepository } from './APAgingSummaryRepository';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { APAgingSummaryQueryDto } from './APAgingSummaryQuery.dto';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class APAgingSummarySheet extends AgingSummaryReport {
   readonly repository: APAgingSummaryRepository;
@@ -152,9 +156,9 @@ export class APAgingSummarySheet extends AgingSummaryReport {
   private vendorsSection = (
     vendors: ModelObject<Vendor>[],
   ): IAPAgingSummaryVendor[] => {
-    return R.compose(
-      R.when(this.isVendorNodesFilter, this.vendorsFilter),
+    return flow(
       this.vendorsMapper,
+      when(this.isVendorNodesFilter, this.vendorsFilter),
     )(vendors);
   };
 

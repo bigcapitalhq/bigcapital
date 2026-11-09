@@ -1,23 +1,24 @@
-// @ts-nocheck
-import * as R from 'ramda';
 import { Spinner } from '@blueprintjs/core';
-import { Suspense, lazy } from 'react';
-
+import * as FF from 'fp-ts/function';
+import React, { Suspense, lazy } from 'react';
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
-
-import { DashboardPageContent } from '@/components';
-
-import AccountTransactionsActionsBar from './AccountTransactionsActionsBar';
+import { withBanking } from '../withBanking';
+import { AccountTransactionsActionsBar } from './AccountTransactionsActionsBar';
+import { AccountTransactionsAside } from './AccountTransactionsAside';
+import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
+import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
 import {
   AccountTransactionsProvider,
   useAccountTransactionsContext,
 } from './AccountTransactionsProvider';
-import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
-import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
-import { AppContentShell } from '@/components/AppShell';
-import { AccountTransactionsAside } from './AccountTransactionsAside';
 import { AccountTransactionsLoadingBar } from './components';
-import { withBanking } from '../withBanking';
+import type { WithBankingProps } from '../withBanking';
+import { DashboardPageContent } from '@/components';
+import { AppContentShell } from '@/components/AppShell';
+import { CashFlowDrawers } from '@/containers/CashFlow/CashFlowDrawers';
+
+interface AccountTransactionsListRootProps
+  extends Pick<WithBankingProps, 'openMatchingTransactionAside'> {}
 
 /**
  * Account transactions list.
@@ -25,9 +26,11 @@ import { withBanking } from '../withBanking';
 function AccountTransactionsListRoot({
   // #withBanking
   openMatchingTransactionAside,
-}) {
+}: AccountTransactionsListRootProps) {
   return (
     <AccountTransactionsProvider>
+      <CashFlowDrawers />
+
       <AppContentShell hideAside={!openMatchingTransactionAside}>
         <AccountTransactionsMain />
         <AccountTransactionsAside />
@@ -40,7 +43,9 @@ function AccountTransactionsMain() {
   const { setScrollableRef } = useAccountTransactionsContext();
 
   return (
-    <AppContentShell.Main ref={(e) => setScrollableRef(e)}>
+    <AppContentShell.Main
+      ref={(e: HTMLDivElement | null) => setScrollableRef(e)}
+    >
       <AccountTransactionsActionsBar />
       <AccountTransactionsLoadingBar />
       <AccountTransactionsDetailsBar />
@@ -56,18 +61,25 @@ function AccountTransactionsMain() {
   );
 }
 
-export default R.compose(
+export const AccountTransactionsList = FF.pipe(
+  AccountTransactionsListRoot,
   withBanking(
     ({ selectedUncategorizedTransactionId, openMatchingTransactionAside }) => ({
       selectedUncategorizedTransactionId,
       openMatchingTransactionAside,
     }),
   ),
-)(AccountTransactionsListRoot);
+);
 
-const AccountsTransactionsAll = lazy(() => import('./AccountsTransactionsAll'));
-const AccountsTransactionsUncategorized = lazy(
-  () => import('./AllTransactionsUncategorized'),
+const AccountsTransactionsAll = lazy(() =>
+  import('./AccountsTransactionsAll').then((m) => ({
+    default: m.AccountTransactionsAll,
+  })),
+);
+const AccountsTransactionsUncategorized = lazy(() =>
+  import('./AllTransactionsUncategorized').then((m) => ({
+    default: m.AllTransactionsUncategorized,
+  })),
 );
 
 function AccountTransactionsContent() {

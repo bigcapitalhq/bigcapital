@@ -1,28 +1,23 @@
-// @ts-nocheck
 import React from 'react';
-
-import {
-  CommercialDocFooter,
-  T,
-  If,
-  DetailsMenu,
-  DetailItem,
-} from '@/components';
+import intl from 'react-intl-universal';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
+import { CommercialDocFooter, If, DetailsMenu, DetailItem } from '@/components';
 
 /**
  * Payment receive detail footer.
- * @returns {React.JSX}
  */
-export default function PaymentReceiveDetailFooter() {
+export function PaymentReceiveDetailFooter() {
   const { paymentReceive } = usePaymentReceiveDetailContext();
 
+  if (!paymentReceive) {
+    return null;
+  }
   return (
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-        <If condition={paymentReceive.statement}>
+        <If condition={!!paymentReceive.statement}>
           <DetailItem
-            label={<T id={'payment_receive.details.statement'} />}
+            label={intl.get('payment_receive.details.statement')}
             multiline
           >
             {paymentReceive.statement}

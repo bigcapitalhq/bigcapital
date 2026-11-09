@@ -1,9 +1,28 @@
-// @ts-nocheck
 import { connect } from 'react-redux';
-import { setGlobalErrors } from '@/store/globalErrors/globalErrors.actions';
+import { Dispatch } from 'redux';
+import type { GlobalErrorsData } from '@/store/global-errors/global-errors.reducer';
+import type { ComponentType } from 'react';
+import { setGlobalErrors } from '@/store/global-errors/global-errors.actions';
 
-export const mapDispatchToProps = (dispatch) => ({
-  globalErrorsSet: (errors) => dispatch(setGlobalErrors(errors)),
+export interface WithGlobalErrorsActionsProps {
+  globalErrorsSet: (errors: Partial<GlobalErrorsData>) => void;
+}
+
+export const mapDispatchToProps = (
+  dispatch: Dispatch,
+): WithGlobalErrorsActionsProps => ({
+  globalErrorsSet: (errors: Partial<GlobalErrorsData>) =>
+    dispatch(setGlobalErrors(errors)),
 });
 
-export const withGlobalErrorsActions = connect(null, mapDispatchToProps);
+export function withGlobalErrorsActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithGlobalErrorsActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithGlobalErrorsActionsProps>
+  >;
+}

@@ -9,7 +9,7 @@ import { ICreditNoteCreatingPayload } from '@/modules/CreditNotes/types/CreditNo
 export class CreditNoteBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on credit note creating.

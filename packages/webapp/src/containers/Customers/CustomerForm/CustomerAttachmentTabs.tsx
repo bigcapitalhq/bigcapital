@@ -1,17 +1,10 @@
-// @ts-nocheck
-import React, {
-  useMemo,
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react';
 import { Dragzone, FormattedMessage as T } from '@/components';
 
-function CustomerAttachmentTabs() {
+export function CustomerAttachmentTabs() {
   return (
     <div>
       <Dragzone
+        className={''}
         initialFiles={[]}
         onDrop={null}
         onDeleteFile={[]}
@@ -20,5 +13,3 @@ function CustomerAttachmentTabs() {
     </div>
   );
 }
-
-export default CustomerAttachmentTabs;

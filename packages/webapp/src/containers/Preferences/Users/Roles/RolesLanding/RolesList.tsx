@@ -1,18 +1,14 @@
-// @ts-nocheck
 import React from 'react';
-
+import { RolesDataTable } from './RolesDataTable';
 import { RolesListProvider } from './RolesListProvider';
-import RolesDataTable from './RolesDataTable';
 
 /**
  * Roles list.
  */
-function RolesListPrefernces() {
+export function RolesListPrefernces() {
   return (
     <RolesListProvider>
       <RolesDataTable />
     </RolesListProvider>
   );
 }
-
-export default RolesListPrefernces;

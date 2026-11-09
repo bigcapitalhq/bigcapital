@@ -1,4 +1,3 @@
-
 import { IFinancialSheetCommonMeta } from '../../types/Report.types';
 import { IFinancialTable } from '../../types/Table.types';
 import {
@@ -7,11 +6,10 @@ import {
   ITransactionsByContactsFilter,
 } from '../TransactionsByContact/TransactionsByContact.types';
 
-export interface ITransactionsByCustomersAmount
-  extends ITransactionsByContactsAmount {}
+export type ITransactionsByCustomersAmount = ITransactionsByContactsAmount;
 
-export interface ITransactionsByCustomersTransaction
-  extends ITransactionsByContactsTransaction {}
+export type ITransactionsByCustomersTransaction =
+  ITransactionsByContactsTransaction;
 
 export interface ITransactionsByCustomersCustomer {
   customerName: string;
@@ -41,7 +39,7 @@ export interface ITransactionsByCustomersTable extends IFinancialTable {
 export interface ITransactionsByCustomersService {
   transactionsByCustomers(
     tenantId: number,
-    filter: ITransactionsByCustomersFilter
+    filter: ITransactionsByCustomersFilter,
   ): Promise<ITransactionsByCustomersStatement>;
 }
 export interface ITransactionsByCustomersMeta

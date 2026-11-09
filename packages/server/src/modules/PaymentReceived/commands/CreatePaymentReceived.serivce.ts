@@ -44,42 +44,14 @@ export class CreatePaymentReceivedService {
   ) {
     const tenant = await this.tenancyContext.getTenant(true);
 
-    // Validate customer existance.
-    const paymentCustomer = await this.customer()
-      .query()
-      .findById(paymentReceiveDTO.customerId)
-      .throwIfNotFound();
-
-    // Transformes the payment receive DTO to model.
-    const paymentReceiveObj = await this.transformCreateDTOToModel(
-      paymentCustomer,
-      paymentReceiveDTO,
-    );
-    // Validate payment receive number uniquiness.
-    await this.validators.validatePaymentReceiveNoExistance(
-      paymentReceiveObj.paymentReceiveNo,
-    );
-    // Validate the deposit account existance and type.
-    const depositAccount = await this.validators.getDepositAccountOrThrowError(
-      paymentReceiveDTO.depositAccountId,
-    );
-    // Validate payment receive invoices IDs existance.
-    await this.validators.validateInvoicesIDsExistance(
-      paymentReceiveDTO.customerId,
-      paymentReceiveDTO.entries,
-    );
-    // Validate invoice payment amount.
-    await this.validators.validateInvoicesPaymentsAmount(
-      paymentReceiveDTO.entries,
-    );
-    // Validates the payment account currency code.
-    this.validators.validatePaymentAccountCurrency(
-      depositAccount.currencyCode,
-      paymentCustomer.currencyCode,
-      tenant?.metadata.baseCurrency,
-    );
     // Creates a payment receive transaction under UOW envirment.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the payment receive operation against the locked invoice rows.
+      const { paymentReceiveObj } = await this.validate(
+        paymentReceiveDTO,
+        tenant?.metadata.baseCurrency,
+        trx,
+      );
       // Triggers `onPaymentReceiveCreating` event.
       await this.eventPublisher.emitAsync(events.paymentReceive.onCreating, {
         trx,
@@ -102,6 +74,60 @@ export class CreatePaymentReceivedService {
 
       return paymentReceive;
     }, trx);
+  }
+
+  /**
+   * Validates the create payment receive operation: customer existence,
+   * payment number uniqueness, deposit account and currency, invoices
+   * existence and payment amounts (locks the invoice rows).
+   * @param {CreatePaymentReceivedDto} paymentReceiveDTO - Payment receive create DTO.
+   * @param {string} baseCurrency - Tenant base currency.
+   * @param {Knex.Transaction} trx - Locks the invoice rows (FOR UPDATE).
+   * @returns {Promise<{ paymentReceiveObj: PaymentReceived }>}
+   */
+  async validate(
+    paymentReceiveDTO: CreatePaymentReceivedDto,
+    baseCurrency: string,
+    trx: Knex.Transaction,
+  ): Promise<{ paymentReceiveObj: PaymentReceived }> {
+    // Validate customer existance.
+    const paymentCustomer = await this.customer()
+      .query(trx)
+      .findById(paymentReceiveDTO.customerId)
+      .throwIfNotFound();
+
+    // Transformes the payment receive DTO to model.
+    const paymentReceiveObj = await this.transformCreateDTOToModel(
+      paymentCustomer,
+      paymentReceiveDTO,
+    );
+    // Validate payment receive number uniquiness.
+    await this.validators.validatePaymentReceiveNoExistance(
+      paymentReceiveObj.paymentReceiveNo,
+    );
+    // Validate the deposit account existance and type.
+    const depositAccount = await this.validators.getDepositAccountOrThrowError(
+      paymentReceiveDTO.depositAccountId,
+    );
+    // Validates the payment account currency code.
+    this.validators.validatePaymentAccountCurrency(
+      depositAccount.currencyCode,
+      paymentCustomer.currencyCode,
+      baseCurrency,
+    );
+    // Validate payment receive invoices IDs existance (locks the invoice rows).
+    await this.validators.validateInvoicesIDsExistance(
+      paymentReceiveDTO.customerId,
+      paymentReceiveDTO.entries,
+      trx,
+    );
+    // Validate invoice payment amount against the locked rows.
+    await this.validators.validateInvoicesPaymentsAmount(
+      paymentReceiveDTO.entries,
+      [],
+      trx,
+    );
+    return { paymentReceiveObj };
   }
 
   /**

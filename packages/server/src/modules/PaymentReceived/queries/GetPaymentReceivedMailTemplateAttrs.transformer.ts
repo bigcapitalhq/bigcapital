@@ -1,4 +1,4 @@
-import { Transformer } from "@/modules/Transformer/Transformer";
+import { Transformer } from '@/modules/Transformer/Transformer';
 
 export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer {
   /**
@@ -65,7 +65,7 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
    * @returns {string}
    */
   public totalLabel(): string {
-    return 'Total';
+    return this.context.i18n.t('payment_receive.mail.total');
   }
 
   /**
@@ -81,7 +81,7 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
    * @returns {string}
    */
   public subtotalLabel(): string {
-    return 'Subtotal';
+    return this.context.i18n.t('payment_receive.mail.subtotal');
   }
 
   /**
@@ -89,7 +89,9 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
    * @returns {string}
    */
   public paymentNumberLabel(): string {
-    return 'Payment # {paymentNumber}';
+    return this.context.i18n.t('payment_receive.mail.payment_number', {
+      args: { paymentNumber: this.paymentNumber() },
+    });
   }
 
   /**
@@ -107,7 +109,7 @@ export class GetPaymentReceivedMailTemplateAttrsTransformer extends Transformer 
   public items() {
     return this.item(
       this.options.paymentReceived.entries,
-      new GetPaymentReceivedMailTemplateItemAttrsTransformer()
+      new GetPaymentReceivedMailTemplateItemAttrsTransformer(),
     );
   }
 }

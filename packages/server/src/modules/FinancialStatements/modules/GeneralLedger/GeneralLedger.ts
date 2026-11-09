@@ -1,12 +1,12 @@
-import { isEmpty, get, last, head } from 'lodash';
+import { isEmpty, defaultTo, get, last, head } from 'lodash';
 import * as moment from 'moment';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { assoc, when } from '@/common/fp';
 import {
   IGeneralLedgerSheetQuery,
   IGeneralLedgerSheetAccount,
   IGeneralLedgerSheetAccountBalance,
   IGeneralLedgerSheetAccountTransaction,
-  IGeneralLedgerNumberFormat,
 } from './GeneralLedger.types';
 import { GeneralLedgerRepository } from './GeneralLedgerRepository';
 import { calculateRunningBalance } from './_utils';
@@ -19,9 +19,12 @@ import { Account } from '@/modules/Accounts/models/Account.model';
 import { ModelObject } from 'objection';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
 import { getTransactionTypeLabel } from '@/modules/BankingTransactions/utils';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
-export class GeneralLedgerSheet extends R.compose(FinancialSheetStructure)(
+export class GeneralLedgerSheet extends flow(FinancialSheetStructure)(
   FinancialSheet,
 ) {
   public query: IGeneralLedgerSheetQuery;
@@ -62,7 +65,7 @@ export class GeneralLedgerSheet extends R.compose(FinancialSheetStructure)(
     openingBalance: number,
     runningBalance?: number,
   ): number {
-    const lastRunningBalance = runningBalance || openingBalance;
+    const lastRunningBalance = runningBalance ?? openingBalance;
 
     const amount = Ledger.getAmount(
       entry.credit,
@@ -301,11 +304,10 @@ export class GeneralLedgerSheet extends R.compose(FinancialSheetStructure)(
       closingBalance,
     };
 
-    return R.compose(
-      R.when(
-        () => this.isAccountNodeIncludesClosingSubaccounts(account.id),
-        R.assoc('closingBalanceSubaccounts', closingBalanceSubaccounts),
-      ),
+    return when(
+      () => this.isAccountNodeIncludesClosingSubaccounts(account.id),
+      (node: IGeneralLedgerSheetAccount) =>
+        assoc('closingBalanceSubaccounts', closingBalanceSubaccounts, node),
     )(initialNode);
   };
 
@@ -358,7 +360,7 @@ export class GeneralLedgerSheet extends R.compose(FinancialSheetStructure)(
     nodes: ModelObject<Account>[],
   ): ModelObject<Account>[] => {
     return this.filterNodesDeep(nodes, (node: IGeneralLedgerSheetAccount) => {
-      if (R.isEmpty(this.query.accountsIds)) {
+      if (isEmpty(this.query.accountsIds)) {
         return true;
       }
       // Returns true if the given account id exists in the filter.
@@ -375,13 +377,13 @@ export class GeneralLedgerSheet extends R.compose(FinancialSheetStructure)(
   private accountsWalker(
     accounts: ModelObject<Account>[],
   ): IGeneralLedgerSheetAccount[] {
-    return R.compose(
-      R.defaultTo([]),
-      this.filterAccountNodesByTransactionsFilter,
-      this.accountNodesDeepMap,
-      R.defaultTo([]),
-      this.filterAccountNodesByAccountsFilter,
+    return flow(
       this.nestedAccountsNode,
+      this.filterAccountNodesByAccountsFilter,
+      (nodes: ModelObject<Account>[]) => defaultTo(nodes, []),
+      this.accountNodesDeepMap,
+      this.filterAccountNodesByTransactionsFilter,
+      (nodes: IGeneralLedgerSheetAccount[]) => defaultTo(nodes, []),
     )(accounts);
   }
 

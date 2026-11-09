@@ -7,10 +7,12 @@ export const INVITE_ROUTES = {
   RESEND: '/api/invite/users/{id}/resend',
   ACCEPT: '/api/invite/accept/{token}',
   CHECK: '/api/invite/check/{token}',
+  BULK_INVITE: '/api/invite/bulk',
 } as const satisfies Record<string, keyof paths>;
 
 export type InviteUserBody = OpRequestBody<OpForPath<typeof INVITE_ROUTES.INVITE, 'patch'>>;
 export type AcceptInviteBody = OpRequestBody<OpForPath<typeof INVITE_ROUTES.ACCEPT, 'post'>>;
+export type BulkInviteBody = OpRequestBody<OpForPath<typeof INVITE_ROUTES.BULK_INVITE, 'post'>>;
 
 export async function acceptInvite(
   fetcher: ApiFetcher,
@@ -39,4 +41,13 @@ export async function inviteUser(
 export async function resendInvite(fetcher: ApiFetcher, id: number): Promise<void> {
   const post = fetcher.path(INVITE_ROUTES.RESEND).method('post').create();
   await post({ id });
+}
+
+export async function bulkSendInviteUsers(
+  fetcher: ApiFetcher,
+  body: BulkInviteBody
+): Promise<unknown> {
+  const post = fetcher.path(INVITE_ROUTES.BULK_INVITE).method('post').create();
+  const { data } = await post(body as never);
+  return data;
 }

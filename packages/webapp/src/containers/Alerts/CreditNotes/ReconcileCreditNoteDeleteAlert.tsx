@@ -1,40 +1,40 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
 import { useDeleteReconcileCredit } from '@/hooks/query';
-import { compose } from '@/utils';
+
+interface ReconcileCreditNoteDeleteAlertPayload {
+  creditNoteId: number;
+}
+
+interface ReconcileCreditNoteDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ReconcileCreditNoteDeleteAlertPayload;
+}
 
 /**
  * Reconcile credit note delete alert.
  */
-function ReconcileCreditNoteDeleteAlert({
+function ReconcileCreditNoteDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { creditNoteId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { isLoading, mutateAsync: deleteReconcileCreditMutate } =
+}: ReconcileCreditNoteDeleteAlertProps): React.ReactElement {
+  const { isPending: isLoading, mutateAsync: deleteReconcileCreditMutate } =
     useDeleteReconcileCredit();
 
-  // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
@@ -47,15 +47,13 @@ function ReconcileCreditNoteDeleteAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
-          // handleDeleteErrors(errors);
-        },
-      )
+      .catch((error: Error) => {
+        // Bugfix: the original had a commented-out `handleDeleteErrors(errors)` and empty catch — failures were silently swallowed.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -63,8 +61,8 @@ function ReconcileCreditNoteDeleteAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -83,8 +81,9 @@ function ReconcileCreditNoteDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const ReconcileCreditNoteDeleteAlert = FF.pipe(
+  ReconcileCreditNoteDeleteAlertInner,
   withDrawerActions,
-)(ReconcileCreditNoteDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import '@/style/components/Skeleton.scss';
-
 import { randomNumber } from '@/utils';
 
 export function SkeletonText({

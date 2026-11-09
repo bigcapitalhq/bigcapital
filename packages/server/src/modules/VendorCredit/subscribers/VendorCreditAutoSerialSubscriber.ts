@@ -8,14 +8,14 @@ import { IVendorCreditCreatedPayload } from '../types/VendorCredit.types';
 export class VendorCreditAutoSerialSubscriber {
   constructor(
     private readonly vendorCreditIncrementService: VendorCreditAutoIncrementService,
-  ) { }
+  ) {}
 
   /**
    * Auto serial increment once vendor credit created.
    * @param {IVendorCreditCreatedPayload} payload -
    */
   @OnEvent(events.vendorCredit.onCreated)
-  async autoSerialIncrementOnceCreated({ }: IVendorCreditCreatedPayload) {
+  async autoSerialIncrementOnceCreated({}: IVendorCreditCreatedPayload) {
     await this.vendorCreditIncrementService.incrementSerialNumber();
   }
 }

@@ -1,16 +1,17 @@
-// @ts-nocheck
 import React from 'react';
-
 import '@/style/pages/RefundVendorCredit/RefundVendorCredit.scss';
-
+import { RefundVendorCreditForm } from './RefundVendorCreditForm';
 import { RefundVendorCreditFormProvider } from './RefundVendorCreditFormProvider';
-import RefundVendorCreditForm from './RefundVendorCreditForm';
 
-export default function RefundVendorCreditDialogContent({
-  // #ownProps
+interface RefundVendorCreditDialogContentProps {
+  dialogName: string;
+  vendorCreditId?: number | null;
+}
+
+export function RefundVendorCreditDialogContent({
   dialogName,
   vendorCreditId,
-}) {
+}: RefundVendorCreditDialogContentProps): React.ReactElement {
   return (
     <RefundVendorCreditFormProvider
       vendorCreditId={vendorCreditId}

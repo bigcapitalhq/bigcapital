@@ -1,11 +1,24 @@
-// @ts-nocheck
+import { Intent, Menu, MenuItem, Tag } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Menu, MenuItem, Tag } from '@blueprintjs/core';
-import { Icon } from '@/components';
-import { safeCallback } from '@/utils';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import FinancialLoadingBar from '@/containers/FinancialStatements/FinancialLoadingBar';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { BankingTransactionResponse } from '@bigcapital/sdk-ts';
+import { Icon } from '@/components';
+import { FinancialLoadingBar } from '@/containers/FinancialStatements/FinancialLoadingBar';
+import { safeCallback } from '@/utils';
+
+export type AccountTransactionRow = BankingTransactionResponse;
+
+interface ActionsMenuPayload {
+  onUncategorize: (row: AccountTransactionRow) => void;
+  onUnmatch: (row: AccountTransactionRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: AccountTransactionRow };
+  payload: ActionsMenuPayload;
+}
 
 export function AccountTransactionsLoadingBar() {
   const {
@@ -28,7 +41,7 @@ export function AccountTransactionsLoadingBar() {
 export function ActionsMenu({
   payload: { onUncategorize, onUnmatch },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       {original.status === 'categorized' && (
@@ -49,19 +62,19 @@ export function ActionsMenu({
   );
 }
 
-const allTransactionsStatusAccessor = (transaction) => {
+const allTransactionsStatusAccessor = (transaction: AccountTransactionRow) => {
   return (
     <Tag
       intent={
         transaction.status === 'categorized'
           ? Intent.SUCCESS
           : transaction.status === 'matched'
-          ? Intent.SUCCESS
-          : Intent.NONE
+            ? Intent.SUCCESS
+            : Intent.NONE
       }
       minimal={transaction.status === 'manual'}
     >
-      {transaction.formatted_status}
+      {transaction.formattedStatus}
     </Tag>
   );
 };
@@ -69,13 +82,13 @@ const allTransactionsStatusAccessor = (transaction) => {
 /**
  * Retrieve account transctions table columns.
  */
-export function useAccountTransactionsColumns() {
+export function useAccountTransactionsColumns(): DataTableColumn<AccountTransactionRow>[] {
   return React.useMemo(
     () => [
       {
         id: 'date',
         Header: intl.get('date'),
-        accessor: 'formatted_date',
+        accessor: 'formattedDate',
         width: 110,
         className: 'date',
         clickable: true,
@@ -84,7 +97,7 @@ export function useAccountTransactionsColumns() {
       {
         id: 'type',
         Header: intl.get('type'),
-        accessor: 'formatted_transaction_type',
+        accessor: 'formattedTransactionType',
         className: 'type',
         width: 140,
         textOverview: true,
@@ -93,7 +106,7 @@ export function useAccountTransactionsColumns() {
       {
         id: 'transaction_number',
         Header: 'Transaction #',
-        accessor: 'transaction_number',
+        accessor: 'transactionNumber',
         width: 160,
         className: 'transaction_number',
         clickable: true,
@@ -102,7 +115,7 @@ export function useAccountTransactionsColumns() {
       {
         id: 'reference_number',
         Header: 'Ref.#',
-        accessor: 'reference_number',
+        accessor: 'referenceNumber',
         width: 160,
         className: 'reference_number',
         clickable: true,
@@ -116,7 +129,7 @@ export function useAccountTransactionsColumns() {
       {
         id: 'deposit',
         Header: intl.get('banking.label.deposit'),
-        accessor: 'formatted_deposit',
+        accessor: 'formattedDeposit',
         width: 110,
         className: 'deposit',
         textOverview: true,
@@ -127,7 +140,7 @@ export function useAccountTransactionsColumns() {
       {
         id: 'withdrawal',
         Header: intl.get('banking.label.withdrawal'),
-        accessor: 'formatted_withdrawal',
+        accessor: 'formattedWithdrawal',
         className: 'withdrawal',
         width: 150,
         textOverview: true,
@@ -138,7 +151,7 @@ export function useAccountTransactionsColumns() {
       {
         id: 'running_balance',
         Header: intl.get('banking.label.running_balance'),
-        accessor: 'formatted_running_balance',
+        accessor: 'formattedRunningBalance',
         className: 'running_balance',
         align: 'right',
         width: 150,

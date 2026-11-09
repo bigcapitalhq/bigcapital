@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import { Injectable } from '@nestjs/common';
 import * as validator from 'is-my-json-valid';
 import { IFilterRole } from './DynamicFilter/DynamicFilter.types';
@@ -90,9 +89,7 @@ export class DynamicListFilterRoles extends DynamicFilterRoleAbstractor {
     model: MetableModel,
     filterRoles: IFilterRole[],
   ): DynamicFilterAdvancedFilter => {
-    const filterRolesParsed = R.compose(this.incrementFilterRolesIndex)(
-      filterRoles,
-    );
+    const filterRolesParsed = this.incrementFilterRolesIndex(filterRoles);
     // Validate filter roles json schema.
     this.validateFilterRolesSchema(filterRolesParsed);
 

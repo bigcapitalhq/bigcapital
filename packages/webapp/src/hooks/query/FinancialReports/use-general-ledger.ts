@@ -1,63 +1,71 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchGeneralLedgerTable,
+  fetchGeneralLedgerXlsx,
+  fetchGeneralLedgerCsv,
+  fetchGeneralLedgerPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  GeneralLedgerTableQuery,
+  GeneralLedgerTableResponse,
+  GeneralLedgerXlsxQuery,
+  GeneralLedgerCsvQuery,
+  GeneralLedgerPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve general ledger (GL) sheet.
- */
-export function useGeneralLedgerSheet(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.GENERAL_LEDGER, query],
-    {
-      method: 'get',
-      url: '/reports/general-ledger',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function useGeneralLedgerSheet(
+  query: GeneralLedgerTableQuery,
+  props?: Omit<
+    UseQueryOptions<GeneralLedgerTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.generalLedger(query),
+    queryFn: () => fetchGeneralLedgerTable(fetcher, query),
+  });
 }
-export const useGeneralLedgerSheetXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/general-ledger',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'general_ledger.xlsx',
-    ...args,
-  });
-};
 
-export const useGeneralLedgerSheetCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/general-ledger',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'general_ledger.csv',
+export function useGeneralLedgerSheetXlsxExport(
+  query: GeneralLedgerXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchGeneralLedgerXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'general_ledger.xlsx'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves the general ledger pdf document data.
- */
-export function useGeneralLedgerPdf(query = {}) {
-  return useRequestPdf({
-    url: `/reports/general-ledger`,
-    params: query,
+export function useGeneralLedgerSheetCsvExport(
+  query: GeneralLedgerCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
+    ...args,
+    mutationFn: () =>
+      fetchGeneralLedgerCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'general_ledger.csv'),
+      ),
   });
+}
+
+export function useGeneralLedgerPdf(query: GeneralLedgerPdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchGeneralLedgerPdf(fetcher, query));
 }

@@ -43,16 +43,6 @@ export class ARAgingSummaryQueryDto extends FinancialSheetBranchesQueryDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
-  @ApiPropertyOptional({
-    description: 'Number format configuration',
-    example: {
-      precision: 2,
-      divideOn1000: false,
-      showZero: true,
-      formatMoney: 'total',
-      negativeFormat: 'parentheses',
-    },
-  })
   numberFormat: NumberFormatQueryDto;
 
   @Transform(({ value }) => parseBoolean(value, false))

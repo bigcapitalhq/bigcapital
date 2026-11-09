@@ -5,10 +5,14 @@ import {
 } from './InventoryValuationSheet.types';
 import { InventoryValuationSheetTable } from './InventoryValuationSheetTable';
 import { Injectable } from '@nestjs/common';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class InventoryValuationSheetTableInjectable {
-  constructor(private readonly sheet: InventoryValuationSheetService) {}
+  constructor(
+    private readonly sheet: InventoryValuationSheetService,
+    private readonly i18n: I18nService,
+  ) {}
 
   /**
    * Retrieves the inventory valuation json table format.
@@ -20,7 +24,7 @@ export class InventoryValuationSheetTableInjectable {
   ): Promise<IInventoryValuationTable> {
     const { data, query, meta } =
       await this.sheet.inventoryValuationSheet(filter);
-    const table = new InventoryValuationSheetTable(data);
+    const table = new InventoryValuationSheetTable(data, this.i18n);
 
     return {
       table: {

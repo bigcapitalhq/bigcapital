@@ -1,11 +1,9 @@
-// @ts-nocheck
 import React from 'react';
-
+import { SidebarOverlayBinded } from '../SidebarOverlay';
+import { useMainSidebarMenu } from './hooks';
 import { SidebarContainer } from './SidebarContainer';
 import { SidebarHead } from './SidebarHead';
 import { SidebarMenu } from './SidebarMenu';
-import { useMainSidebarMenu } from './hooks';
-import { SidebarOverlayBinded } from '../SidebarOverlay';
 
 import '@/style/containers/Dashboard/Sidebar.scss';
 
@@ -39,5 +37,5 @@ function SidebarFooterVersion() {
   if (!REACT_APP_VERSION) {
     return null;
   }
-  return <div class="sidebar__version">v{REACT_APP_VERSION}</div>;
+  return <div className="sidebar__version">v{REACT_APP_VERSION}</div>;
 }

@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ApiKeyModel } from '../models/ApiKey.model';
 import { ClsService } from 'nestjs-cls';
 import { TenantModel } from '@/modules/System/models/TenantModel';
+import { AuthApiKeyPrefix } from '../Auth.constants';
+import { hashApiKey } from '../Auth.utils';
 
 @Injectable()
 export class AuthApiKeyAuthorizeService {
@@ -19,9 +21,12 @@ export class AuthApiKeyAuthorizeService {
    * Authenticate using the given api key.
    */
   async authorize(apiKey: string): Promise<boolean> {
+    if (!apiKey || !apiKey.startsWith(AuthApiKeyPrefix)) {
+      return false;
+    }
     const apiKeyRecord = await this.apikeyModel
       .query()
-      .findOne({ key: apiKey });
+      .findOne({ keyHash: hashApiKey(apiKey) });
 
     if (!apiKeyRecord) {
       return false;
@@ -41,7 +46,6 @@ export class AuthApiKeyAuthorizeService {
 
     if (!tenant) return false;
 
-    this.clsService.set('tenantId', tenant.id);
     this.clsService.set('organizationId', tenant.organizationId);
     this.clsService.set('userId', apiKeyRecord.userId);
 

@@ -1,10 +1,27 @@
-// @ts-nocheck
 import { connect } from 'react-redux';
-import { toggleRealizedGainOrLossFilterDrawer } from '@/store/financialStatement/financialStatements.actions';
+import { Dispatch } from 'redux';
+import type { ComponentType } from 'react';
+import { toggleRealizedGainOrLossFilterDrawer } from '@/store/financial-statement/financial-statements.actions';
 
-const mapDispatchToProps = (dispatch) => ({
-  toggleRealizedGainOrLossFilterDrawer: (toggle) =>
+export interface WithRealizedGainOrLossActionsProps {
+  toggleRealizedGainOrLossFilterDrawer: (toggle?: boolean) => void;
+}
+
+export const mapDispatchToProps = (
+  dispatch: Dispatch,
+): WithRealizedGainOrLossActionsProps => ({
+  toggleRealizedGainOrLossFilterDrawer: (toggle?: boolean) =>
     dispatch(toggleRealizedGainOrLossFilterDrawer(toggle)),
 });
 
-export const withRealizedGainOrLossActions = connect(null, mapDispatchToProps);
+export function withRealizedGainOrLossActions<P>(
+  WrappedComponent: ComponentType<P>,
+): ComponentType<Omit<P, keyof WithRealizedGainOrLossActionsProps>> {
+  const Connected = connect(
+    null,
+    mapDispatchToProps,
+  )(WrappedComponent as ComponentType<any>);
+  return Connected as unknown as ComponentType<
+    Omit<P, keyof WithRealizedGainOrLossActionsProps>
+  >;
+}

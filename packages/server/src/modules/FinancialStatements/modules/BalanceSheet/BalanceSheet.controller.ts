@@ -1,15 +1,24 @@
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AcceptType } from '@/constants/accept-type';
 import { BalanceSheetApplication } from './BalanceSheetApplication';
 import {
   ApiExtraModels,
   ApiOperation,
   ApiProduces,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { BalanceSheetQueryDto } from './BalanceSheet.dto';
 import {
   BalanceSheetResponseExample,
@@ -43,6 +52,13 @@ export class BalanceSheetStatementController {
   @Get('')
   @RequirePermission(ReportsAction.READ_BALANCE_SHEET, AbilitySubject.Report)
   @ApiOperation({ summary: 'Get balance sheet statement' })
+  @ApiQuery({
+    name: 'numberFormat',
+    required: false,
+    description:
+      'Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)',
+    schema: { $ref: getSchemaPath(NumberFormatQueryDto) },
+  })
   @ApiResponse({
     status: 200,
     description: 'Balance sheet statement',

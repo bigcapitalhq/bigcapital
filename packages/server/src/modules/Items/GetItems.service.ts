@@ -65,12 +65,9 @@ export class GetItemsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed items.
-    const transformedItems = await this.transformer.transform(
-      items,
-      new ItemTransformer(),
-    );
+    const data = await this.transformer.transform(items, new ItemTransformer());
     return {
-      items: transformedItems,
+      data,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

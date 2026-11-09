@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Global, Module, Scope } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TENANCY_DB_CONNECTION } from '../TenancyDB/TenancyDB.constants';
 import { Item } from '../../../modules/Items/models/Item';
 import { Account } from '@/modules/Accounts/models/Account.model';
@@ -22,10 +22,9 @@ import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Bill } from '@/modules/Bills/models/Bill';
 import { BillPayment } from '@/modules/BillPayments/models/BillPayment';
 import { BillPaymentEntry } from '@/modules/BillPayments/models/BillPaymentEntry';
-import { BillLandedCostEntry } from '@/modules/BillLandedCosts/models/BillLandedCostEntry';
-import { BillLandedCost } from '@/modules/BillLandedCosts/models/BillLandedCost';
 import { VendorCreditAppliedBill } from '@/modules/VendorCreditsApplyBills/models/VendorCreditAppliedBill';
 import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
+import { RecurringInvoice } from '@/modules/RecurringInvoices/models/RecurringInvoice';
 import { PaymentIntegration } from '@/modules/StripePayment/models/PaymentIntegration.model';
 import { PaymentReceivedEntry } from '@/modules/PaymentReceived/models/PaymentReceivedEntry';
 import { CreditNoteAppliedInvoice } from '@/modules/CreditNotesApplyInvoice/models/CreditNoteAppliedInvoice';
@@ -37,6 +36,10 @@ import { RefundCreditNote } from '@/modules/CreditNoteRefunds/models/RefundCredi
 import { VendorCredit } from '@/modules/VendorCredit/models/VendorCredit';
 import { RefundVendorCredit } from '@/modules/VendorCreditsRefund/models/RefundVendorCredit';
 import { PaymentReceived } from '@/modules/PaymentReceived/models/PaymentReceived';
+import { TrackingCategory } from '@/modules/TrackingCategories/models/TrackingCategory';
+import { TrackingCategoryOption } from '@/modules/TrackingCategories/models/TrackingCategoryOption';
+import { ManualJournalEntryTrackingCategory } from '@/modules/TrackingCategories/models/ManualJournalEntryTrackingCategory';
+import { AccountTransactionTrackingCategory } from '@/modules/TrackingCategories/models/AccountTransactionTrackingCategory';
 import { Model } from 'objection';
 import { ClsModule } from 'nestjs-cls';
 import { TenantUser } from './models/TenantUser.model';
@@ -63,10 +66,9 @@ const models = [
   Bill,
   BillPayment,
   BillPaymentEntry,
-  BillLandedCost,
-  BillLandedCostEntry,
   VendorCreditAppliedBill,
   SaleInvoice,
+  RecurringInvoice,
   CreditNoteAppliedInvoice,
   CreditNote,
   RefundCreditNote,
@@ -80,6 +82,10 @@ const models = [
   PaymentReceived,
   PaymentReceivedEntry,
   TenantUser,
+  TrackingCategory,
+  TrackingCategoryOption,
+  ManualJournalEntryTrackingCategory,
+  AccountTransactionTrackingCategory,
 ];
 
 /**
@@ -107,4 +113,4 @@ const modelProviders = models.map((model) => RegisterTenancyModel(model));
   imports: [...modelProviders],
   exports: [...modelProviders],
 })
-export class TenancyModelsModule { }
+export class TenancyModelsModule {}

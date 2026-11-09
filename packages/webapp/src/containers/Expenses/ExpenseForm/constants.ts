@@ -1,4 +1,4 @@
-import { ACCOUNT_TYPE } from "@/constants";
+import { ACCOUNT_TYPE } from '@/constants';
 
 export const SUPPORTED_EXPENSE_PAYMENT_ACCOUNT_TYPES = [
   ACCOUNT_TYPE.CASH,

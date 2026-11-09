@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ApplyVendorCreditSyncBillsService } from './command/ApplyVendorCreditSyncBills.service';
 import { ApplyVendorCreditSyncInvoicedService } from './command/ApplyVendorCreditSyncInvoiced.service';
+import { ApplyVendorCreditSyncBillsSubscriber } from './subscribers/ApplyVendorCreditSyncBillsSubscriber';
+import { ApplyVendorCreditSyncInvoicedSubscriber } from './subscribers/ApplyVendorCreditSyncInvoicedSubscriber';
 import { DeleteApplyVendorCreditToBillService } from './command/DeleteApplyVendorCreditToBill.service';
 import { ApplyVendorCreditToBillsService } from './command/ApplyVendorCreditToBills.service';
 import { GetAppliedBillsToVendorCreditService } from './queries/GetAppliedBillsToVendorCredit.service';
@@ -9,7 +11,6 @@ import { VendorCreditApplyBillsApplicationService } from './VendorCreditApplyBil
 import { VendorCreditApplyBillsController } from './VendorCreditApplyBills.controller';
 import { BillsModule } from '../Bills/Bills.module';
 import { BillPaymentsModule } from '../BillPayments/BillPayments.module';
-import { VendorCreditDTOTransformService } from '../VendorCredit/commands/VendorCreditDTOTransform.service';
 import { ItemsModule } from '../Items/Items.module';
 import { BranchesModule } from '../Branches/Branches.module';
 import { WarehousesModule } from '../Warehouses/Warehouses.module';
@@ -22,7 +23,7 @@ import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
     ItemsModule,
     BranchesModule,
     WarehousesModule,
-    VendorCreditsModule
+    VendorCreditsModule,
   ],
   providers: [
     ApplyVendorCreditSyncBillsService,
@@ -32,7 +33,9 @@ import { VendorCreditsModule } from '../VendorCredit/VendorCredits.module';
     GetAppliedBillsToVendorCreditService,
     GetVendorCreditToApplyBills,
     VendorCreditApplyBillsApplicationService,
+    ApplyVendorCreditSyncBillsSubscriber,
+    ApplyVendorCreditSyncInvoicedSubscriber,
   ],
   controllers: [VendorCreditApplyBillsController],
 })
-export class VendorCreditApplyBillsModule { }
+export class VendorCreditApplyBillsModule {}

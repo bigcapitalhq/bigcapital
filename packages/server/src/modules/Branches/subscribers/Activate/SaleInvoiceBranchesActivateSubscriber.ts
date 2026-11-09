@@ -8,7 +8,7 @@ import { Injectable } from '@nestjs/common';
 export class SaleInvoicesActivateBranchesSubscriber {
   constructor(
     private readonly invoicesActivateBranches: SaleInvoiceActivateBranches,
-  ) { }
+  ) {}
 
   /**
    * Updates accounts transactions with the primary branch once
@@ -22,7 +22,7 @@ export class SaleInvoicesActivateBranchesSubscriber {
   }: IBranchesActivatedPayload) {
     await this.invoicesActivateBranches.updateInvoicesWithBranch(
       primaryBranch.id,
-      trx
+      trx,
     );
-  };
+  }
 }

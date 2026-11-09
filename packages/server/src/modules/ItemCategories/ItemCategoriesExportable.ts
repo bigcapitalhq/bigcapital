@@ -19,11 +19,11 @@ export class ItemCategoriesExportable extends Exportable {
    */
   public exportable(query: Partial<IItemCategoriesFilter>) {
     const parsedQuery = {
-      ...query
+      ...query,
     } as IItemCategoriesFilter;
 
     return this.itemCategoryApp
       .getItemCategories(parsedQuery)
-      .then((output) => output.data);
+      .then((output) => output);
   }
 }

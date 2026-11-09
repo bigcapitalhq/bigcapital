@@ -1,9 +1,9 @@
-// @ts-nocheck
+import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { defaultTo } from 'lodash';
-
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
+import { InvoiceDetailsStatus } from './utils';
 import {
   Row,
   Col,
@@ -14,21 +14,20 @@ import {
   CustomerDrawerLink,
   ExchangeRateDetailItem,
 } from '@/components';
-import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
-import { InvoiceDetailsStatus } from './utils';
 
-/**
- * Invoice detail header.
- */
-export default function InvoiceDetailHeader() {
+export function InvoiceDetailHeader() {
   const { invoice } = useInvoiceDetailDrawerContext();
+
+  if (!invoice) {
+    return null;
+  }
 
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountDetailItem label={intl.get('amount')}>
-            <h3 class="big-number">{invoice.total_formatted}</h3>
+            <h3 className="big-number">{invoice.totalFormatted}</h3>
           </AmountDetailItem>
 
           <StatusDetailItem label={''}>
@@ -41,25 +40,25 @@ export default function InvoiceDetailHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem label={intl.get('invoice_date')}>
-              {invoice.invoice_date_formatted}
+              {invoice.invoiceDateFormatted}
             </DetailItem>
 
             <DetailItem label={intl.get('due_date')}>
-              {invoice.due_date_formatted}
+              {invoice.dueDateFormatted}
             </DetailItem>
 
             <DetailItem label={intl.get('customer_name')}>
-              <CustomerDrawerLink customerId={invoice.customer_id}>
-                {invoice.customer?.display_name}
+              <CustomerDrawerLink customerId={invoice.customerId}>
+                {invoice.customer?.displayName}
               </CustomerDrawerLink>
             </DetailItem>
 
             <DetailItem label={intl.get('invoice.details.invoice_no')}>
-              {invoice.invoice_no}
+              {invoice.invoiceNo}
             </DetailItem>
             <ExchangeRateDetailItem
-              exchangeRate={invoice?.exchange_rate}
-              toCurrency={invoice?.currency_code}
+              exchangeRate={invoice?.exchangeRate}
+              toCurrency={invoice?.currencyCode}
             />
           </DetailsMenu>
         </Col>
@@ -71,20 +70,20 @@ export default function InvoiceDetailHeader() {
             textAlign={'right'}
           >
             <DetailItem label={intl.get('due_amount')}>
-              <strong>{invoice.due_amount_formatted}</strong>
+              <strong>{invoice.dueAmountFormatted}</strong>
             </DetailItem>
 
             <DetailItem label={intl.get('invoice.details.payment_amount')}>
-              <strong>{invoice.payment_amount_formatted}</strong>
+              <strong>{invoice.paymentAmountFormatted}</strong>
             </DetailItem>
 
             <DetailItem
               label={intl.get('reference')}
-              children={defaultTo(invoice.reference_no, '--')}
+              children={defaultTo(invoice.referenceNo, '--')}
             />
             <DetailItem
               label={intl.get('invoice.details.created_at')}
-              children={invoice.created_at_formatted}
+              children={invoice.createdAtFormatted}
             />
           </DetailsMenu>
         </Col>

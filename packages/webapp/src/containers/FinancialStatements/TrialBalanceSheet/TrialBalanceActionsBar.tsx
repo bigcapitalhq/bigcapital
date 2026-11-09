@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -10,19 +8,35 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
-
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
-import { withTrialBalance } from './withTrialBalance';
-import { withTrialBalanceActions } from './withTrialBalanceActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose, saveInvoke } from '@/utils';
-import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { TrialBalanceSheetExportMenu } from './components';
+import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
+import { withTrialBalance, WithTrialBalanceProps } from './withTrialBalance';
+import {
+  withTrialBalanceActions,
+  WithTrialBalanceActionsProps,
+} from './withTrialBalanceActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { saveInvoke } from '@/utils';
 
-function TrialBalanceActionsBar({
+interface TrialBalanceActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
+
+type TrialBalanceActionsBarProps = WithTrialBalanceProps &
+  Pick<WithTrialBalanceActionsProps, 'toggleTrialBalanceFilterDrawer'> &
+  WithDialogActionsProps &
+  TrialBalanceActionsBarOwnProps;
+
+function TrialBalanceActionsBarInner({
   // #withTrialBalance
   trialBalanceDrawerFilter,
 
@@ -35,7 +49,7 @@ function TrialBalanceActionsBar({
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
-}) {
+}: TrialBalanceActionsBarProps) {
   const { refetchSheet, isLoading } = useTrialBalanceSheetContext();
 
   // Handle filter toggle click.
@@ -49,14 +63,14 @@ function TrialBalanceActionsBar({
   };
 
   // Handle number format submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
 
   // Handle print button click.
   const handlePrintBtnClick = () => {
     openDialog(DialogsName.TrialBalanceSheetPdfPreview);
-  }
+  };
 
   return (
     <DashboardActionsBar>
@@ -126,10 +140,11 @@ function TrialBalanceActionsBar({
   );
 }
 
-export default compose(
+export const TrialBalanceActionsBar = FF.pipe(
+  TrialBalanceActionsBarInner,
+  withDialogActions,
+  withTrialBalanceActions,
   withTrialBalance(({ trialBalanceDrawerFilter }) => ({
     trialBalanceDrawerFilter,
   })),
-  withTrialBalanceActions,
-  withDialogActions,
-)(TrialBalanceActionsBar);
+);

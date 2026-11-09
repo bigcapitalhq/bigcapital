@@ -1,9 +1,9 @@
-// @ts-nocheck
+import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { defaultTo } from 'lodash';
-
+import { VendorCreditDetailsStatus } from './utils';
+import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import {
   T,
   Row,
@@ -15,20 +15,23 @@ import {
   VendorDrawerLink,
   ExchangeRateDetailItem,
 } from '@/components';
-import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
-import { VendorCreditDetailsStatus } from './utils';
 
 /**
  * Vendor credit detail drawer header.
  */
-export default function VendorCreditDetailHeader() {
+export function VendorCreditDetailHeader() {
   const { vendorCredit } = useVendorCreditDetailDrawerContext();
+
+  if (!vendorCredit) {
+    return null;
+  }
+
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountItem label={intl.get('amount')}>
-            <span class="big-number">{vendorCredit.total_formatted}</span>
+            <span className="big-number">{vendorCredit.totalFormatted}</span>
           </AmountItem>
           <StatusItem>
             <VendorCreditDetailsStatus vendorCredit={vendorCredit} />
@@ -42,22 +45,22 @@ export default function VendorCreditDetailHeader() {
             <DetailItem
               label={intl.get('vendor_credit.drawer.label_vendor_credit_date')}
             >
-              {vendorCredit.formatted_vendor_credit_date}
+              {vendorCredit.formattedVendorCreditDate}
             </DetailItem>
             <DetailItem
               label={intl.get('vendor_credit.drawer.label_vendor_credit_no')}
             >
-              {defaultTo(vendorCredit.vendor_credit_number, '-')}
+              {defaultTo(vendorCredit.vendorCreditNumber, '-')}
             </DetailItem>
 
             <DetailItem label={intl.get('vendor_name')}>
-              <VendorDrawerLink vendorId={vendorCredit.vendor_id}>
-                {vendorCredit.vendor?.display_name}
+              <VendorDrawerLink vendorId={vendorCredit.vendorId}>
+                {vendorCredit.vendor?.displayName}
               </VendorDrawerLink>
             </DetailItem>
             <ExchangeRateDetailItem
-              exchangeRate={vendorCredit?.exchange_rate}
-              toCurrency={vendorCredit?.currency_code}
+              exchangeRate={vendorCredit?.exchangeRate}
+              toCurrency={vendorCredit?.currencyCode}
             />
           </DetailsMenu>
         </Col>
@@ -70,15 +73,15 @@ export default function VendorCreditDetailHeader() {
             <DetailItem
               label={intl.get('vendor_credit.drawer.label_credits_remaining')}
             >
-              <strong>{vendorCredit.formatted_credits_remaining}</strong>
+              <strong>{vendorCredit.formattedCreditsRemaining}</strong>
             </DetailItem>
             <DetailItem
               label={intl.get('reference')}
-              children={defaultTo(vendorCredit.reference_no, '-')}
+              children={defaultTo(vendorCredit.referenceNo, '-')}
             />
             <DetailItem
-              label={<T id={'vendor_credit.drawer.label_created_at'} />}
-              children={vendorCredit.formatted_created_at}
+              label={intl.get('vendor_credit.drawer.label_created_at')}
+              children={vendorCredit.formattedCreatedAt}
             />
           </DetailsMenu>
         </Col>

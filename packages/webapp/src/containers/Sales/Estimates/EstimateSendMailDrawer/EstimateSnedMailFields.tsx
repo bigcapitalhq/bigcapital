@@ -1,14 +1,13 @@
-import { useFormikContext } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
-import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from '@/components';
-import { SendMailViewToAddressField } from '../SendMailViewDrawer/SendMailViewToAddressField';
+import { useFormikContext } from 'formik';
+import { useSendMailItems } from '../SendMailViewDrawer/hooks';
 import { SendMailViewMessageField } from '../SendMailViewDrawer/SendMailViewMessageField';
+import { SendMailViewToAddressField } from '../SendMailViewDrawer/SendMailViewToAddressField';
+import { useSendEstimateFormatArgsOptions } from './hooks';
+import { FCheckbox, FFormGroup, FInputGroup, Group, Stack } from '@/components';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useDrawerActions } from '@/hooks/state';
-import { useSendEstimateFormatArgsOptions } from './hooks';
-import { useSendMailItems } from '../SendMailViewDrawer/hooks';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
-
 
 export function EstimateSendMailFields() {
   const argOptions = useSendEstimateFormatArgsOptions();

@@ -26,6 +26,8 @@ import {
   BulkDeleteVendorsDto,
   ValidateBulkDeleteVendorsResponseDto,
 } from './dtos/BulkDeleteVendors.dto';
+import { VendorResponseDto } from './dtos/VendorResponse.dto';
+import { VendorsListResponseDto } from './dtos/VendorsListResponse.dto';
 import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
@@ -35,6 +37,8 @@ import { VendorAction } from '../Customers/types/Customers.types';
 @Controller('vendors')
 @ApiTags('Vendors')
 @ApiExtraModels(ValidateBulkDeleteVendorsResponseDto)
+@ApiExtraModels(VendorResponseDto)
+@ApiExtraModels(VendorsListResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class VendorsController {
@@ -43,6 +47,11 @@ export class VendorsController {
   @Get()
   @RequirePermission(VendorAction.View, AbilitySubject.Vendor)
   @ApiOperation({ summary: 'Retrieves the vendors.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The vendors have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(VendorsListResponseDto) },
+  })
   getVendors(@Query() filterDTO: GetVendorsQueryDto) {
     return this.vendorsApplication.getVendors(filterDTO);
   }
@@ -50,6 +59,11 @@ export class VendorsController {
   @Get(':id')
   @RequirePermission(VendorAction.View, AbilitySubject.Vendor)
   @ApiOperation({ summary: 'Retrieves the vendor details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The vendor details have been successfully retrieved.',
+    schema: { $ref: getSchemaPath(VendorResponseDto) },
+  })
   getVendor(@Param('id') vendorId: number) {
     return this.vendorsApplication.getVendor(vendorId);
   }
@@ -57,6 +71,11 @@ export class VendorsController {
   @Post()
   @RequirePermission(VendorAction.Create, AbilitySubject.Vendor)
   @ApiOperation({ summary: 'Create a new vendor.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The vendor has been successfully created.',
+    schema: { $ref: getSchemaPath(VendorResponseDto) },
+  })
   createVendor(@Body() vendorDTO: CreateVendorDto) {
     return this.vendorsApplication.createVendor(vendorDTO);
   }
@@ -64,6 +83,11 @@ export class VendorsController {
   @Put(':id')
   @RequirePermission(VendorAction.Edit, AbilitySubject.Vendor)
   @ApiOperation({ summary: 'Edit the given vendor.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The vendor has been successfully updated.',
+    schema: { $ref: getSchemaPath(VendorResponseDto) },
+  })
   editVendor(@Param('id') vendorId: number, @Body() vendorDTO: EditVendorDto) {
     return this.vendorsApplication.editVendor(vendorId, vendorDTO);
   }
@@ -71,6 +95,10 @@ export class VendorsController {
   @Delete(':id')
   @RequirePermission(VendorAction.Delete, AbilitySubject.Vendor)
   @ApiOperation({ summary: 'Delete the given vendor.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The vendor has been successfully deleted.',
+  })
   deleteVendor(@Param('id') vendorId: number) {
     return this.vendorsApplication.deleteVendor(vendorId);
   }
@@ -78,6 +106,11 @@ export class VendorsController {
   @Put(':id/opening-balance')
   @RequirePermission(VendorAction.Edit, AbilitySubject.Vendor)
   @ApiOperation({ summary: 'Edit the given vendor opening balance.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The vendor opening balance has been successfully updated.',
+    schema: { $ref: getSchemaPath(VendorResponseDto) },
+  })
   editOpeningBalance(
     @Param('id') vendorId: number,
     @Body() openingBalanceDTO: VendorOpeningBalanceEditDto,
@@ -103,9 +136,7 @@ export class VendorsController {
   validateBulkDeleteVendors(
     @Body() bulkDeleteDto: BulkDeleteVendorsDto,
   ): Promise<ValidateBulkDeleteVendorsResponseDto> {
-    return this.vendorsApplication.validateBulkDeleteVendors(
-      bulkDeleteDto.ids,
-    );
+    return this.vendorsApplication.validateBulkDeleteVendors(bulkDeleteDto.ids);
   }
 
   @Post('bulk-delete')

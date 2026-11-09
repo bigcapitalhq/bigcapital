@@ -2,14 +2,23 @@ import {
   ApiExtraModels,
   ApiOperation,
   ApiProduces,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
 import { Response } from 'express';
-import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { GeneralLedgerApplication } from './GeneralLedgerApplication';
 import { AcceptType } from '@/constants/accept-type';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { GeneralLedgerQueryDto } from './GeneralLedgerQuery.dto';
 import { GeneralLedgerResponseExample } from './GeneralLedger.swagger';
 import {
@@ -27,7 +36,11 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
-@ApiExtraModels(GeneralLedgerResponseDto, GeneralLedgerTableResponseDto)
+@ApiExtraModels(
+  GeneralLedgerResponseDto,
+  GeneralLedgerTableResponseDto,
+  NumberFormatQueryDto,
+)
 export class GeneralLedgerController {
   constructor(
     private readonly generalLedgerApplication: GeneralLedgerApplication,
@@ -49,6 +62,13 @@ export class GeneralLedgerController {
     },
   })
   @ApiOperation({ summary: 'Get general ledger report' })
+  @ApiQuery({
+    name: 'numberFormat',
+    required: false,
+    description:
+      'Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)',
+    schema: { $ref: getSchemaPath(NumberFormatQueryDto) },
+  })
   @ApiProduces(
     AcceptType.ApplicationJson,
     AcceptType.ApplicationJsonTable,

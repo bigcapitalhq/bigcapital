@@ -1,83 +1,84 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchCashflowStatementTable,
+  fetchCashflowStatementXlsx,
+  fetchCashflowStatementCsv,
+  fetchCashflowStatementPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  CashflowStatementTableQuery,
+  CashflowStatementTableResponse,
+  CashflowStatementXlsxQuery,
+  CashflowStatementCsvQuery,
+  CashflowStatementPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve cash flow statement report.
- */
-export function useCashFlowStatementReport(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.CASH_FLOW_STATEMENT, query],
-    {
-      method: 'get',
-      url: '/reports/cashflow-statement',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => ({
-        columns: res.data.table.columns,
-        query: res.data.query,
-        meta: res.data.meta,
-        tableRows: res.data.table.rows,
-      }),
-      defaultData: {
-        tableRows: [],
-        columns: [],
-        query: {},
-        meta: {},
-      },
-      ...props,
-    },
-  );
+interface CashFlowStatementReport {
+  columns: CashflowStatementTableResponse['table']['columns'];
+  query: CashflowStatementTableResponse['query'];
+  meta: CashflowStatementTableResponse['meta'];
+  tableRows: CashflowStatementTableResponse['table']['rows'];
 }
 
-export const useCashFlowStatementXlsxExport = (query, args) => {
-  const url = '/reports/cashflow-statement';
-  const config = {
-    headers: {
-      accept: 'application/xlsx',
-    },
-    params: query,
-  };
-  const filename = 'cashflow_statement.xlsx';
+export function useCashFlowStatementReport(
+  query: CashflowStatementTableQuery,
+  props?: Omit<
+    UseQueryOptions<CashFlowStatementReport, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.cashFlowStatement(query),
+    queryFn: () =>
+      fetchCashflowStatementTable(fetcher, query).then((data) => ({
+        columns: data.table.columns,
+        query: data.query,
+        meta: data.meta,
+        tableRows: data.table.rows,
+      })),
+  });
+}
 
-  return useDownloadFile({
-    url,
-    config,
-    filename,
+export function useCashFlowStatementXlsxExport(
+  query: CashflowStatementXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchCashflowStatementXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'cashflow_statement.xlsx'),
+      ),
   });
-};
+}
 
-export const useCashFlowStatementCsvExport = (query, args) => {
-  const url = '/reports/cashflow-statement';
-  const config = {
-    headers: {
-      accept: 'application/csv',
-    },
-    params: query,
-  };
-  const filename = 'cashflow_statement.csv';
-
-  return useDownloadFile({
-    url,
-    config,
-    filename,
+export function useCashFlowStatementCsvExport(
+  query: CashflowStatementCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchCashflowStatementCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'cashflow_statement.csv'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves the cashflow sheet pdf document.
- */
-export function useCashflowSheetPdf(query = {}) {
-  return useRequestPdf({
-    url: `/reports/cashflow-statement`,
-    params: query,
-  });
+export function useCashflowSheetPdf(query: CashflowStatementPdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchCashflowStatementPdf(fetcher, query));
 }

@@ -20,7 +20,7 @@ export class VendorBalanceSummaryService {
 
   /**
    * Retrieve the statment of customer balance summary report.
-   * @param {IVendorBalanceSummaryQuery} query - 
+   * @param {IVendorBalanceSummaryQuery} query -
    * @return {Promise<IVendorBalanceSummaryStatement>}
    */
   public async vendorBalanceSummary(

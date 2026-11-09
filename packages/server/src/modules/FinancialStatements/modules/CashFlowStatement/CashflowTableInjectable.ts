@@ -16,7 +16,7 @@ export class CashflowTableInjectable {
 
   /**
    * Retrieves the cash flow table.
-   * @param {ICashFlowStatementQuery} query - 
+   * @param {ICashFlowStatementQuery} query -
    * @returns {Promise<ICashFlowStatementTable>}
    */
   public async table(

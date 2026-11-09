@@ -15,7 +15,7 @@ export class VendorGLEntriesStorage {
 
     @Inject(Vendor.name)
     private readonly vendorModel: TenantModelProxy<typeof Vendor>,
-  ) { }
+  ) {}
 
   /**
    * Vendor opening balance journals.
@@ -26,22 +26,17 @@ export class VendorGLEntriesStorage {
     vendorId: number,
     trx?: Knex.Transaction,
   ) => {
-    const vendor = await this.vendorModel()
-      .query(trx)
-      .findById(vendorId);
+    const vendor = await this.vendorModel().query(trx).findById(vendorId);
 
     // Finds the expense account.
-    const expenseAccount = await this.accountRepository.findOrCreateOtherExpensesAccount(
+    const expenseAccount =
+      await this.accountRepository.findOrCreateOtherExpensesAccount({}, trx);
+    // Find or create the A/P account.
+    const APAccount = await this.accountRepository.findOrCreateAccountsPayable(
+      vendor.currencyCode,
       {},
       trx,
     );
-    // Find or create the A/P account.
-    const APAccount =
-      await this.accountRepository.findOrCreateAccountsPayable(
-        vendor.currencyCode,
-        {},
-        trx,
-      );
     // Retrieves the vendor opening balance ledger.
     const ledger = this.vendorGLEntries.getOpeningBalanceLedger(
       APAccount.id,

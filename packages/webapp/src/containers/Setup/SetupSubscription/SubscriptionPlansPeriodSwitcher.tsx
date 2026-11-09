@@ -1,16 +1,16 @@
-import { ChangeEvent } from 'react';
-import * as R from 'ramda';
 import { Intent, Switch, Tag, Text } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import { ChangeEvent } from 'react';
+import styles from './SetupSubscription.module.scss';
 import { Group } from '@/components';
 import {
   withSubscriptionPlansActions,
   WithSubscriptionPlansActionsProps,
 } from '@/containers/Subscriptions/withSubscriptionPlansActions';
 import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
-import styles from './SetupSubscription.module.scss';
 
 interface SubscriptionPlansPeriodsSwitchCombinedProps
-  extends WithSubscriptionPlansActionsProps { }
+  extends WithSubscriptionPlansActionsProps {}
 
 function SubscriptionPlansPeriodSwitcherRoot({
   // #withSubscriptionPlansActions
@@ -42,6 +42,7 @@ function SubscriptionPlansPeriodSwitcherRoot({
   );
 }
 
-export const SubscriptionPlansPeriodSwitcher = R.compose(
+export const SubscriptionPlansPeriodSwitcher = FF.pipe(
+  SubscriptionPlansPeriodSwitcherRoot,
   withSubscriptionPlansActions,
-)(SubscriptionPlansPeriodSwitcherRoot);
+);

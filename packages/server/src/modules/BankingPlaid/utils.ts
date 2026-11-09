@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import {
   Item as PlaidItem,
   Institution as PlaidInstitution,
@@ -51,6 +50,31 @@ export const transformPlaidAccountToCreateAccount = (
 };
 
 /**
+ * The maximum length of the uncategorized transaction `varchar` columns
+ * (`payee` and `reference_no`).
+ */
+const UNCATEGORIZED_TRANSACTION_VARCHAR_MAX_LENGTH = 255;
+
+/**
+ * Truncates the given value to the maximum length allowed by the
+ * uncategorized transaction `varchar` columns.
+ * @param {string|null|undefined} value - The value to truncate.
+ * @returns {string|undefined}
+ */
+const truncateTransactionString = (
+  value: string | null | undefined,
+): string | undefined => {
+  if (value === null || value === undefined) {
+    return;
+  }
+  // Slice by code points instead of UTF-16 code units to avoid splitting
+  // multi-byte characters.
+  return Array.from(value)
+    .slice(0, UNCATEGORIZED_TRANSACTION_VARCHAR_MAX_LENGTH)
+    .join('');
+};
+
+/**
  * Transformes the plaid transaction to cashflow create DTO.
  * @param {number} cashflowAccountId - Cashflow account ID.
  * @param {number} creditAccountId - Credit account ID.
@@ -58,24 +82,26 @@ export const transformPlaidAccountToCreateAccount = (
  * @returns {CreateUncategorizedTransactionDTO}
  */
 export const transformPlaidTrxsToCashflowCreate = (
-    cashflowAccountId: number,
-    plaidTranasction: PlaidTransactionBase,
-  ): CreateUncategorizedTransactionDTO => {
-    return {
-      date: plaidTranasction.date,
+  cashflowAccountId: number,
+  plaidTranasction: PlaidTransactionBase,
+): CreateUncategorizedTransactionDTO => {
+  return {
+    date: plaidTranasction.date,
 
-      // Plaid: Positive values when money moves out of the account; negative values
-      // when money moves in. For example, debit card purchases are positive;
-      // credit card payments, direct deposits, and refunds are negative.
-      amount: -1 * plaidTranasction.amount,
+    // Plaid: Positive values when money moves out of the account; negative values
+    // when money moves in. For example, debit card purchases are positive;
+    // credit card payments, direct deposits, and refunds are negative.
+    amount: -1 * plaidTranasction.amount,
 
-      description: plaidTranasction.name,
-      payee: plaidTranasction.payment_meta?.payee,
-      currencyCode: plaidTranasction.iso_currency_code,
-      accountId: cashflowAccountId,
-      referenceNo: plaidTranasction.payment_meta?.reference_number,
-      plaidTransactionId: plaidTranasction.transaction_id,
-      pending: plaidTranasction.pending,
-      pendingPlaidTransactionId: plaidTranasction.pending_transaction_id,
-    };
+    description: plaidTranasction.name,
+    payee: truncateTransactionString(plaidTranasction.payment_meta?.payee),
+    currencyCode: plaidTranasction.iso_currency_code,
+    accountId: cashflowAccountId,
+    referenceNo: truncateTransactionString(
+      plaidTranasction.payment_meta?.reference_number,
+    ),
+    plaidTransactionId: plaidTranasction.transaction_id,
+    pending: plaidTranasction.pending,
+    pendingPlaidTransactionId: plaidTranasction.pending_transaction_id,
   };
+};

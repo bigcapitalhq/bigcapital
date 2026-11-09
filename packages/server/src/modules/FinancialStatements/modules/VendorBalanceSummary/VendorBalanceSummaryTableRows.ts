@@ -1,5 +1,6 @@
-import * as R from 'ramda';
 import { I18nService } from 'nestjs-i18n';
+import { constant, flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import {
   IVendorBalanceSummaryData,
   IVendorBalanceSummaryVendor,
@@ -12,6 +13,7 @@ import {
   IColumnMapperMeta,
 } from '../../types/Table.types';
 import { tableMapper, tableRowMapper } from '../../utils/Table.utils';
+import { CONTACT_BALANCE_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
 enum TABLE_ROWS_TYPES {
   VENDOR = 'VENDOR',
@@ -32,7 +34,7 @@ export class VendorBalanceSummaryTable {
   constructor(
     report: IVendorBalanceSummaryData,
     query: IVendorBalanceSummaryQuery,
-    i18n: I18nService
+    i18n: I18nService,
   ) {
     this.report = report;
     this.query = query;
@@ -58,15 +60,21 @@ export class VendorBalanceSummaryTable {
    */
   private getVendorColumnsAccessor = (): IColumnMapperMeta[] => {
     const columns = [
-      { key: 'name', accessor: 'vendorName' },
-      { key: 'total', accessor: 'total.formattedAmount' },
+      { key: CONTACT_BALANCE_COLUMN_KEYS.NAME, accessor: 'vendorName' },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        accessor: 'total.formattedAmount',
+      },
     ];
-    return R.compose(
-      R.concat(columns),
-      R.when(
-        R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor())
-      )
+    return flow(
+      when(
+        constant(this.query.percentageColumn),
+        (cols: IColumnMapperMeta[]) => [
+          ...this.getPercentageColumnsAccessor(),
+          ...cols,
+        ],
+      ),
+      (cols: IColumnMapperMeta[]): IColumnMapperMeta[] => [...columns, ...cols],
     )([]);
   };
 
@@ -76,7 +84,7 @@ export class VendorBalanceSummaryTable {
    * @returns {ITableRow[]}
    */
   private vendorsTransformer = (
-    vendors: IVendorBalanceSummaryVendor[]
+    vendors: IVendorBalanceSummaryVendor[],
   ): ITableRow[] => {
     const columns = this.getVendorColumnsAccessor();
 
@@ -91,16 +99,25 @@ export class VendorBalanceSummaryTable {
    */
   private getTotalColumnsAccessor = (): IColumnMapperMeta[] => {
     const columns = [
-      { key: 'name', value: this.i18n.t('contact_summary_balance.total') },
-      { key: 'total', accessor: 'total.formattedAmount' },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.NAME,
+        value: this.i18n.t('contact_summary_balance.total'),
+      },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        accessor: 'total.formattedAmount',
+      },
     ];
-    return R.compose(
-      R.concat(columns),
-      R.when(
-        R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor())
-      )
-    )([]) as IColumnMapperMeta[];
+    return flow(
+      when(
+        constant(this.query.percentageColumn),
+        (cols: IColumnMapperMeta[]) => [
+          ...this.getPercentageColumnsAccessor(),
+          ...cols,
+        ],
+      ),
+      (cols: IColumnMapperMeta[]): IColumnMapperMeta[] => [...columns, ...cols],
+    )([]);
   };
 
   /**
@@ -133,22 +150,25 @@ export class VendorBalanceSummaryTable {
    * @returns {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
-    const columns = [
+    const columns: ITableColumn[] = [
       {
-        key: 'name',
+        key: CONTACT_BALANCE_COLUMN_KEYS.NAME,
         label: this.i18n.t('contact_summary_balance.account_name'),
       },
-      { key: 'total', label: this.i18n.t('contact_summary_balance.total') },
+      {
+        key: CONTACT_BALANCE_COLUMN_KEYS.TOTAL,
+        label: this.i18n.t('contact_summary_balance.total'),
+      },
     ];
-    return R.compose(
-      R.when(
-        () => this.query.percentageColumn,
-        R.append({
-          key: 'percentage_of_column',
+    return when(
+      constant(this.query.percentageColumn),
+      (cols: ITableColumn[]) => [
+        ...cols,
+        {
+          key: CONTACT_BALANCE_COLUMN_KEYS.PERCENTAGE_OF_COLUMN,
           label: this.i18n.t('contact_summary_balance.percentage_column'),
-        })
-      ),
-      R.concat(columns),
-    )([]) as ITableColumn[];
+        } as ITableColumn,
+      ],
+    )(columns);
   };
 }

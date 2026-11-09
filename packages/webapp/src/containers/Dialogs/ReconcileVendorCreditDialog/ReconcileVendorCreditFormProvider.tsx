@@ -1,14 +1,27 @@
-// @ts-nocheck
-import React from 'react';
+import { isEmpty } from 'lodash';
+import React, { createContext } from 'react';
+import type {
+  ReconcileVendorCredit,
+  ReconcileVendorCreditContextValue,
+  ReconcileVendorCreditFormEntry,
+} from './types';
 import { DialogContent } from '@/components';
 import {
-  useVendorCredit,
-  useReconcileVendorCredit,
   useCreateReconcileVendorCredit,
+  useReconcileVendorCredit,
+  useVendorCredit,
 } from '@/hooks/query';
-import { isEmpty } from 'lodash';
 
-const ReconcileVendorCreditFormContext = React.createContext();
+const ReconcileVendorCreditFormContext =
+  createContext<ReconcileVendorCreditContextValue>(
+    {} as ReconcileVendorCreditContextValue,
+  );
+
+interface ReconcileVendorCreditFormProviderProps {
+  vendorCreditId?: number | null;
+  dialogName: string;
+  children?: React.ReactNode;
+}
 
 /**
  * Reconcile vendor credit provider.
@@ -17,15 +30,19 @@ function ReconcileVendorCreditFormProvider({
   vendorCreditId,
   dialogName,
   ...props
-}) {
-  
-  // Handle fetch reconcile
+}: ReconcileVendorCreditFormProviderProps) {
+  // Handle fetch reconcile vendor credits.
+  // `useReconcileVendorCredit` returns `unknown` from the SDK; cast narrow.
   const {
     isLoading: isReconcileVendorCreditLoading,
-    data: reconcileVendorCredits,
+    data: reconcileVendorCreditsRaw,
   } = useReconcileVendorCredit(vendorCreditId, {
     enabled: !!vendorCreditId,
   });
+  const reconcileVendorCredits =
+    (reconcileVendorCreditsRaw as
+      | ReconcileVendorCreditFormEntry[]
+      | undefined) ?? [];
 
   // Handle fetch vendor credit details.
   const { data: vendorCredit, isLoading: isVendorCreditLoading } =
@@ -41,12 +58,12 @@ function ReconcileVendorCreditFormProvider({
   const isEmptyStatus = isEmpty(reconcileVendorCredits);
 
   // provider.
-  const provider = {
+  const provider: ReconcileVendorCreditContextValue = {
     dialogName,
     reconcileVendorCredits,
     createReconcileVendorCreditMutate,
     isEmptyStatus,
-    vendorCredit,
+    vendorCredit: vendorCredit as ReconcileVendorCredit | undefined,
   };
 
   return (

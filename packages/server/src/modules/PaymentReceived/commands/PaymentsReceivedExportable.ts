@@ -28,10 +28,10 @@ export class PaymentsReceivedExportable extends Exportable {
       page: 1,
       pageSize: EXPORT_SIZE_LIMIT,
       filterQuery,
-      ...query
+      ...query,
     };
     return this.paymentReceivedApp
       .getPaymentsReceived(parsedQuery)
-      .then((output) => output.paymentReceives);
+      .then((output) => output.data);
   }
 }

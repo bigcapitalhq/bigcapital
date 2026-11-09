@@ -1,13 +1,17 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
-
-import { compose } from '@/utils';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const PaymentMadeDetailContent = React.lazy(() =>
-  import('./PaymentMadeDetailContent'),
+  import('./PaymentMadeDetailContent').then((m) => ({
+    default: m.PaymentMadeDetailContent,
+  })),
 );
+
+interface PaymentMadeDetailDrawerProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  * Payment made detail drawer.
@@ -16,8 +20,10 @@ function PaymentMadeDetailDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { paymentMadeId },
-}) {
+  payload,
+}: PaymentMadeDetailDrawerProps) {
+  const paymentMadeId = payload?.paymentMadeId as number | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -32,4 +38,4 @@ function PaymentMadeDetailDrawer({
   );
 }
 
-export default compose(withDrawers())(PaymentMadeDetailDrawer);
+export const index = FF.pipe(PaymentMadeDetailDrawer, withDrawers());

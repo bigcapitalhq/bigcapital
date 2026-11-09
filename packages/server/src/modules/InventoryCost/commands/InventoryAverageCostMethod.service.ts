@@ -1,4 +1,3 @@
-import { pick } from 'lodash';
 import { Knex } from 'knex';
 import { InventoryTransaction } from '../models/InventoryTransaction';
 import { InventoryItemOpeningAvgCostService } from './InventoryItemOpeningAvgCost.service';

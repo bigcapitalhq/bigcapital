@@ -1,26 +1,64 @@
 import { Response } from 'express';
-import { ApiExtraModels, ApiOperation, ApiTags, ApiResponse, ApiProduces, getSchemaPath } from '@nestjs/swagger';
-import { Controller, Get, Headers, Query, Res } from '@nestjs/common';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiTags,
+  ApiResponse,
+  ApiProduces,
+  ApiQuery,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { InventoryItemDetailsApplication } from './InventoryItemDetailsApplication';
 import { AcceptType } from '@/constants/accept-type';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { InventoryItemDetailsQueryDto } from './InventoryItemDetailsQuery.dto';
 import {
   InventoryItemDetailsResponseDto,
   InventoryItemDetailsTableResponseDto,
 } from './InventoryItemDetailsResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { ReportsAction } from '../../types/Report.types';
 
 @Controller('reports/inventory-item-details')
 @ApiTags('Reports')
 @ApiCommonHeaders()
-@ApiExtraModels(InventoryItemDetailsResponseDto, InventoryItemDetailsTableResponseDto)
+@ApiExtraModels(
+  InventoryItemDetailsResponseDto,
+  InventoryItemDetailsTableResponseDto,
+  NumberFormatQueryDto,
+)
+// Restrict this financial report to authenticated users granted the inventory-item-details read permission.
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class InventoryItemDetailsController {
   constructor(
     private readonly inventoryItemDetailsApp: InventoryItemDetailsApplication,
   ) {}
 
   @Get('/')
+  @RequirePermission(
+    ReportsAction.READ_INVENTORY_ITEM_DETAILS,
+    AbilitySubject.Report,
+  )
   @ApiOperation({ summary: 'Get inventory item details' })
+  @ApiQuery({
+    name: 'numberFormat',
+    required: false,
+    description:
+      'Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)',
+    schema: { $ref: getSchemaPath(NumberFormatQueryDto) },
+  })
   @ApiResponse({
     status: 200,
     description: 'Inventory item details report',

@@ -10,9 +10,7 @@ import { Item } from './models/Item';
 @Injectable()
 @ImportableService({ name: Item.name })
 export class ItemsImportable extends Importable {
-  constructor(
-    private readonly createItemService: CreateItemService,
-  ) {
+  constructor(private readonly createItemService: CreateItemService) {
     super();
   }
 
@@ -24,7 +22,7 @@ export class ItemsImportable extends Importable {
    */
   public async importable(
     createDTO: CreateItemDto,
-    trx?: Knex.Transaction<any, any[]>
+    trx?: Knex.Transaction<any, any[]>,
   ): Promise<void> {
     await this.createItemService.createItem(createDTO, trx);
   }

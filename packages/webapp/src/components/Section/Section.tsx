@@ -1,5 +1,3 @@
-import classNames from 'classnames';
-import React from 'react';
 import {
   Card,
   Collapse,
@@ -13,8 +11,10 @@ import {
   IconName,
 } from '@blueprintjs/core';
 import { H6 } from '@blueprintjs/core';
-import { CLASSES } from '@/constants';
+import classNames from 'classnames';
+import React from 'react';
 import { Icon } from '../Icon';
+import { CLASSES } from '@/constants';
 
 /**
  * Subset of {@link Elevation} options which are visually supported by the {@link Section} component.
@@ -231,9 +231,7 @@ export const Section: React.FC<SectionProps> = React.forwardRef(
         )}
         {collapsible ? (
           // @ts-ignore
-          <Collapse isOpen={!isCollapsed}>
-            {children}
-          </Collapse>
+          <Collapse isOpen={!isCollapsed}>{children}</Collapse>
         ) : (
           children
         )}

@@ -1,22 +1,15 @@
-// @ts-nocheck
 import React from 'react';
-import * as R from 'ramda';
-
-import PurchasesByItemsTable from './PurchasesByItemsTable';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '@/components';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { PurchasesByItemsTable } from './PurchasesByItemsTable';
+import { FinancialSheetSkeleton } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * Purchases by items.
- * @returns {JSX.Element}
  */
-function PurchasesByItemsBodyJSX({
-  // #withPreferences
-  organizationName,
-}) {
+function PurchasesByItemsBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = usePurchaseByItemsContext();
 
   return (
@@ -30,8 +23,4 @@ function PurchasesByItemsBodyJSX({
   );
 }
 
-export const PurchasesByItemsBody = R.compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(PurchasesByItemsBodyJSX);
+export const PurchasesByItemsBody = PurchasesByItemsBodyJSX;

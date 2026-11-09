@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React from 'react';
-import classNames from 'classnames';
 import { Spinner } from '@blueprintjs/core';
-import { CLASSES } from '@/constants/classes';
+import classNames from 'classnames';
+import React from 'react';
 import { If } from '../Utils/If';
+import { CLASSES } from '@/constants/classes';
 
 export function CloudLoadingIndicator({ isLoading, children }) {
   return (

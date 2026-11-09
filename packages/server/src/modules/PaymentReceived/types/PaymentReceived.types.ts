@@ -9,7 +9,6 @@ import {
 import { TenantJobPayload } from '@/interfaces/Tenant';
 import { EditPaymentReceivedDto } from '../dtos/PaymentReceived.dto';
 
-
 export interface IPaymentReceivedEntryDTO {
   id?: number;
   index?: number;
@@ -17,7 +16,6 @@ export interface IPaymentReceivedEntryDTO {
   invoiceId: number;
   paymentAmount: number;
 }
-
 
 export interface IPaymentReceivedCreateDTO {
   customerId: number;
@@ -52,6 +50,23 @@ export interface IPaymentsReceivedFilter extends IDynamicListFilter {
   stringifiedFilterRoles?: string;
   filterQuery?: (trx: Knex.Transaction) => void;
 }
+
+export interface IPaymentReceivedTransformedEntry {
+  paymentAmountFormatted: string;
+  invoice: {
+    invoiceNo: string;
+    totalFormatted: string;
+  };
+}
+
+export type IPaymentReceivedTransformed = Omit<PaymentReceived, 'entries'> & {
+  formattedAmount: string;
+  subtotalFormatted: string;
+  formattedPaymentDate: string;
+  formattedCreatedAt: string;
+  formattedExchangeRate: string;
+  entries: IPaymentReceivedTransformedEntry[];
+};
 
 export interface IPaymentReceivePageEntry {
   invoiceId: number;
@@ -133,7 +148,7 @@ export enum PaymentReceiveAction {
 export interface PaymentReceiveMailOpts extends CommonMailOptions {
   attachPdf?: boolean;
 }
-export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}
+export type PaymentReceiveMailOptsDTO = CommonMailOptionsDTO;
 export interface PaymentReceiveMailPresendEvent {
   paymentReceivedId: number;
   messageOptions: PaymentReceiveMailOptsDTO;
@@ -156,12 +171,13 @@ export interface PaymentReceivedPdfTemplateAttributes {
   primaryColor: string;
   secondaryColor: string;
   showCompanyLogo: boolean;
-  companyLogo: string;
+  companyLogoUri: string;
   companyName: string;
 
   // Customer Address
   showCustomerAddress: boolean;
   customerAddress: string;
+  customerName?: string;
 
   // Company address
   showCompanyAddress: boolean;

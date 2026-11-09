@@ -5,10 +5,10 @@ import { IBranchesActivatedPayload } from '../../Branches.types';
 import { events } from '@/common/events/events';
 
 @Injectable()
-export class CreditNoteActivateBranchesSubscriber {
+export class CashflowActivateBranchesSubscriber {
   constructor(
     private readonly cashflowActivateBranches: CashflowTransactionsActivateBranches,
-  ) { }
+  ) {}
 
   /**
    * Updates accounts transactions with the primary branch once
@@ -17,13 +17,12 @@ export class CreditNoteActivateBranchesSubscriber {
    */
   @OnEvent(events.branch.onActivated)
   async updateCashflowWithBranchOnActivated({
-
     primaryBranch,
     trx,
   }: IBranchesActivatedPayload) {
     await this.cashflowActivateBranches.updateCashflowTransactionsWithBranch(
       primaryBranch.id,
-      trx
+      trx,
     );
-  };
+  }
 }

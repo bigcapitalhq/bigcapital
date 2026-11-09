@@ -1,12 +1,20 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
+import type { UnlockingPartialTransactionsDialogPayload } from './types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose } from '@/utils';
 
 const UnlockingPartialTransactionsDialogContent = React.lazy(() =>
-  import('./UnlockingPartialTransactionsDialogContent'),
+  import('./UnlockingPartialTransactionsDialogContent').then((m) => ({
+    default: m.UnlockingPartialTransactionsDialogContent,
+  })),
 );
+
+interface UnlockingPartialTransactionsDialogProps {
+  dialogName: string;
+  payload: UnlockingPartialTransactionsDialogPayload;
+  isOpen: boolean | undefined;
+}
 
 /**
  * UncLocking Partial transactions dialog.
@@ -14,8 +22,8 @@ const UnlockingPartialTransactionsDialogContent = React.lazy(() =>
 function UnLockingPartialTransactionsDilaog({
   isOpen,
   dialogName,
-  payload: { module },
-}) {
+  payload: { module } = {},
+}: UnlockingPartialTransactionsDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -27,7 +35,7 @@ function UnLockingPartialTransactionsDilaog({
     >
       <DialogSuspense>
         <UnlockingPartialTransactionsDialogContent
-          moduleName={module}
+          moduleName={module ?? ''}
           dialogName={dialogName}
         />
       </DialogSuspense>
@@ -35,4 +43,7 @@ function UnLockingPartialTransactionsDilaog({
   );
 }
 
-export default compose(withDialogRedux())(UnLockingPartialTransactionsDilaog);
+export const index = FF.pipe(
+  UnLockingPartialTransactionsDilaog,
+  withDialogRedux(),
+);

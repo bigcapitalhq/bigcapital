@@ -2,6 +2,7 @@ import { Transformer } from '@/modules/Transformer/Transformer';
 import { Bill } from '../models/Bill';
 import { ItemEntryTransformer } from '@/modules/TransactionItemEntry/ItemEntry.transformer';
 import { AttachmentTransformer } from '@/modules/Attachments/Attachment.transformer';
+import { SaleInvoiceTaxEntryTransformer } from '@/modules/SaleInvoices/queries/SaleInvoiceTaxEntry.transformer';
 
 export class BillTransformer extends Transformer {
   /**
@@ -223,13 +224,13 @@ export class BillTransformer extends Transformer {
    * Retrieve the taxes lines of bill.
    * @param {Bill} bill
    */
-  // protected taxes = (bill: Bill) => {
-  //   return this.item(bill.taxes, new SaleInvoiceTaxEntryTransformer(), {
-  //     subtotal: bill.subtotal,
-  //     isInclusiveTax: bill.isInclusiveTax,
-  //     currencyCode: bill.currencyCode,
-  //   });
-  // };
+  protected taxes = (bill: Bill) => {
+    return this.item(bill.taxes, new SaleInvoiceTaxEntryTransformer(), {
+      subtotal: bill.subtotal,
+      isInclusiveTax: bill.isInclusiveTax,
+      currencyCode: bill.currencyCode,
+    });
+  };
 
   /**
    * Retrieves the entries of the bill.

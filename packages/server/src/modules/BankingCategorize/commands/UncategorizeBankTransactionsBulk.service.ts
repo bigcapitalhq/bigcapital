@@ -6,7 +6,7 @@ import { UncategorizeBankTransactionService } from './UncategorizeBankTransactio
 @Injectable()
 export class UncategorizeBankTransactionsBulk {
   constructor(
-    private readonly uncategorizeTransactionService: UncategorizeBankTransactionService
+    private readonly uncategorizeTransactionService: UncategorizeBankTransactionService,
   ) {}
 
   /**
@@ -14,15 +14,15 @@ export class UncategorizeBankTransactionsBulk {
    * @param {number | Array<number>} uncategorizedTransactionId
    */
   public async uncategorizeBulk(
-    uncategorizedTransactionId: number | Array<number>
+    uncategorizedTransactionId: number | Array<number>,
   ) {
     const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
 
-    const result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
+    const _result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
       .for(uncategorizedTransactionIds)
-      .process(async (_uncategorizedTransactionId: number, index, pool) => {
+      .process(async (_uncategorizedTransactionId: number, _index, _pool) => {
         await this.uncategorizeTransactionService.uncategorize(
-          _uncategorizedTransactionId
+          _uncategorizedTransactionId,
         );
       });
   }

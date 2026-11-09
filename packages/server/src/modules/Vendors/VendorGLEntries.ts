@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AccountNormal } from '@/interfaces/Account';
 import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { Ledger } from '@/modules/Ledger/Ledger';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
 import { Vendor } from './models/Vendor';
 
 @Injectable()
@@ -25,6 +26,11 @@ export class VendorGLEntries {
       debit: 0,
 
       branchId: vendor.openingBalanceBranchId,
+
+      // The vendor opening balance recognizes the payable and the offsetting
+      // expense without any cash movement, hence it is an accrual basis
+      // entry and it is excluded from the cash basis reports.
+      basis: AccountingBasis.Accrual,
     };
   };
 
@@ -36,7 +42,7 @@ export class VendorGLEntries {
    */
   private getOpeningBalanceGLDebitEntry = (
     costAccountId: number,
-    vendor: Vendor
+    vendor: Vendor,
   ): ILedgerEntry => {
     const commonEntry = this.getOpeningBalanceGLCommonEntry(vendor);
 
@@ -58,7 +64,7 @@ export class VendorGLEntries {
    */
   private getOpeningBalanceGLCreditEntry = (
     APAccountId: number,
-    vendor: Vendor
+    vendor: Vendor,
   ): ILedgerEntry => {
     const commonEntry = this.getOpeningBalanceGLCommonEntry(vendor);
 
@@ -81,15 +87,15 @@ export class VendorGLEntries {
   public getOpeningBalanceGLEntries = (
     APAccountId: number,
     costAccountId: number,
-    vendor: Vendor
+    vendor: Vendor,
   ): ILedgerEntry[] => {
     const debitEntry = this.getOpeningBalanceGLDebitEntry(
       costAccountId,
-      vendor
+      vendor,
     );
     const creditEntry = this.getOpeningBalanceGLCreditEntry(
       APAccountId,
-      vendor
+      vendor,
     );
     return [debitEntry, creditEntry];
   };
@@ -104,12 +110,12 @@ export class VendorGLEntries {
   public getOpeningBalanceLedger = (
     APAccountId: number,
     costAccountId: number,
-    vendor: Vendor
+    vendor: Vendor,
   ) => {
     const entries = this.getOpeningBalanceGLEntries(
       APAccountId,
       costAccountId,
-      vendor
+      vendor,
     );
     return new Ledger(entries);
   };

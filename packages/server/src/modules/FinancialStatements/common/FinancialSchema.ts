@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import { FinancialSheetStructure } from './FinancialSheetStructure';
 import { GConstructor } from '@/common/types/Constructor';
 import { FinancialSheet } from './FinancialSheet';

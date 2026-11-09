@@ -1,4 +1,4 @@
-import { ContactTransfromer } from "../../Contacts/Contact.transformer";
+import { ContactTransfromer } from '../../Contacts/Contact.transformer';
 
 export class VendorTransfromer extends ContactTransfromer {
   /**
@@ -9,7 +9,7 @@ export class VendorTransfromer extends ContactTransfromer {
     return [
       'formattedBalance',
       'formattedOpeningBalance',
-      'formattedOpeningBalanceAt'
+      'formattedOpeningBalanceAt',
     ];
   };
 }

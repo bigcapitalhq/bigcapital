@@ -9,7 +9,7 @@ export class ValidateBulkDeleteExpensesService {
     private readonly deleteExpenseService: DeleteExpense,
     @Inject(TENANCY_DB_CONNECTION)
     private readonly tenantKnex: () => Knex,
-  ) { }
+  ) {}
 
   public async validateBulkDeleteExpenses(expenseIds: number[]): Promise<{
     deletableCount: number;
@@ -29,7 +29,7 @@ export class ValidateBulkDeleteExpensesService {
         try {
           await this.deleteExpenseService.deleteExpense(expenseId, trx);
           deletableIds.push(expenseId);
-        } catch (error) {
+        } catch (_error) {
           nonDeletableIds.push(expenseId);
         }
       }
@@ -48,4 +48,3 @@ export class ValidateBulkDeleteExpensesService {
     }
   }
 }
-

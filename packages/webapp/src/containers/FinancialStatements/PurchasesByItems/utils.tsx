@@ -1,11 +1,11 @@
-// @ts-nocheck
-import React from 'react';
+import { PurchasesByItemsTableQuery } from '@bigcapital/sdk-ts';
+import { castArray } from 'lodash';
 import moment from 'moment';
-import * as Yup from 'yup';
+import React from 'react';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
-import { castArray } from 'lodash';
 
 /**
  * Retrieves the purchases by items query.
@@ -14,12 +14,12 @@ export const getDefaultPurchasesByItemsQuery = () => ({
   fromDate: moment().startOf('month').format('YYYY-MM-DD'),
   toDate: moment().format('YYYY-MM-DD'),
   filterByOption: 'with-transactions',
-  itemsIds: [],
+  itemsIds: [] as number[],
+  numberFormat: {},
 });
 
 /**
  * Retrieves the purchases by items query validation schema.
- * @returns {Yup}
  */
 export const getPurchasesByItemsQuerySchema = () => {
   return Yup.object().shape({
@@ -34,16 +34,17 @@ export const getPurchasesByItemsQuerySchema = () => {
 /**
  * Parses the purchases by items query.
  */
-const parsePurchasesByItemsQuery = (locationQuery) => {
+const parsePurchasesByItemsQuery = (
+  locationQuery: Record<string, unknown>,
+): PurchasesByItemsTableQuery => {
   const defaultQuery = getDefaultPurchasesByItemsQuery();
-
   const transformed = {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {
     ...transformed,
-    itemsIds: castArray(transformed.itemsIds),
+    itemsIds: castArray(transformed.itemsIds).map(Number),
   };
 };
 

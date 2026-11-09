@@ -2,9 +2,9 @@ export interface ITransactionsLockingAllDTO {
   lockToDate: Date;
   reason: string;
 }
-export interface ITransactionsLockingCashflowDTO {}
-export interface ITransactionsLockingSalesDTO {}
-export interface ITransactionsLockingPurchasesDTO {}
+export type ITransactionsLockingCashflowDTO = object;
+export type ITransactionsLockingSalesDTO = object;
+export type ITransactionsLockingPurchasesDTO = object;
 
 export enum TransactionsLockingGroup {
   All = 'all',

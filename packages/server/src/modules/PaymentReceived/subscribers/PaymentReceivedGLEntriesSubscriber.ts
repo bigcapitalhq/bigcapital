@@ -11,7 +11,7 @@ import { events } from '@/common/events/events';
 @Injectable()
 export class PaymentReceivedGLEntriesSubscriber {
   /**
-   * @param {PaymentReceivedGLEntries} paymentReceivedGLEntries - 
+   * @param {PaymentReceivedGLEntries} paymentReceivedGLEntries -
    */
   constructor(
     private readonly paymentReceivedGLEntries: PaymentReceivedGLEntries,

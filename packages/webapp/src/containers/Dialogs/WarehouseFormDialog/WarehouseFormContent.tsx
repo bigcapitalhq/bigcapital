@@ -1,15 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
+import React from 'react';
+import { WarehouseFormFields } from './WarehouseFormFields';
+import { WarehouseFormFloatingActions } from './WarehouseFormFloatingActions';
 
-import WarehouseFormFields from './WarehouseFormFields';
-import WarehouseFormFloatingActions from './WarehouseFormFloatingActions';
-
-/**
- * Warehouse form content.
- * @returns
- */
-export default function WarehouseFormContent() {
+export function WarehouseFormContent(): React.ReactElement {
   return (
     <Form>
       <WarehouseFormFields />

@@ -23,6 +23,8 @@ export const ERRORS = {
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
   SALE_ESTIMATE_ALREADY_DELIVERED: 'SALE_ESTIMATE_ALREADY_DELIVERED',
   SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
+  SALE_ESTIMATE_EXPIRATION_DATE_INVALID:
+    'SALE_ESTIMATE_EXPIRATION_DATE_INVALID',
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];
@@ -190,6 +192,12 @@ export const defaultEstimatePdfBrandingAttributes = {
   showCompanyAddress: true,
   billedToLabel: 'Billed To',
 
+  // Entries
+  lineItemLabel: 'Item',
+  lineQuantityLabel: 'Qty',
+  lineRateLabel: 'Rate',
+  lineTotalLabel: 'Total',
+
   total: '$1000.00',
   totalLabel: 'Total',
   showTotal: true,
@@ -242,7 +250,7 @@ export interface EstimatePdfBrandingAttributes {
   primaryColor: string;
   secondaryColor: string;
   showCompanyLogo: boolean;
-  companyLogo: string;
+  companyLogoUri: string;
   companyName: string;
 
   // Customer Address
@@ -253,6 +261,12 @@ export interface EstimatePdfBrandingAttributes {
   showCompanyAddress: boolean;
   companyAddress: string;
   billedToLabel: string;
+
+  // Entries
+  lineItemLabel: string;
+  lineQuantityLabel: string;
+  lineRateLabel: string;
+  lineTotalLabel: string;
 
   total: string;
   totalLabel: string;

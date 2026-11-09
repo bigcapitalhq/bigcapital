@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { pick } from 'lodash';
 import { Role } from '@/modules/Roles/models/Role.model';
 import { SystemUser } from '@/modules/System/models/SystemUser';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -31,14 +30,11 @@ export class SyncSystemUserToTenantService {
     await this.tenantUserModel()
       .query()
       .insert({
-        ...pick(systemUser, [
-          'firstName',
-          'lastName',
-          'phoneNumber',
-          'email',
-          'active',
-          'inviteAcceptedAt',
-        ]),
+        firstName: systemUser.firstName,
+        lastName: systemUser.lastName,
+        email: systemUser.email,
+        active: systemUser.active,
+        inviteAcceptedAt: new Date(systemUser.inviteAcceptedAt),
         systemUserId: systemUser.id,
         roleId: adminRole.id,
       });

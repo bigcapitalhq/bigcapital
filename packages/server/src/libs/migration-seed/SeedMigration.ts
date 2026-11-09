@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Knex } from 'knex';
 import * as Bluebird from 'bluebird';
 import { getTable, getTableName, getLockTableName } from './TableUtils';
@@ -98,7 +97,7 @@ export class SeedMigration {
    * @param trx
    * @returns
    */
-  private latestBatchNumber(trx = this.knex): number {
+  private latestBatchNumber(trx = this.knex): Promise<number> {
     return trx
       .from(getTableName(this.config.tableName, this.config.schemaName))
       .max('batch as max_batch')
@@ -127,10 +126,10 @@ export class SeedMigration {
 
       return this.migrationSource
         .getMigration(migration)
-        .then((migrationContent) =>
+        .then((migrationContent): any =>
           this.runMigrationContent(migrationContent.default, direction, trx),
         )
-        .then(() => {
+        .then((): any => {
           if (direction === 'up') {
             return trx.into(getTableName(tableName)).insert({
               name,
@@ -164,7 +163,9 @@ export class SeedMigration {
    * @param {MigrateItem} migration
    * @returns {MigrateItem}
    */
-  async validateMigrationStructure(migration: MigrateItem): MigrateItem {
+  async validateMigrationStructure(
+    migration: MigrateItem,
+  ): Promise<MigrateItem> {
     const migrationName = this.migrationSource.getMigrationName(migration);
 
     // maybe promise

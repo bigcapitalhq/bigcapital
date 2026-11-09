@@ -1,18 +1,13 @@
-// @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
-
-import { If } from '@/components';
-import MoneyInContentFields from './MoneyInContentFields';
-import TransactionTypeFields from './TransactionTypeFields';
+import React from 'react';
+import { MoneyInContentFields } from './MoneyInContentFields';
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import { TransactionTypeFields } from './TransactionTypeFields';
 
 /**
  * Money in form fields.
  */
-function MoneyInFormFields() {
-  // Money in dialog context.
+export function MoneyInFormFields() {
   const { defaultAccountId } = useMoneyInDailogContext();
 
   return (
@@ -22,5 +17,3 @@ function MoneyInFormFields() {
     </div>
   );
 }
-
-export default MoneyInFormFields;

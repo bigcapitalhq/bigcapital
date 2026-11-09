@@ -1,31 +1,30 @@
-// @ts-nocheck
-import * as Yup from 'yup';
 import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 import { isBlank } from '@/utils';
 
 const getSchema = () =>
   Yup.object().shape({
-    customer_id: Yup.string().label(intl.get('customer_name_')).required(),
-    credit_note_date: Yup.date().required().label(intl.get('invoice_date_')),
-    credit_note_number: Yup.string()
+    customerId: Yup.string().label(intl.get('customer_name_')).required(),
+    creditNoteDate: Yup.date().required().label(intl.get('invoice_date_')),
+    creditNoteNumber: Yup.string()
       .max(DATATYPES_LENGTH.STRING)
       .label(intl.get('invoice_no_')),
-    reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
+    referenceNo: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
     note: Yup.string()
       .trim()
       .min(1)
       .max(DATATYPES_LENGTH.TEXT)
       .label(intl.get('note')),
     open: Yup.boolean(),
-    terms_conditions: Yup.string()
+    termsConditions: Yup.string()
       .trim()
       .min(1)
       .max(DATATYPES_LENGTH.TEXT)
       .label(intl.get('note')),
-    branch_id: Yup.string(),
-    warehouse_id: Yup.string(),
-    exchange_rate:Yup.number(),
+    branchId: Yup.string(),
+    warehouseId: Yup.string(),
+    exchangeRate: Yup.number(),
     entries: Yup.array().of(
       Yup.object().shape({
         quantity: Yup.number()
@@ -36,7 +35,7 @@ const getSchema = () =>
             then: Yup.number().required(),
           }),
         rate: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
-        item_id: Yup.number()
+        itemId: Yup.number()
           .nullable()
           .when(['quantity', 'rate'], {
             is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),

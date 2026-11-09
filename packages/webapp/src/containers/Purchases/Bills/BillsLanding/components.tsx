@@ -1,14 +1,9 @@
-// @ts-nocheck
+import { Intent, Menu, MenuItem, MenuDivider, Tag } from '@blueprintjs/core';
+import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Intent,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Tag,
-} from '@blueprintjs/core';
-import clsx from 'classnames';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { BillsListResponse } from '@bigcapital/sdk-ts';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -17,20 +12,32 @@ import {
   Choose,
   Can,
 } from '@/components';
-import {
-  formattedAmount,
-  safeCallback,
-} from '@/utils';
+import { CLASSES, Features } from '@/constants';
 import {
   BillAction,
   PaymentMadeAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
-import { CLASSES } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
+import { formattedAmount, safeCallback } from '@/utils';
 
-/**
- * Actions menu.
- */
+export type BillTableRow = NonNullable<BillsListResponse['data']>[number];
+
+interface BillActionsPayload {
+  onEdit: (bill: BillTableRow) => void;
+  onOpen: (bill: BillTableRow) => void;
+  onDelete: (bill: BillTableRow) => void;
+  onQuick: (bill: BillTableRow) => void;
+  onConvert: (bill: BillTableRow) => void;
+  onViewDetails: (bill: BillTableRow) => void;
+  onAllocateLandedCost: (bill: BillTableRow) => void;
+}
+
+interface ActionsMenuProps {
+  row: { original: BillTableRow };
+  payload: BillActionsPayload;
+}
+
 export function ActionsMenu({
   payload: {
     onEdit,
@@ -42,7 +49,10 @@ export function ActionsMenu({
     onAllocateLandedCost,
   },
   row: { original },
-}) {
+}: ActionsMenuProps) {
+  const { featureCan } = useFeatureCan();
+  const isLandedCostEnabled = featureCan(Features.LandedCost);
+
   return (
     <Menu>
       <MenuItem
@@ -63,7 +73,7 @@ export function ActionsMenu({
           onClick={safeCallback(onConvert, original)}
         />
 
-        <If condition={!original.is_open}>
+        <If condition={!original.isOpen}>
           <MenuItem
             icon={<Icon icon={'check'} iconSize={18} />}
             text={intl.get('mark_as_open')}
@@ -72,7 +82,7 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
-        <If condition={original.is_open && !original.is_fully_paid}>
+        <If condition={!!(original.isOpen && !original.isFullyPaid)}>
           <MenuItem
             icon={<Icon icon="quick-payment-16" iconSize={16} />}
             text={intl.get('add_payment')}
@@ -80,11 +90,13 @@ export function ActionsMenu({
           />
         </If>
       </Can>
-      <MenuItem
-        icon={<Icon icon="receipt-24" iconSize={16} />}
-        text={intl.get('allocate_landed_coast')}
-        onClick={safeCallback(onAllocateLandedCost, original)}
-      />
+      {isLandedCostEnabled && (
+        <MenuItem
+          icon={<Icon icon="receipt-24" iconSize={16} />}
+          text={intl.get('allocate_landed_coast')}
+          onClick={safeCallback(onAllocateLandedCost, original)}
+        />
+      )}
       <Can I={BillAction.Delete} a={AbilitySubject.Bill}>
         <MenuDivider />
         <MenuItem
@@ -98,36 +110,33 @@ export function ActionsMenu({
   );
 }
 
-/**
- * Status accessor.
- */
-export function StatusAccessor(bill) {
+export function StatusAccessor(bill: BillTableRow) {
   return (
     <div className={'status-accessor'}>
       <Choose>
-        <Choose.When condition={bill.is_fully_paid && bill.is_open}>
+        <Choose.When condition={!!(bill.isFullyPaid && bill.isOpen)}>
           <Tag round minimal intent={Intent.SUCCESS}>
             <T id={'paid'} />
           </Tag>
         </Choose.When>
 
-        <Choose.When condition={bill.is_open}>
+        <Choose.When condition={!!bill.isOpen}>
           <Choose>
-            <Choose.When condition={bill.is_overdue}>
+            <Choose.When condition={!!bill.isOverdue}>
               <Tag round minimal intent={Intent.DANGER}>
-                {intl.get('overdue_by', { overdue: bill.overdue_days })}
+                {intl.get('overdue_by', { overdue: bill.overdueDays })}
               </Tag>
             </Choose.When>
             <Choose.Otherwise>
               <Tag round minimal intent={Intent.WARNING}>
-                {intl.get('due_in', { due: bill.remaining_days })}
+                {intl.get('due_in', { due: bill.remainingDays })}
               </Tag>
             </Choose.Otherwise>
           </Choose>
-          <If condition={bill.is_partially_paid}>
+          <If condition={!!bill.isPartiallyPaid}>
             <Tag round minimal intent={Intent.PRIMARY}>
               {intl.get('day_partially_paid', {
-                due: formattedAmount(bill.due_amount, bill.currency_code),
+                due: formattedAmount(bill.dueAmount, bill.currencyCode),
               })}
             </Tag>
           </If>
@@ -143,72 +152,71 @@ export function StatusAccessor(bill) {
   );
 }
 
-/**
- * Retrieve bills table columns.
- */
-export function useBillsTableColumns() {
+export function useBillsTableColumns(): DataTableColumn<BillTableRow>[] {
   return React.useMemo(
-    () => [
-      {
-        id: 'bill_date',
-        Header: intl.get('bill_date'),
-        accessor: 'formatted_bill_date',
-        width: 110,
-        className: 'bill_date',
-        clickable: true,
-      },
-      {
-        id: 'vendor',
-        Header: intl.get('vendor_name'),
-        accessor: 'vendor.display_name',
-        width: 180,
-        className: 'vendor',
-        clickable: true,
-      },
-      {
-        id: 'bill_number',
-        Header: intl.get('bill_number'),
-        accessor: (row) => (row.bill_number ? `${row.bill_number}` : null),
-        width: 100,
-        className: 'bill_number',
-        clickable: true,
-      },
-      {
-        id: 'amount',
-        Header: intl.get('amount'),
-        accessor: 'total_formatted',
-        width: 120,
-        align: 'right',
-        clickable: true,
-        money: true,
-        className: clsx(CLASSES.FONT_BOLD),
-      },
-      {
-        id: 'status',
-        Header: intl.get('status'),
-        accessor: StatusAccessor,
-        width: 160,
-        className: 'status',
-        clickable: true,
-      },
-      {
-        id: 'due_date',
-        Header: intl.get('due_date'),
-        accessor: 'due_date',
-        Cell: FormatDateCell,
-        width: 110,
-        className: 'due_date',
-        clickable: true,
-      },
-      {
-        id: 'reference_no',
-        Header: intl.get('reference_no'),
-        accessor: 'reference_no',
-        width: 90,
-        className: 'reference_no',
-        clickable: true,
-      },
-    ],
+    () =>
+      [
+        {
+          id: 'bill_date',
+          Header: intl.get('bill_date'),
+          accessor: 'formattedBillDate',
+          width: 110,
+          className: 'bill_date',
+          clickable: true,
+        },
+        {
+          id: 'vendor',
+          Header: intl.get('vendor_name'),
+          accessor: 'vendor.displayName',
+          width: 180,
+          className: 'vendor',
+          clickable: true,
+        },
+        {
+          id: 'bill_number',
+          Header: intl.get('bill_number'),
+          accessor: (row: BillTableRow) =>
+            row.billNumber ? `${row.billNumber}` : null,
+          width: 100,
+          className: 'bill_number',
+          clickable: true,
+        },
+        {
+          id: 'amount',
+          Header: intl.get('amount'),
+          accessor: 'totalFormatted',
+          width: 120,
+          align: 'right',
+          clickable: true,
+          money: true,
+          className: clsx(CLASSES.FONT_BOLD),
+        },
+        {
+          id: 'status',
+          Header: intl.get('status'),
+          accessor: StatusAccessor,
+          width: 160,
+          className: 'status',
+          clickable: true,
+        },
+        {
+          id: 'due_date',
+          Header: intl.get('due_date'),
+          accessor: 'dueDate',
+          Cell: FormatDateCell,
+          width: 110,
+          className: 'due_date',
+          clickable: true,
+        },
+        {
+          id: 'reference_no',
+          Header: intl.get('reference_no'),
+          accessor: 'referenceNo',
+          width: 90,
+          className: 'reference_no',
+          clickable: true,
+        },
+      ] as DataTableColumn<BillTableRow>[],
     [],
   );
 }

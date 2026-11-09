@@ -1,27 +1,25 @@
-// @ts-nocheck
 import React from 'react';
-import * as R from 'ramda';
-
-import { FinancialSheetSkeleton } from '@/components';
 import { FinancialReportBody } from '../FinancialReportPage';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
-import TrialBalanceSheetTable from './TrialBalanceSheetTable';
-
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { TrialBalanceSheetTable } from './TrialBalanceSheetTable';
+import { FinancialSheetSkeleton } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
  * Trial balance sheet body.
  * @returns {React.JSX}
  */
-function TrialBalanceSheetBodyJSX({
-  // #withCurrentOrganization
-  organizationName,
-}) {
-  const { isLoading } = useTrialBalanceSheetContext();
+function TrialBalanceSheetBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
+  const { isLoading, trialBalanceSheet } = useTrialBalanceSheetContext();
+
+  // Shows the skeleton only on the initial load. Refetches (e.g. sorting)
+  // keep the current report rendered while the request is in flight.
+  const isInitialLoading = isLoading && !trialBalanceSheet;
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
+      {isInitialLoading ? (
         <FinancialSheetSkeleton />
       ) : (
         <TrialBalanceSheetTable companyName={organizationName} />
@@ -30,8 +28,4 @@ function TrialBalanceSheetBodyJSX({
   );
 }
 
-export const TrialBalanceSheetBody = R.compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(TrialBalanceSheetBodyJSX);
+export const TrialBalanceSheetBody = TrialBalanceSheetBodyJSX;

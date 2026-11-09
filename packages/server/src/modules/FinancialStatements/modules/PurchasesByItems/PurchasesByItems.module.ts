@@ -6,12 +6,12 @@ import { PurchasesByItemsExport } from './PurchasesByItemsExport';
 import { PurchasesByItemsApplication } from './PurchasesByItemsApplication';
 import { PurchasesByItemReportController } from './PurchasesByItems.controller';
 import { PurchasesByItemsMeta } from './PurchasesByItemsMeta';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 import { InventoryCostModule } from '@/modules/InventoryCost/InventoryCost.module';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
 
 @Module({
-  imports: [InventoryCostModule, FinancialSheetCommonModule],
+  imports: [TenancyModule, InventoryCostModule, FinancialSheetCommonModule],
   providers: [
     PurchasesByItemsTableInjectable,
     PurchasesByItemsService,
@@ -19,7 +19,6 @@ import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.mo
     PurchasesByItemsPdf,
     PurchasesByItemsMeta,
     PurchasesByItemsApplication,
-    TenancyContext,
   ],
   exports: [PurchasesByItemsApplication],
   controllers: [PurchasesByItemReportController],

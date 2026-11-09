@@ -1,12 +1,10 @@
-// @ts-nocheck
 import { transformTableStateToQuery } from '@/utils';
 
-/**
- * Transformes the table state to list query.
- */
-export const transformAccountsStateToQuery = (tableState) => {
+export const transformAccountsStateToQuery = (
+  tableState: { inactiveMode?: boolean } & Record<string, unknown>,
+) => {
   return {
     ...transformTableStateToQuery(tableState),
-    inactive_mode: tableState.inactiveMode,
+    inactiveMode: tableState.inactiveMode,
   };
 };

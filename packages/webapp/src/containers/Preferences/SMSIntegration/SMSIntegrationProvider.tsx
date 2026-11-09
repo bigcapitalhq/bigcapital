@@ -1,17 +1,45 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
+import type { AllSettings } from '@bigcapital/sdk-ts';
 import { CLASSES } from '@/constants/classes';
-import { useSettings, useSettingSMSNotifications } from '@/hooks/query';
+import {
+  useSaveSettings,
+  useSettings,
+  useSettingSMSNotifications,
+} from '@/hooks/query';
 
-const SMSIntegrationContext = React.createContext();
+export interface SMSNotification {
+  key: string;
+  notificationLabel?: string;
+  notificationDescription?: string;
+  moduleFormatted?: string;
+  smsMessage?: string;
+  isNotificationEnabled?: boolean;
+}
+
+export interface SMSIntegrationContextValue {
+  allSettings?: AllSettings;
+  notifications: SMSNotification[] | undefined;
+  isSMSNotificationsLoading: boolean;
+  isSMSNotificationsFetching: boolean;
+  saveSettingMutate: ReturnType<typeof useSaveSettings>['mutateAsync'];
+}
+
+const SMSIntegrationContext = React.createContext<SMSIntegrationContextValue>(
+  {} as SMSIntegrationContextValue,
+);
+
+export interface SMSIntegrationProviderProps {
+  children?: React.ReactNode;
+}
 
 /**
  * SMS Integration provider.
  */
-function SMSIntegrationProvider({ ...props }) {
+function SMSIntegrationProvider({ children }: SMSIntegrationProviderProps) {
   //Fetches Organization Settings.
-  const { isLoading: isSettingsLoading } = useSettings();
+  const { data: allSettings, isLoading: isSettingsLoading } = useSettings();
+  const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
   const {
     data: notifications,
@@ -20,10 +48,12 @@ function SMSIntegrationProvider({ ...props }) {
   } = useSettingSMSNotifications();
 
   // Provider state.
-  const provider = {
-    notifications,
-    isSMSNotificationsLoading,
+  const provider: SMSIntegrationContextValue = {
+    allSettings,
+    notifications: (notifications as SMSNotification[] | undefined) ?? [],
+    isSMSNotificationsLoading: isSMSNotificationsLoading || isSettingsLoading,
     isSMSNotificationsFetching,
+    saveSettingMutate,
   };
 
   return (
@@ -33,7 +63,9 @@ function SMSIntegrationProvider({ ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_SMS_INTEGRATION,
       )}
     >
-      <SMSIntegrationContext.Provider value={provider} {...props} />
+      <SMSIntegrationContext.Provider value={provider}>
+        {children}
+      </SMSIntegrationContext.Provider>
     </div>
   );
 }

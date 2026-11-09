@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React from 'react';
-import ExpenseFormEntriesField from './ExpenseFormEntriesField';
+import { ExpenseFormEntriesField } from './ExpenseFormEntriesField';
 
-export default function ExpenseFormBody() {
+export function ExpenseFormBody() {
   return <ExpenseFormEntriesField />;
 }

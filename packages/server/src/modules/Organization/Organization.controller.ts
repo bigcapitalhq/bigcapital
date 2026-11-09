@@ -3,7 +3,6 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBody,
-  ApiOkResponse,
   ApiExtraModels,
   getSchemaPath,
   ApiParam,
@@ -38,6 +37,7 @@ import {
 import { GetCurrentOrganizationResponseDto } from './dtos/GetCurrentOrganizationResponse.dto';
 import { OrganizationBuildJobResponseDto } from './dtos/OrganizationBuildJobResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { OrgBaseCurrencyMutateAbilitiesResponseDto } from './dtos/OrgBaseCurrencyMutateAbilitiesResponse.dto';
 
 @ApiTags('Organization')
 @Controller('organization')
@@ -46,6 +46,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 @IgnoreTenantModelsInitialize()
 @ApiExtraModels(GetCurrentOrganizationResponseDto)
 @ApiExtraModels(OrganizationBuildJobResponseDto)
+@ApiExtraModels(OrgBaseCurrencyMutateAbilitiesResponseDto)
 @ApiCommonHeaders()
 export class OrganizationController {
   constructor(
@@ -120,6 +121,14 @@ export class OrganizationController {
   }
 
   @Get('base-currency-mutate')
+  @ApiOperation({
+    summary: 'Retrieves the base currency mutation lock abilities.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The base currency mutation abilities.',
+    schema: { $ref: getSchemaPath(OrgBaseCurrencyMutateAbilitiesResponseDto) },
+  })
   async baseCurrencyMutate() {
     const abilities =
       await this.orgBaseCurrencyLockingService.baseCurrencyMutateLocks();

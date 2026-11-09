@@ -1,5 +1,12 @@
+import {
+  CurrenciesListResponse,
+  BranchesListResponse,
+  ContactResponse,
+  Customer,
+} from '@bigcapital/sdk-ts';
 import React, { createContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Features } from '@/constants';
 import {
   useCustomer,
   useCurrencies,
@@ -8,35 +15,21 @@ import {
   useContact,
   useBranches,
 } from '@/hooks/query';
-import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
+
+type UseEditCustomerResult = ReturnType<typeof useEditCustomer>;
+type UseCreateCustomerResult = ReturnType<typeof useCreateCustomer>;
 
 type CustomerFormSubmitPayload = {
   noRedirect?: boolean;
 };
 
-type Customer = {
-  id: number;
-  [key: string]: any;
-};
-
-type Currency = {
-  currency_code: string;
-  [key: string]: any;
-};
-
-type Branch = {
-  id: number;
-  primary?: boolean;
-  [key: string]: any;
-};
-
 type CustomerFormContextValue = {
   customerId?: number;
-  customer?: Customer;
-  currencies: Currency[];
-  branches: Branch[];
-  contactDuplicate?: Customer;
+  customer?: Customer | undefined;
+  currencies: CurrenciesListResponse;
+  branches: BranchesListResponse;
+  contactDuplicate?: ContactResponse | undefined;
   submitPayload: CustomerFormSubmitPayload;
   isNewMode: boolean;
 
@@ -49,12 +42,12 @@ type CustomerFormContextValue = {
     React.SetStateAction<CustomerFormSubmitPayload>
   >;
 
-  editCustomerMutate: (args: [number, any]) => Promise<any>;
-  createCustomerMutate: (values: any) => Promise<any>;
+  editCustomerMutate: UseEditCustomerResult['mutateAsync'];
+  createCustomerMutate: UseCreateCustomerResult['mutateAsync'];
 };
 
 type CustomerFormProviderProps = {
-  query?: unknown;
+  query?: Record<string, unknown>;
   customerId?: number;
   children?: React.ReactNode;
 };
@@ -63,9 +56,14 @@ const CustomerFormContext = createContext<CustomerFormContextValue | undefined>(
   undefined,
 );
 
-export function CustomerFormProvider({ query, customerId, children }: CustomerFormProviderProps) {
+export function CustomerFormProvider({
+  query,
+  customerId,
+  children,
+}: CustomerFormProviderProps) {
   const { state } = useLocation<{ action?: number | string }>();
-  const contactId = state?.action;
+  const contactId =
+    typeof state?.action === 'number' ? state.action : undefined;
 
   // Features guard.
   const { featureCan } = useFeatureCan();
@@ -82,7 +80,8 @@ export function CustomerFormProvider({ query, customerId, children }: CustomerFo
     { enabled: !!contactId },
   );
   // Handle fetch Currencies data table
-  const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies(undefined);
+  const { data: currencies, isLoading: isCurrenciesLoading } =
+    useCurrencies(undefined);
 
   // Fetches the branches list.
   const {
@@ -92,13 +91,12 @@ export function CustomerFormProvider({ query, customerId, children }: CustomerFo
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Form submit payload.
-  const [submitPayload, setSubmitPayload] = useState<CustomerFormSubmitPayload>({});
+  const [submitPayload, setSubmitPayload] = useState<CustomerFormSubmitPayload>(
+    {},
+  );
 
-  const editCustomerMutation = useEditCustomer(undefined) as any;
-  const createCustomerMutation = useCreateCustomer(undefined) as any;
-  const editCustomerMutate = editCustomerMutation.mutateAsync as CustomerFormContextValue['editCustomerMutate'];
-  const createCustomerMutate =
-    createCustomerMutation.mutateAsync as CustomerFormContextValue['createCustomerMutate'];
+  const { mutateAsync: editCustomerMutate } = useEditCustomer();
+  const { mutateAsync: createCustomerMutate } = useCreateCustomer();
 
   // determines whether the form new or duplicate mode.
   const isNewMode = Boolean(contactId) || !customerId;
@@ -108,10 +106,10 @@ export function CustomerFormProvider({ query, customerId, children }: CustomerFo
 
   const provider: CustomerFormContextValue = {
     customerId,
-    customer: customer as Customer | undefined,
-    currencies: (currencies as Currency[]) ?? [],
-    branches: (branches as Branch[]) ?? [],
-    contactDuplicate: contactDuplicate as Customer | undefined,
+    customer,
+    currencies: currencies ?? [],
+    branches: branches ?? [],
+    contactDuplicate: contactDuplicate || undefined,
     submitPayload,
     isNewMode,
 

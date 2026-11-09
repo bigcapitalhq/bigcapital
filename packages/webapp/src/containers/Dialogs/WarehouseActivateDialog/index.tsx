@@ -1,24 +1,30 @@
-// @ts-nocheck
-import React from 'react';
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
-import { compose } from '@/utils';
-
-const WarehouseActivateDialogContent = React.lazy(
-  () => import('./WarehouseActivateDialogContent'),
+const WarehouseActivateDialogContent = lazy(() =>
+  import('./WarehouseActivateDialogContent').then((m) => ({
+    default: m.WarehouseActivateDialogContent,
+  })),
 );
 
-/**
- * Warehouse activate dialog.
- */
-function WarehouseActivateDialog({ dialogName, payload: {}, isOpen }) {
+interface WarehouseActivateDialogProps extends DialogBaseProps {
+  dialogName: string;
+}
+
+function WarehouseActivateDialog({
+  dialogName,
+  payload = {},
+  isOpen,
+}: WarehouseActivateDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
       title={<T id={'warehouse_activate.dialog.label'} />}
       isOpen={isOpen}
-      canEscapeJeyClose={true}
+      canEscapeKeyClose={true}
       autoFocus={true}
       className={'dialog--warehouse-activate'}
     >
@@ -29,4 +35,4 @@ function WarehouseActivateDialog({ dialogName, payload: {}, isOpen }) {
   );
 }
 
-export default compose(withDialogRedux())(WarehouseActivateDialog);
+export const index = FF.pipe(WarehouseActivateDialog, withDialogRedux());

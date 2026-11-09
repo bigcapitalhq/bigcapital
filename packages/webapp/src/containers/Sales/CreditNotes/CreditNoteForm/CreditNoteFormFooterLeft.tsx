@@ -1,8 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
+import { FFormGroup, FEditableText } from '@/components';
 
 export function CreditNoteFormFooterLeft() {
   return (
@@ -10,7 +9,7 @@ export function CreditNoteFormFooterLeft() {
       {/* --------- Customer notes --------- */}
       <CreditNoteMsgFormGroup
         name={'note'}
-        label={<T id={'credit_note.label_customer_note'} />}
+        label={intl.get('credit_note.label_customer_note')}
       >
         <FEditableText
           name={'note'}
@@ -21,11 +20,11 @@ export function CreditNoteFormFooterLeft() {
       </CreditNoteMsgFormGroup>
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
-        label={<T id={'credit_note.label_terms_conditions'} />}
-        name={'terms_conditions'}
+        label={intl.get('credit_note.label_terms_conditions')}
+        name={'termsConditions'}
       >
         <FEditableText
-          name={'terms_conditions'}
+          name={'termsConditions'}
           placeholder={intl.get(
             'credit_note.label_terms_and_conditions.placeholder',
           )}

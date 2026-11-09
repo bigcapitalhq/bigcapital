@@ -1,13 +1,22 @@
-// @ts-nocheck
+import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import clsx from 'classnames';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-
-import clsx from 'classnames';
-import { safeCallback } from '@/utils';
-import { CLASSES } from '@/constants/classes';
+import type { ItemAssociatedEstimatesResponse } from '@bigcapital/sdk-ts';
 import { Can, FormatDateCell, Icon } from '@/components';
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants/classes';
+import { safeCallback } from '@/utils';
+
+export type ItemEstimateTransaction = ItemAssociatedEstimatesResponse[number];
+
+interface ActionsMenuProps {
+  row: { original: ItemEstimateTransaction };
+  payload: {
+    onEdit: (row: ItemEstimateTransaction) => void;
+    onDelete: (row: ItemEstimateTransaction) => void;
+  };
+}
 
 /**
  * Table actions menu.
@@ -15,7 +24,7 @@ import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 export function ActionsMenu({
   row: { original },
   payload: { onEdit, onDelete },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
@@ -47,7 +56,7 @@ export const useEstimateTransactionsColumns = () => {
       {
         id: 'estimate_date',
         Header: intl.get('date'),
-        accessor: 'formatted_estimate_date',
+        accessor: 'formattedEstimateDate',
         Cell: FormatDateCell,
         width: 120,
         className: 'estimate_date',
@@ -56,7 +65,7 @@ export const useEstimateTransactionsColumns = () => {
       {
         id: 'customer',
         Header: intl.get('customer'),
-        accessor: 'customer_display_name',
+        accessor: 'customerDisplayName',
         width: 140,
         className: 'customer',
         textOverview: true,
@@ -64,7 +73,7 @@ export const useEstimateTransactionsColumns = () => {
       {
         id: 'estimate_number',
         Header: intl.get('estimate_no'),
-        accessor: 'estimate_number',
+        accessor: 'estimateNumber',
         width: 120,
         className: 'estimate_number',
         textOverview: true,
@@ -72,14 +81,14 @@ export const useEstimateTransactionsColumns = () => {
       {
         id: 'qunatity',
         Header: intl.get('item.drawer_quantity_sold'),
-        accessor: 'quantity_formatted',
+        accessor: 'formattedQuantity',
         align: 'right',
         width: 100,
       },
       {
         id: 'rate',
         Header: 'Rate',
-        accessor: 'formatted_rate',
+        accessor: 'formattedRate',
         align: 'right',
         width: 100,
         className: clsx(CLASSES.FONT_BOLD),
@@ -88,7 +97,7 @@ export const useEstimateTransactionsColumns = () => {
       {
         id: 'amount',
         Header: intl.get('total'),
-        accessor: 'formatted_amount',
+        accessor: 'formattedAmount',
         align: 'right',
         width: 100,
         className: clsx(CLASSES.FONT_BOLD),

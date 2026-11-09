@@ -8,8 +8,7 @@ import { ExpensesApplication } from './ExpensesApplication.service';
 import { GetExpenseService } from './queries/GetExpense.service';
 import { ExpenseDTOTransformer } from './commands/CommandExpenseDTO.transformer';
 import { CommandExpenseValidator } from './commands/CommandExpenseValidator.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { ExpensesWriteGLSubscriber } from './subscribers/ExpenseGLEntries.subscriber';
 import { ExpenseGLEntriesStorageService } from './subscribers/ExpenseGLEntriesStorage.sevice';
 import { ExpenseGLEntriesService } from './subscribers/ExpenseGLEntries.service';
@@ -23,7 +22,7 @@ import { BulkDeleteExpensesService } from './BulkDeleteExpenses.service';
 import { ValidateBulkDeleteExpensesService } from './ValidateBulkDeleteExpenses.service';
 
 @Module({
-  imports: [LedgerModule, BranchesModule, DynamicListModule],
+  imports: [TenancyModule, LedgerModule, BranchesModule, DynamicListModule],
   controllers: [ExpensesController],
   exports: [CreateExpense, ExpensesExportable, ExpensesImportable],
   providers: [
@@ -35,8 +34,6 @@ import { ValidateBulkDeleteExpensesService } from './ValidateBulkDeleteExpenses.
     PublishExpense,
     GetExpenseService,
     ExpensesApplication,
-    TenancyContext,
-    TransformerInjectable,
     ExpensesWriteGLSubscriber,
     ExpenseGLEntriesStorageService,
     ExpenseGLEntriesService,

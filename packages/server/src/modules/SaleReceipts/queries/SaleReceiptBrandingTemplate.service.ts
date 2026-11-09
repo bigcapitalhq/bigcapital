@@ -20,10 +20,7 @@ export class SaleReceiptBrandingTemplate {
    * @param {number} templateId - The ID of the PDF template.
    * @returns {Promise<Object>} The sale receipt branding template with merged attributes.
    */
-  public async getSaleReceiptBrandingTemplate(templateId: number) {
-    const template =
-      await this.getPdfTemplateService.getPdfTemplate(templateId);
-
+  public async getSaleReceiptBrandingTemplate(templateId?: number) {
     // Retrieves the organization branding attributes.
     const commonOrgBrandingAttrs =
       await this.getOrgBrandingAttributes.execute();
@@ -33,6 +30,21 @@ export class SaleReceiptBrandingTemplate {
       ...defaultSaleReceiptBrandingAttributes,
       ...commonOrgBrandingAttrs,
     };
+
+    // The receipt may have no assigned template and no default template set for
+    // the resource, in which case we fall back to the default branding attributes.
+    let template = null;
+    if (templateId != null) {
+      try {
+        template = await this.getPdfTemplateService.getPdfTemplate(templateId);
+      } catch {
+        template = null;
+      }
+    }
+    if (!template) {
+      return { attributes: organizationBrandingAttrs };
+    }
+
     const brandingTemplateAttrs = {
       ...template.attributes,
       companyLogoUri: template.companyLogoUri,

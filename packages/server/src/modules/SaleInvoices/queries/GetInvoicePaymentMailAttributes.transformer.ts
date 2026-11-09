@@ -74,7 +74,9 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   }
 
   public dueDateLabel(): string {
-    return 'Due {dueDate}';
+    return this.context.i18n.t('invoice.mail.due_date', {
+      args: { dueDate: this.dueDate() },
+    });
   }
 
   public invoiceNumber(): string {
@@ -82,7 +84,9 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   }
 
   public invoiceNumberLabel(): string {
-    return 'Invoice # {invoiceNumber}';
+    return this.context.i18n.t('invoice.mail.invoice_number', {
+      args: { invoiceNumber: this.invoiceNumber() },
+    });
   }
 
   public subtotal(): string {
@@ -90,7 +94,7 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   }
 
   public subtotalLabel(): string {
-    return 'Subtotal';
+    return this.context.i18n.t('invoice.mail.subtotal');
   }
 
   public discount(): string {
@@ -98,7 +102,7 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   }
 
   public discountLabel(): string {
-    return 'Discount';
+    return this.context.i18n.t('invoice.mail.discount');
   }
 
   public adjustment(): string {
@@ -106,7 +110,7 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   }
 
   public adjustmentLabel(): string {
-    return 'Adjustment';
+    return this.context.i18n.t('invoice.mail.adjustment');
   }
 
   public total(): string {
@@ -114,7 +118,7 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   }
 
   public totalLabel(): string {
-    return 'Total';
+    return this.context.i18n.t('invoice.mail.total');
   }
 
   public dueAmount(): string {
@@ -122,11 +126,11 @@ export class GetInvoicePaymentMailAttributesTransformer extends Transformer {
   }
 
   public dueAmountLabel(): string {
-    return 'Due Amount';
+    return this.context.i18n.t('invoice.mail.due_amount');
   }
 
   public viewInvoiceButtonLabel(): string {
-    return 'View Invoice';
+    return this.context.i18n.t('invoice.mail.view_invoice');
   }
 
   public viewInvoiceButtonUrl(): string {

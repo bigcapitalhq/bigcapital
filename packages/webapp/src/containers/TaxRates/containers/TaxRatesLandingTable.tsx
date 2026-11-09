@@ -1,6 +1,10 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import { TaxRatesTableActionsMenu } from './_components';
+import { useTaxRatesTableColumns } from './_utils';
+import { TaxRatesLandingEmptyState } from './TaxRatesLandingEmptyState';
+import { useTaxRatesLandingContext } from './TaxRatesLandingProvider';
+import type { TaxRate } from '@bigcapital/sdk-ts';
 import {
   DataTable,
   DashboardContentTable,
@@ -8,39 +12,39 @@ import {
   TableSkeletonRows,
   AppToaster,
 } from '@/components';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { useTaxRatesTableColumns } from './_utils';
-import { useTaxRatesLandingContext } from './TaxRatesLandingProvider';
-import { TaxRatesLandingEmptyState } from './TaxRatesLandingEmptyState';
-import { TaxRatesTableActionsMenu } from './_components';
-
-import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 import {
   useActivateTaxRate,
   useInactivateTaxRate,
-} from '@/hooks/query/taxRates';
+} from '@/hooks/query/tax-rates';
+
+interface TaxRatesDataTableProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'openDrawer'>,
+    Pick<WithDialogActionsProps, 'openDialog'> {}
 
 /**
  * Invoices datatable.
  */
 function TaxRatesDataTable({
-  // #withAlertActions
   openAlert,
-
-  // #withDrawerActions
   openDrawer,
-
-  // #withDialogAction
   openDialog,
-}) {
+}: TaxRatesDataTableProps) {
   // Invoices list context.
   const { taxRates, isTaxRatesLoading, isEmptyStatus } =
     useTaxRatesLandingContext();
@@ -52,23 +56,26 @@ function TaxRatesDataTable({
   const { mutateAsync: inactivateTaxRateMutate } = useInactivateTaxRate();
 
   // Handle delete tax rate.
-  const handleDeleteTaxRate = ({ id }) => {
+  const handleDeleteTaxRate = ({ id }: { id: number }) => {
     openAlert('tax-rate-delete', { taxRateId: id });
   };
   // Handle edit tax rate.
-  const handleEditTaxRate = (taxRate) => {
+  const handleEditTaxRate = (taxRate: TaxRate) => {
     openDialog(DialogsName.TaxRateForm, { id: taxRate.id });
   };
   // Handle view details tax rate.
-  const handleViewDetails = (taxRate) => {
+  const handleViewDetails = (taxRate: TaxRate) => {
     openDrawer(DRAWERS.TAX_RATE_DETAILS, { taxRateId: taxRate.id });
   };
   // Handle table cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (
+    cell: { row: { original: TaxRate } },
+    event: unknown,
+  ) => {
     openDrawer(DRAWERS.TAX_RATE_DETAILS, { taxRateId: cell.row.original.id });
   };
   // Handles activating the given tax rate.
-  const handleActivateTaxRate = (taxRate) => {
+  const handleActivateTaxRate = (taxRate: TaxRate) => {
     activateTaxRateMutate(taxRate.id)
       .then(() => {
         AppToaster.show({
@@ -84,7 +91,7 @@ function TaxRatesDataTable({
       });
   };
   // Handles inactivating the given tax rate.
-  const handleInactivateTaxRate = (taxRate) => {
+  const handleInactivateTaxRate = (taxRate: TaxRate) => {
     inactivateTaxRateMutate(taxRate.id)
       .then(() => {
         AppToaster.show({
@@ -108,7 +115,7 @@ function TaxRatesDataTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={taxRates}
+        data={taxRates ?? []}
         loading={isTaxRatesLoading}
         headerLoading={isTaxRatesLoading}
         progressBarLoading={isTaxRatesLoading}
@@ -137,12 +144,10 @@ function TaxRatesDataTable({
   );
 }
 
-export default compose(
-  withDashboardActions,
-  withAlertActions,
-  withDrawerActions,
+export const TaxRatesLandingTable = FF.pipe(
+  TaxRatesDataTable,
   withDialogActions,
-  withSettings(({ invoiceSettings }) => ({
-    invoicesTableSize: invoiceSettings?.tableSize,
-  })),
-)(TaxRatesDataTable);
+  withDrawerActions,
+  withAlertActions,
+  withDashboardActions,
+);

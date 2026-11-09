@@ -1,20 +1,14 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { Text } from '@blueprintjs/core';
-import { Icon, For, FormattedMessage as T, Stack } from '@/components';
+import { Icon, For, FormattedMessage as T } from '@/components';
 import { getFooterLinks } from '@/constants/footerLinks';
 import { useAuthActions } from '@/hooks/state';
-import style from './SetupLeftSection.module.scss';
-import { useAuthMetadata } from '@/hooks/query';
 
 /**
  * Footer item link.
  */
-function FooterLinkItem({ title, link }) {
+function FooterLinkItem({ title, link }: { title: string; link: string }) {
   return (
-    <div class="content__links-item">
-      <a href={link} target="_blank">
+    <div className="content__links-item">
+      <a href={link} target="_blank" rel="noreferrer">
         {title}
       </a>
     </div>
@@ -28,24 +22,8 @@ function SetupLeftSectionFooter() {
   // Retrieve the footer links.
   const footerLinks = getFooterLinks();
 
-  const { data: authMeta } = useAuthMetadata();
-  const demoUrl = authMeta?.meta?.one_click_demo?.demo_url;
-
-  const handleDemoBtnClick = () => {
-    window.open(demoUrl);
-  };
-
   return (
     <div className={'content__footer'}>
-      {demoUrl && (
-        <Stack spacing={16}>
-          <Text className={style.demoButtonLabel}>Not Now?</Text>
-          <button className={style.demoButton} onClick={handleDemoBtnClick}>
-            Try Demo Account
-          </button>
-        </Stack>
-      )}
-
       <div className={'content__links'}>
         <For render={FooterLinkItem} of={footerLinks} />
       </div>
@@ -75,7 +53,7 @@ function SetupLeftSectionHeader() {
       </p>
 
       <div className={'content__organization'}>
-        <span class="signout">
+        <span className="signout">
           <a onClick={onClickLogout} href="#">
             <T id={'sign_out'} />
           </a>
@@ -88,7 +66,7 @@ function SetupLeftSectionHeader() {
 /**
  * Wizard setup left section.
  */
-export default function SetupLeftSection() {
+export function SetupLeftSection() {
   return (
     <section className={'setup-page__left-section'}>
       <div className={'content'}>

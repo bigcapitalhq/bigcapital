@@ -43,11 +43,7 @@ export class ExpenseGLEntriesStorageService {
     expenseId: number,
     trx?: Knex.Transaction,
   ) => {
-    await this.ledgerStorage.deleteByReference(
-      expenseId,
-      'Expense',
-      trx,
-    );
+    await this.ledgerStorage.deleteByReference(expenseId, 'Expense', trx);
   };
 
   /**

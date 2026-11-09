@@ -1,5 +1,4 @@
-// @ts-nocheck
-import React from 'react';
+import { ReactNode } from 'react';
 import styled from 'styled-components';
 import { AuthInsiderCard } from './_components';
 import { Skeleton } from '@/components';
@@ -7,7 +6,13 @@ import { Skeleton } from '@/components';
 /**
  * Invite accept loading space.
  */
-export function InviteAcceptLoading({ isLoading, children }) {
+export function InviteAcceptLoading({
+  isLoading,
+  children,
+}: {
+  isLoading: boolean;
+  children?: ReactNode;
+}) {
   return isLoading ? (
     <AuthInsiderCard>
       <Fields>
@@ -17,15 +22,15 @@ export function InviteAcceptLoading({ isLoading, children }) {
       </Fields>
     </AuthInsiderCard>
   ) : (
-    children
+    <>{children}</>
   );
 }
 
 function SkeletonField() {
   return (
     <SkeletonFieldRoot>
-      <Skeleton>XXXX XXXX</Skeleton>
-      <Skeleton minWidth={100}>XXXX XXXX XXXX XXXX</Skeleton>
+      <Skeleton />
+      <Skeleton minWidth={100} />
     </SkeletonFieldRoot>
   );
 }

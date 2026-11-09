@@ -1,59 +1,32 @@
-// @ts-nocheck
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { useState } from 'react';
-import { useMutation } from 'react-query';
-import useApiRequest from './useRequest';
-
-interface IArgs {
-  url: string;
-  filename: string;
-  mime?: string;
-  config?: AxiosRequestConfig;
-  onDownloadProgress?: (progress: number) => void;
-}
-
-export const useDownloadFile = (args: IArgs) => {
-  const apiRequest = useApiRequest();
-
-  const mutation = useMutation<void, AxiosError, IArgs>(() =>
-    apiRequest
-      .get(args.url, {
-        responseType: 'blob',
-        onDownloadProgress: (ev) => {
-          args.onDownloadProgress &&
-            args.onDownloadProgress(Math.round((ev.loaded * 100) / ev.total));
-        },
-        ...args.config,
-      })
-      .then((res) => {
-        downloadFile(res.data, args.filename, args.mime);
-        return res;
-      }),
-  );
-  return { ...mutation };
-};
-
 export function downloadFile(
-  data,
-  filename,
+  data: BlobPart,
+  filename: string,
   mime = 'application/octet-stream',
-  bom?: any,
+  bom?: BlobPart,
 ) {
-  var blobData = typeof bom !== 'undefined' ? [bom, data] : [data];
-  var blob = new Blob(blobData, { type: mime });
+  const blobData: BlobPart[] =
+    typeof bom !== 'undefined' ? [bom, data] : [data];
+  const blob = new Blob(blobData, { type: mime });
 
-  if (typeof window.navigator.msSaveBlob !== 'undefined') {
+  if (
+    typeof (window.navigator as Navigator & { msSaveBlob?: unknown })
+      .msSaveBlob !== 'undefined'
+  ) {
     // IE workaround for "HTML7007: One or more blob URLs were
     // revoked by closing the blob for which they were created.
     // These URLs will no longer resolve as the data backing
     // the URL has been freed."
-    window.navigator.msSaveBlob(blob, filename);
+    (
+      window.navigator as unknown as {
+        msSaveBlob: (blob: Blob, name: string) => void;
+      }
+    ).msSaveBlob(blob, filename);
   } else {
-    var blobURL =
+    const blobURL =
       window.URL && window.URL.createObjectURL
         ? window.URL.createObjectURL(blob)
         : window.webkitURL.createObjectURL(blob);
-    var tempLink = document.createElement('a');
+    const tempLink = document.createElement('a');
     tempLink.style.display = 'none';
     tempLink.href = blobURL;
     tempLink.setAttribute('download', filename);

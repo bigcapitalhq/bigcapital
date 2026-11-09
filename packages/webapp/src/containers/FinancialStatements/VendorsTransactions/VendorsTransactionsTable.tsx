@@ -1,51 +1,51 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { DataTable, FinancialSheet } from '@/components';
-
+import { getReportRowTestId } from '../reportTestIds';
 import { useVendorsTransactionsColumns } from './components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
-
-import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { DataTable, FinancialSheet } from '@/components';
 import { TableStyle } from '@/constants';
+import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+
+interface VendorsTransactionsTableProps {
+  companyName: any;
+}
 
 /**
  * Vendors transactions table.
  */
 
-export default function VendorsTransactionsTable({
+export function VendorsTransactionsTable({
   // #ownProps
   companyName,
-}) {
+}: VendorsTransactionsTableProps) {
   // Vendor transactions context.
-  const { vendorsTransactions, isVendorsTransactionsLoading } =
-    useVendorsTransactionsContext();
+  const { vendorsTransactions } = useVendorsTransactionsContext();
 
-  const { table, query, meta } = vendorsTransactions;
+  const table = (vendorsTransactions as any)?.table;
+  const meta = (vendorsTransactions as any)?.meta;
 
-  // Retireve vendor transactions table columns.
+  // Retrieve vendor transactions table columns.
   const columns = useVendorsTransactionsColumns();
 
   const expandedRows = useMemo(
-    () => defaultExpanderReducer(table.rows, 5),
-    [table.rows],
+    () => defaultExpanderReducer(table?.rows, 5),
+    [table?.rows],
   );
 
   return (
     <FinancialSheet
-      name="vendor-transactions"
       companyName={companyName}
       sheetType={intl.get('vendors_transactions')}
-      loading={isVendorsTransactionsLoading}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
       fullWidth={true}
     >
       <VendorsTransactionsDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('vendors-transactions')}
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}

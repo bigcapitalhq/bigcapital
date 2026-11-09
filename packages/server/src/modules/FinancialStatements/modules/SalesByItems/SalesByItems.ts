@@ -1,5 +1,5 @@
 import { get, sumBy } from 'lodash';
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
 import {
   ISalesByItemsReportQuery,
   ISalesByItemsItem,
@@ -12,7 +12,10 @@ import { Item } from '@/modules/Items/models/Item';
 import { transformToMap } from '@/utils/transform-to-key';
 import { allPassedConditionsPass } from '@/utils/all-conditions-passed';
 import { InventoryTransaction } from '@/modules/InventoryCost/models/InventoryTransaction';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class SalesByItemsReport extends FinancialSheet {
   readonly baseCurrency: string;
@@ -142,7 +145,7 @@ export class SalesByItemsReport extends FinancialSheet {
    * @returns {ISalesByItemsItem[]}
    */
   private itemsSection(): ISalesByItemsItem[] {
-    return R.compose(this.itemsFilters, this.itemsMapper)(this.items);
+    return flow(this.itemsMapper, this.itemsFilters)(this.items);
   }
 
   /**

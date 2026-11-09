@@ -1,49 +1,56 @@
-// @ts-nocheck
+import { FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-
-import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm';
-import { useSaveSettings } from '@/hooks/query';
 import { WarehouseTransferNumberDialogProvider } from './WarehouseTransferNumberDialogProvider';
-
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { ReferenceNumberForm } from '@/containers/JournalNumber/ReferenceNumberForm';
 import {
   transformFormToSettings,
   transformSettingsToForm,
 } from '@/containers/JournalNumber/utils';
+import { useSaveSettings, useSettingsWarehouseTransfers } from '@/hooks/query';
 
-/**
- * Warehouse transfer no dialog content.
- */
-function WarehouseTransferNumberDialogContent({
-  // #ownProps
+interface WarehouseTransferNumberDialogContentProps
+  extends WithDialogActionsProps {
+  initialValues?: Partial<ReferenceNumberFormValues>;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
+function WarehouseTransferNumberDialogContentInner({
   initialValues,
   onConfirm,
-
-  // #withSettings
-  nextNumber,
-  numberPrefix,
-  autoIncrement,
-
-  // #withDialogActions
   closeDialog,
-}) {
-  const { mutateAsync: saveSettings } = useSaveSettings();
-  const [referenceFormValues, setReferenceFormValues] = React.useState(null);
+}: WarehouseTransferNumberDialogContentProps): React.ReactElement {
+  const { data: warehouseTransferSettings } = useSettingsWarehouseTransfers();
+  const nextNumber = warehouseTransferSettings?.nextNumber as
+    | string
+    | number
+    | undefined;
+  const numberPrefix = warehouseTransferSettings?.numberPrefix as
+    | string
+    | undefined;
+  const autoIncrement = warehouseTransferSettings?.autoIncrement as
+    | boolean
+    | string
+    | undefined;
 
-  // Handle the submit form.
-  const handleSubmitForm = (values, { setSubmitting }) => {
-    // Handle the form success.
+  const { mutateAsync: saveSettings } = useSaveSettings();
+  const [referenceFormValues, setReferenceFormValues] =
+    React.useState<Partial<ReferenceNumberFormValues> | null>(null);
+
+  const handleSubmitForm = (
+    values: ReferenceNumberFormValues,
+    { setSubmitting }: FormikHelpers<ReferenceNumberFormValues>,
+  ) => {
     const handleSuccess = () => {
       setSubmitting(false);
       closeDialog('warehouse-transfer-no-form');
-      onConfirm(values);
+      onConfirm?.(values);
     };
 
-    // Handle the form errors.
     const handleErrors = () => {
       setSubmitting(false);
     };
@@ -52,23 +59,19 @@ function WarehouseTransferNumberDialogContent({
       handleSuccess();
       return;
     }
-    // Transformes the form values to settings to save it.
     const options = transformFormToSettings(values, 'warehouse_transfers');
 
-    // Save the settings.
     saveSettings({ options }).then(handleSuccess).catch(handleErrors);
   };
 
-  // Handle the dialog close.
   const handleClose = () => {
     closeDialog('warehouse-transfer-no-form');
   };
 
-  // Handle form change.
-  const handleChange = (values) => {
+  const handleChange = (values: ReferenceNumberFormValues) => {
     setReferenceFormValues(values);
   };
-  // Description.
+
   const description =
     referenceFormValues?.incrementMode === 'auto'
       ? intl.get('warehouse_transfer.auto_increment.auto')
@@ -93,12 +96,7 @@ function WarehouseTransferNumberDialogContent({
     </WarehouseTransferNumberDialogProvider>
   );
 }
-export default compose(
+export const WarehouseTransferNumberDialogContent = FF.pipe(
+  WarehouseTransferNumberDialogContentInner,
   withDialogActions,
-  withSettingsActions,
-  withSettings(({ warehouseTransferSettings }) => ({
-    autoIncrement: warehouseTransferSettings?.autoIncrement,
-    nextNumber: warehouseTransferSettings?.nextNumber,
-    numberPrefix: warehouseTransferSettings?.numberPrefix,
-  })),
-)(WarehouseTransferNumberDialogContent);
+);

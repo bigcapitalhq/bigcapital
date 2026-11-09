@@ -1,14 +1,16 @@
-// @ts-nocheck
 import React from 'react';
-
 import { NotifyPaymentReceiveViaFormProvider } from './NotifyPaymentReceiveViaFormProvider';
-import NotifyPaymentReceiveViaSMSForm from './NotifyPaymentReceiveViaSMSForm';
+import { NotifyPaymentReceiveViaSMSForm } from './NotifyPaymentReceiveViaSMSForm';
 
-export default function NotifyPaymentReceiveViaSMSContent({
-  // #ownProps
+interface NotifyPaymentReceiveViaSMSContentProps {
+  dialogName: string;
+  paymentReceive?: number | null;
+}
+
+export function NotifyPaymentReceiveViaSMSContent({
   dialogName,
   paymentReceive,
-}) {
+}: NotifyPaymentReceiveViaSMSContentProps): React.ReactElement {
   return (
     <NotifyPaymentReceiveViaFormProvider
       paymentReceiveId={paymentReceive}

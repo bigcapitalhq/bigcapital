@@ -1,13 +1,17 @@
 import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { defaultPageConfig } from './_utils';
+import { newUnauthenticatedPage } from './_utils';
+
+// This spec exercises the onboarding UI itself with its own freshly
+// registered user, so it must not reuse the shared onboarded session.
+test.use({ storageState: undefined });
 
 let authPage: Page;
 let businessLegalName: string = faker.company.name();
 
 test.describe('onboarding', () => {
   test.beforeAll(async ({ browser }) => {
-    authPage = await browser.newPage({ ...defaultPageConfig() });
+    authPage = await newUnauthenticatedPage(browser);
     await authPage.goto('/auth/register');
 
     const form = authPage.locator('form');
@@ -59,10 +63,14 @@ test.describe('onboarding', () => {
       await authPage.locator('a').filter({ hasText: 'June - May' }).click();
 
       // Fill Timezone.
+      // The timezone select only shows a minimal list until a query is typed,
+      // and the IANA code is not part of the option text, so search by the
+      // short label ("Marquesas") before selecting the option.
+      await authPage.getByRole('button', { name: 'Select Time Zone...' }).click();
       await authPage
-        .getByRole('button', { name: 'Select Time Zone...' })
-        .click();
-      await authPage.getByText('Pacific/Marquesas-09:30').click();
+        .getByPlaceholder('Search for timezones...')
+        .fill('Marquesas');
+      await authPage.getByRole('menuitem', { name: /Marquesas/ }).click();
 
       // Click on Submit button
       await authPage.getByRole('button', { name: 'Save & Continue' }).click();

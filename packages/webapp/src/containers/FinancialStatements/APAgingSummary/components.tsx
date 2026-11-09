@@ -1,11 +1,3 @@
-// @ts-nocheck
-import { useRef } from 'react';
-import classNames from 'classnames';
-
-import { AppToaster, If, Stack } from '@/components';
-import FinancialLoadingBar from '../FinancialLoadingBar';
-import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
-import { agingSummaryDynamicColumns } from '../AgingSummary/dynamicColumns';
 import {
   Classes,
   Intent,
@@ -14,25 +6,29 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { agingSummaryDynamicColumns } from '../AgingSummary/dynamicColumns';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
+import type {
+  PayableAgingXlsxQuery,
+  PayableAgingCsvQuery,
+} from '@bigcapital/sdk-ts';
+import { AppToaster, If, Stack } from '@/components';
 import {
   useAPAgingSheetCsvExport,
   useAPAgingSheetXlsxExport,
 } from '@/hooks/query';
 
-/**
- * Retrieve AP aging summary columns.
- */
 export const useAPAgingSummaryColumns = () => {
-  const {
-    APAgingSummary: { table },
-  } = useAPAgingSummaryContext();
+  const { APAgingSummary } = useAPAgingSummaryContext();
 
-  return agingSummaryDynamicColumns(table.columns, table.rows);
+  return agingSummaryDynamicColumns(
+    (APAgingSummary as any)?.table?.columns ?? [],
+    (APAgingSummary as any)?.table?.rows ?? [],
+  );
 };
 
-/**
- * A/P aging summary sheet loading bar.
- */
 export function APAgingSummarySheetLoadingBar() {
   const { isAPAgingFetching } = useAPAgingSummaryContext();
 
@@ -43,75 +39,55 @@ export function APAgingSummarySheetLoadingBar() {
   );
 }
 
-/**
- * A/P aging summary export menu.
- * @returns {JSX.Element}
- */
 export function APAgingSummaryExportMenu() {
-  const toastKey = useRef(null);
   const commonToastConfig = { isCloseButtonShown: true, timeout: 2000 };
   const { httpQuery } = useAPAgingSummaryContext();
 
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+            [Classes.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
-  // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useAPAgingSheetXlsxExport(httpQuery, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Export the report to csv.
-  const { mutateAsync: csvExport } = useAPAgingSheetCsvExport(httpQuery, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport();
+
+  const { mutateAsync: xlsxExport } = useAPAgingSheetXlsxExport(
+    httpQuery as PayableAgingXlsxQuery,
+  );
+  const { mutateAsync: csvExport } = useAPAgingSheetCsvExport(
+    httpQuery as PayableAgingCsvQuery,
+  );
+
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport();
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

@@ -1,14 +1,39 @@
-// @ts-nocheck
+import { PurchasesByItemsTableQuery } from '@bigcapital/sdk-ts';
 import React, { createContext, useContext, useMemo } from 'react';
-import FinancialReportPage from '../FinancialReportPage';
-import { usePurchasesByItemsTable } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
+import { FinancialReportPage } from '../FinancialReportPage';
+import { usePurchasesByItemsTable } from '@/hooks/query';
 
-const PurchasesByItemsContext = createContext();
+type UsePurchasesByItemsTableResult = ReturnType<
+  typeof usePurchasesByItemsTable
+>;
 
-function PurchasesByItemsProvider({ query, ...props }) {
-  // Transformes the report query to http query.
-  const httpQuery = useMemo(() => transformFilterFormToQuery(query), [query]);
+type PurchasesByItemsContextValue = {
+  purchaseByItems: UsePurchasesByItemsTableResult['data'];
+  isFetching: boolean;
+  isLoading: boolean;
+  refetchSheet: UsePurchasesByItemsTableResult['refetch'];
+  httpQuery: PurchasesByItemsTableQuery;
+};
+
+interface PurchasesByItemsProviderProps {
+  query: PurchasesByItemsTableQuery;
+  children?: React.ReactNode;
+}
+
+const PurchasesByItemsContext = createContext<
+  PurchasesByItemsContextValue | undefined
+>(undefined);
+
+function PurchasesByItemsProvider({
+  query,
+  ...props
+}: PurchasesByItemsProviderProps) {
+  // Transforms the report query to http query.
+  const httpQuery = useMemo(
+    () => transformFilterFormToQuery(query),
+    [query],
+  ) as PurchasesByItemsTableQuery;
 
   // Handle fetching the purchases by items report based on the given query.
   const {
@@ -16,9 +41,9 @@ function PurchasesByItemsProvider({ query, ...props }) {
     isFetching,
     isLoading,
     refetch,
-  } = usePurchasesByItemsTable(httpQuery, { keepPreviousData: true });
+  } = usePurchasesByItemsTable(httpQuery);
 
-  const provider = {
+  const provider: PurchasesByItemsContextValue = {
     purchaseByItems,
     isFetching,
     isLoading,
@@ -32,6 +57,10 @@ function PurchasesByItemsProvider({ query, ...props }) {
   );
 }
 
-const usePurchaseByItemsContext = () => useContext(PurchasesByItemsContext);
+const usePurchaseByItemsContext = (): PurchasesByItemsContextValue => {
+  const ctx = useContext(PurchasesByItemsContext);
+  if (!ctx) throw new Error('PurchasesByItemsContext is not provided');
+  return ctx;
+};
 
 export { PurchasesByItemsProvider, usePurchaseByItemsContext };

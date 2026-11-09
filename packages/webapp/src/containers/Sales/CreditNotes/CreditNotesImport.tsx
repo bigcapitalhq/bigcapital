@@ -1,9 +1,8 @@
-// @ts-nocheck
+import { useHistory } from 'react-router-dom';
 import { DashboardInsider } from '@/components';
 import { ImportView } from '@/containers/Import';
-import { useHistory } from 'react-router-dom';
 
-export default function CreditNotesImport() {
+export function CreditNotesImport() {
   const history = useHistory();
 
   const handleCancelBtnClick = () => {

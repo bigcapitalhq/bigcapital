@@ -1,53 +1,44 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
-import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
-import * as R from 'ramda';
-import { sumBy, round, isEmpty, omit } from 'lodash';
-import classNames from 'classnames';
 import { css } from '@emotion/css';
+import classNames from 'classnames';
+import { Formik, Form, type FormikHelpers } from 'formik';
+import { sumBy, round, isEmpty } from 'lodash';
+import { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-
-import { CLASSES } from '@/constants/classes';
+import { JournalSyncIncrementSettingsToForm } from './components';
 import {
   CreateJournalSchema,
   EditJournalSchema,
 } from './MakeJournalEntries.schema';
+import { MakeJournalEntriesField } from './MakeJournalEntriesField';
+import { MakeJournalEntriesHeader } from './MakeJournalEntriesHeader';
+import { MakeJournalFormDialogs } from './MakeJournalFormDialogs';
+import { MakeJournalFloatingAction as MakeJournalFormFloatingActions } from './MakeJournalFormFloatingActions';
+import { MakeJournalFormFooter } from './MakeJournalFormFooter';
+import { MakeJournalFormTopBar } from './MakeJournalFormTopBar';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
-import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
-import MakeJournalFormFloatingActions from './MakeJournalFormFloatingActions';
-import MakeJournalEntriesField from './MakeJournalEntriesField';
-import MakeJournalFormFooter from './MakeJournalFormFooter';
-import MakeJournalFormDialogs from './MakeJournalFormDialogs';
-import MakeJournalFormTopBar from './MakeJournalFormTopBar';
-
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
-import { AppToaster } from '@/components';
-import { PageForm } from '@/components/PageForm';
-import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import {
   transformErrors,
   transformToEditForm,
+  transformFormValuesToRequest,
   defaultManualJournal,
+  type MakeJournalEntry,
+  type MakeJournalFormValues,
+  type MakeJournalErrorResponse,
 } from './utils';
-import { JournalSyncIncrementSettingsToForm } from './components';
-import { transformAttachmentsToRequest } from '@/containers/Attachments/utils';
+import { AppToaster } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { CLASSES } from '@/constants/classes';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { transactionNumber } from '@/utils';
 
 /**
  * Journal entries form.
  */
-function MakeJournalEntriesForm({
-  // #withSettings
-  journalNextNumber,
-  journalNumberPrefix,
-  journalAutoIncrement,
+function MakeJournalEntriesFormInner() {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
-  // #withCurrentOrganization
-  organization: { base_currency },
-}) {
   // Journal form context.
   const {
     createJournalMutate,
@@ -55,7 +46,19 @@ function MakeJournalEntriesForm({
     isNewMode,
     manualJournal,
     submitPayload,
+    manualJournalsSettings,
   } = useMakeJournalFormContext();
+
+  // Auto-increment settings derived from the manual journals settings group.
+  const journalNextNumber = manualJournalsSettings?.nextNumber as
+    | number
+    | undefined;
+  const journalNumberPrefix = manualJournalsSettings?.numberPrefix as
+    | string
+    | undefined;
+  const journalAutoIncrement = manualJournalsSettings?.autoIncrement as
+    | boolean
+    | undefined;
 
   const history = useHistory();
 
@@ -65,7 +68,7 @@ function MakeJournalEntriesForm({
     journalNextNumber,
   );
   // Form initial values.
-  const initialValues = useMemo(
+  const initialValues = useMemo<MakeJournalFormValues>(
     () => ({
       ...(!isEmpty(manualJournal)
         ? {
@@ -76,24 +79,33 @@ function MakeJournalEntriesForm({
             // If the auto-increment mode is enabled, take the next journal
             // number from the settings.
             ...(journalAutoIncrement && {
-              journal_number: journalNumber,
+              journalNumber,
             }),
-            currency_code: base_currency,
+            currencyCode: baseCurrency ?? '',
           }),
     }),
-    [manualJournal, base_currency, journalNumber, journalAutoIncrement],
+    [manualJournal, baseCurrency, journalNumber, journalAutoIncrement],
   );
 
   // Handle the form submiting.
-  const handleSubmit = (values, { setErrors, setSubmitting, resetForm }) => {
+  const handleSubmit = (
+    values: MakeJournalFormValues,
+    {
+      setErrors,
+      setSubmitting,
+      resetForm,
+    }: FormikHelpers<MakeJournalFormValues>,
+  ) => {
     setSubmitting(true);
     const entries = values.entries.filter(
       (entry) => entry.debit || entry.credit,
     );
     // Updated getTotal function using lodash
-    const getTotal = (type = 'credit') => {
+    const getTotal = (type: 'credit' | 'debit'): number => {
       return round(
-        sumBy(entries, (entry) => parseFloat(entry[type] || 0)),
+        sumBy(entries, (entry: MakeJournalEntry) =>
+          parseFloat(String(entry[type] || 0)),
+        ),
         2,
       );
     };
@@ -116,33 +128,24 @@ function MakeJournalEntriesForm({
       setSubmitting(false);
       return;
     }
-    const attachments = transformAttachmentsToRequest(values);
-    const form = {
-      ...omit(values, ['journal_number_manually']),
-      ...(values.journal_number_manually && {
-        journal_number: values.journal_number,
-      }),
-      entries: R.compose(orderingLinesIndexes)(entries),
-      publish: submitPayload.publish,
-      attachments,
-    };
+    const form = transformFormValuesToRequest(values, !!submitPayload.publish);
     // Handle the request error.
     const handleError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: MakeJournalErrorResponse[] };
     }) => {
       transformErrors(errors, { setErrors });
       setSubmitting(false);
     };
     // Handle the request success.
-    const handleSuccess = (errors) => {
+    const handleSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
             ? 'the_journal_has_been_created_successfully'
             : 'the_journal_has_been_edited_successfully',
-          { number: values.journal_number },
+          { number: values.journalNumber },
         ),
         intent: Intent.SUCCESS,
       });
@@ -155,7 +158,7 @@ function MakeJournalEntriesForm({
         resetForm();
       }
     };
-    if (isNewMode) {
+    if (isNewMode || !manualJournal) {
       createJournalMutate(form).then(handleSuccess).catch(handleError);
     } else {
       editJournalMutate([manualJournal.id, form])
@@ -209,11 +212,4 @@ function MakeJournalEntriesForm({
   );
 }
 
-export default compose(
-  withSettings(({ manualJournalsSettings }) => ({
-    journalNextNumber: manualJournalsSettings?.nextNumber,
-    journalNumberPrefix: manualJournalsSettings?.numberPrefix,
-    journalAutoIncrement: manualJournalsSettings?.autoIncrement,
-  })),
-  withCurrentOrganization(),
-)(MakeJournalEntriesForm);
+export const MakeJournalEntriesForm = MakeJournalEntriesFormInner;

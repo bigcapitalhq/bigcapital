@@ -1,17 +1,13 @@
-// @ts-nocheck
 import React from 'react';
-
-import { CommercialDocEntriesTable } from '@/components';
-
-import { useExpenseReadEntriesColumns } from './utils';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
-
+import { useExpenseReadEntriesColumns } from './utils';
+import { CommercialDocEntriesTable } from '@/components';
 import { TableStyle } from '@/constants';
 
 /**
- * Expense details table.
+ * Expense drawer table.
  */
-export default function ExpenseDrawerTable() {
+export function ExpenseDrawerTable() {
   // Expense readonly entries columns.
   const columns = useExpenseReadEntriesColumns();
 
@@ -21,7 +17,7 @@ export default function ExpenseDrawerTable() {
   return (
     <CommercialDocEntriesTable
       columns={columns}
-      data={expense.categories}
+      data={expense?.categories ?? []}
       styleName={TableStyle.Constrant}
     />
   );

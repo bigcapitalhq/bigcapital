@@ -1,41 +1,44 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
+import { TrialBalanceTableQuery } from '@bigcapital/sdk-ts';
 import { castArray } from 'lodash';
-
+import moment from 'moment';
+import React from 'react';
+import { transformFilterFormToQuery } from '../common';
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
-import { transformFilterFormToQuery } from '../common';
+
+type TrialBalanceQuery = TrialBalanceTableQuery & { filterByOption?: string };
 
 /**
  * Retrieves the default trial balance query.
  */
-export function getDefaultTrialBalanceQuery() {
+export function getDefaultTrialBalanceQuery(): TrialBalanceQuery {
   return {
     fromDate: moment().startOf('year').format('YYYY-MM-DD'),
     toDate: moment().format('YYYY-MM-DD'),
     basis: 'accrual',
     filterByOption: 'with-transactions',
-    branchesIds: [],
+    branchesIds: [] as number[],
     numberFormat: {},
+    columnSortBy: undefined,
+    sortOrder: undefined,
   };
 }
 
 /**
  * Parses the trial balance sheet query of browser location.
  */
-const parseTrialBalanceSheetQuery = (locationQuery) => {
+const parseTrialBalanceSheetQuery = (
+  locationQuery: Record<string, unknown>,
+): TrialBalanceQuery => {
   const defaultQuery = getDefaultTrialBalanceQuery();
-
   const transformed = {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {
     ...transformed,
-
     // Ensures the branches ids is always array.
-    branchesIds: castArray(transformed.branchesIds),
+    branchesIds: castArray(transformed.branchesIds).map((id) => Number(id)),
   };
 };
 
@@ -65,6 +68,5 @@ export const useTrialBalanceSheetQuery = () => {
  */
 export const useTrialBalanceSheetHttpQuery = () => {
   const { query } = useTrialBalanceSheetQuery();
-
   return React.useMemo(() => transformFilterFormToQuery(query), [query]);
 };

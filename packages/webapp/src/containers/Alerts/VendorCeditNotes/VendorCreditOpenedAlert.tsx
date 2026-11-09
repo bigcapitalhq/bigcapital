@@ -1,38 +1,39 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useOpenVendorCredit } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface VendorCreditOpenedAlertPayload {
+  vendorCreditId: number;
+}
 
-import { compose } from '@/utils';
+interface VendorCreditOpenedAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: VendorCreditOpenedAlertPayload;
+}
 
 /**
  *  Vendor credit opened alert.
  */
-function VendorCreditOpenedAlert({
+function VendorCreditOpenedAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { vendorCreditId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: openVendorCreditMutate, isLoading } =
+}: VendorCreditOpenedAlertProps): React.ReactElement {
+  const { mutateAsync: openVendorCreditMutate, isPending: isLoading } =
     useOpenVendorCredit();
 
-  // Handle cancel opened credit note alert.
   const handleAlertCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm  vendor credit as opened.
   const handleAlertConfirm = () => {
     openVendorCreditMutate(vendorCreditId)
       .then(() => {
@@ -41,7 +42,13 @@ function VendorCreditOpenedAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch((error: Error) => {
+        // Bugfix: the original had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -49,8 +56,8 @@ function VendorCreditOpenedAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'open'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('open')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleAlertCancel}
@@ -63,7 +70,9 @@ function VendorCreditOpenedAlert({
     </Alert>
   );
 }
-export default compose(
-  withAlertStoreConnect(),
+
+export const VendorCreditOpenedAlert = FF.pipe(
+  VendorCreditOpenedAlertInner,
   withAlertActions,
-)(VendorCreditOpenedAlert);
+  withAlertStoreConnect(),
+);

@@ -41,11 +41,14 @@ export class CreateCustomerDto extends ContactAddressDto {
 
   @ApiProperty({
     required: false,
-    description: 'Opening balance date (required when openingBalance is provided)',
+    description:
+      'Opening balance date (required when openingBalance is provided)',
     example: '2024-01-01',
   })
   @ValidateIf((o) => o.openingBalance != null)
-  @IsNotEmpty({ message: 'openingBalanceAt is required when openingBalance is provided' })
+  @IsNotEmpty({
+    message: 'openingBalanceAt is required when openingBalance is provided',
+  })
   @IsString()
   openingBalanceAt?: string;
 

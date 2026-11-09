@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   NavbarGroup,
@@ -8,34 +5,35 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { ItemDetailActionsMoreBtn } from './ItemDetailActionsMoreBtn';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
-import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   Icon,
   FormattedMessage as T,
   Can,
   DrawerActionsBar,
 } from '@/components';
-import { ItemDetailActionsMoreBtn } from './ItemDetailActionsMoreBtn';
-
-import { compose } from '@/utils';
+import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+
+interface ItemDetailActionsBarInnerProps
+  extends Pick<WithAlertActionsProps, 'openAlert'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'> {}
 
 /**
  * Item action-bar of readonly details drawer.
  */
-function ItemDetailActionsBar({
-  // #withAlertActions
+function ItemDetailActionsBarInner({
   openAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
+}: ItemDetailActionsBarInnerProps) {
   // Item readonly drawer context.
   const { itemId } = useItemDetailDrawerContext();
 
@@ -79,7 +77,8 @@ function ItemDetailActionsBar({
   );
 }
 
-export default compose(
-  withDrawerActions,
+export const ItemDetailActionsBar = FF.pipe(
+  ItemDetailActionsBarInner,
   withAlertActions,
-)(ItemDetailActionsBar);
+  withDrawerActions,
+);

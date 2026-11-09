@@ -1,33 +1,27 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-
-import { withEstimatesActions } from './withEstimatesActions';
-import { withEstimates } from './withEstimates';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { withEstimates } from './withEstimates';
+import { withEstimatesActions } from './withEstimatesActions';
+import type { WithEstimatesProps } from './withEstimates';
+import type { WithEstimatesActionsProps } from './withEstimatesActions';
+import { DashboardViewsTabs } from '@/components';
+import { transfromViewsToTabs } from '@/utils';
 
-/**
- * Estimates views tabs.
- */
+interface EstimateViewTabsProps extends WithEstimatesActionsProps {
+  estimatesCurrentView: string;
+}
+
 function EstimateViewTabs({
-  // #withEstimatesActions
   setEstimatesTableState,
-
-  // #withEstimates
   estimatesCurrentView,
-}) {
-  // Estimates list context.
+}: EstimateViewTabsProps) {
   const { estimatesViews } = useEstimatesListContext();
- 
-  // Estimates views.
+
   const tabs = transfromViewsToTabs(estimatesViews);
 
-  // Handle tab change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string | null) => {
     setEstimatesTableState({ viewSlug: viewSlug || null });
   };
 
@@ -45,9 +39,10 @@ function EstimateViewTabs({
   );
 }
 
-export default compose(
-  withEstimatesActions,
-  withEstimates(({ estimatesTableState }) => ({
-    estimatesCurrentView: estimatesTableState.viewSlug
+export const EstimatesViewTabs = FF.pipe(
+  EstimateViewTabs,
+  withEstimates(({ estimatesTableState }: WithEstimatesProps) => ({
+    estimatesCurrentView: estimatesTableState.viewSlug,
   })),
-)(EstimateViewTabs);
+  withEstimatesActions,
+);

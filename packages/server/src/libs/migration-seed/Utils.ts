@@ -1,4 +1,3 @@
-// @ts-nocheck
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -7,7 +6,7 @@ import * as path from 'path';
  * @param {string} filepath
  * @returns {boolean}
  */
-async function isModuleType(filepath: string): boolean {
+async function isModuleType(filepath: string): Promise<boolean> {
   if (process.env.npm_package_json) {
     const { promisify } = require('util');
     const readFile = promisify(fs.readFile);
@@ -27,7 +26,7 @@ async function isModuleType(filepath: string): boolean {
  * @param {string} filepath
  * @returns
  */
-export async function importFile(filepath: string): any {
+export async function importFile(filepath: string): Promise<any> {
   return (await isModuleType(filepath))
     ? import(require('url').pathToFileURL(filepath))
     : require(filepath);
@@ -42,7 +41,7 @@ export async function importFile(filepath: string): any {
 export async function importWebpackSeedModule(
   moduleName: string,
   seedsDirectory: string,
-): any {
+): Promise<any> {
   // Convert the seeds directory to a relative path from this file's location
   const utilsDir = __dirname;
   const seedsDirAbsolute = path.isAbsolute(seedsDirectory)

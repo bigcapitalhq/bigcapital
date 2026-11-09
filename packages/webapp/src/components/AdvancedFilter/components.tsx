@@ -1,7 +1,7 @@
-// @ts-nocheck
-import React from 'react';
 import { useFormikContext } from 'formik';
 import { debounce } from 'lodash';
+import React from 'react';
+import type { IFilterDropdownFormikValues } from './interfaces';
 
 const DEBOUNCE_MS = 100;
 
@@ -9,7 +9,8 @@ const DEBOUNCE_MS = 100;
  * Advanced filter auto-save.
  */
 export function useAdvancedFilterAutoSubmit() {
-  const { submitForm, values } = useFormikContext();
+  const { submitForm, values } =
+    useFormikContext<IFilterDropdownFormikValues>();
   const [isSubmit, setIsSubmit] = React.useState(false);
 
   const debouncedSubmit = React.useCallback(
@@ -19,5 +20,7 @@ export function useAdvancedFilterAutoSubmit() {
     [submitForm],
   );
 
-  React.useEffect(() => debouncedSubmit, [debouncedSubmit, values]);
+  React.useEffect(() => {
+    debouncedSubmit();
+  }, [debouncedSubmit, values]);
 }

@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -10,6 +10,7 @@ describe('Customers (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send({
         customerType: 'business',
+        currencyCode: 'USD',
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
         firstName: faker.person.firstName(),
@@ -25,6 +26,7 @@ describe('Customers (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send({
         customerType: 'business',
+        currencyCode: 'USD',
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
         firstName: faker.person.firstName(),
@@ -35,7 +37,7 @@ describe('Customers (e2e)', () => {
     return request(app.getHttpServer())
       .get(`/customers/${customerId}`)
       .set('organization-id', orgainzationId)
-      .set('Authorization', AuthorizationHeader) 
+      .set('Authorization', AuthorizationHeader)
       .expect(200);
   });
 
@@ -46,6 +48,7 @@ describe('Customers (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send({
         customerType: 'business',
+        currencyCode: 'USD',
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
         firstName: faker.person.firstName(),
@@ -67,6 +70,7 @@ describe('Customers (e2e)', () => {
       .set('Authorization', AuthorizationHeader)
       .send({
         customerType: 'business',
+        currencyCode: 'USD',
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
         firstName: faker.person.firstName(),
@@ -79,6 +83,8 @@ describe('Customers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
+        customerType: 'business',
+        currencyCode: 'USD',
         displayName: faker.commerce.productName(),
         email: faker.internet.email(),
         firstName: faker.person.firstName(),

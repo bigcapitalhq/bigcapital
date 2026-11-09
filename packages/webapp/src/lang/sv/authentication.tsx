@@ -1,7 +1,6 @@
 // @ts-nocheck
 
-
 export default {
-  "login": "Logga in",
-  "reset_password": "Återställ lösenord",
+  login: 'Logga in',
+  reset_password: 'Återställ lösenord',
 };

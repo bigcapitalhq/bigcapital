@@ -15,7 +15,7 @@ export interface IAgingPeriod {
   fromPeriod: Date | string;
   toPeriod: Date | string;
   beforeDays: number;
-  toDays: number;
+  toDays: number | null;
 }
 
 export interface IAgingSummaryContact {

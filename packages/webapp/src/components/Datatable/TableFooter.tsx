@@ -1,22 +1,19 @@
-// @ts-nocheck
-import React, { useContext } from 'react';
 import classNames from 'classnames';
+import React, { useContext } from 'react';
 import TableContext from './TableContext';
 
-/**
- * Table footer.
- */
 export default function TableFooter() {
   const {
     props: { footer },
     table: { footerGroups },
   } = useContext(TableContext);
 
-  // Can't contiunue if the footer is disabled.
-  if (!footer) { return null; }
-  
+  if (!footer) {
+    return null;
+  }
+
   return (
-    <div class="tfooter">
+    <div className="tfooter">
       {footerGroups.map((group) => (
         <div {...group.getFooterGroupProps({ className: 'tr' })}>
           {group.headers.map((column) => (
@@ -25,9 +22,7 @@ export default function TableFooter() {
                 className: classNames(column.className || '', 'td'),
               })}
             >
-              <div className={'cell-inner'}>
-                {column.render('Footer')}
-              </div>
+              <div className={'cell-inner'}>{column.render('Footer')}</div>
             </div>
           ))}
         </div>

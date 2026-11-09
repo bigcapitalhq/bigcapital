@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Item } from './models/Item';
 import { events } from '@/common/events/events';
+import { IItemEventInactivatedPayload } from '@/interfaces/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
@@ -38,7 +39,11 @@ export class InactivateItem {
         .patch({ active: false });
 
       // Triggers `onItemInactivated` event.
-      await this.eventEmitter.emitAsync(events.item.onInactivated, { trx });
+      await this.eventEmitter.emitAsync(events.item.onInactivated, {
+        itemId,
+        item: oldItem,
+        trx,
+      } as IItemEventInactivatedPayload);
     }, trx);
   }
 }

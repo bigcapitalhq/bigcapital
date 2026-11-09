@@ -1,39 +1,37 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
+import { getReportRowTestId } from '../reportTestIds';
+import { useCustomersSummaryColumns } from './components';
+import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
 import { tableRowTypesToClassnames } from '@/utils';
 
-import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
-import { useCustomersSummaryColumns } from './components';
+interface CustomersBalanceSummaryTableProps {
+  companyName: string;
+}
 
-/**
- * Customers balance summary table.
- */
-export default function CustomersBalanceSummaryTable({
-  // #ownProps
+export function CustomersBalanceSummaryTable({
   companyName,
-}) {
-  const {
-    CustomerBalanceSummary: { table, query, meta },
-  } = useCustomersBalanceSummaryContext();
+}: CustomersBalanceSummaryTableProps) {
+  const { CustomerBalanceSummary } = useCustomersBalanceSummaryContext();
+  const table = (CustomerBalanceSummary as any)?.table;
+  const meta = (CustomerBalanceSummary as any)?.meta;
 
-  // Retrieves the customers summary columns.
   const columns = useCustomersSummaryColumns();
 
   return (
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('customers_balance_summary')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
     >
       <CustomerBalanceDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows ?? []}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('customers-balance')}
         noInitialFetch={true}
         sticky={true}
         styleName={TableStyle.Constrant}
@@ -62,8 +60,6 @@ const CustomerBalanceDataTable = styled(ReportDataTable)`
         }
         &.row_type--TOTAL {
           .td {
-            font-weight: 500;
-            border-top-width: 1px;
             font-weight: 500;
             border-top-width: 1px;
             border-top-style: solid;

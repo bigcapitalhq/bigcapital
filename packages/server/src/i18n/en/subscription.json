@@ -1,0 +1,7 @@
+{
+  "status.canceled": "Canceled",
+  "status.active": "Active",
+  "status.inactive": "Inactive",
+  "status.expired": "Expired",
+  "status.on_trial": "On Trial"
+}

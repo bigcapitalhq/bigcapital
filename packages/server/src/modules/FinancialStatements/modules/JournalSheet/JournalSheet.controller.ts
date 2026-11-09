@@ -1,4 +1,11 @@
-import { Controller, Get, Headers, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { AcceptType } from '@/constants/accept-type';
 import { JournalSheetApplication } from './JournalSheetApplication';
@@ -6,10 +13,12 @@ import {
   ApiExtraModels,
   ApiOperation,
   ApiProduces,
+  ApiQuery,
   ApiResponse,
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { JournalSheetQueryDto } from './JournalSheetQuery.dto';
 import { JournalSheetResponseExample } from './JournalSheet.swagger';
 import {
@@ -27,7 +36,11 @@ import { ReportsAction } from '../../types/Report.types';
 @ApiTags('Reports')
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
-@ApiExtraModels(JournalSheetResponseDto, JournalSheetTableResponseDto)
+@ApiExtraModels(
+  JournalSheetResponseDto,
+  JournalSheetTableResponseDto,
+  NumberFormatQueryDto,
+)
 export class JournalSheetController {
   constructor(private readonly journalSheetApp: JournalSheetApplication) {}
 
@@ -47,6 +60,13 @@ export class JournalSheetController {
     },
   })
   @ApiOperation({ summary: 'Journal report' })
+  @ApiQuery({
+    name: 'numberFormat',
+    required: false,
+    description:
+      'Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)',
+    schema: { $ref: getSchemaPath(NumberFormatQueryDto) },
+  })
   @ApiProduces(
     AcceptType.ApplicationJson,
     AcceptType.ApplicationJsonTable,

@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   NavbarGroup,
@@ -8,13 +5,11 @@ import {
   NavbarDivider,
   Intent,
 } from '@blueprintjs/core';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { CreditNoteMenuItem } from './utils';
 import {
   DrawerActionsBar,
   Can,
@@ -23,15 +18,29 @@ import {
   If,
 } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
-
-import { compose } from '@/utils';
-import { CreditNoteMenuItem } from './utils';
 import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+
+interface CreditNoteDetailActionsBarInnerProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Credit note detail actions bar.
  */
-function CreditNoteDetailActionsBar({
+function CreditNoteDetailActionsBarInner({
   // #withDialogActions
   openDialog,
 
@@ -40,10 +49,15 @@ function CreditNoteDetailActionsBar({
 
   // #withDrawerActions
   closeDrawer,
-}) {
+  openDrawer,
+}: CreditNoteDetailActionsBarInnerProps) {
   const { creditNoteId, creditNote } = useCreditNoteDetailDrawerContext();
 
   const history = useHistory();
+
+  if (!creditNote) {
+    return null;
+  }
 
   // Handle edit credit note.
   const handleEditCreditNote = () => {
@@ -69,6 +83,11 @@ function CreditNoteDetailActionsBar({
     openDialog('credit-note-pdf-preview', { creditNoteId });
   };
 
+  // Handle send mail of credit note.
+  const handleSendMailCreditNote = () => {
+    openDrawer(DRAWERS.CREDIT_NOTE_SEND_MAIL, { creditNoteId });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -82,7 +101,7 @@ function CreditNoteDetailActionsBar({
           <NavbarDivider />
         </Can>
         <Can I={CreditNoteAction.Refund} a={AbilitySubject.CreditNote}>
-          <If condition={!creditNote.is_closed && !creditNote.is_draft}>
+          <If condition={!creditNote.isClosed && !creditNote.isDraft}>
             <Button
               className={Classes.MINIMAL}
               icon={<Icon icon="arrow-upward" iconSize={18} />}
@@ -99,6 +118,16 @@ function CreditNoteDetailActionsBar({
             text={<T id={'print'} />}
             onClick={handlePrintCreditNote}
           />
+          <If condition={!!creditNote.isPublished && !creditNote.isClosed}>
+            <Can I={CreditNoteAction.Edit} a={AbilitySubject.CreditNote}>
+              <Button
+                className={Classes.MINIMAL}
+                icon={<Icon icon={'envelope'} iconSize={16} />}
+                text={<T id={'credit_note.action.send_mail'} />}
+                onClick={handleSendMailCreditNote}
+              />
+            </Can>
+          </If>
         </Can>
         <Can I={CreditNoteAction.Delete} a={AbilitySubject.CreditNote}>
           <Button
@@ -110,7 +139,7 @@ function CreditNoteDetailActionsBar({
           />
         </Can>
         <Can I={CreditNoteAction.Edit} a={AbilitySubject.CreditNote}>
-          <If condition={creditNote.is_published && !creditNote.is_closed}>
+          <If condition={!!creditNote.isPublished && !creditNote.isClosed}>
             <NavbarDivider />
             <CreditNoteMenuItem
               payload={{
@@ -124,8 +153,9 @@ function CreditNoteDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertActions,
+export const CreditNoteDetailActionsBar = FF.pipe(
+  CreditNoteDetailActionsBarInner,
   withDrawerActions,
-)(CreditNoteDetailActionsBar);
+  withAlertActions,
+  withDialogActions,
+);

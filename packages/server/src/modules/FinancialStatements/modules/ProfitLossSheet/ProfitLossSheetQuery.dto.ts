@@ -1,10 +1,11 @@
 import { FinancialSheetBranchesQueryDto } from '../../dtos/FinancialSheetBranchesQuery.dto';
-import { INumberFormatQuery } from '../../types/Report.types';
+
 import {
   IsArray,
   IsBoolean,
   IsDateString,
   IsEnum,
+  IsIn,
   IsOptional,
   IsString,
   ValidateNested,
@@ -14,12 +15,18 @@ import { Transform, Type } from 'class-transformer';
 import { ToNumber } from '@/common/decorators/Validators';
 import { parseBoolean } from '@/utils/parse-boolean';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+import {
+  PROFIT_LOSS_COLUMN_KEYS,
+  ProfitLossColumnKey,
+} from '../../common/constants/tableColumnKeys';
+import { ProfitLossSheetSortOrder } from './ProfitLossSheet.types';
 
 export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
-  @IsString()
+  @IsEnum(AccountingBasis)
   @IsOptional()
   @ApiProperty({ description: 'The basis for the profit and loss sheet' })
-  basis: string;
+  basis: AccountingBasis;
 
   @IsDateString()
   @IsOptional()
@@ -31,7 +38,6 @@ export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   @ApiProperty({ description: 'End date for the profit and loss sheet' })
   toDate: moment.MomentInput;
 
-  @ApiProperty({ description: 'Number format configuration' })
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
   @IsOptional()
@@ -64,10 +70,13 @@ export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
   displayColumnsType: 'total' | 'date_periods';
 
   @IsString()
-  @IsEnum(['day', 'month', 'year', 'quarter'])
+  @IsEnum(['day', 'week', 'month', 'quarter', 'year'])
   @IsOptional()
-  @ApiProperty({ description: 'How to display columns' })
-  displayColumnsBy: 'day' | 'month' | 'year' | 'quarter' = 'year';
+  @ApiProperty({
+    description: 'How to display columns',
+    enum: ['day', 'week', 'month', 'quarter', 'year'],
+  })
+  displayColumnsBy: 'day' | 'week' | 'month' | 'quarter' | 'year' = 'year';
 
   @Transform(({ value }) => parseBoolean(value, false))
   @IsBoolean()
@@ -136,4 +145,22 @@ export class ProfitLossSheetQueryDto extends FinancialSheetBranchesQueryDto {
     description: 'Whether to show previous year percentage change',
   })
   previousYearPercentageChange: boolean;
+
+  @ApiProperty({
+    description: 'Column to sort the accounts by',
+    required: false,
+    enum: Object.values(PROFIT_LOSS_COLUMN_KEYS),
+  })
+  @IsIn(Object.values(PROFIT_LOSS_COLUMN_KEYS))
+  @IsOptional()
+  columnSortBy?: ProfitLossColumnKey;
+
+  @ApiProperty({
+    description: 'Sort order for the accounts',
+    required: false,
+    enum: ['asc', 'desc'],
+  })
+  @IsIn(['asc', 'desc'])
+  @IsOptional()
+  sortOrder?: ProfitLossSheetSortOrder;
 }

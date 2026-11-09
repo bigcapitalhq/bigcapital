@@ -1,8 +1,15 @@
-// @ts-nocheck
-import React from 'react';
 import classnames from 'classnames';
+import React, { ReactNode, CSSProperties } from 'react';
 import { LoadingIndicator } from '../Indicator';
-import { css } from '@emotion/css';
+
+interface DashboardInsiderProps {
+  loading?: boolean;
+  children?: ReactNode;
+  name?: string;
+  mount?: boolean;
+  className?: string;
+  style?: CSSProperties;
+}
 
 export function DashboardInsider({
   loading,
@@ -10,8 +17,8 @@ export function DashboardInsider({
   name,
   mount = false,
   className,
-  style
-}) {
+  style,
+}: DashboardInsiderProps) {
   return (
     <div
       className={classnames(
@@ -19,7 +26,6 @@ export function DashboardInsider({
           dashboard__insider: true,
           'dashboard__insider--loading': loading,
           [`dashboard__insider--${name}`]: !!name,
-
         },
         className,
       )}

@@ -1,5 +1,5 @@
-// @ts-nocheck
 import { Classes } from '@blueprintjs/core';
+import { Overlay } from '../../Invoices/InvoiceCustomize/Overlay';
 import {
   FFormGroup,
   FieldRequiredHint,
@@ -8,7 +8,6 @@ import {
   Stack,
 } from '@/components';
 import { FColorInput } from '@/components/Forms/FColorInput';
-import { Overlay } from '../../Invoices/InvoiceCustomize/Overlay';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
 import { BrandingCompanyLogoUploadField } from '@/containers/ElementCustomize/components/BrandingCompanyLogoUploadField';
 

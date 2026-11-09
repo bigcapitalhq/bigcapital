@@ -1,15 +1,13 @@
-// @ts-nocheck
-
-import { AccountSelect } from "./AccountsMultiSelect";
+import { AccountSelectModel } from './AccountsMultiSelect';
 
 // Filters accounts items.
 export const accountPredicate = (
   query: string,
-  account: AccountSelect,
+  account: AccountSelectModel,
   _index?: number,
   exactMatch?: boolean,
-) => {
-  const normalizedTitle = account.name.toLowerCase();
+): boolean => {
+  const normalizedTitle = account?.name?.toLowerCase();
   const normalizedQuery = query.toLowerCase();
 
   if (exactMatch) {

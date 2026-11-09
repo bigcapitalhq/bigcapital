@@ -1,83 +1,89 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchInventoryValuationJson,
+  fetchInventoryValuationTable,
+  fetchInventoryValuationXlsx,
+  fetchInventoryValuationCsv,
+  fetchInventoryValuationPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  InventoryValuationJsonQuery,
+  InventoryValuationJsonResponse,
+  InventoryValuationTableQuery,
+  InventoryValuationTableResponse,
+  InventoryValuationXlsxQuery,
+  InventoryValuationCsvQuery,
+  InventoryValuationPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve inventory valuation.
- */
-export function useInventoryValuation(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.INVENTORY_VALUATION, query],
-    {
-      method: 'get',
-      url: '/reports/inventory-valuation',
-      params: query,
-    },
-    {
-      select: (res) => res.data,
-
-      ...props,
-    },
-  );
+export function useInventoryValuation(
+  query: InventoryValuationJsonQuery,
+  props?: Omit<
+    UseQueryOptions<InventoryValuationJsonResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.inventoryValuation(query),
+    queryFn: () => fetchInventoryValuationJson(fetcher, query),
+  });
 }
 
-/**
- * Retrieve inventory valuation.
- */
-export function useInventoryValuationTable(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.INVENTORY_VALUATION, query],
-    {
-      method: 'get',
-      url: '/reports/inventory-valuation',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function useInventoryValuationTable(
+  query: InventoryValuationTableQuery,
+  props?: Omit<
+    UseQueryOptions<InventoryValuationTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.inventoryValuation(query),
+    queryFn: () => fetchInventoryValuationTable(fetcher, query),
+  });
 }
 
-export const useInventoryValuationXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/inventory-valuation',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'inventory_valuation.xlsx',
+export function useInventoryValuationXlsxExport(
+  query: InventoryValuationXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchInventoryValuationXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'inventory_valuation.xlsx'),
+      ),
   });
-};
+}
 
-export const useInventoryValuationCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/inventory-valuation',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'inventory_valuation.csv',
+export function useInventoryValuationCsvExport(
+  query: InventoryValuationCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchInventoryValuationCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'inventory_valuation.csv'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves the inventory valuation pdf document data.
- */
-export function useInventoryValuationPdf(query = {}) {
-  return useRequestPdf({
-    url: `/reports/inventory-valuation`,
-    params: query,
-  });
+export function useInventoryValuationPdf(query: InventoryValuationPdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchInventoryValuationPdf(fetcher, query));
 }

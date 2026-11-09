@@ -1,21 +1,27 @@
-// @ts-nocheck
-import React from 'react';
-import VendorCreditNumberDialog from '@/containers/Dialogs/VendorCreditNumberDialog';
 import { useFormikContext } from 'formik';
+import React from 'react';
+import type { VendorCreditFormValues } from './utils';
+import { index as VendorCreditNumberDialog } from '@/containers/Dialogs/VendorCreditNumberDialog';
+
+type VendorCreditNumberFormSettings = {
+  incrementNumber?: string;
+  manually?: boolean;
+};
 
 /**
  * Vendor credit form dialog.
  */
-export default function VendorCreditNoteFormDialogs() {
+export function VendorCreditNoteFormDialogs() {
+  const { setFieldValue } = useFormikContext<VendorCreditFormValues>();
+
   // Update the form once the vendor credit number form submit confirm.
   const handleVendorCreditNumberFormConfirm = ({
     incrementNumber,
     manually,
-  }) => {
-    setFieldValue('vendor_credit_number', incrementNumber || '');
-    setFieldValue('vendor_credit_no_manually', manually);
+  }: VendorCreditNumberFormSettings) => {
+    setFieldValue('vendorCreditNumber', incrementNumber || '');
+    setFieldValue('vendorCreditNumberManually', manually);
   };
-  const { setFieldValue } = useFormikContext();
 
   return (
     <React.Fragment>

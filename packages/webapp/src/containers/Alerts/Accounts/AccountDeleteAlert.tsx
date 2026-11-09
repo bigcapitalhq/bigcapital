@@ -1,46 +1,46 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
-
-import { handleDeleteErrors } from '@/containers/Accounts/utils';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { useDeleteAccount } from '@/hooks/query';
-import { compose } from '@/utils';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import { AppToaster, FormattedHTMLMessage } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { handleDeleteErrors } from '@/containers/Accounts/utils';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useDeleteAccount } from '@/hooks/query';
+
+interface AccountDeleteAlertPayload {
+  accountId: number;
+}
+
+interface AccountDeleteAlertProps
+  extends WithAlertActionsProps,
+    WithDrawerActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: AccountDeleteAlertPayload;
+}
 
 /**
- * Account delete alerts.
+ * Account delete alert.
  */
-function AccountDeleteAlert({
+function AccountDeleteAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { accountId },
-
-  // #withAlertActions
   closeAlert,
-
-  // #withDrawerActions
   closeDrawer,
-}) {
-  const { isLoading, mutateAsync: deleteAccount } = useDeleteAccount();
+}: AccountDeleteAlertProps): React.ReactElement {
+  const { isPending: isLoading, mutateAsync: deleteAccount } =
+    useDeleteAccount();
 
-  // handle cancel delete account alert.
   const handleCancelAccountDelete = () => {
     closeAlert(name);
   };
-  // Handle confirm account delete.
+
   const handleConfirmAccountDelete = () => {
     deleteAccount(accountId)
       .then(() => {
@@ -52,11 +52,7 @@ function AccountDeleteAlert({
         closeDrawer(DRAWERS.ACCOUNT_DETAILS);
       })
       .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
+        ({ data: { errors } }: { data: { errors: { type: string }[] } }) => {
           handleDeleteErrors(errors);
           closeAlert(name);
         },
@@ -65,8 +61,8 @@ function AccountDeleteAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'delete'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('delete')}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -74,7 +70,7 @@ function AccountDeleteAlert({
       onConfirm={handleConfirmAccountDelete}
       loading={isLoading}
     >
-      <p>
+      <p data-testId={'account-delete-alert'}>
         <FormattedHTMLMessage
           id={'once_delete_this_account_you_will_able_to_restore_it'}
         />
@@ -83,8 +79,9 @@ function AccountDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const AccountDeleteAlert = FF.pipe(
+  AccountDeleteAlertInner,
   withDrawerActions,
-)(AccountDeleteAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

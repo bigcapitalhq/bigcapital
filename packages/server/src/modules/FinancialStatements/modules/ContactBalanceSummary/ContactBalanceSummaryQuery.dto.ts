@@ -20,10 +20,6 @@ export class ContactBalanceSummaryQueryDto {
   @IsOptional()
   asDate: Date;
 
-  @ApiPropertyOptional({
-    description: 'Number formatting options for the summary',
-    type: NumberFormatQueryDto,
-  })
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
   @IsOptional()

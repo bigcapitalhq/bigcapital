@@ -1,3 +1,5 @@
+import { AccountingBasis } from '@/common/types/AccountingBasis';
+
 export const CashflowStatementResponseExample = {
   data: [
     {
@@ -382,7 +384,7 @@ export const CashflowStatementResponseExample = {
     },
     none_zero: false,
     none_transactions: false,
-    basis: 'cash',
+    basis: AccountingBasis.Cash,
   },
   meta: {
     organization_name: 'BIGCAPITAL, INC',

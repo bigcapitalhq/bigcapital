@@ -1,10 +1,19 @@
-// @ts-nocheck
-import React from 'react';
-import clsx from 'classnames';
 import { Classes } from '@blueprintjs/core';
+import clsx from 'classnames';
+import React from 'react';
 import { LoadingIndicator } from '../Indicator';
 
-export function DrawerLoading({ loading, mount = false, children }) {
+interface DrawerLoadingProps {
+  loading?: boolean;
+  mount?: boolean;
+  children?: React.ReactNode;
+}
+
+export function DrawerLoading({
+  loading,
+  mount = false,
+  children,
+}: DrawerLoadingProps) {
   return (
     <LoadingIndicator loading={loading} mount={mount}>
       {children}
@@ -12,7 +21,12 @@ export function DrawerLoading({ loading, mount = false, children }) {
   );
 }
 
-export function DrawerBody({ children, className }) {
+interface DrawerBodyProps {
+  children?: React.ReactNode;
+  className?: string;
+}
+
+export function DrawerBody({ children, className }: DrawerBodyProps) {
   return <div className={clsx(Classes.DRAWER_BODY, className)}>{children}</div>;
 }
 

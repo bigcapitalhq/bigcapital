@@ -1,32 +1,30 @@
-// @ts-nocheck
-import React from 'react';
 import { includes } from 'lodash';
-
-import { compose } from '@/utils';
+import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { withSubscriptions } from '@/containers/Subscriptions/withSubscriptionss';
+import { useGetSubscriptions } from '@/hooks/query';
+
+interface EnsureSubscriptionsIsActiveProps {
+  children: React.ReactNode;
+  redirectTo?: string;
+  routePath?: string;
+  exclude?: string[];
+}
 
 /**
- * Ensures the given subscription type is active or redirect to the given route.
+ * Renders children when no subscription is active; redirects otherwise.
  */
-function EnsureSubscriptionsIsActive({
+export default function EnsureSubscriptionsIsActive({
   children,
-  subscriptionType = 'main',
   redirectTo = '/billing',
   routePath,
   exclude,
-  isSubscriptionsActive,
-}) {
+}: EnsureSubscriptionsIsActiveProps) {
+  const { data } = useGetSubscriptions();
+  const isSubscriptionsActive = !!data?.subscriptions?.some((s) => s.active);
+
   return !isSubscriptionsActive || includes(exclude, routePath) ? (
-    children
+    <>{children}</>
   ) : (
     <Redirect to={{ pathname: redirectTo }} />
   );
 }
-
-export default compose(
-  withSubscriptions(
-    ({ isSubscriptionsActive }) => ({ isSubscriptionsActive }),
-    'main',
-  ),
-)(EnsureSubscriptionsIsActive);

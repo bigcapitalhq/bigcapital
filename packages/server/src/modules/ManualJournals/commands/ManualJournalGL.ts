@@ -34,6 +34,7 @@ export class ManualJournalGL {
       date: this.manualJournal.date,
       currencyCode: this.manualJournal.currencyCode,
       exchangeRate: this.manualJournal.exchangeRate,
+      basis: this.manualJournal.basis ?? null,
 
       transactionType: 'Journal',
       transactionId: this.manualJournal.id,
@@ -51,11 +52,12 @@ export class ManualJournalGL {
    */
   public getManualJournalEntry(entry: ManualJournalEntry): ILedgerEntry {
     const commonEntry = this.manualJournalCommonEntry;
+    const exchangeRate = this.manualJournal.exchangeRate || 1;
 
     return {
       ...commonEntry,
-      debit: entry.debit,
-      credit: entry.credit,
+      debit: (entry.debit || 0) * exchangeRate,
+      credit: (entry.credit || 0) * exchangeRate,
       accountId: entry.accountId,
 
       contactId: entry.contactId,
@@ -66,6 +68,12 @@ export class ManualJournalGL {
 
       branchId: entry.branchId,
       projectId: entry.projectId,
+      trackingCategories: (entry.trackingCategories ?? []).map(
+        (assignment) => ({
+          categoryId: assignment.categoryId,
+          optionId: assignment.optionId,
+        }),
+      ),
     };
   }
 

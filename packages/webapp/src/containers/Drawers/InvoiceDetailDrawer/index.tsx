@@ -1,13 +1,17 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
-
-import { compose } from '@/utils';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
 const InvoiceDetailDrawerContent = React.lazy(() =>
-  import('./InvoiceDetailDrawerContent'),
+  import('./InvoiceDetailDrawerContent').then((m) => ({
+    default: m.InvoiceDetailDrawerContent,
+  })),
 );
+
+interface InvoiceDetailDrawerProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  * Invoice Detail drawer.
@@ -16,8 +20,10 @@ function InvoiceDetailDrawer({
   name,
   // #withDrawer
   isOpen,
-  payload: { invoiceId },
-}) {
+  payload,
+}: InvoiceDetailDrawerProps) {
+  const invoiceId = payload?.invoiceId as number | undefined;
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -31,4 +37,4 @@ function InvoiceDetailDrawer({
     </Drawer>
   );
 }
-export default compose(withDrawers())(InvoiceDetailDrawer);
+export const index = FF.pipe(InvoiceDetailDrawer, withDrawers());

@@ -1,5 +1,5 @@
-import React from 'react';
 import { css } from '@emotion/css';
+import React from 'react';
 
 const customerFormSectionTitleClass = css`
   font-size: 14px;
@@ -8,6 +8,10 @@ const customerFormSectionTitleClass = css`
   margin-top: 10px;
 `;
 
-export function CustomerFormSectionTitle({ children }: { children: React.ReactNode | string }) {
+export function CustomerFormSectionTitle({
+  children,
+}: {
+  children: React.ReactNode | string;
+}) {
   return <h4 className={customerFormSectionTitleClass}>{children}</h4>;
 }

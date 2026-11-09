@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 export class MailTenancy {
   constructor(
     private readonly tenancyContext: TenancyContext,
-    private readonly config: ConfigService
+    private readonly config: ConfigService,
   ) {}
 
   /**
@@ -16,12 +16,14 @@ export class MailTenancy {
     const tenantMetadata = await this.tenancyContext.getTenantMetadata();
     const from = this.config.get('mail.from');
 
+    const fromAddress = typeof from === 'string' ? from : from?.address;
+
     return [
       {
-        mail: from,
+        mail: fromAddress,
         label: tenantMetadata.name,
         primary: true,
-      }
-    ].filter((item) => item.mail)
+      },
+    ].filter((item) => item.mail);
   }
 }

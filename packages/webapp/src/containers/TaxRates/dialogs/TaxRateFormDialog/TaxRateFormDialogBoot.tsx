@@ -1,29 +1,33 @@
-// @ts-nocheck
-import React from 'react';
+import { createContext, ReactNode, useContext } from 'react';
+import type { TaxRate } from '@bigcapital/sdk-ts';
 import { DialogContent } from '@/components';
-import { useTaxRate } from '@/hooks/query/taxRates';
-import { DialogsName } from '@/constants/dialogs';
+import { useTaxRate } from '@/hooks/query/tax-rates';
 
-const TaxRateFormDialogContext = React.createContext();
-
-interface TaxRateFormDialogBootProps {
+export interface TaxRateFormDialogBootContext {
   taxRateId: number;
-  children?: JSX.Element;
-}
-
-interface TaxRateFormDialogBootContext {
-  taxRateId: number;
-  taxRate: any;
+  taxRate: TaxRate | undefined;
   isTaxRateLoading: boolean;
   isTaxRateSuccess: boolean;
   isNewMode: boolean;
+  dialogName: string;
 }
+
+export interface TaxRateFormDialogBootProps {
+  taxRateId: number;
+  dialogName: string;
+  children?: ReactNode;
+}
+
+const TaxRateFormDialogContext = createContext<
+  TaxRateFormDialogBootContext | undefined
+>(undefined);
 
 /**
  * Money in dialog provider.
  */
 function TaxRateFormDialogBoot({
   taxRateId,
+  dialogName,
   ...props
 }: TaxRateFormDialogBootProps) {
   const {
@@ -37,13 +41,13 @@ function TaxRateFormDialogBoot({
   const isNewMode = !taxRateId;
 
   // Provider data.
-  const provider = {
+  const provider: TaxRateFormDialogBootContext = {
     taxRateId,
     taxRate,
     isTaxRateLoading,
     isTaxRateSuccess,
     isNewMode,
-    dialogName: DialogsName.TaxRateForm,
+    dialogName,
   };
   const isLoading = isTaxRateLoading;
 
@@ -54,7 +58,14 @@ function TaxRateFormDialogBoot({
   );
 }
 
-const useTaxRateFormDialogContext = () =>
-  React.useContext<TaxRateFormDialogBootContext>(TaxRateFormDialogContext);
+const useTaxRateFormDialogContext = (): TaxRateFormDialogBootContext => {
+  const context = useContext(TaxRateFormDialogContext);
+  if (!context) {
+    throw new Error(
+      'useTaxRateFormDialogContext must be used within a TaxRateFormDialogBoot.',
+    );
+  }
+  return context;
+};
 
 export { TaxRateFormDialogBoot, useTaxRateFormDialogContext };

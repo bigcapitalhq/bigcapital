@@ -1,27 +1,45 @@
-// @ts-nocheck
+import { ReceivableAgingTableQuery } from '@bigcapital/sdk-ts';
 import { useMemo, createContext, useContext } from 'react';
-import FinancialReportPage from '../FinancialReportPage';
-import { useARAgingSummaryReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
+import { FinancialReportPage } from '../FinancialReportPage';
+import { useARAgingSummaryReport } from '@/hooks/query';
 
-const ARAgingSummaryContext = createContext();
+type UseARAgingSummaryResult = ReturnType<typeof useARAgingSummaryReport>;
 
-/**
- * A/R aging summary provider.
- */
-function ARAgingSummaryProvider({ filter, ...props }) {
-  // Transformes the filter from to the url query.
-  const httpQuery = useMemo(() => transformFilterFormToQuery(filter), [filter]);
+type ARAgingSummaryContextValue = {
+  ARAgingSummary: UseARAgingSummaryResult['data'];
+  isARAgingLoading: boolean;
+  isARAgingFetching: boolean;
+  refetch: UseARAgingSummaryResult['refetch'];
+  httpQuery: ReceivableAgingTableQuery;
+};
 
-  // A/R aging summary sheet context.
+type ARAgingSummaryProviderProps = {
+  filter: Record<string, unknown>;
+  children?: React.ReactNode;
+};
+
+const ARAgingSummaryContext = createContext<
+  ARAgingSummaryContextValue | undefined
+>(undefined);
+
+function ARAgingSummaryProvider({
+  filter,
+  ...props
+}: ARAgingSummaryProviderProps) {
+  const httpQuery = useMemo(
+    () => transformFilterFormToQuery(filter) as ReceivableAgingTableQuery,
+    [filter],
+  );
+
   const {
     data: ARAgingSummary,
     isLoading: isARAgingLoading,
     isFetching: isARAgingFetching,
     refetch,
-  } = useARAgingSummaryReport(httpQuery, { keepPreviousData: true });
+  } = useARAgingSummaryReport(httpQuery, { placeholderData: (prev) => prev });
 
-  const provider = {
+  const provider: ARAgingSummaryContextValue = {
     ARAgingSummary,
     isARAgingLoading,
     isARAgingFetching,
@@ -36,6 +54,13 @@ function ARAgingSummaryProvider({ filter, ...props }) {
   );
 }
 
-const useARAgingSummaryContext = () => useContext(ARAgingSummaryContext);
+const useARAgingSummaryContext = (): ARAgingSummaryContextValue => {
+  const ctx = useContext(ARAgingSummaryContext);
+  if (!ctx)
+    throw new Error(
+      'useARAgingSummaryContext must be used within ARAgingSummaryProvider',
+    );
+  return ctx;
+};
 
 export { ARAgingSummaryProvider, useARAgingSummaryContext };

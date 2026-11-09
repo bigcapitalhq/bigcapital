@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
+import React, { useCallback } from 'react';
 
 export function CurrenciesSelectList({ selectProps, onItemSelect, className }) {
   const currencies = [

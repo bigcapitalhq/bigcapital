@@ -1,73 +1,71 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchCustomerBalanceTable,
+  fetchCustomerBalanceXlsx,
+  fetchCustomerBalanceCsv,
+  fetchCustomerBalancePdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  CustomerBalanceTableQuery,
+  CustomerBalanceTableResponse,
+  CustomerBalanceXlsxQuery,
+  CustomerBalanceCsvQuery,
+  CustomerBalancePdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve customers balance summary report.
- */
-export function useCustomerBalanceSummaryReport(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.CUSTOMERS_BALANCE_SUMMARY, query],
-    {
-      method: 'get',
-      url: '/reports/customer-balance-summary',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => ({
-        query: res.data.query,
-        table: res.data.table,
-        meta: res.data.meta,
-      }),
-      defaultData: {
-        table: {},
-        query: {},
-        meta: {},
-      },
-      ...props,
-    },
-  );
+export function useCustomerBalanceSummaryReport(
+  query: CustomerBalanceTableQuery,
+  props?: Omit<
+    UseQueryOptions<CustomerBalanceTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.customerBalanceSummary(query),
+    queryFn: () => fetchCustomerBalanceTable(fetcher, query),
+  });
 }
 
-export const useCustomerBalanceSummaryXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/customer-balance-summary',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'customer_balance_summary.xlsx',
+export function useCustomerBalanceSummaryXlsxExport(
+  query: CustomerBalanceXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchCustomerBalanceXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'customer_balance_summary.xlsx'),
+      ),
   });
-};
+}
 
-export const useCustomerBalanceSummaryCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/customer-balance-summary',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'customer_balance_summary.csv',
+export function useCustomerBalanceSummaryCsvExport(
+  query: CustomerBalanceCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchCustomerBalanceCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'customer_balance_summary.csv'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves the pdf content of customers balance summary.
- */
-export function useCustomerBalanceSummaryPdf(query = {}) {
-  return useRequestPdf({
-    url: `/reports/customer-balance-summary`,
-    params: query,
-  });
+export function useCustomerBalanceSummaryPdf(query: CustomerBalancePdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchCustomerBalancePdf(fetcher, query));
 }

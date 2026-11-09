@@ -1,13 +1,22 @@
-// @ts-nocheck
+import { MenuItem, Intent } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem, Intent } from '@blueprintjs/core';
-
+import type { VendorCredit } from '@bigcapital/sdk-ts';
 import { TextStatus, Icon, Choose, T } from '@/components';
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, VendorCreditAction } from '@/constants/abilityOption';
 import { DRAWERS } from '@/constants/drawers';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+
+interface VendorCreditUniversalSearchSelectComponentProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+  onAction?: () => void;
+}
 
 /**
  * Vendor credit universal search item select action.
@@ -20,7 +29,7 @@ function VendorCreditUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: VendorCreditUniversalSearchSelectComponentProps) {
   if (resourceType === RESOURCES_TYPES.VENDOR_CREDIT) {
     openDrawer(DRAWERS.VENDOR_CREDIT_DETAILS, {
       vendorCreditId: resourceId,
@@ -37,16 +46,22 @@ export const VendorCreditUniversalSearchSelect = withDrawerActions(
 /**
  * Status accessor.
  */
-function VendorCreditUniversalSearchStatus({ receipt }) {
+interface VendorCreditUniversalSearchStatusProps {
+  receipt: VendorCredit;
+}
+
+function VendorCreditUniversalSearchStatus({
+  receipt,
+}: VendorCreditUniversalSearchStatusProps) {
   return (
     <Choose>
-      <Choose.When condition={receipt.is_closed}>
+      <Choose.When condition={receipt.isClosed}>
         <TextStatus intent={Intent.SUCCESS}>
           <T id={'closed'} />
         </TextStatus>
       </Choose.When>
 
-      <Choose.When condition={receipt.is_open}>
+      <Choose.When condition={receipt.isOpen}>
         <TextStatus intent={Intent.WARNING}>
           <T id={'closed'} />
         </TextStatus>
@@ -64,9 +79,22 @@ function VendorCreditUniversalSearchStatus({ receipt }) {
 /**
  * Credit note universal search item.
  */
+interface VendorCreditUniversalSearchItemData {
+  id: number;
+  text: string;
+  label: string;
+  reference: VendorCredit;
+}
+
+interface VendorCreditUniversalSearchItemActions {
+  handleClick: () => void;
+  modifiers: { active: boolean };
+  query: string;
+}
+
 export function VendorCreditUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
+  item: VendorCreditUniversalSearchItemData,
+  { handleClick, modifiers, query }: VendorCreditUniversalSearchItemActions,
 ) {
   return (
     <MenuItem
@@ -74,16 +102,16 @@ export function VendorCreditUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
-            {item.reference.vendor_credit_number}{' '}
+          <span className="bp4-text-muted">
+            {item.reference.vendorCreditNumber}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.formatted_vendor_credit_date}
+            {item.reference.formattedVendorCreditDate}
           </span>
         </div>
       }
-      label={
+      labelElement={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div className="amount">{item.reference.formattedAmount}</div>
           <VendorCreditUniversalSearchStatus receipt={item.reference} />
         </>
       }
@@ -96,10 +124,10 @@ export function VendorCreditUniversalSearchItem(
 /**
  * Transformes receipt resource item to search item.
  */
-const transformVendorCreditsToSearch = (vendorCredit) => ({
+const transformVendorCreditsToSearch = (vendorCredit: VendorCredit) => ({
   id: vendorCredit.id,
-  text: vendorCredit.vendor.display_name,
-  label: vendorCredit.formatted_amount,
+  text: vendorCredit.vendor?.displayName ?? '',
+  label: vendorCredit.formattedAmount ?? '',
   reference: vendorCredit,
 });
 

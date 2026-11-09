@@ -1,9 +1,7 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
+import React from 'react';
+import { useExpenseFormContext } from './ExpenseFormPageProvider';
 import { useSetPrimaryBranchToForm } from './utils';
-import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
 import {
   BranchSelect,
   FeatureCan,
@@ -11,20 +9,18 @@ import {
   DetailsBarSkeletonBase,
   FormBranchSelectButton,
 } from '@/components';
-import { useExpenseFormContext } from './ExpenseFormPageProvider';
+import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Expenses form topbar.
  * @returns
  */
-export default function ExpenseFormTopBar() {
-  // Features guard.
+export function ExpenseFormTopBar() {
   const { featureCan } = useFeatureCan();
 
-  // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
 
-  // Can't display the navigation bar if  branches feature is not enabled.
   if (!featureCan(Features.Branches)) {
     return null;
   }
@@ -41,14 +37,13 @@ export default function ExpenseFormTopBar() {
 }
 
 function ExpenseFormSelectBranch() {
-  // Invoice form context.
   const { branches, isBranchesLoading } = useExpenseFormContext();
 
   return isBranchesLoading ? (
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <BranchSelect
-      name={'branch_id'}
+      name={'branchId'}
       branches={branches}
       input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}

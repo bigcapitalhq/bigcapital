@@ -1,17 +1,18 @@
-// @ts-nocheck
 import React from 'react';
+import { CreditNoteDetail } from './CreditNoteDetail';
+import { CreditNoteDetailDrawerProvider } from './CreditNoteDetailDrawerProvider';
 import { DrawerBody } from '@/components';
 
-import CreditNoteDetail from './CreditNoteDetail';
-import { CreditNoteDetailDrawerProvider } from './CreditNoteDetailDrawerProvider';
+interface CreditNoteDetailDrawerContentProps {
+  creditNoteId: number | undefined;
+}
 
 /**
  * Credit note detail drawer content.
  */
-export default function CreditNoteDetailDrawerContent({
-  // #ownProp
+export function CreditNoteDetailDrawerContent({
   creditNoteId,
-}) {
+}: CreditNoteDetailDrawerContentProps) {
   return (
     <CreditNoteDetailDrawerProvider creditNoteId={creditNoteId}>
       <DrawerBody>

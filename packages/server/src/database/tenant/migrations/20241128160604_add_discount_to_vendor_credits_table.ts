@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema.alterTable('vendor_credits', (table) => {
     table.decimal('discount', 10, 2).nullable().after('amount');
     table.string('discount_type').nullable().after('discount');
@@ -14,7 +14,7 @@ exports.up = function(knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema.alterTable('vendor_credits', (table) => {
     table.dropColumn('discount');
     table.dropColumn('discount_type');

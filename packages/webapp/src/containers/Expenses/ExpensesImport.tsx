@@ -1,9 +1,8 @@
-// @ts-nocheck
 import { useHistory } from 'react-router-dom';
-import { DashboardInsider } from '@/components';
 import { ImportView } from '../Import/ImportView';
+import { DashboardInsider } from '@/components';
 
-export default function ExpensesImport() {
+export function ExpensesImport() {
   const history = useHistory();
 
   const handleCancelBtnClick = () => {

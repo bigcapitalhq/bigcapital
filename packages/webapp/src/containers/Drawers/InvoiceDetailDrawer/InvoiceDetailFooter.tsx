@@ -1,5 +1,6 @@
-// @ts-nocheck
 import React from 'react';
+import intl from 'react-intl-universal';
+import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 import {
   CommercialDocFooter,
   T,
@@ -7,7 +8,6 @@ import {
   DetailsMenu,
   DetailItem,
 } from '@/components';
-import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
  * Invoice details footer.
@@ -16,24 +16,28 @@ import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 export function InvoiceDetailFooter() {
   const { invoice } = useInvoiceDetailDrawerContext();
 
-  if (!invoice.terms_conditions && !invoice.invoice_message) {
+  if (!invoice) {
+    return null;
+  }
+
+  if (!invoice.termsConditions && !invoice.invoiceMessage) {
     return null;
   }
   return (
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-        <If condition={invoice.terms_conditions}>
-          <DetailItem label={<T id={'terms_conditions'} />} multiline>
-            {invoice.terms_conditions}
+        <If condition={!!invoice.termsConditions}>
+          <DetailItem label={intl.get('terms_conditions')} multiline>
+            {invoice.termsConditions}
           </DetailItem>
         </If>
 
-        <If condition={invoice.invoice_message}>
+        <If condition={!!invoice.invoiceMessage}>
           <DetailItem
-            label={<T id={'invoice.details.invoice_message'} />}
+            label={intl.get('invoice.details.invoice_message')}
             multiline
           >
-            {invoice.invoice_message}
+            {invoice.invoiceMessage}
           </DetailItem>
         </If>
       </DetailsMenu>

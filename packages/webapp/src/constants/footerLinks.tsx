@@ -1,7 +1,6 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 
-export const getFooterLinks = () => [
+export const getFooterLinks = (): Array<{ title: string; link: string }> => [
   {
     title: intl.get('blog'),
     link: 'https://docs.bigcapital.ly/blog',

@@ -1,12 +1,16 @@
 import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { clearLocalStorage, defaultPageConfig } from './_utils';
+import { clearLocalStorage, newUnauthenticatedPage } from './_utils';
+
+// This spec exercises the login/register UI itself, so it must start each
+// test without the shared onboarded session.
+test.use({ storageState: undefined });
 
 let authPage: Page;
 
 test.describe('authentication', () => {
   test.beforeAll(async ({ browser }) => {
-    authPage = await browser.newPage({ ...defaultPageConfig() });
+    authPage = await newUnauthenticatedPage(browser);
   });
   test.afterAll(async () => {
     await authPage.close();
@@ -98,7 +102,7 @@ test.describe('authentication', () => {
 
   test.describe('reset password', () => {
     test.beforeAll(async ({ browser }) => {
-      authPage = await browser.newPage({ ...defaultPageConfig() });
+      authPage = await newUnauthenticatedPage(browser);
     });
     test.afterAll(async () => {
       await authPage.close();

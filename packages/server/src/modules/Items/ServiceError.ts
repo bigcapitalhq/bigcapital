@@ -6,7 +6,12 @@ export class ServiceError extends Error {
   payload: any;
   httpStatus: HttpStatus;
 
-  constructor(errorType: string, message?: string, payload?: any, httpStatus?: HttpStatus) {
+  constructor(
+    errorType: string,
+    message?: string,
+    payload?: any,
+    httpStatus?: HttpStatus,
+  ) {
     super(message);
 
     this.errorType = errorType;

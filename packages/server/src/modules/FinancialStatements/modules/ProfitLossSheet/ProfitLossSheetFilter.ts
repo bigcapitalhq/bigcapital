@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow, constant } from 'fp-ts/function';
+import { ifElse, when } from '@/common/fp';
 import { get } from 'lodash';
 import { ProfitLossSheetBase } from './ProfitLossSheetBase';
 import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
@@ -15,9 +15,13 @@ import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialFilter, ProfitLossSheetBase)(Base) {
+  class extends flow(FinancialFilter, ProfitLossSheetBase)(Base) {
     query: ProfitLossSheetQuery;
     repository: ProfitLossSheetRepository;
+
+    protected filterNodesDeep: (nodes, callback) => any;
+    protected filterNodesDeep2: (predicate, nodes) => any;
+    protected getSchemaNodeById: (id: string | number) => any;
 
     // ----------------
     // # Account.
@@ -30,25 +34,44 @@ export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
     private accountNoneZeroNodesFilterDetarminer = (
       node: IProfitLossSheetNode,
     ): boolean => {
-      return R.ifElse(
+      return ifElse(
         this.isNodeType(ProfitLossNodeType.ACCOUNT),
         this.isNodeNoneZero,
-        R.always(true),
+        constant(true),
       )(node);
     };
 
     /**
+     * Keeps an account when it or a descendant account has ledger entries
+     * in the report period. Parents stay so children that have transactions
+     * are not removed with them.
+     * @param {IProfitLossSheetNode} node
+     * @returns {boolean}
+     */
+    private isAccountNodeHasTransactions = (
+      node: IProfitLossSheetNode,
+    ): boolean => {
+      const accountIds = this.repository.getAccountsIdsIncludingChildren(
+        node.id,
+      );
+
+      return !this.repository.totalAccountsLedger
+        .whereAccountsIds(accountIds)
+        .isEmpty();
+    };
+
+    /**
      * Determines account none-transactions node.
-     * @param {IBalanceSheetDataNode} node
+     * @param {IProfitLossSheetNode} node
      * @returns {boolean}
      */
     private accountNoneTransFilterDetarminer = (
       node: IProfitLossSheetNode,
     ): boolean => {
-      return R.ifElse(
+      return ifElse(
         this.isNodeType(ProfitLossNodeType.ACCOUNT),
-        this.isNodeNoneZero,
-        R.always(true),
+        this.isAccountNodeHasTransactions,
+        constant(true),
       )(node);
     };
 
@@ -91,8 +114,7 @@ export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
       const schemaNode = this.getSchemaNodeById(node.id);
 
       // Determines whether the given node is aggregate node.
-      const isAggregateNode = this.isNodeType(
-        ProfitLossNodeType.ACCOUNTS,
+      const isAggregateNode = this.isNodeType(ProfitLossNodeType.ACCOUNTS)(
         node,
       );
       // Determines if the schema node is always should show.
@@ -129,9 +151,9 @@ export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
     private filterNoneZeroNodesCompose = (
       nodes: IProfitLossSheetNode[],
     ): IProfitLossSheetNode[] => {
-      return R.compose(
-        this.aggregateNoneChildrenFilter,
+      return flow(
         this.accountsNoneZeroNodesFilter,
+        this.aggregateNoneChildrenFilter,
       )(nodes);
     };
 
@@ -143,9 +165,9 @@ export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
     private filterNoneTransNodesCompose = (
       nodes: IProfitLossSheetNode[],
     ): IProfitLossSheetNode[] => {
-      return R.compose(
-        this.aggregateNoneChildrenFilter,
+      return flow(
         this.accountsNoneTransactionsNodesFilter,
+        this.aggregateNoneChildrenFilter,
       )(nodes);
     };
 
@@ -168,13 +190,13 @@ export const ProfitLossSheetFilter = <T extends GConstructor<FinancialSheet>>(
     protected reportFilterPlugin = (
       nodes: IProfitLossSheetNode[],
     ): IProfitLossSheetNode[] => {
-      return R.compose(
-        this.supressNodesWhenRangeTransactionsEmpty,
-        R.when(() => this.query.noneZero, this.filterNoneZeroNodesCompose),
-        R.when(
+      return flow(
+        when(
           () => this.query.noneTransactions,
           this.filterNoneTransNodesCompose,
         ),
+        when(() => this.query.noneZero, this.filterNoneZeroNodesCompose),
+        this.supressNodesWhenRangeTransactionsEmpty,
       )(nodes);
     };
   };

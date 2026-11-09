@@ -6,7 +6,7 @@ import { SaleInvoiceCostGLEntries } from '../SaleInvoiceCostGLEntries';
 
 @Injectable()
 export class InvoiceCostGLEntriesSubscriber {
-  constructor(private readonly invoiceCostEntries: SaleInvoiceCostGLEntries) { }
+  constructor(private readonly invoiceCostEntries: SaleInvoiceCostGLEntries) {}
 
   /**
    * Writes the invoices cost GL entries once the inventory cost lots be written.

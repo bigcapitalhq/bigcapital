@@ -1,7 +1,6 @@
 import { AutoIncrementOrdersService } from '@/modules/AutoIncrementOrders/AutoIncrementOrders.service';
 import { Injectable } from '@nestjs/common';
 
-
 @Injectable()
 export class VendorCreditAutoIncrementService {
   /**

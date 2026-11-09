@@ -1,74 +1,120 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import moment from 'moment';
 import { Intent } from '@blueprintjs/core';
-import { Formik } from 'formik';
-import { omit, get } from 'lodash';
-
+import { Formik, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import '@/style/pages/Items/ItemAdjustmentDialog.scss';
-
-import { AppToaster } from '@/components';
 import { CreateInventoryAdjustmentFormSchema } from './InventoryAdjustmentForm.schema';
-
-import InventoryAdjustmentFormContent from './InventoryAdjustmentFormContent';
+import { InventoryAdjustmentFormContent } from './InventoryAdjustmentFormContent';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
-
+import { diffQuantity, transformFormToRequest } from './utils';
+import type { InventoryAdjustmentFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { toSafeNumber } from '@/utils';
 
-const defaultInitialValues = {
+const defaultInitialValues: InventoryAdjustmentFormValues = {
   date: moment(new Date()).format('YYYY-MM-DD'),
   type: 'decrement',
-  adjustment_account_id: '',
-  item_id: '',
+  adjustmentAccountId: '',
+  itemId: '',
   reason: '',
   cost: '',
   quantity: '',
-  reference_no: '',
-  quantity_on_hand: '',
-  publish: '',
-  branch_id: '',
-  warehouse_id: '',
+  referenceNo: '',
+  quantityOnHand: '',
+  publish: false,
+  branchId: '',
+  warehouseId: '',
 };
 
-/**
- * Inventory adjustment form.
- */
-function InventoryAdjustmentForm({
-  // #withDialogActions
+interface InventoryAdjustmentFormProps extends WithDialogActionsProps {}
+
+function InventoryAdjustmentFormInner({
   closeDialog,
-}) {
-  const { dialogName, item, itemId, submitPayload, createInventoryAdjMutate } =
-    useInventoryAdjContext();
+}: InventoryAdjustmentFormProps): React.ReactElement {
+  const {
+    dialogName,
+    item,
+    itemId,
+    inventoryId,
+    inventoryAdjustment,
+    isEditMode,
+    submitPayload,
+    createInventoryAdjMutate,
+    editInventoryAdjMutate,
+  } = useInventoryAdjContext();
 
-  // Initial form values.
-  const initialValues = {
-    ...defaultInitialValues,
-    item_id: itemId,
-    quantity_on_hand: get(item, 'quantity_on_hand', 0),
-  };
+  const quantityOnHand = toSafeNumber(item?.quantityOnHand ?? 0);
 
-  // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = {
-      ...omit(values, ['quantity_on_hand', 'new_quantity', 'action']),
-      publish: submitPayload.publish,
+  const initialValues: InventoryAdjustmentFormValues = useMemo(() => {
+    if (isEditMode && inventoryAdjustment) {
+      const entry = inventoryAdjustment.entries?.[0];
+      const type = inventoryAdjustment.type;
+      const entryQuantity = entry?.quantity;
+
+      return {
+        ...defaultInitialValues,
+        date: moment(inventoryAdjustment.date).format('YYYY-MM-DD'),
+        type,
+        adjustmentAccountId: inventoryAdjustment.adjustmentAccountId ?? '',
+        itemId: entry?.itemId ?? itemId ?? '',
+        reason: inventoryAdjustment.reason ?? '',
+        cost: entry?.cost ?? '',
+        quantity: entryQuantity ?? '',
+        referenceNo: inventoryAdjustment.referenceNo ?? '',
+        quantityOnHand,
+        newQuantity:
+          entryQuantity != null
+            ? diffQuantity(entryQuantity, quantityOnHand, type)
+            : '',
+        publish: !!inventoryAdjustment.isPublished,
+        branchId: inventoryAdjustment.branchId ?? '',
+        warehouseId: inventoryAdjustment.warehouseId ?? '',
+      };
+    }
+    return {
+      ...defaultInitialValues,
+      itemId: itemId ?? '',
+      quantityOnHand,
     };
+  }, [isEditMode, inventoryAdjustment, itemId, quantityOnHand]);
+
+  const handleFormSubmit = (
+    values: InventoryAdjustmentFormValues,
+    { setSubmitting }: FormikHelpers<InventoryAdjustmentFormValues>,
+  ) => {
     setSubmitting(true);
-    createInventoryAdjMutate(form)
+
+    // Publishing is a one-way action; keep the published state on edit.
+    const publish =
+      submitPayload.publish ??
+      (isEditMode ? !!inventoryAdjustment?.isPublished : false);
+
+    const request = transformFormToRequest({ ...values, publish });
+
+    const mutationPromise =
+      isEditMode && inventoryId
+        ? editInventoryAdjMutate([inventoryId, request])
+        : createInventoryAdjMutate(request);
+
+    mutationPromise
       .then(() => {
         closeDialog(dialogName);
 
         AppToaster.show({
           message: intl.get(
-            'the_adjustment_transaction_has_been_created_successfully',
+            isEditMode
+              ? 'the_adjustment_transaction_has_been_edited_successfully'
+              : 'the_adjustment_transaction_has_been_created_successfully',
           ),
           intent: Intent.SUCCESS,
         });
       })
       .finally(() => {
-        setSubmitting(true);
+        setSubmitting(false);
       });
   };
 
@@ -83,4 +129,7 @@ function InventoryAdjustmentForm({
   );
 }
 
-export default compose(withDialogActions)(InventoryAdjustmentForm);
+export const InventoryAdjustmentForm = FF.pipe(
+  InventoryAdjustmentFormInner,
+  withDialogActions,
+);

@@ -1,69 +1,74 @@
-// @ts-nocheck
-import * as R from 'ramda';
-
-import { getColumnWidth } from '@/utils';
+import type { InventoryItemDetailsColumnKey } from '@bigcapital/sdk-ts';
 import { Align } from '@/constants';
+import { getColumnWidth } from '@/utils';
 
-const itemNameOrDateColumn = R.curry((data, index, column) => ({
-  id: column.key,
-  key: column.key,
-  Header: column.label,
-  accessor: `cells[${index}].value`,
-  className: column.key,
-  width: getColumnWidth(data, `cells.${index}.key`, {
-    minWidth: 130,
-    magicSpacing: 10,
-  }),
-  disableSortBy: true,
-}));
+const itemNameOrDateColumn =
+  (data: unknown[], index: number) => (column: Record<string, any>) => ({
+    id: column.key,
+    key: column.key,
+    Header: column.label,
+    accessor: `cells[${index}].value`,
+    className: column.key,
+    width: getColumnWidth(data, `cells.${index}.key`, {
+      minWidth: 130,
+      magicSpacing: 10,
+    }),
+    disableSortBy: true,
+  });
 
-const numericColumn = R.curry((data, index, column) => ({
-  id: column.key,
-  key: column.key,
-  Header: column.label,
-  accessor: `cells[${index}].value`,
-  className: column.key,
-  width: getColumnWidth(data, `cells.${index}.key`, {
-    minWidth: 130,
-    magicSpacing: 10,
-  }),
-  disableSortBy: true,
-  align: Align.Right,
-  money: true,
-}));
+const numericColumn =
+  (data: unknown[], index: number) => (column: Record<string, any>) => ({
+    id: column.key,
+    key: column.key,
+    Header: column.label,
+    accessor: `cells[${index}].value`,
+    className: column.key,
+    width: getColumnWidth(data, `cells.${index}.key`, {
+      minWidth: 130,
+      magicSpacing: 10,
+    }),
+    disableSortBy: true,
+    align: Align.Right,
+    money: true,
+  });
 
-const columnsMapper = R.curry((data, index, column) => ({
-  id: column.key,
-  key: column.key,
-  Header: column.label,
-  accessor: `cells[${index}].value`,
-  className: column.key,
-  width: getColumnWidth(data, `cells.${index}.key`, {
-    minWidth: 130,
-    magicSpacing: 10,
-  }),
-  disableSortBy: true,
-  textOverview: true,
-}));
+const columnsMapper =
+  (data: unknown[], index: number) => (column: Record<string, any>) => ({
+    id: column.key,
+    key: column.key,
+    Header: column.label,
+    accessor: `cells[${index}].value`,
+    className: column.key,
+    width: getColumnWidth(data, `cells.${index}.key`, {
+      minWidth: 130,
+      magicSpacing: 10,
+    }),
+    disableSortBy: true,
+    textOverview: true,
+  });
 
 /**
  * Inventory item details columns.
  */
-export const dynamicColumns = (columns, data) => {
-  const mapper = (column, index) => {
-    return R.compose(
-      R.cond([
-        [R.pathEq(['key'], 'date'), itemNameOrDateColumn(data, index)],
-        [R.pathEq(['key'], 'running_quantity'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'profit_margin'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'running_value'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'quantity'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'rate'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'total'), numericColumn(data, index)],
-        [R.pathEq(['key'], 'value'), numericColumn(data, index)],
-        [R.T, columnsMapper(data, index)],
-      ]),
-    )(column);
+export const dynamicColumns = (
+  columns: Record<string, any>[],
+  data: unknown[],
+) => {
+  const mapper = (column: Record<string, any>, index: number) => {
+    switch (column.key as InventoryItemDetailsColumnKey) {
+      case 'date':
+        return itemNameOrDateColumn(data, index)(column);
+      case 'running_quantity':
+      case 'profit_margin':
+      case 'running_value':
+      case 'quantity':
+      case 'rate':
+      case 'total':
+      case 'value':
+        return numericColumn(data, index)(column);
+      default:
+        return columnsMapper(data, index)(column);
+    }
   };
   return columns.map(mapper);
 };

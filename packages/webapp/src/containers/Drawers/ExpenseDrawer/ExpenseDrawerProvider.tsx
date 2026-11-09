@@ -1,18 +1,34 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useExpense } from '@/hooks/query';
+import type { Expense } from '@bigcapital/sdk-ts';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
 import { DRAWERS } from '@/constants/drawers';
+import { useExpense } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-const ExpenseDrawerDrawerContext = React.createContext();
+export interface ExpenseDrawerContextValue {
+  expenseId: number | undefined;
+  expense: Expense | undefined;
+  isExpenseFetching: boolean;
+  isExpenseLoading: boolean;
+}
+
+interface ExpenseDrawerProviderProps {
+  expenseId: number | undefined;
+}
+
+const ExpenseDrawerDrawerContext = React.createContext<
+  ExpenseDrawerContextValue | undefined
+>(undefined);
 
 /**
  * Expense drawer provider.
  */
-function ExpenseDrawerProvider({ expenseId, ...props }) {
+function ExpenseDrawerProvider({
+  expenseId,
+  ...props
+}: ExpenseDrawerProviderProps & { children?: React.ReactNode }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -26,7 +42,7 @@ function ExpenseDrawerProvider({ expenseId, ...props }) {
   });
 
   // Provider.
-  const provider = {
+  const provider: ExpenseDrawerContextValue = {
     expenseId,
     expense,
 
@@ -42,7 +58,7 @@ function ExpenseDrawerProvider({ expenseId, ...props }) {
         subTitle={
           featureCan(Features.Branches)
             ? intl.get('expense.drawer.subtitle', {
-                value: expense.branch?.name,
+                value: expense?.branch?.name,
               })
             : null
         }
@@ -51,7 +67,15 @@ function ExpenseDrawerProvider({ expenseId, ...props }) {
     </DrawerLoading>
   );
 }
-const useExpenseDrawerContext = () =>
-  React.useContext(ExpenseDrawerDrawerContext);
+
+const useExpenseDrawerContext = (): ExpenseDrawerContextValue => {
+  const ctx = React.useContext(ExpenseDrawerDrawerContext);
+  if (ctx === undefined) {
+    throw new Error(
+      'useExpenseDrawerContext must be used within an ExpenseDrawerProvider',
+    );
+  }
+  return ctx;
+};
 
 export { ExpenseDrawerProvider, useExpenseDrawerContext };

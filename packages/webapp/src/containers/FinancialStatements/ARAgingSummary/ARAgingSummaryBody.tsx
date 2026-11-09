@@ -1,22 +1,12 @@
-// @ts-nocheck
 import React from 'react';
-import * as R from 'ramda';
-
-import ARAgingSummaryTable from './ARAgingSummaryTable';
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '@/components';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
+import { ARAgingSummaryTable } from './ARAgingSummaryTable';
+import { FinancialSheetSkeleton } from '@/components';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-
-/**
- * A/R Aging summary body.
- * @returns {JSX.Element}
- */
-function ARAgingSummaryBodyJSX({
-  // #withCurrentOrganization
-  organizationName,
-}) {
+function ARAgingSummaryBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isARAgingLoading } = useARAgingSummaryContext();
 
   return (
@@ -30,8 +20,4 @@ function ARAgingSummaryBodyJSX({
   );
 }
 
-export const ARAgingSummaryBody = R.compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(ARAgingSummaryBodyJSX);
+export const ARAgingSummaryBody = ARAgingSummaryBodyJSX;

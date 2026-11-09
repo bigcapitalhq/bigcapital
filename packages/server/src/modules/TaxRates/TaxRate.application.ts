@@ -62,11 +62,9 @@ export class TaxRatesApplication {
 
   /**
    * Retrieves the tax rates list.
-   * @returns {Promise<{ data: ITaxRate[] }>}
    */
-  public async getTaxRates() {
-    const taxRates = await this.getTaxRatesService.getTaxRates();
-    return { data: taxRates };
+  public getTaxRates() {
+    return this.getTaxRatesService.getTaxRates();
   }
 
   /**

@@ -1,9 +1,21 @@
-// @ts-nocheck
 import React from 'react';
 
+interface SubscriptionPlan {
+  slug: string;
+  name: string;
+  description: string;
+  features: unknown[];
+  featured?: boolean;
+  monthlyPrice: string;
+  monthlyPriceLabel: string;
+  annuallyPrice: string;
+  annuallyPriceLabel: string;
+  monthlyVariantId: string;
+  annuallyVariantId: string;
+}
 
 interface WithSubscriptionPlanProps {
-  plan: any;
+  plan: SubscriptionPlan;
   onSubscribe?: (variantId: number) => void;
 }
 
@@ -11,14 +23,14 @@ interface MappedSubscriptionPlanProps {
   slug: string;
   label: string;
   description: string;
-  features: any[];
-  featured: boolean;
+  features: unknown[];
+  featured?: boolean;
   monthlyPrice: string;
   monthlyPriceLabel: string;
   annuallyPrice: string;
   annuallyPriceLabel: string;
-  monthlyVariantId: number;
-  annuallyVariantId: number;
+  monthlyVariantId: string;
+  annuallyVariantId: string;
   onSubscribe?: (variantId: number) => void;
 }
 
@@ -47,6 +59,8 @@ export const withSubscriptionPlanMapper = <
       annuallyVariantId: plan.annuallyVariantId,
       onSubscribe,
     };
-    return <WrappedComponent {...mappedProps} {...(restProps as P)} />;
+    return (
+      <WrappedComponent {...mappedProps} {...(restProps as unknown as P)} />
+    );
   };
 };

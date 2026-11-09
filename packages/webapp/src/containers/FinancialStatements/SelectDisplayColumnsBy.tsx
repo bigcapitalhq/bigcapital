@@ -1,18 +1,14 @@
-// @ts-nocheck
 import React from 'react';
-import {
-  Row,
-  Col,
-  FSelect,
-  FormattedMessage as T,
-  FFormGroup,
-} from '@/components';
+import intl from 'react-intl-universal';
 import { displayColumnsByOptions } from './constants';
+import { Row, Col, FSelect, FFormGroup } from '@/components';
 
-/**
- * Financial statement - Display columns by and type select.
- */
-export default function SelectsListColumnsBy(props) {
+interface SelectDisplayColumnsByProps {
+  formGroupProps?: Record<string, unknown>;
+  selectListProps?: Record<string, unknown>;
+}
+
+export function SelectDisplayColumnsBy(props: SelectDisplayColumnsByProps) {
   const { formGroupProps, selectListProps } = props;
 
   return (
@@ -20,7 +16,7 @@ export default function SelectsListColumnsBy(props) {
       <Col xs={4}>
         <FFormGroup
           name={'displayColumnsType'}
-          label={<T id={'display_report_columns'} />}
+          label={intl.get('display_report_columns')}
           inline={false}
           {...formGroupProps}
         >

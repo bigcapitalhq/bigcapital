@@ -22,7 +22,7 @@ export class ImportFileCommon {
     private readonly importFileValidator: ImportFileDataValidator,
     private readonly resource: ResourceService,
     private readonly importableRegistry: ImportableRegistry,
-  ) { }
+  ) {}
 
   /**
    * Imports the given parsed data to the resource storage through registered importable service.
@@ -36,7 +36,7 @@ export class ImportFileCommon {
     parsedData: Record<string, any>[],
     trx?: Knex.Transaction,
   ): Promise<[ImportOperSuccess[], ImportOperError[]]> {
-    const resourceFields = this.resource.getResourceFields2(
+    const resourceFields = await this.resource.getResourceFields2(
       importFile.resource,
     );
     const importable = await this.importableRegistry.getImportable(

@@ -1,24 +1,31 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
-
 import withDialogRedux from '@/components/DialogReduxConnect';
-
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 // Lazy loading the content.
-const SalesTaxLiabilityPdfDialogContent = lazy(
-  () => import('./SalesTaxLiabilityPdfDialogContent'),
+const SalesTaxLiabilityPdfDialogContent = lazy(() =>
+  import('./SalesTaxLiabilityPdfDialogContent').then((m) => ({
+    default: m.SalesTaxLiabilityPdfDialogContent,
+  })),
 );
 
+interface SalesTaxLiabilityPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
+
 /**
- * Cashflow sheet pdf preview dialog.
- * @returns {React.ReactNode}
+ * Sales tax liability pdf preview dialog.
  */
-function SalesTaxLiabilityPdfDialogRoot({ dialogName, payload, isOpen }) {
+function SalesTaxLiabilityPdfDialogRoot({
+  dialogName,
+  payload,
+  isOpen,
+}: SalesTaxLiabilityPdfDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -36,6 +43,7 @@ function SalesTaxLiabilityPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const SalesTaxLiabiltiyPdfDialog = compose(withDialogRedux())(
+export const SalesTaxLiabiltiyPdfDialog = FF.pipe(
   SalesTaxLiabilityPdfDialogRoot,
+  withDialogRedux(),
 );

@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import { Dragzone, FormattedMessage as T } from '@/components';
 
 /**
@@ -9,6 +7,7 @@ export function VendorAttachmentTab() {
   return (
     <div>
       <Dragzone
+        className={''}
         initialFiles={[]}
         onDrop={null}
         onDeleteFile={[]}

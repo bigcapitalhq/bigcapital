@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   NavbarGroup,
@@ -14,33 +11,40 @@ import {
   Popover,
 } from '@blueprintjs/core';
 import clsx from 'classnames';
-
-import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
-
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-
-import {
-  Can,
-  Icon,
-  FormattedMessage as T,
-  DrawerActionsBar,
-} from '@/components';
-import { VendorMoreMenuItem } from './utils';
+import * as FF from 'fp-ts/function';
+import { useHistory } from 'react-router-dom';
 import {
   AbilitySubject,
   SaleInvoiceAction,
   PaymentMadeAction,
   VendorAction,
 } from '../../../constants/abilityOption';
-import { safeCallback, compose } from '@/utils';
+import { VendorMoreMenuItem } from './utils';
+import { useVendorDetailsDrawerContext } from './VendorDetailsDrawerProvider';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import {
+  Can,
+  Icon,
+  FormattedMessage as T,
+  DrawerActionsBar,
+} from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { safeCallback } from '@/utils';
+
+interface VendorDetailsActionsBarProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Vendor details actions bar.
  */
-function VendorDetailsActionsBar({
+function VendorDetailsActionsBarInner({
   // #withDialogActions
   openDialog,
 
@@ -49,7 +53,7 @@ function VendorDetailsActionsBar({
 
   // #withDrawerActions
   closeDrawer,
-}) {
+}: VendorDetailsActionsBarProps) {
   const { vendorId } = useVendorDetailsDrawerContext();
   const history = useHistory();
 
@@ -139,8 +143,9 @@ function VendorDetailsActionsBar({
   );
 }
 
-export default compose(
-  withDrawerActions,
-  withAlertActions,
+export const VendorDetailsActionsBar = FF.pipe(
+  VendorDetailsActionsBarInner,
   withDialogActions,
-)(VendorDetailsActionsBar);
+  withAlertActions,
+  withDrawerActions,
+);

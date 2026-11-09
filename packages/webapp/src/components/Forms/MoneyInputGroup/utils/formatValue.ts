@@ -59,12 +59,17 @@ export const formatValue = (props: Props): string => {
   }
 
   const isNegative = RegExp('^-\\d+').test(value);
-  const hasDecimalSeparator = decimalSeparator && value.includes(decimalSeparator);
+  const hasDecimalSeparator =
+    decimalSeparator && value.includes(decimalSeparator);
 
   const valueOnly = isNegative ? value.replace('-', '') : value;
-  const [int, decimals] = hasDecimalSeparator ? valueOnly.split(decimalSeparator) : [valueOnly];
+  const [int, decimals] = hasDecimalSeparator
+    ? valueOnly.split(decimalSeparator)
+    : [valueOnly];
 
-  const formattedInt = turnOffSeparators ? int : addSeparators(int, groupSeparator);
+  const formattedInt = turnOffSeparators
+    ? int
+    : addSeparators(int, groupSeparator);
 
   const includePrefix = prefix ? prefix : '';
   const includeNegative = isNegative ? '-' : '';
@@ -72,8 +77,8 @@ export const formatValue = (props: Props): string => {
     hasDecimalSeparator && decimals
       ? `${decimalSeparator}${decimals}`
       : hasDecimalSeparator
-      ? `${decimalSeparator}`
-      : '';
+        ? `${decimalSeparator}`
+        : '';
 
   return `${includeNegative}${includePrefix}${formattedInt}${includeDecimals}`;
 };

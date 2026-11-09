@@ -14,7 +14,7 @@ export class CreateBankTransactionDto {
   @ApiProperty({
     description: 'The date of the bank transaction',
     type: Date,
-    example: '2023-01-01T00:00:00.000Z',
+    example: '2023-01-01',
   })
   @IsDateString()
   @IsNotEmpty()

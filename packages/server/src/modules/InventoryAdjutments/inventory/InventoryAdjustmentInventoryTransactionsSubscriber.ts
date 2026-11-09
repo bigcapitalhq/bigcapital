@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  IInventoryAdjustmentEditedPayload,
   IInventoryAdjustmentEventCreatedPayload,
   IInventoryAdjustmentEventPublishedPayload,
 } from '../types/InventoryAdjustments.types';
@@ -29,6 +30,23 @@ export class InventoryAdjustmentInventoryTransactionsSubscriber {
     await this.inventoryTransactions.writeInventoryTransactions(
       inventoryAdjustment,
       false,
+      trx,
+    );
+  }
+
+  /**
+   * Handles rewriting the inventory transactions once the inventory adjustment
+   * edited.
+   * @param {IInventoryAdjustmentEditedPayload} payload -
+   */
+  @OnEvent(events.inventoryAdjustment.onEdited)
+  public async handleRewriteInventoryTransactionsOnceEdited({
+    inventoryAdjustment,
+    trx,
+  }: IInventoryAdjustmentEditedPayload) {
+    await this.inventoryTransactions.writeInventoryTransactions(
+      inventoryAdjustment,
+      true,
       trx,
     );
   }

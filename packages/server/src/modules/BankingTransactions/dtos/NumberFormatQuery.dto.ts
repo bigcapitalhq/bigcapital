@@ -1,11 +1,5 @@
 import { Transform, Type } from 'class-transformer';
-import {
-  IsBoolean,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsPositive,
-} from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { parseBoolean } from '@/utils/parse-boolean';
 
@@ -16,7 +10,7 @@ export class NumberFormatQueryDto {
   })
   @Type(() => Number)
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   @IsOptional()
   readonly precision: number;
 
@@ -37,6 +31,15 @@ export class NumberFormatQueryDto {
   @Transform(({ value }) => parseBoolean(value, false))
   @IsOptional()
   readonly showZero: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Whether to show negative amounts in red',
+    example: false,
+  })
+  @IsBoolean()
+  @Transform(({ value }) => parseBoolean(value, false))
+  @IsOptional()
+  readonly showInRed: boolean;
 
   @ApiPropertyOptional({
     description: 'How to format money values',

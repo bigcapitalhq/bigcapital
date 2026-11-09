@@ -4,6 +4,7 @@ export interface INumberFormatQuery {
   showZero: boolean;
   formatMoney: 'total' | 'always' | 'none';
   negativeFormat: 'parentheses' | 'mines';
+  showInRed?: boolean;
 }
 
 export interface IFormatNumberSettings {
@@ -34,9 +35,9 @@ export enum ReportsAction {
   READ_CUSTOMERS_SUMMARY_BALANCE = 'read-customers-summary-balance',
   READ_VENDORS_SUMMARY_BALANCE = 'read-vendors-summary-balance',
   READ_INVENTORY_VALUATION_SUMMARY = 'read-inventory-valuation-summary',
+  READ_INVENTORY_SUMMARY = 'read-inventory-summary',
   READ_INVENTORY_ITEM_DETAILS = 'read-inventory-item-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION = 'read-cashflow-account-transactions',
-  READ_PROJECT_PROFITABILITY_SUMMARY = 'read-project-profitability-summary',
   READ_SALES_TAX_LIABILITY_SUMMARY = 'read-sales-tax-liability-summary',
 }
 
@@ -70,6 +71,7 @@ export const DEFAULT_REPORT_META: Omit<IFinancialReportMeta, 'baseCurrency'> = {
 
 export enum IFinancialDatePeriodsUnit {
   Day = 'day',
+  Week = 'week',
   Month = 'month',
   Year = 'year',
 }
@@ -93,9 +95,9 @@ interface FinancialDateMeta {
 }
 
 interface IFinancialSheetTotal {
-    amount: number;
-    formattedAmount: string;
-    currencyCode: string;
+  amount: number;
+  formattedAmount: string;
+  currencyCode: string;
 }
 
 interface IFinancialSheetPercentage {
@@ -112,8 +114,8 @@ export interface IFinancialNodeWithPreviousPeriod {
   previousPeriodPercentage?: IFinancialSheetPercentage;
 }
 export interface IFinancialNodeWithPreviousYear {
-  previousYearFromDate: FinancialDateMeta;
-  previousYearToDate: FinancialDateMeta;
+  previousYearFromDate?: FinancialDateMeta;
+  previousYearToDate?: FinancialDateMeta;
 
   previousYear?: IFinancialSheetTotal;
   previousYearChange?: IFinancialSheetTotal;

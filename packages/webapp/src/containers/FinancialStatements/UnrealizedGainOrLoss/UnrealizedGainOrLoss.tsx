@@ -1,30 +1,22 @@
-// @ts-nocheck
 import React from 'react';
-
-import { FinancialStatement, DashboardPageContent } from '@/components';
-import { UnrealizedGainOrLossProvider } from './UnrealizedGainOrLossProvider';
 import { UnrealizedGainOrLossLoadingBar } from './components';
+import { UnrealizedGainOrLossActionsBar } from './UnrealizedGainOrLossActionsBar';
+import { UnrealizedGainOrLossHeader } from './UnrealizedGainOrLossHeader';
+import { UnrealizedGainOrLossProvider } from './UnrealizedGainOrLossProvider';
+import { WithUnrealizedGainOrLossActionsProps } from './withUnrealizedGainOrLossActions';
+import { FinancialStatement, DashboardPageContent } from '@/components';
 
-import UnrealizedGainOrLossHeader from './UnrealizedGainOrLossHeader';
-import UnrealizedGainOrLossActionsBar from './UnrealizedGainOrLossActionsBar';
+type UnrealizedGainOrLossProps = {
+  organizationName: string;
+} & Pick<
+  WithUnrealizedGainOrLossActionsProps,
+  'toggleUnrealizedGainOrLossFilterDrawer'
+>;
 
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
-import { withUnrealizedGainOrLossActions } from './withUnrealizedGainOrLossActions';
-
-import { compose } from '@/utils';
-
-/**
- * Unrealized Gain or Loss
- */
-function UnrealizedGainOrLoss({
-  // #withPreferences
-  organizationName,
-
-  //#withUnrealizedGainOrLossActions
+export function UnrealizedGainOrLoss({
   toggleUnrealizedGainOrLossFilterDrawer,
-}) {
-  // Handle refetch unrealized Gain or Loss after filter change.
-  const handleFilterSubmit = (filter) => {};
+}: UnrealizedGainOrLossProps) {
+  const handleFilterSubmit = (_filter: Record<string, unknown>) => {};
 
   React.useEffect(
     () => () => {
@@ -39,7 +31,7 @@ function UnrealizedGainOrLoss({
       <DashboardPageContent>
         <FinancialStatement>
           <UnrealizedGainOrLossHeader
-            pageFilter={[]}
+            pageFilter={{}}
             onSubmitFilter={handleFilterSubmit}
           />
 
@@ -49,10 +41,3 @@ function UnrealizedGainOrLoss({
     </UnrealizedGainOrLossProvider>
   );
 }
-
-export default compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-  withUnrealizedGainOrLossActions,
-)(UnrealizedGainOrLoss);

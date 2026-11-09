@@ -1,10 +1,10 @@
-// @ts-nocheck
 export enum DRAWERS {
   ACCOUNT_DETAILS = 'account-drawer',
   JOURNAL_DETAILS = 'journal-drawer',
   EXPENSE_DETAILS = 'expense-drawer',
   BILL_DETAILS = 'bill-drawer',
   INVOICE_DETAILS = 'invoice-detail-drawer',
+  RECURRING_INVOICE_DETAILS = 'recurring-invoice-detail-drawer',
   RECEIPT_DETAILS = 'receipt-detail-drawer',
   PAYMENT_RECEIVED_DETAILS = 'payment-receive-detail-drawer',
   PAYMENT_MADE_DETAILS = 'payment-made-drawer',
@@ -38,4 +38,8 @@ export enum DRAWERS {
   ESTIMATE_SEND_MAIL = 'ESTIMATE_SEND_MAIL',
   RECEIPT_SEND_MAIL = 'RECEIPT_SEND_MAIL',
   PAYMENT_RECEIVED_SEND_MAIL = 'PAYMENT_RECEIVED_SEND_MAIL',
+  ORGANIZATIONS_LIST = 'organizations-list',
+  NOTIFICATIONS = 'notifications',
+  CREDIT_NOTE_SEND_MAIL = 'CREDIT_NOTE_SEND_MAIL',
+  CREATE_WORKSPACE = 'create-workspace',
 }

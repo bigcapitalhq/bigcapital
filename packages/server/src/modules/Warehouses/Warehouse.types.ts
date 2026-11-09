@@ -7,6 +7,13 @@ export interface IWarehouse {
   id?: number;
 }
 
+export enum WarehouseTransferAction {
+  CREATE = 'Create',
+  EDIT = 'Edit',
+  DELETE = 'Delete',
+  VIEW = 'View',
+}
+
 export interface IWarehouseTransferEntry {
   id?: number;
   index?: number;
@@ -140,8 +147,7 @@ export interface IItemWarehouseQuantityChange {
   amount: number;
 }
 
-export interface IWarehousesActivatePayload {
-}
+export type IWarehousesActivatePayload = object;
 export interface IWarehousesActivatedPayload {
   primaryWarehouse: Warehouse;
 }

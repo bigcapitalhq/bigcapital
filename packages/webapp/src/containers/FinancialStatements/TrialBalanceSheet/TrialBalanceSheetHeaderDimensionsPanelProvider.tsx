@@ -1,17 +1,31 @@
-// @ts-nocheck
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { Features } from '@/constants';
 import { useBranches } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
-import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 
-const TrialBLSheetHeaderDimensionsContext = React.createContext();
+type TrialBLSheetHeaderDimensionsContextValue = {
+  branches: ReturnType<typeof useBranches>['data'];
+  isBranchesLoading: boolean;
+};
+
+interface TrialBLHeaderDimensionsPanelProviderProps {
+  query?: Record<string, unknown>;
+  children?: ReactNode;
+}
+
+const TrialBLSheetHeaderDimensionsContext = React.createContext<
+  TrialBLSheetHeaderDimensionsContextValue | undefined
+>(undefined);
 
 /**
  *  Trial BL sheet header provider.
  * @returns
  */
-function TrialBLHeaderDimensionsPanelProvider({ query, ...props }) {
+function TrialBLHeaderDimensionsPanelProvider({
+  query,
+  ...props
+}: TrialBLHeaderDimensionsPanelProviderProps) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -19,11 +33,11 @@ function TrialBLHeaderDimensionsPanelProvider({ query, ...props }) {
   // Fetches the branches list.
   const { isLoading: isBranchesLoading, data: branches } = useBranches(query, {
     enabled: isBranchFeatureCan,
-    keepPreviousData: true,
+    placeholderData: (prev) => prev,
   });
 
   // Provider
-  const provider = {
+  const provider: TrialBLSheetHeaderDimensionsContextValue = {
     branches,
     isBranchesLoading,
   };
@@ -35,8 +49,15 @@ function TrialBLHeaderDimensionsPanelProvider({ query, ...props }) {
   );
 }
 
-const useTrialBalanceSheetPanelContext = () =>
-  React.useContext(TrialBLSheetHeaderDimensionsContext);
+const useTrialBalanceSheetPanelContext =
+  (): TrialBLSheetHeaderDimensionsContextValue => {
+    const ctx = React.useContext(TrialBLSheetHeaderDimensionsContext);
+    if (!ctx)
+      throw new Error(
+        'useTrialBalanceSheetPanelContext must be used within a TrialBLHeaderDimensionsPanelProvider',
+      );
+    return ctx;
+  };
 
 export {
   TrialBLHeaderDimensionsPanelProvider,

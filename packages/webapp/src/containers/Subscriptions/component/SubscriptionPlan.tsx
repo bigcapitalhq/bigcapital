@@ -1,12 +1,11 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { ButtonProps } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import { PricingPlan } from '@/components/PricingPlan/PricingPlan';
-import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 import {
   WithPlansProps,
   withPlans,
 } from '@/containers/Subscriptions/withPlans';
-import { ButtonProps } from '@blueprintjs/core';
+import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 
 interface SubscriptionPricingFeature {
   text: string;
@@ -15,7 +14,7 @@ interface SubscriptionPricingFeature {
   style?: Record<string, string>;
 }
 
-interface SubscriptionPricingProps {
+export interface SubscriptionPricingProps {
   slug: string;
   label: string;
   description: string;
@@ -26,12 +25,12 @@ interface SubscriptionPricingProps {
   annuallyPrice: string;
   annuallyPriceLabel: string;
   onSubscribe?: (variantId: number) => void;
-  subscribeButtonProps?: Optional<ButtonProps>;
+  subscribeButtonProps?: Partial<ButtonProps>;
 }
 
 interface SubscriptionPricingCombinedProps
   extends SubscriptionPricingProps,
-    WithPlansProps {}
+    Pick<WithPlansProps, 'plansPeriod'> {}
 
 function SubscriptionPlanRoot({
   label,
@@ -49,7 +48,8 @@ function SubscriptionPlanRoot({
   plansPeriod,
 }: SubscriptionPricingCombinedProps) {
   const handleClick = () => {
-    onSubscribe && onSubscribe();
+    // The callback is invoked without a variant id (the same call shape as before).
+    onSubscribe && onSubscribe(undefined as unknown as number);
   };
 
   return (
@@ -83,6 +83,7 @@ function SubscriptionPlanRoot({
   );
 }
 
-export const SubscriptionPlan = R.compose(
+export const SubscriptionPlan = FF.pipe(
+  SubscriptionPlanRoot,
   withPlans(({ plansPeriod }) => ({ plansPeriod })),
-)(SubscriptionPlanRoot);
+);

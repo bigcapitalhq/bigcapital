@@ -1,16 +1,13 @@
-// @ts-nocheck
 import React from 'react';
-import { x } from '@xstyled/emotion';
-
-import { Row, Col, Paper, Box } from '@/components';
 import { PaymentReceiveFormFootetLeft } from './PaymentReceiveFormFootetLeft';
 import { PaymentReceiveFormFootetRight } from './PaymentReceiveFormFootetRight';
+import { Row, Col, Paper, Box } from '@/components';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**
  * Payment received form footer.
  */
-export default function PaymentReceiveFormFooter() {
+export function PaymentReceiveFormFooter() {
   return (
     <Box mt={'20px'} px={'32px'} pb={'20px'} flex={1}>
       <Paper p={'20px'}>

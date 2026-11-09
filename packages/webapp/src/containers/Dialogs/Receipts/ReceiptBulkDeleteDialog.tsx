@@ -1,33 +1,49 @@
-// @ts-nocheck
-import React from 'react';
 import { Button, Classes, Dialog, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T, AppToaster } from '@/components';
+import * as FF from 'fp-ts/function';
 import intl from 'react-intl-universal';
-
-import BulkDeleteDialogContent from '@/containers/Dialogs/components/BulkDeleteDialogContent';
-import { useBulkDeleteReceipts } from '@/hooks/query/receipts';
+import type { DialogBaseProps } from '@/components/DialogReduxConnect';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import type { WithReceiptsActionsProps } from '@/containers/Sales/Receipts/ReceiptsLanding/withReceiptsActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { BulkDeleteDialogContent } from '@/containers/Dialogs/components/BulkDeleteDialogContent';
 import { withReceiptsActions } from '@/containers/Sales/Receipts/ReceiptsLanding/withReceiptsActions';
-import { compose } from '@/utils';
+import { useBulkDeleteReceipts } from '@/hooks/query/receipts';
 
-function ReceiptBulkDeleteDialog({
+interface ReceiptBulkDeleteDialogPayload {
+  ids?: number[];
+  deletableCount?: number;
+  undeletableCount?: number;
+  totalSelected?: number;
+}
+
+interface ReceiptBulkDeleteDialogProps
+  extends WithReceiptsActionsProps,
+    WithDialogActionsProps,
+    DialogBaseProps {
+  dialogName: string;
+}
+
+function ReceiptBulkDeleteDialogInner({
   dialogName,
   isOpen,
-  payload: {
+  payload,
+
+  // #withReceiptsActions
+  resetReceiptsSelectedRows,
+
+  // #withDialogActions
+  closeDialog,
+}: ReceiptBulkDeleteDialogProps) {
+  const {
     ids = [],
     deletableCount = 0,
     undeletableCount = 0,
     totalSelected = ids.length,
-  } = {},
+  }: ReceiptBulkDeleteDialogPayload = payload ?? {};
 
-  // #withReceiptsActions
-  setReceiptsSelectedRows,
-
-  // #withDialogActions
-  closeDialog,
-}) {
-  const { mutateAsync: bulkDeleteReceipts, isLoading } =
+  const { mutateAsync: bulkDeleteReceipts, isPending: isLoading } =
     useBulkDeleteReceipts();
 
   const handleCancel = () => {
@@ -44,7 +60,7 @@ function ReceiptBulkDeleteDialog({
           message: intl.get('the_receipts_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
-        setReceiptsSelectedRows([]);
+        resetReceiptsSelectedRows();
         closeDialog(dialogName);
       })
       .catch(() => {
@@ -96,9 +112,9 @@ function ReceiptBulkDeleteDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
+export const ReceiptBulkDeleteDialog = FF.pipe(
+  ReceiptBulkDeleteDialogInner,
   withReceiptsActions,
-)(ReceiptBulkDeleteDialog);
-
+  withDialogActions,
+  withDialogRedux(),
+);

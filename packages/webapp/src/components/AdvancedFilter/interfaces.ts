@@ -1,13 +1,25 @@
-// @ts-nocheck
-import { ArrayHelpers } from 'formik';
 import { IPopoverProps } from '@blueprintjs/core';
+import { ArrayHelpers, FormikContextType } from 'formik';
 
-export type IResourceFieldType = 'text' | 'number' | 'enumeration' | 'boolean';
+export type IResourceFieldType =
+  | 'text'
+  | 'number'
+  | 'date'
+  | 'enumeration'
+  | 'boolean';
 
 export interface IResourceField {
   name: string;
   key: string;
   fieldType: IResourceFieldType;
+  options?: IFilterOption[];
+}
+
+export interface IFilterRole {
+  fieldKey: string;
+  comparator: string;
+  condition: string;
+  value: string;
 }
 
 export interface IAdvancedFilterDropdown {
@@ -21,50 +33,50 @@ export interface IAdvancedFilterDropdown {
 }
 
 export interface IAdvancedFilterDropdownFooter {
-  onClick?: Function;
+  onClick?: () => void;
 }
 
 export interface IFilterFieldsField {
   fields: IResourceField[];
 }
 
-export interface IFilterRole {
-  fieldKey: string;
-  comparator: string;
-  condition: string;
-  value: string;
-}
-
 export interface IAdvancedFilterContextProps {
   initialCondition: IFilterRole;
   fields: IResourceField[];
   fieldsByKey: { [fieldKey: string]: IResourceField };
+  getFieldMetaByKey: (key: string) => IResourceField | undefined;
 }
 
 export interface IFilterConditionContextProps {
   conditionIndex: number;
+  fieldMeta?: IResourceField;
+  getConditionValue: (field: keyof IFilterRole) => unknown;
+  getConditionFieldPath: (field: keyof IFilterRole) => string;
+  setConditionValue: (field: keyof IFilterRole, value: unknown) => void;
 }
 
 export interface IAdvancedFilterProviderProps {
   initialCondition: IFilterRole;
   fields: IResourceField[];
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
 }
 
 export interface IFilterConditionProviderProps {
   conditionIndex: number;
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
 }
 
 export interface IFilterDropdownFormikValues {
   conditions: IFilterRole[];
 }
 
-export type IAdvancedFilterDropdownConditionsProps = ArrayHelpers;
+export type IAdvancedFilterDropdownConditionsProps = ArrayHelpers & {
+  form: FormikContextType<IFilterDropdownFormikValues>;
+};
 
 export interface IAdvancedFilterDropdownCondition {
   conditionIndex: number;
-  onRemoveClick: Function;
+  onRemoveClick?: (index: number) => void;
 }
 
 export interface IFilterOption {
@@ -73,12 +85,12 @@ export interface IFilterOption {
 }
 
 export interface IAdvancedFilterValueField {
-  fieldType: string;
-  value?: string;
-  key: string;
-  label: string;
+  fieldType: IResourceFieldType;
+  value?: string | boolean;
+  label?: string;
   options?: IFilterOption[];
-  onChange: Function;
+  onChange?: (value: string | boolean) => void;
+  isFocus?: boolean;
 }
 
 export enum IFieldType {
@@ -103,10 +115,9 @@ export interface IConditionOption {
 export interface IAdvancedFilterPopover {
   popoverProps?: IPopoverProps;
   advancedFilterProps: IAdvancedFilterDropdown;
-  children: JSX.Element | JSX.Element[];
+  children?: React.ReactNode;
 }
 
-
 export interface IDynamicFilterCompatatorFieldProps {
-  dataType: string;
+  dataType: IResourceFieldType;
 }

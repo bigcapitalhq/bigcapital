@@ -1,27 +1,27 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
+import type { SMSMessageFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   DialogFooter,
   DialogFooterActions,
   FormattedMessage as T,
 } from '@/components';
-import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 
-import { compose } from '@/utils';
+interface SMSMessageFormFloatingActionsProps extends WithDialogActionsProps {}
 
 /**
  * SMS Message Form floating actions.
  */
-function SMSMessageFormFloatingActions({
-  // #withDialogActions
+function SMSMessageFormFloatingActionsInner({
   closeDialog,
-}) {
+}: SMSMessageFormFloatingActionsProps): React.ReactElement {
   // Formik context.
-  const { isSubmitting } = useFormikContext();
+  const { isSubmitting } = useFormikContext<SMSMessageFormValues>();
 
   // SMS Message dialog contxt.
   const { dialogName } = useSMSMessageDialogContext();
@@ -34,6 +34,9 @@ function SMSMessageFormFloatingActions({
   return (
     <DialogFooter>
       <DialogFooterActions alignment={'left'}>
+        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
+          <T id={'cancel'} />
+        </Button>
         <Button
           intent={Intent.PRIMARY}
           loading={isSubmitting}
@@ -42,12 +45,12 @@ function SMSMessageFormFloatingActions({
         >
           <T id={'save_sms_message'} />
         </Button>
-        <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
-          <T id={'cancel'} />
-        </Button>
       </DialogFooterActions>
     </DialogFooter>
   );
 }
 
-export default compose(withDialogActions)(SMSMessageFormFloatingActions);
+export const SMSMessageFormFloatingActions = FF.pipe(
+  SMSMessageFormFloatingActionsInner,
+  withDialogActions,
+);

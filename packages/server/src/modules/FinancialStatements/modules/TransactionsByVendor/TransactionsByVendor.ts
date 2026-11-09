@@ -1,5 +1,6 @@
-import * as R from 'ramda';
 import { isEmpty } from 'lodash';
+import { flow } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { ModelObject } from 'objection';
 import { I18nService } from 'nestjs-i18n';
 import {
@@ -10,9 +11,13 @@ import {
 } from './TransactionsByVendor.types';
 import { TransactionsByContact } from '../TransactionsByContact/TransactionsByContact';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
+import { ILedgerEntry } from '@/modules/Ledger/types/Ledger.types';
 import { INumberFormatQuery } from '../../types/Report.types';
 import { TransactionsByVendorRepository } from './TransactionsByVendorRepository';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 const VENDOR_NORMAL = 'credit';
 
@@ -21,7 +26,7 @@ export class TransactionsByVendor extends TransactionsByContact {
   public readonly filter: ITransactionsByVendorsFilter;
   public readonly numberFormat: INumberFormatQuery;
   public readonly i18n: I18nService;
-  
+
   /**
    * Constructor method.
    * @param {TransactionsByVendorRepository} transactionsByVendorRepository - Transactions by vendor repository.
@@ -62,10 +67,16 @@ export class TransactionsByVendor extends TransactionsByContact {
 
     const openingEntries = openingBalanceLedger.getEntries();
 
-    return R.compose(
-      R.curry(this.contactTransactionRunningBalance)(openingBalance, 'credit'),
-      R.map(this.contactTransactionMapper.bind(this)),
-    ).bind(this)(openingEntries);
+    return flow(
+      (entries: ILedgerEntry[]) =>
+        entries.map((entry) => this.contactTransactionMapper(entry)),
+      (transactions) =>
+        this.contactTransactionRunningBalance(
+          openingBalance,
+          'credit',
+          transactions,
+        ),
+    )(openingEntries);
   }
 
   /**
@@ -125,10 +136,11 @@ export class TransactionsByVendor extends TransactionsByContact {
   public vendorsMapper(
     vendors: ModelObject<Vendor>[],
   ): ITransactionsByVendorsVendor[] {
-    return R.compose(
-      R.when(this.isVendorsPostFilter, this.contactsFilter),
-      R.map(this.vendorMapper.bind(this)),
-    ).bind(this)(vendors);
+    return flow(
+      (nodes: ModelObject<Vendor>[]) =>
+        nodes.map((vendor) => this.vendorMapper(vendor)),
+      when(this.isVendorsPostFilter, this.contactsFilter),
+    )(vendors) as ITransactionsByVendorsVendor[];
   }
 
   /**

@@ -4,10 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as R from 'ramda';
 import { Customer } from '../models/Customer';
 import { CustomerTransfromer } from './CustomerTransformer';
-import {
-  GetCustomersResponse,
-  ICustomersFilter,
-} from '../types/Customers.types';
+import { GetCustomersResponse } from '../types/Customers.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GetCustomersQueryDto } from '../dtos/GetCustomersQuery.dto';
 
@@ -61,12 +58,12 @@ export class GetCustomers {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed customers.
-    const customers = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new CustomerTransfromer(),
     );
     return {
-      customers,
+      data,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

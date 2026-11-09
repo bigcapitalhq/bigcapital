@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { assoc, ifElse, when } from '@/common/fp';
 import { GConstructor } from '@/common/types/Constructor';
 import {
   IProfitLossSheetNode,
@@ -14,8 +14,12 @@ export const ProfitLossSheetPercentage = <
 >(
   Base: T,
 ) =>
-  class extends R.pipe(FinancialHorizTotals)(Base) {
+  class extends flow(FinancialHorizTotals)(Base) {
     query: ProfitLossSheetQuery;
+
+    protected mapNodesDeep: (nodes, callback) => any;
+    protected findNodeById: (id, nodes) => any;
+    protected isNodeTotal: (node) => boolean;
 
     /**
      * Assoc column of percentage attribute to the given node.
@@ -23,23 +27,19 @@ export const ProfitLossSheetPercentage = <
      * @param {IProfitLossSheetNode} node -
      * @return {IProfitLossSheetNode}
      */
-    private assocColumnPercentage = R.curry(
-      (
-        propertyPath: string,
-        parentNode: IProfitLossSheetNode,
-        node: IProfitLossSheetNode,
-      ) => {
+    private assocColumnPercentage =
+      (propertyPath: string, parentNode: IProfitLossSheetNode) =>
+      (node: IProfitLossSheetNode) => {
         const percentage = this.getPercentageBasis(
           parentNode.total.amount,
           node.total.amount,
         );
-        return R.assoc(
+        return assoc(
           propertyPath,
           this.getPercentageAmountMeta(percentage),
           node,
         );
-      },
-    );
+      };
 
     /**
      * Assoc column of percentage attribute to the given node.
@@ -47,23 +47,19 @@ export const ProfitLossSheetPercentage = <
      * @param {IProfitLossSheetNode} node -
      * @return {IProfitLossSheetNode}
      */
-    private assocColumnTotalPercentage = R.curry(
-      (
-        propertyPath: string,
-        parentNode: IProfitLossSheetNode,
-        node: IProfitLossSheetNode,
-      ) => {
+    private assocColumnTotalPercentage =
+      (propertyPath: string, parentNode: IProfitLossSheetNode) =>
+      (node: IProfitLossSheetNode) => {
         const percentage = this.getPercentageBasis(
           parentNode.total.amount,
           node.total.amount,
         );
-        return R.assoc(
+        return assoc(
           propertyPath,
           this.getPercentageTotalAmountMeta(percentage),
           node,
         );
-      },
-    );
+      };
 
     /**
      * Compose percentage of columns.
@@ -115,41 +111,38 @@ export const ProfitLossSheetPercentage = <
      * @param  {IProfitLossSheetNode} node -
      * @return {IProfitLossSheetNode}
      */
-    private columnPercentageMapper = R.curry(
-      (netIncomeNode: IProfitLossSheetNode, node: IProfitLossSheetNode) => {
+    private columnPercentageMapper =
+      (netIncomeNode: IProfitLossSheetNode) => (node: IProfitLossSheetNode) => {
         const path = 'percentageColumn';
 
-        return R.compose(
-          R.when(
-            this.isNodeHasHorizTotals,
-            this.assocColumnPercentageHorizTotals(netIncomeNode),
-          ),
-          R.ifElse(
+        return flow(
+          ifElse(
             this.isNodeTotal,
             this.assocColumnTotalPercentage(path, netIncomeNode),
             this.assocColumnPercentage(path, netIncomeNode),
           ),
+          when(
+            this.isNodeHasHorizTotals,
+            this.assocColumnPercentageHorizTotals(netIncomeNode),
+          ),
         )(node);
-      },
-    );
+      };
 
     /**
      *
      * @param   {IProfitLossSheetNode} node
      * @returns {IProfitLossSheetNode}
      */
-    private rowPercentageMap = (
-      node: IProfitLossSheetNode,
-    ): IProfitLossSheetNode => {
+    private rowPercentageMap = (node: IProfitLossSheetNode) => {
       const path = 'percentageRow';
 
-      return R.compose(
-        R.when(this.isNodeHasHorizTotals, this.assocRowPercentageHorizTotals),
-        R.ifElse(
+      return flow(
+        ifElse(
           this.isNodeTotal,
           this.assocColumnTotalPercentage(path, node),
           this.assocColumnPercentage(path, node),
         ),
+        when(this.isNodeHasHorizTotals, this.assocRowPercentageHorizTotals),
       )(node);
     };
 
@@ -159,46 +152,44 @@ export const ProfitLossSheetPercentage = <
      * @param   {IProfitLossSheetNode} node -
      * @returns {IProfitLossSheetNode}
      */
-    private incomePercentageMapper = R.curry(
-      (incomeNode: IProfitLossSheetNode, node: IProfitLossSheetNode) => {
+    private incomePercentageMapper =
+      (incomeNode: IProfitLossSheetNode) => (node: IProfitLossSheetNode) => {
         const path = 'percentageIncome';
 
-        return R.compose(
-          R.when(
-            this.isNodeHasHorizTotals,
-            this.assocIncomePercentageHorizTotals(incomeNode),
-          ),
-          R.ifElse(
+        return flow(
+          ifElse(
             this.isNodeTotal,
             this.assocColumnTotalPercentage(path, incomeNode),
             this.assocColumnPercentage(path, incomeNode),
           ),
+          when(
+            this.isNodeHasHorizTotals,
+            this.assocIncomePercentageHorizTotals(incomeNode),
+          ),
         )(node);
-      },
-    );
+      };
 
     /**
      *
      * @param {IProfitLossSheetNode} expenseNode -
      * @param {IProfitLossSheetNode} node -
      */
-    private expensePercentageMapper = R.curry(
-      (expenseNode: IProfitLossSheetNode, node: IProfitLossSheetNode) => {
+    private expensePercentageMapper =
+      (expenseNode: IProfitLossSheetNode) => (node: IProfitLossSheetNode) => {
         const path = 'percentageExpense';
 
-        return R.compose(
-          R.when(
-            this.isNodeHasHorizTotals,
-            this.assocExpensePercentageHorizTotals(expenseNode),
-          ),
-          R.ifElse(
+        return flow(
+          ifElse(
             this.isNodeTotal,
             this.assocColumnTotalPercentage(path, expenseNode),
             this.assocColumnPercentage(path, expenseNode),
           ),
+          when(
+            this.isNodeHasHorizTotals,
+            this.assocExpensePercentageHorizTotals(expenseNode),
+          ),
         )(node);
-      },
-    );
+      };
 
     /**
      * Compose percentage of expense.
@@ -226,11 +217,11 @@ export const ProfitLossSheetPercentage = <
     protected reportColumnsPerentageCompose = (
       nodes: IProfitLossSheetNode[],
     ): IProfitLossSheetNode[] => {
-      return R.compose(
-        R.when(this.query.isIncomePercentage, this.incomePercetageCompose),
-        R.when(this.query.isColumnPercentage, this.columnPercentageCompose),
-        R.when(this.query.isExpensesPercentage, this.expensesPercentageCompose),
-        R.when(this.query.isRowPercentage, this.rowPercentageCompose),
+      return flow(
+        when(this.query.isRowPercentage, this.rowPercentageCompose),
+        when(this.query.isExpensesPercentage, this.expensesPercentageCompose),
+        when(this.query.isColumnPercentage, this.columnPercentageCompose),
+        when(this.query.isIncomePercentage, this.incomePercetageCompose),
       )(nodes);
     };
 
@@ -252,16 +243,15 @@ export const ProfitLossSheetPercentage = <
      * @param   {IProfitLossSheetNode} node -
      * @returns {IProfitLossSheetNode}
      */
-    private assocIncomePercentageHorizTotals = R.curry(
-      (incomeNode: IProfitLossSheetNode, node: IProfitLossSheetNode) => {
+    private assocIncomePercentageHorizTotals =
+      (incomeNode: IProfitLossSheetNode) => (node: IProfitLossSheetNode) => {
         const horTotalsWithIncomePerc = this.assocPercentageHorizTotals(
           'percentageIncome',
           incomeNode,
           node,
         );
-        return R.assoc('horizontalTotals', horTotalsWithIncomePerc, node);
-      },
-    );
+        return assoc('horizontalTotals', horTotalsWithIncomePerc, node);
+      };
 
     /**
      * Assoc expense percentage to horizontal totals nodes.
@@ -269,16 +259,15 @@ export const ProfitLossSheetPercentage = <
      * @param   {IProfitLossSheetNode} node -
      * @returns {IProfitLossSheetNode}
      */
-    private assocExpensePercentageHorizTotals = R.curry(
-      (expenseNode: IProfitLossSheetNode, node: IProfitLossSheetNode) => {
+    private assocExpensePercentageHorizTotals =
+      (expenseNode: IProfitLossSheetNode) => (node: IProfitLossSheetNode) => {
         const horTotalsWithExpensePerc = this.assocPercentageHorizTotals(
           'percentageExpense',
           expenseNode,
           node,
         );
-        return R.assoc('horizontalTotals', horTotalsWithExpensePerc, node);
-      },
-    );
+        return assoc('horizontalTotals', horTotalsWithExpensePerc, node);
+      };
 
     /**
      * Assoc net income percentage to horizontal totals nodes.
@@ -286,25 +275,24 @@ export const ProfitLossSheetPercentage = <
      * @param   {IProfitLossSheetNode} node -
      * @returns {IProfitLossSheetNode}
      */
-    private assocColumnPercentageHorizTotals = R.curry(
-      (netIncomeNode: IProfitLossSheetNode, node: IProfitLossSheetNode) => {
+    private assocColumnPercentageHorizTotals =
+      (netIncomeNode: IProfitLossSheetNode) => (node: IProfitLossSheetNode) => {
         const horTotalsWithExpensePerc = this.assocPercentageHorizTotals(
           'percentageColumn',
           netIncomeNode,
           node,
         );
-        return R.assoc('horizontalTotals', horTotalsWithExpensePerc, node);
-      },
-    );
+        return assoc('horizontalTotals', horTotalsWithExpensePerc, node);
+      };
 
     /**
      *
      */
-    private assocRowPercentageHorizTotals = R.curry((node) => {
+    private assocRowPercentageHorizTotals = (node) => {
       const horTotalsWithExpensePerc = this.assocHorizontalPercentageTotals(
         'percentageRow',
         node,
       );
-      return R.assoc('horizontalTotals', horTotalsWithExpensePerc, node);
-    });
+      return assoc('horizontalTotals', horTotalsWithExpensePerc, node);
+    };
   };

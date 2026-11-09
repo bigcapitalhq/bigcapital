@@ -1,32 +1,41 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-
 import '@/style/pages/VendorsCreditNote/List.scss';
-
-import { DashboardPageContent } from '@/components';
-import VendorsCreditNoteActionsBar from './VendorsCreditNoteActionsBar';
-import VendorsCreditNoteDataTable from './VendorsCreditNoteDataTable';
-
+import { VendorsCreditNoteActionsBar } from './VendorsCreditNoteActionsBar';
+import { VendorsCreditNoteDataTable } from './VendorsCreditNoteDataTable';
+import { VendorsCreditNoteListProvider } from './VendorsCreditNoteListProvider';
+import { VendorsCreditNotesListDialogs } from './VendorsCreditNotesListDialogs';
+import { VendorsCreditNotesListDrawers } from './VendorsCreditNotesListDrawers';
 import { withVendorsCreditNotes } from './withVendorsCreditNotes';
 import { withVendorsCreditNotesActions } from './withVendorsCreditNotesActions';
+import type { WithVendorsCreditNotesProps } from './withVendorsCreditNotes';
+import { DashboardPageContent } from '@/components';
+import { transformTableStateToQuery } from '@/utils';
 
-import { VendorsCreditNoteListProvider } from './VendorsCreditNoteListProvider';
-import { transformTableStateToQuery, compose } from '@/utils';
+interface WithVendorsCreditNotesActionsProps {
+  resetVendorsCreditNoteTableState: () => void;
+  resetVendorsCreditNoteSelectedRows: () => void;
+}
 
-function VendorsCreditNotesList({
-  // #withVendorsCreditNotes
+interface VendorsCreditNotesListProps
+  extends Pick<
+      WithVendorsCreditNotesProps,
+      'vendorsCreditNoteTableState' | 'vendorsCreditNoteTableStateChanged'
+    >,
+    WithVendorsCreditNotesActionsProps {}
+
+function VendorsCreditNotesListInner({
   vendorsCreditNoteTableState,
   vendorsCreditNoteTableStateChanged,
-
-  // #withVendorsCreditNotesActions
   resetVendorsCreditNoteTableState,
-}) {
-  // Resets the credit note table state once the page unmount.
+  resetVendorsCreditNoteSelectedRows,
+}: VendorsCreditNotesListProps) {
   React.useEffect(
     () => () => {
       resetVendorsCreditNoteTableState();
+      resetVendorsCreditNoteSelectedRows();
     },
-    [resetVendorsCreditNoteTableState],
+    [resetVendorsCreditNoteSelectedRows, resetVendorsCreditNoteTableState],
   );
 
   return (
@@ -35,6 +44,9 @@ function VendorsCreditNotesList({
       tableStateChanged={vendorsCreditNoteTableStateChanged}
     >
       <VendorsCreditNoteActionsBar />
+      <VendorsCreditNotesListDrawers />
+      <VendorsCreditNotesListDialogs />
+
       <DashboardPageContent>
         <VendorsCreditNoteDataTable />
       </DashboardPageContent>
@@ -42,12 +54,13 @@ function VendorsCreditNotesList({
   );
 }
 
-export default compose(
-  withVendorsCreditNotesActions,
+export const VendorsCreditNotesList = FF.pipe(
+  VendorsCreditNotesListInner,
   withVendorsCreditNotes(
     ({ vendorsCreditNoteTableState, vendorsCreditNoteTableStateChanged }) => ({
       vendorsCreditNoteTableState,
       vendorsCreditNoteTableStateChanged,
     }),
   ),
-)(VendorsCreditNotesList);
+  withVendorsCreditNotesActions,
+);

@@ -1,28 +1,29 @@
-// @ts-nocheck
-import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Link } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
-
-import { AppToaster, FormattedMessage as T } from '@/components';
-import AuthInsider from '@/containers/Authentication/AuthInsider';
-import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
-
-import RegisterForm from './RegisterForm';
-import {
-  RegisterSchema,
-  transformRegisterErrorsToForm,
-  transformRegisterToastMessages,
-} from './utils';
+import { Formik, FormikHelpers } from 'formik';
+import intl from 'react-intl-universal';
+import { Link } from 'react-router-dom';
 import {
   AuthFooterLinks,
   AuthFooterLink,
   AuthInsiderCard,
 } from './_components';
+import { useAuthMetaBoot } from './AuthMetaBoot';
+import { GoogleAuthSection } from './GoogleAuthButton';
+import { RegisterForm } from './RegisterForm';
+import {
+  RegisterSchema,
+  RegisterValues,
+  transformRegisterErrorsToForm,
+  transformRegisterToastMessages,
+} from './utils';
+import type { ApiError } from 'openapi-typescript-fetch';
+import { AppToaster, FormattedMessage as T } from '@/components';
+import { AuthInsider } from '@/containers/Authentication/AuthInsider';
+import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
-const initialValues = {
-  first_name: '',
-  last_name: '',
+const initialValues: RegisterValues = {
+  firstName: '',
+  lastName: '',
   email: '',
   password: '',
 };
@@ -30,34 +31,36 @@ const initialValues = {
 /**
  * Register form.
  */
-export default function RegisterUserForm() {
+export function RegisterUserForm() {
   const { mutateAsync: authLoginMutate } = useAuthLogin();
   const { mutateAsync: authRegisterMutate } = useAuthRegister();
+  const { googleEnabled } = useAuthMetaBoot();
 
-  const handleSubmit = (values, { setSubmitting, setErrors }) => {
-    authRegisterMutate(values)
+  const handleSubmit = (
+    values: RegisterValues,
+    { setSubmitting, setErrors }: FormikHelpers<RegisterValues>,
+  ) => {
+    authRegisterMutate({
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      password: values.password,
+    })
       .then(() => {
         authLoginMutate({
           email: values.email,
           password: values.password,
-        }).catch(
-          ({
-            response: {
-              data: { errors },
-            },
-          }) => {
-            AppToaster.show({
-              message: intl.get('something_wentwrong'),
-              intent: Intent.SUCCESS,
-            });
-          },
-        );
+        }).catch(() => {
+          AppToaster.show({
+            message: intl.get('something_wentwrong'),
+            intent: Intent.SUCCESS,
+          });
+        });
       })
-      .catch(({ response }) => {
-        const {
-          data: { errors },
-        } = response;
-        
+      .catch((response: ApiError) => {
+        const errors =
+          (response.data?.errors as Array<{ type?: string }> | undefined) ?? [];
+
         const formErrors = transformRegisterErrorsToForm(errors);
         const toastMessages = transformRegisterToastMessages(errors);
 
@@ -72,6 +75,8 @@ export default function RegisterUserForm() {
   return (
     <AuthInsider>
       <AuthInsiderCard>
+        {googleEnabled && <GoogleAuthSection />}
+
         <Formik
           initialValues={initialValues}
           validationSchema={RegisterSchema}

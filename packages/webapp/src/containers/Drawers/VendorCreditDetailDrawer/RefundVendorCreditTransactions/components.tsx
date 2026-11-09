@@ -1,15 +1,25 @@
-// @ts-nocheck
+import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, MenuItem, Menu } from '@blueprintjs/core';
+import type { VendorCreditRefund } from '@bigcapital/sdk-ts';
 import { Can, FormatDateCell, Icon } from '@/components';
-import { safeCallback } from '@/utils';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
+import { safeCallback } from '@/utils';
+
+interface ActionsMenuProps {
+  payload: {
+    onDelete: (row: { original: VendorCreditRefund }) => void;
+  };
+  row: { original: VendorCreditRefund };
+}
 
 /**
  * Actions menu.
  */
-export function ActionsMenu({ payload: { onDelete }, row: { original } }) {
+export function ActionsMenu({
+  payload: { onDelete },
+  row: { original },
+}: ActionsMenuProps) {
   return (
     <Menu>
       <Can I={VendorCreditAction.Delete} a={AbilitySubject.VendorCredit}>
@@ -29,28 +39,28 @@ export function useRefundCreditTransactionsTableColumns() {
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'formatted_date',
+        accessor: 'formattedDate',
         Cell: FormatDateCell,
         width: 100,
         className: 'date',
       },
       {
         Header: intl.get('refund_vendor_credit.column.amount'),
-        accessor: 'formtted_amount',
+        accessor: 'formattedAmount',
         width: 100,
         className: 'amount',
         align: 'right',
       },
       {
         Header: intl.get('refund_vendor_credit.column.withdrawal_account'),
-        accessor: ({ deposit_account }) => deposit_account.name,
+        accessor: (row: VendorCreditRefund) => row.depositAccount?.name,
         width: 100,
         className: 'deposit_account',
       },
       {
-        id: 'reference_no',
+        id: 'referenceNo',
         Header: intl.get('reference_no'),
-        accessor: 'reference_no',
+        accessor: 'referenceNo',
         width: 100,
         className: 'reference_no',
         textOverview: true,

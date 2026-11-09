@@ -48,7 +48,8 @@ export class ExportResourceService {
     const resource = sanitizeResourceName(resourceName);
     const resourceMeta = this.getResourceMeta(resource);
 
-    const resourceColumns = this.resourceService.getResourceColumns(resource);
+    const resourceColumns =
+      await this.resourceService.getResourceColumns(resource);
     this.validateResourceMeta(resourceMeta);
 
     const data = await this.getExportableData(resource);
@@ -141,7 +142,7 @@ export class ExportResourceService {
       parent = '',
     ) => {
       return Object.entries(columns)
-        .filter(([_, value]) => value.exportable !== false)
+        .filter(([_key, value]) => value.exportable !== false)
         .flatMap(([key, value]) => {
           if (value.type === 'collection' && value.collectionOf === 'object') {
             return processColumns(value.columns, key);
@@ -149,7 +150,9 @@ export class ExportResourceService {
             const group = parent;
             return [
               {
-                name: this.i18nService.t(value.name, { defaultValue: value.name }),
+                name: this.i18nService.t(value.name, {
+                  defaultValue: value.name,
+                }),
                 type: value.type || 'text',
                 accessor: value.accessor || key,
                 group,
@@ -166,24 +169,31 @@ export class ExportResourceService {
       columns: { [key: string]: IModelMetaColumn },
       parent = '',
     ) => {
-      return Object.entries(columns)
-        // @ts-expect-error
-        .filter(([_, value]) => value.printable !== false)
-        .flatMap(([key, value]) => {
-          if (value.type === 'collection' && value.collectionOf === 'object') {
-            return processColumns(value.columns, key);
-          } else {
-            const group = parent;
-            return [
-              {
-                name: this.i18nService.t(value.name, { defaultValue: value.name }),
-                type: value.type || 'text',
-                accessor: value.accessor || key,
-                group,
-              },
-            ];
-          }
-        });
+      return (
+        Object.entries(columns)
+          // @ts-expect-error
+          .filter(([_key, value]) => value.printable !== false)
+          .flatMap(([key, value]) => {
+            if (
+              value.type === 'collection' &&
+              value.collectionOf === 'object'
+            ) {
+              return processColumns(value.columns, key);
+            } else {
+              const group = parent;
+              return [
+                {
+                  name: this.i18nService.t(value.name, {
+                    defaultValue: value.name,
+                  }),
+                  type: value.type || 'text',
+                  accessor: value.accessor || key,
+                  group,
+                },
+              ];
+            }
+          })
+      );
     };
     return processColumns(resourceMeta.columns);
   }

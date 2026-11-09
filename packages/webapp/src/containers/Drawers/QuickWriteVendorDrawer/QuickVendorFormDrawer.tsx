@@ -1,29 +1,37 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
-import styled from 'styled-components';
-
+import * as FF from 'fp-ts/function';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
+import type { VendorFormValues } from '@/containers/Vendors/VendorForm/utils';
+import type { FormikHelpers } from 'formik';
 import { Card, DrawerLoading } from '@/components';
+import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
+import { DRAWERS } from '@/constants/drawers';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { VendorFormFormik } from '@/containers/Vendors/VendorForm/VendorFormFormik';
 import {
   VendorFormProvider,
   useVendorFormContext,
 } from '@/containers/Vendors/VendorForm/VendorFormProvider';
-import {
-  VendorFormFormik,
-} from '@/containers/Vendors/VendorForm/VendorFormFormik';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { useAddAutofillRef } from '@/hooks/state/autofill';
-import { DRAWERS } from '@/constants/drawers';
+
+type VendorFormSubmitPayload = { noRedirect?: boolean };
+
+interface QuickVendorFormDrawerProps
+  extends WithDrawerActionsProps,
+    WithDashboardActionsProps {
+  displayName?: string;
+  vendorId?: number;
+  autofillRef?: number;
+  // Latent bug preserved: action is not actually injected by
+  // WithDashboardActionsProps — runtime ReferenceError if invoked.
+  addQuickActionEvent?: (event: unknown, payload: unknown) => void;
+}
 
 /**
  * Drawer vendor form loading wrapper.
- * @returns {JSX}
  */
-function DrawerVendorFormLoading({ children }) {
+function DrawerVendorFormLoading({ children }: { children: React.ReactNode }) {
   const { isFormLoading } = useVendorFormContext();
 
   return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
@@ -32,25 +40,35 @@ function DrawerVendorFormLoading({ children }) {
 /**
  * Quick vendor form of the drawer.
  */
-function QuickVendorFormDrawer({
+function QuickVendorFormDrawerInner({
   displayName,
   closeDrawer,
   vendorId,
-  addQuickActionEvent,
   autofillRef,
-}) {
-  const { payload } = useDrawerContext();
+}: QuickVendorFormDrawerProps) {
+  const { payload: _payload } = useDrawerContext();
   const addAutofillRef = useAddAutofillRef();
 
   // Handle the form submit request success.
-  const handleSubmitSuccess = (values, form, submitPayload, res) => {
+  // `responseData` is typed as `unknown` because `VendorFormFormik` forwards
+  // the mutate result opaquely; the SDK's `createVendor` returns void so the
+  // created id is unavailable here. To preserve the previous runtime behavior
+  // we fall back to `vendorId` when `responseData.id` is missing.
+  const handleSubmitSuccess = (
+    values: VendorFormValues,
+    _form: FormikHelpers<VendorFormValues>,
+    submitPayload: VendorFormSubmitPayload,
+    responseData?: unknown,
+  ) => {
     if (!submitPayload.noRedirect) {
       closeDrawer(DRAWERS.QUICK_WRITE_VENDOR);
     }
     if (autofillRef) {
+      const responseId =
+        (responseData as { id?: number } | undefined)?.id ?? vendorId;
       addAutofillRef(autofillRef, {
-        displayName: values.display_name,
-        vendorId: res.id,
+        displayName: values.displayName,
+        vendorId: responseId,
       });
     }
   };
@@ -62,18 +80,18 @@ function QuickVendorFormDrawer({
   return (
     <VendorFormProvider vendorId={vendorId}>
       <DrawerVendorFormLoading>
-          <VendorFormFormik
-            initialValues={{ first_name: displayName }}
-            onSubmitSuccess={handleSubmitSuccess}
-            onCancel={handleCancelForm}
-          />
+        <VendorFormFormik
+          initialValues={{ firstName: displayName }}
+          onSubmitSuccess={handleSubmitSuccess}
+          onCancel={handleCancelForm}
+        />
       </DrawerVendorFormLoading>
     </VendorFormProvider>
   );
 }
 
-export default R.compose(
-  withDrawerActions,
+export const QuickVendorFormDrawer = FF.pipe(
+  QuickVendorFormDrawerInner,
   withDashboardActions,
-)(QuickVendorFormDrawer);
-
+  withDrawerActions,
+);

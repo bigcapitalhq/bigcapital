@@ -1,13 +1,19 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-
-import { AppToaster, FormattedMessage as T } from '@/components';
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
+import { AppToaster } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { usePauseFeedsBankAccount } from '@/hooks/query/banking';
 
-import { usePauseFeedsBankAccount } from '@/hooks/query/bank-accounts';
-import { compose } from '@/utils';
+interface PauseFeedsBankAccountAlertProps
+  extends Pick<WithAlertActionsProps, 'closeAlert'>,
+    WithAlertStoreConnectProps {
+  name: string;
+}
 
 /**
  * Pause feeds of the bank account alert.
@@ -17,13 +23,15 @@ function PauseFeedsBankAccountAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { bankAccountId },
+  payload,
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: pauseBankAccountFeeds, isLoading } =
+}: PauseFeedsBankAccountAlertProps) {
+  const { mutateAsync: pauseBankAccountFeeds, isPending: isLoading } =
     usePauseFeedsBankAccount();
+
+  const bankAccountId = payload?.bankAccountId as number;
 
   // Handle activate item alert cancel.
   const handleCancelActivateItem = () => {
@@ -38,7 +46,7 @@ function PauseFeedsBankAccountAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -46,7 +54,7 @@ function PauseFeedsBankAccountAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Pause bank feeds'}
       intent={Intent.WARNING}
       isOpen={isOpen}
@@ -62,7 +70,8 @@ function PauseFeedsBankAccountAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const PauseFeedsBankAccount = FF.pipe(
+  PauseFeedsBankAccountAlert,
   withAlertActions,
-)(PauseFeedsBankAccountAlert);
+  withAlertStoreConnect(),
+);

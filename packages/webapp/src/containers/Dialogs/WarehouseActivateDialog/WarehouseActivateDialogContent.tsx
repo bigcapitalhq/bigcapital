@@ -1,13 +1,14 @@
-// @ts-nocheck
 import React from 'react';
-
-import WarehouseActivateForm from './WarehouseActivateForm';
+import { WarehouseActivateForm } from './WarehouseActivateForm';
 import { WarehouseActivateFormProvider } from './WarehouseActivateFormProvider';
 
-export default function WarehouseActivateDialogContent({
-  // #ownProps
+interface WarehouseActivateDialogContentProps {
+  dialogName: string;
+}
+
+export function WarehouseActivateDialogContent({
   dialogName,
-}) {
+}: WarehouseActivateDialogContentProps): React.ReactElement {
   return (
     <WarehouseActivateFormProvider dialogName={dialogName}>
       <WarehouseActivateForm />

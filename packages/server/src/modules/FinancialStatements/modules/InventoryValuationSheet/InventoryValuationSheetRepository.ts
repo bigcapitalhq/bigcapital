@@ -97,10 +97,10 @@ export class InventoryValuationSheetRepository {
       .onBuild((q) => {
         q.where('type', 'inventory');
 
-      if (this.filter.itemsIds.length > 0) {
-        q.whereIn('id', this.filter.itemsIds);
-      }
-    });
+        if (this.filter.itemsIds.length > 0) {
+          q.whereIn('id', this.filter.itemsIds);
+        }
+      });
     this.inventoryItems = inventoryItems;
   }
 
@@ -118,6 +118,9 @@ export class InventoryValuationSheetRepository {
       builder.select('itemId');
       builder.groupBy('itemId');
 
+      if (this.filter.asDate) {
+        builder.modify('filterDateRange', null, this.filter.asDate);
+      }
       if (!isEmpty(this.filter.branchesIds)) {
         builder.modify('filterByBranches', this.filter.branchesIds);
       }

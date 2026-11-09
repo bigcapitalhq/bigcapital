@@ -1,36 +1,42 @@
-// @ts-nocheck
-import React, { useEffect } from 'react';
-
+import * as FF from 'fp-ts/function';
+import { useEffect } from 'react';
 import '@/style/pages/Accounts/List.scss';
-
-import { DashboardPageContent, DashboardContentTable } from '@/components';
+import { AccountsActionsBar } from './AccountsActionsBar';
+import { AccountsChartDialogs } from './AccountsChartDialogs';
+import { AccountsChartDrawers } from './AccountsChartDrawers';
 import { AccountsChartProvider } from './AccountsChartProvider';
-import AccountsActionsBar from './AccountsActionsBar';
-import AccountsDataTable from './AccountsDataTable';
-
-import { withAccounts } from '@/containers/Accounts/withAccounts';
-import { withAccountsTableActions } from './withAccountsTableActions';
-
+import { AccountsDataTable } from './AccountsDataTable';
 import { transformAccountsStateToQuery } from './utils';
-import { compose } from '@/utils';
+import { withAccountsTableActions } from './withAccountsTableActions';
+import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
+import type { WithAccountsProps } from '@/containers/Accounts/withAccounts';
+import { DashboardPageContent, DashboardContentTable } from '@/components';
+import { withAccounts } from '@/containers/Accounts/withAccounts';
+
+interface AccountsChartInnerProps {
+  accountsTableState: WithAccountsProps['accountsTableState'];
+  accountsTableStateChanged: WithAccountsProps['accountsTableStateChanged'];
+  resetAccountsTableState: WithAccountsTableActionsProps['resetAccountsTableState'];
+  resetAccountsSelectedRows: WithAccountsTableActionsProps['resetAccountsSelectedRows'];
+}
 
 /**
  * Accounts chart list.
  */
-function AccountsChart({
-  // #withAccounts
+function AccountsChartInner({
   accountsTableState,
   accountsTableStateChanged,
 
-  // #withAccountsActions
   resetAccountsTableState,
-}) {
-  // Resets the accounts table state once the page unmount.
+  resetAccountsSelectedRows,
+}: AccountsChartInnerProps) {
+  // Resets the accounts table state and selected rows once the page unmount.
   useEffect(
     () => () => {
       resetAccountsTableState();
+      resetAccountsSelectedRows();
     },
-    [resetAccountsTableState],
+    [resetAccountsSelectedRows, resetAccountsTableState],
   );
 
   return (
@@ -39,6 +45,8 @@ function AccountsChart({
       tableStateChanged={accountsTableStateChanged}
     >
       <AccountsActionsBar />
+      <AccountsChartDrawers />
+      <AccountsChartDialogs />
 
       <DashboardPageContent>
         <DashboardContentTable>
@@ -49,10 +57,11 @@ function AccountsChart({
   );
 }
 
-export default compose(
+export const AccountsChart = FF.pipe(
+  AccountsChartInner,
+  withAccountsTableActions,
   withAccounts(({ accountsTableState, accountsTableStateChanged }) => ({
     accountsTableState,
     accountsTableStateChanged,
   })),
-  withAccountsTableActions,
-)(AccountsChart);
+);

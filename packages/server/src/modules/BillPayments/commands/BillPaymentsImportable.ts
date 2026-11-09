@@ -11,7 +11,7 @@ import { BillPayment } from '../models/BillPayment';
 @ImportableService({ name: BillPayment.name })
 export class BillPaymentsImportable extends Importable {
   constructor(
-    private readonly createBillPaymentService: CreateBillPaymentService
+    private readonly createBillPaymentService: CreateBillPaymentService,
   ) {
     super();
   }
@@ -24,12 +24,9 @@ export class BillPaymentsImportable extends Importable {
    */
   public importable(
     billPaymentDTO: CreateBillPaymentDto,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
-    return this.createBillPaymentService.createBillPayment(
-      billPaymentDTO,
-      trx
-    );
+    return this.createBillPaymentService.createBillPayment(billPaymentDTO, trx);
   }
 
   /**

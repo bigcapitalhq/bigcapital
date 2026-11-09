@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import {
   Menu,
   Popover,
@@ -10,8 +7,25 @@ import {
   MenuDivider,
   Intent,
 } from '@blueprintjs/core';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { DataTableColumn } from '@/components/Datatable/types';
+import type { ItemCategory } from '@bigcapital/sdk-ts';
 import { Icon } from '@/components';
 import { safeCallback } from '@/utils';
+
+// `count` is returned by the server at runtime but not declared on the SDK type.
+export type ItemCategoryTableRow = ItemCategory & { count?: number };
+
+interface ActionMenuListPayload {
+  onEditCategory: (category: ItemCategoryTableRow) => void;
+  onDeleteCategory: (category: ItemCategoryTableRow) => void;
+}
+
+interface ActionMenuListProps {
+  row: { original: ItemCategoryTableRow };
+  payload: ActionMenuListPayload;
+}
 
 /**
  * Row actions menu list.
@@ -19,9 +33,7 @@ import { safeCallback } from '@/utils';
 export function ActionMenuList({
   row: { original },
   payload: { onEditCategory, onDeleteCategory },
-}) {
-  
-
+}: ActionMenuListProps) {
   return (
     <Menu>
       <MenuItem
@@ -43,7 +55,7 @@ export function ActionMenuList({
 /**
  * Table actions cell.
  */
-export function TableActionsCell(props) {
+export function TableActionsCell(props: ActionMenuListProps) {
   return (
     <Popover
       content={<ActionMenuList {...props} />}
@@ -57,33 +69,31 @@ export function TableActionsCell(props) {
 /**
  * Retrieve the items categories table columns.
  */
-export function useItemsCategoriesTableColumns() {
-  
-
+export function useItemsCategoriesTableColumns(): DataTableColumn<ItemCategoryTableRow>[] {
   return React.useMemo(
-    () => [
-      {
-        id: 'name',
-        Header: intl.get('category_name'),
-        accessor: 'name',
-        width: 220,
-      },
-      
-      {
-        id: 'count',
-        Header: intl.get('count'),
-        accessor: 'count',
-        className: 'count',
-        width: 180,
-      },
-      {
-        id: 'description',
-        Header: intl.get('description'),
-        accessor: 'description',
-        className: 'description',
-        width: 220,
-      }
-    ],
+    () =>
+      [
+        {
+          id: 'name',
+          Header: intl.get('category_name'),
+          accessor: 'name',
+          width: 220,
+        },
+        {
+          id: 'count',
+          Header: intl.get('count'),
+          accessor: 'count',
+          className: 'count',
+          width: 180,
+        },
+        {
+          id: 'description',
+          Header: intl.get('description'),
+          accessor: 'description',
+          className: 'description',
+          width: 220,
+        },
+      ] as DataTableColumn<ItemCategoryTableRow>[],
     [],
   );
 }

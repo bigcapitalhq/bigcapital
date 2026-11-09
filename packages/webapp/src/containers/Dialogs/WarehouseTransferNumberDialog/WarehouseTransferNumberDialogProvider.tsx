@@ -1,18 +1,27 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
 import { useSettingsWarehouseTransfers } from '@/hooks/query';
 
-const WarehouseTransferNumberDilaogContext = createContext();
+interface WarehouseTransferNumberDialogContextValue {
+  isSettingsLoading: boolean;
+}
 
-/**
- * Warehouse transfer number dialog provier.
- */
-function WarehouseTransferNumberDialogProvider({ query, ...props }) {
+const WarehouseTransferNumberDilaogContext =
+  createContext<WarehouseTransferNumberDialogContextValue>(
+    {} as WarehouseTransferNumberDialogContextValue,
+  );
+
+interface WarehouseTransferNumberDialogProviderProps {
+  query?: Record<string, unknown>;
+  children?: React.ReactNode;
+}
+
+function WarehouseTransferNumberDialogProvider({
+  ...props
+}: WarehouseTransferNumberDialogProviderProps) {
   const { isLoading: isSettingsLoading } = useSettingsWarehouseTransfers();
 
-  // Provider payload.
-  const provider = {
+  const provider: WarehouseTransferNumberDialogContextValue = {
     isSettingsLoading,
   };
 

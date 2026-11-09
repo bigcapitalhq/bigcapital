@@ -1,5 +1,5 @@
-// @ts-nocheck
 import styled from 'styled-components';
+import { useBillDrawerContext } from './BillDrawerProvider';
 import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
@@ -7,7 +7,6 @@ import {
   TotalLines,
   TotalLine,
 } from '@/components';
-import { useBillDrawerContext } from './BillDrawerProvider';
 
 /**
  * Bill read-only details table footer.
@@ -15,52 +14,53 @@ import { useBillDrawerContext } from './BillDrawerProvider';
 export function BillDetailTableFooter() {
   const { bill } = useBillDrawerContext();
 
+  if (!bill) {
+    return null;
+  }
+
   return (
     <BillDetailsFooterRoot>
       <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'bill.details.subtotal'} />}
-          value={bill.subtotal_formatted}
+          value={bill.subtotalFormatted}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
-        {bill.taxes.map((taxRate) => (
+        {(bill.taxes ?? []).map((taxRate) => (
           <TotalLine
             key={taxRate.id}
-            title={`${taxRate.name} [${taxRate.tax_rate}%]`}
-            value={taxRate.tax_rate_amount_formatted}
+            title={`${taxRate.name} [${taxRate.taxRate}%]`}
+            value={taxRate.taxRateAmountFormatted}
             textStyle={TotalLineTextStyle.Regular}
           />
         ))}
-        {bill.discount_amount > 0 && (
+        {(bill.discountAmount ?? 0) > 0 && (
           <TotalLine
             title={
-              bill.discount_percentage_formatted
-                ? `Discount [${bill.discount_percentage_formatted}]`
+              bill.discountPercentageFormatted
+                ? `Discount [${bill.discountPercentageFormatted}]`
                 : 'Discount'
             }
-            value={bill.discount_amount_formatted}
+            value={bill.discountAmountFormatted}
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
-        {bill.adjustment_formatted && (
-          <TotalLine
-            title={'Adjustment'}
-            value={bill.adjustment_formatted}
-          />
+        {bill.adjustmentFormatted && (
+          <TotalLine title={'Adjustment'} value={bill.adjustmentFormatted} />
         )}
         <TotalLine
           title={<T id={'bill.details.total'} />}
-          value={bill.total_formatted}
+          value={bill.totalFormatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
         <TotalLine
           title={<T id={'bill.details.payment_amount'} />}
-          value={bill.formatted_payment_amount}
+          value={bill.formattedPaymentAmount}
         />
         <TotalLine
           title={<T id={'bill.details.due_amount'} />}
-          value={bill.formatted_due_amount}
+          value={bill.formattedDueAmount}
           textStyle={TotalLineTextStyle.Bold}
         />
       </BillTotalLines>

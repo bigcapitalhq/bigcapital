@@ -1,10 +1,10 @@
-import * as R from 'ramda';
 import { useFormikContext } from 'formik';
-import { InvoicePaymentPagePreviewProps } from '@/containers/PaymentPortal/InvoicePaymentPagePreview';
-import { InvoiceCustomizeFormValues } from './types';
-import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import * as FF from 'fp-ts/function';
 import { InvoiceMailReceiptPreview } from './InvoiceMailReceiptPreview';
+import { InvoiceCustomizeFormValues } from './types';
 import { Box } from '@/components';
+import { useElementCustomizeContext } from '@/containers/ElementCustomize/ElementCustomizeProvider';
+import { InvoicePaymentPagePreviewProps } from '@/containers/PaymentPortal/InvoicePaymentPagePreview';
 
 const withInvoiceMailReceiptPreviewConnected = <P extends Object>(
   Component: React.ComponentType<P>,
@@ -30,6 +30,7 @@ const withInvoiceMailReceiptPreviewConnected = <P extends Object>(
   };
 };
 
-export const InvoiceCustomizeMailReceiptPreview = R.compose(
+export const InvoiceCustomizeMailReceiptPreview = FF.pipe(
+  InvoiceMailReceiptPreview,
   withInvoiceMailReceiptPreviewConnected,
-)(InvoiceMailReceiptPreview);
+);

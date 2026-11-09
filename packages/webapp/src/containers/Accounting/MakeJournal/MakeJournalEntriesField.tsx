@@ -1,22 +1,18 @@
-// @ts-nocheck
-import React from 'react';
-import { FastField } from 'formik';
 import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
+import { FastField, type FieldProps } from 'formik';
+import { MakeJournalEntriesTable } from './MakeJournalEntriesTable';
+import { useMakeJournalFormContext } from './MakeJournalProvider';
 import {
   entriesFieldShouldUpdate,
   defaultEntry,
   MIN_LINES_NUMBER,
+  type MakeJournalEntry,
+  type MakeJournalFormValues,
 } from './utils';
-import { useMakeJournalFormContext } from './MakeJournalProvider';
-import MakeJournalEntriesTable from './MakeJournalEntriesTable';
+import { CLASSES } from '@/constants/classes';
 
-/**
- * Make journal entries field.
- */
-export default function MakeJournalEntriesField() {
-  const { accounts, contacts, branches, projects } =
-    useMakeJournalFormContext();
+export function MakeJournalEntriesField() {
+  const { accounts, contacts, branches } = useMakeJournalFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
@@ -25,23 +21,22 @@ export default function MakeJournalEntriesField() {
         contacts={contacts}
         accounts={accounts}
         branches={branches}
-        projects={projects}
         shouldUpdate={entriesFieldShouldUpdate}
       >
         {({
           form: { values, setFieldValue },
           field: { value },
-          meta: { error, touched },
-        }) => (
+          meta: { error },
+        }: FieldProps<MakeJournalEntry[], MakeJournalFormValues>) => (
           <MakeJournalEntriesTable
             onChange={(entries) => {
               setFieldValue('entries', entries);
             }}
-            entries={value}
+            entries={value ?? []}
             defaultEntry={defaultEntry}
             initialLinesNumber={MIN_LINES_NUMBER}
             error={error}
-            currencyCode={values.currency_code}
+            currencyCode={values.currencyCode}
           />
         )}
       </FastField>

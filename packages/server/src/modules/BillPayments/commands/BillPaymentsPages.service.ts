@@ -19,7 +19,7 @@ export class BillPaymentsPages {
 
     @Inject(BillPayment.name)
     private readonly billPaymentModel: TenantModelProxy<typeof BillPayment>,
-  ) { }
+  ) {}
 
   /**
    * Retrieve bill payment with associated metadata.

@@ -1,18 +1,15 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-
-import ItemFormFormik from './ItemFormFormik';
-
-import { useDashboardPageTitle } from '@/hooks/state';
+import { ItemFormFormik } from './ItemFormFormik';
 import { useItemFormContext, ItemFormProvider } from './ItemFormProvider';
-import { DashboardInsider, DashboardCard } from '@/components';
+import type { ItemFormValues, ItemFormSubmitPayload } from './types';
+import type { FormikHelpers } from 'formik';
+import { DashboardInsider, Box } from '@/components';
+import { useDashboardPageTitle } from '@/hooks/state';
 
 /**
  * Item form dashboard title.
- * @returns {null}
  */
 function ItemFormDashboardTitle() {
   // Change page title dispatcher.
@@ -33,35 +30,35 @@ function ItemFormDashboardTitle() {
 
 /**
  * Item form page loading state indicator.
- * @returns {JSX}
  */
-function ItemFormPageLoading({ children }) {
+function ItemFormPageLoading({ children }: { children: React.ReactNode }) {
   const { isFormLoading } = useItemFormContext();
 
   return (
-    <DashboardItemFormPageInsider loading={isFormLoading} name={'item-form'}>
-      {children}
-    </DashboardItemFormPageInsider>
+    <DashboardInsider loading={isFormLoading}>{children}</DashboardInsider>
   );
+}
+
+interface ItemFormProps {
+  itemId?: number;
 }
 
 /**
  * Item form of the page.
- * @returns {JSX}
  */
-export default function ItemForm({ itemId }) {
+export function ItemForm({ itemId }: ItemFormProps) {
   // History context.
   const history = useHistory();
 
   // Handle the form submit success.
-  const handleSubmitSuccess = (values, form, submitPayload) => {
+  const handleSubmitSuccess = (
+    _values: ItemFormValues,
+    _form: FormikHelpers<ItemFormValues>,
+    submitPayload: ItemFormSubmitPayload,
+  ) => {
     if (submitPayload.redirect) {
       history.push('/items');
     }
-  };
-  // Handle cancel button click.
-  const handleFormCancel = () => {
-    history.goBack();
   };
 
   return (
@@ -69,26 +66,10 @@ export default function ItemForm({ itemId }) {
       <ItemFormDashboardTitle />
 
       <ItemFormPageLoading>
-        <DashboardCard page>
-          <ItemFormPageFormik
-            onSubmitSuccess={handleSubmitSuccess}
-            onCancel={handleFormCancel}
-          />
-        </DashboardCard>
+        <Box mx={'auto'} maxWidth={800}>
+          <ItemFormFormik onSubmitSuccess={handleSubmitSuccess} />
+        </Box>
       </ItemFormPageLoading>
     </ItemFormProvider>
   );
 }
-
-const DashboardItemFormPageInsider = styled(DashboardInsider)`
-  padding-bottom: 64px;
-`;
-
-const ItemFormPageFormik = styled(ItemFormFormik)`
-  .page-form {
-    &__floating-actions {
-      margin-left: -40px;
-      margin-right: -40px;
-    }
-  }
-`;

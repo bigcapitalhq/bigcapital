@@ -17,7 +17,7 @@ export class SaleReceiptResponseDto {
 
   @ApiProperty({
     description: 'The date of the sale receipt',
-    example: '2024-01-01T00:00:00Z',
+    example: '2024-01-01',
   })
   receiptDate: Date;
 
@@ -79,12 +79,22 @@ export class SaleReceiptResponseDto {
   })
   statement?: string;
 
-  @ApiProperty({ description: 'Whether the receipt is closed', example: false })
-  closed: boolean;
+  @ApiProperty({
+    description: 'Whether the sale receipt is closed',
+    example: false,
+  })
+  isClosed: boolean;
+
+  @ApiProperty({
+    description: 'Whether the sale receipt is draft',
+    example: false,
+    required: false,
+  })
+  isDraft?: boolean;
 
   @ApiProperty({
     description: 'The date when the receipt was closed',
-    example: '2024-01-02T00:00:00Z',
+    example: '2024-01-02',
     required: false,
   })
   closedAt?: Date | string;
@@ -218,6 +228,20 @@ export class SaleReceiptResponseDto {
     example: '100.00',
   })
   discountAmountFormatted: string;
+
+  @ApiProperty({
+    description: 'The discount amount computed from the discount type',
+    example: 100,
+    required: false,
+  })
+  discountAmount?: number;
+
+  @ApiProperty({
+    description: 'The formatted paid amount',
+    example: '1,000.00',
+    required: false,
+  })
+  paidFormatted?: string;
 
   @ApiProperty({
     description: 'The formatted discount percentage',

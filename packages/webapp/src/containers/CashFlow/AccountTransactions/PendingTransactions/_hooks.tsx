@@ -10,7 +10,7 @@ export function usePendingTransactionsTableColumns() {
       {
         id: 'date',
         Header: intl.get('date'),
-        accessor: 'formatted_date',
+        accessor: 'formattedDate',
         width: 40,
         clickable: true,
         textOverview: true,
@@ -34,7 +34,7 @@ export function usePendingTransactionsTableColumns() {
       {
         id: 'reference_number',
         Header: 'Ref.#',
-        accessor: 'reference_no',
+        accessor: 'referenceNo',
         width: 50,
         clickable: true,
         textOverview: true,
@@ -42,24 +42,24 @@ export function usePendingTransactionsTableColumns() {
       {
         id: 'deposit',
         Header: intl.get('banking.label.deposit'),
-        accessor: 'formatted_deposit_amount',
+        accessor: 'formattedDepositAmount',
         width: 40,
         className: 'deposit',
         textOverview: true,
         align: 'right',
         clickable: true,
-        money: true
+        money: true,
       },
       {
         id: 'withdrawal',
         Header: intl.get('banking.label.withdrawal'),
-        accessor: 'formatted_withdrawal_amount',
+        accessor: 'formattedWithdrawalAmount',
         className: 'withdrawal',
         width: 40,
         textOverview: true,
         align: 'right',
         clickable: true,
-        money: true
+        money: true,
       },
     ],
     [],

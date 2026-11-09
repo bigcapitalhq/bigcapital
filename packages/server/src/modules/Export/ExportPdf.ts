@@ -5,9 +5,7 @@ import { mapPdfRows } from './utils';
 
 @Injectable()
 export class ExportPdf {
-  constructor(
-    private readonly chromiumlyTenancy: ChromiumlyTenancy,
-  ) { }
+  constructor(private readonly chromiumlyTenancy: ChromiumlyTenancy) {}
 
   /**
    * Generates the pdf table sheet for the given data and columns.
@@ -18,10 +16,15 @@ export class ExportPdf {
    * @returns
    */
   public async pdf(
-    columns: { accessor: string; name?: string; style?: string; group?: string }[],
+    columns: {
+      accessor: string;
+      name?: string;
+      style?: string;
+      group?: string;
+    }[],
     data: Record<string, any>,
     sheetTitle: string = '',
-    sheetDescription: string = ''
+    sheetDescription: string = '',
   ) {
     const rows = mapPdfRows(columns, data);
 

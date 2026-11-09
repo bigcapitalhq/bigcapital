@@ -1,4 +1,4 @@
-import { mixin, Model, raw } from 'objection';
+import { Model } from 'objection';
 // import TenantModel from 'models/TenantModel';
 // import ModelSearchable from './ModelSearchable';
 import { BaseModel } from '@/models/Model';
@@ -10,7 +10,7 @@ export class TaxRateTransaction extends BaseModel {
   public referenceId: string;
   public rate: number;
   public taxAccountId?: number;
-  
+
   /**
    * Table name
    */

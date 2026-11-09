@@ -1,13 +1,13 @@
 import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { BankAccountsApplication } from './BankAccountsApplication.service';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BankAccountsQueryDto } from './dtos/BankAccountsQuery.dto';
 import { BankAccountResponseDto } from './dtos/BankAccountResponse.dto';
 
 @Controller('banking/accounts')
 @ApiTags('Bank Accounts')
 export class BankAccountsController {
-  constructor(private bankAccountsApplication: BankAccountsApplication) { }
+  constructor(private bankAccountsApplication: BankAccountsApplication) {}
 
   @Get()
   @ApiOperation({ summary: 'Retrieve the bank accounts.' })

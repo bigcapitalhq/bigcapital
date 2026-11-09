@@ -1,17 +1,15 @@
 // @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import { setLocale } from 'yup';
-import intl from 'react-intl-universal';
+import * as FF from 'fp-ts/function';
 import { find } from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
 import rtlDetect from 'rtl-detect';
-import * as R from 'ramda';
-
-import { AppIntlProvider } from './AppIntlProvider';
-import { useSplashLoading } from '@/hooks/state';
-
+import { setLocale } from 'yup';
 import { useWatchImmediate } from '../hooks';
+import { AppIntlProvider } from './AppIntlProvider';
 import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { useSplashLoading } from '@/hooks/state';
 
 const SUPPORTED_LOCALES = [
   { name: 'English', value: 'en' },
@@ -52,6 +50,15 @@ async function loadYupLocales(currentLocale) {
 }
 
 /**
+ * Dynamically loads the moment.js locale bundle for the given locale.
+ */
+async function loadMomentLocale(currentLocale) {
+  const momentLocale = transformMomentLocale(currentLocale);
+  if (momentLocale === 'en') return;
+  await import(`moment/locale/${momentLocale}`);
+}
+
+/**
  * Modifies the html document direction to RTl if it was rtl-language.
  */
 function useDocumentDirectionModifier(locale, isRTL) {
@@ -88,6 +95,7 @@ function useAppLoadLocales(currentLocale) {
           },
         });
       })
+      .then(() => loadMomentLocale(currentLocale))
       .then(() => {
         moment.locale(transformMomentLocale(currentLocale));
         setIsLoading(false);
@@ -117,7 +125,7 @@ function useAppYupLoadLocales(currentLocale) {
         setLocale(results);
         setIsLoading(false);
       })
-      .then(() => { });
+      .then(() => {});
   }, [currentLocale, stopLoading]);
 
   // Watches the valiue to start/stop splash screen.
@@ -158,4 +166,4 @@ function AppIntlLoader({ children }) {
   );
 }
 
-export default R.compose(withDashboardActions)(AppIntlLoader);
+export default FF.pipe(AppIntlLoader, withDashboardActions);

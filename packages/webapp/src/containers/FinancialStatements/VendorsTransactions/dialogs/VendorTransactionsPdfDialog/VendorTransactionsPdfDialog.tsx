@@ -1,22 +1,32 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 // Lazy loading the content.
-const InventoryValuationPdfDialogContent = lazy(
-  () => import('./VendorTransactionsPdfDialogContent'),
+const VendorTransactionsPdfDialogContent = lazy(() =>
+  import('./VendorTransactionsPdfDialogContent').then((m) => ({
+    default: m.VendorTransactionsPdfDialogContent,
+  })),
 );
 
+interface VendorTransactionsPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
+
 /**
- * Balance sheet pdf preview dialog.
+ * Vendor transactions pdf preview dialog.
  * @returns {React.ReactNode}
  */
-function VendorTransactionsPdfDialogRoot({ dialogName, payload, isOpen }) {
+function VendorTransactionsPdfDialogRoot({
+  dialogName,
+  payload,
+  isOpen,
+}: VendorTransactionsPdfDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -28,12 +38,13 @@ function VendorTransactionsPdfDialogRoot({ dialogName, payload, isOpen }) {
       style={{ width: '1000px' }}
     >
       <DialogSuspense>
-        <InventoryValuationPdfDialogContent dialogName={dialogName} />
+        <VendorTransactionsPdfDialogContent />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export const VendorTransactionsPdfDialog = compose(withDialogRedux())(
+export const VendorTransactionsPdfDialog = FF.pipe(
   VendorTransactionsPdfDialogRoot,
+  withDialogRedux(),
 );

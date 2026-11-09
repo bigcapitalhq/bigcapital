@@ -4,14 +4,13 @@ import { TenantModel } from '../System/models/TenantModel';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
 
 export interface JwtPayload {
+  /** The authenticated user's id. */
   sub: string;
+  iss?: string;
+  aud?: string;
   iat: number;
   exp: number;
 }
-
-export interface IAuthSignedInEventPayload {}
-export interface IAuthSigningInEventPayload {}
-export interface IAuthSignInPOJO {}
 
 export interface IAuthSigningInEventPayload {
   email: string;
@@ -59,6 +58,7 @@ export interface IAuthSendedResetPassword {
 
 export interface IAuthGetMetaPOJO {
   signupDisabled: boolean;
+  googleEnabled: boolean;
 }
 
 export interface IAuthSignUpVerifingEventPayload {

@@ -9,7 +9,7 @@ export class BalanceSheetPdfInjectable {
   constructor(
     private readonly balanceSheetTable: BalanceSheetTableInjectable,
     private readonly tableSheetPdf: TableSheetPdf,
-  ) { }
+  ) {}
 
   /**
    * Converts the given balance sheet table to pdf.
@@ -25,6 +25,7 @@ export class BalanceSheetPdfInjectable {
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,
+      query.numberFormat?.showInRed,
     );
   }
 }

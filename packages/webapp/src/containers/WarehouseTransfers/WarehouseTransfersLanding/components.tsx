@@ -1,8 +1,6 @@
-// @ts-nocheck
+import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { safeCallback } from '@/utils';
 import {
   FormatDateCell,
   FormattedMessage as T,
@@ -10,11 +8,31 @@ import {
   If,
   Icon,
 } from '@/components';
+import { safeCallback } from '@/utils';
+
+interface WarehouseTransferRow {
+  id: number;
+  isTransferred?: boolean;
+  isInitiated?: boolean;
+}
+
+interface ActionsMenuPayload {
+  onEdit?: (row: WarehouseTransferRow) => void;
+  onDelete?: (row: WarehouseTransferRow) => void;
+  onViewDetails?: (row: WarehouseTransferRow) => void;
+  onInitate?: (row: WarehouseTransferRow) => void;
+  onTransfer?: (row: WarehouseTransferRow) => void;
+}
+
+interface ActionsMenuProps {
+  payload: ActionsMenuPayload;
+  row: { original: WarehouseTransferRow };
+}
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onViewDetails, onInitate, onTransfer },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -29,14 +47,14 @@ export function ActionsMenu({
         onClick={safeCallback(onEdit, original)}
       />
 
-      <If condition={!original.is_transferred && !original.is_initiated}>
+      <If condition={Boolean(!original.isTransferred && !original.isInitiated)}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
           text={intl.get('warehouse_transfer.action.initiate_transfer')}
           onClick={safeCallback(onInitate, original)}
         />
       </If>
-      <If condition={original.is_initiated && !original.is_transferred}>
+      <If condition={Boolean(original.isInitiated && !original.isTransferred)}>
         <MenuItem
           icon={<Icon icon="send" iconSize={16} />}
           text={intl.get('warehouse_transfer.action.mark_as_transferred')}
@@ -58,18 +76,18 @@ export function ActionsMenu({
 /**
  * Status accessor.
  */
-export function StatusAccessor(warehouse) {
+export function StatusAccessor(warehouse: WarehouseTransferRow) {
   return (
     <Choose>
       <Choose.When
-        condition={warehouse.is_initiated && !warehouse.is_transferred}
+        condition={Boolean(warehouse.isInitiated && !warehouse.isTransferred)}
       >
         <Tag minimal={true} intent={Intent.WARNING} round={true}>
           <T id={'warehouse_transfer.label.transfer_initiated'} />
         </Tag>
       </Choose.When>
       <Choose.When
-        condition={warehouse.is_initiated && warehouse.is_transferred}
+        condition={Boolean(warehouse.isInitiated && warehouse.isTransferred)}
       >
         <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
           <T id={'warehouse_transfer.label.transferred'} />
@@ -94,7 +112,7 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'date',
         Header: intl.get('date'),
-        accessor: 'formatted_date',
+        accessor: 'formattedDate',
         Cell: FormatDateCell,
         width: 120,
         className: 'date',
@@ -104,7 +122,7 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'transaction_number',
         Header: intl.get('warehouse_transfer.column.transfer_no'),
-        accessor: 'transaction_number',
+        accessor: 'transactionNumber',
         width: 100,
         className: 'transaction_number',
         clickable: true,
@@ -113,7 +131,7 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'from_warehouse',
         Header: intl.get('warehouse_transfer.column.from_warehouse'),
-        accessor: 'from_warehouse.name',
+        accessor: 'fromWarehouse.name',
         width: 140,
         className: 'from_warehouse',
         clickable: true,
@@ -122,7 +140,7 @@ export function useWarehouseTransfersTableColumns() {
       {
         id: 'to_warehouse',
         Header: intl.get('warehouse_transfer.column.to_warehouse'),
-        accessor: 'to_warehouse.name',
+        accessor: 'toWarehouse.name',
         width: 140,
         className: 'to_warehouse',
         clickable: true,

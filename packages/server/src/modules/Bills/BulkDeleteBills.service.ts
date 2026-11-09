@@ -6,12 +6,12 @@ import { DeleteBill } from './commands/DeleteBill.service';
 
 @Injectable()
 export class BulkDeleteBillsService {
-  constructor(private readonly deleteBillService: DeleteBill) { }
+  constructor(private readonly deleteBillService: DeleteBill) {}
 
   async bulkDeleteBills(
     billIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const billsIds = uniq(castArray(billIds));
@@ -33,4 +33,3 @@ export class BulkDeleteBillsService {
     }
   }
 }
-

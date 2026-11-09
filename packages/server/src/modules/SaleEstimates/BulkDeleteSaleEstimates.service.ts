@@ -6,12 +6,12 @@ import { DeleteSaleEstimate } from './commands/DeleteSaleEstimate.service';
 
 @Injectable()
 export class BulkDeleteSaleEstimatesService {
-  constructor(private readonly deleteSaleEstimateService: DeleteSaleEstimate) { }
+  constructor(private readonly deleteSaleEstimateService: DeleteSaleEstimate) {}
 
   async bulkDeleteSaleEstimates(
     saleEstimateIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const estimatesIds = uniq(castArray(saleEstimateIds));
@@ -33,4 +33,3 @@ export class BulkDeleteSaleEstimatesService {
     }
   }
 }
-

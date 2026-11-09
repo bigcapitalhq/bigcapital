@@ -1,32 +1,34 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { DataTable, Card } from '@/components';
-
-import { TableStyle } from '@/constants';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
 import {
   useRefundCreditTransactionsTableColumns,
   ActionsMenu,
 } from './components';
+import { DataTable, Card } from '@/components';
+import { TableStyle } from '@/constants';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
 
-import { compose } from '@/utils';
+interface RefundCreditNoteTransactionsTableInnerProps
+  extends WithAlertActionsProps {}
 
 /**
  * Refund credit note transactions table.
  */
-function RefundCreditNoteTransactionsTable({
+function RefundCreditNoteTransactionsTableInner({
   // #withAlertActions
   openAlert,
-}) {
+}: RefundCreditNoteTransactionsTableInnerProps) {
   const { refundCreditNote } = useCreditNoteDetailDrawerContext();
 
   // Refund credit transactions table columns.
   const columns = useRefundCreditTransactionsTableColumns();
 
   // Handle delete refund credit.
-  const handleDeleteRefundCreditNote = ({ id }) => {
+  const handleDeleteRefundCreditNote = ({ id }: { id: number }) => {
     openAlert('refund-credit-delete', { creditNoteId: id });
   };
 
@@ -34,7 +36,7 @@ function RefundCreditNoteTransactionsTable({
     <Card>
       <DataTable
         columns={columns}
-        data={refundCreditNote}
+        data={refundCreditNote ?? []}
         ContextMenu={ActionsMenu}
         styleName={TableStyle.Constrant}
         payload={{
@@ -45,4 +47,7 @@ function RefundCreditNoteTransactionsTable({
   );
 }
 
-export default compose(withAlertActions)(RefundCreditNoteTransactionsTable);
+export const RefundCreditNoteTransactionsTable = FF.pipe(
+  RefundCreditNoteTransactionsTableInner,
+  withAlertActions,
+);

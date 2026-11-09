@@ -46,42 +46,14 @@ export class EditVendorCreditService {
     vendorCreditDTO: EditVendorCreditDto,
     trx?: Knex.Transaction,
   ) => {
-    // Retrieve the vendor credit or throw not found service error.
-    const oldVendorCredit = await this.vendorCreditModel()
-      .query()
-      .findById(vendorCreditId)
-      .throwIfNotFound();
-
-    // Validate customer existance.
-    const vendor = await this.contactModel()
-      .query()
-      .modify('vendor')
-      .findById(vendorCreditDTO.vendorId)
-      .throwIfNotFound();
-
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      vendorCreditDTO.entries,
-    );
-    // Validate non-sellable entries items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      vendorCreditDTO.entries,
-    );
-    // Validate the items entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
-      vendorCreditId,
-      'VendorCredit',
-      vendorCreditDTO.entries,
-    );
-    // Transformes edit DTO to model storage layer.
-    const vendorCreditModel =
-      await this.vendorCreditDTOTransform.transformCreateEditDTOToModel(
-        vendorCreditDTO,
-        vendor.currencyCode,
-        oldVendorCredit,
-      );
     // Edits the vendor credit graph under unit-of-work envirement.
     return this.uow.withTransaction(async (trx) => {
+      // Validates the edit operation against the locked vendor credit row.
+      const { oldVendorCredit, vendorCreditModel } = await this.validate(
+        vendorCreditId,
+        vendorCreditDTO,
+        trx,
+      );
       // Triggers `onVendorCreditEditing` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onEditing, {
         oldVendorCredit,
@@ -106,5 +78,66 @@ export class EditVendorCreditService {
 
       return vendorCredit;
     }, trx);
+  };
+
+  /**
+   * Validates the edit vendor credit operation against the locked vendor
+   * credit row: existence, vendor, items entries and the new amount against
+   * the already used amounts.
+   * @param {number} vendorCreditId - Vendor credit id.
+   * @param {EditVendorCreditDto} vendorCreditDTO - Vendor credit edit DTO.
+   * @param {Knex.Transaction} trx - Locks the vendor credit row (FOR UPDATE).
+   * @returns {Promise<{ oldVendorCredit: VendorCredit, vendorCreditModel: VendorCredit }>}
+   */
+  validate = async (
+    vendorCreditId: number,
+    vendorCreditDTO: EditVendorCreditDto,
+    trx: Knex.Transaction,
+  ): Promise<{
+    oldVendorCredit: VendorCredit;
+    vendorCreditModel: VendorCredit;
+  }> => {
+    // Retrieve the vendor credit with a row lock or throw not found service error.
+    const oldVendorCredit = await this.vendorCreditModel()
+      .query(trx)
+      .findById(vendorCreditId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate customer existance.
+    const vendor = await this.contactModel()
+      .query(trx)
+      .modify('vendor')
+      .findById(vendorCreditDTO.vendorId)
+      .throwIfNotFound();
+
+    // Validate items ids existance.
+    await this.itemsEntriesService.validateItemsIdsExistance(
+      vendorCreditDTO.entries,
+    );
+    // Validate non-purchasable entries items.
+    await this.itemsEntriesService.validateNonPurchasableEntriesItems(
+      vendorCreditDTO.entries,
+    );
+    // Validate the items entries existance.
+    await this.itemsEntriesService.validateEntriesIdsExistance(
+      vendorCreditId,
+      'VendorCredit',
+      vendorCreditDTO.entries,
+    );
+    // Transformes edit DTO to model storage layer.
+    const vendorCreditModel =
+      await this.vendorCreditDTOTransform.transformCreateEditDTOToModel(
+        vendorCreditDTO,
+        vendor.currencyCode,
+        oldVendorCredit,
+      );
+    // Validate the new amount is not smaller than the already refunded
+    // and applied-to-bills amounts against the locked row.
+    this.vendorCreditDTOTransform.validateCreditAmountNotBelowUsed(
+      oldVendorCredit,
+      vendorCreditModel.amount,
+    );
+    return { oldVendorCredit, vendorCreditModel };
   };
 }

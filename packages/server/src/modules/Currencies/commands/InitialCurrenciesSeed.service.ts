@@ -10,7 +10,7 @@ export class InitialCurrenciesSeedService {
   constructor(
     @Inject(Currency.name)
     private readonly currencyModel: TenantModelProxy<typeof Currency>,
-  ) { }
+  ) {}
 
   /**
    * Seeds the given base currency to the currencies list.

@@ -1,10 +1,9 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-import ItemCategoryFormFields from './ItemCategoryFormFields';
-import ItemCategoryFormFooter from './ItemCategoryFormFooter';
+import React from 'react';
+import { ItemCategoryFormFields } from './ItemCategoryFormFields';
+import { ItemCategoryFormFooter } from './ItemCategoryFormFooter';
 
-export default function ItemCategoryForm() {
+export function ItemCategoryForm(): React.ReactElement {
   return (
     <Form>
       <ItemCategoryFormFields />

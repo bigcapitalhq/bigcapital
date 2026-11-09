@@ -5,10 +5,8 @@ moment.prototype.toMySqlDateTime = function () {
   return this.format('YYYY-MM-DD HH:mm:ss');
 };
 
-declare global {
-  namespace moment {
-    interface Moment {
-      toMySqlDateTime(): string;
-    }
+declare module 'moment' {
+  interface Moment {
+    toMySqlDateTime(): string;
   }
 }

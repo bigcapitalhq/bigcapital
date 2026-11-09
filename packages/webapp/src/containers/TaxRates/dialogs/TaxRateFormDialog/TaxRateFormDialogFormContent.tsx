@@ -1,17 +1,20 @@
-// @ts-nocheck
-import React from 'react';
-import { useFormikContext } from 'formik';
 import { Tag, Text } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import { ChangeEvent } from 'react';
 import styled from 'styled-components';
-import { FCheckbox, FFormGroup, FInputGroup, Hint } from '@/components';
-import { transformTaxRateCodeValue, useIsTaxRateChanged } from './utils';
 import { useTaxRateFormDialogContext } from './TaxRateFormDialogBoot';
+import {
+  TaxRateFormValues,
+  transformTaxRateCodeValue,
+  useIsTaxRateChanged,
+} from './utils';
+import { FCheckbox, FFormGroup, FInputGroup, Hint } from '@/components';
 
 /**
  * Tax rate form content.
  * @returns {JSX.Element}
  */
-export default function TaxRateFormDialogContent() {
+export function TaxRateFormDialogContent() {
   return (
     <div>
       <FFormGroup
@@ -52,18 +55,14 @@ export default function TaxRateFormDialogContent() {
         <FInputGroup name={'description'} fastField={true} />
       </FFormGroup>
 
-      <CompoundFormGroup name={'is_compound'} fastField={true}>
-        <FCheckbox
-          label={'Is compound'}
-          name={'is_compound'}
-          fastField={true}
-        />
+      <CompoundFormGroup name={'isCompound'} fastField={true}>
+        <FCheckbox label={'Is compound'} name={'isCompound'} fastField={true} />
       </CompoundFormGroup>
 
-      <CompoundFormGroup name={'is_non_recoverable'} fastField={true}>
+      <CompoundFormGroup name={'isNonRecoverable'} fastField={true}>
         <FCheckbox
           label={'Is non recoverable'}
-          name={'is_non_recoverable'}
+          name={'isNonRecoverable'}
           fastField={true}
         />
       </CompoundFormGroup>
@@ -78,10 +77,10 @@ export default function TaxRateFormDialogContent() {
  * @returns {JSX.Element}
  */
 function TaxRateCodeField() {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue } = useFormikContext<TaxRateFormValues>();
 
   // Handle the field change.
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const transformedValue = transformTaxRateCodeValue(event.target.value);
     setFieldValue('code', transformedValue);
   };
@@ -108,9 +107,9 @@ function ConfirmEditingTaxRate() {
   return (
     <EditWarningWrap>
       <Text color={'#766f58'}>Please Note:</Text>
-      <ConfirmEditFormGroup name={'confirm_edit'} helperText={''}>
+      <ConfirmEditFormGroup name={'confirmEdit'} helperText={''}>
         <FCheckbox
-          name={'confirm_edit'}
+          name={'confirmEdit'}
           label={`I understand that updating the
           tax will mark the existing tax inactive, create a new tax, and update
           it in the chosen transactions.`}

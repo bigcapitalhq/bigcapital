@@ -1,12 +1,24 @@
-// @ts-nocheck
-import React, { useRef, useState, useEffect } from 'react';
-import { FormattedMessage as T } from '@/components';
-import PropTypes from 'prop-types';
 import { Button, Tabs, Tab, Tooltip, Position } from '@blueprintjs/core';
-import { useHistory } from 'react-router';
 import { debounce } from 'lodash';
+import React, { useRef, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { FormattedMessage as T } from '@/components';
 import { If, Icon } from '@/components';
 import { saveInvoke } from '@/utils';
+
+interface DashboardViewsTabsProps {
+  initialViewSlug?: any;
+  currentViewSlug?: any;
+  tabs: any[];
+  defaultTabText?: React.ReactNode;
+  allTab?: boolean;
+  newViewTab?: boolean;
+  resourceName?: string;
+  onNewViewTabClick?: () => void;
+  onChange?: (value: any) => void;
+  OnThrottledChange?: (value: any) => void;
+  throttleTime?: number;
+}
 
 /**
  * Dashboard views tabs.
@@ -23,9 +35,11 @@ export function DashboardViewsTabs({
   onChange,
   OnThrottledChange,
   throttleTime = 250,
-}) {
+}: DashboardViewsTabsProps) {
   const history = useHistory();
-  const [currentView, setCurrentView] = useState(initialViewSlug || 0);
+  const [currentView, setCurrentView] = useState<string | number>(
+    initialViewSlug || 0,
+  );
 
   useEffect(() => {
     if (
@@ -37,11 +51,14 @@ export function DashboardViewsTabs({
   }, [currentView, setCurrentView, currentViewSlug]);
 
   const throttledOnChange = useRef(
-    debounce((viewId) => saveInvoke(OnThrottledChange, viewId), throttleTime),
+    debounce(
+      (viewId: any) => saveInvoke(OnThrottledChange, viewId),
+      throttleTime,
+    ),
   );
 
   // Trigger `onChange` and `onThrottledChange` events.
-  const triggerOnChange = (viewSlug) => {
+  const triggerOnChange = (viewSlug: string | number) => {
     const value = viewSlug === 0 ? null : viewSlug;
     saveInvoke(onChange, value);
     throttledOnChange.current(value);
@@ -54,13 +71,13 @@ export function DashboardViewsTabs({
   };
 
   // Handle tabs change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string | number) => {
     setCurrentView(viewSlug);
     triggerOnChange(viewSlug);
   };
 
   return (
-    <div class="dashboard__views-tabs">
+    <div className="dashboard__views-tabs">
       <Tabs
         id="navbar"
         large={true}
@@ -71,7 +88,9 @@ export function DashboardViewsTabs({
       >
         {allTab && <Tab id={0} title={defaultTabText} />}
 
-        {tabs.map((tab) => (
+        {(
+          tabs as Array<{ slug?: string | number; name?: React.ReactNode }>
+        ).map((tab) => (
           <Tab id={tab.slug} title={tab.name} />
         ))}
         <If condition={newViewTab}>
@@ -91,14 +110,3 @@ export function DashboardViewsTabs({
     </div>
   );
 }
-
-DashboardViewsTabs.propTypes = {
-  tabs: PropTypes.array.isRequired,
-  allTab: PropTypes.bool,
-  newViewTab: PropTypes.bool,
-
-  onNewViewTabClick: PropTypes.func,
-  onChange: PropTypes.func,
-  OnThrottledChange: PropTypes.func,
-  throttleTime: PropTypes.number,
-};

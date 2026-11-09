@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { differenceWith } from 'lodash';
 import * as path from 'path';
 import { FsMigrations } from './FsMigrations';

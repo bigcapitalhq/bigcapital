@@ -1,18 +1,15 @@
-// @ts-nocheck
+import { FormGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormGroup, Classes } from '@blueprintjs/core';
-import { BranchMultiSelect, Row, Col } from '@/components';
 import {
   ARAgingSummaryHeaderDimensionsProvider,
   useARAgingSummaryHeaderDimensonsContext,
 } from './ARAgingSummaryHeaderDimensionsProvider';
+import { BranchMultiSelect, Row, Col } from '@/components';
+import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
-/**
- * ARAging summary header dimensions.
- * @returns {JSX.Element}
- */
-export default function ARAgingSummaryHeaderDimensions() {
+export function ARAgingSummaryHeaderDimensions() {
   return (
     <ARAgingSummaryHeaderDimensionsProvider>
       <ARAgingSummaryHeaderDimensionsContent />
@@ -20,16 +17,10 @@ export default function ARAgingSummaryHeaderDimensions() {
   );
 }
 
-/**
- * ARAging summary header dimensions content.
- * @returns {JSX.Element}
- */
 function ARAgingSummaryHeaderDimensionsContent() {
   const { branches } = useARAgingSummaryHeaderDimensonsContext();
 
-  // Detarmines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
-
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (

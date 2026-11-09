@@ -23,7 +23,8 @@ export class SaleReceiptTransformer extends Transformer {
       'discountAmountFormatted',
       'discountPercentageFormatted',
       'adjustmentFormatted',
-      
+      'paidFormatted',
+
       'entries',
       'attachments',
     ];
@@ -134,6 +135,17 @@ export class SaleReceiptTransformer extends Transformer {
    */
   protected adjustmentFormatted = (receipt: SaleReceipt): string => {
     return this.formatMoney(receipt.adjustment, {
+      currencyCode: receipt.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted paid amount of the sale receipt.
+   * @param {SaleReceipt} receipt
+   * @returns {string}
+   */
+  protected paidFormatted = (receipt: SaleReceipt): string => {
+    return this.formatNumber(receipt.paid, {
       currencyCode: receipt.currencyCode,
     });
   };

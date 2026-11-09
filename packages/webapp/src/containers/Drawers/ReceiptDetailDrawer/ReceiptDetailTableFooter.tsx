@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import {
   T,
   TotalLines,
@@ -9,48 +8,51 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
 /**
  * Receipts read-only details table footer.
  */
-export default function ReceiptDetailTableFooter() {
+export function ReceiptDetailTableFooter() {
   const { receipt } = useReceiptDetailDrawerContext();
+
+  if (!receipt) {
+    return null;
+  }
 
   return (
     <ReceiptDetailsFooterRoot>
       <ReceiptTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'receipt.details.subtotal'} />}
-          value={receipt.subtotal_formatted}
+          value={receipt.subtotalFormatted}
         />
-        {receipt.discount_amount > 0 && (
+        {(receipt.discountAmount ?? 0) > 0 && (
           <TotalLine
             title={
-              receipt.discount_percentage_formatted
-                ? `Discount [${invoice.discount_percentage_formatted}]`
+              receipt.discountPercentageFormatted
+                ? `Discount [${receipt.discountPercentageFormatted}]`
                 : 'Discount'
             }
-            value={receipt.discount_amount_formatted}
+            value={receipt.discountAmountFormatted}
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
-        {receipt.adjustment_formatted && (
+        {receipt.adjustmentFormatted && (
           <TotalLine
             title={'Adjustment'}
-            value={receipt.adjustment_formatted}
+            value={receipt.adjustmentFormatted}
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
         <TotalLine
           title={<T id={'receipt.details.total'} />}
-          value={receipt.total_formatted}
+          value={receipt.totalFormatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
         <TotalLine
           title={<T id={'receipt.details.payment_amount'} />}
-          value={receipt.paid_formatted}
+          value={receipt.paidFormatted}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine

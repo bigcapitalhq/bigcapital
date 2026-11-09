@@ -1,12 +1,12 @@
 import { sumBy, omit } from 'lodash';
 import * as moment from 'moment';
-import * as R from 'ramda';
+import * as A from 'fp-ts/Array';
+import * as F from 'fp-ts/function';
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
 import * as composeAsync from 'async/compose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
-  IManualJournalDTO,
   IManualJournalEventCreatedPayload,
   IManualJournalCreatingPayload,
 } from '../types/ManualJournals.types';
@@ -20,6 +20,8 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ManualJournalBranchesDTOTransformer } from '@/modules/Branches/integrations/ManualJournals/ManualJournalDTOTransformer.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { CreateManualJournalDto } from '../dtos/ManualJournal.dto';
+import { CommandTrackingCategoryValidator } from '@/modules/TrackingCategories/commands/CommandTrackingCategoryValidator.service';
+import { transformManualJournalEntry } from './transformManualJournalEntry';
 
 @Injectable()
 export class CreateManualJournalService {
@@ -30,6 +32,7 @@ export class CreateManualJournalService {
     private validator: CommandManualJournalValidators,
     private autoIncrement: AutoIncrementManualJournal,
     private branchesDTOTransformer: ManualJournalBranchesDTOTransformer,
+    private trackingCategoriesValidator: CommandTrackingCategoryValidator,
 
     @Inject(ManualJournal.name)
     private manualJournalModel: TenantModelProxy<typeof ManualJournal>,
@@ -55,10 +58,13 @@ export class CreateManualJournalService {
     const tenant = await this.tenancyContext.getTenant(true);
     const authorizedUser = await this.tenancyContext.getSystemUser();
 
-    const entries = R.compose(
-      // Associate the default index to each item entry.
+    // Maps the tracking category assignments into their storage shape and
+    // associates the default index to each entry.
+    const entries = F.pipe(
+      manualJournalDTO.entries,
+      A.map(transformManualJournalEntry),
       assocItemEntriesDefaultIndex,
-    )(manualJournalDTO.entries);
+    );
 
     const initialDTO = {
       ...omit(manualJournalDTO, ['publish', 'attachments']),
@@ -116,6 +122,10 @@ export class CreateManualJournalService {
     await this.validator.validateJournalCurrencyWithAccountsCurrency(
       manualJournalDTO,
       tenant.metadata.baseCurrency,
+    );
+    // Validates the tracking category assignments.
+    await this.trackingCategoriesValidator.validateEntries(
+      manualJournalDTO.entries,
     );
   };
 

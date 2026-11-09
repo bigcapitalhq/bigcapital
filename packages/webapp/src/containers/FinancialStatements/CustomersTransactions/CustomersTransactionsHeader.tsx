@@ -1,27 +1,48 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import styled from 'styled-components';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-import { Formik, Form } from 'formik';
-
-import FinancialStatementHeader from '../FinancialStatementHeader';
-import CustomersTransactionsHeaderGeneralPanel from './CustomersTransactionsHeaderGeneralPanel';
-
-import { withCustomersTransactions } from './withCustomersTransactions';
-import { withCustomersTransactionsActions } from './withCustomersTransactionsActions';
-
-import { compose, transformToForm } from '@/utils';
+import { Formik, Form, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React from 'react';
+import styled from 'styled-components';
+import { FinancialStatementHeader } from '../FinancialStatementHeader';
 import {
   getCustomersTransactionsDefaultQuery,
   getCustomersTransactionsQuerySchema,
 } from './_utils';
+import { CustomersTransactionsHeaderGeneralPanel } from './CustomersTransactionsHeaderGeneralPanel';
+import { withCustomersTransactions } from './withCustomersTransactions';
+import {
+  withCustomersTransactionsActions,
+  WithCustomersTransactionsActionsProps,
+} from './withCustomersTransactionsActions';
+import { FormattedMessage as T } from '@/components';
+import { transformToForm } from '@/utils';
+
+interface CustomersTransactionsHeaderFormValues {
+  fromDate: Date;
+  toDate: Date;
+  customersIds: string[];
+  filterByOption: string;
+  [key: string]: unknown;
+}
+
+interface CustomersTransactionsHeaderOwnProps {
+  onSubmitFilter: (values: Record<string, any>) => void;
+  pageFilter: Record<string, any>;
+}
+
+type CustomersTransactionsHeaderProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<
+  WithCustomersTransactionsActionsProps,
+  'toggleCustomersTransactionsFilterDrawer'
+> &
+  CustomersTransactionsHeaderOwnProps;
 
 /**
  * Customers transactions header.
  */
-function CustomersTransactionsHeader({
+function CustomersTransactionsHeaderInner({
   // #ownProps
   onSubmitFilter,
   pageFilter,
@@ -31,7 +52,7 @@ function CustomersTransactionsHeader({
 
   //#withCustomersTransactionsActions
   toggleCustomersTransactionsFilterDrawer: toggleFilterDrawer,
-}) {
+}: CustomersTransactionsHeaderProps) {
   // Default form values.
   const defaultValues = getCustomersTransactionsDefaultQuery();
 
@@ -44,13 +65,16 @@ function CustomersTransactionsHeader({
       toDate: moment(pageFilter.toDate).toDate(),
     },
     defaultValues,
-  );
+  ) as CustomersTransactionsHeaderFormValues;
 
   // Validation schema.
   const validationSchema = getCustomersTransactionsQuerySchema();
 
   // Handle form submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: CustomersTransactionsHeaderFormValues,
+    { setSubmitting }: FormikHelpers<CustomersTransactionsHeaderFormValues>,
+  ) => {
     onSubmitFilter(values);
     toggleFilterDrawer(false);
     setSubmitting(false);
@@ -79,7 +103,7 @@ function CustomersTransactionsHeader({
             />
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -93,12 +117,13 @@ function CustomersTransactionsHeader({
   );
 }
 
-export default compose(
+export const CustomersTransactionsHeader = FF.pipe(
+  CustomersTransactionsHeaderInner,
+  withCustomersTransactionsActions,
   withCustomersTransactions(({ customersTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: customersTransactionsDrawerFilter,
   })),
-  withCustomersTransactionsActions,
-)(CustomersTransactionsHeader);
+);
 
 const CustomerTransactionsDrawerHeader = styled(FinancialStatementHeader)`
   .bp4-drawer {

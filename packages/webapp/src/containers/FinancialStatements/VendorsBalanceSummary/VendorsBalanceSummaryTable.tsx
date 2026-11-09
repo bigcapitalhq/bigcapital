@@ -1,24 +1,28 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import { TableStyle } from '@/constants';
-import { ReportDataTable, FinancialSheet } from '@/components';
-import { tableRowTypesToClassnames } from '@/utils';
+import { getReportRowTestId } from '../reportTestIds';
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
+import { ReportDataTable, FinancialSheet } from '@/components';
+import { TableStyle } from '@/constants';
+import { tableRowTypesToClassnames } from '@/utils';
+
+interface VendorsBalanceSummaryTableProps {
+  organizationName: any;
+}
 
 /**
  * Vendors balance summary table.
  */
-export default function VendorsBalanceSummaryTable({
+export function VendorsBalanceSummaryTable({
   //#ownProps
   organizationName,
-}) {
-  const {
-    VendorBalanceSummary: { table, query, meta },
-  } = useVendorsBalanceSummaryContext();
+}: VendorsBalanceSummaryTableProps) {
+  const { VendorBalanceSummary } = useVendorsBalanceSummaryContext();
+
+  const table = (VendorBalanceSummary as any)?.table;
+  const meta = (VendorBalanceSummary as any)?.meta;
 
   // vendors balance summary columns.
   const columns = useVendorsBalanceColumns();
@@ -27,12 +31,13 @@ export default function VendorsBalanceSummaryTable({
     <VendorBalanceFinancialSheet
       companyName={organizationName}
       sheetType={intl.get('vendors_balance_summary')}
-      dateText={meta?.formatted_date_range ?? meta?.formatted_as_date}
+      dateText={meta?.formattedDateRange ?? meta?.formattedAsDate}
     >
       <VendorBalanceDataTable
         columns={columns}
-        data={table.rows}
+        data={table?.rows}
         rowClassNames={tableRowTypesToClassnames}
+        rowTestId={getReportRowTestId('vendors-balance')}
         noInitialFetch={true}
         sticky={true}
         styleName={TableStyle.Constrant}

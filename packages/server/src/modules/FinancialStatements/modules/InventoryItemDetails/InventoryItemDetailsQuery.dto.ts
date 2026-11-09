@@ -7,7 +7,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { INumberFormatQuery } from '../../types/Report.types';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import { parseBoolean } from '@/utils/parse-boolean';
 
@@ -29,9 +28,6 @@ export class InventoryItemDetailsQueryDto {
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
   @IsOptional()
-  @ApiPropertyOptional({
-    description: 'Number format for the inventory item details',
-  })
   numberFormat: NumberFormatQueryDto;
 
   @Transform(({ value }) => parseBoolean(value, false))

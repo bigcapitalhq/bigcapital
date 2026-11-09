@@ -1,18 +1,36 @@
-// @ts-nocheck
+import {
+  Classes,
+  Icon,
+  IconName,
+  IconSize,
+  H4,
+  Button,
+} from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { FormattedMessage as T } from '@/components';
-import { Classes, Icon, H4, Button } from '@blueprintjs/core';
-
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { useDrawerContext } from './DrawerProvider';
-
-import { compose } from '@/utils';
 import styled from 'styled-components';
+import { useDrawerContext } from './DrawerProvider';
+import { FormattedMessage as T } from '@/components';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+
+export interface DrawerHeaderContentProps {
+  /** Accepted for convenience; the active drawer name is read from context. */
+  name?: string;
+  icon?: IconName;
+  title?: React.ReactNode;
+  subTitle?: React.ReactNode;
+}
+
+type DrawerHeaderContentInnerProps = DrawerHeaderContentProps &
+  WithDrawerActionsProps;
 
 /**
  * Drawer header content.
  */
-function DrawerHeaderContentRoot(props) {
+function DrawerHeaderContentRoot(props: DrawerHeaderContentInnerProps) {
   const {
     icon,
     title = <T id={'view_paper'} />,
@@ -24,13 +42,13 @@ function DrawerHeaderContentRoot(props) {
   if (title == null) {
     return null;
   }
-  const handleClose = (event) => {
+  const handleClose = () => {
     closeDrawer(name);
   };
 
   return (
     <div className={Classes.DRAWER_HEADER}>
-      <Icon icon={icon} iconSize={Icon.SIZE_LARGE} />
+      <Icon icon={icon as IconName} iconSize={IconSize.LARGE} />
       <H4>
         {title}
         <SubTitle>{subTitle}</SubTitle>
@@ -39,7 +57,7 @@ function DrawerHeaderContentRoot(props) {
       <Button
         aria-label="Close"
         className={Classes.DIALOG_CLOSE_BUTTON}
-        icon={<Icon icon="small-cross" iconSize={Icon.SIZE_LARGE} />}
+        icon={<Icon icon="small-cross" iconSize={IconSize.LARGE} />}
         minimal={true}
         onClick={handleClose}
       />
@@ -47,15 +65,19 @@ function DrawerHeaderContentRoot(props) {
   );
 }
 
-export const DrawerHeaderContent = compose(withDrawerActions)(
+export const DrawerHeaderContent = FF.pipe(
   DrawerHeaderContentRoot,
+  withDrawerActions,
 );
+
+export interface SubTitleProps {
+  children?: React.ReactNode;
+}
 
 /**
  * SubTitle Drawer header.
- * @returns {React.JSX}
  */
-function SubTitle({ children }) {
+function SubTitle({ children }: SubTitleProps) {
   if (children == null) {
     return null;
   }

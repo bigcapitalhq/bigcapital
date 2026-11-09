@@ -1,24 +1,27 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
-
 import withDialogRedux from '@/components/DialogReduxConnect';
-
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 // Lazy loading the content.
-const CustomerBalanceSummaryPdfDialogContent = lazy(
-  () => import('./CustomerBalanceSummaryPdfDialogContent'),
+const CustomerBalanceSummaryPdfDialogContent = lazy(() =>
+  import('./CustomerBalanceSummaryPdfDialogContent').then((m) => ({
+    default: m.CustomerBalanceSummaryPdfDialogContent,
+  })),
 );
 
-/**
- * Cashflow sheet pdf preview dialog.
- * @returns {React.ReactNode}
- */
-function CashflowSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
+interface CustomerBalanceSummaryPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
+
+function CashflowSheetPdfDialogRoot({
+  dialogName,
+  isOpen,
+}: CustomerBalanceSummaryPdfDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -36,6 +39,7 @@ function CashflowSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const CustomerBalanceSummaryPdfDialog = compose(withDialogRedux())(
+export const CustomerBalanceSummaryPdfDialog = FF.pipe(
   CashflowSheetPdfDialogRoot,
+  withDialogRedux(),
 );

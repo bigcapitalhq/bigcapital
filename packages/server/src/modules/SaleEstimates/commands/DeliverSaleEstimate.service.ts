@@ -28,20 +28,12 @@ export class DeliverSaleEstimateService {
    * @param {number} saleEstimateId - Sale estimate id.
    */
   public async deliverSaleEstimate(saleEstimateId: number): Promise<void> {
-    // Retrieve details of the given sale estimate id.
-    const oldSaleEstimate = await this.saleEstimateModel()
-      .query()
-      .findById(saleEstimateId)
-      .throwIfNotFound();
-
-    // Throws error in case the sale estimate already published.
-    if (oldSaleEstimate.isDelivered) {
-      throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_DELIVERED);
-    }
-
     // Updates the sale estimate transaction with assocaited transactions
     // under UOW envirement.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the deliver operation against the locked estimate row.
+      const oldSaleEstimate = await this.validate(saleEstimateId, trx);
+
       // Triggers `onSaleEstimateDelivering` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onDelivering, {
         oldSaleEstimate,
@@ -61,5 +53,30 @@ export class DeliverSaleEstimateService {
         trx,
       } as ISaleEstimateEventDeliveredPayload);
     });
+  }
+
+  /**
+   * Validates the deliver sale estimate operation against the locked estimate
+   * row: existence and not already delivered.
+   * @param {number} saleEstimateId - Sale estimate id.
+   * @param {Knex.Transaction} trx - Locks the estimate row (FOR UPDATE).
+   * @returns {Promise<SaleEstimate>} The locked sale estimate.
+   */
+  async validate(
+    saleEstimateId: number,
+    trx: Knex.Transaction,
+  ): Promise<SaleEstimate> {
+    // Re-read the estimate with a row lock to validate against current state.
+    const oldSaleEstimate = await this.saleEstimateModel()
+      .query(trx)
+      .findById(saleEstimateId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Throws error in case the sale estimate already published.
+    if (oldSaleEstimate.isDelivered) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_DELIVERED);
+    }
+    return oldSaleEstimate;
   }
 }

@@ -1,12 +1,11 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
 import { FormGroup } from '@blueprintjs/core';
+import { useFormikContext } from 'formik';
+import React, { lazy } from 'react';
+import styled from 'styled-components';
+import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
+import type { CategorizeTransactionFormValues } from './_utils';
 import { Box, FFormGroup, FSelect } from '@/components';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
-import { useFormikContext } from 'formik';
-import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
-import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();
@@ -49,32 +48,39 @@ export function CategorizeTransactionFormContent() {
   );
 }
 
-const CategorizeTransactionOtherIncome = React.lazy(
-  () => import('./MoneyIn/CategorizeTransactionOtherIncome'),
+const CategorizeTransactionOtherIncome = lazy(() =>
+  import('./MoneyIn/CategorizeTransactionOtherIncome').then((m) => ({
+    default: m.CategorizeTransactionOtherIncome,
+  })),
 );
-
-const CategorizeTransactionOwnerContribution = React.lazy(
-  () => import('./MoneyIn/CategorizeTransactionOwnerContribution'),
+const CategorizeTransactionOwnerContribution = lazy(() =>
+  import('./MoneyIn/CategorizeTransactionOwnerContribution').then((m) => ({
+    default: m.CategorizeTransactionOwnerContribution,
+  })),
 );
-
-const CategorizeTransactionTransferFrom = React.lazy(
-  () => import('./MoneyIn/CategorizeTransactionTransferFrom'),
+const CategorizeTransactionTransferFrom = lazy(() =>
+  import('./MoneyIn/CategorizeTransactionTransferFrom').then((m) => ({
+    default: m.CategorizeTransactionTransferFrom,
+  })),
 );
-
-const CategorizeTransactionOtherExpense = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionOtherExpense'),
+const CategorizeTransactionOtherExpense = lazy(() =>
+  import('./MoneyOut/CategorizeTransactionOtherExpense').then((m) => ({
+    default: m.CategorizeTransactionOtherExpense,
+  })),
 );
-
-const CategorizeTransactionToAccount = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionToAccount'),
+const CategorizeTransactionToAccount = lazy(() =>
+  import('./MoneyOut/CategorizeTransactionToAccount').then((m) => ({
+    default: m.CategorizeTransactionToAccount,
+  })),
 );
-
-const CategorizeTransactionOwnerDrawings = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionOwnerDrawings'),
+const CategorizeTransactionOwnerDrawings = lazy(() =>
+  import('./MoneyOut/CategorizeTransactionOwnerDrawings').then((m) => ({
+    default: m.CategorizeTransactionOwnerDrawings,
+  })),
 );
 
 function CategorizeTransactionFormSubContent() {
-  const { values } = useFormikContext();
+  const { values } = useFormikContext<CategorizeTransactionFormValues>();
 
   // Other expense.
   if (values.transactionType === 'other_expense') {

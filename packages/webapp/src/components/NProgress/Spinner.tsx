@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as React from 'react'
+import * as React from 'react';
 
 const Spinner = () => (
   <div
@@ -25,6 +25,6 @@ const Spinner = () => (
       }}
     />
   </div>
-)
+);
 
 export default Spinner;

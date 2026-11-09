@@ -1,26 +1,27 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-
-import { Intent } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
-
-import NotifyViaSMSForm from '@/containers/NotifyViaSMS/NotifyViaSMSForm';
 import { useEstimateViaSMSContext } from './NotifyEstimateViaSMSFormProvider';
-import { transformErrors } from '@/containers/NotifyViaSMS/utils';
-
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { AppToaster } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import {
+  NotifyViaSMSForm,
+  type NotifyViaSMSFormValues,
+} from '@/containers/NotifyViaSMS/NotifyViaSMSForm';
+import { transformErrors } from '@/containers/NotifyViaSMS/utils';
 
 const notificationType = {
   key: 'sale-estimate-details',
   label: intl.get('sms_notification.estimate_details.type'),
 };
 
-function NotifyEstimateViaSMSForm({
-  // #withDialogActions
+interface NotifyEstimateViaSMSFormProps extends WithDialogActionsProps {}
+
+function NotifyEstimateViaSMSFormInner({
   closeDialog,
-}) {
+}: NotifyEstimateViaSMSFormProps): React.ReactElement {
   const {
     estimateId,
     dialogName,
@@ -28,14 +29,23 @@ function NotifyEstimateViaSMSForm({
     createNotifyEstimateBySMSMutate,
   } = useEstimateViaSMSContext();
 
-  const [calloutCode, setCalloutCode] = React.useState([]);
+  const [calloutCode, setCalloutCode] = React.useState<number[]>([]);
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (
+    values: NotifyViaSMSFormValues,
+    {
+      setSubmitting,
+      setErrors,
+    }: {
+      setSubmitting: (isSubmitting: boolean) => void;
+      setErrors: (errors: Partial<Record<string, string>>) => void;
+    },
+  ) => {
     setSubmitting(true);
 
     // Handle request response success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('notify_estimate_via_sms.dialog.success_message'),
         intent: Intent.SUCCESS,
@@ -45,23 +55,26 @@ function NotifyEstimateViaSMSForm({
     };
     // Handle request response errors.
     const onError = ({
-      response: {
-        data: { errors },
-      },
+      data: { errors },
+    }: {
+      data: { errors: Array<{ type: string }> };
     }) => {
       if (errors) {
         transformErrors(errors, { setErrors, setCalloutCode });
       }
       setSubmitting(false);
     };
+    // @ts-expect-error — estimateId may be null in theory; dialog only opens with real id.
     createNotifyEstimateBySMSMutate([estimateId, values])
       .then(onSuccess)
       .catch(onError);
   };
 
+  // The SMS details are camelCase (`enableCamelCaseTransform` on the detail
+  // query), matching the camelCase field keys `NotifyViaSMSForm` expects.
   const initialValues = {
     ...estimateSMSDetail,
-    notification_key: notificationType.key,
+    notificationKey: notificationType.key,
   };
   // Handle the form cancel.
   const handleFormCancel = () => {
@@ -79,4 +92,7 @@ function NotifyEstimateViaSMSForm({
   );
 }
 
-export default compose(withDialogActions)(NotifyEstimateViaSMSForm);
+export const NotifyEstimateViaSMSForm = FF.pipe(
+  NotifyEstimateViaSMSFormInner,
+  withDialogActions,
+);

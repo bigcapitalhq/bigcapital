@@ -50,7 +50,7 @@ export class SendSaleEstimateMail {
 
     @InjectQueue(SendSaleEstimateMailQueue)
     private readonly sendEstimateMailQueue: Queue,
-  ) { }
+  ) {}
 
   /**
    * Triggers the reminder mail of the given sale estimate.

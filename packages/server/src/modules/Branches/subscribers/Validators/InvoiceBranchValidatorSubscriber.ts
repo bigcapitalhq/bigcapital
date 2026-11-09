@@ -11,7 +11,7 @@ import {
 export class InvoiceBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on invoice creating.

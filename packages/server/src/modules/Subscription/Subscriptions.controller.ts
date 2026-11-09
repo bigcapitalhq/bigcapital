@@ -4,16 +4,40 @@ import {
   Get,
   Body,
   Req,
-  Res,
   Next,
   HttpCode,
 } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
-import { ApiOperation, ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { Request, NextFunction } from 'express';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiResponse,
+  ApiBody,
+  ApiExtraModels,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { SubscriptionApplication } from './SubscriptionApplication';
+import { IgnoreTenantInitializedRoute } from '../Tenancy/EnsureTenantIsInitialized.guard';
+import { IgnoreTenantSeededRoute } from '../Tenancy/EnsureTenantIsSeeded.guards';
+import { SubscriptionResponseDto } from './dtos/SubscriptionResponse.dto';
+import { SubscriptionsListResponseDto } from './dtos/SubscriptionsListResponse.dto';
+import {
+  LemonSubscriptionResponseDto,
+  LemonSubscriptionUrlsDto,
+} from './dtos/LemonSubscriptionResponse.dto';
+import { LemonSubscriptionsListResponseDto } from './dtos/LemonSubscriptionsListResponse.dto';
 
 @Controller('subscription')
 @ApiTags('Subscriptions')
+@ApiExtraModels(
+  SubscriptionResponseDto,
+  SubscriptionsListResponseDto,
+  LemonSubscriptionResponseDto,
+  LemonSubscriptionUrlsDto,
+  LemonSubscriptionsListResponseDto,
+)
+@IgnoreTenantInitializedRoute()
+@IgnoreTenantSeededRoute()
 export class SubscriptionsController {
   constructor(private readonly subscriptionApp: SubscriptionApplication) {}
 
@@ -22,12 +46,30 @@ export class SubscriptionsController {
   @ApiResponse({
     status: 200,
     description: 'List of subscriptions retrieved successfully',
+    schema: { $ref: getSchemaPath(SubscriptionsListResponseDto) },
   })
   @HttpCode(200)
   async getSubscriptions() {
     const subscriptions = await this.subscriptionApp.getSubscriptions();
 
     return { subscriptions };
+  }
+
+  @Get('lemon')
+  @ApiOperation({
+    summary: 'Get Lemon Squeezy subscription details for the current tenant',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lemon subscription details retrieved successfully',
+    schema: { $ref: getSchemaPath(LemonSubscriptionsListResponseDto) },
+  })
+  @HttpCode(200)
+  async getLemonSubscriptions() {
+    const lemonSubscriptions =
+      await this.subscriptionApp.getLemonSubscriptions();
+
+    return { lemonSubscriptions };
   }
 
   @Post('lemon/checkout_url')
@@ -62,7 +104,7 @@ export class SubscriptionsController {
     status: 200,
     description: 'Subscription canceled successfully',
   })
-  async cancelSubscription(@Req() req: Request, @Next() next: NextFunction) {
+  async cancelSubscription(@Req() req: Request, @Next() _next: NextFunction) {
     const tenantId = req.headers['organization-id'] as string;
     await this.subscriptionApp.cancelSubscription(tenantId);
 
@@ -79,7 +121,7 @@ export class SubscriptionsController {
     status: 200,
     description: 'Subscription resumed successfully',
   })
-  async resumeSubscription(@Req() req: Request, @Next() next: NextFunction) {
+  async resumeSubscription(@Req() req: Request, @Next() _next: NextFunction) {
     const tenantId = req.headers['organization-id'] as string;
     await this.subscriptionApp.resumeSubscription(tenantId);
 

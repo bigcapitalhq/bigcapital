@@ -8,7 +8,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 export class ExpenseActivateBranchesSubscriber {
   constructor(
     private readonly expensesActivateBranches: ExpensesActivateBranches,
-  ) { }
+  ) {}
 
   /**
    * Updates accounts transactions with the primary branch once

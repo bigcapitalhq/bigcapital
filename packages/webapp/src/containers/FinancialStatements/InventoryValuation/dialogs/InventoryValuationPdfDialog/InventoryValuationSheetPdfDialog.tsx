@@ -1,22 +1,31 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 // Lazy loading the content.
-const InventoryValuationPdfDialogContent = lazy(
-  () => import('./InventoryValuationSheetPdfDialogContent'),
+const InventoryValuationPdfDialogContent = lazy(() =>
+  import('./InventoryValuationSheetPdfDialogContent').then((m) => ({
+    default: m.InventoryValuationSheetPdfDialogContent,
+  })),
 );
+
+interface InventoryValuationSheetPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
 
 /**
  * Inventory valuation sheet pdf preview dialog.
  * @returns {React.ReactNode}
  */
-function InventoryValuationSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
+function InventoryValuationSheetPdfDialogRoot({
+  dialogName,
+  isOpen,
+}: InventoryValuationSheetPdfDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -34,6 +43,7 @@ function InventoryValuationSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const InventoryValuationPdfDialog = compose(withDialogRedux())(
+export const InventoryValuationPdfDialog = FF.pipe(
   InventoryValuationSheetPdfDialogRoot,
+  withDialogRedux(),
 );

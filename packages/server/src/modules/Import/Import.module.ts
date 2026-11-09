@@ -41,7 +41,7 @@ const models = [InjectSystemModel(ImportModel)];
     ImportFileDataTransformer,
     ImportFileCommon,
     ImportableRegistry,
-    ImportDeleteExpiredFilesJobs
+    ImportDeleteExpiredFilesJobs,
   ],
   controllers: [ImportController],
   exports: [ImportAls, ...models],

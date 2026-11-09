@@ -1,31 +1,27 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
-
 import { withCreditNotes } from './withCreditNotes';
 import { withCreditNotesActions } from './withCreditNotesActions';
+import type { WithCreditNotesProps } from './withCreditNotes';
+import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
+import { DashboardViewsTabs } from '@/components';
+import { transfromViewsToTabs } from '@/utils';
 
-/**
- * Credit Note views tabs.
- */
-function CreditNotesViewTabs({
-  // #withCreditNotes
+interface CreditNotesViewTabsProps extends WithCreditNotesActionsProps {
+  creditNoteCurrentView: string;
+}
+
+function CreditNotesViewTabsInner({
   creditNoteCurrentView,
-
-  // #withCreditNotesActions
   setCreditNotesTableState,
-}) {
-  // Credit note list context.
+}: CreditNotesViewTabsProps) {
   const { CreditNotesView } = useCreditNoteListContext();
 
   const tabs = transfromViewsToTabs(CreditNotesView);
 
-  // Handle tab change.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string) => {
     setCreditNotesTableState({ viewSlug });
   };
 
@@ -43,9 +39,10 @@ function CreditNotesViewTabs({
   );
 }
 
-export default compose(
-  withCreditNotesActions,
-  withCreditNotes(({ creditNoteTableState }) => ({
+export const CreditNotesViewTabs = FF.pipe(
+  CreditNotesViewTabsInner,
+  withCreditNotes(({ creditNoteTableState }: WithCreditNotesProps) => ({
     creditNoteCurrentView: creditNoteTableState.viewSlug,
   })),
-)(CreditNotesViewTabs);
+  withCreditNotesActions,
+);

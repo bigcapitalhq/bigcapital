@@ -1,4 +1,5 @@
-import type { ApiFetcher } from './fetch-utils';
+import type { ApiFetcher, PdfDocument } from './fetch-utils';
+import { rawRequest, toPdfDocument } from './fetch-utils';
 import { paths } from './schema';
 import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
@@ -14,6 +15,7 @@ export const CREDIT_NOTES_ROUTES = {
   APPLIED_INVOICES: '/api/credit-notes/{creditNoteId}/applied-invoices',
   APPLY_INVOICES: '/api/credit-notes/{creditNoteId}/apply-invoices',
   APPLIED_INVOICE_BY_ID: '/api/credit-notes/applied-invoices/{applyCreditToInvoicesId}',
+  MAIL: '/api/credit-notes/{id}/mail',
 } as const satisfies Record<string, keyof paths>;
 
 export type CreditNotesListResponse = OpResponseBody<OpForPath<typeof CREDIT_NOTES_ROUTES.LIST, 'get'>>;
@@ -46,6 +48,20 @@ export async function fetchCreditNote(fetcher: ApiFetcher, id: number): Promise<
   const getCreditNote = fetcher.path(CREDIT_NOTES_ROUTES.BY_ID).method('get').create();
   const { data } = await getCreditNote({ id });
   return data;
+}
+
+/**
+ * Downloads the given credit note as a PDF document. The server picks the
+ * output format from the `Accept` header; the raw-response middleware returns
+ * the body as a Blob and the filename is read from Content-Disposition.
+ */
+export async function fetchCreditNotePdf(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<PdfDocument> {
+  const getCreditNote = fetcher.path(CREDIT_NOTES_ROUTES.BY_ID).method('get').create();
+  const response = await getCreditNote({ id }, { headers: { Accept: 'application/pdf' } });
+  return toPdfDocument(response);
 }
 
 /** Credit note state (default template etc.). Defined in controller DTO when not in schema. */
@@ -173,4 +189,69 @@ export async function deleteApplyCreditNoteToInvoices(
 ): Promise<void> {
   const del = fetcher.path(CREDIT_NOTES_ROUTES.APPLIED_INVOICE_BY_ID).method('delete').create();
   await del({ applyCreditToInvoicesId });
+}
+
+export interface CreditNoteMailStateResponse {
+  from: string[];
+  to: string[];
+  cc?: string[];
+  bcc?: string[];
+  subject: string;
+  message: string;
+  formatArgs?: Record<string, string>;
+  toOptions: Array<{ label: string; mail: string; primary?: boolean }>;
+  fromOptions: Array<{ label: string; mail: string; primary?: boolean }>;
+  attachPdf?: boolean;
+  creditNoteDate: string;
+  creditNoteDateFormatted: string;
+  total: number;
+  totalFormatted: string;
+  subtotal: number;
+  subtotalFormatted: string;
+  discountAmount: number;
+  discountAmountFormatted: string;
+  discountPercentage: number | null;
+  discountPercentageFormatted: string;
+  discountLabel: string;
+  adjustment: number;
+  adjustmentFormatted: string;
+  creditNoteNumber: string;
+  entries: Array<{ name: string; quantity: number; unitPrice: number; unitPriceFormatted: string; total: number; totalFormatted: string }>;
+  companyName: string;
+  companyLogoUri: string | null;
+  primaryColor: string | null;
+  customerName: string;
+}
+
+export async function fetchCreditNoteMail(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<CreditNoteMailStateResponse> {
+  const get = fetcher.path(CREDIT_NOTES_ROUTES.MAIL).method('get').create();
+  const { data } = await get({ id });
+  return data as CreditNoteMailStateResponse;
+}
+
+export async function sendCreditNoteMail(
+  fetcher: ApiFetcher,
+  id: number,
+  body?: Record<string, unknown>
+): Promise<void> {
+  const post = fetcher.path(CREDIT_NOTES_ROUTES.MAIL).method('post').create();
+  await post({ id, ...(body ?? {}) } as never);
+}
+
+export type CreditNoteHtmlContentResponse = { htmlContent: string };
+
+export async function fetchCreditNoteHtmlContent(
+  fetcher: ApiFetcher,
+  id: number
+): Promise<CreditNoteHtmlContentResponse> {
+  return rawRequest<CreditNoteHtmlContentResponse>(
+    fetcher,
+    'GET',
+    `/api/credit-notes/${id}`,
+    undefined,
+    { Accept: 'application/json+html' }
+  );
 }

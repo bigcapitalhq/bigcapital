@@ -1,8 +1,7 @@
-// @ts-nocheck
-import { DashboardInsider } from '@/components';
 import { ImportView } from '../Import/ImportView';
+import { DashboardInsider } from '@/components';
 
-export default function ItemsImport() {
+export function ItemsImport() {
   return (
     <DashboardInsider name={'import-items'}>
       <ImportView resource={'items'} />

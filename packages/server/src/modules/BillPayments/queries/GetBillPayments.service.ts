@@ -45,17 +45,19 @@ export class GetBillPaymentsService {
         builder.withGraphFetched('paymentAccount');
 
         dynamicList.buildQuery()(builder);
-        filter?.filterQuery && filter?.filterQuery(builder);
+        if (filter?.filterQuery) {
+          filter?.filterQuery(builder);
+        }
       })
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the bill payments models to POJO.
-    const billPayments = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new BillPaymentTransformer(),
     );
     return {
-      billPayments,
+      data,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

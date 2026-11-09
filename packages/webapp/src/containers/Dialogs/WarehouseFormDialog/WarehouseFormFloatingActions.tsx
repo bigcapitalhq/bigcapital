@@ -1,28 +1,21 @@
-// @ts-nocheck
-import React from 'react';
-
-import { Intent, Button, Classes } from '@blueprintjs/core';
+import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useWarehouseFormContext } from './WarehouseFormProvider';
+import type { WarehouseFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import { FormattedMessage as T } from '@/components';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
-/**
- * Warehouse form floating actions.
- * @returns
- */
-function WarehouseFormFloatingActions({
-  // #withDialogActions
+interface WarehouseFormFloatingActionsProps extends WithDialogActionsProps {}
+
+function WarehouseFormFloatingActionsInner({
   closeDialog,
-}) {
-  // Formik context.
-  const { isSubmitting } = useFormikContext();
-
+}: WarehouseFormFloatingActionsProps): React.ReactElement {
+  const { isSubmitting } = useFormikContext<WarehouseFormValues>();
   const { dialogName } = useWarehouseFormContext();
 
-  // Handle close button click.
   const handleCancelBtnClick = () => {
     closeDialog(dialogName);
   };
@@ -39,11 +32,14 @@ function WarehouseFormFloatingActions({
           style={{ minWidth: '95px' }}
           type="submit"
         >
-          {<T id={'save'} />}
+          <T id={'save'} />
         </Button>
       </div>
     </div>
   );
 }
 
-export default compose(withDialogActions)(WarehouseFormFloatingActions);
+export const WarehouseFormFloatingActions = FF.pipe(
+  WarehouseFormFloatingActionsInner,
+  withDialogActions,
+);

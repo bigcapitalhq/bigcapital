@@ -1,29 +1,45 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { SaleReceipt } from '@bigcapital/sdk-ts';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { Features } from '@/constants';
-import { useFeatureCan } from '@/hooks/state';
-import { useReceipt } from '@/hooks/query';
 import { DRAWERS } from '@/constants/drawers';
+import { useReceipt } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 
-// useTransactionsByReference
-const ReceiptDetailDrawerContext = React.createContext();
+export type ReceiptDetailEntry = SaleReceipt['entries'][number];
+export type ReceiptDetail = SaleReceipt;
+
+export interface ReceiptDetailDrawerContextValue {
+  receiptId: number | undefined;
+  receipt: ReceiptDetail | undefined;
+}
+
+interface ReceiptDetailDrawerProviderProps {
+  receiptId: number | undefined;
+}
+
+const ReceiptDetailDrawerContext = React.createContext<
+  ReceiptDetailDrawerContextValue | undefined
+>(undefined);
 
 /**
  * Receipt detail provider.
  */
-function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
+function ReceiptDetailDrawerProvider({
+  receiptId,
+  ...props
+}: ReceiptDetailDrawerProviderProps & { children?: React.ReactNode }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
   // Fetch sale receipt details.
-  const { data: receipt, isLoading: isReceiptLoading } = useReceipt(receiptId, {
+  const { isLoading: isReceiptLoading, data } = useReceipt(receiptId, {
     enabled: !!receiptId,
   });
+  const receipt = data as ReceiptDetail | undefined;
 
-  // Provider.
-  const provider = {
+  const provider: ReceiptDetailDrawerContextValue = {
     receiptId,
     receipt,
   };
@@ -33,12 +49,12 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
       <DrawerHeaderContent
         name={DRAWERS.RECEIPT_DETAILS}
         title={intl.get('receipt.drawer.title', {
-          number: receipt.receipt_number,
+          number: receipt?.receiptNumber,
         })}
         subTitle={
           featureCan(Features.Branches)
             ? intl.get('receipt.drawer.subtitle', {
-                value: receipt.branch?.name,
+                value: receipt?.branch?.name,
               })
             : null
         }
@@ -47,7 +63,15 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
     </DrawerLoading>
   );
 }
-const useReceiptDetailDrawerContext = () =>
-  React.useContext(ReceiptDetailDrawerContext);
+
+const useReceiptDetailDrawerContext = (): ReceiptDetailDrawerContextValue => {
+  const ctx = React.useContext(ReceiptDetailDrawerContext);
+  if (ctx === undefined) {
+    throw new Error(
+      'useReceiptDetailDrawerContext must be used within a ReceiptDetailDrawerProvider',
+    );
+  }
+  return ctx;
+};
 
 export { ReceiptDetailDrawerProvider, useReceiptDetailDrawerContext };

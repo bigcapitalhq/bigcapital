@@ -1,7 +1,7 @@
-// @ts-nocheck
-import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
-
+import React from 'react';
+import intl from 'react-intl-universal';
+import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 import {
   Row,
   Col,
@@ -12,20 +12,23 @@ import {
   CustomerDrawerLink,
   ExchangeRateDetailItem,
 } from '@/components';
-import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
 /**
  * Payment receive detail header.
  */
-export default function PaymentReceiveDetailHeader() {
+export function PaymentReceiveDetailHeader() {
   const { paymentReceive } = usePaymentReceiveDetailContext();
+
+  if (!paymentReceive) {
+    return null;
+  }
 
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
           <DetailItem label={intl.get('amount')}>
-            <h3 class="big-number">{paymentReceive.formatted_amount}</h3>
+            <h3 className="big-number">{paymentReceive.formattedAmount}</h3>
           </DetailItem>
         </DetailsMenu>
       </CommercialDocTopHeader>
@@ -35,25 +38,25 @@ export default function PaymentReceiveDetailHeader() {
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('payment_date')}
-              children={paymentReceive.formatted_payment_date}
+              children={paymentReceive.formattedPaymentDate}
             />
             <DetailItem
               label={intl.get('payment_receive.details.payment_number')}
-              children={defaultTo(paymentReceive.payment_receive_no, '-')}
+              children={defaultTo(paymentReceive.paymentReceiveNo, '-')}
             />
             <DetailItem label={intl.get('customer_name')}>
-              <CustomerDrawerLink customerId={paymentReceive.customer_id}>
-                {paymentReceive.customer?.display_name}
+              <CustomerDrawerLink customerId={paymentReceive.customerId}>
+                {paymentReceive.customer?.displayName}
               </CustomerDrawerLink>
             </DetailItem>
 
             <DetailItem
               label={intl.get('deposit_account')}
-              children={paymentReceive.deposit_account?.name}
+              children={paymentReceive.depositAccount?.name}
             />
             <ExchangeRateDetailItem
-              exchangeRate={paymentReceive?.exchange_rate}
-              toCurrency={paymentReceive?.currency_code}
+              exchangeRate={paymentReceive?.exchangeRate}
+              toCurrency={paymentReceive?.currencyCode}
             />
           </DetailsMenu>
         </Col>
@@ -66,11 +69,11 @@ export default function PaymentReceiveDetailHeader() {
           >
             <DetailItem
               label={intl.get('reference')}
-              children={defaultTo(paymentReceive.reference_no, '-')}
+              children={defaultTo(paymentReceive.referenceNo, '-')}
             />
             <DetailItem
               label={intl.get('created_at')}
-              children={paymentReceive.formatted_created_at}
+              children={paymentReceive.formattedCreatedAt}
             />
           </DetailsMenu>
         </Col>

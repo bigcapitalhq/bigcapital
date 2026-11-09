@@ -1,64 +1,71 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchJournalTable,
+  fetchJournalXlsx,
+  fetchJournalCsv,
+  fetchJournalPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  JournalTableQuery,
+  JournalTableResponse,
+  JournalXlsxQuery,
+  JournalCsvQuery,
+  JournalPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve journal sheet.
- */
-export function useJournalSheet(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.JOURNAL, query],
-    {
-      method: 'get',
-      url: '/reports/journal',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function useJournalSheet(
+  query: JournalTableQuery,
+  props?: Omit<
+    UseQueryOptions<JournalTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.journal(query),
+    queryFn: () => fetchJournalTable(fetcher, query),
+  });
 }
 
-export const useJournalSheetXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/journal',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'journal.xlsx',
+export function useJournalSheetXlsxExport(
+  query: JournalXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchJournalXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'journal.xlsx'),
+      ),
   });
-};
+}
 
-export const useJournalSheetCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/journal',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'journal.csv',
+export function useJournalSheetCsvExport(
+  query: JournalCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchJournalCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'journal.csv'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves the journal sheet pdf content.
- */
-export const useJournalSheetPdf = (query = {}) => {
-  return useRequestPdf({
-    url: `/reports/journal`,
-    params: query,
-  });
-};
+export function useJournalSheetPdf(query: JournalPdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchJournalPdf(fetcher, query));
+}

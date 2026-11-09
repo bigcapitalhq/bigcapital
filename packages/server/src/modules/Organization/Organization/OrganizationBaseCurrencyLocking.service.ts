@@ -19,7 +19,7 @@ export class OrganizationBaseCurrencyLocking {
     const lockedModels = getPreventMutateBaseCurrencyModels();
 
     const filteredEntries = Array.from(lockedModels).filter(
-      ([key, Model]) => !!Model.preventMutateBaseCurrency,
+      ([_key, Model]) => !!Model.preventMutateBaseCurrency,
     );
     return Object.fromEntries(filteredEntries);
   }
@@ -57,7 +57,7 @@ export class OrganizationBaseCurrencyLocking {
     MutateBaseCurrencyLockMeta[]
   > {
     const PreventedModels = this.getModelsPreventsMutate();
-    const opers = Object.entries(PreventedModels).map(([ModelName, Model]) => {
+    const opers = Object.entries(PreventedModels).map(([ModelName, _Model]) => {
       const InjectedModelProxy = this.moduleRef.get(ModelName, {
         strict: false,
       });

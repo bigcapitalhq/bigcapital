@@ -42,20 +42,12 @@ export class WriteoffSaleInvoice {
     saleInvoiceId: number,
     writeoffDTO: ISaleInvoiceWriteoffDTO,
   ): Promise<SaleInvoice> => {
-    const saleInvoice = await this.saleInvoiceModel()
-      .query()
-      .findById(saleInvoiceId)
-      .throwIfNotFound();
-
-    // Validates the given invoice existance.
-    this.validators.validateInvoiceExistance(saleInvoice);
-
-    // Validate the sale invoice whether already written-off.
-    this.validateSaleInvoiceAlreadyWrittenoff(saleInvoice);
-
     // Saves the invoice write-off transaction with associated transactions
     // under unit-of-work envirmenet.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the write-off operation against the locked invoice row.
+      const saleInvoice = await this.validate(saleInvoiceId, trx, false);
+
       const eventPayload = {
         // tenantId,
         saleInvoiceId,
@@ -97,21 +89,11 @@ export class WriteoffSaleInvoice {
   public cancelWrittenoff = async (
     saleInvoiceId: number,
   ): Promise<SaleInvoice> => {
-    // Validate the sale invoice existance.
-
-    // Retrieve the sale invoice or throw not found service error.
-    const saleInvoice = await this.saleInvoiceModel()
-      .query()
-      .findById(saleInvoiceId);
-
-    // Validate the sale invoice existance.
-    this.validators.validateInvoiceExistance(saleInvoice);
-
-    // Validate the sale invoice whether already written-off.
-    this.validateSaleInvoiceNotWrittenoff(saleInvoice);
-
     // Cancels the invoice written-off and removes the associated transactions.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the cancel written-off operation against the locked invoice row.
+      const saleInvoice = await this.validate(saleInvoiceId, trx, true);
+
       // Triggers `onSaleInvoiceWrittenoffCancel` event.
       await this.eventPublisher.emitAsync(
         events.saleInvoice.onWrittenoffCancel,
@@ -121,7 +103,8 @@ export class WriteoffSaleInvoice {
         } as ISaleInvoiceWrittenOffCancelPayload,
       );
       // Mark the sale invoice as written-off.
-      const newSaleInvoice = await SaleInvoice.query(trx)
+      const newSaleInvoice = await this.saleInvoiceModel()
+        .query(trx)
         .patch({
           writtenoffAmount: null,
           writtenoffAt: null,
@@ -139,6 +122,35 @@ export class WriteoffSaleInvoice {
       return newSaleInvoice;
     });
   };
+
+  /**
+   * Validates the write-off / cancel written-off operation against the locked
+   * invoice row: existence and the expected written-off state.
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {Knex.Transaction} trx - Locks the invoice row (FOR UPDATE).
+   * @param {boolean} expectWrittenoff - Expected written-off state.
+   * @returns {Promise<SaleInvoice>} The locked sale invoice.
+   */
+  async validate(
+    saleInvoiceId: number,
+    trx: Knex.Transaction,
+    expectWrittenoff: boolean,
+  ): Promise<SaleInvoice> {
+    // Re-read the invoice with a row lock to validate against current state.
+    const saleInvoice = await this.saleInvoiceModel()
+      .query(trx)
+      .findById(saleInvoiceId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate the sale invoice written-off state against the locked row.
+    if (expectWrittenoff) {
+      this.validateSaleInvoiceNotWrittenoff(saleInvoice);
+    } else {
+      this.validateSaleInvoiceAlreadyWrittenoff(saleInvoice);
+    }
+    return saleInvoice;
+  }
 
   /**
    * Should sale invoice not be written-off.

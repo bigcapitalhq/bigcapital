@@ -8,6 +8,7 @@ import {
 } from './types/Ledger.types';
 import { ILedger } from './types/Ledger.types';
 import { AccountTransaction } from '../Accounts/models/AccountTransaction.model';
+import { AccountTransactionTrackingCategory } from '../TrackingCategories/models/AccountTransactionTrackingCategory';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 
 // Filter the blank entries.
@@ -23,6 +24,11 @@ export class LedgerEntriesStorageService {
     @Inject(AccountTransaction.name)
     private readonly accountTransactionModel: TenantModelProxy<
       typeof AccountTransaction
+    >,
+
+    @Inject(AccountTransactionTrackingCategory.name)
+    private readonly accountTransactionTrackingCategoryModel: TenantModelProxy<
+      typeof AccountTransactionTrackingCategory
     >,
   ) {}
 
@@ -71,7 +77,21 @@ export class LedgerEntriesStorageService {
   ): Promise<void> => {
     const transaction = transformLedgerEntryToTransaction(entry);
 
-    await this.accountTransactionModel().query(trx).insert(transaction);
+    const insertedTransaction = await this.accountTransactionModel()
+      .query(trx)
+      .insertAndFetch(transaction);
+
+    if (entry.trackingCategories?.length) {
+      await this.accountTransactionTrackingCategoryModel()
+        .query(trx)
+        .insert(
+          entry.trackingCategories.map(({ categoryId, optionId }) => ({
+            accountTransactionId: insertedTransaction.id,
+            categoryId,
+            optionId,
+          })),
+        );
+    }
   };
 
   /**

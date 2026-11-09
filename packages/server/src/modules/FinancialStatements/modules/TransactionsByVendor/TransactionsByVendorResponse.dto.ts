@@ -28,10 +28,16 @@ export class VendorTransactionDto {
   @ApiPropertyOptional({ description: 'Transaction description' })
   description?: string;
 
-  @ApiProperty({ description: 'Transaction amount', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Transaction amount',
+    type: FinancialReportTotalDto,
+  })
   amount: FinancialReportTotalDto;
 
-  @ApiProperty({ description: 'Running balance', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Running balance',
+    type: FinancialReportTotalDto,
+  })
   runningBalance: FinancialReportTotalDto;
 }
 
@@ -42,19 +48,34 @@ export class VendorWithTransactionsDto {
   @ApiProperty({ description: 'Vendor name' })
   vendorName: string;
 
-  @ApiPropertyOptional({ description: 'Opening balance', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Opening balance',
+    type: FinancialReportTotalDto,
+  })
   openingBalance?: FinancialReportTotalDto;
 
-  @ApiProperty({ description: 'Vendor transactions', type: [VendorTransactionDto] })
+  @ApiProperty({
+    description: 'Vendor transactions',
+    type: [VendorTransactionDto],
+  })
   transactions: VendorTransactionDto[];
 
-  @ApiProperty({ description: 'Closing balance', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Closing balance',
+    type: FinancialReportTotalDto,
+  })
   closingBalance: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Total debit', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Total debit',
+    type: FinancialReportTotalDto,
+  })
   totalDebit?: FinancialReportTotalDto;
 
-  @ApiPropertyOptional({ description: 'Total credit', type: FinancialReportTotalDto })
+  @ApiPropertyOptional({
+    description: 'Total credit',
+    type: FinancialReportTotalDto,
+  })
   totalCredit?: FinancialReportTotalDto;
 }
 
@@ -76,7 +97,10 @@ export class TransactionsByVendorQueryResponseDto {
   @ApiProperty({ description: 'End date' })
   toDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Vendor IDs to include', type: [Number] })
@@ -87,13 +111,22 @@ export class TransactionsByVendorQueryResponseDto {
 }
 
 export class TransactionsByVendorResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: TransactionsByVendorQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: TransactionsByVendorQueryResponseDto,
+  })
   query: TransactionsByVendorQueryResponseDto;
 
-  @ApiProperty({ description: 'Vendors with transactions', type: [VendorWithTransactionsDto] })
+  @ApiProperty({
+    description: 'Vendors with transactions',
+    type: [VendorWithTransactionsDto],
+  })
   data: VendorWithTransactionsDto[];
 
-  @ApiProperty({ description: 'Report metadata', type: TransactionsByVendorMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: TransactionsByVendorMetaDto,
+  })
   meta: TransactionsByVendorMetaDto;
 }
 
@@ -106,12 +139,21 @@ export {
 } from '../../dtos/FinancialReportResponse.dto';
 
 export class TransactionsByVendorTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => FinancialTableDataDto,
+  })
   table: FinancialTableDataDto;
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: TransactionsByVendorQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: TransactionsByVendorQueryResponseDto,
+  })
   query: TransactionsByVendorQueryResponseDto;
 
-  @ApiProperty({ description: 'Report metadata', type: TransactionsByVendorMetaDto })
+  @ApiProperty({
+    description: 'Report metadata',
+    type: TransactionsByVendorMetaDto,
+  })
   meta: TransactionsByVendorMetaDto;
 }

@@ -1,31 +1,35 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
-
-import { DashboardViewsTabs } from '@/components';
-import { withReceiptActions } from './withReceiptsActions';
-import { withReceipts } from './withReceipts';
-
-import { compose, transfromViewsToTabs } from '@/utils';
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { useReceiptsListContext } from './ReceiptsListProvider';
+import { withReceipts } from './withReceipts';
+import { withReceiptsActions } from './withReceiptsActions';
+import type { WithReceiptsProps } from './withReceipts';
+import type { WithReceiptsActionsProps } from './withReceiptsActions';
+import { DashboardViewsTabs } from '@/components';
+import { transfromViewsToTabs } from '@/utils';
+
+interface ReceiptViewTabsProps extends WithReceiptsActionsProps {
+  receiptsCurrentView: string;
+}
 
 /**
  * Receipts views tabs.
  */
-function ReceiptViewTabs({
+function ReceiptViewTabsInner({
   // #withReceiptActions
   setReceiptsTableState,
 
   // #withReceipts
   receiptsCurrentView,
-}) {
+}: ReceiptViewTabsProps) {
   // Receipts list context.
   const { receiptsViews } = useReceiptsListContext();
 
   const tabs = transfromViewsToTabs(receiptsViews);
 
   // Handles the active tab chaning.
-  const handleTabsChange = (viewSlug) => {
+  const handleTabsChange = (viewSlug: string | null) => {
     setReceiptsTableState({
       viewSlug: viewSlug || null,
     });
@@ -45,9 +49,10 @@ function ReceiptViewTabs({
   );
 }
 
-export default compose(
-  withReceiptActions,
-  withReceipts(({ receiptTableState }) => ({
+export const ReceiptViewTabs = FF.pipe(
+  ReceiptViewTabsInner,
+  withReceipts(({ receiptTableState }: WithReceiptsProps) => ({
     receiptsCurrentView: receiptTableState.viewSlug,
   })),
-)(ReceiptViewTabs);
+  withReceiptsActions,
+);

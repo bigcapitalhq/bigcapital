@@ -1,22 +1,26 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
-// Lazy loading the content.
-const APAgingSummaryPdfDialogContent = lazy(
-  () => import('./APAgingSummaryPdfDialogContent'),
+const APAgingSummaryPdfDialogContent = lazy(() =>
+  import('./APAgingSummaryPdfDialogContent').then((m) => ({
+    default: m.APAgingSummaryPdfDialogContent,
+  })),
 );
 
-/**
- * A/P aging summary pdf preview dialog.
- * @returns {React.ReactNode}
- */
-function APAgingSummaryPdfDialogRoot({ dialogName, payload, isOpen }) {
+interface APAgingSummaryPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
+
+function APAgingSummaryPdfDialogRoot({
+  dialogName,
+  isOpen,
+}: APAgingSummaryPdfDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -34,6 +38,7 @@ function APAgingSummaryPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const APAgingSummaryPdfDialog = compose(withDialogRedux())(
+export const APAgingSummaryPdfDialog = FF.pipe(
   APAgingSummaryPdfDialogRoot,
+  withDialogRedux(),
 );

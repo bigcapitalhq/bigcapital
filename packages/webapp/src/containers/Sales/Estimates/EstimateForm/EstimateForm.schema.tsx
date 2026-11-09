@@ -1,23 +1,22 @@
-// @ts-nocheck
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
 import moment from 'moment';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 import { isBlank } from '@/utils';
 
 const Schema = Yup.object().shape({
-  customer_id: Yup.number().label(intl.get('customer_name_')).required(),
-  estimate_date: Yup.date().required().label(intl.get('estimate_date_')),
-  expiration_date: Yup.date()
+  customerId: Yup.number().label(intl.get('customer_name_')).required(),
+  estimateDate: Yup.date().required().label(intl.get('estimate_date_')),
+  expirationDate: Yup.date()
     .required()
-    .min(Yup.ref('estimate_date'), ({ path, min }) =>
+    .min(Yup.ref('estimateDate'), ({ path, min }) =>
       intl.get('estimate.validation.expiration_date', {
         path,
         min: moment(min).format('YYYY/MM/DD'),
       }),
     )
     .label(intl.get('expiration_date_')),
-  estimate_number: Yup.string()
+  estimateNumber: Yup.string()
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('estimate_number_')),
   reference: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
@@ -26,15 +25,15 @@ const Schema = Yup.object().shape({
     .min(1)
     .max(DATATYPES_LENGTH.STRING)
     .label(intl.get('note')),
-  terms_conditions: Yup.string()
+  termsConditions: Yup.string()
     .trim()
     .min(1)
     .max(DATATYPES_LENGTH.TEXT)
     .label(intl.get('note')),
   delivered: Yup.boolean(),
-  branch_id: Yup.string(),
-  warehouse_id: Yup.string(),
-  exchange_rate: Yup.number(),
+  branchId: Yup.string(),
+  warehouseId: Yup.string(),
+  exchangeRate: Yup.number(),
   entries: Yup.array().of(
     Yup.object().shape({
       quantity: Yup.number()
@@ -45,7 +44,7 @@ const Schema = Yup.object().shape({
           then: Yup.number().required(),
         }),
       rate: Yup.number().nullable().max(DATATYPES_LENGTH.INT_10),
-      item_id: Yup.number()
+      itemId: Yup.number()
         .nullable()
         .when(['quantity', 'rate'], {
           is: (quantity, rate) => !isBlank(quantity) && !isBlank(rate),

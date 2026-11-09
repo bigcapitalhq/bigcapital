@@ -1,35 +1,48 @@
-// @ts-nocheck
+import { Button, Intent, Classes } from '@blueprintjs/core';
+import { Formik, Form, type FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import * as Yup from 'yup';
-import { Formik, Form } from 'formik';
-import { FFormGroup, FSelect, FieldRequiredHint } from '@/components';
-import { Button, Intent, Classes } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
 import { useContactDuplicateFromContext } from './ContactDuplicateProvider';
-
+import type { ContactDuplicateFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import {
+  FFormGroup as FFormGroupBase,
+  FSelect,
+  FieldRequiredHint,
+  FormattedMessage as T,
+} from '@/components';
 import { ContactsOptions } from '@/constants/contactsOptions';
-
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
 
-function ContactDuplicateForm({
-  // #withDialogActions
+// Widened BP4 wrapper type — `popoverProps` minimal not exposed publicly.
+type FFormGroupProps = React.PropsWithChildren<{
+  name?: string;
+  label?: React.ReactNode;
+  labelInfo?: React.ReactNode;
+  className?: string;
+  inline?: boolean;
+  fastField?: boolean;
+}>;
+const FFormGroup = FFormGroupBase as unknown as React.FC<FFormGroupProps>;
+
+interface ContactDuplicateFormProps extends WithDialogActionsProps {}
+
+function ContactDuplicateFormInner({
   closeDialog,
-}) {
+}: ContactDuplicateFormProps): React.ReactElement {
   const history = useHistory();
 
   const { dialogName, contactId } = useContactDuplicateFromContext();
 
   const validationSchema = Yup.object().shape({
-    contact_type: Yup.string()
-      .required()
-      .label(intl.get('contact_type_')),
+    contactType: Yup.string().required().label(intl.get('contact_type_')),
   });
 
-  const initialValues = {
-    contact_type: '',
+  const initialValues: ContactDuplicateFormValues = {
+    contactType: '',
   };
 
   // Handle cancel button click.
@@ -38,9 +51,9 @@ function ContactDuplicateForm({
   };
 
   // Handle form submit.
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (values: ContactDuplicateFormValues) => {
     closeDialog(dialogName);
-    history.push(`${values.contact_type}/new?duplicate=${contactId}`, {
+    history.push(`${values.contactType}/new?duplicate=${contactId}`, {
       action: contactId,
     });
   };
@@ -49,23 +62,28 @@ function ContactDuplicateForm({
     <Formik
       validationSchema={validationSchema}
       initialValues={initialValues}
-      onSubmit={handleFormSubmit}
+      onSubmit={
+        handleFormSubmit as (
+          values: ContactDuplicateFormValues,
+          helpers: FormikHelpers<ContactDuplicateFormValues>,
+        ) => void
+      }
     >
       {({ isSubmitting }) => (
         <Form>
           <div className={Classes.DIALOG_BODY}>
-            <p class="paragraph">
+            <p className="paragraph">
               <T id={'are_you_sure_want_to_duplicate'} />
             </p>
 
             {/*------------ Contact Type -----------*/}
             <FFormGroup
-              name={'contact_type'}
-              label={<T id={'contact_type'} />}
+              name={'contactType'}
+              label={intl.get('contact_type')}
               labelInfo={<FieldRequiredHint />}
             >
               <FSelect
-                name={'contact_type'}
+                name={'contactType'}
                 items={ContactsOptions}
                 placeholder={<T id={'select_contact'} />}
                 textAccessor={'name'}
@@ -97,4 +115,7 @@ function ContactDuplicateForm({
   );
 }
 
-export default compose(withDialogActions)(ContactDuplicateForm);
+export const ContactDuplicateForm = FF.pipe(
+  ContactDuplicateFormInner,
+  withDialogActions,
+);

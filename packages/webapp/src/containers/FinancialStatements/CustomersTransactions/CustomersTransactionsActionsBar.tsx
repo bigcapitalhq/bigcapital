@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -10,23 +8,45 @@ import {
   Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { CustomersTransactionsExportMenu } from './components';
-import NumberFormatDropdown from '@/components/NumberFormatDropdown';
-
 import { useCustomersTransactionsContext } from './CustomersTransactionsProvider';
-import { withCustomersTransactions } from './withCustomersTransactions';
-import { withCustomersTransactionsActions } from './withCustomersTransactionsActions';
-
-import { compose, saveInvoke } from '@/utils';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import {
+  withCustomersTransactions,
+  WithCustomersTransactionsProps,
+} from './withCustomersTransactions';
+import {
+  withCustomersTransactionsActions,
+  WithCustomersTransactionsActionsProps,
+} from './withCustomersTransactionsActions';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import { saveInvoke } from '@/utils';
+
+interface CustomersTransactionsActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
+
+type CustomersTransactionsActionsBarProps = {
+  isFilterDrawerOpen: boolean;
+} & Pick<
+  WithCustomersTransactionsActionsProps,
+  'toggleCustomersTransactionsFilterDrawer'
+> &
+  WithDialogActionsProps &
+  CustomersTransactionsActionsBarOwnProps;
 
 /**
  * Customers transactions actions bar.
  */
-function CustomersTransactionsActionsBar({
+function CustomersTransactionsActionsBarInner({
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
@@ -38,8 +58,8 @@ function CustomersTransactionsActionsBar({
   toggleCustomersTransactionsFilterDrawer,
 
   // #withDialogActions
-  openDialog
-}) {
+  openDialog,
+}: CustomersTransactionsActionsBarProps) {
   const { isCustomersTransactionsLoading, CustomersTransactionsRefetch } =
     useCustomersTransactionsContext();
 
@@ -54,13 +74,13 @@ function CustomersTransactionsActionsBar({
   };
 
   // Handle number format form submit.
-  const handleNumberFormatSubmit = (values) => {
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
 
   // Handle print button click.
   const handlePrintBtnClick = () => {
-    openDialog(DialogsName.CustomerTransactionsPdfPreview)
+    openDialog(DialogsName.CustomerTransactionsPdfPreview);
   };
 
   return (
@@ -131,10 +151,11 @@ function CustomersTransactionsActionsBar({
   );
 }
 
-export default compose(
+export const CustomersTransactionsActionsBar = FF.pipe(
+  CustomersTransactionsActionsBarInner,
+  withDialogActions,
+  withCustomersTransactionsActions,
   withCustomersTransactions(({ customersTransactionsDrawerFilter }) => ({
     isFilterDrawerOpen: customersTransactionsDrawerFilter,
   })),
-  withCustomersTransactionsActions,
-  withDialogActions
-)(CustomersTransactionsActionsBar);
+);

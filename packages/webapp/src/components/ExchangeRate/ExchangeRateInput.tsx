@@ -1,7 +1,4 @@
 // @ts-nocheck
-import { useState } from 'react';
-import styled from 'styled-components';
-import { useFormikContext } from 'formik';
 import {
   Button,
   Classes,
@@ -11,8 +8,11 @@ import {
   Position,
   Spinner,
 } from '@blueprintjs/core';
-import { FlagIcon } from '../Tags';
+import { useFormikContext } from 'formik';
+import { useState } from 'react';
+import styled from 'styled-components';
 import { FMoneyInputGroup, FFormGroup } from '../Forms';
+import { FlagIcon } from '../Tags';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 
 interface ExchangeRateValuesBag {
@@ -31,8 +31,8 @@ interface ExchangeRateInputGroupProps {
 
   withPopoverRecalcConfirm?: boolean;
 
-  onRecalcConfirm: (bag: ExchangeRateValuesBag) => void;
-  onCancel: (bag: ExchangeRateValuesBag) => void;
+  onRecalcConfirm?: (bag: ExchangeRateValuesBag) => void;
+  onCancel?: (bag: ExchangeRateValuesBag) => void;
 
   isConfirmPopoverOpen?: boolean;
   initialConfirmPopoverOpen?: boolean;

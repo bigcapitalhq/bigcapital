@@ -1,9 +1,14 @@
-// @ts-nocheck
-import React from 'react';
+import { lazy } from 'react';
 
-const TaxRateDeleteAlert = React.lazy(() => import('./TaxRateDeleteAlert'));
+const TaxRateDeleteAlert = lazy(() =>
+  import('./TaxRateDeleteAlert').then((m) => ({
+    default: m.TaxRateDeleteAlert,
+  })),
+);
 
 /**
  * Tax rates alerts.
  */
-export default [{ name: 'tax-rate-delete', component: TaxRateDeleteAlert }];
+export const TaxRatesAlerts = [
+  { name: 'tax-rate-delete', component: TaxRateDeleteAlert },
+];

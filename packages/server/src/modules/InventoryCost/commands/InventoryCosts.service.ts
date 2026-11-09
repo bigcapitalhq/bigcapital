@@ -1,7 +1,6 @@
 import { keyBy, get } from 'lodash';
 import { IInventoryItemCostMeta } from '../types/InventoryCost.types';
 import { Inject, Injectable } from '@nestjs/common';
-import { InventoryTransaction } from '../models/InventoryTransaction';
 import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
 import { Item } from '../../Items/models/Item';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -25,8 +24,8 @@ export class InventoryItemCostService {
    * @param {number} itemId
    */
   private getItemInventoryMeta(
-    INValuationMap: Map<number, IInventoryItemCostMeta>,
-    OUTValuationMap: Map<number, IInventoryItemCostMeta>,
+    INValuationMap: Record<string, any>,
+    OUTValuationMap: Record<string, any>,
     itemId: number,
   ) {
     const INCost = get(INValuationMap, `[${itemId}].cost`, 0);

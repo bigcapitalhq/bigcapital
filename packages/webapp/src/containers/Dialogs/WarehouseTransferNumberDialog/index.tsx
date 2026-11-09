@@ -1,23 +1,30 @@
-// @ts-nocheck
-import React from 'react';
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
-const WarehouseTransferNumberDialogContent = React.lazy(
-  () => import('./WarehouseTransferNumberDialogContent'),
+const WarehouseTransferNumberDialogContent = lazy(() =>
+  import('./WarehouseTransferNumberDialogContent').then((m) => ({
+    default: m.WarehouseTransferNumberDialogContent,
+  })),
 );
 
-/**
- * Warehouse transfer number dialog.
- */
+interface WarehouseTransferNumberDialogProps {
+  dialogName: string;
+  payload: { initialFormValues?: Partial<ReferenceNumberFormValues> };
+  isOpen: boolean | undefined;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
+
 function WarehouseTransferNumberDilaog({
   dialogName,
-  payload: { initialFormValues },
+  payload: { initialFormValues } = {},
   isOpen,
   onConfirm,
-}) {
-  const handleConfirm = (values) => {
+}: WarehouseTransferNumberDialogProps): React.ReactElement {
+  const handleConfirm = (values: ReferenceNumberFormValues) => {
     saveInvoke(onConfirm, values);
   };
   return (
@@ -37,4 +44,4 @@ function WarehouseTransferNumberDilaog({
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(WarehouseTransferNumberDilaog);
+export const index = FF.pipe(WarehouseTransferNumberDilaog, withDialogRedux());

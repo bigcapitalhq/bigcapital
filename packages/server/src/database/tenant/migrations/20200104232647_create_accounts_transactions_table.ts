@@ -18,8 +18,8 @@ exports.up = function (knex) {
       table.string('transaction_number').nullable().index();
       table.string('reference_number').nullable().index();
       table.integer('item_id').unsigned().nullable().index();
-      table.integer('item_quantity').unsigned().nullable().index(),
-        table.string('note');
+      table.integer('item_quantity').unsigned().nullable().index();
+      table.string('note');
       table.integer('user_id').unsigned().index();
 
       table.integer('index_group').unsigned().index();

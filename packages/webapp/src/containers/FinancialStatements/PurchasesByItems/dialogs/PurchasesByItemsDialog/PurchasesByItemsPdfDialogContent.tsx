@@ -1,14 +1,13 @@
-// @ts-nocheck
 import { AnchorButton } from '@blueprintjs/core';
+import { usePurchaseByItemsContext } from '../../PurchasesByItemsProvider';
 import {
   DialogContent,
   PdfDocumentPreview,
   FormattedMessage as T,
 } from '@/components';
 import { usePurchasesByItemsPdfExport } from '@/hooks/query';
-import { usePurchaseByItemsContext } from '../../PurchasesByItemsProvider';
 
-export default function PurchasesByItemsPdfDialogContent() {
+export function PurchasesByItemsPdfDialogContent() {
   const { httpQuery } = usePurchaseByItemsContext();
   const { isLoading, pdfUrl } = usePurchasesByItemsPdfExport(httpQuery);
 

@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
 import { AccountResponseDto } from '@/modules/Accounts/dtos/AccountResponse.dto';
 import { BranchResponseDto } from '@/modules/Branches/dtos/BranchResponse.dto';
+import { CustomerResponseDto } from '@/modules/Customers/dtos/CustomerResponse.dto';
 
 class PaymentReceivedEntryResponseDto {
   @ApiProperty({ description: 'ID of the entry', example: 1 })
@@ -48,7 +49,7 @@ export class PaymentReceivedResponseDto {
 
   @ApiProperty({
     description: 'The date of the payment',
-    example: '2023-01-01T00:00:00Z',
+    example: '2023-01-01',
   })
   paymentDate: Date | string;
 
@@ -102,6 +103,13 @@ export class PaymentReceivedResponseDto {
   })
   @Type(() => AccountResponseDto)
   depositAccount: AccountResponseDto;
+
+  @ApiProperty({
+    description: 'The customer of the payment received',
+    type: () => CustomerResponseDto,
+  })
+  @Type(() => CustomerResponseDto)
+  customer: CustomerResponseDto;
 
   @ApiProperty({
     description: 'The ID of the branch',

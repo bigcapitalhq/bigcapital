@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import {
   T,
   TotalLines,
@@ -9,43 +8,46 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
 /**
  * Estimate details panel footer content.
  */
-export default function EstimateDetailTableFooter() {
+export function EstimateDetailTableFooter() {
   const { estimate } = useEstimateDetailDrawerContext();
+
+  if (!estimate) {
+    return null;
+  }
 
   return (
     <EstimateDetailsFooterRoot>
       <EstimateTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'estimate.details.subtotal'} />}
-          value={estimate.formatted_subtotal}
+          value={estimate.formattedSubtotal}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
-        {estimate?.discount_amount_formatted && (
+        {estimate?.discountAmountFormatted && (
           <TotalLine
             title={
-              estimate.discount_percentage_formatted
-                ? `Discount [${estimate.discount_percentage_formatted}]`
+              estimate.discountPercentageFormatted
+                ? `Discount [${estimate.discountPercentageFormatted}]`
                 : 'Discount'
             }
-            value={estimate.discount_amount_formatted}
+            value={estimate.discountAmountFormatted}
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
-        {estimate?.adjustment_formatted && (
+        {estimate?.adjustmentFormatted && (
           <TotalLine
             title="Adjustment"
-            value={estimate.adjustment_formatted}
+            value={estimate.adjustmentFormatted}
             textStyle={TotalLineTextStyle.Regular}
           />
         )}
         <TotalLine
           title={<T id={'estimate.details.total'} />}
-          value={estimate.total_formatted}
+          value={estimate.totalFormatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />

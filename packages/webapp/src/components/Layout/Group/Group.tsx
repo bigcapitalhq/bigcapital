@@ -1,5 +1,5 @@
-import React from 'react';
 import { SystemProps } from '@xstyled/emotion';
+import React from 'react';
 import { Box } from '../Box';
 import { filterFalsyChildren } from './_utils';
 

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { ActivateCustomer } from './commands/ActivateCustomer.service';
 import { CreateCustomer } from './commands/CreateCustomer.service';
 import { CustomerValidators } from './commands/CustomerValidators.service';
@@ -26,6 +25,7 @@ import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerG
 
 @Module({
   imports: [
+    TenancyModule,
     TenancyDatabaseModule,
     DynamicListModule,
     LedgerModule,
@@ -43,8 +43,6 @@ import { CustomerWriteGLOpeningBalanceSubscriber } from './subscribers/CustomerG
     GetCustomerService,
     CustomersApplication,
     DeleteCustomer,
-    TenancyContext,
-    TransformerInjectable,
     GetCustomerService,
     CustomersExportable,
     CustomersImportable,

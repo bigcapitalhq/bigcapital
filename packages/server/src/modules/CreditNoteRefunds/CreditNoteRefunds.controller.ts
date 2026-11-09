@@ -14,7 +14,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ICreditNoteRefundDTO } from '../CreditNotes/types/CreditNotes.types';
+
 import { CreditNotesRefundsApplication } from './CreditNotesRefundsApplication.service';
 import { RefundCreditNote } from './models/RefundCreditNote';
 import { CreditNoteRefundDto } from './dto/CreditNoteRefund.dto';
@@ -55,7 +55,9 @@ export class CreditNoteRefundsController {
 
   @Get('refunds/:refundCreditId')
   @RequirePermission(CreditNoteAction.View, AbilitySubject.CreditNote)
-  @ApiOperation({ summary: 'Retrieve a refund transaction for the given credit note.' })
+  @ApiOperation({
+    summary: 'Retrieve a refund transaction for the given credit note.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Refund credit note transaction retrieved successfully.',

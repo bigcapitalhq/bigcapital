@@ -1,10 +1,18 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
-const InvoiceCustomize = React.lazy(() => import('./InvoiceCustomize'));
+const InvoiceCustomize = React.lazy(() =>
+  import('./InvoiceCustomize').then((m) => ({ default: m.InvoiceCustomize })),
+);
+
+interface InvoiceCustomizeDrawerRootProps {
+  name: string;
+}
+
+type InvoiceCustomizeDrawerRootConnectedProps =
+  InvoiceCustomizeDrawerRootProps & WithDrawersProps;
 
 /**
  * Invoice customize drawer.
@@ -15,7 +23,7 @@ function InvoiceCustomizeDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: InvoiceCustomizeDrawerRootConnectedProps) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -30,6 +38,7 @@ function InvoiceCustomizeDrawerRoot({
   );
 }
 
-export const InvoiceCustomizeDrawer = R.compose(withDrawers())(
+export const InvoiceCustomizeDrawer = FF.pipe(
   InvoiceCustomizeDrawerRoot,
+  withDrawers(),
 );

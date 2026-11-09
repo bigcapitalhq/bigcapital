@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { PreferencesReceiptsBoot } from './PreferencesReceiptsFormBoot';
 import { PreferencesReceiptsFormPage } from './PreferencesReceiptsFormPage';
 

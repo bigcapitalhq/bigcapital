@@ -1,42 +1,47 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { saveInvoke } from '@/utils';
 
-import { compose, saveInvoke } from '@/utils';
+interface ExpenseDeleteEntriesAlertPayload {
+  // The original `payload: {}` shape — this alert is a generic clear-lines confirmation that doesn't read any payload field.
+  [key: string]: unknown;
+}
+
+interface ExpenseDeleteEntriesAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: ExpenseDeleteEntriesAlertPayload;
+  onConfirm?: (event: React.SyntheticEvent<HTMLElement>) => void;
+}
 
 /**
  * Alert description.
  */
-function ExpenseDeleteEntriesAlert({
+function ExpenseDeleteEntriesAlertInner({
   name,
   onConfirm,
-
-  // #withAlertStoreConnect
   isOpen,
-  payload: {  },
-
-  // #withAlertActions
+  payload,
   closeAlert,
-}) {
-  // Handle the alert cancel.
+}: ExpenseDeleteEntriesAlertProps): React.ReactElement {
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle confirm the alert.
-  const handleConfirm = (event) => {
+  const handleConfirm = (event: React.SyntheticEvent<HTMLElement>) => {
     closeAlert(name);
-    saveInvoke(onConfirm, event)
+    saveInvoke(onConfirm, event);
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'clear_all_lines'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('clear_all_lines')}
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancel}
@@ -44,13 +49,15 @@ function ExpenseDeleteEntriesAlert({
       loading={false}
     >
       <p>
-        Clearing the table lines will delete all expense amounts were applied, Is this okay?
+        Clearing the table lines will delete all expense amounts were applied,
+        Is this okay?
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const ExpenseDeleteEntriesAlert = FF.pipe(
+  ExpenseDeleteEntriesAlertInner,
   withAlertActions,
-)(ExpenseDeleteEntriesAlert);
+  withAlertStoreConnect(),
+);

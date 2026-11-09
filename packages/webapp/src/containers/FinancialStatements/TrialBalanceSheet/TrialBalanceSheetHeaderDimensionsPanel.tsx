@@ -1,20 +1,19 @@
-// @ts-nocheck
+import { FormGroup, Classes } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { FormGroup, Classes } from '@blueprintjs/core';
-import { BranchMultiSelect, Row, Col } from '@/components';
 import {
   TrialBLHeaderDimensionsPanelProvider,
   useTrialBalanceSheetPanelContext,
 } from './TrialBalanceSheetHeaderDimensionsPanelProvider';
-import { useFeatureCan } from '@/hooks/state';
+import { BranchMultiSelect, Row, Col } from '@/components';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
- * Trial balance sheet header dismension panel.
+ * Trial balance sheet header dimension panel.
  * @returns {JSX.Element}
  */
-export default function TrialBalanceSheetHeaderDimensionsPanel() {
+export function TrialBalanceSheetHeaderDimensionsPanel() {
   return (
     <TrialBLHeaderDimensionsPanelProvider>
       <TrialBLSheetHeaderDimensionsPanelContent />
@@ -23,7 +22,7 @@ export default function TrialBalanceSheetHeaderDimensionsPanel() {
 }
 
 /**
- * Trial balance sheet header dismension panel content.
+ * Trial balance sheet header dimension panel content.
  * @returns {JSX.Element}
  */
 function TrialBLSheetHeaderDimensionsPanelContent() {

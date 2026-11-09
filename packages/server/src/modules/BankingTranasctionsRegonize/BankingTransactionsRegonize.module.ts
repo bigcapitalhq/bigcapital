@@ -46,6 +46,7 @@ const models = [RegisterTenancyModel(RecognizedBankTransaction)];
     ...models,
     RevertRecognizedTransactionsService,
     RecognizeTranasctionsService,
+    BullModule,
   ],
   controllers: [BankingRecognizedTransactionsController],
 })

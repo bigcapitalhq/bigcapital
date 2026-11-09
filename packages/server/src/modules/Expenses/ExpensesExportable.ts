@@ -10,9 +10,7 @@ import { ISortOrder } from '@/modules/DynamicListing/DynamicFilter/DynamicFilter
 @Injectable()
 @ExportableService({ name: Expense.name })
 export class ExpensesExportable extends Exportable {
-  constructor(
-    private readonly expensesApplication: ExpensesApplication,
-  ) {
+  constructor(private readonly expensesApplication: ExpensesApplication) {
     super();
   }
 
@@ -35,6 +33,6 @@ export class ExpensesExportable extends Exportable {
 
     return this.expensesApplication
       .getExpenses(parsedQuery)
-      .then((output) => output.expenses);
+      .then((output) => output.data);
   }
 }

@@ -1,13 +1,12 @@
-// @ts-nocheck
-import React from 'react';
-import { Alert } from '@/components';
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
+import { TaxRateFormValues } from './utils';
+import { Alert } from '@/components';
 
 export function TaxRateFormDialogFormErrors() {
-  const { errors } = useFormikContext();
+  const { errors } = useFormikContext<TaxRateFormValues>();
 
-  if (!errors.confirm_edit) return null;
+  if (!errors.confirmEdit) return null;
 
-  return <Alert intent={Intent.DANGER}>{errors.confirm_edit}</Alert>;
+  return <Alert intent={Intent.DANGER}>{errors.confirmEdit}</Alert>;
 }

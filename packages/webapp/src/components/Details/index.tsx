@@ -1,15 +1,24 @@
-// @ts-nocheck
-import React from 'react';
 import clsx from 'classnames';
+import React from 'react';
 
 import '@/style/components/Details.scss';
 
 const DIRECTION = {
   VERTICAL: 'vertical',
   HORIZANTAL: 'horizantal',
-};
+} as const;
 
-const DetailsMenuContext = React.createContext();
+interface DetailsMenuProps {
+  children?: React.ReactNode;
+  direction?: string;
+  textAlign?: string;
+  minLabelSize?: number | string;
+  className?: string;
+}
+
+const DetailsMenuContext = React.createContext<{
+  minLabelSize?: number | string;
+}>({});
 const useDetailsMenuContext = () => React.useContext(DetailsMenuContext);
 
 /**
@@ -21,7 +30,7 @@ export function DetailsMenu({
   textAlign,
   minLabelSize,
   className,
-}) {
+}: DetailsMenuProps) {
   return (
     <div
       className={clsx(
@@ -41,6 +50,15 @@ export function DetailsMenu({
   );
 }
 
+interface DetailItemProps {
+  label?: React.ReactNode;
+  children?: React.ReactNode;
+  name?: string;
+  align?: string;
+  multiline?: boolean;
+  className?: string;
+}
+
 /**
  * Detail item.
  */
@@ -51,7 +69,7 @@ export function DetailItem({
   align,
   multiline,
   className,
-}) {
+}: DetailItemProps) {
   const { minLabelSize } = useDetailsMenuContext();
 
   return (
@@ -68,9 +86,9 @@ export function DetailItem({
     >
       <div
         style={{
-          'min-width': minLabelSize,
+          minWidth: minLabelSize,
         }}
-        class="detail-item__label"
+        className="detail-item__label"
       >
         {label}
       </div>

@@ -6,9 +6,11 @@ export class SystemUser extends BaseModel {
   public readonly lastName: string;
   public readonly email: string;
   public password: string;
+  public googleId?: string;
 
   public readonly active: boolean;
   public readonly tenantId: number;
+  public readonly defaultTenantId?: number;
   public readonly verifyToken: string;
   public readonly verified: boolean;
   public readonly inviteAcceptedAt!: string;

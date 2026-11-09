@@ -1,64 +1,71 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchTrialBalanceTable,
+  fetchTrialBalanceXlsx,
+  fetchTrialBalanceCsv,
+  fetchTrialBalancePdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  TrialBalanceTableQuery,
+  TrialBalanceTableResponse,
+  TrialBalanceXlsxQuery,
+  TrialBalanceCsvQuery,
+  TrialBalancePdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve trial balance sheet.
- */
-export function useTrialBalanceSheet(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.TRIAL_BALANCE_SHEET, query],
-    {
-      method: 'get',
-      url: '/reports/trial-balance-sheet',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function useTrialBalanceSheet(
+  query: TrialBalanceTableQuery,
+  props?: Omit<
+    UseQueryOptions<TrialBalanceTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.trialBalance(query),
+    queryFn: () => fetchTrialBalanceTable(fetcher, query),
+  });
 }
 
-export const useTrialBalanceSheetXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/trial-balance-sheet',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'trial_balance_sheet.xlsx',
+export function useTrialBalanceSheetXlsxExport(
+  query: TrialBalanceXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchTrialBalanceXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'trial_balance_sheet.xlsx'),
+      ),
   });
-};
+}
 
-export const useTrialBalanceSheetCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/trial-balance-sheet',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'trial_balance_sheet.csv',
+export function useTrialBalanceSheetCsvExport(
+  query: TrialBalanceCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchTrialBalanceCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'trial_balance_sheet.csv'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves the trial balance sheet pdf document data.
- */
-export function useTrialBalanceSheetPdf(query = {}) {
-  return useRequestPdf({
-    url: `/reports/trial-balance-sheet`,
-    params: query,
-  });
+export function useTrialBalanceSheetPdf(query: TrialBalancePdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchTrialBalancePdf(fetcher, query));
 }

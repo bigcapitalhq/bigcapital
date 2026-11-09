@@ -1,0 +1,21 @@
+# Single-node, zero-replication Garage configuration for self-hosted S3.
+# Runtime secrets (rpc_secret, admin_token) are injected via environment
+# variables (GARAGE_RPC_SECRET / GARAGE_ADMIN_TOKEN) from the compose file.
+
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+block_size = 1048576
+
+# Zero-replication: the node holds a single copy of the data.
+replication_mode = "none"
+
+# RPC bind address used for inter-node layout management.
+rpc_bind_addr = "[::]:3901"
+
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "[::]:3900"
+
+[admin]
+api_bind_addr = "[::]:3903"

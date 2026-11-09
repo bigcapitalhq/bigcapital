@@ -114,8 +114,10 @@ export class GetSaleEstimateMailStateTransformer extends SaleEstimateTransfromer
    */
   protected discountLabel(estimate) {
     return estimate.discountType === 'percentage'
-      ? `Discount [${estimate.discountPercentageFormatted}]`
-      : 'Discount';
+      ? this.context.i18n.t('estimate.mail.discount_with_percentage', {
+          args: { percentage: this.discountPercentageFormatted(estimate) },
+        })
+      : this.context.i18n.t('estimate.mail.discount');
   }
 
   /**

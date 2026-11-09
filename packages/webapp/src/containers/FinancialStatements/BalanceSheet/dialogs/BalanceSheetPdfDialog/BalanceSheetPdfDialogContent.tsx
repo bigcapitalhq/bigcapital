@@ -1,16 +1,18 @@
-// @ts-nocheck
+import { AnchorButton } from '@blueprintjs/core';
+import { useBalanceSheetContext } from '../../BalanceSheetProvider';
+import type { BalanceSheetPdfQuery } from '@bigcapital/sdk-ts';
 import {
   DialogContent,
   PdfDocumentPreview,
   FormattedMessage as T,
 } from '@/components';
 import { useBalanceSheetPdf } from '@/hooks/query';
-import { AnchorButton } from '@blueprintjs/core';
-import { useBalanceSheetContext } from '../../BalanceSheetProvider';
 
-export default function BalanceSheetPdfDialogContent() {
+export function BalanceSheetPdfDialogContent() {
   const { httpQuery } = useBalanceSheetContext();
-  const { isLoading, isLoaded, pdfUrl } = useBalanceSheetPdf({ ...httpQuery });
+  const { isLoading, isLoaded, pdfUrl } = useBalanceSheetPdf(
+    httpQuery as BalanceSheetPdfQuery,
+  );
 
   return (
     <DialogContent>
@@ -29,7 +31,6 @@ export default function BalanceSheetPdfDialogContent() {
         <AnchorButton
           href={pdfUrl}
           download={'invoice.pdf'}
-
           disabled={!isLoaded}
           small
           minimal

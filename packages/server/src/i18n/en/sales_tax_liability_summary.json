@@ -1,0 +1,9 @@
+{
+  "sheet_name": "Sales Tax Liability Summary",
+  "total": "Total",
+  "tax_name": "Tax Name",
+  "tax_percentage": "Tax Percentage",
+  "taxable_amount": "Taxable Amount",
+  "collected_tax": "Collected Tax",
+  "tax_amount": "Tax Amount"
+}

@@ -1,24 +1,27 @@
-// @ts-nocheck
-import React, { lazy } from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React, { lazy } from 'react';
 import { Dialog, DialogSuspense } from '@/components';
-
 import withDialogRedux from '@/components/DialogReduxConnect';
-
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
-// Lazy loading the content.
-const ProfitLossSheetPdfDialogContent = lazy(
-  () => import('./ProfitLossSheetPdfDialogContent'),
+const ProfitLossSheetPdfDialogContent = lazy(() =>
+  import('./ProfitLossSheetPdfDialogContent').then((mod) => ({
+    default: mod.ProfitLossSheetPdfDialogContent,
+  })),
 );
 
-/**
- * Cashflow sheet pdf preview dialog.
- * @returns {React.ReactNode}
- */
-function ProfitLossSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
+interface ProfitLossSheetPdfDialogRootProps {
+  dialogName: string;
+  payload?: Record<string, unknown>;
+  isOpen: boolean;
+}
+
+function ProfitLossSheetPdfDialogRoot({
+  dialogName,
+  isOpen,
+  payload,
+}: ProfitLossSheetPdfDialogRootProps) {
   return (
     <Dialog
       name={dialogName}
@@ -30,15 +33,13 @@ function ProfitLossSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
       style={{ width: '1000px' }}
     >
       <DialogSuspense>
-        <ProfitLossSheetPdfDialogContent
-          dialogName={dialogName}
-          subscriptionForm={payload}
-        />
+        <ProfitLossSheetPdfDialogContent />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export const ProfitLossSheetPdfDialog = compose(withDialogRedux())(
+export const ProfitLossSheetPdfDialog = FF.pipe(
   ProfitLossSheetPdfDialogRoot,
+  withDialogRedux(),
 );

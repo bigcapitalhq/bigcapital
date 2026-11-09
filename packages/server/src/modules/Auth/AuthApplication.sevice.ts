@@ -3,7 +3,6 @@ import { AuthSigninService } from './commands/AuthSignin.service';
 import { AuthSignupService } from './commands/AuthSignup.service';
 import { AuthSignupConfirmService } from './commands/AuthSignupConfirm.service';
 import { AuthSignupConfirmResendService } from './commands/AuthSignupConfirmResend.service';
-import { AuthSigninDto } from './dtos/AuthSignin.dto';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
 import { AuthSendResetPasswordService } from './commands/AuthSendResetPassword.service';
 import { AuthResetPasswordService } from './commands/AuthResetPassword.service';

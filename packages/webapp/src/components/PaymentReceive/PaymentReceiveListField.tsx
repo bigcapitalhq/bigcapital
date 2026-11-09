@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
 import { MenuItem } from '@blueprintjs/core';
+import React, { useCallback } from 'react';
 import { ListSelect, FormattedMessage as T } from '@/components';
 
 export function PaymentReceiveListField({

@@ -1,51 +1,53 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
-import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
-
-import FinancialStatementHeader from '../FinancialStatementHeader';
-import UnrealizedGainOrLossGeneralPanel from './UnrealizedGainOrLossGeneralPanel';
-
+import { Formik, Form } from 'formik';
+import * as FF from 'fp-ts/function';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import * as Yup from 'yup';
+import { FinancialStatementHeader } from '../FinancialStatementHeader';
+import { UnrealizedGainOrLossGeneralPanel } from './UnrealizedGainOrLossGeneralPanel';
 import { withUnrealizedGainOrLoss } from './withUnrealizedGainOrLoss';
-import { withUnrealizedGainOrLossActions } from './withUnrealizedGainOrLossActions';
+import {
+  withUnrealizedGainOrLossActions,
+  WithUnrealizedGainOrLossActionsProps,
+} from './withUnrealizedGainOrLossActions';
+import type { FormikHelpers } from 'formik';
+import { FormattedMessage as T } from '@/components';
+import { transformToForm } from '@/utils';
 
-import { compose, transformToForm } from '@/utils';
+interface UnrealizedGainOrLossHeaderOwnProps {
+  onSubmitFilter: (values: Record<string, unknown>) => void;
+  pageFilter: Record<string, unknown>;
+}
 
-/**
- * Unrealized Gain or Loss.header.
- */
-function UnrealizedGainOrLossHeader({
-  // #ownProps
+type UnrealizedGainOrLossHeaderProps = UnrealizedGainOrLossHeaderOwnProps & {
+  isFilterDrawerOpen: boolean;
+} & Pick<
+    WithUnrealizedGainOrLossActionsProps,
+    'toggleUnrealizedGainOrLossFilterDrawer'
+  >;
+
+function UnrealizedGainOrLossHeaderInner({
   onSubmitFilter,
   pageFilter,
-
-  //#withUnrealizedGainOrLoss
   isFilterDrawerOpen,
-
-  //#withUnrealizedGainOrLossActions
   toggleUnrealizedGainOrLossFilterDrawer,
-}) {
-  // Filter form default values.
+}: UnrealizedGainOrLossHeaderProps) {
   const defaultValues = {
     fromDate: moment().toDate(),
     toDate: moment().toDate(),
   };
 
-  // Initial form values.
   const initialValues = transformToForm(
     {
       ...pageFilter,
-      fromDate: moment(pageFilter.fromDate).toDate(),
-      toDate: moment(pageFilter.toDate).toDate(),
+      fromDate: moment(pageFilter.fromDate as string).toDate(),
+      toDate: moment(pageFilter.toDate as string).toDate(),
     },
     defaultValues,
   );
 
-  // Validation schema.
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date().required().label(intl.get('fromDate')),
@@ -56,14 +58,15 @@ function UnrealizedGainOrLossHeader({
     displayColumnsType: Yup.string(),
   });
 
-  // Handle form submit.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: Record<string, unknown>,
+    { setSubmitting }: FormikHelpers<Record<string, unknown>>,
+  ) => {
     onSubmitFilter(values);
     toggleUnrealizedGainOrLossFilterDrawer(false);
     setSubmitting(false);
   };
 
-  // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleUnrealizedGainOrLossFilterDrawer(false);
   };
@@ -87,7 +90,7 @@ function UnrealizedGainOrLossHeader({
             />
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>
@@ -101,9 +104,10 @@ function UnrealizedGainOrLossHeader({
   );
 }
 
-export default compose(
+export const UnrealizedGainOrLossHeader = FF.pipe(
+  UnrealizedGainOrLossHeaderInner,
+  withUnrealizedGainOrLossActions,
   withUnrealizedGainOrLoss(({ unrealizedGainOrLossDrawerFilter }) => ({
     isFilterDrawerOpen: unrealizedGainOrLossDrawerFilter,
   })),
-  withUnrealizedGainOrLossActions,
-)(UnrealizedGainOrLossHeader);
+);

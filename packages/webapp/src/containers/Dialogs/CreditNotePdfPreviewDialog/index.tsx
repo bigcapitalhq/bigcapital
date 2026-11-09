@@ -1,17 +1,21 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
 import { T, Dialog, DialogSuspense } from '@/components';
-
 import withDialogRedux from '@/components/DialogReduxConnect';
-
 import { CLASSES } from '@/constants/classes';
-import { compose } from '@/utils';
 
 const PdfPreviewDialogContent = React.lazy(() =>
-  import('./CreditNotePdfPreviewDialogContent'),
+  import('./CreditNotePdfPreviewDialogContent').then((m) => ({
+    default: m.CreditNotePdfPreviewDialogContent,
+  })),
 );
+
+interface CreditNotePdfPreviewDialogProps {
+  dialogName: string;
+  payload: { creditNoteId: number | string | null };
+  isOpen: boolean | undefined;
+}
 
 /**
  * Credit note PDF previwe dialog.
@@ -20,7 +24,7 @@ function CreditNotePdfPreviewDialog({
   dialogName,
   payload = { creditNoteId: null },
   isOpen,
-}) {
+}: CreditNotePdfPreviewDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -40,4 +44,4 @@ function CreditNotePdfPreviewDialog({
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(CreditNotePdfPreviewDialog);
+export const index = FF.pipe(CreditNotePdfPreviewDialog, withDialogRedux());

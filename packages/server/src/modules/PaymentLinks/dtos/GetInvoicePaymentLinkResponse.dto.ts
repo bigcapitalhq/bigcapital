@@ -2,19 +2,19 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class PaymentLinkAddressDto {
   @ApiProperty({ description: 'Address line 1' })
-  address_1: string;
+  address1: string;
 
   @ApiProperty({ description: 'Address line 2' })
-  address_2: string;
+  address2: string;
 
   @ApiProperty({ description: 'Postal code' })
-  postal_code: string;
+  postalCode: string;
 
   @ApiProperty({ description: 'City' })
   city: string;
 
   @ApiProperty({ description: 'State or province' })
-  state_province: string;
+  stateProvince: string;
 
   @ApiProperty({ description: 'Phone number' })
   phone: string;
@@ -140,16 +140,25 @@ export class GetInvoicePaymentLinkResponseDto {
   @ApiProperty({ description: 'Terms and conditions' })
   termsConditions: string;
 
-  @ApiProperty({ type: [PaymentLinkEntryDto], description: 'Invoice line entries' })
+  @ApiProperty({
+    type: [PaymentLinkEntryDto],
+    description: 'Invoice line entries',
+  })
   entries: PaymentLinkEntryDto[];
 
   @ApiProperty({ type: [PaymentLinkTaxEntryDto], description: 'Tax entries' })
   taxes: PaymentLinkTaxEntryDto[];
 
-  @ApiProperty({ type: PaymentLinkBrandingTemplateDto, description: 'Branding template' })
+  @ApiProperty({
+    type: PaymentLinkBrandingTemplateDto,
+    description: 'Branding template',
+  })
   brandingTemplate: PaymentLinkBrandingTemplateDto;
 
-  @ApiProperty({ type: PaymentLinkOrganizationDto, description: 'Organization metadata' })
+  @ApiProperty({
+    type: PaymentLinkOrganizationDto,
+    description: 'Organization metadata',
+  })
   organization: PaymentLinkOrganizationDto;
 
   @ApiProperty({ description: 'Whether Stripe is available as payment method' })

@@ -7,4 +7,10 @@ interface IfProps {
 }
 
 export const If = (props: IfProps): React.ReactElement | null =>
-  props.condition ? (props.render ? <>{props.render()}</> : <>{props.children}</>) : null;
+  props.condition ? (
+    props.render ? (
+      <>{props.render()}</>
+    ) : (
+      <>{props.children}</>
+    )
+  ) : null;

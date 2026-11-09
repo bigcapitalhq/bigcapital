@@ -1,21 +1,20 @@
-// @ts-nocheck
+import { css } from '@emotion/css';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { css } from '@emotion/css';
 import { InvoiceForm } from './InvoiceForm';
 import {
   InvoiceFormProvider,
   useInvoiceFormContext,
 } from './InvoiceFormProvider';
-import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 import { DashboardInsider } from '@/components';
+import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 
 /**
  * Invoice form page.
  */
-export default function InvoiceFormPage() {
-  const { id } = useParams();
-  const invoiceId = parseInt(id, 10);
+export function InvoiceFormPage() {
+  const { id } = useParams<{ id?: string }>();
+  const invoiceId = id ? parseInt(id, 10) : undefined;
 
   return (
     <InvoiceFormProvider invoiceId={invoiceId}>

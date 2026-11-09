@@ -17,7 +17,7 @@ export class EditRoleService {
 
     @Inject(Role.name)
     private readonly roleModel: TenantModelProxy<typeof Role>,
-  ) { }
+  ) {}
 
   /**
    * Edits details of the given role on the storage.

@@ -1,11 +1,10 @@
-import * as moment from 'moment';
 import { ClsService } from 'nestjs-cls';
 import { Inject, Injectable } from '@nestjs/common';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { SaleInvoice } from '../SaleInvoices/models/SaleInvoice';
 import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { PaymentLink } from './models/PaymentLink';
-import { ServiceError } from '../Items/ServiceError';
+import { assertPaymentLinkAccessible } from './payment-link.utils';
 import { GetInvoicePaymentLinkMetaTransformer } from '../SaleInvoices/queries/GetInvoicePaymentLink.transformer';
 import { TenantModel } from '../System/models/TenantModel';
 
@@ -36,19 +35,17 @@ export class GetInvoicePaymentLinkMetadata {
       .where('resourceType', 'SaleInvoice')
       .throwIfNotFound();
 
-    // Validate the expiry at date.
-    if (paymentLink.expiryAt) {
-      const currentDate = moment();
-      const expiryDate = moment(paymentLink.expiryAt);
+    const callerOrganizationId = this.clsService.get<string>('organizationId');
 
-      if (expiryDate.isBefore(currentDate)) {
-        throw new ServiceError('PAYMENT_LINK_EXPIRED');
-      }
-    }
     const tenant = await this.systemTenantModel
       .query()
       .findById(paymentLink.tenantId);
 
+    assertPaymentLinkAccessible(
+      paymentLink,
+      tenant.organizationId,
+      callerOrganizationId,
+    );
     this.clsService.set('organizationId', tenant.organizationId);
     // this.clsService.set('userId', paymentLink.userId);
 

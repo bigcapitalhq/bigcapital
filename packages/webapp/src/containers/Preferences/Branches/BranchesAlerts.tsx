@@ -1,8 +1,11 @@
-// @ts-nocheck
 import React from 'react';
 
-const BranchDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Branches/BranchDeleteAlert'),
+const BranchDeleteAlert = React.lazy(() =>
+  import('@/containers/Alerts/Branches/BranchDeleteAlert').then((m) => ({
+    default: m.BranchDeleteAlert,
+  })),
 );
 
-export default [{ name: 'branch-delete', component: BranchDeleteAlert }];
+export const BranchesAlerts = [
+  { name: 'branch-delete', component: BranchDeleteAlert },
+];

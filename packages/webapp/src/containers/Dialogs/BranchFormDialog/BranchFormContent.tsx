@@ -1,14 +1,12 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-
-import BranchFormFields from './BranchFormFields';
-import BranchFormFloatingActions from './BranchFormFloatingActions';
+import React from 'react';
+import { BranchFormFields } from './BranchFormFields';
+import { BranchFormFloatingActions } from './BranchFormFloatingActions';
 
 /**
  * Branch form content.
  */
-export default function BranchFormContent() {
+export function BranchFormContent(): React.ReactElement {
   return (
     <Form>
       <BranchFormFields />

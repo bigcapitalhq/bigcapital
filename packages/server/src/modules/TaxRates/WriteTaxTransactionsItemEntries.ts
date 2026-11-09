@@ -6,6 +6,8 @@ import { TaxRateModel } from './models/TaxRate.model';
 import { Inject, Injectable } from '@nestjs/common';
 import { ItemEntry } from '../TransactionItemEntry/models/ItemEntry';
 import { TaxRateTransaction } from './models/TaxRateTransaction.model';
+import { FeaturesManager } from '../Features/FeaturesManager';
+import { Features } from '@/common/types/Features';
 
 @Injectable()
 export class WriteTaxTransactionsItemEntries {
@@ -17,6 +19,8 @@ export class WriteTaxTransactionsItemEntries {
 
     @Inject(TaxRateModel.name)
     private readonly taxRateModel: TenantModelProxy<typeof TaxRateModel>,
+
+    private readonly featuresManager: FeaturesManager,
   ) {}
 
   /**
@@ -28,6 +32,11 @@ export class WriteTaxTransactionsItemEntries {
     itemEntries: ModelObject<ItemEntry>[],
     trx?: Knex.Transaction,
   ) {
+    const isSalesTaxEnabled = await this.featuresManager.accessible(
+      Features.SALES_TAX,
+    );
+    if (!isSalesTaxEnabled) return;
+
     const aggregatedEntries = this.aggregateItemEntriesByTaxCode(itemEntries);
     const entriesTaxRateIds = aggregatedEntries.map((entry) => entry.taxRateId);
 
@@ -97,6 +106,11 @@ export class WriteTaxTransactionsItemEntries {
     referenceType: string,
     trx?: Knex.Transaction,
   ) {
+    const isSalesTaxEnabled = await this.featuresManager.accessible(
+      Features.SALES_TAX,
+    );
+    if (!isSalesTaxEnabled) return;
+
     await this.taxRateTransactionModel()
       .query(trx)
       .where({ referenceType, referenceId })

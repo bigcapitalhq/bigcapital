@@ -1,16 +1,22 @@
-// @ts-nocheck
+import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import { T, Dialog, DialogSuspense } from '@/components';
-import classNames from 'classnames';
-import { CLASSES } from '@/constants/classes';
 import withDialogRedux from '@/components/DialogReduxConnect';
-
-import { compose } from '@/utils';
+import { CLASSES } from '@/constants/classes';
 
 // Lazy loading the content.
 const PdfPreviewDialogContent = React.lazy(() =>
-  import('./ReceiptPdfPreviewDialogContent'),
+  import('./ReceiptPdfPreviewDialogContent').then((m) => ({
+    default: m.ReceiptPdfPreviewDialogContent,
+  })),
 );
+
+interface ReceiptPdfPreviewDialogProps {
+  dialogName: string;
+  payload: { receiptId: number | null };
+  isOpen: boolean | undefined;
+}
 
 /**
  * Receipt Pdf preview dialog.
@@ -19,7 +25,7 @@ function ReceiptPdfPreviewDialog({
   dialogName,
   payload = { receiptId: null },
   isOpen,
-}) {
+}: ReceiptPdfPreviewDialogProps): React.ReactElement {
   return (
     <Dialog
       name={dialogName}
@@ -39,4 +45,4 @@ function ReceiptPdfPreviewDialog({
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(ReceiptPdfPreviewDialog);
+export const index = FF.pipe(ReceiptPdfPreviewDialog, withDialogRedux());

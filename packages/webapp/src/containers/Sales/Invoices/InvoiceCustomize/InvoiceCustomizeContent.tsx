@@ -1,19 +1,19 @@
-import { lazy, Suspense } from 'react';
 import { Spinner, Tab } from '@blueprintjs/core';
+import { lazy, Suspense } from 'react';
 import {
   ElementCustomize,
   ElementCustomizeContent,
 } from '../../../ElementCustomize/ElementCustomize';
+import { initialValues } from './constants';
+import { InvoiceCustomizeSchema } from './InvoiceCustomizeForm.schema';
 import { InvoiceCustomizeGeneralField } from './InvoiceCustomizeGeneralFields';
+import { InvoiceCustomizeTabs } from './InvoiceCustomizeTabs';
 import { InvoiceCustomizeContentFields } from './InvoiceCutomizeContentFields';
 import { InvoiceCustomizeFormValues, InvoiceCustomizeState } from './types';
-import { InvoiceCustomizeSchema } from './InvoiceCustomizeForm.schema';
 import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
-import { useDrawerActions } from '@/hooks/state';
 import { BrandingTemplateForm } from '@/containers/BrandingTemplates/BrandingTemplateForm';
-import { initialValues } from './constants';
 import { useIsTemplateNamedFilled } from '@/containers/BrandingTemplates/utils';
-import { InvoiceCustomizeTabs } from './InvoiceCustomizeTabs';
+import { useDrawerActions } from '@/hooks/state';
 
 const InvoiceCustomizePaymentPreview = lazy(() =>
   import('./InvoiceCustomizePaymentPreview').then((module) => ({

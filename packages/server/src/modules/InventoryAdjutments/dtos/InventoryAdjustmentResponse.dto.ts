@@ -1,5 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { InventoryAdjustmentEntry } from '../models/InventoryAdjustmentEntry';
+import { InventoryAdjustmentEntryResponseDto } from './InventoryAdjustmentEntryResponse.dto';
+
+class InventoryAdjustmentAccountDto {
+  @ApiProperty({
+    description: 'The unique identifier of the adjustment account',
+    example: 100,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: 'The name of the adjustment account',
+    example: 'Inventory Adjustment',
+  })
+  name: string;
+}
 
 export class InventoryAdjustmentResponseDto {
   @ApiProperty({
@@ -34,6 +48,13 @@ export class InventoryAdjustmentResponseDto {
   adjustmentAccountId: number;
 
   @ApiProperty({
+    description: 'The nested adjustment account summary',
+    type: InventoryAdjustmentAccountDto,
+    required: false,
+  })
+  adjustmentAccount?: InventoryAdjustmentAccountDto;
+
+  @ApiProperty({
     description: 'The reason for the adjustment',
     example: 'Stock count discrepancy',
   })
@@ -60,10 +81,16 @@ export class InventoryAdjustmentResponseDto {
 
   @ApiProperty({
     description: 'The date when the adjustment was published',
-    example: '2024-03-20T10:00:00Z',
+    example: '2024-03-20',
     required: false,
   })
   publishedAt?: string;
+
+  @ApiProperty({
+    example: true,
+    description: 'Whether the inventory adjustment is published',
+  })
+  isPublished: boolean;
 
   @ApiProperty({
     description: 'The ID of the branch where the adjustment was made',
@@ -85,8 +112,8 @@ export class InventoryAdjustmentResponseDto {
 
   @ApiProperty({
     description: 'The entries associated with this adjustment',
-    type: [InventoryAdjustmentEntry],
+    type: InventoryAdjustmentEntryResponseDto,
     isArray: true,
   })
-  entries: InventoryAdjustmentEntry[];
+  entries: InventoryAdjustmentEntryResponseDto[];
 }

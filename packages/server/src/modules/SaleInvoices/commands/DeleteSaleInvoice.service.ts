@@ -47,16 +47,49 @@ export class DeleteSaleInvoice {
 
     @Inject(ItemEntry.name)
     private itemEntryModel: TenantModelProxy<typeof ItemEntry>,
-  ) { }
+  ) {}
+
+  /**
+   * Validates the delete sale invoice operation against the locked invoice
+   * row: existence, no associated payment entries and no applied to credit
+   * note transactions.
+   * @param {number} saleInvoiceId - Sale invoice id.
+   * @param {Knex.Transaction} trx - Locks the invoice row (FOR UPDATE).
+   * @returns {Promise<SaleInvoice>} The locked sale invoice.
+   */
+  async validate(
+    saleInvoiceId: number,
+    trx: Knex.Transaction,
+  ): Promise<SaleInvoice> {
+    // Lock the invoice row to serialize with concurrent payment/credit operations.
+    const oldSaleInvoice = await this.saleInvoiceModel()
+      .query(trx)
+      .findById(saleInvoiceId)
+      .forUpdate()
+      .withGraphFetched('entries')
+      .withGraphFetched('paymentMethods')
+      .throwIfNotFound();
+
+    // Validate the sale invoice has no associated payment entries.
+    await this.validateInvoiceHasNoPaymentEntries(saleInvoiceId, trx);
+
+    // Validate the sale invoice has applied to credit note transaction.
+    await this.validateInvoiceHasNoAppliedToCredit(saleInvoiceId, trx);
+    return oldSaleInvoice;
+  }
 
   /**
    * Validate the sale invoice has no payment entries.
    * @param {number} saleInvoiceId
+   * @param {Knex.Transaction} trx
    */
-  private async validateInvoiceHasNoPaymentEntries(saleInvoiceId: number) {
+  private async validateInvoiceHasNoPaymentEntries(
+    saleInvoiceId: number,
+    trx?: Knex.Transaction,
+  ) {
     // Retrieve the sale invoice associated payment receive entries.
     const entries = await this.paymentReceivedEntryModel()
-      .query()
+      .query(trx)
       .where('invoice_id', saleInvoiceId);
 
     if (entries.length > 0) {
@@ -68,13 +101,15 @@ export class DeleteSaleInvoice {
   /**
    * Validate the sale invoice has no applied to credit note transaction.
    * @param {number} invoiceId - Invoice id.
+   * @param {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
   public validateInvoiceHasNoAppliedToCredit = async (
     invoiceId: number,
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const appliedTransactions = await this.creditNoteAppliedInvoiceModel()
-      .query()
+      .query(trx)
       .where('invoiceId', invoiceId);
 
     if (appliedTransactions.length > 0) {
@@ -92,29 +127,17 @@ export class DeleteSaleInvoice {
     saleInvoiceId: number,
     trx?: Knex.Transaction,
   ): Promise<void> {
-    // Retrieve the given sale invoice with associated entries
-    // or throw not found error.
-    const oldSaleInvoice = await this.saleInvoiceModel()
-      .query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('entries')
-      .withGraphFetched('paymentMethods')
-      .throwIfNotFound();
-
-    // Validate the sale invoice has no associated payment entries.
-    await this.validateInvoiceHasNoPaymentEntries(saleInvoiceId);
-
-    // Validate the sale invoice has applied to credit note transaction.
-    await this.validateInvoiceHasNoAppliedToCredit(saleInvoiceId);
-
-    // Triggers `onSaleInvoiceDelete` event.
-    await this.eventPublisher.emitAsync(events.saleInvoice.onDelete, {
-      oldSaleInvoice,
-      saleInvoiceId,
-    } as ISaleInvoiceDeletePayload);
-
     // Deletes sale invoice transaction and associate transactions with UOW env.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the delete operation against the locked invoice row.
+      const oldSaleInvoice = await this.validate(saleInvoiceId, trx);
+
+      // Triggers `onSaleInvoiceDelete` event.
+      await this.eventPublisher.emitAsync(events.saleInvoice.onDelete, {
+        oldSaleInvoice,
+        saleInvoiceId,
+      } as ISaleInvoiceDeletePayload);
+
       // Triggers `onSaleInvoiceDeleting` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onDeleting, {
         oldSaleInvoice,

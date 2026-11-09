@@ -21,10 +21,7 @@ export class SaleReceiptsImportable extends Importable {
     createAccountDTO: CreateSaleReceiptDto,
     trx?: Knex.Transaction,
   ) {
-    return this.createReceiptService.createSaleReceipt(
-      createAccountDTO,
-      trx,
-    );
+    return this.createReceiptService.createSaleReceipt(createAccountDTO, trx);
   }
 
   /**

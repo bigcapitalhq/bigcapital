@@ -62,8 +62,8 @@ export class LemonSqueezyWebhooks {
   private async processWebhookEvent(eventBody): Promise<void> {
     const webhookEvent = eventBody.meta.event_name;
 
-    const userId = eventBody.meta.custom_data?.user_id;
-    const tenantId = eventBody.meta.custom_data?.tenant_id;
+    const _userId = eventBody.meta.custom_data?.user_id;
+    const _tenantId = eventBody.meta.custom_data?.tenant_id;
     const subscriptionSlug = 'main';
 
     if (!webhookHasMeta(eventBody)) {
@@ -94,7 +94,7 @@ export class LemonSqueezyWebhooks {
           .findOne('lemonVariantId', variantId);
 
         // Update the subscription in the database.
-        const priceId = attributes.first_subscription_item.price_id;
+        const _priceId = attributes.first_subscription_item.price_id;
         const subscriptionId = eventBody.data.id;
 
         // Throw error early if the given lemon variant id is not associated to any plan.
@@ -110,18 +110,14 @@ export class LemonSqueezyWebhooks {
           );
           // Cancel the given subscription of the organization.
         } else if (webhookEvent === 'subscription_cancelled') {
-          await this.subscriptionApp.cancelSubscription(
-            subscriptionSlug,
-          );
+          await this.subscriptionApp.cancelSubscription(subscriptionSlug);
         } else if (webhookEvent === 'subscription_plan_changed') {
           await this.subscriptionApp.markSubscriptionPlanChanged(
             plan.slug,
             subscriptionSlug,
           );
         } else if (webhookEvent === 'subscription_resumed') {
-          await this.subscriptionApp.resumeSubscription(
-            subscriptionSlug,
-          );
+          await this.subscriptionApp.resumeSubscription(subscriptionSlug);
         }
       } else if (webhookEvent.startsWith('order_')) {
         // Save orders; eventBody is a "Order"

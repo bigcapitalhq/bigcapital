@@ -19,10 +19,7 @@ export class EditCurrencyService {
     currencyId: number,
     currencyDTO: EditCurrencyDto,
   ): Promise<Currency> {
-    const foundCurrency = this.currencyModel()
-      .query()
-      .findById(currencyId)
-      .throwIfNotFound();
+    await this.currencyModel().query().findById(currencyId).throwIfNotFound();
 
     // Directly use the provided ID to update the currency
     const currency = await this.currencyModel()

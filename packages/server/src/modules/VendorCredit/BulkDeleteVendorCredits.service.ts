@@ -8,12 +8,12 @@ import { DeleteVendorCreditService } from './commands/DeleteVendorCredit.service
 export class BulkDeleteVendorCreditsService {
   constructor(
     private readonly deleteVendorCreditService: DeleteVendorCreditService,
-  ) { }
+  ) {}
 
   async bulkDeleteVendorCredits(
     vendorCreditIds: number | Array<number>,
     options?: { skipUndeletable?: boolean },
-    trx?: Knex.Transaction,
+    _trx?: Knex.Transaction,
   ): Promise<void> {
     const { skipUndeletable = false } = options ?? {};
     const creditsIds = uniq(castArray(vendorCreditIds));
@@ -37,4 +37,3 @@ export class BulkDeleteVendorCreditsService {
     }
   }
 }
-

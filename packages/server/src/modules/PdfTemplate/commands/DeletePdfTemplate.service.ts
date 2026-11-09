@@ -42,6 +42,23 @@ export class DeletePdfTemplateService {
       });
       await this.pdfTemplateModel().query(trx).deleteById(templateId);
 
+      // If the deleted template was the resource default, assign the default to
+      // the remaining predefined template of the resource, if any.
+      if (oldPdfTemplate.default) {
+        const fallbackTemplate = await this.pdfTemplateModel()
+          .query(trx)
+          .where('resource', oldPdfTemplate.resource)
+          .where('predefined', true)
+          .first();
+
+        if (fallbackTemplate) {
+          await this.pdfTemplateModel()
+            .query(trx)
+            .findById(fallbackTemplate.id)
+            .patch({ default: true });
+        }
+      }
+
       // Triggers `onPdfTemplateDeleted` event.
       await this.eventEmitter.emitAsync(events.pdfTemplate.onDeleted, {
         templateId,

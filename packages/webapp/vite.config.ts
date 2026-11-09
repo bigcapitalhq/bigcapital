@@ -38,6 +38,13 @@ export default defineConfig(({ mode }) => {
         '@public': path.resolve(rootDir, 'public'),
         path: 'path-browserify',
       },
+      dedupe: [
+        'react',
+        'react-dom',
+        '@emotion/react',
+        '@emotion/css',
+        '@xstyled/emotion',
+      ],
     },
     define: {
       'process.env': {

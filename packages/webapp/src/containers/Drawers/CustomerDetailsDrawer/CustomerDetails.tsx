@@ -1,18 +1,13 @@
-// @ts-nocheck
-import React from 'react';
 import clsx from 'classnames';
-
-import { Card } from '@/components';
-
-import CustomerDetailsActionsBar from './CustomerDetailsActionsBar';
-import CustomerDetailsHeader from './CustomerDetailsHeader';
-
+import { CustomerDetailsActionsBar } from './CustomerDetailsActionsBar';
 import Style from './CustomerDetailsDrawer.module.scss';
+import { CustomerDetailsHeader } from './CustomerDetailsHeader';
+import { Card } from '@/components';
 
 /**
  * contact detail.
  */
-export default function CustomerDetails() {
+export function CustomerDetails() {
   return (
     <div className={clsx(Style.root)}>
       <CustomerDetailsActionsBar />

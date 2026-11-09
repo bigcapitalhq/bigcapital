@@ -2,22 +2,42 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
 import { ValidateBranchExistance } from '../../integrations/ValidateBranchExistance';
-import { IInventoryAdjustmentCreatingPayload } from '@/modules/InventoryAdjutments/types/InventoryAdjustments.types';
+import {
+  IInventoryAdjustmentCreatingPayload,
+  IInventoryAdjustmentEditingPayload,
+} from '@/modules/InventoryAdjutments/types/InventoryAdjustments.types';
 
 @Injectable()
 export class InventoryAdjustmentBranchValidateSubscriber {
   constructor(
     private readonly validateBranchExistance: ValidateBranchExistance,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on inventory adjustment creating.
    * @param {IInventoryAdjustmentCreatingPayload} payload
    */
-  @OnEvent(events.inventoryAdjustment.onQuickCreating, { suppressErrors: false })
+  @OnEvent(events.inventoryAdjustment.onQuickCreating, {
+    suppressErrors: false,
+  })
   async validateBranchExistanceOnInventoryCreating({
     quickAdjustmentDTO,
   }: IInventoryAdjustmentCreatingPayload) {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+      quickAdjustmentDTO.branchId,
+    );
+  }
+
+  /**
+   * Validate branch existance on inventory adjustment editing.
+   * @param {IInventoryAdjustmentEditingPayload} payload
+   */
+  @OnEvent(events.inventoryAdjustment.onEditing, {
+    suppressErrors: false,
+  })
+  async validateBranchExistanceOnInventoryEditing({
+    quickAdjustmentDTO,
+  }: IInventoryAdjustmentEditingPayload) {
     await this.validateBranchExistance.validateTransactionBranchWhenActive(
       quickAdjustmentDTO.branchId,
     );

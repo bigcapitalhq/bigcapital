@@ -1,8 +1,7 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
-import classNames from 'classnames';
+import intl from 'react-intl-universal';
+import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
 import {
-  FormattedMessage as T,
   FAccountsSuggestField,
   FieldRequiredHint,
   Col,
@@ -11,19 +10,15 @@ import {
   FFormGroup,
 } from '@/components';
 import { getAddMoneyOutOptions } from '@/constants/cashflowOptions';
-import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
-import { CLASSES } from '@/constants/classes';
 
 /**
  * Transaction type fields.
  */
-function TransactionTypeFields() {
-  // Money in dialog context.
+export function TransactionTypeFields() {
   const { cashflowAccounts } = useMoneyOutDialogContext();
 
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
-  // Money in dialog context.
   const { defaultAccountId, setAccountId } = useMoneyOutDialogContext();
 
   // Cannot continue if the default account id is defined.
@@ -35,12 +30,12 @@ function TransactionTypeFields() {
         {/*------------ Transaction type -----------*/}
         <Col xs={5}>
           <FFormGroup
-            name={'transaction_type'}
-            label={<T id={'transaction_type'} />}
+            name={'transactionType'}
+            label={intl.get('transaction_type')}
             labelInfo={<FieldRequiredHint />}
           >
             <FSelect
-              name={'transaction_type'}
+              name={'transactionType'}
               items={addMoneyOutOptions}
               popoverProps={{ minimal: true }}
               valueAccessor={'value'}
@@ -52,16 +47,15 @@ function TransactionTypeFields() {
         <Col xs={5}>
           {/*------------ Current account -----------*/}
           <FFormGroup
-            name={'cashflow_account_id'}
-            label={<T id={'cash_flow_transaction.label_current_account'} />}
+            name={'cashflowAccountId'}
+            label={intl.get('cash_flow_transaction.label_current_account')}
             labelInfo={<FieldRequiredHint />}
-            fill
           >
             <FAccountsSuggestField
-              name={'cashflow_account_id'}
+              name={'cashflowAccountId'}
               items={cashflowAccounts}
-              onItemChange={(value) => {
-                setAccountId(value);
+              onItemChange={(value: string) => {
+                setAccountId(Number(value));
               }}
             />
           </FFormGroup>
@@ -70,5 +64,3 @@ function TransactionTypeFields() {
     </div>
   );
 }
-
-export default TransactionTypeFields;

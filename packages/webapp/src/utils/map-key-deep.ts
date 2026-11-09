@@ -16,14 +16,17 @@ export interface Opts {
 export class DeepMapKeys {
   private cache = new WeakMap<NonPrimitive, any>();
 
-  constructor(private mapFn: MapFn, private opts: Opts) {}
+  constructor(
+    private mapFn: MapFn,
+    private opts: Opts,
+  ) {}
 
   public map(value: any): any {
     return isArray(value)
       ? this.mapArray(value)
       : isObject(value)
-      ? this.mapObject(value)
-      : value;
+        ? this.mapObject(value)
+        : value;
   }
 
   private mapArray(arr: any[]): any[] {

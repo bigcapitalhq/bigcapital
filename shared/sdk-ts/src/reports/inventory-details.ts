@@ -1,5 +1,6 @@
 import type { OpArgType } from 'openapi-typescript-fetch';
 import type { ApiFetcher } from '../fetch-utils';
+import { withNestedQuery } from "../fetch-utils";
 import type { paths } from '../schema';
 import {
   OpForPath,
@@ -22,7 +23,11 @@ export async function fetchInventoryItemDetailsTable(
   query: InventoryItemDetailsTableQuery
 ): Promise<InventoryItemDetailsTableResponse> {
   const get = fetcher.path(INVENTORY_DETAILS_ROUTE).method('get').create();
-  const { data } = await get(query as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: 'application/json+table' },
+  });
   return data as unknown as InventoryItemDetailsTableResponse;
 }
 
@@ -36,7 +41,8 @@ export async function fetchInventoryItemDetailsJson(
   query: InventoryItemDetailsJsonQuery
 ): Promise<InventoryItemDetailsJsonResponse> {
   const get = fetcher.path(INVENTORY_DETAILS_ROUTE).method('get').create();
-  const { data } = await get(query as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const { data } = await get(payload as Arg, init);
   return data as unknown as InventoryItemDetailsJsonResponse;
 }
 
@@ -49,7 +55,11 @@ export async function fetchInventoryItemDetailsCsv(
   query: InventoryItemDetailsCsvQuery
 ): Promise<InventoryItemDetailsCsvResponse> {
   const get = fetcher.path(INVENTORY_DETAILS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/csv' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/csv" },
+  });
   return response.data as unknown as InventoryItemDetailsCsvResponse;
 }
 
@@ -62,7 +72,11 @@ export async function fetchInventoryItemDetailsXlsx(
   query: InventoryItemDetailsXlsxQuery
 ): Promise<InventoryItemDetailsXlsxResponse> {
   const get = fetcher.path(INVENTORY_DETAILS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/xlsx' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/xlsx" },
+  });
   return response.data as unknown as InventoryItemDetailsXlsxResponse;
 }
 
@@ -75,6 +89,10 @@ export async function fetchInventoryItemDetailsPdf(
   query: InventoryItemDetailsPdfQuery
 ): Promise<InventoryItemDetailsPdfResponse> {
   const get = fetcher.path(INVENTORY_DETAILS_ROUTE).method('get').create();
-  const response = await get({ ...query, Accept: 'application/pdf' } as Arg);
+  const { payload, init } = withNestedQuery(query);
+  const response = await get(payload as Arg, {
+    ...init,
+    headers: { ...init?.headers, accept: "application/pdf" },
+  });
   return response.data as unknown as InventoryItemDetailsPdfResponse;
 }

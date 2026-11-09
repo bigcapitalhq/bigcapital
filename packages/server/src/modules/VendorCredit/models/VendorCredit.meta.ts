@@ -245,7 +245,7 @@ export const VendorCreditMeta = {
       relationModel: 'Branch',
       relationImportMatch: ['name', 'code'],
       features: [Features.BRANCHES],
-      required: true
+      required: true,
     },
     warehouseId: {
       name: 'invoice.field.warehouse',
@@ -253,7 +253,7 @@ export const VendorCreditMeta = {
       relationModel: 'Warehouse',
       relationImportMatch: ['name', 'code'],
       features: [Features.WAREHOUSES],
-      required: true
+      required: true,
     },
   },
 };

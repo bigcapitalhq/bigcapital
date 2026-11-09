@@ -1,7 +1,6 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 
-export const moreVertOptions = [
+export const moreVertOptions: Array<{ name: string; value: string }> = [
   {
     name: intl.get('bad_debt.dialog.bad_debt'),
     value: 'bad debt',

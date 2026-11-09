@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React, { useRef } from 'react';
 import {
   Button,
   Classes,
@@ -10,7 +8,15 @@ import {
   Text,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
-
+import React from 'react';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
+import { FinancialComputeAlert } from '../FinancialReportPage';
+import { useCashFlowStatementContext } from './CashFlowStatementProvider';
+import { dynamicColumns } from './dynamicColumns';
+import type {
+  CashflowStatementXlsxQuery,
+  CashflowStatementCsvQuery,
+} from '@bigcapital/sdk-ts';
 import {
   AppToaster,
   Icon,
@@ -22,23 +28,20 @@ import {
   useCashFlowStatementCsvExport,
   useCashFlowStatementXlsxExport,
 } from '@/hooks/query';
-import FinancialLoadingBar from '../FinancialLoadingBar';
-
-import { dynamicColumns } from './dynamicColumns';
-import { useCashFlowStatementContext } from './CashFlowStatementProvider';
-import { FinancialComputeAlert } from '../FinancialReportPage';
 
 /**
  * Retrieve cash flow statement columns.
  */
 export const useCashFlowStatementColumns = () => {
-  const {
-    cashFlowStatement: { columns, tableRows },
-  } = useCashFlowStatementContext();
+  const { cashFlowStatement } = useCashFlowStatementContext();
 
   return React.useMemo(
-    () => dynamicColumns(columns, tableRows),
-    [columns, tableRows],
+    () =>
+      dynamicColumns(
+        cashFlowStatement?.columns ?? [],
+        cashFlowStatement?.tableRows ?? [],
+      ),
+    [cashFlowStatement],
   );
 };
 
@@ -71,7 +74,7 @@ export function CashFlowStatementAlerts() {
     return null;
   }
   // Can't continue if the cost compute is not running.
-  if (!cashFlowStatement.meta.is_cost_compute_running) {
+  if (!cashFlowStatement?.meta?.isCostComputeRunning) {
     return null;
   }
   return (
@@ -90,78 +93,57 @@ export function CashFlowStatementAlerts() {
  * @returns {JSX.Element}
  */
 export function CashflowSheetExportMenu() {
-  const toastKey = useRef(null);
   const commonToastConfig = {
     isCloseButtonShown: true,
     timeout: 2000,
   };
   const { httpQuery } = useCashFlowStatementContext();
 
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+            [Classes.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
 
-  // Export the report to xlsx.
   const { mutateAsync: xlsxExport } = useCashFlowStatementXlsxExport(
-    httpQuery,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
-    },
+    httpQuery as CashflowStatementXlsxQuery,
+  );
+  const { mutateAsync: csvExport } = useCashFlowStatementCsvExport(
+    httpQuery as CashflowStatementCsvQuery,
   );
 
-  // Export the report to csv.
-  const { mutateAsync: csvExport } = useCashFlowStatementCsvExport(httpQuery, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
-    },
-  });
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport();
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport();
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

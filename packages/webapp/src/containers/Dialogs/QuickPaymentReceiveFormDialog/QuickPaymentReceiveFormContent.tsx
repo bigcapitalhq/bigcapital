@@ -1,13 +1,12 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-import QuickPaymentReceiveFormFields from './QuickPaymentReceiveFormFields';
-import QuickPaymentReceiveFloatingActions from './QuickPaymentReceiveFloatingActions';
+import React from 'react';
+import { QuickPaymentReceiveFloatingActions } from './QuickPaymentReceiveFloatingActions';
+import { QuickPaymentReceiveFormFields } from './QuickPaymentReceiveFormFields';
 
 /**
  * Quick payment receive form content.
  */
-export default function QuickPaymentReceiveFormContent() {
+export function QuickPaymentReceiveFormContent(): React.ReactElement {
   return (
     <Form>
       <QuickPaymentReceiveFormFields />

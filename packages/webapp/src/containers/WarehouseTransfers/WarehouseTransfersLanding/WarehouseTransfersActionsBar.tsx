@@ -1,13 +1,22 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   Classes,
   NavbarDivider,
   NavbarGroup,
+  Intent,
   Alignment,
 } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useBulkDeleteWarehouseTransfersDialog } from './hooks/use-bulk-delete-warehouse-transfers-dialog';
+import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
+import { withWarehouseTransfers } from './withWarehouseTransfers';
+import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
+import type { WithWarehouseTransfersProps } from './withWarehouseTransfers';
+import type { WithWarehouseTransfersActionsProps } from './withWarehouseTransfersActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
 import {
   Icon,
   FormattedMessage as T,
@@ -17,36 +26,43 @@ import {
   DashboardActionViewsList,
   DashboardActionsBar,
 } from '@/components';
+import { useSaveSettings } from '@/hooks/query';
 
-import { useWarehouseTranfersListContext } from './WarehouseTransfersListProvider';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
-import { withWarehouseTransfers } from './withWarehouseTransfers';
-import { withWarehouseTransfersActions } from './withWarehouseTransfersActions';
+interface WarehouseTransfersActionsBarInnerProps
+  extends Pick<
+      WithWarehouseTransfersActionsProps,
+      'setWarehouseTransferTableState'
+    >,
+    Pick<WithWarehouseTransfersProps, 'warehouseTransferSelectedRows'> {
+  warehouseTransferFilterRoles: IFilterRole[];
+}
 
-import { compose } from '@/utils';
+interface ViewOption {
+  slug?: string;
+}
 
 /**
  * Warehouse Transfers actions bar.
  */
-function WarehouseTransfersActionsBar({
+function WarehouseTransfersActionsBarInner({
   // #withWarehouseTransfers
   warehouseTransferFilterRoles,
+  warehouseTransferSelectedRows = [],
 
   // #withWarehouseTransfersActions
   setWarehouseTransferTableState,
+}: WarehouseTransfersActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
 
-  // #withSettings
-  warehouseTransferTableSize,
-
-  // #withSettingsActions
-  addSetting,
-}) {
   const history = useHistory();
 
+  const { openBulkDeleteDialog, isValidatingBulkDeleteWarehouseTransfers } =
+    useBulkDeleteWarehouseTransfersDialog();
+
   // credit note list context.
-  const { WarehouseTransferView, fields, refresh } =
+  const { WarehouseTransferView, fields, refresh, warehouseTransferSettings } =
     useWarehouseTranfersListContext();
+  const warehouseTransferTableSize = warehouseTransferSettings?.tableSize;
 
   // Handle new warehouse transfer button click.
   const handleClickNewWarehouseTransfer = () => {
@@ -59,14 +75,38 @@ function WarehouseTransfersActionsBar({
   };
 
   // Handle views tab change.
-  const handleTabChange = (view) => {
+  const handleTabChange = (view: ViewOption | null) => {
     setWarehouseTransferTableState({ viewSlug: view ? view.slug : null });
   };
 
   // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('warehouseTransfers', 'tableSize', size);
+  const handleTableRowSizeChange = (size: string) => {
+    saveSettings({
+      options: [{ group: 'warehouseTransfers', key: 'tableSize', value: size }],
+    });
   };
+
+  // Handle bulk delete button click.
+  const handleBulkDelete = () => {
+    openBulkDeleteDialog(warehouseTransferSelectedRows as number[]);
+  };
+
+  if (!isEmpty(warehouseTransferSelectedRows)) {
+    return (
+      <DashboardActionsBar>
+        <NavbarGroup>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="trash-16" iconSize={16} />}
+            text={<T id={'delete'} />}
+            intent={Intent.DANGER}
+            onClick={handleBulkDelete}
+            disabled={isValidatingBulkDeleteWarehouseTransfers}
+          />
+        </NavbarGroup>
+      </DashboardActionsBar>
+    );
+  }
 
   return (
     <DashboardActionsBar>
@@ -92,8 +132,10 @@ function WarehouseTransfersActionsBar({
             conditions: warehouseTransferFilterRoles,
             defaultFieldKey: 'created_at',
             fields: fields,
-            onFilterChange: (filterConditions) => {
-              setWarehouseTransferTableState({ filterRoles: filterConditions });
+            onFilterChange: (filterConditions: IFilterRole[]) => {
+              setWarehouseTransferTableState({
+                filterRoles: filterConditions,
+              });
             },
           }}
         >
@@ -104,7 +146,7 @@ function WarehouseTransfersActionsBar({
 
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'print-16'} iconSize={'16'} />}
+          icon={<Icon icon={'print-16'} iconSize={16} />}
           text={<T id={'print'} />}
         />
         <Button
@@ -114,7 +156,7 @@ function WarehouseTransfersActionsBar({
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
+          icon={<Icon icon={'file-export-16'} iconSize={16} />}
           text={<T id={'export'} />}
         />
         <NavbarDivider />
@@ -135,13 +177,14 @@ function WarehouseTransfersActionsBar({
   );
 }
 
-export default compose(
-  withSettingsActions,
+export const WarehouseTransfersActionsBar = FF.pipe(
+  WarehouseTransfersActionsBarInner,
+  withWarehouseTransfers(
+    ({ warehouseTransferTableState, warehouseTransferSelectedRows }) => ({
+      warehouseTransferFilterRoles:
+        warehouseTransferTableState?.filterRoles ?? [],
+      warehouseTransferSelectedRows,
+    }),
+  ),
   withWarehouseTransfersActions,
-  withWarehouseTransfers(({ warehouseTransferTableState }) => ({
-    warehouseTransferFilterRoles: warehouseTransferTableState.filterRoles,
-  })),
-  withSettings(({ warehouseTransferSettings }) => ({
-    warehouseTransferTableSize: warehouseTransferSettings?.tableSize,
-  })),
-)(WarehouseTransfersActionsBar);
+);

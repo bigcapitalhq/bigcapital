@@ -1,5 +1,5 @@
-import React from 'react';
 import { Formik, Form } from 'formik';
+import React from 'react';
 
 interface SelectPaymentMethodsFormValues {}
 

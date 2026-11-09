@@ -59,6 +59,6 @@ export class GetItemCategoriesService {
         );
         dynamicList.buildQuery()(query);
       });
-    return { data };
+    return data;
   }
 }

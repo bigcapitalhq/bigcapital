@@ -33,7 +33,7 @@ export class AuthSignupService {
 
     @Inject(SystemUser.name)
     private readonly systemUserModel: typeof SystemUser,
-  ) { }
+  ) {}
 
   /**
    * Registers a new tenant with user from user input.
@@ -53,7 +53,7 @@ export class AuthSignupService {
     const verifiedEnabed = signupConfirmation.enabled ?? false;
     const verifyToken = verifiedEnabed ? verifyTokenCrypto : '';
     const verified = !verifiedEnabed;
-    
+
     const inviteAcceptedAt = moment().format('YYYY-MM-DD');
 
     // Triggers signin up event.
@@ -72,7 +72,6 @@ export class AuthSignupService {
       inviteAcceptedAt,
     });
     // Set the user in the cls service.
-    this.clsService.set('tenantId', user.tenantId);
     this.clsService.set('userId', user.id);
     this.clsService.set('organizationId', tenant.organizationId);
 
@@ -88,6 +87,67 @@ export class AuthSignupService {
       tenantId: user.tenantId,
       organizationId: tenant.organizationId,
     };
+  }
+
+  /**
+   * Registers a new user through a verified Google profile.
+   *
+   * Unlike the email/password flow, Google already verified the email address
+   * so no confirmation token is generated. The sign-up restrictions still
+   * apply, and the regular `signUp` event is emitted so downstream subscribers
+   * (workspace membership, free subscription, ...) run as usual.
+   *
+   * @param {object} googleUser - The verified Google profile details.
+   * @returns {Promise<SystemUser>}
+   */
+  public async signUpWithGoogle(googleUser: {
+    googleId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  }): Promise<SystemUser> {
+    // Validates the signup disable restrictions.
+    await this.validateSignupRestrictions(googleUser.email);
+
+    // Validates the given email uniqiness.
+    await this.validateEmailUniqiness(googleUser.email);
+
+    const inviteAcceptedAt = moment().format('YYYY-MM-DD');
+
+    // The signup event payload is shared with the email/password flow. There
+    // is no password for Google accounts, so an empty placeholder is used.
+    const signupDTO = {
+      email: googleUser.email,
+      firstName: googleUser.firstName,
+      lastName: googleUser.lastName,
+      password: '',
+    } as AuthSignupDto;
+
+    const tenant = await this.tenantsManager.createTenant();
+    const user = await this.systemUserModel.query().insert({
+      firstName: googleUser.firstName,
+      lastName: googleUser.lastName,
+      email: googleUser.email,
+      googleId: googleUser.googleId,
+      verifyToken: '',
+      verified: true,
+      active: true,
+      tenantId: tenant.id,
+      inviteAcceptedAt,
+    });
+
+    // Set the user in the cls service.
+    this.clsService.set('userId', user.id);
+    this.clsService.set('organizationId', tenant.organizationId);
+
+    // Triggers signed up event.
+    await this.eventEmitter.emitAsync(events.auth.signUp, {
+      signupDTO,
+      tenant,
+      user,
+    } as IAuthSignedUpEventPayload);
+
+    return user as SystemUser;
   }
 
   /**
@@ -109,7 +169,7 @@ export class AuthSignupService {
    * Validate sign-up disable restrictions.
    * @param {string} email - Signup email address
    */
-  private async validateSignupRestrictions(email: string) {
+  public async validateSignupRestrictions(email: string) {
     const signupRestrictions = this.configService.get('signupRestrictions');
 
     // Can't continue if the signup is not disabled.

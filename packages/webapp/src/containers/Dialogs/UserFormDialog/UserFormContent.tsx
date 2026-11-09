@@ -1,31 +1,35 @@
-// @ts-nocheck
-import React from 'react';
-import {
-  Intent,
-  Classes,
-  Button,
-} from '@blueprintjs/core';
-import { Form, useFormikContext } from 'formik';
+import { Intent, Classes, Button } from '@blueprintjs/core';
 import classNames from 'classnames';
-
-import { FFormGroup, FInputGroup, FSelect, FormattedMessage as T } from '@/components';
-import { CLASSES } from '@/constants/classes';
-import { FieldRequiredHint } from '@/components';
-import { useUserFormContext } from './UserFormProvider';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { compose } from '@/utils';
+import { Form, useFormikContext } from 'formik';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { UserFormCalloutAlerts } from './components';
+import { useUserFormContext } from './UserFormProvider';
+import type { UserFormValues } from './types';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
+import {
+  FFormGroup,
+  FInputGroup,
+  FSelect,
+  FormattedMessage as T,
+  FieldRequiredHint,
+} from '@/components';
+import { CLASSES } from '@/constants/classes';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+
+interface UserFormContentProps extends WithDialogActionsProps {
+  calloutCode: number[];
+}
 
 /**
  * User form content.
  */
-function UserFormContent({
+function UserFormContentInner({
   calloutCode,
-
-  // #withDialogActions
   closeDialog,
-}) {
-  const { isSubmitting } = useFormikContext();
+}: UserFormContentProps): React.ReactElement {
+  const { isSubmitting } = useFormikContext<UserFormValues>();
   const { dialogName, roles, isAuth } = useUserFormContext();
 
   const handleClose = () => {
@@ -40,7 +44,7 @@ function UserFormContent({
         {/* ----------- Email ----------- */}
         <FFormGroup
           name={'email'}
-          label={<T id={'email'} />}
+          label={intl.get('email')}
           labelInfo={<FieldRequiredHint />}
         >
           <FInputGroup name={'email'} />
@@ -48,31 +52,31 @@ function UserFormContent({
 
         {/* ----------- First name ----------- */}
         <FFormGroup
-          name={'first_name'}
-          label={<T id={'first_name'} />}
+          name={'firstName'}
+          label={intl.get('first_name')}
           labelInfo={<FieldRequiredHint />}
         >
-          <FInputGroup name={'first_name'} />
+          <FInputGroup name={'firstName'} />
         </FFormGroup>
 
         {/* ----------- Last name ----------- */}
         <FFormGroup
-          name={'last_name'}
-          label={<T id={'last_name'} />}
+          name={'lastName'}
+          label={intl.get('last_name')}
           labelInfo={<FieldRequiredHint />}
         >
-          <FInputGroup name={'last_name'} />
+          <FInputGroup name={'lastName'} />
         </FFormGroup>
 
         {/* ----------- Role name ----------- */}
         <FFormGroup
-          name={'role_id'}
-          label={<T id={'roles.label.role_name'} />}
+          name={'roleId'}
+          label={intl.get('roles.label.role_name')}
           labelInfo={<FieldRequiredHint />}
           className={classNames(CLASSES.FILL, 'form-group--role_name')}
         >
           <FSelect
-            name={'role_id'}
+            name={'roleId'}
             items={roles}
             valueAccessor={'id'}
             textAccessor={'name'}
@@ -95,11 +99,11 @@ function UserFormContent({
             loading={isSubmitting}
             style={{ minWidth: '85px' }}
           >
-            <T id={'edit'} />
+            <T id={'save'} />
           </Button>
         </div>
       </div>
     </Form>
   );
 }
-export default compose(withDialogActions)(UserFormContent);
+export const UserFormContent = FF.pipe(UserFormContentInner, withDialogActions);

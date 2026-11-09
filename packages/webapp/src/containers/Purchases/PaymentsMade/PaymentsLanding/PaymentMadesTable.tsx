@@ -1,99 +1,105 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import { compose } from '@/utils';
-import { TABLES } from '@/constants/tables';
+import { usePaymentMadesTableColumns, ActionsMenu } from './components';
+import { PaymentMadesEmptyStatus } from './PaymentMadesEmptyStatus';
+import { usePaymentMadesListContext } from './PaymentMadesListProvider';
+import { withPaymentMade } from './withPaymentMade';
+import { withPaymentMadeActions } from './withPaymentMadeActions';
+import type { PaymentMadeTableRow } from './components';
+import type { WithPaymentMadeProps } from './withPaymentMade';
+import type { WithPaymentMadeActionsProps } from './withPaymentMadeActions';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-
-import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
-
-import { withPaymentMade } from './withPaymentMade';
-import { withPaymentMadeActions } from './withPaymentMadeActions';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { DRAWERS } from '@/constants/drawers';
+import { TABLES } from '@/constants/tables';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-
-import { usePaymentMadesTableColumns, ActionsMenu } from './components';
-import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { DRAWERS } from '@/constants/drawers';
 
-/**
- * Payment made datatable transactions.
- */
-function PaymentMadesTable({
-  // #withPaymentMadeActions
+interface PaymentMadesTableProps
+  extends Pick<
+      WithPaymentMadeProps,
+      'paymentMadesTableState' | 'paymentMadesSelectedRows'
+    >,
+    WithPaymentMadeActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
+
+function PaymentMadesTableInner({
   setPaymentMadesTableState,
-
-  // #withPaymentMade
+  setPaymentMadesSelectedRows,
   paymentMadesTableState,
-
-  // #withAlerts
+  paymentMadesSelectedRows,
   openAlert,
-
-  // #withDrawerActions
   openDrawer,
-
-  // #withSettings
-  paymentMadesTableSize,
-}) {
-  // Payment mades table columns.
+}: PaymentMadesTableProps) {
   const columns = usePaymentMadesTableColumns();
 
-  // Payment mades list context.
   const {
     paymentMades,
     pagination,
     isEmptyStatus,
     isPaymentsLoading,
     isPaymentsFetching,
+    billPaymentSettings,
   } = usePaymentMadesListContext();
+  const paymentMadesTableSize = billPaymentSettings?.tableSize as
+    | string
+    | undefined;
 
-  // History context.
   const history = useHistory();
 
-  // Handles the edit payment made action.
-  const handleEditPaymentMade = (paymentMade) => {
+  const handleEditPaymentMade = (paymentMade: PaymentMadeTableRow) => {
     history.push(`/payments-made/${paymentMade.id}/edit`);
   };
 
-  // Handles the delete payment made action.
-  const handleDeletePaymentMade = (paymentMade) => {
+  const handleDeletePaymentMade = (paymentMade: PaymentMadeTableRow) => {
     openAlert('payment-made-delete', { paymentMadeId: paymentMade.id });
   };
 
-  // Handle view detail  payment made.
-  const handleViewDetailPaymentMade = ({ id }) => {
+  const handleViewDetailPaymentMade = ({ id }: PaymentMadeTableRow) => {
     openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, { paymentMadeId: id });
   };
 
-  // Handle cell click.
-  const handleCellClick = (cell, event) => {
+  const handleCellClick = (cell: any, _event: React.MouseEvent) => {
     openDrawer(DRAWERS.PAYMENT_MADE_DETAILS, {
       paymentMadeId: cell.row.original.id,
     });
   };
 
-  // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.PAYMENT_MADES);
 
-  // Handle datatable fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
-    ({ pageIndex, pageSize, sortBy }) => {
+    ({
+      pageIndex,
+      pageSize,
+      sortBy,
+    }: {
+      pageSize: number;
+      pageIndex: number;
+      sortBy: Array<{ id: string; desc: boolean }>;
+    }) => {
       setPaymentMadesTableState({ pageIndex, pageSize, sortBy });
     },
     [setPaymentMadesTableState],
   );
 
-  // Display empty status instead of the table.
+  const handleSelectedRowsChange = useCallback(
+    (selectedRows: Array<{ original: PaymentMadeTableRow }>) => {
+      const selectedIds = selectedRows?.map((row) => row.original.id) || [];
+      setPaymentMadesSelectedRows(selectedIds);
+    },
+    [setPaymentMadesSelectedRows],
+  );
+
   if (isEmptyStatus) {
     return <PaymentMadesEmptyStatus />;
   }
@@ -102,8 +108,11 @@ function PaymentMadesTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={paymentMades}
+        data={paymentMades ?? []}
         onFetchData={handleDataTableFetchData}
+        onSelectedRowsChange={handleSelectedRowsChange}
+        selectedRowsIds={paymentMadesSelectedRows}
+        autoResetSelectedRows={false}
         loading={isPaymentsLoading}
         headerLoading={isPaymentsLoading}
         progressBarLoading={isPaymentsFetching}
@@ -112,8 +121,8 @@ function PaymentMadesTable({
         noInitialFetch={true}
         sticky={true}
         pagination={true}
-        initialPageSize={paymentMadesTableState.pageSize}
-        pagesCount={pagination.pagesCount}
+        initialPageSize={paymentMadesTableState?.pageSize ?? 10}
+        rowsCount={pagination?.total ?? 0}
         autoResetSortBy={false}
         autoResetPage={false}
         TableLoadingRenderer={TableSkeletonRows}
@@ -133,13 +142,13 @@ function PaymentMadesTable({
   );
 }
 
-export default compose(
-  withPaymentMadeActions,
-  withPaymentMade(({ paymentMadesTableState }) => ({ paymentMadesTableState })),
-  withAlertActions,
+export const PaymentMadesTable = FF.pipe(
+  PaymentMadesTableInner,
   withDrawerActions,
-  withCurrentOrganization(),
-  withSettings(({ billPaymentSettings }) => ({
-    paymentMadesTableSize: billPaymentSettings?.tableSize,
+  withAlertActions,
+  withPaymentMade(({ paymentMadesTableState, paymentMadesSelectedRows }) => ({
+    paymentMadesTableState,
+    paymentMadesSelectedRows,
   })),
-)(PaymentMadesTable);
+  withPaymentMadeActions,
+);

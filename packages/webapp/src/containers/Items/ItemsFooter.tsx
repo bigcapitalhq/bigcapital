@@ -1,16 +1,22 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
+import React from 'react';
 import { FormattedMessage as T } from '@/components';
 
-export default function ItemFloatingFooter({
+interface ItemFloatingFooterProps {
+  formik: { isSubmitting: boolean };
+  onSubmitClick: (payload: { publish: boolean; redirect: boolean }) => void;
+  onCancelClick?: () => void;
+  itemDetail?: { id?: number };
+}
+
+export function ItemFloatingFooter({
   formik: { isSubmitting },
   onSubmitClick,
   onCancelClick,
   itemDetail,
-}) {
+}: ItemFloatingFooterProps) {
   return (
-    <div class="form__floating-footer">
+    <div className={'form__floating-footer'}>
       <Button
         intent={Intent.PRIMARY}
         disabled={isSubmitting}

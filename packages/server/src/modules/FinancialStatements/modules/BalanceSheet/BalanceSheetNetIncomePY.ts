@@ -1,5 +1,5 @@
-// @ts-nocheck
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { assoc, when } from '@/common/fp';
 import { IBalanceSheetNetIncomeNode } from './BalanceSheet.types';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
@@ -12,7 +12,7 @@ import { GConstructor } from '@/common/types/Constructor';
 export const BalanceSheetNetIncomePY = <T extends GConstructor<FinancialSheet>>(
   Base: T,
 ) =>
-  class extends R.pipe(
+  class extends flow(
     BalanceSheetNetIncomeDatePeriodsPY,
     BalanceSheetComparsionPreviousYear,
     BalanceSheetComparsionPreviousPeriod,
@@ -48,7 +48,7 @@ export const BalanceSheetNetIncomePY = <T extends GConstructor<FinancialSheet>>(
     ): IBalanceSheetNetIncomeNode => {
       const total = this.getPreviousYearNetIncome();
 
-      return R.assoc('previousYear', this.getTotalAmountMeta(total), node);
+      return assoc('previousYear', this.getTotalAmountMeta(total), node);
     };
 
     /**
@@ -59,21 +59,21 @@ export const BalanceSheetNetIncomePY = <T extends GConstructor<FinancialSheet>>(
     public previousYearNetIncomeNodeCompose = (
       node: IBalanceSheetNetIncomeNode,
     ): IBalanceSheetNetIncomeNode => {
-      return R.compose(
-        R.when(
-          this.query.isPreviousYearPercentageActive,
-          this.assocPreviousYearTotalPercentageNode,
-        ),
-        R.when(
-          this.query.isPreviousYearChangeActive,
-          this.assocPreviousYearTotalChangeNode,
-        ),
+      return flow(
+        this.assocPreviousYearNetIncomeNode,
         // Associate the PY to date periods horizontal nodes.
-        R.when(
+        when(
           this.isNodeHasHorizontalTotals,
           this.assocPreviousYearNetIncomeHorizNode,
         ),
-        this.assocPreviousYearNetIncomeNode,
-      )(node);
+        when(
+          this.query.isPreviousYearChangeActive,
+          this.assocPreviousYearTotalChangeNode,
+        ),
+        when(
+          this.query.isPreviousYearPercentageActive,
+          this.assocPreviousYearTotalPercentageNode,
+        ),
+      )(node) as IBalanceSheetNetIncomeNode;
     };
   };

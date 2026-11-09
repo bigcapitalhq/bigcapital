@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Button,
   NavbarGroup,
@@ -10,13 +7,11 @@ import {
   Tooltip,
   Position,
 } from '@blueprintjs/core';
-
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
-
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
+import { BadDebtMenuItem } from './utils';
 import {
   If,
   Can,
@@ -28,18 +23,32 @@ import {
   SaleInvoiceAction,
   PaymentReceiveAction,
   AbilitySubject,
-} from '../../../constants/abilityOption';
-
-import { compose } from '@/utils';
-import { BadDebtMenuItem } from './utils';
-import { DRAWERS } from '@/constants/drawers';
+} from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
+import { DRAWERS } from '@/constants/drawers';
+import {
+  withAlertActions,
+  WithAlertActionsProps,
+} from '@/containers/Alert/withAlertActions';
+import {
+  withDialogActions,
+  WithDialogActionsProps,
+} from '@/containers/Dialog/withDialogActions';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
 import { ArrowBottomLeft } from '@/icons/ArrowBottomLeft';
+
+interface InvoiceDetailActionsBarInnerProps
+  extends WithDialogActionsProps,
+    WithAlertActionsProps,
+    WithDrawerActionsProps {}
 
 /**
  * Invoice details action bar.
  */
-function InvoiceDetailActionsBar({
+function InvoiceDetailActionsBarInner({
   // #withDialogActions
   openDialog,
 
@@ -49,11 +58,15 @@ function InvoiceDetailActionsBar({
   // #withDrawerActions
   openDrawer,
   closeDrawer,
-}) {
+}: InvoiceDetailActionsBarInnerProps) {
   const history = useHistory();
 
   // Invoice detail drawer context.
   const { invoiceId, invoice } = useInvoiceDetailDrawerContext();
+
+  if (!invoice) {
+    return null;
+  }
 
   // Handle edit sale invoice.
   const handleEditInvoice = () => {
@@ -62,7 +75,7 @@ function InvoiceDetailActionsBar({
   };
 
   // Hanlde deliver sale invoice.
-  const handleDeliverInvoice = ({ id }) => {
+  const handleDeliverInvoice = () => {
     openAlert('invoice-deliver', { invoiceId });
   };
 
@@ -128,7 +141,7 @@ function InvoiceDetailActionsBar({
           <NavbarDivider />
         </Can>
         <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
-          <If condition={invoice.is_delivered && !invoice.is_fully_paid}>
+          <If condition={invoice.isDelivered && !invoice.isFullyPaid}>
             <Button
               className={Classes.MINIMAL}
               icon={<ArrowBottomLeft size={16} />}
@@ -188,8 +201,9 @@ function InvoiceDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withDrawerActions,
+export const InvoiceDetailActionsBar = FF.pipe(
+  InvoiceDetailActionsBarInner,
   withAlertActions,
-)(InvoiceDetailActionsBar);
+  withDrawerActions,
+  withDialogActions,
+);

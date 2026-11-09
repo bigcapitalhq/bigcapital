@@ -1,5 +1,5 @@
 import { BaseModel } from '@/models/Model';
-import { Model, raw } from 'objection';
+import { Model } from 'objection';
 
 export class InventoryTransactionMeta extends BaseModel {
   transactionNumber!: string;
@@ -32,9 +32,9 @@ export class InventoryTransactionMeta extends BaseModel {
         modelClass: InventoryTransaction,
         join: {
           from: 'inventory_transaction_meta.inventoryTransactionId',
-          to: 'inventory_transactions.inventoryTransactionId'
-        }
-      }
+          to: 'inventory_transactions.inventoryTransactionId',
+        },
+      },
     };
   }
 }

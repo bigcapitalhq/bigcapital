@@ -36,6 +36,8 @@ export class ResourceController {
   ): ResourceMetaResponseDto {
     const resourceMeta = this.resourcesService.getResourceMeta(resourceModel);
 
-    return resourceMeta as ResourceMetaResponseDto;
+    return this.resourcesService.localizeResourceMeta(
+      resourceMeta,
+    ) as ResourceMetaResponseDto;
   }
 }

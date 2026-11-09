@@ -39,9 +39,9 @@
 Bigcapital is a smart and open-source accounting and inventory software, Bigcapital keeps all business finances in right place and automates accounting processes to give the business powerful and intelligent financial statements and reports to help in making decisions.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/abouolia/blog/main/public/screenshot-2.png" width="270">
-  <img src="https://raw.githubusercontent.com/abouolia/blog/main/public/screenshot-1.png" width="270">
-  <img src="https://raw.githubusercontent.com/abouolia/blog/main/public/screenshot-3.png" width="270">
+  <img src="screenshots/accounts-chart.png" width="270" alt="Accounts Chart">
+  <img src="screenshots/balance-sheet.png" width="270" alt="Balance Sheet">
+  <img src="screenshots/new-invoice.png" width="270" alt="New Invoice">
 </p>
 
 # Getting Started
@@ -62,6 +62,12 @@ To get started with self-hosted with Docker and Docker Compose, take a look at t
 
 To get started locally, we have a [guide to help you](https://github.com/bigcapitalhq/bigcapital/blob/develop/CONTRIBUTING.md).
 
+### Configuration
+
+Optional integrations are documented under [`docs/`](docs/):
+
+- [Google Sign-In](docs/google-auth.md) — configure the "Continue with Google" button.
+
 ### Gitpod
 
 - Click the Gitpod button below to open this project in development mode.
@@ -79,6 +85,7 @@ You can integrate Bigcapital API with your system to organize your transactions 
 
 - [Documentation](https://docs.bigcapital.app/) - Learn how to use.
 - [API Reference](https://docs.bigcapital.app/api-reference) - API reference docs
+- [Google Sign-In Setup](docs/google-auth.md) - Configure Google authentication.
 - [Contribution](https://github.com/bigcapitalhq/bigcapital/blob/develop/CONTRIBUTING.md) - Welcome to any contributions.
 - [Discord](https://discord.com/invite/c8nPBJafeb) - Ask for help.
 - [Bug Tracker](https://github.com/bigcapitalhq/bigcapital/issues) - Notify us new bugs.

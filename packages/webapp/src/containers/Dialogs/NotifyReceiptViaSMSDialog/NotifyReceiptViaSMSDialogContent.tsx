@@ -1,14 +1,16 @@
-// @ts-nocheck
 import React from 'react';
-
+import { NotifyReceiptViaSMSForm } from './NotifyReceiptViaSMSForm';
 import { NotifyReceiptViaSMSFormProvider } from './NotifyReceiptViaSMSFormProvider';
-import NotifyReceiptViaSMSForm from './NotifyReceiptViaSMSForm';
 
-export default function NotifyReceiptViaSMSDialogContent({
-  // #ownProps
+interface NotifyReceiptViaSMSDialogContentProps {
+  dialogName: string;
+  receipt?: number | null;
+}
+
+export function NotifyReceiptViaSMSDialogContent({
   dialogName,
   receipt,
-}) {
+}: NotifyReceiptViaSMSDialogContentProps): React.ReactElement {
   return (
     <NotifyReceiptViaSMSFormProvider
       receiptId={receipt}

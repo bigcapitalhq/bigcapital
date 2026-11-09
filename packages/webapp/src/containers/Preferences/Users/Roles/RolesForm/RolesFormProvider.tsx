@@ -1,22 +1,45 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 import { CLASSES } from '@/constants/classes';
-
+import { PreferencesPageLoader } from '@/containers/Preferences/PreferencesPageLoader';
 import {
   useCreateRolePermissionSchema,
   useEditRolePermissionSchema,
   usePermissionsSchema,
   useRolePermission,
 } from '@/hooks/query';
-import PreferencesPageLoader from '@/containers/Preferences/PreferencesPageLoader';
 
-const RolesFormContext = React.createContext();
+type CreateRolePermissionMutate = ReturnType<
+  typeof useCreateRolePermissionSchema
+>['mutateAsync'];
+type EditRolePermissionMutate = ReturnType<
+  typeof useEditRolePermissionSchema
+>['mutateAsync'];
+
+export interface RolesFormContextValue {
+  isNewMode: boolean;
+  roleId: number;
+  role: ReturnType<typeof useRolePermission>['data'];
+  permissionsSchema: ReturnType<typeof usePermissionsSchema>['data'];
+  isPermissionsSchemaLoading: boolean;
+  isPermissionsSchemaFetching: boolean;
+  createRolePermissionMutate: CreateRolePermissionMutate;
+  editRolePermissionMutate: EditRolePermissionMutate;
+}
+
+const RolesFormContext = React.createContext<RolesFormContextValue>(
+  {} as RolesFormContextValue,
+);
+
+export interface RolesFormProviderProps {
+  roleId?: number;
+  children?: React.ReactNode;
+}
 
 /**
  * Roles Form page provider.
  */
-function RolesFormProvider({ roleId, ...props }) {
+function RolesFormProvider({ roleId, children }: RolesFormProviderProps) {
   // Create and edit roles mutations.
   const { mutateAsync: createRolePermissionMutate } =
     useCreateRolePermissionSchema();
@@ -42,9 +65,9 @@ function RolesFormProvider({ roleId, ...props }) {
   const isNewMode = !roleId;
 
   // Provider state.
-  const provider = {
+  const provider: RolesFormContextValue = {
     isNewMode,
-    roleId,
+    roleId: roleId ?? 0,
     role,
     permissionsSchema,
     isPermissionsSchemaLoading,
@@ -63,7 +86,9 @@ function RolesFormProvider({ roleId, ...props }) {
       {isPermissionsSchemaLoading || isPermissionLoading ? (
         <PreferencesPageLoader />
       ) : (
-        <RolesFormContext.Provider value={provider} {...props} />
+        <RolesFormContext.Provider value={provider}>
+          {children}
+        </RolesFormContext.Provider>
       )}
     </div>
   );

@@ -1,12 +1,17 @@
-// @ts-nocheck
+import classNames from 'classnames';
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
-import classNames from 'classnames';
-
-import { withDashboard } from '@/containers/Dashboard/withDashboard';
-
 import { useObserveSidebarExpendedBodyclass } from './hooks';
-import { compose } from '@/utils';
+import {
+  withDashboard,
+  WithDashboardProps,
+} from '@/containers/Dashboard/withDashboard';
+
+interface SidebarContainerProps {
+  children: React.ReactNode;
+  sidebarExpended: boolean;
+}
 
 /**
  * Sidebar container/
@@ -18,8 +23,8 @@ function SidebarContainerJSX({
 
   // #withDashboard
   sidebarExpended,
-}) {
-  const sidebarScrollerRef = React.useRef();
+}: SidebarContainerProps) {
+  const sidebarScrollerRef = React.useRef<HTMLDivElement | null>(null);
 
   // Toggles classname to body once sidebar expend/shrink.
   useObserveSidebarExpendedBodyclass(sidebarExpended);
@@ -39,7 +44,7 @@ function SidebarContainerJSX({
     }
   };
 
-  const scrollerElementRef = React.useCallback((ref) => {
+  const scrollerElementRef = React.useCallback((ref: HTMLDivElement | null) => {
     sidebarScrollerRef.current = ref;
   }, []);
 
@@ -63,8 +68,9 @@ function SidebarContainerJSX({
   );
 }
 
-export const SidebarContainer = compose(
-  withDashboard(({ sidebarExpended }) => ({
+export const SidebarContainer = FF.pipe(
+  SidebarContainerJSX,
+  withDashboard(({ sidebarExpended }: WithDashboardProps) => ({
     sidebarExpended,
   })),
-)(SidebarContainerJSX);
+);

@@ -1,6 +1,6 @@
-import { BankTransaction } from "@/modules/BankingTransactions/models/BankTransaction";
-import { UncategorizedBankTransaction } from "@/modules/BankingTransactions/models/UncategorizedBankTransaction";
-import { Knex } from "knex";
+import { BankTransaction } from '@/modules/BankingTransactions/models/BankTransaction';
+import { UncategorizedBankTransaction } from '@/modules/BankingTransactions/models/UncategorizedBankTransaction';
+import { Knex } from 'knex';
 
 export interface ICashflowTransactionCategorizedPayload {
   uncategorizedTransactions: Array<UncategorizedBankTransaction>;
@@ -35,7 +35,6 @@ export interface ICategorizeCashflowTransactioDTO {
   description: string;
   branchId: number;
 }
-
 
 export interface IUncategorizedTransactionCreatingEventPayload {
   tenantId: number;

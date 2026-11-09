@@ -25,6 +25,7 @@ export class ARAgingSummaryPdfInjectable {
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCss,
+      query.numberFormat?.showInRed,
     );
   }
 }

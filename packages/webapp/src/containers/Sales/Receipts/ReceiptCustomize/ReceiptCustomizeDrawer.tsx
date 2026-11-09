@@ -1,12 +1,19 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-import * as R from 'ramda';
 import { Drawer, DrawerSuspense } from '@/components';
 import { withDrawers } from '@/containers/Drawer/withDrawers';
 
-const ReceiptCustomizeDrawerBody = React.lazy(
-  () => import('./ReceiptCustomizeDrawerBody'),
+const ReceiptCustomizeDrawerBody = React.lazy(() =>
+  import('./ReceiptCustomizeDrawerBody').then((m) => ({
+    default: m.ReceiptCustomizeDrawerBody,
+  })),
 );
+
+interface ReceiptCustomizeDrawerProps {
+  name: string;
+  isOpen?: boolean;
+  payload?: Record<string, any>;
+}
 
 /**
  * Receipt customize drawer.
@@ -17,7 +24,7 @@ function ReceiptCustomizeDrawerRoot({
   // #withDrawer
   isOpen,
   payload,
-}) {
+}: ReceiptCustomizeDrawerProps) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -32,6 +39,7 @@ function ReceiptCustomizeDrawerRoot({
   );
 }
 
-export const ReceiptCustomizeDrawer = R.compose(withDrawers())(
+export const ReceiptCustomizeDrawer = FF.pipe(
   ReceiptCustomizeDrawerRoot,
+  withDrawers(),
 );

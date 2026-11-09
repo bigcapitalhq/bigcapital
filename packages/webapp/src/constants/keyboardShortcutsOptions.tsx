@@ -1,4 +1,3 @@
-// @ts-nocheck
 import intl from 'react-intl-universal';
 import {
   AbilitySubject,
@@ -15,8 +14,9 @@ import {
   SaleReceiptAction,
   VendorAction,
 } from './abilityOption';
+import type { KeyboardShortcutOption } from './types';
 
-export const KeyboardShortcutsOptions = [
+export const KeyboardShortcutsOptions: KeyboardShortcutOption[] = [
   {
     shortcut_key: 'Shift + I',
     description: intl.get('jump_to_the_invoices'),

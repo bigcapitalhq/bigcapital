@@ -1,26 +1,30 @@
-// @ts-nocheck
-import React from 'react';
+import React, { createContext } from 'react';
 import intl from 'react-intl-universal';
-import { useWarehouseTransfer } from '@/hooks/query';
+import type { WarehouseTransferDetailDrawerContextValue } from './types';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { useWarehouseTransfer } from '@/hooks/query';
 
-const WarehouseTransferDetailDrawerContext = React.createContext();
+const WarehouseTransferDetailDrawerContext =
+  createContext<WarehouseTransferDetailDrawerContextValue>(
+    {} as WarehouseTransferDetailDrawerContextValue,
+  );
 
-/**
- * Warehouse transfer detail drawer provider.
- */
+interface WarehouseTransferDetailDrawerProviderProps {
+  warehouseTransferId?: number | null;
+  children?: React.ReactNode;
+}
+
 function WarehouseTransferDetailDrawerProvider({
   warehouseTransferId,
   ...props
-}) {
-  // Handle fetch warehouse transfer detail.
+}: WarehouseTransferDetailDrawerProviderProps) {
   const { data: warehouseTransfer, isLoading: isWarehouseTransferLoading } =
     useWarehouseTransfer(warehouseTransferId, {
       enabled: !!warehouseTransferId,
     });
 
-  const provider = {
+  const provider: WarehouseTransferDetailDrawerContextValue = {
     warehouseTransfer,
     warehouseTransferId,
   };
@@ -30,8 +34,8 @@ function WarehouseTransferDetailDrawerProvider({
       <DrawerHeaderContent
         name={DRAWERS.WAREHOUSE_TRANSFER_DETAILS}
         title={intl.get('warehouse_transfer.drawer.title', {
-          number: warehouseTransfer.transaction_number
-            ? `(${warehouseTransfer.transaction_number})`
+          number: warehouseTransfer?.transactionNumber
+            ? `(${warehouseTransfer.transactionNumber})`
             : null,
         })}
       />

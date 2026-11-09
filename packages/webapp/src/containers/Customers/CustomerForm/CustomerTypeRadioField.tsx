@@ -1,9 +1,7 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { FastField } from 'formik';
-import { FormattedMessage as T, FFormGroup } from '@/components';
+import intl from 'react-intl-universal';
+import { FFormGroup } from '@/components';
 
 /**
  * Customer type selector (button group).
@@ -11,14 +9,22 @@ import { FormattedMessage as T, FFormGroup } from '@/components';
 export function CustomerTypeRadioField() {
   return (
     <FFormGroup
-      name={'customer_type'}
-      label={<T id={'customer_type'} />}
+      name={'customerType'}
+      label={intl.get('customer_type')}
       inline
-      fill
       fastField
     >
-      <FastField name="customer_type">
-        {({ field, form }) => (
+      <FastField name="customerType">
+        {({
+          field,
+          form,
+        }: {
+          field: { value: string };
+          form: {
+            setFieldValue: (name: string, value: string) => void;
+            setFieldTouched: (name: string, touched: boolean) => void;
+          };
+        }) => (
           <ButtonGroup>
             <Button
               type="button"
@@ -26,8 +32,8 @@ export function CustomerTypeRadioField() {
               small
               active={field.value === 'business'}
               onClick={() => {
-                form.setFieldValue('customer_type', 'business');
-                form.setFieldTouched('customer_type', true);
+                form.setFieldValue('customerType', 'business');
+                form.setFieldTouched('customerType', true);
               }}
             >
               {intl.get('business')}
@@ -38,8 +44,8 @@ export function CustomerTypeRadioField() {
               small
               active={field.value === 'individual'}
               onClick={() => {
-                form.setFieldValue('customer_type', 'individual');
-                form.setFieldTouched('customer_type', true);
+                form.setFieldValue('customerType', 'individual');
+                form.setFieldTouched('customerType', true);
               }}
             >
               {intl.get('individual')}

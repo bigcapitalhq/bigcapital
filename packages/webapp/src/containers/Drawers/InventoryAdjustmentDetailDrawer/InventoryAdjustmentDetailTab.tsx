@@ -1,13 +1,8 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
-
+import { InventoryAdjustmentDetailHeader } from './InventoryAdjustmentDetailHeader';
+import { InventoryAdjustmentDetailTable } from './InventoryAdjustmentDetailTable';
 import { CommercialDocBox } from '@/components';
 
-import InventoryAdjustmentDetailHeader from './InventoryAdjustmentDetailHeader';
-import InventoryAdjustmentDetailTable from './InventoryAdjustmentDetailTable';
-
-export default function InventoryAdjustmentDetailTab() {
+export function InventoryAdjustmentDetailTab() {
   return (
     <CommercialDocBox>
       <InventoryAdjustmentDetailHeader />

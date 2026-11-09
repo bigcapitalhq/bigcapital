@@ -6,7 +6,6 @@ export default class SeedRolesAndPermissions extends TenantSeeder {
    * @param knex
    * @returns
    */
-  // eslint-disable-next-line class-methods-use-this
   async up(knex) {
     return knex('role_permissions').insert([
       // Assign sale invoice permissions to staff role.
@@ -44,6 +43,12 @@ export default class SeedRolesAndPermissions extends TenantSeeder {
       { roleId: 2, subject: 'PaymentMade', ability: 'delete' },
       { roleId: 2, subject: 'PaymentMade', ability: 'view' },
       { roleId: 2, subject: 'PaymentMade', ability: 'edit' },
+
+      // Assign recurring invoice permissions to staff role.
+      { roleId: 2, subject: 'RecurringInvoice', ability: 'create' },
+      { roleId: 2, subject: 'RecurringInvoice', ability: 'delete' },
+      { roleId: 2, subject: 'RecurringInvoice', ability: 'view' },
+      { roleId: 2, subject: 'RecurringInvoice', ability: 'edit' },
     ]);
   }
 }

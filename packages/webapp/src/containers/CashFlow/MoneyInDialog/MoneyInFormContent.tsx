@@ -1,16 +1,14 @@
-// @ts-nocheck
-import React from 'react';
 import { Form } from 'formik';
-
-import MoneyInFormFields from './MoneyInFormFields';
-import MoneyInFormDialog from './MoneyInFormDialog';
-import MoneyInFloatingActions from './MoneyInFloatingActions';
+import React from 'react';
 import { MoneyInOutSyncIncrementSettingsToForm } from '../_components';
+import { MoneyInFloatingActions } from './MoneyInFloatingActions';
+import { MoneyInFormDialog } from './MoneyInFormDialog';
+import { MoneyInFormFields } from './MoneyInFormFields';
 
 /**
  * Money In form content.
  */
-export default function MoneyInFormContent() {
+export function MoneyInFormContent() {
   return (
     <Form>
       <MoneyInFormFields />

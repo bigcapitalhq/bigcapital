@@ -1,20 +1,16 @@
-// @ts-nocheck
-import React from 'react';
-import styled from 'styled-components';
 import {
   Alignment,
   NavbarGroup,
   NavbarDivider,
   Classes,
 } from '@blueprintjs/core';
+import React from 'react';
+import styled from 'styled-components';
+import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
   useSetPrimaryWarehouseToForm,
   useSetPrimaryBranchToForm,
 } from './utils';
-
-import { Features } from '@/constants';
-import { useInvoiceFormContext } from './InvoiceFormProvider';
-import { useFeatureCan } from '@/hooks/state';
 import {
   BranchSelect,
   FeatureCan,
@@ -23,12 +19,14 @@ import {
   FormWarehouseSelectButton,
   FormBranchSelectButton,
 } from '@/components';
+import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Invoice form topbar .
  * @returns {JSX.Element}
  */
-export default function InvoiceFormTopBar() {
+export function InvoiceFormTopBar() {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -67,7 +65,7 @@ function InvoiceFormSelectBranch() {
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <BranchSelect
-      name={'branch_id'}
+      name={'branchId'}
       branches={branches}
       input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
@@ -84,7 +82,7 @@ function InvoiceFormSelectWarehouse() {
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <WarehouseSelect
-      name={'warehouse_id'}
+      name={'warehouseId'}
       warehouses={warehouses}
       input={FormWarehouseSelectButton}
       popoverProps={{ minimal: true }}

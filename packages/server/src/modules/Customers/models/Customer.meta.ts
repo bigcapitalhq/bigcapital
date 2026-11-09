@@ -36,7 +36,7 @@ export const CustomerMeta = {
       fieldType: 'text',
     },
     personal_phone: {
-      name: 'vendor.field.personal_pone',
+      name: 'vendor.field.personal_phone',
       column: 'personal_phone',
       fieldType: 'text',
     },
@@ -146,7 +146,7 @@ export const CustomerMeta = {
       name: 'vendor.field.opening_balance_at',
       type: 'date',
       printable: false,
-      accessor: 'formattedOpeningBalanceAt'
+      accessor: 'formattedOpeningBalanceAt',
     },
     currencyCode: {
       name: 'vendor.field.currency',
@@ -410,7 +410,7 @@ export const CustomerMeta = {
   },
 };
 
-function statusFieldFilterQuery(query, role) {
+function _statusFieldFilterQuery(query, role) {
   switch (role.value) {
     case 'overdue':
       query.modify('overdue');

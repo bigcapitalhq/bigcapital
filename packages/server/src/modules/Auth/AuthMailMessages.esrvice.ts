@@ -41,9 +41,9 @@ export class AuthenticationMailMesssages {
   }
 
   sendResetPasswordMail(user: ModelObject<SystemUser>, token: string) {
-      const mail = this.resetPasswordMessage(user, token);
+    const mail = this.resetPasswordMessage(user, token);
 
-      return this.mailTransporter.send(mail);
+    return this.mailTransporter.send(mail);
   }
 
   /**
@@ -72,11 +72,7 @@ export class AuthenticationMailMesssages {
   }
 
   sendSignupVerificationMail(email: string, fullName: string, token: string) {
-    const mail = this.signupVerificationMail(
-      email,
-      fullName,
-      token,
-    );
+    const mail = this.signupVerificationMail(email, fullName, token);
     return this.mailTransporter.send(mail);
   }
 }

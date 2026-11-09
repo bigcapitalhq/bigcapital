@@ -20,9 +20,15 @@ export class CreateEditCustomerDTO {
   private transformCommonDTO = (
     customerDTO: ICustomerNewDTO | ICustomerEditDTO,
   ) => {
+    const { code, ...rest } = customerDTO;
+
     return {
-      ...omit(customerDTO, ['customerType']),
+      ...omit(rest, ['customerType']),
       contactType: customerDTO.customerType,
+      // Blank codes are stored as NULL to avoid `CONTACTS_CODE_UNIQUE` collisions.
+      ...(typeof code === 'string'
+        ? { code: code.trim() ? code.trim() : null }
+        : {}),
     };
   };
 
@@ -40,7 +46,7 @@ export class CreateEditCustomerDTO {
     return {
       ...commonDTO,
       currencyCode:
-        commonDTO.currencyCode || tenantMeta?.metadata?.baseCurrency,
+        customerDTO.currencyCode || tenantMeta?.metadata?.baseCurrency,
       active: defaultTo(customerDTO.active, true),
       contactService: ContactService.Customer,
       ...(!isEmpty(customerDTO.openingBalanceAt)

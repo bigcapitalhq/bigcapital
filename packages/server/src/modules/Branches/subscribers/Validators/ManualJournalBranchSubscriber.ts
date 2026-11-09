@@ -1,4 +1,3 @@
-
 import {
   IManualJournalCreatingPayload,
   IManualJournalEditingPayload,
@@ -15,7 +14,7 @@ export class ManualJournalBranchValidateSubscriber {
   constructor(
     private readonly validateManualJournalBranch: ManualJournalBranchesValidator,
     private readonly featuresManager: FeaturesManager,
-  ) { }
+  ) {}
 
   /**
    * Validate branch existance on estimate creating.
@@ -27,16 +26,16 @@ export class ManualJournalBranchValidateSubscriber {
   }: IManualJournalCreatingPayload) {
     // Detarmines whether the multi-branches is accessible by tenant.
     const isAccessible = await this.featuresManager.accessible(
-      Features.BRANCHES
+      Features.BRANCHES,
     );
     // Can't continue if the multi-branches feature is inactive.
     if (!isAccessible) return;
 
     // Validates the entries whether have branch id.
     await this.validateManualJournalBranch.validateEntriesHasBranchId(
-      manualJournalDTO
+      manualJournalDTO,
     );
-  };
+  }
 
   /**
    * Validate branch existance once estimate editing.
@@ -48,13 +47,13 @@ export class ManualJournalBranchValidateSubscriber {
   }: IManualJournalEditingPayload) {
     // Detarmines whether the multi-branches is accessible by tenant.
     const isAccessible = await this.featuresManager.accessible(
-      Features.BRANCHES
+      Features.BRANCHES,
     );
     // Can't continue if the multi-branches feature is inactive.
     if (!isAccessible) return;
 
     await this.validateManualJournalBranch.validateEntriesHasBranchId(
-      manualJournalDTO
+      manualJournalDTO,
     );
-  };
+  }
 }

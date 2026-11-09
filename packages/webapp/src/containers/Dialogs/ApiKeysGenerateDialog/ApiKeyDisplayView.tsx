@@ -1,5 +1,3 @@
-// @ts-nocheck
-import React from 'react';
 import {
   Classes,
   Button,
@@ -9,19 +7,35 @@ import {
   Position,
   Tooltip,
 } from '@blueprintjs/core';
+import React from 'react';
 import intl from 'react-intl-universal';
-import { FormattedMessage as T, Icon, Alert } from '@/components';
-import { useClipboard } from '@/hooks/utils/useClipboard';
+import { FormattedMessage as T, Icon, Alert as AlertBase } from '@/components';
 import { AppToaster } from '@/components';
+import { useClipboard } from '@/hooks/utils/useClipboard';
+
+// `Alert` (components/Alert) is not typed yet; widen to accept the props used
+// here.
+const Alert = AlertBase as unknown as React.FC<{
+  intent?: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  className?: string;
+  children?: React.ReactNode;
+}>;
+
+interface ApiKeyDisplayViewProps {
+  dialogName: string;
+  apiKey: string;
+  onClose: () => void;
+}
 
 /**
  * API Key Display view component (used within the generate dialog).
  */
-function ApiKeyDisplayView({
-  dialogName,
+export function ApiKeyDisplayView({
   apiKey,
   onClose,
-}) {
+}: ApiKeyDisplayViewProps): React.ReactElement {
   const clipboard = useClipboard();
 
   const handleCopy = () => {
@@ -38,14 +52,18 @@ function ApiKeyDisplayView({
     <>
       <div className={Classes.DIALOG_BODY}>
         <Alert intent="primary">
-          <strong>{intl.get('api_key.important')}:</strong> {intl.get('api_key.display_warning')}
+          <strong>{intl.get('api_key.important')}:</strong>{' '}
+          {intl.get('api_key.display_warning')}
         </Alert>
         <FormGroup label={intl.get('api_key.label')}>
           <InputGroup
             value={apiKey || ''}
             readOnly
             rightElement={
-              <Tooltip content={intl.get('api_key.copy_to_clipboard')} position={Position.TOP}>
+              <Tooltip
+                content={intl.get('api_key.copy_to_clipboard')}
+                position={Position.TOP}
+              >
                 <Button
                   onClick={handleCopy}
                   minimal
@@ -59,7 +77,11 @@ function ApiKeyDisplayView({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button intent={Intent.PRIMARY} onClick={onClose} style={{ width: '85px' }}>
+          <Button
+            intent={Intent.PRIMARY}
+            onClick={onClose}
+            style={{ width: '85px' }}
+          >
             <T id={'done'} />
           </Button>
         </div>
@@ -67,6 +89,3 @@ function ApiKeyDisplayView({
     </>
   );
 }
-
-export default ApiKeyDisplayView;
-

@@ -2,18 +2,21 @@
   "name": "@bigcapital/pdf-templates",
   "version": "0.0.0",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js && npm run build:esm",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "dev": "npm run build",
     "lint": "eslint .",
+    "lint:check": "eslint .",
     "storybook:dev": "storybook dev -p 6006",
     "storybook:build": "storybook build"
   },
   "main": "./dist/components.umd.js",
-  "module": "./dist/components.es.js",
+  "module": "./dist/esm/components/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/src/index.d.ts",
-      "import": "./dist/components.es.js",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/components/index.js",
       "require": "./dist/components.umd.js"
     }
   },

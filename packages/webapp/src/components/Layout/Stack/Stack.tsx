@@ -1,5 +1,5 @@
-import React from 'react';
 import { x, SystemProps } from '@xstyled/emotion';
+import React from 'react';
 
 export interface StackProps
   extends SystemProps,

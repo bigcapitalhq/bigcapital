@@ -11,6 +11,7 @@ import { ServiceError } from '@/modules/Items/ServiceError';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import type { RecognizedBankTransaction } from '@/modules/BankingTranasctionsRegonize/models/RecognizedBankTransaction';
 
 @Injectable()
 export class RemovePendingUncategorizedTransaction {
@@ -51,6 +52,13 @@ export class RemovePendingUncategorizedTransaction {
           trx,
         } as IPendingTransactionRemovingEventPayload,
       );
+      // Unlink and remove the recognized transaction (if any) before deleting
+      // the pending transaction, since both tables reference each other.
+      await this.removeRecognizedTransaction(
+        uncategorizedTransactionId,
+        pendingTransaction,
+        trx,
+      );
       // Removes the pending uncategorized transaction.
       await this.uncategorizedBankTransaction()
         .query(trx)
@@ -65,6 +73,33 @@ export class RemovePendingUncategorizedTransaction {
           trx,
         } as IPendingTransactionRemovedEventPayload,
       );
-    });
+    }, trx);
+  }
+
+  /**
+   * Removes the recognized bank transaction linked to the given pending
+   * transaction.
+   * @param {number} uncategorizedTransactionId - Pending transaction id.
+   * @param {UncategorizedBankTransaction} pendingTransaction - Pending transaction.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<void>}
+   */
+  private async removeRecognizedTransaction(
+    uncategorizedTransactionId: number,
+    pendingTransaction: UncategorizedBankTransaction,
+    trx: Knex.Transaction,
+  ): Promise<void> {
+    if (!pendingTransaction.recognizedTransactionId) {
+      return;
+    }
+    // Break the circular reference before deleting the recognized row.
+    await this.uncategorizedBankTransaction()
+      .query(trx)
+      .findById(uncategorizedTransactionId)
+      .patch({ recognizedTransactionId: null });
+
+    await pendingTransaction
+      .$relatedQuery<RecognizedBankTransaction>('recognizedTransaction', trx)
+      .delete();
   }
 }

@@ -1,15 +1,14 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
+import { FFormGroup, FEditableText } from '@/components';
 
 export function VendorCreditNoteFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
-        label={<T id={'vendor_credit_form.label.note'} />}
+        label={intl.get('vendor_credit_form.label.note')}
         name={'note'}
       >
         <FEditableText

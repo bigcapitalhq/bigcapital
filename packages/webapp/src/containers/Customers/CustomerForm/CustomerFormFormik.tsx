@@ -1,66 +1,29 @@
+import { Intent } from '@blueprintjs/core';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import { Formik, Form, FormikHelpers } from 'formik';
-import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { CreateCustomerForm, EditCustomerForm } from './CustomerForm.schema';
-import { compose, transformToForm, saveInvoke, parseBoolean } from '@/utils';
-import { useCustomerFormContext } from './CustomerFormProvider';
-import { defaultInitialValues } from './utils';
-import { AppToaster } from '@/components';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
 import { CustomerFormContent } from './CustomerFormContent';
-
-type CustomerFormValues = {
-  customer_type: string;
-  salutation: string;
-  first_name: string;
-  last_name: string;
-  company_name: string;
-  display_name: string;
-
-  email?: string;
-  work_phone?: string;
-  personal_phone?: string;
-  website?: string;
-  note?: string;
-  active: boolean | string;
-
-  billing_address_country: string;
-  billing_address1: string;
-  billing_address2: string;
-  billing_address_city: string;
-  billing_address_state: string;
-  billing_address_postcode?: string;
-  billing_address_phone?: string;
-
-  shipping_address_country: string;
-  shipping_address1: string;
-  shipping_address2: string;
-  shipping_address_city: string;
-  shipping_address_state: string;
-  shipping_address_postcode?: string;
-  shipping_address_phone?: string;
-
-  currency_code: string;
-  opening_balance?: string | number;
-  opening_balance_at?: string;
-  opening_balance_exchange_rate?: string;
-  opening_balance_branch_id?: string;
-
-  [key: string]: any;
-};
+import { useCustomerFormContext } from './CustomerFormProvider';
+import {
+  CustomerFormValues,
+  defaultInitialValues,
+  transformCustomerToForm,
+  transformFormToCreateRequest,
+  transformFormToEditRequest,
+  transformValuesToForm,
+} from './utils';
+import { AppToaster } from '@/components';
+import { inferDisplayNameFormat } from '@/components/Select/displayNameUtils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
+import { saveInvoke } from '@/utils';
 
 type CustomerFormSubmitPayload = {
   noRedirect?: boolean;
 };
 
 type CustomerFormFormikRootProps = {
-  organization: {
-    base_currency: string;
-  };
-
-  // #ownProps
   initialValues?: Partial<CustomerFormValues>;
   onSubmitSuccess?: (
     values: CustomerFormValues,
@@ -81,15 +44,15 @@ type CustomerFormFormikRootProps = {
 const EMPTY_INITIAL_VALUES: Partial<CustomerFormValues> = {};
 
 function CustomerFormFormikRoot({
-  organization: { base_currency },
-
-  // #ownProps
   initialValues: initialCustomerValues = EMPTY_INITIAL_VALUES,
   onSubmitSuccess,
   onSubmitError,
   // `onCancel` is accepted for compatibility but currently not used.
-  className,
+  onCancel: _onCancel,
+  className: _className,
 }: CustomerFormFormikRootProps) {
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
+
   const {
     customer,
     submitPayload,
@@ -99,15 +62,25 @@ function CustomerFormFormikRoot({
     isNewMode,
   } = useCustomerFormContext();
 
-  const initialValues = useMemo<CustomerFormValues>(
-    () => ({
+  const initialValues = useMemo<CustomerFormValues>(() => {
+    const merged: CustomerFormValues = {
       ...defaultInitialValues,
-      currency_code: base_currency,
-      ...transformToForm(contactDuplicate ?? customer ?? {}, defaultInitialValues),
-      ...transformToForm(initialCustomerValues, defaultInitialValues),
-    }) as CustomerFormValues,
-    [customer, contactDuplicate, base_currency, initialCustomerValues],
-  );
+      ...transformCustomerToForm(
+        contactDuplicate ?? customer,
+        defaultInitialValues,
+      ),
+      ...transformValuesToForm(initialCustomerValues, defaultInitialValues),
+    };
+    // Fall back to the organization base currency only if nothing else provided one.
+    if (!merged.currencyCode && baseCurrency) {
+      merged.currencyCode = baseCurrency;
+    }
+    // Infer the selected display-name format from the existing display name.
+    if (merged.displayName && !merged.displayNameFormat) {
+      merged.displayNameFormat = inferDisplayNameFormat(merged);
+    }
+    return merged;
+  }, [customer, contactDuplicate, baseCurrency, initialCustomerValues]);
 
   // Handles the form submit.
   const handleFormSubmit = (
@@ -115,12 +88,8 @@ function CustomerFormFormikRoot({
     formArgs: FormikHelpers<CustomerFormValues>,
   ) => {
     const { setSubmitting, resetForm } = formArgs;
-    const formValues = {
-      ...values,
-      active: parseBoolean(values.active, true),
-    };
 
-    const onSuccess = (res: { data?: unknown }) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -131,33 +100,38 @@ function CustomerFormFormikRoot({
       });
       setSubmitting(false);
       resetForm();
-      saveInvoke(onSubmitSuccess, values, formArgs, submitPayload, res.data);
+      saveInvoke(onSubmitSuccess, values, formArgs, submitPayload);
     };
 
     const onError = () => {
       setSubmitting(false);
       saveInvoke(onSubmitError, values, formArgs, submitPayload);
     };
+
     if (isNewMode) {
-      createCustomerMutate(formValues).then(onSuccess).catch(onError);
+      createCustomerMutate(transformFormToCreateRequest(values))
+        .then(onSuccess)
+        .catch(onError);
     } else {
       if (!customer) return;
-      editCustomerMutate([customer.id, formValues]).then(onSuccess).catch(onError);
+      editCustomerMutate([customer.id, transformFormToEditRequest(values)])
+        .then(onSuccess)
+        .catch(onError);
     }
   };
 
   return (
-      <Formik<CustomerFormValues>
-        validationSchema={isNewMode ? CreateCustomerForm : EditCustomerForm}
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
-      >
-        <Form>
-          <CustomerFormFields>
-            <CustomerFormContent />
-          </CustomerFormFields>
-        </Form>
-      </Formik>
+    <Formik<CustomerFormValues>
+      validationSchema={isNewMode ? CreateCustomerForm : EditCustomerForm}
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
+    >
+      <Form>
+        <CustomerFormFields>
+          <CustomerFormContent />
+        </CustomerFormFields>
+      </Form>
+    </Formik>
   );
 }
 
@@ -166,7 +140,7 @@ const CustomerFormFields = styled.div`
   .bp6-form-content {
     min-width: 300px;
   }
-  .bp4-form-group{
+  .bp4-form-group {
     margin-bottom: 20px;
   }
   .bp4-form-group.bp4-inline label.bp4-label {
@@ -174,4 +148,4 @@ const CustomerFormFields = styled.div`
   }
 `;
 
-export const CustomerFormFormik = compose(withCurrentOrganization(undefined))(CustomerFormFormikRoot);
+export const CustomerFormFormik = CustomerFormFormikRoot;

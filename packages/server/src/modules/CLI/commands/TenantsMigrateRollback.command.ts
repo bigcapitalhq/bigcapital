@@ -28,13 +28,21 @@ export class TenantsMigrateRollbackCommand extends BaseCommand {
     return val;
   }
 
-  async run(passedParams: string[], options: TenantsMigrateRollbackOptions): Promise<void> {
+  async run(
+    passedParams: string[],
+    options: TenantsMigrateRollbackOptions,
+  ): Promise<void> {
     try {
       const sysKnex = this.initSystemKnex();
       const tenants = await this.getAllInitializedTenants(sysKnex);
-      const tenantsOrgsIds = tenants.map((tenant: any) => tenant.organizationId);
+      const tenantsOrgsIds = tenants.map(
+        (tenant: any) => tenant.organizationId,
+      );
 
-      if (options.tenant_id && tenantsOrgsIds.indexOf(options.tenant_id) === -1) {
+      if (
+        options.tenant_id &&
+        tenantsOrgsIds.indexOf(options.tenant_id) === -1
+      ) {
         this.exit(`The given tenant id ${options.tenant_id} does not exist.`);
       }
 
@@ -49,7 +57,7 @@ export class TenantsMigrateRollbackCommand extends BaseCommand {
           }
 
           this.log(
-            `Tenant: ${tenantDb} > Batch ${batchNo} rolled back: ${_log.length} migrations`
+            `Tenant: ${tenantDb} > Batch ${batchNo} rolled back: ${_log.length} migrations`,
           );
           this.log('---------------');
         } catch (error) {

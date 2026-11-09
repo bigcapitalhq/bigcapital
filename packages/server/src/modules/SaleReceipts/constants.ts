@@ -88,6 +88,12 @@ export const defaultSaleReceiptBrandingAttributes = {
   companyAddress: '',
   billedToLabel: 'Billed To',
 
+  // Entries
+  lineItemLabel: 'Item',
+  lineQuantityLabel: 'Qty',
+  lineRateLabel: 'Rate',
+  lineTotalLabel: 'Total',
+
   // # Total
   total: '$1000.00',
   totalLabel: 'Total',

@@ -39,10 +39,6 @@ export class PurchasesByItemsQueryDto {
   @IsOptional()
   itemsIds: number[];
 
-  @ApiPropertyOptional({
-    description: 'Number formatting options for the report',
-    type: NumberFormatQueryDto,
-  })
   @ValidateNested()
   @Type(() => NumberFormatQueryDto)
   @IsOptional()
@@ -56,6 +52,7 @@ export class PurchasesByItemsQueryDto {
   })
   @IsBoolean()
   @Transform(({ value }) => parseBoolean(value, false))
+  @IsOptional()
   noneTransactions: boolean;
 
   @ApiPropertyOptional({
@@ -66,5 +63,6 @@ export class PurchasesByItemsQueryDto {
   })
   @IsBoolean()
   @Transform(({ value }) => parseBoolean(value, false))
+  @IsOptional()
   onlyActive: boolean;
 }

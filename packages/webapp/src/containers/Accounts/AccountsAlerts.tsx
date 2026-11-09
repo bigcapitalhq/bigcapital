@@ -1,23 +1,37 @@
-// @ts-nocheck
-import React from 'react';
+import React, { ComponentType, LazyExoticComponent } from 'react';
 
-const AccountDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Accounts/AccountDeleteAlert'),
+const AccountDeleteAlert = React.lazy(() =>
+  import('@/containers/Alerts/Accounts/AccountDeleteAlert').then((m) => ({
+    default: m.AccountDeleteAlert,
+  })),
 );
-const AccountInactivateAlert = React.lazy(
-  () => import('@/containers/Alerts/Accounts/AccountInactivateAlert'),
+const AccountInactivateAlert = React.lazy(() =>
+  import('@/containers/Alerts/Accounts/AccountInactivateAlert').then((m) => ({
+    default: m.AccountInactivateAlert,
+  })),
 );
-const AccountActivateAlert = React.lazy(
-  () => import('@/containers/Alerts/Accounts/AccountActivateAlert'),
+const AccountActivateAlert = React.lazy(() =>
+  import('@/containers/Alerts/Accounts/AccountActivateAlert').then((m) => ({
+    default: m.AccountActivateAlert,
+  })),
 );
-const AccountBulkActivateAlert = React.lazy(
-  () => import('@/containers/Alerts/Accounts/AccountBulkActivateAlert'),
+const AccountBulkActivateAlert = React.lazy(() =>
+  import('@/containers/Alerts/Accounts/AccountBulkActivateAlert').then((m) => ({
+    default: m.AccountBulkActivateAlert,
+  })),
 );
-const AccountBulkInactivateAlert = React.lazy(
-  () => import('@/containers/Alerts/Accounts/AccountBulkInactivateAlert'),
+const AccountBulkInactivateAlert = React.lazy(() =>
+  import('@/containers/Alerts/Accounts/AccountBulkInactivateAlert').then(
+    (m) => ({ default: m.AccountBulkInactivateAlert }),
+  ),
 );
 
-export default [
+interface AlertItem {
+  name: string;
+  component: LazyExoticComponent<ComponentType<any>>;
+}
+
+export const AccountsAlerts: AlertItem[] = [
   { name: 'account-delete', component: AccountDeleteAlert },
   { name: 'account-inactivate', component: AccountInactivateAlert },
   { name: 'account-activate', component: AccountActivateAlert },

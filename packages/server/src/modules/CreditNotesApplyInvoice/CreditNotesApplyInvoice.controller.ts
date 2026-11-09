@@ -30,7 +30,10 @@ import { CreditNoteInvoiceToApplyResponseDto } from './dtos/CreditNoteInvoiceToA
 
 @Controller('credit-notes')
 @ApiTags('Credit Notes Apply Invoice')
-@ApiExtraModels(AppliedCreditNoteInvoiceResponseDto, CreditNoteInvoiceToApplyResponseDto)
+@ApiExtraModels(
+  AppliedCreditNoteInvoiceResponseDto,
+  CreditNoteInvoiceToApplyResponseDto,
+)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class CreditNotesApplyInvoiceController {

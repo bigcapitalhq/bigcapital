@@ -1,32 +1,32 @@
-// @ts-nocheck
-import React from 'react';
 import { defaultTo } from 'lodash';
+import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
+import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
+import { ManualJournalDetailsStatus } from './utils';
 import {
   Row,
   Col,
   DetailsMenu,
   DetailItem,
-  FormattedMessage as T,
   CommercialDocHeader,
   CommercialDocTopHeader,
 } from '@/components';
-import { ManualJournalDetailsStatus } from './utils';
-import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
 
 /**
  * Manual journal details header.
  */
-export default function ManualJournalDrawerHeader() {
+export function ManualJournalDrawerHeader() {
   const { manualJournal } = useManualJournalDrawerContext();
+
+  if (!manualJournal) return null;
 
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
-          <DetailItem name={'total'} label={<T id={'total'} />}>
-            <h3 class="big-number">{manualJournal.formatted_amount}</h3>
+          <DetailItem name={'total'} label={intl.get('total')}>
+            <h3 className="big-number">{manualJournal.formattedAmount}</h3>
           </DetailItem>
 
           <StatusDetailItem>
@@ -38,23 +38,32 @@ export default function ManualJournalDrawerHeader() {
       <Row>
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-            <DetailItem name={'journal-type'} label={<T id={'journal_type'} />}>
-              {manualJournal.journal_type}
+            <DetailItem name={'journal-type'} label={intl.get('journal_type')}>
+              {manualJournal.journalType}
             </DetailItem>
 
-            <DetailItem name={'journal-number'} label={<T id={'journal_no'} />}>
-              {manualJournal.journal_number}
+            <DetailItem
+              name={'accounting-method'}
+              label={intl.get('accounting_basis_')}
+            >
+              {manualJournal.basis
+                ? intl.get(manualJournal.basis)
+                : intl.get('general')}
             </DetailItem>
 
-            <DetailItem name={'reference-no'} label={<T id={'reference_no'} />}>
+            <DetailItem name={'journal-number'} label={intl.get('journal_no')}>
+              {manualJournal.journalNumber}
+            </DetailItem>
+
+            <DetailItem name={'reference-no'} label={intl.get('reference_no')}>
               {defaultTo(manualJournal.reference, '-')}
             </DetailItem>
 
-            <DetailItem name={'currency'} label={<T id={'currency'} />}>
-              {manualJournal.currency_code}
+            <DetailItem name={'currency'} label={intl.get('currency')}>
+              {manualJournal.currencyCode}
             </DetailItem>
 
-            <DetailItem label={<T id={'description'} />}>
+            <DetailItem label={intl.get('description')}>
               {defaultTo(manualJournal.description, '—')}
             </DetailItem>
           </DetailsMenu>

@@ -7,7 +7,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ERRORS } from '../Users.constants';
 import { ModelObject } from 'objection';
-import { SystemUser } from '@/modules/System/models/SystemUser';
 import { ITenantUserActivatedPayload } from '../Users.types';
 
 @Injectable()
@@ -26,9 +25,13 @@ export class ActivateUserService {
    */
   public async activateUser(userId: number): Promise<void> {
     const authorizedUser = await this.tenancyContext.getSystemUser();
+    const authorizedTenantUser = await this.tenantUserModel()
+      .query()
+      .findOne({ systemUserId: authorizedUser.id })
+      .throwIfNotFound();
 
     // Throw service error if the given user is equals the authorized user.
-    this.throwErrorIfUserSameAuthorizedUser(userId, authorizedUser);
+    this.throwErrorIfUserSameAuthorizedUser(userId, authorizedTenantUser);
 
     // Retrieve the user or throw not found service error.
     const tenantUser = await this.tenantUserModel().query().findById(userId);
@@ -67,9 +70,9 @@ export class ActivateUserService {
    */
   private throwErrorIfUserSameAuthorizedUser(
     userId: number,
-    authorizedUser: ModelObject<SystemUser>,
+    authorizedUser: ModelObject<TenantUser>,
   ) {
-    if (userId === authorizedUser.id) {
+    if (Number(userId) === authorizedUser.id) {
       throw new ServiceError(ERRORS.USER_SAME_THE_AUTHORIZED_USER);
     }
   }

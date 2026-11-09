@@ -1,12 +1,17 @@
-// @ts-nocheck
-import React from 'react';
-import moment from 'moment';
-import intl from 'react-intl-universal';
-import { pick, first, sumBy } from 'lodash';
-import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { AppToaster } from '@/components';
+import { useFormikContext } from 'formik';
+import { pick, first, sumBy } from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import intl from 'react-intl-universal';
+import { PAYMENT_MADE_ERRORS } from '../constants';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
+import { AppToaster } from '@/components';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 import {
   defaultFastFieldShouldUpdate,
   safeSumBy,
@@ -14,83 +19,180 @@ import {
   orderingLinesIndexes,
   formattedAmount,
 } from '@/utils';
-import { useCurrentOrganization } from '@/hooks/state';
-import { PAYMENT_MADE_ERRORS } from '../constants';
-import {
-  transformAttachmentsToForm,
-  transformAttachmentsToRequest,
-} from '@/containers/Attachments/utils';
+
+export type PaymentMadeEntry = {
+  index?: string | number;
+  billId: string | number;
+  paymentAmount: string | number;
+  currencyCode: string;
+  id: number | null;
+  dueAmount: string | number | null;
+  amount: string | number;
+  billNo?: string;
+  date?: string;
+  entryType?: string;
+  branchId?: string | number;
+  totalPaymentAmount?: string | number;
+};
+
+export type PaymentMadeFormValues = {
+  amount: string | number;
+  vendorId: string | number;
+  paymentAccountId: string | number;
+  paymentDate: string;
+  reference: string;
+  paymentNumber: string;
+  statement: string;
+  currencyCode: string;
+  branchId: string | number;
+  exchangeRate: number;
+  entries: PaymentMadeEntry[];
+  attachments: unknown[];
+};
+
+export type PaymentMadeRequestEntry = {
+  index?: string | number;
+  paymentAmount: string | number;
+  billId: string | number;
+};
+
+export type PaymentMadeRequestBody = {
+  vendorId: string | number;
+  amount: string | number;
+  paymentAccountId: string | number;
+  paymentNumber: string;
+  paymentDate: string;
+  exchangeRate: number;
+  statement: string;
+  branchId: string | number;
+  entries: PaymentMadeRequestEntry[];
+  attachments: unknown[];
+};
+
+export type PaymentMadeErrorResponse = {
+  type: string;
+  indexes?: number[];
+  meta?: unknown[];
+};
+
+type PaymentMadeEditPage = NonNullable<
+  ReturnType<typeof usePaymentMadeFormContext>['paymentMadeEditPage']
+>;
+
+export type PaymentMadeEditEntry = {
+  paymentAmount?: string | number;
+} & Partial<PaymentMadeEntry>;
+
+/**
+ * Source shape returned by `usePaymentMadeNewPageEntries`.
+ * Query enables `enableCamelCaseTransform`, so fields are camelCase.
+ */
+type BillRow = {
+  id?: string | number;
+  billId?: string | number;
+  dueAmount?: string | number;
+  date?: string;
+  amount?: string | number;
+  currencyCode?: string;
+  billNo?: string;
+  branchId?: string | number;
+  totalPaymentAmount?: string | number;
+};
 
 export const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
-};
+} as const;
 
 // Default payment made entry values.
-export const defaultPaymentMadeEntry = {
-  bill_id: '',
-  payment_amount: '',
-  currency_code: '',
+export const defaultPaymentMadeEntry: PaymentMadeEntry = {
+  billId: '',
+  paymentAmount: '',
+  currencyCode: '',
   id: null,
-  due_amount: null,
+  dueAmount: null,
   amount: '',
 };
 
 // Default initial values of payment made.
-export const defaultPaymentMade = {
+export const defaultPaymentMade: PaymentMadeFormValues = {
   amount: '',
-  vendor_id: '',
-  payment_account_id: '',
-  payment_date: moment(new Date()).format('YYYY-MM-DD'),
+  vendorId: '',
+  paymentAccountId: '',
+  paymentDate: moment(new Date()).format('YYYY-MM-DD'),
   reference: '',
-  payment_number: '',
+  paymentNumber: '',
   statement: '',
-  currency_code: '',
-  branch_id: '',
-  exchange_rate: 1,
+  currencyCode: '',
+  branchId: '',
+  exchangeRate: 1,
   entries: [],
   attachments: [],
 };
 
-export const transformToEditForm = (paymentMade, paymentMadeEntries) => {
-  const attachments = transformAttachmentsToForm(paymentMade);
-
-  return {
+/**
+ * Transformes the edit payment made to initial values of the form.
+ */
+export const transformToEditForm = (
+  paymentMade: PaymentMadeEditPage | Record<string, unknown>,
+  paymentMadeEntries: PaymentMadeEditEntry[],
+): PaymentMadeFormValues =>
+  ({
     ...transformToForm(paymentMade, defaultPaymentMade),
     entries: [
       ...paymentMadeEntries.map((paymentMadeEntry) => ({
         ...transformToForm(paymentMadeEntry, defaultPaymentMadeEntry),
-        payment_amount: paymentMadeEntry.payment_amount || '',
+        paymentAmount: paymentMadeEntry.paymentAmount || '',
       })),
     ],
-    attachments,
-  };
-};
+    attachments: transformAttachmentsToForm(paymentMade),
+  }) as PaymentMadeFormValues;
 
 /**
  * Transform the new page entries.
  */
-export const transformToNewPageEntries = (entries) => {
-  return entries.map((entry) => ({
+export const transformToNewPageEntries = (
+  entries: BillRow[],
+): PaymentMadeEntry[] =>
+  entries.map((entry) => ({
     ...transformToForm(entry, defaultPaymentMadeEntry),
-    payment_amount: '',
-    currency_code: entry.currency_code,
-  }));
+    paymentAmount: '',
+    currencyCode: entry.currencyCode,
+  })) as PaymentMadeEntry[];
+
+type FieldShouldUpdateDeps = {
+  items?: unknown[];
+  accounts?: unknown[];
+  shouldUpdateDeps?: {
+    items?: unknown[];
+    accounts?: unknown[];
+  };
 };
 
 /**
  * Detarmines vendors fast field when update.
  */
-export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
+export const vendorsFieldShouldUpdate = (
+  newProps: FieldShouldUpdateDeps,
+  oldProps: FieldShouldUpdateDeps,
+): boolean => {
   return (
-    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
+    newProps.shouldUpdateDeps?.items !== oldProps.shouldUpdateDeps?.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
+};
+
+type AccountsFieldShouldUpdateProps = {
+  items?: unknown[];
+  shouldUpdateDeps?: { items?: unknown[] };
 };
 
 /**
  * Detarmines accounts fast field when update.
  */
-export const accountsFieldShouldUpdate = (newProps, oldProps) => {
+export const accountsFieldShouldUpdate = (
+  newProps: AccountsFieldShouldUpdateProps,
+  oldProps: AccountsFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -100,29 +202,36 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Transformes the form values to request body.
  */
-export const transformFormToRequest = (form) => {
-  // Filters entries that have no `bill_id` or `payment_amount`.
+export const transformFormToRequest = (
+  form: PaymentMadeFormValues,
+): PaymentMadeRequestBody => {
+  // Filters entries that have no `billId` or `paymentAmount`.
   const entries = form.entries
-    .filter((item) => item.bill_id && item.payment_amount)
+    .filter((item) => item.billId && item.paymentAmount)
     .map((entry) => ({
-      ...pick(entry, ['payment_amount', 'bill_id']),
-    }));
+      ...pick(entry, ['paymentAmount', 'billId']),
+    })) as PaymentMadeRequestEntry[];
 
   const attachments = transformAttachmentsToRequest(form);
 
-  return { ...form, entries: orderingLinesIndexes(entries), attachments };
+  return {
+    ...form,
+    entries: orderingLinesIndexes(entries),
+    attachments,
+  } as PaymentMadeRequestBody;
 };
 
 export const useSetPrimaryBranchToForm = () => {
-  const { setFieldValue } = useFormikContext();
-  const { branches, isBranchesSuccess, isNewMode } = usePaymentMadeFormContext();
+  const { setFieldValue } = useFormikContext<PaymentMadeFormValues>();
+  const { branches, isBranchesSuccess, isNewMode } =
+    usePaymentMadeFormContext();
 
   React.useEffect(() => {
-    if (isBranchesSuccess && isNewMode) {
+    if (isBranchesSuccess && isNewMode && branches) {
       const primaryBranch = branches.find((b) => b.primary) || first(branches);
 
       if (primaryBranch) {
-        setFieldValue('branch_id', primaryBranch.id);
+        setFieldValue('branchId', primaryBranch.id);
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches, isNewMode]);
@@ -131,11 +240,17 @@ export const useSetPrimaryBranchToForm = () => {
 /**
  * Transformes the response errors types.
  */
-export const transformErrors = (errors, { setFieldError }) => {
-  const getError = (errorType) => errors.find((e) => e.type === errorType);
+export const transformErrors = (
+  errors: PaymentMadeErrorResponse[],
+  {
+    setFieldError,
+  }: { setFieldError: (field: string, message: string) => void },
+): void => {
+  const getError = (errorType: string) =>
+    errors.find((e) => e.type === errorType);
 
   if (getError(PAYMENT_MADE_ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
-    setFieldError('payment_number', intl.get('payment_number_is_not_unique'));
+    setFieldError('paymentNumber', intl.get('payment_number_is_not_unique'));
   }
   if (getError(PAYMENT_MADE_ERRORS.WITHDRAWAL_ACCOUNT_CURRENCY_INVALID)) {
     AppToaster.show({
@@ -147,23 +262,23 @@ export const transformErrors = (errors, { setFieldError }) => {
   }
 };
 
+/**
+ * Retreives the payment made totals.
+ */
 export const usePaymentMadeTotals = () => {
   const {
-    values: { entries, currency_code: currencyCode },
-  } = useFormikContext();
+    values: { entries, currencyCode },
+  } = useFormikContext<PaymentMadeFormValues>();
 
-  // Retrieves the invoice entries total.
   const total = React.useMemo(
-    () => sumBy(entries, 'payment_amount'),
+    () => safeSumBy(entries, 'paymentAmount'),
     [entries],
   );
 
-  // Retrieves the formatted total money.
   const formattedTotal = React.useMemo(
     () => formattedAmount(total, currencyCode),
     [total, currencyCode],
   );
-  // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),
     [total, currencyCode],
@@ -179,45 +294,70 @@ export const usePaymentMadeTotals = () => {
 export const usePaymentmadeTotalAmount = () => {
   const {
     values: { amount },
-  } = useFormikContext();
+  } = useFormikContext<PaymentMadeFormValues>();
 
   return amount;
 };
 
-export const usePaymentMadeAppliedAmount = () => {
+export const usePaymentMadeAppliedAmount = (): number => {
   const {
     values: { entries },
-  } = useFormikContext();
+  } = useFormikContext<PaymentMadeFormValues>();
 
-  // Retrieves the invoice entries total.
-  return React.useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
+  return React.useMemo(() => sumBy(entries, 'paymentAmount'), [entries]);
 };
 
-export const usePaymentMadeExcessAmount = () => {
+export const usePaymentMadeExcessAmount = (): number => {
   const appliedAmount = usePaymentMadeAppliedAmount();
   const totalAmount = usePaymentmadeTotalAmount();
 
-  return Math.abs(totalAmount - appliedAmount);
+  return Math.abs(Number(totalAmount) - appliedAmount);
 };
 
 /**
  * Detarmines whether the bill has foreign customer.
- * @returns {boolean}
  */
-export const usePaymentMadeIsForeignCustomer = () => {
-  const { values } = useFormikContext();
-  const currentOrganization = useCurrentOrganization();
+export const usePaymentMadeIsForeignCustomer = (): boolean => {
+  const { values } = useFormikContext<PaymentMadeFormValues>();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
 
   const isForeignCustomer = React.useMemo(
-    () => values.currency_code !== currentOrganization.base_currency,
-    [values.currency_code, currentOrganization.base_currency],
+    () => values.currencyCode !== baseCurrency,
+    [values.currencyCode, baseCurrency],
   );
   return isForeignCustomer;
 };
 
-export const getPaymentExcessAmountFromValues = (values) => {
-  const appliedAmount = sumBy(values.entries, 'payment_amount');
-  const totalAmount = values.amount;
+export const getPaymentExcessAmountFromValues = (
+  values: PaymentMadeFormValues,
+): number => {
+  const appliedAmount = sumBy(values.entries, 'paymentAmount');
+  const totalAmount = Number(values.amount);
 
   return Math.abs(totalAmount - appliedAmount);
 };
+
+export const amountPaymentEntries = (
+  amount: number,
+  entries: PaymentMadeEntry[],
+): PaymentMadeEntry[] => {
+  let total = amount;
+
+  return entries.map((item) => {
+    const diff = Math.min(Number(item.dueAmount), total);
+    total -= Math.max(diff, 0);
+
+    return {
+      ...item,
+      paymentAmount: diff,
+    };
+  });
+};
+
+export const fullAmountPaymentEntries = (
+  entries: PaymentMadeEntry[],
+): PaymentMadeEntry[] =>
+  entries.map((item) => ({
+    ...item,
+    paymentAmount: item.dueAmount ?? 0,
+  }));

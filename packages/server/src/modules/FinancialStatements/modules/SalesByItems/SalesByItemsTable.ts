@@ -1,4 +1,7 @@
-import * as R from 'ramda';
+import { constant, flow } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { I18nService } from 'nestjs-i18n';
+import { when } from '@/common/fp';
 import {
   ISalesByItemsItem,
   ISalesByItemsSheetData,
@@ -10,20 +13,24 @@ import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { ITableColumn, ITableRow } from '../../types/Table.types';
 import { tableRowMapper } from '../../utils/Table.utils';
+import { SALES_BY_ITEMS_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class SalesByItemsTable extends R.pipe(
+export class SalesByItemsTable extends flow(
   FinancialTable,
   FinancialSheetStructure,
 )(FinancialSheet) {
   private readonly data: ISalesByItemsSheetData;
+  readonly i18n: I18nService;
 
   /**
    * Constructor method.
    * @param {ISalesByItemsSheetStatement} data
+   * @param {I18nService} i18n
    */
-  constructor(data: ISalesByItemsSheetData) {
+  constructor(data: ISalesByItemsSheetData, i18n: I18nService) {
     super();
     this.data = data;
+    this.i18n = i18n;
   }
 
   /**
@@ -32,10 +39,19 @@ export class SalesByItemsTable extends R.pipe(
    */
   private commonTableAccessors() {
     return [
-      { key: 'item_name', accessor: 'name' },
-      { key: 'sold_quantity', accessor: 'quantitySoldFormatted' },
-      { key: 'sold_amount', accessor: 'soldCostFormatted' },
-      { key: 'average_price', accessor: 'averageSellPriceFormatted' },
+      { key: SALES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME, accessor: 'name' },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_QUANTITY,
+        accessor: 'quantitySoldFormatted',
+      },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_AMOUNT,
+        accessor: 'soldCostFormatted',
+      },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.AVERAGE_PRICE,
+        accessor: 'averageSellPriceFormatted',
+      },
     ];
   }
 
@@ -58,7 +74,7 @@ export class SalesByItemsTable extends R.pipe(
    * @returns {ITableRow[]}
    */
   private itemsMap = (items: ISalesByItemsItem[]): ITableRow[] => {
-    return R.map(this.itemMap, items);
+    return items.map(this.itemMap);
   };
 
   /**
@@ -82,9 +98,10 @@ export class SalesByItemsTable extends R.pipe(
     const itemsRows = this.itemsMap(this.data.items);
     const totalRow = this.totalMap(this.data.total);
 
-    return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow))
-    )([...itemsRows]) as ITableRow[];
+    return when(constant(!isEmpty(itemsRows)), (rows: ITableRow[]) => [
+      ...rows,
+      totalRow,
+    ])([...itemsRows]);
   }
 
   /**
@@ -93,11 +110,23 @@ export class SalesByItemsTable extends R.pipe(
    */
   public tableColumns(): ITableColumn[] {
     const columns = [
-      { key: 'item_name', label: 'Item name' },
-      { key: 'sold_quantity', label: 'Sold quantity' },
-      { key: 'sold_amount', label: 'Sold amount' },
-      { key: 'average_price', label: 'Average price' },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.ITEM_NAME,
+        label: this.i18n.t('sales_by_items.item_name'),
+      },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_QUANTITY,
+        label: this.i18n.t('sales_by_items.sold_quantity'),
+      },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.SOLD_AMOUNT,
+        label: this.i18n.t('sales_by_items.sold_amount'),
+      },
+      {
+        key: SALES_BY_ITEMS_COLUMN_KEYS.AVERAGE_PRICE,
+        label: this.i18n.t('sales_by_items.average_price'),
+      },
     ];
-    return R.compose(this.tableColumnsCellIndexing)(columns);
+    return this.tableColumnsCellIndexing(columns);
   }
 }

@@ -11,5 +11,3 @@ export class InvalidEmailPasswordException extends UnauthorizedException {
     });
   }
 }
-
-

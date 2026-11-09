@@ -7,7 +7,6 @@ import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
-  IsDate,
   IsDateString,
   IsEnum,
   IsInt,
@@ -213,5 +212,5 @@ export class CommandBillDto {
   adjustment?: number;
 }
 
-export class CreateBillDto extends CommandBillDto { }
-export class EditBillDto extends CommandBillDto { }
+export class CreateBillDto extends CommandBillDto {}
+export class EditBillDto extends CommandBillDto {}

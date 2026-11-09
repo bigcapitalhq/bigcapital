@@ -1,35 +1,45 @@
-// @ts-nocheck
-import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import * as FF from 'fp-ts/function';
+import React from 'react';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import { AppToaster } from '@/components';
-
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-
-import { useUncategorizeTransaction } from '@/hooks/query';
-import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
+import { useUncategorizeTransaction } from '@/hooks/query';
+
+interface UncategorizeTransactionAlertProps
+  extends Pick<WithAlertActionsProps, 'closeAlert'>,
+    Pick<WithDrawerActionsProps, 'closeDrawer'>,
+    WithAlertStoreConnectProps {
+  name: string;
+}
 
 /**
  * Project delete alert.
  */
-function UncategorizeTransactionAlert({
+function UncategorizeTransactionAlertInner({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { uncategorizedTransactionId },
+  payload,
 
   // #withAlertActions
   closeAlert,
 
   // #withDrawerActions
   closeDrawer,
-}) {
-  const { mutateAsync: uncategorizeTransaction, isLoading } =
+}: UncategorizeTransactionAlertProps) {
+  const { mutateAsync: uncategorizeTransaction, isPending: isLoading } =
     useUncategorizeTransaction();
+
+  const uncategorizedTransactionId =
+    payload?.uncategorizedTransactionId as number;
 
   // handle cancel delete project alert.
   const handleCancelDeleteAlert = () => {
@@ -47,23 +57,17 @@ function UncategorizeTransactionAlert({
         closeAlert(name);
         closeDrawer(DRAWERS.CASHFLOW_TRNASACTION_DETAILS);
       })
-      .catch(
-        ({
-          response: {
-            data: { errors },
-          },
-        }) => {
-          AppToaster.show({
-            message: 'Something went wrong.',
-            intent: Intent.DANGER,
-          });
-        },
-      );
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
   };
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
+      cancelButtonText={intl.get('cancel')}
       confirmButtonText={'Uncategorize'}
       intent={Intent.WARNING}
       isOpen={isOpen}
@@ -76,8 +80,9 @@ function UncategorizeTransactionAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
+export const UncategorizeTransactionAlert = FF.pipe(
+  UncategorizeTransactionAlertInner,
   withDrawerActions,
-)(UncategorizeTransactionAlert);
+  withAlertActions,
+  withAlertStoreConnect(),
+);

@@ -4,14 +4,13 @@ import { CreateItemService } from './CreateItem.service';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
 import { ItemsValidators } from './ItemValidator.service';
 import { DeleteItemService } from './DeleteItem.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { EditItemService } from './EditItem.service';
 import { InactivateItem } from './InactivateItem.service';
 import { ActivateItemService } from './ActivateItem.service';
 import { ItemsApplicationService } from './ItemsApplication.service';
 import { ItemTransactionsService } from './ItemTransactions.service';
 import { GetItemService } from './GetItem.service';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { ItemsEntriesService } from './ItemsEntries.service';
 import { GetItemsService } from './GetItems.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
@@ -23,6 +22,7 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
 
 @Module({
   imports: [
+    TenancyModule,
     TenancyDatabaseModule,
     DynamicListModule,
     InventoryAdjustmentsModule,
@@ -39,8 +39,6 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
     GetItemService,
     GetItemsService,
     ItemTransactionsService,
-    TenancyContext,
-    TransformerInjectable,
     ItemsEntriesService,
     ItemsExportable,
     ItemsImportable,
@@ -49,4 +47,4 @@ import { ValidateBulkDeleteItemsService } from './ValidateBulkDeleteItems.servic
   ],
   exports: [ItemsEntriesService, ItemsExportable, ItemsImportable],
 })
-export class ItemsModule { }
+export class ItemsModule {}

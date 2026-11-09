@@ -1,10 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
-import {
-  IBillDTO,
-  IBillCreatedPayload,
-  IBillCreatingPayload,
-} from '../Bills.types';
+import { IBillCreatedPayload, IBillCreatingPayload } from '../Bills.types';
 import { BillDTOTransformer } from './BillDTOTransformer.service';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';

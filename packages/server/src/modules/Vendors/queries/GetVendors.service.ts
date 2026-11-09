@@ -4,7 +4,7 @@ import { Vendor } from '../models/Vendor';
 import { DynamicListService } from '@/modules/DynamicListing/DynamicList.service';
 import { TransformerInjectable } from '@/modules/Transformer/TransformerInjectable.service';
 import { VendorTransfromer } from './VendorTransformer';
-import { GetVendorsResponse, IVendorsFilter } from '../types/Vendors.types';
+import { GetVendorsResponse } from '../types/Vendors.types';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { GetVendorsQueryDto } from '../dtos/GetVendorsQuery.dto';
 
@@ -59,12 +59,12 @@ export class GetVendorsService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transform the vendors.
-    const transformedVendors = await this.transformer.transform(
+    const data = await this.transformer.transform(
       results,
       new VendorTransfromer(),
     );
     return {
-      vendors: transformedVendors,
+      data,
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };

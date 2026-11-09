@@ -55,8 +55,8 @@ export class CreateVendorCreditService {
       .findById(vendorCreditCreateDTO.vendorId)
       .throwIfNotFound();
 
-    // Validate items should be sellable items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
+    // Validate items should be purchasable items.
+    await this.itemsEntriesService.validateNonPurchasableEntriesItems(
       vendorCreditCreateDTO.entries,
     );
     // Transforms the credit DTO to storage layer.

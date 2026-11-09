@@ -1,8 +1,11 @@
-// @ts-nocheck
 import { chain } from 'lodash';
 import { pick } from 'lodash';
 import { IItemEntryTransactionType } from '../TransactionItemEntry/ItemEntry.types';
-import { TInventoryTransactionDirection } from './types/InventoryCost.types';
+import {
+  TInventoryTransactionDirection,
+  IInventoryTransaction,
+  IInventoryTransactionItemEntry,
+} from './types/InventoryCost.types';
 
 /**
  * Grpups by transaction type and id the inventory transactions.
@@ -28,16 +31,16 @@ export function transformItemEntriesToInventory(transaction: {
 
   exchangeRate?: number;
 
-  warehouseId: number | null;
+  warehouseId?: number | null;
 
   date: Date | string;
   direction: TInventoryTransactionDirection;
-  entries: IItemEntry[];
+  entries: IInventoryTransactionItemEntry[];
   createdAt: Date;
 }): IInventoryTransaction[] {
   const exchangeRate = transaction.exchangeRate || 1;
 
-  return transaction.entries.map((entry: IItemEntry) => ({
+  return transaction.entries.map((entry: IInventoryTransactionItemEntry) => ({
     ...pick(entry, ['itemId', 'quantity']),
     rate: entry.rate * exchangeRate,
     transactionType: transaction.transactionType,

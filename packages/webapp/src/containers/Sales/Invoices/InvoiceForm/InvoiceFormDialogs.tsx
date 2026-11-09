@@ -1,23 +1,29 @@
-// @ts-nocheck
 import { useFormikContext } from 'formik';
-import InvoiceNumberDialog from '@/containers/Dialogs/InvoiceNumberDialog';
+import type { InvoiceFormValues } from './utils';
 import { DialogsName } from '@/constants/dialogs';
+import { index as InvoiceNumberDialog } from '@/containers/Dialogs/InvoiceNumberDialog';
+import { InvoiceExchangeRateChangeDialog } from '@/containers/Sales/Invoices/InvoiceForm/Dialogs/InvoiceExchangeRateChangeDialog';
+
+type InvoiceNumberSettings = {
+  transactionNumber: string;
+  incrementMode: string;
+};
 
 /**
  * Invoice form dialogs.
  */
-export default function InvoiceFormDialogs() {
-  const { setFieldValue } = useFormikContext();
+export function InvoiceFormDialogs() {
+  const { setFieldValue } = useFormikContext<InvoiceFormValues>();
 
   // Update the form once the invoice number form submit confirm.
-  const handleInvoiceNumberFormConfirm = (settings) => {
+  const handleInvoiceNumberFormConfirm = (settings: InvoiceNumberSettings) => {
     // Set the invoice transaction no. that cames from dialog to the form.
     // the `invoice_no_manually` will be empty except the increment mode is not auto.
-    setFieldValue('invoice_no', settings.transactionNumber);
-    setFieldValue('invoice_no_manually', '');
+    setFieldValue('invoiceNo', settings.transactionNumber);
+    setFieldValue('invoiceNoManually', '');
 
     if (settings.incrementMode !== 'auto') {
-      setFieldValue('invoice_no_manually', settings.transactionNumber);
+      setFieldValue('invoiceNoManually', settings.transactionNumber);
     }
   };
 
@@ -26,6 +32,9 @@ export default function InvoiceFormDialogs() {
       <InvoiceNumberDialog
         dialogName={DialogsName.InvoiceNumberSettings}
         onConfirm={handleInvoiceNumberFormConfirm}
+      />
+      <InvoiceExchangeRateChangeDialog
+        dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
       />
     </>
   );

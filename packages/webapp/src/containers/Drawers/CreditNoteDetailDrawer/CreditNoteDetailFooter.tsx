@@ -1,5 +1,6 @@
-// @ts-nocheck
 import React from 'react';
+import intl from 'react-intl-universal';
+import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 import {
   CommercialDocFooter,
   T,
@@ -8,29 +9,26 @@ import {
   DetailItem,
 } from '@/components';
 
-import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
-
 /**
  * Credit note detail footer
- * @returns {React.JSX}
  */
-export default function CreditNoteDetailFooter() {
+export function CreditNoteDetailFooter() {
   const { creditNote } = useCreditNoteDetailDrawerContext();
 
   return (
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-        <If condition={creditNote.terms_conditions}>
+        <If condition={!!creditNote?.termsConditions}>
           <DetailItem
-            label={<T id={'note'} />}
-            children={creditNote.note}
+            label={intl.get('note')}
+            children={creditNote?.note}
             multiline
           />
         </If>
 
-        <If condition={creditNote.terms_conditions}>
-          <DetailItem label={<T id={'terms_conditions'} />} multiline>
-            {creditNote.terms_conditions}
+        <If condition={!!creditNote?.termsConditions}>
+          <DetailItem label={intl.get('terms_conditions')} multiline>
+            {creditNote?.termsConditions}
           </DetailItem>
         </If>
       </DetailsMenu>

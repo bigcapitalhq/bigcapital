@@ -11,6 +11,7 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { SaleReceiptApplication } from './SaleReceiptApplication.service';
 import {
@@ -26,11 +27,14 @@ import {
   EditSaleReceiptDto,
 } from './dtos/SaleReceipt.dto';
 import { GetSaleReceiptsQueryDto } from './dtos/GetSaleReceiptsQuery.dto';
-import {
-  SaleReceiptMailOptsDTO,
-} from './types/SaleReceipts.types';
+import { SaleReceiptMailOptsDTO } from './types/SaleReceipts.types';
 import { AcceptType } from '@/constants/accept-type';
 import { Response } from 'express';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { SaleReceiptAction } from './types/SaleReceipts.types';
 import { SaleReceiptResponseDto } from './dtos/SaleReceiptResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { SaleReceiptStateResponseDto } from './dtos/SaleReceiptState.dto';
@@ -39,6 +43,9 @@ import {
   BulkDeleteDto,
   ValidateBulkDeleteResponseDto,
 } from '@/common/dtos/BulkDelete.dto';
+import { SaleReceiptHtmlContentResponseDto } from './dtos/SaleReceiptHtmlResponse.dto';
+import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
+import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
 
 @Controller('sale-receipts')
 @ApiTags('Sale Receipts')
@@ -47,8 +54,10 @@ import {
 @ApiExtraModels(SaleReceiptStateResponseDto)
 @ApiCommonHeaders()
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
+@ApiExtraModels(SaleReceiptHtmlContentResponseDto)
+@ApiExtraModels(SmsNotificationDetailsResponseDto)
 export class SaleReceiptsController {
-  constructor(private saleReceiptApplication: SaleReceiptApplication) { }
+  constructor(private saleReceiptApplication: SaleReceiptApplication) {}
 
   @Post('validate-bulk-delete')
   @ApiOperation({
@@ -132,6 +141,44 @@ export class SaleReceiptsController {
     return this.saleReceiptApplication.getSaleReceiptMail(id);
   }
 
+  @Post(':id/notify-by-sms')
+  @UseGuards(AuthorizationGuard, PermissionGuard, SmsNotificationsFeatureGuard)
+  @RequirePermission(SaleReceiptAction.NotifyBySms, AbilitySubject.SaleReceipt)
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Notify the given sale receipt by SMS.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale receipt has been notified by SMS.',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale receipt id',
+  })
+  notifySaleReceiptBySms(@Param('id', ParseIntPipe) id: number) {
+    return this.saleReceiptApplication.notifySaleReceiptBySms(id);
+  }
+
+  @Get(':id/sms-details')
+  @UseGuards(AuthorizationGuard, PermissionGuard, SmsNotificationsFeatureGuard)
+  @RequirePermission(SaleReceiptAction.View, AbilitySubject.SaleReceipt)
+  @ApiOperation({ summary: 'Retrieves the sale receipt SMS details.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sale receipt SMS details have been retrieved.',
+    schema: { $ref: getSchemaPath(SmsNotificationDetailsResponseDto) },
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: 'The sale receipt id',
+  })
+  getSaleReceiptSmsDetails(@Param('id', ParseIntPipe) id: number) {
+    return this.saleReceiptApplication.getSaleReceiptSmsDetails(id);
+  }
+
   @Put(':id')
   @ApiOperation({ summary: 'Edit the given sale receipt.' })
   @ApiParam({
@@ -152,8 +199,13 @@ export class SaleReceiptsController {
   @ApiResponse({
     status: 200,
     description: 'The sale receipt details have been successfully retrieved.',
-    schema: {
-      $ref: getSchemaPath(SaleReceiptResponseDto),
+    content: {
+      'application/json': {
+        schema: { $ref: getSchemaPath(SaleReceiptResponseDto) },
+      },
+      'application/json+html': {
+        schema: { $ref: getSchemaPath(SaleReceiptHtmlContentResponseDto) },
+      },
     },
   })
   @ApiResponse({ status: 404, description: 'The sale receipt not found.' })

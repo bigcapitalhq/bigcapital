@@ -1,32 +1,37 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
-
 import '@/style/pages/CreditNote/List.scss';
-
-import { DashboardPageContent } from '@/components';
-import CreditNotesActionsBar from './CreditNotesActionsBar';
-import CreditNotesDataTable from './CreditNotesDataTable';
-
+import { CreditNotesActionsBar } from './CreditNotesActionsBar';
+import { CreditNotesDataTable } from './CreditNotesDataTable';
+import { CreditNotesListDialogs } from './CreditNotesListDialogs';
+import { CreditNotesListDrawers } from './CreditNotesListDrawers';
+import { CreditNotesListProvider } from './CreditNotesListProvider';
 import { withCreditNotes } from './withCreditNotes';
 import { withCreditNotesActions } from './withCreditNotesActions';
+import type { WithCreditNotesProps } from './withCreditNotes';
+import type { WithCreditNotesActionsProps } from './withCreditNotesActions';
+import { DashboardPageContent } from '@/components';
+import { transformTableStateToQuery } from '@/utils';
 
-import { CreditNotesListProvider } from './CreditNotesListProvider';
-import { transformTableStateToQuery, compose } from '@/utils';
+interface CreditNotesListProps
+  extends Pick<
+      WithCreditNotesProps,
+      'creditNoteTableState' | 'creditNoteTableStateChanged'
+    >,
+    WithCreditNotesActionsProps {}
 
-function CreditNotesList({
-  // #withCreditNotes
+function CreditNotesListInner({
   creditNoteTableState,
   creditNoteTableStateChanged,
-
-  // #withCreditNotesActions
   resetCreditNotesTableState,
-}) {
-  // Resets the credit note table state once the page unmount.
+  resetCreditNotesSelectedRows,
+}: CreditNotesListProps) {
   React.useEffect(
     () => () => {
       resetCreditNotesTableState();
+      resetCreditNotesSelectedRows();
     },
-    [resetCreditNotesTableState],
+    [resetCreditNotesSelectedRows, resetCreditNotesTableState],
   );
 
   return (
@@ -35,6 +40,8 @@ function CreditNotesList({
       tableStateChanged={creditNoteTableStateChanged}
     >
       <CreditNotesActionsBar />
+      <CreditNotesListDrawers />
+      <CreditNotesListDialogs />
 
       <DashboardPageContent>
         <CreditNotesDataTable />
@@ -43,10 +50,11 @@ function CreditNotesList({
   );
 }
 
-export default compose(
-  withCreditNotesActions,
+export const CreditNotesList = FF.pipe(
+  CreditNotesListInner,
   withCreditNotes(({ creditNoteTableState, creditNoteTableStateChanged }) => ({
     creditNoteTableState,
     creditNoteTableStateChanged,
   })),
-)(CreditNotesList);
+  withCreditNotesActions,
+);

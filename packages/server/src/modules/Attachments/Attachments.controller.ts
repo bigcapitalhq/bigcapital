@@ -1,5 +1,5 @@
 import mime from 'mime-types';
-import { Response, NextFunction, Request } from 'express';
+import { Response } from 'express';
 import {
   ApiBody,
   ApiConsumes,
@@ -9,6 +9,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,8 +18,8 @@ import {
   Param,
   Post,
   Res,
-  UnauthorizedException,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -31,10 +32,16 @@ import { AttachmentUploadPipeline } from './S3UploadPipeline';
 import { FileInterceptor } from '@/common/interceptors/file.interceptor';
 import { ConfigService } from '@nestjs/config';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
+import { PermissionGuard } from '@/modules/Roles/Permission.guard';
+import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
+import { AbilitySubject } from '@/modules/Roles/Roles.types';
+import { AttachmentAction } from './Attachments.types';
 
 @ApiTags('Attachments')
 @Controller('/attachments')
 @ApiCommonHeaders()
+@UseGuards(AuthorizationGuard, PermissionGuard)
 export class AttachmentsController {
   /**
    * @param {AttachmentsApplication} attachmentsApplication - Attachments application.
@@ -53,6 +60,7 @@ export class AttachmentsController {
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
+  @RequirePermission(AttachmentAction.Create, AbilitySubject.Attachment)
   @ApiOperation({ summary: 'Upload attachment to S3' })
   @ApiBody({ description: 'Upload attachment', type: UploadAttachmentDto })
   @ApiResponse({
@@ -60,14 +68,14 @@ export class AttachmentsController {
     description: 'The document has been uploaded successfully',
   })
   @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - File upload failed',
+    status: 400,
+    description: 'Bad request - no file was provided in the upload',
   })
   async uploadAttachment(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
-      throw new UnauthorizedException({
+      throw new BadRequestException({
         errorType: 'FILE_UPLOAD_FAILED',
-        message: 'Now file uploaded.',
+        message: 'No file uploaded.',
       });
     }
     const data = await this.attachmentsApplication.upload(file);
@@ -86,6 +94,7 @@ export class AttachmentsController {
   @ApiOperation({ summary: 'Get attachment by ID' })
   @ApiParam({ name: 'id', description: 'Attachment ID' })
   @ApiResponse({ status: 200, description: 'Returns the attachment file' })
+  @RequirePermission(AttachmentAction.View, AbilitySubject.Attachment)
   async getAttachment(
     @Res() res: Response,
     @Param('id') documentId: string,
@@ -112,6 +121,7 @@ export class AttachmentsController {
     status: 200,
     description: 'The document has been deleted successfully',
   })
+  @RequirePermission(AttachmentAction.Delete, AbilitySubject.Attachment)
   async deleteAttachment(@Param('id') documentId: string) {
     await this.attachmentsApplication.delete(documentId);
 
@@ -128,6 +138,7 @@ export class AttachmentsController {
   @ApiOperation({ summary: 'Link attachment to a model' })
   @ApiParam({ name: 'id', description: 'Attachment ID' })
   @ApiBody({ type: LinkAttachmentDto })
+  @RequirePermission(AttachmentAction.Create, AbilitySubject.Attachment)
   @ApiResponse({
     status: 200,
     description: 'The document has been linked successfully',
@@ -155,6 +166,7 @@ export class AttachmentsController {
   @ApiOperation({ summary: 'Unlink attachment from a model' })
   @ApiParam({ name: 'id', description: 'Attachment ID' })
   @ApiBody({ type: UnlinkAttachmentDto })
+  @RequirePermission(AttachmentAction.Delete, AbilitySubject.Attachment)
   @ApiResponse({
     status: 200,
     description: 'The document has been unlinked successfully',
@@ -185,6 +197,7 @@ export class AttachmentsController {
     status: 200,
     description: 'Returns the presigned URL for the attachment',
   })
+  @RequirePermission(AttachmentAction.View, AbilitySubject.Attachment)
   async getAttachmentPresignedUrl(@Param('id') documentKey: string) {
     const presignedUrl =
       await this.attachmentsApplication.getPresignedUrl(documentKey);

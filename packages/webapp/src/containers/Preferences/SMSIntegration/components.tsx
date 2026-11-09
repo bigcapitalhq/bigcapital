@@ -1,25 +1,38 @@
-// @ts-nocheck
+import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { Intent, Button, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-
+import type { SMSNotification } from './SMSIntegrationProvider';
 import { SwitchFieldCell } from '@/components/DataTableCells';
 import { safeInvoke } from '@/utils';
+
+interface Row {
+  row: { original: SMSNotification };
+}
+
+interface Payload {
+  onEditMessageText?: (n: SMSNotification) => void;
+  onEnableNotification?: (n: SMSNotification) => void;
+  onDisableNotification?: (n: SMSNotification) => void;
+}
 
 /**
  * Notification accessor.
  */
-export const NotificationAccessor = (row) => {
+export const NotificationAccessor = (row: SMSNotification) => {
   return (
     <span className="notification">
-      <NotificationLabel>{row.notification_label}</NotificationLabel>
+      <NotificationLabel>{row.notificationLabel}</NotificationLabel>
       <NotificationDescription>
-        {row.notification_description}
+        {row.notificationDescription}
       </NotificationDescription>
     </span>
   );
 };
+
+interface SMSMessageCellProps extends Row {
+  payload: { onEditMessageText?: (n: SMSNotification) => void };
+}
 
 /**
  * SMS notification message cell.
@@ -27,9 +40,9 @@ export const NotificationAccessor = (row) => {
 export const SMSMessageCell = ({
   payload: { onEditMessageText },
   row: { original },
-}) => (
+}: SMSMessageCellProps) => (
   <div>
-    <MessageBox>{original.sms_message}</MessageBox>
+    <MessageBox>{original.smsMessage}</MessageBox>
     <MessageBoxActions>
       <Button
         minimal={true}
@@ -43,13 +56,17 @@ export const SMSMessageCell = ({
   </div>
 );
 
+interface ActionsMenuProps extends Row {
+  payload: Payload;
+}
+
 /**
  * Context menu of SMS notification messages.
  */
 export function ActionsMenu({
   payload: { onEditMessageText, onEnableNotification, onDisableNotification },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
@@ -57,7 +74,7 @@ export function ActionsMenu({
         onClick={() => safeInvoke(onEditMessageText, original)}
       />
       <MenuDivider />
-      {!original.is_notification_enabled ? (
+      {!original.isNotificationEnabled ? (
         <MenuItem
           text={intl.get('sms_notifications.enable_notification')}
           onClick={() => safeInvoke(onEnableNotification, original)}
@@ -72,11 +89,20 @@ export function ActionsMenu({
   );
 }
 
+interface UseSMSIntegrationTableColumnsArgs {
+  onSwitchChange: (
+    event: unknown,
+    value: boolean,
+    notification: SMSNotification,
+  ) => void;
+}
+
 /**
  * Retrieve SMS notifications messages table columns
- * @returns
  */
-export function useSMSIntegrationTableColumns({ onSwitchChange }) {
+export function useSMSIntegrationTableColumns({
+  onSwitchChange,
+}: UseSMSIntegrationTableColumnsArgs) {
   return React.useMemo(
     () => [
       {
@@ -89,14 +115,14 @@ export function useSMSIntegrationTableColumns({ onSwitchChange }) {
       },
       {
         Header: intl.get('sms_messages.column.service'),
-        accessor: 'module_formatted',
+        accessor: 'moduleFormatted',
         className: 'service',
         width: '80',
         disableSortBy: true,
       },
       {
         Header: intl.get('sms_messages.column.message'),
-        accessor: 'sms_message',
+        accessor: 'smsMessage',
         Cell: SMSMessageCell,
         className: 'sms_message',
         width: '180',
@@ -104,7 +130,7 @@ export function useSMSIntegrationTableColumns({ onSwitchChange }) {
       },
       {
         Header: intl.get('sms_messages.column.auto'),
-        accessor: 'is_notification_enabled',
+        accessor: 'isNotificationEnabled',
         Cell: SwitchFieldCell,
         className: 'is_notification_enabled',
         disableResizing: true,
@@ -129,9 +155,16 @@ const NotificationDescription = styled.div`
 `;
 
 const MessageBox = styled.div`
+  --x-message-bg: #fbfbfb;
+  --x-message-border: #dcdcdc;
+
+  .bp4-dark & {
+    --x-message-bg: var(--color-dark-gray3);
+    --x-message-border: rgba(255, 255, 255, 0.2);
+  }
   padding: 10px;
-  background-color: #fbfbfb;
-  border: 1px dashed #dcdcdc;
+  background-color: var(--x-message-bg);
+  border: 1px dashed var(--x-message-border);
   font-size: 14px;
   line-height: 1.45;
 `;

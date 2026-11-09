@@ -1,6 +1,3 @@
-// @ts-nocheck
-import React from 'react';
-import { isEmpty, isUndefined } from 'lodash';
 import {
   Button,
   NavbarGroup,
@@ -9,15 +6,22 @@ import {
   Intent,
   Switch,
   Alignment,
-  ProgressBar,
-  ToastProps,
-  Text,
 } from '@blueprintjs/core';
-import clsx from 'classnames';
-
+import * as FF from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { useAccountsChartContext } from './AccountsChartProvider';
+import { useBulkDeleteAccountsDialog } from './hooks/use-bulk-delete-accounts-dialog';
+import { withAccounts } from './withAccounts';
+import { withAccountsTableActions } from './withAccountsTableActions';
+import type { WithAccountsProps } from './withAccounts';
+import type { WithAccountsTableActionsProps } from './withAccountsTableActions';
+import type { IFilterRole } from '@/components/AdvancedFilter/interfaces';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import {
   AdvancedFilterPopover,
-  If,
   Can,
   Icon,
   FormattedMessage as T,
@@ -26,52 +30,39 @@ import {
   DashboardRowsHeightButton,
   DashboardActionsBar,
 } from '@/components';
-
 import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
-
-import { useHistory } from 'react-router-dom';
-import { useRefreshAccounts } from '@/hooks/query/accounts';
-import { useAccountsChartContext } from './AccountsChartProvider';
-import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
-import { useBulkDeleteAccountsDialog } from './hooks/use-bulk-delete-accounts-dialog';
-
-import { withAccounts } from './withAccounts';
-import { withAccountsTableActions } from './withAccountsTableActions';
-import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { withSettingsActions } from '@/containers/Settings/withSettingsActions';
+import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { useSaveSettings } from '@/hooks/query';
+import { useRefreshAccounts } from '@/hooks/query/accounts';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
-import { compose } from '@/utils';
+interface AccountsActionsBarInnerProps {
+  openDialog: WithDialogActionsProps['openDialog'];
+  openAlert: WithAlertActionsProps['openAlert'];
+  setAccountsTableState: WithAccountsTableActionsProps['setAccountsTableState'];
+  accountsSelectedRows: WithAccountsProps['accountsSelectedRows'];
+  accountsInactiveMode: boolean | undefined;
+  accountsFilterConditions: IFilterRole[];
+}
 
 /**
  * Accounts actions bar.
  */
-function AccountsActionsBar({
-  // #withDialogActions
+function AccountsActionsBarInner({
   openDialog,
-
-  // #withAccounts
   accountsSelectedRows,
   accountsInactiveMode,
   accountsFilterConditions,
-
-  // #withAlertActions
   openAlert,
-
-  // #withAccountsTableActions
   setAccountsTableState,
+}: AccountsActionsBarInnerProps) {
+  const { mutateAsync: saveSettings } = useSaveSettings();
 
-  // #withSettings
-  accountsTableSize,
-
-  // #withSettingsActions
-  addSetting,
-}) {
   const history = useHistory();
-
-  const { resourceViews, fields } = useAccountsChartContext();
+  const { resourceViews, fields, accountsSettings } = useAccountsChartContext();
+  const accountsTableSize = accountsSettings?.tableSize as string | undefined;
 
   // Exports pdf document.
   const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
@@ -80,10 +71,8 @@ function AccountsActionsBar({
   const { refresh } = useRefreshAccounts();
 
   // Bulk delete accounts dialog.
-  const {
-    openBulkDeleteDialog,
-    isValidatingBulkDeleteAccounts,
-  } = useBulkDeleteAccountsDialog();
+  const { openBulkDeleteDialog, isValidatingBulkDeleteAccounts } =
+    useBulkDeleteAccountsDialog();
 
   // Handle bulk accounts delete.
   const handleBulkDelete = () => {
@@ -100,11 +89,13 @@ function AccountsActionsBar({
     });
   };
   // Handle tab changing.
-  const handleTabChange = (view) => {
+  const handleTabChange = (view: { slug?: string | null } | null) => {
     setAccountsTableState({ viewSlug: view ? view.slug : null });
   };
   // Handle inactive switch changing.
-  const handleInactiveSwitchChange = (event) => {
+  const handleInactiveSwitchChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const checked = event.target.checked;
     setAccountsTableState({ inactiveMode: checked });
   };
@@ -113,8 +104,10 @@ function AccountsActionsBar({
     refresh();
   };
   // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('accounts', 'tableSize', size);
+  const handleTableRowSizeChange = (size: unknown) => {
+    saveSettings({
+      options: [{ group: 'accounts', key: 'tableSize', value: size }],
+    });
   };
   // handle the import button click.
   const handleImportBtnClick = () => {
@@ -182,11 +175,12 @@ function AccountsActionsBar({
           />
         </Can>
         <AdvancedFilterPopover
+          popoverProps={{ minimal: true }}
           advancedFilterProps={{
             conditions: accountsFilterConditions,
             defaultFieldKey: 'name',
             fields: fields,
-            onFilterChange: (filterConditions) => {
+            onFilterChange: (filterConditions: IFilterRole[]) => {
               setAccountsTableState({ filterRoles: filterConditions });
             },
           }}
@@ -219,6 +213,7 @@ function AccountsActionsBar({
         <NavbarDivider />
         <DashboardRowsHeightButton
           initialValue={accountsTableSize}
+          value={accountsTableSize}
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
@@ -241,17 +236,14 @@ function AccountsActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertActions,
-  withSettingsActions,
+export const AccountsActionsBar = FF.pipe(
+  AccountsActionsBarInner,
+  withAccountsTableActions,
   withAccounts(({ accountsSelectedRows, accountsTableState }) => ({
     accountsSelectedRows,
     accountsInactiveMode: accountsTableState.inactiveMode,
     accountsFilterConditions: accountsTableState.filterRoles,
   })),
-  withSettings(({ accountsSettings }) => ({
-    accountsTableSize: accountsSettings.tableSize,
-  })),
-  withAccountsTableActions,
-)(AccountsActionsBar);
+  withAlertActions,
+  withDialogActions,
+);

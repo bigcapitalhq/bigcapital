@@ -84,10 +84,14 @@ And you should get something like that.
 Batch 1 run: 6 migrations
 ```
 
+- Optional integrations (such as [Google Sign-In](docs/google-auth.md)) are
+  configured through the same root `.env` file. See the
+  [`docs/`](docs/) directory for integration-specific setup guides.
+
 - Next, start the server.
 
 ```
-pnpm run server:start
+pnpm run dev:server
 ```
 
 **[`^top^`](#)**

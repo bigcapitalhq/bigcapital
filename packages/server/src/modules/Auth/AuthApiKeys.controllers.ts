@@ -45,7 +45,7 @@ export class AuthApiKeysController {
   constructor(
     private readonly getApiKeysService: GetApiKeysService,
     private readonly generateApiKeyService: GenerateApiKey,
-  ) { }
+  ) {}
 
   @Post('generate')
   @ApiOperation({ summary: 'Generate a new API key' })

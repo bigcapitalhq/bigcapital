@@ -8,14 +8,14 @@ import { events } from '@/common/events/events';
 export class CreditNoteAutoSerialSubscriber {
   constructor(
     private readonly creditNoteIncrementService: CreditNoteAutoIncrementService,
-  ) { }
+  ) {}
 
   /**
    * Auto serial increment once credit note created.
    * @param {ICreditNoteCreatedPayload} payload -
    */
   @OnEvent(events.creditNote.onCreated)
-  async autoSerialIncrementOnceCreated({ }: ICreditNoteCreatedPayload) {
+  async autoSerialIncrementOnceCreated({}: ICreditNoteCreatedPayload) {
     await this.creditNoteIncrementService.incrementSerialNumber();
   }
 }

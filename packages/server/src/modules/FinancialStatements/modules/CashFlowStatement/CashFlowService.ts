@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ModelObject } from 'objection';
-import * as R from 'ramda';
+import { flow, constant } from 'fp-ts/function';
+import { when } from '@/common/fp';
 import { I18nService } from 'nestjs-i18n';
 import {
   ICashFlowStatementQuery,
@@ -13,6 +14,7 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { Ledger } from '@/modules/Ledger/Ledger';
 import { AccountTransaction } from '@/modules/Accounts/models/AccountTransaction.model';
 import { getDefaultCashflowQuery } from './constants';
+import { AccountingBasisService } from '../../common/AccountingBasisService';
 
 @Injectable()
 export class CashFlowStatementService {
@@ -25,6 +27,7 @@ export class CashFlowStatementService {
     private readonly cashFlowRepo: CashFlowRepository,
     private readonly cashflowSheetMeta: CashflowSheetMeta,
     private readonly tenancyContext: TenancyContext,
+    private readonly accountingBasisService: AccountingBasisService,
     private readonly i18n: I18nService,
   ) {}
 
@@ -36,21 +39,23 @@ export class CashFlowStatementService {
   private async cashAtBeginningTransactions(
     filter: ICashFlowStatementQuery,
   ): Promise<ModelObject<AccountTransaction>[]> {
-    const appendPeriodsOperToChain = (trans) =>
-      R.append(
-        this.cashFlowRepo.cashAtBeginningPeriodTransactions(filter),
-        trans,
-      );
+    const appendPeriodsOperToChain = (trans) => [
+      ...trans,
+      this.cashFlowRepo.cashAtBeginningPeriodTransactions(filter),
+    ];
 
-    const promisesChain = R.pipe(
-      R.append(this.cashFlowRepo.cashAtBeginningTotalTransactions(filter)),
-      R.when(
-        R.always(R.equals(filter.displayColumnsType, 'date_periods')),
+    const promisesChain = flow(
+      (chain: any[]) => [
+        ...chain,
+        this.cashFlowRepo.cashAtBeginningTotalTransactions(filter),
+      ],
+      when(
+        constant(filter.displayColumnsType === 'date_periods'),
         appendPeriodsOperToChain,
       ),
     )([]);
     const promisesResults = await Promise.all(promisesChain);
-    const transactions = R.flatten(promisesResults);
+    const transactions = promisesResults.flat();
 
     return transactions;
   }
@@ -71,6 +76,8 @@ export class CashFlowStatementService {
       ...getDefaultCashflowQuery(),
       ...query,
     };
+    filter.basis = await this.accountingBasisService.resolve(filter.basis);
+
     // Retrieve the accounts transactions.
     const transactions =
       await this.cashFlowRepo.getAccountsTransactions(filter);
@@ -96,7 +103,10 @@ export class CashFlowStatementService {
       netIncomeLedger,
       filter,
       this.i18n,
-      { baseCurrency: tenant.metadata.baseCurrency, dateFormat: meta.dateFormat },
+      {
+        baseCurrency: tenant.metadata.baseCurrency,
+        dateFormat: meta.dateFormat,
+      },
     );
 
     return {

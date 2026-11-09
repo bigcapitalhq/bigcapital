@@ -1,13 +1,13 @@
-import React from 'react';
-import { Box, Stack } from '@/components';
 import { Tab, TabProps, Tabs } from '@blueprintjs/core';
+import React from 'react';
 import { ElementCustomizeHeader } from './ElementCustomizeHeader';
+import { useElementCustomizeContext } from './ElementCustomizeProvider';
+import styles from './ElementCustomizeTabs.module.scss';
 import {
   ElementCustomizeTabsEnum,
   useElementCustomizeTabsController,
 } from './ElementCustomizeTabsController';
-import { useElementCustomizeContext } from './ElementCustomizeProvider';
-import styles from './ElementCustomizeTabs.module.scss';
+import { Box, Stack } from '@/components';
 
 export function ElementCustomizeTabs() {
   const { setCurrentTabId } = useElementCustomizeTabsController();
@@ -40,9 +40,7 @@ export function ElementCustomizeTabs() {
               id: string;
               label: string;
               tabProps?: TabProps;
-            }) => (
-              <Tab id={id} key={id} title={label} {...tabProps} />
-            ),
+            }) => <Tab id={id} key={id} title={label} {...tabProps} />,
           )}
         </Tabs>
       </Box>

@@ -1,9 +1,9 @@
-// @ts-nocheck
+import { defaultTo } from 'lodash';
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import { defaultTo } from 'lodash';
-
+import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
+import { CreditNoteDetailsStatus } from './utils';
 import {
   T,
   Row,
@@ -15,14 +15,11 @@ import {
   CustomerDrawerLink,
   ExchangeRateDetailItem,
 } from '@/components';
-import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
-
-import { CreditNoteDetailsStatus } from './utils';
 
 /**
  * Credit note details drawer header.
  */
-export default function CreditNoteDetailHeader() {
+export function CreditNoteDetailHeader() {
   const { creditNote } = useCreditNoteDetailDrawerContext();
 
   return (
@@ -30,11 +27,11 @@ export default function CreditNoteDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountItem label={intl.get('amount')}>
-            <span class="big-number">{creditNote.total_formatted}</span>
+            <span className="big-number">{creditNote?.totalFormatted}</span>
           </AmountItem>
 
           <StatusItem>
-            <CreditNoteDetailsStatus creditNote={creditNote} />
+            {creditNote && <CreditNoteDetailsStatus creditNote={creditNote} />}
           </StatusItem>
         </DetailsMenu>
       </CommercialDocTopHeader>
@@ -45,23 +42,23 @@ export default function CreditNoteDetailHeader() {
             <DetailItem
               label={intl.get('credit_note.drawer.label_credit_note_date')}
             >
-              {creditNote.formatted_credit_note_date}
+              {creditNote?.formattedCreditNoteDate}
             </DetailItem>
 
             <DetailItem
               label={intl.get('credit_note.drawer.label_credit_note_no')}
             >
-              {defaultTo(creditNote.credit_note_number, '-')}
+              {defaultTo(creditNote?.creditNoteNumber, '-')}
             </DetailItem>
 
             <DetailItem label={intl.get('customer_name')}>
-              <CustomerDrawerLink customerId={creditNote.customer_id}>
-                {creditNote.customer?.display_name}
+              <CustomerDrawerLink customerId={creditNote?.customerId}>
+                {creditNote?.customer?.displayName}
               </CustomerDrawerLink>
             </DetailItem>
             <ExchangeRateDetailItem
-              exchangeRate={creditNote?.exchange_rate}
-              toCurrency={creditNote?.currency_code}
+              exchangeRate={creditNote?.exchangeRate}
+              toCurrency={creditNote?.currencyCode}
             />
           </DetailsMenu>
         </Col>
@@ -75,15 +72,15 @@ export default function CreditNoteDetailHeader() {
             <DetailItem
               label={intl.get('credit_note.drawer.label_credits_remaining')}
             >
-              <strong>{creditNote.formatted_credits_remaining}</strong>
+              <strong>{creditNote?.formattedCreditsRemaining}</strong>
             </DetailItem>
             <DetailItem
               label={intl.get('reference')}
-              children={defaultTo(creditNote.reference_no, '-')}
+              children={defaultTo(creditNote?.referenceNo, '-')}
             />
             <DetailItem
-              label={<T id={'credit_note.drawer.label_created_at'} />}
-              children={creditNote.formatted_created_at}
+              label={intl.get('credit_note.drawer.label_created_at')}
+              children={creditNote?.formattedCreatedAt}
             />
           </DetailsMenu>
         </Col>

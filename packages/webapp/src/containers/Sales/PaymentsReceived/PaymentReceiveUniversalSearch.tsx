@@ -1,17 +1,24 @@
-// @ts-nocheck
+import { MenuItem } from '@blueprintjs/core';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { MenuItem } from '@blueprintjs/core';
-
-import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import { Icon } from '@/components';
 import {
   AbilitySubject,
   PaymentReceiveAction,
 } from '@/constants/abilityOption';
-import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
-import { highlightText } from '@/utils';
-import { Icon } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
+import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
+import {
+  withDrawerActions,
+  WithDrawerActionsProps,
+} from '@/containers/Drawer/withDrawerActions';
+import { highlightText } from '@/utils';
+
+interface PaymentReceiveUniversalSearchSelectProps
+  extends WithDrawerActionsProps {
+  resourceType: string;
+  resourceId: number;
+}
 
 /**
  * Payment receive universal search item select action.
@@ -23,7 +30,7 @@ function PaymentReceiveUniversalSearchSelectComponent({
 
   // #withDrawerActions
   openDrawer,
-}) {
+}: PaymentReceiveUniversalSearchSelectProps) {
   if (resourceType === RESOURCES_TYPES.PAYMENT_RECEIVE) {
     openDrawer(DRAWERS.PAYMENT_RECEIVED_DETAILS, {
       paymentReceiveId: resourceId,
@@ -36,12 +43,29 @@ export const PaymentReceiveUniversalSearchSelect = withDrawerActions(
   PaymentReceiveUniversalSearchSelectComponent,
 );
 
+interface PaymentReceiveUniversalSearchItemData {
+  id: number;
+  text: string;
+  label: string;
+  reference: {
+    paymentReceiveNo: string;
+    formattedPaymentDate: string;
+    formattedAmount: string;
+  };
+}
+
+interface PaymentReceiveUniversalSearchItemActions {
+  handleClick: () => void;
+  modifiers: { active: boolean };
+  query: string;
+}
+
 /**
  * Payment receive universal search item.
  */
 export function PaymentReceiveUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
+  item: PaymentReceiveUniversalSearchItemData,
+  { handleClick, modifiers, query }: PaymentReceiveUniversalSearchItemActions,
 ) {
   return (
     <MenuItem
@@ -50,14 +74,16 @@ export function PaymentReceiveUniversalSearchItem(
         <div>
           <div>{highlightText(item.text, query)}</div>
 
-          <span class="bp4-text-muted">
-            {highlightText(item.reference.payment_receive_no, query)}{' '}
+          <span className="bp4-text-muted">
+            {highlightText(item.reference.paymentReceiveNo, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {highlightText(item.reference.formatted_payment_date, query)}
+            {highlightText(item.reference.formattedPaymentDate, query)}
           </span>
         </div>
       }
-      label={<div class="amount">{item.reference.formatted_amount}</div>}
+      labelElement={
+        <div className="amount">{item.reference.formattedAmount}</div>
+      }
       onClick={handleClick}
       className={'universal-search__item--invoice'}
     />
@@ -67,11 +93,16 @@ export function PaymentReceiveUniversalSearchItem(
 /**
  * Transformes payment receives to search.
  */
-const paymentReceivesToSearch = (payment) => ({
+const paymentReceivesToSearch = (payment: {
+  id: number;
+  customer?: { displayName?: string };
+  formattedPaymentDate?: string;
+  formattedAmount?: string;
+}) => ({
   id: payment.id,
-  text: payment.customer.display_name,
-  subText: payment.formatted_payment_date,
-  label: payment.formatted_amount,
+  text: payment.customer?.displayName ?? '',
+  subText: payment.formattedPaymentDate ?? '',
+  label: payment.formattedAmount ?? '',
   reference: payment,
 });
 

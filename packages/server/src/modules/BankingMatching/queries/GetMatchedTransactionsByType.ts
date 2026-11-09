@@ -12,9 +12,7 @@ import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 
 export abstract class GetMatchedTransactionsByType {
   @Inject(MatchedBankTransaction.name)
-  matchedBankTransactionModel: TenantModelProxy<
-    typeof MatchedBankTransaction
-  >;
+  matchedBankTransactionModel: TenantModelProxy<typeof MatchedBankTransaction>;
 
   /**
    * Retrieves the matched transactions.
@@ -23,7 +21,7 @@ export abstract class GetMatchedTransactionsByType {
    * @returns {Promise<MatchedTransactionsPOJO>}
    */
   public async getMatchedTransactions(
-    filter: GetMatchedTransactionsFilter,
+    _filter: GetMatchedTransactionsFilter,
   ): Promise<MatchedTransactionsPOJO> {
     throw new Error(
       'The `getMatchedTransactions` method is not defined for the transaction type.',
@@ -37,7 +35,7 @@ export abstract class GetMatchedTransactionsByType {
    * @returns {Promise<MatchedTransactionPOJO>}
    */
   public async getMatchedTransaction(
-    transactionId: number,
+    _transactionId: number,
   ): Promise<MatchedTransactionPOJO> {
     throw new Error(
       'The `getMatchedTransaction` method is not defined for the transaction type.',
@@ -56,7 +54,7 @@ export abstract class GetMatchedTransactionsByType {
     matchTransactionDTO: IMatchTransactionDTO,
     trx?: Knex.Transaction,
   ) {
-    await PromisePool.withConcurrency(2)
+    const creationResult = await PromisePool.withConcurrency(2)
       .for(uncategorizedTransactionIds)
       .process(async (uncategorizedTransactionId) => {
         await this.matchedBankTransactionModel().query(trx).insert({
@@ -65,5 +63,9 @@ export abstract class GetMatchedTransactionsByType {
           referenceId: matchTransactionDTO.referenceId,
         });
       });
+    // Throws the first error to prevent partial matched transactions.
+    if (creationResult.errors?.length > 0) {
+      throw creationResult.errors[0].raw;
+    }
   }
 }

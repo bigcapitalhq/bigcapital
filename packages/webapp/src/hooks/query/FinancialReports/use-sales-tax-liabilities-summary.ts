@@ -1,64 +1,73 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchSalesTaxLiabilityTable,
+  fetchSalesTaxLiabilityXlsx,
+  fetchSalesTaxLiabilityCsv,
+  fetchSalesTaxLiabilityPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  SalesTaxLiabilityTableQuery,
+  SalesTaxLiabilityTableResponse,
+  SalesTaxLiabilityXlsxQuery,
+  SalesTaxLiabilityCsvQuery,
+  SalesTaxLiabilityPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieves the sales tax liability summary report.
- */
-export function useSalesTaxLiabilitySummary(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.SALES_TAX_LIABILITY_SUMMARY, query],
-    {
-      method: 'get',
-      url: '/reports/sales-tax-liability-summary',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function useSalesTaxLiabilitySummary(
+  query: SalesTaxLiabilityTableQuery,
+  props?: Omit<
+    UseQueryOptions<SalesTaxLiabilityTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.salesTaxLiability(query),
+    queryFn: () => fetchSalesTaxLiabilityTable(fetcher, query),
+  });
 }
 
-export const useSalesTaxLiabilitySummaryXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/sales-tax-liability-summary',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'sales_tax_liability_summary.xlsx',
+export function useSalesTaxLiabilitySummaryXlsxExport(
+  query: SalesTaxLiabilityXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchSalesTaxLiabilityXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'sales_tax_liability_summary.xlsx'),
+      ),
   });
-};
+}
 
-export const useSalesTaxLiabilitySummaryCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/sales-tax-liability-summary',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'sales_tax_liability_summary.csv',
+export function useSalesTaxLiabilitySummaryCsvExport(
+  query: SalesTaxLiabilityCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchSalesTaxLiabilityCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'sales_tax_liability_summary.csv'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves pdf document data of sales tax liability summary.
- */
-export function useSalesTaxLiabilitySummaryPdf(query = {}) {
-  return useRequestPdf({
-    url: `/reports/sales-tax-liability-summary`,
-    params: query,
-  });
+export function useSalesTaxLiabilitySummaryPdf(
+  query: SalesTaxLiabilityPdfQuery,
+) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchSalesTaxLiabilityPdf(fetcher, query));
 }

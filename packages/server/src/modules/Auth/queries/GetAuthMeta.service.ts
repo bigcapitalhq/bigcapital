@@ -4,12 +4,7 @@ import { IAuthGetMetaPOJO } from '../Auth.interfaces';
 
 @Injectable()
 export class GetAuthMetaService {
-
-  constructor(
-    private readonly configService: ConfigService,
-  ) {
-
-  }
+  constructor(private readonly configService: ConfigService) {}
   /**
    * Retrieves the authentication meta for SPA.
    * @returns {Promise<IAuthGetMetaPOJO>}
@@ -17,6 +12,7 @@ export class GetAuthMetaService {
   public async getAuthMeta(): Promise<IAuthGetMetaPOJO> {
     return {
       signupDisabled: this.configService.get('signupRestrictions.disabled'),
+      googleEnabled: this.configService.get<boolean>('google.enabled') ?? false,
     };
   }
 }

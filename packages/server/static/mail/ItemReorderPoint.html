@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Bigcapital | Low stock alert</title>
+    <style>
+      body {
+        background-color: #f6f6f6;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+      }
+
+      table {
+        border-collapse: separate;
+        width: 100%;
+      }
+
+      .container {
+        display: block;
+        margin: 0 auto;
+        max-width: 580px;
+        padding: 10px;
+        width: 580px;
+      }
+
+      .content {
+        box-sizing: border-box;
+        display: block;
+        margin: 0 auto;
+        max-width: 580px;
+        padding: 10px;
+      }
+
+      .main {
+        background: #ffffff;
+        border-radius: 3px;
+        width: 100%;
+      }
+
+      .wrapper {
+        box-sizing: border-box;
+        padding: 24px;
+      }
+
+      .align-center {
+        text-align: center;
+      }
+
+      h3 {
+        color: #1c2127;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 16px 0;
+      }
+
+      p {
+        color: #404854;
+        margin: 0 0 16px;
+      }
+
+      hr {
+        border: 0;
+        border-top: 1px solid #e2e2e2;
+        margin: 0 0 20px;
+      }
+
+      .details {
+        background: #f7f8fa;
+        border-radius: 4px;
+        padding: 16px;
+        margin-bottom: 20px;
+      }
+
+      .details table td {
+        padding: 4px 0;
+      }
+
+      .details .label {
+        color: #738091;
+        width: 140px;
+      }
+
+      .details .value {
+        color: #1c2127;
+        font-weight: 600;
+      }
+
+      .btn-primary a {
+        background-color: #2d72d2;
+        border-radius: 3px;
+        color: #ffffff !important;
+        display: inline-block;
+        font-weight: 600;
+        padding: 10px 18px;
+        text-decoration: none;
+      }
+
+      .email-note {
+        color: #8f99a8;
+        font-size: 12px;
+        margin-top: 20px;
+      }
+
+      .footer {
+        color: #8f99a8;
+        font-size: 12px;
+        padding: 16px 10px;
+        text-align: center;
+      }
+
+      .footer a {
+        color: #5f6b7c;
+      }
+    </style>
+  </head>
+  <body>
+    <span class="preheader">{{ itemName }} has reached its reorder point.</span>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>&nbsp;</td>
+        <td class="container">
+          <div class="content">
+            <table role="presentation" class="main">
+              <tr>
+                <td class="wrapper">
+                  <table
+                    role="presentation"
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                  >
+                    <tr>
+                      <td>
+                        <p class="align-center">
+                          <img src="cid:bigcapital_logo" alt="Bigcapital" />
+                        </p>
+                        <hr />
+
+                        <h3 class="align-center">Low stock alert</h3>
+                        <p>Hello,</p>
+                        <p>
+                          The stock level for
+                          <strong>{{ itemName }}</strong>
+                          has reached its reorder point.
+                        </p>
+
+                        <div class="details">
+                          <table
+                            role="presentation"
+                            border="0"
+                            cellpadding="0"
+                            cellspacing="0"
+                          >
+                            <tr>
+                              <td class="label">Item</td>
+                              <td class="value">{{ itemName }}</td>
+                            </tr>
+                            {{#itemCode}}
+                            <tr>
+                              <td class="label">SKU</td>
+                              <td class="value">{{ itemCode }}</td>
+                            </tr>
+                            {{/itemCode}}
+                            <tr>
+                              <td class="label">Quantity on hand</td>
+                              <td class="value">{{ quantityOnHand }}</td>
+                            </tr>
+                            <tr>
+                              <td class="label">Reorder point</td>
+                              <td class="value">{{ reorderPoint }}</td>
+                            </tr>
+                          </table>
+                        </div>
+
+                        <p>
+                          Please review the item and replenish your inventory
+                          when convenient.
+                        </p>
+
+                        <table
+                          role="presentation"
+                          border="0"
+                          cellpadding="0"
+                          cellspacing="0"
+                          class="btn-primary"
+                        >
+                          <tbody>
+                            <tr>
+                              <td align="left">
+                                <table
+                                  role="presentation"
+                                  border="0"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                >
+                                  <tbody>
+                                    <tr>
+                                      <td>
+                                        <a href="{{ itemUrl }}" target="_blank"
+                                          >View item</a
+                                        >
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <p class="email-note">
+                          This is an automatically generated email, please do
+                          not reply to it.
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+
+            <div class="footer">
+              <table
+                role="presentation"
+                border="0"
+                cellpadding="0"
+                cellspacing="0"
+              >
+                <tr>
+                  <td class="content-block powered-by">
+                    {{ companyName }} &middot; Powered by
+                    <a href="https://Bigcapital.ly">Bigcapital.ly</a>.
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </body>
+</html>

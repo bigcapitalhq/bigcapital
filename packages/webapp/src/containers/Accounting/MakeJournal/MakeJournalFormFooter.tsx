@@ -1,14 +1,12 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
-
-import { CLASSES } from '@/constants/classes';
-import { Row, Col, Paper } from '@/components';
+import React from 'react';
 import { MakeJournalFormFooterLeft } from './MakeJournalFormFooterLeft';
 import { MakeJournalFormFooterRight } from './MakeJournalFormFooterRight';
+import { Row, Col, Paper } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
-export default function MakeJournalFormFooter() {
+export function MakeJournalFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <Paper p={'20px'}>

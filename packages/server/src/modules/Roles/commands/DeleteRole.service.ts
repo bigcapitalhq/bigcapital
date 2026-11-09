@@ -56,7 +56,7 @@ export class DeleteRoleService {
         .delete();
 
       // Deletes the role object form the storage.
-      await Role.query(trx).findById(roleId).delete();
+      await this.roleModel().query(trx).findById(roleId).delete();
 
       // Triggers `onRoleDeleted` event.
       await this.eventPublisher.emitAsync(events.roles.onDeleted, {

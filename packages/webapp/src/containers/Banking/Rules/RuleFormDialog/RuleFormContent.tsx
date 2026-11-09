@@ -7,7 +7,7 @@ interface RuleFormContentProps {
   bankRuleId?: number;
 }
 
-export default function RuleFormContent({
+export function RuleFormContent({
   dialogName,
   bankRuleId,
 }: RuleFormContentProps) {

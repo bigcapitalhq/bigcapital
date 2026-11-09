@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -28,7 +28,8 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send({
-        name: faker.commerce.productName(),
+        name: `${faker.commerce.productName()} ${Date.now()}-${faker.string.alphanumeric({ length: 4 })}`,
+        type: 'inventory',
         sellable: true,
         purchasable: true,
         sellAccountId: 1026,
@@ -67,7 +68,7 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createWarehouseTransferRequest())
-      .expect(200);
+      .expect(201);
   });
 
   it('/warehouse-transfers (GET)', () => {
@@ -93,7 +94,7 @@ describe('Warehouse Transfers (e2e)', () => {
       .expect(200);
   });
 
-  it('/warehouse-transfers/:id (POST)', async () => {
+  it('/warehouse-transfers/:id (PUT)', async () => {
     const response = await request(app.getHttpServer())
       .post('/warehouse-transfers')
       .set('organization-id', orgainzationId)
@@ -102,7 +103,7 @@ describe('Warehouse Transfers (e2e)', () => {
     const transferId = response.body.id;
 
     return request(app.getHttpServer())
-      .post(`/warehouse-transfers/${transferId}`)
+      .put(`/warehouse-transfers/${transferId}`)
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .send(createWarehouseTransferRequest())
@@ -122,5 +123,89 @@ describe('Warehouse Transfers (e2e)', () => {
       .set('organization-id', orgainzationId)
       .set('Authorization', AuthorizationHeader)
       .expect(200);
+  });
+
+  it('/warehouse-transfers/validate-bulk-delete (POST)', async () => {
+    const response1 = await request(app.getHttpServer())
+      .post('/warehouse-transfers')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(createWarehouseTransferRequest());
+    const transferId1 = response1.body.id;
+
+    const response2 = await request(app.getHttpServer())
+      .post('/warehouse-transfers')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(createWarehouseTransferRequest());
+    const transferId2 = response2.body.id;
+
+    const response = await request(app.getHttpServer())
+      .post('/warehouse-transfers/validate-bulk-delete')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ids: [transferId1, transferId2],
+      })
+      .expect(200);
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        deletable_count: 2,
+        non_deletable_count: 0,
+      }),
+    );
+    expect(response.body.deletable_ids).toHaveLength(2);
+
+    // Ensure the validation did not actually delete the transfers.
+    await request(app.getHttpServer())
+      .get(`/warehouse-transfers/${transferId1}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .get(`/warehouse-transfers/${transferId2}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
+  it('/warehouse-transfers/bulk-delete (POST)', async () => {
+    const response1 = await request(app.getHttpServer())
+      .post('/warehouse-transfers')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(createWarehouseTransferRequest());
+    const transferId1 = response1.body.id;
+
+    const response2 = await request(app.getHttpServer())
+      .post('/warehouse-transfers')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send(createWarehouseTransferRequest());
+    const transferId2 = response2.body.id;
+
+    await request(app.getHttpServer())
+      .post('/warehouse-transfers/bulk-delete')
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .send({
+        ids: [transferId1, transferId2],
+      })
+      .expect(200);
+
+    // Ensure the transfers have been deleted.
+    await request(app.getHttpServer())
+      .get(`/warehouse-transfers/${transferId1}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(404);
+
+    await request(app.getHttpServer())
+      .get(`/warehouse-transfers/${transferId2}`)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(404);
   });
 });

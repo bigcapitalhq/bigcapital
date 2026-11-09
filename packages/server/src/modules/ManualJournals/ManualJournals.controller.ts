@@ -43,7 +43,7 @@ import { ManualJournalAction } from './types/ManualJournals.types';
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class ManualJournalsController {
-  constructor(private manualJournalsApplication: ManualJournalsApplication) { }
+  constructor(private manualJournalsApplication: ManualJournalsApplication) {}
 
   @Post('validate-bulk-delete')
   @RequirePermission(ManualJournalAction.Delete, AbilitySubject.ManualJournal)

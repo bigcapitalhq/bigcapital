@@ -1,30 +1,32 @@
-// @ts-nocheck
-import React from 'react';
-import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { FastField, ErrorMessage } from 'formik';
+import React from 'react';
+import intl from 'react-intl-universal';
 import styled from 'styled-components';
-
-import {
-  FFormGroup,
-  FSelect,
-  FieldRequiredHint,
-  FormattedMessage as T,
-} from '@/components';
+import type { NotifyViaSMSNotificationType } from './NotifyViaSMSForm';
+import type { FieldProps } from 'formik';
+import { FFormGroup, FSelect, FieldRequiredHint } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { inputIntent } from '@/utils';
 
-export default function NotifyViaSMSFormFields({ notificationTypes }) {
+interface NotifyViaSMSFormFieldsProps {
+  notificationTypes: NotifyViaSMSNotificationType[];
+}
+
+export function NotifyViaSMSFormFields({
+  notificationTypes,
+}: NotifyViaSMSFormFieldsProps) {
   return (
     <NotifyViaSMSFormFieldsRoot>
       <FFormGroup
-        name={'notification_key'}
-        label={<T id={'notify_via_sms.dialog.notification_type'} />}
+        name={'notificationKey'}
+        label={intl.get('notify_via_sms.dialog.notification_type')}
         className={classNames(CLASSES.FILL)}
         fastField
       >
         <FSelect
-          name={'notification_key'}
+          name={'notificationKey'}
           items={notificationTypes}
           valueAccessor={'key'}
           textAccessor={'label'}
@@ -36,17 +38,17 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
       </FFormGroup>
 
       {/* ----------- Send Notification to ----------- */}
-      <FastField name={'customer_name'}>
-        {({ form, field, meta: { error, touched } }) => (
+      <FastField name={'customerName'}>
+        {({ field, meta: { error, touched } }: FieldProps) => (
           <FormGroup
-            label={<T id={'notify_via_sms.dialog.send_notification_to'} />}
+            label={intl.get('notify_via_sms.dialog.send_notification_to')}
             className={classNames('form-group--customer-name', CLASSES.FILL)}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_name'} />}
+            intent={inputIntent({ error, touched }) || undefined}
+            helperText={<ErrorMessage name={'customerName'} />}
           >
             <InputGroup
-              intent={inputIntent({ error, touched })}
+              intent={inputIntent({ error, touched }) || undefined}
               disabled={true}
               {...field}
             />
@@ -55,20 +57,20 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
       </FastField>
 
       {/* ----------- Phone number ----------- */}
-      <FastField name={'customer_phone_number'}>
-        {({ form, field, meta: { error, touched } }) => (
+      <FastField name={'customerPhoneNumber'}>
+        {({ field, meta: { error, touched } }: FieldProps) => (
           <FormGroup
-            label={<T id={'phone_number'} />}
+            label={intl.get('phone_number')}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="customer_phone_number" />}
+            intent={inputIntent({ error, touched }) || undefined}
+            helperText={<ErrorMessage name="customerPhoneNumber" />}
             className={classNames(
               'form-group--customer_phone_number',
               CLASSES.FILL,
             )}
           >
             <InputGroup
-              intent={inputIntent({ error, touched })}
+              intent={inputIntent({ error, touched }) || undefined}
               disabled={true}
               {...field}
             />

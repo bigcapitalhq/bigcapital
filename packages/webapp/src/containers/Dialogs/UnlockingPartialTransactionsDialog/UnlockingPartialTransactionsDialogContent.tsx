@@ -1,17 +1,19 @@
-// @ts-nocheck
 import React from 'react';
-
+import { UnlockingPartialTransactionsForm } from './UnlockingPartialTransactionsForm';
 import { UnlockingPartialTransactionsFormProvider } from './UnlockingPartialTransactionsFormProvider';
-import UnlockingPartialTransactionsForm from './UnlockingPartialTransactionsForm';
+
+interface UnlockingPartialTransactionsDialogContentProps {
+  moduleName: string;
+  dialogName: string;
+}
 
 /**
  * Unlocking partail transactions dialog content.
  */
-export default function UnlockingPartialTransactionsDialogContent({
-  // #ownProps
+export function UnlockingPartialTransactionsDialogContent({
   moduleName,
   dialogName,
-}) {
+}: UnlockingPartialTransactionsDialogContentProps): React.ReactElement {
   return (
     <UnlockingPartialTransactionsFormProvider
       moduleName={moduleName}

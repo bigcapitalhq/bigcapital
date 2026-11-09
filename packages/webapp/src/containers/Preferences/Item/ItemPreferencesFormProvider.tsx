@@ -1,38 +1,56 @@
-// @ts-nocheck
-import React, { useContext, createContext } from 'react';
 import classNames from 'classnames';
+import React, { createContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
-
-import { CLASSES } from '@/constants/classes';
+import { PreferencesPageLoader } from '../PreferencesPageLoader';
+import type { Account, User } from '@bigcapital/sdk-ts';
+import type { SaveSettingsBody, SettingsGroup } from '@bigcapital/sdk-ts';
 import { Card } from '@/components';
-import { useSettingsItems, useAccounts, useSaveSettings } from '@/hooks/query';
-import PreferencesPageLoader from '../PreferencesPageLoader';
+import { CLASSES } from '@/constants/classes';
+import {
+  useAccounts,
+  useSaveSettings,
+  useSettingsItems,
+  useUsers,
+} from '@/hooks/query';
 
-const ItemFormContext = createContext();
+interface ItemPreferencesFormContextValue {
+  accounts: Account[];
+  users: User[];
+  itemsSettings?: SettingsGroup;
+  saveSettingMutate: (vars: {
+    options: SaveSettingsBody['options'];
+  }) => Promise<unknown>;
+}
 
-/**
- * Item data provider.
- */
+const ItemFormContext = createContext<ItemPreferencesFormContextValue>(
+  {} as ItemPreferencesFormContextValue,
+);
 
-function ItemPreferencesFormProvider({ ...props }) {
-  // Fetches the accounts list.
+interface ItemPreferencesFormProviderProps {
+  children?: React.ReactNode;
+}
+
+function ItemPreferencesFormProvider({
+  ...props
+}: ItemPreferencesFormProviderProps) {
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isUsersLoading, data: users } = useUsers();
 
-  const {
-    isLoading: isItemsSettingsLoading,
-    isFetching: isItemsSettingsFetching,
-  } = useSettingsItems();
+  const { data: itemsSettings, isLoading: isItemsSettingsLoading } =
+    useSettingsItems();
 
-  // Save Organization Settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
-  // Provider state.
-  const provider = {
-    accounts,
+  const provider: ItemPreferencesFormContextValue = {
+    accounts: accounts ?? [],
+    users: users ?? [],
+    itemsSettings,
     saveSettingMutate,
   };
 
-  const isLoading = isAccountsLoading || isItemsSettingsLoading;
+  const isLoading =
+    isAccountsLoading || isUsersLoading || isItemsSettingsLoading;
 
   return (
     <div

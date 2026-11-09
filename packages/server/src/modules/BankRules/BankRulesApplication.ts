@@ -22,9 +22,7 @@ export class BankRulesApplication {
    * @param {ICreateBankRuleDTO} createRuleDTO - Bank rule data.
    * @returns {Promise<void>}
    */
-  public createBankRule(
-    createRuleDTO: CreateBankRuleDto,
-  ): Promise<BankRule> {
+  public createBankRule(createRuleDTO: CreateBankRuleDto): Promise<BankRule> {
     return this.createBankRuleService.createBankRule(createRuleDTO);
   }
 

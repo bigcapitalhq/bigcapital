@@ -8,8 +8,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
-  Length,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
 
@@ -39,7 +37,7 @@ export class CommandRolePermissionDto {
   value: boolean;
 }
 
-export class CreateRolePermissionDto extends CommandRolePermissionDto { }
+export class CreateRolePermissionDto extends CommandRolePermissionDto {}
 export class EditRolePermissionDto extends CommandRolePermissionDto {
   @IsNumber()
   @IsOptional()

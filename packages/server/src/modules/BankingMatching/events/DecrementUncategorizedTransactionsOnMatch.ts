@@ -36,7 +36,7 @@ export class DecrementUncategorizedTransactionOnMatchingSubscriber {
         .query()
         .whereIn('id', uncategorizedTransactionIds);
 
-    await PromisePool.withConcurrency(1)
+    const decrementResult = await PromisePool.withConcurrency(1)
       .for(uncategorizedTransactions)
       .process(async (transaction) => {
         await this.accountModel()
@@ -44,6 +44,11 @@ export class DecrementUncategorizedTransactionOnMatchingSubscriber {
           .findById(transaction.accountId)
           .decrement('uncategorizedTransactions', 1);
       });
+    // Throws the first error to rollback the matching transaction and
+    // prevent the uncategorized transactions counter from drifting.
+    if (decrementResult.errors?.length > 0) {
+      throw decrementResult.errors[0].raw;
+    }
   }
 
   /**

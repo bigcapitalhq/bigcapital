@@ -1,8 +1,8 @@
-import { ILedgerEntry } from "./types/Ledger.types";
+import { ILedgerEntry } from './types/Ledger.types';
 
 export class JournalEntry {
   entry: ILedgerEntry;
-  
+
   constructor(entry: ILedgerEntry) {
     const defaults = {
       credit: 0,

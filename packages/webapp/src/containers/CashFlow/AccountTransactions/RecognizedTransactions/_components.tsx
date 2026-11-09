@@ -1,12 +1,21 @@
-// @ts-nocheck
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { safeCallback } from '@/utils';
+import React from 'react';
+import type { RecognizedTransactionRow } from './_utils';
 import { Icon } from '@/components';
+import { safeCallback } from '@/utils';
+
+interface ActionsMenuProps {
+  row: { original: RecognizedTransactionRow };
+  payload: {
+    onCategorize: (transaction: RecognizedTransactionRow) => void;
+    onExclude: (transaction: RecognizedTransactionRow) => void;
+  };
+}
 
 export function ActionsMenu({
   payload: { onCategorize, onExclude },
   row: { original },
-}) {
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem

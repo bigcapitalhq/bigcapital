@@ -1,31 +1,35 @@
-// @ts-nocheck
-import React from 'react';
 import { Form, useFormikContext } from 'formik';
-import { FormObserver } from '@/components';
+import React from 'react';
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
-import AllocateLandedCostFloatingActions from './AllocateLandedCostFloatingActions';
-import AllocateLandedCostFormFields from './AllocateLandedCostFormFields';
+import { AllocateLandedCostFloatingActions } from './AllocateLandedCostFloatingActions';
+import { AllocateLandedCostFormFields } from './AllocateLandedCostFormFields';
+import type { AllocateLandedCostFormValues } from './types';
+import { FormObserver } from '@/components';
 
 /**
  * Allocate landed cost form content.
  */
-export default function AllocateLandedCostFormContent() {
-  const { values } = useFormikContext();
+export function AllocateLandedCostFormContent() {
+  const { values } = useFormikContext<AllocateLandedCostFormValues>();
 
   // Allocate landed cost dialog context.
   const { setTransactionsType, setTransactionId, setTransactionEntryId } =
     useAllocateLandedConstDialogContext();
 
   // Handle the form change.
-  const handleFormChange = (values) => {
-    if (values.transaction_type) {
-      setTransactionsType(values.transaction_type);
+  // FIXME: `transactionId` / `transactionEntryId` form values are typed as
+  // `number | string` (schema Yup.string()) but the provider state setters are
+  // `number | null`. Pass through unchanged to preserve original runtime behavior
+  // (state may hold a string at runtime if the field is a string).
+  const handleFormChange = (nextValues: AllocateLandedCostFormValues) => {
+    if (nextValues.transactionType) {
+      setTransactionsType(nextValues.transactionType);
     }
-    if (values.transaction_id) {
-      setTransactionId(values.transaction_id);
+    if (nextValues.transactionId) {
+      setTransactionId(nextValues.transactionId as unknown as number);
     }
-    if (values.transaction_entry_id) {
-      setTransactionEntryId(values.transaction_entry_id);
+    if (nextValues.transactionEntryId) {
+      setTransactionEntryId(nextValues.transactionEntryId as unknown as number);
     }
   };
   return (

@@ -1,8 +1,7 @@
-// @ts-nocheck
-import React from 'react';
 import { Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
+import React from 'react';
+import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { useSetPrimaryBranchToForm } from './utils';
-import { useFeatureCan } from '@/hooks/state';
 import {
   BranchSelect,
   FeatureCan,
@@ -10,14 +9,13 @@ import {
   DetailsBarSkeletonBase,
   FormBranchSelectButton,
 } from '@/components';
-import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { Features } from '@/constants';
+import { useFeatureCan } from '@/hooks/state';
 
 /**
  * Payment made from top bar.
- * @returns
  */
-export default function PaymentMadeFormTopBar() {
+export function PaymentMadeFormTopBar() {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
@@ -47,7 +45,7 @@ function PaymentMadeFormSelectBranch() {
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <BranchSelect
-      name={'branch_id'}
+      name={'branchId'}
       branches={branches}
       input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}

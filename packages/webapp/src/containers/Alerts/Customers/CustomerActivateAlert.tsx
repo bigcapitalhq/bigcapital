@@ -1,30 +1,41 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster, FormattedMessage as T } from '@/components';
-
+import * as FF from 'fp-ts/function';
+import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import type { WithAlertStoreConnectProps } from '@/containers/Alert/withAlertStoreConnect';
+import { AppToaster } from '@/components';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useActivateContact } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface CustomerActivateAlertPayload {
+  customerId?: number;
+  /** @deprecated legacy payload field, no longer used. Kept for backwards-compat with callers. */
+  service?: unknown;
+}
 
-import { compose } from '@/utils';
+interface CustomerActivateAlertProps
+  extends WithAlertActionsProps,
+    WithAlertStoreConnectProps {
+  name: string;
+}
 
 /**
  * Customer activate alert.
  */
-function CustomerActivateAlert({
+function CustomerActivateAlertInner({
   name,
 
   // #withAlertStoreConnect
   isOpen,
-  payload: { customerId, service },
+  payload,
 
   // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: activateContact, isLoading } = useActivateContact();
+}: CustomerActivateAlertProps) {
+  const { customerId } = (payload as CustomerActivateAlertPayload) ?? {};
+  const { mutateAsync: activateContact, isPending: isLoading } =
+    useActivateContact();
 
   // Handle activate constomer alert cancel.
   const handleCancelActivateCustomer = () => {
@@ -33,14 +44,16 @@ function CustomerActivateAlert({
 
   // Handle confirm customer activated.
   const handleConfirmCustomerActivate = () => {
-    activateContact(customerId)
+    activateContact(customerId!)
       .then(() => {
         AppToaster.show({
           message: intl.get('customer.alert.activated_message'),
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {
+        // Errors are surfaced via the alert UI; nothing to do here.
+      })
       .finally(() => {
         closeAlert(name);
       });
@@ -48,8 +61,8 @@ function CustomerActivateAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('activate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelActivateCustomer}
@@ -63,7 +76,8 @@ function CustomerActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const CustomerActivateAlert = FF.pipe(
+  CustomerActivateAlertInner,
   withAlertActions,
-)(CustomerActivateAlert);
+  withAlertStoreConnect(),
+);

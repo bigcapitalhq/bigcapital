@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TenancyDatabaseModule } from '../Tenancy/TenancyDB/TenancyDB.module';
-import { TransformerInjectable } from '../Transformer/TransformerInjectable.service';
 import { ActivateVendorService } from './commands/ActivateVendor.service';
 import { CreateEditVendorDTOService } from './commands/CreateEditVendorDTO';
 import { CreateVendorService } from './commands/CreateVendor.service';
@@ -10,7 +9,7 @@ import { EditVendorService } from './commands/EditVendor.service';
 import { GetVendorService } from './queries/GetVendor';
 import { VendorValidators } from './commands/VendorValidators';
 import { VendorsApplication } from './VendorsApplication.service';
-import { TenancyContext } from '../Tenancy/TenancyContext.service';
+import { TenancyModule } from '../Tenancy/Tenancy.module';
 import { VendorsController } from './Vendors.controller';
 import { GetVendorsService } from './queries/GetVendors.service';
 import { DynamicListModule } from '../DynamicListing/DynamicList.module';
@@ -25,7 +24,13 @@ import { VendorGLEntriesStorage } from './VendorGLEntriesStorage';
 import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSubscriber';
 
 @Module({
-  imports: [TenancyDatabaseModule, DynamicListModule, LedgerModule, AccountsModule],
+  imports: [
+    TenancyModule,
+    TenancyDatabaseModule,
+    DynamicListModule,
+    LedgerModule,
+    AccountsModule,
+  ],
   controllers: [VendorsController],
   providers: [
     ActivateVendorService,
@@ -40,8 +45,6 @@ import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSu
     VendorsApplication,
     BulkDeleteVendorsService,
     ValidateBulkDeleteVendorsService,
-    TransformerInjectable,
-    TenancyContext,
     VendorsExportable,
     VendorsImportable,
     VendorGLEntries,
@@ -49,4 +52,4 @@ import { VendorsWriteGLOpeningSubscriber } from './subscribers/VendorGLEntriesSu
     VendorsWriteGLOpeningSubscriber,
   ],
 })
-export class VendorsModule { }
+export class VendorsModule {}

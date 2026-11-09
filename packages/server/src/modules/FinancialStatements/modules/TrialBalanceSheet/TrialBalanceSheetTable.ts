@@ -1,4 +1,6 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import { isEmpty } from 'lodash';
+import { unless } from '@/common/fp';
 import { FinancialSheet } from '../../common/FinancialSheet';
 import { FinancialTable } from '../../common/FinancialTable';
 import {
@@ -16,10 +18,11 @@ import { FinancialSheetStructure } from '../../common/FinancialSheetStructure';
 import { I18nService } from 'nestjs-i18n';
 import { tableRowMapper } from '../../utils/Table.utils';
 import { IROW_TYPE } from './_constants';
+import { TRIAL_BALANCE_COLUMN_KEYS } from '../../common/constants/tableColumnKeys';
 
-export class TrialBalanceSheetTable extends R.compose(
-  FinancialTable,
+export class TrialBalanceSheetTable extends flow(
   FinancialSheetStructure,
+  FinancialTable,
 )(FinancialSheet) {
   /**
    * Trial balance sheet data.
@@ -58,10 +61,10 @@ export class TrialBalanceSheetTable extends R.compose(
    */
   private commonColumnsAccessors = (): ITableColumnAccessor[] => {
     return [
-      { key: 'account', accessor: 'formattedName' },
-      { key: 'debit', accessor: 'formattedDebit' },
-      { key: 'credit', accessor: 'formattedCredit' },
-      { key: 'total', accessor: 'formattedBalance' },
+      { key: TRIAL_BALANCE_COLUMN_KEYS.ACCOUNT, accessor: 'formattedName' },
+      { key: TRIAL_BALANCE_COLUMN_KEYS.DEBIT, accessor: 'formattedDebit' },
+      { key: TRIAL_BALANCE_COLUMN_KEYS.CREDIT, accessor: 'formattedCredit' },
+      { key: TRIAL_BALANCE_COLUMN_KEYS.TOTAL, accessor: 'formattedBalance' },
     ];
   };
 
@@ -127,10 +130,10 @@ export class TrialBalanceSheetTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.compose(
-      R.unless(R.isEmpty, R.append(this.totalTableRow())),
-      R.concat(this.accountsTableRows()),
-    )([]);
+    return unless(
+      (rows: ITableRow[]) => isEmpty(rows),
+      (rows: ITableRow[]) => [...rows, this.totalTableRow()],
+    )([...this.accountsTableRows()]);
   };
 
   /**
@@ -138,14 +141,27 @@ export class TrialBalanceSheetTable extends R.compose(
    * @returns {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
-    return R.compose(
+    return flow(
+      (columns: ITableColumn[]) => [
+        {
+          key: TRIAL_BALANCE_COLUMN_KEYS.ACCOUNT,
+          label: this.i18n.t('trial_balance_sheet.account'),
+        },
+        {
+          key: TRIAL_BALANCE_COLUMN_KEYS.DEBIT,
+          label: this.i18n.t('trial_balance_sheet.debit'),
+        },
+        {
+          key: TRIAL_BALANCE_COLUMN_KEYS.CREDIT,
+          label: this.i18n.t('trial_balance_sheet.credit'),
+        },
+        {
+          key: TRIAL_BALANCE_COLUMN_KEYS.TOTAL,
+          label: this.i18n.t('trial_balance_sheet.total'),
+        },
+        ...columns,
+      ],
       this.tableColumnsCellIndexing,
-      R.concat([
-        { key: 'account', label: this.i18n.t('trial_balance_sheet.account') },
-        { key: 'debit', label: this.i18n.t('trial_balance_sheet.debit') },
-        { key: 'credit', label: this.i18n.t('trial_balance_sheet.credit') },
-        { key: 'total', label: this.i18n.t('trial_balance_sheet.total') },
-      ]),
     )([]);
   };
 }

@@ -1,20 +1,14 @@
-// @ts-nocheck
-import React from 'react';
-
-import { CommercialDocEntriesTable } from '@/components';
-
-import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { useVendorCreditReadonlyEntriesTableColumns } from './utils';
-
+import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
+import { CommercialDocEntriesTable } from '@/components';
 import { TableStyle } from '@/constants';
 
 /**
  * Vendor Credit detail table.
  */
-export default function VendorCreditDetailTable() {
-  const {
-    vendorCredit: { entries },
-  } = useVendorCreditDetailDrawerContext();
+export function VendorCreditDetailTable() {
+  const { vendorCredit } = useVendorCreditDetailDrawerContext();
+  const entries = vendorCredit?.entries ?? [];
 
   // Vendor Credit entries table columns.
   const columns = useVendorCreditReadonlyEntriesTableColumns();
@@ -25,7 +19,7 @@ export default function VendorCreditDetailTable() {
       data={entries}
       initialHiddenColumns={
         // If any entry has no discount, hide the discount column.
-        entries?.some((e) => e.discount_formatted) ? [] : ['discount']
+        entries.some((e) => e.discountFormatted) ? [] : ['discount']
       }
       styleName={TableStyle.Constrant}
     />

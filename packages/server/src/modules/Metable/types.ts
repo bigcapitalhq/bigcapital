@@ -5,6 +5,7 @@ export interface IMetadata {
   _markAsDeleted?: boolean;
   _markAsInserted?: boolean;
   _markAsUpdated?: boolean;
+  [key: string]: string | boolean | number | undefined;
 }
 
 export interface IMetaQuery {

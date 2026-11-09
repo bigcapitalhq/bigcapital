@@ -1,39 +1,40 @@
-// @ts-nocheck
-import React, { useMemo } from 'react';
-import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Link, useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
-
-import { AppToaster, FormattedMessage as T } from '@/components';
-import { useAuthSendResetPassword } from '@/hooks/query';
-
-import SendResetPasswordForm from './SendResetPasswordForm';
+import { Formik, FormikHelpers } from 'formik';
+import intl from 'react-intl-universal';
+import { Link, useHistory } from 'react-router-dom';
 import {
   AuthFooterLink,
   AuthFooterLinks,
   AuthInsiderCard,
 } from './_components';
+import { useAuthMetaBoot } from './AuthMetaBoot';
+import { SendResetPasswordForm } from './SendResetPasswordForm';
 import {
   SendResetPasswordSchema,
   transformSendResetPassErrorsToToasts,
+  SendResetPasswordValues,
 } from './utils';
-import AuthInsider from '@/containers/Authentication/AuthInsider';
-import { useAuthMetaBoot } from './AuthMetaBoot';
+import type { ApiError } from 'openapi-typescript-fetch';
+import { AppToaster, FormattedMessage as T } from '@/components';
+import { AuthInsider } from '@/containers/Authentication/AuthInsider';
+import { useAuthSendResetPassword } from '@/hooks/query';
 
-const initialValues = {
+const initialValues: SendResetPasswordValues = {
   crediential: '',
 };
 
 /**
  * Send reset password page.
  */
-export default function SendResetPassword() {
+export function SendResetPassword() {
   const history = useHistory();
   const { mutateAsync: sendResetPasswordMutate } = useAuthSendResetPassword();
 
   // Handle form submitting.
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = (
+    values: SendResetPasswordValues,
+    { setSubmitting }: FormikHelpers<SendResetPasswordValues>,
+  ) => {
     sendResetPasswordMutate({ email: values.crediential })
       .then(() => {
         AppToaster.show({
@@ -43,7 +44,14 @@ export default function SendResetPassword() {
         history.push('/auth/login');
         setSubmitting(false);
       })
-      .catch(() => {
+      .catch((response: ApiError) => {
+        const toastMessages = transformSendResetPassErrorsToToasts(
+          response.data,
+        );
+
+        toastMessages.forEach((toastMessage) => {
+          AppToaster.show(toastMessage);
+        });
         setSubmitting(false);
       });
   };

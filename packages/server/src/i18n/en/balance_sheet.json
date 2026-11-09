@@ -1,4 +1,5 @@
 {
+  "sheet_name": "Balance Sheet",
   "assets": "Assets",
   "current_asset": "Current Asset",
   "cash_and_cash_equivalents": "Cash and cash equivalents",
@@ -9,7 +10,7 @@
   "non_current_assets": "Non-Current Assets",
   "liabilities_and_equity": "Liabilities and Equity",
   "liabilities": "Liabilities",
-  "current_liabilties": "Current Liabilties",
+  "current_liabilities": "Current Liabilities",
   "long_term_liabilities": "Long-Term Liabilities",
   "non_current_liabilities": "Non-Current Liabilities",
   "equity": "Equity",

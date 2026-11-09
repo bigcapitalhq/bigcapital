@@ -1,9 +1,8 @@
-import { IsOptional } from "@/common/decorators/Validators";
-import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsEmail, IsUrl } from "class-validator";
-import { IsNotEmpty } from "class-validator";
-import { IsString } from "class-validator";
-
+import { IsOptional } from '@/common/decorators/Validators';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsEmail, IsUrl } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CommandWarehouseDto {
   @IsString()
@@ -20,7 +19,7 @@ export class CommandWarehouseDto {
   @IsOptional()
   @ApiProperty({ description: 'The code of the warehouse' })
   code?: string;
-  
+
   @IsString()
   @IsOptional()
   @ApiProperty({ description: 'The address of the warehouse' })
@@ -35,7 +34,7 @@ export class CommandWarehouseDto {
   @IsOptional()
   @ApiProperty({ description: 'The country of the warehouse' })
   country?: string;
-  
+
   @IsString()
   @IsOptional()
   @ApiProperty({ description: 'The phone number of the warehouse' })

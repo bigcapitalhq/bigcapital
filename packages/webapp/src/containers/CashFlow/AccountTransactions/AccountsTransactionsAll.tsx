@@ -1,10 +1,11 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
+import { useEffect } from 'react';
 import styled from 'styled-components';
-
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
-
-import AccountTransactionsDataTable from './AccountTransactionsDataTable';
+import { withBankingActions } from '../withBankingActions';
 import { AccountTransactionsAllProvider } from './AccountTransactionsAllBoot';
+import { AccountTransactionsDataTable } from './AccountTransactionsDataTable';
+import type { WithBankingActionsProps } from '../withBankingActions';
 
 const Box = styled.div`
   margin: 30px 15px;
@@ -18,7 +19,22 @@ const CashflowTransactionsTableCard = styled.div`
   flex: 0 1;
 `;
 
-export default function AccountTransactionsAll() {
+interface AccountTransactionsAllProps
+  extends Pick<
+    WithBankingActionsProps,
+    'resetCategorizedTransactionsSelected'
+  > {}
+
+function AccountTransactionsAllRoot({
+  resetCategorizedTransactionsSelected,
+}: AccountTransactionsAllProps) {
+  useEffect(
+    () => () => {
+      resetCategorizedTransactionsSelected();
+    },
+    [resetCategorizedTransactionsSelected],
+  );
+
   return (
     <AccountTransactionsAllProvider>
       <Box>
@@ -29,3 +45,8 @@ export default function AccountTransactionsAll() {
     </AccountTransactionsAllProvider>
   );
 }
+
+export const AccountTransactionsAll = FF.pipe(
+  AccountTransactionsAllRoot,
+  withBankingActions,
+);

@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NumberFormatQueryDto } from '@/modules/BankingTransactions/dtos/NumberFormatQuery.dto';
 import {
+  FinancialTableColumnDto,
   FinancialReportTotalDto,
   FinancialReportMetaDto,
   FinancialTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
+import {
+  SALES_BY_ITEMS_COLUMN_KEYS,
+  SalesByItemsColumnKey,
+} from '../../common/constants/tableColumnKeys';
 
 export class SalesByItemDto {
   @ApiProperty({ description: 'Item ID', type: Number })
@@ -22,7 +27,10 @@ export class SalesByItemDto {
   @ApiProperty({ description: 'Quantity sold', type: Number })
   quantity: number;
 
-  @ApiProperty({ description: 'Total sales amount', type: FinancialReportTotalDto })
+  @ApiProperty({
+    description: 'Total sales amount',
+    type: FinancialReportTotalDto,
+  })
   total: FinancialReportTotalDto;
 
   @ApiPropertyOptional({ description: 'Average price', type: Number })
@@ -56,7 +64,10 @@ export class SalesByItemsQueryResponseDto {
   @ApiProperty({ description: 'End date' })
   toDate: string;
 
-  @ApiProperty({ description: 'Number format settings', type: NumberFormatQueryDto })
+  @ApiProperty({
+    description: 'Number format settings',
+    type: NumberFormatQueryDto,
+  })
   numberFormat: NumberFormatQueryDto;
 
   @ApiProperty({ description: 'Item IDs to include', type: [Number] })
@@ -67,7 +78,10 @@ export class SalesByItemsQueryResponseDto {
 }
 
 export class SalesByItemsResponseDto {
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: SalesByItemsQueryResponseDto })
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: SalesByItemsQueryResponseDto,
+  })
   query: SalesByItemsQueryResponseDto;
 
   @ApiProperty({ description: 'Sales by items', type: [SalesByItemDto] })
@@ -81,15 +95,35 @@ export class SalesByItemsResponseDto {
 export {
   FinancialTableCellDto as SalesByItemsTableCellDto,
   FinancialTableRowDto as SalesByItemsTableRowDto,
-  FinancialTableColumnDto as SalesByItemsTableColumnDto,
-  FinancialTableDataDto as SalesByItemsTableDataDto,
 } from '../../dtos/FinancialReportResponse.dto';
 
-export class SalesByItemsTableResponseDto {
-  @ApiProperty({ description: 'Table data structure', type: () => FinancialTableDataDto })
-  table: FinancialTableDataDto;
+export class SalesByItemsTableColumnDto extends FinancialTableColumnDto {
+  @ApiProperty({
+    description: 'Column key',
+    enum: Object.values(SALES_BY_ITEMS_COLUMN_KEYS),
+  })
+  key: SalesByItemsColumnKey;
+}
 
-  @ApiProperty({ description: 'Query parameters used to generate the report', type: SalesByItemsQueryResponseDto })
+export class SalesByItemsTableDataDto extends FinancialTableDataDto {
+  @ApiProperty({
+    description: 'Table column definitions',
+    type: [SalesByItemsTableColumnDto],
+  })
+  columns: SalesByItemsTableColumnDto[];
+}
+
+export class SalesByItemsTableResponseDto {
+  @ApiProperty({
+    description: 'Table data structure',
+    type: () => SalesByItemsTableDataDto,
+  })
+  table: SalesByItemsTableDataDto;
+
+  @ApiProperty({
+    description: 'Query parameters used to generate the report',
+    type: SalesByItemsQueryResponseDto,
+  })
   query: SalesByItemsQueryResponseDto;
 
   @ApiProperty({ description: 'Report metadata', type: SalesByItemsMetaDto })

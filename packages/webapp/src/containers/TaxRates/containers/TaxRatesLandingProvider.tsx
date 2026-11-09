@@ -1,31 +1,49 @@
-// @ts-nocheck
-import React from 'react';
+import { keepPreviousData } from '@tanstack/react-query';
 import { isEmpty } from 'lodash';
+import { createContext, ReactNode, useContext } from 'react';
+import type { TaxRate } from '@bigcapital/sdk-ts';
 import { DashboardInsider } from '@/components/Dashboard';
-import { useTaxRates } from '@/hooks/query/taxRates';
+import { useTaxRates } from '@/hooks/query/tax-rates';
 
-const TaxRatesLandingContext = React.createContext();
+export interface TaxRatesLandingContextValue {
+  taxRates: TaxRate[] | undefined;
+  isTaxRatesFetching: boolean;
+  isTaxRatesLoading: boolean;
+  isEmptyStatus: boolean;
+}
+
+export interface TaxRatesLandingProviderProps {
+  tableState?: unknown;
+  children?: ReactNode;
+}
+
+const TaxRatesLandingContext = createContext<
+  TaxRatesLandingContextValue | undefined
+>(undefined);
 
 /**
  * Cash Flow data provider.
  */
-function TaxRatesLandingProvider({ tableState, ...props }) {
+function TaxRatesLandingProvider({
+  tableState,
+  ...props
+}: TaxRatesLandingProviderProps) {
   // Fetch cash flow list .
   const {
     data: taxRates,
     isFetching: isTaxRatesFetching,
     isLoading: isTaxRatesLoading,
-  } = useTaxRates({}, { keepPreviousData: true });
+  } = useTaxRates({ placeholderData: keepPreviousData });
 
   // Detarmines whether the table should show empty state.
   const isEmptyStatus = isEmpty(taxRates) && !isTaxRatesLoading;
 
   // Provider payload.
-  const provider = {
+  const provider: TaxRatesLandingContextValue = {
     taxRates,
     isTaxRatesFetching,
     isTaxRatesLoading,
-    isEmptyStatus
+    isEmptyStatus,
   };
 
   return (
@@ -35,7 +53,14 @@ function TaxRatesLandingProvider({ tableState, ...props }) {
   );
 }
 
-const useTaxRatesLandingContext = () =>
-  React.useContext(TaxRatesLandingContext);
+const useTaxRatesLandingContext = (): TaxRatesLandingContextValue => {
+  const context = useContext(TaxRatesLandingContext);
+  if (!context) {
+    throw new Error(
+      'useTaxRatesLandingContext must be used within a TaxRatesLandingProvider.',
+    );
+  }
+  return context;
+};
 
 export { TaxRatesLandingProvider, useTaxRatesLandingContext };

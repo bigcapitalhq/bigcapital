@@ -1,37 +1,31 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster, FormattedMessage as T } from '@/components';
-import { Intent, Alert } from '@blueprintjs/core';
-
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useActivateItem } from '@/hooks/query';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
+interface ItemActivateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { itemId: number };
+}
 
-import { compose } from '@/utils';
-
-/**
- *  Item activate alert.
- */
-function ItemActivateAlert({
+function ItemActivateAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
   payload: { itemId },
-
-  // #withAlertActions
   closeAlert,
-}) {
-  const { mutateAsync: activateItem, isLoading } = useActivateItem();
+}: ItemActivateAlertProps): React.ReactElement {
+  const { mutateAsync: activateItem, isPending } = useActivateItem();
 
-  // Handle activate item alert cancel.
   const handleCancelActivateItem = () => {
     closeAlert(name);
   };
 
-  // Handle confirm item activated.
   const handleConfirmItemActivate = () => {
     activateItem(itemId)
       .then(() => {
@@ -40,7 +34,7 @@ function ItemActivateAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {})
+      .catch(() => {})
       .finally(() => {
         closeAlert(name);
       });
@@ -48,12 +42,12 @@ function ItemActivateAlert({
 
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('activate')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelActivateItem}
-      loading={isLoading}
+      loading={isPending}
       onConfirm={handleConfirmItemActivate}
     >
       <p>
@@ -63,7 +57,8 @@ function ItemActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const ItemActivateAlert = FF.pipe(
+  ItemActivateAlertInner,
   withAlertActions,
-)(ItemActivateAlert);
+  withAlertStoreConnect(),
+);

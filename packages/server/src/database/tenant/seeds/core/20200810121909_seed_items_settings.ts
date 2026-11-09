@@ -2,9 +2,9 @@ import { TenantSeeder } from '@/libs/migration-seed/TenantSeeder';
 
 export default class SeedSettings extends TenantSeeder {
   /**
-   * 
-   * @param knex 
-   * @returns 
+   *
+   * @param knex
+   * @returns
    */
   async up(knex) {
     const costAccount = await knex('accounts')

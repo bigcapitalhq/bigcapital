@@ -8,7 +8,7 @@ import { IBranchesActivatedPayload } from '../../Branches.types';
 export class PaymentMadeActivateBranchesSubscriber {
   constructor(
     private readonly paymentsActivateBranches: BillPaymentsActivateBranches,
-  ) { }
+  ) {}
 
   /**
    * Updates accounts transactions with the primary branch once

@@ -1,9 +1,18 @@
-// @ts-nocheck
-import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import { safeCallback } from '@/utils';
+import { Menu, MenuItem } from '@blueprintjs/core';
+import React from 'react';
+import type { ExcludedTransactionRow } from './_utils';
 import { Icon } from '@/components';
+import { safeCallback } from '@/utils';
 
-export function ActionsMenu({ payload: { onRestore }, row: { original } }) {
+interface ActionsMenuProps {
+  row: { original: ExcludedTransactionRow };
+  payload: { onRestore: (transaction: ExcludedTransactionRow) => void };
+}
+
+export function ActionsMenu({
+  payload: { onRestore },
+  row: { original },
+}: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem

@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import * as moment from 'moment';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,7 +27,7 @@ export class GenerateShareLink {
 
     @Inject(PaymentLink.name)
     private paymentLinkModel: typeof PaymentLink,
-  ) { }
+  ) {}
 
   /**
    * Generates private or public payment link for the given sale invoice.
@@ -47,6 +48,9 @@ export class GenerateShareLink {
 
     // Generate unique uuid for sharable link.
     const linkId = uuidv4() as string;
+    const expiryAt = expiryTime
+      ? moment(expiryTime).endOf('day').toDate()
+      : null;
     const commonEventPayload = {
       saleInvoiceId,
       publicity,
@@ -61,6 +65,7 @@ export class GenerateShareLink {
       const paymentLink = await this.paymentLinkModel.query().insert({
         linkId,
         publicity,
+        expiryAt,
         resourceId: foundInvoice.id,
         resourceType: 'SaleInvoice',
         tenantId: tenant.id,
@@ -79,7 +84,7 @@ export class GenerateShareLink {
         new GeneratePaymentLinkTransformer(),
         {
           baseUrl: this.configService.get('app.baseUrl'),
-        }
+        },
       );
     });
   }

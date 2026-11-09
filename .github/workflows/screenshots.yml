@@ -1,0 +1,196 @@
+name: Screenshots
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: 'bash'
+
+concurrency:
+  group: screenshots
+  cancel-in-progress: false
+
+jobs:
+  capture_screenshots:
+    runs-on: ubuntu-latest
+    name: Capture app screenshots
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+
+    services:
+      mysql:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bigcapital_system
+          MYSQL_USER: bigcapital
+          MYSQL_PASSWORD: bigcapital
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.16.1
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+        id: pnpm-cache
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm build
+
+      - name: Create server .env file
+        run: |
+          cat > packages/server/.env << EOF
+          # Database
+          DB_HOST=127.0.0.1
+          DB_USER=bigcapital
+          DB_PASSWORD=bigcapital
+          DB_ROOT_PASSWORD=root
+          DB_CHARSET=utf8
+
+          # System database
+          SYSTEM_DB_NAME=bigcapital_system
+
+          # Tenant databases
+          TENANT_DB_NAME_PERFIX=bigcapital_tenant_
+
+          # Application
+          BASE_URL=http://localhost:3000
+          APP_JWT_SECRET=test-app-jwt-secret
+
+          # Sign-up
+          SIGNUP_DISABLED=false
+
+          # API throttling
+          THROTTLE_GLOBAL_TTL=60000
+          THROTTLE_GLOBAL_LIMIT=300
+          THROTTLE_AUTH_TTL=60000
+          THROTTLE_AUTH_LIMIT=30
+
+          # Redis
+          REDIS_HOST=127.0.0.1
+          REDIS_PORT=6379
+
+          # S3 (placeholder values for screenshots)
+          S3_REGION=us-east-1
+          S3_ACCESS_KEY_ID=test-access-key
+          S3_SECRET_ACCESS_KEY=test-secret-key
+          S3_ENDPOINT=http://localhost:9000
+          S3_BUCKET=test-bucket
+
+          # Mail (placeholder values for screenshots)
+          MAIL_HOST=localhost
+          MAIL_PORT=1025
+          MAIL_FROM_NAME=Bigcapital
+          MAIL_FROM_ADDRESS=test@bigcapital.app
+          EOF
+
+      - name: Grant tenant database privileges
+        run: |
+          CID=$(docker ps -qf "ancestor=mariadb:10.6" | head -1)
+          docker exec "$CID" mysql -uroot -proot -e \
+            "GRANT ALL PRIVILEGES ON *.* TO 'bigcapital'@'%' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+
+      - name: Run database migrations
+        run: pnpm system:migrate:latest
+
+      - name: Start server in background
+        env:
+          NODE_ENV: production
+        run: |
+          cd packages/server && node dist/main > /tmp/bigcapital-server.log 2>&1 &
+
+          SERVER_READY=false
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:3000/api/auth/meta > /dev/null; then
+              SERVER_READY=true
+              break
+            fi
+            sleep 2
+          done
+
+          if [ "$SERVER_READY" != "true" ]; then
+            echo '::error::Server failed to become ready.'
+            tail -100 /tmp/bigcapital-server.log
+            exit 1
+          fi
+
+      - name: Start webapp in background
+        run: |
+          cd packages/webapp && VITE_REACT_QUERY_DEVTOOLS=false pnpm dev > /tmp/bigcapital-webapp.log 2>&1 &
+
+          WEBAPP_READY=false
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:4000 > /dev/null; then
+              WEBAPP_READY=true
+              break
+            fi
+            sleep 2
+          done
+
+          if [ "$WEBAPP_READY" != "true" ]; then
+            echo '::error::Webapp failed to become ready.'
+            tail -100 /tmp/bigcapital-webapp.log
+            exit 1
+          fi
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium
+
+      - name: Capture screenshots
+        run: pnpm run screenshot:webapp
+        env:
+          PLAYWRIGHT_TEST_API_URL: http://localhost:3000
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost:4000
+
+      - name: Upload screenshots artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: app-screenshots
+          path: screenshots/
+          retention-days: 30
+
+      - name: Open pull request with updated screenshots
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: screenshots
+          branch: chore/update-app-screenshots
+          base: ${{ github.ref_name }}
+          delete-branch: true
+          commit-message: 'chore: update app screenshots'
+          title: 'chore: update app screenshots'
+          body: |
+            Automated app screenshots captured by the **Screenshots** workflow.
+
+            Download the artifact from the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) to review the images before merging.

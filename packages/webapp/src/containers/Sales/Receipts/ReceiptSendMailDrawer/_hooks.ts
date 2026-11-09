@@ -1,13 +1,13 @@
-import { useMemo } from 'react';
-import { useFormikContext } from 'formik';
 import { SelectOptionProps } from '@blueprintjs-formik/select';
-import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
-import { ReceiptSendMailFormValues } from './_types';
+import { useFormikContext } from 'formik';
+import { useMemo } from 'react';
 import {
   formatMailMessage,
   transformEmailArgs,
   transformFormatArgsToOptions,
 } from '../../Estimates/SendMailViewDrawer/hooks';
+import { ReceiptSendMailFormValues } from './_types';
+import { useReceiptSendMailBoot } from './ReceiptSendMailBoot';
 
 /**
  * Retrieves the mail format arguments of receipt mail.

@@ -1,17 +1,14 @@
-// @ts-nocheck
 import React from 'react';
-
-import { Card, CommercialDocBox } from '@/components';
-
-import CashflowTransactionDrawerActionBar from './CashflowTransactionDrawerActionBar';
-import CashflowTransactionDrawerHeader from './CashflowTransactionDrawerHeader';
-import CashflowTransactionDrawerTable from './CashflowTransactionDrawerTable';
-import CashflowTransactionDrawerTableFooter from './CashflowTransactionDrawerTableFooter';
+import { CashflowTransactionDrawerActionBar } from './CashflowTransactionDrawerActionBar';
 import { CashflowTransactionDrawerFooter } from './CashflowTransactionDrawerFooter';
+import { CashflowTransactionDrawerHeader } from './CashflowTransactionDrawerHeader';
+import { CashflowTransactionDrawerTable } from './CashflowTransactionDrawerTable';
+import { CashflowTransactionDrawerTableFooter } from './CashflowTransactionDrawerTableFooter';
+import { CommercialDocBox } from '@/components';
 /**
  * Cashflow transaction view details.
  */
-export default function CashflowTransactionDrawerDetails() {
+export function CashflowTransactionDrawerDetails() {
   return (
     <div className={'cashflow-drawer'}>
       <CashflowTransactionDrawerActionBar />

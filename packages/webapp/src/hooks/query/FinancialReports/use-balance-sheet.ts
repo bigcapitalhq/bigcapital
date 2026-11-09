@@ -1,82 +1,71 @@
-// @ts-nocheck
+import {
+  fetchBalanceSheetTable,
+  fetchBalanceSheetXlsx,
+  fetchBalanceSheetCsv,
+  fetchBalanceSheetPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  BalanceSheetTableQuery,
+  BalanceSheetTableResponse,
+  BalanceSheetXlsxQuery,
+  BalanceSheetCsvQuery,
+  BalanceSheetPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
-
-/**
- * Fetches balance sheet data.
- * @param {Object} query - The query parameters for the request.
- * @param {Object} props - Additional options for the request.
- * @returns {Object} The response object from the useRequestQuery hook.
- */
-export function useBalanceSheet(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.BALANCE_SHEET, query],
-    {
-      method: 'get',
-      url: '/reports/balance-sheet',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => res.data,
-      ...props,
-    },
-  );
+export function useBalanceSheet(
+  query: BalanceSheetTableQuery,
+  props?: Omit<
+    UseQueryOptions<BalanceSheetTableResponse, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.balanceSheet(query),
+    queryFn: () => fetchBalanceSheetTable(fetcher, query),
+  });
 }
 
-/**
- * Initiates a download of the balance sheet in XLSX format.
- * @param {Object} query - The query parameters for the request.
- * @param {Object} args - Additional configurations for the download.
- * @returns {Function} A function to trigger the file download.
- */
-export const useBalanceSheetXlsxExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/balance-sheet',
-    config: {
-      headers: {
-        accept: 'application/xlsx',
-      },
-      params: query,
-    },
-    filename: 'balance_sheet.xlsx',
+export function useBalanceSheetXlsxExport(
+  query: BalanceSheetXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchBalanceSheetXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'balance_sheet.xlsx'),
+      ),
   });
-};
+}
 
-/**
- * Initiates a download of the balance sheet in CSV format.
- * @param {Object} query - The query parameters for the request.
- * @param {Object} args - Additional configurations for the download.
- * @returns {Function} A function to trigger the file download.
- */
-export const useBalanceSheetCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/balance-sheet',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'balance_sheet.csv',
+export function useBalanceSheetCsvExport(
+  query: BalanceSheetCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchBalanceSheetCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'balance_sheet.csv'),
+      ),
   });
-};
+}
 
-/**
- * Fetches balance sheet data in PDF format.
- * @param {Object} [query={}] - The query parameters for the request.
- * @returns {Object} The response object from the useRequestPdf hook.
- */
-export function useBalanceSheetPdf(query = {}) {
-  return useRequestPdf({
-    url: `/reports/balance-sheet`,
-    params: query,
-  });
+export function useBalanceSheetPdf(query: BalanceSheetPdfQuery) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchBalanceSheetPdf(fetcher, query));
 }

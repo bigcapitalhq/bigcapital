@@ -16,6 +16,14 @@
   "field.status.delivered": "Delivered",
   "field.status.rejected": "Rejected",
   "field.status.approved": "Approved",
-  "field.created_at": "Created At"
+  "field.created_at": "Created At",
+
+  "mail.total": "Total",
+  "mail.subtotal": "Subtotal",
+  "mail.discount": "Discount",
+  "mail.discount_with_percentage": "Discount [{percentage}]",
+  "mail.adjustment": "Adjustment",
+  "mail.estimate_number": "Estimate No: {estimateNumber}",
+  "mail.expiration_date": "Expiration Date: {expirationDate}"
 }
 

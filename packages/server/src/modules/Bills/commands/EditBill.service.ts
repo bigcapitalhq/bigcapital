@@ -1,8 +1,4 @@
-import {
-  IBillEditDTO,
-  IBillEditedPayload,
-  IBillEditingPayload,
-} from '../Bills.types';
+import { IBillEditedPayload, IBillEditingPayload } from '../Bills.types';
 import { Inject, Injectable } from '@nestjs/common';
 import { BillsValidators } from './BillsValidators.service';
 import { ItemsEntriesService } from '@/modules/Items/ItemsEntries.service';
@@ -13,7 +9,7 @@ import { Bill } from '../models/Bill';
 import { events } from '@/common/events/events';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { Knex } from 'knex';
-import { TransactionLandedCostEntriesService } from '@/modules/BillLandedCosts/TransactionLandedCostEntries.service';
+import { BillLandedCostsBridge } from '../integrations/BillLandedCostsBridge';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditBillDto } from '../dtos/Bill.dto';
 
@@ -24,12 +20,12 @@ export class EditBillService {
     private itemsEntriesService: ItemsEntriesService,
     private uow: UnitOfWork,
     private eventPublisher: EventEmitter2,
-    private transactionLandedCostEntries: TransactionLandedCostEntriesService,
+    private landedCostsBridge: BillLandedCostsBridge,
     private transformerDTO: BillDTOTransformer,
 
     @Inject(Bill.name) private billModel: TenantModelProxy<typeof Bill>,
     @Inject(Vendor.name) private vendorModel: TenantModelProxy<typeof Vendor>,
-  ) { }
+  ) {}
 
   /**
    * Edits details of the given bill id with associated entries.
@@ -48,18 +44,61 @@ export class EditBillService {
    * @return {Promise<IBill>}
    */
   public async editBill(billId: number, billDTO: EditBillDto): Promise<Bill> {
-    // Retrieve the given bill or throw not found error.
-    const oldBill = await this.billModel()
-      .query()
-      .findById(billId)
-      .withGraphFetched('entries');
+    // Edits bill transactions and associated transactions under UOW envirement.
+    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the edit operation against the locked bill row.
+      const { oldBill, billObj } = await this.validate(billId, billDTO, trx);
+      // Triggers `onBillEditing` event.
+      await this.eventPublisher.emitAsync(events.bill.onEditing, {
+        oldBill,
+        billDTO,
+        trx,
+      } as IBillEditingPayload);
 
-    // Validate bill existance.
-    this.validators.validateBillExistance(oldBill);
+      // Update the bill transaction.
+      const bill = await this.billModel()
+        .query(trx)
+        .upsertGraphAndFetch({
+          id: billId,
+          ...billObj,
+        });
+      // Triggers event `onBillEdited`.
+      await this.eventPublisher.emitAsync(events.bill.onEdited, {
+        oldBill,
+        bill,
+        billDTO,
+        trx,
+      } as IBillEditedPayload);
+
+      return bill;
+    });
+  }
+
+  /**
+   * Validates the edit bill operation against the locked bill row: existence,
+   * vendor, bill number uniqueness, items entries, landed cost entries and
+   * the bill amount against the paid amount.
+   * @param {number} billId - Bill id.
+   * @param {EditBillDto} billDTO - Bill edit DTO.
+   * @param {Knex.Transaction} trx - Locks the bill row (FOR UPDATE).
+   * @returns {Promise<{ oldBill: Bill, billObj: Bill }>}
+   */
+  async validate(
+    billId: number,
+    billDTO: EditBillDto,
+    trx: Knex.Transaction,
+  ): Promise<{ oldBill: Bill; billObj: Bill }> {
+    // Retrieve the given bill with a row lock or throw not found error.
+    const oldBill = await this.billModel()
+      .query(trx)
+      .findById(billId)
+      .forUpdate()
+      .withGraphFetched('entries')
+      .throwIfNotFound();
 
     // Retrieve vendor details or throw not found service error.
     const vendor = await this.vendorModel()
-      .query()
+      .query(trx)
       .findById(billDTO.vendorId)
       .throwIfNotFound();
 
@@ -89,46 +128,17 @@ export class EditBillService {
       vendor,
       oldBill,
     );
-    // Validate bill total amount should be bigger than paid amount.
+    // Validate landed cost entries against the bill edit operation.
+    this.landedCostsBridge.validateBillEditEntries(
+      oldBill.entries,
+      billObj.entries,
+    );
+    // Validate bill total amount should be bigger than paid amount
+    // against the locked row.
     this.validators.validateBillAmountBiggerPaidAmount(
       billObj.amount,
       oldBill.paymentAmount,
     );
-    // Validate landed cost entries that have allocated cost could not be deleted.
-    await this.transactionLandedCostEntries.validateLandedCostEntriesNotDeleted(
-      oldBill.entries,
-      billObj.entries,
-    );
-    // Validate new landed cost entries should be bigger than new entries.
-    await this.transactionLandedCostEntries.validateLocatedCostEntriesSmallerThanNewEntries(
-      oldBill.entries,
-      billObj.entries,
-    );
-    // Edits bill transactions and associated transactions under UOW envirement.
-    return this.uow.withTransaction(async (trx: Knex.Transaction) => {
-      // Triggers `onBillEditing` event.
-      await this.eventPublisher.emitAsync(events.bill.onEditing, {
-        oldBill,
-        billDTO,
-        trx,
-      } as IBillEditingPayload);
-
-      // Update the bill transaction.
-      const bill = await this.billModel()
-        .query(trx)
-        .upsertGraphAndFetch({
-          id: billId,
-          ...billObj,
-        });
-      // Triggers event `onBillEdited`.
-      await this.eventPublisher.emitAsync(events.bill.onEdited, {
-        oldBill,
-        bill,
-        billDTO,
-        trx,
-      } as IBillEditedPayload);
-
-      return bill;
-    });
+    return { oldBill, billObj };
   }
 }

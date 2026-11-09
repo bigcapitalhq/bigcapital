@@ -1,37 +1,40 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Alert } from '@blueprintjs/core';
-import { AppToaster,FormattedMessage as T } from '@/components';
-import { usePublishJournal } from '@/hooks/query';
-
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { withAlertActions } from '@/containers/Alert/withAlertActions';
 import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
+import { usePublishJournal } from '@/hooks/query';
 
-import { compose } from '@/utils';
+interface JournalPublishAlertPayload {
+  manualJournalId: number;
+  journalNumber: string;
+}
+
+interface JournalPublishAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: JournalPublishAlertPayload;
+}
 
 /**
  * Journal publish alert.
  */
-function JournalPublishAlert({
+function JournalPublishAlertInner({
   name,
-
-  // #withAlertStoreConnect
   isOpen,
-  payload: { manualJournalId, journalNumber },
-
-  // #withAlertActions
+  payload: { manualJournalId },
   closeAlert,
-}) {
-  
-  const { mutateAsync: publishJournalMutate, isLoading } = usePublishJournal();
+}: JournalPublishAlertProps): React.ReactElement {
+  const { mutateAsync: publishJournalMutate, isPending: isLoading } =
+    usePublishJournal();
 
-  // Handle cancel manual journal alert.
   const handleCancel = () => {
     closeAlert(name);
   };
 
-  // Handle publish manual journal confirm.
   const handleConfirm = () => {
     publishJournalMutate(manualJournalId)
       .then(() => {
@@ -40,18 +43,22 @@ function JournalPublishAlert({
           intent: Intent.SUCCESS,
         });
       })
-      .catch((error) => {
-        
+      .catch((error: Error) => {
+        // Bugfix: the original had an empty `.catch((error) => {})` that silently swallowed failures.
+        AppToaster.show({
+          message: error.message,
+          intent: Intent.DANGER,
+        });
       })
       .finally(() => {
         closeAlert(name);
       });
   };
-  
+
   return (
     <Alert
-      cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'publish'} />}
+      cancelButtonText={intl.get('cancel')}
+      confirmButtonText={intl.get('publish')}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancel}
@@ -65,7 +72,8 @@ function JournalPublishAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const JournalPublishAlert = FF.pipe(
+  JournalPublishAlertInner,
   withAlertActions,
-)(JournalPublishAlert)
+  withAlertStoreConnect(),
+);

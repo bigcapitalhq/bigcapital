@@ -1,12 +1,22 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React from 'react';
+import type { ReferenceNumberFormValues } from '@/containers/JournalNumber/types';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
-import { compose, saveInvoke } from '@/utils';
+import { saveInvoke } from '@/utils';
 
-const TransactionNumberDialogContent = React.lazy(
-  () => import('./TransactionNumberDialogContent'),
+const TransactionNumberDialogContent = React.lazy(() =>
+  import('./TransactionNumberDialogContent').then((m) => ({
+    default: m.TransactionNumberDialogContent,
+  })),
 );
+
+interface TransactionNumberDialogProps {
+  dialogName: string;
+  payload: { initialFormValues?: Partial<ReferenceNumberFormValues> };
+  isOpen: boolean | undefined;
+  onConfirm?: (values: ReferenceNumberFormValues) => void;
+}
 
 /**
  * Transaction number dialog.
@@ -16,8 +26,8 @@ function TransctionNumberDialog({
   payload: { initialFormValues },
   isOpen,
   onConfirm,
-}) {
-  const handleConfirm = (values) => {
+}: TransactionNumberDialogProps): React.ReactElement {
+  const handleConfirm = (values: ReferenceNumberFormValues) => {
     saveInvoke(onConfirm, values);
   };
 
@@ -39,4 +49,4 @@ function TransctionNumberDialog({
   );
 }
 
-export default compose(withDialogRedux())(TransctionNumberDialog);
+export const index = FF.pipe(TransctionNumberDialog, withDialogRedux());

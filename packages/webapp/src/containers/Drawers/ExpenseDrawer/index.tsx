@@ -1,22 +1,24 @@
-// @ts-nocheck
+import * as FF from 'fp-ts/function';
 import React, { lazy } from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
-import { withDrawers } from '@/containers/Drawer/withDrawers';
+import { withDrawers, WithDrawersProps } from '@/containers/Drawer/withDrawers';
 
-import { compose } from '@/utils';
+const ExpenseDrawerContent = lazy(() =>
+  import('./ExpenseDrawerContent').then((m) => ({
+    default: m.ExpenseDrawerContent,
+  })),
+);
 
-const ExpenseDrawerContent = lazy(() => import('./ExpenseDrawerContent'));
+interface ExpenseDrawerProps extends WithDrawersProps {
+  name: string;
+}
 
 /**
  * Expense drawer.
  */
-function ExpenseDrawer({
-  name,
+function ExpenseDrawer({ name, isOpen, payload }: ExpenseDrawerProps) {
+  const expenseId = payload?.expenseId as number | undefined;
 
-  // #withDrawer
-  isOpen,
-  payload: { expenseId },
-}) {
   return (
     <Drawer
       isOpen={isOpen}
@@ -31,4 +33,4 @@ function ExpenseDrawer({
   );
 }
 
-export default compose(withDrawers())(ExpenseDrawer);
+export const index = FF.pipe(ExpenseDrawer, withDrawers());

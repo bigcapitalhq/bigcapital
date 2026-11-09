@@ -1,22 +1,14 @@
-// @ts-nocheck
-import React from 'react';
-import * as R from 'ramda';
-
 import { FinancialReportBody } from '../FinancialReportPage';
-import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useSalesByItemsContext } from './SalesByItemProvider';
-
-import SalesByItemsTable from './SalesByItemsTable';
-import { withCurrentOrganization } from '@/containers/Organization/withCurrentOrganization';
+import { SalesByItemsTable } from './SalesByItemsTable';
+import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
+import { useCurrentOrganizationName } from '@/hooks/query';
 
 /**
- *
- * @returns {JSX.Element}
+ * Sales by items body.
  */
-function SalesByItemsBodyJSX({
-  // #withCurrentOrganization
-  organizationName,
-}) {
+function SalesByItemsBodyJSX() {
+  const organizationName = useCurrentOrganizationName();
   const { isLoading } = useSalesByItemsContext();
 
   return (
@@ -30,8 +22,4 @@ function SalesByItemsBodyJSX({
   );
 }
 
-export const SalesByItemsBody = R.compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(SalesByItemsBodyJSX);
+export const SalesByItemsBody = SalesByItemsBodyJSX;

@@ -1,35 +1,48 @@
-// @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { defaultTo } from 'lodash';
-
-import { If, DetailsMenu, DetailItem, Card } from '@/components';
+import React from 'react';
+import intl from 'react-intl-universal';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
+import { If, DetailsMenu, DetailItem, Card } from '@/components';
 
 /**
  * Item header drawer of readonly details.
  */
-export default function ItemDetailHeader() {
+const toNullableNumber = (value: unknown): number | null => {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+  const parsedValue = Number(value);
+
+  return Number.isNaN(parsedValue) ? null : parsedValue;
+};
+
+export function ItemDetailHeader() {
   const { item } = useItemDetailDrawerContext();
+  const quantityOnHand = toNullableNumber(item?.quantityOnHand);
+  const reorderPoint = toNullableNumber(item?.reorderPoint);
+  const isLowStock =
+    quantityOnHand !== null &&
+    reorderPoint !== null &&
+    quantityOnHand <= reorderPoint;
 
   return (
     <Card>
-      <div class="item-drawer__content">
+      <div className="item-drawer__content">
         <DetailsMenu direction={'vertical'}>
           <DetailItem
             name={'name'}
             label={intl.get('item_name')}
-            children={item.name}
+            children={item?.name}
           />
           <DetailItem
             label={intl.get('sell_price')}
-            children={item.sell_price_formatted}
+            children={item?.sellPriceFormatted}
             align={'right'}
           />
           <DetailItem
             label={intl.get('cost_price')}
-            children={item.cost_price_formatted}
+            children={item?.costPriceFormatted}
             align={'right'}
           />
         </DetailsMenu>
@@ -37,57 +50,68 @@ export default function ItemDetailHeader() {
         <DetailsMenu direction={'horizantal'}>
           <DetailItem
             label={intl.get('item_type')}
-            children={item.type_formatted}
+            children={item?.typeFormatted}
           />
           <DetailItem
             label={intl.get('item_code')}
-            children={defaultTo(item.code, '-')}
+            children={defaultTo(item?.code, '-')}
           />
-          <If condition={item.type === 'inventory'}>
+          <DetailItem
+            label={intl.get('item_unit')}
+            children={defaultTo(item?.unit, '-')}
+          />
+          <If condition={item?.type === 'inventory'}>
             <DetailItem name={'quantity'} label={intl.get('quantity_on_hand')}>
               <span
                 className={classNames({
-                  mines: item.quantity_on_hand <= 0,
-                  plus: item.quantity_on_hand > 0,
+                  mines: (quantityOnHand ?? 0) <= 0,
+                  plus: (quantityOnHand ?? 0) > 0,
+                  'low-stock': isLowStock,
                 })}
               >
-                {defaultTo(item.quantity_on_hand, '-')}
+                {defaultTo(item?.quantityOnHand, '-')}
               </span>
+            </DetailItem>
+            <DetailItem
+              name={'reorder_point'}
+              label={intl.get('reorder_point')}
+            >
+              {defaultTo(item?.reorderPoint, '-')}
             </DetailItem>
           </If>
           <DetailItem
             label={intl.get('category_name')}
-            children={defaultTo(item.category?.name, '-')}
+            children={defaultTo(item?.category?.name, '-')}
           />
           <DetailItem
             label={intl.get('sell_account_id')}
-            children={defaultTo(item?.sell_account?.name, '-')}
+            children={defaultTo(item?.sellAccount?.name, '-')}
           />
           <DetailItem
             label={intl.get('cost_account_id')}
-            children={defaultTo(item.cost_account?.name, '-')}
+            children={defaultTo(item?.costAccount?.name, '-')}
           />
           <DetailItem
             label={intl.get('item.details.sell_tax_rate')}
-            children={item?.sell_tax_rate?.name}
+            children={item?.sellTaxRate?.name}
           />
           <DetailItem
             label={intl.get('item.details.purchase_tax_rate')}
-            children={item?.purchase_tax_rate?.name}
+            children={item?.purchaseTaxRate?.name}
           />
-          <If condition={item.type === 'inventory'}>
+          <If condition={item?.type === 'inventory'}>
             <DetailItem
               label={intl.get('inventory_account')}
-              children={defaultTo(item?.inventory_account?.name, '-')}
+              children={defaultTo(item?.inventoryAccount?.name, '-')}
             />
           </If>
           <DetailItem
             label={intl.get('item.sell_description')}
-            children={defaultTo(item.sell_description, '-')}
+            children={defaultTo(item?.sellDescription, '-')}
           />
           <DetailItem
             label={intl.get('item.purchase_description')}
-            children={defaultTo(item.purchase_description, '-')}
+            children={defaultTo(item?.purchaseDescription, '-')}
           />
         </DetailsMenu>
       </div>

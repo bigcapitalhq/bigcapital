@@ -1,14 +1,20 @@
-// @ts-nocheck
+import { AnchorButton } from '@blueprintjs/core';
+import React from 'react';
+import { useInventoryValuationContext } from '../../InventoryValuationProvider';
 import {
   DialogContent,
   PdfDocumentPreview,
   FormattedMessage as T,
 } from '@/components';
 import { useInventoryValuationPdf } from '@/hooks/query';
-import { AnchorButton } from '@blueprintjs/core';
-import { useInventoryValuationContext } from '../../InventoryValuationProvider';
 
-export default function InventoryValuationPdfDialogContent() {
+interface InventoryValuationSheetPdfDialogContentProps {
+  dialogName: string;
+}
+
+export function InventoryValuationSheetPdfDialogContent({
+  dialogName,
+}: InventoryValuationSheetPdfDialogContentProps) {
   const { httpQuery } = useInventoryValuationContext();
   const { isLoading, pdfUrl } = useInventoryValuationPdf(httpQuery);
 

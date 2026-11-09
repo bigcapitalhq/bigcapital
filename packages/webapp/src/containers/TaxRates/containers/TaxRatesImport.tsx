@@ -1,9 +1,8 @@
-// @ts-nocheck
 import { useHistory } from 'react-router-dom';
 import { DashboardInsider } from '@/components';
 import { ImportView } from '@/containers/Import';
 
-export default function TaxRatesImport() {
+export function TaxRatesImport() {
   const history = useHistory();
 
   const handleCancelBtnClick = () => {

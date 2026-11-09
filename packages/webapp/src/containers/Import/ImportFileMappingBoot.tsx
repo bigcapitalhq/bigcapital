@@ -1,9 +1,14 @@
 import { Spinner } from '@blueprintjs/core';
 import React, { createContext, useContext } from 'react';
+import type { ImportFileMeta } from './_types';
 import { Box } from '@/components';
 import { useImportFileMeta } from '@/hooks/query/import';
 
-interface ImportFileMapBootContextValue {}
+interface ImportFileMapBootContextValue {
+  importFile?: ImportFileMeta;
+  isImportFileLoading: boolean;
+  isImportFileFetching: boolean;
+}
 
 const ImportFileMapBootContext = createContext<ImportFileMapBootContextValue>(
   {} as ImportFileMapBootContextValue,
@@ -35,12 +40,10 @@ export const ImportFileMapBootProvider = ({
     data: importFile,
     isLoading: isImportFileLoading,
     isFetching: isImportFileFetching,
-  } = useImportFileMeta(importId, {
-    enabled: Boolean(importId),
-  });
+  } = useImportFileMeta(importId, { enabled: false });
 
   const value = {
-    importFile,
+    importFile: importFile as ImportFileMeta | undefined,
     isImportFileLoading,
     isImportFileFetching,
   };

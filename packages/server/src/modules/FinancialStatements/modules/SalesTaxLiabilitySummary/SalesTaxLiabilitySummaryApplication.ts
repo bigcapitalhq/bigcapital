@@ -1,4 +1,3 @@
-
 import { SalesTaxLiabilitySummaryTableInjectable } from './SalesTaxLiabilitySummaryTableInjectable';
 import { SalesTaxLiabilitySummaryExportInjectable } from './SalesTaxLiabilitySummaryExportInjectable';
 import { SalesTaxLiabilitySummaryService } from './SalesTaxLiabilitySummaryService';
@@ -17,7 +16,7 @@ export class SalesTaxLiabilitySummaryApplication {
 
   /**
    * Retrieves the sales tax liability summary in json format.
-   * @param {SalesTaxLiabilitySummaryQuery} query - 
+   * @param {SalesTaxLiabilitySummaryQuery} query -
    * @returns {Promise<Buffer>}
    */
   public sheet(query: SalesTaxLiabilitySummaryQuery) {

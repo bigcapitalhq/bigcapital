@@ -1,4 +1,5 @@
-import * as R from 'ramda';
+import { flow } from 'fp-ts/function';
+import * as A from 'fp-ts/Array';
 import { isEmpty, sumBy } from 'lodash';
 import {
   SalesTaxLiabilitySummaryQuery,
@@ -10,7 +11,10 @@ import { FinancialSheet } from '../../common/FinancialSheet';
 import { ModelObject } from 'objection';
 import { TaxRateModel } from '@/modules/TaxRates/models/TaxRate.model';
 import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
-import { IFinancialReportMeta, DEFAULT_REPORT_META } from '../../types/Report.types';
+import {
+  IFinancialReportMeta,
+  DEFAULT_REPORT_META,
+} from '../../types/Report.types';
 
 export class SalesTaxLiabilitySummary extends FinancialSheet {
   private query: SalesTaxLiabilitySummaryQuery;
@@ -33,6 +37,10 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
     this.repository = repository;
     this.baseCurrency = meta.baseCurrency;
     this.dateFormat = meta.dateFormat || DEFAULT_REPORT_META.dateFormat;
+    this.numberFormat = {
+      ...this.numberFormat,
+      ...this.query.numberFormat,
+    };
   }
 
   /**
@@ -52,9 +60,10 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
     const salesTaxAmount = salesTax ? salesTax.credit - salesTax.debit : 0;
 
     // Calculates the tax percentage.
-    const taxPercentage = R.compose(
-      R.unless(R.equals(0), R.divide(R.__, salesTaxAmount)),
-    )(payableTaxAmount);
+    const taxPercentage = this.getPercentageBasis(
+      salesTaxAmount,
+      payableTaxAmount,
+    );
 
     // Calculates the payable tax amount.
     const collectedTaxAmount = payableTax ? payableTax.debit : 0;
@@ -90,9 +99,9 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
    * @returns {SalesTaxLiabilitySummaryRate[]}
    */
   private taxRatesLiability = (): SalesTaxLiabilitySummaryRate[] => {
-    return R.compose(
+    return flow(
+      A.map(this.taxRateLiability),
       this.filterNonTransactionsTaxRates,
-      R.map(this.taxRateLiability),
     )(this.repository.taxRates);
   };
 

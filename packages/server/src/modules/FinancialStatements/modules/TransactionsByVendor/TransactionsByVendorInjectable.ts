@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import {
-  ITransactionsByVendorsStatement,
-} from './TransactionsByVendor.types';
+import { ITransactionsByVendorsStatement } from './TransactionsByVendor.types';
 import { TransactionsByVendor } from './TransactionsByVendor';
 import { TransactionsByVendorRepository } from './TransactionsByVendorRepository';
 import { TransactionsByVendorMeta } from './TransactionsByVendorMeta';
@@ -18,7 +16,7 @@ export class TransactionsByVendorsInjectable {
     private readonly transactionsByVendorMeta: TransactionsByVendorMeta,
     private readonly eventPublisher: EventEmitter2,
     private readonly i18n: I18nService,
-  ) { }
+  ) {}
 
   /**
    * Retrieve transactions by by the customers.

@@ -1,20 +1,26 @@
 import type { ApiFetcher } from './fetch-utils';
 import { paths } from './schema';
-import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
+import { OpForPath, OpQueryParams, OpRequestBody, OpResponseBody } from './utils';
 
 export const ITEMS_CATEGORIES_ROUTES = {
   LIST: '/api/item-categories',
   BY_ID: '/api/item-categories/{id}',
+  VALIDATE_BULK_DELETE: '/api/item-categories/validate-bulk-delete',
+  BULK_DELETE: '/api/item-categories/bulk-delete',
 } as const satisfies Record<string, keyof paths>;
 
 export type ItemCategoriesListResponse = OpResponseBody<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.LIST, 'get'>>;
 export type ItemCategory = OpResponseBody<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.BY_ID, 'get'>>;
 export type CreateItemCategoryBody = OpRequestBody<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.LIST, 'post'>>;
 export type EditItemCategoryBody = OpRequestBody<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.BY_ID, 'put'>>;
+export type BulkDeleteItemCategoriesBody = OpRequestBody<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.BULK_DELETE, 'post'>>;
+export type ValidateBulkDeleteItemCategoriesResponse = OpResponseBody<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.VALIDATE_BULK_DELETE, 'post'>>;
 
-export async function fetchItemCategories(fetcher: ApiFetcher): Promise<ItemCategoriesListResponse> {
+export type GetItemCategoriesQuery = OpQueryParams<OpForPath<typeof ITEMS_CATEGORIES_ROUTES.LIST, 'get'>>;
+
+export async function fetchItemCategories(fetcher: ApiFetcher, query?: GetItemCategoriesQuery): Promise<ItemCategoriesListResponse> {
   const get = fetcher.path(ITEMS_CATEGORIES_ROUTES.LIST).method('get').create();
-  const { data } = await get({});
+  const { data } = await get(query ?? {});
   return data;
 }
 
@@ -44,4 +50,21 @@ export async function editItemCategory(
 export async function deleteItemCategory(fetcher: ApiFetcher, id: number): Promise<void> {
   const del = fetcher.path(ITEMS_CATEGORIES_ROUTES.BY_ID).method('delete').create();
   await del({ id });
+}
+
+export async function validateBulkDeleteItemCategories(
+  fetcher: ApiFetcher,
+  body: BulkDeleteItemCategoriesBody
+): Promise<ValidateBulkDeleteItemCategoriesResponse> {
+  const validate = fetcher.path(ITEMS_CATEGORIES_ROUTES.VALIDATE_BULK_DELETE).method('post').create();
+  const { data } = await validate(body);
+  return data;
+}
+
+export async function bulkDeleteItemCategories(
+  fetcher: ApiFetcher,
+  body: BulkDeleteItemCategoriesBody
+): Promise<void> {
+  const post = fetcher.path(ITEMS_CATEGORIES_ROUTES.BULK_DELETE).method('post').create();
+  await post(body);
 }

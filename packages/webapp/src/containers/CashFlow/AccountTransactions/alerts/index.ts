@@ -1,22 +1,37 @@
-// @ts-nocheck
-import React from 'react';
+import { lazy } from 'react';
+import type { ComponentType, LazyExoticComponent } from 'react';
 
-const ResumeFeedsBankAccountAlert = React.lazy(
-  () => import('./ResumeFeedsBankAccount'),
+const ResumeFeedsBankAccountAlert: LazyExoticComponent<ComponentType<any>> =
+  lazy(() =>
+    import('./ResumeFeedsBankAccount').then((m) => ({
+      default: m.ResumeFeedsBankAccount,
+    })),
+  );
+
+const PauseFeedsBankAccountAlert: LazyExoticComponent<ComponentType<any>> =
+  lazy(() =>
+    import('./PauseFeedsBankAccount').then((m) => ({
+      default: m.PauseFeedsBankAccount,
+    })),
+  );
+
+const UncategorizeTransactionsBulkAlert: LazyExoticComponent<
+  ComponentType<any>
+> = lazy(() =>
+  import('./UncategorizeBankTransactionsBulkAlert').then((m) => ({
+    default: m.UncategorizeBankTransactionsBulkAlert,
+  })),
 );
 
-const PauseFeedsBankAccountAlert = React.lazy(
-  () => import('./PauseFeedsBankAccount'),
-);
-
-const UncategorizeTransactionsBulkAlert = React.lazy(
-  () => import('./UncategorizeBankTransactionsBulkAlert'),
-);
+interface BankAccountAlertEntry {
+  name: string;
+  component: LazyExoticComponent<ComponentType<any>>;
+}
 
 /**
  * Bank account alerts.
  */
-export const BankAccountAlerts = [
+export const BankAccountAlerts: BankAccountAlertEntry[] = [
   {
     name: 'resume-feeds-syncing-bank-accounnt',
     component: ResumeFeedsBankAccountAlert,

@@ -1,12 +1,11 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
+import { useWatch, useWatchImmediate, useWhen } from '@/hooks';
 import {
   useAuthenticatedAccount,
   useCurrentOrganization,
   useDashboardMeta,
 } from '@/hooks/query';
 import { useSplashLoading } from '@/hooks/state';
-import { useWatch, useWatchImmediate, useWhen } from '@/hooks';
 import { setCookie, getCookie } from '@/utils';
 
 /**
@@ -19,9 +18,7 @@ export function useDashboardMetaBoot() {
     data: dashboardMeta,
     isLoading: isDashboardMetaLoading,
     isSuccess: isDashboardMetaSuccess,
-  } = useDashboardMeta({
-    keepPreviousData: true,
-  });
+  } = useDashboardMeta();
   const [startLoading, stopLoading] = useSplashLoading();
 
   useWatchImmediate((value) => {

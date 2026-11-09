@@ -1,30 +1,21 @@
-import React from 'react';
+import { Account } from '@bigcapital/sdk-ts';
 import { MenuItem } from '@blueprintjs/core';
+import { SelectOptionProps } from '@blueprintjs-formik/select';
+import React from 'react';
 import intl from 'react-intl-universal';
 import { FMultiSelect } from '../Forms';
 import { accountPredicate } from './_components';
 import { usePreprocessingAccounts } from './_hooks';
 import { DialogsName } from '@/constants/dialogs';
 import { useDialogActions } from '@/hooks/state/dashboard';
-import { SelectOptionProps } from '@blueprintjs-formik/select';
 
-interface Account {
-  id: number;
-  name: string;
-  code: string;
-  account_level: number;
-  account_type?: string;
-  account_parent_type?: string;
-  account_root_type?: string;
-  account_normal?: string;
-}
-
-export interface AccountSelect extends Partial<Account>, SelectOptionProps { }
-
+export interface AccountSelectModel
+  extends Partial<Account>,
+    SelectOptionProps {}
 type MultiSelectProps = React.ComponentProps<typeof FMultiSelect>;
 
 interface AccountsMultiSelectProps extends Omit<MultiSelectProps, 'items'> {
-  items: AccountSelect[];
+  items: AccountSelectModel[];
   allowCreate?: boolean;
   filterByRootTypes?: string[];
   filterByParentTypes?: string[];
@@ -49,7 +40,7 @@ const createNewItemRenderer = (
 };
 
 // Create new item from the given query string.
-const createNewItemFromQuery = (query: string): AccountSelect => ({
+const createNewItemFromQuery = (query: string): AccountSelectModel => ({
   label: query,
   value: query,
   text: query,
@@ -96,7 +87,7 @@ export function AccountsMultiSelect({
   };
 
   return (
-    <FMultiSelect
+    <FMultiSelect<AccountSelectModel>
       {...rest}
       items={filteredAccounts}
       valueAccessor={'id'}

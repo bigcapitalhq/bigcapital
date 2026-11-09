@@ -1,7 +1,10 @@
-// @ts-nocheck
 import React from 'react';
 
-const CurrencyDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Currencies/CurrencyDeleteAlert'),
+const CurrencyDeleteAlert = React.lazy(() =>
+  import('@/containers/Alerts/Currencies/CurrencyDeleteAlert').then((m) => ({
+    default: m.CurrencyDeleteAlert,
+  })),
 );
-export default [{ name: 'currency-delete', component: CurrencyDeleteAlert }];
+export const CurrenciesAlerts = [
+  { name: 'currency-delete', component: CurrencyDeleteAlert },
+];

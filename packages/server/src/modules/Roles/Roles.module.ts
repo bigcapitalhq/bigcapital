@@ -12,6 +12,7 @@ import { RolesApplication } from './Roles.application';
 import { RolePermissionsSchema } from './queries/RolePermissionsSchema';
 import { AuthorizationGuard } from './Authorization.guard';
 import { PermissionGuard } from './Permission.guard';
+import { PurgeTenantAbilitiesSubscriber } from './subscribers/PurgeTenantAbilities.subscriber';
 
 const models = [
   RegisterTenancyModel(Role),
@@ -30,6 +31,7 @@ const models = [
     RolePermissionsSchema,
     AuthorizationGuard,
     PermissionGuard,
+    PurgeTenantAbilitiesSubscriber,
   ],
   controllers: [RolesController],
   exports: [...models, AuthorizationGuard, PermissionGuard],

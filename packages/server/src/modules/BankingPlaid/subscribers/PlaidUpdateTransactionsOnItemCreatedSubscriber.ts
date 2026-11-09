@@ -29,6 +29,7 @@ export class PlaidUpdateTransactionsOnItemCreatedSubscriber {
     await this.updateTransitionsQueue.add(
       UpdateBankingPlaidTransitionsJob,
       payload,
+      { jobId: plaidItemId },
     );
   }
 }

@@ -6,7 +6,7 @@ import { ValidateIf, ValidationOptions } from 'class-validator';
  * @returns PropertyDecorator
  */
 export function ToNumber() {
-  return Transform(({ value, key }) => {
+  return Transform(({ value, key: _key }) => {
     const defaultValue = null;
 
     if (typeof value === 'number') {

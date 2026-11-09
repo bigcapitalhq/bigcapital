@@ -1,6 +1,3 @@
-// @ts-nocheck
-import { useRef } from 'react';
-import classNames from 'classnames';
 import {
   Classes,
   Intent,
@@ -9,14 +6,18 @@ import {
   ProgressBar,
   Text,
 } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { FinancialLoadingBar } from '../FinancialLoadingBar';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
-import FinancialLoadingBar from '../FinancialLoadingBar';
+import type {
+  SalesTaxLiabilityXlsxQuery,
+  SalesTaxLiabilityCsvQuery,
+} from '@bigcapital/sdk-ts';
 import { AppToaster, Stack } from '@/components';
 import {
   useSalesTaxLiabilitySummaryCsvExport,
   useSalesTaxLiabilitySummaryXlsxExport,
 } from '@/hooks/query';
-import { useSalesByItemsContext } from '../SalesByItems/SalesByItemProvider';
 
 /**
  * Sales tax liability summary loading bar.
@@ -31,84 +32,60 @@ export function SalesTaxLiabilitySummaryLoadingBar() {
 }
 
 /**
- *
- * @returns {JSX.Element}
+ * Sales tax liability export menu.
  */
 export function SalesTaxLiabilityExportMenu() {
-  const toastKey = useRef(null);
   const commonToastConfig = {
     isCloseButtonShown: true,
     timeout: 2000,
   };
   const { query } = useSalesTaxLiabilitySummaryContext();
 
-  const openProgressToast = (amount: number) => {
+  const renderToast = (done: boolean) => {
     return (
       <Stack spacing={8}>
-        <Text>The report has been exported successfully.</Text>
+        <Text>
+          {done
+            ? 'The report has been exported successfully.'
+            : 'Exporting the report…'}
+        </Text>
         <ProgressBar
           className={classNames('toast-progress', {
-            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+            [Classes.PROGRESS_NO_STRIPES]: done,
           })}
-          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
-          value={amount / 100}
+          intent={done ? Intent.SUCCESS : Intent.PRIMARY}
+          value={done ? 1 : undefined}
         />
       </Stack>
     );
   };
 
-  // Export the report to xlsx.
   const { mutateAsync: xlsxExport } = useSalesTaxLiabilitySummaryXlsxExport(
-    query,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
-    },
+    query as SalesTaxLiabilityXlsxQuery,
   );
-  // Export the report to csv.
   const { mutateAsync: csvExport } = useSalesTaxLiabilitySummaryCsvExport(
-    query,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
-            message: openProgressToast(xlsxExportProgress),
-            ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
-    },
+    query as SalesTaxLiabilityCsvQuery,
   );
-  // Handle csv export button click.
-  const handleCsvExportBtnClick = () => {
-    csvExport();
+
+  const runExport = async (mutate: () => Promise<unknown>) => {
+    const key = AppToaster.show({
+      message: renderToast(false),
+      ...commonToastConfig,
+      timeout: 0,
+    });
+    try {
+      await mutate();
+      AppToaster.show(
+        { message: renderToast(true), ...commonToastConfig },
+        key,
+      );
+    } catch {
+      AppToaster.dismiss(key);
+    }
   };
-  // Handle xlsx export button click.
-  const handleXlsxExportBtnClick = () => {
-    xlsxExport();
-  };
+
+  const handleCsvExportBtnClick = () => runExport(csvExport);
+  const handleXlsxExportBtnClick = () => runExport(xlsxExport);
 
   return (
     <Menu>

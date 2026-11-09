@@ -1,5 +1,3 @@
-
-
 export interface BrandingTemplateValues {
   templateName: string;
 
@@ -18,6 +16,4 @@ export interface BrandingState extends ElementPreviewState {
   primaryColor: string;
 }
 
-export interface ElementPreviewState {
-
-}
+export interface ElementPreviewState {}

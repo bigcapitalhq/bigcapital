@@ -1,11 +1,14 @@
-// @ts-nocheck
-import React from 'react';
 import classNames from 'classnames';
-
+import React from 'react';
 import { CLASSES } from '@/constants/classes';
 
+interface DashboardCardProps {
+  children?: React.ReactNode;
+  page?: boolean;
+}
+
 // Dashboard card.
-export function DashboardCard({ children, page }) {
+export function DashboardCard({ children, page }: DashboardCardProps) {
   return (
     <div
       className={classNames(CLASSES.DASHBOARD_CARD, {

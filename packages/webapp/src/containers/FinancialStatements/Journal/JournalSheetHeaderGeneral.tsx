@@ -1,11 +1,12 @@
-// @ts-nocheck
 import React from 'react';
-import FinancialStatementDateRange from '../FinancialStatementDateRange';
+import { FinancialStatementDateRange } from '../FinancialStatementDateRange';
+import { RadiosAccountingBasis } from '../RadiosAccountingBasis';
 
-export default function JournalSheetHeaderGeneralPanel({}) {
+export function JournalSheetHeaderGeneralPanel() {
   return (
     <div>
       <FinancialStatementDateRange />
+      <RadiosAccountingBasis key={'basis'} />
     </div>
   );
 }

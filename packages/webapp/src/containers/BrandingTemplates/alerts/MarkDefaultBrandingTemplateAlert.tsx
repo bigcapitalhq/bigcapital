@@ -1,19 +1,23 @@
-// @ts-nocheck
+import { Alert, Intent } from '@blueprintjs/core';
+import * as FF from 'fp-ts/function';
 import React from 'react';
 import intl from 'react-intl-universal';
+import type { WithAlertActionsProps } from '@/containers/Alert/withAlertActions';
 import { AppToaster } from '@/components';
-import { Alert, Intent } from '@blueprintjs/core';
+import { withAlertActions } from '@/containers/Alert/withAlertActions';
+import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
 import { useAssignPdfTemplateAsDefault } from '@/hooks/query/pdf-templates';
 
-import { withAlertStoreConnect } from '@/containers/Alert/withAlertStoreConnect';
-import { withAlertActions } from '@/containers/Alert/withAlertActions';
-
-import { compose } from '@/utils';
+interface MarkDefaultBrandingTemplateAlertProps extends WithAlertActionsProps {
+  name: string;
+  isOpen: boolean;
+  payload: { templateId: number };
+}
 
 /**
  * Mark default branding template alert.
  */
-function MarkDefaultBrandingTemplateAlert({
+function MarkDefaultBrandingTemplateAlertInner({
   // #ownProps
   name,
 
@@ -23,7 +27,7 @@ function MarkDefaultBrandingTemplateAlert({
 
   // #withAlertActions
   closeAlert,
-}) {
+}: MarkDefaultBrandingTemplateAlertProps): React.ReactElement {
   const { mutateAsync: assignPdfTemplateAsDefault } =
     useAssignPdfTemplateAsDefault();
 
@@ -37,7 +41,7 @@ function MarkDefaultBrandingTemplateAlert({
         });
         closeAlert(name);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         AppToaster.show({
           message: 'Something went wrong.',
           intent: Intent.DANGER,
@@ -60,13 +64,15 @@ function MarkDefaultBrandingTemplateAlert({
       onConfirm={handleConfirmDelete}
     >
       <p>
-        Are you sure want to mark the given branding template as a default template?
+        Are you sure want to mark the given branding template as a default
+        template?
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
+export const MarkDefaultBrandingTemplateAlert = FF.pipe(
+  MarkDefaultBrandingTemplateAlertInner,
   withAlertActions,
-)(MarkDefaultBrandingTemplateAlert);
+  withAlertStoreConnect(),
+);

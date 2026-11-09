@@ -1,11 +1,9 @@
-// @ts-nocheck
-import * as R from 'ramda';
 import { Callout, Classes } from '@blueprintjs/core';
+import { ChangeSubscriptionPlans } from './ChangeSubscriptionPlans';
 import { Box } from '@/components';
 import { SubscriptionPlansPeriodSwitcher } from '@/containers/Setup/SetupSubscription/SubscriptionPlansPeriodSwitcher';
-import { ChangeSubscriptionPlans } from './ChangeSubscriptionPlans';
 
-export default function ChangeSubscriptionPlanContent() {
+export function ChangeSubscriptionPlanContent() {
   return (
     <Box className={Classes.DRAWER_BODY}>
       <Box

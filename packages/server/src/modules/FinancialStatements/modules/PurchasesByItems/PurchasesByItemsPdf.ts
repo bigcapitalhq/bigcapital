@@ -16,9 +16,7 @@ export class PurchasesByItemsPdf {
    * @param {IBalanceSheetQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    query: IPurchasesByItemsReportQuery,
-  ): Promise<Buffer> {
+  public async pdf(query: IPurchasesByItemsReportQuery): Promise<Buffer> {
     const table = await this.purchasesByItemsTable.table(query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -27,6 +25,7 @@ export class PurchasesByItemsPdf {
       table.meta.sheetName,
       table.meta.formattedDateRange,
       HtmlTableCustomCss,
+      query.numberFormat?.showInRed,
     );
   }
 }

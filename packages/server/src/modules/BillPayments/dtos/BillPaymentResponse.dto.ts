@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { AttachmentLinkDto } from '@/modules/Attachments/dtos/Attachment.dto';
+import { AccountResponseDto } from '@/modules/Accounts/dtos/AccountResponse.dto';
+import { VendorResponseDto } from '@/modules/Vendors/dtos/VendorResponse.dto';
 
 // Minimal Bill response for entry
 class BillResponseDto {
@@ -143,4 +145,18 @@ export class BillPaymentResponseDto {
   })
   @Type(() => AttachmentLinkDto)
   attachments?: AttachmentLinkDto[];
+
+  @ApiProperty({
+    description: 'The vendor of the bill payment',
+    type: () => VendorResponseDto,
+  })
+  @Type(() => VendorResponseDto)
+  vendor: VendorResponseDto;
+
+  @ApiProperty({
+    description: 'The payment account of the bill payment',
+    type: () => AccountResponseDto,
+  })
+  @Type(() => AccountResponseDto)
+  paymentAccount: AccountResponseDto;
 }

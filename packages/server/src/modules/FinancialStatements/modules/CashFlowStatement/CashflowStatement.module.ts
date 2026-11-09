@@ -7,11 +7,11 @@ import { CashflowController } from './Cashflow.controller';
 import { FinancialSheetCommonModule } from '../../common/FinancialSheetCommon.module';
 import { CashflowTableInjectable } from './CashflowTableInjectable';
 import { CashFlowStatementService } from './CashFlowService';
-import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
+import { TenancyModule } from '@/modules/Tenancy/Tenancy.module';
 import { CashflowSheetApplication } from './CashflowSheetApplication';
 
 @Module({
-  imports: [FinancialSheetCommonModule],
+  imports: [TenancyModule, FinancialSheetCommonModule],
   providers: [
     CashFlowRepository,
     CashflowSheetMeta,
@@ -20,7 +20,6 @@ import { CashflowSheetApplication } from './CashflowSheetApplication';
     CashflowExportInjectable,
     CashflowTableInjectable,
     CashflowSheetApplication,
-    TenancyContext,
   ],
   controllers: [CashflowController],
 })

@@ -1,24 +1,28 @@
-// @ts-nocheck
+import { Intent } from '@blueprintjs/core';
+import { Formik, FormikHelpers } from 'formik';
+import * as FF from 'fp-ts/function';
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
-import { Formik } from 'formik';
-import { Intent } from '@blueprintjs/core';
-import * as R from 'ramda';
-
-import { AppToaster } from '@/components';
-import { PreferencesReceiptsFormSchema } from './PreferencesReceiptsForm.schema';
-import { PreferencesReceiptsForm } from './PreferencesReceiptsForm';
-import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
-
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
-import { withSettings } from '@/containers/Settings/withSettings';
-import { useSaveSettings } from '@/hooks/query';
 import { transferObjectOptionsToArray } from '../Accountant/utils';
+import { PreferencesReceiptsForm } from './PreferencesReceiptsForm';
+import { PreferencesReceiptsFormSchema } from './PreferencesReceiptsForm.schema';
+import { usePreferencesReceiptsFormContext } from './PreferencesReceiptsFormBoot';
+import type { ReceiptsPreferencesFormValues } from './types';
+import type { WithDashboardActionsProps } from '@/containers/Dashboard/withDashboardActions';
+import { AppToaster } from '@/components';
+import { withDashboardActions } from '@/containers/Dashboard/withDashboardActions';
+import { useSaveSettings } from '@/hooks/query';
+import { transformToForm, transfromToSnakeCase } from '@/utils';
 
-const defaultValues = {
+const defaultValues: ReceiptsPreferencesFormValues = {
   termsConditions: '',
   receiptMessage: '',
 };
+
+type PreferencesReceiptsFormPageRootProps = Pick<
+  WithDashboardActionsProps,
+  'changePreferencesPageTitle'
+>;
 
 /**
  * Preferences - Receipts.
@@ -26,10 +30,8 @@ const defaultValues = {
 function PreferencesReceiptsFormPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
-
-  // #withSettings
-  receiptSettings,
-}) {
+}: PreferencesReceiptsFormPageRootProps) {
+  const { receiptSettings } = usePreferencesReceiptsFormContext();
   // Save settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
@@ -38,16 +40,20 @@ function PreferencesReceiptsFormPageRoot({
   }, [changePreferencesPageTitle]);
 
   // Initial values.
-  const initialValues = {
+  const initialValues: ReceiptsPreferencesFormValues = {
     ...defaultValues,
     ...transformToForm(receiptSettings, defaultValues),
   };
   // Handle the form submit.
-  const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
+  const handleFormSubmit = (
+    values: ReceiptsPreferencesFormValues,
+    { setSubmitting }: FormikHelpers<ReceiptsPreferencesFormValues>,
+  ) => {
+    const options = FF.pipe(
+      { salesReceipts: { ...values } },
       transfromToSnakeCase,
-    )({ salesReceipts: { ...values } });
+      transferObjectOptionsToArray,
+    );
 
     // Handle request success.
     const onSuccess = () => {
@@ -65,7 +71,7 @@ function PreferencesReceiptsFormPageRoot({
   };
 
   return (
-    <Formik
+    <Formik<ReceiptsPreferencesFormValues>
       initialValues={initialValues}
       validationSchema={PreferencesReceiptsFormSchema}
       onSubmit={handleFormSubmit}
@@ -74,9 +80,7 @@ function PreferencesReceiptsFormPageRoot({
   );
 }
 
-export const PreferencesReceiptsFormPage = compose(
+export const PreferencesReceiptsFormPage = FF.pipe(
+  PreferencesReceiptsFormPageRoot,
   withDashboardActions,
-  withSettings(({ receiptSettings }) => ({
-    receiptSettings: receiptSettings,
-  })),
-)(PreferencesReceiptsFormPageRoot);
+);

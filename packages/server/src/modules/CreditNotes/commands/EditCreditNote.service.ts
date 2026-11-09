@@ -45,40 +45,14 @@ export class EditCreditNoteService {
     creditNoteId: number,
     creditNoteEditDTO: EditCreditNoteDto,
   ) {
-    // Retrieve the sale invoice or throw not found service error.
-    const oldCreditNote = await this.creditNoteModel()
-      .query()
-      .findById(creditNoteId)
-      .throwIfNotFound();
-
-    // Validate customer existance.
-    const customer = await this.contactModel()
-      .query()
-      .findById(creditNoteEditDTO.customerId);
-
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      creditNoteEditDTO.entries,
-    );
-    // Validate non-sellable entries items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      creditNoteEditDTO.entries,
-    );
-    // Validate the items entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
-      creditNoteId,
-      'CreditNote',
-      creditNoteEditDTO.entries,
-    );
-    // Transformes the given DTO to storage layer data.
-    const creditNoteModel =
-      await this.commandCreditNoteDTOTransform.transformCreateEditDTOToModel(
-        creditNoteEditDTO,
-        customer.currencyCode,
-        oldCreditNote,
-      );
     // Sales the credit note transactions with associated entries.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Validates the edit operation against the locked credit note row.
+      const { oldCreditNote, creditNoteModel } = await this.validate(
+        creditNoteId,
+        creditNoteEditDTO,
+        trx,
+      );
       // Triggers `onCreditNoteEditing` event.
       await this.eventPublisher.emitAsync(events.creditNote.onEditing, {
         creditNoteEditDTO,
@@ -104,5 +78,62 @@ export class EditCreditNoteService {
 
       return creditNote;
     });
+  }
+
+  /**
+   * Validates the edit credit note operation against the locked credit note
+   * row: existence, customer, items entries and the new amount against the
+   * already used amounts.
+   * @param {number} creditNoteId - Credit note id.
+   * @param {EditCreditNoteDto} creditNoteEditDTO - Credit note edit DTO.
+   * @param {Knex.Transaction} trx - Locks the credit note row (FOR UPDATE).
+   * @returns {Promise<{ oldCreditNote: CreditNote, creditNoteModel: CreditNote }>}
+   */
+  async validate(
+    creditNoteId: number,
+    creditNoteEditDTO: EditCreditNoteDto,
+    trx: Knex.Transaction,
+  ): Promise<{ oldCreditNote: CreditNote; creditNoteModel: CreditNote }> {
+    // Retrieve the credit note with a row lock or throw not found service error.
+    const oldCreditNote = await this.creditNoteModel()
+      .query(trx)
+      .findById(creditNoteId)
+      .forUpdate()
+      .throwIfNotFound();
+
+    // Validate customer existance.
+    const customer = await this.contactModel()
+      .query(trx)
+      .findById(creditNoteEditDTO.customerId)
+      .throwIfNotFound();
+
+    // Validate items ids existance.
+    await this.itemsEntriesService.validateItemsIdsExistance(
+      creditNoteEditDTO.entries,
+    );
+    // Validate non-sellable entries items.
+    await this.itemsEntriesService.validateNonSellableEntriesItems(
+      creditNoteEditDTO.entries,
+    );
+    // Validate the items entries existance.
+    await this.itemsEntriesService.validateEntriesIdsExistance(
+      creditNoteId,
+      'CreditNote',
+      creditNoteEditDTO.entries,
+    );
+    // Transformes the given DTO to storage layer data.
+    const creditNoteModel =
+      await this.commandCreditNoteDTOTransform.transformCreateEditDTOToModel(
+        creditNoteEditDTO,
+        customer.currencyCode,
+        oldCreditNote,
+      );
+    // Validate the new amount is not smaller than the already refunded
+    // and applied-to-invoices amounts against the locked row.
+    this.commandCreditNoteDTOTransform.validateCreditAmountNotBelowUsed(
+      oldCreditNote,
+      creditNoteModel.amount,
+    );
+    return { oldCreditNote, creditNoteModel };
   }
 }

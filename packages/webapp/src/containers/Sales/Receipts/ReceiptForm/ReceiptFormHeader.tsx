@@ -1,18 +1,23 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Group, PageFormBigNumber } from '@/components';
-import ReceiptFormHeaderFields from './ReceiptFormHeaderFields';
+import { ReceiptFormHeader as ReceiptFormHeaderFields } from './ReceiptFormHeaderFields';
 import { useReceiptTotalFormatted } from './utils';
+import type { CSSProperties } from 'react';
+import { Group, PageFormBigNumber } from '@/components';
 import { useIsDarkMode } from '@/hooks/useDarkMode';
+
+const headerStyle = (isDarkMode: boolean): CSSProperties =>
+  ({
+    '--x-header-background': isDarkMode
+      ? 'var(--color-dark-gray1)'
+      : 'var(--color-white)',
+    '--x-header-border': isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#d2dce2',
+  }) as CSSProperties;
 
 /**
  * Receipt form header section.
  */
-function ReceiptFormHeader({
-  // #ownProps
-  onReceiptNumberChanged,
-}) {
+export function ReceiptFormHeader() {
   const isDarkMode = useIsDarkMode();
 
   return (
@@ -23,18 +28,9 @@ function ReceiptFormHeader({
       p="25px 32px"
       bg="var(--x-header-background)"
       borderBottom="1px solid var(--x-header-border)"
-      style={{
-        '--x-header-background': isDarkMode
-          ? 'var(--color-dark-gray1)'
-          : 'var(--color-white)',
-        '--x-header-border': isDarkMode
-          ? 'rgba(255, 255, 255, 0.1)'
-          : '#d2dce2',
-      }}
+      style={headerStyle(isDarkMode)}
     >
-      <ReceiptFormHeaderFields
-        onReceiptNumberChanged={onReceiptNumberChanged}
-      />
+      <ReceiptFormHeaderFields />
       <ReceiptFormHeaderBigTotal />
     </Group>
   );
@@ -51,5 +47,3 @@ function ReceiptFormHeaderBigTotal() {
     <PageFormBigNumber label={intl.get('due_amount')} amount={totalFormatted} />
   );
 }
-
-export default ReceiptFormHeader;

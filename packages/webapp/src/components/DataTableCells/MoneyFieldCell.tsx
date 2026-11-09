@@ -1,23 +1,25 @@
 // @ts-nocheck
-import React, { useCallback, useState, useEffect } from 'react';
 import { FormGroup, Intent } from '@blueprintjs/core';
-
+import React, { useCallback, useState, useEffect } from 'react';
 import { MoneyInputGroup } from '@/components';
-import { CLASSES } from '@/constants/classes';
 import { CellType } from '@/constants';
+import { CLASSES } from '@/constants/classes';
 
 // Input form cell renderer.
 const MoneyFieldCellRenderer = ({
   row: { index, moneyInputGroupProps = {} },
-  column: { id },
+  column: { id, moneyInputGroupProps: columnMoneyInputGroupProps = {} },
   cell: { value: initialValue },
   payload: { errors, updateData },
 }) => {
   const [value, setValue] = useState(initialValue);
 
-  const handleFieldChange = useCallback((value) => {
-    setValue(value);
-  }, [setValue]);
+  const handleFieldChange = useCallback(
+    (value) => {
+      setValue(value);
+    },
+    [setValue],
+  );
 
   function isNumeric(data) {
     return (
@@ -37,15 +39,14 @@ const MoneyFieldCellRenderer = ({
   const error = errors?.[index]?.[id];
 
   return (
-    <FormGroup
-      intent={error ? Intent.DANGER : null}
-      className={CLASSES.FILL}>
+    <FormGroup intent={error ? Intent.DANGER : null} className={CLASSES.FILL}>
       <MoneyInputGroup
         value={value}
         // prefix={'$'}
         onChange={handleFieldChange}
         onBlur={handleFieldBlur}
         {...moneyInputGroupProps}
+        {...columnMoneyInputGroupProps}
       />
     </FormGroup>
   );

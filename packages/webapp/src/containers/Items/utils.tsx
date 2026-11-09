@@ -1,18 +1,22 @@
-// @ts-nocheck
-import { useMemo } from 'react';
-import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
 import { defaultTo, includes } from 'lodash';
+import { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
+import { DEFAULT_ITEM_UNIT } from './constants';
+import { transformItemFormData } from './ItemForm.schema';
+import type { ItemFormValues } from './types';
+import type { Item } from '@bigcapital/sdk-ts';
 import { AppToaster } from '@/components';
+import { useSettingsItems } from '@/hooks/query';
+import { useWatch } from '@/hooks/utils';
 import {
   transformToForm,
   transformTableStateToQuery,
   defaultFastFieldShouldUpdate,
 } from '@/utils';
-import { useSettingsSelector } from '@/hooks/state';
-import { transformItemFormData } from './ItemForm.schema';
-import { useWatch } from '@/hooks/utils';
+
+type ItemError = { type: string };
 
 /**
  * Error types for item operations.
@@ -20,43 +24,58 @@ import { useWatch } from '@/hooks/utils';
 export const ItemErrorType = {
   ItemNameExists: 'ITEM_NAME_EXISTS',
   InventoryAccountCannotModified: 'INVENTORY_ACCOUNT_CANNOT_MODIFIED',
-  TypeCannotChangeWithItemHasTransactions: 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
+  TypeCannotChangeWithItemHasTransactions:
+    'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
   ItemHasAssociatedTransactions: 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
-  ItemHasAssociatedInventoryAdjustment: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
+  ItemHasAssociatedInventoryAdjustment:
+    'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
   ItemHasAssociatedTransactionsPlural: 'ITEM_HAS_ASSOCIATED_TRANSACTIONS',
 } as const;
 
-const defaultInitialValues = {
-  active: 1,
+const defaultInitialValues: ItemFormValues = {
+  active: true,
   name: '',
   type: 'service',
   code: '',
-  cost_price: '',
-  sell_price: '',
-  cost_account_id: '',
-  sell_account_id: '',
-  sell_tax_rate_id: '',
-  inventory_account_id: '',
-  category_id: '',
-  sellable: 1,
+  reorderPoint: '',
+  unit: DEFAULT_ITEM_UNIT,
+  costPrice: '',
+  sellPrice: '',
+  costAccountId: '',
+  sellAccountId: '',
+  sellTaxRateId: '',
+  inventoryAccountId: '',
+  categoryId: '',
+  sellable: true,
   purchasable: true,
-  sell_description: '',
-  purchase_description: '',
-  purchase_tax_rate_id: '',
+  sellDescription: '',
+  purchaseDescription: '',
+  purchaseTaxRateId: '',
+};
+
+type ItemsSettings = {
+  preferredCostAccount?: number | string | null;
+  preferredSellAccount?: number | string | null;
+  preferredInventoryAccount?: number | string | null;
 };
 
 /**
  * Initial values in create and edit mode.
  */
-export const useItemFormInitialValues = (item, initialValues) => {
-  const { items: itemsSettings } = useSettingsSelector();
+export const useItemFormInitialValues = (
+  item: Item | undefined,
+  initialValues?: Partial<ItemFormValues>,
+): ItemFormValues => {
+  const { data: itemsSettings } = useSettingsItems() as {
+    data?: ItemsSettings;
+  };
 
   return useMemo(
     () => ({
       ...defaultInitialValues,
-      cost_account_id: defaultTo(itemsSettings?.preferredCostAccount, ''),
-      sell_account_id: defaultTo(itemsSettings?.preferredSellAccount, ''),
-      inventory_account_id: defaultTo(
+      costAccountId: defaultTo(itemsSettings?.preferredCostAccount, ''),
+      sellAccountId: defaultTo(itemsSettings?.preferredSellAccount, ''),
+      inventoryAccountId: defaultTo(
         itemsSettings?.preferredInventoryAccount,
         '',
       ),
@@ -65,18 +84,18 @@ export const useItemFormInitialValues = (item, initialValues) => {
        * values such as `notes` come back from the API as null, so remove those
        * as well.
        */
-      ...transformToForm(
+      ...(transformToForm(
         transformItemFormData(item, defaultInitialValues),
         defaultInitialValues,
-      ),
-      ...initialValues,
+      ) as Partial<ItemFormValues>),
+      ...(initialValues ?? {}),
     }),
     [item, itemsSettings, initialValues],
   );
 };
 
-export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
-  const table = {
+export const transitionItemTypeKeyToLabel = (itemTypeKey: string): string => {
+  const table: Record<string, string> = {
     service: intl.get('service'),
     inventory: intl.get('inventory'),
   };
@@ -84,9 +103,11 @@ export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
 };
 
 // handle delete errors.
-export const handleDeleteErrors = (errors) => {
+export const handleDeleteErrors = (errors: ItemError[]): void => {
   if (
-    errors.find((error) => error.type === ItemErrorType.ItemHasAssociatedTransactions)
+    errors.find(
+      (error) => error.type === ItemErrorType.ItemHasAssociatedTransactions,
+    )
   ) {
     AppToaster.show({
       message: intl.get('the_item_has_associated_transactions'),
@@ -96,7 +117,8 @@ export const handleDeleteErrors = (errors) => {
 
   if (
     errors.find(
-      (error) => error.type === ItemErrorType.ItemHasAssociatedInventoryAdjustment,
+      (error) =>
+        error.type === ItemErrorType.ItemHasAssociatedInventoryAdjustment,
     )
   ) {
     AppToaster.show({
@@ -108,7 +130,8 @@ export const handleDeleteErrors = (errors) => {
   }
   if (
     errors.find(
-      (error) => error.type === ItemErrorType.TypeCannotChangeWithItemHasTransactions,
+      (error) =>
+        error.type === ItemErrorType.TypeCannotChangeWithItemHasTransactions,
     )
   ) {
     AppToaster.show({
@@ -119,7 +142,10 @@ export const handleDeleteErrors = (errors) => {
     });
   }
   if (
-    errors.find((error) => error.type === ItemErrorType.ItemHasAssociatedTransactionsPlural)
+    errors.find(
+      (error) =>
+        error.type === ItemErrorType.ItemHasAssociatedTransactionsPlural,
+    )
   ) {
     AppToaster.show({
       message: intl.get('item.error.you_could_not_delete_item_has_associated'),
@@ -128,10 +154,15 @@ export const handleDeleteErrors = (errors) => {
   }
 };
 
+type FastFieldShouldUpdateProps = Record<string, unknown>;
+
 /**
  * Detarmines accounts fast field should update.
  */
-export const accountsFieldShouldUpdate = (newProps, oldProps) => {
+export const accountsFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.items !== oldProps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -141,7 +172,10 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Detarmines categories fast field should update.
  */
-export const categoriesFieldShouldUpdate = (newProps, oldProps) => {
+export const categoriesFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.categories !== oldProps.categories ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -151,7 +185,10 @@ export const categoriesFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Sell price fast field should update.
  */
-export const sellPriceFieldShouldUpdate = (newProps, oldProps) => {
+export const sellPriceFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.sellable !== oldProps.sellable ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
@@ -161,7 +198,10 @@ export const sellPriceFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Sell account fast field should update.
  */
-export const sellAccountFieldShouldUpdate = (newProps, oldProps) => {
+export const sellAccountFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.items !== oldProps.items ||
     newProps.sellable !== oldProps.sellable ||
@@ -172,14 +212,20 @@ export const sellAccountFieldShouldUpdate = (newProps, oldProps) => {
 /**
  * Sell description fast field should update.
  */
-export const sellDescriptionFieldShouldUpdate = (newProps, oldProps) => {
+export const sellDescriptionFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.sellable !== oldProps.sellable ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
 
-export const costAccountFieldShouldUpdate = (newProps, oldProps) => {
+export const costAccountFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.accounts !== oldProps.accounts ||
     newProps.purchasable !== oldProps.purchasable ||
@@ -187,28 +233,39 @@ export const costAccountFieldShouldUpdate = (newProps, oldProps) => {
   );
 };
 
-export const costPriceFieldShouldUpdate = (newProps, oldProps) => {
+export const costPriceFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.purchasable !== oldProps.purchasable ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
 
-export const purchaseDescFieldShouldUpdate = (newProps, oldProps) => {
+export const purchaseDescFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
     newProps.purchasable !== oldProps.purchasable ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
 
-export const taxRateFieldShouldUpdate = (newProps, oldProps) => {
+export const taxRateFieldShouldUpdate = (
+  newProps: FastFieldShouldUpdateProps,
+  oldProps: FastFieldShouldUpdateProps,
+): boolean => {
   return (
-    newProps.shouldUpdateDeps.taxRates !== oldProps.shouldUpdateDeps.taxRates ||
+    newProps.shouldUpdateDeps !== oldProps.shouldUpdateDeps ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
 
-export function transformItemsTableState(tableState) {
+export function transformItemsTableState(
+  tableState: Record<string, unknown> & { inactiveMode?: boolean },
+) {
   return {
     ...transformTableStateToQuery(tableState),
     inactive_mode: tableState.inactiveMode,
@@ -218,18 +275,20 @@ export function transformItemsTableState(tableState) {
 /**
  * Transform API errors.
  */
-export const transformSubmitRequestErrors = (error) => {
+export const transformSubmitRequestErrors = (error: {
+  data: { errors: ItemError[] };
+}): Record<string, string> => {
   const {
-    response: {
-      data: { errors },
-    },
+    data: { errors },
   } = error;
-  const fields = {};
+  const fields: Record<string, string> = {};
 
   if (errors.find((e) => e.type === ItemErrorType.ItemNameExists)) {
     fields.name = intl.get('the_name_used_before');
   }
-  if (errors.find((e) => e.type === ItemErrorType.InventoryAccountCannotModified)) {
+  if (
+    errors.find((e) => e.type === ItemErrorType.InventoryAccountCannotModified)
+  ) {
     AppToaster.show({
       message: intl.get('cannot_change_item_inventory_account'),
       intent: Intent.DANGER,
@@ -250,18 +309,25 @@ export const transformSubmitRequestErrors = (error) => {
   return fields;
 };
 
+type ItemQuery = {
+  // react-query error is typed as `unknown` or `Error`; we inspect for axios shape at runtime.
+  error: unknown;
+  isError: boolean;
+};
+
 /**
  * Watches and handles item response not found error.
- * @param {*} itemQuery
  */
-export function useWatchItemError(itemQuery) {
+export function useWatchItemError(itemQuery: ItemQuery): void {
   const { error, isError } = itemQuery;
 
   // History context.
   const history = useHistory();
 
   useWatch(() => {
-    if (isError && includes([400, 404], error.response.status)) {
+    const status = (error as { response?: { status?: number } } | null)
+      ?.response?.status;
+    if (isError && includes([400, 404], status)) {
       AppToaster.show({
         message: 'The given item not found.',
         intent: Intent.DANGER,

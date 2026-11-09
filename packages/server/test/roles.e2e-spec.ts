@@ -1,4 +1,4 @@
-import * as request from 'supertest';
+import request = require('supertest');
 import { faker } from '@faker-js/faker';
 import { app, AuthorizationHeader, orgainzationId } from './init-app-test';
 
@@ -21,7 +21,7 @@ const createRoleRequest = () => ({
 
 describe('Roles (e2e)', () => {
   it('/roles (POST)', () => {
-    console.log(createRoleRequest())
+    console.log(createRoleRequest());
     return request(app.getHttpServer())
       .post('/roles')
       .set('organization-id', orgainzationId)

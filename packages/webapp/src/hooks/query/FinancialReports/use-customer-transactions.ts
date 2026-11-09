@@ -1,77 +1,84 @@
-// @ts-nocheck
-import { useRequestQuery } from '../../useQueryRequest';
-import { useDownloadFile } from '../../useDownloadFile';
-import { useRequestPdf } from '../../useRequestPdf';
-import t from '../types';
+import {
+  fetchTransactionsByCustomersTable,
+  fetchTransactionsByCustomersXlsx,
+  fetchTransactionsByCustomersCsv,
+  fetchTransactionsByCustomersPdf,
+} from '@bigcapital/sdk-ts';
+import {
+  useQuery,
+  useMutation,
+  UseQueryOptions,
+  UseMutationOptions,
+} from '@tanstack/react-query';
+import { downloadFile } from '../../useDownloadFile';
+import { useApiFetcher } from '../../useRequest';
+import { useFetcherPdf } from '../../useRequestPdf';
+import { financialReportsKeys } from './query-keys';
+import type {
+  TransactionsByCustomersTableQuery,
+  TransactionsByCustomersTableResponse,
+  TransactionsByCustomersXlsxQuery,
+  TransactionsByCustomersCsvQuery,
+  TransactionsByCustomersPdfQuery,
+} from '@bigcapital/sdk-ts';
 
-/**
- * Retrieve customers transactions report.
- */
-export function useCustomersTransactionsReport(query, props) {
-  return useRequestQuery(
-    [t.FINANCIAL_REPORT, t.CUSTOMERS_TRANSACTIONS, query],
-    {
-      method: 'get',
-      url: '/reports/transactions-by-customers',
-      params: query,
-      headers: {
-        Accept: 'application/json+table',
-      },
-    },
-    {
-      select: (res) => ({
-        data: res.data.table,
-        tableRows: res.data.table.rows,
-        meta: res.data.meta,
-      }),
-      defaultData: {
-        tableRows: [],
-        data: [],
-        meta: {},
-      },
-      ...props,
-    },
-  );
+interface CustomersTransactionsReport {
+  data: TransactionsByCustomersTableResponse['table'];
+  tableRows: TransactionsByCustomersTableResponse['table']['rows'];
+  meta: TransactionsByCustomersTableResponse['meta'];
 }
 
-export const useCustomersTransactionsXlsxExport = (query, args) => {
-  const url = '/reports/transactions-by-customers';
-  const config = {
-    headers: {
-      accept: 'application/xlsx',
-    },
-    params: query,
-  };
-  const filename = 'customers_transactions.xlsx';
+export function useCustomersTransactionsReport(
+  query: TransactionsByCustomersTableQuery,
+  props?: Omit<
+    UseQueryOptions<CustomersTransactionsReport, Error>,
+    'queryKey' | 'queryFn'
+  >,
+) {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+  return useQuery({
+    ...props,
+    queryKey: financialReportsKeys.customerTransactions(query),
+    queryFn: () =>
+      fetchTransactionsByCustomersTable(fetcher, query).then((data) => ({
+        data: data.table,
+        tableRows: data.table.rows,
+        meta: data.meta,
+      })),
+  });
+}
 
-  return useDownloadFile({
-    url,
-    config,
-    filename,
+export function useCustomersTransactionsXlsxExport(
+  query: TransactionsByCustomersXlsxQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchTransactionsByCustomersXlsx(fetcher, query).then((blob) =>
+        downloadFile(blob, 'customers_transactions.xlsx'),
+      ),
   });
-};
+}
 
-export const useCustomersTransactionsCsvExport = (query, args) => {
-  return useDownloadFile({
-    url: '/reports/transactions-by-customers',
-    config: {
-      headers: {
-        accept: 'application/csv',
-      },
-      params: query,
-    },
-    filename: 'customers_transactions.csv',
+export function useCustomersTransactionsCsvExport(
+  query: TransactionsByCustomersCsvQuery,
+  args?: Omit<UseMutationOptions<void, Error, void>, 'mutationFn'>,
+) {
+  const fetcher = useApiFetcher();
+  return useMutation({
     ...args,
+    mutationFn: () =>
+      fetchTransactionsByCustomersCsv(fetcher, query).then((blob) =>
+        downloadFile(blob, 'customers_transactions.csv'),
+      ),
   });
-};
+}
 
-/**
- * Retrieves the pdf content of customers transactions.
- */
-export const useCustomersTransactionsPdfExport = (query = {}) => {
-  return useRequestPdf({
-    url: '/reports/transactions-by-customers',
-    params: query,
-  });
-};
+export function useCustomersTransactionsPdfExport(
+  query: TransactionsByCustomersPdfQuery,
+) {
+  const fetcher = useApiFetcher();
+  return useFetcherPdf(() => fetchTransactionsByCustomersPdf(fetcher, query));
+}

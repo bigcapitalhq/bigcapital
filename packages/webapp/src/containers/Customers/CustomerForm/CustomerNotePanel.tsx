@@ -1,10 +1,9 @@
-// @ts-nocheck
-import React from 'react';
-import { FormattedMessage as T, FFormGroup, FTextArea } from '@/components';
+import intl from 'react-intl-universal';
+import { FFormGroup, FTextArea } from '@/components';
 
-export default function CustomerNotePanel({ errors, touched, getFieldProps }) {
+export function CustomerNotePanel() {
   return (
-    <FFormGroup name={'note'} label={<T id={'note'} />} inline={false} fill>
+    <FFormGroup name={'note'} label={intl.get('note')} inline={false}>
       <FTextArea name={'note'} fill />
     </FFormGroup>
   );

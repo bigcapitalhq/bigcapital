@@ -6,7 +6,8 @@ export class ApiKeyResponseDto {
 
   @ApiProperty({
     example: 'bc_1234567890abcdef',
-    description: 'The API key string',
+    description:
+      'The API key string. Returned only once when the key is created.',
   })
   key: string;
 }
@@ -31,7 +32,7 @@ export class ApiKeyListItemDto {
 
   @ApiProperty({
     example: 'bc_1234...',
-    description: 'First 8 characters of the API key token',
+    description: 'Masked API key prefix',
   })
   token: string;
 

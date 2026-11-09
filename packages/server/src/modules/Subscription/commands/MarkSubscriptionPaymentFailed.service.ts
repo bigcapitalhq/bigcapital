@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { PlanSubscription } from '../models/PlanSubscription';
 import { SubscriptionPaymentStatus } from '@/interfaces/SubscriptionPlan';
 import { events } from '@/common/events/events';

@@ -1,4 +1,9 @@
-export type IItemEntryTransactionType = 'SaleInvoice' | 'Bill' | 'SaleReceipt';
+export type IItemEntryTransactionType =
+  | 'SaleInvoice'
+  | 'Bill'
+  | 'SaleReceipt'
+  | 'CreditNote'
+  | 'VendorCredit';
 
 export interface IItemEntryDTO {
   id?: number;
@@ -8,7 +13,7 @@ export interface IItemEntryDTO {
   warehouseId?: number;
 
   sellAccountId?: number;
-  costAccountId?: number; 
+  costAccountId?: number;
 
   projectRefId?: number;
   projectRefType?: ProjectLinkRefType;
