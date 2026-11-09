@@ -35,6 +35,7 @@ export enum ReportsAction {
   READ_CUSTOMERS_SUMMARY_BALANCE = 'read-customers-summary-balance',
   READ_VENDORS_SUMMARY_BALANCE = 'read-vendors-summary-balance',
   READ_INVENTORY_VALUATION_SUMMARY = 'read-inventory-valuation-summary',
+  READ_INVENTORY_SUMMARY = 'read-inventory-summary',
   READ_INVENTORY_ITEM_DETAILS = 'read-inventory-item-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION = 'read-cashflow-account-transactions',
   READ_SALES_TAX_LIABILITY_SUMMARY = 'read-sales-tax-liability-summary',

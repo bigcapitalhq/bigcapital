@@ -6,6 +6,7 @@ import { useAuthMetadata } from '@/hooks/query';
 export interface AuthMetaBootState {
   isAuthMetaLoading: boolean;
   signupDisabled?: boolean;
+  googleEnabled?: boolean;
 }
 
 export interface AuthMetaBootProviderProps {
@@ -25,9 +26,23 @@ function AuthMetaBootProvider({
 }: AuthMetaBootProviderProps) {
   const { isLoading: isAuthMetaLoading, data: authMeta } = useAuthMetadata();
 
+  // The API wire format is snake_case; accept both spellings so the flags keep
+  // working if the SDK camelCase transform is enabled for this call.
+  const authMetaValue = authMeta as
+    | {
+        signupDisabled?: boolean;
+        signup_disabled?: boolean;
+        googleEnabled?: boolean;
+        google_enabled?: boolean;
+      }
+    | undefined;
+
   const state: AuthMetaBootState = {
     isAuthMetaLoading,
-    signupDisabled: authMeta?.signupDisabled,
+    signupDisabled:
+      authMetaValue?.signup_disabled ?? authMetaValue?.signupDisabled,
+    googleEnabled:
+      authMetaValue?.google_enabled ?? authMetaValue?.googleEnabled ?? false,
   };
 
   if (isAuthMetaLoading) {

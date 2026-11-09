@@ -52,6 +52,7 @@ import { VendorsModule } from '../Vendors/Vendors.module';
 import { SaleEstimatesModule } from '../SaleEstimates/SaleEstimates.module';
 import { BillsModule } from '../Bills/Bills.module';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
+import { RecurringInvoicesModule } from '../RecurringInvoices/RecurringInvoices.module';
 import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
 import { ManualJournalsModule } from '../ManualJournals/ManualJournals.module';
 import { CreditNotesModule } from '../CreditNotes/CreditNotes.module';
@@ -216,6 +217,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     CustomersModule,
     VendorsModule,
     SaleInvoicesModule,
+    RecurringInvoicesModule,
     SaleEstimatesModule,
     SaleReceiptsModule,
     BillsModule,
