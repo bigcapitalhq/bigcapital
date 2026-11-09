@@ -1,0 +1,250 @@
+# Coolify deployment for Bigcapital.
+#
+# Differences from docker-compose.prod.yml:
+#   - No bundled reverse proxy (envoy). Coolify's Traefik terminates TLS and
+#     routes the public domain to the `webapp` service on port 80.
+#   - The webapp nginx is the single ingress: it serves the SPA and proxies
+#     /api and /socket to the internal `server` service, so only ONE domain
+#     is required.
+#   - webapp/server are built from this repo instead of pulling :latest images.
+#   - No watchtower: Coolify owns image updates.
+#
+# Coolify setup:
+#   1. Create a resource from this Git repo and pick "Docker Compose".
+#   2. Set the compose file path to `docker-compose.coolify.yml`.
+#   3. Fill in the environment variables (see .env.example).
+#   4. Assign your FQDN to the `webapp` service, container port 80.
+
+x-server-build: &server-build
+  context: ./
+  dockerfile: packages/server/Dockerfile
+
+# Shared tag so the one-shot migration service reuses the server image
+# instead of building the same image twice.
+x-server-image: &server-image bigcapital-server:local
+
+services:
+  webapp:
+    build:
+      context: ./
+      dockerfile: packages/webapp/Dockerfile
+    image: bigcapital-webapp:local
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_started
+    expose:
+      - '80'
+    networks:
+      - bigcapital_network
+
+  server:
+    build: *server-build
+    image: *server-image
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      garage:
+        condition: service_started
+      # Migrations must finish before the API starts serving traffic.
+      database_migration:
+        condition: service_completed_successfully
+    expose:
+      - '3000'
+    networks:
+      - bigcapital_network
+    environment:
+      # Mail
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_SECURE=${MAIL_SECURE}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
+
+      # Database
+      - DB_HOST=mysql
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CHARSET=${DB_CHARSET}
+      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
+
+      # Redis / queues
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QUEUE_HOST=redis
+      - QUEUE_PORT=6379
+
+      # Authentication
+      - APP_JWT_SECRET=${APP_JWT_SECRET:?APP_JWT_SECRET is required - generate one with: openssl rand -base64 48}
+
+      # Application (must be the public HTTPS URL of the domain set on webapp)
+      - BASE_URL=${BASE_URL}
+
+      # Sign-up restrictions
+      - SIGNUP_DISABLED=${SIGNUP_DISABLED}
+      - SIGNUP_ALLOWED_DOMAINS=${SIGNUP_ALLOWED_DOMAINS}
+      - SIGNUP_ALLOWED_EMAILS=${SIGNUP_ALLOWED_EMAILS}
+      - SIGNUP_EMAIL_CONFIRMATION=${SIGNUP_EMAIL_CONFIRMATION}
+
+      # Gotenberg (PDF generation)
+      - GOTENBERG_URL=${GOTENBERG_URL:-http://gotenberg:3000}
+      - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL:-http://server:3000/public/}
+
+      # Exchange rates
+      - EXCHANGE_RATE_SERVICE=${EXCHANGE_RATE_SERVICE}
+      - OPEN_EXCHANGE_RATE_APP_ID=${OPEN_EXCHANGE_RATE_APP_ID}
+
+      # Bank sync / Plaid
+      - BANK_FEED_ENABLED=${BANK_FEED_ENABLED}
+      - PLAID_ENV=${PLAID_ENV}
+      - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
+      - PLAID_SECRET=${PLAID_SECRET}
+      - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
+      - PLAID_CLIENT_NAME=${PLAID_CLIENT_NAME}
+
+      # S3 (Garage)
+      - S3_REGION=${S3_REGION}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+      - S3_ENDPOINT=${S3_ENDPOINT:-http://garage:3900}
+      - S3_BUCKET=${S3_BUCKET}
+      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE}
+
+      # Stripe
+      - STRIPE_PAYMENT_SECRET_KEY=${STRIPE_PAYMENT_SECRET_KEY}
+      - STRIPE_PAYMENT_PUBLISHABLE_KEY=${STRIPE_PAYMENT_PUBLISHABLE_KEY}
+      - STRIPE_PAYMENT_CLIENT_ID=${STRIPE_PAYMENT_CLIENT_ID}
+      - STRIPE_PAYMENT_WEBHOOKS_SECRET=${STRIPE_PAYMENT_WEBHOOKS_SECRET}
+      - STRIPE_PAYMENT_REDIRECT_URL=${STRIPE_PAYMENT_REDIRECT_URL}
+
+      # Lemon Squeezy
+      - LEMONSQUEEZY_API_KEY=${LEMONSQUEEZY_API_KEY}
+      - LEMONSQUEEZY_STORE_ID=${LEMONSQUEEZY_STORE_ID}
+      - LEMONSQUEEZY_WEBHOOK_SECRET=${LEMONSQUEEZY_WEBHOOK_SECRET}
+      - HOSTED_ON_BIGCAPITAL_CLOUD=${HOSTED_ON_BIGCAPITAL_CLOUD}
+
+      # ClickHouse analytics
+      - CLICKHOUSE_ENABLED=${CLICKHOUSE_ENABLED:-false}
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD is required - generate one with: openssl rand -base64 32}
+      - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE:-bigcapital_analytics}
+
+      # API rate limiting
+      - THROTTLE_GLOBAL_TTL=${THROTTLE_GLOBAL_TTL}
+      - THROTTLE_GLOBAL_LIMIT=${THROTTLE_GLOBAL_LIMIT}
+      - THROTTLE_AUTH_TTL=${THROTTLE_AUTH_TTL}
+      - THROTTLE_AUTH_LIMIT=${THROTTLE_AUTH_LIMIT}
+
+  # One-shot: runs system + tenant migrations, then exits 0.
+  # `server` waits for it via `service_completed_successfully`.
+  database_migration:
+    build: *server-build
+    image: *server-image
+    restart: 'no'
+    command: >
+      sh -c "node packages/server/dist/cli.js system:migrate:latest &&
+             node packages/server/dist/cli.js tenants:migrate:latest"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CHARSET=${DB_CHARSET}
+      - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
+    networks:
+      - bigcapital_network
+
+  mysql:
+    build:
+      context: ./docker/mariadb
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${SYSTEM_DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - mysql:/var/lib/mysql
+    expose:
+      - '3306'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - mysqladmin ping -h 127.0.0.1 -u root -p"$$MYSQL_ROOT_PASSWORD" --silent
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - bigcapital_network
+
+  redis:
+    build:
+      context: ./docker/redis
+    restart: unless-stopped
+    expose:
+      - '6379'
+    volumes:
+      - redis:/data
+    networks:
+      - bigcapital_network
+
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    restart: unless-stopped
+    expose:
+      - '3000'
+    networks:
+      - bigcapital_network
+
+  garage:
+    image: dxflrs/garage:v1.3.1
+    restart: unless-stopped
+    environment:
+      - GARAGE_CONFIG_FILE=/etc/garage.toml
+      - GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
+      - GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
+    volumes:
+      - ./docker/garage/garage.toml:/etc/garage.toml
+      - ./docker/garage/setup.sh:/garage-setup/setup.sh
+      - garage:/var/lib/garage
+    expose:
+      - '3900'
+      - '3903'
+    networks:
+      - bigcapital_network
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    restart: unless-stopped
+    environment:
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER:-default}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD:?CLICKHOUSE_PASSWORD is required - generate one with: openssl rand -base64 32}
+      - CLICKHOUSE_DB=${CLICKHOUSE_DATABASE:-bigcapital_analytics}
+    expose:
+      - '8123'
+    volumes:
+      - clickhouse:/var/lib/clickhouse
+    networks:
+      - bigcapital_network
+
+volumes:
+  mysql:
+  redis:
+  garage:
+  clickhouse:
+
+networks:
+  bigcapital_network:
+    driver: bridge
