@@ -6,6 +6,7 @@ export const subscriptionKeys = {
   all: () => [SUBSCRIPTIONS] as const,
   list: () => [SUBSCRIPTIONS] as const,
   plans: () => [SUBSCRIPTIONS, 'plans'] as const,
+  usage: () => [SUBSCRIPTIONS, 'usage'] as const,
   billingOverview: () => [SUBSCRIPTIONS, 'billing-overview'] as const,
 };
 

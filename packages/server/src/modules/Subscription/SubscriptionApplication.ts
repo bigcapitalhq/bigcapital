@@ -10,6 +10,7 @@ import { SyncStripeCheckoutSessionService } from './stripe/SyncStripeCheckoutSes
 import { ChangeStripeSubscriptionService } from './stripe/ChangeStripeSubscription.service';
 import { CancelStripeSubscriptionService } from './stripe/CancelStripeSubscription.service';
 import { ResumeStripeSubscriptionService } from './stripe/ResumeStripeSubscription.service';
+import { SubscriptionLimitsService } from './limits/SubscriptionLimits.service';
 
 @Injectable()
 export class SubscriptionApplication {
@@ -24,6 +25,7 @@ export class SubscriptionApplication {
     private readonly changeStripeSubscriptionService: ChangeStripeSubscriptionService,
     private readonly cancelStripeSubscriptionService: CancelStripeSubscriptionService,
     private readonly resumeStripeSubscriptionService: ResumeStripeSubscriptionService,
+    private readonly subscriptionLimitsService: SubscriptionLimitsService,
   ) {}
 
   /**
@@ -38,6 +40,13 @@ export class SubscriptionApplication {
    */
   public getPlans() {
     return this.getPlansService.getPlans();
+  }
+
+  /**
+   * Retrieves the current plan usage and limits.
+   */
+  public getUsage() {
+    return this.subscriptionLimitsService.getUsage();
   }
 
   /**

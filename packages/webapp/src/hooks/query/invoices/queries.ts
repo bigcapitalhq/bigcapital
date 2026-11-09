@@ -38,6 +38,7 @@ import { financialReportsKeys } from '../FinancialReports/query-keys';
 import { itemsKeys } from '../items/query-keys';
 import { organizationKeys } from '../organization/query-keys';
 import { settingsKeys } from '../settings/query-keys';
+import { subscriptionKeys } from '../subscription/query-keys';
 import { invoicesKeys } from './query-keys';
 import type {
   SaleInvoicesListResponse,
@@ -73,6 +74,7 @@ function commonInvalidateQueries(
   queryClient.invalidateQueries({
     queryKey: organizationKeys.mutateAbilities(),
   });
+  queryClient.invalidateQueries({ queryKey: subscriptionKeys.usage() });
 }
 
 export function useCreateInvoice(

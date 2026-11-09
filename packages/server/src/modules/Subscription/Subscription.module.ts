@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { SocketModule } from '../Socket/Socket.module';
 import { SubscribeFreeOnSignupCommunity } from './subscribers/SubscribeFreeOnSignupCommunity';
 import { TriggerInvalidateCacheOnSubscriptionChange } from './subscribers/TriggerInvalidateCacheOnSubscriptionChange';
@@ -26,7 +25,7 @@ import { ResumeStripeSubscriptionService } from './stripe/ResumeStripeSubscripti
 import { SyncStripeSubscriptionService } from './stripe/SyncStripeSubscription.service';
 import { StripeBillingWebhooksService } from './stripe/StripeBillingWebhooks.service';
 import { StripeBillingWebhooksController } from './stripe/StripeBillingWebhooks.controller';
-import { SubscriptionAccessInterceptor } from './interceptors/SubscriptionAccess.interceptor';
+import { SubscriptionLimitsService } from './limits/SubscriptionLimits.service';
 
 const models = [
   InjectSystemModel(Plan),
@@ -56,12 +55,9 @@ const models = [
     SubscribeFreeOnSignupCommunity,
     TriggerInvalidateCacheOnSubscriptionChange,
     SubscriptionApplication,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: SubscriptionAccessInterceptor,
-    },
+    SubscriptionLimitsService,
   ],
   controllers: [SubscriptionsController, StripeBillingWebhooksController],
-  exports: [...models],
+  exports: [...models, SubscriptionLimitsService],
 })
 export class SubscriptionModule {}

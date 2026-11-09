@@ -36,10 +36,10 @@ export function BillingPlansSection() {
   }
 
   return (
-    <Box style={{ marginTop: '2rem' }}>
+    <Box id="billing-plans" style={{ marginTop: '2rem' }}>
       <Callout icon={null} style={{ marginBottom: '1.6rem' }}>
-        Choose the plan that fits your business. You can change or cancel your
-        plan at any time from this page.
+        Upgrade to Go for unlimited invoices and bills, and access to every
+        feature. You can change or cancel your plan at any time from this page.
       </Callout>
 
       <SubscriptionPlansPeriodSwitcher period={period} onChange={setPeriod} />

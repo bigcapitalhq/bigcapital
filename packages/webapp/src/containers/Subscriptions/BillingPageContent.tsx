@@ -8,6 +8,7 @@ import styles from './BillingPageContent.module.scss';
 import { BillingPaymentMethod } from './BillingPaymentMethod';
 import { BillingPlansSection } from './BillingPlansSection';
 import { Subscription } from './BillingSubscription';
+import { FreePlanUsage } from './FreePlanUsage';
 import { AppToaster, Box, Can, Group } from '@/components';
 import {
   subscriptionKeys,
@@ -82,8 +83,7 @@ export function BillingPageContent() {
   return (
     <Box className={styles.root}>
       <Text>
-        Only pay for what you really need. All plans come with 24/7 customer
-        support.
+        Only pay for what you really need. Go comes with 24/7 customer support.
       </Text>
 
       {mainSubscription && (
@@ -91,6 +91,8 @@ export function BillingPageContent() {
           <Subscription />
         </Group>
       )}
+
+      <FreePlanUsage />
 
       {hasStripeAccount && <BillingPaymentMethod />}
       {hasStripeAccount && <BillingInvoices />}

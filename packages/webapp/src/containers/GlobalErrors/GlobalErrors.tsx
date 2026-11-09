@@ -93,6 +93,22 @@ function GlobalErrorsInner({
       },
     });
   }
+  if (globalErrors.subscriptionLimitReached) {
+    const { resource, limit } = globalErrors.subscriptionLimitReached;
+    const label = resource === 'invoice' ? 'invoices' : 'bills';
+
+    AppToaster.show({
+      message: `Your free plan allows up to ${limit} ${label}. Upgrade to Go to create more.`,
+      intent: Intent.WARNING,
+      action: {
+        text: 'Upgrade',
+        onClick: () => window.location.assign('/preferences/billing'),
+      },
+      onDismiss: () => {
+        globalErrorsSet({ subscriptionLimitReached: undefined });
+      },
+    });
+  }
   if (globalErrors.userInactive) {
     AppToaster.show({
       message: intl.get('global_error.authorized_user_inactive'),

@@ -12,6 +12,11 @@ export interface GlobalErrorsData {
   access_denied?: { message?: string };
   transactionsLocked?: TransactionsLockedError;
   subscriptionInactive?: boolean;
+  subscriptionLimitReached?: {
+    resource: 'invoice' | 'bill';
+    used: number;
+    limit: number;
+  };
   userInactive?: boolean;
 }
 

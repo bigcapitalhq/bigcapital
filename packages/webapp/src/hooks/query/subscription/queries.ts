@@ -1,6 +1,7 @@
 import {
   fetchSubscriptions,
   fetchSubscriptionPlans,
+  fetchSubscriptionUsage,
   fetchBillingOverview,
   createStripeCheckoutSession,
   createStripePortalSession,
@@ -23,6 +24,7 @@ import { subscriptionKeys } from './query-keys';
 import type {
   SubscriptionsListResponse,
   SubscriptionPlansResponse,
+  SubscriptionUsageResponse,
   BillingOverviewResponse,
   ChangeSubscriptionPlanBody,
   CreateStripeCheckoutSessionBody,
@@ -104,6 +106,21 @@ export function useSubscription(slug = 'main') {
     isSubscriptionInactive: !!subscription?.inactive,
     isSubscriptionOnTrial: !!subscription?.onTrial,
   };
+}
+
+/**
+ * The current plan usage and limits.
+ */
+export function useGetSubscriptionUsage(
+  options?: UseQueryOptions<SubscriptionUsageResponse, Error>,
+): UseQueryResult<SubscriptionUsageResponse, Error> {
+  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
+
+  return useQuery({
+    queryKey: subscriptionKeys.usage(),
+    queryFn: () => fetchSubscriptionUsage(fetcher),
+    ...options,
+  });
 }
 
 /**

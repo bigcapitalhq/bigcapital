@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import DashboardPage from './DashboardPage';
-import EnsureSubscriptionIsActive from '@/components/Guards/EnsureSubscriptionIsActive';
 import { useFeatureCan } from '@/hooks/state';
 import { getDashboardRoutes } from '@/routes/dashboard';
 
@@ -16,7 +15,6 @@ export interface DashboardRoute {
   defaultSearchResource?: string;
   exact?: boolean;
   feature?: string;
-  subscriptionActive?: string[];
 }
 
 /**
@@ -50,16 +48,7 @@ export default function DashboardContentRoute() {
       <Switch>
         {routes.map((route, index) => (
           <Route exact={route.exact} key={index} path={`${route.path}`}>
-            {route.subscriptionActive?.length ? (
-              <EnsureSubscriptionIsActive
-                subscriptionType={route.subscriptionActive[0]}
-                routePath={route.path}
-              >
-                <DashboardContentRouteContent route={route} />
-              </EnsureSubscriptionIsActive>
-            ) : (
-              <DashboardContentRouteContent route={route} />
-            )}
+            <DashboardContentRouteContent route={route} />
           </Route>
         ))}
       </Switch>

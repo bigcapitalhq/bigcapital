@@ -4093,6 +4093,459 @@
         ]
       }
     },
+    "/api/subscription": {
+      "get": {
+        "operationId": "SubscriptionsController_getSubscriptions",
+        "summary": "Get all subscriptions for the current tenant",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of subscriptions retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/plans": {
+      "get": {
+        "operationId": "SubscriptionsController_getPlans",
+        "summary": "Get the Bigcapital Cloud plan catalog",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plan catalog retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSubscriptionPlansResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/usage": {
+      "get": {
+        "operationId": "SubscriptionsController_getUsage",
+        "summary": "Get the current plan usage and limits",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plan usage retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionUsageResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/overview": {
+      "get": {
+        "operationId": "SubscriptionsController_getBillingOverview",
+        "summary": "Get Stripe billing overview for the current organization",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Billing overview retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingOverviewResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/checkout_session": {
+      "post": {
+        "operationId": "SubscriptionsController_createCheckoutSession",
+        "summary": "Create a Stripe Checkout session for a subscription plan",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStripeCheckoutSessionBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeCheckoutSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/portal_session": {
+      "post": {
+        "operationId": "SubscriptionsController_createPortalSession",
+        "summary": "Create a Stripe Customer Portal session",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Portal session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/sync": {
+      "post": {
+        "operationId": "SubscriptionsController_syncCheckoutSession",
+        "summary": "Synchronize a completed Stripe Checkout session",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncStripeCheckoutSessionBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session synchronized successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeSyncCheckoutSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/change": {
+      "post": {
+        "operationId": "SubscriptionsController_changeSubscriptionPlan",
+        "summary": "Change the subscription plan of the current organization",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeSubscriptionPlanBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription plan changed successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/cancel": {
+      "post": {
+        "operationId": "SubscriptionsController_cancelSubscription",
+        "summary": "Cancel the current organization subscription",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription canceled successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/resume": {
+      "post": {
+        "operationId": "SubscriptionsController_resumeSubscription",
+        "summary": "Resume the current organization subscription",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription resumed successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/webhooks/stripe-billing": {
+      "post": {
+        "operationId": "StripeBillingWebhooksController_handleWebhook",
+        "summary": "Listen to Stripe Billing webhooks",
+        "parameters": [
+          {
+            "name": "stripe-signature",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "stripe"
+        ]
+      }
+    },
     "/api/pdf-templates": {
       "post": {
         "operationId": "PdfTemplatesController_createPdfTemplate",
@@ -23846,417 +24299,6 @@
         ]
       }
     },
-    "/api/subscription": {
-      "get": {
-        "operationId": "SubscriptionsController_getSubscriptions",
-        "summary": "Get all subscriptions for the current tenant",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of subscriptions retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubscriptionsListResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/plans": {
-      "get": {
-        "operationId": "SubscriptionsController_getPlans",
-        "summary": "Get the Bigcapital Cloud plan catalog",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plan catalog retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetSubscriptionPlansResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/stripe/overview": {
-      "get": {
-        "operationId": "SubscriptionsController_getBillingOverview",
-        "summary": "Get Stripe billing overview for the current organization",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Billing overview retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BillingOverviewResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/stripe/checkout_session": {
-      "post": {
-        "operationId": "SubscriptionsController_createCheckoutSession",
-        "summary": "Create a Stripe Checkout session for a subscription plan",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateStripeCheckoutSessionBodyDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Checkout session created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StripeCheckoutSessionResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/stripe/portal_session": {
-      "post": {
-        "operationId": "SubscriptionsController_createPortalSession",
-        "summary": "Create a Stripe Customer Portal session",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Portal session created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StripeSessionResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/stripe/sync": {
-      "post": {
-        "operationId": "SubscriptionsController_syncCheckoutSession",
-        "summary": "Synchronize a completed Stripe Checkout session",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SyncStripeCheckoutSessionBodyDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Checkout session synchronized successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StripeSyncCheckoutSessionResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/change": {
-      "post": {
-        "operationId": "SubscriptionsController_changeSubscriptionPlan",
-        "summary": "Change the subscription plan of the current organization",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChangeSubscriptionPlanBodyDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Subscription plan changed successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/cancel": {
-      "post": {
-        "operationId": "SubscriptionsController_cancelSubscription",
-        "summary": "Cancel the current organization subscription",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Subscription canceled successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/resume": {
-      "post": {
-        "operationId": "SubscriptionsController_resumeSubscription",
-        "summary": "Resume the current organization subscription",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "Bearer bc_1234567890abcdef"
-            }
-          },
-          {
-            "name": "organization-id",
-            "in": "header",
-            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Subscription resumed successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/webhooks/stripe-billing": {
-      "post": {
-        "operationId": "StripeBillingWebhooksController_handleWebhook",
-        "summary": "Listen to Stripe Billing webhooks",
-        "parameters": [
-          {
-            "name": "stripe-signature",
-            "required": true,
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "stripe"
-        ]
-      }
-    },
     "/api/organization/build": {
       "post": {
         "operationId": "OrganizationController_build",
@@ -30530,6 +30572,588 @@
             "example": "2026-11-07"
           }
         }
+      },
+      "SubscriptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "main"
+          },
+          "status": {
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "inactive",
+              "on_trial",
+              "canceled",
+              "past_due"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "inactive": {
+            "type": "boolean",
+            "example": false
+          },
+          "onTrial": {
+            "type": "boolean",
+            "example": false
+          },
+          "canceled": {
+            "type": "boolean",
+            "example": false
+          },
+          "ended": {
+            "type": "boolean",
+            "example": false
+          },
+          "cancelAtPeriodEnd": {
+            "type": "boolean",
+            "description": "Whether the subscription will cancel at the period end.",
+            "example": false
+          },
+          "stripeStatus": {
+            "type": "string",
+            "description": "The raw Stripe subscription status.",
+            "example": "active",
+            "nullable": true
+          },
+          "paymentStatus": {
+            "type": "string",
+            "example": "succeed",
+            "enum": [
+              "succeed",
+              "failed"
+            ]
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "endsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-02-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "canceledAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "trialEndsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-07T00:00:00.000Z",
+            "nullable": true
+          },
+          "statusFormatted": {
+            "type": "string",
+            "example": "Active"
+          },
+          "canceledAtFormatted": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "endsAtFormatted": {
+            "type": "string",
+            "example": "Jan 1, 2024",
+            "nullable": true
+          },
+          "startsAtFormatted": {
+            "type": "string",
+            "example": "Jan 1, 2024",
+            "nullable": true
+          },
+          "trialStartsAtFormatted": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "trialEndsAtFormatted": {
+            "type": "string",
+            "example": "Jan 7, 2024",
+            "nullable": true
+          },
+          "planName": {
+            "type": "string",
+            "example": "Standard"
+          },
+          "planSlug": {
+            "type": "string",
+            "example": "standard"
+          },
+          "planDescription": {
+            "type": "string",
+            "example": "Good for service businesses that just started.",
+            "nullable": true
+          },
+          "planPrice": {
+            "type": "number",
+            "example": 10
+          },
+          "planPriceCurrency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "planPriceFormatted": {
+            "type": "string",
+            "example": "$10"
+          },
+          "planPeriod": {
+            "type": "string",
+            "example": "month"
+          }
+        },
+        "required": [
+          "slug",
+          "status",
+          "active",
+          "inactive",
+          "onTrial",
+          "canceled",
+          "ended",
+          "cancelAtPeriodEnd",
+          "paymentStatus",
+          "statusFormatted",
+          "planName",
+          "planSlug",
+          "planPrice",
+          "planPriceCurrency",
+          "planPriceFormatted",
+          "planPeriod"
+        ]
+      },
+      "SubscriptionsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionResponseDto"
+            }
+          }
+        },
+        "required": [
+          "subscriptions"
+        ]
+      },
+      "SubscriptionPlanFeatureResponseDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "example": "Unlimited Sale Invoices"
+          },
+          "hint": {
+            "type": "string",
+            "example": "Feature description"
+          },
+          "hintLabel": {
+            "type": "string",
+            "example": "Feature label"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "SubscriptionPlanPriceResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "capital-basic-monthly"
+          },
+          "interval": {
+            "type": "string",
+            "example": "month"
+          },
+          "intervalCount": {
+            "type": "number",
+            "example": 1
+          },
+          "amount": {
+            "type": "number",
+            "example": 10
+          },
+          "amountFormatted": {
+            "type": "string",
+            "example": "$10"
+          },
+          "priceLabel": {
+            "type": "string",
+            "example": "Per month"
+          }
+        },
+        "required": [
+          "slug",
+          "interval",
+          "intervalCount",
+          "amount",
+          "amountFormatted",
+          "priceLabel"
+        ]
+      },
+      "SubscriptionPlanGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "capital-basic"
+          },
+          "name": {
+            "type": "string",
+            "example": "Capital Basic"
+          },
+          "description": {
+            "type": "string",
+            "example": "Good for service businesses that just started."
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanFeatureResponseDto"
+            }
+          },
+          "featured": {
+            "type": "boolean",
+            "example": false
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanPriceResponseDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "description",
+          "features",
+          "featured",
+          "prices"
+        ]
+      },
+      "GetSubscriptionPlansResponseDto": {
+        "type": "object",
+        "properties": {
+          "plans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanGroupResponseDto"
+            }
+          }
+        },
+        "required": [
+          "plans"
+        ]
+      },
+      "BillingCustomerResponseDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "example": "billing@example.com"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Acme Inc."
+          }
+        }
+      },
+      "BillingPaymentMethodResponseDto": {
+        "type": "object",
+        "properties": {
+          "brand": {
+            "type": "string",
+            "example": "visa"
+          },
+          "last4": {
+            "type": "string",
+            "example": "4242"
+          },
+          "expMonth": {
+            "type": "number",
+            "example": 12
+          },
+          "expYear": {
+            "type": "number",
+            "example": 2030
+          }
+        },
+        "required": [
+          "brand",
+          "last4",
+          "expMonth",
+          "expYear"
+        ]
+      },
+      "BillingUpcomingInvoiceResponseDto": {
+        "type": "object",
+        "properties": {
+          "amountDue": {
+            "type": "number",
+            "example": 1000
+          },
+          "amountDueFormatted": {
+            "type": "string",
+            "example": "$10.00"
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "date": {
+            "type": "string",
+            "example": "2026-12-01T00:00:00.000Z"
+          },
+          "dateFormatted": {
+            "type": "string",
+            "example": "Dec 1, 2026"
+          }
+        },
+        "required": [
+          "amountDue",
+          "amountDueFormatted",
+          "currency",
+          "date",
+          "dateFormatted"
+        ]
+      },
+      "BillingInvoiceResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "in_xxx"
+          },
+          "number": {
+            "type": "string",
+            "nullable": true,
+            "example": "INV-0001"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "example": "paid"
+          },
+          "amount": {
+            "type": "number",
+            "example": 1000
+          },
+          "amountFormatted": {
+            "type": "string",
+            "example": "$10.00"
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2026-11-01T00:00:00.000Z"
+          },
+          "createdAtFormatted": {
+            "type": "string",
+            "example": "Nov 1, 2026"
+          },
+          "hostedInvoiceUrl": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://invoice.stripe.com/xxx"
+          },
+          "invoicePdf": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://pay.stripe.com/invoice/xxx/pdf"
+          }
+        },
+        "required": [
+          "id",
+          "amount",
+          "amountFormatted",
+          "currency",
+          "createdAt",
+          "createdAtFormatted"
+        ]
+      },
+      "BillingOverviewResponseDto": {
+        "type": "object",
+        "properties": {
+          "customer": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BillingCustomerResponseDto"
+              }
+            ]
+          },
+          "paymentMethod": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BillingPaymentMethodResponseDto"
+              }
+            ]
+          },
+          "upcomingInvoice": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BillingUpcomingInvoiceResponseDto"
+              }
+            ]
+          },
+          "invoices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BillingInvoiceResponseDto"
+            }
+          }
+        },
+        "required": [
+          "customer",
+          "paymentMethod",
+          "upcomingInvoice",
+          "invoices"
+        ]
+      },
+      "SubscriptionUsageResourceDto": {
+        "type": "object",
+        "properties": {
+          "used": {
+            "type": "number",
+            "example": 2
+          },
+          "limit": {
+            "type": "number",
+            "example": 5,
+            "nullable": true
+          }
+        },
+        "required": [
+          "used",
+          "limit"
+        ]
+      },
+      "SubscriptionUsageResponseDto": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "type": "string",
+            "enum": [
+              "free",
+              "paid"
+            ],
+            "example": "free"
+          },
+          "invoices": {
+            "$ref": "#/components/schemas/SubscriptionUsageResourceDto"
+          },
+          "bills": {
+            "$ref": "#/components/schemas/SubscriptionUsageResourceDto"
+          }
+        },
+        "required": [
+          "plan",
+          "invoices",
+          "bills"
+        ]
+      },
+      "StripeCheckoutSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The hosted Stripe URL to redirect the user to",
+            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Stripe Checkout Session id",
+            "example": "cs_test_xxx"
+          }
+        },
+        "required": [
+          "url",
+          "sessionId"
+        ]
+      },
+      "StripeSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The hosted Stripe URL to redirect the user to",
+            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "StripeSyncCheckoutSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "synced"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "CreateStripeCheckoutSessionBodyDto": {
+        "type": "object",
+        "properties": {
+          "planSlug": {
+            "type": "string",
+            "description": "The plan slug to subscribe to",
+            "example": "capital-basic-monthly"
+          }
+        },
+        "required": [
+          "planSlug"
+        ]
+      },
+      "SyncStripeCheckoutSessionBodyDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "The Stripe Checkout Session id returned in the success URL",
+            "example": "cs_test_xxx"
+          }
+        },
+        "required": [
+          "sessionId"
+        ]
+      },
+      "ChangeSubscriptionPlanBodyDto": {
+        "type": "object",
+        "properties": {
+          "planSlug": {
+            "type": "string",
+            "description": "The target plan slug",
+            "example": "capital-plus-monthly"
+          }
+        },
+        "required": [
+          "planSlug"
+        ]
       },
       "CreatePdfTemplateDto": {
         "type": "object",
@@ -47897,546 +48521,6 @@
           "roleName",
           "roleDescription",
           "permissions"
-        ]
-      },
-      "SubscriptionResponseDto": {
-        "type": "object",
-        "properties": {
-          "slug": {
-            "type": "string",
-            "example": "main"
-          },
-          "status": {
-            "type": "string",
-            "example": "active",
-            "enum": [
-              "active",
-              "inactive",
-              "on_trial",
-              "canceled",
-              "past_due"
-            ]
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          },
-          "inactive": {
-            "type": "boolean",
-            "example": false
-          },
-          "onTrial": {
-            "type": "boolean",
-            "example": false
-          },
-          "canceled": {
-            "type": "boolean",
-            "example": false
-          },
-          "ended": {
-            "type": "boolean",
-            "example": false
-          },
-          "cancelAtPeriodEnd": {
-            "type": "boolean",
-            "description": "Whether the subscription will cancel at the period end.",
-            "example": false
-          },
-          "stripeStatus": {
-            "type": "string",
-            "description": "The raw Stripe subscription status.",
-            "example": "active",
-            "nullable": true
-          },
-          "paymentStatus": {
-            "type": "string",
-            "example": "succeed",
-            "enum": [
-              "succeed",
-              "failed"
-            ]
-          },
-          "startsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-01T00:00:00.000Z",
-            "nullable": true
-          },
-          "endsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-02-01T00:00:00.000Z",
-            "nullable": true
-          },
-          "canceledAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "trialEndsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-07T00:00:00.000Z",
-            "nullable": true
-          },
-          "statusFormatted": {
-            "type": "string",
-            "example": "Active"
-          },
-          "canceledAtFormatted": {
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "endsAtFormatted": {
-            "type": "string",
-            "example": "Jan 1, 2024",
-            "nullable": true
-          },
-          "startsAtFormatted": {
-            "type": "string",
-            "example": "Jan 1, 2024",
-            "nullable": true
-          },
-          "trialStartsAtFormatted": {
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "trialEndsAtFormatted": {
-            "type": "string",
-            "example": "Jan 7, 2024",
-            "nullable": true
-          },
-          "planName": {
-            "type": "string",
-            "example": "Standard"
-          },
-          "planSlug": {
-            "type": "string",
-            "example": "standard"
-          },
-          "planDescription": {
-            "type": "string",
-            "example": "Good for service businesses that just started.",
-            "nullable": true
-          },
-          "planPrice": {
-            "type": "number",
-            "example": 10
-          },
-          "planPriceCurrency": {
-            "type": "string",
-            "example": "USD"
-          },
-          "planPriceFormatted": {
-            "type": "string",
-            "example": "$10"
-          },
-          "planPeriod": {
-            "type": "string",
-            "example": "month"
-          }
-        },
-        "required": [
-          "slug",
-          "status",
-          "active",
-          "inactive",
-          "onTrial",
-          "canceled",
-          "ended",
-          "cancelAtPeriodEnd",
-          "paymentStatus",
-          "statusFormatted",
-          "planName",
-          "planSlug",
-          "planPrice",
-          "planPriceCurrency",
-          "planPriceFormatted",
-          "planPeriod"
-        ]
-      },
-      "SubscriptionsListResponseDto": {
-        "type": "object",
-        "properties": {
-          "subscriptions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubscriptionResponseDto"
-            }
-          }
-        },
-        "required": [
-          "subscriptions"
-        ]
-      },
-      "SubscriptionPlanFeatureResponseDto": {
-        "type": "object",
-        "properties": {
-          "text": {
-            "type": "string",
-            "example": "Unlimited Sale Invoices"
-          },
-          "hint": {
-            "type": "string",
-            "example": "Feature description"
-          },
-          "hintLabel": {
-            "type": "string",
-            "example": "Feature label"
-          }
-        },
-        "required": [
-          "text"
-        ]
-      },
-      "SubscriptionPlanPriceResponseDto": {
-        "type": "object",
-        "properties": {
-          "slug": {
-            "type": "string",
-            "example": "capital-basic-monthly"
-          },
-          "interval": {
-            "type": "string",
-            "example": "month"
-          },
-          "intervalCount": {
-            "type": "number",
-            "example": 1
-          },
-          "amount": {
-            "type": "number",
-            "example": 10
-          },
-          "amountFormatted": {
-            "type": "string",
-            "example": "$10"
-          },
-          "priceLabel": {
-            "type": "string",
-            "example": "Per month"
-          }
-        },
-        "required": [
-          "slug",
-          "interval",
-          "intervalCount",
-          "amount",
-          "amountFormatted",
-          "priceLabel"
-        ]
-      },
-      "SubscriptionPlanGroupResponseDto": {
-        "type": "object",
-        "properties": {
-          "slug": {
-            "type": "string",
-            "example": "capital-basic"
-          },
-          "name": {
-            "type": "string",
-            "example": "Capital Basic"
-          },
-          "description": {
-            "type": "string",
-            "example": "Good for service businesses that just started."
-          },
-          "features": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubscriptionPlanFeatureResponseDto"
-            }
-          },
-          "featured": {
-            "type": "boolean",
-            "example": false
-          },
-          "prices": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubscriptionPlanPriceResponseDto"
-            }
-          }
-        },
-        "required": [
-          "slug",
-          "name",
-          "description",
-          "features",
-          "featured",
-          "prices"
-        ]
-      },
-      "GetSubscriptionPlansResponseDto": {
-        "type": "object",
-        "properties": {
-          "plans": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubscriptionPlanGroupResponseDto"
-            }
-          }
-        },
-        "required": [
-          "plans"
-        ]
-      },
-      "BillingCustomerResponseDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "nullable": true,
-            "example": "billing@example.com"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true,
-            "example": "Acme Inc."
-          }
-        }
-      },
-      "BillingPaymentMethodResponseDto": {
-        "type": "object",
-        "properties": {
-          "brand": {
-            "type": "string",
-            "example": "visa"
-          },
-          "last4": {
-            "type": "string",
-            "example": "4242"
-          },
-          "expMonth": {
-            "type": "number",
-            "example": 12
-          },
-          "expYear": {
-            "type": "number",
-            "example": 2030
-          }
-        },
-        "required": [
-          "brand",
-          "last4",
-          "expMonth",
-          "expYear"
-        ]
-      },
-      "BillingUpcomingInvoiceResponseDto": {
-        "type": "object",
-        "properties": {
-          "amountDue": {
-            "type": "number",
-            "example": 1000
-          },
-          "amountDueFormatted": {
-            "type": "string",
-            "example": "$10.00"
-          },
-          "currency": {
-            "type": "string",
-            "example": "USD"
-          },
-          "date": {
-            "type": "string",
-            "example": "2026-12-01T00:00:00.000Z"
-          },
-          "dateFormatted": {
-            "type": "string",
-            "example": "Dec 1, 2026"
-          }
-        },
-        "required": [
-          "amountDue",
-          "amountDueFormatted",
-          "currency",
-          "date",
-          "dateFormatted"
-        ]
-      },
-      "BillingInvoiceResponseDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "in_xxx"
-          },
-          "number": {
-            "type": "string",
-            "nullable": true,
-            "example": "INV-0001"
-          },
-          "status": {
-            "type": "string",
-            "nullable": true,
-            "example": "paid"
-          },
-          "amount": {
-            "type": "number",
-            "example": 1000
-          },
-          "amountFormatted": {
-            "type": "string",
-            "example": "$10.00"
-          },
-          "currency": {
-            "type": "string",
-            "example": "USD"
-          },
-          "createdAt": {
-            "type": "string",
-            "example": "2026-11-01T00:00:00.000Z"
-          },
-          "createdAtFormatted": {
-            "type": "string",
-            "example": "Nov 1, 2026"
-          },
-          "hostedInvoiceUrl": {
-            "type": "string",
-            "nullable": true,
-            "example": "https://invoice.stripe.com/xxx"
-          },
-          "invoicePdf": {
-            "type": "string",
-            "nullable": true,
-            "example": "https://pay.stripe.com/invoice/xxx/pdf"
-          }
-        },
-        "required": [
-          "id",
-          "amount",
-          "amountFormatted",
-          "currency",
-          "createdAt",
-          "createdAtFormatted"
-        ]
-      },
-      "BillingOverviewResponseDto": {
-        "type": "object",
-        "properties": {
-          "customer": {
-            "nullable": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BillingCustomerResponseDto"
-              }
-            ]
-          },
-          "paymentMethod": {
-            "nullable": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BillingPaymentMethodResponseDto"
-              }
-            ]
-          },
-          "upcomingInvoice": {
-            "nullable": true,
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BillingUpcomingInvoiceResponseDto"
-              }
-            ]
-          },
-          "invoices": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BillingInvoiceResponseDto"
-            }
-          }
-        },
-        "required": [
-          "customer",
-          "paymentMethod",
-          "upcomingInvoice",
-          "invoices"
-        ]
-      },
-      "StripeCheckoutSessionResponseDto": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "The hosted Stripe URL to redirect the user to",
-            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
-          },
-          "sessionId": {
-            "type": "string",
-            "description": "Stripe Checkout Session id",
-            "example": "cs_test_xxx"
-          }
-        },
-        "required": [
-          "url",
-          "sessionId"
-        ]
-      },
-      "StripeSessionResponseDto": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "The hosted Stripe URL to redirect the user to",
-            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
-          }
-        },
-        "required": [
-          "url"
-        ]
-      },
-      "StripeSyncCheckoutSessionResponseDto": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "example": "synced"
-          }
-        },
-        "required": [
-          "status"
-        ]
-      },
-      "CreateStripeCheckoutSessionBodyDto": {
-        "type": "object",
-        "properties": {
-          "planSlug": {
-            "type": "string",
-            "description": "The plan slug to subscribe to",
-            "example": "capital-basic-monthly"
-          }
-        },
-        "required": [
-          "planSlug"
-        ]
-      },
-      "SyncStripeCheckoutSessionBodyDto": {
-        "type": "object",
-        "properties": {
-          "sessionId": {
-            "type": "string",
-            "description": "The Stripe Checkout Session id returned in the success URL",
-            "example": "cs_test_xxx"
-          }
-        },
-        "required": [
-          "sessionId"
-        ]
-      },
-      "ChangeSubscriptionPlanBodyDto": {
-        "type": "object",
-        "properties": {
-          "planSlug": {
-            "type": "string",
-            "description": "The target plan slug",
-            "example": "capital-plus-monthly"
-          }
-        },
-        "required": [
-          "planSlug"
         ]
       },
       "OrgBaseCurrencyMutateLockDto": {

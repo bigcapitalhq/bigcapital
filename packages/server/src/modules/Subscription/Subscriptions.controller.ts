@@ -25,6 +25,7 @@ import { SubscriptionResponseDto } from './dtos/SubscriptionResponse.dto';
 import { SubscriptionsListResponseDto } from './dtos/SubscriptionsListResponse.dto';
 import { GetSubscriptionPlansResponseDto } from './dtos/SubscriptionPlansResponse.dto';
 import { BillingOverviewResponseDto } from './dtos/BillingOverviewResponse.dto';
+import { SubscriptionUsageResponseDto } from './dtos/SubscriptionUsageResponse.dto';
 import {
   ChangeSubscriptionPlanBodyDto,
   CreateStripeCheckoutSessionBodyDto,
@@ -43,6 +44,7 @@ import {
   SubscriptionsListResponseDto,
   GetSubscriptionPlansResponseDto,
   BillingOverviewResponseDto,
+  SubscriptionUsageResponseDto,
   StripeCheckoutSessionResponseDto,
   StripeSessionResponseDto,
   StripeSyncCheckoutSessionResponseDto,
@@ -80,6 +82,20 @@ export class SubscriptionsController {
     const plans = await this.subscriptionApp.getPlans();
 
     return { plans };
+  }
+
+  @Get('usage')
+  @ApiOperation({
+    summary: 'Get the current plan usage and limits',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Plan usage retrieved successfully',
+    schema: { $ref: getSchemaPath(SubscriptionUsageResponseDto) },
+  })
+  @HttpCode(200)
+  async getUsage() {
+    return this.subscriptionApp.getUsage();
   }
 
   @Get('stripe/overview')

@@ -18,6 +18,7 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { useApiFetcher } from '../../useRequest';
+import { subscriptionKeys } from '../subscription/query-keys';
 import { billsKeys } from './query-keys';
 import type {
   Bill,
@@ -33,6 +34,7 @@ const commonInvalidateQueries = (
   queryClient: ReturnType<typeof useQueryClient>,
 ) => {
   queryClient.invalidateQueries({ queryKey: billsKeys.all() });
+  queryClient.invalidateQueries({ queryKey: subscriptionKeys.usage() });
 };
 
 export function useCreateBill(
