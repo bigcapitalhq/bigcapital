@@ -44,7 +44,15 @@ export class WebhooksApplication {
     return this.getWebhooksService.getWebhooks(filterBy, page, pageSize);
   }
 
-  public getWebhookDeliveries(webhookId: number, page?: number, pageSize?: number) {
-    return this.getWebhookDeliveriesService.getDeliveries(webhookId, page, pageSize);
+  public getWebhookDeliveries(
+    webhookId: number,
+    page?: number,
+    pageSize?: number,
+  ) {
+    return this.getWebhookDeliveriesService.getDeliveries(
+      webhookId,
+      page,
+      pageSize,
+    );
   }
 }

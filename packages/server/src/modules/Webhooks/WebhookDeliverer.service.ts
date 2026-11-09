@@ -16,7 +16,9 @@ export class WebhookDelivererService {
     @Inject(Webhook.name)
     private readonly webhookModel: TenantModelProxy<typeof Webhook>,
     @Inject(WebhookDelivery.name)
-    private readonly webhookDeliveryModel: TenantModelProxy<typeof WebhookDelivery>,
+    private readonly webhookDeliveryModel: TenantModelProxy<
+      typeof WebhookDelivery
+    >,
     private readonly clsService: ClsService,
   ) {}
 
@@ -47,14 +49,12 @@ export class WebhookDelivererService {
     const userId = this.clsService.get('userId');
 
     for (const webhook of matchingWebhooks) {
-      const delivery = await this.webhookDeliveryModel()
-        .query()
-        .insert({
-          webhookId: webhook.id,
-          eventType,
-          payload,
-          attemptCount: 0,
-        });
+      const delivery = await this.webhookDeliveryModel().query().insert({
+        webhookId: webhook.id,
+        eventType,
+        payload,
+        attemptCount: 0,
+      });
 
       await this.webhookDeliveryQueue.add(WebhookDeliveryJob, {
         webhookId: webhook.id,

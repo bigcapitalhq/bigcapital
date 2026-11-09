@@ -11,11 +11,13 @@ export class CreateWebhookService {
   ) {}
 
   public async createWebhook(dto: CreateWebhookDto) {
-    const webhook = await this.webhookModel().query().insertAndFetch({
-      ...dto,
-      method: dto.method || 'POST',
-      isActive: true,
-    } as any);
+    const webhook = await this.webhookModel()
+      .query()
+      .insertAndFetch({
+        ...dto,
+        method: dto.method || 'POST',
+        isActive: true,
+      } as any);
     return webhook;
   }
 }
