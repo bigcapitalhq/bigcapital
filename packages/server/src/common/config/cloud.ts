@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+import { isStripeBillingConfigured } from './stripe-billing';
 
 const parseTrialDays = (value?: string): number => {
   const days = parseInt(value ?? '15', 10);
@@ -6,6 +7,7 @@ const parseTrialDays = (value?: string): number => {
 };
 
 export default registerAs('cloud', () => ({
-  hostedOnCloud: process.env.HOSTED_ON_BIGCAPITAL_CLOUD === 'true',
+  // Bigcapital Cloud is the deployment where Stripe Billing is configured.
+  hostedOnCloud: isStripeBillingConfigured(),
   freeTrialDays: parseTrialDays(process.env.FREE_TRIAL_DAYS),
 }));

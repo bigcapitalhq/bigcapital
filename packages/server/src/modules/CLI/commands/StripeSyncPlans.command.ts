@@ -19,13 +19,11 @@ export class StripeSyncPlansCommand extends BaseCommand {
   }
 
   async run(): Promise<void> {
-    const secretKey =
-      this.configService.get<string>('stripeBilling.secretKey') ||
-      this.configService.get<string>('stripePayment.secretKey');
+    const secretKey = this.configService.get<string>('stripeBilling.secretKey');
 
     if (!secretKey) {
       this.exit(
-        'Stripe secret key is not configured. Set STRIPE_BILLING_SECRET_KEY or STRIPE_PAYMENT_SECRET_KEY.',
+        'Stripe billing secret key is not configured. Set STRIPE_BILLING_SECRET_KEY.',
       );
     }
 

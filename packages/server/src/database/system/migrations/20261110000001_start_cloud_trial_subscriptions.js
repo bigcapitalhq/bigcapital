@@ -14,6 +14,15 @@ const getTrialDays = () => {
 };
 
 /**
+ * Stripe Billing credentials mark a Cloud deployment.
+ */
+const isCloudBillingConfigured = () =>
+  Boolean(
+    process.env.STRIPE_BILLING_SECRET_KEY?.trim() &&
+      process.env.STRIPE_BILLING_WEBHOOK_SECRET?.trim(),
+  );
+
+/**
  * Grants a fresh full-access trial to existing Cloud organizations that never
  * started a paid subscription.
  *
@@ -21,7 +30,7 @@ const getTrialDays = () => {
  * @returns { Promise<void> }
  */
 exports.up = async function (knex) {
-  if (process.env.HOSTED_ON_BIGCAPITAL_CLOUD !== 'true') return;
+  if (!isCloudBillingConfigured()) return;
 
   const trialPlan =
     (await knex('subscription_plans')

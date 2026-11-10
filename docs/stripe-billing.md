@@ -3,6 +3,10 @@
 Bigcapital Cloud uses Stripe Billing for organization subscriptions. Self-hosted
 installations remain free and never call Stripe.
 
+A deployment is considered Bigcapital Cloud once the required Stripe Billing
+credentials (`STRIPE_BILLING_SECRET_KEY` and `STRIPE_BILLING_WEBHOOK_SECRET`)
+are configured. There is no separate Cloud deployment flag.
+
 ## How it works
 
 - A Cloud organization gets a Stripe Customer lazily when it starts checkout.
@@ -22,13 +26,13 @@ installations remain free and never call Stripe.
 
 ## Environment variables
 
-```dotenv
-HOSTED_ON_BIGCAPITAL_CLOUD=true
+Setting both required billing credentials enables Cloud billing mode.
 
+```dotenv
 # Full-access trial length for new Cloud organizations, in days.
 FREE_TRIAL_DAYS=15
 
-# Falls back to STRIPE_PAYMENT_SECRET_KEY when empty.
+# Starts with "sk_".
 STRIPE_BILLING_SECRET_KEY=sk_live_...
 
 # From the Stripe webhook endpoint configuration.
@@ -58,11 +62,12 @@ The migrations add:
 - Stripe subscription state on `subscription_plan_subscriptions`
 - `stripe_webhook_events` for idempotent webhook handling
 - A full-access trial for existing Cloud organizations that never started a
-  paid subscription (based on `HOSTED_ON_BIGCAPITAL_CLOUD` / `FREE_TRIAL_DAYS`)
+  paid subscription (based on the Stripe Billing credentials and
+  `FREE_TRIAL_DAYS`)
 
-When running the migration container, make sure both
-`HOSTED_ON_BIGCAPITAL_CLOUD` and `FREE_TRIAL_DAYS` are passed to it; the trial
-backfill is skipped when the Cloud flag is missing.
+When running the migration container, make sure the Stripe Billing credentials
+and `FREE_TRIAL_DAYS` are passed to it; the trial backfill is skipped when
+billing is not configured.
 
 ## Provisioning plans in Stripe
 

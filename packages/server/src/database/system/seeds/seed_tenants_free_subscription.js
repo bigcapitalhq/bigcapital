@@ -1,7 +1,11 @@
 exports.seed = async (knex) => {
   // Cloud organizations subscribe through Stripe; never grant them the
-  // self-hosted free plan.
-  if (process.env.HOSTED_ON_BIGCAPITAL_CLOUD === 'true') return;
+  // self-hosted free plan. Stripe Billing credentials mark a Cloud deployment.
+  const isCloudBillingConfigured = Boolean(
+    process.env.STRIPE_BILLING_SECRET_KEY?.trim() &&
+      process.env.STRIPE_BILLING_WEBHOOK_SECRET?.trim(),
+  );
+  if (isCloudBillingConfigured) return;
 
   const tenants = await knex('tenants');
   const freePlan = await knex('subscription_plans')
