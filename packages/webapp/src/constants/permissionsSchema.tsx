@@ -14,6 +14,7 @@ import {
   ReportsAction,
   SaleEstimateAction,
   SaleInvoiceAction,
+  RecurringInvoiceAction,
   SaleReceiptAction,
   VendorAction,
   VendorCreditAction,
@@ -245,6 +246,35 @@ export const getPermissionsSchema = (): PermissionModule[] => [
             label: intl.get('permissions.column.written_off_invoice'),
             key: SaleInvoiceAction.Writeoff,
             depend: [{ key: SaleInvoiceAction.Edit }],
+          },
+        ],
+      },
+      {
+        label: intl.get('permissions.recurring_invoices'),
+        subject: AbilitySubject.RecurringInvoice,
+        permissions: [
+          {
+            label: intl.get('permissions.column.view'),
+            key: RecurringInvoiceAction.View,
+            relatedColumn: PermissionColumn.View,
+          },
+          {
+            label: intl.get('permissions.column.create'),
+            key: RecurringInvoiceAction.Create,
+            relatedColumn: PermissionColumn.Create,
+            depend: [{ key: RecurringInvoiceAction.View }],
+          },
+          {
+            label: intl.get('permissions.column.edit'),
+            key: RecurringInvoiceAction.Edit,
+            relatedColumn: PermissionColumn.Edit,
+            depend: [{ key: RecurringInvoiceAction.Create }],
+          },
+          {
+            label: intl.get('permissions.column.delete'),
+            key: RecurringInvoiceAction.Delete,
+            relatedColumn: PermissionColumn.Delete,
+            depend: [{ key: RecurringInvoiceAction.Edit }],
           },
         ],
       },
@@ -651,6 +681,10 @@ export const getPermissionsSchema = (): PermissionModule[] => [
           {
             label: intl.get('permissions.inventory_valuation_summary'),
             key: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
+          },
+          {
+            label: intl.get('permissions.inventory_summary'),
+            key: ReportsAction.READ_INVENTORY_SUMMARY,
           },
           {
             label: intl.get('permissions.inventory_items_details'),

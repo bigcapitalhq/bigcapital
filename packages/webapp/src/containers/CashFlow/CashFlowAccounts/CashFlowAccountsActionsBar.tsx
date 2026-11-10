@@ -13,7 +13,6 @@ import {
 } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { withCashflowAccountsTableActions } from '../AccountTransactions/withCashflowAccountsTableActions';
 import type { WithCashflowAccountsTableActionsProps } from '../AccountTransactions/withCashflowAccountsTableActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
@@ -30,9 +29,9 @@ import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { useRefreshCashflowAccounts } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 import { useOpenPlaidConnect } from '@/hooks/utils/useOpenPlaidConnect';
 import { CreditCard2Icon } from '@/icons/CreditCard2';
-import { getDashboardFeaturesSelector } from '@/store/dashboard/dashboard.selectors';
 
 interface CashFlowAccountsActionsBarInnerProps
   extends Pick<WithDialogActionsProps, 'openDialog'>,
@@ -57,12 +56,9 @@ function CashFlowAccountsActionsBarInner({
   const { openPlaidAsync, isPlaidLoading } = useOpenPlaidConnect();
 
   // Bank feed providers enabled on the server.
-  const features = useSelector(getDashboardFeaturesSelector()) as Record<
-    string,
-    boolean
-  >;
-  const isPlaidEnabled = !!features[Features.BankSyncingPlaid];
-  const isSimpleFinEnabled = !!features[Features.BankSyncingSimpleFin];
+  const { featureCan } = useFeatureCan();
+  const isPlaidEnabled = featureCan(Features.BankSyncingPlaid);
+  const isSimpleFinEnabled = featureCan(Features.BankSyncingSimpleFin);
 
   // Handle refresh button click.
   const handleRefreshBtnClick = () => {

@@ -1,11 +1,15 @@
+import { Intent } from '@blueprintjs/core';
 import { Formik, FormikHelpers } from 'formik';
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import intl from 'react-intl-universal';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import {
   AuthFooterLinks,
   AuthFooterLink,
   AuthInsiderCard,
 } from './_components';
 import { useAuthMetaBoot } from './AuthMetaBoot';
+import { GoogleAuthSection } from './GoogleAuthButton';
 import { LoginForm } from './LoginForm';
 import {
   LoginSchema,
@@ -28,6 +32,23 @@ const initialValues: LoginValues = {
  */
 export function Login() {
   const { mutateAsync: loginMutate } = useAuthLogin();
+  const { googleEnabled } = useAuthMetaBoot();
+  const history = useHistory();
+  const location = useLocation();
+
+  // Surface errors coming back from the Google OAuth redirect.
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const error = params.get('error');
+
+    if (!error) return;
+
+    Toaster.show({
+      message: intl.get('google_auth_failed'),
+      intent: Intent.DANGER,
+    });
+    history.replace('/auth/login');
+  }, [history, location.search]);
 
   const handleSubmit = (
     values: LoginValues,
@@ -50,6 +71,8 @@ export function Login() {
   return (
     <AuthInsider>
       <AuthInsiderCard>
+        {googleEnabled && <GoogleAuthSection />}
+
         <Formik
           initialValues={initialValues}
           validationSchema={LoginSchema}

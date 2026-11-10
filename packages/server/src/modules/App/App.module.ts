@@ -52,6 +52,7 @@ import { VendorsModule } from '../Vendors/Vendors.module';
 import { SaleEstimatesModule } from '../SaleEstimates/SaleEstimates.module';
 import { BillsModule } from '../Bills/Bills.module';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
+import { RecurringInvoicesModule } from '../RecurringInvoices/RecurringInvoices.module';
 import { SaleReceiptsModule } from '../SaleReceipts/SaleReceipts.module';
 import { ManualJournalsModule } from '../ManualJournals/ManualJournals.module';
 import { CreditNotesModule } from '../CreditNotes/CreditNotes.module';
@@ -105,6 +106,7 @@ import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
 import { BankingSimpleFinModule } from '../BankingSimpleFin/BankingSimpleFin.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
+import { WebhooksModule } from '../Webhooks/Webhooks.module';
 import { TenantModelsInitializeModule } from '../Tenancy/TenantModelsInitialize.module';
 import { SocketModule } from '../Socket/Socket.module';
 import { NotificationsModule } from '../Notifications/Notifications.module';
@@ -217,6 +219,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     CustomersModule,
     VendorsModule,
     SaleInvoicesModule,
+    RecurringInvoicesModule,
     SaleEstimatesModule,
     SaleReceiptsModule,
     BillsModule,
@@ -272,6 +275,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     EEModule,
     AnalyticsModule,
     ExchangeRatesModule,
+    WebhooksModule,
   ],
   controllers: [AppController],
   providers: [

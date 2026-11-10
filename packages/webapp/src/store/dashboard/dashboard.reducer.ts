@@ -19,7 +19,6 @@ import {
   RESET,
   RESET_AUTOFILL_REF,
   SET_DASHBOARD_BACK_LINK,
-  SET_FEATURE_DASHBOARD_META,
   SET_TOPBAR_EDIT_VIEW,
   SIDEBAR_EXPEND_TOGGLE,
   SIDEBAR_SUBMENU_CLOSE,
@@ -49,7 +48,6 @@ export interface DashboardState {
   appIsLoading: boolean;
   appIntlIsLoading: boolean;
   sidebarSubmenu: { isOpen: boolean; submenuId: unknown };
-  features: Record<string, boolean>;
   autofill: Record<string, unknown>;
 }
 
@@ -69,7 +67,6 @@ const initialState: DashboardState = {
   appIsLoading: true,
   appIntlIsLoading: true,
   sidebarSubmenu: { isOpen: false, submenuId: null },
-  features: {},
   autofill: {},
 };
 
@@ -166,19 +163,6 @@ const reducerInstance = createReducer(initialState, {
     } else {
       state.splashScreenLoading = 1;
     }
-  },
-  [SET_FEATURE_DASHBOARD_META]: (
-    state: DashboardState,
-    action: DashboardAction,
-  ) => {
-    const { features } = (action.payload || {}) as {
-      features: Array<{ name: string; isAccessible: boolean }>;
-    };
-    const _data: Record<string, boolean> = {};
-    features.forEach((feature) => {
-      _data[feature.name] = feature.isAccessible;
-    });
-    state.features = _data;
   },
   [SPLASH_STOP_LOADING]: (state: DashboardState) => {
     state.splashScreenLoading = Math.max(

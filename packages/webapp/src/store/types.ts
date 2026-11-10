@@ -17,6 +17,7 @@ export * from './exchange-rate/exchange.type';
 export * from './customers/customers.type';
 export * from './estimate/estimates.types';
 export * from './invoice/invoices.types';
+export * from './recurring-invoices/recurring-invoices.types';
 export * from './receipts/receipts.type';
 export * from './bills/bills.type';
 export * from './vendors/vendors.types';
