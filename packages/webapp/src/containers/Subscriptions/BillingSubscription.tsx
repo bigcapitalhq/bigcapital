@@ -1,10 +1,15 @@
 import { Button, Card, Classes, Intent, Text } from '@blueprintjs/core';
 import clsx from 'classnames';
 import { includes } from 'lodash';
-import { getSubscriptionStatusText } from './_utils';
+import {
+  getSubscriptionStatusText,
+  openPendingTab,
+  redirectPendingTab,
+} from './_utils';
 import { useBillingPageBoot } from './BillingPageBoot';
 import styles from './BillingSubscription.module.scss';
 import { SubscriptionsDrawers } from './SubscriptionsDrawers';
+import { useUpgradeToGoCheckout } from './useUpgradeToGoCheckout';
 import type { SubscriptionsListResponse } from '@bigcapital/sdk-ts';
 import { AppToaster, Can, Group, Stack } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
@@ -17,11 +22,16 @@ type MainSubscription = SubscriptionsListResponse['subscriptions'][number];
  * Current subscription summary and actions.
  */
 export function Subscription() {
-  const { mainSubscription, billingOverview } = useBillingPageBoot();
+  const { mainSubscription } = useBillingPageBoot();
   const { openAlert } = useAlertActions();
   const { openDrawer } = useDrawerActions();
   const { mutateAsync: createPortalSession, isPending: isPortalPending } =
     useCreateStripePortalSession();
+  const {
+    upgrade: upgradeToGo,
+    isPending: isUpgradeToGoPending,
+    canUpgrade: canUpgradeToGo,
+  } = useUpgradeToGoCheckout();
 
   if (!mainSubscription) {
     return null;
@@ -34,11 +44,14 @@ export function Subscription() {
     openAlert('resume-main-subscription');
   };
   const handleUpdatePaymentMethod = () => {
+    const billingTab = openPendingTab();
+
     createPortalSession()
       .then(({ url }) => {
-        window.location.assign(url);
+        redirectPendingTab(billingTab, url);
       })
       .catch(() => {
+        billingTab?.close();
         AppToaster.show({
           message: 'Unable to open the billing portal. Please try again.',
           intent: Intent.DANGER,
@@ -48,9 +61,13 @@ export function Subscription() {
   const handleUpgradeBtnClick = () => {
     openDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
   };
-  const isActive = mainSubscription.active;
+  // Only provider-backed (Stripe) subscriptions can be changed/canceled from
+  // this page. A local trial is active but has no Stripe subscription yet.
+  const isActive = mainSubscription.active && !!mainSubscription.stripeStatus;
   const isCancelScheduled = mainSubscription.cancelAtPeriodEnd;
-  const hasStripeAccount = !!billingOverview?.customer;
+  const hasStripeAccount = !!mainSubscription.stripeStatus;
+  const isActiveGo = isActive && !!mainSubscription.planSlug?.startsWith('go');
+  const showUpgradeToGo = canUpgradeToGo && !isActiveGo;
 
   return (
     <Card className={styles.root}>
@@ -79,56 +96,74 @@ export function Subscription() {
         </Group>
       </Stack>
 
-      <Text className={styles.description}>
+      <Text className={clsx(styles.description, 'bp4-text-muted')}>
         Control your business bookkeeping with automated accounting, to run
         intelligent reports for faster decision-making.
       </Text>
 
-      {hasStripeAccount && (
+      {(hasStripeAccount || showUpgradeToGo) && (
         <Can I="manage" a="all">
           <Stack align="flex-start" spacing={8} className={styles.actions}>
-            {isActive && (
+            {hasStripeAccount && (
+              <>
+                {isActive && (
+                  <Button
+                    minimal
+                    small
+                    intent={Intent.PRIMARY}
+                    onClick={handleUpgradeBtnClick}
+                  >
+                    Change plan
+                  </Button>
+                )}
+
+                {isActive && isCancelScheduled && (
+                  <Button
+                    minimal
+                    small
+                    intent={Intent.PRIMARY}
+                    onClick={handleResumeSubBtnClick}
+                  >
+                    Resume subscription
+                  </Button>
+                )}
+
+                {isActive && !isCancelScheduled && (
+                  <Button
+                    minimal
+                    small
+                    intent={Intent.PRIMARY}
+                    onClick={handleCancelSubBtnClick}
+                  >
+                    Cancel subscription
+                  </Button>
+                )}
+              </>
+            )}
+
+            {showUpgradeToGo && (
               <Button
                 minimal
                 small
                 intent={Intent.PRIMARY}
-                onClick={handleUpgradeBtnClick}
+                onClick={upgradeToGo}
+                loading={isUpgradeToGoPending}
               >
-                Change plan
+                Upgrade to Go
               </Button>
             )}
 
-            {isActive && isCancelScheduled && (
+            {hasStripeAccount && (
               <Button
                 minimal
                 small
                 intent={Intent.PRIMARY}
-                onClick={handleResumeSubBtnClick}
+                onClick={handleUpdatePaymentMethod}
+                loading={isPortalPending}
               >
-                Resume subscription
+                Manage billing
               </Button>
             )}
-
-            {isActive && !isCancelScheduled && (
-              <Button
-                minimal
-                small
-                intent={Intent.PRIMARY}
-                onClick={handleCancelSubBtnClick}
-              >
-                Cancel subscription
-              </Button>
-            )}
-
-            <Button
-              minimal
-              small
-              intent={Intent.PRIMARY}
-              onClick={handleUpdatePaymentMethod}
-              loading={isPortalPending}
-            >
-              Manage billing
-            </Button>
           </Stack>
         </Can>
       )}

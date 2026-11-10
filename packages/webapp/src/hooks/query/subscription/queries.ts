@@ -1,8 +1,6 @@
 import {
   fetchSubscriptions,
   fetchSubscriptionPlans,
-  fetchSubscriptionUsage,
-  fetchBillingOverview,
   createStripeCheckoutSession,
   createStripePortalSession,
   syncStripeCheckoutSession,
@@ -24,8 +22,6 @@ import { subscriptionKeys } from './query-keys';
 import type {
   SubscriptionsListResponse,
   SubscriptionPlansResponse,
-  SubscriptionUsageResponse,
-  BillingOverviewResponse,
   ChangeSubscriptionPlanBody,
   CreateStripeCheckoutSessionBody,
   CreateSubscriptionCheckoutSessionResponse,
@@ -105,22 +101,11 @@ export function useSubscription(slug = 'main') {
     isSubscriptionActive: !!subscription?.active,
     isSubscriptionInactive: !!subscription?.inactive,
     isSubscriptionOnTrial: !!subscription?.onTrial,
+    isTrialExpired:
+      !!subscription?.trialEndsAt &&
+      !subscription?.onTrial &&
+      !subscription?.stripeStatus,
   };
-}
-
-/**
- * The current plan usage and limits.
- */
-export function useGetSubscriptionUsage(
-  options?: UseQueryOptions<SubscriptionUsageResponse, Error>,
-): UseQueryResult<SubscriptionUsageResponse, Error> {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
-  return useQuery({
-    queryKey: subscriptionKeys.usage(),
-    queryFn: () => fetchSubscriptionUsage(fetcher),
-    ...options,
-  });
 }
 
 /**
@@ -134,21 +119,6 @@ export function useGetSubscriptionPlans(
   return useQuery({
     queryKey: subscriptionKeys.plans(),
     queryFn: () => fetchSubscriptionPlans(fetcher),
-    ...options,
-  });
-}
-
-/**
- * Stripe billing details (payment method, invoices, next payment).
- */
-export function useGetBillingOverview(
-  options?: UseQueryOptions<BillingOverviewResponse, Error>,
-): UseQueryResult<BillingOverviewResponse, Error> {
-  const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
-
-  return useQuery({
-    queryKey: subscriptionKeys.billingOverview(),
-    queryFn: () => fetchBillingOverview(fetcher),
     ...options,
   });
 }

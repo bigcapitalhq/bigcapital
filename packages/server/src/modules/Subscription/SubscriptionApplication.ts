@@ -1,31 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { SubscriptionPayload } from '@/interfaces/SubscriptionPlan';
 import { NewSubscriptionService } from './commands/NewSubscription.service';
+import { StartTrialSubscriptionService } from './commands/StartTrialSubscription.service';
 import { GetSubscriptionsService } from './queries/GetSubscriptions.service';
 import { GetPlansService } from './stripe/GetPlans.service';
-import { GetBillingOverviewService } from './stripe/GetBillingOverview.service';
 import { CreateStripeCheckoutSessionService } from './stripe/CreateStripeCheckoutSession.service';
 import { CreateStripePortalSessionService } from './stripe/CreateStripePortalSession.service';
 import { SyncStripeCheckoutSessionService } from './stripe/SyncStripeCheckoutSession.service';
 import { ChangeStripeSubscriptionService } from './stripe/ChangeStripeSubscription.service';
 import { CancelStripeSubscriptionService } from './stripe/CancelStripeSubscription.service';
 import { ResumeStripeSubscriptionService } from './stripe/ResumeStripeSubscription.service';
-import { SubscriptionLimitsService } from './limits/SubscriptionLimits.service';
 
 @Injectable()
 export class SubscriptionApplication {
   constructor(
     private readonly createNewSubscriptionService: NewSubscriptionService,
+    private readonly startTrialSubscriptionService: StartTrialSubscriptionService,
     private readonly getSubscriptionsService: GetSubscriptionsService,
     private readonly getPlansService: GetPlansService,
-    private readonly getBillingOverviewService: GetBillingOverviewService,
     private readonly createStripeCheckoutSessionService: CreateStripeCheckoutSessionService,
     private readonly createStripePortalSessionService: CreateStripePortalSessionService,
     private readonly syncStripeCheckoutSessionService: SyncStripeCheckoutSessionService,
     private readonly changeStripeSubscriptionService: ChangeStripeSubscriptionService,
     private readonly cancelStripeSubscriptionService: CancelStripeSubscriptionService,
     private readonly resumeStripeSubscriptionService: ResumeStripeSubscriptionService,
-    private readonly subscriptionLimitsService: SubscriptionLimitsService,
   ) {}
 
   /**
@@ -40,20 +38,6 @@ export class SubscriptionApplication {
    */
   public getPlans() {
     return this.getPlansService.getPlans();
-  }
-
-  /**
-   * Retrieves the current plan usage and limits.
-   */
-  public getUsage() {
-    return this.subscriptionLimitsService.getUsage();
-  }
-
-  /**
-   * Retrieves Stripe billing details (payment method, invoices, next payment).
-   */
-  public getBillingOverview() {
-    return this.getBillingOverviewService.execute();
   }
 
   /**
@@ -91,6 +75,13 @@ export class SubscriptionApplication {
       subscriptionSlug,
       payload,
     );
+  }
+
+  /**
+   * Starts a full-access trial for the given Cloud tenant.
+   */
+  public startTrial(tenantId: number) {
+    return this.startTrialSubscriptionService.execute(tenantId);
   }
 
   /**

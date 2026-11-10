@@ -31,7 +31,11 @@ export class PlanSubscriptionRepository extends TenantRepository {
     invoiceInterval: 'month' | 'year',
     invoicePeriod: number,
     subscriptionSlug: string,
-    payload?: { stripeSubscriptionId?: string },
+    payload?: {
+      stripeSubscriptionId?: string;
+      trialEndsAt?: Date | null;
+      endsAt?: Date | null;
+    },
   ) {
     const period = new SubscriptionPeriod(invoiceInterval, invoicePeriod);
     const model: PartialModelObject<PlanSubscription> = {
@@ -39,7 +43,8 @@ export class PlanSubscriptionRepository extends TenantRepository {
       slug: subscriptionSlug,
       planId,
       startsAt: period.getStartDate(),
-      endsAt: period.getEndDate(),
+      endsAt: payload?.endsAt ?? period.getEndDate(),
+      trialEndsAt: payload?.trialEndsAt ?? null,
       stripeSubscriptionId: payload?.stripeSubscriptionId || null,
     };
     return this.model.query().insert({ ...model });

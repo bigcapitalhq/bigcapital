@@ -13,7 +13,6 @@ import { NewSubscriptionService } from './commands/NewSubscription.service';
 import { GetSubscriptionsService } from './queries/GetSubscriptions.service';
 import { PlanSubscriptionRepository } from './repositories/PlanSubscription.repository';
 import { GetPlansService } from './stripe/GetPlans.service';
-import { GetBillingOverviewService } from './stripe/GetBillingOverview.service';
 import { StripeBillingService } from './stripe/StripeBillingService';
 import { StripePlanSyncService } from './stripe/StripePlanSyncService';
 import { CreateStripeCheckoutSessionService } from './stripe/CreateStripeCheckoutSession.service';
@@ -25,7 +24,12 @@ import { ResumeStripeSubscriptionService } from './stripe/ResumeStripeSubscripti
 import { SyncStripeSubscriptionService } from './stripe/SyncStripeSubscription.service';
 import { StripeBillingWebhooksService } from './stripe/StripeBillingWebhooks.service';
 import { StripeBillingWebhooksController } from './stripe/StripeBillingWebhooks.controller';
-import { SubscriptionLimitsService } from './limits/SubscriptionLimits.service';
+import { StartTrialSubscriptionService } from './commands/StartTrialSubscription.service';
+import { StartTrialOnSignupCloud } from './subscribers/StartTrialOnSignupCloud';
+import { StartTrialOnWorkspaceCreatedCloud } from './subscribers/StartTrialOnWorkspaceCreatedCloud';
+import { SubscriptionAccessService } from './access/SubscriptionAccess.service';
+import { SubscriptionAccessInterceptor } from './interceptors/SubscriptionAccess.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 const models = [
   InjectSystemModel(Plan),
@@ -39,9 +43,9 @@ const models = [
     ...models,
     PlanSubscriptionRepository,
     NewSubscriptionService,
+    StartTrialSubscriptionService,
     GetSubscriptionsService,
     GetPlansService,
-    GetBillingOverviewService,
     StripeBillingService,
     StripePlanSyncService,
     CreateStripeCheckoutSessionService,
@@ -53,11 +57,17 @@ const models = [
     SyncStripeSubscriptionService,
     StripeBillingWebhooksService,
     SubscribeFreeOnSignupCommunity,
+    StartTrialOnSignupCloud,
+    StartTrialOnWorkspaceCreatedCloud,
     TriggerInvalidateCacheOnSubscriptionChange,
     SubscriptionApplication,
-    SubscriptionLimitsService,
+    SubscriptionAccessService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SubscriptionAccessInterceptor,
+    },
   ],
   controllers: [SubscriptionsController, StripeBillingWebhooksController],
-  exports: [...models, SubscriptionLimitsService],
+  exports: [...models, SubscriptionAccessService],
 })
 export class SubscriptionModule {}

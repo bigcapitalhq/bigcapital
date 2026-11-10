@@ -4,9 +4,7 @@ import { OpForPath, OpRequestBody, OpResponseBody } from './utils';
 
 export const SUBSCRIPTION_ROUTES = {
   LIST: '/api/subscription',
-  USAGE: '/api/subscription/usage',
   PLANS: '/api/subscription/plans',
-  BILLING_OVERVIEW: '/api/subscription/stripe/overview',
   CHECKOUT_SESSION: '/api/subscription/stripe/checkout_session',
   PORTAL_SESSION: '/api/subscription/stripe/portal_session',
   SYNC_CHECKOUT_SESSION: '/api/subscription/stripe/sync',
@@ -18,14 +16,8 @@ export const SUBSCRIPTION_ROUTES = {
 export type SubscriptionsListResponse = OpResponseBody<
   OpForPath<typeof SUBSCRIPTION_ROUTES.LIST, 'get'>
 >;
-export type SubscriptionUsageResponse = OpResponseBody<
-  OpForPath<typeof SUBSCRIPTION_ROUTES.USAGE, 'get'>
->;
 export type SubscriptionPlansResponse = OpResponseBody<
   OpForPath<typeof SUBSCRIPTION_ROUTES.PLANS, 'get'>
->;
-export type BillingOverviewResponse = OpResponseBody<
-  OpForPath<typeof SUBSCRIPTION_ROUTES.BILLING_OVERVIEW, 'get'>
 >;
 export type CreateStripeCheckoutSessionBody = OpRequestBody<
   OpForPath<typeof SUBSCRIPTION_ROUTES.CHECKOUT_SESSION, 'post'>
@@ -51,29 +43,10 @@ export async function fetchSubscriptions(
   return data;
 }
 
-export async function fetchSubscriptionUsage(
-  fetcher: ApiFetcher,
-): Promise<SubscriptionUsageResponse> {
-  const get = fetcher.path(SUBSCRIPTION_ROUTES.USAGE).method('get').create();
-  const { data } = await get({});
-  return data;
-}
-
 export async function fetchSubscriptionPlans(
   fetcher: ApiFetcher,
 ): Promise<SubscriptionPlansResponse> {
   const get = fetcher.path(SUBSCRIPTION_ROUTES.PLANS).method('get').create();
-  const { data } = await get({});
-  return data;
-}
-
-export async function fetchBillingOverview(
-  fetcher: ApiFetcher,
-): Promise<BillingOverviewResponse> {
-  const get = fetcher
-    .path(SUBSCRIPTION_ROUTES.BILLING_OVERVIEW)
-    .method('get')
-    .create();
   const { data } = await get({});
   return data;
 }

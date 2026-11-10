@@ -88,17 +88,12 @@ export function useApiFetcherOnError() {
         ) {
           setGlobalErrors({ subscriptionInactive: true });
         }
-        const limitError = errors.find(
-          (e) => e.type === 'ORGANIZATION.SUBSCRIPTION.FREE_PLAN_LIMIT_REACHED',
-        );
-        if (limitError) {
-          setGlobalErrors({
-            subscriptionLimitReached: {
-              resource: limitError.payload?.resource,
-              used: limitError.payload?.used,
-              limit: limitError.payload?.limit,
-            },
-          });
+        if (
+          errors.find(
+            (e) => e.type === 'ORGANIZATION.SUBSCRIPTION.TRIAL_EXPIRED',
+          )
+        ) {
+          setGlobalErrors({ trialExpired: true });
         }
         if (errors.find((e) => e.type === 'USER_INACTIVE')) {
           setGlobalErrors({ userInactive: true });

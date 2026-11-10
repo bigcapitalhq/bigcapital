@@ -2,21 +2,18 @@ import { Intent, Spinner, Text } from '@blueprintjs/core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { BillingInvoices } from './BillingInvoices';
 import { useBillingPageBoot } from './BillingPageBoot';
 import styles from './BillingPageContent.module.scss';
-import { BillingPaymentMethod } from './BillingPaymentMethod';
-import { BillingPlansSection } from './BillingPlansSection';
 import { Subscription } from './BillingSubscription';
-import { FreePlanUsage } from './FreePlanUsage';
-import { AppToaster, Box, Can, Group } from '@/components';
+import { TrialStatus } from './TrialStatus';
+import { AppToaster, Box, Group } from '@/components';
 import {
   subscriptionKeys,
   useSyncStripeCheckoutSession,
 } from '@/hooks/query/subscription';
 
 export function BillingPageContent() {
-  const { isLoading, mainSubscription, billingOverview } = useBillingPageBoot();
+  const { isLoading, mainSubscription } = useBillingPageBoot();
   const location = useLocation();
   const history = useHistory();
   const queryClient = useQueryClient();
@@ -74,15 +71,9 @@ export function BillingPageContent() {
     return <Spinner size={30} />;
   }
 
-  const hasStripeAccount = !!billingOverview?.customer;
-  const hasActiveSubscription =
-    !!mainSubscription?.active &&
-    (!!mainSubscription.stripeStatus ||
-      Number(mainSubscription.planPrice || 0) > 0);
-
   return (
     <Box className={styles.root}>
-      <Text>
+      <Text className="bp4-text-muted" style={{ marginTop: '1rem' }}>
         Only pay for what you really need. Go comes with 24/7 customer support.
       </Text>
 
@@ -92,16 +83,7 @@ export function BillingPageContent() {
         </Group>
       )}
 
-      <FreePlanUsage />
-
-      {hasStripeAccount && <BillingPaymentMethod />}
-      {hasStripeAccount && <BillingInvoices />}
-
-      {!hasActiveSubscription && (
-        <Can I="manage" a="all">
-          <BillingPlansSection />
-        </Can>
-      )}
+      <TrialStatus />
     </Box>
   );
 }

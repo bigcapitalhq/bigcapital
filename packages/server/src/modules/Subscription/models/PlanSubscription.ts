@@ -150,6 +150,16 @@ export class PlanSubscription extends mixin(SystemModel) {
     if (this.stripeStatus) {
       return ['active', 'trialing', 'past_due'].includes(this.stripeStatus);
     }
+
+    const hasBillingProvider = !!(
+      this.stripeSubscriptionId || this.lemonSubscriptionId
+    );
+
+    // A local (provider-less) trial ends when `trialEndsAt` passes, even if a
+    // future paid period was stored on the subscription.
+    if (this.trialEndsAt && !hasBillingProvider) {
+      return this.onTrial() && !this.canceled();
+    }
     return this.onTrial() ? !this.canceled() : !this.ended();
   }
 
@@ -183,6 +193,17 @@ export class PlanSubscription extends mixin(SystemModel) {
    */
   public onTrial() {
     return this.trialEndsAt ? moment().isBefore(this.trialEndsAt) : false;
+  }
+
+  /**
+   * Check if a provider-less trial has already expired.
+   * @returns {boolean}
+   */
+  public trialExpired() {
+    const hasBillingProvider = !!(
+      this.stripeSubscriptionId || this.lemonSubscriptionId
+    );
+    return !!this.trialEndsAt && !hasBillingProvider && !this.onTrial();
   }
 
   /**

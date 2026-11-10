@@ -1,18 +1,12 @@
 .root {
   --billing-card-background: #fff;
-  --billing-card-border: #d2dde1;
-  --billing-card-accent: #ccd6dd;
   --billing-title-text: #3d4c58;
-  --billing-description-text: #394b59;
   --billing-muted-text: #5c7080;
   --billing-separator-text: #999;
 
   :global(.bp4-dark) & {
     --billing-card-background: var(--color-dark-gray3);
-    --billing-card-border: var(--color-dark-gray4);
-    --billing-card-accent: var(--color-dark-gray5);
     --billing-title-text: var(--color-light-gray1);
-    --billing-description-text: var(--color-light-gray2);
     --billing-muted-text: var(--color-muted-text);
     --billing-separator-text: var(--color-gray3);
   }
@@ -20,9 +14,7 @@
   width: 450px;
   background: var(--billing-card-background);
   border-radius: 5px;
-  box-shadow: 0 -6px 0 0 var(--billing-card-accent);
-  border: 1px solid var(--billing-card-border);
-  min-height: 420px;
+  min-height: 350px;
   display: flex;
   flex-direction: column;
 }
@@ -36,11 +28,12 @@
 
 .description {
   line-height: 1.5;
-  color: var(--billing-description-text);
   margin-top: 14px;
 }
 
 .period {
+  font-size: 12px;
+
   div + div {
     &::before {
       content: ' • ';

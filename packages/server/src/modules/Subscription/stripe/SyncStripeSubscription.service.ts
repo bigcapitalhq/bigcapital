@@ -78,7 +78,10 @@ export class SyncStripeSubscriptionService {
       }
     }
 
-    const wasActive = previous ? previous.active() : false;
+    const wasProviderActive = previous
+      ? previous.active() &&
+        !!(previous.stripeSubscriptionId || previous.lemonSubscriptionId)
+      : false;
     const cancelAtPeriodEnd = !!subscription.cancel_at_period_end;
     const isActiveAfter = ['active', 'trialing', 'past_due'].includes(
       subscription.status,
@@ -131,7 +134,7 @@ export class SyncStripeSubscriptionService {
     await this.emitSubscriptionEvents({
       previous,
       next: localSubscription,
-      wasActive,
+      wasProviderActive,
       isActiveAfter,
       plan,
     });
@@ -167,19 +170,19 @@ export class SyncStripeSubscriptionService {
   private async emitSubscriptionEvents({
     previous,
     next,
-    wasActive,
+    wasProviderActive,
     isActiveAfter,
     plan,
   }: {
     previous?: PlanSubscription;
     next: PlanSubscription;
-    wasActive: boolean;
+    wasProviderActive: boolean;
     isActiveAfter: boolean;
     plan: Plan;
   }) {
     const subscriptionSlug = next.slug || 'main';
 
-    if (!previous || (!wasActive && isActiveAfter)) {
+    if (!previous || (!wasProviderActive && isActiveAfter)) {
       await this.eventEmitter.emitAsync(
         events.subscription.onSubscriptionSubscribed,
         { subscriptionSlug },

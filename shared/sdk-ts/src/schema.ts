@@ -1125,40 +1125,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/subscription/usage": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get the current plan usage and limits */
-        get: operations["SubscriptionsController_getUsage"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/subscription/stripe/overview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Stripe billing overview for the current organization */
-        get: operations["SubscriptionsController_getBillingOverview"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/subscription/stripe/checkout_session": {
         parameters: {
             query?: never;
@@ -5509,6 +5475,77 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/webhooks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the webhooks list. */
+        get: operations["WebhooksController_getWebhooks"];
+        put?: never;
+        /** Create a new webhook. */
+        post: operations["WebhooksController_createWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the webhook details. */
+        get: operations["WebhooksController_getWebhook"];
+        /** Edit the given webhook. */
+        put: operations["WebhooksController_editWebhook"];
+        post?: never;
+        /** Delete the given webhook. */
+        delete: operations["WebhooksController_deleteWebhook"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/{id}/toggle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Toggle the webhook active state. */
+        post: operations["WebhooksController_toggleWebhookActive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/webhooks/{id}/deliveries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the webhook delivery logs. */
+        get: operations["WebhooksController_getWebhookDeliveries"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -8309,77 +8346,6 @@ export interface components {
         };
         GetSubscriptionPlansResponseDto: {
             plans: components["schemas"]["SubscriptionPlanGroupResponseDto"][];
-        };
-        BillingCustomerResponseDto: {
-            /** @example billing@example.com */
-            email?: string | null;
-            /** @example Acme Inc. */
-            name?: string | null;
-        };
-        BillingPaymentMethodResponseDto: {
-            /** @example visa */
-            brand: string;
-            /** @example 4242 */
-            last4: string;
-            /** @example 12 */
-            expMonth: number;
-            /** @example 2030 */
-            expYear: number;
-        };
-        BillingUpcomingInvoiceResponseDto: {
-            /** @example 1000 */
-            amountDue: number;
-            /** @example $10.00 */
-            amountDueFormatted: string;
-            /** @example USD */
-            currency: string;
-            /** @example 2026-12-01T00:00:00.000Z */
-            date: string;
-            /** @example Dec 1, 2026 */
-            dateFormatted: string;
-        };
-        BillingInvoiceResponseDto: {
-            /** @example in_xxx */
-            id: string;
-            /** @example INV-0001 */
-            number?: string | null;
-            /** @example paid */
-            status?: string | null;
-            /** @example 1000 */
-            amount: number;
-            /** @example $10.00 */
-            amountFormatted: string;
-            /** @example USD */
-            currency: string;
-            /** @example 2026-11-01T00:00:00.000Z */
-            createdAt: string;
-            /** @example Nov 1, 2026 */
-            createdAtFormatted: string;
-            /** @example https://invoice.stripe.com/xxx */
-            hostedInvoiceUrl?: string | null;
-            /** @example https://pay.stripe.com/invoice/xxx/pdf */
-            invoicePdf?: string | null;
-        };
-        BillingOverviewResponseDto: {
-            customer: components["schemas"]["BillingCustomerResponseDto"] | null;
-            paymentMethod: components["schemas"]["BillingPaymentMethodResponseDto"] | null;
-            upcomingInvoice: components["schemas"]["BillingUpcomingInvoiceResponseDto"] | null;
-            invoices: components["schemas"]["BillingInvoiceResponseDto"][];
-        };
-        SubscriptionUsageResourceDto: {
-            /** @example 2 */
-            used: number;
-            /** @example 5 */
-            limit: number | null;
-        };
-        SubscriptionUsageResponseDto: {
-            /**
-             * @example free
-             * @enum {string}
-             */
-            plan: "free" | "paid";
-            invoices: components["schemas"]["SubscriptionUsageResourceDto"];
-            bills: components["schemas"]["SubscriptionUsageResourceDto"];
         };
         StripeCheckoutSessionResponseDto: {
             /**
@@ -19001,6 +18967,196 @@ export interface components {
              */
             exchangeRate: number;
         };
+        WebhookResponseDto: {
+            /**
+             * @description The unique identifier of the webhook
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description Name of the webhook.
+             * @example Invoice Webhook
+             */
+            name: string;
+            /**
+             * @description Target URL for the webhook callback.
+             * @example https://example.com/webhook
+             */
+            url: string;
+            /**
+             * @description Entity type the webhook subscribes to.
+             * @example sale_invoice
+             */
+            entity: string;
+            /**
+             * @description List of events that trigger this webhook.
+             * @example [
+             *       "created",
+             *       "edited",
+             *       "deleted"
+             *     ]
+             */
+            events: string[];
+            /**
+             * @description HTTP method for the webhook.
+             * @example POST
+             */
+            method: string;
+            /** @description Custom headers to include in the webhook request. */
+            headers: unknown[];
+            /**
+             * @description Secret key for HMAC signature.
+             * @example whsec_123456
+             */
+            secret: string | null;
+            /**
+             * @description Whether the webhook is active.
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * @description Creation timestamp.
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            createdAt: string;
+            /**
+             * @description Last update timestamp.
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            updatedAt: string;
+        };
+        WebhookDeliveryResponseDto: {
+            /**
+             * @description The unique identifier of the delivery log
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description ID of the associated webhook
+             * @example 1
+             */
+            webhookId: number;
+            /**
+             * @description The event type that was delivered.
+             * @example sale_invoice.created
+             */
+            eventType: string;
+            /** @description The payload that was sent. */
+            payload: Record<string, never>;
+            /**
+             * @description HTTP response status code.
+             * @example 200
+             */
+            responseStatus?: number | null;
+            /**
+             * @description HTTP response body.
+             * @example OK
+             */
+            responseBody?: string | null;
+            /**
+             * @description Number of delivery attempts.
+             * @example 1
+             */
+            attemptCount: number;
+            /**
+             * @description Error message if delivery failed.
+             * @example Connection timeout
+             */
+            errorMessage?: string | null;
+            /**
+             * @description Timestamp when the delivery succeeded.
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            deliveredAt?: string | null;
+            /**
+             * @description Creation timestamp.
+             * @example 2024-01-01T00:00:00.000Z
+             */
+            createdAt: string;
+        };
+        WebhookHeaderDto: {
+            /** @description Name of the header parameter. */
+            param_name: string;
+            /** @description Value of the header parameter. */
+            param_value: string;
+        };
+        CreateWebhookDto: {
+            /**
+             * @description Name of the webhook.
+             * @example Invoice Webhook
+             */
+            name: string;
+            /**
+             * @description Target URL for the webhook callback.
+             * @example https://example.com/webhook
+             */
+            url: string;
+            /**
+             * @description Entity type the webhook subscribes to.
+             * @example sale_invoice
+             */
+            entity: string;
+            /**
+             * @description List of events that trigger this webhook.
+             * @example [
+             *       "created",
+             *       "edited",
+             *       "deleted"
+             *     ]
+             */
+            events: string[];
+            /**
+             * @description HTTP method for the webhook.
+             * @default POST
+             * @example POST
+             */
+            method: string;
+            /** @description Custom headers to include in the webhook request. */
+            headers?: components["schemas"]["WebhookHeaderDto"][];
+            /**
+             * @description Secret key for HMAC signature.
+             * @example whsec_123456
+             */
+            secret?: string;
+        };
+        EditWebhookDto: {
+            /**
+             * @description Name of the webhook.
+             * @example Invoice Webhook
+             */
+            name?: string;
+            /**
+             * @description Target URL for the webhook callback.
+             * @example https://example.com/webhook
+             */
+            url?: string;
+            /**
+             * @description Entity type the webhook subscribes to.
+             * @example sale_invoice
+             */
+            entity?: string;
+            /**
+             * @description List of events that trigger this webhook.
+             * @example [
+             *       "created",
+             *       "edited",
+             *       "deleted"
+             *     ]
+             */
+            events?: string[];
+            /**
+             * @description HTTP method for the webhook.
+             * @example POST
+             */
+            method?: string;
+            /** @description Custom headers to include in the webhook request. */
+            headers?: components["schemas"]["WebhookHeaderDto"][];
+            /**
+             * @description Secret key for HMAC signature.
+             * @example whsec_123456
+             */
+            secret?: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -21508,56 +21664,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GetSubscriptionPlansResponseDto"];
-                };
-            };
-        };
-    };
-    SubscriptionsController_getUsage: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
-                Authorization: string;
-                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
-                "organization-id": string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Plan usage retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SubscriptionUsageResponseDto"];
-                };
-            };
-        };
-    };
-    SubscriptionsController_getBillingOverview: {
-        parameters: {
-            query?: never;
-            header: {
-                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
-                Authorization: string;
-                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
-                "organization-id": string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Billing overview retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BillingOverviewResponseDto"];
                 };
             };
         };
@@ -35512,6 +35618,220 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    WebhooksController_getWebhooks: {
+        parameters: {
+            query: {
+                filter_by: string;
+                page: number;
+                page_size: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The webhooks have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["WebhookResponseDto"][];
+                        pagination?: {
+                            total?: number;
+                            page?: number;
+                            pageSize?: number;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    WebhooksController_createWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWebhookDto"];
+            };
+        };
+        responses: {
+            /** @description The webhook has been successfully created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_getWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The webhook details have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_editWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditWebhookDto"];
+            };
+        };
+        responses: {
+            /** @description The webhook has been successfully updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_deleteWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The webhook has been successfully deleted. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_toggleWebhookActive: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The webhook active state has been toggled. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResponseDto"];
+                };
+            };
+        };
+    };
+    WebhooksController_getWebhookDeliveries: {
+        parameters: {
+            query: {
+                page: number;
+                page_size: number;
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+            };
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The delivery logs have been successfully retrieved. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["WebhookDeliveryResponseDto"][];
+                        pagination?: {
+                            total?: number;
+                            page?: number;
+                            pageSize?: number;
+                        };
+                    };
+                };
             };
         };
     };

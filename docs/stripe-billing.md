@@ -6,19 +6,27 @@ installations remain free and never call Stripe.
 ## How it works
 
 - A Cloud organization gets a Stripe Customer lazily when it starts checkout.
+- Every new Cloud organization starts a full-access **15-day Go trial**. The
+  trial length is configurable with `FREE_TRIAL_DAYS`.
+- During the trial there are no document limits; all features are available.
+- When the trial ends, the organization keeps read-only access. Write
+  operations are blocked with `ORGANIZATION.SUBSCRIPTION.TRIAL_EXPIRED` until
+  a paid subscription is active. Auth, onboarding, billing, and webhook routes
+  are excluded.
 - The initial subscription uses **Stripe Checkout** (hosted).
 - Plan changes, cancellation, and resume are handled by the API.
 - Payment methods, billing details, and invoices are available through the
-  **Stripe Customer Portal** and are also summarized on the Billing page.
+  **Stripe Customer Portal**.
 - Stripe webhooks are the source of truth and sync into the existing
   `subscription_plans` / `subscription_plan_subscriptions` system tables.
-- Cloud write operations are blocked when the organization has no active
-  subscription. Auth, onboarding, billing, and webhook routes are excluded.
 
 ## Environment variables
 
 ```dotenv
 HOSTED_ON_BIGCAPITAL_CLOUD=true
+
+# Full-access trial length for new Cloud organizations, in days.
+FREE_TRIAL_DAYS=15
 
 # Falls back to STRIPE_PAYMENT_SECRET_KEY when empty.
 STRIPE_BILLING_SECRET_KEY=sk_live_...
@@ -49,6 +57,12 @@ The migrations add:
 - Stripe product/price columns and plan metadata on `subscription_plans`
 - Stripe subscription state on `subscription_plan_subscriptions`
 - `stripe_webhook_events` for idempotent webhook handling
+- A full-access trial for existing Cloud organizations that never started a
+  paid subscription (based on `HOSTED_ON_BIGCAPITAL_CLOUD` / `FREE_TRIAL_DAYS`)
+
+When running the migration container, make sure both
+`HOSTED_ON_BIGCAPITAL_CLOUD` and `FREE_TRIAL_DAYS` are passed to it; the trial
+backfill is skipped when the Cloud flag is missing.
 
 ## Provisioning plans in Stripe
 
@@ -116,7 +130,6 @@ Set the printed `whsec_...` as `STRIPE_BILLING_WEBHOOK_SECRET`.
 |---|---|---|
 | `GET` | `/api/subscription` | Current organization subscriptions |
 | `GET` | `/api/subscription/plans` | Plan catalog |
-| `GET` | `/api/subscription/stripe/overview` | Payment method, invoices, next invoice |
 | `POST` | `/api/subscription/stripe/checkout_session` | Create Stripe Checkout session |
 | `POST` | `/api/subscription/stripe/portal_session` | Create Stripe Customer Portal session |
 | `POST` | `/api/subscription/stripe/sync` | Sync a completed Checkout session |
