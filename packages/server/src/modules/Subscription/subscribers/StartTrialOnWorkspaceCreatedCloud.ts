@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
 import { events } from '@/common/events/events';
-import { IWorkspaceCreatedEventPayload } from '@/modules/EE/Workspaces/Workspaces.types';
+import { IWorkspaceCreatedEventPayload } from '@/modules/ee/Workspaces/Workspaces.types';
 import { StartTrialSubscriptionService } from '../commands/StartTrialSubscription.service';
 
 @Injectable()
