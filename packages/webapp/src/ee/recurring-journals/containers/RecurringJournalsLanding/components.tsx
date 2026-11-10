@@ -21,6 +21,7 @@ interface RecurringJournalActionsPayload {
   onResume: (recurringJournal: RecurringJournalTableRow) => void;
   onGenerate: (recurringJournal: RecurringJournalTableRow) => void;
   onViewJournals: (recurringJournal: RecurringJournalTableRow) => void;
+  onViewDetails: (recurringJournal: RecurringJournalTableRow) => void;
 }
 
 interface ActionsMenuProps {
@@ -57,12 +58,25 @@ export function RecurringJournalStatus({
 
 export function ActionsMenu({
   row: { original },
-  payload: { onEdit, onDelete, onPause, onResume, onGenerate, onViewJournals },
+  payload: {
+    onEdit,
+    onDelete,
+    onPause,
+    onResume,
+    onGenerate,
+    onViewJournals,
+    onViewDetails,
+  },
 }: ActionsMenuProps) {
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
+        text={intl.get('view_details')}
+        onClick={safeCallback(onViewDetails, original)}
+      />
+      <MenuItem
+        icon={<Icon icon="document" />}
         text={intl.get('recurring_journal.view_generated_journals')}
         onClick={safeCallback(onViewJournals, original)}
       />

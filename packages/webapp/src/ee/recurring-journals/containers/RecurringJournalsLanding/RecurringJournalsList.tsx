@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { RecurringJournalsActionsBar } from './RecurringJournalsActionsBar';
 import { RecurringJournalsDataTable } from './RecurringJournalsDataTable';
 import { RecurringJournalsEmptyStatus } from './RecurringJournalsEmptyStatus';
+import { RecurringJournalsListDrawers } from './RecurringJournalsListDrawers';
 import { RecurringJournalsListProvider } from './RecurringJournalsListProvider';
 import { useRecurringJournalsListContext } from './RecurringJournalsListProvider';
 import { withRecurringJournals } from './withRecurringJournals';
@@ -55,6 +56,7 @@ function RecurringJournalsListInner({
           recurringJournalsTableState?.filterRoles || []
         }
       />
+      <RecurringJournalsListDrawers />
       <RecurringJournalsListContent />
     </RecurringJournalsListProvider>
   );

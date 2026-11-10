@@ -1799,6 +1799,7 @@
   "unlocking_partial_transactions.alert.cancel_message": "Partial transaction unlocking has been canceled successfully.",
   "unlocking_partial_transactions.alert.message": "Are you sure you want to cancel partial unlock of this module?",
   "yes": "Yes",
+  "no": "No",
   "transactions_locking.lock_all_transactions_at_once": "Lock All Transactions At Once →",
   "transactions_locking.lock_modules_individually": "Lock Modules Individually →",
   "transactions_locking_lock_all_transactions_at_once": "Lock All Transactions At Once.",
@@ -2459,6 +2460,17 @@
   "recurring_journal.field.amount": "Amount",
   "recurring_journal.field.auto_publish": "Publish generated journals automatically",
   "recurring_journal.field.auto_publish_hint": "Leave off to save generated journals as drafts.",
+  "recurring_journal.field.auto_publish_short": "Auto-publish",
+  "recurring_journal.field.created_at": "Created At",
+  "recurring_journal.field.last_error": "Last Error",
+
+  "recurring_journal_details": "Recurring Journal Details",
+  "recurring_journal_details.drawer.title": "Recurring Journal Details ({profileName})",
+  "recurring_journal_details.drawer.subtitle": "Next journal: {date}",
+
+  "recurring_journal.details.subtotal": "Subtotal",
+  "recurring_journal.details.total": "TOTAL",
+  "recurring_journal.details.occurrences_count": "Journals Generated",
 
   "recurring_journal.generated_journals": "Generated Journals",
   "recurring_journal.view_generated_journals": "View Generated Journals",

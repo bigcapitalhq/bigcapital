@@ -151,6 +151,9 @@ export function usePauseRecurringJournal(
     ...props,
     mutationFn: (id: number) => pauseRecurringJournal(fetcher, id),
     onSuccess: (data, variables, _onMutateResult, context) => {
+      queryClient.invalidateQueries({
+        queryKey: recurringJournalsKeys.detail(variables),
+      });
       commonInvalidateQueries(queryClient);
       props?.onSuccess?.(data, variables, _onMutateResult, context);
     },
@@ -167,6 +170,9 @@ export function useResumeRecurringJournal(
     ...props,
     mutationFn: (id: number) => resumeRecurringJournal(fetcher, id),
     onSuccess: (data, variables, _onMutateResult, context) => {
+      queryClient.invalidateQueries({
+        queryKey: recurringJournalsKeys.detail(variables),
+      });
       commonInvalidateQueries(queryClient);
       props?.onSuccess?.(data, variables, _onMutateResult, context);
     },
@@ -183,6 +189,9 @@ export function useGenerateRecurringJournalNow(
     ...props,
     mutationFn: (id: number) => generateRecurringJournalNow(fetcher, id),
     onSuccess: (data, variables, _onMutateResult, context) => {
+      queryClient.invalidateQueries({
+        queryKey: recurringJournalsKeys.detail(variables),
+      });
       queryClient.invalidateQueries({
         queryKey: recurringJournalsKeys.journals(variables),
       });

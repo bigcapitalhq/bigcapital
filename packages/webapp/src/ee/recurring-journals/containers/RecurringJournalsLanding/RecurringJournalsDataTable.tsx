@@ -3,7 +3,6 @@ import * as FF from 'fp-ts/function';
 import React, { useCallback, useState } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import { RecurringJournalGeneratedJournalsDialog } from '../Dialogs/RecurringJournalGeneratedJournalsDialog';
 import { ActionsMenu, useRecurringJournalsTableColumns } from './components';
 import { useRecurringJournalsListContext } from './RecurringJournalsListProvider';
 import { withRecurringJournals } from './withRecurringJournals';
@@ -11,6 +10,7 @@ import { withRecurringJournalsActions } from './withRecurringJournalsActions';
 import type { RecurringJournalTableRow } from './components';
 import type { WithRecurringJournalsProps } from './withRecurringJournals';
 import type { WithRecurringJournalsActionsProps } from './withRecurringJournalsActions';
+import type { WithDrawerActionsProps } from '@/containers/Drawer/withDrawerActions';
 import {
   AppToaster,
   DataTable,
@@ -18,7 +18,9 @@ import {
   TableSkeletonHeader,
   TableSkeletonRows,
 } from '@/components';
+import { DRAWERS } from '@/constants/drawers';
 import { TABLES } from '@/constants/tables';
+import { withDrawerActions } from '@/containers/Drawer/withDrawerActions';
 import {
   useDeleteRecurringJournal,
   useGenerateRecurringJournalNow,
@@ -32,13 +34,16 @@ interface RecurringJournalsDataTableProps
       WithRecurringJournalsProps,
       'recurringJournalsTableState' | 'recurringJournalsSelectedRows'
     >,
-    WithRecurringJournalsActionsProps {}
+    WithRecurringJournalsActionsProps,
+    WithDrawerActionsProps {}
 
 function RecurringJournalsDataTableInner({
   setRecurringJournalsTableState,
   setRecurringJournalsSelectedRows,
   recurringJournalsTableState,
   recurringJournalsSelectedRows,
+  // #withDrawerActions
+  openDrawer,
 }: RecurringJournalsDataTableProps) {
   const history = useHistory();
   const {
@@ -59,15 +64,23 @@ function RecurringJournalsDataTableInner({
 
   const [deleteTarget, setDeleteTarget] =
     useState<RecurringJournalTableRow | null>(null);
-  const [journalsTarget, setJournalsTarget] =
-    useState<RecurringJournalTableRow | null>(null);
 
   const handleEdit = (recurringJournal: RecurringJournalTableRow) => {
     history.push(`/recurring-journals/${recurringJournal.id}/edit`);
   };
 
+  const handleViewDetails = (recurringJournal: RecurringJournalTableRow) => {
+    openDrawer(DRAWERS.RECURRING_JOURNAL_DETAILS, {
+      recurringJournalId: recurringJournal.id,
+      tab: 'details',
+    });
+  };
+
   const handleViewJournals = (recurringJournal: RecurringJournalTableRow) => {
-    setJournalsTarget(recurringJournal);
+    openDrawer(DRAWERS.RECURRING_JOURNAL_DETAILS, {
+      recurringJournalId: recurringJournal.id,
+      tab: 'journals',
+    });
   };
 
   const handlePause = async (recurringJournal: RecurringJournalTableRow) => {
@@ -162,7 +175,10 @@ function RecurringJournalsDataTableInner({
   );
 
   const handleCellClick = (cell: any) => {
-    history.push(`/recurring-journals/${cell.row.original.id}/edit`);
+    openDrawer(DRAWERS.RECURRING_JOURNAL_DETAILS, {
+      recurringJournalId: cell.row.original.id,
+      tab: 'details',
+    });
   };
 
   if (isEmptyStatus) {
@@ -199,6 +215,7 @@ function RecurringJournalsDataTableInner({
         size={manualJournalsSettings?.tableSize as string | undefined}
         payload={{
           onEdit: handleEdit,
+          onViewDetails: handleViewDetails,
           onViewJournals: handleViewJournals,
           onPause: handlePause,
           onResume: handleResume,
@@ -218,12 +235,6 @@ function RecurringJournalsDataTableInner({
       >
         <p>{intl.get('recurring_journal.delete_confirmation')}</p>
       </Alert>
-
-      <RecurringJournalGeneratedJournalsDialog
-        recurringJournalId={journalsTarget?.id}
-        isOpen={!!journalsTarget}
-        onClose={() => setJournalsTarget(null)}
-      />
     </DashboardContentTable>
   );
 }
@@ -237,4 +248,5 @@ export const RecurringJournalsDataTable = FF.pipe(
     }),
   ),
   withRecurringJournalsActions,
+  withDrawerActions,
 );
