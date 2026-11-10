@@ -1,3 +1,4 @@
+import { Spinner } from '@blueprintjs/core';
 import { keepPreviousData } from '@tanstack/react-query';
 import * as FF from 'fp-ts/function';
 import { useEffect } from 'react';
@@ -21,7 +22,7 @@ function BillingPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
 }: BillingPageRootProps) {
-  const { data: dashboardMeta } = useDashboardMeta({
+  const { data: dashboardMeta, isLoading } = useDashboardMeta({
     placeholderData: keepPreviousData,
   });
 
@@ -29,8 +30,13 @@ function BillingPageRoot({
     changePreferencesPageTitle('Billing');
   }, [changePreferencesPageTitle]);
 
-  // In case the edition is not Bigcapital Cloud, redirect to the homepage.
-  if (!dashboardMeta!.isBigcapitalCloud) {
+  if (isLoading) {
+    return <Spinner size={30} />;
+  }
+
+  // Billing is only available on Bigcapital Cloud. Self-hosted installations
+  // are free and never require a subscription.
+  if (!dashboardMeta?.isBigcapitalCloud) {
     return <Redirect to={{ pathname: '/' }} />;
   }
 

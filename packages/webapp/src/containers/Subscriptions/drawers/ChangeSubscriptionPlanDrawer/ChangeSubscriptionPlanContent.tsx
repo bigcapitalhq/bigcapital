@@ -1,9 +1,13 @@
 import { Callout, Classes } from '@blueprintjs/core';
+import { useState } from 'react';
+import { SubscriptionPlansPeriodSwitcher } from '../../components/SubscriptionPlansPeriodSwitcher';
 import { ChangeSubscriptionPlans } from './ChangeSubscriptionPlans';
+import type { SubscriptionPlansPeriod } from '../../component/SubscriptionPlan';
 import { Box } from '@/components';
-import { SubscriptionPlansPeriodSwitcher } from '@/containers/Setup/SetupSubscription/SubscriptionPlansPeriodSwitcher';
 
 export function ChangeSubscriptionPlanContent() {
+  const [period, setPeriod] = useState<SubscriptionPlansPeriod>('monthly');
+
   return (
     <Box className={Classes.DRAWER_BODY}>
       <Box
@@ -19,8 +23,8 @@ export function ChangeSubscriptionPlanContent() {
           include applicable taxes.
         </Callout>
 
-        <SubscriptionPlansPeriodSwitcher />
-        <ChangeSubscriptionPlans />
+        <SubscriptionPlansPeriodSwitcher period={period} onChange={setPeriod} />
+        <ChangeSubscriptionPlans period={period} />
       </Box>
     </Box>
   );

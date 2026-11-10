@@ -29,6 +29,7 @@
     "cli:tenants:migrate:make": "ts-node -r tsconfig-paths/register src/cli.ts tenants:migrate:make",
     "cli:tenants:list": "ts-node -r tsconfig-paths/register src/cli.ts tenants:list",
     "openapi:export": "ts-node -r tsconfig-paths/register src/cli.ts openapi:export",
+    "cli:stripe:sync-plans": "ts-node -r tsconfig-paths/register src/cli.ts stripe:sync-plans",
     "cli:system:seed:latest": "ts-node -r tsconfig-paths/register src/cli.ts system:seed:latest",
     "cli:tenants:seed:latest": "ts-node -r tsconfig-paths/register src/cli.ts tenants:seed:latest"
   },
@@ -44,7 +45,6 @@
     "@bull-board/nestjs": "^5.22.0",
     "@casl/ability": "^5.4.3",
     "@clickhouse/client": "^1.23.1",
-    "@lemonsqueezy/lemonsqueezy.js": "^2.2.0",
     "@liaoliaots/nestjs-redis": "^10.0.0",
     "@nest-lab/throttler-storage-redis": "^1.1.0",
     "@nestjs/bull": "^10.2.1",

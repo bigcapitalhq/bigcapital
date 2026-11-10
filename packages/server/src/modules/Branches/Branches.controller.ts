@@ -18,9 +18,12 @@ import {
 } from '@nestjs/swagger';
 import { BranchResponseDto } from './dtos/BranchResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('branches')
 @ApiTags('Branches')
+@RequireSubscriptionFeature(SubscriptionFeature.Branches)
 @ApiExtraModels(BranchResponseDto)
 @ApiCommonHeaders()
 export class BranchesController {

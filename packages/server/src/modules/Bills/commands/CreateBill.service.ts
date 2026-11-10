@@ -10,6 +10,7 @@ import { Bill } from '../models/Bill';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { SubscriptionAccessService } from '@/modules/Subscription/access/SubscriptionAccess.service';
 import { CreateBillDto } from '../dtos/Bill.dto';
 
 @Injectable()
@@ -20,6 +21,7 @@ export class CreateBill {
     private validators: BillsValidators,
     private itemsEntriesService: ItemsEntriesService,
     private transformerDTO: BillDTOTransformer,
+    private subscriptionAccess: SubscriptionAccessService,
 
     @Inject(Bill.name)
     private billModel: TenantModelProxy<typeof Bill>,
@@ -46,6 +48,9 @@ export class CreateBill {
     billDTO: CreateBillDto,
     trx?: Knex.Transaction,
   ): Promise<Bill> {
+    // Validate the organization can still write data (Cloud trial/access).
+    await this.subscriptionAccess.assertCanWrite();
+
     // Retrieves the given bill vendor or throw not found error.
     const vendor = await this.vendorModel()
       .query()
