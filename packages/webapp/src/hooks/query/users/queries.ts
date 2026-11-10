@@ -17,8 +17,7 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useSetAuthEmailConfirmed } from '../../state';
-import { useSetFeatureDashboardMeta } from '../../state/feature';
+import { useSetAuthEmailConfirmed } from '../../state/authentication';
 import { useApiFetcher } from '../../useRequest';
 import { usersKeys } from './query-keys';
 import type {
@@ -163,18 +162,11 @@ export const useDashboardMeta = (
     'queryKey' | 'queryFn'
   >,
 ) => {
-  const setFeatureDashboardMeta = useSetFeatureDashboardMeta();
   const fetcher = useApiFetcher({ enableCamelCaseTransform: true });
 
-  const state = useQuery({
+  return useQuery({
     ...props,
     queryKey: usersKeys.dashboardMeta(),
     queryFn: () => fetchDashboardBootMeta(fetcher),
   });
-  useEffect(() => {
-    if (state.isSuccess && state.data) {
-      setFeatureDashboardMeta(state.data);
-    }
-  }, [state.isSuccess, state.data, setFeatureDashboardMeta]);
-  return state;
 };
