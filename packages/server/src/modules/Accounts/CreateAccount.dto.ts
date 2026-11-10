@@ -94,4 +94,22 @@ export class CreateAccountDTO {
     required: false,
   })
   plaidItemId?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description: 'SimpleFIN account ID for syncing',
+    example: 'ACT-1a2b3c',
+    required: false,
+  })
+  simplefinAccountId?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description: 'SimpleFIN item ID for syncing',
+    example: 'f0a5c1b2-7a6d-4f9e-9c1a-2b3c4d5e6f70',
+    required: false,
+  })
+  simplefinItemId?: string;
 }

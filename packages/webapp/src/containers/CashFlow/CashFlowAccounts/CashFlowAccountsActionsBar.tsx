@@ -5,6 +5,11 @@ import {
   NavbarDivider,
   Alignment,
   Switch,
+  Menu,
+  MenuItem,
+  Popover,
+  PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
@@ -24,6 +29,7 @@ import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 import { useRefreshCashflowAccounts } from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
 import { useOpenPlaidConnect } from '@/hooks/utils/useOpenPlaidConnect';
 import { CreditCard2Icon } from '@/icons/CreditCard2';
 
@@ -48,6 +54,11 @@ function CashFlowAccountsActionsBarInner({
 
   // Opens the Plaid popup.
   const { openPlaidAsync, isPlaidLoading } = useOpenPlaidConnect();
+
+  // Bank feed providers enabled on the server.
+  const { featureCan } = useFeatureCan();
+  const isPlaidEnabled = featureCan(Features.BankSyncingPlaid);
+  const isSimpleFinEnabled = featureCan(Features.BankSyncingSimpleFin);
 
   // Handle refresh button click.
   const handleRefreshBtnClick = () => {
@@ -74,10 +85,37 @@ function CashFlowAccountsActionsBarInner({
     const checked = event.target.checked;
     setCashflowAccountsTableState({ inactiveMode: checked });
   };
-  // Handle connect button click.
-  const handleConnectToBank = () => {
+  // Handle connect via Plaid click.
+  const handleConnectViaPlaid = () => {
     openPlaidAsync();
   };
+  // Handle connect via SimpleFIN click.
+  const handleConnectViaSimpleFin = () => {
+    openDialog(DialogsName.ConnectSimpleFin, {});
+  };
+  // When a single provider is enabled the button opens it directly, otherwise
+  // it shows a menu to pick the provider.
+  const handleConnectToBank = () => {
+    if (isPlaidEnabled && !isSimpleFinEnabled) {
+      handleConnectViaPlaid();
+    } else if (isSimpleFinEnabled && !isPlaidEnabled) {
+      handleConnectViaSimpleFin();
+    }
+  };
+  const hasMultipleProviders = isPlaidEnabled && isSimpleFinEnabled;
+  const hasAnyProvider = isPlaidEnabled || isSimpleFinEnabled;
+
+  const connectButton = (
+    <Button
+      className={Classes.MINIMAL}
+      text={<T id={'banking.connect_bank_credit_card'} />}
+      icon={<CreditCard2Icon />}
+      rightIcon={hasMultipleProviders ? 'caret-down' : undefined}
+      onClick={hasMultipleProviders ? undefined : handleConnectToBank}
+      disabled={isPlaidLoading}
+      data-testid="connect-bank-account"
+    />
+  );
 
   return (
     <DashboardActionsBar>
@@ -107,14 +145,36 @@ function CashFlowAccountsActionsBarInner({
 
       <NavbarGroup align={Alignment.RIGHT}>
         <FeatureCan feature={Features.BankSyncing}>
-          <Button
-            className={Classes.MINIMAL}
-            text={'Connect Bank/Credit Card'}
-            icon={<CreditCard2Icon />}
-            onClick={handleConnectToBank}
-            disabled={isPlaidLoading}
-          />
-          <NavbarDivider />
+          {hasAnyProvider && (
+            <>
+              {hasMultipleProviders ? (
+                <Popover
+                  minimal={true}
+                  interactionKind={PopoverInteractionKind.CLICK}
+                  position={Position.BOTTOM_LEFT}
+                  content={
+                    <Menu>
+                      <MenuItem
+                        text={<T id={'banking.connect_via_plaid'} />}
+                        onClick={handleConnectViaPlaid}
+                        disabled={isPlaidLoading}
+                      />
+                      <MenuItem
+                        text={<T id={'banking.connect_via_simplefin'} />}
+                        onClick={handleConnectViaSimpleFin}
+                        data-testid="connect-via-simplefin"
+                      />
+                    </Menu>
+                  }
+                >
+                  {connectButton}
+                </Popover>
+              ) : (
+                connectButton
+              )}
+              <NavbarDivider />
+            </>
+          )}
         </FeatureCan>
         <Button
           className={Classes.MINIMAL}

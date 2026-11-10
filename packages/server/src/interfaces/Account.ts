@@ -15,6 +15,8 @@ export interface IAccountCreateDTO extends IAccountDTO {
   currencyCode?: string;
   plaidAccountId?: string;
   plaidItemId?: string;
+  simplefinAccountId?: string;
+  simplefinItemId?: string;
 }
 
 export type IAccountEditDTO = IAccountDTO;

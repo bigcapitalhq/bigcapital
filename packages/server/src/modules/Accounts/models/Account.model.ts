@@ -7,6 +7,7 @@ import {
 } from '@/constants/accounts';
 import { AccountTypesUtils } from '@/libs/accounts-utils/AccountTypesUtils';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
+import { SimpleFinItem } from '@/modules/BankingSimpleFin/models/SimpleFinItem';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { flatToNestedArray } from '@/utils/flat-to-nested-array';
 import { ExportableModel } from '../../Export/decorators/ExportableModel.decorator';
@@ -35,9 +36,12 @@ export class Account extends TenantBaseModel {
   public amount!: number;
   public plaidItemId!: string;
   public plaidAccountId!: string | null;
+  public simplefinItemId!: string | null;
+  public simplefinAccountId!: string | null;
   public isFeedsActive!: boolean;
   public isSyncingOwner!: boolean;
   public plaidItem!: PlaidItem;
+  public simplefinItem!: SimpleFinItem;
 
   /**
    * Table name.
@@ -216,6 +220,9 @@ export class Account extends TenantBaseModel {
     // const ItemEntry = require('models/ItemEntry');
     // const UncategorizedTransaction = require('models/UncategorizedCashflowTransaction');
     const { PlaidItem } = require('../../BankingPlaid/models/PlaidItem');
+    const {
+      SimpleFinItem,
+    } = require('../../BankingSimpleFin/models/SimpleFinItem');
 
     return {
       /**
@@ -341,6 +348,18 @@ export class Account extends TenantBaseModel {
         join: {
           from: 'accounts.plaidItemId',
           to: 'plaid_items.plaidItemId',
+        },
+      },
+
+      /**
+       * Account model may belongs to a SimpleFIN item.
+       */
+      simplefinItem: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: SimpleFinItem,
+        join: {
+          from: 'accounts.simplefinItemId',
+          to: 'simplefin_items.simplefinItemId',
         },
       },
     };

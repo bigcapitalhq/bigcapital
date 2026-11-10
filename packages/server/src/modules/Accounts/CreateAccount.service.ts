@@ -101,9 +101,13 @@ export class CreateAccountService {
       slug: kebabCase(createAccountDTO.name),
       currencyCode: createAccountDTO.currencyCode || baseCurrency,
 
-      // Mark the account is Plaid owner since Plaid item/account is defined on creating.
+      // Mark the account as the bank feed owner since the provider
+      // (Plaid/SimpleFIN) item/account is defined on creating.
       isSyncingOwner: Boolean(
-        createAccountDTO.plaidAccountId || createAccountDTO.plaidItemId,
+        createAccountDTO.plaidAccountId ||
+          createAccountDTO.plaidItemId ||
+          createAccountDTO.simplefinAccountId ||
+          createAccountDTO.simplefinItemId,
       ),
     };
   };

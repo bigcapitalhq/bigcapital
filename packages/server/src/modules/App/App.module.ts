@@ -103,6 +103,7 @@ import { MiscellaneousModule } from '../Miscellaneous/Miscellaneous.module';
 import { UsersModule } from '../UsersModule/Users.module';
 import { ContactsModule } from '../Contacts/Contacts.module';
 import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
+import { BankingSimpleFinModule } from '../BankingSimpleFin/BankingSimpleFin.module';
 import { BankingCategorizeModule } from '../BankingCategorize/BankingCategorize.module';
 import { ExchangeRatesModule } from '../ExchangeRates/ExchangeRates.module';
 import { WebhooksModule } from '../Webhooks/Webhooks.module';
@@ -239,6 +240,7 @@ import { AppThrottleModule } from './AppThrottle.module';
     BankingTransactionsModule,
     BankingMatchingModule,
     BankingPlaidModule,
+    BankingSimpleFinModule,
     BankingCategorizeModule,
     TransactionsLockingModule,
     SettingsModule,

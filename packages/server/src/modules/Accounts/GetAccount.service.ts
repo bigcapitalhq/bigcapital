@@ -28,7 +28,7 @@ export class GetAccount {
     const account = await this.accountModel()
       .query()
       .findById(accountId)
-      .withGraphFetched('plaidItem')
+      .withGraphFetched('[plaidItem, simplefinItem]')
       .throwIfNotFound();
 
     const accountsGraph = await this.accountRepository.getDependencyGraph();

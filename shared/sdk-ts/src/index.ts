@@ -58,6 +58,7 @@ export * from "./notifications";
 export * from "./reports";
 export * from "./workspaces";
 export * from "./audit-logs";
+export * from "./simplefin";
 
 /**
  * Utility types for request/response types from schema paths.

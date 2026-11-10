@@ -15,12 +15,14 @@ import { events } from '@/common/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PLAID_CLIENT } from '@/modules/Plaid/Plaid.module';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { DisconnectSimpleFinItemService } from '@/modules/BankingSimpleFin/commands/DisconnectSimpleFinItem.service';
 
 @Injectable()
 export class DisconnectBankAccountService {
   constructor(
     private eventPublisher: EventEmitter2,
     private uow: UnitOfWork,
+    private disconnectSimpleFinItem: DisconnectSimpleFinItemService,
 
     @Inject(PLAID_CLIENT) private plaidClient: PlaidApi,
     @Inject(Account.name)
@@ -45,12 +47,13 @@ export class DisconnectBankAccountService {
         ACCOUNT_TYPE.BANK,
         ACCOUNT_TYPE.CREDIT_CARD,
       ])
-      .withGraphFetched('plaidItem')
+      .withGraphFetched('[plaidItem, simplefinItem]')
       .throwIfNotFound();
 
     const oldPlaidItem = account.plaidItem;
+    const oldSimpleFinItem = account.simplefinItem;
 
-    if (!oldPlaidItem) {
+    if (!oldPlaidItem && !oldSimpleFinItem) {
       throw new ServiceError(ERRORS.BANK_ACCOUNT_NOT_CONNECTED);
     }
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
@@ -59,27 +62,46 @@ export class DisconnectBankAccountService {
         bankAccountId,
       } as IBankAccountDisconnectingEventPayload);
 
-      // Remove the Plaid item from the system.
-      await this.plaidItemModel()
-        .query(trx)
-        .findOne('plaidItemId', account.plaidItemId)
-        .delete();
-
-      // Remove the plaid item association to the bank account.
-      await this.accountModel().query(trx).findById(bankAccountId).patch({
-        plaidAccountId: null,
-        plaidItemId: null,
-        isFeedsActive: false,
-      });
-      // Remove the Plaid item.
-      await this.plaidClient.itemRemove({
-        access_token: oldPlaidItem.plaidAccessToken,
-      });
+      if (oldPlaidItem) {
+        await this.disconnectPlaid(account, trx);
+      } else if (oldSimpleFinItem) {
+        await this.disconnectSimpleFinItem.unlinkAccount(
+          bankAccountId,
+          oldSimpleFinItem.simplefinItemId,
+          trx,
+        );
+      }
       // Triggers `onBankAccountDisconnected` event.
       await this.eventPublisher.emitAsync(events.bankAccount.onDisconnected, {
         bankAccountId,
         trx,
       } as IBankAccountDisconnectedEventPayload);
+    });
+  }
+
+  /**
+   * Disconnects the Plaid item of the given bank account.
+   * @param {Account} account
+   * @param {Knex.Transaction} trx
+   */
+  private async disconnectPlaid(account: Account, trx: Knex.Transaction) {
+    const oldPlaidItem = account.plaidItem;
+
+    // Remove the Plaid item from the system.
+    await this.plaidItemModel()
+      .query(trx)
+      .findOne('plaidItemId', account.plaidItemId)
+      .delete();
+
+    // Remove the plaid item association to the bank account.
+    await this.accountModel().query(trx).findById(account.id).patch({
+      plaidAccountId: null,
+      plaidItemId: null,
+      isFeedsActive: false,
+    });
+    // Remove the Plaid item.
+    await this.plaidClient.itemRemove({
+      access_token: oldPlaidItem.plaidAccessToken,
     });
   }
 }

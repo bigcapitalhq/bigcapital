@@ -27,6 +27,19 @@ export class FeaturesConfigure {
         defaultValue: this.configService.get('bankfeed.enabled') ?? false,
       },
       {
+        // Plaid is available once its API credentials are configured.
+        name: Features.BankSyncingPlaid,
+        defaultValue: Boolean(
+          this.configService.get('plaid.clientId') &&
+            this.configService.get('plaid.secret'),
+        ),
+      },
+      {
+        // SimpleFIN needs no server credentials, only the enabled flag.
+        name: Features.BankSyncingSimpleFin,
+        defaultValue: this.configService.get('simplefin.enabled') ?? true,
+      },
+      {
         name: Features.LANDED_COST,
         defaultValue: false,
       },

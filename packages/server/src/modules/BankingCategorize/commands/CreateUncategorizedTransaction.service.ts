@@ -50,11 +50,12 @@ export class CreateUncategorizedTransactionService {
             ...createUncategorizedTransactionDTO,
           });
       } catch (error) {
-        // A duplicated Plaid transaction id means the transaction was already
-        // synced (e.g. by a concurrent sync run), so treat it as a no-op and
-        // return the existing row to keep the sync idempotent.
+        // A duplicated bank feed (Plaid/SimpleFIN) transaction id means the
+        // transaction was already synced (e.g. by a concurrent sync run), so
+        // treat it as a no-op and return the existing row to keep the sync
+        // idempotent.
         if (
-          this.isDuplicatePlaidTransactionError(
+          this.isDuplicateFeedTransactionError(
             error,
             createUncategorizedTransactionDTO,
           )
@@ -62,8 +63,15 @@ export class CreateUncategorizedTransactionService {
           uncategorizedTransaction = await this.uncategorizedBankTransaction()
             .query(trx)
             .findOne({
-              plaidTransactionId:
-                createUncategorizedTransactionDTO.plaidTransactionId,
+              ...(createUncategorizedTransactionDTO.plaidTransactionId
+                ? {
+                    plaidTransactionId:
+                      createUncategorizedTransactionDTO.plaidTransactionId,
+                  }
+                : {
+                    simplefinTransactionId:
+                      createUncategorizedTransactionDTO.simplefinTransactionId,
+                  }),
               accountId: createUncategorizedTransactionDTO.accountId,
             })
             .throwIfNotFound();
@@ -86,17 +94,18 @@ export class CreateUncategorizedTransactionService {
 
   /**
    * Determines whether the given error is a duplicate key violation on the
-   * unique `plaid_transaction_id` index for the given create DTO.
+   * unique bank feed transaction id index (`plaid_transaction_id` or
+   * `simplefin_transaction_id`) for the given create DTO.
    * @param {any} error - The insert error.
    * @param {UncategorizedBankTransactionDto} createDTO - Create DTO.
    * @returns {boolean}
    */
-  private isDuplicatePlaidTransactionError(
+  private isDuplicateFeedTransactionError(
     error: any,
     createDTO: UncategorizedBankTransactionDto,
   ): boolean {
     return (
-      !!createDTO.plaidTransactionId &&
+      !!(createDTO.plaidTransactionId || createDTO.simplefinTransactionId) &&
       error?.code === 'ER_DUP_ENTRY' &&
       error?.errno === 1062
     );

@@ -34,7 +34,7 @@ export function DashboardSockets() {
       });
 
       AppToaster.show({
-        message: 'The Plaid connected accounts have been updated.',
+        message: 'The connected bank accounts have been updated.',
         intent: Intent.SUCCESS,
       });
     });

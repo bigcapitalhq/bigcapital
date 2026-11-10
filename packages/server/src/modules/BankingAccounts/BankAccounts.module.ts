@@ -8,6 +8,7 @@ import { DeleteUncategorizedTransactionsOnAccountDeleting } from './subscribers/
 import { DisconnectPlaidItemOnAccountDeleted } from './subscribers/DisconnectPlaidItemOnAccountDeleted';
 import { BankAccountsController } from './BankAccounts.controller';
 import { BankingPlaidModule } from '../BankingPlaid/BankingPlaid.module';
+import { BankingSimpleFinModule } from '../BankingSimpleFin/BankingSimpleFin.module';
 import { PlaidModule } from '../Plaid/Plaid.module';
 import { BankRulesModule } from '../BankRules/BankRules.module';
 import { BankingTransactionsRegonizeModule } from '../BankingTranasctionsRegonize/BankingTransactionsRegonize.module';
@@ -21,6 +22,7 @@ import { MutateBaseCurrencyAccounts } from '../Accounts/MutateBaseCurrencyAccoun
 @Module({
   imports: [
     BankingPlaidModule,
+    BankingSimpleFinModule,
     PlaidModule,
     BankRulesModule,
     BankingTransactionsRegonizeModule,

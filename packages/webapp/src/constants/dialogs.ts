@@ -63,6 +63,7 @@ export enum DialogsName {
   ReceiptMail = 'receipt-mail',
   PaymentMail = 'payment-mail',
   ConnectBankCreditCard = 'connect-bank-credit-card',
+  ConnectSimpleFin = 'connect-simplefin',
   InvoiceFormMailDeliver = 'InvoiceFormMailDeliver',
   EstimateFormMailDeliver = 'EstimateFormMailDeliver',
   ReceiptFormMailDeliver = 'ReceiptFormMailDeliver',

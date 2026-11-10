@@ -60,5 +60,6 @@ export interface CreateUncategorizedTransactionDTO {
   plaidTransactionId?: string | null;
   pending?: boolean;
   pendingPlaidTransactionId?: string | null;
+  simplefinTransactionId?: string | null;
   batch?: string;
 }

@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 import { ERRORS } from '../types/BankAccounts.types';
 import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { PlaidItem } from '@/modules/BankingPlaid/models/PlaidItem';
+import { SimpleFinItem } from '@/modules/BankingSimpleFin/models/SimpleFinItem';
 import { Account } from '@/modules/Accounts/models/Account.model';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
@@ -16,6 +17,9 @@ export class ResumeBankAccountFeedsService {
     @Inject(PlaidItem.name)
     private plaidItemModel: TenantModelProxy<typeof PlaidItem>,
 
+    @Inject(SimpleFinItem.name)
+    private simplefinItemModel: TenantModelProxy<typeof SimpleFinItem>,
+
     private uow: UnitOfWork,
   ) {}
 
@@ -28,23 +32,31 @@ export class ResumeBankAccountFeedsService {
     const oldAccount = await this.accountModel()
       .query()
       .findById(bankAccountId)
-      .withGraphFetched('plaidItem');
+      .withGraphFetched('[plaidItem, simplefinItem]')
+      .throwIfNotFound();
+
+    const feedItem = oldAccount.plaidItem || oldAccount.simplefinItem;
 
     // Can't continue if the bank account is not connected.
-    if (!oldAccount.plaidItem) {
+    if (!feedItem) {
       throw new ServiceError(ERRORS.BANK_ACCOUNT_NOT_CONNECTED);
     }
-    // Cannot continue if the bank account feeds is already paused.
-    if (!oldAccount.plaidItem.isPaused) {
+    // Cannot continue if the bank account feeds is already resumed.
+    if (!feedItem.isPaused) {
       throw new ServiceError(ERRORS.BANK_ACCOUNT_FEEDS_ALREADY_RESUMED);
     }
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
-      await this.plaidItemModel()
-        .query(trx)
-        .findById(oldAccount.plaidItem.id)
-        .patch({
-          pausedAt: null,
-        });
+      if (oldAccount.plaidItem) {
+        await this.plaidItemModel()
+          .query(trx)
+          .findById(feedItem.id)
+          .patch({ pausedAt: null });
+      } else {
+        await this.simplefinItemModel()
+          .query(trx)
+          .findById(feedItem.id)
+          .patch({ pausedAt: null });
+      }
     });
   }
 }
