@@ -8,13 +8,11 @@ import {
 } from './_utils';
 import { useBillingPageBoot } from './BillingPageBoot';
 import styles from './BillingSubscription.module.scss';
-import { SubscriptionsDrawers } from './SubscriptionsDrawers';
 import { useUpgradeToGoCheckout } from './useUpgradeToGoCheckout';
 import type { SubscriptionsListResponse } from '@bigcapital/sdk-ts';
 import { AppToaster, Can, Group, Stack } from '@/components';
-import { DRAWERS } from '@/constants/drawers';
 import { useCreateStripePortalSession } from '@/hooks/query/subscription';
-import { useAlertActions, useDrawerActions } from '@/hooks/state';
+import { useAlertActions } from '@/hooks/state';
 
 type MainSubscription = SubscriptionsListResponse['subscriptions'][number];
 
@@ -24,7 +22,6 @@ type MainSubscription = SubscriptionsListResponse['subscriptions'][number];
 export function Subscription() {
   const { mainSubscription } = useBillingPageBoot();
   const { openAlert } = useAlertActions();
-  const { openDrawer } = useDrawerActions();
   const { mutateAsync: createPortalSession, isPending: isPortalPending } =
     useCreateStripePortalSession();
   const {
@@ -58,20 +55,18 @@ export function Subscription() {
         });
       });
   };
-  const handleUpgradeBtnClick = () => {
-    openDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
-  };
   // Only provider-backed (Stripe) subscriptions can be changed/canceled from
   // this page. A local trial is active but has no Stripe subscription yet.
-  const isActive = mainSubscription.active && !!mainSubscription.stripeStatus;
-  const isCancelScheduled = mainSubscription.cancelAtPeriodEnd;
+  const isActive = !!mainSubscription.active && !!mainSubscription.stripeStatus;
+  // `cancelAtPeriodEnd` is a DB boolean (0/1) at runtime, so coerce it to avoid
+  // rendering the raw value in the JSX below.
+  const isCancelScheduled = !!mainSubscription.cancelAtPeriodEnd;
   const hasStripeAccount = !!mainSubscription.stripeStatus;
   const isActiveGo = isActive && !!mainSubscription.planSlug?.startsWith('go');
   const showUpgradeToGo = canUpgradeToGo && !isActiveGo;
 
   return (
     <Card className={styles.root}>
-      <SubscriptionsDrawers />
       <Stack spacing={6}>
         <h1 className={styles.title}>{mainSubscription.planName}</h1>
 
@@ -106,17 +101,6 @@ export function Subscription() {
           <Stack align="flex-start" spacing={8} className={styles.actions}>
             {hasStripeAccount && (
               <>
-                {isActive && (
-                  <Button
-                    minimal
-                    small
-                    intent={Intent.PRIMARY}
-                    onClick={handleUpgradeBtnClick}
-                  >
-                    Change plan
-                  </Button>
-                )}
-
                 {isActive && isCancelScheduled && (
                   <Button
                     minimal
