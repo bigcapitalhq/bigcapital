@@ -28,8 +28,8 @@ import { StartTrialSubscriptionService } from './commands/StartTrialSubscription
 import { StartTrialOnSignupCloud } from './subscribers/StartTrialOnSignupCloud';
 import { StartTrialOnWorkspaceCreatedCloud } from './subscribers/StartTrialOnWorkspaceCreatedCloud';
 import { SubscriptionAccessService } from './access/SubscriptionAccess.service';
-import { SubscriptionAccessInterceptor } from './interceptors/SubscriptionAccess.interceptor';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { SubscriptionAccessGuard } from './guards/SubscriptionAccess.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 const models = [
   InjectSystemModel(Plan),
@@ -62,12 +62,13 @@ const models = [
     TriggerInvalidateCacheOnSubscriptionChange,
     SubscriptionApplication,
     SubscriptionAccessService,
+    SubscriptionAccessGuard,
     {
-      provide: APP_INTERCEPTOR,
-      useClass: SubscriptionAccessInterceptor,
+      provide: APP_GUARD,
+      useClass: SubscriptionAccessGuard,
     },
   ],
   controllers: [SubscriptionsController, StripeBillingWebhooksController],
-  exports: [...models, SubscriptionAccessService],
+  exports: [...models, SubscriptionAccessService, SubscriptionAccessGuard],
 })
 export class SubscriptionModule {}

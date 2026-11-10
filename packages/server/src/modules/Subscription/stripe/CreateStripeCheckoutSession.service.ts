@@ -55,8 +55,15 @@ export class CreateStripeCheckoutSessionService {
     const syncedPlan = await this.stripePlanSync.ensurePlanSynced(plan);
     const customer = await this.stripeBilling.getOrCreateCustomer(tenant, user);
 
-    const baseUrl =
-      this.configService.get<string>('app.baseUrl') || 'http://localhost:4000';
+    const baseUrl = this.configService.get<string>('app.baseUrl');
+
+    if (!baseUrl) {
+      throw new ServiceError(
+        ERRORS.BASE_URL_NOT_CONFIGURED,
+        'The application base URL is not configured. Set BASE_URL.',
+      );
+    }
+
     const successUrl =
       this.configService.get<string>('stripeBilling.successUrl') ||
       `${baseUrl}/preferences/billing?checkout=success&session_id={CHECKOUT_SESSION_ID}`;

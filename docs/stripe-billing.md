@@ -17,6 +17,11 @@ are configured. There is no separate Cloud deployment flag.
   operations are blocked with `ORGANIZATION.SUBSCRIPTION.TRIAL_EXPIRED` until
   a paid subscription is active. Auth, onboarding, billing, and webhook routes
   are excluded.
+- Controllers can declare plan-level access with
+  `@RequireSubscriptionFeature(SubscriptionFeature.X)`. The Go plan grants
+  every feature; legacy plan families are checked against the plan family
+  catalog. The guard also accepts options such as `allowTrial`,
+  `allowSelfHosted`, `writeOnly`, `allowInactive`, and `allowPlans`.
 - The initial subscription uses **Stripe Checkout** (hosted).
 - Plan changes, cancellation, and resume are handled by the API.
 - Payment methods, billing details, and invoices are available through the

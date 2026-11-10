@@ -4,9 +4,12 @@ import { GetInventoyItemsCostQueryDto } from './dtos/GetInventoryItemsCostQuery.
 import { GetInventoryItemsCostResponseDto } from './dtos/GetInventoryItemsCostResponse.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('inventory-cost')
 @ApiTags('Inventory Cost')
+@RequireSubscriptionFeature(SubscriptionFeature.Inventory)
 @ApiCommonHeaders()
 export class InventoryCostController {
   constructor(

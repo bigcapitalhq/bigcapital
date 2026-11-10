@@ -21,6 +21,7 @@ import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { AuthorizationGuard } from '../Roles/Authorization.guard';
 import { PermissionGuard } from '../Roles/Permission.guard';
 import { RequirePermission } from '../Roles/RequirePermission.decorator';
+import { SkipSubscriptionCheck } from './decorators/SkipSubscriptionCheck.decorator';
 import { SubscriptionResponseDto } from './dtos/SubscriptionResponse.dto';
 import { SubscriptionsListResponseDto } from './dtos/SubscriptionsListResponse.dto';
 import { GetSubscriptionPlansResponseDto } from './dtos/SubscriptionPlansResponse.dto';
@@ -47,6 +48,7 @@ import {
 )
 @IgnoreTenantInitializedRoute()
 @IgnoreTenantSeededRoute()
+@SkipSubscriptionCheck()
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)
 export class SubscriptionsController {

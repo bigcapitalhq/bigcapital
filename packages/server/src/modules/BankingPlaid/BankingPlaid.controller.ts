@@ -2,9 +2,12 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { PlaidApplication } from './PlaidApplication';
 import { PlaidItemDto } from './dtos/PlaidItem.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('banking/plaid')
 @ApiTags('Banking Plaid')
+@RequireSubscriptionFeature(SubscriptionFeature.BankFeeds)
 export class BankingPlaidController {
   constructor(private readonly plaidApplication: PlaidApplication) {}
 
