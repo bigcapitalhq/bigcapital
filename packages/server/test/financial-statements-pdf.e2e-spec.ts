@@ -10,6 +10,7 @@ import { HtmlTableCustomCss as CustomerBalanceSummaryCss } from '@/modules/Finan
 import { HtmlTableCustomCss as GeneralLedgerCss } from '@/modules/FinancialStatements/modules/GeneralLedger/constants';
 import { HtmlTableCustomCss as InventoryItemDetailsCss } from '@/modules/FinancialStatements/modules/InventoryItemDetails/constant';
 import { HtmlTableCustomCss as InventoryValuationCss } from '@/modules/FinancialStatements/modules/InventoryValuationSheet/_constants';
+import { HtmlTableCustomCss as InventorySummaryCss } from '@/modules/FinancialStatements/modules/InventorySummary/constants';
 import { HtmlTableCustomCss as JournalCss } from '@/modules/FinancialStatements/modules/JournalSheet/constant';
 import { HtmlTableCustomCss as ProfitLossCss } from '@/modules/FinancialStatements/modules/ProfitLossSheet/constants';
 import { HtmlTableCustomCss as PurchasesByItemsCss } from '@/modules/FinancialStatements/modules/PurchasesByItems/_types';
@@ -59,6 +60,7 @@ const REPORTS: Array<[string, string, string]> = [
     '/reports/inventory-valuation',
     InventoryValuationCss,
   ],
+  ['inventory summary', '/reports/inventory-summary', InventorySummaryCss],
   ['sales by items', '/reports/sales-by-items', SalesByItemsCss],
   ['purchases by items', '/reports/purchases-by-items', PurchasesByItemsCss],
 ];

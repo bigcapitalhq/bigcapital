@@ -140,6 +140,9 @@ export function usePauseRecurringInvoice(
     ...props,
     mutationFn: (id: number) => pauseRecurringInvoice(fetcher, id),
     onSuccess: (data, variables, _onMutateResult, context) => {
+      queryClient.invalidateQueries({
+        queryKey: recurringInvoicesKeys.detail(variables),
+      });
       commonInvalidateQueries(queryClient);
       props?.onSuccess?.(data, variables, _onMutateResult, context);
     },
@@ -156,6 +159,9 @@ export function useResumeRecurringInvoice(
     ...props,
     mutationFn: (id: number) => resumeRecurringInvoice(fetcher, id),
     onSuccess: (data, variables, _onMutateResult, context) => {
+      queryClient.invalidateQueries({
+        queryKey: recurringInvoicesKeys.detail(variables),
+      });
       commonInvalidateQueries(queryClient);
       props?.onSuccess?.(data, variables, _onMutateResult, context);
     },
@@ -172,6 +178,9 @@ export function useGenerateRecurringInvoiceNow(
     ...props,
     mutationFn: (id: number) => generateRecurringInvoiceNow(fetcher, id),
     onSuccess: (data, variables, _onMutateResult, context) => {
+      queryClient.invalidateQueries({
+        queryKey: recurringInvoicesKeys.detail(variables),
+      });
       queryClient.invalidateQueries({
         queryKey: recurringInvoicesKeys.invoices(variables),
       });

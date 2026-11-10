@@ -713,6 +713,10 @@ export const getPermissionsSchema = (): PermissionModule[] => [
             key: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
           },
           {
+            label: intl.get('permissions.inventory_summary'),
+            key: ReportsAction.READ_INVENTORY_SUMMARY,
+          },
+          {
             label: intl.get('permissions.inventory_items_details'),
             key: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
           },

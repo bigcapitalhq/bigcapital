@@ -122,6 +122,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Start sign-in with Google */
+        get: operations["AuthController_googleAuth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/google/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Google OAuth callback */
+        get: operations["AuthController_googleAuthCallback"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/signup/verify/resend": {
         parameters: {
             query?: never;
@@ -4329,6 +4363,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/reports/inventory-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Retrieves the inventory summary report */
+        get: operations["InventorySummaryController_getInventorySummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/reports/sales-tax-liability-summary": {
         parameters: {
             query?: never;
@@ -5511,6 +5562,8 @@ export interface components {
         AuthMetaResponseDto: {
             /** @description Whether signup is disabled */
             signupDisabled: boolean;
+            /** @description Whether sign-in with Google is enabled */
+            googleEnabled: boolean;
         };
         AuthSigninDto: {
             /**
@@ -10593,6 +10646,10 @@ export interface components {
              * @example 1
              */
             customerId: number;
+            /** @description The customer of the recurring invoice profile */
+            customer?: components["schemas"]["CustomerResponseDto"];
+            /** @description The branch of the recurring invoice profile */
+            branch?: components["schemas"]["BranchLinkDto"];
             /**
              * @description Profile name
              * @example Monthly retainer
@@ -10699,16 +10756,34 @@ export interface components {
             failureCount?: number;
             /** @description Recurring invoice line items */
             entries?: components["schemas"]["ItemEntryDto"][];
+            /** @description Subtotal amount */
+            subtotal?: number;
+            /** @description Tax amount */
+            taxAmount?: number;
+            /** @description Discount amount */
+            discountAmount?: number;
+            /** @description Total amount */
+            total?: number;
             /** @description Formatted start date */
             startDateFormatted?: string;
+            /** @description Formatted end date */
+            endDateFormatted?: string;
             /** @description Formatted next invoice date */
             nextInvoiceDateFormatted?: string;
             /** @description Formatted last invoice date */
             lastInvoiceDateFormatted?: string;
+            /** @description Formatted created date */
+            createdAtFormatted?: string;
             /** @description Formatted total */
             totalFormatted?: string;
             /** @description Formatted subtotal */
             subtotalFormatted?: string;
+            /** @description Formatted tax amount */
+            taxAmountFormatted?: string;
+            /** @description Formatted discount amount */
+            discountAmountFormatted?: string;
+            /** @description Formatted adjustment amount */
+            adjustmentFormatted?: string;
         };
         CreateRecurringInvoiceDto: {
             /**
@@ -16878,6 +16953,123 @@ export interface components {
             /** @description Report metadata */
             meta: components["schemas"]["InventoryValuationMetaDto"];
         };
+        InventorySummaryQueryResponseDto: {
+            /** @description From date */
+            fromDate: string;
+            /** @description To date */
+            toDate: string;
+            /** @description Number format settings */
+            numberFormat: components["schemas"]["NumberFormatQueryDto"];
+            /** @description Exclude items without transactions */
+            noneTransactions: boolean;
+            /** @description Item IDs to include */
+            itemsIds: number[];
+            /** @description Warehouse IDs to include */
+            warehousesIds?: number[];
+            /** @description Branch IDs to include */
+            branchesIds?: number[];
+        };
+        InventorySummaryItemDto: {
+            /** @description Item ID */
+            id: number;
+            /** @description Item name */
+            name: string;
+            /** @description Item code */
+            code: string;
+            /** @description Opening stock quantity */
+            openingStock: number;
+            /** @description Quantity received in the period */
+            quantityIn: number;
+            /** @description Quantity issued out in the period */
+            quantityOut: number;
+            /** @description Closing stock quantity */
+            closingStock: number;
+            /** @description Formatted opening stock quantity */
+            openingStockFormatted: string;
+            /** @description Formatted quantity in */
+            quantityInFormatted: string;
+            /** @description Formatted quantity out */
+            quantityOutFormatted: string;
+            /** @description Formatted closing stock quantity */
+            closingStockFormatted: string;
+        };
+        InventorySummaryTotalDto: {
+            /** @description Total opening stock quantity */
+            openingStock: number;
+            /** @description Total quantity in */
+            quantityIn: number;
+            /** @description Total quantity out */
+            quantityOut: number;
+            /** @description Total closing stock quantity */
+            closingStock: number;
+            /** @description Formatted total opening stock quantity */
+            openingStockFormatted: string;
+            /** @description Formatted total quantity in */
+            quantityInFormatted: string;
+            /** @description Formatted total quantity out */
+            quantityOutFormatted: string;
+            /** @description Formatted total closing stock quantity */
+            closingStockFormatted: string;
+        };
+        InventorySummaryDataDto: {
+            /** @description Inventory summary items */
+            items: components["schemas"]["InventorySummaryItemDto"][];
+            /** @description Inventory summary totals */
+            total: components["schemas"]["InventorySummaryTotalDto"];
+        };
+        InventorySummaryMetaDto: {
+            /** @description Organization name */
+            organizationName: string;
+            /** @description Base currency code */
+            baseCurrency: string;
+            /** @description Date format string */
+            dateFormat: string;
+            /** @description Whether cost computation is running */
+            isCostComputeRunning: boolean;
+            /** @description Sheet name */
+            sheetName: string;
+            /** @description Formatted from date */
+            formattedFromDate: string;
+            /** @description Formatted to date */
+            formattedToDate: string;
+            /** @description Formatted date range */
+            formattedDateRange: string;
+        };
+        InventorySummaryResponseDto: {
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventorySummaryQueryResponseDto"];
+            /** @description Inventory summary data */
+            data: components["schemas"]["InventorySummaryDataDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventorySummaryMetaDto"];
+        };
+        InventorySummaryTableColumnDto: {
+            /**
+             * @description Column key
+             * @enum {string}
+             */
+            key: "item_name" | "opening_stock" | "quantity_in" | "quantity_out" | "closing_stock";
+            /** @description Column header label */
+            label: string;
+            /** @description Cell position index */
+            cellIndex?: number;
+            /** @description Nested column definitions */
+            children?: components["schemas"]["FinancialTableColumnDto"][];
+        };
+        InventorySummaryTableDataDto: {
+            /** @description Table column definitions */
+            columns: components["schemas"]["InventorySummaryTableColumnDto"][];
+            /** @description Table row data */
+            rows: components["schemas"]["FinancialTableRowDto"][];
+        };
+        InventorySummaryTableResponseDto: {
+            /** @description Table data structure */
+            table: components["schemas"]["InventorySummaryTableDataDto"];
+            /** @description Query parameters used to generate the report */
+            query: components["schemas"]["InventorySummaryQueryResponseDto"];
+            /** @description Report metadata */
+            meta: components["schemas"]["InventorySummaryMetaDto"];
+        };
         SalesTaxLiabilitySummaryQueryResponseDto: {
             /** @description Start date */
             fromDate: string;
@@ -19106,6 +19298,42 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["AuthMetaResponseDto"];
                 };
+            };
+        };
+    };
+    AuthController_googleAuth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Redirects the browser to the Google consent screen. */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuthController_googleAuthCallback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Redirects to the web app with a JWT access token or an error code. */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -32404,6 +32632,44 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["InventoryValuationResponseDto"];
                     "application/json+table": components["schemas"]["InventoryValuationTableResponseDto"];
+                };
+            };
+        };
+    };
+    InventorySummaryController_getInventorySummary: {
+        parameters: {
+            query?: {
+                /** @description Whether to exclude items without transactions */
+                noneTransactions?: boolean;
+                /** @description Items IDs for the inventory summary */
+                itemsIds?: string[];
+                /** @description Warehouses IDs for the inventory summary */
+                warehousesIds?: string[];
+                /** @description Branches IDs for the inventory summary */
+                branchesIds?: string[];
+                /** @description Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2) */
+                numberFormat?: components["schemas"]["NumberFormatQueryDto"];
+            };
+            header: {
+                /** @description Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token. */
+                Authorization: string;
+                /** @description Required if Authorization is a JWT token. The organization ID to operate within. */
+                "organization-id": string;
+                accept: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The inventory summary report */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InventorySummaryResponseDto"];
+                    "application/json+table": components["schemas"]["InventorySummaryTableResponseDto"];
                 };
             };
         };

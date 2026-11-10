@@ -29,8 +29,3 @@ export const isDrawerOpenFactory = () =>
 
 export const getDrawerPayloadFactory = () =>
   createSelector(drawerByNameSelector, (drawer) => ({ ...drawer?.payload }));
-
-const featuresSelector = (state: RootState) => state.dashboard.features;
-
-export const getDashboardFeaturesSelector = () =>
-  createSelector(featuresSelector, (features) => features);

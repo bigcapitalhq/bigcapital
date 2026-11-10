@@ -378,6 +378,20 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/financial-reports/inventory-summary`,
+    component: lazy(() =>
+      import(
+        '@/containers/FinancialStatements/InventorySummary/InventorySummary'
+      ).then((m) => ({ default: m.InventorySummary })),
+    ),
+    breadcrumb: intl.get('inventory_summary'),
+    hint: intl.get('summerize_the_stock_movements_of_each_inventory_item'),
+    pageTitle: intl.get('inventory_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/financial-reports/customers-balance-summary`,
     component: lazy(() =>
       import(

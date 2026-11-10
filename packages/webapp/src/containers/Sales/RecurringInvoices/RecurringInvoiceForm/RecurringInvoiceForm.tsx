@@ -1,12 +1,13 @@
 import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
 import { Form, Formik } from 'formik';
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { RecurringInvoiceFloatingActions } from './RecurringInvoiceFloatingActions';
-import { RecurringInvoiceFormFields } from './RecurringInvoiceFormFields';
 import { RecurringInvoiceFormFooter } from './RecurringInvoiceFormFooter';
+import { RecurringInvoiceFormHeader } from './RecurringInvoiceFormHeader';
 import { useRecurringInvoiceFormContext } from './RecurringInvoiceFormProvider';
 import { RecurringInvoiceItemsField } from './RecurringInvoiceItemsField';
 import {
@@ -16,6 +17,7 @@ import {
 } from './utils';
 import type { RecurringInvoiceFormValues } from './utils';
 import { AppToaster, PageForm } from '@/components';
+import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 const validationSchema = Yup.object().shape({
   customerId: Yup.mixed().required(intl.get('customer_is_required')),
@@ -35,6 +37,7 @@ const validationSchema = Yup.object().shape({
 
 export function RecurringInvoiceForm() {
   const history = useHistory();
+  const baseCurrency = useCurrentOrganizationBaseCurrency();
   const {
     recurringInvoice,
     isNewMode,
@@ -45,8 +48,8 @@ export function RecurringInvoiceForm() {
   const initialValues = useMemo<RecurringInvoiceFormValues>(() => {
     return recurringInvoice
       ? transformRecurringInvoiceToForm(recurringInvoice)
-      : defaultRecurringInvoice;
-  }, [recurringInvoice]);
+      : { ...defaultRecurringInvoice, currencyCode: baseCurrency ?? '' };
+  }, [recurringInvoice, baseCurrency]);
 
   const handleSubmit = async (values: RecurringInvoiceFormValues) => {
     const payload = transformRecurringInvoiceToRequest(values);
@@ -80,12 +83,17 @@ export function RecurringInvoiceForm() {
       onSubmit={handleSubmit}
       enableReinitialize={true}
     >
-      <Form>
+      <Form
+        className={css({
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        })}
+      >
         <PageForm flex={1}>
           <PageForm.Body>
-            <div style={{ padding: '24px 32px 0' }}>
-              <RecurringInvoiceFormFields />
-            </div>
+            <RecurringInvoiceFormHeader />
 
             <RecurringInvoiceItemsField />
             <RecurringInvoiceFormFooter />

@@ -124,6 +124,15 @@ describe('Financial Statements (e2e)', () => {
       .expect(200);
   });
 
+  it('/reports/inventory-summary (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/reports/inventory-summary')
+      .query(baseQuery)
+      .set('organization-id', orgainzationId)
+      .set('Authorization', AuthorizationHeader)
+      .expect(200);
+  });
+
   it('/reports/inventory-item-details (GET)', () => {
     return request(app.getHttpServer())
       .get('/reports/inventory-item-details')
