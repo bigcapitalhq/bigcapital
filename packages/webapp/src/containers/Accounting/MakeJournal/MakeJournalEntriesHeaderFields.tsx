@@ -1,10 +1,9 @@
 import { Position } from '@blueprintjs/core';
-import { css } from '@emotion/css';
 import { useTheme } from '@emotion/react';
-import { Theme } from '@xstyled/emotion';
 import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 import { JournalExchangeRateInputField } from './components';
+import { getMakeJournalFieldsStyle } from './fieldsStyle';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { MakeJournalTransactionNoField } from './MakeJournalTransactionNoField';
 import type { MakeJournalFormValues } from './utils';
@@ -22,23 +21,6 @@ import {
 } from '@/components';
 import { useDateInputFormatter } from '@/hooks';
 
-const getFieldsStyle = (theme: Theme) => css`
-  .${theme.bpPrefix}-form-group {
-    margin-bottom: 0;
-
-    &.${theme.bpPrefix}-inline {
-      max-width: 480px;
-    }
-    .${theme.bpPrefix}-label {
-      min-width: 165px;
-      font-weight: 500;
-    }
-    .${theme.bpPrefix}-form-content {
-      width: 100%;
-    }
-  }
-`;
-
 type MakeJournalBasisOption = 'general' | 'accrual' | 'cash';
 
 /**
@@ -48,7 +30,7 @@ export function MakeJournalEntriesHeader() {
   const { currencies } = useMakeJournalFormContext();
   const form = useFormikContext<MakeJournalFormValues>();
   const theme = useTheme();
-  const fieldsClassName = getFieldsStyle(theme);
+  const fieldsClassName = getMakeJournalFieldsStyle(theme);
   const dateInputFormatter = useDateInputFormatter();
 
   return (

@@ -1,27 +1,24 @@
 import { Position } from '@blueprintjs/core';
+import { useTheme } from '@emotion/react';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useRecurringJournalFormContext } from './RecurringJournalFormProvider';
 import type { RecurringJournalFormValues } from './utils';
 import {
-  BranchSelect,
   FDateInput,
   FFormGroup,
   FInputGroup,
   FSelect,
-  FSwitch,
   FieldRequiredHint,
-  FormBranchSelectButton,
   Hint,
   Icon,
   SegmentedControl,
   Stack,
 } from '@/components';
-import { Features } from '@/constants';
+import { JournalExchangeRateInputField } from '@/containers/Accounting/MakeJournal/components';
+import { getMakeJournalFieldsStyle } from '@/containers/Accounting/MakeJournal/fieldsStyle';
 import { useDateInputFormatter } from '@/hooks';
-import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
-import { useFeatureCan } from '@/hooks/state';
 
 const FREQUENCY_OPTIONS = [
   { key: 'day', label: intl.get('recurring_journal.frequency.day') },
@@ -34,15 +31,13 @@ type BasisOption = 'general' | 'accrual' | 'cash';
 
 export function RecurringJournalFormFields() {
   const dateInputFormatter = useDateInputFormatter();
-  const { featureCan } = useFeatureCan();
-  const { currencies, branches } = useRecurringJournalFormContext();
+  const { currencies } = useRecurringJournalFormContext();
   const form = useFormikContext<RecurringJournalFormValues>();
-  const baseCurrency = useCurrentOrganizationBaseCurrency();
-  const isForeignCurrency =
-    !!form.values.currencyCode && form.values.currencyCode !== baseCurrency;
+  const theme = useTheme();
+  const fieldsClassName = getMakeJournalFieldsStyle(theme);
 
   return (
-    <Stack spacing={18} flex={1}>
+    <Stack spacing={18} flex={1} className={fieldsClassName}>
       <FFormGroup
         name={'profileName'}
         label={intl.get('recurring_journal.field.profile_name')}
@@ -53,16 +48,8 @@ export function RecurringJournalFormFields() {
         <FInputGroup
           name={'profileName'}
           data-testId="recurring-journal-profile-name"
+          fill
         />
-      </FFormGroup>
-
-      <FFormGroup
-        name={'reference'}
-        label={intl.get('reference')}
-        inline
-        fastField
-      >
-        <FInputGroup name={'reference'} />
       </FFormGroup>
 
       <FFormGroup
@@ -112,6 +99,21 @@ export function RecurringJournalFormFields() {
       </FFormGroup>
 
       <FFormGroup
+        name={'reference'}
+        label={intl.get('reference')}
+        labelInfo={
+          <Hint
+            content={intl.get('journal_reference_hint')}
+            position={Position.RIGHT}
+          />
+        }
+        inline
+        fastField
+      >
+        <FInputGroup name={'reference'} fill />
+      </FFormGroup>
+
+      <FFormGroup
         name={'repeatInterval'}
         label={intl.get('recurring_journal.field.repeat_every')}
         labelInfo={<FieldRequiredHint />}
@@ -146,18 +148,7 @@ export function RecurringJournalFormFields() {
           type="number"
           min={1}
           placeholder={intl.get('recurring_journal.field.unlimited')}
-        />
-      </FFormGroup>
-
-      <FFormGroup
-        name={'autoPublish'}
-        inline
-        helperText={intl.get('recurring_journal.field.auto_publish_hint')}
-      >
-        <FSwitch
-          name={'autoPublish'}
-          labelElement={intl.get('recurring_journal.field.auto_publish')}
-          large={true}
+          fill
         />
       </FFormGroup>
 
@@ -219,33 +210,11 @@ export function RecurringJournalFormFields() {
         />
       </FFormGroup>
 
-      {isForeignCurrency && (
-        <FFormGroup
-          name={'exchangeRate'}
-          label={intl.get('exchange_rate')}
-          inline
-          fastField
-        >
-          <FInputGroup
-            name={'exchangeRate'}
-            type="number"
-            min={0}
-            step="0.000001"
-          />
-        </FFormGroup>
-      )}
-
-      {featureCan(Features.Branches) && (
-        <FFormGroup name={'branchId'} label={intl.get('branch')} inline>
-          <BranchSelect
-            name={'branchId'}
-            branches={branches}
-            input={FormBranchSelectButton}
-            popoverProps={{ minimal: true }}
-            fill={false}
-          />
-        </FFormGroup>
-      )}
+      {/* ----------- Exchange rate ----------- */}
+      <JournalExchangeRateInputField
+        name={'exchangeRate'}
+        formGroupProps={{ label: ' ', inline: true }}
+      />
     </Stack>
   );
 }

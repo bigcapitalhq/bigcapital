@@ -1,4 +1,6 @@
 import { Intent } from '@blueprintjs/core';
+import { css } from '@emotion/css';
+import classNames from 'classnames';
 import { Form, Formik } from 'formik';
 import { round, sumBy } from 'lodash';
 import React, { useMemo } from 'react';
@@ -7,9 +9,10 @@ import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { RecurringJournalEntriesField } from './RecurringJournalEntriesField';
 import { RecurringJournalFloatingActions } from './RecurringJournalFloatingActions';
-import { RecurringJournalFormFields } from './RecurringJournalFormFields';
 import { RecurringJournalFormFooter } from './RecurringJournalFormFooter';
+import { RecurringJournalFormHeader } from './RecurringJournalFormHeader';
 import { useRecurringJournalFormContext } from './RecurringJournalFormProvider';
+import { RecurringJournalFormTopBar } from './RecurringJournalFormTopBar';
 import {
   defaultRecurringJournal,
   transformRecurringJournalToForm,
@@ -17,6 +20,7 @@ import {
 } from './utils';
 import type { RecurringJournalFormValues } from './utils';
 import { AppToaster, PageForm } from '@/components';
+import { CLASSES } from '@/constants/classes';
 import { useCurrentOrganizationBaseCurrency } from '@/hooks/query';
 
 const validationSchema = Yup.object().shape({
@@ -106,26 +110,40 @@ export function RecurringJournalForm() {
   };
 
   return (
-    <Formik<RecurringJournalFormValues>
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-      enableReinitialize={true}
+    <div
+      className={classNames(
+        CLASSES.PAGE_FORM,
+        CLASSES.PAGE_FORM_STRIP_STYLE,
+        CLASSES.PAGE_FORM_MAKE_JOURNAL,
+      )}
     >
-      <Form>
-        <PageForm flex={1}>
-          <PageForm.Body>
-            <div style={{ padding: '24px 32px 0' }}>
-              <RecurringJournalFormFields />
-            </div>
-            <RecurringJournalEntriesField />
-            <RecurringJournalFormFooter />
-          </PageForm.Body>
-          <PageForm.Footer>
-            <RecurringJournalFloatingActions />
-          </PageForm.Footer>
-        </PageForm>
-      </Form>
-    </Formik>
+      <Formik<RecurringJournalFormValues>
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+      >
+        <Form
+          className={css({
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+          })}
+        >
+          <PageForm flex={1}>
+            <PageForm.Body>
+              <RecurringJournalFormTopBar />
+              <RecurringJournalFormHeader />
+              <RecurringJournalEntriesField />
+              <RecurringJournalFormFooter />
+            </PageForm.Body>
+            <PageForm.Footer>
+              <RecurringJournalFloatingActions />
+            </PageForm.Footer>
+          </PageForm>
+        </Form>
+      </Formik>
+    </div>
   );
 }

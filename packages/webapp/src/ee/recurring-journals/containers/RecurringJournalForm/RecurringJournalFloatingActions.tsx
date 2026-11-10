@@ -1,47 +1,63 @@
 import { Button, Intent } from '@blueprintjs/core';
+import classNames from 'classnames';
 import { useFormikContext } from 'formik';
 import React, { useState } from 'react';
-import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { RecurringJournalGeneratedJournalsDialog } from '../Dialogs/RecurringJournalGeneratedJournalsDialog';
 import { useRecurringJournalFormContext } from './RecurringJournalFormProvider';
-import { Group, Icon } from '@/components';
+import { FormattedMessage as T } from '@/components';
+import { PageForm } from '@/components/PageForm';
+import { CLASSES } from '@/constants/classes';
 
 export function RecurringJournalFloatingActions() {
   const history = useHistory();
-  const { isSubmitting, isValid, dirty } = useFormikContext();
+  const { isSubmitting, isValid, dirty, resetForm } = useFormikContext();
   const { isNewMode, recurringJournal } = useRecurringJournalFormContext();
   const [isGeneratedJournalsOpen, setGeneratedJournalsOpen] = useState(false);
 
+  // Handle reset/clear button click.
+  const handleClearBtnClick = () => {
+    resetForm();
+  };
+
+  // Handle cancel button click.
+  const handleCancelBtnClick = () => {
+    history.push('/recurring-journals');
+  };
+
   return (
     <>
-      <Group spacing={10} position={'right'}>
-        {!isNewMode && (
-          <Button
-            minimal
-            icon={<Icon icon={'document'} />}
-            onClick={() => setGeneratedJournalsOpen(true)}
-            disabled={isSubmitting}
-          >
-            {intl.get('recurring_journal.generated_journals')}
-          </Button>
-        )}
+      <PageForm.FooterActions
+        spacing={10}
+        className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+      >
         <Button
           intent={Intent.PRIMARY}
           type="submit"
           loading={isSubmitting}
           disabled={!isValid || (!dirty && !isNewMode)}
-          icon={<Icon icon={'floppy-disk'} />}
-        >
-          {isNewMode ? intl.get('create') : intl.get('save')}
-        </Button>
+          text={isNewMode ? <T id={'create'} /> : <T id={'save'} />}
+        />
+        {!isNewMode && (
+          <Button
+            onClick={() => setGeneratedJournalsOpen(true)}
+            disabled={isSubmitting}
+            text={<T id={'recurring_journal.generated_journals'} />}
+          />
+        )}
         <Button
-          onClick={() => history.push('/recurring-journals')}
+          className={'ml1'}
+          onClick={handleClearBtnClick}
           disabled={isSubmitting}
-        >
-          {intl.get('cancel')}
-        </Button>
-      </Group>
+          text={recurringJournal ? <T id={'reset'} /> : <T id={'clear'} />}
+        />
+        <Button
+          className={'ml1'}
+          onClick={handleCancelBtnClick}
+          disabled={isSubmitting}
+          text={<T id={'cancel'} />}
+        />
+      </PageForm.FooterActions>
 
       <RecurringJournalGeneratedJournalsDialog
         recurringJournalId={recurringJournal?.id}

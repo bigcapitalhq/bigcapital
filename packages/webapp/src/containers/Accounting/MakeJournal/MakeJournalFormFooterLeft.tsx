@@ -3,7 +3,11 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FFormGroup, FEditableText } from '@/components';
 
-export function MakeJournalFormFooterLeft() {
+export function MakeJournalFormFooterLeft({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   return (
     <React.Fragment>
       {/* --------- Description --------- */}
@@ -18,6 +22,8 @@ export function MakeJournalFormFooterLeft() {
           fastField
         />
       </DescriptionFormGroup>
+
+      {children}
     </React.Fragment>
   );
 }

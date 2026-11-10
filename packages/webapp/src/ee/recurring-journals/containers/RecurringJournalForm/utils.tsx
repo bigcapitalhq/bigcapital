@@ -1,3 +1,4 @@
+import { useFormikContext } from 'formik';
 import { omit } from 'lodash';
 import moment from 'moment';
 import type { AccountingBasis } from '@/hooks/query';
@@ -9,7 +10,7 @@ import {
   defaultEntry,
   type MakeJournalEntry,
 } from '@/containers/Accounting/MakeJournal/utils';
-import { orderingLinesIndexes } from '@/utils';
+import { formattedAmount, orderingLinesIndexes, safeSumBy } from '@/utils';
 
 export type RecurringJournalEntry = MakeJournalEntry;
 
@@ -131,3 +132,36 @@ export function transformRecurringJournalToRequest(
     entries,
   } as unknown as CreateRecurringJournalBody;
 }
+
+export const useRecurringJournalCreditTotal = (): number => {
+  const { values } = useFormikContext<RecurringJournalFormValues>();
+
+  return safeSumBy(values.entries, 'credit');
+};
+
+export const useRecurringJournalDebitTotal = (): number => {
+  const { values } = useFormikContext<RecurringJournalFormValues>();
+
+  return safeSumBy(values.entries, 'debit');
+};
+
+export const useRecurringJournalSubtotal = (): number => {
+  const totalCredit = useRecurringJournalCreditTotal();
+  const totalDebit = useRecurringJournalDebitTotal();
+
+  return Math.max(totalCredit, totalDebit);
+};
+
+export const useRecurringJournalSubtotalFormatted = (): string => {
+  const subtotal = useRecurringJournalSubtotal();
+  const { values } = useFormikContext<RecurringJournalFormValues>();
+
+  return formattedAmount(subtotal, values.currencyCode);
+};
+
+export const useRecurringJournalTotalFormatted = (): string => {
+  const total = useRecurringJournalSubtotal();
+  const { values } = useFormikContext<RecurringJournalFormValues>();
+
+  return formattedAmount(total, values.currencyCode);
+};
