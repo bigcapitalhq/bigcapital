@@ -4,6 +4,7 @@
  */
 export type * from "./schema";
 export * from "./fetch-utils";
+export * from "./utils/case-transform";
 export * from "./accounts";
 export * from "./credit-notes";
 export * from "./api-keys";
