@@ -39,44 +39,6 @@ export class InventoryAdjustmentInventoryTransactions {
   }
 
   /**
-   * Asserts that writing the inventory adjustment transactions will not make
-   * the items stock negative.
-   * @param {InventoryAdjustment} inventoryAdjustment - Inventory adjustment.
-   * @param {boolean} override - Whether the existing transactions will be replaced.
-   * @param {Knex.Transaction} trx - Knex transaction.
-   * @return {Promise<void>}
-   */
-  public async assertSufficientStock(
-    inventoryAdjustment: InventoryAdjustment,
-    override: boolean = false,
-    trx?: Knex.Transaction,
-  ): Promise<void> {
-    await this.inventoryService.assertSufficientStock(
-      this.buildInventoryTransactions(inventoryAdjustment),
-      override,
-      trx,
-    );
-  }
-
-  /**
-   * Asserts that reverting the inventory adjustment transactions will not make
-   * the items stock negative.
-   * @param {number} inventoryAdjustmentId - Inventory adjustment id.
-   * @param {Knex.Transaction} trx - Knex transaction.
-   * @return {Promise<void>}
-   */
-  public async assertSufficientStockForDeletion(
-    inventoryAdjustmentId: number,
-    trx?: Knex.Transaction,
-  ): Promise<void> {
-    await this.inventoryService.assertSufficientStockForDeletion(
-      inventoryAdjustmentId,
-      'InventoryAdjustment',
-      trx,
-    );
-  }
-
-  /**
    * Writes the inventory transactions from the inventory adjustment transaction.
    * @param  {number} tenantId -
    * @param  {IInventoryAdjustment} inventoryAdjustment -

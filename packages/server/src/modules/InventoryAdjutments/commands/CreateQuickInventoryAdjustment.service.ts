@@ -22,7 +22,6 @@ import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { ERRORS } from '../constants/InventoryAdjustments.constants';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { formatDateFields } from '@/utils/format-date-fields';
-import { InventoryAdjustmentInventoryTransactions } from '../inventory/InventoryAdjustmentInventoryTransactions';
 
 @Injectable()
 export class CreateQuickInventoryAdjustmentService {
@@ -43,7 +42,6 @@ export class CreateQuickInventoryAdjustmentService {
     private readonly uow: UnitOfWork,
     private readonly warehouseDTOTransform: WarehouseTransactionDTOTransform,
     private readonly branchDTOTransform: BranchTransactionDTOTransformer,
-    private readonly inventoryTransactions: InventoryAdjustmentInventoryTransactions,
   ) {}
 
   /**
@@ -134,12 +132,6 @@ export class CreateQuickInventoryAdjustmentService {
         .upsertGraphAndFetch({
           ...invAdjustmentObject,
         });
-      // Prevent the adjustment from making the item stock negative.
-      await this.inventoryTransactions.assertSufficientStock(
-        inventoryAdjustment,
-        false,
-        trx,
-      );
       // Triggers `onInventoryAdjustmentQuickCreated` event.
       await this.eventEmitter.emitAsync(
         events.inventoryAdjustment.onQuickCreated,

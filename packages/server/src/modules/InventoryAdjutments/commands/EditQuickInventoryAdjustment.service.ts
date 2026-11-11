@@ -20,7 +20,6 @@ import {
   IInventoryAdjustmentEditingPayload,
 } from '../types/InventoryAdjustments.types';
 import { ERRORS } from '../constants/InventoryAdjustments.constants';
-import { InventoryAdjustmentInventoryTransactions } from '../inventory/InventoryAdjustmentInventoryTransactions';
 
 @Injectable()
 export class EditQuickInventoryAdjustmentService {
@@ -40,7 +39,6 @@ export class EditQuickInventoryAdjustmentService {
     private readonly uow: UnitOfWork,
     private readonly warehouseDTOTransform: WarehouseTransactionDTOTransform,
     private readonly branchDTOTransform: BranchTransactionDTOTransformer,
-    private readonly inventoryTransactions: InventoryAdjustmentInventoryTransactions,
   ) {}
 
   /**
@@ -152,13 +150,6 @@ export class EditQuickInventoryAdjustmentService {
         .query(trx)
         .findById(inventoryAdjustmentId)
         .withGraphFetched('entries');
-
-      // Prevent the adjustment from making the item stock negative.
-      await this.inventoryTransactions.assertSufficientStock(
-        inventoryAdjustment,
-        true,
-        trx,
-      );
 
       // Triggers `onInventoryAdjustmentEdited` event.
       await this.eventEmitter.emitAsync(events.inventoryAdjustment.onEdited, {
