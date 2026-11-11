@@ -24,10 +24,9 @@ import { useApiFetcher } from '../../useRequest';
 import { accountsKeys } from '../accounts/query-keys';
 import { customersKeys } from '../customers/query-keys';
 import { financialReportsKeys } from '../FinancialReports/query-keys';
+import { getNextPageFromPagination } from '../utils/infinite-pagination';
 import { vendorsKeys } from '../vendors/query-keys';
 import { cashflowAccountsKeys } from './query-keys';
-import { getNextPageFromPagination } from '../utils/infinite-pagination';
-import type { PaginatedPage } from '../utils/infinite-pagination';
 import type {
   BankingAccountsListResponse,
   BankingTransactionDetailResponse,
@@ -162,23 +161,6 @@ type AccountUncategorizedTransactionsInfinityPage = Awaited<
   ReturnType<typeof fetchAccountUncategorizedTransactions>
 >;
 
-/**
- * Derives the next page number from the server's `{ total, page, pageSize }`
- * pagination meta (the API has no `nextPage` field).
- */
-const getNextInfinityPage = (
-  lastPage?: { pagination?: Partial<PaginatedPage['pagination']> | null },
-): number | undefined => {
-  const pagination = lastPage?.pagination;
-
-  if (pagination?.total == null || pagination?.page == null) {
-    return undefined;
-  }
-  return getNextPageFromPagination({
-    pagination: pagination as PaginatedPage['pagination'],
-  });
-};
-
 export function useAccountTransactionsInfinity(
   accountId: number,
   query?: CashflowAccountTransactionsQuery,
@@ -211,7 +193,7 @@ export function useAccountTransactionsInfinity(
         page: pageParam,
       }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => getNextInfinityPage(lastPage),
+    getNextPageParam: getNextPageFromPagination,
   });
 }
 
@@ -245,7 +227,7 @@ export function useAccountUncategorizedTransactionsInfinity(
         page: pageParam,
       }) as Promise<AccountUncategorizedTransactionsInfinityPage>,
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => getNextInfinityPage(lastPage),
+    getNextPageParam: getNextPageFromPagination,
   });
 }
 

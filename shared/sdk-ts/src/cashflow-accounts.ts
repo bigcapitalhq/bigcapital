@@ -20,6 +20,9 @@ export type GetBankingAccountsQuery = OpQueryParams<
   OpForPath<typeof BANKING_ACCOUNTS_ROUTES.LIST, 'get'>
 >;
 
+/** Pagination metadata returned by the server (`Model.pagination()`). */
+export type PaginationMeta = { total: number; page: number; pageSize: number };
+
 /** List row for GET /api/banking/transactions. */
 export type BankingTransactionResponse = NonNullable<
   OpResponseBody<OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTIONS, 'get'>>['data']
@@ -65,10 +68,15 @@ export type GetBankingTransactionsQuery = OpQueryParams<
   OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTIONS, 'get'>
 >;
 
-/** Server returns { transactions, pagination } (OpenAPI schema says data). */
-export type BankingTransactionsListResponse = OpResponseBody<
-  OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTIONS, 'get'>
-> & { transactions?: unknown[] };
+/**
+ * Response for GET /api/banking/transactions.
+ * The OpenAPI schema advertises `data`, but the server actually returns
+ * `transactions` alongside the `{ total, page, pageSize }` pagination meta.
+ */
+export type BankingTransactionsListResponse = {
+  transactions?: unknown[];
+  pagination: PaginationMeta;
+};
 
 /** Query params for GET /api/banking/uncategorized/accounts/{accountId}. */
 export type GetUncategorizedTransactionsQuery = OpQueryParams<
@@ -119,17 +127,23 @@ export async function deleteBankingTransaction(
   await del({ id: String(id) });
 }
 
+/** Response for GET /api/banking/uncategorized/accounts/{accountId}. */
+export type UncategorizedTransactionsListResponse = {
+  data?: unknown[];
+  pagination: PaginationMeta;
+};
+
 export async function fetchUncategorizedTransactions(
   fetcher: ApiFetcher,
   accountId: number,
   query: GetUncategorizedTransactionsQuery
-): Promise<{ data?: unknown[]; pagination: { page: number; pageSize: number; total: number } }> {
+): Promise<UncategorizedTransactionsListResponse> {
   const get = fetcher
     .path(BANKING_ACCOUNTS_ROUTES.UNCATEGORIZED_BY_ACCOUNT)
     .method('get')
     .create();
   const { data } = await get({ accountId, ...query });
-  return data as { data?: unknown[]; pagination: { page: number; pageSize: number; total: number } };
+  return data as UncategorizedTransactionsListResponse;
 }
 
 export async function getUncategorizedTransaction(
