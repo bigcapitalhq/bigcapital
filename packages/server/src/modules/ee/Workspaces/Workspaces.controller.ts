@@ -17,7 +17,10 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import { ClsService } from 'nestjs-cls';
-import { TenantAgnosticRoute } from '@/modules/Tenancy/TenancyGlobal.guard';
+import {
+  AllowInactiveTenant,
+  TenantAgnosticRoute,
+} from '@/modules/Tenancy/TenancyGlobal.guard';
 import { IgnoreUserVerifiedRoute } from '@/modules/Auth/guards/EnsureUserVerified.guard';
 import { IgnoreTenantInitializedRoute } from '@/modules/Tenancy/EnsureTenantIsInitialized.guard';
 import { IgnoreTenantSeededRoute } from '@/modules/Tenancy/EnsureTenantIsSeeded.guards';
@@ -121,6 +124,7 @@ export class WorkspacesController {
   @IgnoreTenantInitializedRoute()
   @IgnoreTenantSeededRoute()
   @IgnoreTenantModelsInitialize()
+  @AllowInactiveTenant()
   @HttpCode(200)
   @ApiOperation({ summary: 'Delete a workspace (owner only)' })
   @ApiResponse({
@@ -160,6 +164,7 @@ export class WorkspacesController {
   @IgnoreTenantInitializedRoute()
   @IgnoreTenantSeededRoute()
   @IgnoreTenantModelsInitialize()
+  @AllowInactiveTenant()
   @HttpCode(200)
   @ApiOperation({ summary: 'Inactivate a workspace (owner only)' })
   @ApiResponse({
@@ -185,6 +190,7 @@ export class WorkspacesController {
   @IgnoreTenantInitializedRoute()
   @IgnoreTenantSeededRoute()
   @IgnoreTenantModelsInitialize()
+  @AllowInactiveTenant()
   @HttpCode(200)
   @ApiOperation({ summary: 'Reactivate a workspace (owner only)' })
   @ApiResponse({
