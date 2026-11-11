@@ -66,10 +66,21 @@ export const SettingsOptions = {
     auto_increment: {
       type: 'boolean',
     },
+    table_size: {
+      type: 'string',
+    },
   },
   bill_payments: {
     withdrawal_account: {
       type: 'number',
+    },
+    table_size: {
+      type: 'string',
+    },
+  },
+  bills: {
+    table_size: {
+      type: 'string',
     },
   },
   sales_estimates: {
@@ -86,6 +97,9 @@ export const SettingsOptions = {
       type: 'string',
     },
     terms_conditions: {
+      type: 'string',
+    },
+    table_size: {
       type: 'string',
     },
   },
@@ -108,6 +122,9 @@ export const SettingsOptions = {
     terms_conditions: {
       type: 'string',
     },
+    table_size: {
+      type: 'string',
+    },
   },
   sales_invoices: {
     next_number: {
@@ -123,6 +140,9 @@ export const SettingsOptions = {
       type: 'string',
     },
     terms_conditions: {
+      type: 'string',
+    },
+    table_size: {
       type: 'string',
     },
   },
@@ -141,6 +161,9 @@ export const SettingsOptions = {
     },
     preferred_advance_deposit: {
       type: 'number',
+    },
+    table_size: {
+      type: 'string',
     },
   },
   items: {
@@ -162,6 +185,9 @@ export const SettingsOptions = {
     prevent_stock_from_going_below_zero: {
       type: 'boolean',
     },
+    table_size: {
+      type: 'string',
+    },
   },
   item_categories: {
     table_size: {
@@ -171,6 +197,9 @@ export const SettingsOptions = {
   expenses: {
     preferred_payment_account: {
       type: 'number',
+    },
+    table_size: {
+      type: 'string',
     },
   },
   inventory: {
@@ -185,6 +214,9 @@ export const SettingsOptions = {
     account_code_unique: {
       type: 'boolean',
     },
+    table_size: {
+      type: 'string',
+    },
   },
   cashflow: {
     next_number: {
@@ -195,6 +227,21 @@ export const SettingsOptions = {
     },
     auto_increment: {
       type: 'boolean',
+    },
+  },
+  cashflow_transactions: {
+    table_size: {
+      type: 'string',
+    },
+  },
+  customers: {
+    table_size: {
+      type: 'string',
+    },
+  },
+  vendors: {
+    table_size: {
+      type: 'string',
     },
   },
   credit_note: {
@@ -213,6 +260,9 @@ export const SettingsOptions = {
     terms_conditions: {
       type: 'string',
     },
+    table_size: {
+      type: 'string',
+    },
   },
   vendor_credit: {
     next_number: {
@@ -224,6 +274,9 @@ export const SettingsOptions = {
     auto_increment: {
       type: 'boolean',
     },
+    table_size: {
+      type: 'string',
+    },
   },
   warehouse_transfers: {
     next_number: {
@@ -234,6 +287,9 @@ export const SettingsOptions = {
     },
     auto_increment: {
       type: 'boolean',
+    },
+    table_size: {
+      type: 'string',
     },
   },
   'sms-integration': {
