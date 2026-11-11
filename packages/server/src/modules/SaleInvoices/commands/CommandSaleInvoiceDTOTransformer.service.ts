@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { omit, sumBy } from 'lodash';
+import { defaultTo, omit, sumBy } from 'lodash';
 import * as R from 'ramda';
 import * as moment from 'moment';
 import '../../../utils/moment-mysql';
@@ -152,11 +152,17 @@ export class CommandSaleInvoiceDTOTransformer {
   };
 
   /**
-   * Gets the due balance from the invoice entries.
-   * @param {IItemEntry[]} entries
+   * Gets the due balance from the invoice entries, net of each entry's line
+   * discount. `ItemEntry.amount` is the raw quantity * rate, so the line
+   * discount has to be taken off here; otherwise the invoice total, and the
+   * A/R debit derived from it, ignores line discounts while the income
+   * credits (`totalExcludingTax`) apply them, leaving the journal unbalanced.
+   * `discountAmount` honors the discount type and is not a number for entries
+   * without a discount.
+   * @param {ItemEntry[]} entries
    * @returns {number}
    */
   private getDueBalanceItemEntries = (entries: ItemEntry[]) => {
-    return sumBy(entries, (e) => e.amount);
+    return sumBy(entries, (e) => e.amount - defaultTo(e.discountAmount, 0));
   };
 }
