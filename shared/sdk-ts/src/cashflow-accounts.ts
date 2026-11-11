@@ -192,9 +192,8 @@ export async function fetchAccountTransactionsInfinity(
   fetcher: ApiFetcher,
   accountId: number,
   query: GetBankingTransactionsQuery
-): Promise<BankingTransactionsListResponse & { pagination?: { nextPage?: number } }> {
-  const result = await fetchBankingTransactions(fetcher, { ...query, accountId });
-  return result as BankingTransactionsListResponse & { pagination?: { nextPage?: number } };
+): Promise<BankingTransactionsListResponse> {
+  return fetchBankingTransactions(fetcher, { ...query, accountId });
 }
 
 /** Fetch uncategorized transactions for an account (alias for fetchUncategorizedTransactions). */
