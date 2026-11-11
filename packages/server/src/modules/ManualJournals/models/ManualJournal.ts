@@ -30,6 +30,9 @@ export class ManualJournal extends TenantBaseModel {
   description: string;
   userId?: number;
 
+  recurringJournalId?: number | null;
+  recurringJournalDate?: Date | string | null;
+
   createdAt?: Date;
   updatedAt?: Date;
 

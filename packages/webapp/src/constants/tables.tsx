@@ -12,6 +12,7 @@ export const TABLES = {
   VENDORS: 'vendors',
   ACCOUNTS: 'accounts',
   MANUAL_JOURNALS: 'manual_journal',
+  RECURRING_JOURNALS: 'recurring_journals',
   EXPENSES: 'expenses',
   CASHFLOW_ACCOUNTS: 'cashflow_accounts',
   CASHFLOW_Transactions: 'cashflow_transactions',

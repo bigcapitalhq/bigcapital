@@ -32,6 +32,13 @@ export enum RoleAction {
   Delete = 'Delete',
 }
 
+export enum RecurringJournalAction {
+  View = 'View',
+  Create = 'Create',
+  Edit = 'Edit',
+  Delete = 'Delete',
+}
+
 export interface ISubjectAbilitySchema {
   key: string;
   label: string;
@@ -53,6 +60,7 @@ export enum AbilitySubject {
   Account = 'Account',
   SaleInvoice = 'SaleInvoice',
   RecurringInvoice = 'RecurringInvoice',
+  RecurringJournal = 'RecurringJournal',
   SaleEstimate = 'SaleEstimate',
   SaleReceipt = 'SaleReceipt',
   PaymentReceive = 'PaymentReceive',

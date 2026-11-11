@@ -3,7 +3,10 @@ import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import intl from 'react-intl-universal';
-import { useMakeJournalFormContext } from './MakeJournalProvider';
+import {
+  useMakeJournalFormContext,
+  useMakeJournalFormContextOptional,
+} from './MakeJournalProvider';
 import { useJournalIsForeign, type MakeJournalFormValues } from './utils';
 import {
   ExchangeRateInputGroup,
@@ -114,14 +117,25 @@ ActionsCellRenderer.cellType = CellType.Button;
 /**
  * Retrieve columns of make journal entries table.
  */
-export const useJournalTableEntriesColumns = () => {
+export const useJournalTableEntriesColumns = (options?: {
+  trackingCategories?: any[];
+  usedCategoryIds?: Set<number>;
+}) => {
   const { featureCan } = useFeatureCan();
-  const { trackingCategories, manualJournal } = useMakeJournalFormContext();
+  const context = useMakeJournalFormContextOptional();
+  const trackingCategories = React.useMemo(
+    () => options?.trackingCategories ?? context?.trackingCategories ?? [],
+    [options?.trackingCategories, context?.trackingCategories],
+  );
+  const manualJournal = context?.manualJournal;
 
   // Categories already used by the journal remain visible on edit so history
   // is preserved even after the category is archived or its module
   // availability changes.
   const usedCategoryIds = React.useMemo(() => {
+    if (options?.usedCategoryIds) {
+      return options.usedCategoryIds;
+    }
     return new Set(
       (manualJournal?.entries ?? []).flatMap((entry) =>
         (entry.trackingCategories ?? []).map(
@@ -129,7 +143,7 @@ export const useJournalTableEntriesColumns = () => {
         ),
       ),
     );
-  }, [manualJournal]);
+  }, [manualJournal, options?.usedCategoryIds]);
 
   const visibleCategories = React.useMemo(() => {
     return trackingCategories.filter((category) => {

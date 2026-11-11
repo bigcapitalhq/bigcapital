@@ -181,4 +181,11 @@ const useMakeJournalFormContext = (): MakeJournalFormContextValue => {
   return ctx;
 };
 
-export { MakeJournalProvider, useMakeJournalFormContext };
+const useMakeJournalFormContextOptional = () =>
+  React.useContext(MakeJournalFormContext);
+
+export {
+  MakeJournalProvider,
+  useMakeJournalFormContext,
+  useMakeJournalFormContextOptional,
+};

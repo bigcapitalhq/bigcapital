@@ -32,6 +32,7 @@ import { usersReducer as users } from './users/users.reducer';
 import { vendorCreditPersistReducer as vendorCredit } from './vendor-credit/vendor-credit.reducer';
 import { vendorsPersistReducer as vendors } from './vendors/vendors.reducer';
 import { warehouseTransfersPersistReducer as warehouseTransfers } from './warehouse-transfer/warehouse-transfer.reducer';
+import { recurringJournalsPersistReducer as recurringJournals } from '@/ee/recurring-journals/store/recurring-journals.reducer';
 
 const appReducer = combineReducers({
   authentication,
@@ -55,6 +56,7 @@ const appReducer = combineReducers({
   salesEstimates,
   salesInvoices,
   recurringInvoices,
+  recurringJournals,
   salesReceipts,
   bills,
   vendors,

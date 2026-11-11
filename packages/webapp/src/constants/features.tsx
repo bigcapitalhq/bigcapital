@@ -7,4 +7,5 @@ export const Features = {
   SmsNotifications: 'sms_notifications',
   SalesTax: 'sales_tax',
   TrackingCategories: 'tracking_categories',
+  RecurringJournals: 'recurring_journals',
 };

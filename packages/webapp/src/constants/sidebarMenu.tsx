@@ -17,6 +17,7 @@ import {
   VendorAction,
   AccountAction,
   ManualJournalAction,
+  RecurringJournalAction,
   ExpenseAction,
   CashflowAction,
   PreferencesAbility,
@@ -428,6 +429,16 @@ export const SidebarMenu: SidebarMenuItem[] = [
                 permission: {
                   subject: AbilitySubject.ManualJournal,
                   ability: ManualJournalAction.View,
+                },
+              },
+              {
+                text: <T id={'sidebar.recurring_journals'} />,
+                href: '/recurring-journals',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.RecurringJournals,
+                permission: {
+                  subject: AbilitySubject.RecurringJournal,
+                  ability: RecurringJournalAction.View,
                 },
               },
               {

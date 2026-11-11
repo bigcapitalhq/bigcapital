@@ -20,12 +20,7 @@ export enum RecurringInvoiceStatus {
   Completed = 'completed',
 }
 
-export enum RecurringInvoiceFrequency {
-  Day = 'day',
-  Week = 'week',
-  Month = 'month',
-  Year = 'year',
-}
+export { RecurrenceFrequency as RecurringInvoiceFrequency } from '@/utils/recurrence';
 
 export enum RecurringInvoiceDeliveryMode {
   Draft = 'draft',

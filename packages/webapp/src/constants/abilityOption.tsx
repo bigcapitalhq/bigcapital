@@ -4,6 +4,7 @@ export const AbilitySubject = {
   Estimate: 'SaleEstimate',
   Invoice: 'SaleInvoice',
   RecurringInvoice: 'RecurringInvoice',
+  RecurringJournal: 'RecurringJournal',
   Receipt: 'SaleReceipt',
   PaymentReceive: 'PaymentReceive',
   Bill: 'Bill',
@@ -57,6 +58,13 @@ export const SaleInvoiceAction = {
 } as const;
 
 export const RecurringInvoiceAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
+} as const;
+
+export const RecurringJournalAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',

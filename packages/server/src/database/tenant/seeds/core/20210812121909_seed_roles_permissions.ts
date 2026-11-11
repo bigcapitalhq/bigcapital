@@ -49,6 +49,12 @@ export default class SeedRolesAndPermissions extends TenantSeeder {
       { roleId: 2, subject: 'RecurringInvoice', ability: 'delete' },
       { roleId: 2, subject: 'RecurringInvoice', ability: 'view' },
       { roleId: 2, subject: 'RecurringInvoice', ability: 'edit' },
+
+      // Assign recurring journal permissions to staff role.
+      { roleId: 2, subject: 'RecurringJournal', ability: 'create' },
+      { roleId: 2, subject: 'RecurringJournal', ability: 'delete' },
+      { roleId: 2, subject: 'RecurringJournal', ability: 'view' },
+      { roleId: 2, subject: 'RecurringJournal', ability: 'edit' },
     ]);
   }
 }
