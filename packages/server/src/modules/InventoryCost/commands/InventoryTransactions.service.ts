@@ -39,6 +39,43 @@ export class InventoryTransactionsService {
   ) {}
 
   /**
+   * Asserts that the given inventory transactions will not make stock negative
+   * without writing them to the storage.
+   * @param {IInventoryTransactionRecord[]} transactions - Inventory transactions.
+   * @param {boolean} override - Whether the existing transactions will be replaced.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @return {Promise<void>}
+   */
+  public async assertSufficientStock(
+    transactions: IInventoryTransactionRecord[],
+    override: boolean = false,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
+    await this.stockGuard.assertSufficientStock(transactions, override, trx);
+  }
+
+  /**
+   * Asserts that reverting the stored inventory transactions will not make
+   * stock negative.
+   * @param {number} transactionId - Inventory transaction reference id.
+   * @param {string} transactionType - Inventory transaction reference type.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @return {Promise<void>}
+   */
+  public async assertSufficientStockForDeletion(
+    transactionId: number,
+    transactionType: string,
+    trx?: Knex.Transaction,
+  ): Promise<void> {
+    const transactions = await this.findInventoryTransactions(
+      transactionId,
+      transactionType,
+      trx,
+    );
+    await this.stockGuard.assertSufficientStockForDeletion(transactions, trx);
+  }
+
+  /**
    * Records the inventory transactions.
    * @param {InventoryTransaction[]} transactions - Inventory transactions.
    * @param {boolean} override - Override the existing transactions.
@@ -152,14 +189,11 @@ export class InventoryTransactionsService {
     validateStock: boolean = true,
   ): Promise<{ oldInventoryTransactions: InventoryTransaction[] }> {
     // Retrieve the inventory transactions of the given sale invoice.
-    let oldInventoryTransactionsQuery = this.inventoryTransactionModel()
-      .query(trx)
-      .where({ transactionId, transactionType });
-
-    if (trx) {
-      oldInventoryTransactionsQuery = oldInventoryTransactionsQuery.forUpdate();
-    }
-    const oldInventoryTransactions = await oldInventoryTransactionsQuery;
+    const oldInventoryTransactions = await this.findInventoryTransactions(
+      transactionId,
+      transactionType,
+      trx,
+    );
 
     // Prevent deleting the transactions that would make the items stock negative.
     if (validateStock) {
@@ -186,6 +220,28 @@ export class InventoryTransactionsService {
       } as IInventoryTransactionsDeletedPayload,
     );
     return { oldInventoryTransactions };
+  }
+
+  /**
+   * Retrieves the stored inventory transactions of the given reference.
+   * @param {number} transactionId - Transaction reference id.
+   * @param {string} transactionType - Transaction reference type.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @return {Promise<InventoryTransaction[]>}
+   */
+  private async findInventoryTransactions(
+    transactionId: number,
+    transactionType: string,
+    trx?: Knex.Transaction,
+  ): Promise<InventoryTransaction[]> {
+    let query = this.inventoryTransactionModel()
+      .query(trx)
+      .where({ transactionId, transactionType });
+
+    if (trx) {
+      query = query.forUpdate();
+    }
+    return query;
   }
 
   /**

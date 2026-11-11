@@ -10,12 +10,14 @@ import { UnitOfWork } from '@/modules/Tenancy/TenancyDB/UnitOfWork.service';
 import { InventoryAdjustmentEntry } from '../models/InventoryAdjustmentEntry';
 import { InventoryAdjustment } from '../models/InventoryAdjustment';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { InventoryAdjustmentInventoryTransactions } from '../inventory/InventoryAdjustmentInventoryTransactions';
 
 @Injectable()
 export class DeleteInventoryAdjustmentService {
   constructor(
     private readonly eventEmitter: EventEmitter2,
     private readonly uow: UnitOfWork,
+    private readonly inventoryTransactions: InventoryAdjustmentInventoryTransactions,
 
     @Inject(InventoryAdjustment.name)
     private readonly inventoryAdjustmentModel: TenantModelProxy<
@@ -44,6 +46,12 @@ export class DeleteInventoryAdjustmentService {
     // Deletes the inventory adjustment transaction and associated transactions
     // under unit-of-work env.
     return this.uow.withTransaction(async (trx: Knex.Transaction) => {
+      // Prevent reverting the inventory transactions from making stock negative.
+      await this.inventoryTransactions.assertSufficientStockForDeletion(
+        inventoryAdjustmentId,
+        trx,
+      );
+
       // Triggers `onInventoryAdjustmentDeleting` event.
       await this.eventEmitter.emitAsync(events.inventoryAdjustment.onDeleting, {
         inventoryAdjustment: oldInventoryAdjustment,
