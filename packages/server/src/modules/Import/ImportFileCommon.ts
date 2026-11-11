@@ -7,6 +7,7 @@ import {
   ImportInsertError,
   ImportOperError,
   ImportOperSuccess,
+  ImportRowSkip,
   ImportableContext,
 } from './interfaces';
 import { getUniqueImportableValue, trimObject } from './_utils';
@@ -47,18 +48,38 @@ export class ImportFileCommon {
     const success: ImportOperSuccess[] = [];
     const failed: ImportOperError[] = [];
 
+    // Rows the importable asks to skip, decided once with all parsed rows.
+    const skippedRows = await importable.getSkippedRows(parsedData, importFile);
+    const skippedRowsByIndex = new Map<number, ImportRowSkip>(
+      skippedRows.map((skipped) => [skipped.index, skipped]),
+    );
+
     const importAsync = async (objectDTO, index: number): Promise<void> => {
-      const context: ImportableContext = {
-        rowIndex: index,
-        import: importFile,
-      };
-      const transformedDTO = importable.transform(objectDTO, context);
       const rowNumber = index + 1;
       const uniqueValue = getUniqueImportableValue(resourceFields, objectDTO);
       const errorContext = {
         rowNumber,
         uniqueValue,
       };
+      const skipped = skippedRowsByIndex.get(index);
+
+      if (skipped) {
+        const error: ImportInsertError[] = [
+          {
+            errorCode: skipped.errorCode,
+            errorMessage: skipped.errorMessage,
+            ...errorContext,
+          },
+        ];
+        failed.push({ index, skipped: true, error });
+        return;
+      }
+      const context: ImportableContext = {
+        rowIndex: index,
+        import: importFile,
+      };
+      const transformedDTO = importable.transform(objectDTO, context);
+
       try {
         // Validate the DTO object before passing it to the service layer.
         await this.importFileValidator.validateData(

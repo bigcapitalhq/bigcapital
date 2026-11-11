@@ -1,7 +1,12 @@
 import { chain } from 'lodash';
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
-import { ERRORS, getUnmappedSheetColumns, readImportFile } from './_utils';
+import {
+  ERRORS,
+  getImportResultCounts,
+  getUnmappedSheetColumns,
+  readImportFile,
+} from './_utils';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
 import { ImportFilePreviewPOJO } from './interfaces';
@@ -81,9 +86,10 @@ export class ImportFileProcess {
     const unmappedColumns = getUnmappedSheetColumns(sheetColumns, mapping);
     const totalCount = allData.length;
 
-    const createdCount = successedImport.length;
-    const errorsCount = failedImport.length;
-    const skippedCount = errorsCount;
+    const { createdCount, skippedCount, errorsCount } = getImportResultCounts(
+      successedImport,
+      failedImport,
+    );
 
     return {
       resource,

@@ -13,6 +13,12 @@ import { SectionCard, Section } from '@/components/Section';
 import { CLASSES } from '@/constants';
 import { useImportFileProcess } from '@/hooks/query/import';
 
+interface ImportResultCounts {
+  createdCount?: number;
+  totalCount?: number;
+  skippedCount?: number;
+}
+
 export function ImportFilePreview() {
   const { importId } = useImportFileContext();
 
@@ -138,10 +144,19 @@ function ImportFilePreviewFloatingActions() {
 
   const handleSubmitBtn = () => {
     importFile(importId)
-      .then(() => {
+      .then((result) => {
+        // Report what the import did, which can differ from the preview when
+        // the data changed in between (for example rows skipped as duplicates).
+        const counts = result as ImportResultCounts;
+        const createdCount = counts?.createdCount ?? importPreview.createdCount;
+        const totalCount = counts?.totalCount ?? importPreview.totalCount;
+        const skippedCount = counts?.skippedCount ?? importPreview.skippedCount;
+        const skippedMessage =
+          skippedCount > 0 ? ` ${skippedCount} skipped.` : '';
+
         AppToaster.show({
           intent: Intent.SUCCESS,
-          message: `The ${importPreview.createdCount} of ${importPreview.totalCount} has imported successfully.`,
+          message: `The ${createdCount} of ${totalCount} has imported successfully.${skippedMessage}`,
         });
         onImportSuccess && onImportSuccess();
       })
