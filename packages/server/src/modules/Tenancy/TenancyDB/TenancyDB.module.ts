@@ -10,14 +10,15 @@ import { UnitOfWork } from './UnitOfWork.service';
 
 const lruCache = new LRUCache();
 
-export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
-  provide: TENANCY_DB_CONNECTION,
-  global: true,
-  strict: true,
-  inject: [ConfigService, ClsService],
-  useFactory: async (configService: ConfigService, cls: ClsService) => () => {
+/**
+ * Builds the function that returns the current tenant's knex connection.
+ * @param {ConfigService} configService
+ * @param {ClsService} cls
+ */
+export const tenancyDatabaseConnectionFactory =
+  async (configService: ConfigService, cls: ClsService) => () => {
     const organizationId = cls.get('organizationId');
-    const database = `bigcapital_tenant_${organizationId}`;
+    const database = `${configService.get('tenantDatabase.dbNamePrefix')}${organizationId}`;
     const cachedInstance = lruCache.get(database);
 
     if (cachedInstance) {
@@ -47,7 +48,14 @@ export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
     lruCache.set(database, knexInstance);
 
     return knexInstance;
-  },
+  };
+
+export const TenancyDatabaseProxyProvider = ClsModule.forFeatureAsync({
+  provide: TENANCY_DB_CONNECTION,
+  global: true,
+  strict: true,
+  inject: [ConfigService, ClsService],
+  useFactory: tenancyDatabaseConnectionFactory,
   type: 'function',
 });
 
