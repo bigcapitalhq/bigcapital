@@ -860,7 +860,6 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     backLink: true,
     feature: Features.RecurringJournals,
-    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
     path: `/recurring-journals/new`,
@@ -875,7 +874,6 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     backLink: true,
     feature: Features.RecurringJournals,
-    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
     path: `/recurring-journals`,
@@ -887,7 +885,6 @@ export const getDashboardRoutes = () => [
     breadcrumb: intl.get('recurring_journals'),
     pageTitle: intl.get('recurring_journals'),
     feature: Features.RecurringJournals,
-    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
   // Sales Receipts.
