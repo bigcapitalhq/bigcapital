@@ -20,8 +20,8 @@ export class SaleReceiptInventoryTransactionsSubscriber {
    * or closed in case it was created as draft.
    * @param {ISaleReceiptCreatedPayload | ISaleReceiptEventClosedPayload} payload -
    */
-  @OnEvent(events.saleReceipt.onCreated)
-  @OnEvent(events.saleReceipt.onClosed)
+  @OnEvent(events.saleReceipt.onCreated, { suppressErrors: false })
+  @OnEvent(events.saleReceipt.onClosed, { suppressErrors: false })
   public async handleWritingInventoryTransactions({
     saleReceipt,
     trx,
@@ -40,7 +40,7 @@ export class SaleReceiptInventoryTransactionsSubscriber {
    * Rewriting the inventory transactions once the sale invoice be edited.
    * @param {ISaleReceiptEditedPayload} payload -
    */
-  @OnEvent(events.saleReceipt.onEdited)
+  @OnEvent(events.saleReceipt.onEdited, { suppressErrors: false })
   public async handleRewritingInventoryTransactions({
     saleReceipt,
     trx,
@@ -59,7 +59,7 @@ export class SaleReceiptInventoryTransactionsSubscriber {
    * Handles deleting the inventory transactions once the receipt deleted.
    * @param {ISaleReceiptEventDeletedPayload} payload -
    */
-  @OnEvent(events.saleReceipt.onDeleted)
+  @OnEvent(events.saleReceipt.onDeleted, { suppressErrors: false })
   public async handleDeletingInventoryTransactions({
     saleReceiptId,
     trx,
