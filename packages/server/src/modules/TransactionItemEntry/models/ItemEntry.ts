@@ -155,9 +155,12 @@ export class ItemEntry extends BaseModel {
    * @returns {number}
    */
   get taxAmount() {
+    // Entries built from a DTO without a tax rate have no `taxRate` at all.
+    const taxRate = this.taxRate || 0;
+
     return this.isInclusiveTax
-      ? getInclusiveTaxAmount(this.amount, this.taxRate)
-      : getExlusiveTaxAmount(this.amount, this.taxRate);
+      ? getInclusiveTaxAmount(this.amount, taxRate)
+      : getExlusiveTaxAmount(this.amount, taxRate);
   }
 
   /**

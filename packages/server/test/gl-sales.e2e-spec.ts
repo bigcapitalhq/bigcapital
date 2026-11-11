@@ -31,32 +31,34 @@ describe('GL entries — Sales transactions (e2e)', () => {
   });
 
   describe('Sale Invoice', () => {
+    const invoiceDTO = (overrides: Record<string, any> = {}) => ({
+      customerId,
+      invoiceDate: '2023-01-01',
+      dueDate: '2023-02-01',
+      invoiceNo: faker.string.uuid(),
+      referenceNo: 'REF-000201',
+      delivered: true,
+      discountType: 'percentage',
+      discount: 10,
+      branchId: 1,
+      warehouseId: 1,
+      entries: [
+        {
+          index: 1,
+          itemId,
+          quantity: 1,
+          rate: 1000,
+          description: 'Item description...',
+        },
+      ],
+      ...overrides,
+    });
+
     const createInvoice = async (overrides: Record<string, any> = {}) => {
       const res = await request(app.getHttpServer())
         .post('/sale-invoices')
         .set(authHeaders())
-        .send({
-          customerId,
-          invoiceDate: '2023-01-01',
-          dueDate: '2023-02-01',
-          invoiceNo: faker.string.uuid(),
-          referenceNo: 'REF-000201',
-          delivered: true,
-          discountType: 'percentage',
-          discount: 10,
-          branchId: 1,
-          warehouseId: 1,
-          entries: [
-            {
-              index: 1,
-              itemId,
-              quantity: 1,
-              rate: 1000,
-              description: 'Item description...',
-            },
-          ],
-          ...overrides,
-        })
+        .send(invoiceDTO(overrides))
         .expect(201);
 
       return res.body.id;
@@ -134,6 +136,47 @@ describe('GL entries — Sales transactions (e2e)', () => {
           { accountCode: '10007', contactId: customerId, debit: 900 },
           { accountCode: '50002', credit: 909.09 },
           { accountCode: '20006', credit: 90.91 },
+          { accountCode: '40008', debit: 100 },
+        ],
+        'SaleInvoice',
+      );
+    });
+
+    it('posts a balanced journal after the tax is removed from an edited invoice', async () => {
+      const invoiceNo = faker.string.uuid();
+      const entry = {
+        index: 1,
+        itemId,
+        quantity: 1,
+        rate: 1000,
+        description: 'Item description...',
+      };
+      const invoiceId = await createInvoice({
+        invoiceNo,
+        entries: [{ ...entry, taxRateId: taxRate10 }],
+      });
+
+      await request(app.getHttpServer())
+        .put(`/sale-invoices/${invoiceId}`)
+        .set(authHeaders())
+        .send(invoiceDTO({ invoiceNo, entries: [entry] }))
+        .expect(200);
+
+      const invoiceRes = await request(app.getHttpServer())
+        .get(`/sale-invoices/${invoiceId}`)
+        .set(authHeaders())
+        .expect(200);
+
+      expect(invoiceRes.body.total).toBeCloseTo(900, 2);
+
+      const legs = await fetchLegs('SaleInvoice', invoiceId);
+
+      expectBalanced(legs);
+      expectLegs(
+        legs,
+        [
+          { accountCode: '10007', contactId: customerId, debit: 900 },
+          { accountCode: '50002', credit: 1000 },
           { accountCode: '40008', debit: 100 },
         ],
         'SaleInvoice',

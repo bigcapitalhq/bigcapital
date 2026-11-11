@@ -1,7 +1,8 @@
 // @ts-nocheck
-import { FormGroup } from '@blueprintjs/core';
+import { Button, FormGroup, Intent } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs-formik/select';
 import React, { useCallback } from 'react';
+import intl from 'react-intl-universal';
 import { CellType } from '@/constants';
 
 export function TaxRatesSuggestInputCell({
@@ -20,6 +21,21 @@ export function TaxRatesSuggestInputCell({
     [updateData, index, id],
   );
 
+  // Handle the tax rate cleared.
+  const handleClear = useCallback(() => {
+    updateData(index, id, null);
+  }, [updateData, index, id]);
+
+  const clearButton = cellValue ? (
+    <Button
+      icon={'cross'}
+      minimal={true}
+      small={true}
+      aria-label={intl.get('clear')}
+      onClick={handleClear}
+    />
+  ) : undefined;
+
   return (
     <FormGroup intent={error ? Intent.DANGER : null} {...formGroupProps}>
       <Suggest<any>
@@ -29,7 +45,7 @@ export function TaxRatesSuggestInputCell({
         labelAccessor={'code'}
         textAccessor={'nameFormatted'}
         popoverProps={{ minimal: true, boundary: 'window' }}
-        inputProps={{ placeholder: '' }}
+        inputProps={{ placeholder: '', rightElement: clearButton }}
         fill={true}
         onItemChange={handleItemSelected}
         {...suggestProps}
