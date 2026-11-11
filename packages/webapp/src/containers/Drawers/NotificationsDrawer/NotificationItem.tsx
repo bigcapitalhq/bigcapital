@@ -63,7 +63,7 @@ export function NotificationItem({
         <Icon icon={icon} intent={intent} iconSize={20} />
       </div>
       <div className={styles.content}>
-        <div className={styles.header}>
+        <div className={styles.itemHeader}>
           <h4 className={styles.title}>{notification.title}</h4>
           <Tooltip
             content={new Date(notification.createdAt).toLocaleString()}
