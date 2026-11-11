@@ -52,11 +52,12 @@ function ItemsCategoryTable({
     isCategoriesFetching,
     itemsCategories,
     itemsCategoriesSettings,
+    defaultCostMethod,
   } = useItemsCategoriesContext();
   const tableSize = itemsCategoriesSettings?.tableSize as string | undefined;
 
   // Table columns.
-  const columns = useItemsCategoriesTableColumns();
+  const columns = useItemsCategoriesTableColumns(defaultCostMethod);
 
   // Handle selected rows change.
   const handleSelectedRowsChange = React.useCallback(

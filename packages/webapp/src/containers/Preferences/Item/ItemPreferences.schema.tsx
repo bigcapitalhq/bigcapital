@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { ITEM_COST_METHODS } from '@/constants/costMethods';
 
 const reorderPointNotificationEmailSchema = Yup.string()
   .transform((value) => (value === '' ? null : value))
@@ -9,6 +10,9 @@ const Schema = Yup.object().shape({
   preferredSellAccount: Yup.number().nullable(),
   preferredCostAccount: Yup.number().nullable(),
   preferredInventoryAccount: Yup.number().nullable(),
+  defaultCostMethod: Yup.string()
+    .oneOf([...ITEM_COST_METHODS])
+    .required(),
   reorderPointNotifications: Yup.boolean(),
   reorderPointNotificationEmail: reorderPointNotificationEmailSchema.when(
     'reorderPointNotifications',

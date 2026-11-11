@@ -3,6 +3,19 @@ import type {
   EditItemCategoryBody,
   ItemCategory,
 } from '@bigcapital/sdk-ts';
+import {
+  ITEM_COST_METHODS,
+  ITEM_COST_METHOD_INHERIT,
+  normalizeItemCostMethod,
+  type ItemCostMethod,
+  type ItemCostMethodValue,
+} from '@/constants/costMethods';
+
+export { ITEM_COST_METHODS, normalizeItemCostMethod };
+export type { ItemCostMethod, ItemCostMethodValue };
+
+export const DEFAULT_ITEM_COST_METHOD: ItemCostMethodValue =
+  ITEM_COST_METHOD_INHERIT;
 
 export interface ItemCategoryFormValues {
   name: string;
@@ -13,7 +26,7 @@ export interface ItemCategoryFormValues {
   costAccountId: string | number;
   sellAccountId: string | number;
   inventoryAccountId: string | number;
-  costMethod: string;
+  costMethod: ItemCostMethodValue;
 }
 
 export type ItemCategoryDialogPayload = {

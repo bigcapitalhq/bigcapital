@@ -8,6 +8,7 @@ import { Item } from './models/Item';
 import { UnitOfWork } from '../Tenancy/TenancyDB/UnitOfWork.service';
 import { TenantModelProxy } from '../System/models/TenantBaseModel';
 import { EditItemDto } from './dtos/Item.dto';
+import { normalizeNullableCostMethod } from '@/common/constants/inventory.constants';
 
 @Injectable()
 export class EditItemService {
@@ -38,6 +39,9 @@ export class EditItemService {
 
     // Validate edit item type to inventory type.
     await this.validators.validateEditItemTypeToInventory(oldItem, itemDTO);
+
+    // Validate the cost method cannot be changed after the first transaction.
+    this.validators.validateCostMethodModification(itemDTO, oldItem);
 
     // Validate whether the given item name already exists on the storage.
     await this.validators.validateItemNameUniquiness(itemDTO.name, oldItem.id);
@@ -110,8 +114,16 @@ export class EditItemService {
         ? { reorderPointNotified: false }
         : {};
 
+    const { costMethod, ...itemObj } = itemDTO;
+    const costMethodPatch =
+      itemDTO.type === 'inventory'
+        ? costMethod !== undefined
+          ? { costMethod: normalizeNullableCostMethod(costMethod) }
+          : {}
+        : { costMethod: null };
+
     return {
-      ...itemDTO,
+      ...itemObj,
       ...(itemDTO.type === 'inventory' && oldItem.type !== 'inventory'
         ? {
             quantityOnHand: 0,
@@ -119,6 +131,7 @@ export class EditItemService {
         : {}),
       ...reorderPointPatch,
       ...reorderPointNotifiedPatch,
+      ...costMethodPatch,
     };
   }
 
@@ -161,6 +174,17 @@ export class EditItemService {
 
     // Edits the item with associated transactions under unit-of-work environment.
     return this.uow.withTransaction<number>(async (trx: Knex.Transaction) => {
+      // Re-fetch the item under a row lock to close the race between editing
+      // the cost method and creating the first inventory transaction.
+      const lockedItem = await this.itemModel()
+        .query(trx)
+        .findById(itemId)
+        .forUpdate()
+        .throwIfNotFound();
+
+      // Re-validate the cost method against the locked row.
+      this.validators.validateCostMethodModification(itemDTO, lockedItem);
+
       // Updates the item on the storage and fetches the updated one.
       const newItem = await this.itemModel()
         .query(trx)
@@ -169,7 +193,7 @@ export class EditItemService {
       // Edit event payload.
       const eventPayload: IItemEventEditedPayload = {
         item: newItem,
-        oldItem,
+        oldItem: lockedItem,
         itemId: newItem.id,
         trx,
       };

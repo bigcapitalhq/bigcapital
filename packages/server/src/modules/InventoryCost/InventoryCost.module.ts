@@ -21,9 +21,12 @@ import { BullBoardModule } from '@bull-board/nestjs';
 import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { BullModule } from '@nestjs/bullmq';
 import { InventoryAverageCostMethodService } from './commands/InventoryAverageCostMethod.service';
+import { InventoryLotCostMethodService } from './commands/InventoryLotCostMethod.service';
 import { InventoryItemCostService } from './commands/InventoryCosts.service';
 import { InventoryItemOpeningAvgCostService } from './commands/InventoryItemOpeningAvgCost.service';
 import { InventoryCostSubscriber } from './subscribers/InventoryCost.subscriber';
+import { ItemCostMethodResolverService } from './commands/ItemCostMethodResolver.service';
+import { InventoryItemCostMethodLockService } from './commands/InventoryItemCostMethodLock.service';
 import { SaleInvoicesModule } from '../SaleInvoices/SaleInvoices.module';
 import { ImportModule } from '../Import/Import.module';
 import { GetItemsInventoryValuationListService } from './queries/GetItemsInventoryValuationList.service';
@@ -65,9 +68,12 @@ const models = [
     ComputeItemCostProcessor,
     WriteInventoryTransactionsGLEntriesProcessor,
     InventoryAverageCostMethodService,
+    InventoryLotCostMethodService,
     InventoryItemCostService,
     InventoryItemOpeningAvgCostService,
     InventoryCostSubscriber,
+    ItemCostMethodResolverService,
+    InventoryItemCostMethodLockService,
     GetItemsInventoryValuationListService,
   ],
   exports: [

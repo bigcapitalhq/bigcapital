@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 // import { ISystemUser } from './User';
 import { ItemCategory } from './models/ItemCategory.model';
 import { IDynamicListFilter } from '../DynamicListing/DynamicFilter/DynamicFilter.types';
+import type { TCostMethod } from '@/common/constants/inventory.constants';
 
 export interface IItemCategoryOTD {
   name: string;
@@ -14,7 +15,7 @@ export interface IItemCategoryOTD {
   sellAccountId?: number;
   inventoryAccountId?: number;
 
-  costMethod?: string;
+  costMethod?: TCostMethod | null;
 }
 
 // export interface IItemCategoriesFilter extends IDynamicListFilterDTO {
@@ -28,6 +29,7 @@ export interface IItemCategoryCreatedPayload {
 
 export interface IItemCategoryEditedPayload {
   oldItemCategory: ItemCategory;
+  itemCategory: ItemCategory;
   trx: Knex.Transaction;
 }
 

@@ -1,5 +1,6 @@
 import { Warehouse } from '@/modules/Warehouses/models/Warehouse.model';
 import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
+import type { ItemCategory } from '@/modules/ItemCategories/models/ItemCategory.model';
 import { Model } from 'objection';
 import { ExportableModel } from '@/modules/Export/decorators/ExportableModel.decorator';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
@@ -7,6 +8,7 @@ import { ItemMeta } from './Item.meta';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
 import { PreventMutateBaseCurrency } from '@/common/decorators/LockMutateBaseCurrency.decorator';
 import { InjectModelDefaultViews } from '@/modules/Views/decorators/InjectModelDefaultViews.decorator';
+import type { TCostMethod } from '@/common/constants/inventory.constants';
 import { ItemDefaultViews } from '../Items.constants';
 
 @ExportableModel()
@@ -31,6 +33,8 @@ export class Item extends TenantBaseModel {
   public readonly costAccountId: number;
   public readonly inventoryAccountId: number;
   public readonly categoryId: number;
+  public readonly costMethod: TCostMethod | null;
+  public readonly costMethodLockedAt: Date | null;
   public readonly pictureUri: string;
   public readonly sellAccountId: number;
   public readonly sellDescription: string;
@@ -42,6 +46,7 @@ export class Item extends TenantBaseModel {
   public readonly purchaseTaxRateId: number;
 
   public readonly warehouse!: Warehouse;
+  public readonly category?: ItemCategory;
 
   static get tableName() {
     return 'items';

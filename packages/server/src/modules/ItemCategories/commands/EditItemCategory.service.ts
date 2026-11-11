@@ -10,6 +10,7 @@ import { ItemCategory } from '../models/ItemCategory.model';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { EditItemCategoryDto } from '../dtos/ItemCategory.dto';
+import { normalizeNullableCostMethod } from '@/common/constants/inventory.constants';
 
 @Injectable()
 export class EditItemCategoryService {
@@ -78,6 +79,7 @@ export class EditItemCategoryService {
       // Triggers `onItemCategoryEdited` event.
       await this.eventEmitter.emitAsync(events.itemCategory.onEdited, {
         oldItemCategory,
+        itemCategory,
         trx,
       } as IItemCategoryEditedPayload);
 
@@ -94,6 +96,15 @@ export class EditItemCategoryService {
     itemCategoryOTD: EditItemCategoryDto,
     authorizedUser: SystemUser,
   ) {
-    return { ...itemCategoryOTD, userId: authorizedUser.id };
+    const { costMethod, ...itemCategoryObj } = itemCategoryOTD;
+
+    return {
+      ...itemCategoryObj,
+      userId: authorizedUser.id,
+      // Keep the existing cost method when it is not provided.
+      ...(costMethod !== undefined
+        ? { costMethod: normalizeNullableCostMethod(costMethod) }
+        : {}),
+    };
   }
 }

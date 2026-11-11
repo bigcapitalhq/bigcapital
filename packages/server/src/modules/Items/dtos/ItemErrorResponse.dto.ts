@@ -47,6 +47,9 @@ export enum ItemErrorType {
   /** Inventory account cannot be modified */
   InventoryAccountCannotModified = 'INVENTORY_ACCOUNT_CANNOT_MODIFIED',
 
+  /** Item cost method cannot be modified after the first inventory transaction */
+  ItemCostMethodCannotModified = 'ITEM_COST_METHOD_CANNOT_MODIFIED',
+
   /** Purchase tax rate was not found */
   PurchaseTaxRateNotFound = 'PURCHASE_TAX_RATE_NOT_FOUND',
 

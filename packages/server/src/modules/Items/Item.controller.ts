@@ -24,7 +24,10 @@ import {
 } from '@nestjs/swagger';
 import { CreateItemDto, EditItemDto } from './dtos/Item.dto';
 import { GetItemsQueryDto } from './dtos/GetItemsQuery.dto';
-import { ItemResponseDto } from './dtos/itemResponse.dto';
+import {
+  ItemCategorySummaryResponseDto,
+  ItemResponseDto,
+} from './dtos/itemResponse.dto';
 import { PaginatedResponseDto } from '@/common/dtos/PaginatedResults.dto';
 import { ItemInvoiceResponseDto } from './dtos/ItemInvoiceResponse.dto';
 import { ItemEstimatesResponseDto } from './dtos/ItemEstimatesResponse.dto';
@@ -45,6 +48,7 @@ import { ItemAction } from '@/interfaces/Item';
 @Controller('/items')
 @ApiTags('Items')
 @ApiExtraModels(ItemResponseDto)
+@ApiExtraModels(ItemCategorySummaryResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(ItemInvoiceResponseDto)
 @ApiExtraModels(ItemEstimatesResponseDto)

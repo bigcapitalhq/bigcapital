@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { Inject, Injectable } from '@nestjs/common';
-import { omit } from 'lodash';
+import { chunk, omit } from 'lodash';
 import { InventoryCostLotTracker } from '../models/InventoryCostLotTracker';
 import { TenantModelProxy } from '../../System/models/TenantBaseModel';
 
@@ -17,13 +17,14 @@ export class StoreInventoryLotsCostService {
    * Stores the inventory lots costs transactions in bulk.
    * @param {InventoryCostLotTracker[]} costLotsTransactions - Inventory lots costs transactions.
    * @param {Knex.Transaction} trx - Knex transaction.
-   * @return {Promise<object>}
+   * @return {Promise<void>}
    */
-  public storeInventoryLotsCost(
+  public async storeInventoryLotsCost(
     costLotsTransactions: InventoryCostLotTracker[],
     trx?: Knex.Transaction,
-  ): Promise<object> {
-    const opers: any = [];
+  ): Promise<void> {
+    const decrementOpers: any[] = [];
+    const insertRows: any[] = [];
 
     costLotsTransactions.forEach((transaction: any) => {
       if (transaction.lotTransId && transaction.decrement) {
@@ -32,17 +33,20 @@ export class StoreInventoryLotsCostService {
           .where('id', transaction.lotTransId)
           .decrement('remaining', transaction.decrement);
 
-        opers.push(decrementOper);
+        decrementOpers.push(decrementOper);
       } else if (!transaction.lotTransId) {
-        const operation = this.inventoryCostLotTracker()
-          .query(trx)
-          .insert({
-            ...omit(transaction, ['decrement', 'invTransId', 'lotTransId']),
-          });
-        opers.push(operation);
+        insertRows.push({
+          ...omit(transaction, ['decrement', 'invTransId', 'lotTransId']),
+        });
       }
     });
-    return Promise.all(opers);
+    await Promise.all(decrementOpers);
+
+    // Insert the cost lots in chunks to avoid a large number of concurrent
+    // queries when re-computing a long item history.
+    for (const rows of chunk(insertRows, 500)) {
+      await this.inventoryCostLotTracker().query(trx).insert(rows);
+    }
   }
 
   /**

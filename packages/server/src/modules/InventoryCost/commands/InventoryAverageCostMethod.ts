@@ -1,5 +1,5 @@
-import { pick } from 'lodash';
 import { InventoryTransaction } from '../models/InventoryTransaction';
+import { transformInventoryTransactionToCostLot } from '../utils';
 
 export class InventoryAverageCostMethod {
   constructor() {}
@@ -35,24 +35,8 @@ export class InventoryAverageCostMethod {
     let accCost: number = openingCost;
 
     invTransactions.forEach((invTransaction: InventoryTransaction) => {
-      const commonEntry = {
-        invTransId: invTransaction.id,
-        ...pick(invTransaction, [
-          'date',
-          'direction',
-          'itemId',
-          'quantity',
-          'rate',
-          'entryId',
-          'transactionId',
-          'transactionType',
-          'createdAt',
-          'costAccountId',
-          'branchId',
-          'warehouseId',
-        ]),
-        inventoryTransactionId: invTransaction.id,
-      };
+      const commonEntry =
+        transformInventoryTransactionToCostLot(invTransaction);
       switch (invTransaction.direction) {
         case 'IN':
           const inCost = this.getCost(

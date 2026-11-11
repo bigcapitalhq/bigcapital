@@ -1,6 +1,7 @@
 import { Button, Divider, Intent } from '@blueprintjs/core';
 import { Form, useFormikContext } from 'formik';
 import React from 'react';
+import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
@@ -19,6 +20,7 @@ export interface ItemPreferencesFormValues {
   preferredSellAccount: string | number;
   preferredCostAccount: string | number;
   preferredInventoryAccount: string | number;
+  defaultCostMethod: string;
   reorderPointNotifications: boolean;
   reorderPointNotificationEmail: string;
   preventStockFromGoingBelowZero: boolean;
@@ -30,6 +32,15 @@ export function ItemForm(): React.ReactElement {
 
   const { isSubmitting, values } =
     useFormikContext<ItemPreferencesFormValues>();
+
+  const costMethodOptions = React.useMemo(
+    () => [
+      { value: 'AVG', label: intl.get('cost_method_average') },
+      { value: 'FIFO', label: intl.get('cost_method_fifo') },
+      { value: 'LIFO', label: intl.get('cost_method_lifo') },
+    ],
+    [],
+  );
 
   const userOptions = users
     .filter((user) => user.active && user.email)
@@ -130,6 +141,27 @@ export function ItemForm(): React.ReactElement {
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           filterByTypes={[ACCOUNT_TYPE.INVENTORY]}
+        />
+      </ItemFormGroup>
+
+      <ItemFormGroup
+        name={'defaultCostMethod'}
+        label={
+          <strong>
+            <T id={'default_cost_method'} />
+          </strong>
+        }
+        helperText={<T id={'default_cost_method_hint'} />}
+        inline={true}
+      >
+        <FSelect
+          name={'defaultCostMethod'}
+          items={costMethodOptions}
+          valueAccessor={'value'}
+          textAccessor={'label'}
+          filterable={false}
+          popoverProps={{ minimal: true, captureDismiss: true }}
+          fill={true}
         />
       </ItemFormGroup>
 

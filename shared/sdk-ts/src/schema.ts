@@ -5728,7 +5728,7 @@ export interface components {
              * @example ITEM_NAME_EXISTS
              * @enum {string}
              */
-            type: "ITEM_NAME_EXISTS" | "ITEM_CATEOGRY_NOT_FOUND" | "COST_ACCOUNT_NOT_COGS" | "COST_ACCOUNT_NOT_FOUMD" | "SELL_ACCOUNT_NOT_FOUND" | "SELL_ACCOUNT_NOT_INCOME" | "INVENTORY_ACCOUNT_NOT_FOUND" | "INVENTORY_ACCOUNT_NOT_INVENTORY" | "ITEMS_HAVE_ASSOCIATED_TRANSACTIONS" | "ITEM_HAS_ASSOCIATED_TRANSACTINS" | "ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT" | "ITEM_CANNOT_CHANGE_INVENTORY_TYPE" | "TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS" | "INVENTORY_ACCOUNT_CANNOT_MODIFIED" | "PURCHASE_TAX_RATE_NOT_FOUND" | "SELL_TAX_RATE_NOT_FOUND" | "INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM" | "COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM" | "NOT_FOUND" | "ITEMS_NOT_FOUND";
+            type: "ITEM_NAME_EXISTS" | "ITEM_CATEOGRY_NOT_FOUND" | "COST_ACCOUNT_NOT_COGS" | "COST_ACCOUNT_NOT_FOUMD" | "SELL_ACCOUNT_NOT_FOUND" | "SELL_ACCOUNT_NOT_INCOME" | "INVENTORY_ACCOUNT_NOT_FOUND" | "INVENTORY_ACCOUNT_NOT_INVENTORY" | "ITEMS_HAVE_ASSOCIATED_TRANSACTIONS" | "ITEM_HAS_ASSOCIATED_TRANSACTINS" | "ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT" | "ITEM_CANNOT_CHANGE_INVENTORY_TYPE" | "TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS" | "INVENTORY_ACCOUNT_CANNOT_MODIFIED" | "ITEM_COST_METHOD_CANNOT_MODIFIED" | "PURCHASE_TAX_RATE_NOT_FOUND" | "SELL_TAX_RATE_NOT_FOUND" | "INCOME_ACCOUNT_REQUIRED_WITH_SELLABLE_ITEM" | "COST_ACCOUNT_REQUIRED_WITH_PURCHASABLE_ITEM" | "NOT_FOUND" | "ITEMS_NOT_FOUND";
             /**
              * @description Human-readable error message
              * @example The item name is already exist.
@@ -6067,6 +6067,24 @@ export interface components {
             /** @description Pagination metadata */
             pagination: components["schemas"]["Pagination"];
         };
+        ItemCategorySummaryResponseDto: {
+            /**
+             * @description The category ID
+             * @example 1
+             */
+            id: number;
+            /**
+             * @description The category name
+             * @example Electronics
+             */
+            name: string;
+            /**
+             * @description The category cost method. Null means inherit from the default cost method preference.
+             * @example FIFO
+             * @enum {string|null}
+             */
+            costMethod?: "AVG" | "FIFO" | "LIFO" | null;
+        };
         ItemResponseDto: {
             /**
              * @description The unique identifier of the item
@@ -6163,7 +6181,19 @@ export interface components {
              */
             categoryId?: number;
             /** @description The category details */
-            category?: Record<string, never>;
+            category?: components["schemas"]["ItemCategorySummaryResponseDto"];
+            /**
+             * @description The inventory cost method. Null means inherit from the item category.
+             * @example FIFO
+             * @enum {string|null}
+             */
+            costMethod?: "AVG" | "FIFO" | "LIFO" | null;
+            /**
+             * Format: date-time
+             * @description The date when the cost method was frozen by the first inventory transaction
+             * @example 2024-03-20T10:00:00Z
+             */
+            costMethodLockedAt?: string | null;
             /**
              * @description The description shown on sales documents
              * @example Premium ergonomic office chair with adjustable height and lumbar support
@@ -6312,6 +6342,12 @@ export interface components {
              */
             categoryId?: number;
             /**
+             * @description Inventory cost method. Null means inherit from the item category.
+             * @example FIFO
+             * @enum {string|null}
+             */
+            costMethod?: "AVG" | "FIFO" | "LIFO" | null;
+            /**
              * @description Additional notes about the item
              * @example Available in black, gray, and navy colors. 5-year warranty included.
              */
@@ -6436,6 +6472,12 @@ export interface components {
              * @example 5
              */
             categoryId?: number;
+            /**
+             * @description Inventory cost method. Null means inherit from the item category.
+             * @example FIFO
+             * @enum {string|null}
+             */
+            costMethod?: "AVG" | "FIFO" | "LIFO" | null;
             /**
              * @description Additional notes about the item
              * @example Available in black, gray, and navy colors. 5-year warranty included.
@@ -9438,10 +9480,11 @@ export interface components {
              */
             inventoryAccountId?: number;
             /**
-             * @description The cost method
+             * @description The cost method. Null means inherit from the items default cost method preference.
              * @example FIFO
+             * @enum {string|null}
              */
-            costMethod?: string;
+            costMethod?: "AVG" | "FIFO" | "LIFO" | null;
             /**
              * @description The user ID who created the category
              * @example 1
@@ -9492,10 +9535,11 @@ export interface components {
              */
             inventoryAccountId: number;
             /**
-             * @description The cost method
+             * @description The cost method. Null means inherit from the items default cost method preference.
              * @example FIFO
+             * @enum {string|null}
              */
-            costMethod: string;
+            costMethod?: "AVG" | "FIFO" | "LIFO" | null;
         };
         EditItemCategoryDto: {
             /**
@@ -9524,10 +9568,11 @@ export interface components {
              */
             inventoryAccountId: number;
             /**
-             * @description The cost method
+             * @description The cost method. Null means inherit from the items default cost method preference.
              * @example FIFO
+             * @enum {string|null}
              */
-            costMethod: string;
+            costMethod?: "AVG" | "FIFO" | "LIFO" | null;
         };
         BulkDeleteItemCategoriesDto: {
             /**

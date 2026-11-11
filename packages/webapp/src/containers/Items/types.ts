@@ -16,6 +16,7 @@ export interface ItemFormValues {
   sellTaxRateId: number | string;
   inventoryAccountId: number | string;
   categoryId: number | string;
+  costMethod: string;
   sellable: boolean;
   purchasable: boolean;
   sellDescription: string;

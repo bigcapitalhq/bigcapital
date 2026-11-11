@@ -4,6 +4,7 @@ import { TenantBaseModel } from '@/modules/System/models/TenantBaseModel';
 import { InjectModelMeta } from '@/modules/Tenancy/TenancyModels/decorators/InjectModelMeta.decorator';
 import { ItemCategoryMeta } from './ItemCategory.meta';
 import { ImportableModel } from '@/modules/Import/decorators/Import.decorator';
+import type { TCostMethod } from '@/common/constants/inventory.constants';
 
 @ExportableModel()
 @ImportableModel()
@@ -15,6 +16,7 @@ export class ItemCategory extends TenantBaseModel {
   costAccountId!: number;
   sellAccountId!: number;
   inventoryAccountId!: number;
+  costMethod?: TCostMethod | null;
 
   userId!: number;
 

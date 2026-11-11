@@ -7,6 +7,7 @@ import {
   useItemsCategories,
   useResourceMeta,
   useSettingsItemCategories,
+  useSettingsItems,
 } from '@/hooks/query';
 import { transformTableStateToQuery, getFieldsFromResourceMeta } from '@/utils';
 
@@ -27,6 +28,7 @@ export interface ItemsCategoriesContextValue {
   isResourceLoading: boolean;
   isResourceFetching: boolean;
   itemsCategoriesSettings: SettingsGroup | undefined;
+  defaultCostMethod: string;
   // FIXME: response shape mismatch — `ItemCategoriesListResponse` is the array
   // type but the original code reads `.itemsCategories`/`.pagination`. Preserved
   // from the original; both are `undefined` at runtime.
@@ -66,6 +68,11 @@ function ItemsCategoriesProvider({
   // Fetch the item categories settings.
   const { data: itemsCategoriesSettings } = useSettingsItemCategories();
 
+  // Fetch the items preferences to resolve the inherited cost method.
+  const { data: itemsSettings } = useSettingsItems();
+  const defaultCostMethod =
+    (itemsSettings?.defaultCostMethod as string | undefined) || 'AVG';
+
   const state: ItemsCategoriesContextValue = {
     isCategoriesFetching,
     isCategoriesLoading,
@@ -79,6 +86,7 @@ function ItemsCategoriesProvider({
 
     itemsCategories: itemsCategoriesData,
     itemsCategoriesSettings,
+    defaultCostMethod,
     query,
   };
 

@@ -1,11 +1,40 @@
 import { chain } from 'lodash';
 import { pick } from 'lodash';
 import { IItemEntryTransactionType } from '../TransactionItemEntry/ItemEntry.types';
+import { InventoryTransaction } from './models/InventoryTransaction';
 import {
   TInventoryTransactionDirection,
   IInventoryTransaction,
   IInventoryTransactionItemEntry,
 } from './types/InventoryCost.types';
+
+/**
+ * Transforms the inventory transaction to a cost lot transaction entry.
+ * @param {InventoryTransaction} invTransaction - The inventory transaction.
+ * @returns {object}
+ */
+export function transformInventoryTransactionToCostLot(
+  invTransaction: InventoryTransaction,
+) {
+  return {
+    invTransId: invTransaction.id,
+    ...pick(invTransaction, [
+      'date',
+      'direction',
+      'itemId',
+      'quantity',
+      'rate',
+      'entryId',
+      'transactionId',
+      'transactionType',
+      'createdAt',
+      'costAccountId',
+      'branchId',
+      'warehouseId',
+    ]),
+    inventoryTransactionId: invTransaction.id,
+  };
+}
 
 /**
  * Grpups by transaction type and id the inventory transactions.

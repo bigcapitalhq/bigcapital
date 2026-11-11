@@ -1,5 +1,33 @@
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  COST_METHODS,
+  TCostMethod,
+} from '@/common/constants/inventory.constants';
 import { DEFAULT_ITEM_UNIT, ITEM_UNITS } from '../Items.constants';
+
+export class ItemCategorySummaryResponseDto {
+  @ApiProperty({
+    description: 'The category ID',
+    example: 1,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: 'The category name',
+    example: 'Electronics',
+  })
+  name: string;
+
+  @ApiProperty({
+    description:
+      'The category cost method. Null means inherit from the default cost method preference.',
+    enum: COST_METHODS,
+    required: false,
+    nullable: true,
+    example: 'FIFO',
+  })
+  costMethod?: TCostMethod | null;
+}
 
 export class ItemResponseDto {
   @ApiProperty({
@@ -145,12 +173,29 @@ export class ItemResponseDto {
 
   @ApiProperty({
     description: 'The category details',
+    type: ItemCategorySummaryResponseDto,
     required: false,
   })
-  category?: {
-    id: number;
-    name: string;
-  };
+  category?: ItemCategorySummaryResponseDto;
+
+  @ApiProperty({
+    description:
+      'The inventory cost method. Null means inherit from the item category.',
+    enum: COST_METHODS,
+    required: false,
+    nullable: true,
+    example: 'FIFO',
+  })
+  costMethod?: TCostMethod | null;
+
+  @ApiProperty({
+    description:
+      'The date when the cost method was frozen by the first inventory transaction',
+    required: false,
+    nullable: true,
+    example: '2024-03-20T10:00:00Z',
+  })
+  costMethodLockedAt?: Date | null;
 
   @ApiProperty({
     description: 'The description shown on sales documents',

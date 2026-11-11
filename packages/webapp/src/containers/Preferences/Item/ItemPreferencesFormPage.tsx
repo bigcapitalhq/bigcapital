@@ -23,6 +23,7 @@ const defaultFormValues: ItemPreferencesFormValues = {
   preferredSellAccount: '',
   preferredCostAccount: '',
   preferredInventoryAccount: '',
+  defaultCostMethod: 'AVG',
   reorderPointNotifications: false,
   reorderPointNotificationEmail: '',
   preventStockFromGoingBelowZero: false,
@@ -53,6 +54,7 @@ function ItemPreferencesFormPageInner({
         preferredSellAccount: values.preferredSellAccount,
         preferredCostAccount: values.preferredCostAccount,
         preferredInventoryAccount: values.preferredInventoryAccount,
+        defaultCostMethod: values.defaultCostMethod,
         reorderPointNotifications: Boolean(values.reorderPointNotifications),
         reorderPointNotificationEmail:
           values.reorderPointNotificationEmail ?? '',

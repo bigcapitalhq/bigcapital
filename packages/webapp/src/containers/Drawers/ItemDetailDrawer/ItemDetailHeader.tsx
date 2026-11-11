@@ -4,6 +4,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import { If, DetailsMenu, DetailItem, Card } from '@/components';
+import { getItemCostMethodLabel } from '@/constants/costMethods';
+import { useSettingsItems } from '@/hooks/query';
 
 /**
  * Item header drawer of readonly details.
@@ -19,6 +21,12 @@ const toNullableNumber = (value: unknown): number | null => {
 
 export function ItemDetailHeader() {
   const { item } = useItemDetailDrawerContext();
+  const { data: itemsSettings } = useSettingsItems();
+  const defaultCostMethod =
+    (itemsSettings?.defaultCostMethod as string | undefined) || 'AVG';
+  const effectiveCostMethod =
+    item?.costMethod || item?.category?.costMethod || defaultCostMethod;
+
   const quantityOnHand = toNullableNumber(item?.quantityOnHand);
   const reorderPoint = toNullableNumber(item?.reorderPoint);
   const isLowStock =
@@ -77,6 +85,9 @@ export function ItemDetailHeader() {
               label={intl.get('reorder_point')}
             >
               {defaultTo(item?.reorderPoint, '-')}
+            </DetailItem>
+            <DetailItem name={'cost_method'} label={intl.get('cost_method')}>
+              {getItemCostMethodLabel(effectiveCostMethod)}
             </DetailItem>
           </If>
           <DetailItem

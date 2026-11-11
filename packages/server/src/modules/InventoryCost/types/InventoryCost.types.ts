@@ -46,7 +46,7 @@ export interface IInventoryCostLotsGLEntriesWriteEvent {
 
 export type TInventoryTransactionDirection = 'IN' | 'OUT';
 
-export type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
+export type { TCostMethod } from '@/common/constants/inventory.constants';
 
 export interface IInventoryTransactionMeta {
   id?: number;
