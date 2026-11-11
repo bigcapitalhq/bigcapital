@@ -24,6 +24,7 @@ export class InventoryTransactionsService {
    */
   constructor(
     private readonly eventEmitter: EventEmitter2,
+    private readonly stockGuard: InventoryStockGuard,
 
     @Inject(InventoryTransaction.name)
     private readonly inventoryTransactionModel: TenantModelProxy<
@@ -34,8 +35,6 @@ export class InventoryTransactionsService {
     private readonly inventoryCostLotTracker: TenantModelProxy<
       typeof InventoryCostLotTracker
     >,
-
-    private readonly stockGuard: InventoryStockGuard,
   ) {}
 
   /**
