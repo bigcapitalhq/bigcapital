@@ -10,24 +10,26 @@ import {
 import { AgingReport } from './AgingReport';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { Vendor } from '@/modules/Vendors/models/Vendor';
-import { Bill } from '@/modules/Bills/models/Bill';
-import { SaleInvoice } from '@/modules/SaleInvoices/models/SaleInvoice';
+import { IAgingDocument } from './AgingAsOf';
 import { IARAgingSummaryCustomer } from '../ARAgingSummary/ARAgingSummary.types';
 import { IFormatNumberSettings } from '../../types/Report.types';
+
+/**
+ * The fields of an open invoice or bill the aging sheet reads: its open
+ * amount in the base currency and its overdue days, both as of the report date.
+ */
+export type AgingSheetDocument = Pick<
+  IAgingDocument,
+  'dueAmountLocal' | 'overdueDays'
+>;
 
 export abstract class AgingSummaryReport extends AgingReport {
   readonly contacts: ModelObject<Customer | Vendor>[];
   readonly agingPeriods: IAgingPeriod[] = [];
   public baseCurrency: string;
   readonly query: IAgingSummaryQuery;
-  readonly overdueInvoicesByContactId: Record<
-    number,
-    Array<ModelObject<Bill> | ModelObject<SaleInvoice>>
-  >;
-  readonly currentInvoicesByContactId: Record<
-    number,
-    Array<ModelObject<Bill> | ModelObject<SaleInvoice>>
-  >;
+  readonly overdueInvoicesByContactId: Record<number, AgingSheetDocument[]>;
+  readonly currentInvoicesByContactId: Record<number, AgingSheetDocument[]>;
 
   /**
    * Setes initial aging periods to the contact.
@@ -144,13 +146,13 @@ export abstract class AgingSummaryReport extends AgingReport {
   }
 
   /**
-   * Retrieve the due invoices by the given contact id.
+   * Retrieve the overdue invoices or bills of the given contact.
    * @param  {number} contactId -
-   * @return {(ISaleInvoice | IBill)[]}
+   * @return {AgingSheetDocument[]}
    */
   protected getUnpaidInvoicesByContactId(
     contactId: number,
-  ): (ModelObject<SaleInvoice> | ModelObject<Bill>)[] {
+  ): AgingSheetDocument[] {
     return defaultTo(this.overdueInvoicesByContactId[contactId], []);
   }
 
@@ -182,13 +184,13 @@ export abstract class AgingSummaryReport extends AgingReport {
   }
 
   /**
-   * Retrieve the current invoices by the given contact id.
+   * Retrieve the current invoices or bills of the given contact.
    * @param {number} contactId - Specific contact id.
-   * @return {(ISaleInvoice | IBill)[]}
+   * @return {AgingSheetDocument[]}
    */
   protected getCurrentInvoicesByContactId(
     contactId: number,
-  ): (ModelObject<SaleInvoice> | ModelObject<Bill>)[] {
+  ): AgingSheetDocument[] {
     return get(this.currentInvoicesByContactId, contactId, []);
   }
 

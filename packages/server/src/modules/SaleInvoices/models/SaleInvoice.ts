@@ -506,6 +506,38 @@ export class SaleInvoice extends TenantBaseModel {
         query.modify('overdue', asDate);
         query.modify('fromDate', asDate);
       },
+
+      /**
+       * Filters the delivered invoices dated on or before the given date that
+       * could still be open on it: either not settled today (compared with an
+       * upper bound of the invoice total), or settled by a payment, credit note
+       * or write-off dated after the date. The exact open amount on the date
+       * is worked out by the caller.
+       */
+      agingCandidatesAsOf(query, asDate: string) {
+        query.modify('delivered');
+        query.modify('fromDate', asDate);
+        query.where((builder) => {
+          builder
+            .whereRaw(
+              `COALESCE(PAYMENT_AMOUNT, 0) + COALESCE(WRITTENOFF_AMOUNT, 0) + COALESCE(CREDITED_AMOUNT, 0)
+                < BALANCE + ABS(COALESCE(ADJUSTMENT, 0)) + COALESCE(TAX_AMOUNT_WITHHELD, 0)`,
+            )
+            .orWhere('writtenoffAt', '>', asDate)
+            .orWhereRaw(
+              `EXISTS (SELECT 1 FROM PAYMENT_RECEIVES_ENTRIES AS E
+                JOIN PAYMENT_RECEIVES AS P ON P.ID = E.PAYMENT_RECEIVE_ID
+                WHERE E.INVOICE_ID = SALES_INVOICES.ID AND P.PAYMENT_DATE > ?)`,
+              [asDate],
+            )
+            .orWhereRaw(
+              `EXISTS (SELECT 1 FROM CREDIT_NOTE_APPLIED_INVOICE AS A
+                JOIN CREDIT_NOTES AS C ON C.ID = A.CREDIT_NOTE_ID
+                WHERE A.INVOICE_ID = SALES_INVOICES.ID AND C.CREDIT_NOTE_DATE > ?)`,
+              [asDate],
+            );
+        });
+      },
     };
   }
 
