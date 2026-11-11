@@ -157,6 +157,6 @@ export class CommandSaleInvoiceDTOTransformer {
    * @returns {number}
    */
   private getDueBalanceItemEntries = (entries: ItemEntry[]) => {
-    return sumBy(entries, (e) => e.amount);
+    return sumBy(entries, (e) => e.amount - (e.discountAmount || 0));
   };
 }
