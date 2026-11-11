@@ -12,6 +12,7 @@ export interface GlobalErrorsData {
   access_denied?: { message?: string };
   transactionsLocked?: TransactionsLockedError;
   subscriptionInactive?: boolean;
+  trialExpired?: boolean;
   userInactive?: boolean;
 }
 

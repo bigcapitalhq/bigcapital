@@ -4093,6 +4093,375 @@
         ]
       }
     },
+    "/api/subscription": {
+      "get": {
+        "operationId": "SubscriptionsController_getSubscriptions",
+        "summary": "Get all subscriptions for the current tenant",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of subscriptions retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/plans": {
+      "get": {
+        "operationId": "SubscriptionsController_getPlans",
+        "summary": "Get the Bigcapital Cloud plan catalog",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plan catalog retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSubscriptionPlansResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/checkout_session": {
+      "post": {
+        "operationId": "SubscriptionsController_createCheckoutSession",
+        "summary": "Create a Stripe Checkout session for a subscription plan",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStripeCheckoutSessionBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeCheckoutSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/portal_session": {
+      "post": {
+        "operationId": "SubscriptionsController_createPortalSession",
+        "summary": "Create a Stripe Customer Portal session",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Portal session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/sync": {
+      "post": {
+        "operationId": "SubscriptionsController_syncCheckoutSession",
+        "summary": "Synchronize a completed Stripe Checkout session",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncStripeCheckoutSessionBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session synchronized successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeSyncCheckoutSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/change": {
+      "post": {
+        "operationId": "SubscriptionsController_changeSubscriptionPlan",
+        "summary": "Change the subscription plan of the current organization",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeSubscriptionPlanBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription plan changed successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/cancel": {
+      "post": {
+        "operationId": "SubscriptionsController_cancelSubscription",
+        "summary": "Cancel the current organization subscription",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription canceled successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/resume": {
+      "post": {
+        "operationId": "SubscriptionsController_resumeSubscription",
+        "summary": "Resume the current organization subscription",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription resumed successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/webhooks/stripe-billing": {
+      "post": {
+        "operationId": "StripeBillingWebhooksController_handleWebhook",
+        "summary": "Listen to Stripe Billing webhooks",
+        "parameters": [
+          {
+            "name": "stripe-signature",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "stripe"
+        ]
+      }
+    },
     "/api/pdf-templates": {
       "post": {
         "operationId": "PdfTemplatesController_createPdfTemplate",
@@ -23846,162 +24215,6 @@
         ]
       }
     },
-    "/api/subscription": {
-      "get": {
-        "operationId": "SubscriptionsController_getSubscriptions",
-        "summary": "Get all subscriptions for the current tenant",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "List of subscriptions retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubscriptionsListResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/lemon": {
-      "get": {
-        "operationId": "SubscriptionsController_getLemonSubscriptions",
-        "summary": "Get Lemon Squeezy subscription details for the current tenant",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Lemon subscription details retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LemonSubscriptionsListResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/lemon/checkout_url": {
-      "post": {
-        "operationId": "SubscriptionsController_getCheckoutUrl",
-        "summary": "Get LemonSqueezy checkout URL",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "variantId": {
-                    "type": "string",
-                    "description": "The variant ID for the subscription plan"
-                  }
-                },
-                "required": [
-                  "variantId"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Checkout URL retrieved successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/cancel": {
-      "post": {
-        "operationId": "SubscriptionsController_cancelSubscription",
-        "summary": "Cancel the current organization subscription",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Subscription canceled successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/resume": {
-      "post": {
-        "operationId": "SubscriptionsController_resumeSubscription",
-        "summary": "Resume the current organization subscription",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Subscription resumed successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/change": {
-      "post": {
-        "operationId": "SubscriptionsController_changeSubscriptionPlan",
-        "summary": "Change the subscription plan of the current organization",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "variant_id": {
-                    "type": "number",
-                    "description": "The variant ID for the new subscription plan"
-                  }
-                },
-                "required": [
-                  "variant_id"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Subscription plan changed successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/webhooks/lemon": {
-      "post": {
-        "operationId": "SubscriptionsLemonWebhook_lemonWebhooks",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
     "/api/organization/build": {
       "post": {
         "operationId": "OrganizationController_build",
@@ -26963,6 +27176,438 @@
         },
         "tags": [
           "Exchange Rates"
+        ]
+      }
+    },
+    "/api/webhooks": {
+      "post": {
+        "operationId": "WebhooksController_createWebhook",
+        "summary": "Create a new webhook.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWebhookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The webhook has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      },
+      "get": {
+        "operationId": "WebhooksController_getWebhooks",
+        "summary": "Retrieves the webhooks list.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter_by",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page_size",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The webhooks have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WebhookResponseDto"
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number"
+                        },
+                        "page": {
+                          "type": "number"
+                        },
+                        "pageSize": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      }
+    },
+    "/api/webhooks/{id}": {
+      "put": {
+        "operationId": "WebhooksController_editWebhook",
+        "summary": "Edit the given webhook.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditWebhookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The webhook has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      },
+      "delete": {
+        "operationId": "WebhooksController_deleteWebhook",
+        "summary": "Delete the given webhook.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The webhook has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      },
+      "get": {
+        "operationId": "WebhooksController_getWebhook",
+        "summary": "Retrieves the webhook details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The webhook details have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      }
+    },
+    "/api/webhooks/{id}/toggle": {
+      "post": {
+        "operationId": "WebhooksController_toggleWebhookActive",
+        "summary": "Toggle the webhook active state.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The webhook active state has been toggled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      }
+    },
+    "/api/webhooks/{id}/deliveries": {
+      "get": {
+        "operationId": "WebhooksController_getWebhookDeliveries",
+        "summary": "Retrieves the webhook delivery logs.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page_size",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The delivery logs have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WebhookDeliveryResponseDto"
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number"
+                        },
+                        "page": {
+                          "type": "number"
+                        },
+                        "pageSize": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
         ]
       }
     }
@@ -30846,6 +31491,374 @@
             "example": "2026-11-07"
           }
         }
+      },
+      "SubscriptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "main"
+          },
+          "status": {
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "inactive",
+              "on_trial",
+              "canceled",
+              "past_due"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "inactive": {
+            "type": "boolean",
+            "example": false
+          },
+          "onTrial": {
+            "type": "boolean",
+            "example": false
+          },
+          "canceled": {
+            "type": "boolean",
+            "example": false
+          },
+          "ended": {
+            "type": "boolean",
+            "example": false
+          },
+          "cancelAtPeriodEnd": {
+            "type": "boolean",
+            "description": "Whether the subscription will cancel at the period end.",
+            "example": false
+          },
+          "stripeStatus": {
+            "type": "string",
+            "description": "The raw Stripe subscription status.",
+            "example": "active",
+            "nullable": true
+          },
+          "paymentStatus": {
+            "type": "string",
+            "example": "succeed",
+            "enum": [
+              "succeed",
+              "failed"
+            ]
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "endsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-02-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "canceledAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "trialEndsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-07T00:00:00.000Z",
+            "nullable": true
+          },
+          "statusFormatted": {
+            "type": "string",
+            "example": "Active"
+          },
+          "canceledAtFormatted": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "endsAtFormatted": {
+            "type": "string",
+            "example": "Jan 1, 2024",
+            "nullable": true
+          },
+          "startsAtFormatted": {
+            "type": "string",
+            "example": "Jan 1, 2024",
+            "nullable": true
+          },
+          "trialStartsAtFormatted": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "trialEndsAtFormatted": {
+            "type": "string",
+            "example": "Jan 7, 2024",
+            "nullable": true
+          },
+          "planName": {
+            "type": "string",
+            "example": "Standard"
+          },
+          "planSlug": {
+            "type": "string",
+            "example": "standard"
+          },
+          "planDescription": {
+            "type": "string",
+            "example": "Good for service businesses that just started.",
+            "nullable": true
+          },
+          "planPrice": {
+            "type": "number",
+            "example": 10
+          },
+          "planPriceCurrency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "planPriceFormatted": {
+            "type": "string",
+            "example": "$10"
+          },
+          "planPeriod": {
+            "type": "string",
+            "example": "month"
+          }
+        },
+        "required": [
+          "slug",
+          "status",
+          "active",
+          "inactive",
+          "onTrial",
+          "canceled",
+          "ended",
+          "cancelAtPeriodEnd",
+          "paymentStatus",
+          "statusFormatted",
+          "planName",
+          "planSlug",
+          "planPrice",
+          "planPriceCurrency",
+          "planPriceFormatted",
+          "planPeriod"
+        ]
+      },
+      "SubscriptionsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionResponseDto"
+            }
+          }
+        },
+        "required": [
+          "subscriptions"
+        ]
+      },
+      "SubscriptionPlanFeatureResponseDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "example": "Unlimited Sale Invoices"
+          },
+          "hint": {
+            "type": "string",
+            "example": "Feature description"
+          },
+          "hintLabel": {
+            "type": "string",
+            "example": "Feature label"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "SubscriptionPlanPriceResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "capital-basic-monthly"
+          },
+          "interval": {
+            "type": "string",
+            "example": "month"
+          },
+          "intervalCount": {
+            "type": "number",
+            "example": 1
+          },
+          "amount": {
+            "type": "number",
+            "example": 10
+          },
+          "amountFormatted": {
+            "type": "string",
+            "example": "$10"
+          },
+          "priceLabel": {
+            "type": "string",
+            "example": "Per month"
+          }
+        },
+        "required": [
+          "slug",
+          "interval",
+          "intervalCount",
+          "amount",
+          "amountFormatted",
+          "priceLabel"
+        ]
+      },
+      "SubscriptionPlanGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "capital-basic"
+          },
+          "name": {
+            "type": "string",
+            "example": "Capital Basic"
+          },
+          "description": {
+            "type": "string",
+            "example": "Good for service businesses that just started."
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanFeatureResponseDto"
+            }
+          },
+          "featured": {
+            "type": "boolean",
+            "example": false
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanPriceResponseDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "description",
+          "features",
+          "featured",
+          "prices"
+        ]
+      },
+      "GetSubscriptionPlansResponseDto": {
+        "type": "object",
+        "properties": {
+          "plans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanGroupResponseDto"
+            }
+          }
+        },
+        "required": [
+          "plans"
+        ]
+      },
+      "StripeCheckoutSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The hosted Stripe URL to redirect the user to",
+            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Stripe Checkout Session id",
+            "example": "cs_test_xxx"
+          }
+        },
+        "required": [
+          "url",
+          "sessionId"
+        ]
+      },
+      "StripeSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The hosted Stripe URL to redirect the user to",
+            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "StripeSyncCheckoutSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "synced"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "CreateStripeCheckoutSessionBodyDto": {
+        "type": "object",
+        "properties": {
+          "planSlug": {
+            "type": "string",
+            "description": "The plan slug to subscribe to",
+            "example": "capital-basic-monthly"
+          }
+        },
+        "required": [
+          "planSlug"
+        ]
+      },
+      "SyncStripeCheckoutSessionBodyDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "The Stripe Checkout Session id returned in the success URL",
+            "example": "cs_test_xxx"
+          }
+        },
+        "required": [
+          "sessionId"
+        ]
+      },
+      "ChangeSubscriptionPlanBodyDto": {
+        "type": "object",
+        "properties": {
+          "planSlug": {
+            "type": "string",
+            "description": "The target plan slug",
+            "example": "capital-plus-monthly"
+          }
+        },
+        "required": [
+          "planSlug"
+        ]
       },
       "CreatePdfTemplateDto": {
         "type": "object",
@@ -48225,201 +49238,6 @@
           "permissions"
         ]
       },
-      "SubscriptionResponseDto": {
-        "type": "object",
-        "properties": {
-          "slug": {
-            "type": "string",
-            "example": "main"
-          },
-          "status": {
-            "type": "string",
-            "example": "active",
-            "enum": [
-              "active",
-              "inactive",
-              "on_trial",
-              "canceled"
-            ]
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          },
-          "inactive": {
-            "type": "boolean",
-            "example": false
-          },
-          "onTrial": {
-            "type": "boolean",
-            "example": false
-          },
-          "canceled": {
-            "type": "boolean",
-            "example": false
-          },
-          "ended": {
-            "type": "boolean",
-            "example": false
-          },
-          "paymentStatus": {
-            "type": "string",
-            "example": "succeed",
-            "enum": [
-              "succeed",
-              "failed"
-            ]
-          },
-          "startsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-01T00:00:00.000Z",
-            "nullable": true
-          },
-          "endsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-02-01T00:00:00.000Z",
-            "nullable": true
-          },
-          "canceledAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "trialEndsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-07T00:00:00.000Z",
-            "nullable": true
-          },
-          "statusFormatted": {
-            "type": "string",
-            "example": "Active"
-          },
-          "canceledAtFormatted": {
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "endsAtFormatted": {
-            "type": "string",
-            "example": "Jan 1, 2024",
-            "nullable": true
-          },
-          "trialStartsAtFormatted": {
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "trialEndsAtFormatted": {
-            "type": "string",
-            "example": "Jan 7, 2024",
-            "nullable": true
-          },
-          "planName": {
-            "type": "string",
-            "example": "Standard"
-          },
-          "planSlug": {
-            "type": "string",
-            "example": "standard"
-          },
-          "planPrice": {
-            "type": "number",
-            "example": 10
-          },
-          "planPriceCurrency": {
-            "type": "string",
-            "example": "USD"
-          },
-          "planPriceFormatted": {
-            "type": "string",
-            "example": "$10"
-          },
-          "planPeriod": {
-            "type": "string",
-            "example": "month"
-          }
-        },
-        "required": [
-          "slug",
-          "status",
-          "active",
-          "inactive",
-          "onTrial",
-          "canceled",
-          "ended",
-          "paymentStatus",
-          "statusFormatted",
-          "planName",
-          "planSlug",
-          "planPrice",
-          "planPriceCurrency",
-          "planPriceFormatted",
-          "planPeriod"
-        ]
-      },
-      "SubscriptionsListResponseDto": {
-        "type": "object",
-        "properties": {
-          "subscriptions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubscriptionResponseDto"
-            }
-          }
-        },
-        "required": [
-          "subscriptions"
-        ]
-      },
-      "LemonSubscriptionUrlsDto": {
-        "type": "object",
-        "properties": {
-          "updatePaymentMethod": {
-            "type": "string",
-            "example": "https://.../update-payment-method",
-            "nullable": true
-          },
-          "customerPortal": {
-            "type": "string",
-            "example": "https://.../customer-portal",
-            "nullable": true
-          }
-        }
-      },
-      "LemonSubscriptionResponseDto": {
-        "type": "object",
-        "properties": {
-          "slug": {
-            "type": "string",
-            "example": "main"
-          },
-          "urls": {
-            "$ref": "#/components/schemas/LemonSubscriptionUrlsDto"
-          }
-        },
-        "required": [
-          "slug",
-          "urls"
-        ]
-      },
-      "LemonSubscriptionsListResponseDto": {
-        "type": "object",
-        "properties": {
-          "lemonSubscriptions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LemonSubscriptionResponseDto"
-            }
-          }
-        },
-        "required": [
-          "lemonSubscriptions"
-        ]
-      },
       "OrgBaseCurrencyMutateLockDto": {
         "type": "object",
         "properties": {
@@ -50638,6 +51456,274 @@
           "toCurrency",
           "exchangeRate"
         ]
+      },
+      "WebhookResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the webhook",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the webhook.",
+            "example": "Invoice Webhook"
+          },
+          "url": {
+            "type": "string",
+            "description": "Target URL for the webhook callback.",
+            "example": "https://example.com/webhook"
+          },
+          "entity": {
+            "type": "string",
+            "description": "Entity type the webhook subscribes to.",
+            "example": "sale_invoice"
+          },
+          "events": {
+            "description": "List of events that trigger this webhook.",
+            "example": [
+              "created",
+              "edited",
+              "deleted"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method for the webhook.",
+            "example": "POST"
+          },
+          "headers": {
+            "type": "array",
+            "description": "Custom headers to include in the webhook request."
+          },
+          "secret": {
+            "type": "string",
+            "description": "Secret key for HMAC signature.",
+            "example": "whsec_123456",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Whether the webhook is active.",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp.",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update timestamp.",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "url",
+          "entity",
+          "events",
+          "method",
+          "headers",
+          "secret",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "WebhookDeliveryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the delivery log",
+            "example": 1
+          },
+          "webhookId": {
+            "type": "number",
+            "description": "ID of the associated webhook",
+            "example": 1
+          },
+          "eventType": {
+            "type": "string",
+            "description": "The event type that was delivered.",
+            "example": "sale_invoice.created"
+          },
+          "payload": {
+            "type": "object",
+            "description": "The payload that was sent."
+          },
+          "responseStatus": {
+            "type": "number",
+            "description": "HTTP response status code.",
+            "example": 200,
+            "nullable": true
+          },
+          "responseBody": {
+            "type": "string",
+            "description": "HTTP response body.",
+            "example": "OK",
+            "nullable": true
+          },
+          "attemptCount": {
+            "type": "number",
+            "description": "Number of delivery attempts.",
+            "example": 1
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error message if delivery failed.",
+            "example": "Connection timeout",
+            "nullable": true
+          },
+          "deliveredAt": {
+            "type": "string",
+            "description": "Timestamp when the delivery succeeded.",
+            "example": "2024-01-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp.",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "webhookId",
+          "eventType",
+          "payload",
+          "attemptCount",
+          "createdAt"
+        ]
+      },
+      "WebhookHeaderDto": {
+        "type": "object",
+        "properties": {
+          "param_name": {
+            "type": "string",
+            "description": "Name of the header parameter."
+          },
+          "param_value": {
+            "type": "string",
+            "description": "Value of the header parameter."
+          }
+        },
+        "required": [
+          "param_name",
+          "param_value"
+        ]
+      },
+      "CreateWebhookDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the webhook.",
+            "example": "Invoice Webhook"
+          },
+          "url": {
+            "type": "string",
+            "description": "Target URL for the webhook callback.",
+            "example": "https://example.com/webhook"
+          },
+          "entity": {
+            "type": "string",
+            "description": "Entity type the webhook subscribes to.",
+            "example": "sale_invoice"
+          },
+          "events": {
+            "description": "List of events that trigger this webhook.",
+            "example": [
+              "created",
+              "edited",
+              "deleted"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method for the webhook.",
+            "example": "POST",
+            "default": "POST"
+          },
+          "headers": {
+            "description": "Custom headers to include in the webhook request.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookHeaderDto"
+            }
+          },
+          "secret": {
+            "type": "string",
+            "description": "Secret key for HMAC signature.",
+            "example": "whsec_123456"
+          }
+        },
+        "required": [
+          "name",
+          "url",
+          "entity",
+          "events"
+        ]
+      },
+      "EditWebhookDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the webhook.",
+            "example": "Invoice Webhook"
+          },
+          "url": {
+            "type": "string",
+            "description": "Target URL for the webhook callback.",
+            "example": "https://example.com/webhook"
+          },
+          "entity": {
+            "type": "string",
+            "description": "Entity type the webhook subscribes to.",
+            "example": "sale_invoice"
+          },
+          "events": {
+            "description": "List of events that trigger this webhook.",
+            "example": [
+              "created",
+              "edited",
+              "deleted"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method for the webhook.",
+            "example": "POST"
+          },
+          "headers": {
+            "description": "Custom headers to include in the webhook request.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookHeaderDto"
+            }
+          },
+          "secret": {
+            "type": "string",
+            "description": "Secret key for HMAC signature.",
+            "example": "whsec_123456"
+          }
+        }
       }
     }
   }

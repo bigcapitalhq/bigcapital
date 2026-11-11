@@ -1,5 +1,5 @@
 export interface SubscriptionPayload {
-  lemonSqueezyId?: string;
+  stripeSubscriptionId?: string;
 }
 
 export enum SubscriptionPaymentStatus {

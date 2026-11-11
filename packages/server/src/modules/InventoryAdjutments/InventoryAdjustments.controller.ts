@@ -31,9 +31,12 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { InventoryAdjustmentAction } from './types/InventoryAdjustments.types';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('inventory-adjustments')
 @ApiTags('Inventory Adjustments')
+@RequireSubscriptionFeature(SubscriptionFeature.Inventory)
 @ApiExtraModels(InventoryAdjustmentResponseDto)
 @ApiExtraModels(InventoryAdjustmentsListResponseDto)
 @ApiExtraModels(InventoryAdjustmentEntryResponseDto)

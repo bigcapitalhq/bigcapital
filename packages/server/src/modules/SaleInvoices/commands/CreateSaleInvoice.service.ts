@@ -15,6 +15,7 @@ import { SaleEstimate } from '@/modules/SaleEstimates/models/SaleEstimate';
 import { Customer } from '@/modules/Customers/models/Customer';
 import { events } from '@/common/events/events';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
+import { SubscriptionAccessService } from '@/modules/Subscription/access/SubscriptionAccess.service';
 import { CreateSaleInvoiceDto } from '../dtos/SaleInvoice.dto';
 
 @Injectable()
@@ -37,6 +38,7 @@ export class CreateSaleInvoice {
     private readonly eventPublisher: EventEmitter2,
     private readonly commandEstimateValidators: SaleEstimateValidators,
     private readonly uow: UnitOfWork,
+    private readonly subscriptionAccess: SubscriptionAccessService,
 
     @Inject(SaleInvoice.name)
     private readonly saleInvoiceModel: TenantModelProxy<typeof SaleInvoice>,
@@ -60,6 +62,9 @@ export class CreateSaleInvoice {
     saleInvoiceDTO: CreateSaleInvoiceDto,
     trx?: Knex.Transaction,
   ): Promise<SaleInvoice> => {
+    // Validate the organization can still write data (Cloud trial/access).
+    await this.subscriptionAccess.assertCanWrite();
+
     // Validate customer existance.
     const customer = await this.customerModel()
       .query()

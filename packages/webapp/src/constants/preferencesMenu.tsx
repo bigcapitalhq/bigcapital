@@ -14,10 +14,11 @@ export const PreferencesMenu: PreferencesMenuItem[] = [
     disabled: false,
     href: '/preferences/branding',
   },
-  // {
-  //   text: 'Billing',
-  //   href: '/preferences/billing',
-  // },
+  {
+    text: 'Billing',
+    href: '/preferences/billing',
+    cloudOnly: true,
+  },
   {
     text: <T id={'users'} />,
     href: '/preferences/users',

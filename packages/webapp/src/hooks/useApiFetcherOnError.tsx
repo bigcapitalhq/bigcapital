@@ -1,7 +1,8 @@
 import { Intent } from '@blueprintjs/core';
 import { useCallback } from 'react';
 import intl from 'react-intl-universal';
-import { useAuthActions, useSetGlobalErrors } from './state';
+import { useAuthActions } from './state/authentication';
+import { useSetGlobalErrors } from './state/globalErrors';
 import type { ApiError } from 'openapi-typescript-fetch';
 import { AppToaster } from '@/components/AppToaster';
 import { ERROR } from '@/constants/errors';
@@ -86,6 +87,13 @@ export function useApiFetcherOnError() {
           errors.find((e) => e.type === 'ORGANIZATION.SUBSCRIPTION.INACTIVE')
         ) {
           setGlobalErrors({ subscriptionInactive: true });
+        }
+        if (
+          errors.find(
+            (e) => e.type === 'ORGANIZATION.SUBSCRIPTION.TRIAL_EXPIRED',
+          )
+        ) {
+          setGlobalErrors({ trialExpired: true });
         }
         if (errors.find((e) => e.type === 'USER_INACTIVE')) {
           setGlobalErrors({ userInactive: true });

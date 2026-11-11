@@ -3,7 +3,7 @@ import { Job } from 'bullmq';
 import { Scope, Inject } from '@nestjs/common';
 import { ClsService, UseCls } from 'nestjs-cls';
 import axios, { AxiosError } from 'axios';
-import { WebhookDeliveryQueue, WebhookDeliveryJob } from '../constants';
+import { WebhookDeliveryQueue } from '../constants';
 import { WebhookDeliveryQueueJobPayload } from '../Webhooks.types';
 import { WebhookSignatureService } from '../WebhookSignature.service';
 import { Webhook } from '../models/Webhook.model';

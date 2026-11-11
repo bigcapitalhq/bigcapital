@@ -31,7 +31,6 @@ export * from './vendor-credit';
 export * from './expenses';
 export * from './manual-journals';
 export * from './settings';
-export * from './subscriptions';
 export * from './subscription';
 export * from './organization';
 export * from './landed-cost';
