@@ -66,9 +66,10 @@ export type GetBankingTransactionsQuery = OpQueryParams<
 >;
 
 /** Server returns { transactions, pagination } (OpenAPI schema says data). */
-export type BankingTransactionsListResponse = OpResponseBody<
-  OpForPath<typeof BANKING_ACCOUNTS_ROUTES.TRANSACTIONS, 'get'>
-> & { transactions?: unknown[] };
+export type BankingTransactionsListResponse = {
+  transactions?: unknown[];
+  pagination: { total: number; page: number; pageSize: number };
+};
 
 /** Query params for GET /api/banking/uncategorized/accounts/{accountId}. */
 export type GetUncategorizedTransactionsQuery = OpQueryParams<
@@ -91,7 +92,7 @@ export async function fetchBankingTransactions(
 ): Promise<BankingTransactionsListResponse> {
   const get = fetcher.path(BANKING_ACCOUNTS_ROUTES.TRANSACTIONS).method('get').create();
   const { data } = await get(query);
-  return data as BankingTransactionsListResponse;
+  return data;
 }
 
 export async function getBankingTransaction(
