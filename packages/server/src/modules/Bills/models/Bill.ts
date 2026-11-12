@@ -455,12 +455,16 @@ export class Bill extends TenantBaseModel {
       },
 
       dueBillsFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
+        // Draft bills are not yet opened, hence not payables.
+        query.modify('opened');
         query.modify('dueBills');
         query.modify('notOverdue');
         query.modify('fromDate', asDate);
       },
 
       overdueBillsFromDate(query, asDate = moment().format('YYYY-MM-DD')) {
+        // Draft bills are not yet opened, hence not payables.
+        query.modify('opened');
         query.modify('dueBills');
         query.modify('overdue', asDate);
         query.modify('fromDate', asDate);
