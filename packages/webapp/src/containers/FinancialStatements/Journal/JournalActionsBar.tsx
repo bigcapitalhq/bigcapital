@@ -5,6 +5,7 @@ import {
   NavbarDivider,
   Popover,
   PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import classNames from 'classnames';
 import * as FF from 'fp-ts/function';
@@ -16,13 +17,21 @@ import { withJournalActions } from './withJournalActions';
 import type { WithJournalActionsProps } from './withJournalActions';
 import type { WithDialogActionsProps } from '@/containers/Dialog/withDialogActions';
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { DialogsName } from '@/constants/dialogs';
 import { withDialogActions } from '@/containers/Dialog/withDialogActions';
+import { saveInvoke } from '@/utils';
+
+interface JournalActionsBarOwnProps {
+  numberFormat: Record<string, unknown>;
+  onNumberFormatSubmit: (values: Record<string, unknown>) => void;
+}
 
 type JournalActionsBarProps = {
   isFilterDrawerOpen: boolean;
 } & Pick<WithJournalActionsProps, 'toggleJournalSheetFilter'> &
-  WithDialogActionsProps;
+  WithDialogActionsProps &
+  JournalActionsBarOwnProps;
 
 /**
  * Journal sheeet - Actions bar.
@@ -36,8 +45,12 @@ function JournalActionsBarInner({
 
   // #withDialogActions
   openDialog,
+
+  // #ownProps
+  numberFormat,
+  onNumberFormatSubmit,
 }: JournalActionsBarProps) {
-  const { refetchSheet } = useJournalSheetContext();
+  const { refetchSheet, isLoading } = useJournalSheetContext();
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
@@ -47,6 +60,11 @@ function JournalActionsBarInner({
   // Handle re-calc the report.
   const handleRecalcReport = () => {
     refetchSheet();
+  };
+
+  // Handle number format form submit.
+  const handleNumberFormatSubmit = (values: Record<string, unknown>) => {
+    saveInvoke(onNumberFormatSubmit, values);
   };
 
   // Handle the print button click.
@@ -78,6 +96,26 @@ function JournalActionsBarInner({
           active={isFilterDrawerOpen}
           onClick={handleFilterToggleClick}
         />
+        <NavbarDivider />
+
+        <Popover
+          content={
+            <NumberFormatDropdown
+              numberFormat={numberFormat}
+              onSubmit={handleNumberFormatSubmit}
+              submitDisabled={isLoading}
+            />
+          }
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_LEFT}
+        >
+          <Button
+            className={classNames(Classes.MINIMAL, 'button--filter')}
+            text={<T id={'format'} />}
+            icon={<Icon icon="numbers" width={23} height={16} />}
+          />
+        </Popover>
         <NavbarDivider />
 
         <Button
