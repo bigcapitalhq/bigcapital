@@ -9,7 +9,6 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
 import {
   ApiTags,
   ApiOperation,
@@ -35,12 +34,13 @@ import { GoogleAuthGuard } from './guards/Google.guard';
 import { AuthSigninService } from './commands/AuthSignin.service';
 import { buildUrlWithQuery } from './Auth.utils';
 import { SystemUser } from '../System/models/SystemUser';
+import { AuthThrottle } from '../App/AppThrottle.throttlers';
 
 @Controller('/auth')
 @ApiTags('Auth')
 @ApiExtraModels(AuthSigninResponseDto, AuthMetaResponseDto)
 @PublicRoute()
-@Throttle({ auth: {} })
+@AuthThrottle()
 export class AuthController {
   constructor(
     private readonly authApp: AuthenticationApplication,
