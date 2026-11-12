@@ -24,6 +24,7 @@ export interface ReceiptCustomizeValues extends BrandingTemplateValues {
   // Addresses
   showCustomerAddress?: boolean;
   showCompanyAddress?: boolean;
+  showCompanyTaxNumber?: boolean;
   billedToLabel?: string;
 
   // Entries

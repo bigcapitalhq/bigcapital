@@ -26,6 +26,8 @@ export interface PaymentReceivedPaperTemplateProps extends PaperTemplateProps {
   // Company address
   showCompanyAddress?: boolean;
   companyAddress?: string;
+  showCompanyTaxNumber?: boolean;
+  companyTaxNumber?: string;
 
   billedToLabel?: string;
 
@@ -72,6 +74,8 @@ export function PaymentReceivedPaperTemplate({
   // # Company address
   showCompanyAddress = true,
   companyAddress = DefaultPdfTemplateAddressBilledFrom,
+  showCompanyTaxNumber = true,
+  companyTaxNumber = '',
 
   billedToLabel = 'Billed To',
 
@@ -134,6 +138,9 @@ export function PaymentReceivedPaperTemplate({
           {showCompanyAddress && (
             <PaperTemplate.Address>
               <Box dangerouslySetInnerHTML={{ __html: companyAddress }} />
+              {showCompanyTaxNumber && (
+                <PaperTemplate.CompanyTaxNumber taxNumber={companyTaxNumber} />
+              )}
             </PaperTemplate.Address>
           )}
 

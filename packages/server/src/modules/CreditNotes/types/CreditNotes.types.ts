@@ -127,6 +127,8 @@ export interface CreditNotePdfTemplateAttributes {
   // # Company address
   showCompanyAddress: boolean;
   companyAddress: string;
+  showCompanyTaxNumber: boolean;
+  companyTaxNumber: string;
   billedToLabel: string;
 
   // Entries

@@ -101,6 +101,8 @@ export const defaultCreditNoteBrandingAttributes = {
   // # Company address
   showCompanyAddress: true,
   companyAddress: '',
+  showCompanyTaxNumber: true,
+  companyTaxNumber: '',
   billedToLabel: 'Billed To',
 
   // Entries

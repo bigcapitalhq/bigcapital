@@ -23,6 +23,7 @@ export interface PaymentReceivedCustomizeValues extends BrandingTemplateValues {
 
   // Addresses
   showCompanyAddress?: boolean;
+  showCompanyTaxNumber?: boolean;
   showCustomerAddress?: boolean;
   billedToLabel?: string;
 

@@ -39,6 +39,7 @@ export interface PdfTemplatesListResponse {
 export interface PdfTemplateBrandingStateResponse {
   companyName: string;
   companyAddress: string;
+  companyTaxNumber?: string;
   companyLogoUri: string;
   companyLogoKey: string;
   primaryColor: string;
