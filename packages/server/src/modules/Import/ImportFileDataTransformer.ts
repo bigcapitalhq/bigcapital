@@ -29,6 +29,7 @@ export class ImportFileDataTransformer {
     importableFields: ResourceMetaFieldsMap,
     data: Record<string, unknown>[],
     trx?: Knex.Transaction,
+    date1904 = false,
   ): Promise<Record<string, any>[]> {
     // Sanitize the sheet data.
     const sanitizedData = sanitizeSheetData(data);
@@ -43,6 +44,7 @@ export class ImportFileDataTransformer {
       importableFields,
       mappedDTOs,
       trx,
+      date1904,
     );
     const aggregateValues = this.aggregateParsedValues(
       importFile.resource,
@@ -106,12 +108,13 @@ export class ImportFileDataTransformer {
     fields: ResourceMetaFieldsMap,
     valueDTOs: Record<string, any>[],
     trx?: Knex.Transaction,
+    date1904 = false,
   ): Promise<Record<string, any>[]> {
     // Create a model resolver function that uses ResourceService
     const modelResolver = (modelName: string) => {
       return this.resource.getResourceModel(modelName)();
     };
-    const _valueParser = valueParser(fields, modelResolver, trx);
+    const _valueParser = valueParser(fields, modelResolver, trx, date1904);
     const _keyParser = parseKey(fields);
 
     const parseAsync = async (valueDTO) => {

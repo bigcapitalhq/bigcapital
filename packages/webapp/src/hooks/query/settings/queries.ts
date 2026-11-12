@@ -148,7 +148,7 @@ export function useSaveSettings(
     ...props,
     mutationFn: (values: SaveSettingsBody) =>
       editSettings(fetcher, normalizeSettingsValues(values)),
-    onMutate: async (values: SaveSettingsBody) => {
+    onMutate: async (values: SaveSettingsBody, context) => {
       await queryClient.cancelQueries({ queryKey: settingsKeys.all() });
 
       const previousQueries = queryClient.getQueriesData({
@@ -159,19 +159,19 @@ export function useSaveSettings(
         getSettingsOptions(values).map(normalizeSettingsOption),
       );
 
-      await props?.onMutate?.(values);
+      await props?.onMutate?.(values, context);
 
       return { previousQueries };
     },
-    onError: (error, values, context) => {
-      context?.previousQueries.forEach(([queryKey, queryData]) => {
+    onError: (error, values, _onMutateResult, context) => {
+      _onMutateResult?.previousQueries.forEach(([queryKey, queryData]) => {
         queryClient.setQueryData(queryKey, queryData);
       });
-      props?.onError?.(error, values, context);
+      props?.onError?.(error, values, _onMutateResult, context);
     },
-    onSettled: (data, error, values, context) => {
+    onSettled: (data, error, values, _onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: settingsKeys.all() });
-      props?.onSettled?.(data, error, values, context);
+      props?.onSettled?.(data, error, values, _onMutateResult, context);
     },
   });
 }
