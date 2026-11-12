@@ -23,6 +23,7 @@ import {
   ISubjectAbilitySchema,
   RecurringJournalAction,
   RoleAction,
+  UserAction,
 } from './Roles.types';
 import { PaymentReceiveAction } from '../PaymentReceived/types/PaymentReceived.types';
 import { PreferencesAction } from '../Settings/Settings.types';
@@ -398,6 +399,16 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
       { key: AttachmentAction.View, label: 'ability.view', default: true },
       { key: AttachmentAction.Create, label: 'ability.create', default: true },
       { key: AttachmentAction.Delete, label: 'ability.delete', default: true },
+    ],
+  },
+  {
+    subject: AbilitySubject.User,
+    subjectLabel: 'ability.users',
+    abilities: [
+      { key: UserAction.View, label: 'ability.view', default: true },
+      { key: UserAction.Create, label: 'ability.create', default: false },
+      { key: UserAction.Edit, label: 'ability.edit', default: false },
+      { key: UserAction.Delete, label: 'ability.delete', default: false },
     ],
   },
   {

@@ -1,19 +1,24 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, HttpStatus, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ModelObject } from 'objection';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { TenantModelProxy } from '@/modules/System/models/TenantBaseModel';
 import { TenantUser } from '@/modules/Tenancy/TenancyModels/models/TenantUser.model';
+import { UserTenant } from '@/modules/System/models/UserTenant.model';
 import { ERRORS } from '../Users.constants';
 import { ITenantUserInactivatedPayload } from '../Users.types';
 import { TenancyContext } from '@/modules/Tenancy/TenancyContext.service';
 import { events } from '@/common/events/events';
+import { isTenantOwner } from '../Users.utils';
 
 @Injectable()
 export class InactivateUserService {
   constructor(
     @Inject(TenantUser.name)
     private readonly tenantUserModel: TenantModelProxy<typeof TenantUser>,
+
+    @Inject(UserTenant.name)
+    private readonly userTenantModel: typeof UserTenant,
 
     private readonly eventEmitter: EventEmitter2,
     private readonly tenancyContext: TenancyContext,
@@ -43,6 +48,9 @@ export class InactivateUserService {
     // Throw serivce error if the user is already inactivated.
     this.throwErrorIfUserInactive(tenantUser);
 
+    // Validate the workspace owner cannot be inactivated.
+    await this.validateNotTenantOwner(tenantUser);
+
     // Marks the tenant user as inactive.
     await this.tenantUserModel()
       .query()
@@ -54,6 +62,29 @@ export class InactivateUserService {
       userId,
       tenantUser,
     } as ITenantUserInactivatedPayload);
+  }
+
+  /**
+   * Validate the given user is not the workspace owner.
+   * @param {TenantUser} tenantUser
+   * @throws {ServiceError}
+   */
+  private async validateNotTenantOwner(
+    tenantUser: ModelObject<TenantUser>,
+  ): Promise<void> {
+    const isOwner = await isTenantOwner(
+      tenantUser,
+      this.userTenantModel,
+      this.tenancyContext,
+    );
+    if (isOwner) {
+      throw new ServiceError(
+        ERRORS.CANNOT_MUTATE_TENANT_OWNER,
+        'The workspace owner cannot be inactivated.',
+        null,
+        HttpStatus.FORBIDDEN,
+      );
+    }
   }
 
   /**

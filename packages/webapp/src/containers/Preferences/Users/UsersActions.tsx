@@ -2,7 +2,8 @@ import { Button, Intent } from '@blueprintjs/core';
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Icon, FormattedMessage as T } from '@/components';
+import { Can, Icon, FormattedMessage as T } from '@/components';
+import { AbilitySubject, UserAction } from '@/constants/abilityOption';
 import {
   withDialogActions,
   type WithDialogActionsProps,
@@ -19,13 +20,15 @@ function UsersActionsInner({ openDialog }: WithDialogActionsProps) {
 
   return (
     <div className="preferences-actions">
-      <Button
-        icon={<Icon icon="plus" iconSize={12} />}
-        onClick={onClickNewUser}
-        intent={Intent.PRIMARY}
-      >
-        <T id={'invite_user'} />
-      </Button>
+      <Can I={UserAction.Create} a={AbilitySubject.User}>
+        <Button
+          icon={<Icon icon="plus" iconSize={12} />}
+          onClick={onClickNewUser}
+          intent={Intent.PRIMARY}
+        >
+          <T id={'invite_user'} />
+        </Button>
+      </Can>
 
       <Button
         icon={<Icon icon="plus" iconSize={12} />}
