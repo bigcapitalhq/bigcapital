@@ -56,9 +56,12 @@ import { SaleInvoiceHtmlContentResponseDto } from './dtos/SaleInvoiceHtmlRespons
 import { SmsNotificationDetailsResponseDto } from '@/common/dtos/SmsNotificationDetailsResponse.dto';
 import { NotifySaleInvoiceBySmsDto } from './dtos/NotifySaleInvoiceBySms.dto';
 import { SmsNotificationsFeatureGuard } from '../SMS/SmsNotificationsFeatureGuard';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('sale-invoices')
 @ApiTags('Sale Invoices')
+@RequireSubscriptionFeature(SubscriptionFeature.SaleInvoices)
 @ApiExtraModels(SaleInvoiceResponseDto)
 @ApiExtraModels(PaginatedResponseDto)
 @ApiExtraModels(SaleInvoiceStateResponseDto)

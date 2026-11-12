@@ -68,11 +68,13 @@ import { SaleInvoicesImportable } from './commands/SaleInvoicesImportable';
 import { PaymentLinksModule } from '../PaymentLinks/PaymentLinks.module';
 import { BulkDeleteSaleInvoicesService } from './BulkDeleteSaleInvoices.service';
 import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleInvoices.service';
+import { SubscriptionModule } from '../Subscription/Subscription.module';
 
 @Module({
   imports: [
     TenancyModule,
     TenancyDatabaseModule,
+    SubscriptionModule,
     PdfTemplatesModule,
     AutoIncrementOrdersModule,
     ChromiumlyTenancyModule,
@@ -147,6 +149,8 @@ import { ValidateBulkDeleteSaleInvoicesService } from './ValidateBulkDeleteSaleI
   ],
   exports: [
     GetSaleInvoice,
+    CreateSaleInvoice,
+    SendSaleInvoiceMail,
     SaleInvoicesCost,
     SaleInvoicePdf,
     SaleInvoicesExportable,

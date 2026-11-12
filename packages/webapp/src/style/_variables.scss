@@ -235,6 +235,7 @@ $ns: bp4;
   --color-financial-sheet-date-text: rgb(31, 50, 85);
   --color-financial-sheet-footer-text: var(--color-muted-text);
   --color-financial-sheet-minimal-title-text: #333;
+  --color-financial-sheet-negative-amount-text: var(--color-red-400);
 
   // Transaction locking.
   --color-transaction-locking-item-background: #fff;
@@ -561,6 +562,7 @@ body.bp4-dark  {
   --color-financial-sheet-date-text: var(--color-light-gray1);
   --color-financial-sheet-footer-text: var(--color-muted-text);
   --color-financial-sheet-minimal-title-text: var(--color-white);
+  --color-financial-sheet-negative-amount-text: var(--color-red-500);
 
   // Transaction locking.
   --color-transaction-locking-item-background: var(--color-dark-gray2);

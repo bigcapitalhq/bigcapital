@@ -16,9 +16,12 @@ import {
 } from './dtos/TransactionsLocking.dto';
 import { TransactionLockingResponseDto } from './dtos/TransactionLockingResponse.dto';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('transactions-locking')
 @ApiTags('Transactions Locking')
+@RequireSubscriptionFeature(SubscriptionFeature.TransactionsLocking)
 @ApiExtraModels(TransactionLockingResponseDto)
 @ApiCommonHeaders()
 export class TransactionsLockingController {

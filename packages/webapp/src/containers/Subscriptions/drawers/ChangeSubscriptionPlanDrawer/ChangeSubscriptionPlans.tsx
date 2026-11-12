@@ -1,60 +1,35 @@
-import { Intent } from '@blueprintjs/core';
+import { Intent, Spinner } from '@blueprintjs/core';
+import { useBillingPageBoot } from '../../BillingPageBoot';
 import {
   SubscriptionPlan,
-  SubscriptionPricingProps,
+  SubscriptionPlansPeriod,
 } from '../../component/SubscriptionPlan';
-import { withSubscriptionPlanMapper } from '../../component/withSubscriptionPlanMapper';
-import { withPlans } from '../../withPlans';
-import type { ComponentType } from 'react';
 import { AppToaster, Group } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import {
-  withDrawerActions,
-  WithDrawerActionsProps,
-} from '@/containers/Drawer/withDrawerActions';
-import { useSubscriptionPlans } from '@/hooks/constants/useSubscriptionPlans';
-import { useChangeSubscriptionPlan } from '@/hooks/query/subscription';
-import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
+  useChangeSubscriptionPlan,
+  useGetSubscriptionPlans,
+} from '@/hooks/query/subscription';
+import { useDrawerActions } from '@/hooks/state';
 
-export function ChangeSubscriptionPlans() {
-  const subscriptionPlans = useSubscriptionPlans();
-
-  return (
-    <Group spacing={14} noWrap align="stretch">
-      {subscriptionPlans.map((plan, index) => (
-        <SubscriptionPlanMapped key={index} plan={plan} />
-      ))}
-    </Group>
-  );
+interface ChangeSubscriptionPlansProps {
+  period: SubscriptionPlansPeriod;
 }
 
-interface ChangeSubscriptionPlansInnerProps extends SubscriptionPricingProps {
-  monthlyVariantId: string;
-  annuallyVariantId: string;
-  plansPeriod: SubscriptionPlansPeriod;
-  openDrawer: WithDrawerActionsProps['openDrawer'];
-  closeDrawer: WithDrawerActionsProps['closeDrawer'];
-}
-
-const ChangeSubscriptionPlansInner = ({
-  openDrawer: _openDrawer,
-  closeDrawer,
-  monthlyVariantId,
-  annuallyVariantId,
-  plansPeriod,
-  ...props
-}: ChangeSubscriptionPlansInnerProps) => {
+/**
+ * Plan switcher shown inside the change subscription plan drawer.
+ */
+export function ChangeSubscriptionPlans({
+  period,
+}: ChangeSubscriptionPlansProps) {
+  const { closeDrawer } = useDrawerActions();
+  const { mainSubscription } = useBillingPageBoot();
+  const { data, isLoading } = useGetSubscriptionPlans();
   const { mutateAsync: changeSubscriptionPlan, isPending } =
     useChangeSubscriptionPlan();
 
-  // Handles the subscribe button click.
-  const handleSubscribe = () => {
-    const variantId =
-      plansPeriod === SubscriptionPlansPeriod.Monthly
-        ? monthlyVariantId
-        : annuallyVariantId;
-
-    changeSubscriptionPlan({ variant_id: Number(variantId) })
+  const handleSubscribe = (planSlug: string) => {
+    changeSubscriptionPlan({ planSlug })
       .then(() => {
         closeDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
         AppToaster.show({
@@ -64,30 +39,31 @@ const ChangeSubscriptionPlansInner = ({
       })
       .catch(() => {
         AppToaster.show({
-          message: 'Something went wrong.',
+          message: 'Something went wrong while changing the plan.',
           intent: Intent.DANGER,
         });
       });
   };
-  return (
-    <SubscriptionPlan
-      {...props}
-      onSubscribe={handleSubscribe}
-      subscribeButtonProps={{ loading: isPending }}
-    />
-  );
-};
 
-export const SubscriptionPlanMapped = withSubscriptionPlanMapper(
-  withDrawerActions(
-    withPlans(({ plansPeriod }) => ({ plansPeriod }))(
-      ChangeSubscriptionPlansInner,
-    ) as unknown as ComponentType<
-      Omit<SubscriptionPricingProps, 'features'> & {
-        features: unknown[];
-        monthlyVariantId: string;
-        annuallyVariantId: string;
-      }
-    >,
-  ),
-);
+  if (isLoading) {
+    return <Spinner size={30} />;
+  }
+
+  const plans = data?.plans || [];
+
+  return (
+    <Group spacing={14} noWrap align="stretch">
+      {plans.map((plan) => (
+        <SubscriptionPlan
+          key={plan.slug}
+          plan={plan}
+          period={period}
+          currentPlanSlug={mainSubscription?.planSlug}
+          onSubscribe={handleSubscribe}
+          subscribeButtonLabel="Switch plan"
+          subscribeButtonProps={{ loading: isPending }}
+        />
+      ))}
+    </Group>
+  );
+}

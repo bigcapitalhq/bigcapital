@@ -1,9 +1,23 @@
 import React, { createContext } from 'react';
-import { useGetSubscriptions } from '@/hooks/query/subscription';
+import type {
+  SubscriptionPlansResponse,
+  SubscriptionsListResponse,
+} from '@bigcapital/sdk-ts';
+import {
+  useGetSubscriptionPlans,
+  useGetSubscriptions,
+} from '@/hooks/query/subscription';
+
+type Subscription = SubscriptionsListResponse['subscriptions'][number];
+type PlanGroup = SubscriptionPlansResponse['plans'][number];
 
 interface BillingBootContextValues {
   isSubscriptionsLoading: boolean;
-  subscriptions: any;
+  isPlansLoading: boolean;
+  isLoading: boolean;
+  subscriptions?: Subscription[];
+  plans: PlanGroup[];
+  mainSubscription?: Subscription;
 }
 
 const BillingBoot = createContext<BillingBootContextValues>(
@@ -15,16 +29,22 @@ interface BillingPageBootProps {
 }
 
 export function BillingPageBoot({ children }: BillingPageBootProps) {
-  const { isLoading: isSubscriptionsLoading, data: subscriptionsRes } =
-    useGetSubscriptions();
+  const subscriptionsQuery = useGetSubscriptions();
+  const plansQuery = useGetSubscriptionPlans();
 
-  const mainSubscription = subscriptionsRes?.subscriptions?.find(
-    (s) => s.slug === 'main',
-  );
+  const subscriptions = subscriptionsQuery.data?.subscriptions;
+  const mainSubscription = subscriptions?.find((s) => s.slug === 'main');
+
+  const isSubscriptionsLoading = subscriptionsQuery.isLoading;
+  const isPlansLoading = plansQuery.isLoading;
+  const isLoading = isSubscriptionsLoading || isPlansLoading;
 
   const value = {
     isSubscriptionsLoading,
-    subscriptions: subscriptionsRes?.subscriptions,
+    isPlansLoading,
+    isLoading,
+    subscriptions,
+    plans: plansQuery.data?.plans || [],
     mainSubscription,
   };
   return <BillingBoot.Provider value={value}>{children}</BillingBoot.Provider>;

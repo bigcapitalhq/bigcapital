@@ -534,17 +534,15 @@ describe('Balance Sheet (e2e)', () => {
 
     it('accumulates the fixture activity in the week it was posted', () => {
       const bank = findNode(data, bankId);
-      const beforeBank = findNode(
-        baselineWeekly.data,
-        bankId,
-      ).horizontal_totals;
+      const beforeBank =
+        findNode(baselineWeekly.data, bankId)?.horizontal_totals ?? [];
 
       // The 2022 owner capital (10000) is part of every weekly closing
       // balance; the Jan 15 cash sale (3000) lands in the third week.
       bank.horizontal_totals.forEach((total, index) => {
         expectDelta(
           total.total.amount,
-          beforeBank[index].total.amount,
+          beforeBank[index]?.total.amount ?? 0,
           10000 + (index >= 2 ? 3000 : 0),
         );
       });
@@ -552,17 +550,15 @@ describe('Balance Sheet (e2e)', () => {
 
     it('accumulates net income from the week of the cash sale onwards', () => {
       const netIncome = findNode(data, 'NET_INCOME');
-      const beforeNetIncome = findNode(
-        baselineWeekly.data,
-        'NET_INCOME',
-      ).horizontal_totals;
+      const beforeNetIncome =
+        findNode(baselineWeekly.data, 'NET_INCOME')?.horizontal_totals ?? [];
 
       // The 2022 credit sale (500) opens net income; the Jan 15 cash sale
       // (3000) is picked up from the third week onwards.
       netIncome.horizontal_totals.forEach((total, index) => {
         expectDelta(
           total.total.amount,
-          beforeNetIncome[index].total.amount,
+          beforeNetIncome[index]?.total.amount ?? 0,
           500 + (index >= 2 ? 3000 : 0),
         );
       });

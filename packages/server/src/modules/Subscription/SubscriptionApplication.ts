@@ -1,65 +1,69 @@
 import { Injectable } from '@nestjs/common';
-import { CancelLemonSubscription } from './commands/CancelLemonSubscription.service';
-import { ResumeLemonSubscription } from './commands/ResumeLemonSubscription.service';
-import { ChangeLemonSubscription } from './commands/ChangeLemonSubscription.service';
-import { MarkSubscriptionPaymentFailed } from './commands/MarkSubscriptionPaymentFailed.service';
-import { MarkSubscriptionPaymentSucceed } from './commands/MarkSubscriptionPaymentSuccessed.service';
-import { MarkSubscriptionCanceled } from './commands/MarkSubscriptionCanceled.service';
-import { NewSubscriptionService } from './commands/NewSubscription.service';
 import { SubscriptionPayload } from '@/interfaces/SubscriptionPlan';
-import { MarkSubscriptionPlanChanged } from './commands/MarkSubscriptionChanged.service';
-import { GetLemonSqueezyCheckoutService } from './queries/GetLemonSqueezyCheckout.service';
+import { NewSubscriptionService } from './commands/NewSubscription.service';
+import { StartTrialSubscriptionService } from './commands/StartTrialSubscription.service';
 import { GetSubscriptionsService } from './queries/GetSubscriptions.service';
-import { GetLemonSubscriptionsService } from './queries/GetLemonSubscriptions.service';
-import { MarkSubscriptionResumedService } from './commands/MarkSubscriptionResumed.sevice';
+import { GetPlansService } from './stripe/GetPlans.service';
+import { CreateStripeCheckoutSessionService } from './stripe/CreateStripeCheckoutSession.service';
+import { CreateStripePortalSessionService } from './stripe/CreateStripePortalSession.service';
+import { SyncStripeCheckoutSessionService } from './stripe/SyncStripeCheckoutSession.service';
+import { ChangeStripeSubscriptionService } from './stripe/ChangeStripeSubscription.service';
+import { CancelStripeSubscriptionService } from './stripe/CancelStripeSubscription.service';
+import { ResumeStripeSubscriptionService } from './stripe/ResumeStripeSubscription.service';
 
 @Injectable()
 export class SubscriptionApplication {
   constructor(
-    private readonly cancelSubscriptionService: CancelLemonSubscription,
-    private readonly resumeSubscriptionService: ResumeLemonSubscription,
-    private readonly changeSubscriptionPlanService: ChangeLemonSubscription,
-    private readonly markSubscriptionPaymentSuccessedService: MarkSubscriptionPaymentSucceed,
-    private readonly markSubscriptionPaymentFailedService: MarkSubscriptionPaymentFailed,
-    private readonly markSubscriptionCanceledService: MarkSubscriptionCanceled,
-    private readonly markSubscriptionPlanChangedService: MarkSubscriptionPlanChanged,
-    private readonly markSubscriptionResumedService: MarkSubscriptionResumedService,
     private readonly createNewSubscriptionService: NewSubscriptionService,
+    private readonly startTrialSubscriptionService: StartTrialSubscriptionService,
     private readonly getSubscriptionsService: GetSubscriptionsService,
-    private readonly getLemonSqueezyCheckoutService: GetLemonSqueezyCheckoutService,
-    private readonly getLemonSubscriptionsService: GetLemonSubscriptionsService,
+    private readonly getPlansService: GetPlansService,
+    private readonly createStripeCheckoutSessionService: CreateStripeCheckoutSessionService,
+    private readonly createStripePortalSessionService: CreateStripePortalSessionService,
+    private readonly syncStripeCheckoutSessionService: SyncStripeCheckoutSessionService,
+    private readonly changeStripeSubscriptionService: ChangeStripeSubscriptionService,
+    private readonly cancelStripeSubscriptionService: CancelStripeSubscriptionService,
+    private readonly resumeStripeSubscriptionService: ResumeStripeSubscriptionService,
   ) {}
 
   /**
-   *
-   * @returns
+   * Retrieves all subscriptions of the current tenant.
    */
-  getSubscriptions() {
+  public getSubscriptions() {
     return this.getSubscriptionsService.getSubscriptions();
   }
 
   /**
-   * Lemon Squeezy subscription details (urls) for the current tenant.
+   * Retrieves the Cloud plan catalog.
    */
-  getLemonSubscriptions() {
-    return this.getLemonSubscriptionsService.getLemonSubscriptions();
+  public getPlans() {
+    return this.getPlansService.getPlans();
   }
 
   /**
-   *
-   * @param variantId
-   * @returns
+   * Creates a hosted Stripe Checkout session for the given plan.
    */
-  getLemonSqueezyCheckoutUri(variantId: number) {
-    return this.getLemonSqueezyCheckoutService.getCheckout(variantId);
+  public createCheckoutSession(planSlug: string) {
+    return this.createStripeCheckoutSessionService.execute(planSlug);
+  }
+
+  /**
+   * Creates a Stripe Customer Portal session.
+   */
+  public createPortalSession() {
+    return this.createStripePortalSessionService.execute();
+  }
+
+  /**
+   * Synchronizes a completed Checkout Session right after the redirect.
+   */
+  public syncCheckoutSession(sessionId: string) {
+    return this.syncStripeCheckoutSessionService.execute(sessionId);
   }
 
   /**
    * Creates a new subscription of the current tenant.
-   * @param {string} planSlug
-   * @param {string} subscriptionSlug
-   * @param {SubscriptionPayload} payload
-   * @returns
+   * Used by self-hosted signups to grant the free plan.
    */
   public createNewSubscription(
     planSlug: string,
@@ -74,84 +78,30 @@ export class SubscriptionApplication {
   }
 
   /**
-   * Cancels the subscription of the given tenant.
-   * @param {string} id
-   * @returns {Promise<void>}
+   * Starts a full-access trial for the given Cloud tenant.
    */
-  public cancelSubscription(subscriptionSlug: string = 'main') {
-    return this.cancelSubscriptionService.cancelSubscription(subscriptionSlug);
+  public startTrial(tenantId: number) {
+    return this.startTrialSubscriptionService.execute(tenantId);
   }
 
   /**
-   * Resumes the subscription of the given tenant.
-   * @returns {Promise<void>}
+   * Cancels the current Stripe subscription at the period end.
    */
-  public resumeSubscription(subscriptionSlug: string = 'main') {
-    return this.resumeSubscriptionService.resumeSubscription(subscriptionSlug);
+  public cancelSubscription() {
+    return this.cancelStripeSubscriptionService.execute();
   }
 
   /**
-   * Changes the given organization subscription plan.
-   * @param {number} newVariantId
-   * @returns {Promise<void>}
+   * Resumes a subscription scheduled for cancellation.
    */
-  public changeSubscriptionPlan(newVariantId: number) {
-    return this.changeSubscriptionPlanService.changeSubscriptionPlan(
-      newVariantId,
-    );
+  public resumeSubscription() {
+    return this.resumeStripeSubscriptionService.execute();
   }
 
   /**
-   *
-   * @param subscriptionSlug
-   * @returns
+   * Changes the current Stripe subscription plan.
    */
-  public markSubscriptionPaymentFailed(subscriptionSlug: string = 'main') {
-    return this.markSubscriptionPaymentFailedService.execute(subscriptionSlug);
-  }
-
-  /**
-   *
-   * @param subscriptionSlug
-   * @returns
-   */
-  public markSubscriptionPaymentSuccessed(subscriptionSlug: string = 'main') {
-    return this.markSubscriptionPaymentSuccessedService.execute(
-      subscriptionSlug,
-    );
-  }
-
-  /**
-   * Marks the given subscription slug canceled.
-   * @param {string} subscriptionSlug
-   * @returns
-   */
-  public markSubscriptionCanceled(subscriptionSlug: string = 'main') {
-    return this.markSubscriptionCanceledService.execute(subscriptionSlug);
-  }
-
-  /**
-   *
-   * @param {string} newPlanSlug
-   * @param {string} subscriptionSlug
-   * @returns
-   */
-  public markSubscriptionPlanChanged(
-    newPlanSlug: string,
-    subscriptionSlug: string = 'main',
-  ) {
-    return this.markSubscriptionPlanChangedService.execute(
-      newPlanSlug,
-      subscriptionSlug,
-    );
-  }
-
-  /**
-   * Marks the given subscription slug resumed.
-   * @param {string} subscriptionSlug
-   * @returns
-   */
-  markSubscriptionResumed(subscriptionSlug: string = 'main') {
-    return this.markSubscriptionResumedService.execute(subscriptionSlug);
+  public changeSubscriptionPlan(planSlug: string) {
+    return this.changeStripeSubscriptionService.execute(planSlug);
   }
 }

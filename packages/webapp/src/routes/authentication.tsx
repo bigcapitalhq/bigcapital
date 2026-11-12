@@ -13,6 +13,14 @@ export default [
     ),
   },
   {
+    path: `${BASE_URL}/google/callback`,
+    component: lazy(() =>
+      import('@/containers/Authentication/GoogleAuthCallback').then((m) => ({
+        default: m.GoogleAuthCallback,
+      })),
+    ),
+  },
+  {
     path: `${BASE_URL}/send_reset_password`,
     component: lazy(() =>
       import('@/containers/Authentication/SendResetPassword').then((m) => ({

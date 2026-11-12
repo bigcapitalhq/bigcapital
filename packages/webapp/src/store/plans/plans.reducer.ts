@@ -1,6 +1,4 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import type { SubscriptionPlan } from '@/constants/subscriptionModels';
-import { SubscriptionPlans } from '@/constants/subscriptionModels';
 
 export enum SubscriptionPlansPeriod {
   Monthly = 'monthly',
@@ -8,27 +6,15 @@ export enum SubscriptionPlansPeriod {
 }
 
 interface StorePlansState {
-  plans: SubscriptionPlan[];
   plansPeriod: SubscriptionPlansPeriod;
 }
 
 export const SubscriptionPlansSlice = createSlice({
   name: 'plans',
   initialState: {
-    plans: [],
-    periods: [],
-    plansPeriod: 'monthly',
+    plansPeriod: SubscriptionPlansPeriod.Monthly,
   } as StorePlansState,
   reducers: {
-    /**
-     * Initialize the subscription plans.
-     * @param {StorePlansState} state
-     */
-    initSubscriptionPlans: (state: StorePlansState) => {
-      const plans = SubscriptionPlans;
-      state.plans = plans;
-    },
-
     /**
      * Changes the plans period (monthly or annually).
      * @param {StorePlansState} state
@@ -43,5 +29,4 @@ export const SubscriptionPlansSlice = createSlice({
   },
 });
 
-export const { initSubscriptionPlans, changePlansPeriod } =
-  SubscriptionPlansSlice.actions;
+export const { changePlansPeriod } = SubscriptionPlansSlice.actions;

@@ -27,9 +27,12 @@ import { RequirePermission } from './RequirePermission.decorator';
 import { PermissionGuard } from './Permission.guard';
 import { AuthorizationGuard } from './Authorization.guard';
 import { AbilitySubject, RoleAction } from './Roles.types';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @ApiTags('Roles')
 @Controller('roles')
+@RequireSubscriptionFeature(SubscriptionFeature.UserRoles)
 @ApiExtraModels(RoleResponseDto)
 @ApiCommonHeaders()
 @UseGuards(AuthorizationGuard, PermissionGuard)

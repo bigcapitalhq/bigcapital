@@ -16,7 +16,6 @@ export class GetSubscriptionsService {
 
   /**
    * Retrieve all system subscriptions of the given tenant.
-   * (Lemon Squeezy details are fetched separately via GetLemonSubscriptionsService.)
    */
   public async getSubscriptions() {
     const tenant = await this.tenancyContext.getTenant();

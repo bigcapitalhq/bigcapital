@@ -272,6 +272,36 @@
         ]
       }
     },
+    "/api/auth/google": {
+      "get": {
+        "operationId": "AuthController_googleAuth",
+        "summary": "Start sign-in with Google",
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "Redirects the browser to the Google consent screen."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/google/callback": {
+      "get": {
+        "operationId": "AuthController_googleAuthCallback",
+        "summary": "Google OAuth callback",
+        "parameters": [],
+        "responses": {
+          "302": {
+            "description": "Redirects to the web app with a JWT access token or an error code."
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/api/auth/signup/verify/resend": {
       "post": {
         "operationId": "AuthedController_resendSignupConfirm",
@@ -4381,6 +4411,375 @@
         },
         "tags": [
           "Sale Invoices"
+        ]
+      }
+    },
+    "/api/subscription": {
+      "get": {
+        "operationId": "SubscriptionsController_getSubscriptions",
+        "summary": "Get all subscriptions for the current tenant",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of subscriptions retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/plans": {
+      "get": {
+        "operationId": "SubscriptionsController_getPlans",
+        "summary": "Get the Bigcapital Cloud plan catalog",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plan catalog retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSubscriptionPlansResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/checkout_session": {
+      "post": {
+        "operationId": "SubscriptionsController_createCheckoutSession",
+        "summary": "Create a Stripe Checkout session for a subscription plan",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStripeCheckoutSessionBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeCheckoutSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/portal_session": {
+      "post": {
+        "operationId": "SubscriptionsController_createPortalSession",
+        "summary": "Create a Stripe Customer Portal session",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Portal session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/stripe/sync": {
+      "post": {
+        "operationId": "SubscriptionsController_syncCheckoutSession",
+        "summary": "Synchronize a completed Stripe Checkout session",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncStripeCheckoutSessionBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session synchronized successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeSyncCheckoutSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/change": {
+      "post": {
+        "operationId": "SubscriptionsController_changeSubscriptionPlan",
+        "summary": "Change the subscription plan of the current organization",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeSubscriptionPlanBodyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription plan changed successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/cancel": {
+      "post": {
+        "operationId": "SubscriptionsController_cancelSubscription",
+        "summary": "Cancel the current organization subscription",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription canceled successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/subscription/resume": {
+      "post": {
+        "operationId": "SubscriptionsController_resumeSubscription",
+        "summary": "Resume the current organization subscription",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Subscription resumed successfully"
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/webhooks/stripe-billing": {
+      "post": {
+        "operationId": "StripeBillingWebhooksController_handleWebhook",
+        "summary": "Listen to Stripe Billing webhooks",
+        "parameters": [
+          {
+            "name": "stripe-signature",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "stripe"
         ]
       }
     },
@@ -9282,6 +9681,619 @@
         },
         "tags": [
           "Vendors"
+        ]
+      }
+    },
+    "/api/recurring-invoices": {
+      "post": {
+        "operationId": "RecurringInvoicesController_createRecurringInvoice",
+        "summary": "Creates a new recurring invoice profile.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecurringInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The recurring invoice has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      },
+      "get": {
+        "operationId": "RecurringInvoicesController_getRecurringInvoices",
+        "summary": "Retrieves recurring invoice profiles.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoices have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/state": {
+      "get": {
+        "operationId": "RecurringInvoicesController_getRecurringInvoiceState",
+        "summary": "Retrieves the recurring invoice form state.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice state has been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceStateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}": {
+      "get": {
+        "operationId": "RecurringInvoicesController_getRecurringInvoice",
+        "summary": "Retrieves the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      },
+      "put": {
+        "operationId": "RecurringInvoicesController_editRecurringInvoice",
+        "summary": "Edits the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditRecurringInvoiceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      },
+      "delete": {
+        "operationId": "RecurringInvoicesController_deleteRecurringInvoice",
+        "summary": "Deletes the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been deleted."
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}/pause": {
+      "post": {
+        "operationId": "RecurringInvoicesController_pauseRecurringInvoice",
+        "summary": "Pauses the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been paused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}/resume": {
+      "post": {
+        "operationId": "RecurringInvoicesController_resumeRecurringInvoice",
+        "summary": "Resumes the given recurring invoice.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring invoice has been resumed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}/generate": {
+      "post": {
+        "operationId": "RecurringInvoicesController_generateRecurringInvoice",
+        "summary": "Generates an extra invoice immediately without rescheduling.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The invoice has been generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
+        ]
+      }
+    },
+    "/api/recurring-invoices/{id}/invoices": {
+      "get": {
+        "operationId": "RecurringInvoicesController_getRecurringInvoiceInvoices",
+        "summary": "Retrieves the invoices generated by the recurring profile.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The generated invoices have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SaleInvoiceResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Invoices"
         ]
       }
     },
@@ -21551,6 +22563,115 @@
         ]
       }
     },
+    "/api/reports/inventory-summary": {
+      "get": {
+        "operationId": "InventorySummaryController_getInventorySummary",
+        "summary": "Retrieves the inventory summary report",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "noneTransactions",
+            "required": false,
+            "in": "query",
+            "description": "Whether to exclude items without transactions",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "itemsIds",
+            "required": false,
+            "in": "query",
+            "description": "Items IDs for the inventory summary",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "warehousesIds",
+            "required": false,
+            "in": "query",
+            "description": "Warehouses IDs for the inventory summary",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "branchesIds",
+            "required": false,
+            "in": "query",
+            "description": "Branches IDs for the inventory summary",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "accept",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numberFormat",
+            "required": false,
+            "in": "query",
+            "description": "Number formatting options (serialized as bracket notation, e.g. numberFormat[precision]=2)",
+            "schema": {
+              "$ref": "#/components/schemas/NumberFormatQueryDto"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The inventory summary report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventorySummaryResponseDto"
+                }
+              },
+              "application/json+table": {
+                "schema": {
+                  "$ref": "#/components/schemas/InventorySummaryTableResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/api/reports/sales-tax-liability-summary": {
       "get": {
         "operationId": "SalesTaxLiabilitySummaryController_getSalesTaxLiabilitySummary",
@@ -23415,162 +24536,6 @@
         ]
       }
     },
-    "/api/subscription": {
-      "get": {
-        "operationId": "SubscriptionsController_getSubscriptions",
-        "summary": "Get all subscriptions for the current tenant",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "List of subscriptions retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubscriptionsListResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/lemon": {
-      "get": {
-        "operationId": "SubscriptionsController_getLemonSubscriptions",
-        "summary": "Get Lemon Squeezy subscription details for the current tenant",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Lemon subscription details retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LemonSubscriptionsListResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/lemon/checkout_url": {
-      "post": {
-        "operationId": "SubscriptionsController_getCheckoutUrl",
-        "summary": "Get LemonSqueezy checkout URL",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "variantId": {
-                    "type": "string",
-                    "description": "The variant ID for the subscription plan"
-                  }
-                },
-                "required": [
-                  "variantId"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Checkout URL retrieved successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/cancel": {
-      "post": {
-        "operationId": "SubscriptionsController_cancelSubscription",
-        "summary": "Cancel the current organization subscription",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Subscription canceled successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/resume": {
-      "post": {
-        "operationId": "SubscriptionsController_resumeSubscription",
-        "summary": "Resume the current organization subscription",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Subscription resumed successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/subscription/change": {
-      "post": {
-        "operationId": "SubscriptionsController_changeSubscriptionPlan",
-        "summary": "Change the subscription plan of the current organization",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "variant_id": {
-                    "type": "number",
-                    "description": "The variant ID for the new subscription plan"
-                  }
-                },
-                "required": [
-                  "variant_id"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Subscription plan changed successfully"
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
-    "/api/webhooks/lemon": {
-      "post": {
-        "operationId": "SubscriptionsLemonWebhook_lemonWebhooks",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Subscriptions"
-        ]
-      }
-    },
     "/api/organization/build": {
       "post": {
         "operationId": "OrganizationController_build",
@@ -25298,6 +26263,274 @@
         ]
       }
     },
+    "/api/notifications": {
+      "get": {
+        "operationId": "NotificationsController_getNotifications",
+        "summary": "Retrieves the list of notifications for the current user.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of notifications per page",
+            "schema": {
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Offset for pagination",
+            "schema": {
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "unreadOnly",
+            "required": false,
+            "in": "query",
+            "description": "Filter to only unread notifications",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "Filter by notification category",
+            "schema": {
+              "example": "inventory",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The notifications list has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationsListResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/api/notifications/unread-count": {
+      "get": {
+        "operationId": "NotificationsController_getUnreadCount",
+        "summary": "Gets the count of unread notifications for the current user.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The unread notifications count has been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnreadNotificationsCountResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/api/notifications/{id}/read": {
+      "post": {
+        "operationId": "NotificationsController_markAsRead",
+        "summary": "Marks a notification as read.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The notification id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The notification has been successfully marked as read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarkNotificationAsReadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/api/notifications/read-all": {
+      "post": {
+        "operationId": "NotificationsController_markAllAsRead",
+        "summary": "Marks all notifications as read for the current user.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All notifications have been successfully marked as read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarkAllNotificationsAsReadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
+    "/api/notifications/{id}/delete": {
+      "post": {
+        "operationId": "NotificationsController_deleteNotification",
+        "summary": "Deletes a notification.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "The notification id",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The notification has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteNotificationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
     "/api/audit-logs/filter-options": {
       "get": {
         "operationId": "AuditLogsController_getAuditLogFilterOptions",
@@ -25650,6 +26883,577 @@
         ]
       }
     },
+    "/api/recurring-journals": {
+      "post": {
+        "operationId": "RecurringJournalsController_createRecurringJournal",
+        "summary": "Creates a new recurring journal profile.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecurringJournalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The recurring journal has been created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringJournalResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      },
+      "get": {
+        "operationId": "RecurringJournalsController_getRecurringJournals",
+        "summary": "Retrieves recurring journal profiles.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "customViewId",
+            "required": false,
+            "in": "query",
+            "description": "Custom view ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "filterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Filter roles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "columnSortBy",
+            "required": false,
+            "in": "query",
+            "description": "Column to sort by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort order (asc/desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stringifiedFilterRoles",
+            "required": false,
+            "in": "query",
+            "description": "Stringified filter roles",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchKeyword",
+            "required": false,
+            "in": "query",
+            "description": "Search keyword",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "viewSlug",
+            "required": false,
+            "in": "query",
+            "description": "View slug",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring journals have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/RecurringJournalResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      }
+    },
+    "/api/recurring-journals/{id}": {
+      "get": {
+        "operationId": "RecurringJournalsController_getRecurringJournal",
+        "summary": "Retrieves the given recurring journal.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring journal has been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringJournalResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      },
+      "put": {
+        "operationId": "RecurringJournalsController_editRecurringJournal",
+        "summary": "Edits the given recurring journal.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditRecurringJournalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The recurring journal has been updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringJournalResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      },
+      "delete": {
+        "operationId": "RecurringJournalsController_deleteRecurringJournal",
+        "summary": "Deletes the given recurring journal.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring journal has been deleted."
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      }
+    },
+    "/api/recurring-journals/{id}/pause": {
+      "post": {
+        "operationId": "RecurringJournalsController_pauseRecurringJournal",
+        "summary": "Pauses the given recurring journal.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring journal has been paused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringJournalResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      }
+    },
+    "/api/recurring-journals/{id}/resume": {
+      "post": {
+        "operationId": "RecurringJournalsController_resumeRecurringJournal",
+        "summary": "Resumes the given recurring journal.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The recurring journal has been resumed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurringJournalResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      }
+    },
+    "/api/recurring-journals/{id}/generate": {
+      "post": {
+        "operationId": "RecurringJournalsController_generateRecurringJournal",
+        "summary": "Generates a journal immediately without rescheduling.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The journal has been generated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManualJournalResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      }
+    },
+    "/api/recurring-journals/{id}/journals": {
+      "get": {
+        "operationId": "RecurringJournalsController_getRecurringJournalJournals",
+        "summary": "Retrieves the journals generated by the recurring profile.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Page size",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The generated journals have been retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginatedResponseDto"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ManualJournalResponseDto"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Recurring Journals"
+        ]
+      }
+    },
     "/api/exchange-rates/latest": {
       "get": {
         "operationId": "ExchangeRatesController_getLatestExchangeRate",
@@ -25693,6 +27497,438 @@
         },
         "tags": [
           "Exchange Rates"
+        ]
+      }
+    },
+    "/api/webhooks": {
+      "post": {
+        "operationId": "WebhooksController_createWebhook",
+        "summary": "Create a new webhook.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWebhookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The webhook has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      },
+      "get": {
+        "operationId": "WebhooksController_getWebhooks",
+        "summary": "Retrieves the webhooks list.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter_by",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page_size",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The webhooks have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WebhookResponseDto"
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number"
+                        },
+                        "page": {
+                          "type": "number"
+                        },
+                        "pageSize": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      }
+    },
+    "/api/webhooks/{id}": {
+      "put": {
+        "operationId": "WebhooksController_editWebhook",
+        "summary": "Edit the given webhook.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditWebhookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The webhook has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      },
+      "delete": {
+        "operationId": "WebhooksController_deleteWebhook",
+        "summary": "Delete the given webhook.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The webhook has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      },
+      "get": {
+        "operationId": "WebhooksController_getWebhook",
+        "summary": "Retrieves the webhook details.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The webhook details have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      }
+    },
+    "/api/webhooks/{id}/toggle": {
+      "post": {
+        "operationId": "WebhooksController_toggleWebhookActive",
+        "summary": "Toggle the webhook active state.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The webhook active state has been toggled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
+        ]
+      }
+    },
+    "/api/webhooks/{id}/deliveries": {
+      "get": {
+        "operationId": "WebhooksController_getWebhookDeliveries",
+        "summary": "Retrieves the webhook delivery logs.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Value must be 'Bearer <token>' where <token> is an API key prefixed with 'bc_' or a JWT token.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer bc_1234567890abcdef"
+            }
+          },
+          {
+            "name": "organization-id",
+            "in": "header",
+            "description": "Required if Authorization is a JWT token. The organization ID to operate within.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page_size",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The delivery logs have been successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WebhookDeliveryResponseDto"
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number"
+                        },
+                        "page": {
+                          "type": "number"
+                        },
+                        "pageSize": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Webhooks"
         ]
       }
     }
@@ -25797,10 +28033,15 @@
           "signupDisabled": {
             "type": "boolean",
             "description": "Whether signup is disabled"
+          },
+          "googleEnabled": {
+            "type": "boolean",
+            "description": "Whether sign-in with Google is enabled"
           }
         },
         "required": [
-          "signupDisabled"
+          "signupDisabled",
+          "googleEnabled"
         ]
       },
       "TwoFactorSetupResponseDto": {
@@ -26965,6 +29206,12 @@
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
           },
+          "reorderPoint": {
+            "type": "number",
+            "description": "Stock level at which the item should be reordered (inventory items only)",
+            "minimum": 0,
+            "example": 10
+          },
           "unit": {
             "type": "string",
             "description": "Unit of measure the item is measured in",
@@ -27132,6 +29379,37 @@
             "type": "string",
             "description": "Item code/SKU",
             "example": "CHAIR-X2000"
+          },
+          "reorderPoint": {
+            "type": "number",
+            "description": "Stock level at which the item should be reordered (inventory items only)",
+            "minimum": 0,
+            "example": 10
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure the item is measured in",
+            "enum": [
+              "piece",
+              "dozen",
+              "pair",
+              "set",
+              "pack",
+              "box",
+              "kg",
+              "g",
+              "lb",
+              "oz",
+              "l",
+              "ml",
+              "m",
+              "cm",
+              "m2",
+              "m3",
+              "hour",
+              "day"
+            ],
+            "example": "kg"
           },
           "purchasable": {
             "type": "boolean",
@@ -29765,6 +32043,374 @@
             "example": "2026-11-07"
           }
         }
+      },
+      "SubscriptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "main"
+          },
+          "status": {
+            "type": "string",
+            "example": "active",
+            "enum": [
+              "active",
+              "inactive",
+              "on_trial",
+              "canceled",
+              "past_due"
+            ]
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "inactive": {
+            "type": "boolean",
+            "example": false
+          },
+          "onTrial": {
+            "type": "boolean",
+            "example": false
+          },
+          "canceled": {
+            "type": "boolean",
+            "example": false
+          },
+          "ended": {
+            "type": "boolean",
+            "example": false
+          },
+          "cancelAtPeriodEnd": {
+            "type": "boolean",
+            "description": "Whether the subscription will cancel at the period end.",
+            "example": false
+          },
+          "stripeStatus": {
+            "type": "string",
+            "description": "The raw Stripe subscription status.",
+            "example": "active",
+            "nullable": true
+          },
+          "paymentStatus": {
+            "type": "string",
+            "example": "succeed",
+            "enum": [
+              "succeed",
+              "failed"
+            ]
+          },
+          "startsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "endsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-02-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "canceledAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "trialEndsAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-01-07T00:00:00.000Z",
+            "nullable": true
+          },
+          "statusFormatted": {
+            "type": "string",
+            "example": "Active"
+          },
+          "canceledAtFormatted": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "endsAtFormatted": {
+            "type": "string",
+            "example": "Jan 1, 2024",
+            "nullable": true
+          },
+          "startsAtFormatted": {
+            "type": "string",
+            "example": "Jan 1, 2024",
+            "nullable": true
+          },
+          "trialStartsAtFormatted": {
+            "type": "string",
+            "example": null,
+            "nullable": true
+          },
+          "trialEndsAtFormatted": {
+            "type": "string",
+            "example": "Jan 7, 2024",
+            "nullable": true
+          },
+          "planName": {
+            "type": "string",
+            "example": "Standard"
+          },
+          "planSlug": {
+            "type": "string",
+            "example": "standard"
+          },
+          "planDescription": {
+            "type": "string",
+            "example": "Good for service businesses that just started.",
+            "nullable": true
+          },
+          "planPrice": {
+            "type": "number",
+            "example": 10
+          },
+          "planPriceCurrency": {
+            "type": "string",
+            "example": "USD"
+          },
+          "planPriceFormatted": {
+            "type": "string",
+            "example": "$10"
+          },
+          "planPeriod": {
+            "type": "string",
+            "example": "month"
+          }
+        },
+        "required": [
+          "slug",
+          "status",
+          "active",
+          "inactive",
+          "onTrial",
+          "canceled",
+          "ended",
+          "cancelAtPeriodEnd",
+          "paymentStatus",
+          "statusFormatted",
+          "planName",
+          "planSlug",
+          "planPrice",
+          "planPriceCurrency",
+          "planPriceFormatted",
+          "planPeriod"
+        ]
+      },
+      "SubscriptionsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionResponseDto"
+            }
+          }
+        },
+        "required": [
+          "subscriptions"
+        ]
+      },
+      "SubscriptionPlanFeatureResponseDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "example": "Unlimited Sale Invoices"
+          },
+          "hint": {
+            "type": "string",
+            "example": "Feature description"
+          },
+          "hintLabel": {
+            "type": "string",
+            "example": "Feature label"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "SubscriptionPlanPriceResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "capital-basic-monthly"
+          },
+          "interval": {
+            "type": "string",
+            "example": "month"
+          },
+          "intervalCount": {
+            "type": "number",
+            "example": 1
+          },
+          "amount": {
+            "type": "number",
+            "example": 10
+          },
+          "amountFormatted": {
+            "type": "string",
+            "example": "$10"
+          },
+          "priceLabel": {
+            "type": "string",
+            "example": "Per month"
+          }
+        },
+        "required": [
+          "slug",
+          "interval",
+          "intervalCount",
+          "amount",
+          "amountFormatted",
+          "priceLabel"
+        ]
+      },
+      "SubscriptionPlanGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "capital-basic"
+          },
+          "name": {
+            "type": "string",
+            "example": "Capital Basic"
+          },
+          "description": {
+            "type": "string",
+            "example": "Good for service businesses that just started."
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanFeatureResponseDto"
+            }
+          },
+          "featured": {
+            "type": "boolean",
+            "example": false
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanPriceResponseDto"
+            }
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "description",
+          "features",
+          "featured",
+          "prices"
+        ]
+      },
+      "GetSubscriptionPlansResponseDto": {
+        "type": "object",
+        "properties": {
+          "plans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionPlanGroupResponseDto"
+            }
+          }
+        },
+        "required": [
+          "plans"
+        ]
+      },
+      "StripeCheckoutSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The hosted Stripe URL to redirect the user to",
+            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Stripe Checkout Session id",
+            "example": "cs_test_xxx"
+          }
+        },
+        "required": [
+          "url",
+          "sessionId"
+        ]
+      },
+      "StripeSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The hosted Stripe URL to redirect the user to",
+            "example": "https://checkout.stripe.com/c/pay/cs_test_xxx"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "StripeSyncCheckoutSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "synced"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "CreateStripeCheckoutSessionBodyDto": {
+        "type": "object",
+        "properties": {
+          "planSlug": {
+            "type": "string",
+            "description": "The plan slug to subscribe to",
+            "example": "capital-basic-monthly"
+          }
+        },
+        "required": [
+          "planSlug"
+        ]
+      },
+      "SyncStripeCheckoutSessionBodyDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "The Stripe Checkout Session id returned in the success URL",
+            "example": "cs_test_xxx"
+          }
+        },
+        "required": [
+          "sessionId"
+        ]
+      },
+      "ChangeSubscriptionPlanBodyDto": {
+        "type": "object",
+        "properties": {
+          "planSlug": {
+            "type": "string",
+            "description": "The target plan slug",
+            "example": "capital-plus-monthly"
+          }
+        },
+        "required": [
+          "planSlug"
+        ]
       },
       "CreatePdfTemplateDto": {
         "type": "object",
@@ -33572,6 +36218,586 @@
           "ids"
         ]
       },
+      "RecurringInvoiceStateResponseDto": {
+        "type": "object",
+        "properties": {
+          "defaultTemplateId": {
+            "type": "number",
+            "description": "The ID of the default PDF template for sale invoices",
+            "example": 1,
+            "nullable": true
+          }
+        },
+        "required": [
+          "defaultTemplateId"
+        ]
+      },
+      "RecurringInvoiceResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Recurring invoice ID",
+            "example": 1
+          },
+          "customerId": {
+            "type": "number",
+            "description": "Customer ID",
+            "example": 1
+          },
+          "customer": {
+            "description": "The customer of the recurring invoice profile",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CustomerResponseDto"
+              }
+            ]
+          },
+          "branch": {
+            "description": "The branch of the recurring invoice profile",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BranchLinkDto"
+              }
+            ]
+          },
+          "profileName": {
+            "type": "string",
+            "description": "Profile name",
+            "example": "Monthly retainer"
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "Reference number"
+          },
+          "invoiceMessage": {
+            "type": "string",
+            "description": "Invoice message"
+          },
+          "termsConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Currency code",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "discount": {
+            "type": "number",
+            "description": "Discount value"
+          },
+          "discountType": {
+            "type": "string",
+            "description": "Discount type"
+          },
+          "adjustment": {
+            "type": "number",
+            "description": "Adjustment amount"
+          },
+          "isInclusiveTax": {
+            "type": "boolean",
+            "description": "Whether tax is inclusive"
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "warehouseId": {
+            "type": "number",
+            "description": "Warehouse ID"
+          },
+          "pdfTemplateId": {
+            "type": "number",
+            "description": "PDF template ID"
+          },
+          "status": {
+            "type": "string",
+            "description": "Profile status",
+            "enum": [
+              "active",
+              "paused",
+              "completed"
+            ]
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ]
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat interval",
+            "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date",
+            "example": "2026-11-05"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date",
+            "example": "2027-11-05"
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Maximum occurrences",
+            "example": 12
+          },
+          "occurrencesCount": {
+            "type": "number",
+            "description": "Generated occurrences count",
+            "example": 3
+          },
+          "nextInvoiceDate": {
+            "type": "string",
+            "description": "Next invoice date",
+            "example": "2026-12-05"
+          },
+          "lastInvoiceDate": {
+            "type": "string",
+            "description": "Last generated invoice date",
+            "example": "2026-11-05"
+          },
+          "dueDays": {
+            "type": "number",
+            "description": "Due date offset in days",
+            "example": 15
+          },
+          "deliveryMode": {
+            "type": "string",
+            "description": "Delivery mode",
+            "enum": [
+              "draft",
+              "email"
+            ]
+          },
+          "emailSubject": {
+            "type": "string",
+            "description": "Email subject override"
+          },
+          "emailMessage": {
+            "type": "string",
+            "description": "Email message override"
+          },
+          "emailCc": {
+            "description": "Email CC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emailBcc": {
+            "description": "Email BCC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attachInvoice": {
+            "type": "boolean",
+            "description": "Whether the PDF is attached"
+          },
+          "lastError": {
+            "type": "string",
+            "description": "Last generation error"
+          },
+          "failureCount": {
+            "type": "number",
+            "description": "Consecutive failure count"
+          },
+          "entries": {
+            "description": "Recurring invoice line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryDto"
+            }
+          },
+          "subtotal": {
+            "type": "number",
+            "description": "Subtotal amount"
+          },
+          "taxAmount": {
+            "type": "number",
+            "description": "Tax amount"
+          },
+          "discountAmount": {
+            "type": "number",
+            "description": "Discount amount"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total amount"
+          },
+          "startDateFormatted": {
+            "type": "string",
+            "description": "Formatted start date"
+          },
+          "endDateFormatted": {
+            "type": "string",
+            "description": "Formatted end date"
+          },
+          "nextInvoiceDateFormatted": {
+            "type": "string",
+            "description": "Formatted next invoice date"
+          },
+          "lastInvoiceDateFormatted": {
+            "type": "string",
+            "description": "Formatted last invoice date"
+          },
+          "createdAtFormatted": {
+            "type": "string",
+            "description": "Formatted created date"
+          },
+          "totalFormatted": {
+            "type": "string",
+            "description": "Formatted total"
+          },
+          "subtotalFormatted": {
+            "type": "string",
+            "description": "Formatted subtotal"
+          },
+          "taxAmountFormatted": {
+            "type": "string",
+            "description": "Formatted tax amount"
+          },
+          "discountAmountFormatted": {
+            "type": "string",
+            "description": "Formatted discount amount"
+          },
+          "adjustmentFormatted": {
+            "type": "string",
+            "description": "Formatted adjustment amount"
+          }
+        },
+        "required": [
+          "id",
+          "customerId",
+          "profileName",
+          "status",
+          "frequency",
+          "repeatInterval",
+          "startDate",
+          "occurrencesCount",
+          "dueDays",
+          "deliveryMode"
+        ]
+      },
+      "CreateRecurringInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "number",
+            "description": "Customer ID",
+            "example": 1
+          },
+          "profileName": {
+            "type": "string",
+            "description": "Recurring invoice profile name",
+            "example": "Monthly retainer"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The first invoice date",
+            "example": "2026-11-05"
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ],
+            "example": "month"
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat every N periods",
+            "example": 1,
+            "default": 1
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Optional end date",
+            "example": "2027-11-05"
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Optional maximum number of generated invoices",
+            "example": 12
+          },
+          "dueDays": {
+            "type": "number",
+            "description": "Due date offset in days from the invoice date",
+            "example": 15,
+            "default": 0
+          },
+          "deliveryMode": {
+            "type": "string",
+            "description": "What to do with generated invoices",
+            "enum": [
+              "draft",
+              "email"
+            ],
+            "default": "draft"
+          },
+          "emailSubject": {
+            "type": "string",
+            "description": "Email subject override"
+          },
+          "emailMessage": {
+            "type": "string",
+            "description": "Email message override"
+          },
+          "emailCc": {
+            "description": "Email CC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emailBcc": {
+            "description": "Email BCC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attachInvoice": {
+            "type": "boolean",
+            "description": "Whether the generated invoice PDF is attached",
+            "default": true
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "Reference number"
+          },
+          "invoiceMessage": {
+            "type": "string",
+            "description": "Invoice message"
+          },
+          "termsConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "warehouseId": {
+            "type": "number",
+            "description": "Warehouse ID"
+          },
+          "pdfTemplateId": {
+            "type": "number",
+            "description": "PDF template ID"
+          },
+          "isInclusiveTax": {
+            "type": "boolean",
+            "description": "Whether tax is inclusive"
+          },
+          "discount": {
+            "type": "number",
+            "description": "Discount value"
+          },
+          "discountType": {
+            "type": "string",
+            "description": "Discount type",
+            "enum": [
+              "percentage",
+              "amount"
+            ]
+          },
+          "adjustment": {
+            "type": "number",
+            "description": "Adjustment amount"
+          },
+          "entries": {
+            "description": "Recurring invoice line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryDto"
+            }
+          }
+        },
+        "required": [
+          "customerId",
+          "profileName",
+          "startDate",
+          "frequency",
+          "entries"
+        ]
+      },
+      "EditRecurringInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "number",
+            "description": "Customer ID",
+            "example": 1
+          },
+          "profileName": {
+            "type": "string",
+            "description": "Recurring invoice profile name",
+            "example": "Monthly retainer"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "The first invoice date",
+            "example": "2026-11-05"
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ],
+            "example": "month"
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat every N periods",
+            "example": 1,
+            "default": 1
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Optional end date",
+            "example": "2027-11-05"
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Optional maximum number of generated invoices",
+            "example": 12
+          },
+          "dueDays": {
+            "type": "number",
+            "description": "Due date offset in days from the invoice date",
+            "example": 15,
+            "default": 0
+          },
+          "deliveryMode": {
+            "type": "string",
+            "description": "What to do with generated invoices",
+            "enum": [
+              "draft",
+              "email"
+            ],
+            "default": "draft"
+          },
+          "emailSubject": {
+            "type": "string",
+            "description": "Email subject override"
+          },
+          "emailMessage": {
+            "type": "string",
+            "description": "Email message override"
+          },
+          "emailCc": {
+            "description": "Email CC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "emailBcc": {
+            "description": "Email BCC recipients",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attachInvoice": {
+            "type": "boolean",
+            "description": "Whether the generated invoice PDF is attached",
+            "default": true
+          },
+          "referenceNo": {
+            "type": "string",
+            "description": "Reference number"
+          },
+          "invoiceMessage": {
+            "type": "string",
+            "description": "Invoice message"
+          },
+          "termsConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "warehouseId": {
+            "type": "number",
+            "description": "Warehouse ID"
+          },
+          "pdfTemplateId": {
+            "type": "number",
+            "description": "PDF template ID"
+          },
+          "isInclusiveTax": {
+            "type": "boolean",
+            "description": "Whether tax is inclusive"
+          },
+          "discount": {
+            "type": "number",
+            "description": "Discount value"
+          },
+          "discountType": {
+            "type": "string",
+            "description": "Discount type",
+            "enum": [
+              "percentage",
+              "amount"
+            ]
+          },
+          "adjustment": {
+            "type": "number",
+            "description": "Adjustment amount"
+          },
+          "entries": {
+            "description": "Recurring invoice line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntryDto"
+            }
+          }
+        },
+        "required": [
+          "customerId",
+          "profileName",
+          "startDate",
+          "frequency",
+          "entries"
+        ]
+      },
       "SaleEstimateResponseDto": {
         "type": "object",
         "properties": {
@@ -35887,6 +39113,16 @@
             "type": "number",
             "description": "Branch ID",
             "example": 1
+          },
+          "recurringJournalId": {
+            "type": "number",
+            "description": "Recurring journal profile ID",
+            "example": 1
+          },
+          "recurringJournalDate": {
+            "type": "object",
+            "description": "Recurring journal occurrence date",
+            "example": "2026-11-06"
           },
           "formattedAmount": {
             "type": "string",
@@ -39018,6 +42254,11 @@
             "type": "boolean",
             "description": "Whether to show zero values",
             "example": true
+          },
+          "showInRed": {
+            "type": "boolean",
+            "description": "Whether to show negative amounts in red",
+            "example": false
           },
           "formatMoney": {
             "type": "string",
@@ -44530,6 +47771,365 @@
           "meta"
         ]
       },
+      "InventorySummaryQueryResponseDto": {
+        "type": "object",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "description": "From date"
+          },
+          "toDate": {
+            "type": "string",
+            "description": "To date"
+          },
+          "numberFormat": {
+            "description": "Number format settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NumberFormatQueryDto"
+              }
+            ]
+          },
+          "noneTransactions": {
+            "type": "boolean",
+            "description": "Exclude items without transactions"
+          },
+          "itemsIds": {
+            "description": "Item IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "warehousesIds": {
+            "description": "Warehouse IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "branchesIds": {
+            "description": "Branch IDs to include",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "fromDate",
+          "toDate",
+          "numberFormat",
+          "noneTransactions",
+          "itemsIds"
+        ]
+      },
+      "InventorySummaryItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Item ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Item name"
+          },
+          "code": {
+            "type": "string",
+            "description": "Item code"
+          },
+          "openingStock": {
+            "type": "number",
+            "description": "Opening stock quantity"
+          },
+          "quantityIn": {
+            "type": "number",
+            "description": "Quantity received in the period"
+          },
+          "quantityOut": {
+            "type": "number",
+            "description": "Quantity issued out in the period"
+          },
+          "closingStock": {
+            "type": "number",
+            "description": "Closing stock quantity"
+          },
+          "openingStockFormatted": {
+            "type": "string",
+            "description": "Formatted opening stock quantity"
+          },
+          "quantityInFormatted": {
+            "type": "string",
+            "description": "Formatted quantity in"
+          },
+          "quantityOutFormatted": {
+            "type": "string",
+            "description": "Formatted quantity out"
+          },
+          "closingStockFormatted": {
+            "type": "string",
+            "description": "Formatted closing stock quantity"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "code",
+          "openingStock",
+          "quantityIn",
+          "quantityOut",
+          "closingStock",
+          "openingStockFormatted",
+          "quantityInFormatted",
+          "quantityOutFormatted",
+          "closingStockFormatted"
+        ]
+      },
+      "InventorySummaryTotalDto": {
+        "type": "object",
+        "properties": {
+          "openingStock": {
+            "type": "number",
+            "description": "Total opening stock quantity"
+          },
+          "quantityIn": {
+            "type": "number",
+            "description": "Total quantity in"
+          },
+          "quantityOut": {
+            "type": "number",
+            "description": "Total quantity out"
+          },
+          "closingStock": {
+            "type": "number",
+            "description": "Total closing stock quantity"
+          },
+          "openingStockFormatted": {
+            "type": "string",
+            "description": "Formatted total opening stock quantity"
+          },
+          "quantityInFormatted": {
+            "type": "string",
+            "description": "Formatted total quantity in"
+          },
+          "quantityOutFormatted": {
+            "type": "string",
+            "description": "Formatted total quantity out"
+          },
+          "closingStockFormatted": {
+            "type": "string",
+            "description": "Formatted total closing stock quantity"
+          }
+        },
+        "required": [
+          "openingStock",
+          "quantityIn",
+          "quantityOut",
+          "closingStock",
+          "openingStockFormatted",
+          "quantityInFormatted",
+          "quantityOutFormatted",
+          "closingStockFormatted"
+        ]
+      },
+      "InventorySummaryDataDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Inventory summary items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventorySummaryItemDto"
+            }
+          },
+          "total": {
+            "description": "Inventory summary totals",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryTotalDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ]
+      },
+      "InventorySummaryMetaDto": {
+        "type": "object",
+        "properties": {
+          "organizationName": {
+            "type": "string",
+            "description": "Organization name"
+          },
+          "baseCurrency": {
+            "type": "string",
+            "description": "Base currency code"
+          },
+          "dateFormat": {
+            "type": "string",
+            "description": "Date format string"
+          },
+          "isCostComputeRunning": {
+            "type": "boolean",
+            "description": "Whether cost computation is running"
+          },
+          "sheetName": {
+            "type": "string",
+            "description": "Sheet name"
+          },
+          "formattedFromDate": {
+            "type": "string",
+            "description": "Formatted from date"
+          },
+          "formattedToDate": {
+            "type": "string",
+            "description": "Formatted to date"
+          },
+          "formattedDateRange": {
+            "type": "string",
+            "description": "Formatted date range"
+          }
+        },
+        "required": [
+          "organizationName",
+          "baseCurrency",
+          "dateFormat",
+          "isCostComputeRunning",
+          "sheetName",
+          "formattedFromDate",
+          "formattedToDate",
+          "formattedDateRange"
+        ]
+      },
+      "InventorySummaryResponseDto": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "Query parameters used to generate the report",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryQueryResponseDto"
+              }
+            ]
+          },
+          "data": {
+            "description": "Inventory summary data",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryDataDto"
+              }
+            ]
+          },
+          "meta": {
+            "description": "Report metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryMetaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "query",
+          "data",
+          "meta"
+        ]
+      },
+      "InventorySummaryTableColumnDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Column key",
+            "enum": [
+              "item_name",
+              "opening_stock",
+              "quantity_in",
+              "quantity_out",
+              "closing_stock"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "Column header label"
+          },
+          "cellIndex": {
+            "type": "number",
+            "description": "Cell position index"
+          },
+          "children": {
+            "description": "Nested column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableColumnDto"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ]
+      },
+      "InventorySummaryTableDataDto": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "description": "Table column definitions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InventorySummaryTableColumnDto"
+            }
+          },
+          "rows": {
+            "description": "Table row data",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialTableRowDto"
+            }
+          }
+        },
+        "required": [
+          "columns",
+          "rows"
+        ]
+      },
+      "InventorySummaryTableResponseDto": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "description": "Table data structure",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryTableDataDto"
+              }
+            ]
+          },
+          "query": {
+            "description": "Query parameters used to generate the report",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryQueryResponseDto"
+              }
+            ]
+          },
+          "meta": {
+            "description": "Report metadata",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InventorySummaryMetaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "table",
+          "query",
+          "meta"
+        ]
+      },
       "SalesTaxLiabilitySummaryQueryResponseDto": {
         "type": "object",
         "properties": {
@@ -46190,201 +49790,6 @@
           "permissions"
         ]
       },
-      "SubscriptionResponseDto": {
-        "type": "object",
-        "properties": {
-          "slug": {
-            "type": "string",
-            "example": "main"
-          },
-          "status": {
-            "type": "string",
-            "example": "active",
-            "enum": [
-              "active",
-              "inactive",
-              "on_trial",
-              "canceled"
-            ]
-          },
-          "active": {
-            "type": "boolean",
-            "example": true
-          },
-          "inactive": {
-            "type": "boolean",
-            "example": false
-          },
-          "onTrial": {
-            "type": "boolean",
-            "example": false
-          },
-          "canceled": {
-            "type": "boolean",
-            "example": false
-          },
-          "ended": {
-            "type": "boolean",
-            "example": false
-          },
-          "paymentStatus": {
-            "type": "string",
-            "example": "succeed",
-            "enum": [
-              "succeed",
-              "failed"
-            ]
-          },
-          "startsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-01T00:00:00.000Z",
-            "nullable": true
-          },
-          "endsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-02-01T00:00:00.000Z",
-            "nullable": true
-          },
-          "canceledAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "trialEndsAt": {
-            "format": "date-time",
-            "type": "string",
-            "example": "2024-01-07T00:00:00.000Z",
-            "nullable": true
-          },
-          "statusFormatted": {
-            "type": "string",
-            "example": "Active"
-          },
-          "canceledAtFormatted": {
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "endsAtFormatted": {
-            "type": "string",
-            "example": "Jan 1, 2024",
-            "nullable": true
-          },
-          "trialStartsAtFormatted": {
-            "type": "string",
-            "example": null,
-            "nullable": true
-          },
-          "trialEndsAtFormatted": {
-            "type": "string",
-            "example": "Jan 7, 2024",
-            "nullable": true
-          },
-          "planName": {
-            "type": "string",
-            "example": "Standard"
-          },
-          "planSlug": {
-            "type": "string",
-            "example": "standard"
-          },
-          "planPrice": {
-            "type": "number",
-            "example": 10
-          },
-          "planPriceCurrency": {
-            "type": "string",
-            "example": "USD"
-          },
-          "planPriceFormatted": {
-            "type": "string",
-            "example": "$10"
-          },
-          "planPeriod": {
-            "type": "string",
-            "example": "month"
-          }
-        },
-        "required": [
-          "slug",
-          "status",
-          "active",
-          "inactive",
-          "onTrial",
-          "canceled",
-          "ended",
-          "paymentStatus",
-          "statusFormatted",
-          "planName",
-          "planSlug",
-          "planPrice",
-          "planPriceCurrency",
-          "planPriceFormatted",
-          "planPeriod"
-        ]
-      },
-      "SubscriptionsListResponseDto": {
-        "type": "object",
-        "properties": {
-          "subscriptions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SubscriptionResponseDto"
-            }
-          }
-        },
-        "required": [
-          "subscriptions"
-        ]
-      },
-      "LemonSubscriptionUrlsDto": {
-        "type": "object",
-        "properties": {
-          "updatePaymentMethod": {
-            "type": "string",
-            "example": "https://.../update-payment-method",
-            "nullable": true
-          },
-          "customerPortal": {
-            "type": "string",
-            "example": "https://.../customer-portal",
-            "nullable": true
-          }
-        }
-      },
-      "LemonSubscriptionResponseDto": {
-        "type": "object",
-        "properties": {
-          "slug": {
-            "type": "string",
-            "example": "main"
-          },
-          "urls": {
-            "$ref": "#/components/schemas/LemonSubscriptionUrlsDto"
-          }
-        },
-        "required": [
-          "slug",
-          "urls"
-        ]
-      },
-      "LemonSubscriptionsListResponseDto": {
-        "type": "object",
-        "properties": {
-          "lemonSubscriptions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LemonSubscriptionResponseDto"
-            }
-          }
-        },
-        "required": [
-          "lemonSubscriptions"
-        ]
-      },
       "OrgBaseCurrencyMutateLockDto": {
         "type": "object",
         "properties": {
@@ -47827,6 +51232,162 @@
           "active"
         ]
       },
+      "NotificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "userId": {
+            "type": "number",
+            "example": 1,
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "example": "Inventory cost calculation completed"
+          },
+          "message": {
+            "type": "string",
+            "example": "The inventory cost for 12 items has been calculated."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "success",
+              "info",
+              "warning",
+              "error"
+            ],
+            "example": "info"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "inventory",
+              "billing",
+              "system",
+              "export",
+              "report"
+            ],
+            "example": "inventory"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional notification metadata",
+            "additionalProperties": true,
+            "example": {
+              "itemId": 1
+            },
+            "nullable": true
+          },
+          "readAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Date the notification was read",
+            "example": "2024-03-20T10:00:00Z",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-03-20T10:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-03-20T10:00:00Z"
+          },
+          "isRead": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "message",
+          "type",
+          "category",
+          "createdAt",
+          "updatedAt",
+          "isRead"
+        ]
+      },
+      "NotificationsListResponseDto": {
+        "type": "object",
+        "properties": {
+          "notifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationResponseDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "example": 25
+          },
+          "unreadCount": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "notifications",
+          "total",
+          "unreadCount"
+        ]
+      },
+      "UnreadNotificationsCountResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "count"
+        ]
+      },
+      "MarkNotificationAsReadResponseDto": {
+        "type": "object",
+        "properties": {
+          "notification": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NotificationResponseDto"
+              }
+            ]
+          }
+        }
+      },
+      "MarkAllNotificationsAsReadResponseDto": {
+        "type": "object",
+        "properties": {
+          "markedAsRead": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "required": [
+          "markedAsRead"
+        ]
+      },
+      "DeleteNotificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "deleted": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "deleted"
+        ]
+      },
       "AuditLogFilterOptionDto": {
         "type": "object",
         "properties": {
@@ -48066,6 +51627,363 @@
         "type": "object",
         "properties": {}
       },
+      "RecurringJournalResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Recurring journal ID",
+            "example": 1
+          },
+          "profileName": {
+            "type": "string",
+            "description": "Profile name",
+            "example": "Monthly depreciation"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Reference"
+          },
+          "description": {
+            "type": "string",
+            "description": "Profile notes / journal description"
+          },
+          "journalType": {
+            "type": "string",
+            "description": "Journal type",
+            "example": "Journal"
+          },
+          "basis": {
+            "type": "string",
+            "description": "Accounting basis",
+            "enum": [
+              "cash",
+              "accrual"
+            ],
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Currency code",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "status": {
+            "type": "string",
+            "description": "Profile status",
+            "enum": [
+              "active",
+              "paused",
+              "completed"
+            ]
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ]
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat interval",
+            "example": 1
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date",
+            "example": "2026-11-06"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date",
+            "example": "2027-11-06"
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Maximum occurrences",
+            "example": 12
+          },
+          "occurrencesCount": {
+            "type": "number",
+            "description": "Generated occurrences count",
+            "example": 3
+          },
+          "nextJournalDate": {
+            "type": "string",
+            "description": "Next journal date",
+            "example": "2026-12-06"
+          },
+          "lastJournalDate": {
+            "type": "string",
+            "description": "Last generated journal date",
+            "example": "2026-11-06"
+          },
+          "autoPublish": {
+            "type": "boolean",
+            "description": "Whether generated journals are published automatically",
+            "example": false
+          },
+          "lastError": {
+            "type": "string",
+            "description": "Last generation error"
+          },
+          "failureCount": {
+            "type": "number",
+            "description": "Consecutive failure count"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Total debit amount",
+            "example": 1000
+          },
+          "entries": {
+            "description": "Recurring journal entries",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualJournalEntryResponseDto"
+            }
+          },
+          "startDateFormatted": {
+            "type": "string",
+            "description": "Formatted start date"
+          },
+          "endDateFormatted": {
+            "type": "string",
+            "description": "Formatted end date"
+          },
+          "nextJournalDateFormatted": {
+            "type": "string",
+            "description": "Formatted next journal date"
+          },
+          "lastJournalDateFormatted": {
+            "type": "string",
+            "description": "Formatted last journal date"
+          },
+          "createdAtFormatted": {
+            "type": "string",
+            "description": "Formatted created date"
+          },
+          "amountFormatted": {
+            "type": "string",
+            "description": "Formatted amount"
+          }
+        },
+        "required": [
+          "id",
+          "profileName",
+          "status",
+          "frequency",
+          "repeatInterval",
+          "startDate",
+          "occurrencesCount",
+          "autoPublish",
+          "amount"
+        ]
+      },
+      "CreateRecurringJournalDto": {
+        "type": "object",
+        "properties": {
+          "profileName": {
+            "type": "string",
+            "description": "Recurring journal profile name",
+            "example": "Monthly depreciation"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Reference"
+          },
+          "description": {
+            "type": "string",
+            "description": "Profile notes / journal description"
+          },
+          "journalType": {
+            "type": "string",
+            "description": "Journal type copied to generated journals",
+            "default": "Journal"
+          },
+          "basis": {
+            "type": "string",
+            "description": "Accounting basis copied to generated journals",
+            "enum": [
+              "cash",
+              "accrual"
+            ],
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Currency code",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "First journal date",
+            "example": "2026-11-06"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Optional end date",
+            "example": "2027-11-06"
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ],
+            "example": "month"
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat every N periods",
+            "example": 1,
+            "default": 1
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Optional maximum number of generated journals",
+            "example": 12
+          },
+          "autoPublish": {
+            "type": "boolean",
+            "description": "Whether generated journals are published automatically; otherwise they are saved as drafts",
+            "default": false
+          },
+          "entries": {
+            "description": "Recurring journal entries",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualJournalEntryDto"
+            }
+          }
+        },
+        "required": [
+          "profileName",
+          "startDate",
+          "frequency",
+          "entries"
+        ]
+      },
+      "EditRecurringJournalDto": {
+        "type": "object",
+        "properties": {
+          "profileName": {
+            "type": "string",
+            "description": "Recurring journal profile name",
+            "example": "Monthly depreciation"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Reference"
+          },
+          "description": {
+            "type": "string",
+            "description": "Profile notes / journal description"
+          },
+          "journalType": {
+            "type": "string",
+            "description": "Journal type copied to generated journals",
+            "default": "Journal"
+          },
+          "basis": {
+            "type": "string",
+            "description": "Accounting basis copied to generated journals",
+            "enum": [
+              "cash",
+              "accrual"
+            ],
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "Currency code",
+            "example": "USD"
+          },
+          "exchangeRate": {
+            "type": "number",
+            "description": "Exchange rate",
+            "example": 1
+          },
+          "branchId": {
+            "type": "number",
+            "description": "Branch ID"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "First journal date",
+            "example": "2026-11-06"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Optional end date",
+            "example": "2027-11-06"
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "enum": [
+              "day",
+              "week",
+              "month",
+              "year"
+            ],
+            "example": "month"
+          },
+          "repeatInterval": {
+            "type": "number",
+            "description": "Repeat every N periods",
+            "example": 1,
+            "default": 1
+          },
+          "maxOccurrences": {
+            "type": "number",
+            "description": "Optional maximum number of generated journals",
+            "example": 12
+          },
+          "autoPublish": {
+            "type": "boolean",
+            "description": "Whether generated journals are published automatically; otherwise they are saved as drafts",
+            "default": false
+          },
+          "entries": {
+            "description": "Recurring journal entries",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualJournalEntryDto"
+            }
+          }
+        },
+        "required": [
+          "profileName",
+          "startDate",
+          "frequency",
+          "entries"
+        ]
+      },
       "ExchangeRateLatestResponseDto": {
         "type": "object",
         "properties": {
@@ -48090,6 +52008,274 @@
           "toCurrency",
           "exchangeRate"
         ]
+      },
+      "WebhookResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the webhook",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the webhook.",
+            "example": "Invoice Webhook"
+          },
+          "url": {
+            "type": "string",
+            "description": "Target URL for the webhook callback.",
+            "example": "https://example.com/webhook"
+          },
+          "entity": {
+            "type": "string",
+            "description": "Entity type the webhook subscribes to.",
+            "example": "sale_invoice"
+          },
+          "events": {
+            "description": "List of events that trigger this webhook.",
+            "example": [
+              "created",
+              "edited",
+              "deleted"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method for the webhook.",
+            "example": "POST"
+          },
+          "headers": {
+            "type": "array",
+            "description": "Custom headers to include in the webhook request."
+          },
+          "secret": {
+            "type": "string",
+            "description": "Secret key for HMAC signature.",
+            "example": "whsec_123456",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Whether the webhook is active.",
+            "example": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp.",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update timestamp.",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "url",
+          "entity",
+          "events",
+          "method",
+          "headers",
+          "secret",
+          "isActive",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "WebhookDeliveryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "The unique identifier of the delivery log",
+            "example": 1
+          },
+          "webhookId": {
+            "type": "number",
+            "description": "ID of the associated webhook",
+            "example": 1
+          },
+          "eventType": {
+            "type": "string",
+            "description": "The event type that was delivered.",
+            "example": "sale_invoice.created"
+          },
+          "payload": {
+            "type": "object",
+            "description": "The payload that was sent."
+          },
+          "responseStatus": {
+            "type": "number",
+            "description": "HTTP response status code.",
+            "example": 200,
+            "nullable": true
+          },
+          "responseBody": {
+            "type": "string",
+            "description": "HTTP response body.",
+            "example": "OK",
+            "nullable": true
+          },
+          "attemptCount": {
+            "type": "number",
+            "description": "Number of delivery attempts.",
+            "example": 1
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error message if delivery failed.",
+            "example": "Connection timeout",
+            "nullable": true
+          },
+          "deliveredAt": {
+            "type": "string",
+            "description": "Timestamp when the delivery succeeded.",
+            "example": "2024-01-01T00:00:00.000Z",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp.",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "webhookId",
+          "eventType",
+          "payload",
+          "attemptCount",
+          "createdAt"
+        ]
+      },
+      "WebhookHeaderDto": {
+        "type": "object",
+        "properties": {
+          "param_name": {
+            "type": "string",
+            "description": "Name of the header parameter."
+          },
+          "param_value": {
+            "type": "string",
+            "description": "Value of the header parameter."
+          }
+        },
+        "required": [
+          "param_name",
+          "param_value"
+        ]
+      },
+      "CreateWebhookDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the webhook.",
+            "example": "Invoice Webhook"
+          },
+          "url": {
+            "type": "string",
+            "description": "Target URL for the webhook callback.",
+            "example": "https://example.com/webhook"
+          },
+          "entity": {
+            "type": "string",
+            "description": "Entity type the webhook subscribes to.",
+            "example": "sale_invoice"
+          },
+          "events": {
+            "description": "List of events that trigger this webhook.",
+            "example": [
+              "created",
+              "edited",
+              "deleted"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method for the webhook.",
+            "example": "POST",
+            "default": "POST"
+          },
+          "headers": {
+            "description": "Custom headers to include in the webhook request.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookHeaderDto"
+            }
+          },
+          "secret": {
+            "type": "string",
+            "description": "Secret key for HMAC signature.",
+            "example": "whsec_123456"
+          }
+        },
+        "required": [
+          "name",
+          "url",
+          "entity",
+          "events"
+        ]
+      },
+      "EditWebhookDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the webhook.",
+            "example": "Invoice Webhook"
+          },
+          "url": {
+            "type": "string",
+            "description": "Target URL for the webhook callback.",
+            "example": "https://example.com/webhook"
+          },
+          "entity": {
+            "type": "string",
+            "description": "Entity type the webhook subscribes to.",
+            "example": "sale_invoice"
+          },
+          "events": {
+            "description": "List of events that trigger this webhook.",
+            "example": [
+              "created",
+              "edited",
+              "deleted"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "method": {
+            "type": "string",
+            "description": "HTTP method for the webhook.",
+            "example": "POST"
+          },
+          "headers": {
+            "description": "Custom headers to include in the webhook request.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookHeaderDto"
+            }
+          },
+          "secret": {
+            "type": "string",
+            "description": "Secret key for HMAC signature.",
+            "example": "whsec_123456"
+          }
+        }
       }
     }
   }

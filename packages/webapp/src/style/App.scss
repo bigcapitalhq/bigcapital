@@ -111,6 +111,13 @@ body.hide-scrollbar .Pane2 {
   background-color: #0066ff;
 }
 
+.bp4-card,
+.bp4-card.bp4-dark,
+.bp4-dark .bp4-card {
+  box-shadow: 0 0 0;
+  border: 1px solid #383e47;
+}
+
 .ReactVirtualized__Collection {}
 
 .ReactVirtualized__Collection__innerScrollContainer {}

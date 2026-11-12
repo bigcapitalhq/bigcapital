@@ -10,6 +10,7 @@ export interface TableColumn {
 export interface TableCell {
   key: string;
   value: string;
+  classNames?: string;
 }
 
 export interface TableRow {
@@ -33,6 +34,7 @@ export function FinancialSheetTemplate({
   sheetName,
   sheetDate,
   table,
+  customCSS,
 }: FinancialSheetTemplateProps) {
   return (
     <Box fontSize="14px">
@@ -80,7 +82,11 @@ export function FinancialSheetTemplate({
                     pr="0.5rem"
                     color="#252A31"
                     borderBottom="1px solid transparent"
-                    className={`cell--${cell.key}`}
+                    className={
+                      cell.classNames
+                        ? `cell--${cell.key} ${cell.classNames}`
+                        : `cell--${cell.key}`
+                    }
                   >
                     <span dangerouslySetInnerHTML={{ __html: cell.value }} />
                   </x.td>
@@ -89,6 +95,10 @@ export function FinancialSheetTemplate({
             ))}
           </x.tbody>
         </x.table>
+
+        {customCSS && (
+          <x.style dangerouslySetInnerHTML={{ __html: customCSS }} />
+        )}
       </Box>
     </Box>
   );

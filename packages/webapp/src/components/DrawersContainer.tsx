@@ -1,15 +1,20 @@
 import { DRAWERS } from '@/constants/drawers';
 import { BrandingTemplatesDrawer } from '@/containers/BrandingTemplates/BrandingTemplatesDrawer';
 import { index as CustomerDetailsDrawer } from '@/containers/Drawers/CustomerDetailsDrawer';
+import NotificationsDrawer from '@/containers/Drawers/NotificationsDrawer/NotificationsDrawer';
 import { index as QuickCreateCustomerDrawer } from '@/containers/Drawers/QuickCreateCustomerDrawer';
 import { index as QuickCreateItemDrawer } from '@/containers/Drawers/QuickCreateItemDrawer';
 import { index as QuickWriteVendorDrawer } from '@/containers/Drawers/QuickWriteVendorDrawer';
 import { index as VendorDetailsDrawer } from '@/containers/Drawers/VendorDetailsDrawer';
 import { CreditNoteCustomizeDrawer } from '@/containers/Sales/CreditNotes/CreditNoteCustomize/CreditNoteCustomizeDrawer';
 import { EstimateCustomizeDrawer } from '@/containers/Sales/Estimates/EstimateCustomize/EstimateCustomizeDrawer';
+import { EstimateSendMailDrawer } from '@/containers/Sales/Estimates/EstimateSendMailDrawer';
 import { InvoiceCustomizeDrawer } from '@/containers/Sales/Invoices/InvoiceCustomize/InvoiceCustomizeDrawer';
+import { InvoiceSendMailDrawer } from '@/containers/Sales/Invoices/InvoiceSendMailDrawer/InvoiceSendMailDrawer';
 import { PaymentReceivedCustomizeDrawer } from '@/containers/Sales/PaymentsReceived/PaymentReceivedCustomize/PaymentReceivedCustomizeDrawer';
+import { PaymentReceivedSendMailDrawer } from '@/containers/Sales/PaymentsReceived/PaymentReceivedMailDrawer';
 import { ReceiptCustomizeDrawer } from '@/containers/Sales/Receipts/ReceiptCustomize/ReceiptCustomizeDrawer';
+import { ReceiptSendMailDrawer } from '@/containers/Sales/Receipts/ReceiptSendMailDrawer';
 import { CreateWorkspaceDrawer } from '@/ee/workspaces/containers/CreateWorkspaceDrawer/CreateWorkspaceDrawer';
 import { OrganizationsListDrawer } from '@/ee/workspaces/containers/OrganizationsListDrawer';
 
@@ -38,6 +43,13 @@ export default function DrawersContainer() {
         name={DRAWERS.PAYMENT_RECEIVED_CUSTOMIZE}
       />
       <BrandingTemplatesDrawer name={DRAWERS.BRANDING_TEMPLATES} />
+      <InvoiceSendMailDrawer name={DRAWERS.INVOICE_SEND_MAIL} />
+      <EstimateSendMailDrawer name={DRAWERS.ESTIMATE_SEND_MAIL} />
+      <ReceiptSendMailDrawer name={DRAWERS.RECEIPT_SEND_MAIL} />
+      <PaymentReceivedSendMailDrawer
+        name={DRAWERS.PAYMENT_RECEIVED_SEND_MAIL}
+      />
+      <NotificationsDrawer name={DRAWERS.NOTIFICATIONS} />
       <CreateWorkspaceDrawer name={DRAWERS.CREATE_WORKSPACE} />
       <OrganizationsListDrawer name={DRAWERS.ORGANIZATIONS_LIST} />
     </div>

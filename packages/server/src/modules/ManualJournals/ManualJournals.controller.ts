@@ -35,9 +35,12 @@ import { PermissionGuard } from '@/modules/Roles/Permission.guard';
 import { AuthorizationGuard } from '@/modules/Roles/Authorization.guard';
 import { AbilitySubject } from '@/modules/Roles/Roles.types';
 import { ManualJournalAction } from './types/ManualJournals.types';
+import { RequireSubscriptionFeature } from '@/modules/Subscription/decorators/RequireSubscriptionFeature.decorator';
+import { SubscriptionFeature } from '@/modules/Subscription/SubscriptionFeatures';
 
 @Controller('manual-journals')
 @ApiTags('Manual Journals')
+@RequireSubscriptionFeature(SubscriptionFeature.ManualJournals)
 @ApiExtraModels(ManualJournalResponseDto)
 @ApiExtraModels(ValidateBulkDeleteResponseDto)
 @ApiCommonHeaders()

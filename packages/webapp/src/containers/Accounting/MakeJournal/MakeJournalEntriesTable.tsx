@@ -1,7 +1,7 @@
 import * as FF from 'fp-ts/function';
 import React from 'react';
 import { useJournalTableEntriesColumns } from './components';
-import { useMakeJournalFormContext } from './MakeJournalProvider';
+import { useMakeJournalFormContextOptional } from './MakeJournalProvider';
 import { updateAdjustEntries, type MakeJournalEntry } from './utils';
 import { DataTableEditable } from '@/components';
 import {
@@ -20,6 +20,11 @@ type MakeJournalEntriesTableProps = {
   initialLinesNumber?: number;
   minLinesNumber?: number;
   currencyCode?: string;
+  accounts?: any[];
+  contacts?: any[];
+  branches?: any[];
+  trackingCategories?: any[];
+  usedCategoryIds?: Set<number>;
 };
 
 /**
@@ -33,12 +38,24 @@ export function MakeJournalEntriesTable({
   initialLinesNumber = 1,
   minLinesNumber = 1,
   currencyCode,
+  accounts: accountsProp,
+  contacts: contactsProp,
+  branches: branchesProp,
+  trackingCategories: trackingCategoriesProp,
+  usedCategoryIds,
 }: MakeJournalEntriesTableProps) {
-  const { accounts, contacts, branches, trackingCategories } =
-    useMakeJournalFormContext();
+  const context = useMakeJournalFormContextOptional();
+  const accounts = accountsProp ?? context?.accounts ?? [];
+  const contacts = contactsProp ?? context?.contacts ?? [];
+  const branches = branchesProp ?? context?.branches ?? [];
+  const trackingCategories =
+    trackingCategoriesProp ?? context?.trackingCategories ?? [];
 
   // Memorized data table columns.
-  const columns = useJournalTableEntriesColumns();
+  const columns = useJournalTableEntriesColumns({
+    trackingCategories,
+    usedCategoryIds,
+  });
 
   // Handles update datatable data.
   const handleUpdateData = (

@@ -13,6 +13,10 @@ import { PasswordReset } from './models/PasswordReset';
 import { TenantDBManagerModule } from '../TenantDBManager/TenantDBManager.module';
 import { AuthenticationMailMesssages } from './AuthMailMessages.esrvice';
 import { LocalStrategy } from './strategies/Local.strategy';
+import { GoogleStrategy } from './strategies/Google.strategy';
+import { GoogleOAuthStateStore } from './strategies/GoogleOAuthState.store';
+import { GoogleAuthGuard } from './guards/Google.guard';
+import { AuthGoogleSigninService } from './commands/AuthGoogleSignin.service';
 import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt.guard';
@@ -120,12 +124,16 @@ const models = [
     ...models,
     LocalStrategy,
     JwtStrategy,
+    GoogleStrategy,
+    GoogleOAuthStateStore,
+    GoogleAuthGuard,
     AuthenticationApplication,
     AuthSendResetPasswordService,
     AuthResetPasswordService,
     AuthSignupConfirmResendService,
     AuthSignupConfirmService,
     AuthSignupService,
+    AuthGoogleSigninService,
     AuthSigninService,
     AuthenticationMailMesssages,
     SendResetPasswordMailProcessor,

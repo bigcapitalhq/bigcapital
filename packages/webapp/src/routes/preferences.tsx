@@ -24,6 +24,15 @@ export const getPreferenceRoutes = () => [
     exact: true,
   },
   {
+    path: `${BASE_URL}/billing`,
+    component: lazy(() =>
+      import('../containers/Subscriptions/BillingPage').then((m) => ({
+        default: m.BillingPage,
+      })),
+    ),
+    exact: true,
+  },
+  {
     path: `${BASE_URL}/users`,
     component: lazy(() =>
       import('../containers/Preferences/Users/Users').then((m) => ({

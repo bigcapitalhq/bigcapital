@@ -48,7 +48,9 @@ export class AuthSigninService {
     } catch (_err) {
       throw new InvalidEmailPasswordException(email);
     }
-    if (!(await user.checkPassword(password))) {
+    // Accounts created through Google (or pending invites) may not have a
+    // password set yet, in which case password sign-in is not available.
+    if (!user.password || !(await user.checkPassword(password))) {
       throw new InvalidEmailPasswordException(email);
     }
     return user;

@@ -5,9 +5,10 @@ import {
   Param,
   Post,
   Request,
+  Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
 import {
   ApiTags,
   ApiOperation,
@@ -17,6 +18,8 @@ import {
   ApiExtraModels,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 import { PublicRoute } from './guards/jwt.guard';
 import { AuthenticationApplication } from './AuthApplication.sevice';
 import { AuthSignupDto } from './dtos/AuthSignup.dto';
@@ -30,7 +33,9 @@ import {
 } from './dtos/AuthSigninResponse.dto';
 import { AuthMetaResponseDto } from './dtos/AuthMetaResponse.dto';
 import { LocalAuthGuard } from './guards/Local.guard';
+import { GoogleAuthGuard } from './guards/Google.guard';
 import { AuthSigninService } from './commands/AuthSignin.service';
+import { buildUrlWithQuery } from './Auth.utils';
 import { SystemUser } from '../System/models/SystemUser';
 import { NoActiveWorkspaceException } from './exceptions/NoActiveWorkspace.exception';
 import { TwoFactorSigninService } from './two-factor/TwoFactorSignin.service';
@@ -40,6 +45,7 @@ import {
   TwoFactorSigninSetupDto,
 } from './two-factor/dtos/TwoFactorSignin.dto';
 import { TwoFactorSetupResponseDto } from './two-factor/dtos/TwoFactor.dto';
+import { AuthThrottle } from '../App/AppThrottle.throttlers';
 
 @Controller('/auth')
 @ApiTags('Auth')
@@ -50,12 +56,13 @@ import { TwoFactorSetupResponseDto } from './two-factor/dtos/TwoFactor.dto';
   TwoFactorSetupResponseDto,
 )
 @PublicRoute()
-@Throttle({ auth: {} })
+@AuthThrottle()
 export class AuthController {
   constructor(
     private readonly authApp: AuthenticationApplication,
     private readonly authSignin: AuthSigninService,
     private readonly twoFactorSignin: TwoFactorSigninService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('/signin')
@@ -204,5 +211,60 @@ export class AuthController {
   })
   meta(): Promise<AuthMetaResponseDto> {
     return this.authApp.getAuthMeta();
+  }
+
+  @UseGuards(GoogleAuthGuard)
+  @Get('/google')
+  @ApiOperation({ summary: 'Start sign-in with Google' })
+  @ApiResponse({
+    status: 302,
+    description: 'Redirects the browser to the Google consent screen.',
+  })
+  googleAuth(): void {
+    // The GoogleAuthGuard starts the OAuth redirect; this body is never hit.
+  }
+
+  @UseGuards(GoogleAuthGuard)
+  @Get('/google/callback')
+  @ApiOperation({ summary: 'Google OAuth callback' })
+  @ApiResponse({
+    status: 302,
+    description:
+      'Redirects to the web app with a JWT access token or an error code.',
+  })
+  async googleAuthCallback(
+    @Request() req: Request & { user: SystemUser },
+    @Res() res: Response,
+  ): Promise<void> {
+    // The guard already redirected to the failure URL when authentication
+    // failed (or the user declined the consent screen).
+    if (res.headersSent || !req.user) {
+      return;
+    }
+    const { user } = req;
+    const tenant = await this.authSignin.resolveSigninTenant(user);
+    const failureRedirectUrl = this.configService.get<string>(
+      'google.failureRedirectUrl',
+    );
+
+    if (!tenant) {
+      res.redirect(
+        buildUrlWithQuery(failureRedirectUrl, {
+          error: 'no_active_workspace',
+        }),
+      );
+      return;
+    }
+    const successRedirectUrl = this.configService.get<string>(
+      'google.successRedirectUrl',
+    );
+    res.redirect(
+      buildUrlWithQuery(successRedirectUrl, {
+        token: this.authSignin.signToken(user),
+        user_id: user.id,
+        tenant_id: tenant.id,
+        organization_id: tenant.organizationId,
+      }),
+    );
   }
 }
