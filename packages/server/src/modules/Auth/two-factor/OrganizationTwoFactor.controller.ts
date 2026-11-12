@@ -22,7 +22,7 @@ import { RequirePermission } from '@/modules/Roles/RequirePermission.decorator';
 import { ServiceError } from '@/modules/Items/ServiceError';
 import { ApiCommonHeaders } from '@/common/decorators/ApiCommonHeaders';
 import { TwoFactorPolicyService } from './TwoFactorPolicy.service';
-import { TwoFactorService } from './TwoFactor.service';
+import { MfaMethodRegistry } from './methods/MfaMethodRegistry.service';
 import { RejectApiKeyGuard } from './RejectApiKey.guard';
 import {
   AllowWithoutTwoFactor,
@@ -44,7 +44,7 @@ import {
 export class OrganizationTwoFactorController {
   constructor(
     private readonly policyService: TwoFactorPolicyService,
-    private readonly twoFactorService: TwoFactorService,
+    private readonly mfaMethodRegistry: MfaMethodRegistry,
     private readonly tenancyContext: TenancyContext,
     private readonly clsService: ClsService,
   ) {}
@@ -84,7 +84,10 @@ export class OrganizationTwoFactorController {
     const userId = this.clsService.get<number>('userId');
 
     // Turning it on without two-factor of one's own would end the session.
-    if (body.required && !(await this.twoFactorService.isEnabled(userId))) {
+    if (
+      body.required &&
+      !(await this.mfaMethodRegistry.hasAnyEnrolled(userId))
+    ) {
       throw new ServiceError(
         TWO_FACTOR_ERRORS.ENABLE_OWN_FIRST,
         'Turn on two-factor authentication for your own account first.',

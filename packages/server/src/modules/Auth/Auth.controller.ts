@@ -6,7 +6,6 @@ import {
   Post,
   Request,
   Res,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -32,6 +31,15 @@ import {
   AuthSigninSetupConfirmResponseDto,
 } from './dtos/AuthSigninResponse.dto';
 import { AuthMetaResponseDto } from './dtos/AuthMetaResponse.dto';
+import {
+  MfaChallengeDto,
+  MfaMethodDescriptorDto,
+  MfaPrepareDto,
+  MfaPrepareResponseDto,
+  MfaSetupConfirmDto,
+  MfaSetupStartDto,
+  MfaVerifyDto,
+} from './dtos/MfaSignin.dto';
 import { LocalAuthGuard } from './guards/Local.guard';
 import { GoogleAuthGuard } from './guards/Google.guard';
 import { AuthSigninService } from './commands/AuthSignin.service';
@@ -54,6 +62,9 @@ import { AuthThrottle } from '../App/AppThrottle.throttlers';
   AuthSigninSetupConfirmResponseDto,
   AuthMetaResponseDto,
   TwoFactorSetupResponseDto,
+  MfaChallengeDto,
+  MfaMethodDescriptorDto,
+  MfaPrepareResponseDto,
 )
 @PublicRoute()
 @AuthThrottle()
@@ -118,6 +129,91 @@ export class AuthController {
     return this.authSignin.issueSigninResponse(user, rememberMe);
   }
 
+  @Post('/signin/mfa/verify')
+  @ApiOperation({
+    summary:
+      'Second sign-in step: verify the credential of the selected method',
+  })
+  @ApiBody({ type: MfaVerifyDto })
+  @ApiResponse({
+    status: 200,
+    description: 'The same response as a sign-in without two-factor.',
+    schema: { $ref: getSchemaPath(AuthSigninResponseDto) },
+  })
+  async signinMfaVerify(
+    @Body() body: MfaVerifyDto,
+  ): Promise<AuthSigninResponseDto> {
+    const { user, rememberMe } = await this.twoFactorSignin.completeWithMethod(
+      body.challengeToken,
+      body.method,
+      { code: body.code, recoveryCode: body.recoveryCode },
+    );
+    return this.authSignin.issueSigninResponse(user, rememberMe);
+  }
+
+  @Post('/signin/mfa/prepare')
+  @ApiOperation({
+    summary:
+      'Prepare a method before verification, e.g. send an email code or return WebAuthn options',
+  })
+  @ApiBody({ type: MfaPrepareDto })
+  @ApiResponse({
+    status: 200,
+    schema: { $ref: getSchemaPath(MfaPrepareResponseDto) },
+  })
+  signinMfaPrepare(
+    @Body() body: MfaPrepareDto,
+  ): Promise<MfaPrepareResponseDto> {
+    return this.twoFactorSignin.prepare(body.challengeToken, body.method);
+  }
+
+  @Post('/signin/mfa/setup/start')
+  @ApiOperation({
+    summary:
+      'Required two-factor setup during sign-in: start the setup of a method',
+  })
+  @ApiBody({ type: MfaSetupStartDto })
+  @ApiResponse({
+    status: 200,
+    schema: { $ref: getSchemaPath(TwoFactorSetupResponseDto) },
+  })
+  async signinMfaSetupStart(
+    @Body() body: MfaSetupStartDto,
+  ): Promise<TwoFactorSetupResponseDto> {
+    const setup = await this.twoFactorSignin.startSetup(
+      body.challengeToken,
+      body.method ?? 'totp',
+    );
+    return setup as TwoFactorSetupResponseDto;
+  }
+
+  @Post('/signin/mfa/setup/confirm')
+  @ApiOperation({
+    summary:
+      'Confirm the required setup with a credential: turns the method on and signs in',
+  })
+  @ApiBody({ type: MfaSetupConfirmDto })
+  @ApiResponse({
+    status: 200,
+    description: 'The sign-in response plus recovery_codes (shown once).',
+    schema: { $ref: getSchemaPath(AuthSigninSetupConfirmResponseDto) },
+  })
+  async signinMfaSetupConfirm(
+    @Body() body: MfaSetupConfirmDto,
+  ): Promise<AuthSigninSetupConfirmResponseDto> {
+    const { user, rememberMe, recoveryCodes } =
+      await this.twoFactorSignin.confirmSetup(
+        body.challengeToken,
+        body.code,
+        body.method ?? 'totp',
+      );
+    const response = await this.authSignin.issueSigninResponse(
+      user,
+      rememberMe,
+    );
+    return { ...response, recoveryCodes };
+  }
+
   @Post('/signin/2fa/setup')
   @ApiOperation({
     summary:
@@ -128,10 +224,14 @@ export class AuthController {
     status: 200,
     schema: { $ref: getSchemaPath(TwoFactorSetupResponseDto) },
   })
-  signinTwoFactorSetup(
+  async signinTwoFactorSetup(
     @Body() body: TwoFactorSigninSetupDto,
   ): Promise<TwoFactorSetupResponseDto> {
-    return this.twoFactorSignin.startSetup(body.challengeToken);
+    const setup = await this.twoFactorSignin.startSetup(
+      body.challengeToken,
+      'totp',
+    );
+    return setup as TwoFactorSetupResponseDto;
   }
 
   @Post('/signin/2fa/setup/confirm')
@@ -149,7 +249,11 @@ export class AuthController {
     @Body() body: TwoFactorSigninSetupConfirmDto,
   ): Promise<AuthSigninSetupConfirmResponseDto> {
     const { user, rememberMe, recoveryCodes } =
-      await this.twoFactorSignin.confirmSetup(body.challengeToken, body.code);
+      await this.twoFactorSignin.confirmSetup(
+        body.challengeToken,
+        body.code,
+        'totp',
+      );
     const response = await this.authSignin.issueSigninResponse(
       user,
       rememberMe,

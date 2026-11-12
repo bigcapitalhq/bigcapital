@@ -5,7 +5,7 @@ import { IS_PUBLIC_ROUTE } from '../Auth.constants';
 import { getAuthApiKey } from '../Auth.utils';
 import { IS_ALLOWED_WITHOUT_TWO_FACTOR } from './TwoFactor.constants';
 import { TwoFactorPolicyService } from './TwoFactorPolicy.service';
-import { TwoFactorService } from './TwoFactor.service';
+import { MfaMethodRegistry } from './methods/MfaMethodRegistry.service';
 import { TwoFactorSetupRequiredException } from './TwoFactor.exceptions';
 
 /**
@@ -19,7 +19,7 @@ export class TwoFactorEnforcementGuard implements CanActivate {
     private readonly reflector: Reflector,
     private readonly clsService: ClsService,
     private readonly policyService: TwoFactorPolicyService,
-    private readonly twoFactorService: TwoFactorService,
+    private readonly mfaMethodRegistry: MfaMethodRegistry,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -52,7 +52,7 @@ export class TwoFactorEnforcementGuard implements CanActivate {
     if (!(await this.policyService.isRequiredForOrganization(organizationId))) {
       return true;
     }
-    if (await this.twoFactorService.isEnabled(userId)) {
+    if (await this.mfaMethodRegistry.hasAnyEnrolled(userId)) {
       return true;
     }
     throw new TwoFactorSetupRequiredException();

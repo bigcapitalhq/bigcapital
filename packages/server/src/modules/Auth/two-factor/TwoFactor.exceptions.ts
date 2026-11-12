@@ -56,6 +56,24 @@ export class TwoFactorCodeInvalidException extends UnauthorizedException {
 }
 
 /**
+ * The requested method is unknown, not offered by this challenge, or the
+ * user no longer has it enrolled.
+ */
+export class TwoFactorMethodUnavailableException extends HttpException {
+  constructor() {
+    super(
+      body(
+        400,
+        'Bad Request',
+        'This two-factor method is not available. Choose another method.',
+        TWO_FACTOR_ERRORS.METHOD_UNAVAILABLE,
+      ),
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+}
+
+/**
  * Too many wrong codes for this user lately.
  */
 export class TwoFactorTooManyAttemptsException extends HttpException {

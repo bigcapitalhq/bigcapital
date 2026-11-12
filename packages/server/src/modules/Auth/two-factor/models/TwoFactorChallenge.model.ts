@@ -10,6 +10,10 @@ export class TwoFactorChallenge extends SystemModel {
   readonly tokenHash!: string;
   readonly userId!: number;
   readonly purpose!: TwoFactorChallengePurpose;
+  /** Methods offered when the challenge was issued (JSON column). */
+  readonly methods?: unknown;
+  /** The method selected for verification or setup. */
+  readonly method?: string | null;
   readonly rememberMe!: boolean;
   readonly attempts!: number;
   readonly expiresAt!: Date;

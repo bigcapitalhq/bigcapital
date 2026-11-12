@@ -76,6 +76,134 @@
         ]
       }
     },
+    "/api/auth/signin/mfa/verify": {
+      "post": {
+        "operationId": "AuthController_signinMfaVerify",
+        "summary": "Second sign-in step: verify the credential of the selected method",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaVerifyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The same response as a sign-in without two-factor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSigninResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/signin/mfa/prepare": {
+      "post": {
+        "operationId": "AuthController_signinMfaPrepare",
+        "summary": "Prepare a method before verification, e.g. send an email code or return WebAuthn options",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaPrepareDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaPrepareResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/signin/mfa/setup/start": {
+      "post": {
+        "operationId": "AuthController_signinMfaSetupStart",
+        "summary": "Required two-factor setup during sign-in: start the setup of a method",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaSetupStartDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorSetupResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/signin/mfa/setup/confirm": {
+      "post": {
+        "operationId": "AuthController_signinMfaSetupConfirm",
+        "summary": "Confirm the required setup with a credential: turns the method on and signs in",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaSetupConfirmDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The sign-in response plus recovery_codes (shown once).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSigninSetupConfirmResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/api/auth/signin/2fa/setup": {
       "post": {
         "operationId": "AuthController_signinTwoFactorSetup",
@@ -27943,6 +28071,74 @@
   "servers": [],
   "components": {
     "schemas": {
+      "MfaMethodDescriptorDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "totp",
+              "recovery_code",
+              "email_otp",
+              "webauthn"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "otp",
+              "recovery_code",
+              "webauthn"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "kind"
+        ]
+      },
+      "MfaChallengeDto": {
+        "type": "object",
+        "properties": {
+          "challengeToken": {
+            "type": "string",
+            "description": "Single-use token of the second step."
+          },
+          "expiresIn": {
+            "type": "number",
+            "description": "Seconds until the challenge token expires."
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "verify",
+              "setup"
+            ]
+          },
+          "methods": {
+            "description": "Methods the user can use for this challenge.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MfaMethodDescriptorDto"
+            }
+          },
+          "defaultMethod": {
+            "type": "string",
+            "enum": [
+              "totp",
+              "recovery_code",
+              "email_otp",
+              "webauthn"
+            ]
+          }
+        },
+        "required": [
+          "challengeToken",
+          "expiresIn",
+          "purpose",
+          "methods"
+        ]
+      },
       "AuthSigninResponseDto": {
         "type": "object",
         "properties": {
@@ -27977,6 +28173,25 @@
           "challengeExpiresIn": {
             "type": "number",
             "description": "Seconds until the challenge token expires."
+          },
+          "mfa": {
+            "description": "The second step to complete, with the methods the user can choose from. Missing when the sign-in is complete.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MfaChallengeDto"
+              }
+            ]
+          },
+          "availableMethods": {
+            "description": "Methods available for the second step (deprecated, use mfa.methods).",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MfaMethodDescriptorDto"
+            }
+          },
+          "defaultMethod": {
+            "type": "string",
+            "description": "The method to show first (deprecated, use mfa.defaultMethod)."
           }
         }
       },
@@ -28014,6 +28229,25 @@
           "challengeExpiresIn": {
             "type": "number",
             "description": "Seconds until the challenge token expires."
+          },
+          "mfa": {
+            "description": "The second step to complete, with the methods the user can choose from. Missing when the sign-in is complete.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MfaChallengeDto"
+              }
+            ]
+          },
+          "availableMethods": {
+            "description": "Methods available for the second step (deprecated, use mfa.methods).",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MfaMethodDescriptorDto"
+            }
+          },
+          "defaultMethod": {
+            "type": "string",
+            "description": "The method to show first (deprecated, use mfa.defaultMethod)."
           },
           "recoveryCodes": {
             "description": "The new single-use recovery codes. Shown once.",
@@ -28063,6 +28297,28 @@
           "otpauthUrl"
         ]
       },
+      "MfaPrepareResponseDto": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": [
+              "totp",
+              "recovery_code",
+              "email_otp",
+              "webauthn"
+            ]
+          },
+          "ready": {
+            "type": "boolean",
+            "description": "The method is ready for its credential."
+          }
+        },
+        "required": [
+          "method",
+          "ready"
+        ]
+      },
       "AuthSigninDto": {
         "type": "object",
         "properties": {
@@ -28107,6 +28363,108 @@
         },
         "required": [
           "challengeToken"
+        ]
+      },
+      "MfaVerifyDto": {
+        "type": "object",
+        "properties": {
+          "challengeToken": {
+            "type": "string",
+            "description": "The challenge token returned by POST /auth/signin."
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "totp",
+              "recovery_code",
+              "email_otp",
+              "webauthn"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "description": "6-digit code from the authenticator app or email.",
+            "example": "123456"
+          },
+          "recoveryCode": {
+            "type": "string",
+            "description": "One of the recovery codes, instead of `code`.",
+            "example": "k7m2-q9xd-3fha-p8tw"
+          }
+        },
+        "required": [
+          "challengeToken",
+          "method"
+        ]
+      },
+      "MfaPrepareDto": {
+        "type": "object",
+        "properties": {
+          "challengeToken": {
+            "type": "string",
+            "description": "The challenge token returned by POST /auth/signin."
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "totp",
+              "recovery_code",
+              "email_otp",
+              "webauthn"
+            ]
+          }
+        },
+        "required": [
+          "challengeToken",
+          "method"
+        ]
+      },
+      "MfaSetupStartDto": {
+        "type": "object",
+        "properties": {
+          "challengeToken": {
+            "type": "string",
+            "description": "The challenge token returned by POST /auth/signin."
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "totp",
+              "recovery_code",
+              "email_otp",
+              "webauthn"
+            ]
+          }
+        },
+        "required": [
+          "challengeToken"
+        ]
+      },
+      "MfaSetupConfirmDto": {
+        "type": "object",
+        "properties": {
+          "challengeToken": {
+            "type": "string",
+            "description": "The challenge token returned by POST /auth/signin."
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "totp",
+              "recovery_code",
+              "email_otp",
+              "webauthn"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "description": "6-digit code from the authenticator app.",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "challengeToken",
+          "code"
         ]
       },
       "TwoFactorSigninSetupDto": {

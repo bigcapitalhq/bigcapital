@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { MfaChallengeDto, MfaMethodDescriptorDto } from './MfaSignin.dto';
 
 export class AuthSigninResponseDto {
   @ApiProperty({
@@ -42,6 +43,29 @@ export class AuthSigninResponseDto {
     required: false,
   })
   challengeExpiresIn?: number;
+
+  @ApiProperty({
+    description:
+      'The second step to complete, with the methods the user can choose from. Missing when the sign-in is complete.',
+    type: MfaChallengeDto,
+    required: false,
+  })
+  mfa?: MfaChallengeDto;
+
+  @ApiProperty({
+    description:
+      'Methods available for the second step (deprecated, use mfa.methods).',
+    type: [MfaMethodDescriptorDto],
+    required: false,
+  })
+  availableMethods?: MfaMethodDescriptorDto[];
+
+  @ApiProperty({
+    description:
+      'The method to show first (deprecated, use mfa.defaultMethod).',
+    required: false,
+  })
+  defaultMethod?: string;
 }
 
 export class AuthSigninSetupConfirmResponseDto extends AuthSigninResponseDto {

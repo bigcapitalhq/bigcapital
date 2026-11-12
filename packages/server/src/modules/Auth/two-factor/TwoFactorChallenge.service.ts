@@ -10,6 +10,7 @@ import {
   TWO_FACTOR_MAX_ATTEMPTS_PER_CHALLENGE,
   TWO_FACTOR_MAX_FAILED_ATTEMPTS_PER_USER,
 } from './TwoFactor.constants';
+import type { MfaMethodId } from './methods/MfaMethod.types';
 
 export interface IssuedTwoFactorChallenge {
   token: string;
@@ -37,6 +38,7 @@ export class TwoFactorChallengeService {
     userId: number,
     purpose: TwoFactorChallengePurpose,
     rememberMe = false,
+    methods: MfaMethodId[] = ['totp', 'recovery_code'],
   ): Promise<IssuedTwoFactorChallenge> {
     const token = randomBytes(32).toString('base64url');
     const expiresIn = TWO_FACTOR_CHALLENGE_TTL_SECONDS[purpose];
@@ -46,11 +48,47 @@ export class TwoFactorChallengeService {
       tokenHash: hashToken(token),
       userId,
       purpose,
+      methods: JSON.stringify(methods),
       rememberMe: !!rememberMe,
       attempts: 0,
       expiresAt: new Date(Date.now() + expiresIn * 1000),
     });
     return { token, expiresIn };
+  }
+
+  /**
+   * The methods that were offered when the challenge was issued. Old
+   * challenges (created before this column existed) return an empty list.
+   */
+  public getMethods(challenge: TwoFactorChallenge): MfaMethodId[] {
+    const { methods } = challenge;
+
+    if (Array.isArray(methods)) {
+      return methods as MfaMethodId[];
+    }
+    if (typeof methods !== 'string' || !methods) {
+      return [];
+    }
+    try {
+      const parsed = JSON.parse(methods);
+      return Array.isArray(parsed) ? (parsed as MfaMethodId[]) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Remembers the method that was used or is being set up (for audit and
+   * for the setup flow).
+   */
+  public async markMethod(
+    challenge: TwoFactorChallenge,
+    method: MfaMethodId,
+  ): Promise<void> {
+    await this.challengeModel
+      .query()
+      .patch({ method })
+      .where('id', challenge.id);
   }
 
   /**

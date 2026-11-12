@@ -1,50 +1,29 @@
 import { Intent } from '@blueprintjs/core';
-import { Formik, FormikHelpers } from 'formik';
-import React, { useState, useEffect } from 'react';
+import { FormikHelpers } from 'formik';
+import React, { useEffect, useReducer } from 'react';
 import intl from 'react-intl-universal';
-import { Link, useHistory, useLocation } from 'react-router-dom';
-import {
-  AuthFooterLinks,
-  AuthFooterLink,
-  AuthInsiderCard,
-} from './_components';
-import { useAuthMetaBoot } from './AuthMetaBoot';
-import { GoogleAuthSection } from './GoogleAuthButton';
-import { LoginForm } from './LoginForm';
-import { LoginTwoFactorSetup, LoginTwoFactorVerify } from './LoginTwoFactor';
-import {
-  LoginSchema,
-  transformLoginErrorsToToasts,
-  LoginValues,
-} from './utils';
+import { useHistory, useLocation } from 'react-router-dom';
+import { AuthInsiderCard } from './_components';
+import { LoginCredentialsStep } from './login/LoginCredentialsStep';
+import { LoginFooterLinks } from './login/LoginFooterLinks';
+import { loginReducer, initialLoginState } from './login/loginReducer';
+import { MfaFlow } from './login/MfaFlow';
+import { normalizeSigninResponse } from './login/normalize';
+import { transformLoginErrorsToToasts, LoginValues } from './utils';
 import type { AuthSigninResponse } from '@bigcapital/sdk-ts';
 import type { ApiError } from 'openapi-typescript-fetch';
-import { AppToaster as Toaster, FormattedMessage as T } from '@/components';
+import { AppToaster as Toaster } from '@/components';
 import { AuthInsider } from '@/containers/Authentication/AuthInsider';
-import { useAuthLogin } from '@/hooks/query';
-
-const initialValues: LoginValues = {
-  crediential: '',
-  password: '',
-  keepLoggedIn: false,
-};
+import { useApplyAuthLogin, useAuthLogin } from '@/hooks/query';
 
 /**
- * The current step of the sign-in: the password, then (with two-factor) a
- * code, or the setup the organization requires.
- */
-type LoginStep =
-  | { kind: 'password' }
-  | { kind: 'verify' | 'setup'; challengeToken: string; rememberMe: boolean };
-
-/**
- * Login page.
+ * Login page: credentials, then an optional MFA challenge.
  */
 export function Login() {
   const { mutateAsync: loginMutate } = useAuthLogin();
-  const [step, setStep] = useState<LoginStep>({ kind: 'password' });
+  const applyAuthLogin = useApplyAuthLogin();
+  const [state, dispatch] = useReducer(loginReducer, initialLoginState);
 
-  const { googleEnabled } = useAuthMetaBoot();
   const history = useHistory();
   const location = useLocation();
 
@@ -72,17 +51,19 @@ export function Login() {
       rememberMe: values.keepLoggedIn,
     })
       .then((data: AuthSigninResponse) => {
-        const response = data as AuthSigninResponse & {
-          two_factor_required?: boolean;
-          two_factor_setup_required?: boolean;
-          challenge_token?: string;
-        };
-        if (response.challenge_token) {
-          setStep({
-            kind: response.two_factor_setup_required ? 'setup' : 'verify',
-            challengeToken: response.challenge_token,
-            rememberMe: values.keepLoggedIn,
+        const outcome = normalizeSigninResponse(data);
+
+        if (outcome.kind === 'mfa') {
+          dispatch({
+            type: 'challenge-received',
+            challenge: {
+              ...outcome.challenge,
+              rememberMe: values.keepLoggedIn,
+            },
           });
+        } else {
+          // `useAuthLogin` already stored the complete sign-in response.
+          dispatch({ type: 'signin-complete' });
         }
       })
       .catch((response: ApiError) => {
@@ -94,66 +75,33 @@ export function Login() {
         setSubmitting(false);
       });
   };
-  const handleRestart = () => setStep({ kind: 'password' });
+
+  const handleMfaComplete = (data: AuthSigninResponse) => {
+    const rememberMe =
+      state.status === 'mfa' ? state.challenge.rememberMe : false;
+
+    applyAuthLogin(data, rememberMe);
+    dispatch({ type: 'signin-complete' });
+  };
+
+  const handleRestart = () => dispatch({ type: 'restart' });
 
   return (
     <AuthInsider>
       <AuthInsiderCard>
-        {step.kind === 'verify' && (
-          <LoginTwoFactorVerify
-            challengeToken={step.challengeToken}
-            rememberMe={step.rememberMe}
+        {state.status === 'credentials' && (
+          <LoginCredentialsStep onSubmit={handleSubmit} />
+        )}
+        {state.status === 'mfa' && (
+          <MfaFlow
+            challenge={state.challenge}
+            onComplete={handleMfaComplete}
             onRestart={handleRestart}
           />
         )}
-        {step.kind === 'setup' && (
-          <LoginTwoFactorSetup
-            challengeToken={step.challengeToken}
-            rememberMe={step.rememberMe}
-            onRestart={handleRestart}
-          />
-        )}
-        {step.kind === 'password' && (
-          <Formik
-            initialValues={initialValues}
-            validationSchema={LoginSchema}
-            onSubmit={handleSubmit}
-            component={LoginForm}
-          />
-        )}
-        {googleEnabled && <GoogleAuthSection />}
-
-        <Formik
-          initialValues={initialValues}
-          validationSchema={LoginSchema}
-          onSubmit={handleSubmit}
-          component={LoginForm}
-        />
       </AuthInsiderCard>
 
-      {step.kind === 'password' && <LoginFooterLinks />}
+      {state.status === 'credentials' && <LoginFooterLinks />}
     </AuthInsider>
-  );
-}
-
-function LoginFooterLinks() {
-  const { signupDisabled } = useAuthMetaBoot();
-
-  return (
-    <AuthFooterLinks>
-      {!signupDisabled && (
-        <AuthFooterLink>
-          <T id={'dont_have_an_account'} />{' '}
-          <Link to={'/auth/register'}>
-            <T id={'sign_up'} />
-          </Link>
-        </AuthFooterLink>
-      )}
-      <AuthFooterLink>
-        <Link to={'/auth/send_reset_password'}>
-          <T id={'forgot_my_password'} />
-        </Link>
-      </AuthFooterLink>
-    </AuthFooterLinks>
   );
 }

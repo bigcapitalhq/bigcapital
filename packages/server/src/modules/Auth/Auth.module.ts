@@ -57,6 +57,9 @@ import { TwoFactorService } from './two-factor/TwoFactor.service';
 import { TwoFactorChallengeService } from './two-factor/TwoFactorChallenge.service';
 import { TwoFactorPolicyService } from './two-factor/TwoFactorPolicy.service';
 import { TwoFactorSigninService } from './two-factor/TwoFactorSignin.service';
+import { MfaMethodRegistry } from './two-factor/methods/MfaMethodRegistry.service';
+import { TotpMfaMethod } from './two-factor/methods/TotpMfaMethod';
+import { RecoveryCodeMfaMethod } from './two-factor/methods/RecoveryCodeMfaMethod';
 import { TwoFactorEnforcementGuard } from './two-factor/TwoFactorEnforcement.guard';
 import { TwoFactorController } from './two-factor/TwoFactor.controller';
 import { OrganizationTwoFactorController } from './two-factor/OrganizationTwoFactor.controller';
@@ -150,6 +153,9 @@ const models = [
     TwoFactorService,
     TwoFactorChallengeService,
     TwoFactorPolicyService,
+    TotpMfaMethod,
+    RecoveryCodeMfaMethod,
+    MfaMethodRegistry,
     TwoFactorSigninService,
     {
       provide: APP_GUARD,

@@ -23,14 +23,14 @@ describe('TwoFactorEnforcementGuard', () => {
     const policy = {
       isRequiredForOrganization: jest.fn().mockResolvedValue(!!opts.required),
     };
-    const twoFactor = {
-      isEnabled: jest.fn().mockResolvedValue(!!opts.enabled),
+    const mfaMethods = {
+      hasAnyEnrolled: jest.fn().mockResolvedValue(!!opts.enabled),
     };
     const guard = new TwoFactorEnforcementGuard(
       reflector,
       cls,
       policy as any,
-      twoFactor as any,
+      mfaMethods as any,
     );
     const context = {
       getType: () => 'http',
@@ -42,7 +42,7 @@ describe('TwoFactorEnforcementGuard', () => {
         }),
       }),
     } as any;
-    return { guard, context, policy, twoFactor };
+    return { guard, context, policy, mfaMethods };
   };
 
   it('lets users with two-factor through when it is required', async () => {
@@ -68,13 +68,13 @@ describe('TwoFactorEnforcementGuard', () => {
   });
 
   it('does nothing when the organization does not require it', async () => {
-    const { guard, context, twoFactor } = setup({
+    const { guard, context, mfaMethods } = setup({
       userId: 1,
       organizationId: 'org',
       required: false,
     });
     await expect(guard.canActivate(context)).resolves.toBe(true);
-    expect(twoFactor.isEnabled).not.toHaveBeenCalled();
+    expect(mfaMethods.hasAnyEnrolled).not.toHaveBeenCalled();
   });
 
   it('never applies to API keys', async () => {

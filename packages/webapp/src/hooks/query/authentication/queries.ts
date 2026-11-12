@@ -3,6 +3,10 @@ import {
   signinTwoFactor,
   signinTwoFactorSetup,
   signinTwoFactorSetupConfirm,
+  mfaVerify,
+  mfaPrepare,
+  mfaSetupStart,
+  mfaSetupConfirm,
   signup,
   signupConfirm,
   sendResetPassword,
@@ -16,6 +20,14 @@ import {
   type AuthSigninTwoFactorSetupResponse,
   type AuthSigninTwoFactorSetupConfirmBody,
   type AuthSigninTwoFactorSetupConfirmResponse,
+  type AuthMfaVerifyBody,
+  type AuthMfaVerifyResponse,
+  type AuthMfaPrepareBody,
+  type AuthMfaPrepareResponse,
+  type AuthMfaSetupStartBody,
+  type AuthMfaSetupStartResponse,
+  type AuthMfaSetupConfirmBody,
+  type AuthMfaSetupConfirmResponse,
   type AuthSignupBody,
   type AuthSignupVerifyBody,
   type AuthSendResetPasswordBody,
@@ -40,6 +52,28 @@ import { useAuthApiFetcher, useApiFetcher } from '../../useRequest';
 import { authenticationKeys } from './query-keys';
 
 /**
+ * The API wire format is snake_case; the SDK types are camelCase. Accept both
+ * so the auth state keeps working when the camel-case middleware is enabled.
+ */
+type AuthSigninWire = AuthSigninResponse & {
+  access_token?: string;
+  user_id?: number;
+  organization_id?: string;
+  tenant_id?: number;
+};
+
+function readAuthSignin(data: AuthSigninResponse) {
+  const wire = data as AuthSigninWire;
+
+  return {
+    accessToken: wire.access_token ?? wire.accessToken,
+    userId: wire.user_id ?? wire.userId,
+    organizationId: wire.organization_id ?? wire.organizationId,
+    tenantId: wire.tenant_id ?? wire.tenantId,
+  };
+}
+
+/**
  * Saves the response data to cookies.
  */
 export function setAuthLoginCookies(
@@ -47,14 +81,12 @@ export function setAuthLoginCookies(
   rememberMe = false,
 ): void {
   const expiry = rememberMe ? 30 : 1;
-  // @ts-ignore
-  setCookie('token', data.access_token ?? '', expiry);
-  // @ts-ignore
-  setCookie('authenticated_user_id', String(data.user_id ?? ''), expiry);
-  // @ts-ignore
-  setCookie('organization_id', data.organization_id ?? '', expiry);
-  // @ts-ignore
-  setCookie('tenant_id', String(data.tenant_id ?? ''), expiry);
+  const auth = readAuthSignin(data);
+
+  setCookie('token', auth.accessToken ?? '', expiry);
+  setCookie('authenticated_user_id', String(auth.userId ?? ''), expiry);
+  setCookie('organization_id', auth.organizationId ?? '', expiry);
+  setCookie('tenant_id', String(auth.tenantId ?? ''), expiry);
 }
 
 /**
@@ -67,14 +99,13 @@ export function useApplyAuthLogin() {
 
   return useCallback(
     (data: AuthSigninResponse, rememberMe = false) => {
+      const auth = readAuthSignin(data);
+
       setAuthLoginCookies(data, rememberMe);
       batch(() => {
-        // @ts-ignore
-        setAuthToken(data.access_token ?? '');
-        // @ts-ignore
-        setOrganizationId(data.organization_id ?? '');
-        // @ts-ignore
-        setUserId(String(data.user_id ?? ''));
+        setAuthToken(auth.accessToken ?? '');
+        setOrganizationId(auth.organizationId ?? '');
+        setUserId(String(auth.userId ?? ''));
       });
     },
     [setAuthToken, setOrganizationId, setUserId],
@@ -86,8 +117,7 @@ export function useApplyAuthLogin() {
  * step (two_factor_required / two_factor_setup_required).
  */
 export function isAuthSigninComplete(data: AuthSigninResponse): boolean {
-  // @ts-ignore
-  return !!data?.access_token;
+  return !!readAuthSignin(data).accessToken;
 }
 
 export function useAuthLogin(
@@ -166,6 +196,75 @@ export function useAuthTwoFactorSetupConfirm(
     ...props,
     mutationFn: (values: AuthSigninTwoFactorSetupConfirmBody) =>
       signinTwoFactorSetupConfirm(fetcher, values),
+  });
+}
+
+/**
+ * Generic second sign-in step: verify the credential of the selected method.
+ * The caller stores the response with `useApplyAuthLogin`.
+ */
+export function useAuthMfaVerify(
+  props?: UseMutationOptions<AuthMfaVerifyResponse, Error, AuthMfaVerifyBody>,
+) {
+  const fetcher = useAuthApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: AuthMfaVerifyBody) => mfaVerify(fetcher, values),
+  });
+}
+
+/**
+ * Prepares an MFA method before verification (email code, WebAuthn options).
+ */
+export function useAuthMfaPrepare(
+  props?: UseMutationOptions<AuthMfaPrepareResponse, Error, AuthMfaPrepareBody>,
+) {
+  const fetcher = useAuthApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: AuthMfaPrepareBody) => mfaPrepare(fetcher, values),
+  });
+}
+
+/**
+ * Starts the setup of an MFA method during a setup-required sign-in.
+ */
+export function useAuthMfaSetupStart(
+  props?: UseMutationOptions<
+    AuthMfaSetupStartResponse,
+    Error,
+    AuthMfaSetupStartBody
+  >,
+) {
+  const fetcher = useAuthApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: AuthMfaSetupStartBody) =>
+      mfaSetupStart(fetcher, values),
+  });
+}
+
+/**
+ * Confirms the setup of an MFA method: returns the sign-in response plus the
+ * recovery codes. The caller stores it with `useApplyAuthLogin` once the
+ * recovery codes were shown.
+ */
+export function useAuthMfaSetupConfirm(
+  props?: UseMutationOptions<
+    AuthMfaSetupConfirmResponse,
+    Error,
+    AuthMfaSetupConfirmBody
+  >,
+) {
+  const fetcher = useAuthApiFetcher();
+
+  return useMutation({
+    ...props,
+    mutationFn: (values: AuthMfaSetupConfirmBody) =>
+      mfaSetupConfirm(fetcher, values),
   });
 }
 

@@ -4,6 +4,7 @@ export const TWO_FACTOR_ERROR_TYPES = {
   CODE_INVALID: 'TWO_FACTOR_CODE_INVALID',
   VERIFICATION_FAILED: 'TWO_FACTOR_VERIFICATION_FAILED',
   CHALLENGE_INVALID: 'TWO_FACTOR_CHALLENGE_INVALID',
+  METHOD_UNAVAILABLE: 'TWO_FACTOR_METHOD_UNAVAILABLE',
   TOO_MANY_ATTEMPTS: 'TWO_FACTOR_TOO_MANY_ATTEMPTS',
   SETUP_NOT_STARTED: 'TWO_FACTOR_SETUP_NOT_STARTED',
   ALREADY_ENABLED: 'TWO_FACTOR_ALREADY_ENABLED',
@@ -33,6 +34,8 @@ export function getTwoFactorErrorMessage(error: unknown): string {
       return intl.get('two_factor.error.verification_failed');
     case TWO_FACTOR_ERROR_TYPES.CHALLENGE_INVALID:
       return intl.get('two_factor.error.challenge_invalid');
+    case TWO_FACTOR_ERROR_TYPES.METHOD_UNAVAILABLE:
+      return intl.get('two_factor.error.method_unavailable');
     case TWO_FACTOR_ERROR_TYPES.TOO_MANY_ATTEMPTS:
       return intl.get('two_factor.error.too_many_attempts');
     case TWO_FACTOR_ERROR_TYPES.SETUP_NOT_STARTED:

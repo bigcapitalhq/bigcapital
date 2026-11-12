@@ -10,6 +10,10 @@ export const AUTH_ROUTES = {
   SIGNIN_TWO_FACTOR: '/api/auth/signin/2fa',
   SIGNIN_TWO_FACTOR_SETUP: '/api/auth/signin/2fa/setup',
   SIGNIN_TWO_FACTOR_SETUP_CONFIRM: '/api/auth/signin/2fa/setup/confirm',
+  SIGNIN_MFA_VERIFY: '/api/auth/signin/mfa/verify',
+  SIGNIN_MFA_PREPARE: '/api/auth/signin/mfa/prepare',
+  SIGNIN_MFA_SETUP_START: '/api/auth/signin/mfa/setup/start',
+  SIGNIN_MFA_SETUP_CONFIRM: '/api/auth/signin/mfa/setup/confirm',
   SIGNUP: '/api/auth/signup',
   SIGNUP_VERIFY: '/api/auth/signup/verify',
   SEND_RESET_PASSWORD: '/api/auth/send_reset_password',
@@ -47,6 +51,34 @@ export type AuthSigninTwoFactorSetupConfirmBody = OpRequestBody<
 >;
 export type AuthSigninTwoFactorSetupConfirmResponse = OpResponseBody<
   OpForPath<typeof AUTH_ROUTES.SIGNIN_TWO_FACTOR_SETUP_CONFIRM, 'post'>
+>;
+
+export type AuthMfaVerifyBody = OpRequestBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_MFA_VERIFY, 'post'>
+>;
+export type AuthMfaVerifyResponse = OpResponseBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_MFA_VERIFY, 'post'>
+>;
+
+export type AuthMfaPrepareBody = OpRequestBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_MFA_PREPARE, 'post'>
+>;
+export type AuthMfaPrepareResponse = OpResponseBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_MFA_PREPARE, 'post'>
+>;
+
+export type AuthMfaSetupStartBody = OpRequestBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_MFA_SETUP_START, 'post'>
+>;
+export type AuthMfaSetupStartResponse = OpResponseBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_MFA_SETUP_START, 'post'>
+>;
+
+export type AuthMfaSetupConfirmBody = OpRequestBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_MFA_SETUP_CONFIRM, 'post'>
+>;
+export type AuthMfaSetupConfirmResponse = OpResponseBody<
+  OpForPath<typeof AUTH_ROUTES.SIGNIN_MFA_SETUP_CONFIRM, 'post'>
 >;
 
 export type AuthSignupBody = OpRequestBody<
@@ -147,6 +179,67 @@ export async function signinTwoFactorSetupConfirm(
     .create();
   const { data } = await post(body as never);
   return data as AuthSigninTwoFactorSetupConfirmResponse;
+}
+
+/**
+ * Second sign-in step: verify the credential of the selected MFA method.
+ */
+export async function mfaVerify(
+  fetcher: ApiFetcher,
+  body: AuthMfaVerifyBody
+): Promise<AuthMfaVerifyResponse> {
+  const post = fetcher
+    .path(AUTH_ROUTES.SIGNIN_MFA_VERIFY)
+    .method('post')
+    .create();
+  const { data } = await post(body as never);
+  return data as AuthMfaVerifyResponse;
+}
+
+/**
+ * Prepares an MFA method before verification, e.g. sends an email code or
+ * returns WebAuthn request options.
+ */
+export async function mfaPrepare(
+  fetcher: ApiFetcher,
+  body: AuthMfaPrepareBody
+): Promise<AuthMfaPrepareResponse> {
+  const post = fetcher
+    .path(AUTH_ROUTES.SIGNIN_MFA_PREPARE)
+    .method('post')
+    .create();
+  const { data } = await post(body as never);
+  return data as AuthMfaPrepareResponse;
+}
+
+/**
+ * Starts the setup of an MFA method during a setup-required sign-in.
+ */
+export async function mfaSetupStart(
+  fetcher: ApiFetcher,
+  body: AuthMfaSetupStartBody
+): Promise<AuthMfaSetupStartResponse> {
+  const post = fetcher
+    .path(AUTH_ROUTES.SIGNIN_MFA_SETUP_START)
+    .method('post')
+    .create();
+  const { data } = await post(body as never);
+  return data as AuthMfaSetupStartResponse;
+}
+
+/**
+ * Confirms the setup of an MFA method and completes the sign-in.
+ */
+export async function mfaSetupConfirm(
+  fetcher: ApiFetcher,
+  body: AuthMfaSetupConfirmBody
+): Promise<AuthMfaSetupConfirmResponse> {
+  const post = fetcher
+    .path(AUTH_ROUTES.SIGNIN_MFA_SETUP_CONFIRM)
+    .method('post')
+    .create();
+  const { data } = await post(body as never);
+  return data as AuthMfaSetupConfirmResponse;
 }
 
 /**
